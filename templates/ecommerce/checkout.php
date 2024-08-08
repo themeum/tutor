@@ -24,6 +24,7 @@ $total_count     = $courses['total_count'];
 $course_list     = $courses['results'];
 $subtotal        = 0;
 $tax_amount      = 0; // @TODO: Need to implement later.
+$course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
 
 $billing_controller = new BillingController();
 $billing_info       = $billing_controller->get_billing_info();

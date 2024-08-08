@@ -1121,6 +1121,23 @@ class Utils {
 	}
 
 	/**
+	 * Check current user capability and send json response
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $capability User capability, default manage_options.
+	 * @param int    $object_id post id to check with capability.
+	 *
+	 * @return void JSON response.
+	 */
+	public function check_current_user_capability( string $capability = 'manage_options', int $object_id = 0 ) {
+		$can = $object_id ? current_user_can( $capability, $object_id ) : current_user_can( $capability );
+		if ( ! $can ) {
+			$this->json_response( $this->error_message(), null, HttpHelper::STATUS_UNAUTHORIZED );
+		}
+	}
+
+	/**
 	 * Check is course purchaseable.
 	 *
 	 * @since 1.0.0
@@ -10020,8 +10037,21 @@ class Utils {
 		$error_messages = apply_filters(
 			'tutor_default_error_messages',
 			array(
-				'401'   => __( 'You are not authorzied to perform this action', 'tutor' ),
-				'nonce' => __( 'Nonce not matched. Action failed!', 'tutor' ),
+				'401'                => __( 'You are not authorzied to perform this action', 'tutor' ),
+				'nonce'              => __( 'Nonce not matched. Action failed!', 'tutor' ),
+				'invalid_req'        => __( 'Invalid request', 'tutor' ),
+				'authentication'     => __( 'Authentication failed', 'tutor' ),
+				'authorization'      => __( 'Authorization required', 'tutor' ),
+				'not_found'          => __( 'Requested resource not found', 'tutor' ),
+				'server_error'       => __( 'Internal server error', 'tutor' ),
+				'timeout'            => __( 'Request timed out', 'tutor' ),
+				'forbidden'          => __( 'Access to this resource is forbidden', 'tutor' ),
+				'method_not_allowed' => __( 'HTTP method not allowed', 'tutor' ),
+				'too_many_requests'  => __( 'Too many requests', 'tutor' ),
+				'validation_error'   => __( 'Validation error', 'tutor' ),
+				'database_error'     => __( 'Database operation failed', 'tutor' ),
+				'file_not_found'     => __( 'Requested file not found', 'tutor' ),
+				'unsupported_media'  => __( 'Unsupported media type', 'tutor' ),
 			)
 		);
 

@@ -65,6 +65,16 @@ class CouponModel {
 	const REQUIREMENT_MINIMUM_QUANTITY = 'minimum_quantity';
 
 	/**
+	 * Discount type
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const DISCOUNT_TYPE_FLAT       = 'flat';
+	const DISCOUNT_TYPE_PERCENTAGE = 'percentage';
+
+	/**
 	 * Coupon table name
 	 *
 	 * @since 3.0.0
@@ -81,6 +91,53 @@ class CouponModel {
 	 * @var string
 	 */
 	private $coupon_usage_table = 'tutor_coupon_usages';
+
+	/**
+	 * Fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	private $fillable_fields = array(
+		'coupon_status',
+		'coupon_type',
+		'coupon_code',
+		'coupon_title',
+		'coupon_description',
+		'discount_type',
+		'discount_amount',
+		'applies_to',
+		'total_usage_limit',
+		'per_user_usage_limit',
+		'purchase_requirement',
+		'purchase_requirement_value',
+		'start_date_gmt',
+		'expire_date_gmt',
+	);
+
+	/**
+	 * Fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	private $required_fields = array(
+		'coupon_status',
+		'coupon_type',
+		'coupon_code',
+		'coupon_title',
+		'discount_type',
+		'discount_amount',
+		'applies_to',
+		'total_usage_limit',
+		'per_user_usage_limit',
+		'purchase_requirement',
+		'purchase_requirement_value',
+		'start_date_gmt',
+		'expire_date_gmt',
+	);
 
 	/**
 	 * Resolve props & dependencies
@@ -102,6 +159,28 @@ class CouponModel {
 	 */
 	public function get_table_name() {
 		return $this->table_name;
+	}
+
+	/**
+	 * Get fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_fillable_fields() {
+		return $this->fillable_fields;
+	}
+
+	/**
+	 * Get required fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public function get_required_fields() {
+		return $this->required_fields;
 	}
 
 	/**
@@ -182,6 +261,19 @@ class CouponModel {
 			'coupon_code',
 			'coupon_title',
 		);
+	}
+
+	/**
+	 * Create coupon using the data argument
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data Array as per table column.
+	 *
+	 * @return int Coupon id or 0 if failed
+	 */
+	public function create_coupon( array $data ) {
+		return QueryHelper::insert( $this->table_name, $data );
 	}
 
 	/**
@@ -318,6 +410,26 @@ class CouponModel {
 	}
 
 	/**
+	 * Get coupon usage count for a user
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 * @param int   $user_id User id.
+	 *
+	 * @return int
+	 */
+	public function get_user_usage_count( $coupon_code, $user_id ) {
+		return QueryHelper::get_count(
+			$this->coupon_usage_table,
+			array( 'coupon_code' => $coupon_code ),
+			array( 'user_id' => $user_id ),
+			array(),
+			'*'
+		);
+	}
+
+	/**
 	 * Retrieve a coupon by its ID.
 	 *
 	 * This function fetches the coupon data from the database based on the provided coupon ID.
@@ -343,7 +455,7 @@ class CouponModel {
 		$coupon_data->id                  = (int) $coupon_data->id;
 		$coupon_data->usage_limit_status  = ! empty( $coupon_data->total_usage_limit ) ? true : false;
 		$coupon_data->total_usage_limit   = (int) $coupon_data->total_usage_limit;
-		$coupon_data->is_one_use_per_user = ! empty( $coupon_data->is_one_use_per_user ) ? true : false;
+		$coupon_data->is_one_use_per_user = ! empty( $coupon_data->per_user_usage_limit ) ? true : false;
 		$coupon_data->discount_amount     = (float) $coupon_data->discount_amount;
 		$coupon_data->created_by          = get_userdata( $coupon_data->created_by )->display_name;
 		$coupon_data->updated_by          = get_userdata( $coupon_data->updated_by )->display_name;
@@ -484,4 +596,347 @@ class CouponModel {
 
 		return $response;
 	}
+
+	/**
+	 * Get coupon info by coupon code
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 *
+	 * @return mixed
+	 */
+	public function get_coupon( $coupon_code ) {
+		return QueryHelper::get_row(
+			$this->table_name,
+			array( 'coupon_code' => $coupon_code ),
+			'id'
+		);
+	}
+
+	/**
+	 * Apply coupon discount
+	 *
+	 * All type of coupons has been considered while applying coupon.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $course_ids Required, course id or array of ids.
+	 * @param mixed     $coupon_code Required, coupon code.
+	 *
+	 * @return object Detail of discount on object format.
+	 *
+	 * For ex: {
+	 *     total_price: 100,
+	 *    {
+	 *     course_id: 1,
+	 *     regular_price: 80
+	 *     discount_price: 60
+	 *    },
+	 *    {
+	 *     course_id: 2,
+	 *     regular_price: 40
+	 *     discount_price: 0
+	 *    }
+	 * }
+	 */
+	public function apply_coupon_discount( $course_ids, $coupon_code ) {
+		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
+
+		$response                = array();
+		$response['total_price'] = 0;
+
+		$should_apply_coupon = false;
+
+		foreach ( $course_ids as $course_id ) {
+			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
+			$reg_price      = $course_price->regular_price;
+			$sale_price     = $course_price->sale_price;
+			$discount_price = 0;
+
+			if ( $sale_price ) {
+				$discount_price = $sale_price;
+			} else {
+				$coupon = $this->get_coupon( $coupon_code );
+				if ( $coupon ) {
+					$is_valid = $this->is_coupon_valid( $coupon );
+					if ( $is_valid ) {
+						$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_id, $coupon );
+						if ( $is_meet_min_requirement ) {
+							$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
+						}
+					}
+
+					// Apply discount if pass all checks.
+					if ( $should_apply_coupon ) {
+						$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+					}
+				}
+			}
+
+			$response[] = (object) array(
+				'course_id'      => $course_id,
+				'regular_price'  => $reg_price,
+				'discount_price' => $discount_price,
+			);
+
+			$response['total_price'] += $discount_price > 0 ? $discount_price : $reg_price;
+		}
+
+		return (object) $response;
+	}
+
+	/**
+	 * Apply automatic coupon discount
+	 *
+	 * All type of coupons has been considered while applying coupon.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $course_ids Required, course id or array of ids.
+	 *
+	 * @return object Detail of discount on object format.
+	 *
+	 * For ex: {
+	 *     total_price: 60,
+	 *    {
+	 *     course_id: 1,
+	 *     regular_price, 80,
+	 *     discount_price: 60
+	 *    },
+	 * }
+	 */
+	public function apply_automatic_coupon_discount( $course_ids ) {
+		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
+
+		$response                = array();
+		$response['total_price'] = 0;
+
+		$should_apply_coupon = false;
+
+		foreach ( $course_ids as $course_id ) {
+			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
+			$reg_price      = $course_price->regular_price;
+			$sale_price     = $course_price->sale_price;
+			$discount_price = 0;
+
+			if ( $sale_price ) {
+				$discount_price = $sale_price;
+			} else {
+				// @TODO deduct automatic coupon price.
+			}
+
+			$response[] = (object) array(
+				'course_id'      => $course_id,
+				'regular_price'  => $reg_price,
+				'discount_price' => $discount_price,
+			);
+
+			$response['total_price'] += $discount_price;
+		}
+
+		return (object) $response;
+	}
+
+	/**
+	 * Deduct coupon discount
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed  $regular_price Regular price.
+	 * @param string $discount_type Discount type.
+	 * @param mixed  $discount_value Discount value.
+	 *
+	 * @return float Deducted price
+	 */
+	public function deduct_coupon_discount( $regular_price, $discount_type, $discount_value ) {
+		$deducted_price = $regular_price;
+		if ( self::DISCOUNT_TYPE_PERCENTAGE === $discount_type ) {
+			$deducted_price = $regular_price - ( $regular_price * ( $discount_value / 100 ) );
+		} else {
+			$deducted_price = $regular_price - $discount_value;
+		}
+
+		return floatval( $deducted_price );
+	}
+
+	/**
+	 * Check whether this coupon is valid or not.
+	 *
+	 * Considering start-expire time & use limit.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon Coupon object.
+	 *
+	 * @return bool
+	 */
+	public function is_coupon_valid( object $coupon ): bool {
+		return self::STATUS_ACTIVE === $coupon->coupon_status && $this->has_coupon_validity( $coupon ) && $this->has_user_usage_limit( $coupon, get_current_user_id() );
+	}
+
+	/**
+	 * Check whether this coupon is applicable to the given course or not.
+	 *
+	 * Applicable is getting determined by the coupon applies_to value
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon Coupon object.
+	 * @param int    $object_id Course/Bundle id.
+	 *
+	 * @return bool
+	 */
+	public function is_coupon_applicable( object $coupon, int $object_id ): bool {
+		$is_applicable = false;
+
+		$course_post_type = tutor()->course_post_type;
+		$bundle_post_type = 'course-bundle';
+		$object_type      = get_post_type( $object_id );
+
+		$applies_to   = $coupon->applies_to;
+		$applications = $this->get_coupon_applications( $coupon->coupon_code );
+
+		switch ( $applies_to ) {
+			case self::APPLIES_TO_ALL_COURSES_AND_BUNDLES:
+				$is_applicable = true;
+				break;
+
+			case self::APPLIES_TO_ALL_COURSES:
+			case self::APPLIES_TO_SPECIFIC_COURSES:
+				if ( self::APPLIES_TO_ALL_COURSES === $applies_to ) {
+					$is_applicable = $object_type === $course_post_type;
+				} else {
+					$is_applicable = in_array( $object_id, $applications );
+				}
+				break;
+
+			case self::APPLIES_TO_ALL_BUNDLES:
+			case self::APPLIES_TO_SPECIFIC_BUNDLES:
+				if ( self::APPLIES_TO_ALL_BUNDLES === $applies_to ) {
+					$is_applicable = $object_type === $bundle_post_type;
+				} else {
+					$is_applicable = in_array( $object_id, $applications );
+				}
+				break;
+
+			case self::APPLIES_TO_SPECIFIC_CATEGORY:
+				$course_categories = wp_get_post_terms( $object_id, 'course-category' );
+				if ( is_a( $course_categories, 'WP_Term' ) ) {
+					$term_ids      = array_column( $course_categories, 'term_id' );
+					$is_applicable = count( array_intersect( $applications, $term_ids ) );
+				}
+				break;
+		}
+
+		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id );
+	}
+
+	/**
+	 * Check whether meet coupon requirement or not
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $course_id Course id or array of ids.
+	 * @param object    $coupon Coupon object.
+	 *
+	 * @return boolean
+	 */
+	public function is_coupon_requirement_meet( $course_id, object $coupon ) {
+		$is_meet_requirement = true;
+		$course_ids          = is_array( $course_id ) ? $course_id : array( $course_id );
+		if ( self::REQUIREMENT_MINIMUM_PURCHASE === $coupon->purchase_requirement ) {
+			$total_price = 0;
+			$min_amount  = $coupon->purchase_requirement_value;
+			foreach ( $course_ids as $course_id ) {
+				$course_price = tutor_utils()->get_raw_course_price( $course_id );
+				$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->reg_price;
+			}
+
+			if ( $total_price < $min_amount ) {
+				$is_meet_requirement = false;
+			}
+		} elseif ( self::REQUIREMENT_MINIMUM_QUANTITY === $coupon->purchase_requirement ) {
+			$min_quantity        = $coupon->purchase_requirement_value;
+			$is_meet_requirement = count( $course_ids ) >= $min_quantity;
+		}
+
+		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $course_id );
+	}
+
+	/**
+	 * Check coupon time validity
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon coupon object.
+	 *
+	 * @return boolean
+	 */
+	public function has_coupon_validity( object $coupon ): bool {
+		$now         = time();
+		$start_date  = strtotime( $coupon->start_date_gmt );
+		$expire_date = strtotime( $coupon->expire_date_gmt );
+
+		// Check if the current time is within the start and expiry dates.
+		return ( $now >= $start_date ) && ( $now <= $expire_date );
+	}
+
+	/**
+	 * Check coupon usage limit
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon coupon object.
+	 * @param int    $user_id user id.
+	 *
+	 * @return bool true if has usage limit otherwise false
+	 */
+	public function has_user_usage_limit( object $coupon, int $user_id ): bool {
+		$has_limit = true;
+
+		$coupon_usage_limit = (int) $coupon->coupon_usage_limit;
+		$user_usage_limit   = (int) $coupon->per_user_usage_limit;
+
+		$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
+		if ( $coupon_usage_count >= $coupon_usage_limit ) {
+			$has_limit = false;
+		} else {
+			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
+			if ( $user_usage_count >= $user_usage_limit ) {
+				$has_limit = false;
+			}
+		}
+
+		return apply_filters( 'tutor_coupon_has_user_usage_limit', $has_limit, $coupon, $user_id );
+	}
+
+	/**
+	 * Get coupon applications
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 *
+	 * @return array [1,2,4]
+	 */
+	public function get_coupon_applications( $coupon_code ): array {
+		global $wpdb;
+		$application_table = $wpdb->prefix . 'tutor_coupon_applications';
+
+		$response = array();
+
+		$result = QueryHelper::get_all(
+			$application_table,
+			array( 'coupon_code' => $coupon_code ),
+			'coupon_code'
+		);
+
+		if ( is_array( $result ) && count( $result ) ) {
+			$response = array_column( $result, 'reference_id' );
+		}
+
+		return $response;
+	}
+
 }

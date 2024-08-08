@@ -11,7 +11,9 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
+use TUTOR\BaseController;
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
@@ -25,7 +27,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 3.0.0
  */
-class CouponController {
+class CouponController extends BaseController {
 
 	/**
 	 * Page slug
@@ -102,6 +104,65 @@ class CouponController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_get_coupon_applies_to', array( $this, 'get_coupon_applies_to' ) );
+
+			add_action( 'wp_ajax_tutor_coupon_create', array( $this, 'ajax_create_coupon' ) );
+		}
+	}
+
+	/**
+	 * Get coupon model object
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return CouponModel
+	 */
+	public function get_model() {
+		return $this->model;
+	}
+
+	/**
+	 * Handle ajax request for creating coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_create_coupon() {
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
+
+		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), true );
+
+		$validation = $this->validate( $data );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'validation_error' ),
+				$validation->errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
+
+		// Convert start & expire date time into gmt.
+		$data['start_date_gmt']  = get_gmt_from_date( $data['start_date_gmt'] );
+		$data['expire_date_gmt'] = get_gmt_from_date( $data['expire_date_gmt'] );
+
+		try {
+			$coupon_id = $this->model->create_coupon( $data );
+			if ( $coupon_id ) {
+				$this->json_response( __( 'Coupon created successfully!', 'tutor' ) );
+			} else {
+				$this->json_response(
+					__( 'Failed to create!', 'tutor' ),
+					null,
+					HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+				);
+			}
+		} catch ( \Throwable $th ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'server_error' ),
+				$th->getMessage(),
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
 		}
 	}
 
@@ -421,5 +482,42 @@ class CouponController {
 			$success_message_txt,
 			$response
 		);
+	}
+
+	/**
+	 * Validate input data based on predefined rules.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data The data array to validate.
+	 *
+	 * @return object The validation result. It returns validation object.
+	 */
+	protected function validate( array $data ) {
+
+		$validation_rules = array(
+			'coupon_status'              => 'required',
+			'coupon_type'                => 'required',
+			'coupon_code'                => 'required',
+			'coupon_title'               => 'required',
+			'discount_type'              => 'required',
+			'discount_amount'            => 'required',
+			'applies_to'                 => 'required',
+			'total_usage_limit'          => 'required|numeric',
+			'per_user_usage_limit'       => 'required|numeric',
+			'purchase_requirement'       => 'required',
+			'purchase_requirement_value' => 'required',
+			'start_date_gmt'             => 'required|date_format:Y-m-d H:i:s',
+			'expire_date_gmt'            => 'required|date_format:Y-m-d H:i:s',
+		);
+
+		// Skip validation rules for not available fields in data.
+		foreach ( $validation_rules as $key => $value ) {
+			if ( ! array_key_exists( $key, $data ) ) {
+				unset( $validation_rules[ $key ] );
+			}
+		}
+
+		return ValidationHelper::validate( $validation_rules, $data );
 	}
 }
