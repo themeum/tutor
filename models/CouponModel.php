@@ -280,10 +280,16 @@ class CouponModel {
 	 *
 	 * @param array $data Array as per table column.
 	 *
+	 * @throws \Exception Database error if occur.
+	 *
 	 * @return int Coupon id or 0 if failed
 	 */
 	public function create_coupon( array $data ) {
-		return QueryHelper::insert( $this->table_name, $data );
+		try {
+			return QueryHelper::insert( $this->table_name, $data );
+		} catch ( \Throwable $th ) {
+			throw new \Exception( $th->getMessage() );
+		}
 	}
 
 	/**
