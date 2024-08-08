@@ -6,16 +6,16 @@ import FormTimeInput from '@Components/fields/FormTimeInput';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { Subscription } from '@CourseBuilderServices/subscription';
+import type { SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 
-export function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) {
-  const hasSale = form.watch('has_sale');
-  const hasSchedule = form.watch('schedule_sale_price');
+export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormData> }) {
+  const hasSale = form.watch('offer_sale_price');
+  const hasSchedule = !!form.watch('schedule_sale_price');
   const { transitions } = useAnimation({
     animationType: AnimationType.slideDown,
     data: hasSale,
@@ -26,7 +26,7 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) 
       <div>
         <Controller
           control={form.control}
-          name="has_sale"
+          name="offer_sale_price"
           render={(props) => <FormSwitch {...props} label="Offer sale price" />}
         />
       </div>
@@ -49,7 +49,7 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) 
                   <label>{__('Sale starts from', 'tutor')}</label>
                   <div css={styleUtils.dateAndTimeWrapper}>
                     <Controller
-                      name="schedule_start_date"
+                      name="sale_price_from_date"
                       control={form.control}
                       rules={{
                         required: __('Schedule date is required', 'tutor'),
@@ -60,7 +60,7 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) 
                     />
 
                     <Controller
-                      name="schedule_start_time"
+                      name="sale_price_from_time"
                       control={form.control}
                       rules={{
                         required: __('Schedule time is required', 'tutor'),
@@ -75,7 +75,7 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) 
                   <label>{__('Sale ends to', 'tutor')}</label>
                   <div css={styleUtils.dateAndTimeWrapper}>
                     <Controller
-                      name="schedule_end_date"
+                      name="sale_price_to_date"
                       control={form.control}
                       rules={{
                         required: __('Schedule date is required', 'tutor'),
@@ -86,7 +86,7 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<Subscription> }) 
                     />
 
                     <Controller
-                      name="schedule_end_time"
+                      name="sale_price_to_time"
                       control={form.control}
                       rules={{
                         required: __('Schedule time is required', 'tutor'),

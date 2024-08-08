@@ -52,7 +52,7 @@ const CourseBasic = () => {
     queryKey: ['CourseDetails', courseId],
   });
   const navigate = useNavigate();
-  const { state, pathname } = useLocation();
+  const { state } = useLocation();
   const currentUser = tutorConfig.current_user;
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
