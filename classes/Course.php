@@ -838,7 +838,10 @@ class Course extends Tutor_Base {
 			$_POST,
 			array(
 				'post_content'             => 'wp_kses_post',
+				'course_benefits'          => 'sanitize_textarea_field',
+				'course_target_audience'   => 'sanitize_textarea_field',
 				'course_material_includes' => 'sanitize_textarea_field',
+				'course_requirements'      => 'sanitize_textarea_field',
 			)
 		);
 
