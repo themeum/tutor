@@ -316,6 +316,19 @@ class CouponModel {
 	}
 
 	/**
+	 * Delete applies to
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 *
+	 * @return bool
+	 */
+	public function delete_applies_to( $coupon_code ) {
+		return QueryHelper::delete( $this->coupon_applies_to_table, array( 'coupon_code' => $coupon_code ) );
+	}
+
+	/**
 	 * Get coupons list
 	 *
 	 * @since 3.0.0

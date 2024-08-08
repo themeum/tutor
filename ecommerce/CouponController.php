@@ -106,6 +106,7 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_get_coupon_applies_to', array( $this, 'get_coupon_applies_to' ) );
 
 			add_action( 'wp_ajax_tutor_coupon_create', array( $this, 'ajax_create_coupon' ) );
+			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
 		}
 	}
 
@@ -149,15 +150,77 @@ class CouponController extends BaseController {
 		try {
 			$coupon_id = $this->model->create_coupon( $data );
 			if ( $coupon_id ) {
-				if ( array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
+				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
 					$applies_to_ids = array_column( $data['applies_to_items'], 'id' );
-					$this->model->insert_applies_to( $data['applies_to'], $applies_to_ids, $data['code'] );
+					$this->model->insert_applies_to( $data['applies_to'], $applies_to_ids, $data['coupon_code'] );
 				}
 
 				$this->json_response( __( 'Coupon created successfully!', 'tutor' ) );
 			} else {
 				$this->json_response(
 					__( 'Failed to create!', 'tutor' ),
+					null,
+					HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+				);
+			}
+		} catch ( \Throwable $th ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'server_error' ),
+				$th->getMessage(),
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+	}
+
+	/**
+	 * Handle ajax request for updating coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_update_coupon() {
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
+
+		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), false );
+
+		$coupon_id         = Input::post( 'id', null, Input::TYPE_INT );
+		$data['coupon_id'] = $coupon_id;
+
+		$validation = $this->validate( $data );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'validation_error' ),
+				$validation->errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
+
+		unset( $data['coupon_id'] );
+
+		// Convert start & expire date time into gmt.
+		if ( isset( $data['start_date_gmt'] ) ) {
+			get_gmt_from_date( $data['start_date_gmt'] );
+		}
+
+		if ( isset( $data['expire_date_gmt'] ) ) {
+			get_gmt_from_date( $data['expire_date_gmt'] );
+		}
+
+		try {
+			$update = $this->model->update_coupon( $coupon_id, $data );
+			if ( $update ) {
+				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
+					$applies_to_ids = array_column( $data['applies_to_items'], 'id' );
+					$this->model->delete_applies_to( $data['coupon_code'] );
+					$this->model->insert_applies_to( $data['applies_to'], $applies_to_ids, $data['coupon_code'] );
+				}
+
+				$this->json_response( __( 'Coupon updated successfully!', 'tutor' ) );
+			} else {
+				$this->json_response(
+					__( 'Failed to update!', 'tutor' ),
 					null,
 					HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 				);
@@ -505,6 +568,7 @@ class CouponController extends BaseController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
+			'coupon_id'                  => 'required|numeric',
 			'coupon_status'              => 'required',
 			'coupon_type'                => 'required',
 			'coupon_code'                => 'required',
