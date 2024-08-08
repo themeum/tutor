@@ -1238,7 +1238,7 @@ class Utils {
 	public function price_type( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$price_type = get_post_meta( $course_id, '_tutor_course_price_type', true );
+		$price_type = get_post_meta( $course_id, Course::COURSE_PRICE_TYPE_META, true );
 		return $price_type;
 	}
 
