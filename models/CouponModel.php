@@ -931,7 +931,7 @@ class CouponModel {
 		$expire_date = strtotime( $coupon->expire_date_gmt );
 
 		// Check if the current time is within the start and expiry dates.
-		return ( $now >= $start_date ) && ( $now <= $expire_date );
+		return ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
 	}
 
 	/**
