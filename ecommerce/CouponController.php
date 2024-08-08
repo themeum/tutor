@@ -149,6 +149,11 @@ class CouponController extends BaseController {
 		try {
 			$coupon_id = $this->model->create_coupon( $data );
 			if ( $coupon_id ) {
+				if ( array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
+					$applies_to_ids = array_column( $data['applies_to_items'], 'id' );
+					$this->model->insert_applies_to( $data['applies_to'], $applies_to_ids, $data['code'] );
+				}
+
 				$this->json_response( __( 'Coupon created successfully!', 'tutor' ) );
 			} else {
 				$this->json_response(

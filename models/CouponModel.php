@@ -93,6 +93,15 @@ class CouponModel {
 	private $coupon_usage_table = 'tutor_coupon_usages';
 
 	/**
+	 * Coupon application table
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	private $coupon_applies_to_table = 'tutor_coupon_applications';
+
+	/**
 	 * Fillable fields
 	 *
 	 * @since 3.0.0
@@ -146,8 +155,9 @@ class CouponModel {
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->table_name         = $wpdb->prefix . $this->table_name;
-		$this->coupon_usage_table = $wpdb->prefix . $this->coupon_usage_table;
+		$this->table_name              = $wpdb->prefix . $this->table_name;
+		$this->coupon_usage_table      = $wpdb->prefix . $this->coupon_usage_table;
+		$this->coupon_applies_to_table = $wpdb->prefix . $this->coupon_applies_to_table;
 	}
 
 	/**
@@ -274,6 +284,35 @@ class CouponModel {
 	 */
 	public function create_coupon( array $data ) {
 		return QueryHelper::insert( $this->table_name, $data );
+	}
+
+	/**
+	 * Insert applies to
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $applies_to Applies to type.
+	 * @param array  $applies_to_ids Applies to ids.
+	 * @param mixed  $coupon_code Coupon code.
+	 *
+	 * @return mixed true|false on insert, void if not insert-able
+	 */
+	public function insert_applies_to( string $applies_to, array $applies_to_ids, $coupon_code ) {
+		$specific_applies = array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY );
+		if ( in_array( $applies_to, $specific_applies ) ) {
+			$data = array();
+
+			foreach ( $applies_to_ids as $id ) {
+				$data[] = array(
+					'coupon_code'  => $coupon_code,
+					'reference_id' => $id,
+				);
+			}
+
+			if ( count( $data ) ) {
+				return QueryHelper::insert_multiple_rows( $this->coupon_applies_to_table, $data );
+			}
+		}
 	}
 
 	/**
@@ -921,13 +960,10 @@ class CouponModel {
 	 * @return array [1,2,4]
 	 */
 	public function get_coupon_applications( $coupon_code ): array {
-		global $wpdb;
-		$application_table = $wpdb->prefix . 'tutor_coupon_applications';
-
 		$response = array();
 
 		$result = QueryHelper::get_all(
-			$application_table,
+			$this->coupon_applies_to_table,
 			array( 'coupon_code' => $coupon_code ),
 			'coupon_code'
 		);
