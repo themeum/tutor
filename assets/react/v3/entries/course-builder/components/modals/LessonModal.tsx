@@ -393,9 +393,7 @@ const LessonModal = ({
                     label={
                       <div css={styles.previewLabel}>
                         {__('Lesson Preview', 'tutor')}
-                        {!isTutorPro && !isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && (
-                          <SVGIcon name="crown" width={24} height={24} />
-                        )}
+                        {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
                       </div>
                     }
                     helpText={

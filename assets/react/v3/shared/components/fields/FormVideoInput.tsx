@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
@@ -48,6 +49,7 @@ type FormVideoInputProps = {
   buttonText?: string;
   infoText?: string;
   supportedFormats?: string[];
+  loading?: boolean;
   onGetDuration?: (duration: {
     hours: number;
     minutes: number;
@@ -103,6 +105,7 @@ const FormVideoInput = ({
   infoText,
   onChange,
   supportedFormats,
+  loading,
   onGetDuration,
 }: FormVideoInputProps) => {
   if (!videoSources.length) {
@@ -264,7 +267,14 @@ const FormVideoInput = ({
       <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
         {() => {
           return (
-            <div>
+            <Show
+              when={!loading}
+              fallback={
+                <div css={styles.emptyMedia({ hasVideoSource: videoSources.length > 0 })}>
+                  <LoadingOverlay />
+                </div>
+              }
+            >
               <Show
                 when={isVideoAvailable()}
                 fallback={
@@ -386,7 +396,7 @@ const FormVideoInput = ({
                   );
                 }}
               </Show>
-            </div>
+            </Show>
           );
         }}
       </FormFieldWrapper>

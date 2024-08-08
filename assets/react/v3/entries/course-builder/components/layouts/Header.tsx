@@ -24,12 +24,14 @@ import { __ } from '@wordpress/i18n';
 import { isBefore } from 'date-fns';
 import { useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import Tracker from './Tracker';
 
 const courseId = getCourseId();
 
 const Header = () => {
   const form = useFormContext<CourseFormData>();
+  const navigate = useNavigate();
   const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private'>(
     form.watch('post_status'),
   );
@@ -44,6 +46,43 @@ const Header = () => {
   const isPostDateDirty = form.formState.dirtyFields.post_date;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future') => {
+    const triggerAndFocus = (field: keyof CourseFormData) => {
+      Promise.resolve().then(() => {
+        form.trigger(field);
+        form.setFocus(field);
+      });
+    };
+
+    const navigateToBasicsWithError = () => {
+      navigate('/basics', { state: { isError: true } });
+    };
+
+    if (data.course_price_type === 'paid') {
+      if (!data.course_product_id) {
+        triggerAndFocus('course_product_id');
+        return;
+      }
+
+      if (
+        tutorConfig.settings.monetize_by === 'wc' &&
+        (!data.course_price || !data.course_sale_price || !data.course_product_id)
+      ) {
+        navigateToBasicsWithError();
+
+        if (!data.course_price) {
+          triggerAndFocus('course_price');
+          return;
+        }
+
+        if (!data.course_sale_price) {
+          triggerAndFocus('course_sale_price');
+          return;
+        }
+
+        return;
+      }
+    }
+
     const payload = convertCourseDataToPayload(data);
     setLocalPostStatus(postStatus);
 

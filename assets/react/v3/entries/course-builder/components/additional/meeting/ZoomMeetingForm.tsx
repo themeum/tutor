@@ -118,9 +118,13 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       });
     }
 
-    Promise.resolve().then(() => {
+    const timeoutId = setTimeout(() => {
       meetingForm.setFocus('meeting_name');
-    });
+    }, 250);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [currentMeeting]);
 
   return (
