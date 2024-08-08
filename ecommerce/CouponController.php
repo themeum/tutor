@@ -12,12 +12,14 @@ namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
 use TUTOR\BaseController;
+use TUTOR\Course;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
+use TutorPro\CourseBundle\Models\BundleModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -107,6 +109,7 @@ class CouponController extends BaseController {
 
 			add_action( 'wp_ajax_tutor_coupon_create', array( $this, 'ajax_create_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
+			add_action( 'wp_ajax_tutor_coupon_applies_to_list', array( $this, 'ajax_coupon_applies_to_list' ) );
 		}
 	}
 
@@ -230,6 +233,51 @@ class CouponController extends BaseController {
 				tutor_utils()->error_message( 'server_error' ),
 				$th->getMessage(),
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+	}
+
+	/**
+	 * Get list of coupon applies to on which coupon
+	 * will be applicable
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_coupon_applies_to_list() {
+		tutor_utils()->check_nonce();
+		tutor_utils()->check_current_user_capability();
+
+		$applies_to = Input::post( 'applies_to' );
+
+		if ( $this->model->is_specific_applies_to( $applies_to ) ) {
+			try {
+				$list = $this->get_application_list( $applies_to );
+				if ( $list ) {
+					$this->json_response(
+						__( 'Coupon application list retrieved successfully!' ),
+						$list
+					);
+				} else {
+					$this->json_response(
+						tutor_utils()->error_message( 'not_found' ),
+						null,
+						HttpHelper::STATUS_NOT_FOUND
+					);
+				}
+			} catch ( \Throwable $th ) {
+				$this->json_response(
+					tutor_utils()->error_message( 'server_error' ),
+					$th->getMessage(),
+					HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+				);
+			}
+		} else {
+			$this->json_response(
+				tutor_utils()->error_message( 'invalid_req' ),
+				null,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
 	}
@@ -557,6 +605,64 @@ class CouponController extends BaseController {
 	}
 
 	/**
+	 * Get application if applies to is specific category or bundle
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $applies_to Applies to.
+	 *
+	 * @return array
+	 */
+	public function get_application_list( string $applies_to ) {
+		$response = array();
+
+		if ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
+			$args = array(
+				'post_type'      => 'course-bundle',
+				'posts_per_page' => -1,
+				'post_status'    => 'publish',
+			);
+
+			$bundles = new \WP_Query( $args );
+			if ( $bundles->have_posts() ) {
+				$bundles = $bundles->get_posts();
+				foreach ( $bundles as $bundle ) {
+					$response[] = array(
+						'id'            => $bundle->ID,
+						'title'         => $bundle->post_title,
+						'image'         => get_the_post_thumbnail_url( $bundle->ID ),
+						'course_count'  => count( BundleModel::get_bundle_course_ids( $bundle->ID ) ),
+						'regular_price' => get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ),
+						'sale_price'    => get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ),
+					);
+				}
+			}
+		} elseif ( $this->model::APPLIES_TO_SPECIFIC_CATEGORY === $applies_to ) {
+			$terms = get_terms(
+				array(
+					'taxonomy'   => 'course-category',
+					'hide_empty' => true,
+				)
+			);
+
+			if ( ! is_wp_error( $terms ) ) {
+				foreach ( $terms as $term ) {
+					$thumb_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
+
+					$response[] = array(
+						'id'            => $term->term_id,
+						'title'         => $term->name,
+						'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+						'total_courses' => (int) $term->count,
+					);
+				}
+			}
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Validate input data based on predefined rules.
 	 *
 	 * @since 3.0.0
@@ -581,7 +687,6 @@ class CouponController extends BaseController {
 			'purchase_requirement'       => 'required',
 			'purchase_requirement_value' => 'required',
 			'start_date_gmt'             => 'required|date_format:Y-m-d H:i:s',
-			'expire_date_gmt'            => 'required|date_format:Y-m-d H:i:s',
 		);
 
 		// Skip validation rules for not available fields in data.

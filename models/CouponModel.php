@@ -1051,4 +1051,17 @@ class CouponModel {
 		return $response;
 	}
 
+	/**
+	 * Check if applies to is specific
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $applies_to Applies to.
+	 *
+	 * @return boolean
+	 */
+	public function is_specific_applies_to( string $applies_to ) {
+		return in_array( $applies_to, array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY ) );
+	}
+
 }
