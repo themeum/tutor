@@ -149,6 +149,7 @@ class CouponController extends BaseController {
 		// Convert start & expire date time into gmt.
 		$data['start_date_gmt']  = get_gmt_from_date( $data['start_date_gmt'] );
 		$data['expire_date_gmt'] = get_gmt_from_date( $data['expire_date_gmt'] );
+		$data['created_by']      = get_current_user_id();
 
 		try {
 			$coupon_id = $this->model->create_coupon( $data );
@@ -210,6 +211,9 @@ class CouponController extends BaseController {
 		if ( isset( $data['expire_date_gmt'] ) ) {
 			get_gmt_from_date( $data['expire_date_gmt'] );
 		}
+
+		// Set updated by.
+		$data['updated_by'] = get_current_user_id();
 
 		try {
 			$update = $this->model->update_coupon( $coupon_id, $data );
@@ -535,6 +539,10 @@ class CouponController extends BaseController {
 
 		// Set coupon usage.
 		$coupon_data->coupon_usage = $this->model->get_coupon_usage_count( $coupon_data->coupon_code );
+
+		// Set created & updated by.
+		$coupon_data->coupon_created_by = tutor_utils()->display_name( $coupon_data->created_by );
+		$coupon_data->coupon_update_by  = tutor_utils()->display_name( $coupon_data->updated_by );
 
 		$this->json_response(
 			__( 'Coupon retrieved successfully', 'tutor' ),
