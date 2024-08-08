@@ -36,8 +36,9 @@ class Course extends Tutor_Base {
 	 *
 	 * @var string
 	 */
-	const PRICE_TYPE_FREE = 'free';
-	const PRICE_TYPE_PAID = 'paid';
+	const PRICE_TYPE_FREE         = 'free';
+	const PRICE_TYPE_PAID         = 'paid';
+	const PRICE_TYPE_SUBSCRIPTION = 'subscription';
 
 	/**
 	 * Course price and sale price
@@ -837,7 +838,10 @@ class Course extends Tutor_Base {
 			$_POST,
 			array(
 				'post_content'             => 'wp_kses_post',
+				'course_benefits'          => 'sanitize_textarea_field',
+				'course_target_audience'   => 'sanitize_textarea_field',
 				'course_material_includes' => 'sanitize_textarea_field',
+				'course_requirements'      => 'sanitize_textarea_field',
 			)
 		);
 
@@ -983,8 +987,8 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
-		$price_type  = get_post_meta( $course_id, self::COURSE_PRICE_TYPE_META, true );
-		$monetize_by = tutils()->get_option( 'monetize_by' );
+		$price_type  = tutor_utils()->price_type( $course_id );
+		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 
 		$product_name = '';
 		$price        = 0;
