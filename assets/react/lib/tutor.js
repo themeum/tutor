@@ -480,8 +480,8 @@ if (createNewCourse) {
 		const { __ } = wp.i18n;
 		
 		try {
-			createNewCourse.setAttribute('disabled', 'disabled');
 			createNewCourse.classList.add('is-loading');
+			createNewCourse.style.pointerEvents = 'none';
 
 			const from_dashboard = createNewCourse.classList.contains('tutor-dashboard-create-course')
 			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
