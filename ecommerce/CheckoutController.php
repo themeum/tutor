@@ -44,7 +44,7 @@ class CheckoutController {
 	 */
 	public function __construct( $register_hooks = true ) {
 		if ( $register_hooks ) {
-			add_action( 'wp_ajax_tutor_pay_now', array( $this, '::ajax_pay_now' ) );
+			add_action( 'wp_ajax_tutor_pay_now', array( $this, 'ajax_pay_now' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 		}
 	}
@@ -135,7 +135,7 @@ class CheckoutController {
 		}
 
 		$coupon_model  = new CouponModel();
-		$course_ids    = explode( ',', $course_ids );
+		$course_ids    = array_filter( explode( ',', $course_ids ), 'is_numeric' );
 		$price_details = $coupon_model->apply_coupon_discount( $course_ids, $coupon_code );
 
 		// @TODO Prepare payment data.
