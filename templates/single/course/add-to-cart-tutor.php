@@ -66,7 +66,7 @@ if ( $is_course_in_user_cart ) {
 		 */
 		do_action( 'tutor_after_course_details_tutor_cart_price', $course_id );
 		?>
-        <?php echo apply_filters( 'tutor_after_course_details_tutor_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
+        <?php echo apply_filters( 'tutor_after_course_details_tutor_add_to_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
 	</div>
 	<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
 		<span class="tutor-icon-cart-line tutor-mr-8"></span>
