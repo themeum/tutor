@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
+import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
@@ -92,7 +93,6 @@ const FormCoursePrerequisites = ({
       label={label}
       disabled={disabled}
       readOnly={readOnly}
-      loading={loading}
       helpText={helpText}
     >
       {(inputProps) => {
@@ -124,14 +124,16 @@ const FormCoursePrerequisites = ({
             <Show
               when={inputValue.length > 0}
               fallback={
-                <EmptyState
-                  size="small"
-                  emptyStateImage={emptyStateImage}
-                  emptyStateImage2x={emptyStateImage2x}
-                  imageAltText={__('Illustration of a no course selected', 'tutor')}
-                  title={__('No course selected', 'tutor')}
-                  description={__('Select a course to add as a prerequisite', 'tutor')}
-                />
+                <Show when={!loading} fallback={<LoadingSection />}>
+                  <EmptyState
+                    size="small"
+                    emptyStateImage={emptyStateImage}
+                    emptyStateImage2x={emptyStateImage2x}
+                    imageAltText={__('Illustration of a no course selected', 'tutor')}
+                    title={__('No course selected', 'tutor')}
+                    description={__('Select a course to add as a prerequisite', 'tutor')}
+                  />
+                </Show>
               }
             >
               <div css={styles.courseList}>

@@ -9,6 +9,7 @@ import type { Media } from '@Components/fields/FormImageInput';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import { LoadingOverlay } from './LoadingSpinner';
 
 interface ImageInputProps {
   buttonText?: string;
@@ -20,6 +21,7 @@ interface ImageInputProps {
   previewImageCss?: SerializedStyles;
   overlayCss?: SerializedStyles;
   replaceButtonText?: string;
+  loading?: boolean;
 }
 
 const ImageInput = ({
@@ -32,61 +34,71 @@ const ImageInput = ({
   previewImageCss,
   overlayCss,
   replaceButtonText,
+  loading,
 }: ImageInputProps) => {
   return (
     <Show
-      when={value?.url}
+      when={!loading}
       fallback={
-        <div
-          css={[styles.emptyMedia, emptyImageCss]}
-          onClick={(event) => {
-            event.stopPropagation();
-            uploadHandler();
-          }}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter') {
-              event.preventDefault();
-              uploadHandler();
-            }
-          }}
-        >
-          <SVGIcon name="addImage" width={32} height={32} />
-          <Button variant="text" buttonContentCss={styles.buttonText}>
-            {buttonText}
-          </Button>
-          <Show when={infoText}>
-            <p css={styles.infoTexts}>{infoText}</p>
-          </Show>
+        <div css={[styles.emptyMedia]}>
+          <LoadingOverlay />
         </div>
       }
     >
-      {(url) => {
-        return (
-          <div css={[styles.previewWrapper, previewImageCss]}>
-            <img src={url} alt={value?.title} css={styles.imagePreview} />
-            <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
-              <Button
-                variant="secondary"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  uploadHandler();
-                }}
-              >
-                {replaceButtonText || __('Replace Image', 'tutor')}
-              </Button>
-              <Button
-                variant="text"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  clearHandler();
-                }}
-              >
-                {__('Remove', 'tutor')}
-              </Button>
-            </div>
+      <Show
+        when={value?.url}
+        fallback={
+          <div
+            css={[styles.emptyMedia, emptyImageCss]}
+            onClick={(event) => {
+              event.stopPropagation();
+              uploadHandler();
+            }}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                uploadHandler();
+              }
+            }}
+          >
+            <SVGIcon name="addImage" width={32} height={32} />
+            <Button variant="text" buttonContentCss={styles.buttonText}>
+              {buttonText}
+            </Button>
+            <Show when={infoText}>
+              <p css={styles.infoTexts}>{infoText}</p>
+            </Show>
           </div>
-        );
-      }}
+        }
+      >
+        {(url) => {
+          return (
+            <div css={[styles.previewWrapper, previewImageCss]}>
+              <img src={url} alt={value?.title} css={styles.imagePreview} />
+              <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
+                <Button
+                  variant="secondary"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    uploadHandler();
+                  }}
+                >
+                  {replaceButtonText || __('Replace Image', 'tutor')}
+                </Button>
+                <Button
+                  variant="text"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    clearHandler();
+                  }}
+                >
+                  {__('Remove', 'tutor')}
+                </Button>
+              </div>
+            </div>
+          );
+        }}
+      </Show>
     </Show>
   );
 };
