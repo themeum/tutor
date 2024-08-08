@@ -975,4 +975,67 @@ class CouponModel {
 		return $response;
 	}
 
+	/**
+	 * Get formatted coupon application items
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon Coupon object.
+	 *
+	 * @return array
+	 */
+	public function get_formatted_coupon_applications( object $coupon ): array {
+		$applications = $this->get_coupon_applications( $coupon->coupon_code );
+		$response     = array();
+
+		foreach ( $applications as $application_id ) {
+			$application = $this->get_application_details( $application_id );
+
+			if ( $application ) {
+				$response[] = $application;
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Get coupon application details
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $id Application id.
+	 *
+	 * @return array
+	 */
+	public function get_application_details( int $id ): array {
+		$response = array();
+		if ( tutor()->course_post_type === get_post_type( $id ) || 'course-bundle' === get_post_type( $id ) ) {
+			$post = get_post( $id );
+
+			if ( $post ) {
+				$response = array(
+					'id'            => $id,
+					'title'         => get_the_title( $id ),
+					'image'         => get_the_post_thumbnail_url( $id ),
+					'regular_price' => get_post_meta( $id, Course::COURSE_PRICE_META, true ),
+					'sale_price'    => get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ),
+				);
+			}
+		} elseif ( term_exists( $id ) ) {
+			$term = get_term( $id );
+
+			if ( $term ) {
+				$thumb_id = get_term_meta( $id, 'thumbnail_id', true );
+				$response = array(
+					'id'    => $id,
+					'title' => $term->name,
+					'image' => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+				);
+			}
+		}
+
+		return $response;
+	}
+
 }

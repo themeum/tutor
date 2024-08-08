@@ -97,7 +97,7 @@ class CouponController extends BaseController {
 			 *
 			 * @since 3.0.0
 			 */
-			add_action( 'wp_ajax_tutor_coupon_details', array( $this, 'get_coupon_by_id' ) );
+			add_action( 'wp_ajax_tutor_coupon_details', array( $this, 'ajax_coupon_details' ) );
 			/**
 			 * Handle AJAX request for getting courses for coupon.
 			 *
@@ -386,32 +386,28 @@ class CouponController extends BaseController {
 	}
 
 	/**
-	 * Retrieve coupon by ID.
-	 *
-	 * This function handles the retrieval of a coupon based on its ID. It performs several checks,
-	 * including nonce verification and validation of the coupon ID. If the coupon is found,
-	 * it returns the coupon data; otherwise, it returns appropriate error messages.
+	 * Ajax handler to retrieve coupon details.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @return void Sends a JSON response with the coupon data or an error message.
 	 */
-	public function get_coupon_by_id() {
+	public function ajax_coupon_details() {
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		$coupon_id = Input::post( 'coupon_id' );
+		$coupon_code = Input::post( 'coupon_code' );
 
-		if ( empty( $coupon_id ) ) {
+		if ( empty( $coupon_code ) ) {
 			$this->json_response(
-				__( 'Coupon ID is required', 'tutor' ),
+				__( 'Coupon code is required', 'tutor' ),
 				null,
 				HttpHelper::STATUS_BAD_REQUEST
 			);
 		}
 
-		$coupon_data = $this->model->get_coupon_by_id( $coupon_id );
+		$coupon_data = $this->model->get_coupon( $coupon_code );
 
 		if ( ! $coupon_data ) {
 			$this->json_response(
@@ -420,6 +416,14 @@ class CouponController extends BaseController {
 				HttpHelper::STATUS_NOT_FOUND
 			);
 		}
+
+		$applications = $this->model->get_formatted_coupon_applications( $coupon_data );
+
+		// Set applies to items.
+		$coupon_data->applies_to_items = $applications;
+
+		// Set coupon usage.
+		$coupon_data->coupon_usage = $this->model->get_coupon_usage_count( $coupon_data->coupon_code );
 
 		$this->json_response(
 			__( 'Coupon retrieved successfully', 'tutor' ),
