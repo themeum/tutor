@@ -1,23 +1,23 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { useCourseSubscriptionsQuery } from '@CourseBuilderServices/subscription';
+import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@CourseBuilderServices/subscription';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useFormContext } from 'react-hook-form';
+
 import { PreviewItem } from './PreviewItem';
 
 function SubscriptionPreview({ courseId }: { courseId: number }) {
-  const courseSubscriptionsQuery = useCourseSubscriptionsQuery(1);
-  const form = useFormContext<CourseFormData>();
+  const courseSubscriptionsQuery = useCourseSubscriptionsQuery(courseId);
   const { showModal } = useModal();
 
   if (courseSubscriptionsQuery.isLoading) {
@@ -42,10 +42,8 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
               showModal({
                 component: SubscriptionModal,
                 props: {
-                  courseId: courseId,
                   title: __('Manage Subscriptions', 'tutor'),
                   icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
-                  subscriptions: subscriptions.map((item) => ({ ...item, isExpanded: false })),
                 },
               });
             }}
@@ -65,10 +63,8 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
                 showModal({
                   component: SubscriptionModal,
                   props: {
-                    courseId: courseId,
                     title: __('Create Subscriptions', 'tutor'),
                     icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
-                    subscriptions: [],
                   },
                 });
               }}
@@ -80,7 +76,9 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
       >
         <div css={styles.inner}>
           <For each={subscriptions}>
-            {(subscription, index) => <PreviewItem key={index} subscription={subscription} />}
+            {(subscription, index) => (
+              <PreviewItem key={index} subscription={convertSubscriptionToFormData(subscription)} />
+            )}
           </For>
         </div>
       </Show>

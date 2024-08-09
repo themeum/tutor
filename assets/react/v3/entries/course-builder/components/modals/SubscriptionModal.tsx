@@ -8,7 +8,14 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { SubscriptionEmptyState } from '@CourseBuilderComponents/subscription/SubscriptionEmptyState';
 import SubscriptionItem from '@CourseBuilderComponents/subscription/SubscriptionItem';
-import { type Subscription, defaultSubscription } from '@CourseBuilderServices/subscription';
+import {
+  type Subscription,
+  type SubscriptionFormData,
+  convertSubscriptionToFormData,
+  defaultSubscriptionFormData,
+  useSortCourseSubscriptionsMutation,
+} from '@CourseBuilderServices/subscription';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { droppableMeasuringStrategy } from '@Utils/dndkit';
 import { moveTo, noop } from '@Utils/util';
 import {
@@ -24,30 +31,34 @@ import {
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 interface SubscriptionModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  subscriptions: (Subscription & { isExpanded: boolean })[];
-  courseId: number;
 }
 
-export default function SubscriptionModal({
-  title,
-  subtitle,
-  icon,
-  closeModal,
-  subscriptions,
-}: SubscriptionModalProps) {
-  const [items, setItems] = useState(subscriptions);
+const courseId = getCourseId();
+
+export default function SubscriptionModal({ title, subtitle, icon, closeModal }: SubscriptionModalProps) {
+  const queryClient = useQueryClient();
+
+  const courseSubscriptions = queryClient.getQueryData(['SubscriptionsList', courseId]) as Subscription[];
+  const sortSubscriptionMutation = useSortCourseSubscriptionsMutation(courseId);
+
+  const [items, setItems] = useState<(SubscriptionFormData & { isExpanded: boolean })[]>([]);
   const [isExpandedAll, setIsExpandedAll] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   useEffect(() => {
-    setItems(subscriptions.map((item, index) => ({ ...item, isExpanded: index === 0 })));
-  }, [subscriptions]);
+    if (!courseSubscriptions) {
+      return;
+    }
+
+    setItems(courseSubscriptions.map((item) => ({ ...convertSubscriptionToFormData(item), isExpanded: false })));
+  }, [courseSubscriptions]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -90,7 +101,7 @@ export default function SubscriptionModal({
           fallback={
             <SubscriptionEmptyState
               onCreateSubscription={() => {
-                setItems([{ ...defaultSubscription, isExpanded: true }]);
+                setItems([{ ...defaultSubscriptionFormData, isExpanded: true }]);
               }}
             />
           }
@@ -137,6 +148,8 @@ export default function SubscriptionModal({
                     const overIndex = items.findIndex((item) => item.id === over.id);
                     const itemsAfterSort = moveTo(items, activeIndex, overIndex);
                     setItems(itemsAfterSort);
+
+                    sortSubscriptionMutation.mutate(itemsAfterSort.map((item) => Number(item.id)));
                   }
 
                   setActiveSortId(null);
@@ -159,6 +172,13 @@ export default function SubscriptionModal({
                               });
                             });
                           }}
+                          onDiscard={
+                            !subscription.id
+                              ? () => {
+                                  setItems((previous) => previous.filter((item) => item.id !== subscription.id));
+                                }
+                              : noop
+                          }
                         />
                       );
                     }}
@@ -168,7 +188,7 @@ export default function SubscriptionModal({
                   <DragOverlay>
                     <Show when={activeSortItem}>
                       {(item) => {
-                        return <SubscriptionItem subscription={item} toggleCollapse={noop} bgLight />;
+                        return <SubscriptionItem subscription={item} toggleCollapse={noop} bgLight onDiscard={noop} />;
                       }}
                     </Show>
                   </DragOverlay>,
@@ -180,10 +200,9 @@ export default function SubscriptionModal({
                   variant="secondary"
                   icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
                   onClick={() => {
-                    setItems((previous) => {
+                    setItems((previous: (SubscriptionFormData & { isExpanded: boolean })[]) => {
                       const newItems = previous.map((item) => ({ ...item, isExpanded: false }));
-                      const subscriptionId = Math.max(...newItems.map((item) => item.id)) + 1;
-                      return [...newItems, { ...defaultSubscription, id: subscriptionId, isExpanded: true }];
+                      return [...newItems, { ...defaultSubscriptionFormData, id: '', isExpanded: true }];
                     });
                   }}
                 >

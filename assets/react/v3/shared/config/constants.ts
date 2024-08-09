@@ -48,6 +48,7 @@ export enum DateFormats {
 
 export enum Addons {
   COURSE_BUNDLE = 'Course Bundle',
+  SUBSCRIPTION = 'Subscription',
   SOCIAL_LOGIN = 'Social Login',
   CONTENT_DRIP = 'Content Drip',
   TUTOR_MULTI_INSTRUCTORS = 'Tutor Multi Instructors',

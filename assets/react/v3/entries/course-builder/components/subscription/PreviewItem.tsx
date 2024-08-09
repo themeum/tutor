@@ -1,11 +1,11 @@
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { DurationUnit, Subscription } from '@CourseBuilderServices/subscription';
+import type { DurationUnit, SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-export function formatRepeatUnit(unit: DurationUnit | 'until_cancellation', value: number) {
+export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {
     case 'day':
       return value > 1 ? __('Days', 'tutor') : __('Day', 'tutor');
@@ -20,41 +20,23 @@ export function formatRepeatUnit(unit: DurationUnit | 'until_cancellation', valu
   }
 }
 
-export function PreviewItem({ subscription }: { subscription: Subscription }) {
+export function PreviewItem({ subscription }: { subscription: SubscriptionFormData }) {
   return (
     <div css={styles.item}>
-      <p css={styles.title}>{subscription.title}</p>
+      <p css={styles.title}>{subscription.plan_name}</p>
       <div css={styles.information}>
-        {subscription.pricing_option === 'recurring' && (
-          <span>
-            {__('Renew every', 'tutor')} {subscription.repeat_every.toString().padStart(2, '0')}{' '}
-            {formatRepeatUnit(subscription.repeat_unit, subscription.repeat_every)}
-          </span>
-        )}
-        {subscription.pricing_option === 'one-time-purchase' && <span>{__('Lifetime', 'tutor')}</span>}
+        <span>
+          {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
+          {formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}
+        </span>
 
-        <Show when={subscription.trial}>
+        <Show when={subscription.enable_free_trial}>
           <span>•</span>
           <span>
-            {subscription.trial.toString().padStart(2, '0')}{' '}
-            {formatRepeatUnit(subscription.trial_unit, subscription.trial)} {__('trial', 'tutor')}
+            {subscription.trial_value.toString().padStart(2, '0')}{' '}
+            {formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value))} {__('trial', 'tutor')}
           </span>
         </Show>
-
-        {subscription.lifetime_unit === 'until_cancellation' ? (
-          <>
-            <span>•</span>
-            <span>{formatRepeatUnit(subscription.lifetime_unit, 0)}</span>
-          </>
-        ) : (
-          <>
-            <span>•</span>
-            <span>
-              {subscription.lifetime.toString().padStart(2, '0')}{' '}
-              {formatRepeatUnit(subscription.lifetime_unit, subscription.lifetime)}
-            </span>
-          </>
-        )}
       </div>
     </div>
   );

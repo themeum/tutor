@@ -283,13 +283,13 @@ export const styleUtils = {
 		overflow-y: auto;
 
 		::-webkit-scrollbar {
-			background-color: ${colorPalate.basic.white};
-			width: 10px;
+			background-color: ${colorTokens.primary[40]};
+			width: 3px;
 		}
 
 		::-webkit-scrollbar-thumb {
-			background-color: ${colorPalate.basic.secondary};
-			border-radius: ${borderRadius[6]};
+			background-color: ${colorTokens.design.brand};
+			border-radius: ${borderRadius[30]};
 		}
 	`,
   textEllipsis: css`
