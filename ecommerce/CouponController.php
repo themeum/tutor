@@ -262,10 +262,12 @@ class CouponController extends BaseController {
 		tutor_utils()->check_current_user_capability();
 
 		$applies_to = Input::post( 'applies_to' );
+		$limit      = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset     = Input::post( 'offset', 0, Input::TYPE_INT );
 
 		if ( $this->model->is_specific_applies_to( $applies_to ) ) {
 			try {
-				$list = $this->get_application_list( $applies_to );
+				$list = $this->get_application_list( $applies_to, $limit, $offset );
 				if ( $list ) {
 					$this->json_response(
 						__( 'Coupon application list retrieved successfully!' ),
@@ -559,32 +561,67 @@ class CouponController extends BaseController {
 	}
 
 	/**
-	 * Get application if applies to is specific category or bundle
+	 * Get application if applies to a specific category or bundle.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param string $applies_to Applies to.
+	 * @param int    $limit      Number of items to fetch.
+	 * @param int    $offset     Offset for fetching items.
 	 *
 	 * @return array
 	 */
-	public function get_application_list( string $applies_to ) {
-		$response = array();
+	public function get_application_list( string $applies_to, int $limit = 10, int $offset = 0 ) {
 
-		if ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
+		$response = array(
+			'total_items' => 0,
+			'items'       => array(),
+		);
+
+		if ( $this->model::APPLIES_TO_SPECIFIC_COURSES === $applies_to ) {
+			$args = array(
+				'post_type'      => tutor()->course_post_type,
+				'posts_per_page' => $limit,
+				'offset'         => $offset,
+				'post_status'    => 'publish',
+			);
+
+			$courses = new \WP_Query( $args );
+
+			$response['total_items'] = $courses->found_posts;
+
+			if ( $courses->have_posts() ) {
+				$courses = $courses->get_posts();
+				foreach ( $courses as $course ) {
+
+					$response['items'][] = array(
+						'id'            => $course->ID,
+						'title'         => $course->post_title,
+						'image'         => tutor_get_post_thumbnail_url( $course->ID ),
+						'regular_price' => get_post_meta( $course->ID, Course::COURSE_PRICE_META, true ),
+						'sale_price'    => get_post_meta( $course->ID, Course::COURSE_SALE_PRICE_META, true ),
+					);
+				}
+			}
+		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
 			$args = array(
 				'post_type'      => 'course-bundle',
-				'posts_per_page' => -1,
+				'posts_per_page' => $limit,
+				'offset'         => $offset,
 				'post_status'    => 'publish',
 			);
 
 			$bundles = new \WP_Query( $args );
+
+			$response['total_items'] = $bundles->found_posts;
+
 			if ( $bundles->have_posts() ) {
 				$bundles = $bundles->get_posts();
 				foreach ( $bundles as $bundle ) {
-					$response[] = array(
+					$response['items'][] = array(
 						'id'            => $bundle->ID,
 						'title'         => $bundle->post_title,
-						'image'         => get_the_post_thumbnail_url( $bundle->ID ),
+						'image'         => tutor_get_post_thumbnail_url( $bundle->ID ),
 						'course_count'  => count( BundleModel::get_bundle_course_ids( $bundle->ID ) ),
 						'regular_price' => get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ),
 						'sale_price'    => get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ),
@@ -592,10 +629,22 @@ class CouponController extends BaseController {
 				}
 			}
 		} elseif ( $this->model::APPLIES_TO_SPECIFIC_CATEGORY === $applies_to ) {
-			$terms = get_terms(
-				array(
-					'taxonomy'   => 'course-category',
-					'hide_empty' => true,
+			$args = array(
+				'taxonomy'   => 'course-category',
+				'hide_empty' => true,
+				'number'     => $limit,
+				'offset'     => $offset,
+			);
+
+			$terms = get_terms( $args );
+
+			$response['total_items'] = count(
+				get_terms(
+					array(
+						'taxonomy'   => 'course-category',
+						'hide_empty' => true,
+						'fields'     => 'ids',
+					)
 				)
 			);
 
@@ -603,10 +652,10 @@ class CouponController extends BaseController {
 				foreach ( $terms as $term ) {
 					$thumb_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 
-					$response[] = array(
+					$response['items'][] = array(
 						'id'            => $term->term_id,
 						'title'         => $term->name,
-						'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+						'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : tutor()->url . 'assets/images/placeholder.svg',
 						'total_courses' => (int) $term->count,
 					);
 				}
