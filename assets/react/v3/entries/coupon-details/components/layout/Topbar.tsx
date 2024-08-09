@@ -6,7 +6,7 @@ import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { Coupon, useCreateCouponMutation, useUpdateCouponMutation } from '@CouponServices/coupon';
+import { convertFormDataToPayload, Coupon, useCreateCouponMutation, useUpdateCouponMutation } from '@CouponServices/coupon';
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -23,41 +23,12 @@ function Topbar() {
 	const updateCouponMutation = useUpdateCouponMutation();
 
 	async function handleSubmit(data: Coupon) {
-		const payload = {
-			...(data.id && {
-				id: data.id
-			}),
-			coupon_status: data.coupon_status,
-			coupon_type: data.coupon_type,
-			coupon_code: data.coupon_code,
-			coupon_title: data.coupon_title,
-			discount_type: data.discount_type,
-			discount_amount: data.discount_amount,
-			applies_to: data.applies_to,
-			...(data.total_usage_limit && {
-				total_usage_limit: data.total_usage_limit
-			}),
-			...(data.per_user_usage_limit && {
-				per_user_usage_limit: data.per_user_usage_limit
-			}),
-			...(data.purchase_requirement && {
-				purchase_requirement: data.purchase_requirement
-			}),
-			...(data.purchase_requirement_value && {
-				purchase_requirement_value: data.purchase_requirement_value
-			}),
-			start_date_gmt: format(
-				new Date(`${data.start_date} ${data.start_time}`), 
-				DateFormats.yearMonthDayHourMinuteSecond
-			),
-			...(data.end_date && {
-				expire_date_gmt: format(
-					new Date(`${data.end_date} ${data.end_time}`), 
-					DateFormats.yearMonthDayHourMinuteSecond
-				),
-			})
+		const payload = convertFormDataToPayload(data);
+		if (data.id) {
+			updateCouponMutation.mutate(payload);
+		} else {
+			createCouponMutation.mutate(payload);
 		}
-		createCouponMutation.mutate(payload);
 	}
 
 	return (
