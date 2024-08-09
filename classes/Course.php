@@ -410,7 +410,8 @@ class Course extends Tutor_Base {
 		if ( isset( $params['pricing'] ) ) {
 			$type = $params['pricing']['type'] ?? '';
 
-			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID, self::PRICE_TYPE_SUBSCRIPTION ), true ) ) {				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
+			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID, self::PRICE_TYPE_SUBSCRIPTION ), true ) ) {
+								$errors['pricing'] = __( 'Invalid price type', 'tutor' );
 			}
 
 			if ( self::PRICE_TYPE_PAID === $type ) {
