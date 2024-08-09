@@ -7,14 +7,14 @@ import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
 import CouponPreview from '@CouponComponents/coupon/CouponPreview';
 import CouponValidity from '@CouponComponents/coupon/CouponValidity';
 import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
-import { Coupon, mockCouponData } from '@CouponServices/coupon';
+import { Coupon, couponInitialValue, mockCouponData } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {
-	const form = useFormWithGlobalError<Coupon>({ defaultValues: mockCouponData });
+	const form = useFormWithGlobalError<Coupon>({ defaultValues: couponInitialValue });
 
 	// @TODO: populate form data when in edit view
 

@@ -8,6 +8,8 @@ import { transformParams } from '@Utils/util';
 
 export type CouponType = 'code' | 'automatic';
 
+export type CouponStatus = 'active' | 'inactive' | 'trash';
+
 export interface Course {
 	id: number;
 	title: string;
@@ -33,66 +35,84 @@ export type CouponAppliesTo =
 	| 'specific_category';
 
 export interface Coupon {
-	id: number;
+	id?: number;
+	coupon_status: CouponStatus;
 	coupon_type: CouponType;
-	coupon_name: string;
-	code: string;
+	coupon_title: string;
+	coupon_code: string;
 	user_name: string;
-	discount_type: 'percent' | 'amount';
-	discount_value: number;
+	discount_type: 'percentage' | 'flat';
+	discount_amount: string;
 	applies_to: CouponAppliesTo;
 	courses?: Course[];
 	categories?: CourseCategory[];
 	bundles?: Course[];
 	usage_limit_status: boolean;
-	usage_limit_value: number;
-	is_one_use_per_user: boolean;
-	purchase_requirements: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
-	purchase_requirements_value: number;
+	total_usage_limit?: string;
+	per_user_limit_status?: boolean;
+	per_user_usage_limit?: string;
+	coupon_uses?: number;
+	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
+	purchase_requirement_value: string;
 	start_date: string;
 	start_time: string;
 	is_end_enabled: boolean;
 	end_date: string;
 	end_time: string;
-	created_at: string;
-	updated_at?: string;
-	redeemed_coupons_count: number;
+}
+
+export interface CouponPayload {
+	id?: number;
+	coupon_status: CouponStatus;
+	coupon_type: CouponType;
+	coupon_title: string;
+	coupon_code: string;
+	discount_type: 'percentage' | 'flat';
+	discount_amount: string;
+	applies_to: CouponAppliesTo;
+	applies_to_items?: Course[] | CourseCategory[];
+	total_usage_limit?: string;
+	per_user_usage_limit?: string;
+	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
+	purchase_requirement_value?: string;
+	start_date_gmt: string;
+	expire_date_gmt?: string;
 }
 
 export const couponInitialValue: Coupon = {
-	id: 0,
+	coupon_status: 'active',
 	coupon_type: 'code',
-	coupon_name: 'Winter sale',
-	code: '',
-	user_name: 'User',
-	discount_type: 'amount',
-	discount_value: 0,
+	coupon_title: '',
+	coupon_code: '',
+	user_name: '',
+	discount_type: 'percentage',
+	discount_amount: '',
 	applies_to: 'all_courses_and_bundles',
 	courses: [],
 	categories: [],
 	bundles: [],
 	usage_limit_status: false,
-	usage_limit_value: 0,
-	is_one_use_per_user: false,
-	purchase_requirements: 'no_minimum',
-	purchase_requirements_value: 0,
+	total_usage_limit: '',
+	per_user_limit_status: false,
+	per_user_usage_limit: '',
+	purchase_requirement: 'no_minimum',
+	purchase_requirement_value: '',
 	start_date: '',
 	start_time: '',
 	is_end_enabled: false,
-	end_date: '02/16/2024',
+	end_date: '',
 	end_time: '',
-	created_at: '02/16/2024 10:00:00',
-	redeemed_coupons_count: 0,
 };
 
 export const mockCouponData: Coupon = {
 	id: 11211,
+	coupon_status: 'active',
 	coupon_type: 'code',
-	coupon_name: 'Winter sale',
-	code: 'WINTER24',
+	coupon_title: 'Winter sale',
+	coupon_code: 'WINTER24',
 	user_name: 'John Doe',
-	discount_type: 'amount',
-	discount_value: 20,
+	discount_type: 'flat',
+	discount_amount: 20,
 	applies_to: 'specific_bundles',
 	courses: [
 		{
@@ -195,10 +215,12 @@ export const mockCouponData: Coupon = {
 		},
 	],
 	usage_limit_status: true,
-	usage_limit_value: 100,
-	is_one_use_per_user: true,
-	purchase_requirements: 'minimum_purchase',
-	purchase_requirements_value: 200,
+	total_usage_limit: 100,
+	per_user_limit_status: false,
+	per_user_usage_limit: null,
+	coupon_uses: 10,
+	purchase_requirement: 'minimum_purchase',
+	purchase_requirement_value: 200,
 	start_date: '2024/02/16',
 	start_time: '10:00:00',
 	is_end_enabled: true,
@@ -206,7 +228,6 @@ export const mockCouponData: Coupon = {
 	end_time: '10:00:00',
 	created_at: '02/16/2024 10:00:00',
 	updated_at: '02/16/2024 10:00:00',
-	redeemed_coupons_count: 10,
 };
 
 const getCouponDetails = (couponId: number) => {
@@ -231,9 +252,9 @@ interface CouponResponse {
 	status_code: number;
 }
 
-const createCoupon = (payload: Coupon) => {
-	return authApiInstance.post<Coupon, CouponResponse>(endpoints.ADMIN_AJAX, {
-		action: 'tutor_create_coupon',
+const createCoupon = (payload: CouponPayload) => {
+	return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_coupon_create',
 		...payload,
 	});
 };
@@ -254,7 +275,7 @@ export const useCreateCouponMutation = () => {
 
 const updateCoupon = (payload: Coupon) => {
 	return authApiInstance.post<Coupon, CouponResponse>(endpoints.ADMIN_AJAX, {
-		action: 'tutor_update_coupon',
+		action: 'tutor_coupon_update',
 		...payload,
 	});
 };

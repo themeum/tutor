@@ -7,6 +7,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -35,13 +36,15 @@ function CouponValidity() {
 				<BoxSubtitle css={styles.dateTimeTitle}>{__('Starts from', 'tutor')}</BoxSubtitle>
 				<div css={styles.dateTimeWrapper}>
 					<Controller
-						control={form.control}
 						name="start_date"
+						control={form.control}
+						rules={requiredRule()}
 						render={(controllerProps) => <FormDateInput {...controllerProps} placeholder="2030-10-24" />}
 					/>
 					<Controller
-						control={form.control}
 						name="start_time"
+						control={form.control}
+						rules={requiredRule()}
 						render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder="12:30 PM" />}
 					/>
 				</div>

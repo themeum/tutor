@@ -23,7 +23,41 @@ function Topbar() {
 	const updateCouponMutation = useUpdateCouponMutation();
 
 	async function handleSubmit(data: Coupon) {
-		console.log(data);
+		const payload = {
+			...(data.id && {
+				id: data.id
+			}),
+			coupon_status: data.coupon_status,
+			coupon_type: data.coupon_type,
+			coupon_code: data.coupon_code,
+			coupon_title: data.coupon_title,
+			discount_type: data.discount_type,
+			discount_amount: data.discount_amount,
+			applies_to: data.applies_to,
+			...(data.total_usage_limit && {
+				total_usage_limit: data.total_usage_limit
+			}),
+			...(data.per_user_usage_limit && {
+				per_user_usage_limit: data.per_user_usage_limit
+			}),
+			...(data.purchase_requirement && {
+				purchase_requirement: data.purchase_requirement
+			}),
+			...(data.purchase_requirement_value && {
+				purchase_requirement_value: data.purchase_requirement_value
+			}),
+			start_date_gmt: format(
+				new Date(`${data.start_date} ${data.start_time}`), 
+				DateFormats.yearMonthDayHourMinuteSecond
+			),
+			...(data.end_date && {
+				expire_date_gmt: format(
+					new Date(`${data.end_date} ${data.end_time}`), 
+					DateFormats.yearMonthDayHourMinuteSecond
+				),
+			})
+		}
+		createCouponMutation.mutate(payload);
 	}
 
 	return (
@@ -39,7 +73,7 @@ function Topbar() {
 								<h4 css={typography.heading5('medium')}>{__('Create coupon', 'tutor')}</h4>
 								<TutorBadge variant="success">Active</TutorBadge>
 							</div>
-							<Show
+							{/* <Show
 								when={coupon.updated_at}
 								fallback={
 									<p css={styles.updateMessage}>
@@ -54,7 +88,7 @@ function Topbar() {
 										{format(new Date(updatedDate), DateFormats.activityDate)}
 									</p>
 								)}
-							</Show>
+							</Show> */}
 						</div>
 					</div>
 					<div css={styles.right}>
@@ -62,7 +96,7 @@ function Topbar() {
 							Cancel
 						</Button>
 						<DropdownButton
-							text="Publish"
+							text={__('Save', 'tutor')}
 							variant="primary"
 							loading={createCouponMutation.isPending || updateCouponMutation.isPending}
 							onClick={form.handleSubmit(handleSubmit)}

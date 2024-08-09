@@ -7,6 +7,7 @@ import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
+import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -14,7 +15,7 @@ function PurchaseRequirements() {
 	const form = useFormContext<Coupon>();
 	const { tutor_currency } = tutorConfig;
 	const purchaseAmountLabel = __('Minimum purchase amount', 'tutor') + ` (${tutor_currency?.symbol ?? '$'})`;
-	const purchaseRequirements = form.watch('purchase_requirements');
+	const purchaseRequirement = form.watch('purchase_requirement');
 
 	const requirementOptions = [
 		{
@@ -40,7 +41,7 @@ function PurchaseRequirements() {
 				</BoxSubtitle>
 			</div>
 			<Controller
-				name="purchase_requirements"
+				name="purchase_requirement"
 				control={form.control}
 				render={(controllerProps) => (
 					<FormRadioGroup
@@ -53,7 +54,7 @@ function PurchaseRequirements() {
 									<div css={styles.requirementInput}>
 										<Show when={selectedOption.value === 'minimum_purchase'}>
 											<Controller
-												name="purchase_requirements_value"
+												name="purchase_requirement_value"
 												control={form.control}
 												render={(controllerProps) => (
 													<FormInputWithContent
@@ -61,13 +62,14 @@ function PurchaseRequirements() {
 														type="number"
 														placeholder={__('0.00', 'tutor')}
 														content={tutor_currency?.symbol ?? '$'}
+														contentCss={styleUtils.inputCurrencyStyle}
 													/>
 												)}
 											/>
 										</Show>
 										<Show when={selectedOption.value === 'minimum_quantity'}>
 											<Controller
-												name="purchase_requirements_value"
+												name="purchase_requirement_value"
 												control={form.control}
 												render={(controllerProps) => (
 													<FormInput {...controllerProps} type="number" placeholder={__('0', 'tutor')} />

@@ -6,6 +6,7 @@ import { colorPalate, spacing } from '@Config/styles';
 import { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@Utils/style-utils';
 import { generateCouponCode } from '@Utils/util';
+import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -20,7 +21,7 @@ function CouponInfo() {
 
 	function handleGenerateCouponCode() {
 		const newCouponCode = generateCouponCode();
-		form.setValue('code', newCouponCode);
+		form.setValue('coupon_code', newCouponCode);
 	}
 
 	return (
@@ -44,16 +45,18 @@ function CouponInfo() {
 				)}
 			/>
 			<Controller
-				name="coupon_name"
+				name="coupon_title"
 				control={form.control}
+				rules={requiredRule()}
 				render={(controllerProps) => (
 					<FormInput {...controllerProps} label={__('Coupon name', 'tutor')} placeholder={__('Placeholder', 'tutor')} />
 				)}
 			/>
 			<div css={styles.couponCodeWrapper}>
 				<Controller
-					name="code"
+					name="coupon_code"
 					control={form.control}
+					rules={requiredRule()}
 					render={(controllerProps) => (
 						<FormInput
 							{...controllerProps}
