@@ -110,6 +110,7 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_coupon_create', array( $this, 'ajax_create_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_applies_to_list', array( $this, 'ajax_coupon_applies_to_list' ) );
+			add_action( 'wp_ajax_tutor_apply_coupon', array( $this, 'ajax_apply_coupon' ) );
 		}
 	}
 
@@ -668,6 +669,34 @@ class CouponController extends BaseController {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Ajax handler for applying coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_apply_coupon() {
+		$course_ids  = Input::post( 'course_ids' );
+		$course_ids  = array_filter( explode( ',', $course_ids ), 'is_numeric' );
+		$coupon_code = Input::post( 'coupon_code' );
+
+		if ( empty( $course_ids ) ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'invalid_req' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $course_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $course_ids );
+
+		$this->json_response(
+			__( 'Coupon applied successfully', 'tutor' ),
+			$discount_price
+		);
 	}
 
 	/**
