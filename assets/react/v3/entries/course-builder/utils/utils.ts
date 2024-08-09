@@ -113,7 +113,16 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_pricing_category: courseDetails.course_pricing.type !== 'subscription' ? 'regular' : 'subscription',
+    course_pricing_category: (() => {
+      if (
+        isAddonEnabled(Addons.SUBSCRIPTION) &&
+        tutorConfig.settings.monetize_by === 'tutor' &&
+        courseDetails.course_pricing.type === 'subscription'
+      ) {
+        return 'subscription';
+      }
+      return 'regular';
+    })(),
     course_price_type:
       courseDetails.course_pricing.type === 'subscription' ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,

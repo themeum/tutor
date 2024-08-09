@@ -65,6 +65,36 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   schedule_sale_price: false,
 };
 
+const convertPlanLengthToDays = (recurring_interval: Omit<DurationUnit, 'hour'>, length: number): string => {
+  switch (recurring_interval) {
+    case 'day':
+      return String(length);
+    case 'week':
+      return String(length * 7);
+    case 'month':
+      return String(length * 30);
+    case 'year':
+      return String(length * 365);
+    default:
+      return '0';
+  }
+};
+
+const convertDaysToPlanLength = (days: number, recurring_interval: Omit<DurationUnit, 'hour'>): string => {
+  switch (recurring_interval) {
+    case 'day':
+      return String(days);
+    case 'week':
+      return String(days / 7);
+    case 'month':
+      return String(days / 30);
+    case 'year':
+      return String(days / 365);
+    default:
+      return '0';
+  }
+};
+
 export const convertSubscriptionToFormData = (subscription: Subscription): SubscriptionFormData => {
   return {
     id: subscription.id,
@@ -74,7 +104,10 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     recurring_value: subscription.recurring_value ?? '0',
     recurring_interval: subscription.recurring_interval ?? 'month',
     regular_price: subscription.regular_price ?? '0',
-    plan_duration_days: subscription.plan_duration_days ?? '0',
+    plan_duration_days: convertDaysToPlanLength(
+      Number(subscription.plan_duration_days),
+      subscription.recurring_interval,
+    ),
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
@@ -109,21 +142,19 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
     recurring_value: formData.recurring_value,
     recurring_interval: formData.recurring_interval,
     regular_price: formData.regular_price,
-    plan_duration_days: formData.plan_duration_days,
+    plan_duration_days: convertPlanLengthToDays(formData.recurring_interval, Number(formData.plan_duration_days)),
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
     ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),
-    ...(formData.offer_sale_price && {
-      sale_price: formData.sale_price,
-      ...(formData.schedule_sale_price && {
-        sale_price_from: format(
-          new Date(`${formData.sale_price_from_date} ${formData.sale_price_from_time}`),
-          DateFormats.yearMonthDayHourMinuteSecond,
-        ),
-        sale_price_to: format(
-          new Date(`${formData.sale_price_to_date} ${formData.sale_price_to_time}`),
-          DateFormats.yearMonthDayHourMinuteSecond,
-        ),
-      }),
+    sale_price: formData.offer_sale_price ? formData.sale_price : '0',
+    ...(formData.schedule_sale_price && {
+      sale_price_from: format(
+        new Date(`${formData.sale_price_from_date} ${formData.sale_price_from_time}`),
+        DateFormats.yearMonthDayHourMinuteSecond,
+      ),
+      sale_price_to: format(
+        new Date(`${formData.sale_price_to_date} ${formData.sale_price_to_time}`),
+        DateFormats.yearMonthDayHourMinuteSecond,
+      ),
     }),
 
     provide_certificate: formData.do_not_provide_certificate ? '0' : '1',

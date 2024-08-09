@@ -370,7 +370,7 @@ interface CourseResponse {
   status_code: number;
 }
 
-interface WcProduct {
+export interface WcProduct {
   ID: string;
   post_title: string;
 }
