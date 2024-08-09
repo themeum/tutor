@@ -17,8 +17,9 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     post_status: data.post_status,
     post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_author: data.post_author?.id ?? null,
-    'pricing[type]': data.course_price_type,
-    ...(data.course_price_type !== 'free' &&
+    'pricing[type]': data.course_pricing_category === 'subscription' ? 'subscription' : data.course_price_type,
+    ...(data.course_pricing_category !== 'subscription' &&
+      data.course_price_type === 'paid' &&
       data.course_product_id && {
         'pricing[product_id]': data.course_product_id,
       }),
@@ -112,8 +113,9 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_pricing_category: courseDetails.course_pricing_category ?? 'regular',
-    course_price_type: courseDetails.course_pricing.type,
+    course_pricing_category: courseDetails.course_pricing.type !== 'subscription' ? 'regular' : 'subscription',
+    course_price_type:
+      courseDetails.course_pricing.type === 'subscription' ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
     course_categories: courseDetails.course_categories.map((item) => item.term_id),

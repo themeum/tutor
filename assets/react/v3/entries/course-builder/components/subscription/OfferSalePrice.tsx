@@ -1,17 +1,19 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { Controller, type UseFormReturn } from 'react-hook-form';
+
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTimeInput from '@Components/fields/FormTimeInput';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, type UseFormReturn } from 'react-hook-form';
 
 export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormData> }) {
   const hasSale = form.watch('offer_sale_price');

@@ -1,7 +1,11 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+
 import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -9,8 +13,7 @@ import Show from '@Controls/Show';
 import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
 import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@CourseBuilderServices/subscription';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+
 import { PreviewItem } from './PreviewItem';
 
 function SubscriptionPreview({ courseId }: { courseId: number }) {

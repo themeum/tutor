@@ -1,9 +1,17 @@
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { Controller } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -15,15 +23,13 @@ import {
   useSaveCourseSubscriptionMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
-import { useSortable } from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller } from 'react-hook-form';
+
 import { OfferSalePrice } from './OfferSalePrice';
 import { formatRepeatUnit } from './PreviewItem';
 
@@ -60,7 +66,7 @@ export default function SubscriptionItem({
         toggleCollapse(subscription.id);
       }
     } catch (error) {
-      // form.setError('global', error.message);
+      // handle error
     }
   };
 
@@ -72,20 +78,12 @@ export default function SubscriptionItem({
         toggleCollapse(subscription.id);
       }
     } catch (error) {
-      // form.setError('global', error.message);
+      // handle error
     }
   };
 
-  const handleDuplicateSubscription = async () => {
-    try {
-      const response = await duplicateSubscriptionMutation.mutateAsync(Number(subscription.id));
-
-      if (response.data) {
-        // form.reset(convertSubscriptionToFormData(response.data));
-      }
-    } catch (error) {
-      // form.setError('global', error.message);
-    }
+  const handleDuplicateSubscription = () => {
+    duplicateSubscriptionMutation.mutate(Number(subscription.id));
   };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -102,7 +100,6 @@ export default function SubscriptionItem({
   const recurringInterval = form.watch('recurring_interval', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
-  const { isDirty } = form.formState;
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -137,13 +134,8 @@ export default function SubscriptionItem({
           <SVGIcon name="threeDotsVerticalDouble" />
           <span title={subscriptionName}>{subscriptionName}</span>
         </div>
+
         <div css={styles.actions(subscription.isExpanded)}>
-          <button type="button" title={__('Delete subscription', 'tutor')} onClick={handleDeleteSubscription}>
-            <SVGIcon name="delete" width={24} height={24} />
-          </button>
-          <button type="button" title={__('Duplicate subscription', 'tutor')} onClick={handleDuplicateSubscription}>
-            <SVGIcon name="copyPaste" width={24} height={24} />
-          </button>
           <Show when={!subscription.isExpanded}>
             <button
               type="button"
@@ -153,13 +145,21 @@ export default function SubscriptionItem({
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Show>
-          <button
-            type="button"
-            onClick={() => toggleCollapse(subscription.id)}
-            title={__('Collapse/expand subscription', 'tutor')}
-          >
-            <SVGIcon name="chevronDown" width={24} height={24} />
-          </button>
+          <Show when={subscription.id}>
+            <button type="button" title={__('Duplicate subscription', 'tutor')} onClick={handleDuplicateSubscription}>
+              <SVGIcon name="copyPaste" width={24} height={24} />
+            </button>
+            <button type="button" title={__('Delete subscription', 'tutor')} onClick={handleDeleteSubscription}>
+              <SVGIcon name="delete" width={24} height={24} />
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleCollapse(subscription.id)}
+              title={__('Collapse/expand subscription', 'tutor')}
+            >
+              <SVGIcon name="chevronDown" width={24} height={24} />
+            </button>
+          </Show>
         </div>
       </div>
       {transitions((style, openState) => {
@@ -227,7 +227,7 @@ export default function SubscriptionItem({
 
                 <Controller
                   control={form.control}
-                  name="recurring_value"
+                  name="plan_duration_days"
                   render={(props) => (
                     <FormSelectInput
                       {...props}
@@ -292,6 +292,7 @@ export default function SubscriptionItem({
                             {...props}
                             placeholder={__('Enter trial duration', 'tutor')}
                             options={[
+                              { label: __('Hour(s)', 'tutor'), value: 'hour' },
                               { label: __('Day(s)', 'tutor'), value: 'day' },
                               { label: __('Week(s)', 'tutor'), value: 'week' },
                               { label: __('Month(s)', 'tutor'), value: 'month' },
@@ -306,7 +307,7 @@ export default function SubscriptionItem({
 
                 <Controller
                   control={form.control}
-                  name="don_not_provide_certificate"
+                  name="do_not_provide_certificate"
                   render={(props) => <FormCheckbox {...props} label={__('Do not provide certificate', 'tutor')} />}
                 />
 
@@ -323,7 +324,7 @@ export default function SubscriptionItem({
                 >
                   {subscription.id ? __('Cancel', 'tutor') : __('Discard', 'tutor')}
                 </Button>
-                <Button variant="secondary" size="small" type="submit">
+                <Button variant="secondary" size="small" type="submit" loading={saveSubscriptionMutation.isPending}>
                   {__('Save', 'tutor')}
                 </Button>
               </div>

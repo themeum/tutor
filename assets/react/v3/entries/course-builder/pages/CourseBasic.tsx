@@ -395,7 +395,7 @@ const CourseBasic = () => {
                   tutorConfig.edd_products
                     ? tutorConfig.edd_products.map((product) => ({
                         label: product.post_title,
-                        value: Number(product.ID),
+                        value: String(product.ID),
                       }))
                     : []
                 }

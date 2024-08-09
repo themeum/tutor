@@ -34,7 +34,7 @@ export interface SubscriptionFormData
   enable_free_trial: boolean;
   offer_sale_price: boolean;
   schedule_sale_price: boolean;
-  don_not_provide_certificate: boolean;
+  do_not_provide_certificate: boolean;
   sale_price_from_date: string;
   sale_price_from_time: string;
   sale_price_to_date: string;
@@ -55,7 +55,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   sale_price_to_date: '',
   sale_price_to_time: '',
   plan_duration_days: '0',
-  don_not_provide_certificate: false,
+  do_not_provide_certificate: false,
   enrollment_fee: '0',
   trial_value: '0',
   trial_interval: 'day',
@@ -83,7 +83,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     enable_free_trial: !!subscription.trial_value,
     offer_sale_price: !!subscription.sale_price,
     schedule_sale_price: !!subscription.sale_price_from,
-    don_not_provide_certificate: !Number(subscription.provide_certificate),
+    do_not_provide_certificate: !Number(subscription.provide_certificate),
     sale_price_from_date: subscription.sale_price_from
       ? format(parseISO(subscription.sale_price_from), DateFormats.yearMonthDay)
       : '',
@@ -126,7 +126,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
       }),
     }),
 
-    provide_certificate: formData.don_not_provide_certificate ? '0' : '1',
+    provide_certificate: formData.do_not_provide_certificate ? '0' : '1',
   };
 };
 
@@ -209,15 +209,15 @@ export const useDeleteCourseSubscriptionMutation = (courseId: number) => {
 
   return useMutation({
     mutationFn: (subscriptionId: number) => deleteCourseSubscription(courseId, subscriptionId),
-    onSuccess: (response) => {
+    onSuccess: (response, subscriptionId) => {
       if (response.status_code === 200) {
         showToast({
           message: response.message,
           type: 'success',
         });
 
-        queryClient.invalidateQueries({
-          queryKey: ['SubscriptionsList', courseId],
+        queryClient.setQueryData(['SubscriptionsList', courseId], (data: Subscription[]) => {
+          return data.filter((item) => item.id !== String(subscriptionId));
         });
       }
     },
