@@ -597,7 +597,7 @@ class CouponController extends BaseController {
 					$response['items'][] = array(
 						'id'            => $course->ID,
 						'title'         => $course->post_title,
-						'image'         => tutor_get_post_thumbnail_url( $course->ID ),
+						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $course->ID ),
 						'regular_price' => get_post_meta( $course->ID, Course::COURSE_PRICE_META, true ),
 						'sale_price'    => get_post_meta( $course->ID, Course::COURSE_SALE_PRICE_META, true ),
 					);
@@ -621,7 +621,7 @@ class CouponController extends BaseController {
 					$response['items'][] = array(
 						'id'            => $bundle->ID,
 						'title'         => $bundle->post_title,
-						'image'         => tutor_get_post_thumbnail_url( $bundle->ID ),
+						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $bundle->ID ),
 						'course_count'  => count( BundleModel::get_bundle_course_ids( $bundle->ID ) ),
 						'regular_price' => get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ),
 						'sale_price'    => get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ),

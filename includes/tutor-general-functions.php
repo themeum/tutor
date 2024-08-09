@@ -1533,26 +1533,3 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		}
 	}
 }
-
-if ( ! function_exists( 'tutor_get_course_thumbnail_url' )) {
-	/**
-	 * Get post thumbnail url
-	 *
-	 * It will return default placeholder image if
-	 * thumbnail not available.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $post_id Post id.
-	 *
-	 * @return string
-	 */
-	function tutor_get_post_thumbnail_url( int $post_id ) {
-		$default_thumb_url = tutor()->url . 'assets/images/placeholder.svg';
-
-		$thumbnail_id  = (int) get_post_thumbnail_id( $post_id );
-		$thumbnail_url = $thumbnail_id ? wp_get_attachment_image_url( $thumbnail_id, 'thumbnail', false ) : $default_thumb_url;
-
-		return $thumbnail_url;
-	}
-}
