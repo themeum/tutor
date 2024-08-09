@@ -142,6 +142,20 @@ class CheckoutController {
 	}
 
 	/**
+	 * Prepare payment data
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|array $course_ids Course id or array of ids.
+	 * @param array     $price_details Detail price.
+	 *
+	 * @return void
+	 */
+	public function prepare_payment_data( $course_ids, $price_details ) {
+
+	}
+
+	/**
 	 * Restrict checkout page
 	 *
 	 * @return void
