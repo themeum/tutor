@@ -727,7 +727,7 @@ class CouponModel {
 				}
 			}
 
-			$response[] = (object) array(
+			$response['course_items'][] = (object) array(
 				'course_id'      => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,

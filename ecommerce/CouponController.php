@@ -513,9 +513,9 @@ class CouponController extends BaseController {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		$coupon_code = Input::post( 'coupon_code' );
+		$coupon_id = Input::post( 'id' );
 
-		if ( empty( $coupon_code ) ) {
+		if ( empty( $coupon_id ) ) {
 			$this->json_response(
 				__( 'Coupon code is required', 'tutor' ),
 				null,
@@ -523,7 +523,7 @@ class CouponController extends BaseController {
 			);
 		}
 
-		$coupon_data = $this->model->get_coupon( $coupon_code );
+		$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
 
 		if ( ! $coupon_data ) {
 			$this->json_response(
