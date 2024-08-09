@@ -466,6 +466,7 @@ const CourseBasic = () => {
                     placeholder={__('0', 'tutor')}
                     type="number"
                     loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    selectOnFocus
                   />
                 )}
               />
@@ -483,6 +484,7 @@ const CourseBasic = () => {
                     placeholder={__('0', 'tutor')}
                     type="number"
                     loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    selectOnFocus
                   />
                 )}
               />
