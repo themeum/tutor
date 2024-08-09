@@ -682,19 +682,17 @@ class CouponController extends BaseController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
-			'coupon_id'                  => 'required|numeric',
-			'coupon_status'              => 'required',
-			'coupon_type'                => 'required',
-			'coupon_code'                => 'required',
-			'coupon_title'               => 'required',
-			'discount_type'              => 'required',
-			'discount_amount'            => 'required',
-			'applies_to'                 => 'required',
-			'total_usage_limit'          => 'required|numeric',
-			'per_user_usage_limit'       => 'required|numeric',
-			'purchase_requirement'       => 'required',
-			'purchase_requirement_value' => 'required',
-			'start_date_gmt'             => 'required|date_format:Y-m-d H:i:s',
+			'coupon_id'            => 'numeric',
+			'coupon_status'        => 'required',
+			'coupon_type'          => 'required',
+			'coupon_code'          => 'required',
+			'coupon_title'         => 'required',
+			'discount_type'        => 'required',
+			'discount_amount'      => 'required',
+			'applies_to'           => 'required',
+			'total_usage_limit'    => 'numeric',
+			'per_user_usage_limit' => 'numeric',
+			'start_date_gmt'       => 'required|date_format:Y-m-d H:i:s',
 		);
 
 		// Skip validation rules for not available fields in data.
