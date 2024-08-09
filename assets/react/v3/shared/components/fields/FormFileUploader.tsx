@@ -325,6 +325,7 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[8]};
     position: relative;
+    background-color: ${colorTokens.background.white};
 
     ${
       hasFiles &&
@@ -353,7 +354,7 @@ const styles = {
     }
 
     &:hover {
-      background: ${colorTokens.background.white};
+      background: ${colorTokens.background.hover};
 
       button {
         opacity: 1;

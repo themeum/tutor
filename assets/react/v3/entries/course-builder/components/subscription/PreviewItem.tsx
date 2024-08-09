@@ -7,6 +7,8 @@ import { __ } from '@wordpress/i18n';
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {
+    case 'hour':
+      return value > 1 ? __('Hours', 'tutor') : __('Hour', 'tutor');
     case 'day':
       return value > 1 ? __('Days', 'tutor') : __('Day', 'tutor');
     case 'week':
@@ -57,11 +59,11 @@ const styles = {
     }
 	`,
   title: css`
-		${typography.small('medium')};
+		${typography.caption('medium')};
 		color: ${colorTokens.text.primary};
 	`,
   information: css`
-		${typography.tiny()};
+		${typography.small()};
 		color: ${colorTokens.text.hints};
 		display: flex;
 		align-items: center;

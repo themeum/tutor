@@ -46,7 +46,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   plan_type: 'course',
   assign_id: '0',
   plan_name: '',
-  recurring_value: '0',
+  recurring_value: '1',
   recurring_interval: 'month',
   regular_price: '0',
   sale_price: '0',
@@ -112,10 +112,10 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
     sale_price: subscription.sale_price ?? '0',
-    charge_enrollment_fee: !!subscription.enrollment_fee,
-    enable_free_trial: !!subscription.trial_value,
-    offer_sale_price: !!subscription.sale_price,
-    schedule_sale_price: !!subscription.sale_price_from,
+    charge_enrollment_fee: !!Number(subscription.enrollment_fee),
+    enable_free_trial: !!Number(subscription.trial_value),
+    offer_sale_price: !!Number(subscription.sale_price),
+    schedule_sale_price: !!Number(subscription.sale_price_from),
     do_not_provide_certificate: !Number(subscription.provide_certificate),
     sale_price_from_date: subscription.sale_price_from
       ? format(parseISO(subscription.sale_price_from), DateFormats.yearMonthDay)
