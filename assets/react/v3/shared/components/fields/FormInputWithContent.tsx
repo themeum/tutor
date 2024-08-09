@@ -23,6 +23,7 @@ interface FormInputWithContentProps extends FormControllerProps<string | number 
   onKeyDown?: (value: string) => void;
   isHidden?: boolean;
   wrapperCss?: SerializedStyles;
+  contentCss?: SerializedStyles;
   removeBorder?: boolean;
   selectOnFocus?: boolean;
 }
@@ -45,6 +46,7 @@ const FormInputWithContent = ({
   onKeyDown,
   isHidden,
   wrapperCss,
+  contentCss,
   removeBorder = false,
   selectOnFocus = false,
 }: FormInputWithContentProps) => {
@@ -66,7 +68,9 @@ const FormInputWithContent = ({
         const { css: inputCss, ...restInputProps } = inputProps;
         return (
           <div css={[styles.inputWrapper(!!fieldState.error, removeBorder), wrapperCss]}>
-            {contentPosition === 'left' && <div css={styles.inputLeftContent(showVerticalBar, size)}>{content}</div>}
+            {contentPosition === 'left' && (
+              <div css={[styles.inputLeftContent(showVerticalBar, size), contentCss]}>{content}</div>
+            )}
 
             <input
               {...field}
