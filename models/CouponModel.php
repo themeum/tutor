@@ -977,13 +977,13 @@ class CouponModel {
 			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
 			if ( $coupon_usage_count >= $coupon_usage_limit ) {
 				$has_limit = false;
-			} else {
-				if ( $user_usage_limit > 0 ) {
-					$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
-					if ( $user_usage_count >= $user_usage_limit ) {
-						$has_limit = false;
-					}
-				}
+			}
+		}
+
+		if ( $user_usage_limit > 0 ) {
+			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
+			if ( $user_usage_count >= $user_usage_limit ) {
+				$has_limit = false;
 			}
 		}
 
