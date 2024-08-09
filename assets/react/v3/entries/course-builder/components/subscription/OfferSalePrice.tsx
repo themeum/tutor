@@ -39,6 +39,14 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormD
               <Controller
                 control={form.control}
                 name="sale_price"
+                rules={{
+                  validate: (value) => {
+                    if (Number(value) <= 0) {
+                      return __('Sale price must be greater than 0', 'tutor');
+                    }
+                    return true;
+                  },
+                }}
                 render={(props) => <FormInputWithContent {...props} label="Sale price" content={'$'} selectOnFocus />}
               />
               <Controller

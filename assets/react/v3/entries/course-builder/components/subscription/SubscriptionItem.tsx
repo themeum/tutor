@@ -30,6 +30,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 
+import { useEffect } from 'react';
 import { OfferSalePrice } from './OfferSalePrice';
 import { formatRepeatUnit } from './PreviewItem';
 
@@ -48,7 +49,15 @@ export default function SubscriptionItem({
 }) {
   const form = useFormWithGlobalError<SubscriptionFormData>({
     defaultValues: subscription,
+    shouldFocusError: true,
   });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (subscription.isExpanded) {
+      form.setFocus('plan_name');
+    }
+  }, [subscription.isExpanded]);
 
   const saveSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
   const deleteSubscriptionMutation = useDeleteCourseSubscriptionMutation(courseId);
@@ -62,7 +71,7 @@ export default function SubscriptionItem({
       });
       const response = await saveSubscriptionMutation.mutateAsync(payload);
 
-      if (response.data) {
+      if (response.status_code === 200 || response.status_code === 201) {
         toggleCollapse(subscription.id);
       }
     } catch (error) {
@@ -193,6 +202,13 @@ export default function SubscriptionItem({
                   <Controller
                     control={form.control}
                     name="recurring_value"
+                    rules={{
+                      validate: (value) => {
+                        if (Number(value) < 1) {
+                          return __('This value must be equal to or greater than 1');
+                        }
+                      },
+                    }}
                     render={(props) => (
                       <FormInput
                         {...props}
@@ -202,27 +218,23 @@ export default function SubscriptionItem({
                       />
                     )}
                   />
-                  <div
-                    css={css`
-												margin-top: auto;
-											`}
-                  >
-                    <Controller
-                      control={form.control}
-                      name="recurring_interval"
-                      render={(props) => (
-                        <FormSelectInput
-                          {...props}
-                          options={[
-                            { label: __('Day(s)', 'tutor'), value: 'day' },
-                            { label: __('Week(s)', 'tutor'), value: 'week' },
-                            { label: __('Month(s)', 'tutor'), value: 'month' },
-                            { label: __('Year(s)', 'tutor'), value: 'year' },
-                          ]}
-                        />
-                      )}
-                    />
-                  </div>
+
+                  <Controller
+                    control={form.control}
+                    name="recurring_interval"
+                    render={(props) => (
+                      <FormSelectInput
+                        {...props}
+                        label={<div>&nbsp;</div>}
+                        options={[
+                          { label: __('Day(s)', 'tutor'), value: 'day' },
+                          { label: __('Week(s)', 'tutor'), value: 'week' },
+                          { label: __('Month(s)', 'tutor'), value: 'month' },
+                          { label: __('Year(s)', 'tutor'), value: 'year' },
+                        ]}
+                      />
+                    )}
+                  />
                 </div>
 
                 <Controller
@@ -248,6 +260,14 @@ export default function SubscriptionItem({
                   <Controller
                     control={form.control}
                     name="enrollment_fee"
+                    rules={{
+                      validate: (value) => {
+                        if (Number(value) <= 0) {
+                          return __('Enrolment fee must be greater than 0', 'tutor');
+                        }
+                        return true;
+                      },
+                    }}
                     render={(props) => (
                       <FormInputWithContent
                         {...props}
@@ -270,6 +290,14 @@ export default function SubscriptionItem({
                     <Controller
                       control={form.control}
                       name="trial_value"
+                      rules={{
+                        validate: (value) => {
+                          if (Number(value) <= 0) {
+                            return __('Trial duration must be greater than 0', 'tutor');
+                          }
+                          return true;
+                        },
+                      }}
                       render={(props) => (
                         <FormInput
                           {...props}
@@ -279,29 +307,25 @@ export default function SubscriptionItem({
                         />
                       )}
                     />
-                    <div
-                      css={css`
-                        margin-top: auto;
-                      `}
-                    >
-                      <Controller
-                        control={form.control}
-                        name="trial_interval"
-                        render={(props) => (
-                          <FormSelectInput
-                            {...props}
-                            placeholder={__('Enter trial duration', 'tutor')}
-                            options={[
-                              { label: __('Hour(s)', 'tutor'), value: 'hour' },
-                              { label: __('Day(s)', 'tutor'), value: 'day' },
-                              { label: __('Week(s)', 'tutor'), value: 'week' },
-                              { label: __('Month(s)', 'tutor'), value: 'month' },
-                              { label: __('Year(s)', 'tutor'), value: 'year' },
-                            ]}
-                          />
-                        )}
-                      />
-                    </div>
+
+                    <Controller
+                      control={form.control}
+                      name="trial_interval"
+                      render={(props) => (
+                        <FormSelectInput
+                          {...props}
+                          label={<div>&nbsp;</div>}
+                          placeholder={__('Enter trial duration', 'tutor')}
+                          options={[
+                            { label: __('Hour(s)', 'tutor'), value: 'hour' },
+                            { label: __('Day(s)', 'tutor'), value: 'day' },
+                            { label: __('Week(s)', 'tutor'), value: 'week' },
+                            { label: __('Month(s)', 'tutor'), value: 'month' },
+                            { label: __('Year(s)', 'tutor'), value: 'year' },
+                          ]}
+                        />
+                      )}
+                    />
                   </div>
                 </Show>
 
@@ -361,9 +385,8 @@ const styles = {
   trialWrapper: css`
 		display: grid;
 		grid-template-columns: 1fr 1fr;
-		align-items: center;
+		align-items: start;
 		gap: ${spacing[8]};
-		
 	`,
   titleField: css`
 		width: 100%;
@@ -481,7 +504,7 @@ const styles = {
   inputGroup: css`
 		display: grid;
 		grid-template-columns: 2fr 1fr 1fr;
-		align-items: center;
+		align-items: start;
 		gap: ${spacing[8]};
 	`,
 };
