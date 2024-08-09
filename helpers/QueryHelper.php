@@ -24,6 +24,10 @@ class QueryHelper {
 	 * @return int, inserted id.
 	 *
 	 * @since v2.0.7
+	 *
+	 * @since 3.0.0
+	 *
+	 * @throws \Exception Database error if occur.
 	 */
 	public static function insert( string $table, array $data ): int {
 		global $wpdb;
@@ -39,6 +43,11 @@ class QueryHelper {
 			$table,
 			$data
 		);
+
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
+		}
+
 		return $insert ? $wpdb->insert_id : 0;
 	}
 
