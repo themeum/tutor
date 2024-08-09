@@ -69,7 +69,7 @@ const Additional = () => {
           <div css={styles.titleAndSub}>
             <div css={styles.title}>{__('Information', 'tutor')}</div>
             <div css={styles.subtitle}>
-              {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}:
+              {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
             </div>
           </div>
           <div css={styles.fieldsWrapper}>
