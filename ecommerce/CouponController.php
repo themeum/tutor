@@ -110,6 +110,7 @@ class CouponController extends BaseController {
 			add_action( 'wp_ajax_tutor_coupon_create', array( $this, 'ajax_create_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_update', array( $this, 'ajax_update_coupon' ) );
 			add_action( 'wp_ajax_tutor_coupon_applies_to_list', array( $this, 'ajax_coupon_applies_to_list' ) );
+			add_action( 'wp_ajax_tutor_apply_coupon', array( $this, 'ajax_apply_coupon' ) );
 		}
 	}
 
@@ -147,9 +148,15 @@ class CouponController extends BaseController {
 		}
 
 		// Convert start & expire date time into gmt.
-		$data['start_date_gmt']  = get_gmt_from_date( $data['start_date_gmt'] );
-		$data['expire_date_gmt'] = get_gmt_from_date( $data['expire_date_gmt'] );
-		$data['created_by']      = get_current_user_id();
+		$data['start_date_gmt'] = get_gmt_from_date( $data['start_date_gmt'] );
+		$data['created_by']     = get_current_user_id();
+		$data['created_at_gmt'] = current_time( 'mysql', true );
+		$data['updated_at_gmt'] = current_time( 'mysql', true );
+
+		// Set expire date if isset.
+		if ( isset( $data['expire_date_gmt'] ) ) {
+			$data['expire_date_gmt'] = get_gmt_from_date( $data['expire_date_gmt'] );
+		}
 
 		try {
 			$coupon_id = $this->model->create_coupon( $data );
@@ -189,8 +196,9 @@ class CouponController extends BaseController {
 
 		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), false );
 
-		$coupon_id         = Input::post( 'id', null, Input::TYPE_INT );
-		$data['coupon_id'] = $coupon_id;
+		$coupon_id              = Input::post( 'id', null, Input::TYPE_INT );
+		$data['coupon_id']      = $coupon_id;
+		$data['updated_at_gmt'] = current_time( 'mysql', true );
 
 		$validation = $this->validate( $data );
 		if ( ! $validation->success ) {
@@ -254,10 +262,12 @@ class CouponController extends BaseController {
 		tutor_utils()->check_current_user_capability();
 
 		$applies_to = Input::post( 'applies_to' );
+		$limit      = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset     = Input::post( 'offset', 0, Input::TYPE_INT );
 
 		if ( $this->model->is_specific_applies_to( $applies_to ) ) {
 			try {
-				$list = $this->get_application_list( $applies_to );
+				$list = $this->get_application_list( $applies_to, $limit, $offset );
 				if ( $list ) {
 					$this->json_response(
 						__( 'Coupon application list retrieved successfully!' ),
@@ -512,9 +522,9 @@ class CouponController extends BaseController {
 			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		$coupon_code = Input::post( 'coupon_code' );
+		$coupon_id = Input::post( 'id' );
 
-		if ( empty( $coupon_code ) ) {
+		if ( empty( $coupon_id ) ) {
 			$this->json_response(
 				__( 'Coupon code is required', 'tutor' ),
 				null,
@@ -522,7 +532,7 @@ class CouponController extends BaseController {
 			);
 		}
 
-		$coupon_data = $this->model->get_coupon( $coupon_code );
+		$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
 
 		if ( ! $coupon_data ) {
 			$this->json_response(
@@ -551,94 +561,67 @@ class CouponController extends BaseController {
 	}
 
 	/**
-	 * Handles AJAX request to get the entities (courses, bundles, or categories) a coupon applies to.
-	 *
-	 * This function validates the nonce and the required input parameter `applies_to`.
-	 * Based on the `applies_to` value, it retrieves the relevant entities:
-	 * - 'specific_courses' or 'specific_bundles': Retrieves courses or course bundles the coupon applies to.
-	 * - 'specific_category': Retrieves categories the coupon applies to.
-	 * If the required inputs are missing or invalid, it returns an appropriate error response.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
-	 * @return void This function echoes a JSON response and exits. Possible JSON responses include:
-	 *              - Error response if the nonce is invalid, required inputs are missing, or the `applies_to` value is invalid.
-	 *              - Success response with the retrieved entities (courses, bundles, or categories).
-	 */
-	public function get_coupon_applies_to() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
-
-		$applies_to = Input::post( 'applies_to' );
-
-		if ( empty( $applies_to ) ) {
-			$this->json_response(
-				__( 'Applies to is required', 'tutor' ),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
-		}
-
-		if ( 'specific_courses' === $applies_to || 'specific_bundles' === $applies_to ) {
-			$course_model = new CourseModel();
-			$response     = $course_model->get_coupon_applies_to_courses( $applies_to );
-
-		} else {
-			$this->json_response(
-				__( 'Applies to value invalid', 'tutor' ),
-				null,
-				HttpHelper::STATUS_BAD_REQUEST
-			);
-		}
-
-		$error_message_txt = 'specific_category' === $applies_to ? __( 'Categories not found', 'tutor' ) : __( 'Courses not found', 'tutor' );
-
-		if ( ! $response ) {
-			$this->json_response(
-				$error_message_txt,
-				null,
-				HttpHelper::STATUS_NOT_FOUND
-			);
-		}
-
-		$success_message_txt = 'specific_category' === $applies_to ? __( 'Categories retrieved successfully', 'tutor' ) : __( 'Courses retrieved successfully', 'tutor' );
-
-		$this->json_response(
-			$success_message_txt,
-			$response
-		);
-	}
-
-	/**
-	 * Get application if applies to is specific category or bundle
+	 * Get application if applies to a specific category or bundle.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param string $applies_to Applies to.
+	 * @param int    $limit      Number of items to fetch.
+	 * @param int    $offset     Offset for fetching items.
 	 *
 	 * @return array
 	 */
-	public function get_application_list( string $applies_to ) {
-		$response = array();
+	public function get_application_list( string $applies_to, int $limit = 10, int $offset = 0 ) {
 
-		if ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
+		$response = array(
+			'total_items' => 0,
+			'items'       => array(),
+		);
+
+		if ( $this->model::APPLIES_TO_SPECIFIC_COURSES === $applies_to ) {
+			$args = array(
+				'post_type'      => tutor()->course_post_type,
+				'posts_per_page' => $limit,
+				'offset'         => $offset,
+				'post_status'    => 'publish',
+			);
+
+			$courses = new \WP_Query( $args );
+
+			$response['total_items'] = $courses->found_posts;
+
+			if ( $courses->have_posts() ) {
+				$courses = $courses->get_posts();
+				foreach ( $courses as $course ) {
+
+					$response['items'][] = array(
+						'id'            => $course->ID,
+						'title'         => $course->post_title,
+						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $course->ID ),
+						'regular_price' => get_post_meta( $course->ID, Course::COURSE_PRICE_META, true ),
+						'sale_price'    => get_post_meta( $course->ID, Course::COURSE_SALE_PRICE_META, true ),
+					);
+				}
+			}
+		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
 			$args = array(
 				'post_type'      => 'course-bundle',
-				'posts_per_page' => -1,
+				'posts_per_page' => $limit,
+				'offset'         => $offset,
 				'post_status'    => 'publish',
 			);
 
 			$bundles = new \WP_Query( $args );
+
+			$response['total_items'] = $bundles->found_posts;
+
 			if ( $bundles->have_posts() ) {
 				$bundles = $bundles->get_posts();
 				foreach ( $bundles as $bundle ) {
-					$response[] = array(
+					$response['items'][] = array(
 						'id'            => $bundle->ID,
 						'title'         => $bundle->post_title,
-						'image'         => get_the_post_thumbnail_url( $bundle->ID ),
+						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $bundle->ID ),
 						'course_count'  => count( BundleModel::get_bundle_course_ids( $bundle->ID ) ),
 						'regular_price' => get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ),
 						'sale_price'    => get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ),
@@ -646,10 +629,22 @@ class CouponController extends BaseController {
 				}
 			}
 		} elseif ( $this->model::APPLIES_TO_SPECIFIC_CATEGORY === $applies_to ) {
-			$terms = get_terms(
-				array(
-					'taxonomy'   => 'course-category',
-					'hide_empty' => true,
+			$args = array(
+				'taxonomy'   => 'course-category',
+				'hide_empty' => true,
+				'number'     => $limit,
+				'offset'     => $offset,
+			);
+
+			$terms = get_terms( $args );
+
+			$response['total_items'] = count(
+				get_terms(
+					array(
+						'taxonomy'   => 'course-category',
+						'hide_empty' => true,
+						'fields'     => 'ids',
+					)
 				)
 			);
 
@@ -657,10 +652,10 @@ class CouponController extends BaseController {
 				foreach ( $terms as $term ) {
 					$thumb_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 
-					$response[] = array(
+					$response['items'][] = array(
 						'id'            => $term->term_id,
 						'title'         => $term->name,
-						'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+						'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : tutor()->url . 'assets/images/placeholder.svg',
 						'total_courses' => (int) $term->count,
 					);
 				}
@@ -668,6 +663,36 @@ class CouponController extends BaseController {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Ajax handler for applying coupon
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_apply_coupon() {
+		tutor_utils()->check_nonce();
+
+		$course_ids  = Input::post( 'course_ids' );
+		$course_ids  = array_filter( explode( ',', $course_ids ), 'is_numeric' );
+		$coupon_code = Input::post( 'coupon_code' );
+
+		if ( empty( $course_ids ) ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'invalid_req' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $course_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $course_ids );
+
+		$this->json_response(
+			__( 'Coupon applied successfully', 'tutor' ),
+			$discount_price
+		);
 	}
 
 	/**
@@ -682,19 +707,17 @@ class CouponController extends BaseController {
 	protected function validate( array $data ) {
 
 		$validation_rules = array(
-			'coupon_id'                  => 'required|numeric',
-			'coupon_status'              => 'required',
-			'coupon_type'                => 'required',
-			'coupon_code'                => 'required',
-			'coupon_title'               => 'required',
-			'discount_type'              => 'required',
-			'discount_amount'            => 'required',
-			'applies_to'                 => 'required',
-			'total_usage_limit'          => 'required|numeric',
-			'per_user_usage_limit'       => 'required|numeric',
-			'purchase_requirement'       => 'required',
-			'purchase_requirement_value' => 'required',
-			'start_date_gmt'             => 'required|date_format:Y-m-d H:i:s',
+			'coupon_id'            => 'numeric',
+			'coupon_status'        => 'required',
+			'coupon_type'          => 'required',
+			'coupon_code'          => 'required',
+			'coupon_title'         => 'required',
+			'discount_type'        => 'required',
+			'discount_amount'      => 'required',
+			'applies_to'           => 'required',
+			'total_usage_limit'    => 'numeric',
+			'per_user_usage_limit' => 'numeric',
+			'start_date_gmt'       => 'required|date_format:Y-m-d H:i:s',
 		);
 
 		// Skip validation rules for not available fields in data.

@@ -23,6 +23,8 @@ $cart_page_url          = CartController::get_page_url();
 
 $conditional_class = is_user_logged_in() ? 'tutor-native-add-to-cart' : 'tutor-open-login-modal';
 
+ob_start();
+
 if ( $is_course_in_user_cart ) {
 	?>
 	<a href="<?php echo esc_url( $cart_page_url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md">
@@ -39,3 +41,5 @@ if ( $is_course_in_user_cart ) {
 	</div>
 	<?php
 }
+
+echo apply_filters( 'tutor_course_loop_add_to_cart_button', ob_get_clean(), $course_id ); //phpcs:ignore

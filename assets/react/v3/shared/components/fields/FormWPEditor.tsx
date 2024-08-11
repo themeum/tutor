@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n';
 import Button from '@Atoms/Button';
 import WPEditor from '@Atoms/WPEditor';
 
+import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -12,6 +13,7 @@ import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
 import type { Editor } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
+import type { IconCollection } from '@Utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
@@ -26,6 +28,10 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   editors?: Editor[];
   editorUsed?: Editor;
 }
+
+const customEditorIcons: { [key: string]: IconCollection } = {
+  droip: 'droip',
+};
 
 const FormWPEditor = ({
   label,
@@ -77,6 +83,11 @@ const FormWPEditor = ({
                   <Button
                     variant="primary"
                     loading={loading}
+                    icon={
+                      customEditorIcons[editorUsed.name] && (
+                        <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
+                      )
+                    }
                     onClick={() =>
                       editorUsed &&
                       showModal({
@@ -98,6 +109,11 @@ const FormWPEditor = ({
                   {(editor) => (
                     <Button
                       key={editor.name}
+                      icon={
+                        customEditorIcons[editor.name] && (
+                          <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
+                        )
+                      }
                       onClick={() => {
                         showModal({
                           component: EditorModal,

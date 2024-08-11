@@ -140,12 +140,7 @@ class CouponModel {
 		'discount_type',
 		'discount_amount',
 		'applies_to',
-		'total_usage_limit',
-		'per_user_usage_limit',
-		'purchase_requirement',
-		'purchase_requirement_value',
 		'start_date_gmt',
-		'expire_date_gmt',
 	);
 
 	/**
@@ -660,14 +655,14 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param mixed $coupon_code Coupon code.
+	 * @param array $where Where condition.
 	 *
 	 * @return mixed
 	 */
-	public function get_coupon( $coupon_code ) {
+	public function get_coupon( array $where ) {
 		return QueryHelper::get_row(
 			$this->table_name,
-			array( 'coupon_code' => $coupon_code ),
+			$where,
 			'id'
 		);
 	}
@@ -715,7 +710,7 @@ class CouponModel {
 			if ( $sale_price ) {
 				$discount_price = $sale_price;
 			} else {
-				$coupon = $this->get_coupon( $coupon_code );
+				$coupon = $this->get_coupon( array( 'coupon_code' => $coupon_code ) );
 				if ( $coupon ) {
 					$is_valid = $this->is_coupon_valid( $coupon );
 					if ( $is_valid ) {
@@ -732,7 +727,7 @@ class CouponModel {
 				}
 			}
 
-			$response[] = (object) array(
+			$response['course_items'][] = (object) array(
 				'course_id'      => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
@@ -781,16 +776,38 @@ class CouponModel {
 			if ( $sale_price ) {
 				$discount_price = $sale_price;
 			} else {
-				// @TODO deduct automatic coupon price.
+				$automatic_coupons = $this->get_coupons(
+					array( 'coupon_type' => self::TYPE_AUTOMATIC ),
+					'',
+					1000,
+					0
+				)['results'];
+
+				if ( is_array( $automatic_coupons ) && count( $automatic_coupons ) ) {
+					foreach ( $automatic_coupons as $coupon ) {
+						$is_valid = $this->is_coupon_valid( $coupon );
+						if ( $is_valid ) {
+							$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_ids, $coupon );
+							if ( $is_meet_min_requirement ) {
+								$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
+
+								// Apply discount if pass all checks.
+								if ( $should_apply_coupon ) {
+									$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+								}
+							}
+						}
+					}
+				}
 			}
 
-			$response[] = (object) array(
+			$response['course_items'][] = (object) array(
 				'course_id'      => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
 			);
 
-			$response['total_price'] += $discount_price;
+			$response['total_price'] += $discount_price ? $discount_price : $reg_price;
 		}
 
 		return (object) $response;
@@ -880,7 +897,7 @@ class CouponModel {
 
 			case self::APPLIES_TO_SPECIFIC_CATEGORY:
 				$course_categories = wp_get_post_terms( $object_id, 'course-category' );
-				if ( is_a( $course_categories, 'WP_Term' ) ) {
+				if ( ! is_wp_error( $course_categories ) ) {
 					$term_ids      = array_column( $course_categories, 'term_id' );
 					$is_applicable = count( array_intersect( $applications, $term_ids ) );
 				}
@@ -956,10 +973,14 @@ class CouponModel {
 		$coupon_usage_limit = (int) $coupon->coupon_usage_limit;
 		$user_usage_limit   = (int) $coupon->per_user_usage_limit;
 
-		$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
-		if ( $coupon_usage_count >= $coupon_usage_limit ) {
-			$has_limit = false;
-		} else {
+		if ( $coupon_usage_limit > 0 ) {
+			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
+			if ( $coupon_usage_count >= $coupon_usage_limit ) {
+				$has_limit = false;
+			}
+		}
+
+		if ( $user_usage_limit > 0 ) {
 			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
 				$has_limit = false;

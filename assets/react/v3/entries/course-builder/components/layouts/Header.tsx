@@ -59,6 +59,7 @@ const Header = () => {
 
     if (data.course_price_type === 'paid') {
       if (!data.course_product_id) {
+        navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
       }
