@@ -25,6 +25,7 @@ function CouponPreview() {
 	const { tutor_currency } = tutorConfig;
 
 	const couponTitle = form.watch('coupon_title');
+	const couponType = form.watch('coupon_type');
 	const couponCode = form.watch('coupon_code');
 	const discountType = form.watch('discount_type');
 	const discountAmount = form.watch('discount_amount');
@@ -32,7 +33,7 @@ function CouponPreview() {
 	const startTime = form.watch('start_time');
 	const endDate = form.watch('end_date');
 	const appliesTo = form.watch('applies_to');
-	const isOneUserPerCustomer = form.watch('is_one_use_per_user');
+	const perUserUsageLimit = form.watch('per_user_usage_limit');
 	const couponUsedCount = form.watch('coupon_uses');
 
 	const startDateTime = startDate && startTime ? `${startDate} ${startTime}` : '';
@@ -47,7 +48,7 @@ function CouponPreview() {
 		: '';
 
 	const discountText =
-		discountType === 'amount' ? `${tutor_currency?.symbol ?? '$'}${discountAmount ?? 0}` : `${discountAmount ?? 0}%`;
+		discountType === 'flat' ? `${tutor_currency?.symbol ?? '$'}${discountAmount ?? 0}` : `${discountAmount ?? 0}%`;
 	const totalUsedText = `${__('Total', 'tutor')} ${couponUsedCount} ${__('times used', 'tutor')}`;
 	const activeFromText = `${__('Active from ', 'tutor')} ${activeFromSuffix}`;
 
@@ -59,7 +60,7 @@ function CouponPreview() {
 						<div css={styles.couponName}>{couponTitle}</div>
 						<div css={styles.discountText}>{`${discountText} ${__('OFF', 'tutor')}`}</div>
 					</div>
-					<h1 css={styles.couponCode}>{couponCode}</h1>
+					<h1 css={styles.couponCode}>{couponType === 'automatic' ? __('Automatic', 'tutor') : couponCode}</h1>
 					{endDate && (
 						<p css={styles.couponSubtitle}>
 							{__('Valid until', 'tutor') + ' ' + format(new Date(endDate), DateFormats.validityDate)}
@@ -90,7 +91,7 @@ function CouponPreview() {
 					<div>
 						<h6 css={styles.previewListTitle}>{__('Details', 'tutor')}</h6>
 						<ul css={styles.previewList} data-preview-list>
-							<Show when={isOneUserPerCustomer}>
+							<Show when={Number(perUserUsageLimit) === 1}>
 								<li>{__('One use per customer', 'tutor')}</li>
 							</Show>
 							<li>{activeFromText}</li>
@@ -127,7 +128,7 @@ const styles = {
 		css`
 			position: fixed;
 			top: ${headerHeight}px;
-			width: 342px;
+			width: 344px;
 		`}
 	`,
 	previewTop: css`

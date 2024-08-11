@@ -50,9 +50,9 @@ export interface Coupon {
 	categories?: CourseCategory[];
 	bundles?: Course[];
 	usage_limit_status: boolean;
-	total_usage_limit?: string;
-	per_user_limit_status?: boolean;
-	per_user_usage_limit?: string;
+	total_usage_limit: string | null;
+	per_user_limit_status: boolean;
+	per_user_usage_limit: string | null;
 	coupon_uses?: number;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
 	purchase_requirement_value: string;
@@ -68,11 +68,11 @@ export interface CouponPayload {
 	coupon_status: CouponStatus;
 	coupon_type: CouponType;
 	coupon_title: string;
-	coupon_code: string;
+	coupon_code?: string;
 	discount_type: 'percentage' | 'flat';
 	discount_amount: string;
 	applies_to: CouponAppliesTo;
-	applies_to_items?: Course[] | CourseCategory[];
+	applies_to_items: Course[] | CourseCategory[];
 	total_usage_limit?: string;
 	per_user_usage_limit?: string;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
@@ -90,13 +90,13 @@ export interface GetCouponResponse {
 	discount_type: 'percentage' | 'flat';
 	discount_amount: string;
 	applies_to: CouponAppliesTo;
-	applies_to_items?: Course[] | CourseCategory[];
-	total_usage_limit?: string;
-	per_user_usage_limit?: string;
+	applies_to_items: Course[] | CourseCategory[];
+	total_usage_limit: string | null;
+	per_user_usage_limit: string | null;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
 	purchase_requirement_value?: string;
 	start_date_gmt: string;
-	expire_date_gmt?: string;
+	expire_date_gmt: string | null;
 }
 
 export const couponInitialValue: Coupon = {
@@ -107,7 +107,7 @@ export const couponInitialValue: Coupon = {
 	user_name: '',
 	discount_type: 'percentage',
 	discount_amount: '',
-	applies_to: 'all_courses_and_bundles',
+	applies_to: 'all_courses',
 	courses: [],
 	categories: [],
 	bundles: [],
@@ -250,18 +250,21 @@ export const mockCouponData: Coupon = {
 	updated_at: '02/16/2024 10:00:00',
 };
 
-export function convertFormDataToPayload(data: Coupon) {
+export function convertFormDataToPayload(data: Coupon): CouponPayload {
 	return {
 		...(data.id && {
 			id: data.id
 		}),
 		coupon_status: data.coupon_status,
 		coupon_type: data.coupon_type,
-		coupon_code: data.coupon_code,
+		...(data.coupon_type === 'code' && {
+			coupon_code: data.coupon_code
+		}),
 		coupon_title: data.coupon_title,
 		discount_type: data.discount_type,
 		discount_amount: data.discount_amount,
 		applies_to: data.applies_to,
+		applies_to_items: [],
 		...(data.total_usage_limit && {
 			total_usage_limit: data.total_usage_limit
 		}),
@@ -278,7 +281,7 @@ export function convertFormDataToPayload(data: Coupon) {
 			new Date(`${data.start_date} ${data.start_time}`), 
 			DateFormats.yearMonthDayHourMinuteSecond
 		),
-		...(data.end_date && {
+		...(data.is_end_enabled && data.end_date && {
 			expire_date_gmt: format(
 				new Date(`${data.end_date} ${data.end_time}`), 
 				DateFormats.yearMonthDayHourMinuteSecond

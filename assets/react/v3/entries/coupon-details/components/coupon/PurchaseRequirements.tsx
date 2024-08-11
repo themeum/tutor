@@ -8,6 +8,7 @@ import Show from '@Controls/Show';
 import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -15,7 +16,6 @@ function PurchaseRequirements() {
 	const form = useFormContext<Coupon>();
 	const { tutor_currency } = tutorConfig;
 	const purchaseAmountLabel = __('Minimum purchase amount', 'tutor') + ` (${tutor_currency?.symbol ?? '$'})`;
-	const purchaseRequirement = form.watch('purchase_requirement');
 
 	const requirementOptions = [
 		{
@@ -56,6 +56,7 @@ function PurchaseRequirements() {
 											<Controller
 												name="purchase_requirement_value"
 												control={form.control}
+												rules={requiredRule()}
 												render={(controllerProps) => (
 													<FormInputWithContent
 														{...controllerProps}
@@ -71,6 +72,7 @@ function PurchaseRequirements() {
 											<Controller
 												name="purchase_requirement_value"
 												control={form.control}
+												rules={requiredRule()}
 												render={(controllerProps) => (
 													<FormInput {...controllerProps} type="number" placeholder={__('0', 'tutor')} />
 												)}

@@ -8,6 +8,7 @@ import { Coupon } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
+import { requiredRule } from '@Utils/validation';
 
 function CouponLimitation() {
 	const form = useFormContext<Coupon>();
@@ -39,9 +40,10 @@ function CouponLimitation() {
 						<Controller
 							name="total_usage_limit"
 							control={form.control}
+							rules={requiredRule()}
 							render={(controllerProps) => (
 								<div css={styles.limitInput}>
-									<FormInput {...controllerProps} placeholder={__('Placeholder', 'tutor')} />
+									<FormInput {...controllerProps} type="number" placeholder={__('0', 'tutor')} />
 								</div>
 							)}
 						/>
@@ -65,9 +67,10 @@ function CouponLimitation() {
 						<Controller
 							name="per_user_usage_limit"
 							control={form.control}
+							rules={requiredRule()}
 							render={(controllerProps) => (
 								<div css={styles.limitInput}>
-									<FormInput {...controllerProps} placeholder={__('Placeholder', 'tutor')} />
+									<FormInput {...controllerProps} type="number" placeholder={__('0', 'tutor')} />
 								</div>
 							)}
 						/>

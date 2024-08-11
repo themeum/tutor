@@ -2,12 +2,13 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { TutorBadge } from '@Atoms/TutorBadge';
 import Container from '@Components/Container';
+import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { convertFormDataToPayload, Coupon, useCreateCouponMutation, useUpdateCouponMutation } from '@CouponServices/coupon';
-import DropdownButton from '@Molecules/DropdownButton';
+import { toCapitalize } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -15,6 +16,12 @@ import { format } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
 
 export const TOPBAR_HEIGHT = 96;
+
+const statusVariant = {
+	active: 'success',
+	inactive: 'secondary',
+	trash: 'critical',
+} as const;
 
 function Topbar() {
 	const form = useFormContext<Coupon>();
@@ -31,18 +38,22 @@ function Topbar() {
 		}
 	}
 
+	function handleGoBack() {
+		window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_coupons`
+	}
+
 	return (
 		<div css={styles.wrapper}>
 			<Container>
 				<div css={styles.innerWrapper}>
 					<div css={styles.left}>
-						<button type="button" css={styles.backButton} onClick={() => alert('@TODO: will be implemented later.')}>
+						<button type="button" css={styles.backButton} onClick={handleGoBack}>
 							<SVGIcon name="arrowLeft" width={26} height={26} />
 						</button>
 						<div>
 							<div css={styles.headerContent}>
 								<h4 css={typography.heading5('medium')}>{__('Create coupon', 'tutor')}</h4>
-								<TutorBadge variant="success">Active</TutorBadge>
+								<TutorBadge variant={statusVariant[coupon.coupon_status]}>{toCapitalize(coupon.coupon_status)}</TutorBadge>
 							</div>
 							{/* <Show
 								when={coupon.updated_at}
@@ -63,23 +74,16 @@ function Topbar() {
 						</div>
 					</div>
 					<div css={styles.right}>
-						<Button variant="tertiary" onClick={() => alert('@TODO: will be implemented later.')}>
-							Cancel
+						<Button variant="tertiary" onClick={handleGoBack}>
+							{__('Cancel', 'tutor')}
 						</Button>
-						<DropdownButton
-							text={__('Save', 'tutor')}
+						<Button 
 							variant="primary"
 							loading={createCouponMutation.isPending || updateCouponMutation.isPending}
 							onClick={form.handleSubmit(handleSubmit)}
-							dropdownMaxWidth="144px"
 						>
-							<DropdownButton.Item text="Save as Draft" onClick={() => alert('@TODO: will be implemented later.')} />
-							<DropdownButton.Item
-								text="Move to trash"
-								onClick={() => alert('@TODO: will be implemented later.')}
-								isDanger
-							/>
-						</DropdownButton>
+							{__('Save', 'tutor')}
+						</Button>
 					</div>
 				</div>
 			</Container>

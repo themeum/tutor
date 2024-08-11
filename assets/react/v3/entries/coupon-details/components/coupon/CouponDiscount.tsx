@@ -10,23 +10,27 @@ import Show from '@Controls/Show';
 import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
 
 import { Coupon } from '@CouponServices/coupon';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
+const isTutorProActive = !!tutorConfig.tutor_pro_url;
+const displayBundle = isTutorProActive && isAddonEnabled('Course Bundle');
+
 const discountTypeOptions = [
 	{ label: __('Percent', 'tutor'), value: 'percentage' },
 	{ label: __('Amount', 'tutor'), value: 'flat' },
 ];
-// @TODO: Need to check if bundle addon is enabled
+
 const appliesToOptions = [
-	{ label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' },
 	{ label: __('All courses', 'tutor'), value: 'all_courses' },
-	{ label: __('All bundles', 'tutor'), value: 'all_bundles' },
+	...(displayBundle ? [{ label: __('All bundles', 'tutor'), value: 'all_bundles' }] : []),
+	...(displayBundle ? [{ label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' }] : []),
 	{ label: __('Specific courses', 'tutor'), value: 'specific_courses' },
-	{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' },
+	...(displayBundle ? [{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' }] : []),
 	{ label: __('Specific category', 'tutor'), value: 'specific_category' },
 ];
 

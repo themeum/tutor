@@ -2,6 +2,7 @@ import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
 import FormInput from '@Components/fields/FormInput';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
+import { DateFormats } from '@Config/constants';
 import { colorPalate, spacing } from '@Config/styles';
 import { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@Utils/style-utils';
@@ -9,6 +10,7 @@ import { generateCouponCode } from '@Utils/util';
 import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
 import { Controller, useFormContext } from 'react-hook-form';
 
 const couponTypeOptions = [
@@ -18,10 +20,11 @@ const couponTypeOptions = [
 
 function CouponInfo() {
 	const form = useFormContext<Coupon>();
+	const couponType = form.watch('coupon_type');
 
 	function handleGenerateCouponCode() {
 		const newCouponCode = generateCouponCode();
-		form.setValue('coupon_code', newCouponCode);
+		form.setValue('coupon_code', newCouponCode, { shouldValidate: true });
 	}
 
 	return (
@@ -49,26 +52,33 @@ function CouponInfo() {
 				control={form.control}
 				rules={requiredRule()}
 				render={(controllerProps) => (
-					<FormInput {...controllerProps} label={__('Coupon name', 'tutor')} placeholder={__('Placeholder', 'tutor')} />
+					<FormInput 
+						{...controllerProps} 
+						label={__('Coupon name', 'tutor')} 
+						placeholder={__(`Summer Sale ${format(new Date(), DateFormats.year)}`, 'tutor')}
+					/>
 				)}
 			/>
-			<div css={styles.couponCodeWrapper}>
-				<Controller
-					name="coupon_code"
-					control={form.control}
-					rules={requiredRule()}
-					render={(controllerProps) => (
-						<FormInput
-							{...controllerProps}
-							label={__('Coupon code', 'tutor')}
-							placeholder={__('Placeholder', 'tutor')}
-						/>
-					)}
-				/>
-				<Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
-					{__('Generate code', 'tutor')}
-				</Button>
-			</div>
+
+			{couponType === 'code' && (
+				<div css={styles.couponCodeWrapper}>
+					<Controller
+						name="coupon_code"
+						control={form.control}
+						rules={requiredRule()}
+						render={(controllerProps) => (
+							<FormInput
+								{...controllerProps}
+								label={__('Coupon code', 'tutor')}
+								placeholder={__('SUMMER20', 'tutor')}
+							/>
+						)}
+					/>
+					<Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
+						{__('Generate code', 'tutor')}
+					</Button>
+				</div>
+			)}
 		</Box>
 	);
 }

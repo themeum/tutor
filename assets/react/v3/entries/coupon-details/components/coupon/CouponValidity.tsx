@@ -65,13 +65,15 @@ function CouponValidity() {
 						<BoxSubtitle css={styles.dateTimeTitle}>{__('Ends in', 'tutor')}</BoxSubtitle>
 						<div css={styles.dateTimeWrapper}>
 							<Controller
-								control={form.control}
 								name="end_date"
+								control={form.control}
+								rules={requiredRule()}
 								render={(controllerProps) => <FormDateInput {...controllerProps} placeholder="2030-10-24" />}
 							/>
 							<Controller
-								control={form.control}
 								name="end_time"
+								control={form.control}
+								rules={requiredRule()}
 								render={(controllerProps) => <FormTimeInput {...controllerProps} placeholder="12:30 PM" />}
 							/>
 						</div>
