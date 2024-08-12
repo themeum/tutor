@@ -34,6 +34,7 @@ import {
   type CourseDetailsResponse,
   type CourseFormData,
   type PricingCategory,
+  type WcProduct,
   useGetWcProductsQuery,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
@@ -53,7 +54,7 @@ const CourseBasic = () => {
     queryKey: ['CourseDetails', courseId],
   });
   const navigate = useNavigate();
-  const { state, pathname } = useLocation();
+  const { state } = useLocation();
   const currentUser = tutorConfig.current_user;
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
@@ -156,8 +157,8 @@ const CourseBasic = () => {
     tutorConfig.settings.monetize_by,
   );
 
-  const wcProductOptions = () => {
-    if (!wcProductDetailsQuery.isSuccess || !wcProductsQuery.data) {
+  const wcProductOptions = (data: WcProduct[] | undefined) => {
+    if (!data || !data.length) {
       return [];
     }
 
@@ -168,17 +169,55 @@ const CourseBasic = () => {
         : null;
 
     const convertedCourseProducts =
-      wcProductsQuery.data.map(({ post_title: label, ID: value }) => ({
+      data.map(({ post_title: label, ID: value }) => ({
         label,
         value: String(value),
       })) ?? [];
 
     return (
-      wcProductsQuery.data?.find(({ ID }) => ID !== currentSelectedWcProduct?.value)
+      data?.find(({ ID }) => ID !== currentSelectedWcProduct?.value)
         ? [currentSelectedWcProduct, ...convertedCourseProducts]
         : convertedCourseProducts
     ).filter(isDefined);
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (wcProductsQuery.isSuccess && wcProductsQuery.data) {
+      const { course_pricing } = courseDetails || {};
+
+      if (
+        tutorConfig.settings.monetize_by === 'wc' &&
+        course_pricing?.product_id &&
+        course_pricing.product_id !== '0' &&
+        wcProductsQuery.data.find(({ ID }) => ID !== course_pricing.product_id)
+      ) {
+        form.setValue('course_product_id', '', {
+          shouldValidate: true,
+        });
+      }
+    }
+  }, [wcProductsQuery.data]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!tutorConfig.edd_products || !tutorConfig.edd_products.length) {
+      return;
+    }
+
+    const { course_pricing } = courseDetails || {};
+
+    if (
+      tutorConfig.settings.monetize_by === 'edd' &&
+      course_pricing?.product_id &&
+      course_pricing.product_id !== '0' &&
+      !tutorConfig.edd_products.find(({ ID }) => ID === String(course_pricing.product_id))
+    ) {
+      form.setValue('course_product_id', '', {
+        shouldValidate: true,
+      });
+    }
+  }, [tutorConfig.edd_products]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -349,18 +388,20 @@ const CourseBasic = () => {
           )}
         />
 
-        <Controller
-          name="course_pricing_category"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormRadioGroup
-              {...controllerProps}
-              label={__('Pricing type', 'tutor')}
-              options={coursePricingCategoryOptions}
-              wrapperCss={styles.priceRadioGroup}
-            />
-          )}
-        />
+        <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings.monetize_by === 'tutor'}>
+          <Controller
+            name="course_pricing_category"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormRadioGroup
+                {...controllerProps}
+                label={__('Pricing type', 'tutor')}
+                options={coursePricingCategoryOptions}
+                wrapperCss={styles.priceRadioGroup}
+              />
+            )}
+          />
+        </Show>
 
         <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview courseId={courseId} />}>
           <Controller
@@ -389,7 +430,7 @@ const CourseBasic = () => {
                 {...controllerProps}
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
-                options={wcProductOptions()}
+                options={wcProductOptions(wcProductsQuery.data)}
                 helpText={__(
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
                 )}
@@ -416,7 +457,7 @@ const CourseBasic = () => {
                   tutorConfig.edd_products
                     ? tutorConfig.edd_products.map((product) => ({
                         label: product.post_title,
-                        value: Number(product.ID),
+                        value: String(product.ID),
                       }))
                     : []
                 }
@@ -446,6 +487,7 @@ const CourseBasic = () => {
                     placeholder={__('0', 'tutor')}
                     type="number"
                     loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    selectOnFocus
                   />
                 )}
               />
@@ -463,6 +505,7 @@ const CourseBasic = () => {
                     placeholder={__('0', 'tutor')}
                     type="number"
                     loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    selectOnFocus
                   />
                 )}
               />

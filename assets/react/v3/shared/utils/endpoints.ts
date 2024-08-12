@@ -12,6 +12,11 @@ const endpoints = {
   CATEGORY_LIST: 'category_list',
   CREATED_COURSE: 'tutor_create_course',
   TUTOR_INSTRUCTOR_SEARCH: 'tutor_course_instructor_search',
+  GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_course_plans',
+  SAVE_SUBSCRIPTION: 'tutor_subscription_course_plan_save',
+  DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
+  DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
+  SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
 
   GENERATE_AI_IMAGE: 'tutor_generate_image',
   MAGIC_FILL_AI_IMAGE: 'tutor_magic_fill_image',

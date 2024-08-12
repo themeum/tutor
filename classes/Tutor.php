@@ -939,8 +939,8 @@ final class Tutor {
 			discount_type ENUM('percentage', 'flat') NOT NULL,
 			discount_amount DECIMAL(13, 2) NOT NULL,
 			applies_to VARCHAR(100) DEFAULT 'all_courses_and_bundles', -- possible values 'all_courses_and_bundles', 'all_courses', 'all_bundles', 'specific_courses', 'specific_bundles', 'specific_category'
-			total_usage_limit INT(10) UNSIGNED DEFAULT 0,
-			per_user_usage_limit TINYINT(4) UNSIGNED,
+			total_usage_limit INT(10) UNSIGNED DEFAULT NULL, -- null for unlimited usage
+			per_user_usage_limit TINYINT(4) UNSIGNED DEFAULT NULL, -- null for unlimited usage
 			purchase_requirement VARCHAR(50) DEFAULT 'no_minimum', -- possible values 'no_minimum', 'minimum_purchase', 'minimum_quantity'
 			purchase_requirement_value DECIMAL(13, 2),
 			start_date_gmt DATETIME NOT NULL,

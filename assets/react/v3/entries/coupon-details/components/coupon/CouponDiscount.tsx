@@ -10,20 +10,27 @@ import Show from '@Controls/Show';
 import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
 
 import { Coupon } from '@CouponServices/coupon';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
+import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
+const isTutorProActive = !!tutorConfig.tutor_pro_url;
+const displayBundle = isTutorProActive && isAddonEnabled('Course Bundle');
+
 const discountTypeOptions = [
-	{ label: __('Percent', 'tutor'), value: 'percent' },
-	{ label: __('Amount', 'tutor'), value: 'amount' },
+	{ label: __('Percent', 'tutor'), value: 'percentage' },
+	{ label: __('Amount', 'tutor'), value: 'flat' },
 ];
+
 const appliesToOptions = [
-	{ label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' },
 	{ label: __('All courses', 'tutor'), value: 'all_courses' },
-	{ label: __('All bundles', 'tutor'), value: 'all_bundles' },
+	...(displayBundle ? [{ label: __('All bundles', 'tutor'), value: 'all_bundles' }] : []),
+	...(displayBundle ? [{ label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' }] : []),
 	{ label: __('Specific courses', 'tutor'), value: 'specific_courses' },
-	{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' },
+	...(displayBundle ? [{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' }] : []),
 	{ label: __('Specific category', 'tutor'), value: 'specific_category' },
 ];
 
@@ -47,20 +54,23 @@ function CouponDiscount() {
 				<Controller
 					name="discount_type"
 					control={form.control}
+					rules={requiredRule()}
 					render={(controllerProps) => (
 						<FormSelectInput {...controllerProps} label={__('Discount type', 'tutor')} options={discountTypeOptions} />
 					)}
 				/>
 				<Controller
-					name="discount_value"
+					name="discount_amount"
 					control={form.control}
+					rules={requiredRule()}
 					render={(controllerProps) => (
 						<FormInputWithContent
 							{...controllerProps}
 							type="number"
 							label={__('Discount Value', 'tutor')}
 							placeholder="0"
-							content={discountType === 'amount' ? tutor_currency?.symbol ?? '$' : '%'}
+							content={discountType === 'flat' ? tutor_currency?.symbol ?? '$' : '%'}
+							contentCss={styleUtils.inputCurrencyStyle}
 						/>
 					)}
 				/>
@@ -68,6 +78,7 @@ function CouponDiscount() {
 			<Controller
 				name="applies_to"
 				control={form.control}
+				rules={requiredRule()}
 				render={(controllerProps) => (
 					<FormSelectInput {...controllerProps} label={__('Applies to', 'tutor')} options={appliesToOptions} />
 				)}

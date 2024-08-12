@@ -93,6 +93,15 @@ class CouponModel {
 	private $coupon_usage_table = 'tutor_coupon_usages';
 
 	/**
+	 * Coupon application table
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	private $coupon_applies_to_table = 'tutor_coupon_applications';
+
+	/**
 	 * Fillable fields
 	 *
 	 * @since 3.0.0
@@ -131,12 +140,7 @@ class CouponModel {
 		'discount_type',
 		'discount_amount',
 		'applies_to',
-		'total_usage_limit',
-		'per_user_usage_limit',
-		'purchase_requirement',
-		'purchase_requirement_value',
 		'start_date_gmt',
-		'expire_date_gmt',
 	);
 
 	/**
@@ -146,8 +150,9 @@ class CouponModel {
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->table_name         = $wpdb->prefix . $this->table_name;
-		$this->coupon_usage_table = $wpdb->prefix . $this->coupon_usage_table;
+		$this->table_name              = $wpdb->prefix . $this->table_name;
+		$this->coupon_usage_table      = $wpdb->prefix . $this->coupon_usage_table;
+		$this->coupon_applies_to_table = $wpdb->prefix . $this->coupon_applies_to_table;
 	}
 
 	/**
@@ -270,10 +275,58 @@ class CouponModel {
 	 *
 	 * @param array $data Array as per table column.
 	 *
+	 * @throws \Exception Database error if occur.
+	 *
 	 * @return int Coupon id or 0 if failed
 	 */
 	public function create_coupon( array $data ) {
-		return QueryHelper::insert( $this->table_name, $data );
+		try {
+			return QueryHelper::insert( $this->table_name, $data );
+		} catch ( \Throwable $th ) {
+			throw new \Exception( $th->getMessage() );
+		}
+	}
+
+	/**
+	 * Insert applies to
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $applies_to Applies to type.
+	 * @param array  $applies_to_ids Applies to ids.
+	 * @param mixed  $coupon_code Coupon code.
+	 *
+	 * @return mixed true|false on insert, void if not insert-able
+	 */
+	public function insert_applies_to( string $applies_to, array $applies_to_ids, $coupon_code ) {
+		$specific_applies = array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY );
+		if ( in_array( $applies_to, $specific_applies ) ) {
+			$data = array();
+
+			foreach ( $applies_to_ids as $id ) {
+				$data[] = array(
+					'coupon_code'  => $coupon_code,
+					'reference_id' => $id,
+				);
+			}
+
+			if ( count( $data ) ) {
+				return QueryHelper::insert_multiple_rows( $this->coupon_applies_to_table, $data );
+			}
+		}
+	}
+
+	/**
+	 * Delete applies to
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $coupon_code Coupon code.
+	 *
+	 * @return bool
+	 */
+	public function delete_applies_to( $coupon_code ) {
+		return QueryHelper::delete( $this->coupon_applies_to_table, array( 'coupon_code' => $coupon_code ) );
 	}
 
 	/**
@@ -602,14 +655,14 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param mixed $coupon_code Coupon code.
+	 * @param array $where Where condition.
 	 *
 	 * @return mixed
 	 */
-	public function get_coupon( $coupon_code ) {
+	public function get_coupon( array $where ) {
 		return QueryHelper::get_row(
 			$this->table_name,
-			array( 'coupon_code' => $coupon_code ),
+			$where,
 			'id'
 		);
 	}
@@ -657,7 +710,7 @@ class CouponModel {
 			if ( $sale_price ) {
 				$discount_price = $sale_price;
 			} else {
-				$coupon = $this->get_coupon( $coupon_code );
+				$coupon = $this->get_coupon( array( 'coupon_code' => $coupon_code ) );
 				if ( $coupon ) {
 					$is_valid = $this->is_coupon_valid( $coupon );
 					if ( $is_valid ) {
@@ -674,7 +727,7 @@ class CouponModel {
 				}
 			}
 
-			$response[] = (object) array(
+			$response['course_items'][] = (object) array(
 				'course_id'      => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
@@ -723,16 +776,38 @@ class CouponModel {
 			if ( $sale_price ) {
 				$discount_price = $sale_price;
 			} else {
-				// @TODO deduct automatic coupon price.
+				$automatic_coupons = $this->get_coupons(
+					array( 'coupon_type' => self::TYPE_AUTOMATIC ),
+					'',
+					1000,
+					0
+				)['results'];
+
+				if ( is_array( $automatic_coupons ) && count( $automatic_coupons ) ) {
+					foreach ( $automatic_coupons as $coupon ) {
+						$is_valid = $this->is_coupon_valid( $coupon );
+						if ( $is_valid ) {
+							$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_ids, $coupon );
+							if ( $is_meet_min_requirement ) {
+								$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
+
+								// Apply discount if pass all checks.
+								if ( $should_apply_coupon ) {
+									$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+								}
+							}
+						}
+					}
+				}
 			}
 
-			$response[] = (object) array(
+			$response['course_items'][] = (object) array(
 				'course_id'      => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
 			);
 
-			$response['total_price'] += $discount_price;
+			$response['total_price'] += $discount_price ? $discount_price : $reg_price;
 		}
 
 		return (object) $response;
@@ -822,7 +897,7 @@ class CouponModel {
 
 			case self::APPLIES_TO_SPECIFIC_CATEGORY:
 				$course_categories = wp_get_post_terms( $object_id, 'course-category' );
-				if ( is_a( $course_categories, 'WP_Term' ) ) {
+				if ( ! is_wp_error( $course_categories ) ) {
 					$term_ids      = array_column( $course_categories, 'term_id' );
 					$is_applicable = count( array_intersect( $applications, $term_ids ) );
 				}
@@ -879,7 +954,7 @@ class CouponModel {
 		$expire_date = strtotime( $coupon->expire_date_gmt );
 
 		// Check if the current time is within the start and expiry dates.
-		return ( $now >= $start_date ) && ( $now <= $expire_date );
+		return ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
 	}
 
 	/**
@@ -898,10 +973,14 @@ class CouponModel {
 		$coupon_usage_limit = (int) $coupon->coupon_usage_limit;
 		$user_usage_limit   = (int) $coupon->per_user_usage_limit;
 
-		$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
-		if ( $coupon_usage_count >= $coupon_usage_limit ) {
-			$has_limit = false;
-		} else {
+		if ( $coupon_usage_limit > 0 ) {
+			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
+			if ( $coupon_usage_count >= $coupon_usage_limit ) {
+				$has_limit = false;
+			}
+		}
+
+		if ( $user_usage_limit > 0 ) {
 			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
 				$has_limit = false;
@@ -921,13 +1000,10 @@ class CouponModel {
 	 * @return array [1,2,4]
 	 */
 	public function get_coupon_applications( $coupon_code ): array {
-		global $wpdb;
-		$application_table = $wpdb->prefix . 'tutor_coupon_applications';
-
 		$response = array();
 
 		$result = QueryHelper::get_all(
-			$application_table,
+			$this->coupon_applies_to_table,
 			array( 'coupon_code' => $coupon_code ),
 			'coupon_code'
 		);
@@ -937,6 +1013,82 @@ class CouponModel {
 		}
 
 		return $response;
+	}
+
+	/**
+	 * Get formatted coupon application items
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon Coupon object.
+	 *
+	 * @return array
+	 */
+	public function get_formatted_coupon_applications( object $coupon ): array {
+		$applications = $this->get_coupon_applications( $coupon->coupon_code );
+		$response     = array();
+
+		foreach ( $applications as $application_id ) {
+			$application = $this->get_application_details( $application_id );
+
+			if ( $application ) {
+				$response[] = $application;
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Get coupon application details
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $id Application id.
+	 *
+	 * @return array
+	 */
+	public function get_application_details( int $id ): array {
+		$response = array();
+		if ( tutor()->course_post_type === get_post_type( $id ) || 'course-bundle' === get_post_type( $id ) ) {
+			$post = get_post( $id );
+
+			if ( $post ) {
+				$response = array(
+					'id'            => $id,
+					'title'         => get_the_title( $id ),
+					'image'         => get_the_post_thumbnail_url( $id ),
+					'regular_price' => get_post_meta( $id, Course::COURSE_PRICE_META, true ),
+					'sale_price'    => get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ),
+				);
+			}
+		} elseif ( term_exists( $id ) ) {
+			$term = get_term( $id );
+
+			if ( $term ) {
+				$thumb_id = get_term_meta( $id, 'thumbnail_id', true );
+				$response = array(
+					'id'    => $id,
+					'title' => $term->name,
+					'image' => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+				);
+			}
+		}
+
+		return $response;
+	}
+
+	/**
+	 * Check if applies to is specific
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $applies_to Applies to.
+	 *
+	 * @return boolean
+	 */
+	public function is_specific_applies_to( string $applies_to ) {
+		return in_array( $applies_to, array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY ) );
 	}
 
 }
