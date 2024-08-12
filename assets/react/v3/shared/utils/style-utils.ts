@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, colorTokens, containerMaxWidth, fontFamily, spacing } from '@Config/styles';
+import { borderRadius, colorPalate, colorTokens, containerMaxWidth, fontFamily, fontSize, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 
 export const createGlobalCss = () => css`
@@ -349,7 +349,7 @@ export const styleUtils = {
 		outline: 2px solid ${colorTokens.stroke.brand};
 		outline-offset: 1px;
 	`,
-  dateAndTimeWrapper: css`
+  	dateAndTimeWrapper: css`
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		border-radius: ${borderRadius[6]};
@@ -386,5 +386,9 @@ export const styleUtils = {
 				}
 			}
 		}
+	`,
+	inputCurrencyStyle: css`
+		font-size: ${fontSize[18]};
+		color: ${colorTokens.icon.subdued};
 	`,
 };

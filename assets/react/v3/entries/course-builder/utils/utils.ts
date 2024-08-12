@@ -254,3 +254,8 @@ type Addon = `${Addons}`;
 export const isAddonEnabled = (addon: Addon) => {
   return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
 };
+
+export function toCapitalize(str: string) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
