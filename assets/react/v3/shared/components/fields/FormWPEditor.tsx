@@ -22,6 +22,8 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   placeholder?: string;
   helpText?: string;
   onChange?: (value: string) => void;
+  generateWithAi?: boolean;
+  onClickAiButton?: () => void;
   hasCustomEditorSupport?: boolean;
   editors?: Editor[];
   editorUsed?: Editor;
@@ -37,6 +39,8 @@ const FormWPEditor = ({
   placeholder,
   helpText,
   onChange,
+  generateWithAi = false,
+  onClickAiButton,
   hasCustomEditorSupport = false,
   editors,
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
@@ -52,6 +56,8 @@ const FormWPEditor = ({
       readOnly={readOnly}
       placeholder={placeholder}
       helpText={helpText}
+      generateWithAi={generateWithAi}
+      onClickAiButton={onClickAiButton}
     >
       {() => {
         return (

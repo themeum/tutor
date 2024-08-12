@@ -218,6 +218,7 @@ export const colorTokens = {
       primary: '#3e64de',
     },
     wp: '#2271b1',
+    magicAi: '#484F66',
   },
   surface: {
     tutor: '#ffffff',
@@ -228,6 +229,7 @@ export const colorTokens = {
   background: {
     brand: '#3e64de',
     white: '#ffffff',
+    black: '#000000',
     default: '#f4f6f9',
     hover: '#f5f6fa',
     active: '#f0f1f5',
@@ -250,6 +252,10 @@ export const colorTokens = {
       errorFail: '#ffebeb',
       cancelled: '#eceef2',
       refunded: '#e5f5f5',
+    },
+    magicAi: {
+      default: '#FBF6FF',
+      8: rgba('#C984FE', 0.08),
     },
   },
   icon: {
@@ -292,6 +298,7 @@ export const colorTokens = {
       refunded: '#ccebea',
       fail: '#fdd9d7',
     },
+    magicAi: '#C984FE',
   },
   border: {
     neutral: '#C8C8C8',
@@ -547,12 +554,14 @@ export const borderRadius = {
   6: '6px',
   8: '8px',
   10: '10px',
+  12: '12px',
   14: '14px',
   20: '20px',
   24: '24px',
   30: '30px',
   40: '40px',
   50: '50px',
+  54: '54px',
   circle: '50%',
   card: '8px',
   min: '4px',

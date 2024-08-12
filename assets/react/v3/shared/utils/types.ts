@@ -1,5 +1,5 @@
 import type collection from '@Config/icon-list';
-import type { AxiosError } from 'axios';
+import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
 
 export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
@@ -66,6 +66,13 @@ export interface OptionWithIcon<T> {
   label: string;
   value: T;
   icon: ReactNode;
+  disabled?: boolean;
+}
+export interface OptionWithImage<T> {
+  label: string;
+  value: T;
+  image: string;
+  disabled?: boolean;
 }
 
 export interface PaginatedResult<T> {
@@ -105,3 +112,9 @@ export interface MoreOptionsProps<T> {
 export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
+
+export interface WPResponse<T> {
+  data: T;
+  message: string;
+  status_code: AxiosResponse['status'];
+}

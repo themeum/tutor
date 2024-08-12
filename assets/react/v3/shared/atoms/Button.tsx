@@ -51,14 +51,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         css={[styles.button({ variant, isOutlined, size, loading, disabled }), buttonCss]}
         onClick={onClick}
         tabIndex={tabIndex}
-        disabled={disabled || loading}
+        disabled={disabled}
       >
-        {loading && (
+        {loading && !disabled && (
           <span css={styles.spinner}>
             <SVGIcon name="spinner" width={18} height={18} />
           </span>
         )}
-        <span css={[styles.buttonContent({ loading }), buttonContentCss]}>
+        <span css={[styles.buttonContent({ loading, disabled }), buttonContentCss]}>
           {icon && iconPosition === 'left' && (
             <span css={styles.buttonIcon({ iconPosition, loading, hasChildren: !!children })}>{icon}</span>
           )}
@@ -120,23 +120,23 @@ const styles = {
 		${
       size === 'large' &&
       css`
-				padding: ${spacing[12]} ${spacing[40]};
-			`
+			padding: ${spacing[12]} ${spacing[40]};
+		`
     }
 
 		${
       size === 'small' &&
       css`
-				${typography.small('medium')};
-				padding: ${spacing[6]} ${spacing[16]};
-			`
+			${typography.small('medium')};
+			padding: ${spacing[6]} ${spacing[16]};
+		`
     }
     
     ${
       variant === 'primary' &&
       css`
-				background-color: ${colorTokens.action.primary.default};
-				color: ${colorTokens.text.white};
+			background-color: ${colorTokens.action.primary.default};
+			color: ${colorTokens.text.white};
 
 				svg {
 					color: ${colorTokens.icon.white};
@@ -156,12 +156,12 @@ const styles = {
 					box-shadow: none;
 				}
 
-				${
-          isOutlined &&
-          css`
-						background-color: transparent;
-						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
-						color: ${colorTokens.text.brand};
+			${
+        isOutlined &&
+        css`
+				background-color: transparent;
+				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
+				color: ${colorTokens.text.brand};
 
 						svg {
 							color: ${colorTokens.icon.brand};
@@ -186,34 +186,34 @@ const styles = {
 						&:active {
 							color: ${colorTokens.text.white};
 
-							svg {
-								color: ${colorTokens.icon.white};
-							}
-						}
-					`
-        }
+					svg {
+						color: ${colorTokens.icon.white};
+					}
+				}
+			`
+      }
 
 			${
         (disabled || loading) &&
         css`
-					background-color: ${colorTokens.action.primary.disable};
-					color: ${colorTokens.text.disable};
+				background-color: ${colorTokens.action.primary.disable};
+				color: ${colorTokens.text.disable};
+				svg {
+					color: ${colorTokens.icon.disable.default};
+				}
+
+				${
+          isOutlined &&
+          css`
+					background-color: transparent;
+					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
 					svg {
 						color: ${colorTokens.icon.disable.default};
 					}
-
-					${
-            isOutlined &&
-            css`
-						background-color: transparent;
-						box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
-					`
-          }
 				`
+        }
+			`
       }
 		`
     }
@@ -245,9 +245,9 @@ const styles = {
 			${
         isOutlined &&
         css`
-					background-color: transparent;
-					box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
-					color: ${colorTokens.text.wp};
+				background-color: transparent;
+				box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
+				color: ${colorTokens.text.wp};
 
 					svg {
 						color: ${colorTokens.icon.brand};
@@ -272,34 +272,34 @@ const styles = {
 					&:active {
 						color: ${colorTokens.text.white};
 
-						svg {
-							color: ${colorTokens.icon.white};
-						}
+					svg {
+						color: ${colorTokens.icon.white};
 					}
-				`
+				}
+			`
       }
 
 			${
         (disabled || loading) &&
         css`
-					background-color: ${colorTokens.action.primary.disable};
-					color: ${colorTokens.text.disable};
+				background-color: ${colorTokens.action.primary.disable};
+				color: ${colorTokens.text.disable};
+				svg {
+					color: ${colorTokens.icon.disable.default};
+				}
+
+				${
+          isOutlined &&
+          css`
+					background-color: transparent;
+					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
 					svg {
 						color: ${colorTokens.icon.disable.default};
 					}
-
-					${
-            isOutlined &&
-            css`
-						background-color: transparent;
-						box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
-					`
-          }
 				`
+        }
+			`
       }
 		`
     }
@@ -307,8 +307,8 @@ const styles = {
     ${
       variant === 'secondary' &&
       css`
-				background-color: ${colorTokens.action.secondary.default};
-				color: ${colorTokens.text.brand};
+			background-color: ${colorTokens.action.secondary.default};
+			color: ${colorTokens.text.brand};
 
 				svg {
 					color: ${colorTokens.icon.brand};
@@ -328,51 +328,51 @@ const styles = {
 					box-shadow: none;
 				}
 
-				${
-          isOutlined &&
-          css`
-						background-color: transparent;
-						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.neutral};
-						color: ${colorTokens.text.brand};
+			${
+        isOutlined &&
+        css`
+				background-color: transparent;
+				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.neutral};
+				color: ${colorTokens.text.brand};
 
-						svg {
-							color: ${colorTokens.icon.brand};
-						}
-					`
-        }
+				svg {
+					color: ${colorTokens.icon.brand};
+				}
+			`
+      }
 
-				${
-          (disabled || loading) &&
-          css`
-						background-color: ${colorTokens.action.primary.disable};
-						color: ${colorTokens.text.disable};
+			${
+        (disabled || loading) &&
+        css`
+				background-color: ${colorTokens.action.primary.disable};
+				color: ${colorTokens.text.disable};
 
 						svg {
 							color: ${colorTokens.icon.disable.default};
 						}
 
-						${
-              isOutlined &&
-              css`
-							background-color: transparent;
-							box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+				${
+          isOutlined &&
+          css`
+					background-color: transparent;
+					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
-							svg {
-								color: ${colorTokens.icon.disable.default};
-							}
-						`
-            }
+					svg {
+						color: ${colorTokens.icon.disable.default};
+					}
 				`
         }
 			`
+      }
+		`
     }
 
     ${
       variant === 'tertiary' &&
       css`
-				background-color: ${colorTokens.action.outline.default};
-				color: ${colorTokens.text.subdued};
-				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
+			background-color: ${colorTokens.action.outline.default};
+			color: ${colorTokens.text.subdued};
+			box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
 
 				svg {
 					color: ${colorTokens.icon.hints};
@@ -407,45 +407,45 @@ const styles = {
 					}
 				}
 
-				${
-          isOutlined &&
-          css`
-						background-color: transparent;
-					`
-        }
+			${
+        isOutlined &&
+        css`
+				background-color: transparent;
+			`
+      }
 
-				${
-          (disabled || loading) &&
-          css`
-						background-color: ${colorTokens.action.primary.disable};
-						color: ${colorTokens.text.disable};
-						box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+			${
+        (disabled || loading) &&
+        css`
+				background-color: ${colorTokens.action.primary.disable};
+				color: ${colorTokens.text.disable};
+				box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
 						svg {
 							color: ${colorTokens.icon.disable.default};
 						}
 
-						${
-              isOutlined &&
-              css`
-								background-color: transparent;
-								box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+				${
+          isOutlined &&
+          css`
+					background-color: transparent;
+					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
-								svg {
-									color: ${colorTokens.icon.disable.default};
-								}
-							`
-            }
-					`
+					svg {
+						color: ${colorTokens.icon.disable.default};
+					}
+				`
         }
 			`
+      }
+		`
     }
 
     ${
       variant === 'danger' &&
       css`
-				background-color: ${colorTokens.background.status.errorFail};
-				color: ${colorTokens.text.error};
+			background-color: ${colorTokens.background.status.errorFail};
+			color: ${colorTokens.text.error};
 
 				svg {
 					color: ${colorTokens.icon.error};
@@ -464,60 +464,60 @@ const styles = {
 					box-shadow: none;
 				}
 
-				${
-          isOutlined &&
-          css`
-						background-color: transparent;
-						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.danger};
-					`
-        }
+			${
+        isOutlined &&
+        css`
+				background-color: transparent;
+				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.danger};
+			`
+      }
 
-				${
-          (disabled || loading) &&
-          css`
-						background-color: ${colorTokens.action.primary.disable};
-						color: ${colorTokens.text.disable};
+			${
+        (disabled || loading) &&
+        css`
+				background-color: ${colorTokens.action.primary.disable};
+				color: ${colorTokens.text.disable};
 
 						svg {
 							color: ${colorTokens.icon.disable.default};
 						}
 
-						${
-              isOutlined &&
-              css`
-							background-color: transparent;
-							box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+				${
+          isOutlined &&
+          css`
+					background-color: transparent;
+					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
-							svg {
-								color: ${colorTokens.icon.disable.default};
-							}
-						`
-            }
-					`
+					svg {
+						color: ${colorTokens.icon.disable.default};
+					}
+				`
         }
 			`
+      }
+		`
     }
 
     ${
       variant === 'text' &&
       css`
-				background-color: transparent;
-				color: ${colorTokens.text.subdued};
-				padding: ${spacing[8]};
+			background-color: transparent;
+			color: ${colorTokens.text.subdued};
+			padding: ${spacing[8]};
 
-				${
-          size === 'large' &&
-          css`
-						padding: ${spacing[12]} ${spacing[8]};
-					`
-        }
+			${
+        size === 'large' &&
+        css`
+				padding: ${spacing[12]} ${spacing[8]};
+			`
+      }
 
-				${
-          size === 'small' &&
-          css`
-						padding: ${spacing[4]} ${spacing[8]};
-					`
-        }
+			${
+        size === 'small' &&
+        css`
+				padding: ${spacing[4]} ${spacing[8]};
+			`
+      }
 
 				svg {
 					color: ${colorTokens.icon.hints};
@@ -537,36 +537,46 @@ const styles = {
 					}
 				}
 
-				${
-          (disabled || loading) &&
-          css`
-						color: ${colorTokens.text.disable};
+			${
+        (disabled || loading) &&
+        css`
+				color: ${colorTokens.text.disable};
 
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
-					`
-        }
+				svg {
+					color: ${colorTokens.icon.disable.default};
+				}
 			`
+      }
+		`
     }
 
-    ${
-      (disabled || loading) &&
-      css`
-				pointer-events: none;
-				cursor: not-allowed;
-			`
-    }
+    &:disabled {
+			cursor: not-allowed;
+			color: ${colorTokens.text.disable};
+
+			svg {
+				color: ${colorTokens.icon.disable.default};
+			}
+
+			&:hover {
+				color: ${colorTokens.text.disable};
+
+				svg {
+					color: ${colorTokens.icon.disable.default};
+				}
+			}
+		}
 	`,
-  buttonContent: ({ loading }: { loading: boolean }) => css`
+  buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
 		${styleUtils.display.flex()};
 		align-items: center;
 
 		${
       loading &&
+      !disabled &&
       css`
-				color: transparent;
-			`
+			color: transparent;
+		`
     }
 	`,
   buttonIcon: ({
@@ -584,23 +594,23 @@ const styles = {
 		${
       iconPosition === 'right' &&
       css`
-				margin-right: 0;
-				margin-left: ${spacing[4]};
-			`
+			margin-right: 0;
+			margin-left: ${spacing[4]};
+		`
     }
 
 		${
       loading &&
       css`
-				opacity: 0;
-			`
+			opacity: 0;
+		`
     }
 
     ${
       !hasChildren &&
       css`
-				margin-inline: 0;
-			`
+			margin-inline: 0;
+		`
     }
 	`,
   spinner: css`

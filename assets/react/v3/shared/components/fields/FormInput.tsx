@@ -11,10 +11,13 @@ import { typography } from '@Config/typography';
 
 import Show from '@Controls/Show';
 
+import AITextModal from '@Components/modals/AITextModal';
+import { useModal } from '@Components/modals/Modal';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
+import { __ } from '@wordpress/i18n';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -37,6 +40,9 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   style?: SerializedStyles;
   selectOnFocus?: boolean;
   autoFocus?: boolean;
+  generateWithAi?: boolean;
+  onClickAiButton?: () => void;
+  isMagicAi?: boolean;
 }
 
 const FormInput = ({
@@ -62,8 +68,11 @@ const FormInput = ({
   style,
   selectOnFocus = false,
   autoFocus = false,
+  generateWithAi = false,
+  isMagicAi = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
+  const { showModal } = useModal();
 
   let inputValue = field.value ?? '';
   let characterCount:
@@ -72,11 +81,16 @@ const FormInput = ({
         inputCharacter: number;
       }
     | undefined = undefined;
-
+  if (fieldType === 'number') {
+    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
+  }
   if (fieldType === 'number') {
     inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
   }
 
+  if (maxLimit) {
+    characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
+  }
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
@@ -101,6 +115,20 @@ const FormInput = ({
       removeBorder={removeBorder}
       isInlineLabel={isInlineLabel}
       inputStyle={style}
+      generateWithAi={generateWithAi}
+      onClickAiButton={() => {
+        showModal({
+          component: AITextModal,
+          isMagicAi: true,
+          props: {
+            title: __('AI Studio', 'tutor'),
+            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+            field,
+            fieldState,
+          },
+        });
+      }}
+      isMagicAi={isMagicAi}
     >
       {(inputProps) => {
         const ref = useRef<HTMLInputElement>(null);
@@ -120,6 +148,7 @@ const FormInput = ({
 
                   const fieldValue: string | number = fieldType === 'number' ? parseNumberOnly(value) : value;
 
+                  field.onChange(fieldValue);
                   field.onChange(fieldValue);
 
                   if (onChange) {
@@ -146,14 +175,14 @@ const FormInput = ({
                   ref.current.select();
                 }}
               />
-              {isClearable && !loading && !!field.value && (
+              {isClearable && !!field.value && (
                 <div css={styles.clearButton}>
                   <Button variant="text" onClick={() => field.onChange(null)}>
                     <SVGIcon name="timesAlt" />
                   </Button>
                 </div>
               )}
-              <Show when={isPassword && !loading}>
+              <Show when={isPassword}>
                 <div css={styles.eyeButtonWrapper}>
                   <button
                     type="button"
@@ -164,7 +193,7 @@ const FormInput = ({
                   </button>
                 </div>
               </Show>
-              <Show when={isClearable && !loading && !!field.value && fieldType !== 'password'}>
+              <Show when={isClearable && !!field.value && fieldType !== 'password'}>
                 <div css={styles.clearButton}>
                   <Button variant="text" onClick={() => field.onChange(null)}>
                     <SVGIcon name="timesAlt" />

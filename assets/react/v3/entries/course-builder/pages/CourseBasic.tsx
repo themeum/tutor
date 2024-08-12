@@ -18,6 +18,7 @@ import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
 
+import AiButton from '@Atoms/AiButton';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
@@ -204,7 +205,24 @@ const CourseBasic = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm}>
-        <CanvasHead title={__('Course Basic', 'tutor')} />
+        <CanvasHead
+          title={__('Course Basic', 'tutor')}
+          rightButton={
+            <div>
+              <AiButton
+                css={css`
+                display: inline-flex;
+                align-items: center;
+                gap: ${spacing[4]};
+              `}
+                onClick={() => alert('@TODO: will be implemented later.')}
+              >
+                <SVGIcon name="magicAi" width={24} height={24} />
+                Generate with AI
+              </AiButton>
+            </div>
+          }
+        />
 
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
@@ -220,6 +238,7 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
+                  generateWithAi
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
@@ -245,6 +264,7 @@ const CourseBasic = () => {
               <FormWPEditor
                 {...controllerProps}
                 label={__('Description', 'tutor')}
+                generateWithAi
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
@@ -308,6 +328,7 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Standard Size: 800x450 pixels', 'tutor')}
+              generateWithAi
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}

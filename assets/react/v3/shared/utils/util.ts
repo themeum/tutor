@@ -15,7 +15,7 @@ import {
 import type { DateRange } from 'react-day-picker';
 import { v4 as uuidv4 } from 'uuid';
 
-import type { IconCollection, PaginatedParams } from './types';
+import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {
@@ -279,4 +279,14 @@ export const formatSeconds = (seconds: number) => {
   }
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
+};
+export const getObjectKeys = <T extends {}>(object: T) => {
+  if (!isDefined(object) || !isObject(object)) {
+    return [] as (keyof T)[];
+  }
+  return Object.keys(object) as (keyof T)[];
+};
+
+export const getObjectValues = <T extends {}, K extends keyof T = keyof T>(object: T): T[K][] => {
+  return Object.values(object);
 };

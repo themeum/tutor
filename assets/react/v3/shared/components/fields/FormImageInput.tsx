@@ -1,8 +1,9 @@
-import { __ } from '@wordpress/i18n';
-
 import ImageInput from '@Atoms/ImageInput';
-
+import SVGIcon from '@Atoms/SVGIcon';
+import AIImageModal from '@Components/modals/AiImageModal';
+import { useModal } from '@Components/modals/Modal';
 import type { FormControllerProps } from '@Utils/form';
+import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type MediaSize = {
@@ -28,6 +29,7 @@ type FormImageInputProps = {
   helpText?: string;
   buttonText?: string;
   infoText?: string;
+  generateWithAi?: boolean;
   loading?: boolean;
 } & FormControllerProps<Media | null>;
 
@@ -39,8 +41,10 @@ const FormImageInput = ({
   buttonText = __('Upload Media', 'tutor'),
   infoText,
   onChange,
+  generateWithAi = false,
   loading,
 }: FormImageInputProps) => {
+  const { showModal } = useModal();
   const wpMedia = window.wp.media({
     library: { type: 'image' },
   });
@@ -71,7 +75,25 @@ const FormImageInput = ({
   };
 
   return (
-    <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
+    <FormFieldWrapper
+      label={label}
+      field={field}
+      fieldState={fieldState}
+      helpText={helpText}
+      onClickAiButton={() => {
+        showModal({
+          component: AIImageModal,
+          isMagicAi: true,
+          props: {
+            title: __('AI Studio', 'tutor'),
+            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+            field,
+            fieldState,
+          },
+        });
+      }}
+      generateWithAi={generateWithAi}
+    >
       {() => {
         return (
           <div>
