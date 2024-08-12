@@ -21,7 +21,7 @@ export type Subscription = {
   sale_price: string;
   sale_price_from: string; // start date
   sale_price_to: string; // end date
-  plan_duration_days: string; // 30, 60, 90, 120, 365 and 0 for until canceled
+  plan_duration: string; // 0 for until canceled
   provide_certificate: '0' | '1';
   enrollment_fee: string;
   trial_value: string;
@@ -54,7 +54,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   sale_price_from_time: '',
   sale_price_to_date: '',
   sale_price_to_time: '',
-  plan_duration_days: '0',
+  plan_duration: '0',
   do_not_provide_certificate: false,
   enrollment_fee: '0',
   trial_value: '0',
@@ -104,10 +104,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     recurring_value: subscription.recurring_value ?? '0',
     recurring_interval: subscription.recurring_interval ?? 'month',
     regular_price: subscription.regular_price ?? '0',
-    plan_duration_days: convertDaysToPlanLength(
-      Number(subscription.plan_duration_days),
-      subscription.recurring_interval,
-    ),
+    plan_duration: subscription.plan_duration,
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
@@ -142,7 +139,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
     recurring_value: formData.recurring_value,
     recurring_interval: formData.recurring_interval,
     regular_price: formData.regular_price,
-    plan_duration_days: convertPlanLengthToDays(formData.recurring_interval, Number(formData.plan_duration_days)),
+    plan_duration: formData.plan_duration,
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
     ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),
     sale_price: formData.offer_sale_price ? formData.sale_price : '0',
@@ -172,7 +169,7 @@ export type SubscriptionPayload = {
   sale_price?: string;
   sale_price_from?: string; // start date
   sale_price_to?: string; // end date
-  plan_duration_days: string; // 30, 60, 90, 120, 365 and 0 for until canceled
+  plan_duration: string; // 30, 60, 90, 120, 365 and 0 for until canceled
   provide_certificate: '0' | '1';
   enrollment_fee?: string;
   trial_value?: string;

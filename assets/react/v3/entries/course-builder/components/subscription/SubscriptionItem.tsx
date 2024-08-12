@@ -2,6 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -30,11 +31,12 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 
-import { useEffect } from 'react';
+import { tutorConfig } from '@Config/config';
 import { OfferSalePrice } from './OfferSalePrice';
 import { formatRepeatUnit } from './PreviewItem';
 
 const courseId = getCourseId();
+const { tutor_currency } = tutorConfig;
 
 export default function SubscriptionItem({
   subscription,
@@ -193,9 +195,10 @@ export default function SubscriptionItem({
                       <FormInputWithContent
                         {...props}
                         label={__('Price', 'tutor')}
-                        content={'$'}
+                        content={tutor_currency?.symbol || '$'}
                         placeholder={__('Subscription price', 'tutor')}
                         selectOnFocus
+                        contentCss={styleUtils.inputCurrencyStyle}
                       />
                     )}
                   />
@@ -239,7 +242,7 @@ export default function SubscriptionItem({
 
                 <Controller
                   control={form.control}
-                  name="plan_duration_days"
+                  name="plan_duration"
                   render={(props) => (
                     <FormSelectInput
                       {...props}
@@ -272,9 +275,10 @@ export default function SubscriptionItem({
                       <FormInputWithContent
                         {...props}
                         label={__('Enrolment fee', 'tutor')}
-                        content={'$'}
+                        content={tutor_currency?.symbol || '$'}
                         placeholder={__('Enter enrolment fee')}
                         selectOnFocus
+                        contentCss={styleUtils.inputCurrencyStyle}
                       />
                     )}
                   />
