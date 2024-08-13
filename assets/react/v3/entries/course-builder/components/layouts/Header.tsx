@@ -58,25 +58,23 @@ const Header = () => {
     };
 
     if (data.course_price_type === 'paid') {
-      if (!data.course_product_id) {
+      if (
+        (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'edd') &&
+        !data.course_product_id
+      ) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
       }
 
       if (
-        tutorConfig.settings.monetize_by === 'wc' &&
-        (!data.course_price || !data.course_sale_price || !data.course_product_id)
+        (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor') &&
+        !data.course_price
       ) {
         navigateToBasicsWithError();
 
         if (!data.course_price) {
           triggerAndFocus('course_price');
-          return;
-        }
-
-        if (!data.course_sale_price) {
-          triggerAndFocus('course_sale_price');
           return;
         }
 

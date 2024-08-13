@@ -1,3 +1,4 @@
+import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -25,7 +26,12 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
 export function PreviewItem({ subscription }: { subscription: SubscriptionFormData }) {
   return (
     <div css={styles.item}>
-      <p css={styles.title}>{subscription.plan_name}</p>
+      <p css={styles.title}>
+        {subscription.plan_name}
+        <Show when={subscription.is_recommended}>
+          <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
+        </Show>
+      </p>
       <div css={styles.information}>
         <span>
           {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
@@ -61,6 +67,8 @@ const styles = {
   title: css`
 		${typography.caption('medium')};
 		color: ${colorTokens.text.primary};
+    display: flex;
+    align-items: center;
 	`,
   information: css`
 		${typography.small()};
@@ -70,4 +78,7 @@ const styles = {
 		flex-wrap: wrap;
 		gap: ${spacing[4]};
 	`,
+  featuredIcon: css`
+    color: ${colorTokens.icon.brand};
+  `,
 };

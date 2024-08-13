@@ -21,6 +21,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 
+import { getVimeoVideoDuration } from '@CourseBuilderUtils/utils';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -242,7 +243,7 @@ const FormVideoInput = ({
     return fieldValue && fieldValue[videoIdKey] !== '';
   };
 
-  const handleDataFromUrl = (data: URLFormData) => {
+  const handleDataFromUrl = async (data: URLFormData) => {
     const sourceMap: { [key: string]: string } = {
       external: 'external_url',
       shortcode: 'shortcode',
@@ -256,6 +257,17 @@ const FormVideoInput = ({
       source,
       [`source_${source}`]: data.videoUrl,
     };
+
+    if (source === 'vimeo') {
+      const duration = await getVimeoVideoDuration(data.videoUrl);
+      if (onGetDuration && duration) {
+        onGetDuration({
+          hours: Math.floor(duration / 3600),
+          minutes: Math.floor((duration % 3600) / 60),
+          seconds: duration % 60,
+        });
+      }
+    }
 
     field.onChange(updateFieldValue(fieldValue, updatedValue));
     onChange?.(updateFieldValue(fieldValue, updatedValue));

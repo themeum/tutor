@@ -316,7 +316,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {visibilityStatus === 'password_protected' && (
+        <Show when={visibilityStatus === 'password_protected'}>
           <Controller
             name="post_password"
             control={form.control}
@@ -335,7 +335,7 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
         <ScheduleOptions />
 
@@ -399,7 +399,7 @@ const CourseBasic = () => {
           />
         </Show>
 
-        {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc' && (
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc'}>
           <Controller
             name="course_product_id"
             control={form.control}
@@ -420,9 +420,9 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
-        {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'edd' && (
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'edd'}>
           <Controller
             name="course_product_id"
             control={form.control}
@@ -448,52 +448,53 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
-        {courseCategory === 'regular' &&
-          coursePriceType === 'paid' &&
-          (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc') && (
-            <div css={styles.coursePriceWrapper}>
-              <Controller
-                name="course_price"
-                control={form.control}
-                rules={{
-                  ...requiredRule(),
-                }}
-                render={(controllerProps) => (
-                  <FormInputWithContent
-                    {...controllerProps}
-                    label={__('Regular Price', 'tutor')}
-                    content={tutor_currency?.symbol || '$'}
-                    placeholder={__('0', 'tutor')}
-                    type="number"
-                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                    selectOnFocus
-                    contentCss={styleUtils.inputCurrencyStyle}
-                  />
-                )}
-              />
-              <Controller
-                name="course_sale_price"
-                control={form.control}
-                rules={{
-                  ...requiredRule(),
-                }}
-                render={(controllerProps) => (
-                  <FormInputWithContent
-                    {...controllerProps}
-                    label={__('Discount Price', 'tutor')}
-                    content={tutor_currency?.symbol || '$'}
-                    placeholder={__('0', 'tutor')}
-                    type="number"
-                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                    selectOnFocus
-                    contentCss={styleUtils.inputCurrencyStyle}
-                  />
-                )}
-              />
-            </div>
-          )}
+        <Show
+          when={
+            courseCategory === 'regular' &&
+            coursePriceType === 'paid' &&
+            (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc')
+          }
+        >
+          <div css={styles.coursePriceWrapper}>
+            <Controller
+              name="course_price"
+              control={form.control}
+              rules={{
+                ...requiredRule(),
+              }}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Regular Price', 'tutor')}
+                  content={tutor_currency?.symbol || '$'}
+                  placeholder={__('0', 'tutor')}
+                  type="number"
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  selectOnFocus
+                  contentCss={styleUtils.inputCurrencyStyle}
+                />
+              )}
+            />
+            <Controller
+              name="course_sale_price"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Discount Price', 'tutor')}
+                  content={tutor_currency?.symbol || '$'}
+                  placeholder={__('0', 'tutor')}
+                  type="number"
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  selectOnFocus
+                  contentCss={styleUtils.inputCurrencyStyle}
+                />
+              )}
+            />
+          </div>
+        </Show>
 
         <Controller
           name="course_categories"
@@ -510,7 +511,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {currentUser.roles.includes(TutorRoles.ADMINISTRATOR) && (
+        <Show when={currentUser.roles.includes(TutorRoles.ADMINISTRATOR)}>
           <Controller
             name="post_author"
             control={form.control}
@@ -526,9 +527,9 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
-        {isInstructorVisible && (
+        <Show when={isInstructorVisible}>
           <Controller
             name="course_instructors"
             control={form.control}
@@ -544,7 +545,7 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
       </div>
     </div>
   );

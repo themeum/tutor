@@ -259,3 +259,31 @@ export function toCapitalize(str: string) {
   if (!str) return str;
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
+
+export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
+  const videoId = Number.parseInt(videoUrl.split('/').pop() || '', 10);
+  const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
+
+  try {
+    const response = await fetch(jsonUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch the video data');
+    }
+
+    const textData = await response.text();
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(textData, 'application/xml');
+
+    const durationElement = xmlDoc.getElementsByTagName('duration')[0];
+    if (!durationElement || !durationElement.textContent) {
+      return null;
+    }
+
+    const duration = Number.parseInt(durationElement.textContent, 10);
+    return duration; // in seconds
+  } catch (error) {
+    console.error('Error fetching video duration:', error);
+    return null;
+  }
+}
