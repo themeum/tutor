@@ -57,9 +57,11 @@ class Ecommerce {
 		new AdminMenu();
 		new Settings();
 		new CartController();
+		new CheckoutController();
 		new OrderController();
 		new OrderActivitiesController();
 		new CouponController();
+		new BillingController();
 		new HooksHandler();
 	}
 

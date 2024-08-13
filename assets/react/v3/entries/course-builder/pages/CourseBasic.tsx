@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
@@ -17,7 +17,6 @@ import FormSelectUser from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
-import { useModal } from '@Components/modals/Modal';
 
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
@@ -34,36 +33,41 @@ import {
   type CourseDetailsResponse,
   type CourseFormData,
   type PricingCategory,
+  type WcProduct,
   useGetWcProductsQuery,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useInstructorListQuery } from '@Services/users';
+import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const courseId = getCourseId();
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
   const queryClient = useQueryClient();
-  const { showModal } = useModal();
+  const isCourseDetailsFetching = useIsFetching({
+    queryKey: ['CourseDetails', courseId],
+  });
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const currentUser = tutorConfig.current_user;
 
-  const author = form.watch('post_author');
-
-  const [instructorSearchText, setInstructorSearchText] = useState('');
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
-  const isAdministrator = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     isAdministrator &&
-    String(tutorConfig.current_user.data.id) === String(author?.id || '');
+    String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
@@ -128,10 +132,21 @@ const CourseBasic = () => {
     },
   ];
 
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+  const userList = useUserListQuery({
+    context: 'edit',
+    roles: [],
+  });
+
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
-  const instructorOptions = instructorListQuery.data ?? [];
+  const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
+    id: instructor.id,
+    name: instructor.display_name,
+    email: instructor.user_email,
+    avatar_url: instructor.avatar_url,
+  }));
+
+  const instructorOptions = [...convertedCourseInstructors, ...(instructorListQuery.data || [])];
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -141,30 +156,88 @@ const CourseBasic = () => {
     tutorConfig.settings.monetize_by,
   );
 
-  const wcProductOptions = () => {
+  const wcProductOptions = (data: WcProduct[] | undefined) => {
+    if (!data || !data.length) {
+      return [];
+    }
+
     const { course_pricing } = courseDetails || {};
     const currentSelectedWcProduct =
       course_pricing?.product_id && course_pricing.product_id !== '0' && course_pricing.product_name
-        ? { label: course_pricing.product_name || '', value: course_pricing.product_id }
+        ? { label: course_pricing.product_name || '', value: String(course_pricing.product_id) }
         : null;
 
-    return wcProductsQuery.isSuccess && wcProductsQuery.data
-      ? [
-          currentSelectedWcProduct,
-          ...wcProductsQuery.data.map(({ post_title: label, ID: value }) => ({ label, value })),
-        ].filter(isDefined)
-      : [];
+    const convertedCourseProducts =
+      data.map(({ post_title: label, ID: value }) => ({
+        label,
+        value: String(value),
+      })) ?? [];
+
+    return (
+      data?.find(({ ID }) => ID !== currentSelectedWcProduct?.value)
+        ? [currentSelectedWcProduct, ...convertedCourseProducts]
+        : convertedCourseProducts
+    ).filter(isDefined);
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (wcProductDetailsQuery.isSuccess && wcProductDetailsQuery.data) {
-      form.setValue('course_price', wcProductDetailsQuery.data.regular_price || '0');
-      form.setValue('course_sale_price', wcProductDetailsQuery.data.sale_price || '0');
-    } else {
-      form.setValue('course_price', '0');
-      form.setValue('course_sale_price', '0');
+    if (wcProductsQuery.isSuccess && wcProductsQuery.data) {
+      const { course_pricing } = courseDetails || {};
+
+      if (
+        tutorConfig.settings.monetize_by === 'wc' &&
+        course_pricing?.product_id &&
+        course_pricing.product_id !== '0' &&
+        wcProductsQuery.data.find(({ ID }) => ID !== course_pricing.product_id)
+      ) {
+        form.setValue('course_product_id', '', {
+          shouldValidate: true,
+        });
+      }
     }
+  }, [wcProductsQuery.data]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!tutorConfig.edd_products || !tutorConfig.edd_products.length) {
+      return;
+    }
+
+    const { course_pricing } = courseDetails || {};
+
+    if (
+      tutorConfig.settings.monetize_by === 'edd' &&
+      course_pricing?.product_id &&
+      course_pricing.product_id !== '0' &&
+      !tutorConfig.edd_products.find(({ ID }) => ID === String(course_pricing.product_id))
+    ) {
+      form.setValue('course_product_id', '', {
+        shouldValidate: true,
+      });
+    }
+  }, [tutorConfig.edd_products]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (wcProductDetailsQuery.isSuccess && wcProductDetailsQuery.data) {
+      if (state?.isError) {
+        navigate('/basics', { state: { isError: false } });
+        return;
+      }
+
+      form.setValue('course_price', wcProductDetailsQuery.data.regular_price || '0', {
+        shouldValidate: true,
+      });
+      form.setValue('course_sale_price', wcProductDetailsQuery.data.sale_price || '0', {
+        shouldValidate: true,
+      });
+
+      return;
+    }
+
+    form.setValue('course_price', '0');
+    form.setValue('course_sale_price', '0');
   }, [wcProductDetailsQuery.data]);
 
   return (
@@ -186,6 +259,7 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -213,7 +287,7 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
-                loading={!courseDetails}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               />
             )}
           />
@@ -233,6 +307,10 @@ const CourseBasic = () => {
               placeholder="Select visibility status"
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+              onChange={() => {
+                form.setValue('post_password', '');
+              }}
             />
           )}
         />
@@ -241,13 +319,18 @@ const CourseBasic = () => {
           <Controller
             name="post_password"
             control={form.control}
+            rules={{
+              required: __('Password is required', 'tutor'),
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
                 label={__('Password', 'tutor')}
+                placeholder={__('Enter password', 'tutor')}
                 type="password"
                 isPassword
                 selectOnFocus
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               />
             )}
           />
@@ -263,7 +346,8 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
-              infoText={__('Size: 700x430 pixels', 'tutor')}
+              infoText={__('Standard Size: 800x450 pixels', 'tutor')}
+              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}
         />
@@ -276,24 +360,27 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={__('Supported file formats .mp4 ', 'tutor')}
+              infoText={__('Supported file formats .mp4', 'tutor')}
               supportedFormats={['mp4']}
+              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}
         />
 
-        <Controller
-          name="course_pricing_category"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormRadioGroup
-              {...controllerProps}
-              label={__('Pricing type', 'tutor')}
-              options={coursePricingCategoryOptions}
-              wrapperCss={styles.priceRadioGroup}
-            />
-          )}
-        />
+        <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings.monetize_by === 'tutor'}>
+          <Controller
+            name="course_pricing_category"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormRadioGroup
+                {...controllerProps}
+                label={__('Pricing type', 'tutor')}
+                options={coursePricingCategoryOptions}
+                wrapperCss={styles.priceRadioGroup}
+              />
+            )}
+          />
+        </Show>
 
         <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview courseId={courseId} />}>
           <Controller
@@ -314,16 +401,20 @@ const CourseBasic = () => {
           <Controller
             name="course_product_id"
             control={form.control}
+            rules={{
+              ...requiredRule(),
+            }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
-                options={wcProductOptions()}
+                options={wcProductOptions(wcProductsQuery.data)}
                 helpText={__(
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
                 )}
                 isSearchable
+                loading={wcProductsQuery.isLoading && !controllerProps.field.value}
               />
             )}
           />
@@ -333,6 +424,9 @@ const CourseBasic = () => {
           <Controller
             name="course_product_id"
             control={form.control}
+            rules={{
+              ...requiredRule(),
+            }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
@@ -342,12 +436,13 @@ const CourseBasic = () => {
                   tutorConfig.edd_products
                     ? tutorConfig.edd_products.map((product) => ({
                         label: product.post_title,
-                        value: Number(product.ID),
+                        value: String(product.ID),
                       }))
                     : []
                 }
                 helpText={__('Sell your product, process by EDD', 'tutor')}
                 isSearchable
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               />
             )}
           />
@@ -360,6 +455,9 @@ const CourseBasic = () => {
               <Controller
                 name="course_price"
                 control={form.control}
+                rules={{
+                  ...requiredRule(),
+                }}
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
@@ -367,12 +465,17 @@ const CourseBasic = () => {
                     content={<SVGIcon name="currency" width={24} height={24} />}
                     placeholder={__('0', 'tutor')}
                     type="number"
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    selectOnFocus
                   />
                 )}
               />
               <Controller
                 name="course_sale_price"
                 control={form.control}
+                rules={{
+                  ...requiredRule(),
+                }}
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
@@ -380,6 +483,8 @@ const CourseBasic = () => {
                     content={<SVGIcon name="currency" width={24} height={24} />}
                     placeholder={__('0', 'tutor')}
                     type="number"
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    selectOnFocus
                   />
                 )}
               />
@@ -401,7 +506,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR) && (
+        {currentUser.roles.includes(TutorRoles.ADMINISTRATOR) && (
           <Controller
             name="post_author"
             control={form.control}
@@ -409,11 +514,11 @@ const CourseBasic = () => {
               <FormSelectUser
                 {...controllerProps}
                 label={__('Author', 'tutor')}
-                options={instructorOptions}
+                options={userList.data ?? []}
                 placeholder={__('Search to add author', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 disabled={!isAuthorEditable}
+                loading={userList.isLoading && !controllerProps.field.value}
               />
             )}
           />
@@ -430,8 +535,8 @@ const CourseBasic = () => {
                 options={instructorOptions}
                 placeholder={__('Search to add instructor', 'tutor')}
                 isSearchable
-                handleSearchOnChange={setInstructorSearchText}
                 isMultiSelect
+                loading={instructorListQuery.isLoading && !controllerProps.field.value}
               />
             )}
           />
@@ -482,7 +587,7 @@ const styles = {
   `,
   coursePriceWrapper: css`
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: ${spacing[16]};
   `,
   navigator: css`

@@ -228,8 +228,8 @@ const styles = {
     background-color: ${colorTokens.bg.white};
   `,
   categoryListWrapper: css`
+    ${styleUtils.overflowYAuto};
     max-height: 208px;
-    overflow: auto;
   `,
   checkboxLabel: css`
     line-height: 1.88rem !important;

@@ -7,16 +7,52 @@ import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
 import CouponPreview from '@CouponComponents/coupon/CouponPreview';
 import CouponValidity from '@CouponComponents/coupon/CouponValidity';
 import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
-import { Coupon, mockCouponData } from '@CouponServices/coupon';
+import { Coupon, couponInitialValue, useCouponDetailsQuery } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
+import { useEffect } from 'react';
+import { format } from 'date-fns';
+import { DateFormats } from '@Config/constants';
 
 function Main() {
-	const form = useFormWithGlobalError<Coupon>({ defaultValues: mockCouponData });
+	const params = new URLSearchParams(window.location.search);
+  	const courseId = params.get('coupon_id');
+	const form = useFormWithGlobalError<Coupon>({ defaultValues: couponInitialValue });
 
-	// @TODO: populate form data when in edit view
+	const couponDetailsQuery = useCouponDetailsQuery(Number(courseId));
+
+	useEffect(() => {
+		const couponData = couponDetailsQuery.data?.data;
+		if (couponData) {
+			form.reset({
+				id: couponData.id,
+				coupon_status: couponData.coupon_status,
+				coupon_type: couponData.coupon_type,
+				coupon_title: couponData.coupon_title,
+				coupon_code: couponData.coupon_code,
+				user_name: "", // @TODO:
+				discount_type: couponData.discount_type,
+				discount_amount: couponData.discount_amount,
+				applies_to: couponData.applies_to,
+				// applies_to_items: [],
+				usage_limit_status: !!couponData.total_usage_limit,
+				total_usage_limit: couponData.total_usage_limit,
+				per_user_limit_status: !!couponData.per_user_usage_limit,
+				per_user_usage_limit: couponData.per_user_usage_limit,
+				purchase_requirement: couponData.purchase_requirement,
+				purchase_requirement_value: couponData.purchase_requirement_value,
+				start_date: format(new Date(couponData.start_date_gmt), DateFormats.yearMonthDay),
+				start_time: format(new Date(couponData.start_date_gmt), DateFormats.hoursMinutes),
+				...(couponData.expire_date_gmt && {
+					is_end_enabled: !!couponData.expire_date_gmt,
+					end_date: format(new Date(couponData.expire_date_gmt), DateFormats.yearMonthDay),
+					end_time: format(new Date(couponData.expire_date_gmt), DateFormats.hoursMinutes),
+				}),
+			});
+		}
+	}, [couponDetailsQuery.data]);
 
 	return (
 		<div css={styles.wrapper}>

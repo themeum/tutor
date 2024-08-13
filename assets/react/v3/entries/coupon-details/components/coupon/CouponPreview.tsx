@@ -24,16 +24,17 @@ function CouponPreview() {
 	const { stickyRef, isSticky } = useSticky();
 	const { tutor_currency } = tutorConfig;
 
-	const couponName = form.watch('coupon_name');
-	const couponCode = form.watch('code');
+	const couponTitle = form.watch('coupon_title');
+	const couponType = form.watch('coupon_type');
+	const couponCode = form.watch('coupon_code');
 	const discountType = form.watch('discount_type');
-	const discountValue = form.watch('discount_value');
+	const discountAmount = form.watch('discount_amount');
 	const startDate = form.watch('start_date');
 	const startTime = form.watch('start_time');
 	const endDate = form.watch('end_date');
 	const appliesTo = form.watch('applies_to');
-	const isOneUserPerCustomer = form.watch('is_one_use_per_user');
-	const redeemedCouponCount = form.watch('redeemed_coupons_count');
+	const perUserUsageLimit = form.watch('per_user_usage_limit');
+	const couponUsedCount = form.watch('coupon_uses');
 
 	const startDateTime = startDate && startTime ? `${startDate} ${startTime}` : '';
 	const activeFromSuffix = startDateTime
@@ -47,8 +48,8 @@ function CouponPreview() {
 		: '';
 
 	const discountText =
-		discountType === 'amount' ? `${tutor_currency?.symbol ?? '$'}${discountValue ?? 0}` : `${discountValue ?? 0}%`;
-	const totalUsedText = `${__('Total', 'tutor')} ${redeemedCouponCount} ${__('times used', 'tutor')}`;
+		discountType === 'flat' ? `${tutor_currency?.symbol ?? '$'}${discountAmount ?? 0}` : `${discountAmount ?? 0}%`;
+	const totalUsedText = `${__('Total', 'tutor')} ${couponUsedCount} ${__('times used', 'tutor')}`;
 	const activeFromText = `${__('Active from ', 'tutor')} ${activeFromSuffix}`;
 
 	return (
@@ -56,13 +57,15 @@ function CouponPreview() {
 			<div css={styles.previewWrapper(isSticky)}>
 				<div css={styles.previewTop}>
 					<div css={styles.saleSection}>
-						<div css={styles.couponName}>{couponName}</div>
+						<div css={styles.couponName}>{couponTitle}</div>
 						<div css={styles.discountText}>{`${discountText} ${__('OFF', 'tutor')}`}</div>
 					</div>
-					<h1 css={styles.couponCode}>{couponCode}</h1>
-					<p css={styles.couponSubtitle}>
-						{__('Valid until', 'tutor') + ' ' + format(new Date(endDate), DateFormats.validityDate)}
-					</p>
+					<h1 css={styles.couponCode}>{couponType === 'automatic' ? __('Automatic', 'tutor') : couponCode}</h1>
+					{endDate && (
+						<p css={styles.couponSubtitle}>
+							{__('Valid until', 'tutor') + ' ' + format(new Date(endDate), DateFormats.validityDate)}
+						</p>
+					)}
 				</div>
 				<div css={styles.previewMiddle}>
 					<span css={styles.leftCircle} />
@@ -88,7 +91,7 @@ function CouponPreview() {
 					<div>
 						<h6 css={styles.previewListTitle}>{__('Details', 'tutor')}</h6>
 						<ul css={styles.previewList} data-preview-list>
-							<Show when={isOneUserPerCustomer}>
+							<Show when={Number(perUserUsageLimit) === 1}>
 								<li>{__('One use per customer', 'tutor')}</li>
 							</Show>
 							<li>{activeFromText}</li>
@@ -125,7 +128,7 @@ const styles = {
 		css`
 			position: fixed;
 			top: ${headerHeight}px;
-			width: 342px;
+			width: 344px;
 		`}
 	`,
 	previewTop: css`

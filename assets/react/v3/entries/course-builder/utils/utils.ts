@@ -14,11 +14,12 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     ...(data.editor_used.name === 'classic' && {
       post_content: data.post_content,
     }),
-    post_status: data.post_password.length ? 'publish' : (data.post_status as 'publish' | 'private'),
-    post_password: data.post_password,
+    post_status: data.post_status,
+    post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_author: data.post_author?.id ?? null,
-    'pricing[type]': data.course_price_type,
-    ...(data.course_price_type !== 'free' &&
+    'pricing[type]': data.course_pricing_category === 'subscription' ? 'subscription' : data.course_price_type,
+    ...(data.course_pricing_category !== 'subscription' &&
+      data.course_price_type === 'paid' &&
       data.course_product_id && {
         'pricing[product_id]': data.course_product_id,
       }),
@@ -112,8 +113,18 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_pricing_category: courseDetails.course_pricing_category ?? 'regular',
-    course_price_type: courseDetails.course_pricing.type,
+    course_pricing_category: (() => {
+      if (
+        isAddonEnabled(Addons.SUBSCRIPTION) &&
+        tutorConfig.settings.monetize_by === 'tutor' &&
+        courseDetails.course_pricing.type === 'subscription'
+      ) {
+        return 'subscription';
+      }
+      return 'regular';
+    })(),
+    course_price_type:
+      courseDetails.course_pricing.type === 'subscription' ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
@@ -136,7 +147,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
-    course_product_id: courseDetails.course_pricing.product_id === '0' ? '' : courseDetails.course_pricing.product_id,
+    course_product_id:
+      String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:
       courseDetails.course_instructors?.map((item) => {
         return {
@@ -242,3 +254,8 @@ type Addon = `${Addons}`;
 export const isAddonEnabled = (addon: Addon) => {
   return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
 };
+
+export function toCapitalize(str: string) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}

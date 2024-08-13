@@ -8,7 +8,11 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import { type CourseFormData, useCourseDetailsQuery, usePrerequisiteCoursesQuery } from '@CourseBuilderServices/course';
+import {
+  type CourseDetailsResponse,
+  type CourseFormData,
+  usePrerequisiteCoursesQuery,
+} from '@CourseBuilderServices/course';
 
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormFileUploader from '@Components/fields/FormFileUploader';
@@ -19,11 +23,14 @@ import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import Certificate from '../components/additional/Certificate';
 
+const courseId = getCourseId();
+const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+
 const Additional = () => {
-  const courseId = getCourseId();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,31 +39,27 @@ const Additional = () => {
         replace: true,
       });
     }
-  }, [navigate, courseId]);
+  }, [navigate]);
 
   if (!courseId) {
     return null;
   }
 
   const form = useFormContext<CourseFormData>();
-  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+  const queryClient = useQueryClient();
+  const isCourseDetailsFetching = useIsFetching({
+    queryKey: ['CourseDetails', courseId],
+  });
 
-  const courseDetailsQuery = useCourseDetailsQuery(courseId);
-  const prerequisiteCourses = (courseDetailsQuery.data?.course_prerequisites || []).map((prerequisite) =>
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+  const prerequisiteCourses = (courseDetails?.course_prerequisites || []).map((prerequisite) =>
     String(prerequisite.id),
   );
 
   const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
     String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    !!isPrerequisiteAddonEnabled,
+    !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
   );
-
-  const zoomMeetings = courseDetailsQuery.data?.zoom_meetings ?? [];
-  const zoomUsers = courseDetailsQuery.data?.zoom_users ?? {};
-  const zoomTimezones = courseDetailsQuery.data?.zoom_timezones ?? {};
-
-  const googleMeetMeetings = courseDetailsQuery.data?.google_meet_meetings ?? [];
-  const googleMeetTimezones = courseDetailsQuery.data?.google_meet_timezones ?? {};
 
   return (
     <div css={styles.wrapper}>
@@ -66,7 +69,7 @@ const Additional = () => {
           <div css={styles.titleAndSub}>
             <div css={styles.title}>{__('Information', 'tutor')}</div>
             <div css={styles.subtitle}>
-              {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}:
+              {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
             </div>
           </div>
           <div css={styles.fieldsWrapper}>
@@ -80,6 +83,7 @@ const Additional = () => {
                   placeholder={__('Write here the course benefits (One Per Line)', 'tutor')}
                   rows={2}
                   enableResize
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -97,6 +101,7 @@ const Additional = () => {
                   )}
                   rows={2}
                   enableResize
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -113,6 +118,7 @@ const Additional = () => {
                     placeholder="0"
                     contentPosition="right"
                     content={__('hour', 'tutor')}
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
@@ -126,6 +132,7 @@ const Additional = () => {
                     placeholder="0"
                     contentPosition="right"
                     content={__('min', 'tutor')}
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
@@ -144,6 +151,7 @@ const Additional = () => {
                   )}
                   rows={4}
                   enableResize
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -161,6 +169,7 @@ const Additional = () => {
                   )}
                   rows={2}
                   enableResize
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
             />
@@ -192,6 +201,9 @@ const Additional = () => {
                 placeholder={__('Search to add course prerequisites', 'tutor')}
                 options={prerequisiteCoursesQuery.data || []}
                 isSearchable
+                loading={
+                  prerequisiteCoursesQuery.isLoading || (!!isCourseDetailsFetching && !controllerProps.field.value)
+                }
               />
             )}
           />
@@ -210,13 +222,7 @@ const Additional = () => {
             )}
           />
         </div>
-        <LiveClass
-          zoomMeetings={zoomMeetings}
-          zoomTimezones={zoomTimezones}
-          zoomUsers={zoomUsers}
-          googleMeetMeetings={googleMeetMeetings}
-          googleMeetTimezones={googleMeetTimezones}
-        />
+        <LiveClass />
       </div>
     </div>
   );

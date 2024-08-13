@@ -935,8 +935,8 @@ final class Tutor {
 			discount_type ENUM('percentage', 'flat') NOT NULL,
 			discount_amount DECIMAL(13, 2) NOT NULL,
 			applies_to VARCHAR(100) DEFAULT 'all_courses_and_bundles', -- possible values 'all_courses_and_bundles', 'all_courses', 'all_bundles', 'specific_courses', 'specific_bundles', 'specific_category'
-			total_usage_limit INT(10) UNSIGNED DEFAULT 0,
-			is_one_use_per_user TINYINT(4) UNSIGNED DEFAULT 0,
+			total_usage_limit INT(10) UNSIGNED DEFAULT NULL, -- null for unlimited usage
+			per_user_usage_limit TINYINT(4) UNSIGNED DEFAULT NULL, -- null for unlimited usage
 			purchase_requirement VARCHAR(50) DEFAULT 'no_minimum', -- possible values 'no_minimum', 'minimum_purchase', 'minimum_quantity'
 			purchase_requirement_value DECIMAL(13, 2),
 			start_date_gmt DATETIME NOT NULL,
@@ -996,7 +996,8 @@ final class Tutor {
 		$customer_table = "CREATE TABLE {$wpdb->prefix}tutor_customers (
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			user_id BIGINT(20) UNSIGNED DEFAULT NULL,
-			billing_name VARCHAR(255) NOT NULL,
+			billing_first_name VARCHAR(255) NOT NULL,
+			billing_last_name VARCHAR(255) NOT NULL,
 			billing_email VARCHAR(255) NOT NULL,
 			billing_phone VARCHAR(20) NOT NULL,
 			billing_zip_code VARCHAR(20) NOT NULL,

@@ -24,6 +24,10 @@ class QueryHelper {
 	 * @return int, inserted id.
 	 *
 	 * @since v2.0.7
+	 *
+	 * @since 3.0.0
+	 *
+	 * @throws \Exception Database error if occur.
 	 */
 	public static function insert( string $table, array $data ): int {
 		global $wpdb;
@@ -39,6 +43,11 @@ class QueryHelper {
 			$table,
 			$data
 		);
+
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
+		}
+
 		return $insert ? $wpdb->insert_id : 0;
 	}
 
@@ -219,7 +228,7 @@ class QueryHelper {
 	 *
 	 * @return string
 	 */
-	private static function make_clause( array $where ) {
+	public static function make_clause( array $where ) {
 		list ( $field, $operator, $value ) = $where;
 
 		if ( 'IN' === strtoupper( $operator ) ) {
@@ -237,7 +246,7 @@ class QueryHelper {
 	 *
 	 * @since 2.0.9
 	 */
-	private static function build_where_clause( array $where ) {
+	public static function build_where_clause( array $where ) {
 		$arr = array();
 		foreach ( $where as $field => $value ) {
 			if ( is_array( $value ) ) {
@@ -398,12 +407,13 @@ class QueryHelper {
 	 * Get all row from any table with where clause
 	 *
 	 * @since 2.2.1
+	 * @since 3.0.0  added support for -1 value in the limit parameter.
 	 *
 	 * @param string $table  table name with prefix.
 	 *
 	 * @param array  $where  assoc_array. For ex: [col_name => value ].
 	 * @param string $order_by  order by column name.
-	 * @param int    $limit default is 1000.
+	 * @param int    $limit default is 1000, -1 for no limit.
 	 * @param string $order  DESC or ASC, default is DESC.
 	 * @param string $output  expected output type, default is object.
 	 *
@@ -413,18 +423,15 @@ class QueryHelper {
 		global $wpdb;
 
 		$where_clause = self::build_where_clause( $where );
-		$limit        = sanitize_text_field( $limit );
+		$limit        = (int) sanitize_text_field( $limit );
+		$limit_clause = ( -1 === $limit ) ? '' : 'LIMIT ' . $limit;
 
 		//phpcs:disable
-		$query = $wpdb->prepare(
-			"SELECT *
+		$query = "SELECT *
 				FROM {$table}
 				WHERE {$where_clause}
 				ORDER BY {$order_by} {$order}
-				LIMIT %d
-			",
-			$limit
-		);
+				{$limit_clause}";
 
 		return $wpdb->get_results(
 			$query,

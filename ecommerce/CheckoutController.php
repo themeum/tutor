@@ -10,6 +10,12 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Helpers\HttpHelper;
+use TUTOR\Input;
+use Tutor\Traits\JsonResponse;
+use Tutor\Models\CartModel;
+use Tutor\Models\CouponModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,6 +26,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 3.0.0
  */
 class CheckoutController {
+
+	use JsonResponse;
 
 	/**
 	 * Constructor.
@@ -36,7 +44,8 @@ class CheckoutController {
 	 */
 	public function __construct( $register_hooks = true ) {
 		if ( $register_hooks ) {
-
+			add_action( 'wp_ajax_tutor_pay_now', array( $this, 'ajax_pay_now' ) );
+			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 		}
 	}
 
@@ -91,7 +100,7 @@ class CheckoutController {
 		$page_id = self::get_page_id();
 		if ( ! $page_id ) {
 			$args = array(
-				'post_title'   => self::PAGE_SLUG,
+				'post_title'   => ucfirst( self::PAGE_SLUG ),
 				'post_content' => '',
 				'post_type'    => 'page',
 				'post_status'  => 'publish',
@@ -102,4 +111,55 @@ class CheckoutController {
 		}
 	}
 
+	/**
+	 * Pay now ajax handler
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_pay_now() {
+		tutor_utils()->check_nonce();
+
+		$request = Input::sanitize_array( $_POST );
+
+		$course_ids  = $request['course_ids'] ?? '';
+		$coupon_code = $request['coupon_code'] ?? '';
+
+		if ( empty( $course_ids ) ) {
+			$this->json_response(
+				__( 'Invalid cart items' ),
+				'',
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		$coupon_model  = new CouponModel();
+		$course_ids    = array_filter( explode( ',', $course_ids ), 'is_numeric' );
+		$price_details = $coupon_model->apply_coupon_discount( $course_ids, $coupon_code );
+
+		// @TODO Prepare payment data.
+	}
+
+	/**
+	 * Restrict checkout page
+	 *
+	 * @return void
+	 */
+	public function restrict_checkout_page() {
+		$page_id = self::get_page_id();
+
+		if ( is_page( $page_id ) ) {
+			$cart_controller = new CartController();
+			$cart_model      = new CartModel();
+
+			$user_id       = tutils()->get_user_id();
+			$has_cart_item = $cart_model->has_item_in_cart( $user_id );
+
+			if ( ! $has_cart_item ) {
+				wp_safe_redirect( $cart_controller::get_page_url() );
+				exit;
+			}
+		}
+	}
 }

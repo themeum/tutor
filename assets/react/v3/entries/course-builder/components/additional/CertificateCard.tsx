@@ -1,17 +1,17 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import { useModal } from '@Components/modals/Modal';
-import CertificatePreviewModal from '@CourseBuilderComponents/modals/CertificatePreviewModal';
-import { type Certificate, useCourseDetailsQuery } from '@CourseBuilderServices/course';
-
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import CertificatePreviewModal from '@CourseBuilderComponents/modals/CertificatePreviewModal';
 
 import Show from '@Controls/Show';
+import type { Certificate, CourseDetailsResponse } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 
@@ -30,9 +30,11 @@ const CertificateCard = ({
   onSelectCertificate,
 }: CertificateCardProps) => {
   const { showModal } = useModal();
-  const courseDetailsQuery = useCourseDetailsQuery(courseId);
+  const queryClient = useQueryClient();
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+
   const certificatesData =
-    courseDetailsQuery.data?.course_certificates_templates.filter(
+    courseDetails?.course_certificates_templates.filter(
       (certificate) =>
         certificate.orientation === orientation &&
         (data.is_default ? certificate.is_default === true : certificate.is_default === false),

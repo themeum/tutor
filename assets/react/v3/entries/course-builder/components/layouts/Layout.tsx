@@ -8,19 +8,22 @@ import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
+import Notebook from './Notebook';
 
 const Layout = () => {
   const courseId = getCourseId();
 
   const form = useFormWithGlobalError<CourseFormData>({
     defaultValues: courseDefaultData,
+    shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const courseDetailsQuery = useCourseDetailsQuery(Number(courseId));
 
   useEffect(() => {
     if (courseDetailsQuery.data) {
-      form.reset.call(null, convertCourseDataToFormData(courseDetailsQuery.data));
+      form.reset(convertCourseDataToFormData(courseDetailsQuery.data));
     }
   }, [courseDetailsQuery.data, form.reset]);
 
@@ -38,7 +41,7 @@ const Layout = () => {
             {/* Placeholder div for allocating the 1fr space */}
             <div />
           </div>
-          {/* <Notebook /> */}
+          <Notebook />
         </div>
       </CourseNavigatorProvider>
     </FormProvider>

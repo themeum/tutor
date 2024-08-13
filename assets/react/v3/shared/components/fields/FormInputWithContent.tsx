@@ -23,6 +23,7 @@ interface FormInputWithContentProps extends FormControllerProps<string | number 
   onKeyDown?: (value: string) => void;
   isHidden?: boolean;
   wrapperCss?: SerializedStyles;
+  contentCss?: SerializedStyles;
   removeBorder?: boolean;
   selectOnFocus?: boolean;
 }
@@ -45,6 +46,7 @@ const FormInputWithContent = ({
   onKeyDown,
   isHidden,
   wrapperCss,
+  contentCss,
   removeBorder = false,
   selectOnFocus = false,
 }: FormInputWithContentProps) => {
@@ -66,7 +68,9 @@ const FormInputWithContent = ({
         const { css: inputCss, ...restInputProps } = inputProps;
         return (
           <div css={[styles.inputWrapper(!!fieldState.error, removeBorder), wrapperCss]}>
-            {contentPosition === 'left' && <div css={styles.inputLeftContent(showVerticalBar, size)}>{content}</div>}
+            {contentPosition === 'left' && (
+              <div css={[styles.inputLeftContent(showVerticalBar, size), contentCss]}>{content}</div>
+            )}
 
             <input
               {...field}
@@ -88,7 +92,11 @@ const FormInputWithContent = ({
               onKeyDown={(event) => onKeyDown?.(event.key)}
               css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
               autoComplete="off"
-              ref={ref}
+              ref={(element) => {
+                field.ref(element);
+                // @ts-ignore
+                ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+              }}
               onFocus={() => {
                 if (!selectOnFocus || !ref.current) {
                   return;

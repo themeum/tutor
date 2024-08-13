@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
@@ -6,6 +7,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import EmptyState from '@Molecules/EmptyState';
+import Popover from '@Molecules/Popover';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -13,45 +15,34 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 
 import config, { tutorConfig } from '@Config/config';
-import type { GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { Addons } from '@Config/constants';
+import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
-import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import { Addons } from '@Config/constants';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
-
-interface LiveClassProps {
-  zoomMeetings: ZoomMeeting[];
-  zoomUsers: {
-    [key: string]: string;
-  };
-  zoomTimezones: {
-    [key: string]: string;
-  };
-  googleMeetMeetings: GoogleMeet[];
-  googleMeetTimezones: {
-    [key: string]: string;
-  };
-}
 
 const isPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 const isGoogleMeetAddonEnabled = isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION);
 
-const LiveClass = ({
-  zoomMeetings,
-  zoomUsers,
-  zoomTimezones,
-  googleMeetMeetings,
-  googleMeetTimezones,
-}: LiveClassProps) => {
+const courseId = getCourseId();
+
+const LiveClass = () => {
+  const queryClient = useQueryClient();
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
+
+  const zoomMeetings = courseDetails?.zoom_meetings ?? ([] as ZoomMeeting[]);
+  const zoomUsers = courseDetails?.zoom_users ?? ({} as { [key: string]: string });
+
+  const googleMeetMeetings = courseDetails?.google_meet_meetings ?? ([] as GoogleMeet[]);
+
   const [showMeetingForm, setShowMeetingForm] = useState<MeetingType | null>(null);
 
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
@@ -244,13 +235,14 @@ const styles = {
   meetingsWrapper: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     ${styleUtils.display.flex('column')}
     background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius.card};
+
     ${
       hasMeeting &&
       css`
         border: 1px solid ${colorTokens.stroke.default};
       `
     }
-    border-radius: ${borderRadius.card};
   `,
   meeting: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[12]} ${spacing[8]};

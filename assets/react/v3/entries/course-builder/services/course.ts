@@ -25,6 +25,7 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingCategory = 'subscription' | 'regular';
+export type PricingType = 'free' | 'paid' | 'subscription';
 
 export interface CourseFormData {
   post_date: string;
@@ -84,7 +85,7 @@ export const courseDefaultData: CourseFormData = {
   },
   thumbnail: null,
   video: {
-    source: 'external_url',
+    source: '',
     source_video_id: '',
     poster: '',
     poster_url: '',
@@ -313,7 +314,7 @@ export interface CourseDetailsResponse {
     product_id: string;
     product_name: string;
     sale_price: string;
-    type: string;
+    type: PricingType;
   };
   course_instructors: InstructorListResponse[];
   preview_link: string;
@@ -369,7 +370,7 @@ interface CourseResponse {
   status_code: number;
 }
 
-interface WcProduct {
+export interface WcProduct {
   ID: string;
   post_title: string;
 }
@@ -495,10 +496,17 @@ export const useUpdateCourseMutation = () => {
   return useMutation({
     mutationFn: updateCourse,
     onSuccess: (response) => {
-      showToast({ type: 'success', message: response.message });
-      queryClient.invalidateQueries({
-        queryKey: ['CourseDetails', response.data],
-      });
+      if (response.data) {
+        showToast({ type: 'success', message: __(response.message, 'tutor') });
+
+        queryClient.invalidateQueries({
+          queryKey: ['CourseDetails', response.data],
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['InstructorList', String(response.data)],
+        });
+      }
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -554,18 +562,9 @@ export const useWcProductDetailsQuery = (
   coursePriceType: string,
   monetizedBy: 'tutor' | 'wc' | 'edd',
 ) => {
-  const { showToast } = useToast();
-
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],
-    queryFn: () =>
-      getProductDetails(productId, courseId).then((res) => {
-        if (typeof res.data === 'string') {
-          showToast({ type: 'danger', message: res.data });
-          return null;
-        }
-        return res.data;
-      }),
+    queryFn: () => getProductDetails(productId, courseId).then((res) => res.data),
     enabled: !!productId && coursePriceType === 'paid' && monetizedBy === 'wc',
   });
 };
@@ -602,18 +601,20 @@ export const useSaveZoomMeetingMutation = () => {
   return useMutation({
     mutationFn: saveZoomMeeting,
     onSuccess: (response, payload) => {
-      showToast({ type: 'success', message: __(response.message, 'tutor') });
+      if (response.data) {
+        showToast({ type: 'success', message: __(response.message, 'tutor') });
 
-      if (payload.click_form === 'course_builder') {
-        queryClient.invalidateQueries({
-          queryKey: ['CourseDetails', payload.course_id],
-        });
-      }
+        if (payload.click_form === 'course_builder') {
+          queryClient.invalidateQueries({
+            queryKey: ['Topic', payload.course_id],
+          });
+        }
 
-      if (payload.click_form === 'metabox') {
-        queryClient.invalidateQueries({
-          queryKey: ['Topic', payload.course_id],
-        });
+        if (payload.click_form === 'metabox') {
+          queryClient.invalidateQueries({
+            queryKey: ['CourseDetails', Number(payload.course_id)],
+          });
+        }
       }
 
       queryClient.invalidateQueries({
@@ -640,15 +641,17 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
   return useMutation({
     mutationFn: deleteZoomMeeting,
     onSuccess: (response) => {
-      showToast({ type: 'success', message: __(response.data.message, 'tutor') });
+      if (response.data) {
+        showToast({ type: 'success', message: __(response.data.message, 'tutor') });
 
-      queryClient.invalidateQueries({
-        queryKey: ['CourseDetails', Number(courseId)],
-      });
+        queryClient.invalidateQueries({
+          queryKey: ['CourseDetails', Number(courseId)],
+        });
 
-      queryClient.invalidateQueries({
-        queryKey: ['Topic', Number(courseId)],
-      });
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', courseId],
+        });
+      }
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
