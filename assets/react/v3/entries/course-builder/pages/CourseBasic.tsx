@@ -64,11 +64,10 @@ const CourseBasic = () => {
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const isInstructorVisible =
-    isAdministrator ||
-    (isTutorProEnabled &&
-      isMultiInstructorEnabled &&
-      tutorConfig.settings.enable_course_marketplace === 'on' &&
-      String(currentUser.data.id) === String(courseDetails?.post_author.ID || ''));
+    isTutorProEnabled &&
+    isMultiInstructorEnabled &&
+    tutorConfig.settings.enable_course_marketplace === 'on' &&
+    (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || ''));
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
