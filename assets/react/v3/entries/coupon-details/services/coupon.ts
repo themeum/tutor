@@ -17,15 +17,15 @@ export interface Course {
 	title: string;
 	image: '';
 	author: string;
-	regular_price: number;
-	regular_price_formatted: string;
+	regular_price: string;
+	sale_price: string | null;
 }
 
 export interface CourseCategory {
 	id: number;
 	title: string;
-	image: '';
-	number_of_courses: number;
+	image: string;
+	total_courses: number;
 }
 
 export type CouponAppliesTo =
@@ -72,7 +72,7 @@ export interface CouponPayload {
 	discount_type: 'percentage' | 'flat';
 	discount_amount: string;
 	applies_to: CouponAppliesTo;
-	applies_to_items: Course[] | CourseCategory[];
+	applies_to_items: number[];
 	total_usage_limit?: string;
 	per_user_usage_limit?: string;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
@@ -124,131 +124,18 @@ export const couponInitialValue: Coupon = {
 	end_time: '',
 };
 
-export const mockCouponData: Coupon = {
-	id: 11211,
-	coupon_status: 'active',
-	coupon_type: 'code',
-	coupon_title: 'Winter sale',
-	coupon_code: 'WINTER24',
-	user_name: 'John Doe',
-	discount_type: 'flat',
-	discount_amount: 20,
-	applies_to: 'specific_bundles',
-	courses: [
-		{
-			id: 1,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 2,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 3,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 4,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-	],
-	categories: [
-		{
-			id: 1,
-			title: 'Soccer',
-			image: '',
-			number_of_courses: 10,
-		},
-		{
-			id: 2,
-			title: 'Basketball',
-			image: '',
-			number_of_courses: 5,
-		},
-		{
-			id: 3,
-			title: 'Tennis',
-			image: '',
-			number_of_courses: 15,
-		},
-		{
-			id: 4,
-			title: 'Volleyball',
-			image: '',
-			number_of_courses: 8,
-		},
-		{
-			id: 5,
-			title: 'Swimming',
-			image: '',
-			number_of_courses: 12,
-		},
-	],
-	bundles: [
-		{
-			id: 1,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 2,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 3,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 4,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-	],
-	usage_limit_status: true,
-	total_usage_limit: 100,
-	per_user_limit_status: false,
-	per_user_usage_limit: null,
-	coupon_uses: 10,
-	purchase_requirement: 'minimum_purchase',
-	purchase_requirement_value: 200,
-	start_date: '2024/02/16',
-	start_time: '10:00:00',
-	is_end_enabled: true,
-	end_date: '2024/02/16',
-	end_time: '10:00:00',
-	created_at: '02/16/2024 10:00:00',
-	updated_at: '02/16/2024 10:00:00',
-};
+function getAppliesToItemIds(data: Coupon) {
+	if (data.applies_to === 'specific_courses') {
+		return data.courses?.map((item) => item.id) ?? [];
+	}
+	if (data.applies_to === 'specific_bundles') {
+		return data.bundles?.map((item) => item.id) ?? [];
+	}
+	if (data.applies_to === 'specific_category') {
+		return data.categories?.map((item) => item.id) ?? [];
+	}
+	return [];
+}
 
 export function convertFormDataToPayload(data: Coupon): CouponPayload {
 	return {
@@ -264,7 +151,7 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
 		discount_type: data.discount_type,
 		discount_amount: data.discount_amount,
 		applies_to: data.applies_to,
-		applies_to_items: [],
+		applies_to_items: getAppliesToItemIds(data),
 		...(data.total_usage_limit && {
 			total_usage_limit: data.total_usage_limit
 		}),
@@ -357,48 +244,26 @@ export const useUpdateCouponMutation = () => {
 	});
 };
 
-const getCourseList = (params: PaginatedParams) => {
-	return authApiInstance.get<PaginatedResult<Course>>(endpoints.COURSE_LIST, {
-		params: transformParams(params),
+interface GetAppliesToParam extends PaginatedParams {
+	applies_to: CouponAppliesTo;
+}
+
+const getAppliesToList = (params: GetAppliesToParam) => {
+	return authApiInstance.post<PaginatedResult<Course | CourseCategory>>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_coupon_applies_to_list',
+		...params 
 	});
 };
 
-export const useCourseListQuery = (params: PaginatedParams) => {
+export const useAppliesToQuery = (params: GetAppliesToParam) => {
 	return useQuery({
-		queryKey: ['CourseList', params],
+		queryKey: ['AppliesTo', params],
 		placeholderData: keepPreviousData,
 		queryFn: () => {
-			return {
-				results: mockCouponData.courses ?? [],
-				totalItems: mockCouponData.courses?.length ?? 0,
-				totalPages: 1,
-			};
-			return getCourseList(params).then((res) => {
+			return getAppliesToList(params).then((res) => {
 				return res.data;
 			});
 		},
 	});
 };
 
-const getCategoryList = (params: PaginatedParams) => {
-	return authApiInstance.get<PaginatedResult<CourseCategory>>(endpoints.CATEGORY_LIST, {
-		params: transformParams(params),
-	});
-};
-
-export const useCategoryListQuery = (params: PaginatedParams) => {
-	return useQuery({
-		queryKey: ['CourseList', params],
-		placeholderData: keepPreviousData,
-		queryFn: () => {
-			return {
-				results: mockCouponData.categories ?? [],
-				totalItems: mockCouponData.categories?.length ?? 0,
-				totalPages: 1,
-			};
-			return getCategoryList(params).then((res) => {
-				return res.data;
-			});
-		},
-	});
-};

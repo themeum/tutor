@@ -32,7 +32,7 @@ const SearchField = ({ onFilterItems }: SearchFieldProps) => {
 			render={(controllerProps) => (
 				<FormInputWithContent
 					{...controllerProps}
-					content={<SVGIcon name="search" />}
+					content={<SVGIcon name="search" width={24} height={24} />}
 					placeholder={__('Search...')}
 					showVerticalBar={false}
 				/>

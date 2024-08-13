@@ -7,7 +7,7 @@ import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
 import CouponPreview from '@CouponComponents/coupon/CouponPreview';
 import CouponValidity from '@CouponComponents/coupon/CouponValidity';
 import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
-import { Coupon, couponInitialValue, useCouponDetailsQuery } from '@CouponServices/coupon';
+import { Coupon, couponInitialValue, GetCouponResponse, useCouponDetailsQuery } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { FormProvider } from 'react-hook-form';
@@ -36,7 +36,9 @@ function Main() {
 				discount_type: couponData.discount_type,
 				discount_amount: couponData.discount_amount,
 				applies_to: couponData.applies_to,
-				// applies_to_items: [],
+				courses: couponData.applies_to === 'specific_courses' ? couponData.applies_to_items : [],
+				bundles: couponData.applies_to === 'specific_bundles' ? couponData.applies_to_items : [],
+				categories: couponData.applies_to === 'specific_category' ? couponData.applies_to_items : [],
 				usage_limit_status: !!couponData.total_usage_limit,
 				total_usage_limit: couponData.total_usage_limit,
 				per_user_limit_status: !!couponData.per_user_usage_limit,
