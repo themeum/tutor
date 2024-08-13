@@ -64,7 +64,7 @@ const Additional = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
-        <CanvasHead title={__('Additionals', 'tutor')} />
+        <CanvasHead title={__('Additionals', 'tutor')} backUrl="/curriculum" />
         <div css={styles.formSection}>
           <div css={styles.titleAndSub}>
             <div css={styles.title}>{__('Information', 'tutor')}</div>

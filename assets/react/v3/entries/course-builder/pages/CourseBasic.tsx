@@ -244,7 +244,11 @@ const CourseBasic = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm}>
-        <CanvasHead title={__('Course Basic', 'tutor')} />
+        <CanvasHead
+          title={__('Course Basic', 'tutor')}
+          backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
+          isExternalUrl
+        />
 
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
