@@ -38,6 +38,8 @@ type FormSelectInputProps<T> = {
   leftIcon?: ReactNode;
   dataAttribute?: string;
   isSecondary?: boolean;
+  isMagicAi?: boolean;
+  isAiOutline?: boolean;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -61,6 +63,8 @@ const FormSelectInput = <T,>({
   removeBorder,
   dataAttribute,
   isSecondary = false,
+  isMagicAi = false,
+  isAiOutline = false,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = () =>
     options.find((item) => item.value === field.value) || {
@@ -101,12 +105,14 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
@@ -121,13 +127,14 @@ const FormSelectInput = <T,>({
       helpText={helpText}
       removeBorder={removeBorder}
       isSecondary={isSecondary}
+      isMagicAi
     >
       {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;
 
         return (
           <div css={styles.mainWrapper}>
-            <div css={styles.inputWrapper} ref={triggerRef}>
+            <div css={styles.inputWrapper(isAiOutline)} ref={triggerRef}>
               <div css={styles.leftIcon({ hasDescription })}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
@@ -161,6 +168,8 @@ const FormSelectInput = <T,>({
                       hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
                       hasDescription,
                       hasError: !!fieldState.error,
+                      isMagicAi,
+                      isAiOutline,
                     }),
                   ]}
                   autoComplete="off"
@@ -276,13 +285,31 @@ const styles = {
   mainWrapper: css`
     width: 100%;
   `,
-  inputWrapper: css`
+  inputWrapper: (isAiOutline = false) => css`
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
     background-color: ${colorTokens.background.white};
+    
+    ${
+      isAiOutline &&
+      css`
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%);
+        color: ${colorTokens.text.primary};
+        border: 1px solid transparent;
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        border-radius: 6px;
+      }
+    `
+    }
   `,
   leftIcon: ({
     hasDescription = false,
@@ -306,7 +333,15 @@ const styles = {
     hasLeftIcon,
     hasDescription,
     hasError = false,
-  }: { hasLeftIcon: boolean; hasDescription: boolean; hasError: boolean }) => css`
+    isMagicAi = false,
+    isAiOutline = false,
+  }: {
+    hasLeftIcon: boolean;
+    hasDescription: boolean;
+    hasError: boolean;
+    isMagicAi: boolean;
+    isAiOutline: boolean;
+  }) => css`
     &[data-select] {
       ${typography.body()};
       width: 100%;
@@ -340,8 +375,25 @@ const styles = {
       `
       }
 
+      ${
+        isAiOutline &&
+        css`
+        position: relative;
+        border: none;
+        background: transparent;
+      `
+      }
+
       :focus {
         ${styleUtils.inputFocus};
+
+        ${
+          isMagicAi &&
+          css`
+          outline-color: ${colorTokens.stroke.magicAi};
+          background-color: ${colorTokens.background.magicAi[8]};
+        `
+        }
 
         ${
           hasError &&

@@ -8,7 +8,8 @@
             "Tutor\\Models\\":"models/",
             "Tutor\\Helpers\\":"helpers/",
             "Tutor\\Traits\\":"traits/",
-            "Tutor\\Ecommerce\\":"ecommerce/"
+            "Tutor\\Ecommerce\\":"ecommerce/",
+            "Tutor\\MagicAI\\":"magicai/"
         }
     },
     "autoload-dev": {
@@ -24,7 +25,8 @@
         "openai-php/client": "^0.10.1",
         "symfony/http-client": "^6.4",
         "nyholm/psr7": "^1.8",
-        "guzzlehttp/guzzle": "^7.9"
+        "guzzlehttp/guzzle": "^7.9",
+        "erusev/parsedown": "^1.7"
     },
     "config": {
         "allow-plugins": {

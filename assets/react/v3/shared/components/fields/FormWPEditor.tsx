@@ -5,6 +5,7 @@ import Button from '@Atoms/Button';
 import WPEditor from '@Atoms/WPEditor';
 
 import SVGIcon from '@Atoms/SVGIcon';
+import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -29,6 +30,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   hasCustomEditorSupport?: boolean;
   editors?: Editor[];
   editorUsed?: Editor;
+  isMagicAi?: boolean;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -50,6 +52,7 @@ const FormWPEditor = ({
   hasCustomEditorSupport = false,
   editors,
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
+  isMagicAi = false,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -63,7 +66,20 @@ const FormWPEditor = ({
       placeholder={placeholder}
       helpText={helpText}
       generateWithAi={generateWithAi}
-      onClickAiButton={onClickAiButton}
+      isMagicAi={isMagicAi}
+      onClickAiButton={() => {
+        showModal({
+          component: AITextModal,
+          isMagicAi: true,
+          props: {
+            title: __('AI Studio', 'tutor'),
+            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+            field,
+            fieldState,
+            is_html: true,
+          },
+        });
+      }}
     >
       {() => {
         return (

@@ -277,6 +277,7 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
+                  isMagicAi
                   generateWithAi
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
@@ -303,6 +304,7 @@ const CourseBasic = () => {
               <FormWPEditor
                 {...controllerProps}
                 label={__('Description', 'tutor')}
+                isMagicAi
                 generateWithAi
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}

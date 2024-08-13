@@ -262,9 +262,9 @@ const FormFieldWrapper = <T,>({
   characterCount,
   isSecondary = false,
   inputStyle,
-  generateWithAi = false,
   onClickAiButton,
   isMagicAi = false,
+  generateWithAi = false
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
 

@@ -1,8 +1,9 @@
 import { useToast } from '@Atoms/Toast';
 import type { StyleType } from '@Components/magic-ai-image/ImageContext';
+import type { ChatFormat, ChatLanguage, ChatTone } from '@Config/magic-ai';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
-import type { WPResponse } from '@Utils/types';
+import type { Prettify, WPResponse } from '@Utils/types';
 import { useMutation } from '@tanstack/react-query';
 
 interface ImagePayload {
@@ -52,3 +53,54 @@ export const useMagicFillImageMutation = () => {
     mutationFn: magicFillImage,
   });
 };
+
+interface TextGenerationPayload {
+  prompt: string;
+  characters: number;
+  language: ChatLanguage;
+  tone: ChatTone;
+  format: ChatFormat;
+  is_html: boolean;
+}
+
+const generateText = (payload: TextGenerationPayload) => {
+  return wpAjaxInstance.post<TextGenerationPayload, WPResponse<string>>(endpoints.MAGIC_TEXT_GENERATION, payload);
+}
+
+export const useMagicTextGenerationMutation = () => {
+  return useMutation({
+    mutationFn: generateText,
+  })
+}
+
+export type ModificationType = 'rephrase' | 'make_shorter' | 'write_as_bullets' | 'make_longer' | 'simplify_language';
+interface ModifyPayloadBase {
+  content: string;
+  is_html: boolean;
+}
+
+interface TranslationPayload extends ModifyPayloadBase {
+  type: 'translation';
+  language: ChatLanguage;
+}
+
+interface ChangeTonePayload extends ModifyPayloadBase {
+  type: 'change_tone';
+  tone: ChatTone;
+}
+
+interface GeneralPayload extends ModifyPayloadBase {
+  type: ModificationType;
+}
+
+export type ModificationPayload = Prettify<TranslationPayload | ChangeTonePayload | GeneralPayload>;
+
+const modifyContent = (payload: ModificationPayload)=> {
+  return wpAjaxInstance.post<ModificationPayload, WPResponse<string>>(endpoints.MAGIC_AI_MODIFY_CONTENT, payload);
+}
+
+export const useModifyContentMutation = () => {
+  return useMutation({
+    mutationFn: modifyContent
+  })
+}

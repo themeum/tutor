@@ -290,3 +290,15 @@ export const getObjectKeys = <T extends {}>(object: T) => {
 export const getObjectValues = <T extends {}, K extends keyof T = keyof T>(object: T): T[K][] => {
   return Object.values(object);
 };
+
+export function objectToQueryParams(obj: Record<string, string>) {
+  const params = new URLSearchParams();
+
+  for (const key in obj) {
+    if (key in obj) {
+      params.append(key, obj[key]);
+    }
+  }
+
+  return params.toString();
+}  

@@ -20,6 +20,8 @@ const endpoints = {
 
   GENERATE_AI_IMAGE: 'tutor_generate_image',
   MAGIC_FILL_AI_IMAGE: 'tutor_magic_fill_image',
+  MAGIC_TEXT_GENERATION: 'tutor_generate_text_content',
+  MAGIC_AI_MODIFY_CONTENT: 'tutor_modify_text_content',
 };
 
 export default endpoints;

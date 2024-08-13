@@ -555,14 +555,14 @@ const styles = {
 			color: ${colorTokens.text.disable};
 
 			svg {
-				color: ${colorTokens.icon.disable.default};
+				color: ${colorTokens.icon.disable.muted};
 			}
 
 			&:hover {
 				color: ${colorTokens.text.disable};
 
 				svg {
-					color: ${colorTokens.icon.disable.default};
+					color: ${colorTokens.icon.disable.muted};
 				}
 			}
 		}

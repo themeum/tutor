@@ -1,4 +1,4 @@
-import { borderRadius } from '@Config/styles';
+import { borderRadius, colorTokens } from '@Config/styles';
 import { isNumber } from '@Utils/types';
 import { css, keyframes } from '@emotion/react';
 
@@ -6,10 +6,11 @@ interface SkeletonProps {
   width?: number | string;
   height?: number | string;
   animation?: boolean;
+  isMagicAi?: boolean;
 }
 
-const Skeleton = ({ width = '100%', height = 16, animation = false }: SkeletonProps) => {
-  return <span css={styles.skeleton(width, height, animation)} />;
+const Skeleton = ({ width = '100%', height = 16, animation = false, isMagicAi = false }: SkeletonProps) => {
+  return <span css={styles.skeleton(width, height, animation, isMagicAi)} />;
 };
 
 export default Skeleton;
@@ -29,15 +30,17 @@ const animations = {
 };
 
 const styles = {
-  skeleton: (width: number | string, height: number | string, animation: boolean) => css`
+  skeleton: (width: number | string, height: number | string, animation: boolean, isMagicAi: boolean) => css`
     display: block;
     width: ${isNumber(width) ? `${width}px` : width};
     height: ${isNumber(height) ? `${height}px` : height};
     border-radius: ${borderRadius[6]};
-    background-color: rgba(0, 0, 0, 0.11);
+    background-color: ${!isMagicAi ? 'rgba(0, 0, 0, 0.11)' : colorTokens.background.magicAi.skeleton} ;
     position: relative;
     -webkit-mask-image: -webkit-radial-gradient(center, white, black);
     overflow: hidden;
+
+
 
     ${
       animation &&

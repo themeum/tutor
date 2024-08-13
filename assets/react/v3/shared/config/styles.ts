@@ -255,6 +255,7 @@ export const colorTokens = {
     },
     magicAi: {
       default: '#FBF6FF',
+      skeleton: '#FEF4FF',
       8: rgba('#C984FE', 0.08),
     },
   },
@@ -266,6 +267,7 @@ export const colorTokens = {
     disable: {
       default: '#b8bdcc',
       background: '#cbced6',
+      muted: '#dedede',
     },
     white: '#ffffff',
     brand: '#446ef5',

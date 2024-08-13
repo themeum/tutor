@@ -1,6 +1,6 @@
 import config, { tutorConfig } from '@Config/config';
 import axios from 'axios';
-import * as querystring from 'querystring';
+import * as querystring from 'node:querystring';
 
 import { convertToFormData, serializeParams } from './form';
 
