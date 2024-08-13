@@ -312,7 +312,6 @@ export default function SubscriptionItem({
                         contentPosition="right"
                         type="number"
                         presetOptions={lifetimeOptions}
-                        helpText={__('Set to 0 for unlimited duration', 'tutor')}
                         selectOnFocus
                       />
                     )}
