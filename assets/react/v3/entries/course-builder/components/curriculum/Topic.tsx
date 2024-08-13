@@ -329,31 +329,35 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   </button>
                 </Tooltip>
               </Show>
-              <Tooltip content={__('Duplicate', 'tutor')}>
-                <button
-                  type="button"
-                  css={styles.actionButton}
-                  disabled={!topic.isSaved}
-                  data-visually-hidden
-                  onClick={handleDuplicateTopic}
-                >
-                  <SVGIcon name="copyPaste" width={24} height={24} />
-                </button>
-              </Tooltip>
-              <Tooltip content={__('Delete', 'tutor')}>
-                <button
-                  type="button"
-                  css={styles.actionButton}
-                  disabled={!topic.isSaved}
-                  data-visually-hidden
-                  ref={deleteRef}
-                  onClick={() => {
-                    setIsDeletePopoverOpen(true);
-                  }}
-                >
-                  <SVGIcon name="delete" width={24} height={24} />
-                </button>
-              </Tooltip>
+              <Show when={topic.isSaved}>
+                <Tooltip content={__('Duplicate', 'tutor')}>
+                  <button
+                    type="button"
+                    css={styles.actionButton}
+                    disabled={!topic.isSaved}
+                    data-visually-hidden
+                    onClick={handleDuplicateTopic}
+                  >
+                    <SVGIcon name="copyPaste" width={24} height={24} />
+                  </button>
+                </Tooltip>
+              </Show>
+              <Show when={topic.isSaved}>
+                <Tooltip content={__('Delete', 'tutor')}>
+                  <button
+                    type="button"
+                    css={styles.actionButton}
+                    disabled={!topic.isSaved}
+                    data-visually-hidden
+                    ref={deleteRef}
+                    onClick={() => {
+                      setIsDeletePopoverOpen(true);
+                    }}
+                  >
+                    <SVGIcon name="delete" width={24} height={24} />
+                  </button>
+                </Tooltip>
+              </Show>
               <ConfirmationPopover
                 isOpen={isDeletePopoverOpen}
                 triggerRef={deleteRef}
@@ -380,16 +384,18 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 }}
               />
 
-              <button
-                type="button"
-                css={styles.actionButton}
-                disabled={!topic.isSaved}
-                onClick={() => {
-                  onCollapse?.(topic.id);
-                }}
-              >
-                <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
-              </button>
+              <Show when={topic.isSaved}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  disabled={!topic.isSaved}
+                  onClick={() => {
+                    onCollapse?.(topic.id);
+                  }}
+                >
+                  <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
+                </button>
+              </Show>
             </div>
           </div>
 
@@ -407,7 +413,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
               <Controller
                 control={form.control}
                 name="summary"
-                rules={{ required: __('Summary is required', 'tutor') }}
                 render={(controllerProps) => (
                   <FormTextareaInput
                     {...controllerProps}
