@@ -15,6 +15,7 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderActivitiesModel;
 use Tutor\Models\OrderModel;
@@ -162,6 +163,93 @@ class OrderController {
 			return admin_url( 'admin.php?page=' . self::PAGE_SLUG );
 		} else {
 			return tutor_utils()->get_tutor_dashboard_url() . '/orders';
+		}
+	}
+
+	/**
+	 * Create order based on the arguments
+	 *
+	 * Note: This method assumes nonce & user cap has been validated.
+	 *
+	 * Note: This method will validate data so it could be
+	 * used without validation.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id Typically student.
+	 * @param array  $items Key value pairs based on order_items table.
+	 * @param string $payment_status Order payment status.
+	 * @param mixed  $coupon_code Optional, if not provided automatic coupon.
+	 * @param array  $args Optional, Args to set data such as fees, tax, etc.
+	 * Even to modify $order_data.
+	 *
+	 * @throws \Exception Throw exception if data not valid or
+	 * any other exception occur.
+	 *
+	 * @return true on success
+	 */
+	public function create_order( int $user_id, array $items, string $payment_status, $coupon_code = null, array $args = array() ) {
+		$items          = Input::sanitize_array( $items );
+		$payment_status = Input::post( $payment_status );
+		$coupon_code    = Input::post( $coupon_code );
+
+		$allowed_item_fields = $this->model->get_order_items_fillable_fields();
+		unset( $allowed_item_fields['order_id'] );
+
+		// Validate order items.
+		$has_diff_items_fields = count( array_intersect_key( array_flip( $allowed_item_fields ), $items ) );
+		if ( $has_diff_items_fields ) {
+			throw new \Exception( __( 'Invalid order item data provided', 'tutor' ) );
+		}
+
+		// Validate payment status.
+		if ( ! in_array( $payment_status, $this->model->get_payment_status() ) ) {
+			throw new \Exception( __( 'Invalid payment status', 'tutor' ) );
+		}
+
+		$coupon_model = new CouponModel();
+
+		$coupon = $coupon_code ? $coupon_model->get_coupon( array( 'coupon_code' => $coupon_code ) ) : null;
+
+		$price_details = $coupon ? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code ) : $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ) );
+
+		$subtotal_price = 0;
+		foreach ( $items as $item ) {
+			$subtotal_price += $item['regular_price'];
+		}
+
+		$order_data = array(
+			'items'           => $items,
+			'payment_status'  => $payment_status,
+			'coupon_code'     => $coupon_code,
+			'subtotal_price'  => $subtotal_price,
+			'total_price'     => $price_details->total_price,
+			'net_payment'     => $price_details->total_price,
+			'user_id'         => $user_id,
+			'payment_status'  => $payment_status,
+			'order_status'    => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
+			'coupon_code'     => $coupon_code,
+			'discount_type'   => $coupon->discount_type,
+			'discount_type'   => $coupon->discount_amount,
+			'discount_reason' => $coupon->discount_reason,
+			'created_at_gmt'  => current_time( 'mysql', true ),
+			'created_by'      => get_current_user_id(),
+			'updated_at_gmt'  => current_time( 'mysql', true ),
+			'updated_by'      => get_current_user_id(),
+		);
+
+		// Update data with arguments.
+		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
+
+		try {
+			do_action( 'tutor_before_order_create', $order_data );
+			$order_id = $this->model->create_order( $order_data );
+			if ( $order_id ) {
+				do_action( 'tutor_after_order_create', $order_id, $order_data );
+				return $order_id;
+			}
+		} catch ( \Throwable $th ) {
+			throw new \Exception( $th->getMessage() );
 		}
 	}
 

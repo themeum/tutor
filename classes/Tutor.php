@@ -869,13 +869,14 @@ final class Tutor {
 			id BIGINT(20) UNSIGNED AUTO_INCREMENT,
 			transaction_id BIGINT(20) UNSIGNED COMMENT 'Transaction id from payment gateway',
 			user_id BIGINT(20) UNSIGNED NOT NULL,
+			order_type VARCHAR(50) NOT NULL, -- single_order, subscription
 			order_status VARCHAR(50) NOT NULL,
 			payment_status VARCHAR(50) NOT NULL,
 			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
 			total_price DECIMAL(13, 2) NOT NULL, -- final price
 			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
 			coupon_code VARCHAR(255),
-			discount_type ENUM('percentage', 'flat'),
+			discount_type ENUM('percentage', 'flat') DEFAULT NULL,
 			discount_amount DECIMAL(13, 2),
 			discount_reason TEXT,
 			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
@@ -892,6 +893,7 @@ final class Tutor {
 			updated_by BIGINT(20) UNSIGNED NOT NULL,
 			PRIMARY KEY (id),
 			KEY user_id (user_id),
+			KEY order_type (order_type),
 			KEY payment_status (payment_status),
 			KEY order_status (order_status),
 			KEY transaction_id (transaction_id)
@@ -916,12 +918,14 @@ final class Tutor {
 			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 			order_id BIGINT(20) UNSIGNED NOT NULL,
 			user_id BIGINT(20) UNSIGNED NOT NULL,
-			course_id BIGINT(20) UNSIGNED NOT NULL,
+			item_id BIGINT(20) UNSIGNED NOT NULL, -- course id/plan id
+			item_type VARCHAR(50) NOT NULL, -- course, plan
 			regular_price DECIMAL(13, 2) NOT NULL, -- course regular price
 			sale_price DECIMAL(13, 2) NULL, -- course sale price
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
-			KEY course_id (course_id),
+			KEY item_id (item_id),
+			KEY item_type (item_type),
 			CONSTRAINT fk_tutor_order_item_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
 		) $charset_collate;";
 
