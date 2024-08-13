@@ -85,6 +85,13 @@ declare global {
 				course_permalink_base: string;
 				supported_video_sources: string[] | string;
 			};
+			tutor_currency: {
+				decimal_separator: string;
+				no_of_decimal: string;
+				position: string;
+				symbol: string;
+				thousand_separator: string;
+			};
 		};
 		wpApiSettings: {
 			nonce: string;

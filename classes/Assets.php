@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -132,6 +133,14 @@ class Assets {
 			);
 		}
 
+		$tutor_currency = array(
+			'symbol'             => tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR ),
+			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS ),
+		);
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
@@ -158,6 +167,7 @@ class Assets {
 			'is_ssl'                       => is_ssl(),
 			'course_list_page_url'         => admin_url( 'admin.php?page=tutor' ),
 			'course_post_type'             => tutor()->course_post_type,
+			'tutor_currency'               => $tutor_currency,
 		);
 	}
 
