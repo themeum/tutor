@@ -76,7 +76,6 @@ class Course extends Tutor_Base {
 			return;
 		}
 
-		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_save_topic', array( $this, 'tutor_save_topic' ) );
@@ -97,13 +96,6 @@ class Course extends Tutor_Base {
 		 * Gutenberg author support
 		 */
 		add_filter( 'wp_insert_post_data', array( $this, 'tutor_add_gutenberg_author' ), 99, 2 );
-
-		/**
-		 * Frontend metabox supports for course builder
-		 *
-		 * @since  v.1.3.4
-		 */
-		add_action( 'tutor/dashboard_course_builder_form_field_after', array( $this, 'register_meta_box_in_frontend' ) );
 
 		/**
 		 * Do Stuff for the course save from frontend
@@ -1357,17 +1349,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Registering metabox
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function register_meta_box() {
-		$course_post_type = tutor()->course_post_type;
-		tutor_meta_box_wrapper( 'tutor-course-topics', __( 'Course Builder', 'tutor' ), array( $this, 'course_meta_box' ), $course_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-	}
-
-	/**
 	 * Course meta box (Topics)
 	 *
 	 * @since 1.0.0
@@ -1388,23 +1369,6 @@ class Course extends Tutor_Base {
 			include $file_path;
 			return ob_get_clean();
 		}
-	}
-
-	/**
-	 * Register metabox in course builder tutor
-	 *
-	 * @since 1.3.4
-	 * @return void
-	 */
-	public function register_meta_box_in_frontend() {
-		global $post;
-
-		do_action( 'tutor_course_builder_metabox_before', get_the_ID() );
-
-		course_builder_section_wrap( $this->course_meta_box( false ), __( 'Course Builder', 'tutor' ) );
-		do_action( 'tutor/frontend_course_edit/after/course_builder', $post );
-
-		do_action( 'tutor_course_builder_metabox_after', get_the_ID() );
 	}
 
 	/**
