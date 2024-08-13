@@ -200,7 +200,7 @@ export default function SubscriptionItem({
                       label={__('Pricing option', 'tutor')}
                       options={[
                         { label: __('Recurring payments', 'tutor'), value: 'recurring' },
-                        { label: __('One time payment', 'tutor'), value: 'one-time-purchase' },
+                        { label: __('One time payment', 'tutor'), value: 'onetime' },
                       ]}
                     />
                   )}

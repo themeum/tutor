@@ -33,10 +33,12 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
         </Show>
       </p>
       <div css={styles.information}>
-        <span>
-          {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
-          {formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}
-        </span>
+        <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
+          <span>
+            {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
+            {formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}
+          </span>
+        </Show>
 
         <Show when={subscription.enable_free_trial}>
           <span>•</span>
@@ -44,6 +46,24 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
             {subscription.trial_value.toString().padStart(2, '0')}{' '}
             {formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value))} {__('trial', 'tutor')}
           </span>
+        </Show>
+
+        <Show when={subscription.payment_type !== 'onetime'}>
+          <Show
+            when={subscription.plan_duration === 'Until cancelled'}
+            fallback={
+              <>
+                <span>•</span>
+                <span>
+                  {subscription.plan_duration.toString().padStart(2, '0')}{' '}
+                  {formatRepeatUnit(subscription.recurring_interval, Number(subscription.plan_duration))}
+                </span>
+              </>
+            }
+          >
+            <span>•</span>
+            <span>{__('Until Cancellation', 'tutor')}</span>
+          </Show>
         </Show>
       </div>
     </div>

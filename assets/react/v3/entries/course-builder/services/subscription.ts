@@ -111,7 +111,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     recurring_interval: subscription.recurring_interval ?? 'month',
     is_recommended: !!Number(subscription.is_recommended),
     regular_price: subscription.regular_price ?? '0',
-    plan_duration: subscription.plan_duration ?? 'Until cancelled',
+    plan_duration: subscription.plan_duration === '0' ? 'Until cancelled' : subscription.plan_duration,
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',

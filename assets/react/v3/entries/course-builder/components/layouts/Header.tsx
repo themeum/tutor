@@ -72,12 +72,7 @@ const Header = () => {
         !data.course_price
       ) {
         navigateToBasicsWithError();
-
-        if (!data.course_price) {
-          triggerAndFocus('course_price');
-          return;
-        }
-
+        triggerAndFocus('course_price');
         return;
       }
     }

@@ -81,9 +81,12 @@ declare global {
       course_post_type: string;
       settings: {
         monetize_by: 'wc' | 'tutor' | 'edd';
-        enable_course_marketplace: string;
+        enable_course_marketplace: 'on' | 'off';
         course_permalink_base: string;
         supported_video_sources: string[] | string;
+        lesson_video_duration_youtube_api_key: string;
+        enrollment_expiry_enabled: 'on' | 'off';
+        enable_q_and_a_on_course: 'on' | 'off';
       };
       tutor_currency: {
         symbol: string;

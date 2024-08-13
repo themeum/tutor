@@ -21,7 +21,12 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 
-import { getVimeoVideoDuration } from '@CourseBuilderUtils/utils';
+import {
+  covertSecondsToHMS,
+  getExternalVideoDuration,
+  getVimeoVideoDuration,
+  getYouTubeVideoDuration,
+} from '@CourseBuilderUtils/utils';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -209,16 +214,11 @@ const FormVideoInput = ({
           : { poster: attachment.id, poster_url: attachment.url };
 
       if (type === 'video' && onGetDuration) {
-        const video = document.createElement('video');
-        video.src = attachment.url;
-        video.preload = 'metadata';
-        video.onloadedmetadata = () => {
-          const duration = Math.floor(video.duration);
-          const hours = Math.floor(duration / 3600);
-          const minutes = Math.floor((duration % 3600) / 60);
-          const seconds = duration % 60;
-          onGetDuration({ hours, minutes, seconds });
-        };
+        getExternalVideoDuration(attachment.url).then((duration) => {
+          if (duration) {
+            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          }
+        });
       }
 
       field.onChange(updateFieldValue(fieldValue, updateData));
@@ -261,11 +261,23 @@ const FormVideoInput = ({
     if (source === 'vimeo') {
       const duration = await getVimeoVideoDuration(data.videoUrl);
       if (onGetDuration && duration) {
-        onGetDuration({
-          hours: Math.floor(duration / 3600),
-          minutes: Math.floor((duration % 3600) / 60),
-          seconds: duration % 60,
-        });
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+      }
+    }
+
+    if (source === 'external_url') {
+      const duration = await getExternalVideoDuration(data.videoUrl);
+
+      if (onGetDuration && duration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+      }
+    }
+
+    if (source === 'youtube' && tutorConfig.settings.lesson_video_duration_youtube_api_key) {
+      const duration = await getYouTubeVideoDuration(data.videoUrl);
+
+      if (onGetDuration && duration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
       }
     }
 
