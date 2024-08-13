@@ -58,6 +58,16 @@ class OrderModel {
 
 
 	/**
+	 * Order type
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const TYPE_SINGLE_ORDER = 'single_order';
+	const TYPE_SUBSCRIPTION = 'subscription';
+
+	/**
 	 * Order table name
 	 *
 	 * @since 3.0.0
@@ -250,6 +260,11 @@ class OrderModel {
 	 * @return bool
 	 */
 	public function insert_order_items( int $order_id, array $items ): bool {
+		// Check if item is multi dimensional.
+		if ( ! isset( $items[0] ) ) {
+			$items = array( $items );
+		}
+
 		// Set order id on each item.
 		foreach ( $items as $item ) {
 			$item['order_id'] = $order_id;

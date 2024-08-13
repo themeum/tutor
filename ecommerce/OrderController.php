@@ -197,9 +197,15 @@ class OrderController {
 		unset( $allowed_item_fields['order_id'] );
 
 		// Validate order items.
-		$has_diff_items_fields = count( array_intersect_key( array_flip( $allowed_item_fields ), $items ) );
-		if ( $has_diff_items_fields ) {
-			throw new \Exception( __( 'Invalid order item data provided', 'tutor' ) );
+		if ( ! isset( $items[0] ) ) {
+			$items = array( $items );
+		}
+
+		foreach ( $items as $item ) {
+			$has_diff_items_fields = count( array_intersect_key( array_flip( $allowed_item_fields ), $item ) );
+			if ( $has_diff_items_fields ) {
+				throw new \Exception( __( 'Invalid order item data provided', 'tutor' ) );
+			}
 		}
 
 		// Validate payment status.

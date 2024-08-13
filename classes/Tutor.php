@@ -919,7 +919,6 @@ final class Tutor {
 			order_id BIGINT(20) UNSIGNED NOT NULL,
 			user_id BIGINT(20) UNSIGNED NOT NULL,
 			item_id BIGINT(20) UNSIGNED NOT NULL, -- course id/plan id
-			item_type VARCHAR(50) NOT NULL, -- course, plan
 			regular_price DECIMAL(13, 2) NOT NULL, -- course regular price
 			sale_price DECIMAL(13, 2) NULL, -- course sale price
 			PRIMARY KEY (id),
