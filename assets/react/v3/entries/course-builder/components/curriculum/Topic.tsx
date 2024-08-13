@@ -103,7 +103,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(!topic.isSaved);
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
-  const [meetingType, setMeetingType] = useState<'googleMeet' | 'zoom' | null>(null);
+  const [meetingType, setMeetingType] = useState<'tutor-google-meet' | 'tutor_zoom_meeting' | null>(null);
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<TopicContentType[]>(topic.contents);
@@ -625,7 +625,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         </span>
                       }
                       icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
-                      onClick={() => setMeetingType('googleMeet')}
+                      onClick={() => setMeetingType('tutor-google-meet')}
                     />
                     <ThreeDots.Option
                       text={
@@ -634,7 +634,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         </span>
                       }
                       icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
-                      onClick={() => setMeetingType('zoom')}
+                      onClick={() => setMeetingType('tutor_zoom_meeting')}
                     />
                     <ThreeDots.Option
                       text={__('Import Quiz', 'tutor')}
@@ -663,7 +663,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
 
       <Popover
         triggerRef={triggerGoogleMeetRef}
-        isOpen={meetingType === 'googleMeet'}
+        isOpen={meetingType === 'tutor-google-meet'}
         closePopover={() => {
           setMeetingType(null);
           setIsThreeDotOpen(false);
@@ -681,7 +681,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
       </Popover>
       <Popover
         triggerRef={triggerZoomRef}
-        isOpen={meetingType === 'zoom'}
+        isOpen={meetingType === 'tutor_zoom_meeting'}
         closePopover={() => {
           setMeetingType(null);
           setIsThreeDotOpen(false);
