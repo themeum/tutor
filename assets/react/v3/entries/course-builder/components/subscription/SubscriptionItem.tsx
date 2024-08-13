@@ -115,7 +115,6 @@ export default function SubscriptionItem({
   const recurringInterval = form.watch('recurring_interval', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
-  const isRecommended = form.watch('is_recommended');
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -151,7 +150,7 @@ export default function SubscriptionItem({
           <span css={styles.title} title={subscriptionName}>
             {subscriptionName}
 
-            <Show when={isRecommended}>
+            <Show when={subscription.is_recommended}>
               <SVGIcon name="star" width={24} height={24} />
             </Show>
           </span>
