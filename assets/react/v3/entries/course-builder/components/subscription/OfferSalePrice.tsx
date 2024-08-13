@@ -8,12 +8,15 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
+
+const { tutor_currency } = tutorConfig;
 
 export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormData> }) {
   const hasSale = form.watch('offer_sale_price');
@@ -47,7 +50,15 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormD
                     return true;
                   },
                 }}
-                render={(props) => <FormInputWithContent {...props} label="Sale price" content={'$'} selectOnFocus />}
+                render={(props) => (
+                  <FormInputWithContent
+                    {...props}
+                    label="Sale price"
+                    content={tutor_currency?.symbol || '$'}
+                    selectOnFocus
+                    contentCss={styleUtils.inputCurrencyStyle}
+                  />
+                )}
               />
               <Controller
                 control={form.control}

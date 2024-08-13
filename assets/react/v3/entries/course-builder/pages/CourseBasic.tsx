@@ -54,10 +54,11 @@ const CourseBasic = () => {
   });
   const navigate = useNavigate();
   const { state } = useLocation();
-  const currentUser = tutorConfig.current_user;
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
+  const currentUser = tutorConfig.current_user;
+  const { tutor_currency } = tutorConfig;
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
@@ -174,7 +175,7 @@ const CourseBasic = () => {
       })) ?? [];
 
     return (
-      data?.find(({ ID }) => ID !== currentSelectedWcProduct?.value)
+      data?.find(({ ID }) => String(ID) !== String(currentSelectedWcProduct?.value))
         ? [currentSelectedWcProduct, ...convertedCourseProducts]
         : convertedCourseProducts
     ).filter(isDefined);
@@ -189,7 +190,7 @@ const CourseBasic = () => {
         tutorConfig.settings.monetize_by === 'wc' &&
         course_pricing?.product_id &&
         course_pricing.product_id !== '0' &&
-        wcProductsQuery.data.find(({ ID }) => ID !== course_pricing.product_id)
+        !wcProductOptions(wcProductsQuery.data).find(({ value }) => String(value) === String(course_pricing.product_id))
       ) {
         form.setValue('course_product_id', '', {
           shouldValidate: true,
@@ -210,7 +211,7 @@ const CourseBasic = () => {
       tutorConfig.settings.monetize_by === 'edd' &&
       course_pricing?.product_id &&
       course_pricing.product_id !== '0' &&
-      !tutorConfig.edd_products.find(({ ID }) => ID === String(course_pricing.product_id))
+      !tutorConfig.edd_products.find(({ ID }) => String(ID) === String(course_pricing.product_id))
     ) {
       form.setValue('course_product_id', '', {
         shouldValidate: true,
@@ -315,7 +316,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {visibilityStatus === 'password_protected' && (
+        <Show when={visibilityStatus === 'password_protected'}>
           <Controller
             name="post_password"
             control={form.control}
@@ -334,7 +335,7 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
         <ScheduleOptions />
 
@@ -372,11 +373,12 @@ const CourseBasic = () => {
             name="course_pricing_category"
             control={form.control}
             render={(controllerProps) => (
-              <FormRadioGroup
+              <FormSelectInput
                 {...controllerProps}
-                label={__('Pricing type', 'tutor')}
+                label={__('Pricing Category', 'tutor')}
+                placeholder={__('Select pricing category', 'tutor')}
                 options={coursePricingCategoryOptions}
-                wrapperCss={styles.priceRadioGroup}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
               />
             )}
           />
@@ -389,7 +391,7 @@ const CourseBasic = () => {
             render={(controllerProps) => (
               <FormRadioGroup
                 {...controllerProps}
-                label={__('Price', 'tutor')}
+                label={__('Price Type', 'tutor')}
                 options={coursePriceOptions}
                 wrapperCss={styles.priceRadioGroup}
               />
@@ -397,7 +399,7 @@ const CourseBasic = () => {
           />
         </Show>
 
-        {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc' && (
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc'}>
           <Controller
             name="course_product_id"
             control={form.control}
@@ -418,9 +420,9 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
-        {coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'edd' && (
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'edd'}>
           <Controller
             name="course_product_id"
             control={form.control}
@@ -446,50 +448,53 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
-        {courseCategory === 'regular' &&
-          coursePriceType === 'paid' &&
-          (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc') && (
-            <div css={styles.coursePriceWrapper}>
-              <Controller
-                name="course_price"
-                control={form.control}
-                rules={{
-                  ...requiredRule(),
-                }}
-                render={(controllerProps) => (
-                  <FormInputWithContent
-                    {...controllerProps}
-                    label={__('Regular Price', 'tutor')}
-                    content={<SVGIcon name="currency" width={24} height={24} />}
-                    placeholder={__('0', 'tutor')}
-                    type="number"
-                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                    selectOnFocus
-                  />
-                )}
-              />
-              <Controller
-                name="course_sale_price"
-                control={form.control}
-                rules={{
-                  ...requiredRule(),
-                }}
-                render={(controllerProps) => (
-                  <FormInputWithContent
-                    {...controllerProps}
-                    label={__('Discount Price', 'tutor')}
-                    content={<SVGIcon name="currency" width={24} height={24} />}
-                    placeholder={__('0', 'tutor')}
-                    type="number"
-                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                    selectOnFocus
-                  />
-                )}
-              />
-            </div>
-          )}
+        <Show
+          when={
+            courseCategory === 'regular' &&
+            coursePriceType === 'paid' &&
+            (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc')
+          }
+        >
+          <div css={styles.coursePriceWrapper}>
+            <Controller
+              name="course_price"
+              control={form.control}
+              rules={{
+                ...requiredRule(),
+              }}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Regular Price', 'tutor')}
+                  content={tutor_currency?.symbol || '$'}
+                  placeholder={__('0', 'tutor')}
+                  type="number"
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  selectOnFocus
+                  contentCss={styleUtils.inputCurrencyStyle}
+                />
+              )}
+            />
+            <Controller
+              name="course_sale_price"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInputWithContent
+                  {...controllerProps}
+                  label={__('Discount Price', 'tutor')}
+                  content={tutor_currency?.symbol || '$'}
+                  placeholder={__('0', 'tutor')}
+                  type="number"
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  selectOnFocus
+                  contentCss={styleUtils.inputCurrencyStyle}
+                />
+              )}
+            />
+          </div>
+        </Show>
 
         <Controller
           name="course_categories"
@@ -506,7 +511,7 @@ const CourseBasic = () => {
           )}
         />
 
-        {currentUser.roles.includes(TutorRoles.ADMINISTRATOR) && (
+        <Show when={currentUser.roles.includes(TutorRoles.ADMINISTRATOR)}>
           <Controller
             name="post_author"
             control={form.control}
@@ -522,9 +527,9 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
 
-        {isInstructorVisible && (
+        <Show when={isInstructorVisible}>
           <Controller
             name="course_instructors"
             control={form.control}
@@ -540,7 +545,7 @@ const CourseBasic = () => {
               />
             )}
           />
-        )}
+        </Show>
       </div>
     </div>
   );
