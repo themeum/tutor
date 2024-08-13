@@ -16,7 +16,9 @@ import { useDebounce } from '@Hooks/useDebounce';
 import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import profileImage from '@Images/profile-photo.png';
+import { useFormContext } from 'react-hook-form';
 
 interface User {
   id: number;
@@ -70,6 +72,9 @@ const FormSelectUser = ({
 
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
+  const form = useFormContext<CourseFormData>();
+
+  const authorId = form.watch('post_author.id');
 
   const filteredOption =
     options.filter((item) => {
@@ -181,14 +186,16 @@ const FormSelectUser = ({
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteSelection(instructor.id)}
-                        css={styles.instructorDeleteButton}
-                        data-instructor-delete-button
-                      >
-                        <SVGIcon name="cross" width={32} height={32} />
-                      </button>
+                      <Show when={String(authorId) !== String(instructor.id)}>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteSelection(instructor.id)}
+                          css={styles.instructorDeleteButton}
+                          data-instructor-delete-button
+                        >
+                          <SVGIcon name="cross" width={32} height={32} />
+                        </button>
+                      </Show>
                     </div>
                   ))}
                 </div>

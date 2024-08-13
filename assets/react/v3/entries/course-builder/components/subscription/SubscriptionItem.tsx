@@ -147,7 +147,13 @@ export default function SubscriptionItem({
       <div css={styles.subscriptionHeader(subscription.isExpanded)}>
         <div css={styles.grabber} {...listeners}>
           <SVGIcon name="threeDotsVerticalDouble" />
-          <span title={subscriptionName}>{subscriptionName}</span>
+          <span css={styles.title} title={subscriptionName}>
+            {subscriptionName}
+
+            <Show when={subscription.is_recommended}>
+              <SVGIcon name="star" width={24} height={24} />
+            </Show>
+          </span>
         </div>
 
         <div css={styles.actions(subscription.isExpanded)}>
@@ -305,7 +311,6 @@ export default function SubscriptionItem({
                         contentPosition="right"
                         type="number"
                         presetOptions={lifetimeOptions}
-                        helpText={__('Set to 0 for unlimited duration', 'tutor')}
                         selectOnFocus
                       />
                     )}
@@ -457,6 +462,15 @@ const styles = {
 		align-items: start;
 		gap: ${spacing[8]};
 	`,
+  title: css`
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin-left: ${spacing[8]};
+      color: ${colorTokens.icon.brand};
+    }
+  `,
   titleField: css`
 		width: 100%;
 		position: relative;

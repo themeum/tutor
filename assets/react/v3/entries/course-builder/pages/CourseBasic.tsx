@@ -67,8 +67,7 @@ const CourseBasic = () => {
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
-    isAdministrator &&
-    String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
+    (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || ''));
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
@@ -244,7 +243,11 @@ const CourseBasic = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm}>
-        <CanvasHead title={__('Course Basic', 'tutor')} />
+        <CanvasHead
+          title={__('Course Basic', 'tutor')}
+          backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
+          isExternalUrl
+        />
 
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
