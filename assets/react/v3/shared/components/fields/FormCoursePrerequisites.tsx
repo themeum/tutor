@@ -60,8 +60,10 @@ const FormCoursePrerequisites = ({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
 
-  const searchedOptions = options.filter((option) =>
-    option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()),
+  const filteredOption = options.filter(
+    (option) =>
+      option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()) &&
+      !selectedIds.includes(String(option.id)),
   );
 
   useEffect(() => {
@@ -181,14 +183,14 @@ const FormCoursePrerequisites = ({
               >
                 <ul css={[styles.options]}>
                   <Show
-                    when={searchedOptions.length > 0}
+                    when={filteredOption.length > 0}
                     fallback={
                       <li css={styles.emptyOption}>
                         <p>{__('No courses found')}</p>
                       </li>
                     }
                   >
-                    <For each={searchedOptions.filter((course) => !selectedIds.includes(String(course.id)))}>
+                    <For each={filteredOption}>
                       {(course) => (
                         <li key={course.id}>
                           <button

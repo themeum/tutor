@@ -294,7 +294,11 @@ const FormFileUploader = ({
                   </For>
                 </div>
 
-                <div css={styles.uploadButtonWrapper}>
+                <div
+                  css={styles.uploadButtonWrapper({
+                    hasFiles: Array.isArray(files) ? files.length > 0 : files !== null,
+                  })}
+                >
                   <Button
                     buttonCss={styles.uploadButton}
                     icon={<SVGIcon name="attach" height={24} width={24} />}
@@ -325,11 +329,11 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[8]};
     position: relative;
-    background-color: ${colorTokens.background.white};
-
+    
     ${
       hasFiles &&
       css`
+        background-color: ${colorTokens.background.white};
         padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
         border: 1px solid ${colorTokens.stroke.default};
         border-radius: ${borderRadius.card};
@@ -389,8 +393,17 @@ const styles = {
       color: ${colorTokens.icon.default};
     }
   `,
-  uploadButtonWrapper: css`
-    padding-right: ${spacing[16]};
+  uploadButtonWrapper: ({
+    hasFiles,
+  }: {
+    hasFiles: boolean;
+  }) => css`
+    ${
+      hasFiles &&
+      css`
+      margin-right: ${spacing[16]};
+    `
+    }
   `,
   uploadButton: css`
     width: 100%;
