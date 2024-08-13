@@ -1,9 +1,9 @@
-import { css } from '@emotion/react';
-import { useState } from 'react';
+import { type SerializedStyles, css } from '@emotion/react';
+import { type ReactNode, useRef, useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -14,6 +14,11 @@ import type { IconCollection, Option } from '@Utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
+  content?: string | ReactNode;
+  contentPosition?: 'left' | 'right';
+  showVerticalBar?: boolean;
+  type?: 'number' | 'text';
+  size?: 'regular' | 'large';
   label?: string;
   placeholder?: string;
   disabled?: boolean;
@@ -24,11 +29,20 @@ interface FormInputWithPresetsProps extends FormControllerProps<string | null> {
   removeOptionsMinWidth?: boolean;
   onChange?: (value: string) => void;
   presetOptions?: Option<string>[];
+  selectOnFocus?: boolean;
+  wrapperCss?: SerializedStyles;
+  contentCss?: SerializedStyles;
+  removeBorder?: boolean;
 }
 
 const FormInputWithPresets = ({
   field,
   fieldState,
+  content,
+  contentPosition = 'left',
+  showVerticalBar = true,
+  type = 'text',
+  size = 'regular',
   label,
   placeholder = '',
   disabled,
@@ -38,9 +52,14 @@ const FormInputWithPresets = ({
   removeOptionsMinWidth = true,
   onChange,
   presetOptions = [],
+  selectOnFocus = false,
+  wrapperCss,
+  contentCss,
+  removeBorder = false,
 }: FormInputWithPresetsProps) => {
   const fieldValue = field.value ?? '';
 
+  const ref = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
@@ -57,23 +76,41 @@ const FormInputWithPresets = ({
       readOnly={readOnly}
       loading={loading}
       helpText={helpText}
+      removeBorder={removeBorder}
+      placeholder={placeholder}
     >
       {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;
 
         return (
-          <div css={styles.mainWrapper}>
-            <div css={styles.inputWrapper} ref={triggerRef}>
+          <>
+            <div css={[styles.inputWrapper(!!fieldState.error, removeBorder), wrapperCss]} ref={triggerRef}>
+              {content && contentPosition === 'left' && (
+                <div css={[styles.inputLeftContent(showVerticalBar, size), contentCss]}>{content}</div>
+              )}
               <input
                 {...restInputProps}
-                css={[inputCss, styles.input]}
+                css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
                 onClick={() => setIsOpen(true)}
                 autoComplete="off"
                 readOnly={readOnly}
-                placeholder={placeholder}
+                ref={(element) => {
+                  field.ref(element);
+                  // @ts-ignore
+                  ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+                }}
+                onFocus={() => {
+                  if (!selectOnFocus || !ref.current) {
+                    return;
+                  }
+                  ref.current.select();
+                }}
                 value={fieldValue}
                 onChange={(event) => {
-                  const { value } = event.target;
+                  const value =
+                    type === 'number'
+                      ? event.target.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')
+                      : event.target.value;
 
                   field.onChange(value);
 
@@ -81,7 +118,12 @@ const FormInputWithPresets = ({
                     onChange(value);
                   }
                 }}
+                data-input
               />
+
+              {content && contentPosition === 'right' && (
+                <div css={styles.inputRightContent(showVerticalBar, size)}>{content}</div>
+              )}
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
@@ -123,7 +165,7 @@ const FormInputWithPresets = ({
                 </ul>
               </div>
             </Portal>
-          </div>
+          </>
         );
       }}
     </FormFieldWrapper>
@@ -136,21 +178,74 @@ const styles = {
   mainWrapper: css`
     width: 100%;
   `,
-  inputWrapper: css`
-    width: 100%;
+  inputWrapper: (hasFieldError: boolean, removeBorder: boolean) => css`
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    position: relative;
-  `,
-  input: css`
-    ${typography.body()};
-    width: 100%;
-    ${styleUtils.textEllipsis};
 
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus};
+    ${
+      !removeBorder &&
+      css`
+        border: 1px solid ${colorTokens.stroke.default};
+        border-radius: ${borderRadius[6]};
+        box-shadow: ${shadow.input};
+        background-color: ${colorTokens.background.white};
+      `
+    }
+
+    ${
+      hasFieldError &&
+      css`
+        border-color: ${colorTokens.stroke.danger};
+        background-color: ${colorTokens.background.status.errorFail};
+      `
+    };
+
+    &:focus-within {
+      ${styleUtils.inputFocus};
+
+      ${
+        hasFieldError &&
+        css`
+          border-color: ${colorTokens.stroke.danger};
+        `
+      }
+    }
+  `,
+  input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
+    /** Increasing the css specificity */
+    &[data-input] {
+      ${typography.body()};
+      border: none;
+      box-shadow: none;
+      background-color: transparent;
+      padding-${contentPosition}: 0;
+
+      ${
+        showVerticalBar &&
+        css`
+          padding-${contentPosition}: ${spacing[10]};
+        `
+      };
+
+      ${
+        size === 'large' &&
+        css`
+          font-size: ${fontSize[24]};
+          font-weight: ${fontWeight.medium};
+          height: 34px;
+          ${
+            showVerticalBar &&
+            css`
+              padding-${contentPosition}: ${spacing[12]};
+            `
+          };
+        `
+      }
+
+      &:focus {
+        box-shadow: none;
+        outline: none;
+      }
     }
   `,
   label: css`
@@ -226,4 +321,48 @@ const styles = {
 			`
     }
 	`,
+  inputLeftContent: (showVerticalBar: boolean, size: string) => css`
+    ${typography.small()}
+    ${styleUtils.flexCenter()}
+    height: 40px;
+    min-width: 48px;
+    color: ${colorTokens.icon.subdued};
+    padding-inline: ${spacing[12]};
+
+    ${
+      size === 'large' &&
+      css`
+        ${typography.body()}
+      `
+    }
+
+    ${
+      showVerticalBar &&
+      css`
+        border-right: 1px solid ${colorTokens.stroke.default};
+      `
+    }
+  `,
+  inputRightContent: (showVerticalBar: boolean, size: string) => css`
+    ${typography.small()}
+    ${styleUtils.flexCenter()}
+    height: 40px;
+    min-width: 48px;
+    color: ${colorTokens.icon.subdued};
+    padding-inline: ${spacing[12]};
+
+    ${
+      size === 'large' &&
+      css`
+        ${typography.body()}
+      `
+    }
+
+    ${
+      showVerticalBar &&
+      css`
+        border-left: 1px solid ${colorTokens.stroke.default};
+      `
+    }
+  `,
 };

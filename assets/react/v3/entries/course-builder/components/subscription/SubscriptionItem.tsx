@@ -2,6 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -30,11 +31,15 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 
-import { useEffect } from 'react';
+import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
+import { tutorConfig } from '@Config/config';
+import { makeFirstCharacterUpperCase } from '@Utils/util';
+import { requiredRule } from '@Utils/validation';
 import { OfferSalePrice } from './OfferSalePrice';
 import { formatRepeatUnit } from './PreviewItem';
 
 const courseId = getCourseId();
+const { tutor_currency } = tutorConfig;
 
 export default function SubscriptionItem({
   subscription,
@@ -106,6 +111,7 @@ export default function SubscriptionItem({
   });
 
   const subscriptionName = form.watch('plan_name');
+  const paymentType = form.watch('payment_type');
   const recurringInterval = form.watch('recurring_interval', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
@@ -118,7 +124,7 @@ export default function SubscriptionItem({
     })),
     {
       label: __('Until cancelled', 'tutor'),
-      value: '0',
+      value: 'Until cancelled',
     },
   ];
 
@@ -185,70 +191,126 @@ export default function SubscriptionItem({
                   )}
                 />
 
-                <div css={styles.inputGroup}>
-                  <Controller
-                    control={form.control}
-                    name="regular_price"
-                    render={(props) => (
-                      <FormInputWithContent
-                        {...props}
-                        label={__('Price', 'tutor')}
-                        content={'$'}
-                        placeholder={__('Subscription price', 'tutor')}
-                        selectOnFocus
-                      />
-                    )}
-                  />
-                  <Controller
-                    control={form.control}
-                    name="recurring_value"
-                    rules={{
-                      validate: (value) => {
-                        if (Number(value) < 1) {
-                          return __('This value must be equal to or greater than 1');
-                        }
-                      },
-                    }}
-                    render={(props) => (
-                      <FormInput
-                        {...props}
-                        label={__('Repeat every', 'tutor')}
-                        placeholder={__('Repeat every', 'tutor')}
-                        selectOnFocus
-                      />
-                    )}
-                  />
-
-                  <Controller
-                    control={form.control}
-                    name="recurring_interval"
-                    render={(props) => (
-                      <FormSelectInput
-                        {...props}
-                        label={<div>&nbsp;</div>}
-                        options={[
-                          { label: __('Day(s)', 'tutor'), value: 'day' },
-                          { label: __('Week(s)', 'tutor'), value: 'week' },
-                          { label: __('Month(s)', 'tutor'), value: 'month' },
-                          { label: __('Year(s)', 'tutor'), value: 'year' },
-                        ]}
-                      />
-                    )}
-                  />
-                </div>
-
                 <Controller
                   control={form.control}
-                  name="plan_duration_days"
+                  name="payment_type"
                   render={(props) => (
                     <FormSelectInput
                       {...props}
-                      label={__('Length of the plan', 'tutor')}
-                      placeholder={__('Select the length of the plan', 'tutor')}
-                      options={lifetimeOptions}
+                      label={__('Pricing option', 'tutor')}
+                      options={[
+                        { label: __('Recurring payments', 'tutor'), value: 'recurring' },
+                        { label: __('One time payment', 'tutor'), value: 'onetime' },
+                      ]}
                     />
                   )}
                 />
+                <Show
+                  when={paymentType === 'recurring'}
+                  fallback={
+                    <Controller
+                      control={form.control}
+                      name="regular_price"
+                      render={(props) => (
+                        <FormInputWithContent
+                          {...props}
+                          label={__('Price', 'tutor')}
+                          content={tutor_currency?.symbol || '$'}
+                          placeholder={__('Subscription price', 'tutor')}
+                          selectOnFocus
+                          contentCss={styleUtils.inputCurrencyStyle}
+                        />
+                      )}
+                    />
+                  }
+                >
+                  <div css={styles.inputGroup}>
+                    <Controller
+                      control={form.control}
+                      name="regular_price"
+                      render={(props) => (
+                        <FormInputWithContent
+                          {...props}
+                          label={__('Price', 'tutor')}
+                          content={tutor_currency?.symbol || '$'}
+                          placeholder={__('Subscription price', 'tutor')}
+                          selectOnFocus
+                          contentCss={styleUtils.inputCurrencyStyle}
+                        />
+                      )}
+                    />
+                    <Controller
+                      control={form.control}
+                      name="recurring_value"
+                      rules={{
+                        validate: (value) => {
+                          if (Number(value) < 1) {
+                            return __('This value must be equal to or greater than 1');
+                          }
+                        },
+                      }}
+                      render={(props) => (
+                        <FormInput
+                          {...props}
+                          label={__('Repeat every', 'tutor')}
+                          placeholder={__('Repeat every', 'tutor')}
+                          selectOnFocus
+                        />
+                      )}
+                    />
+
+                    <Controller
+                      control={form.control}
+                      name="recurring_interval"
+                      render={(props) => (
+                        <FormSelectInput
+                          {...props}
+                          label={<div>&nbsp;</div>}
+                          options={[
+                            { label: __('Day(s)', 'tutor'), value: 'day' },
+                            { label: __('Week(s)', 'tutor'), value: 'week' },
+                            { label: __('Month(s)', 'tutor'), value: 'month' },
+                            { label: __('Year(s)', 'tutor'), value: 'year' },
+                          ]}
+                        />
+                      )}
+                    />
+                  </div>
+
+                  <Controller
+                    control={form.control}
+                    name="plan_duration"
+                    rules={{
+                      ...requiredRule(),
+                      validate: (value) => {
+                        if (value === 'Until cancelled') {
+                          return true;
+                        }
+
+                        if (Number(value) <= 0) {
+                          return __('Plan duration must be greater than 0', 'tutor');
+                        }
+                        return true;
+                      },
+                    }}
+                    render={(props) => (
+                      <FormInputWithPresets
+                        {...props}
+                        label={__('Length of the plan', 'tutor')}
+                        placeholder={__('Select the length of the plan', 'tutor')}
+                        content={
+                          props.field.value !== 'Until cancelled' &&
+                          `${makeFirstCharacterUpperCase(recurringInterval as string)}(s)`
+                        }
+                        contentPosition="right"
+                        type="number"
+                        presetOptions={lifetimeOptions}
+                        helpText={__('Set to 0 for unlimited duration', 'tutor')}
+                        selectOnFocus
+                      />
+                    )}
+                  />
+                </Show>
 
                 <Controller
                   control={form.control}
@@ -272,9 +334,10 @@ export default function SubscriptionItem({
                       <FormInputWithContent
                         {...props}
                         label={__('Enrolment fee', 'tutor')}
-                        content={'$'}
+                        content={tutor_currency?.symbol || '$'}
                         placeholder={__('Enter enrolment fee')}
                         selectOnFocus
+                        contentCss={styleUtils.inputCurrencyStyle}
                       />
                     )}
                   />
@@ -333,6 +396,12 @@ export default function SubscriptionItem({
                   control={form.control}
                   name="do_not_provide_certificate"
                   render={(props) => <FormCheckbox {...props} label={__('Do not provide certificate', 'tutor')} />}
+                />
+
+                <Controller
+                  control={form.control}
+                  name="is_recommended"
+                  render={(props) => <FormCheckbox {...props} label={__('Feature this subscription', 'tutor')} />}
                 />
 
                 <OfferSalePrice form={form} />
