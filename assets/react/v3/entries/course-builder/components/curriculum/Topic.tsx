@@ -641,7 +641,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                       onClick={() => {
                         fileInputRef?.current?.click();
                       }}
-                      icon={<SVGIcon name="download" width={24} height={24} />}
+                      icon={<SVGIcon name="downloadColorize" width={24} height={24} isColorIcon />}
                     />
                   </ThreeDots>
                 </Show>

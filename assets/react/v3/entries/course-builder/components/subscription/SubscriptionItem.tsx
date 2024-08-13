@@ -115,6 +115,7 @@ export default function SubscriptionItem({
   const recurringInterval = form.watch('recurring_interval', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
+  const isRecommended = form.watch('is_recommended');
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -147,7 +148,13 @@ export default function SubscriptionItem({
       <div css={styles.subscriptionHeader(subscription.isExpanded)}>
         <div css={styles.grabber} {...listeners}>
           <SVGIcon name="threeDotsVerticalDouble" />
-          <span title={subscriptionName}>{subscriptionName}</span>
+          <span css={styles.title} title={subscriptionName}>
+            {subscriptionName}
+
+            <Show when={isRecommended}>
+              <SVGIcon name="star" width={24} height={24} />
+            </Show>
+          </span>
         </div>
 
         <div css={styles.actions(subscription.isExpanded)}>
@@ -457,6 +464,15 @@ const styles = {
 		align-items: start;
 		gap: ${spacing[8]};
 	`,
+  title: css`
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin-left: ${spacing[8]};
+      color: ${colorTokens.icon.brand};
+    }
+  `,
   titleField: css`
 		width: 100%;
 		position: relative;
