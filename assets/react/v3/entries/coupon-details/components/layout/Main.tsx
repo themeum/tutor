@@ -7,7 +7,7 @@ import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
 import CouponPreview from '@CouponComponents/coupon/CouponPreview';
 import CouponValidity from '@CouponComponents/coupon/CouponValidity';
 import PurchaseRequirements from '@CouponComponents/coupon/PurchaseRequirements';
-import { Coupon, couponInitialValue, GetCouponResponse, useCouponDetailsQuery } from '@CouponServices/coupon';
+import { Coupon, couponInitialValue, Course, CourseCategory, GetCouponResponse, useCouponDetailsQuery } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { FormProvider } from 'react-hook-form';
@@ -32,13 +32,12 @@ function Main() {
 				coupon_type: couponData.coupon_type,
 				coupon_title: couponData.coupon_title,
 				coupon_code: couponData.coupon_code,
-				user_name: "", // @TODO:
 				discount_type: couponData.discount_type,
 				discount_amount: couponData.discount_amount,
 				applies_to: couponData.applies_to,
-				courses: couponData.applies_to === 'specific_courses' ? couponData.applies_to_items : [],
-				bundles: couponData.applies_to === 'specific_bundles' ? couponData.applies_to_items : [],
-				categories: couponData.applies_to === 'specific_category' ? couponData.applies_to_items : [],
+				courses: couponData.applies_to === 'specific_courses' ? couponData.applies_to_items as Course[]  : [],
+				bundles: couponData.applies_to === 'specific_bundles' ? couponData.applies_to_items as Course[] : [],
+				categories: couponData.applies_to === 'specific_category' ? couponData.applies_to_items as CourseCategory[] : [],
 				usage_limit_status: !!couponData.total_usage_limit,
 				total_usage_limit: couponData.total_usage_limit,
 				per_user_limit_status: !!couponData.per_user_usage_limit,
@@ -52,6 +51,10 @@ function Main() {
 					end_date: format(new Date(couponData.expire_date_gmt), DateFormats.yearMonthDay),
 					end_time: format(new Date(couponData.expire_date_gmt), DateFormats.hoursMinutes),
 				}),
+				created_at_gmt: couponData.created_at_gmt,
+				updated_at_gmt: couponData.updated_at_gmt,
+				coupon_created_by: couponData.coupon_created_by,
+				coupon_update_by: couponData.coupon_update_by,
 			});
 		}
 	}, [couponDetailsQuery.data]);
@@ -89,22 +92,15 @@ const styles = {
 	content: css`
 		min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
 		width: 100%;
-		display: flex;
+		display: grid;
+		grid-template-columns: 1fr 342px;
 		gap: ${spacing[36]};
 		margin-top: ${spacing[32]};
 	`,
 	left: css`
-		max-width: 736px;
-		width: 100%;
-		flex-shrink: 0;
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[16]};
 	`,
-	right: css`
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[24]};
-	`,
+	right: css``,
 };

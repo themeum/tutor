@@ -9,7 +9,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
 
-import { Coupon, CouponAppliesTo, Course, CourseCategory } from '@CouponServices/coupon';
+import { Coupon } from '@CouponServices/coupon';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';

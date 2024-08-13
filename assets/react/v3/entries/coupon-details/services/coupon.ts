@@ -42,7 +42,6 @@ export interface Coupon {
 	coupon_type: CouponType;
 	coupon_title: string;
 	coupon_code: string;
-	user_name: string;
 	discount_type: 'percentage' | 'flat';
 	discount_amount: string;
 	applies_to: CouponAppliesTo;
@@ -61,6 +60,10 @@ export interface Coupon {
 	is_end_enabled: boolean;
 	end_date: string;
 	end_time: string;
+	created_at_gmt: string;
+	updated_at_gmt: string;
+	coupon_created_by: string;
+	coupon_update_by: string;
 }
 
 export interface CouponPayload {
@@ -97,6 +100,10 @@ export interface GetCouponResponse {
 	purchase_requirement_value?: string;
 	start_date_gmt: string;
 	expire_date_gmt: string | null;
+	created_at_gmt: string;
+	updated_at_gmt: string;
+	coupon_created_by: string;
+	coupon_update_by: string;
 }
 
 export const couponInitialValue: Coupon = {
@@ -104,7 +111,6 @@ export const couponInitialValue: Coupon = {
 	coupon_type: 'code',
 	coupon_title: '',
 	coupon_code: '',
-	user_name: '',
 	discount_type: 'percentage',
 	discount_amount: '',
 	applies_to: 'all_courses',
@@ -122,6 +128,10 @@ export const couponInitialValue: Coupon = {
 	is_end_enabled: false,
 	end_date: '',
 	end_time: '',
+	created_at_gmt: '',
+	updated_at_gmt: '',
+	coupon_created_by: '',
+	coupon_update_by: '',
 };
 
 function getAppliesToItemIds(data: Coupon) {
