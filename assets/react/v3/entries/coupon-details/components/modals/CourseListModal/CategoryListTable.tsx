@@ -1,5 +1,5 @@
 import Checkbox from '@Atoms/CheckBox';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { LoadingSection } from '@Atoms/LoadingSpinner';
 import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
@@ -7,7 +7,7 @@ import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
 
-import { Coupon, CourseCategory, useCategoryListQuery } from '@CouponServices/coupon';
+import { Coupon, CourseCategory, useAppliesToQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
@@ -22,14 +22,15 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 	const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
 		updateQueryParams: false,
 	});
-	const categoryListQuery = useCategoryListQuery({
+	const categoryListQuery = useAppliesToQuery({
+		applies_to: 'specific_category',
 		offset,
 		limit: itemsPerPage,
 		filter: pageInfo.filter,
 	});
 
 	function toggleSelection(isChecked = false) {
-		form.setValue('categories', isChecked ? categoryListQuery.data?.results : []);
+		form.setValue('categories', isChecked ? categoryListQuery.data?.results as CourseCategory[] : []);
 	}
 
 	function handleAllIsChecked() {
@@ -65,7 +66,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 						<img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
 						<div css={styles.courseItem}>
 							<div>{item.title}</div>
-							<p>{`${item.number_of_courses} ${__('Courses', 'tutor')}`}</p>
+							<p>{`${item.total_courses} ${__('Courses', 'tutor')}`}</p>
 						</div>
 					</div>
 				);
@@ -75,11 +76,11 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 	];
 
 	if (categoryListQuery.isLoading) {
-		return <LoadingSpinner />;
+		return <LoadingSection />;
 	}
 
 	if (!categoryListQuery.data) {
-		return <div>{__('Something went wrong', 'tutor')}</div>;
+		return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor')}</div>;
 	}
 
 	return (
@@ -91,7 +92,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 			<div css={styles.tableWrapper}>
 				<Table
 					columns={columns}
-					data={categoryListQuery.data.results ?? []}
+					data={categoryListQuery.data.results as CourseCategory[] ?? []}
 					itemsPerPage={itemsPerPage}
 					loading={categoryListQuery.isFetching || categoryListQuery.isRefetching}
 				/>
@@ -101,7 +102,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
 				<Paginator
 					currentPage={pageInfo.page}
 					onPageChange={onPageChange}
-					totalItems={categoryListQuery.data.totalItems}
+					totalItems={categoryListQuery.data.total_items}
 					itemsPerPage={itemsPerPage}
 				/>
 			</div>
@@ -116,7 +117,7 @@ const styles = {
 		padding: ${spacing[20]};
 	`,
 	tableWrapper: css`
-		max-height: 450px;
+		max-height: calc(100vh - 350px);
 		overflow: auto;
 	`,
 	paginatorWrapper: css`
@@ -135,5 +136,11 @@ const styles = {
 		width: 48px;
 		height: 48px;
 		border-radius: ${borderRadius[4]};
+	`,
+	errorMessage: css`
+		height: 100px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	`,
 };

@@ -69,8 +69,7 @@ export interface OptionWithIcon<T> {
 }
 
 export interface PaginatedResult<T> {
-  totalItems: number;
-  totalPages: number;
+  total_items: number;
   results: T[];
 }
 
