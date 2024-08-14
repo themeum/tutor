@@ -62,6 +62,7 @@ const CourseBasic = () => {
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
+  const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
     isTutorProEnabled &&
@@ -146,7 +147,9 @@ const CourseBasic = () => {
     avatar_url: instructor.avatar_url,
   }));
 
-  const instructorOptions = [...convertedCourseInstructors, ...(instructorListQuery.data || [])];
+  const instructorOptions = [...convertedCourseInstructors, ...(instructorListQuery.data || [])].filter(
+    (instructor) => String(instructor.id) !== String(currentAuthor?.id),
+  );
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -545,6 +548,7 @@ const CourseBasic = () => {
                 isSearchable
                 isMultiSelect
                 loading={instructorListQuery.isLoading && !controllerProps.field.value}
+                emptyStateText={__('No instructors added.', 'tutor')}
               />
             )}
           />
