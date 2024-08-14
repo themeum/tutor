@@ -17,7 +17,7 @@ interface ImageResponse {
 }
 
 const generateImage = (payload: ImagePayload) => {
-  const promises = [1, 2, 3, 4].map(() => {
+  const promises = Array.from({length: 4}).map(() => {
     return wpAjaxInstance.get<WPResponse<ImageResponse>>(endpoints.GENERATE_AI_IMAGE, {
       params: payload,
     });
@@ -49,8 +49,12 @@ const magicFillImage = (payload: FillPayload) => {
 };
 
 export const useMagicFillImageMutation = () => {
+  const { showToast } = useToast();
   return useMutation({
     mutationFn: magicFillImage,
+    onError(error: Error) {
+      showToast({ type: 'danger', message: error.message });
+    },
   });
 };
 
@@ -68,9 +72,13 @@ const generateText = (payload: TextGenerationPayload) => {
 }
 
 export const useMagicTextGenerationMutation = () => {
+  const { showToast } = useToast();
   return useMutation({
     mutationFn: generateText,
-  })
+    onError(error: Error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
 }
 
 export type ModificationType = 'rephrase' | 'make_shorter' | 'write_as_bullets' | 'make_longer' | 'simplify_language';
@@ -100,9 +108,13 @@ const modifyContent = (payload: ModificationPayload)=> {
 }
 
 export const useModifyContentMutation = () => {
+  const { showToast } = useToast();
   return useMutation({
-    mutationFn: modifyContent
-  })
+    mutationFn: modifyContent,
+    onError(error: Error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
 }
 
 interface UseImagePayload {
@@ -115,7 +127,11 @@ const storeImage = (payload: UseImagePayload) => {
 };
 
 export const useStoreAIGeneratedImageMutation = () => {
+  const { showToast } = useToast();
   return useMutation({
-    mutationFn: storeImage
-  })
+    mutationFn: storeImage,
+    onError(error: Error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
 }

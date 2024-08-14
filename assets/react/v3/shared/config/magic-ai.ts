@@ -1,4 +1,5 @@
 import type { Option } from "@Utils/types";
+import { __ } from "@wordpress/i18n";
 
 
 
@@ -92,22 +93,22 @@ const languageOptions: Option<ChatLanguage>[] = [
 ];
 
 const toneOptions: Option<ChatTone>[] = [
-  { label: 'Formal', value: 'formal' },
-  { label: 'Casual', value: 'casual' },
-  { label: 'Professional', value: 'professional' },
-  { label: 'Enthusiastic', value: 'enthusiastic' },
-  { label: 'Informational', value: 'informational' },
-  { label: 'Funny', value: 'funny' },
+  { label: __('Formal', 'tutor'), value: 'formal' },
+  { label: __('Casual', 'tutor'), value: 'casual' },
+  { label: __('Professional', 'tutor'), value: 'professional' },
+  { label: __('Enthusiastic', 'tutor'), value: 'enthusiastic' },
+  { label: __('Informational', 'tutor'), value: 'informational' },
+  { label: __('Funny', 'tutor'), value: 'funny' },
 ];
 
 const formatOptions: Option<ChatFormat>[] = [
-  { label: 'Essay', value: 'essay' },
-  { label: 'Paragraph', value: 'paragraph' },
-  { label: 'Email', value: 'email' },
-  { label: 'Idea', value: 'idea' },
-  { label: 'Blog Post', value: 'blog-post' },
-  { label: 'Outline', value: 'outline' },
-  { label: 'Comment', value: 'comment' },
+  { label: __('Essay', 'tutor'), value: 'essay' },
+  { label: __('Paragraph', 'tutor'), value: 'paragraph' },
+  { label: __('Email', 'tutor'), value: 'email' },
+  { label: __('Idea', 'tutor'), value: 'idea' },
+  { label: __('Blog Post', 'tutor'), value: 'blog-post' },
+  { label: __('Outline', 'tutor'), value: 'outline' },
+  { label: __('Comment', 'tutor'), value: 'comment' },
 ];
 
 export { formatOptions, languageOptions, toneOptions };

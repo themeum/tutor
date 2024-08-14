@@ -258,7 +258,7 @@ const CourseBasic = () => {
                 onClick={() => alert('@TODO: will be implemented later.')}
               >
                 <SVGIcon name="magicAi" width={24} height={24} />
-                Generate with AI
+                {__('Generate with AI', 'tutor')}
               </MagicButton>
             </div>
           }

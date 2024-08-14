@@ -17,22 +17,22 @@ import { type DropdownState, useMagicImageGeneration } from './ImageContext';
 
 const options: Option<DropdownState>[] = [
   {
-    label: 'Magic fill',
+    label: __('Magic fill', 'tutor'),
     value: 'magic-fill',
     icon: <SVGIcon name="magicWand" width={24} height={24} />,
   },
   {
-    label: 'Object eraser',
+    label: __('Object eraser', 'tutor'),
     value: 'magic-erase',
     icon: <SVGIcon name="eraser" width={24} height={24} />,
   },
   {
-    label: 'Variations',
+    label: __('Variations', 'tutor'),
     value: 'variations',
     icon: <SVGIcon name="reload" width={24} height={24} />,
   },
   {
-    label: 'Download',
+    label: __('Download', 'tutor'),
     value: 'download',
     icon: <SVGIcon name="download" width={24} height={24} />,
   },

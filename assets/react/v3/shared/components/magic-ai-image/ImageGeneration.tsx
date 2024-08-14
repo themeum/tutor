@@ -31,62 +31,62 @@ import { magicAIStyles } from './styles';
 
 const styleOptions: OptionWithImage<StyleType>[] = [
   {
-    label: 'None',
+    label: __('None', 'tutor'),
     value: 'none',
     image: noneSrc,
   },
   {
-    label: 'Filmic',
+    label: __('Filmic', 'tutor'),
     value: 'filmic',
     image: photoSrc,
   },
   {
-    label: 'Photo',
+    label: __('Photo', 'tutor'),
     value: 'photo',
     image: illustrationSrc,
   },
   {
-    label: 'Neon',
+    label: __('Neon', 'tutor'),
     value: 'neon',
     image: illustrationSrc,
   },
   {
-    label: 'Dreamy',
+    label: __('Dreamy', 'tutor'),
     value: 'dreamy',
     image: illustrationSrc,
   },
   {
-    label: 'Black and white',
+    label: __('Black and white', 'tutor'),
     value: 'black-and-white',
     image: blackAndWhiteSrc,
   },
   {
-    label: 'Retrowave',
+    label: __('Retrowave', 'tutor'),
     value: 'retrowave',
     image: illustrationSrc,
   },
   {
-    label: '3D',
+    label: __('3D', 'tutor'),
     value: '3d',
     image: threeDSrc,
   },
   {
-    label: 'Concept art',
+    label: __('Concept art', 'tutor'),
     value: 'concept_art',
     image: sketchSrc,
   },
   {
-    label: 'Sketch',
+    label: __('Sketch', 'tutor'),
     value: 'sketch',
     image: sketchSrc,
   },
   {
-    label: 'Illustration',
+    label: __('Illustration', 'tutor'),
     value: 'illustration',
     image: illustrationSrc,
   },
   {
-    label: 'Painting',
+    label: __('Painting', 'tutor'),
     value: 'painting',
     image: cartoonSrc,
   },
