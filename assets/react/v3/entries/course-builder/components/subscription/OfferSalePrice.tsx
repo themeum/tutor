@@ -100,9 +100,27 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormD
                       control={form.control}
                       rules={{
                         required: __('Schedule date is required', 'tutor'),
+                        validate: {
+                          checkEndDate: (value) => {
+                            const startDate = form.watch('sale_price_from_date');
+                            const endDate = value;
+                            if (startDate && endDate) {
+                              return new Date(startDate) > new Date(endDate)
+                                ? __('Sales End date should be greater than start date', 'tutor')
+                                : undefined;
+                            }
+                            return undefined;
+                          },
+                        },
+                        deps: ['sale_price_from_date'],
                       }}
                       render={(controllerProps) => (
-                        <FormDateInput {...controllerProps} isClearable={false} placeholder="yyyy-mm-dd" />
+                        <FormDateInput
+                          {...controllerProps}
+                          isClearable={false}
+                          placeholder="yyyy-mm-dd"
+                          disabledBefore={form.watch('sale_price_from_date') || undefined}
+                        />
                       )}
                     />
 
@@ -111,6 +129,21 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormD
                       control={form.control}
                       rules={{
                         required: __('Schedule time is required', 'tutor'),
+                        validate: {
+                          checkEndTime: (value) => {
+                            const startDate = form.watch('sale_price_from_date');
+                            const startTime = form.watch('sale_price_from_time');
+                            const endDate = form.watch('sale_price_to_date');
+                            const endTime = value;
+                            if (startDate && endDate && startTime && endTime) {
+                              return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
+                                ? __('Sales End time should be greater than start time', 'tutor')
+                                : undefined;
+                            }
+                            return undefined;
+                          },
+                        },
+                        deps: ['sale_price_from_date', 'sale_price_from_time', 'sale_price_to_date'],
                       }}
                       render={(controllerProps) => (
                         <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />

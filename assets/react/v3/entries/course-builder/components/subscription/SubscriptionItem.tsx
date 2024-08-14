@@ -78,6 +78,7 @@ export default function SubscriptionItem({
 
       if (response.status_code === 200 || response.status_code === 201) {
         toggleCollapse(subscription.id);
+        form.reset();
       }
     } catch (error) {
       // handle error
@@ -115,6 +116,7 @@ export default function SubscriptionItem({
   const recurringInterval = form.watch('recurring_interval', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
+  const isRecommended = form.watch('is_recommended');
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -408,6 +410,21 @@ export default function SubscriptionItem({
                   name="is_recommended"
                   render={(props) => <FormCheckbox {...props} label={__('Feature this subscription', 'tutor')} />}
                 />
+
+                <Show when={isRecommended}>
+                  <Controller
+                    control={form.control}
+                    rules={requiredRule()}
+                    name="featured_text"
+                    render={(props) => (
+                      <FormInput
+                        {...props}
+                        label={__('Feature text', 'tutor')}
+                        placeholder={__('Enter feature text', 'tutor')}
+                      />
+                    )}
+                  />
+                </Show>
 
                 <OfferSalePrice form={form} />
               </div>

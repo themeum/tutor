@@ -19,6 +19,7 @@ export type Subscription = {
   recurring_value: string;
   recurring_interval: Omit<DurationUnit, 'hour'>;
   is_recommended: '0' | '1';
+  featured_text: string;
   regular_price: string;
   sale_price: string;
   sale_price_from: string; // start date
@@ -53,6 +54,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   recurring_value: '1',
   recurring_interval: 'month',
   is_recommended: false,
+  featured_text: '',
   regular_price: '0',
   sale_price: '0',
   sale_price_from_date: '',
@@ -62,7 +64,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   plan_duration: 'Until cancelled',
   do_not_provide_certificate: false,
   enrollment_fee: '0',
-  trial_value: '0',
+  trial_value: '1',
   trial_interval: 'day',
   charge_enrollment_fee: false,
   enable_free_trial: false,
@@ -110,6 +112,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     recurring_value: subscription.recurring_value ?? '0',
     recurring_interval: subscription.recurring_interval ?? 'month',
     is_recommended: !!Number(subscription.is_recommended),
+    featured_text: subscription.featured_text ?? '',
     regular_price: subscription.regular_price ?? '0',
     plan_duration: subscription.plan_duration === '0' ? 'Until cancelled' : subscription.plan_duration,
     enrollment_fee: subscription.enrollment_fee ?? '0',
@@ -119,7 +122,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     charge_enrollment_fee: !!Number(subscription.enrollment_fee),
     enable_free_trial: !!Number(subscription.trial_value),
     offer_sale_price: !!Number(subscription.sale_price),
-    schedule_sale_price: !!Number(subscription.sale_price_from),
+    schedule_sale_price: !!subscription.sale_price_from,
     do_not_provide_certificate: !Number(subscription.provide_certificate),
     sale_price_from_date: subscription.sale_price_from
       ? format(parseISO(subscription.sale_price_from), DateFormats.yearMonthDay)
@@ -150,6 +153,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
     regular_price: formData.regular_price,
     plan_duration: formData.plan_duration === 'Until cancelled' ? '0' : formData.plan_duration,
     is_recommended: formData.is_recommended ? '1' : '0',
+    ...(formData.is_recommended && { featured_text: formData.featured_text }),
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
     ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),
     sale_price: formData.offer_sale_price ? formData.sale_price : '0',
@@ -183,6 +187,7 @@ export type SubscriptionPayload = {
   plan_duration: string; // 30, 60, 90, 120, 365 and 0 for until canceled
   provide_certificate: '0' | '1';
   is_recommended: '0' | '1';
+  featured_text?: string;
   enrollment_fee?: string;
   trial_value?: string;
   trial_interval?: DurationUnit;
