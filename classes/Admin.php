@@ -647,10 +647,10 @@ class Admin {
 			$admin_bar->add_menu(
 				array(
 					'id'    => 'edit',
-					'title' => __( 'Edit with Course Builder', 'tutor-pro' ),
+					'title' => __( 'Edit with Course Builder', 'tutor' ),
 					'href'  => tutor_utils()->course_edit_link( $post->ID ),
 					'meta'  => array(
-						'title'  => __( 'Edit with Course Builder', 'tutor-pro' ),
+						'title'  => __( 'Edit with Course Builder', 'tutor' ),
 						'target' => '_blank',
 					),
 				)
