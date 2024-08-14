@@ -369,13 +369,13 @@ class OrderModel {
 			array(
 				'type'  => 'LEFT',
 				'table' => "{$wpdb->prefix}posts AS p",
-				'on'    => 'p.ID = oi.course_id',
+				'on'    => 'p.ID = oi.item_id',
 			),
 		);
 
 		$where = array( 'order_id' => $order_id );
 
-		$select_columns = array( 'oi.course_id AS id', 'oi.regular_price', 'oi.sale_price', 'p.post_title AS title', 'p.post_type AS type' );
+		$select_columns = array( 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'p.post_title AS title', 'p.post_type AS type' );
 
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
