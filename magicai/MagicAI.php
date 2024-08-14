@@ -7,6 +7,7 @@
  * @link https://themeum.com
  * @since 3.0.0
  */
+
 namespace Tutor\MagicAI;
 
 if ( ! defined( 'ABSPATH' ) ) {

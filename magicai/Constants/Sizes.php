@@ -16,9 +16,9 @@ namespace Tutor\MagicAI\Constants;
  * @since 3.0.0
  */
 final class Sizes {
-	const PORTRAIT = '1024x1792';
+	const PORTRAIT  = '1024x1792';
 	const LANDSCAPE = '1792x1024';
-	const REGULAR = '1024x1024';
-	const MEDIUM = '512x512';
-	const SMALL = '256x256';
+	const REGULAR   = '1024x1024';
+	const MEDIUM    = '512x512';
+	const SMALL     = '256x256';
 }
