@@ -211,7 +211,8 @@ class ImageController {
 		$image_base64 = base64_decode( explode( ',', $image, 2 )[1] );
 		$year = date( 'Y' );
 		$month = date( 'm' );
-		$filename = 'course-banner-' . $course_id . '.png';
+		$unique_string = wp_generate_password( 8, false );
+		$filename = 'course-banner-' . $course_id . '-' . $unique_string . '.png';
 
 		$uploads_path = '/uploads/' . $year . '/' . $month . '/' . $filename;
 		$image_path = WP_CONTENT_DIR . $uploads_path;
