@@ -78,6 +78,56 @@ class RestAuth {
 		add_action( 'wp_ajax_tutor_generate_api_keys', __CLASS__ . '::generate_api_keys' );
 		add_action( 'wp_ajax_tutor_update_api_permission', __CLASS__ . '::update_api_permission' );
 		add_action( 'wp_ajax_tutor_revoke_api_keys', __CLASS__ . '::revoke_api_keys' );
+		add_filter( 'determine_current_user', array( $this, 'api_auth' ) );
+	}
+
+	/**
+	 * API auth.
+	 *
+	 * @since 2.7.1
+	 *
+	 * @param int|false $user_id user id.
+	 *
+	 * @return int|false
+	 */
+	public function api_auth( $user_id ) {
+		// Don't authenticate twice.
+		if ( ! empty( $user_id ) || ! $this->is_tutor_api_request() ) {
+			return $user_id;
+		}
+
+		if ( ! wp_is_application_passwords_available() ) {
+			return $user_id;
+		}
+
+		if ( ! isset( $_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'] ) ) {
+			return $user_id;
+		}
+
+		$api_key    = $_SERVER['PHP_AUTH_USER']; //phpcs:ignore sanitization ok
+		$api_secret = $_SERVER['PHP_AUTH_PW']; //phpcs:ignore sanitization ok
+		$record     = self::validate_api_key_secret( $api_key, $api_secret, true );
+		if ( $record ) {
+			return $record->user_id;
+		}
+
+		return $user_id;
+	}
+
+	/**
+	 * Is request is tutor rest api.
+	 *
+	 * @since 2.7.1
+	 *
+	 * @return boolean
+	 */
+	public static function is_tutor_api_request() {
+		$rest_prefix = trailingslashit( rest_get_url_prefix() );
+		$request_uri = esc_url_raw( wp_unslash( $_SERVER['REQUEST_URI'] ?? '' ) );
+
+		$is_tutor_api = ( false !== strpos( $request_uri, $rest_prefix . 'tutor/' ) );
+
+		return $is_tutor_api;
 	}
 
 	/**
@@ -209,13 +259,15 @@ class RestAuth {
 	 * Check if api key & secret is valid
 	 *
 	 * @since 2.2.1
+	 * @since 2.7.1 $return_result param added.
 	 *
 	 * @param string $api_key api key.
 	 * @param string $api_secret api secret.
+	 * @param bool   $return_result return matched meta record.
 	 *
-	 * @return boolean
+	 * @return bool|object
 	 */
-	public static function validate_api_key_secret( $api_key, $api_secret ) {
+	public static function validate_api_key_secret( $api_key, $api_secret, $return_result = false ) {
 		global $wpdb;
 		$table = $wpdb->usermeta;
 
@@ -229,9 +281,12 @@ class RestAuth {
 
 		if ( is_array( $results ) && count( $results ) ) {
 			foreach ( $results as $result ) {
-				$result = json_decode( $result->meta_value );
-				if ( $result->key === $api_key && $result->secret === $api_secret ) {
+				$obj = json_decode( $result->meta_value );
+				if ( $obj->key === $api_key && $obj->secret === $api_secret ) {
 					$valid = true;
+					if ( $return_result ) {
+						return $result;
+					}
 					break;
 				}
 			}

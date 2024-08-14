@@ -333,6 +333,10 @@ window.jQuery(document).ready(function($) {
 					btn.addClass('is-loading').attr('disabled', true);
 				},
 				success: function(data) {
+					if (!data.success) {
+						tutor_toast('Error', get_response_message(data), 'error');
+						return;
+					}
 					if (quiz_id && quiz_id != 0) {
 						// Update if exists already
 						$('#tutor-quiz-' + quiz_id).replaceWith(data.data.output_quiz_row);

@@ -483,6 +483,10 @@ class Ajax {
 		// Check and verify the request.
 		tutor_utils()->checking_nonce();
 
+		if ( ! User::is_admin() ) {
+			wp_send_json_error( tutor_utils()->error_message() );
+		}
+
 		// All good, let's proceed.
 		$all_addons = $this->prepare_addons_data();
 
@@ -673,6 +677,12 @@ class Ajax {
 
 		if ( Input::has( 'announcement_id' ) ) {
 			$form_data['ID'] = Input::post( 'announcement_id' );
+		}
+
+		if ( ! empty( $form_data['ID'] ) ) {
+			if ( ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			}
 		}
 
 		// Validation message set.
