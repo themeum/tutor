@@ -4,6 +4,7 @@ import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentM
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import type { AssignmentPayload, ID, LessonPayload } from '@CourseBuilderServices/curriculum';
+import type { User } from '@Services/users';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -48,7 +49,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     preview_link: data.preview_link,
 
     ...(isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS) && {
-      course_instructor_ids: data.course_instructors.map((item) => item.id),
+      course_instructor_ids: [...data.course_instructors.map((item) => item.id), Number(data.post_author?.id)],
     }),
 
     ...(isAddonEnabled(Addons.TUTOR_PREREQUISITES) && {
@@ -150,14 +151,17 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_product_id:
       String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:
-      courseDetails.course_instructors?.map((item) => {
-        return {
-          id: item.id,
-          name: item.display_name,
-          email: item.user_email,
-          avatar_url: item.avatar_url,
-        };
-      }) ?? [],
+      courseDetails.course_instructors?.reduce((instructors, item) => {
+        if (String(item.id) !== String(courseDetails.post_author.ID)) {
+          instructors.push({
+            id: item.id,
+            name: item.display_name,
+            email: item.user_email,
+            avatar_url: item.avatar_url,
+          });
+        }
+        return instructors;
+      }, [] as User[]) ?? [],
     preview_link: courseDetails.preview_link ?? '',
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',

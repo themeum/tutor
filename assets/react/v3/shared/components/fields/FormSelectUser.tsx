@@ -16,9 +16,7 @@ import { useDebounce } from '@Hooks/useDebounce';
 import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
-import type { CourseFormData } from '@CourseBuilderServices/course';
 import profileImage from '@Images/profile-photo.png';
-import { useFormContext } from 'react-hook-form';
 
 interface User {
   id: number;
@@ -41,6 +39,7 @@ type FormSelectUserProps = {
   isHidden?: boolean;
   responsive?: boolean;
   helpText?: string;
+  emptyStateText?: string;
 } & FormControllerProps<User | User[] | null>;
 
 const userPlaceholderData: User = {
@@ -64,6 +63,7 @@ const FormSelectUser = ({
   loading,
   isSearchable = false,
   helpText,
+  emptyStateText = __('No user selected', 'tutor'),
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
@@ -72,9 +72,6 @@ const FormSelectUser = ({
 
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
-  const form = useFormContext<CourseFormData>();
-
-  const authorId = form.watch('post_author.id');
 
   const filteredOption =
     options.filter((item) => {
@@ -186,22 +183,20 @@ const FormSelectUser = ({
                         </div>
                       </div>
 
-                      <Show when={String(authorId) !== String(instructor.id)}>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteSelection(instructor.id)}
-                          css={styles.instructorDeleteButton}
-                          data-instructor-delete-button
-                        >
-                          <SVGIcon name="cross" width={32} height={32} />
-                        </button>
-                      </Show>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteSelection(instructor.id)}
+                        css={styles.instructorDeleteButton}
+                        data-instructor-delete-button
+                      >
+                        <SVGIcon name="cross" width={32} height={32} />
+                      </button>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div css={styles.emptyState}>
-                  <p>{__('No user selected', 'tutor')}</p>
+                  <p>{emptyStateText}</p>
                 </div>
               ))}
             <Portal

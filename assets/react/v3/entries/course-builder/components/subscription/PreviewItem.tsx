@@ -28,7 +28,7 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
     <div css={styles.item}>
       <p css={styles.title}>
         {subscription.plan_name}
-        <Show when={subscription.is_recommended}>
+        <Show when={subscription.is_featured}>
           <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
         </Show>
       </p>
