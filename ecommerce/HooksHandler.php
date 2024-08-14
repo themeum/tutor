@@ -190,6 +190,7 @@ class HooksHandler {
 						if ( $update ) {
 							$earnings->prepare_order_earnings( $order_id );
 							$earnings->store_earnings();
+							do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
 						} else {
 							// Log error message with student id and course id.
 							error_log( "Error updating enrollment for student {$student_id} and course {$course_id}" );
