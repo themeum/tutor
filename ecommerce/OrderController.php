@@ -179,6 +179,7 @@ class OrderController {
 	 * @param int    $user_id Typically student.
 	 * @param array  $items Key value pairs based on order_items table.
 	 * @param string $payment_status Order payment status.
+	 * @param string $order_type Type single_order/subscription.
 	 * @param mixed  $coupon_code Optional, if not provided automatic coupon.
 	 * @param array  $args Optional, Args to set data such as fees, tax, etc.
 	 * Even to modify $order_data.
@@ -188,7 +189,7 @@ class OrderController {
 	 *
 	 * @return true on success
 	 */
-	public function create_order( int $user_id, array $items, string $payment_status, $coupon_code = null, array $args = array() ) {
+	public function create_order( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array() ) {
 		$items          = Input::sanitize_array( $items );
 		$payment_status = Input::sanitize( $payment_status );
 		$coupon_code    = Input::sanitize( $coupon_code );
@@ -227,6 +228,7 @@ class OrderController {
 		$order_data = array(
 			'items'           => $items,
 			'payment_status'  => $payment_status,
+			'order_type'      => $order_type,
 			'coupon_code'     => $coupon_code,
 			'subtotal_price'  => $subtotal_price,
 			'total_price'     => $price_details->total_price,
@@ -340,16 +342,15 @@ class OrderController {
 			);
 		}
 
-		do_action( 'tutor_before_order_mark_as_paid', $params );
+		do_action( 'tutor_before_order_mark_as_paid', $params['order_id'] );
 
-		$payload                 = new \stdClass();
-		$payload->order_id       = $params['order_id'];
-		$payload->note           = $params['note'];
-		$payload->payment_status = $this->model::PAYMENT_PAID;
+		$data = array(
+			'payment_status' => $this->model::PAYMENT_PAID,
+			'order_status'   => $this->model::ORDER_COMPLETED,
+			'note'           => $params['note'],
+		);
 
-		$response = $this->model->payment_status_update( $payload );
-
-		do_action( 'tutor_after_order_mark_as_paid', $params );
+		$response = $this->model->update_order( $params['order_id'], $data );
 
 		if ( ! $response ) {
 			$this->json_response(
@@ -359,6 +360,7 @@ class OrderController {
 			);
 		}
 
+		do_action( 'tutor_after_order_mark_as_paid', $params['order_id'] );
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 
