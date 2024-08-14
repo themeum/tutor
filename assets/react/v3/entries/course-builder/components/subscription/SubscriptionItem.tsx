@@ -193,18 +193,18 @@ export default function SubscriptionItem({
                 <Controller
                   control={form.control}
                   name="plan_name"
-                  rules={{ required: __('Subscription name is required', 'tutor') }}
-                  render={(props) => (
-                    <FormInput {...props} placeholder="Enter subscription name" label="Subscription name" />
+                  rules={requiredRule()}
+                  render={(controllerProps) => (
+                    <FormInput {...controllerProps} placeholder="Enter subscription name" label="Subscription name" />
                   )}
                 />
 
                 <Controller
                   control={form.control}
                   name="payment_type"
-                  render={(props) => (
+                  render={(controllerProps) => (
                     <FormSelectInput
-                      {...props}
+                      {...controllerProps}
                       label={__('Pricing option', 'tutor')}
                       options={[
                         { label: __('Recurring payments', 'tutor'), value: 'recurring' },
@@ -219,9 +219,10 @@ export default function SubscriptionItem({
                     <Controller
                       control={form.control}
                       name="regular_price"
-                      render={(props) => (
+                      rules={requiredRule()}
+                      render={(controllerProps) => (
                         <FormInputWithContent
-                          {...props}
+                          {...controllerProps}
                           label={__('Price', 'tutor')}
                           content={tutor_currency?.symbol || '$'}
                           placeholder={__('Subscription price', 'tutor')}
@@ -236,9 +237,10 @@ export default function SubscriptionItem({
                     <Controller
                       control={form.control}
                       name="regular_price"
-                      render={(props) => (
+                      rules={requiredRule()}
+                      render={(controllerProps) => (
                         <FormInputWithContent
-                          {...props}
+                          {...controllerProps}
                           label={__('Price', 'tutor')}
                           content={tutor_currency?.symbol || '$'}
                           placeholder={__('Subscription price', 'tutor')}
@@ -251,15 +253,16 @@ export default function SubscriptionItem({
                       control={form.control}
                       name="recurring_value"
                       rules={{
+                        ...requiredRule(),
                         validate: (value) => {
                           if (Number(value) < 1) {
                             return __('This value must be equal to or greater than 1');
                           }
                         },
                       }}
-                      render={(props) => (
+                      render={(controllerProps) => (
                         <FormInput
-                          {...props}
+                          {...controllerProps}
                           label={__('Repeat every', 'tutor')}
                           placeholder={__('Repeat every', 'tutor')}
                           selectOnFocus
@@ -270,9 +273,9 @@ export default function SubscriptionItem({
                     <Controller
                       control={form.control}
                       name="recurring_interval"
-                      render={(props) => (
+                      render={(controllerProps) => (
                         <FormSelectInput
-                          {...props}
+                          {...controllerProps}
                           label={<div>&nbsp;</div>}
                           options={[
                             { label: __('Day(s)', 'tutor'), value: 'day' },
@@ -301,13 +304,13 @@ export default function SubscriptionItem({
                         return true;
                       },
                     }}
-                    render={(props) => (
+                    render={(controllerProps) => (
                       <FormInputWithPresets
-                        {...props}
+                        {...controllerProps}
                         label={__('Length of the plan', 'tutor')}
                         placeholder={__('Select the length of the plan', 'tutor')}
                         content={
-                          props.field.value !== 'Until cancelled' &&
+                          controllerProps.field.value !== 'Until cancelled' &&
                           `${makeFirstCharacterUpperCase(recurringInterval as string)}(s)`
                         }
                         contentPosition="right"
@@ -322,7 +325,9 @@ export default function SubscriptionItem({
                 <Controller
                   control={form.control}
                   name="charge_enrollment_fee"
-                  render={(props) => <FormCheckbox {...props} label={__('Charge enrolment fee', 'tutor')} />}
+                  render={(controllerProps) => (
+                    <FormCheckbox {...controllerProps} label={__('Charge enrolment fee', 'tutor')} />
+                  )}
                 />
 
                 <Show when={chargeEnrolmentFee}>
@@ -330,6 +335,7 @@ export default function SubscriptionItem({
                     control={form.control}
                     name="enrollment_fee"
                     rules={{
+                      ...requiredRule(),
                       validate: (value) => {
                         if (Number(value) <= 0) {
                           return __('Enrolment fee must be greater than 0', 'tutor');
@@ -337,9 +343,9 @@ export default function SubscriptionItem({
                         return true;
                       },
                     }}
-                    render={(props) => (
+                    render={(controllerProps) => (
                       <FormInputWithContent
-                        {...props}
+                        {...controllerProps}
                         label={__('Enrolment fee', 'tutor')}
                         content={tutor_currency?.symbol || '$'}
                         placeholder={__('Enter enrolment fee')}
@@ -352,7 +358,9 @@ export default function SubscriptionItem({
                 <Controller
                   control={form.control}
                   name="enable_free_trial"
-                  render={(props) => <FormCheckbox {...props} label={__('Enable a free trial', 'tutor')} />}
+                  render={(controllerProps) => (
+                    <FormCheckbox {...controllerProps} label={__('Enable a free trial', 'tutor')} />
+                  )}
                 />
 
                 <Show when={enableTrial}>
@@ -361,6 +369,7 @@ export default function SubscriptionItem({
                       control={form.control}
                       name="trial_value"
                       rules={{
+                        ...requiredRule(),
                         validate: (value) => {
                           if (Number(value) <= 0) {
                             return __('Trial duration must be greater than 0', 'tutor');
@@ -368,9 +377,9 @@ export default function SubscriptionItem({
                           return true;
                         },
                       }}
-                      render={(props) => (
+                      render={(controllerProps) => (
                         <FormInput
-                          {...props}
+                          {...controllerProps}
                           label={__('Length of free trial', 'tutor')}
                           placeholder={__('Enter trial duration', 'tutor')}
                           selectOnFocus
@@ -381,9 +390,9 @@ export default function SubscriptionItem({
                     <Controller
                       control={form.control}
                       name="trial_interval"
-                      render={(props) => (
+                      render={(controllerProps) => (
                         <FormSelectInput
-                          {...props}
+                          {...controllerProps}
                           label={<div>&nbsp;</div>}
                           placeholder={__('Enter trial duration', 'tutor')}
                           options={[
@@ -402,13 +411,17 @@ export default function SubscriptionItem({
                 <Controller
                   control={form.control}
                   name="do_not_provide_certificate"
-                  render={(props) => <FormCheckbox {...props} label={__('Do not provide certificate', 'tutor')} />}
+                  render={(controllerProps) => (
+                    <FormCheckbox {...controllerProps} label={__('Do not provide certificate', 'tutor')} />
+                  )}
                 />
 
                 <Controller
                   control={form.control}
                   name="is_recommended"
-                  render={(props) => <FormCheckbox {...props} label={__('Feature this subscription', 'tutor')} />}
+                  render={(controllerProps) => (
+                    <FormCheckbox {...controllerProps} label={__('Feature this subscription', 'tutor')} />
+                  )}
                 />
 
                 <Show when={isRecommended}>
@@ -416,9 +429,9 @@ export default function SubscriptionItem({
                     control={form.control}
                     rules={requiredRule()}
                     name="featured_text"
-                    render={(props) => (
+                    render={(controllerProps) => (
                       <FormInput
-                        {...props}
+                        {...controllerProps}
                         label={__('Feature text', 'tutor')}
                         placeholder={__('Enter feature text', 'tutor')}
                       />
