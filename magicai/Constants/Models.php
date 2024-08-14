@@ -10,6 +10,11 @@
 
 namespace Tutor\MagicAI\Constants;
 
+/**
+ * OpenAI image and chat completion model list
+ *
+ * @since 3.0.0
+ */
 final class Models {
 	const DALL_E_3 = 'dall-e-3';
 	const DALL_E_2 = 'dall-e-2';

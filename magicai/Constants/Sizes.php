@@ -10,6 +10,11 @@
 
 namespace Tutor\MagicAI\Constants;
 
+/**
+ * OpenAI allowed image sizes for the DALL-E-2 & 3 models.
+ *
+ * @since 3.0.0
+ */
 final class Sizes {
 	const PORTRAIT = '1024x1792';
 	const LANDSCAPE = '1792x1024';
