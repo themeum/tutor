@@ -9,6 +9,7 @@
  */
 namespace Tutor\MagicAI;
 
+use DateTime;
 use Exception;
 use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
@@ -51,14 +52,21 @@ class ImageController {
 		 *
 		 * @since 3.0.0
 		 */
-		add_action( 'wp_ajax_tutor_generate_image', array ( $this, 'generate_image' ) );
+		add_action( 'wp_ajax_tutor_generate_image', array( $this, 'generate_image' ) );
 
 		/**
 		 * Handle AJAX request for editing AI image
 		 *
 		 * @since 3.0.0
 		 */
-		add_action( 'wp_ajax_tutor_magic_fill_image', array ( $this, 'magic_fill_image' ) );
+		add_action( 'wp_ajax_tutor_magic_fill_image', array( $this, 'magic_fill_image' ) );
+
+		/**
+		 * Handle AJAX request for using the AI generated image to the WP system.
+		 *
+		 * @since 3.0.0
+		 */
+		add_action( 'wp_ajax_tutor_use_magic_image', array( $this, 'use_magic_image' ) );
 	}
 
 	/**
@@ -179,5 +187,55 @@ class ImageController {
 		} catch (Exception $error) {
 			$this->json_response( $error->getMessage(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
 		}
+	}
+
+	public function use_magic_image() {
+		tutor_utils()->checking_nonce();
+
+		$image = Input::post( 'image' );
+		$course_id = Input::post( 'course_id' );
+
+		if ( empty( $image ) ) {
+			$this->json_response( __( 'Image is missing to use', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+		
+		if ( false === stripos( $image, ',' ) ) {
+			$this->json_response( __( 'Invalid image content', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		$image_base64 = base64_decode( explode( ',', $image, 2 )[1] );
+		$year = date( 'Y' );
+		$month = date( 'm' );
+		$filename = 'course-banner-' . $course_id . '.png';
+
+		$uploads_path = '/uploads/' . $year . '/' . $month . '/' . $filename;
+		$image_path = WP_CONTENT_DIR . $uploads_path;
+		$image_url = content_url() . $uploads_path;
+
+		try {
+			file_put_contents( $image_path, $image_base64 );
+			$media_id = wp_insert_attachment(
+					array(
+						'guid'           => $image_url,
+						'post_mime_type' => 'image/png',
+						'post_title'     => preg_replace( '/\.[^.]+$/', '', basename( $image_url ) ),
+						'post_content'   => '',
+						'post_status'    => 'inherit',
+					),
+					$image_url,
+					0
+				);
+
+				$response = array(
+					'id' 		=> $media_id,
+					'url' 	=> $image_url,
+					'title' => preg_replace( '/\.[^.]+$/', '', basename( $image_url ) ),
+				);
+
+				return $this->json_response( __( 'Image stored', 'tutor' ), $response );
+		} catch (Exception $error) {
+			$this->json_response( $error->getMessage(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
 	}
 }

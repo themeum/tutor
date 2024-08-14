@@ -104,3 +104,18 @@ export const useModifyContentMutation = () => {
     mutationFn: modifyContent
   })
 }
+
+interface UseImagePayload {
+  image: string;
+  course_id: number;
+}
+
+const storeImage = (payload: UseImagePayload) => {
+  return wpAjaxInstance.post<UseImagePayload, WPResponse<{id: number; url: string; title: string;}>>(endpoints.USE_AI_GENERATED_IMAGE, payload);
+};
+
+export const useStoreAIGeneratedImageMutation = () => {
+  return useMutation({
+    mutationFn: storeImage
+  })
+}

@@ -3,6 +3,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
+import { useStoreAIGeneratedImageMutation } from '@CourseBuilderServices/magic-ai';
 import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { downloadBase64Image } from '@Utils/magic-ai';
@@ -41,6 +42,8 @@ export const AiImageItem = ({ src }: { src: string }) => {
   const ref = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { onDropdownMenuChange, setCurrentImage, onCloseModal, field } = useMagicImageGeneration();
+  const storeAIGeneratedImageMutation = useStoreAIGeneratedImageMutation();
+
   return (
     <>
       <div css={styles.image}>
@@ -49,9 +52,13 @@ export const AiImageItem = ({ src }: { src: string }) => {
           <div css={styles.useButton}>
             <AiButton
               variant="primary"
-              onClick={() => {
-                field.onChange({ url: src });
-                onCloseModal();
+              onClick={async () => {
+                const response = await storeAIGeneratedImageMutation.mutateAsync({ image: src, course_id: 417 });
+
+                if (response.data) {
+                  field.onChange(response.data);
+                  onCloseModal();
+                }
               }}
             >
               <SVGIcon name="download" width={24} height={24} />

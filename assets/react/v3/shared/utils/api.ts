@@ -1,6 +1,9 @@
+
 import config, { tutorConfig } from '@Config/config';
 import axios from 'axios';
-import * as querystring from 'node:querystring';
+
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import * as querystring from 'querystring';
 
 import { convertToFormData, serializeParams } from './form';
 

@@ -22,6 +22,7 @@ const endpoints = {
   MAGIC_FILL_AI_IMAGE: 'tutor_magic_fill_image',
   MAGIC_TEXT_GENERATION: 'tutor_generate_text_content',
   MAGIC_AI_MODIFY_CONTENT: 'tutor_modify_text_content',
+  USE_AI_GENERATED_IMAGE: 'tutor_use_magic_image',
 };
 
 export default endpoints;
