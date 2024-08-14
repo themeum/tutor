@@ -15,11 +15,13 @@ import Show from '@Controls/Show';
 import type { SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
 
 const { tutor_currency } = tutorConfig;
 
 export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormData> }) {
   const hasSale = form.watch('offer_sale_price');
+  const regularPrice = form.watch('regular_price');
   const hasSchedule = !!form.watch('schedule_sale_price');
   const { transitions } = useAnimation({
     animationType: AnimationType.slideDown,
@@ -43,11 +45,17 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormD
                 control={form.control}
                 name="sale_price"
                 rules={{
+                  ...requiredRule(),
                   validate: (value) => {
-                    if (Number(value) <= 0) {
-                      return __('Sale price must be greater than 0', 'tutor');
+                    if (value && regularPrice && Number(value) >= Number(regularPrice)) {
+                      return __('Sale price should be less than regular price', 'tutor');
                     }
-                    return true;
+
+                    if (value && regularPrice && Number(value) <= 0) {
+                      return __('Sale price should be greater than 0', 'tutor');
+                    }
+
+                    return undefined;
                   },
                 }}
                 render={(props) => (

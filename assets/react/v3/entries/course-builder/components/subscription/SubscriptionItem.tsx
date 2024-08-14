@@ -78,7 +78,6 @@ export default function SubscriptionItem({
 
       if (response.status_code === 200 || response.status_code === 201) {
         toggleCollapse(subscription.id);
-        form.reset();
       }
     } catch (error) {
       // handle error
@@ -116,7 +115,7 @@ export default function SubscriptionItem({
   const recurringInterval = form.watch('recurring_interval', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
-  const isRecommended = form.watch('is_recommended');
+  const isFeatured = form.watch('is_featured');
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -152,7 +151,7 @@ export default function SubscriptionItem({
           <span css={styles.title} title={subscriptionName}>
             {subscriptionName}
 
-            <Show when={subscription.is_recommended}>
+            <Show when={subscription.is_featured}>
               <SVGIcon name="star" width={24} height={24} />
             </Show>
           </span>
@@ -219,7 +218,14 @@ export default function SubscriptionItem({
                     <Controller
                       control={form.control}
                       name="regular_price"
-                      rules={requiredRule()}
+                      rules={{
+                        ...requiredRule(),
+                        validate: (value) => {
+                          if (Number(value) <= 0) {
+                            return __('Price must be greater than 0', 'tutor');
+                          }
+                        },
+                      }}
                       render={(controllerProps) => (
                         <FormInputWithContent
                           {...controllerProps}
@@ -237,7 +243,14 @@ export default function SubscriptionItem({
                     <Controller
                       control={form.control}
                       name="regular_price"
-                      rules={requiredRule()}
+                      rules={{
+                        ...requiredRule(),
+                        validate: (value) => {
+                          if (Number(value) <= 0) {
+                            return __('Price must be greater than 0', 'tutor');
+                          }
+                        },
+                      }}
                       render={(controllerProps) => (
                         <FormInputWithContent
                           {...controllerProps}
@@ -418,13 +431,13 @@ export default function SubscriptionItem({
 
                 <Controller
                   control={form.control}
-                  name="is_recommended"
+                  name="is_featured"
                   render={(controllerProps) => (
                     <FormCheckbox {...controllerProps} label={__('Feature this subscription', 'tutor')} />
                   )}
                 />
 
-                <Show when={isRecommended}>
+                <Show when={isFeatured}>
                   <Controller
                     control={form.control}
                     rules={requiredRule()}
