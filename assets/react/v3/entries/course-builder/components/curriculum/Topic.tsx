@@ -103,7 +103,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(!topic.isSaved);
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
-  const [meetingType, setMeetingType] = useState<'googleMeet' | 'zoom' | null>(null);
+  const [meetingType, setMeetingType] = useState<'tutor-google-meet' | 'tutor_zoom_meeting' | null>(null);
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<TopicContentType[]>(topic.contents);
@@ -329,31 +329,35 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   </button>
                 </Tooltip>
               </Show>
-              <Tooltip content={__('Duplicate', 'tutor')}>
-                <button
-                  type="button"
-                  css={styles.actionButton}
-                  disabled={!topic.isSaved}
-                  data-visually-hidden
-                  onClick={handleDuplicateTopic}
-                >
-                  <SVGIcon name="copyPaste" width={24} height={24} />
-                </button>
-              </Tooltip>
-              <Tooltip content={__('Delete', 'tutor')}>
-                <button
-                  type="button"
-                  css={styles.actionButton}
-                  disabled={!topic.isSaved}
-                  data-visually-hidden
-                  ref={deleteRef}
-                  onClick={() => {
-                    setIsDeletePopoverOpen(true);
-                  }}
-                >
-                  <SVGIcon name="delete" width={24} height={24} />
-                </button>
-              </Tooltip>
+              <Show when={topic.isSaved}>
+                <Tooltip content={__('Duplicate', 'tutor')}>
+                  <button
+                    type="button"
+                    css={styles.actionButton}
+                    disabled={!topic.isSaved}
+                    data-visually-hidden
+                    onClick={handleDuplicateTopic}
+                  >
+                    <SVGIcon name="copyPaste" width={24} height={24} />
+                  </button>
+                </Tooltip>
+              </Show>
+              <Show when={topic.isSaved}>
+                <Tooltip content={__('Delete', 'tutor')}>
+                  <button
+                    type="button"
+                    css={styles.actionButton}
+                    disabled={!topic.isSaved}
+                    data-visually-hidden
+                    ref={deleteRef}
+                    onClick={() => {
+                      setIsDeletePopoverOpen(true);
+                    }}
+                  >
+                    <SVGIcon name="delete" width={24} height={24} />
+                  </button>
+                </Tooltip>
+              </Show>
               <ConfirmationPopover
                 isOpen={isDeletePopoverOpen}
                 triggerRef={deleteRef}
@@ -380,16 +384,18 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 }}
               />
 
-              <button
-                type="button"
-                css={styles.actionButton}
-                disabled={!topic.isSaved}
-                onClick={() => {
-                  onCollapse?.(topic.id);
-                }}
-              >
-                <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
-              </button>
+              <Show when={topic.isSaved}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  disabled={!topic.isSaved}
+                  onClick={() => {
+                    onCollapse?.(topic.id);
+                  }}
+                >
+                  <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
+                </button>
+              </Show>
             </div>
           </div>
 
@@ -407,7 +413,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
               <Controller
                 control={form.control}
                 name="summary"
-                rules={{ required: __('Summary is required', 'tutor') }}
                 render={(controllerProps) => (
                   <FormTextareaInput
                     {...controllerProps}
@@ -620,7 +625,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         </span>
                       }
                       icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
-                      onClick={() => setMeetingType('googleMeet')}
+                      onClick={() => setMeetingType('tutor-google-meet')}
                     />
                     <ThreeDots.Option
                       text={
@@ -629,14 +634,14 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         </span>
                       }
                       icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
-                      onClick={() => setMeetingType('zoom')}
+                      onClick={() => setMeetingType('tutor_zoom_meeting')}
                     />
                     <ThreeDots.Option
                       text={__('Import Quiz', 'tutor')}
                       onClick={() => {
                         fileInputRef?.current?.click();
                       }}
-                      icon={<SVGIcon name="download" width={24} height={24} />}
+                      icon={<SVGIcon name="downloadColorize" width={24} height={24} isColorIcon />}
                     />
                   </ThreeDots>
                 </Show>
@@ -658,7 +663,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
 
       <Popover
         triggerRef={triggerGoogleMeetRef}
-        isOpen={meetingType === 'googleMeet'}
+        isOpen={meetingType === 'tutor-google-meet'}
         closePopover={() => {
           setMeetingType(null);
           setIsThreeDotOpen(false);
@@ -676,7 +681,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
       </Popover>
       <Popover
         triggerRef={triggerZoomRef}
-        isOpen={meetingType === 'zoom'}
+        isOpen={meetingType === 'tutor_zoom_meeting'}
         closePopover={() => {
           setMeetingType(null);
           setIsThreeDotOpen(false);

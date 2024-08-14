@@ -1,4 +1,4 @@
-import AiButton from '@Atoms/AiButton';
+import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import { Separator } from '@Atoms/Separator';
 import FormRangeSliderField from '@Components/fields/FormRangeSliderField';
@@ -127,7 +127,7 @@ const MagicFill = () => {
               {__('Magic Fill', 'tutor')}
             </div>
             <div css={styles.actions}>
-              <AiButton
+              <MagicButton
                 variant="ghost"
                 disabled={trackStack.length === 0}
                 onClick={() => {
@@ -137,10 +137,10 @@ const MagicFill = () => {
                 }}
               >
                 Revert to Original
-              </AiButton>
+              </MagicButton>
               <Separator variant="vertical" css={css`min-height: 16px;`} />
               <div css={styles.undoRedo}>
-                <AiButton
+                <MagicButton
                   variant="ghost"
                   size="icon"
                   disabled={pointer <= 1}
@@ -150,8 +150,8 @@ const MagicFill = () => {
                   }}
                 >
                   <SVGIcon name="undo" width={20} height={20} />
-                </AiButton>
-                <AiButton
+                </MagicButton>
+                <MagicButton
                   variant="ghost"
                   size="icon"
                   disabled={pointer === trackStack.length}
@@ -161,7 +161,7 @@ const MagicFill = () => {
                   }}
                 >
                   <SVGIcon name="redo" width={20} height={20} />
-                </AiButton>
+                </MagicButton>
               </div>
             </div>
           </div>
@@ -183,15 +183,15 @@ const MagicFill = () => {
           </div>
           <div css={styles.footerActions}>
             <div css={styles.footerActionsLeft}>
-              <AiButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
+              <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
                 <SVGIcon name="magicVariation" width={24} height={24} />
-              </AiButton>
-              <AiButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
+              </MagicButton>
+              <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
                 <SVGIcon name="magicEraser" width={24} height={24} />
-              </AiButton>
+              </MagicButton>
             </div>
             <div>
-              <AiButton
+              <MagicButton
                 variant="secondary"
                 onClick={() => {
                   const filename = `${nanoid()}.png`;
@@ -201,7 +201,7 @@ const MagicFill = () => {
                 }}
               >
                 <SVGIcon name="download" width={24} height={24} />
-              </AiButton>
+              </MagicButton>
             </div>
           </div>
         </div>
@@ -231,11 +231,11 @@ const MagicFill = () => {
         </div>
         <div css={[magicAIStyles.rightFooter, css`margin-top: auto;`]}>
           <div css={styles.footerButtons}>
-            <AiButton type="submit" disabled={magicFillImageMutation.isPending}>
+            <MagicButton type="submit" disabled={magicFillImageMutation.isPending}>
               <SVGIcon name="magicWand" width={24} height={24} />
               {__('Generative erase', 'tutor')}
-            </AiButton>
-            <AiButton
+            </MagicButton>
+            <MagicButton
               variant="primary_outline"
               disabled={magicFillImageMutation.isPending}
               onClick={() => {
@@ -246,7 +246,7 @@ const MagicFill = () => {
               }}
             >
               {__('Use Image', 'tutor')}
-            </AiButton>
+            </MagicButton>
           </div>
           <div css={magicAIStyles.rightFooterInfo}>
             <div>

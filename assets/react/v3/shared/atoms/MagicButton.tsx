@@ -5,13 +5,13 @@ import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import React from 'react';
 
-interface AiButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
+interface MagicButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   type?: 'button' | 'submit';
   disabled?: boolean;
   roundedFull?: boolean;
 }
 
-const AiButton = React.forwardRef<HTMLButtonElement, AiButtonProps>(
+const MagicButton = React.forwardRef<HTMLButtonElement, MagicButtonProps>(
   ({ className, variant, size, children, type = 'button', disabled = false, roundedFull = true, ...props }, ref) => (
     <button
       type={type}
@@ -26,7 +26,7 @@ const AiButton = React.forwardRef<HTMLButtonElement, AiButtonProps>(
   ),
 );
 
-export default AiButton;
+export default MagicButton;
 
 const styles = {
   base: css`
@@ -50,6 +50,9 @@ const styles = {
 			pointer-events: none;
 			color: ${colorTokens.text.disable};
 			border-color: ${colorTokens.stroke.disable};
+			&::before {
+				display: none;
+			}
 		}
 	`,
   default: css`

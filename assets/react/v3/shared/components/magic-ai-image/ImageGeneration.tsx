@@ -1,4 +1,4 @@
-import AiButton from '@Atoms/AiButton';
+import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormImageRadioGroup from '@Components/fields/FormImageRadioGroup';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -184,10 +184,10 @@ export const ImageGeneration = () => {
         </div>
 
         <div css={magicAIStyles.rightFooter}>
-          <AiButton type="submit" disabled={magicImageGenerationMutation.isPending}>
+          <MagicButton type="submit" disabled={magicImageGenerationMutation.isPending}>
             <SVGIcon name={images.length > 0 ? 'reload' : 'magicAi'} width={24} height={24} />
             {images.length > 0 ? __('Generate again', 'tutor') : __('Generate now', 'tutor')}
-          </AiButton>
+          </MagicButton>
           <div css={magicAIStyles.rightFooterInfo}>
             <div>
               <SVGIcon name="seeds" width={20} height={20} />

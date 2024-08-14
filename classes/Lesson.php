@@ -350,13 +350,13 @@ class Lesson extends Tutor_Base {
 
 			do_action( 'tutor/lesson_update/before', $lesson_id );
 			wp_update_post( $lesson_data );
-			if ( $thumbnail_id ) {
-				update_post_meta( $lesson_id, '_thumbnail_id', $thumbnail_id );
-			} else {
-				delete_post_meta( $lesson_id, '_thumbnail_id' );
-			}
-
 			do_action( 'tutor/lesson_update/after', $lesson_id );
+		}
+
+		if ( $thumbnail_id ) {
+			update_post_meta( $lesson_id, '_thumbnail_id', $thumbnail_id );
+		} else {
+			delete_post_meta( $lesson_id, '_thumbnail_id' );
 		}
 
 		if ( $is_update ) {

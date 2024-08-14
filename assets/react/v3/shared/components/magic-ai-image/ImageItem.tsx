@@ -1,4 +1,4 @@
-import AiButton from '@Atoms/AiButton';
+import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -50,7 +50,7 @@ export const AiImageItem = ({ src }: { src: string }) => {
         <img src={src} alt={__('Generated Image', 'tutor')} />
         <div data-actions>
           <div css={styles.useButton}>
-            <AiButton
+            <MagicButton
               variant="primary"
               onClick={async () => {
                 const response = await storeAIGeneratedImageMutation.mutateAsync({ image: src, course_id: 417 });
@@ -63,11 +63,11 @@ export const AiImageItem = ({ src }: { src: string }) => {
             >
               <SVGIcon name="download" width={24} height={24} />
               {__('Use this', 'tutor')}
-            </AiButton>
+            </MagicButton>
           </div>
-          <AiButton variant="primary" size="icon" css={styles.threeDots} ref={ref} onClick={() => setIsOpen(true)}>
+          <MagicButton variant="primary" size="icon" css={styles.threeDots} ref={ref} onClick={() => setIsOpen(true)}>
             <SVGIcon name="threeDotsVertical" width={24} height={24} />
-          </AiButton>
+          </MagicButton>
         </div>
       </div>
       <Popover

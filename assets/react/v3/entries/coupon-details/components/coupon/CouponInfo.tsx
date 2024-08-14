@@ -7,7 +7,7 @@ import { colorPalate, spacing } from '@Config/styles';
 import { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@Utils/style-utils';
 import { generateCouponCode } from '@Utils/util';
-import { requiredRule } from '@Utils/validation';
+import { maxLimitRule, requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
@@ -65,7 +65,7 @@ function CouponInfo() {
 					<Controller
 						name="coupon_code"
 						control={form.control}
-						rules={requiredRule()}
+						rules={{...requiredRule(), ...maxLimitRule(50)}}
 						render={(controllerProps) => (
 							<FormInput
 								{...controllerProps}

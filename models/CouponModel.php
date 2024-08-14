@@ -117,6 +117,7 @@ class CouponModel {
 		'discount_type',
 		'discount_amount',
 		'applies_to',
+		'applies_to_items',
 		'total_usage_limit',
 		'per_user_usage_limit',
 		'purchase_requirement',
@@ -1029,7 +1030,7 @@ class CouponModel {
 		$response     = array();
 
 		foreach ( $applications as $application_id ) {
-			$application = $this->get_application_details( $application_id );
+			$application = $this->get_application_details( $application_id, $coupon->applies_to );
 
 			if ( $application ) {
 				$response[] = $application;
@@ -1048,9 +1049,9 @@ class CouponModel {
 	 *
 	 * @return array
 	 */
-	public function get_application_details( int $id ): array {
+	public function get_application_details( int $id, string $applies_to ): array {
 		$response = array();
-		if ( tutor()->course_post_type === get_post_type( $id ) || 'course-bundle' === get_post_type( $id ) ) {
+		if ( self::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to || self::APPLIES_TO_SPECIFIC_COURSES === $applies_to ) {
 			$post = get_post( $id );
 
 			if ( $post ) {
@@ -1058,8 +1059,8 @@ class CouponModel {
 					'id'            => $id,
 					'title'         => get_the_title( $id ),
 					'image'         => get_the_post_thumbnail_url( $id ),
-					'regular_price' => get_post_meta( $id, Course::COURSE_PRICE_META, true ),
-					'sale_price'    => get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ),
+					'regular_price' => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_PRICE_META, true ) ),
+					'sale_price'    => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ) ),
 				);
 			}
 		} elseif ( term_exists( $id ) ) {
@@ -1068,9 +1069,10 @@ class CouponModel {
 			if ( $term ) {
 				$thumb_id = get_term_meta( $id, 'thumbnail_id', true );
 				$response = array(
-					'id'    => $id,
-					'title' => $term->name,
-					'image' => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+					'id'            => $id,
+					'title'         => $term->name,
+					'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+					'total_courses' => (int) $term->count,
 				);
 			}
 		}

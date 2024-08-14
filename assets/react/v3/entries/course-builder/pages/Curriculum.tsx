@@ -124,6 +124,7 @@ const Curriculum = () => {
         <div css={styles.wrapper}>
           <CanvasHead
             title={__('Curriculum', 'tutor')}
+            backUrl="/basics"
             rightButton={
               <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
                 {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}

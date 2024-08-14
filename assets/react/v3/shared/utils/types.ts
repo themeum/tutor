@@ -76,8 +76,7 @@ export interface OptionWithImage<T> {
 }
 
 export interface PaginatedResult<T> {
-  totalItems: number;
-  totalPages: number;
+  total_items: number;
   results: T[];
 }
 
