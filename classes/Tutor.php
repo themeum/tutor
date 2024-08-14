@@ -924,7 +924,6 @@ final class Tutor {
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
 			KEY item_id (item_id),
-			KEY item_type (item_type),
 			CONSTRAINT fk_tutor_order_item_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
 		) $charset_collate;";
 

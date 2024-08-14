@@ -96,9 +96,8 @@ class OrderModel {
 		'order_id',
 		'user_id',
 		'item_id',
-		'item_type',
 		'regular_price',
-		'sale_price'
+		'sale_price',
 	);
 
 	/**
@@ -266,8 +265,8 @@ class OrderModel {
 		}
 
 		// Set order id on each item.
-		foreach ( $items as $item ) {
-			$item['order_id'] = $order_id;
+		foreach ( $items as $key => $item ) {
+			$items[ $key ]['order_id'] = $order_id;
 		}
 
 		try {

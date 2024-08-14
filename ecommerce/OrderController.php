@@ -190,8 +190,8 @@ class OrderController {
 	 */
 	public function create_order( int $user_id, array $items, string $payment_status, $coupon_code = null, array $args = array() ) {
 		$items          = Input::sanitize_array( $items );
-		$payment_status = Input::post( $payment_status );
-		$coupon_code    = Input::post( $coupon_code );
+		$payment_status = Input::sanitize( $payment_status );
+		$coupon_code    = Input::sanitize( $coupon_code );
 
 		$allowed_item_fields = $this->model->get_order_items_fillable_fields();
 		unset( $allowed_item_fields['order_id'] );
@@ -202,14 +202,14 @@ class OrderController {
 		}
 
 		foreach ( $items as $item ) {
-			$has_diff_items_fields = count( array_intersect_key( array_flip( $allowed_item_fields ), $item ) );
+			$has_diff_items_fields = array_diff_key( $item, array_flip( $allowed_item_fields ) );
 			if ( $has_diff_items_fields ) {
 				throw new \Exception( __( 'Invalid order item data provided', 'tutor' ) );
 			}
 		}
 
 		// Validate payment status.
-		if ( ! in_array( $payment_status, $this->model->get_payment_status() ) ) {
+		if ( ! in_array( $payment_status, array_keys( $this->model->get_payment_status() ) ) ) {
 			throw new \Exception( __( 'Invalid payment status', 'tutor' ) );
 		}
 
