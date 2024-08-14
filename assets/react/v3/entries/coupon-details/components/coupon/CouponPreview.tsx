@@ -1,10 +1,9 @@
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
-import { useSticky } from '@Hooks/useSticky';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format, isToday, isTomorrow } from 'date-fns';
@@ -21,7 +20,6 @@ const appliesToLabel: Record<CouponAppliesTo, string> = {
 
 function CouponPreview() {
 	const form = useFormContext<Coupon>();
-	const { stickyRef, isSticky } = useSticky();
 	const { tutor_currency } = tutorConfig;
 
 	const couponTitle = form.watch('coupon_title');
@@ -53,59 +51,57 @@ function CouponPreview() {
 	const activeFromText = `${__('Active from ', 'tutor')} ${activeFromSuffix}`;
 
 	return (
-		<div ref={stickyRef}>
-			<div css={styles.previewWrapper(isSticky)}>
-				<div css={styles.previewTop}>
-					<div css={styles.saleSection}>
-						<div css={styles.couponName}>{couponTitle}</div>
-						<div css={styles.discountText}>{`${discountText} ${__('OFF', 'tutor')}`}</div>
-					</div>
-					<h1 css={styles.couponCode}>{couponType === 'automatic' ? __('Automatic', 'tutor') : couponCode}</h1>
-					{endDate && (
-						<p css={styles.couponSubtitle}>
-							{__('Valid until', 'tutor') + ' ' + format(new Date(endDate), DateFormats.validityDate)}
-						</p>
-					)}
+		<div css={styles.previewWrapper}>
+			<div css={styles.previewTop}>
+				<div css={styles.saleSection}>
+					<div css={styles.couponName}>{couponTitle}</div>
+					<div css={styles.discountText}>{`${discountText} ${__('OFF', 'tutor')}`}</div>
 				</div>
-				<div css={styles.previewMiddle}>
-					<span css={styles.leftCircle} />
-					<span css={styles.rightCircle} />
-					<svg width="280" height="2" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path
-							d="M1 1h278"
-							stroke={colorTokens.stroke.border}
-							strokeWidth="2"
-							strokeLinecap="round"
-							strokeLinejoin="round"
-							strokeDasharray="7 7"
-						/>
-					</svg>
+				<h1 css={styles.couponCode}>{couponType === 'automatic' ? __('Automatic', 'tutor') : couponCode}</h1>
+				{endDate && (
+					<p css={styles.couponSubtitle}>
+						{__('Valid until', 'tutor') + ' ' + format(new Date(endDate), DateFormats.validityDate)}
+					</p>
+				)}
+			</div>
+			<div css={styles.previewMiddle}>
+				<span css={styles.leftCircle} />
+				<span css={styles.rightCircle} />
+				<svg width="280" height="2" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path
+						d="M1 1h278"
+						stroke={colorTokens.stroke.border}
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						strokeDasharray="7 7"
+					/>
+				</svg>
+			</div>
+			<div css={styles.previewBottom}>
+				<div>
+					<h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
+					<ul css={styles.previewList} data-preview-list>
+						<li>{`${discountText} ${__('off', 'tutor')} ${appliesToLabel[appliesTo]}`}</li>
+					</ul>
 				</div>
-				<div css={styles.previewBottom}>
-					<div>
-						<h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
-						<ul css={styles.previewList} data-preview-list>
-							<li>{`${discountText} ${__('off', 'tutor')} ${appliesToLabel[appliesTo]}`}</li>
-						</ul>
-					</div>
-					<div>
-						<h6 css={styles.previewListTitle}>{__('Details', 'tutor')}</h6>
-						<ul css={styles.previewList} data-preview-list>
-							<Show when={Number(perUserUsageLimit) === 1}>
-								<li>{__('One use per customer', 'tutor')}</li>
-							</Show>
-							<li>{activeFromText}</li>
-						</ul>
-					</div>
-					<div>
-						<h6 css={styles.previewListTitle}>{__('Activity', 'tutor')}</h6>
-						<ul css={styles.previewList} data-preview-list>
-							<Show when={new Date(startDateTime) > new Date()}>
-								<li>{__('Not active yet', 'tutor')}</li>
-							</Show>
-							<li>{totalUsedText}</li>
-						</ul>
-					</div>
+				<div>
+					<h6 css={styles.previewListTitle}>{__('Details', 'tutor')}</h6>
+					<ul css={styles.previewList} data-preview-list>
+						<Show when={Number(perUserUsageLimit) === 1}>
+							<li>{__('One use per customer', 'tutor')}</li>
+						</Show>
+						<li>{activeFromText}</li>
+					</ul>
+				</div>
+				<div>
+					<h6 css={styles.previewListTitle}>{__('Activity', 'tutor')}</h6>
+					<ul css={styles.previewList} data-preview-list>
+						<Show when={new Date(startDateTime) > new Date()}>
+							<li>{__('Not active yet', 'tutor')}</li>
+						</Show>
+						<li>{totalUsedText}</li>
+					</ul>
 				</div>
 			</div>
 		</div>
@@ -115,7 +111,7 @@ function CouponPreview() {
 export default CouponPreview;
 
 const styles = {
-	previewWrapper: (isSticky: boolean) => css`
+	previewWrapper: css`
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[20]};
@@ -123,13 +119,8 @@ const styles = {
 		padding: ${spacing[20]} ${spacing[32]} ${spacing[64]};
 		box-shadow: 0px 2px 3px 0px rgba(0, 0, 0, 0.25);
 		border-radius: ${borderRadius[6]};
-
-		${isSticky &&
-		css`
-			position: fixed;
-			top: ${headerHeight}px;
-			width: 344px;
-		`}
+		position: sticky;
+		top: 160px;
 	`,
 	previewTop: css`
 		display: flex;
@@ -204,6 +195,7 @@ const styles = {
 		${typography.heading3('medium')};
 		color: ${colorTokens.text.brand};
 		margin-top: ${spacing[24]};
+		word-break: break-all;
 	`,
 	couponSubtitle: css`
 		${typography.small()};

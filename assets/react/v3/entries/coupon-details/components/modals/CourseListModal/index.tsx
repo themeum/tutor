@@ -29,19 +29,21 @@ function CouponSelectItemModal({ title, closeModal, actions, form, type }: Coupo
 
 	return (
 		<BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
-			<Show
-				when={type === 'categories'}
-				fallback={<CourseListTable form={_form} type={type === 'bundles' ? 'bundles' : 'courses'} />}
-			>
-				<CategoryListTable form={_form} />
-			</Show>
-			<div css={styles.footer}>
-				<Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-					{__('Cancel', 'tutor')}
-				</Button>
-				<Button type="submit" size="small" variant="primary" onClick={handleApply}>
-					{__('Apply', 'tutor')}
-				</Button>
+			<div css={styles.modalWrapper}>
+				<Show
+					when={type === 'categories'}
+					fallback={<CourseListTable form={_form} type={type === 'bundles' ? 'bundles' : 'courses'} />}
+				>
+					<CategoryListTable form={_form} />
+				</Show>
+				<div css={styles.footer}>
+					<Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
+						{__('Cancel', 'tutor')}
+					</Button>
+					<Button type="submit" size="small" variant="primary" onClick={handleApply}>
+						{__('Apply', 'tutor')}
+					</Button>
+				</div>
 			</div>
 		</BasicModalWrapper>
 	);
@@ -50,6 +52,9 @@ function CouponSelectItemModal({ title, closeModal, actions, form, type }: Coupo
 export default CouponSelectItemModal;
 
 const styles = {
+	modalWrapper: css`
+		width: 720px;
+	`,
 	footer: css`
 		box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
 		height: 56px;

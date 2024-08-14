@@ -39,6 +39,7 @@ type FormSelectUserProps = {
   isHidden?: boolean;
   responsive?: boolean;
   helpText?: string;
+  emptyStateText?: string;
 } & FormControllerProps<User | User[] | null>;
 
 const userPlaceholderData: User = {
@@ -62,6 +63,7 @@ const FormSelectUser = ({
   loading,
   isSearchable = false,
   helpText,
+  emptyStateText = __('No user selected', 'tutor'),
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
@@ -194,7 +196,7 @@ const FormSelectUser = ({
                 </div>
               ) : (
                 <div css={styles.emptyState}>
-                  <p>{__('No user selected', 'tutor')}</p>
+                  <p>{emptyStateText}</p>
                 </div>
               ))}
             <Portal

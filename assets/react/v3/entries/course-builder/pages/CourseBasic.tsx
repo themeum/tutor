@@ -62,13 +62,13 @@ const CourseBasic = () => {
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
+  const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
-    isAdministrator &&
-    String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
+    (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || ''));
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
 
@@ -147,7 +147,9 @@ const CourseBasic = () => {
     avatar_url: instructor.avatar_url,
   }));
 
-  const instructorOptions = [...convertedCourseInstructors, ...(instructorListQuery.data || [])];
+  const instructorOptions = [...convertedCourseInstructors, ...(instructorListQuery.data || [])].filter(
+    (instructor) => String(instructor.id) !== String(currentAuthor?.id),
+  );
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -244,7 +246,11 @@ const CourseBasic = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm}>
-        <CanvasHead title={__('Course Basic', 'tutor')} />
+        <CanvasHead
+          title={__('Course Basic', 'tutor')}
+          backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
+          isExternalUrl
+        />
 
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
@@ -542,6 +548,7 @@ const CourseBasic = () => {
                 isSearchable
                 isMultiSelect
                 loading={instructorListQuery.isLoading && !controllerProps.field.value}
+                emptyStateText={__('No instructors added.', 'tutor')}
               />
             )}
           />

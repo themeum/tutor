@@ -4,7 +4,7 @@ import { TutorBadge } from '@Atoms/TutorBadge';
 import Container from '@Components/Container';
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { convertFormDataToPayload, Coupon, useCreateCouponMutation, useUpdateCouponMutation } from '@CouponServices/coupon';
@@ -55,22 +55,24 @@ function Topbar() {
 								<h4 css={typography.heading5('medium')}>{__('Create coupon', 'tutor')}</h4>
 								<TutorBadge variant={statusVariant[coupon.coupon_status]}>{toCapitalize(coupon.coupon_status)}</TutorBadge>
 							</div>
-							{/* <Show
-								when={coupon.updated_at}
+							<Show
+								when={coupon.updated_at_gmt && coupon.coupon_update_by.length}
 								fallback={
-									<p css={styles.updateMessage}>
-										{__('Updated by ')} {coupon.user_name} {__(' at ', 'tutor')}
-										{format(new Date(coupon.created_at), DateFormats.activityDate)}
-									</p>
+									coupon.created_at_gmt && (
+										<p css={styles.updateMessage}>
+											{__('Created by ')} {coupon.coupon_created_by} {__(' at ', 'tutor')}
+											{format(new Date(coupon.created_at_gmt), DateFormats.activityDate)}
+										</p>
+									)
 								}
 							>
-								{(updatedDate) => (
+								{() => (
 									<p css={styles.updateMessage}>
-										{__('Update by ')} {coupon.user_name} {__(' at ', 'tutor')}
-										{format(new Date(updatedDate), DateFormats.activityDate)}
+										{__('Update by ')} {coupon.coupon_update_by} {__(' at ', 'tutor')}
+										{format(new Date(coupon.updated_at_gmt), DateFormats.activityDate)}
 									</p>
 								)}
-							</Show> */}
+							</Show>
 						</div>
 					</div>
 					<div css={styles.right}>
@@ -97,6 +99,9 @@ const styles = {
 	wrapper: css`
 		height: ${TOPBAR_HEIGHT}px;
 		background: ${colorTokens.background.white};
+		position: sticky;
+		top: 32px;
+		z-index: ${zIndex.positive};
 	`,
 	innerWrapper: css`
 		display: flex;

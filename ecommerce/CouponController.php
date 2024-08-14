@@ -227,9 +227,8 @@ class CouponController extends BaseController {
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
 				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
-					$applies_to_ids = array_column( $data['applies_to_items'], 'id' );
 					$this->model->delete_applies_to( $data['coupon_code'] );
-					$this->model->insert_applies_to( $data['applies_to'], $applies_to_ids, $data['coupon_code'] );
+					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $data['coupon_code'] );
 				}
 
 				$this->json_response( __( 'Coupon updated successfully!', 'tutor' ) );
@@ -582,7 +581,7 @@ class CouponController extends BaseController {
 
 		$response = array(
 			'total_items' => 0,
-			'items'       => array(),
+			'results'     => array(),
 		);
 
 		if ( $this->model::APPLIES_TO_SPECIFIC_COURSES === $applies_to ) {
@@ -591,6 +590,17 @@ class CouponController extends BaseController {
 				'posts_per_page' => $limit,
 				'offset'         => $offset,
 				'post_status'    => 'publish',
+				'meta_query'     => array(
+					'relation'     => 'AND',
+					'paid_clause'  => array(
+						'key'   => Course::COURSE_PRICE_TYPE_META,
+						'value' => 'paid',
+					),
+					'price_clause' => array(
+						'key'     => Course::COURSE_PRICE_META,
+						'compare' => 'EXISTS',
+					),
+				),
 			);
 
 			$courses = new \WP_Query( $args );
@@ -601,12 +611,12 @@ class CouponController extends BaseController {
 				$courses = $courses->get_posts();
 				foreach ( $courses as $course ) {
 
-					$response['items'][] = array(
+					$response['results'][] = array(
 						'id'            => $course->ID,
 						'title'         => $course->post_title,
 						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $course->ID ),
-						'regular_price' => get_post_meta( $course->ID, Course::COURSE_PRICE_META, true ),
-						'sale_price'    => get_post_meta( $course->ID, Course::COURSE_SALE_PRICE_META, true ),
+						'regular_price' => tutor_get_formatted_price( get_post_meta( $course->ID, Course::COURSE_PRICE_META, true ) ),
+						'sale_price'    => tutor_get_formatted_price( get_post_meta( $course->ID, Course::COURSE_SALE_PRICE_META, true ) ),
 					);
 				}
 			}
@@ -616,6 +626,17 @@ class CouponController extends BaseController {
 				'posts_per_page' => $limit,
 				'offset'         => $offset,
 				'post_status'    => 'publish',
+				'meta_query'     => array(
+					'relation'     => 'AND',
+					'paid_clause'  => array(
+						'key'   => Course::COURSE_PRICE_TYPE_META,
+						'value' => 'paid',
+					),
+					'price_clause' => array(
+						'key'     => Course::COURSE_PRICE_META,
+						'compare' => 'EXISTS',
+					),
+				),
 			);
 
 			// Add search.
@@ -630,13 +651,13 @@ class CouponController extends BaseController {
 			if ( $bundles->have_posts() ) {
 				$bundles = $bundles->get_posts();
 				foreach ( $bundles as $bundle ) {
-					$response['items'][] = array(
+					$response['results'][] = array(
 						'id'            => $bundle->ID,
 						'title'         => $bundle->post_title,
 						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $bundle->ID ),
 						'course_count'  => count( BundleModel::get_bundle_course_ids( $bundle->ID ) ),
-						'regular_price' => get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ),
-						'sale_price'    => get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ),
+						'regular_price' => tutor_get_formatted_price( get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ) ),
+						'sale_price'    => tutor_get_formatted_price( get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ) ),
 					);
 				}
 			}
@@ -668,7 +689,7 @@ class CouponController extends BaseController {
 				foreach ( $terms as $term ) {
 					$thumb_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 
-					$response['items'][] = array(
+					$response['results'][] = array(
 						'id'            => $term->term_id,
 						'title'         => $term->name,
 						'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : tutor()->url . 'assets/images/placeholder.svg',

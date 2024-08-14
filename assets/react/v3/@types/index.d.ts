@@ -89,7 +89,11 @@ declare global {
         enable_q_and_a_on_course: 'on' | 'off';
       };
       tutor_currency: {
+        decimal_separator: string;
+        no_of_decimal: string;
+        position: string;
         symbol: string;
+        thousand_separator: string;
       };
     };
     wpApiSettings: {

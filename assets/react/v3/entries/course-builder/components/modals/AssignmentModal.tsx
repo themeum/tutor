@@ -45,8 +45,8 @@ export interface AssignmentForm {
   summary: string;
   attachments: Media[];
   time_duration: {
-    time: string;
-    value: TimeLimitUnit;
+    value: string;
+    time: TimeLimitUnit;
   };
   total_mark: number;
   pass_mark: number;
@@ -100,13 +100,13 @@ const AssignmentModal = ({
       summary: '',
       attachments: [],
       time_duration: {
-        time: '0',
-        value: 'weeks',
+        value: '0',
+        time: 'weeks',
       },
-      total_mark: 0,
-      pass_mark: 0,
-      upload_files_limit: 0,
-      upload_file_size_limit: 0,
+      total_mark: 10,
+      pass_mark: 5,
+      upload_files_limit: 1,
+      upload_file_size_limit: 2,
       content_drip_settings: {
         unlock_date: '',
         after_xdays_of_enroll: '',
@@ -133,13 +133,13 @@ const AssignmentModal = ({
         summary: assignmentDetails.post_content || '',
         attachments: assignmentDetails.attachments || [],
         time_duration: {
-          time: assignmentDetails.assignment_option.time_duration.time,
-          value: (assignmentDetails.assignment_option.time_duration.value as TimeLimitUnit) || 'weeks',
+          value: assignmentDetails.assignment_option.time_duration.value || '0',
+          time: (assignmentDetails.assignment_option.time_duration.time as TimeLimitUnit) || 'weeks',
         },
-        total_mark: assignmentDetails.assignment_option.total_mark,
-        pass_mark: assignmentDetails.assignment_option.pass_mark,
-        upload_files_limit: assignmentDetails.assignment_option.upload_files_limit,
-        upload_file_size_limit: assignmentDetails.assignment_option.upload_file_size_limit,
+        total_mark: assignmentDetails.assignment_option.total_mark || 10,
+        pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
+        upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
+        upload_file_size_limit: assignmentDetails.assignment_option.upload_file_size_limit || 2,
         content_drip_settings: {
           unlock_date: assignmentDetails.content_drip_settings.unlock_date || '',
           after_xdays_of_enroll: assignmentDetails.content_drip_settings.after_xdays_of_enroll || '',
@@ -306,7 +306,7 @@ const AssignmentModal = ({
 
             <div css={styles.timeLimit}>
               <Controller
-                name="time_duration.time"
+                name="time_duration.value"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInput
@@ -321,7 +321,7 @@ const AssignmentModal = ({
               />
 
               <Controller
-                name="time_duration.value"
+                name="time_duration.time"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormSelectInput
