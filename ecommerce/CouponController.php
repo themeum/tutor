@@ -261,13 +261,19 @@ class CouponController extends BaseController {
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$applies_to = Input::post( 'applies_to' );
-		$limit      = Input::post( 'limit', 10, Input::TYPE_INT );
-		$offset     = Input::post( 'offset', 0, Input::TYPE_INT );
+		$applies_to  = Input::post( 'applies_to' );
+		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
+		$search_term = '';
+
+		$filter = json_decode( $_POST['filter'] );
+		if ( ! empty( $filter ) ) {
+			$search_term = Input::sanitize( $filter->search );
+		}
 
 		if ( $this->model->is_specific_applies_to( $applies_to ) ) {
 			try {
-				$list = $this->get_application_list( $applies_to, $limit, $offset );
+				$list = $this->get_application_list( $applies_to, $limit, $offset, $search_term );
 				if ( $list ) {
 					$this->json_response(
 						__( 'Coupon application list retrieved successfully!' ),
@@ -568,10 +574,11 @@ class CouponController extends BaseController {
 	 * @param string $applies_to Applies to.
 	 * @param int    $limit      Number of items to fetch.
 	 * @param int    $offset     Offset for fetching items.
+	 * @param int    $search_term Search term.
 	 *
 	 * @return array
 	 */
-	public function get_application_list( string $applies_to, int $limit = 10, int $offset = 0 ) {
+	public function get_application_list( string $applies_to, int $limit = 10, int $offset = 0, $search_term = '' ) {
 
 		$response = array(
 			'total_items' => 0,
@@ -611,6 +618,11 @@ class CouponController extends BaseController {
 				'post_status'    => 'publish',
 			);
 
+			// Add search.
+			if ( $search_term ) {
+				$args['s'] = $search_term;
+			}
+
 			$bundles = new \WP_Query( $args );
 
 			$response['total_items'] = $bundles->found_posts;
@@ -635,6 +647,10 @@ class CouponController extends BaseController {
 				'number'     => $limit,
 				'offset'     => $offset,
 			);
+			// Add search.
+			if ( $search_term ) {
+				$args['search'] = $search_term;
+			}
 
 			$terms = get_terms( $args );
 
