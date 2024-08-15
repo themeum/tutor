@@ -134,6 +134,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     if (response.data) {
       setIsEdit(false);
       setLocalQuizId(response.data);
+      closeModal({ action: 'CONFIRM' });
     }
   };
 
@@ -218,7 +219,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                       }
 
                       await form.handleSubmit(onQuizFormSubmit)();
-                      closeModal({ action: 'CONFIRM' });
                     }}
                   >
                     {__('Save', 'tutor')}
