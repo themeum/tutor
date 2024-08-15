@@ -17,7 +17,7 @@ const styles = {
       css`
       background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.4) 18.05%, rgba(255, 100, 113, 0.4) 30.25%, rgba(207, 110, 189, 0.4) 55.42%, rgba(164, 119, 209, 0.4) 71.66%, rgba(62, 100, 222, 0.4) 97.9%);
       opacity: 1;
-      backdrop-filter: blur(5px); 
+      backdrop-filter: blur(10px); 
     `
     }
   `,

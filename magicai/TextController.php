@@ -67,7 +67,11 @@ class TextController {
 
 		try {
 			$client   = Helper::get_client();
-			$response = $client->chat()->create( Prompts::prepare_text_generation_input() );
+			$response = $client->chat()->create(
+				Helper::create_openai_chat_input(
+					Prompts::prepare_text_generation_messages()
+				)
+			);
 			$content  = $response->choices[0]->message->content;
 			$content  = $is_html ? Helper::markdown_to_html( $content ) : $content;
 
@@ -107,7 +111,9 @@ class TextController {
 			);
 		}
 
-		$input = Prompts::$method();
+		$input = Helper::create_openai_chat_input(
+			Prompts::$method()
+		);
 
 		try {
 			$client   = Helper::get_client();

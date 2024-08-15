@@ -53,22 +53,18 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_text_generation_input() {
+	public static function prepare_text_generation_messages() {
 		$prompt = Input::post( 'prompt', '' );
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => self::create_system_message(),
-				),
-				array(
-					'role'    => 'user',
-					'content' => $prompt,
-				),
+			array(
+				'role'    => 'system',
+				'content' => self::create_system_message(),
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $prompt,
+			),
 		);
 	}
 
@@ -78,7 +74,7 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_translation_input() {
+	public static function prepare_translation_messages() {
 		$content        = Input::post( 'content', '' );
 		$language       = Input::post( 'language', '' );
 		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
@@ -90,18 +86,14 @@ final class Prompts {
 		}
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => $system_content,
-				),
-				array(
-					'role'    => 'user',
-					'content' => $content,
-				),
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $content,
+			),
 		);
 	}
 
@@ -111,7 +103,7 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_rephrase_input() {
+	public static function prepare_rephrase_messages() {
 		$content        = Input::post( 'content', '' );
 		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
 		$system_content = 'Your task is to rephrase any text content provided to you, ensuring that the original meaning is preserved while expressing it differently.';
@@ -121,18 +113,14 @@ final class Prompts {
 		}
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => $system_content,
-				),
-				array(
-					'role'    => 'user',
-					'content' => $content,
-				),
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $content,
+			),
 		);
 	}
 
@@ -142,7 +130,7 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_make_shorter_input() {
+	public static function prepare_make_shorter_messages() {
 		$content        = Input::post( 'content', '' );
 		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
 		$system_content = 'Your task is to condense the provided text, retaining the key points and meaning while making the content as concise as possible.';
@@ -152,18 +140,14 @@ final class Prompts {
 		}
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => $system_content,
-				),
-				array(
-					'role'    => 'user',
-					'content' => $content,
-				),
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $content,
+			),
 		);
 	}
 
@@ -173,7 +157,7 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_change_tone_input() {
+	public static function prepare_change_tone_messages() {
 		$content        = Input::post( 'content', '' );
 		$tone           = Input::post( 'tone', '' );
 		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
@@ -185,18 +169,14 @@ final class Prompts {
 		}
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => $system_content,
-				),
-				array(
-					'role'    => 'user',
-					'content' => $content,
-				),
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $content,
+			),
 		);
 	}
 
@@ -206,7 +186,7 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_write_as_bullets_input() {
+	public static function prepare_write_as_bullets_messages() {
 		$content        = Input::post( 'content', '' );
 		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
 		$system_content = 'Your task is to rewrite the provided text as bullet points. Ensure that each point is clear and concise while preserving the original meaning.';
@@ -216,18 +196,14 @@ final class Prompts {
 		}
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => $system_content,
-				),
-				array(
-					'role'    => 'user',
-					'content' => $content,
-				),
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $content,
+			),
 		);
 	}
 
@@ -237,7 +213,7 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_make_longer_input() {
+	public static function prepare_make_longer_messages() {
 		$content        = Input::post( 'content', '' );
 		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
 		$system_content = 'Your task is to expand the provided text, adding more detail and depth while maintaining the original meaning and intent.';
@@ -247,18 +223,14 @@ final class Prompts {
 		}
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => $system_content,
-				),
-				array(
-					'role'    => 'user',
-					'content' => $content,
-				),
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $content,
+			),
 		);
 	}
 
@@ -268,7 +240,7 @@ final class Prompts {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_simplify_language_input() {
+	public static function prepare_simplify_language_messages() {
 		$content        = Input::post( 'content', '' );
 		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
 		$system_content = 'Your task is to simplify the language of the provided text, making it easier to understand while preserving the original meaning.';
@@ -278,18 +250,53 @@ final class Prompts {
 		}
 
 		return array(
-			'model'       => Models::GPT_4O,
-			'messages'    => array(
-				array(
-					'role'    => 'system',
-					'content' => $system_content,
-				),
-				array(
-					'role'    => 'user',
-					'content' => $content,
-				),
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
 			),
-			'temperature' => 0.7,
+			array(
+				'role'    => 'user',
+				'content' => $content,
+			),
+		);
+	}
+
+	/**
+	 * Prepare the input array for creating the course title.
+	 *
+	 * @return array
+	 */
+	public static function prepare_course_title_messages() {
+		$prompt = Input::post( 'prompt' );
+
+		return array(
+			array(
+				'role'    => 'system',
+				'content' => 'You are a highly skilled assistant specialized in generating course titles for an e-learning platform. When provided with a prompt describing a course, your task is to create a concise, compelling, and marketable course title. The title should be clear, engaging, and appropriate for the specified audience, which could range from beginners to advanced learners. Ensure that the title reflects the course content accurately and consider the use of impactful language that highlights the value of the course.',
+			),
+			array(
+				'role'    => 'user',
+				'content' => $prompt,
+			),
+		);
+	}
+
+	/**
+	 * Prepare the course description with the help of the course title.
+	 *
+	 * @param string $title The course title.
+	 * @return array
+	 */
+	public static function prepare_course_description_messages( string $title ) {
+		return array(
+			array(
+				'role'    => 'system',
+				'content' => 'You are an AI assistant that specializes in generating detailed course descriptions for an e-learning platform. Based on the provided course title, your task is to create a compelling and informative course description that includes the following elements: an overview of the course content, key learning outcomes, and a clear identification of the target audience. The description should be engaging, informative, and accurately reflect the skills and knowledge students will gain. Ensure that the language is accessible, with a tone that is both motivating and professional, and tailored to the specified audience, whether they are beginners, intermediate learners, or advanced professionals.',
+			),
+			array(
+				'role'    => 'user',
+				'content' => $title,
+			),
 		);
 	}
 }

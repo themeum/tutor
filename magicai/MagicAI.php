@@ -29,5 +29,6 @@ class MagicAI {
 	public function __construct() {
 		new ImageController();
 		new TextController();
+		new CourseGenerationController();
 	}
 }

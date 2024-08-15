@@ -23,6 +23,8 @@ const endpoints = {
   MAGIC_TEXT_GENERATION: 'tutor_generate_text_content',
   MAGIC_AI_MODIFY_CONTENT: 'tutor_modify_text_content',
   USE_AI_GENERATED_IMAGE: 'tutor_use_magic_image',
+
+  GENERATE_COURSE_CONTENT: 'tutor_generate_course_content',
 };
 
 export default endpoints;

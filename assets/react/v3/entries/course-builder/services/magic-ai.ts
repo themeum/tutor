@@ -17,7 +17,7 @@ interface ImageResponse {
 }
 
 const generateImage = (payload: ImagePayload) => {
-  const promises = Array.from({length: 4}).map(() => {
+  const promises = Array.from({ length: 4 }).map(() => {
     return wpAjaxInstance.get<WPResponse<ImageResponse>>(endpoints.GENERATE_AI_IMAGE, {
       params: payload,
     });
@@ -69,7 +69,7 @@ interface TextGenerationPayload {
 
 const generateText = (payload: TextGenerationPayload) => {
   return wpAjaxInstance.post<TextGenerationPayload, WPResponse<string>>(endpoints.MAGIC_TEXT_GENERATION, payload);
-}
+};
 
 export const useMagicTextGenerationMutation = () => {
   const { showToast } = useToast();
@@ -79,7 +79,7 @@ export const useMagicTextGenerationMutation = () => {
       showToast({ type: 'danger', message: error.message });
     },
   });
-}
+};
 
 export type ModificationType = 'rephrase' | 'make_shorter' | 'write_as_bullets' | 'make_longer' | 'simplify_language';
 interface ModifyPayloadBase {
@@ -103,9 +103,9 @@ interface GeneralPayload extends ModifyPayloadBase {
 
 export type ModificationPayload = Prettify<TranslationPayload | ChangeTonePayload | GeneralPayload>;
 
-const modifyContent = (payload: ModificationPayload)=> {
+const modifyContent = (payload: ModificationPayload) => {
   return wpAjaxInstance.post<ModificationPayload, WPResponse<string>>(endpoints.MAGIC_AI_MODIFY_CONTENT, payload);
-}
+};
 
 export const useModifyContentMutation = () => {
   const { showToast } = useToast();
@@ -115,7 +115,7 @@ export const useModifyContentMutation = () => {
       showToast({ type: 'danger', message: error.message });
     },
   });
-}
+};
 
 interface UseImagePayload {
   image: string;
@@ -123,7 +123,10 @@ interface UseImagePayload {
 }
 
 const storeImage = (payload: UseImagePayload) => {
-  return wpAjaxInstance.post<UseImagePayload, WPResponse<{id: number; url: string; title: string;}>>(endpoints.USE_AI_GENERATED_IMAGE, payload);
+  return wpAjaxInstance.post<UseImagePayload, WPResponse<{ id: number; url: string; title: string }>>(
+    endpoints.USE_AI_GENERATED_IMAGE,
+    payload,
+  );
 };
 
 export const useStoreAIGeneratedImageMutation = () => {
@@ -134,4 +137,21 @@ export const useStoreAIGeneratedImageMutation = () => {
       showToast({ type: 'danger', message: error.message });
     },
   });
+};
+
+interface CourseGenerationPayload {
+  prompt: string;
 }
+
+const generateCourseContent = (payload: CourseGenerationPayload) => {
+  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<{ title: string; description: string }>>(
+    endpoints.GENERATE_COURSE_CONTENT,
+    payload,
+  );
+};
+
+export const useGenerateCourseContentMutation = () => {
+  return useMutation({
+    mutationFn: generateCourseContent,
+  });
+};

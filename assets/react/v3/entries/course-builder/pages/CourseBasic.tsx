@@ -24,11 +24,13 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
 import MagicButton from '@Atoms/MagicButton';
+import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -54,6 +56,7 @@ const CourseBasic = () => {
   });
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { showModal } = useModal();
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
@@ -255,7 +258,16 @@ const CourseBasic = () => {
                 align-items: center;
                 gap: ${spacing[4]};
               `}
-                onClick={() => alert('@TODO: will be implemented later.')}
+                onClick={() => {
+                  showModal({
+                    component: AICourseBuilderModal,
+                    isMagicAi: true,
+                    props: {
+                      title: __('Create with AI', 'tutor'),
+                      icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                    },
+                  });
+                }}
               >
                 <SVGIcon name="magicAi" width={24} height={24} />
                 {__('Generate with AI', 'tutor')}

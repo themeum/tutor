@@ -32,13 +32,14 @@ const styles = {
   base: css`
 		${styleUtils.resetButton};
 		${typography.small('medium')};
-		display: inline-flex;
+		display: flex;
 		gap: ${spacing[4]};
 		width: 100%;
 		justify-content: center;
 		align-items: center;
 		white-space: nowrap;
 		transition: 0.5s;
+		
 
 		&:focus-visible {
 			outline: none;
@@ -118,12 +119,12 @@ const styles = {
   size: {
     default: css`
 			height: 32px;
-			padding-inline: ${spacing[16]};
+			padding-inline: ${spacing[12]};
 			padding-block: ${spacing[4]};
 		`,
     sm: css`
 			height: 24px;
-			padding-inline: ${spacing[12]};
+			padding-inline: ${spacing[10]};
 		`,
     icon: css`
 			width: 32px;
