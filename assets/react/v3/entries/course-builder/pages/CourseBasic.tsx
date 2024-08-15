@@ -3,6 +3,7 @@ import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -13,7 +14,7 @@ import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSelectUser from '@Components/fields/FormSelectUser';
+import FormSelectUser, { type UserOption } from '@Components/fields/FormSelectUser';
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
@@ -42,7 +43,6 @@ import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxValueRule, requiredRule } from '@Utils/validation';
-import { useLocation, useNavigate } from 'react-router-dom';
 
 const courseId = getCourseId();
 
@@ -62,6 +62,7 @@ const CourseBasic = () => {
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = currentUser.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
@@ -70,7 +71,7 @@ const CourseBasic = () => {
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || ''));
 
-  const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && isAdministrator;
+  const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && (isAdministrator || isInstructor);
 
   const visibilityStatus = useWatch({
     control: form.control,
@@ -517,23 +518,41 @@ const CourseBasic = () => {
           )}
         />
 
-        <Show when={currentUser.roles.includes(TutorRoles.ADMINISTRATOR)}>
-          <Controller
-            name="post_author"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormSelectUser
-                {...controllerProps}
-                label={__('Author', 'tutor')}
-                options={userList.data ?? []}
-                placeholder={__('Search to add author', 'tutor')}
-                isSearchable
-                disabled={!isAuthorEditable}
-                loading={userList.isLoading && !controllerProps.field.value}
-              />
-            )}
-          />
-        </Show>
+        <Controller
+          name="post_author"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormSelectUser
+              {...controllerProps}
+              label={__('Author', 'tutor')}
+              options={userList.data ?? []}
+              placeholder={__('Search to add author', 'tutor')}
+              isSearchable
+              disabled={!isAuthorEditable}
+              loading={userList.isLoading && !controllerProps.field.value}
+              onChange={() => {
+                const courseInstructors = form.getValues('course_instructors');
+                const previousAuthor = courseDetails?.post_author;
+                const isAlreadyAdded = !!courseInstructors.find(
+                  (instructor) => String(instructor.id) === String(previousAuthor?.ID),
+                );
+
+                const convertedAuthor: UserOption = {
+                  id: Number(previousAuthor?.ID),
+                  name: previousAuthor?.display_name,
+                  email: previousAuthor.user_email,
+                  avatar_url: previousAuthor?.tutor_profile_photo_url,
+                  isRemoveAble: true,
+                };
+
+                form.setValue(
+                  'course_instructors',
+                  isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor],
+                );
+              }}
+            />
+          )}
+        />
 
         <Show when={isInstructorVisible}>
           <Controller
@@ -549,6 +568,7 @@ const CourseBasic = () => {
                 isMultiSelect
                 loading={instructorListQuery.isLoading && !controllerProps.field.value}
                 emptyStateText={__('No instructors added.', 'tutor')}
+                isInstructorMode
               />
             )}
           />

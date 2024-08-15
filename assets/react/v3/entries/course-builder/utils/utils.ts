@@ -1,10 +1,10 @@
+import type { UserOption } from '@Components/fields/FormSelectUser';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import type { AssignmentPayload, ID, LessonPayload } from '@CourseBuilderServices/curriculum';
-import type { User } from '@Services/users';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -158,10 +158,11 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
             name: item.display_name,
             email: item.user_email,
             avatar_url: item.avatar_url,
+            isRemoveAble: false,
           });
         }
         return instructors;
-      }, [] as User[]) ?? [],
+      }, [] as UserOption[]) ?? [],
     preview_link: courseDetails.preview_link ?? '',
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',

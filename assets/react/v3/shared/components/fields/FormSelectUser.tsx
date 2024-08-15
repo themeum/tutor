@@ -16,20 +16,22 @@ import { useDebounce } from '@Hooks/useDebounce';
 import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
+import { tutorConfig } from '@Config/config';
+import { TutorRoles } from '@Config/constants';
 import profileImage from '@Images/profile-photo.png';
-
-interface User {
+export interface UserOption {
   id: number;
   name: string;
   email?: string;
   avatar_url?: string;
+  isRemoveAble?: boolean;
 }
 
 type FormSelectUserProps = {
   label?: string;
   placeholder?: string;
-  options: User[];
-  onChange?: (selectedOption: User | User[]) => void;
+  options: UserOption[];
+  onChange?: (selectedOption: UserOption | UserOption[]) => void;
   handleSearchOnChange?: (searchText: string) => void;
   isMultiSelect?: boolean;
   disabled?: boolean;
@@ -40,9 +42,10 @@ type FormSelectUserProps = {
   responsive?: boolean;
   helpText?: string;
   emptyStateText?: string;
-} & FormControllerProps<User | User[] | null>;
+  isInstructorMode?: boolean;
+} & FormControllerProps<UserOption | UserOption[] | null>;
 
-const userPlaceholderData: User = {
+const userPlaceholderData: UserOption = {
   id: 0,
   name: __('Click to select user', 'tutor'),
   email: 'example@example.com',
@@ -64,9 +67,11 @@ const FormSelectUser = ({
   isSearchable = false,
   helpText,
   emptyStateText = __('No user selected', 'tutor'),
+  isInstructorMode = false,
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
+  const isCurrentUserAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -183,14 +188,30 @@ const FormSelectUser = ({
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteSelection(instructor.id)}
-                        css={styles.instructorDeleteButton}
-                        data-instructor-delete-button
+                      <Show
+                        when={isInstructorMode}
+                        fallback={
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSelection(instructor.id)}
+                            css={styles.instructorDeleteButton}
+                            data-instructor-delete-button
+                          >
+                            <SVGIcon name="cross" width={32} height={32} />
+                          </button>
+                        }
                       >
-                        <SVGIcon name="cross" width={32} height={32} />
-                      </button>
+                        <Show when={isCurrentUserAdmin || instructor.isRemoveAble}>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSelection(instructor.id)}
+                            css={styles.instructorDeleteButton}
+                            data-instructor-delete-button
+                          >
+                            <SVGIcon name="cross" width={32} height={32} />
+                          </button>
+                        </Show>
+                      </Show>
                     </div>
                   ))}
                 </div>
@@ -255,7 +276,13 @@ const FormSelectUser = ({
                           type="button"
                           css={styles.label}
                           onClick={() => {
-                            const newValue = Array.isArray(inputValue) ? [...inputValue, instructor] : instructor;
+                            const selectedValue = isInstructorMode
+                              ? {
+                                  ...instructor,
+                                  isRemoveAble: true,
+                                }
+                              : instructor;
+                            const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
                             field.onChange(newValue);
                             setSearchText('');
                             onChange(newValue);
