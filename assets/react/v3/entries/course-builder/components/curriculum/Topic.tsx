@@ -241,7 +241,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     });
 
     if (response.data) {
-      onEdit?.(response.data);
+      if (response.status_code === 201) {
+        onEdit?.(response.data);
+      }
       setIsEdit(false);
     }
   };
