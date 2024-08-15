@@ -25,7 +25,7 @@ function Topbar() {
 
   return (
     <div css={styles.wrapper}>
-      <Container>
+      <div css={styles.container}>
         <div css={styles.innerWrapper}>
           <div css={styles.left}>
             <button type="button" css={styles.backButton} onClick={handleGoBack}>
@@ -43,7 +43,7 @@ function Topbar() {
             </Button>
           </div>
         </div>
-      </Container>
+      </div>
     </div>
   );
 }
@@ -54,6 +54,11 @@ const styles = {
   wrapper: css`
     height: ${TOPBAR_HEIGHT}px;
     background: ${colorTokens.background.white};
+  `,
+  container: css`
+    max-width: 1030px;
+    margin: 0 auto;
+    height: 100%;
   `,
   innerWrapper: css`
     display: flex;

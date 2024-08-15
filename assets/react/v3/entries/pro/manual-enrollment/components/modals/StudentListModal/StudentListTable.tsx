@@ -7,70 +7,83 @@ import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
 
-import { Course, useAppliesToQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
-import Radio from '@Atoms/Radio';
-import { Enrollment } from '@EnrollmentServices/enrollment';
+import { Enrollment, Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
 
-interface CourseListTableProps {
+interface StudentListTableProps {
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 
-const CourseListTable = ({ form }: CourseListTableProps) => {
-  const selectedCourse = form.watch('course') || null;
+const StudentListTable = ({ form }: StudentListTableProps) => {
+  const courseList = form.watch('students') || [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
-  const courseListQuery = useAppliesToQuery({
-    applies_to: 'specific_courses',
+  const studentListQuery = useStudentListQuery({
     offset,
     limit: itemsPerPage,
     filter: pageInfo.filter,
   });
 
-  const columns: Column<Course>[] = [
+  function toggleSelection(isChecked = false) {
+    form.setValue('students', isChecked ? (studentListQuery.data?.results as Student[]) : []);
+  }
+
+  function handleAllIsChecked() {
+    return (
+      courseList.length === studentListQuery.data?.results.length &&
+      courseList?.every((item) => studentListQuery.data?.results?.map((result) => result.id).includes(item.id))
+    );
+  }
+
+  const columns: Column<Student>[] = [
     {
-      Header: <div css={styles.tableLabel}>{__('Name', 'tutor')}</div>,
+      Header: studentListQuery.data?.results.length ? (
+        <Checkbox
+          onChange={toggleSelection}
+          checked={handleAllIsChecked()}
+          label={__('Name', 'tutor')}
+          labelCss={styles.checkboxLabel}
+        />
+      ) : (
+        __('#', 'tutor')
+      ),
       Cell: (item) => {
         return (
           <div css={styles.checkboxWrapper}>
-            <Radio
+            <Checkbox
               onChange={() => {
-                form.setValue('course', item);
+                const filteredItems = courseList.filter((course) => course.id !== item.id);
+                const isNewItem = filteredItems?.length === courseList.length;
+
+                if (isNewItem) {
+                  form.setValue('students', [...filteredItems, item]);
+                } else {
+                  form.setValue('students', filteredItems);
+                }
               }}
-              checked={selectedCourse?.id === item.id}
+              checked={courseList.map((course) => course.id).includes(item.id)}
             />
-            <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+            <img src={item.avatar || coursePlaceholder} css={styles.thumbnail} alt="course item" />
             <div css={styles.courseItem}>
-              <div>{item.title}</div>
-              <p>{item.author}</p>
+              <div>{item.name}</div>
+              <p>{item.email}</p>
             </div>
           </div>
         );
       },
       width: 600,
     },
-    {
-      Header: __('Price', 'tutor'),
-      Cell: (item) => {
-        return (
-          <div css={styles.price}>
-            <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
-            {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
-          </div>
-        );
-      },
-    },
   ];
 
-  if (courseListQuery.isLoading) {
+  if (studentListQuery.isLoading) {
     return <LoadingSection />;
   }
 
-  if (!courseListQuery.data) {
+  if (!studentListQuery.data) {
     return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor')}</div>;
   }
 
@@ -83,9 +96,9 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
       <div css={styles.tableWrapper}>
         <Table
           columns={columns}
-          data={(courseListQuery.data.results as Course[]) ?? []}
+          data={(studentListQuery.data.results) ?? []}
           itemsPerPage={itemsPerPage}
-          loading={courseListQuery.isFetching || courseListQuery.isRefetching}
+          loading={studentListQuery.isFetching || studentListQuery.isRefetching}
         />
       </div>
 
@@ -93,7 +106,7 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
         <Paginator
           currentPage={pageInfo.page}
           onPageChange={onPageChange}
-          totalItems={courseListQuery.data.total_items}
+          totalItems={studentListQuery.data.total_items}
           itemsPerPage={itemsPerPage}
         />
       </div>
@@ -101,12 +114,9 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
   );
 };
 
-export default CourseListTable;
+export default StudentListTable;
 
 const styles = {
-  tableLabel: css`
-    text-align: left;
-  `,
   tableActions: css`
     padding: ${spacing[20]};
   `,
