@@ -349,6 +349,10 @@ class Lesson extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
 
+		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+			\TUTOR_H5P\H5P::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
+		}
+
 		wp_delete_post( $lesson_id, true );
 		wp_send_json_success();
 	}
