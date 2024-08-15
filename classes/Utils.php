@@ -6644,22 +6644,31 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public function get_course_categories( $parent = 0 ) {
-		$args = apply_filters(
-			'tutor_get_course_categories_args',
-			array(
-				'taxonomy'   => 'course-category',
-				'hide_empty' => false,
-				'parent'     => $parent,
-			)
+	public function get_course_categories( $parent = 0, $custom_args = array() ) {
+		$default_args = array(
+			'taxonomy'   => 'course-category',
+			'hide_empty' => false,
 		);
+
+		if ( $parent > 0 ) {
+			$default_args['parent'] = $parent;
+		}
+
+		$default = apply_filters(
+			'tutor_get_course_categories_args',
+			$default_args
+		);
+
+		$args = wp_parse_args( $custom_args, $default );
 
 		$terms = get_terms( $args );
 
 		$children = array();
 		foreach ( $terms as $term ) {
-			$term->children             = $this->get_course_categories( $term->term_id );
-			$children[ $term->term_id ] = $term;
+			if ( is_object( $term ) ) {
+				$term->children             = $this->get_course_categories( $term->term_id );
+				$children[ $term->term_id ] = $term;
+			}
 		}
 
 		return $children;

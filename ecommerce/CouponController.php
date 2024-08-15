@@ -589,18 +589,6 @@ class CouponController extends BaseController {
 				'post_type'      => tutor()->course_post_type,
 				'posts_per_page' => $limit,
 				'offset'         => $offset,
-				'post_status'    => 'publish',
-				'meta_query'     => array(
-					'relation'     => 'AND',
-					'paid_clause'  => array(
-						'key'   => Course::COURSE_PRICE_TYPE_META,
-						'value' => 'paid',
-					),
-					'price_clause' => array(
-						'key'     => Course::COURSE_PRICE_META,
-						'compare' => 'EXISTS',
-					),
-				),
 			);
 
 			// Add search.
@@ -608,21 +596,14 @@ class CouponController extends BaseController {
 				$args['s'] = $search_term;
 			}
 
-			$courses = new \WP_Query( $args );
+			$courses = Course::get_paid_course( $args );
 
 			$response['total_items'] = $courses->found_posts;
 
 			if ( $courses->have_posts() ) {
 				$courses = $courses->get_posts();
 				foreach ( $courses as $course ) {
-
-					$response['results'][] = array(
-						'id'            => $course->ID,
-						'title'         => $course->post_title,
-						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $course->ID ),
-						'regular_price' => tutor_get_formatted_price( get_post_meta( $course->ID, Course::COURSE_PRICE_META, true ) ),
-						'sale_price'    => tutor_get_formatted_price( get_post_meta( $course->ID, Course::COURSE_SALE_PRICE_META, true ) ),
-					);
+					$response['results'][] = Course::get_mini_info( $course );
 				}
 			}
 		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
@@ -630,18 +611,6 @@ class CouponController extends BaseController {
 				'post_type'      => 'course-bundle',
 				'posts_per_page' => $limit,
 				'offset'         => $offset,
-				'post_status'    => 'publish',
-				'meta_query'     => array(
-					'relation'     => 'AND',
-					'paid_clause'  => array(
-						'key'   => Course::COURSE_PRICE_TYPE_META,
-						'value' => 'paid',
-					),
-					'price_clause' => array(
-						'key'     => Course::COURSE_PRICE_META,
-						'compare' => 'EXISTS',
-					),
-				),
 			);
 
 			// Add search.
@@ -649,46 +618,39 @@ class CouponController extends BaseController {
 				$args['s'] = $search_term;
 			}
 
-			$bundles = new \WP_Query( $args );
+			$bundles = Course::get_paid_course( $args );
 
 			$response['total_items'] = $bundles->found_posts;
 
 			if ( $bundles->have_posts() ) {
 				$bundles = $bundles->get_posts();
 				foreach ( $bundles as $bundle ) {
-					$response['results'][] = array(
-						'id'            => $bundle->ID,
-						'title'         => $bundle->post_title,
-						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $bundle->ID ),
-						'course_count'  => count( BundleModel::get_bundle_course_ids( $bundle->ID ) ),
-						'regular_price' => tutor_get_formatted_price( get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ) ),
-						'sale_price'    => tutor_get_formatted_price( get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ) ),
-					);
+					$response['results'][] = Course::get_mini_info( $bundle );
 				}
 			}
 		} elseif ( $this->model::APPLIES_TO_SPECIFIC_CATEGORY === $applies_to ) {
 			$args = array(
-				'taxonomy'   => 'course-category',
-				'hide_empty' => true,
 				'number'     => $limit,
 				'offset'     => $offset,
+				'hide_empty' => true,
 			);
+
+			$total_arg = array(
+				'fields'     => 'ids',
+				'taxonomy'   => 'course-category',
+				'hide_empty' => true,
+			);
+
 			// Add search.
 			if ( $search_term ) {
-				$args['search'] = $search_term;
+				$args['search']      = $search_term;
+				$total_arg['search'] = $search_term;
 			}
 
-			$terms = get_terms( $args );
+			$terms = tutor_utils()->get_course_categories( 0, $args );
+			$total = get_terms( $total_arg );
 
-			$response['total_items'] = count(
-				get_terms(
-					array(
-						'taxonomy'   => 'course-category',
-						'hide_empty' => true,
-						'fields'     => 'ids',
-					)
-				)
-			);
+			$response['total_items'] = is_array( $total ) ? count( $total ) : 0;
 
 			if ( ! is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {
