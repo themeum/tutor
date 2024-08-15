@@ -77,7 +77,7 @@ module.exports = (env, options) => {
 		{
 			dest_path: '../tutor-pro/addons/enrollments/assets/js',
 			src_files: {
-				'new-enrollment.min': './assets/react/v3/entries/pro/new-enrollment/index.tsx',
+				'manual-enrollment.min': './assets/react/v3/entries/pro/manual-enrollment/index.tsx',
 			},
 			clean: false,
 		},

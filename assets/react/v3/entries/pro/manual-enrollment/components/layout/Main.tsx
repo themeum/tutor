@@ -7,6 +7,8 @@ import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 import { __ } from '@wordpress/i18n';
 import { Enrollment } from '@EnrollmentServices/enrollment';
 import Courses from '@EnrollmentComponents/Courses';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import { requiredRule } from '@Utils/validation';
 
 function Main() {
   const params = new URLSearchParams(window.location.search);
