@@ -74,7 +74,7 @@ import { moveTo, noop } from '@Utils/util';
 interface TopicProps {
   topic: CourseTopicWithCollapse;
   onDelete?: () => void;
-  onCopy?: () => void;
+  onCopy?: (topicId: ID) => void;
   onSort?: (activeIndex: number, overIndex: number) => void;
   onCollapse?: (topicId: ID) => void;
   onEdit?: (topicId: ID) => void;
@@ -220,12 +220,16 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     opacity: isDragging ? 0.3 : undefined,
   };
 
-  const handleDuplicateTopic = () => {
-    duplicateContentMutation.mutate({
+  const handleDuplicateTopic = async () => {
+    const response = await duplicateContentMutation.mutateAsync({
       course_id: courseId,
       content_id: topic.id,
       content_type: 'topic',
     });
+
+    if (response.data) {
+      onCopy?.(response.data);
+    }
   };
 
   const handleSubmit = async (values: TopicForm) => {
@@ -312,7 +316,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
             </div>
             <div css={styles.actions}>
               <Show when={!isEdit}>
-                <Tooltip content={__('Edit', 'tutor')}>
+                <Tooltip content={__('Edit', 'tutor')} delay={200}>
                   <button
                     type="button"
                     css={styles.actionButton}
@@ -330,7 +334,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 </Tooltip>
               </Show>
               <Show when={topic.isSaved}>
-                <Tooltip content={__('Duplicate', 'tutor')}>
+                <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
                   <button
                     type="button"
                     css={styles.actionButton}
@@ -343,7 +347,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 </Tooltip>
               </Show>
               <Show when={topic.isSaved}>
-                <Tooltip content={__('Delete', 'tutor')}>
+                <Tooltip content={__('Delete', 'tutor')} delay={200}>
                   <button
                     type="button"
                     css={styles.actionButton}

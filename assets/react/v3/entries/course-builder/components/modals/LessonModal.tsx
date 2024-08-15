@@ -467,6 +467,7 @@ const styles = {
     color: ${colorTokens.text.title};
   `,
   lessonPreview: css`
+    background-color: ${colorTokens.background.white};
     padding: ${spacing[12]};
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
