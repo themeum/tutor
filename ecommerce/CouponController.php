@@ -265,7 +265,7 @@ class CouponController extends BaseController {
 		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
 		$search_term = '';
 
-		$filter = json_decode( $_POST['filter'] );
+		$filter = json_decode( wp_unslash( $_POST['filter'] ) );
 		if ( ! empty( $filter ) ) {
 			$search_term = Input::sanitize( $filter->search );
 		}
@@ -602,6 +602,11 @@ class CouponController extends BaseController {
 					),
 				),
 			);
+
+			// Add search.
+			if ( $search_term ) {
+				$args['s'] = $search_term;
+			}
 
 			$courses = new \WP_Query( $args );
 
