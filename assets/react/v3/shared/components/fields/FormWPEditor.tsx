@@ -44,14 +44,39 @@ const FormWPEditor = ({
   helpText,
   onChange,
   hasCustomEditorSupport = false,
-  editors,
+  editors = [],
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
+  const editorLabel = hasCustomEditorSupport ? (
+    <div css={styles.editorLabel}>
+      <span>{label}</span>
+      <div css={styles.editorsButtonWrapper}>
+        <span>{__('Edit with', 'tutor')}</span>
+        <div css={styles.customEditorButtons}>
+          <For each={editors}>
+            {(editor) => (
+              <button
+                key={editor.name}
+                type="button"
+                css={styles.customEditorButton}
+                onClick={() => showModal({ component: EditorModal, props: { editorUsed: editor } })}
+              >
+                {editor.label}
+              </button>
+            )}
+          </For>
+        </div>
+      </div>
+    </div>
+  ) : (
+    label
+  );
+
   return (
     <FormFieldWrapper
-      label={label}
+      label={editorLabel}
       field={field}
       fieldState={fieldState}
       disabled={disabled}
@@ -104,33 +129,6 @@ const FormWPEditor = ({
                 </div>
               }
             >
-              <div css={styles.editorsButtonWrapper}>
-                <For each={editors || []}>
-                  {(editor) => (
-                    <Button
-                      key={editor.name}
-                      icon={
-                        customEditorIcons[editor.name] && (
-                          <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
-                        )
-                      }
-                      onClick={() => {
-                        showModal({
-                          component: EditorModal,
-                          props: {
-                            title: __(`${editorUsed.name} Editor`, 'tutor'),
-                            editorUsed: editor,
-                          },
-                        });
-                      }}
-                      type="button"
-                      variant="secondary"
-                    >
-                      {editor.label}
-                    </Button>
-                  )}
-                </For>
-              </div>
               <WPEditor
                 value={field.value ?? ''}
                 onChange={(value) => {
@@ -152,17 +150,25 @@ const FormWPEditor = ({
 export default FormWPEditor;
 
 const styles = {
+  editorLabel: css`
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+  `,
   editorsButtonWrapper: css`
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: ${spacing[10]};
+    align-items: center;
     gap: ${spacing[8]};
-
-    * {
-      flex-shrink: 0;
-      margin-right: ${spacing[8]};
-    }
+    color: ${colorTokens.text.hints};
+  `,
+  customEditorButtons: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+  `,
+  customEditorButton: css`
+    ${styleUtils.resetButton}
   `,
   editorOverlay: css`
     height: 360px;
