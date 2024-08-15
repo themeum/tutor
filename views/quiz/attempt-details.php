@@ -355,9 +355,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
 					$answer_i++;
-					$question_type = tutor_utils()->get_question_types( $answer->question_type );
-
-					$answer_status = 'wrong';
+					$question_type      = tutor_utils()->get_question_types( $answer->question_type );
+					$h5p_thumbnail_path = tutor()->url . 'assets/addons/h5p/thumbnail.png';
+					$answer_status      = 'wrong';
 
 					// If already correct, then show it.
 					if ( (bool) $answer->is_correct ) {
@@ -390,13 +390,27 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
 													<div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
 													<?php
-													echo wp_kses(
-														$question_type['icon'] ?? '',
-														tutor_utils()->allowed_icon_tags()
-													);
+													if ( 'h5p_question' === $answer->question_type ) {
+														?>
+														<span class="tooltip-btn tutor-d-flex tutor-align-center">
+															<img class="tutor-quiz-type-icon" src="<?php echo esc_url( $h5p_thumbnail_path ); ?>"/>
+														</span>
+														<?php
+													} else {
+														echo wp_kses(
+															$question_type['icon'] ?? '',
+															tutor_utils()->allowed_icon_tags()
+														);
+													}
 													?>
 														<span class="tooltip-txt tooltip-top">
-														<?php echo esc_html( $type['name'] ?? '' ); ?>
+														<?php
+														if ( 'h5p_question' === $answer->question_type ) {
+																echo esc_html( 'H5P' );
+														} else {
+																echo esc_html( $type['name'] ?? '' );
+														}
+														?>
 														</span>
 													</div>
 												</td>
@@ -696,18 +710,54 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											?>
 												<td class="result">
 												<?php
-												switch ( $answer_status ) {
-													case 'correct':
-														echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
-														break;
+												if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) && 'h5p_question' === $answer->question_type ) {
+													$attempt_results = \TUTOR_H5P\H5P::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
+													$has_response    = true;
+													if ( is_array( $attempt_results ) && 1 === count( $attempt_results ) ) {
+														if ( is_null( $attempt_results[0]->response ) ) {
+															$has_response = false;
+														}
+													}
+													if ( $has_response ) {
+														?>
+														<a class=" tutor-btn tutor-btn-outline-primary tutor-btn-sm open-tutor-h5p-quiz-result-modal-btn" data-quiz-id="<?php echo esc_attr( $answer->quiz_id ); ?>" 
+														data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" 
+														data-user-id="<?php echo esc_attr( $answer->user_id ); ?>"
+														data-attempt-id="<?php echo esc_attr( $answer->quiz_attempt_id ); ?>"
+														data-content-id="<?php echo esc_attr( $answer->question_description ); ?>"
+														>
+															<?php esc_html_e( 'View', 'tutor' ); ?>
+														</a>
+														<?php
+													} else {
+														switch ( $answer_status ) {
+															case 'correct':
+																echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
+																break;
 
-													case 'pending':
-														echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
-														break;
+															case 'pending':
+																echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
+																break;
 
-													case 'wrong':
-														echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
-														break;
+															case 'wrong':
+																echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
+																break;
+														}
+													}
+												} else {
+													switch ( $answer_status ) {
+														case 'correct':
+															echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
+															break;
+
+														case 'pending':
+															echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
+															break;
+
+														case 'wrong':
+															echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
+															break;
+													}
 												}
 												?>
 												</td>
@@ -739,6 +789,28 @@ if ( is_array( $answers ) && count( $answers ) ) {
 				</tbody>
 			</table>
 		</div>
+		<?php
+		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+			?>
+			<div class="tutor-modal tutor-modal-scrollable<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?> h5p-quiz-result-modal">
+				<div class="tutor-modal-overlay"></div>
+				<div class="tutor-modal-window">
+						<div class="tutor-modal-content">
+							<div class="tutor-modal-header">
+								<div class="tutor-modal-title">
+								<?php esc_html_e( 'H5P Quiz Result', 'tutor' ); ?>
+							</div>
+							<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
+								<span class="tutor-icon-times" area-hidden="true"></span>
+							</button>
+						</div>
+						<div class="tutor-modal-body tutor-modal-container"></div>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+		?>
 		<?php
 }
 ?>
