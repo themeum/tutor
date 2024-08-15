@@ -398,6 +398,10 @@ class CourseModel {
 			return false;
 		}
 
+		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+			\TUTOR_H5P\H5P::delete_h5p_lesson_statements_by_id( $post_id );
+		}
+
 		global $wpdb;
 
 		$lesson_post_type     = tutor()->lesson_post_type;
@@ -419,6 +423,10 @@ class CourseModel {
 					if ( get_post_type( $content_id ) === 'tutor_quiz' ) {
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
+
+						if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+							\TUTOR_H5P\H5P::delete_h5p_quiz_statements_by_id( $content_id );
+						}
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
