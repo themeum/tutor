@@ -28,6 +28,7 @@ type FormImageInputProps = {
   helpText?: string;
   buttonText?: string;
   infoText?: string;
+  loading?: boolean;
 } & FormControllerProps<Media | null>;
 
 const FormImageInput = ({
@@ -38,6 +39,7 @@ const FormImageInput = ({
   buttonText = __('Upload Media', 'tutor'),
   infoText,
   onChange,
+  loading,
 }: FormImageInputProps) => {
   const wpMedia = window.wp.media({
     library: { type: 'image' },
@@ -79,6 +81,7 @@ const FormImageInput = ({
               clearHandler={clearHandler}
               buttonText={buttonText}
               infoText={infoText}
+              loading={loading}
             />
           </div>
         );

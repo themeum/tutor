@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
@@ -20,6 +21,12 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 
+import {
+  covertSecondsToHMS,
+  getExternalVideoDuration,
+  getVimeoVideoDuration,
+  getYouTubeVideoDuration,
+} from '@CourseBuilderUtils/utils';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -48,6 +55,7 @@ type FormVideoInputProps = {
   buttonText?: string;
   infoText?: string;
   supportedFormats?: string[];
+  loading?: boolean;
   onGetDuration?: (duration: {
     hours: number;
     minutes: number;
@@ -103,6 +111,7 @@ const FormVideoInput = ({
   infoText,
   onChange,
   supportedFormats,
+  loading,
   onGetDuration,
 }: FormVideoInputProps) => {
   if (!videoSources.length) {
@@ -205,16 +214,11 @@ const FormVideoInput = ({
           : { poster: attachment.id, poster_url: attachment.url };
 
       if (type === 'video' && onGetDuration) {
-        const video = document.createElement('video');
-        video.src = attachment.url;
-        video.preload = 'metadata';
-        video.onloadedmetadata = () => {
-          const duration = Math.floor(video.duration);
-          const hours = Math.floor(duration / 3600);
-          const minutes = Math.floor((duration % 3600) / 60);
-          const seconds = duration % 60;
-          onGetDuration({ hours, minutes, seconds });
-        };
+        getExternalVideoDuration(attachment.url).then((duration) => {
+          if (duration) {
+            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          }
+        });
       }
 
       field.onChange(updateFieldValue(fieldValue, updateData));
@@ -239,7 +243,7 @@ const FormVideoInput = ({
     return fieldValue && fieldValue[videoIdKey] !== '';
   };
 
-  const handleDataFromUrl = (data: URLFormData) => {
+  const handleDataFromUrl = async (data: URLFormData) => {
     const sourceMap: { [key: string]: string } = {
       external: 'external_url',
       shortcode: 'shortcode',
@@ -254,6 +258,29 @@ const FormVideoInput = ({
       [`source_${source}`]: data.videoUrl,
     };
 
+    if (source === 'vimeo') {
+      const duration = await getVimeoVideoDuration(data.videoUrl);
+      if (onGetDuration && duration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+      }
+    }
+
+    if (source === 'external_url') {
+      const duration = await getExternalVideoDuration(data.videoUrl);
+
+      if (onGetDuration && duration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+      }
+    }
+
+    if (source === 'youtube' && tutorConfig.settings.lesson_video_duration_youtube_api_key) {
+      const duration = await getYouTubeVideoDuration(data.videoUrl);
+
+      if (onGetDuration && duration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+      }
+    }
+
     field.onChange(updateFieldValue(fieldValue, updatedValue));
     onChange?.(updateFieldValue(fieldValue, updatedValue));
     setIsOpen(false);
@@ -264,7 +291,14 @@ const FormVideoInput = ({
       <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
         {() => {
           return (
-            <div>
+            <Show
+              when={!loading}
+              fallback={
+                <div css={styles.emptyMedia({ hasVideoSource: videoSources.length > 0 })}>
+                  <LoadingOverlay />
+                </div>
+              }
+            >
               <Show
                 when={isVideoAvailable()}
                 fallback={
@@ -386,7 +420,7 @@ const FormVideoInput = ({
                   );
                 }}
               </Show>
-            </div>
+            </Show>
           );
         }}
       </FormFieldWrapper>

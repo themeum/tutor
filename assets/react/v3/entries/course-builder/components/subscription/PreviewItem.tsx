@@ -1,12 +1,15 @@
+import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { DurationUnit, Subscription } from '@CourseBuilderServices/subscription';
+import type { DurationUnit, SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-export function formatRepeatUnit(unit: DurationUnit | 'until_cancellation', value: number) {
+export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {
+    case 'hour':
+      return value > 1 ? __('Hours', 'tutor') : __('Hour', 'tutor');
     case 'day':
       return value > 1 ? __('Days', 'tutor') : __('Day', 'tutor');
     case 'week':
@@ -20,41 +23,48 @@ export function formatRepeatUnit(unit: DurationUnit | 'until_cancellation', valu
   }
 }
 
-export function PreviewItem({ subscription }: { subscription: Subscription }) {
+export function PreviewItem({ subscription }: { subscription: SubscriptionFormData }) {
   return (
     <div css={styles.item}>
-      <p css={styles.title}>{subscription.title}</p>
+      <p css={styles.title}>
+        {subscription.plan_name}
+        <Show when={subscription.is_recommended}>
+          <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
+        </Show>
+      </p>
       <div css={styles.information}>
-        {subscription.pricing_option === 'recurring' && (
+        <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
           <span>
-            {__('Renew every', 'tutor')} {subscription.repeat_every.toString().padStart(2, '0')}{' '}
-            {formatRepeatUnit(subscription.repeat_unit, subscription.repeat_every)}
-          </span>
-        )}
-        {subscription.pricing_option === 'one-time-purchase' && <span>{__('Lifetime', 'tutor')}</span>}
-
-        <Show when={subscription.trial}>
-          <span>•</span>
-          <span>
-            {subscription.trial.toString().padStart(2, '0')}{' '}
-            {formatRepeatUnit(subscription.trial_unit, subscription.trial)} {__('trial', 'tutor')}
+            {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
+            {formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}
           </span>
         </Show>
 
-        {subscription.lifetime_unit === 'until_cancellation' ? (
-          <>
+        <Show when={subscription.enable_free_trial}>
+          <span>•</span>
+          <span>
+            {subscription.trial_value.toString().padStart(2, '0')}{' '}
+            {formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value))} {__('trial', 'tutor')}
+          </span>
+        </Show>
+
+        <Show when={subscription.payment_type !== 'onetime'}>
+          <Show
+            when={subscription.plan_duration === 'Until cancelled'}
+            fallback={
+              <>
+                <span>•</span>
+                <span>
+                  {subscription.plan_duration.toString().padStart(2, '0')}{' '}
+                  {formatRepeatUnit(subscription.recurring_interval, Number(subscription.plan_duration))}
+                </span>
+              </>
+            }
+          >
             <span>•</span>
-            <span>{formatRepeatUnit(subscription.lifetime_unit, 0)}</span>
-          </>
-        ) : (
-          <>
-            <span>•</span>
-            <span>
-              {subscription.lifetime.toString().padStart(2, '0')}{' '}
-              {formatRepeatUnit(subscription.lifetime_unit, subscription.lifetime)}
-            </span>
-          </>
-        )}
+            <span>{__('Until Cancellation', 'tutor')}</span>
+          </Show>
+        </Show>
       </div>
     </div>
   );
@@ -75,15 +85,20 @@ const styles = {
     }
 	`,
   title: css`
-		${typography.small('medium')};
+		${typography.caption('medium')};
 		color: ${colorTokens.text.primary};
+    display: flex;
+    align-items: center;
 	`,
   information: css`
-		${typography.tiny()};
+		${typography.small()};
 		color: ${colorTokens.text.hints};
 		display: flex;
 		align-items: center;
 		flex-wrap: wrap;
 		gap: ${spacing[4]};
 	`,
+  featuredIcon: css`
+    color: ${colorTokens.icon.brand};
+  `,
 };

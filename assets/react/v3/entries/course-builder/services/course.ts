@@ -25,6 +25,7 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingCategory = 'subscription' | 'regular';
+export type PricingType = 'free' | 'paid' | 'subscription';
 
 export interface CourseFormData {
   post_date: string;
@@ -313,7 +314,7 @@ export interface CourseDetailsResponse {
     product_id: string;
     product_name: string;
     sale_price: string;
-    type: string;
+    type: PricingType;
   };
   course_instructors: InstructorListResponse[];
   preview_link: string;
@@ -369,7 +370,7 @@ interface CourseResponse {
   status_code: number;
 }
 
-interface WcProduct {
+export interface WcProduct {
   ID: string;
   post_title: string;
 }
@@ -495,10 +496,17 @@ export const useUpdateCourseMutation = () => {
   return useMutation({
     mutationFn: updateCourse,
     onSuccess: (response) => {
-      showToast({ type: 'success', message: response.message });
-      queryClient.invalidateQueries({
-        queryKey: ['CourseDetails', response.data],
-      });
+      if (response.data) {
+        showToast({ type: 'success', message: __(response.message, 'tutor') });
+
+        queryClient.invalidateQueries({
+          queryKey: ['CourseDetails', response.data],
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['InstructorList', String(response.data)],
+        });
+      }
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -554,18 +562,9 @@ export const useWcProductDetailsQuery = (
   coursePriceType: string,
   monetizedBy: 'tutor' | 'wc' | 'edd',
 ) => {
-  const { showToast } = useToast();
-
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],
-    queryFn: () =>
-      getProductDetails(productId, courseId).then((res) => {
-        if (typeof res.data === 'string') {
-          showToast({ type: 'danger', message: res.data });
-          return null;
-        }
-        return res.data;
-      }),
+    queryFn: () => getProductDetails(productId, courseId).then((res) => res.data),
     enabled: !!productId && coursePriceType === 'paid' && monetizedBy === 'wc',
   });
 };

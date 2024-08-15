@@ -17,7 +17,7 @@ import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
-  label?: string;
+  label?: React.ReactNode;
   options: Option<T>[];
   placeholder?: string;
   onChange?: (selectedOption: Option<T>) => void;
@@ -184,7 +184,7 @@ const FormSelectInput = <T,>({
                 </Show>
               </div>
 
-              {!hideCaret && (
+              {!hideCaret && !loading && (
                 <button
                   type="button"
                   css={styles.caretButton({ isOpen })}

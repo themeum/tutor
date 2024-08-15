@@ -17,8 +17,9 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     post_status: data.post_status,
     post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_author: data.post_author?.id ?? null,
-    'pricing[type]': data.course_price_type,
-    ...(data.course_price_type !== 'free' &&
+    'pricing[type]': data.course_pricing_category === 'subscription' ? 'subscription' : data.course_price_type,
+    ...(data.course_pricing_category !== 'subscription' &&
+      data.course_price_type === 'paid' &&
       data.course_product_id && {
         'pricing[product_id]': data.course_product_id,
       }),
@@ -112,8 +113,18 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_pricing_category: courseDetails.course_pricing_category ?? 'regular',
-    course_price_type: courseDetails.course_pricing.type,
+    course_pricing_category: (() => {
+      if (
+        isAddonEnabled(Addons.SUBSCRIPTION) &&
+        tutorConfig.settings.monetize_by === 'tutor' &&
+        courseDetails.course_pricing.type === 'subscription'
+      ) {
+        return 'subscription';
+      }
+      return 'regular';
+    })(),
+    course_price_type:
+      courseDetails.course_pricing.type === 'subscription' ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
@@ -136,7 +147,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
     contentDripType: courseDetails.course_settings.content_drip_type ?? '',
-    course_product_id: courseDetails.course_pricing.product_id === '0' ? '' : courseDetails.course_pricing.product_id,
+    course_product_id:
+      String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:
       courseDetails.course_instructors?.map((item) => {
         return {
@@ -241,4 +253,91 @@ type Addon = `${Addons}`;
 
 export const isAddonEnabled = (addon: Addon) => {
   return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
+};
+
+export function toCapitalize(str: string) {
+  if (!str) return str;
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
+  const videoId = Number.parseInt(videoUrl.split('/').pop() || '', 10);
+  const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
+
+  try {
+    const response = await fetch(jsonUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch the video data');
+    }
+
+    const textData = await response.text();
+
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(textData, 'application/xml');
+
+    const durationElement = xmlDoc.getElementsByTagName('duration')[0];
+    if (!durationElement || !durationElement.textContent) {
+      return null;
+    }
+
+    const duration = Number.parseInt(durationElement.textContent, 10);
+    return duration; // in seconds
+  } catch (error) {
+    console.error('Error fetching video duration:', error);
+    return null;
+  }
+}
+
+export const getExternalVideoDuration = async (videoUrl: string): Promise<number | null> => {
+  const video = document.createElement('video');
+  video.src = videoUrl;
+  video.preload = 'metadata';
+
+  return new Promise((resolve) => {
+    video.onloadedmetadata = () => {
+      resolve(video.duration);
+    };
+  });
+};
+
+const convertYouTubeDurationToSeconds = (duration: string) => {
+  const matches = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+
+  if (!matches) {
+    return 0;
+  }
+
+  const hours = matches[1] ? Number(matches[1].replace('H', '')) : 0;
+  const minutes = matches[2] ? Number(matches[2].replace('M', '')) : 0;
+  const seconds = matches[3] ? Number(matches[3].replace('S', '')) : 0;
+
+  return hours * 3600 + minutes * 60 + seconds;
+};
+
+export const getYouTubeVideoDuration = async (videoUrl: string): Promise<number | null> => {
+  const apiKey = tutorConfig.settings.lesson_video_duration_youtube_api_key;
+  const videoId = videoUrl.split('v=')[1];
+  const jsonUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${apiKey}`;
+
+  try {
+    const response = await fetch(jsonUrl);
+    if (!response.ok) {
+      throw new Error('Failed to fetch the video data');
+    }
+
+    const data = await response.json();
+    const duration = data.items[0].contentDetails.duration;
+    const seconds = convertYouTubeDurationToSeconds(duration);
+    return seconds;
+  } catch (error) {
+    console.error('Error fetching video duration:', error);
+    return null;
+  }
+};
+
+export const covertSecondsToHMS = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const sec = seconds % 60;
+  return { hours, minutes, seconds: sec };
 };

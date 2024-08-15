@@ -215,7 +215,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
 
         <div css={styles.actions} data-actions>
           <Show when={type === 'tutor_quiz'}>
-            <Tooltip content={__('Export Quiz', 'tutor')}>
+            <Tooltip content={__('Export Quiz', 'tutor')} delay={200}>
               <button
                 type="button"
                 css={styles.actionButton}
@@ -227,19 +227,19 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               </button>
             </Tooltip>
           </Show>
-          <Tooltip content={__('Edit', 'tutor')}>
+          <Tooltip content={__('Edit', 'tutor')} delay={200}>
             <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
           <Show when={type !== 'tutor_zoom_meeting' && type !== 'tutor-google-meet'}>
-            <Tooltip content={__('Duplicate', 'tutor')}>
+            <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
               <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
                 <SVGIcon name="copyPaste" width={24} height={24} />
               </button>
             </Tooltip>
           </Show>
-          <Tooltip content={__('Delete', 'tutor')}>
+          <Tooltip content={__('Delete', 'tutor')} delay={200}>
             <button
               ref={deleteRef}
               type="button"

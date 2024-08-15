@@ -1,18 +1,24 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
+
 import SVGIcon from '@Atoms/SVGIcon';
+
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
 
+import Show from '@Controls/Show';
 import { useDebounce } from '@Hooks/useDebounce';
 import { noop } from '@Utils/util';
-import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import profileImage from '@Images/profile-photo.png';
+import { useFormContext } from 'react-hook-form';
 
 interface User {
   id: number;
@@ -66,6 +72,9 @@ const FormSelectUser = ({
 
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
+  const form = useFormContext<CourseFormData>();
+
+  const authorId = form.watch('post_author.id');
 
   const filteredOption =
     options.filter((item) => {
@@ -177,14 +186,16 @@ const FormSelectUser = ({
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteSelection(instructor.id)}
-                        css={styles.instructorDeleteButton}
-                        data-instructor-delete-button
-                      >
-                        <SVGIcon name="cross" width={32} height={32} />
-                      </button>
+                      <Show when={String(authorId) !== String(instructor.id)}>
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteSelection(instructor.id)}
+                          css={styles.instructorDeleteButton}
+                          data-instructor-delete-button
+                        >
+                          <SVGIcon name="cross" width={32} height={32} />
+                        </button>
+                      </Show>
                     </div>
                   ))}
                 </div>
@@ -212,55 +223,63 @@ const FormSelectUser = ({
                 ref={popoverRef}
               >
                 <ul css={[styles.options]}>
-                  {!isMultiSelect && (
-                    <li css={styles.inputWrapperListItem}>
-                      <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
-                        <div css={styles.leftIcon}>
-                          <SVGIcon name="search" width={24} height={24} />
+                  <Show
+                    when={filteredOption.length > 0}
+                    fallback={
+                      <li css={styles.noUserFound}>
+                        <p>{__('No user found', 'tutor')}</p>
+                      </li>
+                    }
+                  >
+                    {!isMultiSelect && (
+                      <li css={styles.inputWrapperListItem}>
+                        <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
+                          <div css={styles.leftIcon}>
+                            <SVGIcon name="search" width={24} height={24} />
+                          </div>
+                          <input
+                            {...restInputProps}
+                            // biome-ignore lint/a11y/noAutofocus: <explanation>
+                            autoFocus
+                            className="tutor-input-field"
+                            css={[inputCss, styles.input]}
+                            autoComplete="off"
+                            readOnly={readOnly || !isSearchable}
+                            placeholder={placeholder}
+                            value={searchText}
+                            onChange={(event) => {
+                              setSearchText(event.target.value);
+                            }}
+                          />
                         </div>
-                        <input
-                          {...restInputProps}
-                          // biome-ignore lint/a11y/noAutofocus: <explanation>
-                          autoFocus
-                          className="tutor-input-field"
-                          css={[inputCss, styles.input]}
-                          autoComplete="off"
-                          readOnly={readOnly || !isSearchable}
-                          placeholder={placeholder}
-                          value={searchText}
-                          onChange={(event) => {
-                            setSearchText(event.target.value);
+                      </li>
+                    )}
+                    {filteredOption.map((instructor) => (
+                      <li key={String(instructor.id)} css={styles.optionItem}>
+                        <button
+                          type="button"
+                          css={styles.label}
+                          onClick={() => {
+                            const newValue = Array.isArray(inputValue) ? [...inputValue, instructor] : instructor;
+                            field.onChange(newValue);
+                            setSearchText('');
+                            onChange(newValue);
+                            setIsOpen(false);
                           }}
-                        />
-                      </div>
-                    </li>
-                  )}
-
-                  {filteredOption.map((instructor) => (
-                    <li key={String(instructor.id)} css={styles.optionItem}>
-                      <button
-                        type="button"
-                        css={styles.label}
-                        onClick={() => {
-                          const newValue = Array.isArray(inputValue) ? [...inputValue, instructor] : instructor;
-                          field.onChange(newValue);
-                          setSearchText('');
-                          onChange(newValue);
-                          setIsOpen(false);
-                        }}
-                      >
-                        <img
-                          src={instructor.avatar_url ? instructor.avatar_url : profileImage}
-                          alt={instructor.name}
-                          css={styles.instructorAvatar}
-                        />
-                        <div>
-                          <div css={styles.instructorName}>{instructor.name}</div>
-                          <div css={styles.instructorEmail}>{instructor.email}</div>
-                        </div>
-                      </button>
-                    </li>
-                  ))}
+                        >
+                          <img
+                            src={instructor.avatar_url ? instructor.avatar_url : profileImage}
+                            alt={instructor.name}
+                            css={styles.instructorAvatar}
+                          />
+                          <div>
+                            <div css={styles.instructorName}>{instructor.name}</div>
+                            <div css={styles.instructorEmail}>{instructor.email}</div>
+                          </div>
+                        </button>
+                      </li>
+                    ))}
+                  </Show>
                 </ul>
               </div>
             </Portal>
@@ -455,11 +474,17 @@ const styles = {
     `
     }
   `,
+  noUserFound: css`
+    padding: ${spacing[8]};
+    text-align: center;
+  `,
   emptyState: css`
     ${styleUtils.flexCenter()};
     ${typography.caption()};
     margin-top: ${spacing[8]};
     padding: ${spacing[8]};
     background-color: ${colorTokens.background.white};
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius[4]};
   `,
 };

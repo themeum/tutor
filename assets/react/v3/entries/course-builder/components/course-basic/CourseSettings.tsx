@@ -1,27 +1,35 @@
 import { css } from '@emotion/react';
+import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
+import Tabs from '@Molecules/Tabs';
+
+import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
 import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
-import Tabs from '@Molecules/Tabs';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+
+const courseId = getCourseId();
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
   const [activeTab, setActiveTab] = useState('general');
+  const isCourseDetailsLoading = useIsFetching({
+    queryKey: ['CourseDetails', courseId],
+  });
 
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
@@ -90,6 +98,7 @@ const CourseSettings = () => {
                   type="number"
                   isClearable
                   selectOnFocus
+                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
                 />
               )}
             />
@@ -105,29 +114,32 @@ const CourseSettings = () => {
                   helpText={__('Course difficulty level', 'tutor')}
                   options={difficultyLevelOptions}
                   isClearable={false}
+                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
                 />
               )}
             />
 
-            {/* @TODO: Add condition based on tutor pro and tutor settings */}
-            <Controller
-              name="enrollment_expiry"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  label={__('Enrollment Expiration', 'tutor')}
-                  helpText={__(
-                    "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                    'tutor',
-                  )}
-                  placeholder="0"
-                  type="number"
-                  isClearable
-                  selectOnFocus
-                />
-              )}
-            />
+            <Show when={tutorConfig.settings.enrollment_expiry_enabled === 'on'}>
+              <Controller
+                name="enrollment_expiry"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Enrollment Expiration', 'tutor')}
+                    helpText={__(
+                      "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
+                      'tutor',
+                    )}
+                    placeholder="0"
+                    type="number"
+                    isClearable
+                    selectOnFocus
+                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                  />
+                )}
+              />
+            </Show>
 
             <div css={styles.courseAndQna}>
               <Controller
@@ -138,21 +150,25 @@ const CourseSettings = () => {
                     {...controllerProps}
                     label={__('Public Course', 'tutor')}
                     helpText={__('Make This Course Public. No Enrollment Required.', 'tutor')}
+                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
                   />
                 )}
               />
 
-              <Controller
-                name="enable_qna"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormSwitch
-                    {...controllerProps}
-                    label={__('Q&A', 'tutor')}
-                    helpText={__('Enable Q&A section for your course', 'tutor')}
-                  />
-                )}
-              />
+              <Show when={tutorConfig.settings.enable_q_and_a_on_course === 'on'}>
+                <Controller
+                  name="enable_qna"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormSwitch
+                      {...controllerProps}
+                      label={__('Q&A', 'tutor')}
+                      helpText={__('Enable Q&A section for your course', 'tutor')}
+                      loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                    />
+                  )}
+                />
+              </Show>
             </div>
           </div>
         )}
@@ -182,6 +198,7 @@ const CourseSettings = () => {
                     label: group.name,
                     value: String(group.id),
                   }))}
+                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
                 />
               )}
             />

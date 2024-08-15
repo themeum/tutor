@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
+import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
@@ -59,8 +60,10 @@ const FormCoursePrerequisites = ({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
 
-  const searchedOptions = options.filter((option) =>
-    option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()),
+  const filteredOption = options.filter(
+    (option) =>
+      option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()) &&
+      !selectedIds.includes(String(option.id)),
   );
 
   useEffect(() => {
@@ -92,7 +95,6 @@ const FormCoursePrerequisites = ({
       label={label}
       disabled={disabled}
       readOnly={readOnly}
-      loading={loading}
       helpText={helpText}
     >
       {(inputProps) => {
@@ -124,14 +126,16 @@ const FormCoursePrerequisites = ({
             <Show
               when={inputValue.length > 0}
               fallback={
-                <EmptyState
-                  size="small"
-                  emptyStateImage={emptyStateImage}
-                  emptyStateImage2x={emptyStateImage2x}
-                  imageAltText={__('Illustration of a no course selected', 'tutor')}
-                  title={__('No course selected', 'tutor')}
-                  description={__('Select a course to add as a prerequisite', 'tutor')}
-                />
+                <Show when={!loading} fallback={<LoadingSection />}>
+                  <EmptyState
+                    size="small"
+                    emptyStateImage={emptyStateImage}
+                    emptyStateImage2x={emptyStateImage2x}
+                    imageAltText={__('Illustration of a no course selected', 'tutor')}
+                    title={__('No course selected', 'tutor')}
+                    description={__('Select a course to add as a prerequisite', 'tutor')}
+                  />
+                </Show>
               }
             >
               <div css={styles.courseList}>
@@ -179,14 +183,14 @@ const FormCoursePrerequisites = ({
               >
                 <ul css={[styles.options]}>
                   <Show
-                    when={searchedOptions.length > 0}
+                    when={filteredOption.length > 0}
                     fallback={
                       <li css={styles.emptyOption}>
                         <p>{__('No courses found')}</p>
                       </li>
                     }
                   >
-                    <For each={searchedOptions.filter((course) => !selectedIds.includes(String(course.id)))}>
+                    <For each={filteredOption}>
                       {(course) => (
                         <li key={course.id}>
                           <button

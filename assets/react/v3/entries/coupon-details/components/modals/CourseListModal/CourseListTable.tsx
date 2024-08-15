@@ -1,13 +1,13 @@
 import Checkbox from '@Atoms/CheckBox';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { LoadingSection } from '@Atoms/LoadingSpinner';
+import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
 
-import { Coupon, Course, useCourseListQuery } from '@CouponServices/coupon';
+import { Coupon, Course, useAppliesToQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
@@ -19,18 +19,19 @@ interface CourseListTableProps {
 }
 
 const CourseListTable = ({ type, form }: CourseListTableProps) => {
-	const courseList = form.watch(type) || [];
+	const courseList = form.watch(type) || [];	
 	const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
 		updateQueryParams: false,
 	});
-	const courseListQuery = useCourseListQuery({
+	const courseListQuery = useAppliesToQuery({
+		applies_to: type === 'courses' ? 'specific_courses' : 'specific_bundles',
 		offset,
 		limit: itemsPerPage,
 		filter: pageInfo.filter,
 	});
 
 	function toggleSelection(isChecked = false) {
-		form.setValue(type, isChecked ? courseListQuery.data?.results : []);
+		form.setValue(type, isChecked ? courseListQuery.data?.results as Course[] : []);
 	}
 
 	function handleAllIsChecked() {
@@ -81,17 +82,22 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
 		{
 			Header: __('Price', 'tutor'),
 			Cell: (item) => {
-				return <div>{item.regular_price_formatted}</div>;
+				return (
+					<div css={styles.price}>
+						<span>{item.sale_price ? item.sale_price : item.regular_price}</span>
+						{item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+					</div>
+				);
 			},
 		},
 	];
 
 	if (courseListQuery.isLoading) {
-		return <LoadingSpinner />;
+		return <LoadingSection />;
 	}
 
 	if (!courseListQuery.data) {
-		return <div>{__('Something went wrong', 'tutor')}</div>;
+		return <div css={styles.errorMessage}>{__('Something went wrong', 'tutor')}</div>;
 	}
 
 	return (
@@ -103,7 +109,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
 			<div css={styles.tableWrapper}>
 				<Table
 					columns={columns}
-					data={courseListQuery.data.results ?? []}
+					data={courseListQuery.data.results as Course[] ?? []}
 					itemsPerPage={itemsPerPage}
 					loading={courseListQuery.isFetching || courseListQuery.isRefetching}
 				/>
@@ -113,7 +119,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
 				<Paginator
 					currentPage={pageInfo.page}
 					onPageChange={onPageChange}
-					totalItems={courseListQuery.data.totalItems}
+					totalItems={courseListQuery.data.total_items}
 					itemsPerPage={itemsPerPage}
 				/>
 			</div>
@@ -128,7 +134,7 @@ const styles = {
 		padding: ${spacing[20]};
 	`,
 	tableWrapper: css`
-		max-height: 450px;
+		max-height: calc(100vh - 350px);
 		overflow: auto;
 	`,
 	paginatorWrapper: css`
@@ -151,5 +157,20 @@ const styles = {
 	checkboxLabel: css`
 		${typography.body()};
 		color: ${colorPalate.text.neutral};
+	`,
+	price: css`
+		display: flex;
+		gap: ${spacing[4]};
+		justify-content: end;
+	`,
+	discountPrice: css`
+		text-decoration: line-through;
+		color: ${colorTokens.text.subdued};
+	`,
+	errorMessage: css`
+		height: 100px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	`,
 };

@@ -267,7 +267,9 @@ const FormFileUploader = ({
 
                           <div css={styles.attachmentCardBody}>
                             <div css={styles.attachmentCardTitle}>
-                              <div css={styleUtils.text.ellipsis(1)}>{file.title}</div>
+                              <div title={file.title} css={styleUtils.text.ellipsis(1)}>
+                                {file.title}
+                              </div>
 
                               <div css={styles.fileExtension}>{`.${file.ext}`}</div>
                             </div>
@@ -292,14 +294,20 @@ const FormFileUploader = ({
                   </For>
                 </div>
 
-                <Button
-                  buttonCss={styles.uploadButton}
-                  icon={<SVGIcon name="attach" height={24} width={24} />}
-                  variant="secondary"
-                  onClick={uploadHandler}
+                <div
+                  css={styles.uploadButtonWrapper({
+                    hasFiles: Array.isArray(files) ? files.length > 0 : files !== null,
+                  })}
                 >
-                  {buttonText}
-                </Button>
+                  <Button
+                    buttonCss={styles.uploadButton}
+                    icon={<SVGIcon name="attach" height={24} width={24} />}
+                    variant="secondary"
+                    onClick={uploadHandler}
+                  >
+                    {buttonText}
+                  </Button>
+                </div>
               </div>
             )}
           </Show>
@@ -321,11 +329,12 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[8]};
     position: relative;
-
+    
     ${
       hasFiles &&
       css`
-        padding: ${spacing[16]};
+        background-color: ${colorTokens.background.white};
+        padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
         border: 1px solid ${colorTokens.stroke.default};
         border-radius: ${borderRadius.card};
       `
@@ -333,6 +342,7 @@ const styles = {
   `,
   attachmentsWrapper: css`
     max-height: 260px;
+    padding-right: ${spacing[16]};
     ${styleUtils.overflowYAuto};
   `,
   attachmentCardWrapper: css`
@@ -348,7 +358,7 @@ const styles = {
     }
 
     &:hover {
-      background: ${colorTokens.background.white};
+      background: ${colorTokens.background.hover};
 
       button {
         opacity: 1;
@@ -381,6 +391,18 @@ const styles = {
 
     svg {
       color: ${colorTokens.icon.default};
+    }
+  `,
+  uploadButtonWrapper: ({
+    hasFiles,
+  }: {
+    hasFiles: boolean;
+  }) => css`
+    ${
+      hasFiles &&
+      css`
+      margin-right: ${spacing[16]};
+    `
     }
   `,
   uploadButton: css`

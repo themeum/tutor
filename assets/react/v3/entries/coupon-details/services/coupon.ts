@@ -1,27 +1,31 @@
 import { useToast } from '@Atoms/Toast';
+import { DateFormats } from '@Config/constants';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { ErrorResponse } from '@Utils/form';
 import { PaginatedParams, PaginatedResult } from '@Utils/types';
 import { transformParams } from '@Utils/util';
+import { format } from 'date-fns';
 
 export type CouponType = 'code' | 'automatic';
+
+export type CouponStatus = 'active' | 'inactive' | 'trash';
 
 export interface Course {
 	id: number;
 	title: string;
 	image: '';
 	author: string;
-	regular_price: number;
-	regular_price_formatted: string;
+	regular_price: string;
+	sale_price: string | null;
 }
 
 export interface CourseCategory {
 	id: number;
 	title: string;
-	image: '';
-	number_of_courses: number;
+	image: string;
+	total_courses: number;
 }
 
 export type CouponAppliesTo =
@@ -33,188 +37,161 @@ export type CouponAppliesTo =
 	| 'specific_category';
 
 export interface Coupon {
-	id: number;
+	id?: number;
+	coupon_status: CouponStatus;
 	coupon_type: CouponType;
-	coupon_name: string;
-	code: string;
-	user_name: string;
-	discount_type: 'percent' | 'amount';
-	discount_value: number;
+	coupon_title: string;
+	coupon_code: string;
+	discount_type: 'percentage' | 'flat';
+	discount_amount: string;
 	applies_to: CouponAppliesTo;
 	courses?: Course[];
 	categories?: CourseCategory[];
 	bundles?: Course[];
 	usage_limit_status: boolean;
-	usage_limit_value: number;
-	is_one_use_per_user: boolean;
-	purchase_requirements: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
-	purchase_requirements_value: number;
+	total_usage_limit: string | null;
+	per_user_limit_status: boolean;
+	per_user_usage_limit: string | null;
+	coupon_uses?: number;
+	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
+	purchase_requirement_value: string;
 	start_date: string;
 	start_time: string;
 	is_end_enabled: boolean;
 	end_date: string;
 	end_time: string;
-	created_at: string;
-	updated_at?: string;
-	redeemed_coupons_count: number;
+	created_at_gmt: string;
+	updated_at_gmt: string;
+	coupon_created_by: string;
+	coupon_update_by: string;
+}
+
+export interface CouponPayload {
+	id?: number;
+	coupon_status: CouponStatus;
+	coupon_type: CouponType;
+	coupon_title: string;
+	coupon_code?: string;
+	discount_type: 'percentage' | 'flat';
+	discount_amount: string;
+	applies_to: CouponAppliesTo;
+	applies_to_items: number[];
+	total_usage_limit?: string;
+	per_user_usage_limit?: string;
+	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
+	purchase_requirement_value?: string;
+	start_date_gmt: string;
+	expire_date_gmt?: string;
+}
+
+export interface GetCouponResponse {
+	id?: number;
+	coupon_status: CouponStatus;
+	coupon_type: CouponType;
+	coupon_title: string;
+	coupon_code: string;
+	discount_type: 'percentage' | 'flat';
+	discount_amount: string;
+	applies_to: CouponAppliesTo;
+	applies_to_items: Course[] | CourseCategory[];
+	total_usage_limit: string | null;
+	per_user_usage_limit: string | null;
+	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
+	purchase_requirement_value?: string;
+	start_date_gmt: string;
+	expire_date_gmt: string | null;
+	created_at_gmt: string;
+	updated_at_gmt: string;
+	coupon_created_by: string;
+	coupon_update_by: string;
 }
 
 export const couponInitialValue: Coupon = {
-	id: 0,
+	coupon_status: 'active',
 	coupon_type: 'code',
-	coupon_name: 'Winter sale',
-	code: '',
-	user_name: 'User',
-	discount_type: 'amount',
-	discount_value: 0,
-	applies_to: 'all_courses_and_bundles',
+	coupon_title: '',
+	coupon_code: '',
+	discount_type: 'percentage',
+	discount_amount: '',
+	applies_to: 'all_courses',
 	courses: [],
 	categories: [],
 	bundles: [],
 	usage_limit_status: false,
-	usage_limit_value: 0,
-	is_one_use_per_user: false,
-	purchase_requirements: 'no_minimum',
-	purchase_requirements_value: 0,
+	total_usage_limit: '',
+	per_user_limit_status: false,
+	per_user_usage_limit: '',
+	purchase_requirement: 'no_minimum',
+	purchase_requirement_value: '',
 	start_date: '',
 	start_time: '',
 	is_end_enabled: false,
-	end_date: '02/16/2024',
+	end_date: '',
 	end_time: '',
-	created_at: '02/16/2024 10:00:00',
-	redeemed_coupons_count: 0,
+	created_at_gmt: '',
+	updated_at_gmt: '',
+	coupon_created_by: '',
+	coupon_update_by: '',
 };
 
-export const mockCouponData: Coupon = {
-	id: 11211,
-	coupon_type: 'code',
-	coupon_name: 'Winter sale',
-	code: 'WINTER24',
-	user_name: 'John Doe',
-	discount_type: 'amount',
-	discount_value: 20,
-	applies_to: 'specific_bundles',
-	courses: [
-		{
-			id: 1,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 2,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 3,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 4,
-			title: 'Soccer for Beginners',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-	],
-	categories: [
-		{
-			id: 1,
-			title: 'Soccer',
-			image: '',
-			number_of_courses: 10,
-		},
-		{
-			id: 2,
-			title: 'Basketball',
-			image: '',
-			number_of_courses: 5,
-		},
-		{
-			id: 3,
-			title: 'Tennis',
-			image: '',
-			number_of_courses: 15,
-		},
-		{
-			id: 4,
-			title: 'Volleyball',
-			image: '',
-			number_of_courses: 8,
-		},
-		{
-			id: 5,
-			title: 'Swimming',
-			image: '',
-			number_of_courses: 12,
-		},
-	],
-	bundles: [
-		{
-			id: 1,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 2,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 3,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-		{
-			id: 4,
-			title: 'Soccer Bundle',
-			author: 'Soccer Skills',
-			image: '',
-			regular_price: 120,
-			regular_price_formatted: '$120.00',
-		},
-	],
-	usage_limit_status: true,
-	usage_limit_value: 100,
-	is_one_use_per_user: true,
-	purchase_requirements: 'minimum_purchase',
-	purchase_requirements_value: 200,
-	start_date: '2024/02/16',
-	start_time: '10:00:00',
-	is_end_enabled: true,
-	end_date: '2024/02/16',
-	end_time: '10:00:00',
-	created_at: '02/16/2024 10:00:00',
-	updated_at: '02/16/2024 10:00:00',
-	redeemed_coupons_count: 10,
-};
+function getAppliesToItemIds(data: Coupon) {
+	if (data.applies_to === 'specific_courses') {
+		return data.courses?.map((item) => item.id) ?? [];
+	}
+	if (data.applies_to === 'specific_bundles') {
+		return data.bundles?.map((item) => item.id) ?? [];
+	}
+	if (data.applies_to === 'specific_category') {
+		return data.categories?.map((item) => item.id) ?? [];
+	}
+	return [];
+}
+
+export function convertFormDataToPayload(data: Coupon): CouponPayload {
+	return {
+		...(data.id && {
+			id: data.id
+		}),
+		coupon_status: data.coupon_status,
+		coupon_type: data.coupon_type,
+		...(data.coupon_type === 'code' && {
+			coupon_code: data.coupon_code
+		}),
+		coupon_title: data.coupon_title,
+		discount_type: data.discount_type,
+		discount_amount: data.discount_amount,
+		applies_to: data.applies_to,
+		applies_to_items: getAppliesToItemIds(data),
+		...(data.total_usage_limit && {
+			total_usage_limit: data.total_usage_limit
+		}),
+		...(data.per_user_usage_limit && {
+			per_user_usage_limit: data.per_user_usage_limit
+		}),
+		...(data.purchase_requirement && {
+			purchase_requirement: data.purchase_requirement
+		}),
+		...(data.purchase_requirement_value && {
+			purchase_requirement_value: data.purchase_requirement_value
+		}),
+		start_date_gmt: format(
+			new Date(`${data.start_date} ${data.start_time}`), 
+			DateFormats.yearMonthDayHourMinuteSecond
+		),
+		...(data.is_end_enabled && data.end_date && {
+			expire_date_gmt: format(
+				new Date(`${data.end_date} ${data.end_time}`), 
+				DateFormats.yearMonthDayHourMinuteSecond
+			),
+		})
+	}
+}
 
 const getCouponDetails = (couponId: number) => {
-	return mockCouponData;
-	// biome-ignore lint/correctness/noUnreachable: <will be implemented later>
-	// return wpAjaxInstance
-	// 	.get<Coupon>(endpoints.COUPON_DETAILS, { params: { coupon_id: couponId } })
-	// 	.then((response) => response.data);
+	return authApiInstance.post<GetCouponResponse>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_coupon_details',
+		id: couponId,
+	});
 };
 
 export const useCouponDetailsQuery = (couponId: number) => {
@@ -231,9 +208,9 @@ interface CouponResponse {
 	status_code: number;
 }
 
-const createCoupon = (payload: Coupon) => {
-	return authApiInstance.post<Coupon, CouponResponse>(endpoints.ADMIN_AJAX, {
-		action: 'tutor_create_coupon',
+const createCoupon = (payload: CouponPayload) => {
+	return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_coupon_create',
 		...payload,
 	});
 };
@@ -252,9 +229,9 @@ export const useCreateCouponMutation = () => {
 	});
 };
 
-const updateCoupon = (payload: Coupon) => {
-	return authApiInstance.post<Coupon, CouponResponse>(endpoints.ADMIN_AJAX, {
-		action: 'tutor_update_coupon',
+const updateCoupon = (payload: CouponPayload) => {
+	return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_coupon_update',
 		...payload,
 	});
 };
@@ -277,48 +254,26 @@ export const useUpdateCouponMutation = () => {
 	});
 };
 
-const getCourseList = (params: PaginatedParams) => {
-	return authApiInstance.get<PaginatedResult<Course>>(endpoints.COURSE_LIST, {
-		params: transformParams(params),
+interface GetAppliesToParam extends PaginatedParams {
+	applies_to: CouponAppliesTo;
+}
+
+const getAppliesToList = (params: GetAppliesToParam) => {
+	return authApiInstance.post<PaginatedResult<Course | CourseCategory>>(endpoints.ADMIN_AJAX, {
+		action: 'tutor_coupon_applies_to_list',
+		...params 
 	});
 };
 
-export const useCourseListQuery = (params: PaginatedParams) => {
+export const useAppliesToQuery = (params: GetAppliesToParam) => {
 	return useQuery({
-		queryKey: ['CourseList', params],
+		queryKey: ['AppliesTo', params],
 		placeholderData: keepPreviousData,
 		queryFn: () => {
-			return {
-				results: mockCouponData.courses ?? [],
-				totalItems: mockCouponData.courses?.length ?? 0,
-				totalPages: 1,
-			};
-			return getCourseList(params).then((res) => {
+			return getAppliesToList(params).then((res) => {
 				return res.data;
 			});
 		},
 	});
 };
 
-const getCategoryList = (params: PaginatedParams) => {
-	return authApiInstance.get<PaginatedResult<CourseCategory>>(endpoints.CATEGORY_LIST, {
-		params: transformParams(params),
-	});
-};
-
-export const useCategoryListQuery = (params: PaginatedParams) => {
-	return useQuery({
-		queryKey: ['CourseList', params],
-		placeholderData: keepPreviousData,
-		queryFn: () => {
-			return {
-				results: mockCouponData.categories ?? [],
-				totalItems: mockCouponData.categories?.length ?? 0,
-				totalPages: 1,
-			};
-			return getCategoryList(params).then((res) => {
-				return res.data;
-			});
-		},
-	});
-};
