@@ -527,6 +527,23 @@ class Quiz {
 				$total_question_marks = $wpdb->get_var( $query );
 				//phpcs:enable
 
+				// Check if h5p addon is enabled.
+				if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+					// Update the total marks to include the marks from h5p questions.
+					foreach ( $question_ids as $question_id ) {
+						$question       = QuizModel::get_quiz_question_by_id( $question_id );
+						$question_type  = $question->question_type;
+						$attempt_result = \TUTOR_H5P\H5P::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+
+						if ( 'h5p_question' === $question_type ) {
+							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
+								$h5p_attempt_answer    = $attempt_result[0];
+								$total_question_marks += $h5p_attempt_answer->max_score;
+							}
+						}
+					}
+				}
+
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
 					$wpdb->prefix . 'tutor_quiz_attempts',
@@ -723,6 +740,21 @@ class Quiz {
 					if ( in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ) ) ) {
 						$answers_data['is_correct'] = null;
 						$review_required            = true;
+					}
+					// Check if h5p addon is enabled.
+					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+						// Check if it is a h5p question.
+						if ( 'h5p_question' === $question_type ) {
+							$attempt_result = \TUTOR_H5P\H5P::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+							// Set the h5p question answer to tutor quiz attempt result.
+							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
+								$h5p_question_answer           = $attempt_result[0];
+								$answers_data['question_mark'] = $h5p_question_answer->max_score;
+								$answers_data['achieved_mark'] = $h5p_question_answer->raw_score;
+								$answers_data['is_correct']    = $h5p_question_answer->max_score === $h5p_question_answer->raw_score;
+								$total_marks                  += $h5p_question_answer->raw_score;
+							}
+						}
 					}
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
@@ -1058,18 +1090,6 @@ class Quiz {
 				);
 				//phpcs:enable
 			}
-
-			//check if h5p addon is enabled
-			if( tutor_utils()->get_option('_tutor_h5p_enabled')){
-
-				foreach ($questions_ids as $question_id) {
-					//check if h5p question
-					if(get_post_meta($question_id, '_tutor_h5p_question_content_id')){
-						delete_post_meta( $question_id, '_tutor_h5p_question_content_id' );
-					}
-				}
-			}
-
 			$wpdb->delete( $wpdb->prefix . 'tutor_quiz_questions', array( 'quiz_id' => $quiz_id ) );
 
 			wp_delete_post( $quiz_id, true );
