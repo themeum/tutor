@@ -1,4 +1,13 @@
-import { borderRadius, colorPalate, colorTokens, containerMaxWidth, fontFamily, fontSize, spacing } from '@Config/styles';
+import {
+  borderRadius,
+  colorPalate,
+  colorTokens,
+  containerMaxWidth,
+  fontFamily,
+  fontSize,
+  shadow,
+  spacing,
+} from '@Config/styles';
 import { css } from '@emotion/react';
 
 export const createGlobalCss = () => css`
@@ -349,7 +358,7 @@ export const styleUtils = {
 		outline: 2px solid ${colorTokens.stroke.brand};
 		outline-offset: 1px;
 	`,
-  	dateAndTimeWrapper: css`
+  dateAndTimeWrapper: css`
 		display: grid;
 		grid-template-columns: 1fr 1fr;
 		border-radius: ${borderRadius[6]};
@@ -387,8 +396,39 @@ export const styleUtils = {
 			}
 		}
 	`,
-	inputCurrencyStyle: css`
+  inputCurrencyStyle: css`
 		font-size: ${fontSize[18]};
 		color: ${colorTokens.icon.subdued};
+	`,
+  crossButton: css`
+		border: none;
+		outline: none;
+		padding: 0;
+		margin: 0;
+		text-align: inherit;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: ${borderRadius.circle};
+		background: ${colorTokens.background.white};
+		transition: opacity 0.3s ease-in-out;
+
+		svg {
+			color: ${colorTokens.icon.default};
+			transition: color 0.3s ease-in-out;
+		}
+
+		:hover {
+			svg {
+				color: ${colorTokens.icon.hover};
+			}
+		}
+
+		:focus {
+			box-shadow: ${shadow.focus};
+		}
 	`,
 };
