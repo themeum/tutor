@@ -49,16 +49,16 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     defaultValues: {
       meeting_name: currentMeeting?.post_title ?? '',
       meeting_summary: currentMeeting?.post_content ?? '',
-      meeting_date: currentMeeting?.meeting_data.start_time
-        ? format(new Date(currentMeeting?.meeting_data.start_time), DateFormats.yearMonthDay)
+      meeting_date: currentMeeting?.meeting_starts_at
+        ? format(new Date(currentMeeting?.meeting_starts_at), DateFormats.yearMonthDay)
         : '',
-      meeting_time: currentMeeting?.meeting_data.start_time
-        ? format(new Date(currentMeeting?.meeting_data.start_time), DateFormats.hoursMinutes)
+      meeting_time: currentMeeting?.meeting_starts_at
+        ? format(new Date(currentMeeting?.meeting_starts_at), DateFormats.hoursMinutes)
         : '',
-      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '',
+      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '60',
       meeting_duration_unit: currentMeeting?.meeting_data.duration_unit ?? 'min',
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
-      auto_recording: currentMeeting?.meeting_data.settings.auto_recording ?? 'none',
+      auto_recording: currentMeeting?.meeting_data.settings?.auto_recording ?? 'none',
       meeting_password: currentMeeting?.meeting_data.password ?? '',
       meeting_host: Object.values(meetingHost)[0],
     },
@@ -84,7 +84,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       course_id: courseId,
       meeting_title: formData.meeting_name,
       meeting_summary: formData.meeting_summary,
-      meeting_date: format(new Date(formData.meeting_date), DateFormats.monthDayYear),
+      meeting_date: format(new Date(formData.meeting_date), DateFormats.yearMonthDay),
       meeting_time: formData.meeting_time,
       meeting_duration: Number(formData.meeting_duration),
       meeting_duration_unit: formData.meeting_duration_unit,
@@ -104,15 +104,20 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(currentMeeting)) {
+      console.log('currentMeeting', currentMeeting);
       meetingForm.reset({
         meeting_name: currentMeeting.post_title,
         meeting_summary: currentMeeting.post_content,
-        meeting_date: format(new Date(currentMeeting.meeting_data.start_time), DateFormats.yearMonthDay),
-        meeting_time: format(new Date(currentMeeting.meeting_data.start_time), DateFormats.hoursMinutes),
+        meeting_date: currentMeeting.meeting_starts_at
+          ? format(new Date(currentMeeting.meeting_starts_at), DateFormats.yearMonthDay)
+          : '',
+        meeting_time: currentMeeting.meeting_starts_at
+          ? format(new Date(currentMeeting.meeting_starts_at), DateFormats.hoursMinutes)
+          : '',
         meeting_duration: String(currentMeeting.meeting_data.duration),
         meeting_duration_unit: currentMeeting.meeting_data.duration_unit,
         meeting_timezone: currentMeeting.meeting_data.timezone,
-        auto_recording: currentMeeting.meeting_data.settings.auto_recording,
+        auto_recording: currentMeeting.meeting_data.settings?.auto_recording ?? 'none',
         meeting_password: currentMeeting.meeting_data.password,
         meeting_host: Object.values(meetingHost)[0],
       });

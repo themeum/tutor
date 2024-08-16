@@ -10,12 +10,14 @@ import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { DateFormats } from '@Config/constants';
 import { type ZoomMeeting, useDeleteZoomMeetingMutation } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { AnimationType } from '@Hooks/useAnimation';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
+import { noop } from '@Utils/util';
 import ZoomMeetingForm from './ZoomMeetingForm';
 
 interface ZoomMeetingCardProps {
@@ -30,22 +32,32 @@ const courseId = getCourseId();
 
 const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const deleteZoomMeetingMutation = useDeleteZoomMeetingMutation(String(courseId));
+
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const { ID, meeting_data, post_title } = data;
+  const deleteRef = useRef<HTMLButtonElement>(null);
+  const { ID, meeting_data, post_title, meeting_starts_at } = data;
 
   const handleZoomMeetingDelete = async () => {
-    await deleteZoomMeetingMutation.mutateAsync(ID);
+    const response = await deleteZoomMeetingMutation.mutateAsync(ID);
+    if (response.success) {
+      setIsDeletePopoverOpen(false);
+    }
   };
 
-  const day = format(new Date(meeting_data.start_time), DateFormats.day);
-  const month = format(new Date(meeting_data.start_time), DateFormats.month);
-  const year = format(new Date(meeting_data.start_time), DateFormats.year);
-  const [time, meridiem = ''] = format(new Date(meeting_data.start_time), DateFormats.hoursMinutes).split(' ');
+  const day = format(new Date(meeting_starts_at), DateFormats.day);
+  const month = format(new Date(meeting_starts_at), DateFormats.month);
+  const year = format(new Date(meeting_starts_at), DateFormats.year);
+  const [time, meridiem = ''] = format(new Date(meeting_starts_at), DateFormats.hoursMinutes).split(' ');
 
   return (
     <>
-      <div css={styles.card}>
+      <div
+        css={styles.card({
+          isPopoverOpen: isDeletePopoverOpen || isOpen,
+        })}
+      >
         <div css={styles.cardTitle}>{post_title}</div>
 
         <div css={styles.cardContent}>
@@ -119,12 +131,14 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
               >
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
-              <button type="button" css={styles.actionButton} data-visually-hidden onClick={handleZoomMeetingDelete}>
-                {deleteZoomMeetingMutation.isPending ? (
-                  <LoadingSpinner size={24} />
-                ) : (
-                  <SVGIcon name="delete" width={24} height={24} />
-                )}
+              <button
+                type="button"
+                css={styles.actionButton}
+                data-visually-hidden
+                onClick={() => setIsDeletePopoverOpen(true)}
+                ref={deleteRef}
+              >
+                <SVGIcon name="delete" width={24} height={24} />
               </button>
             </div>
           </div>
@@ -140,6 +154,33 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
           }}
         />
       </Popover>
+      <ConfirmationPopover
+        isOpen={isDeletePopoverOpen}
+        triggerRef={deleteRef}
+        closePopover={noop}
+        maxWidth="258px"
+        title={`Delete meeting "${post_title}"`}
+        message="Are you sure you want to delete this meeting? This cannot be undone."
+        animationType={AnimationType.slideUp}
+        arrow="auto"
+        hideArrow
+        isLoading={deleteZoomMeetingMutation.isPending}
+        confirmButton={{
+          text: __('Delete', 'tutor'),
+          variant: 'text',
+          isDelete: true,
+        }}
+        cancelButton={{
+          text: __('Cancel', 'tutor'),
+          variant: 'text',
+        }}
+        onConfirmation={async () => {
+          await handleZoomMeetingDelete();
+        }}
+        onCancel={() => {
+          setIsDeletePopoverOpen(false);
+        }}
+      />
     </>
   );
 };
@@ -147,7 +188,12 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
 export default ZoomMeetingCard;
 
 const styles = {
-  card: css`
+  card: ({
+    isPopoverOpen = false,
+  }: {
+    isPopoverOpen: boolean;
+  }) =>
+    css`
     ${styleUtils.display.flex('column')}
     padding: ${spacing[8]} ${spacing[12]} ${spacing[12]} ${spacing[12]};
     gap: ${spacing[8]};
@@ -157,6 +203,19 @@ const styles = {
     [data-visually-hidden] {
       opacity: 0;
       transition: opacity 0.3s ease-in-out;
+    }
+
+    ${
+      isPopoverOpen &&
+      css`
+        background-color: ${colorTokens.background.hover};
+        [data-visually-hidden] {
+          opacity: 1;
+        }
+        .date-time {
+          background: none;
+        }
+      `
     }
 
     &:hover {
