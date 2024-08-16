@@ -364,7 +364,10 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 closePopover={() => setIsDeletePopoverOpen(false)}
                 maxWidth="258px"
                 title={`Delete topic "${topic.title}"`}
-                message="Are you sure you want to delete this content from your course? This cannot be undone."
+                message={__(
+                  'Are you sure you want to delete this content from your course? This cannot be undone.',
+                  'tutor',
+                )}
                 animationType={AnimationType.slideUp}
                 arrow="auto"
                 hideArrow
