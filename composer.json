@@ -19,5 +19,8 @@
     "require-dev": {
         "phpunit/phpunit": "^9",
         "yoast/phpunit-polyfills": "^1.0"
+    },
+    "require": {
+        "nesbot/carbon": "^2.0"
     }
 }
