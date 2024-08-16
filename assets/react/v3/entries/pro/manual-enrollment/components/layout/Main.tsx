@@ -1,5 +1,5 @@
 import Container from '@Components/Container';
-import { colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { Controller, FormProvider } from 'react-hook-form';
@@ -8,14 +8,16 @@ import { __ } from '@wordpress/i18n';
 import { Enrollment } from '@EnrollmentServices/enrollment';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { requiredRule } from '@Utils/validation';
-import Students from '@EnrollmentComponents/Students';
-import SelectCourse from '@EnrollmentComponents/SelectCourse';
+import FormSelectCourse from '@EnrollmentComponents/FormSelectCourse';
+import FormSelectStudents from '@EnrollmentComponents/FormSelectStudents';
+import { Box } from '@Atoms/Box';
 
 function Main() {
   const params = new URLSearchParams(window.location.search);
   const form = useFormWithGlobalError<Enrollment>({
     defaultValues: {
       course: null,
+      // students: [],
       students: [
         {
           id: 1,
@@ -47,6 +49,8 @@ function Main() {
     },
   });
 
+  const course = form.watch('course');
+
   const paymentStatusOptions = [
     {
       label: __('Paid', 'tutor'),
@@ -76,10 +80,24 @@ function Main() {
         <div css={styles.container}>
           <div css={styles.content}>
             <div css={styles.left}>
-              <Students />
+              <div css={styles.studentsWrapper} title="Please select a course first!">
+                <Controller
+                  name="students"
+                  control={form.control}
+                  rules={requiredRule()}
+                  render={(controllerProps) => (
+                    <FormSelectStudents {...controllerProps} label={__('Students', 'tutor')} disabled={!course} />
+                  )}
+                />
+              </div>
             </div>
             <div css={styles.right}>
-              <SelectCourse />
+              <Controller
+                name="course"
+                control={form.control}
+                rules={requiredRule()}
+                render={(controllerProps) => <FormSelectCourse {...controllerProps} />}
+              />
               <Controller
                 name="payment_status"
                 control={form.control}
@@ -93,21 +111,6 @@ function Main() {
                   />
                 )}
               />
-              <Controller
-                name="payment_status"
-                control={form.control}
-                rules={requiredRule()}
-                render={(controllerProps) => (
-                  <FormSelectInput
-                    {...controllerProps}
-                    label={__('Course', 'tutor')}
-                    options={paymentStatusOptions}
-                    placeholder={__('Select course', 'tutor')}
-                    isSearchable
-                  />
-                )}
-              />
-
               <Controller
                 name="payment_status"
                 control={form.control}
@@ -160,5 +163,10 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[12]};
     padding-top: ${spacing[32]};
+  `,
+  studentsWrapper: css`
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[8]};
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[12]};
   `,
 };

@@ -1,26 +1,22 @@
-import Checkbox from '@Atoms/CheckBox';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
-
-import { Course, useAppliesToQuery } from '@CouponServices/coupon';
+import { useAppliesToQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
-import { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
-import Radio from '@Atoms/Radio';
-import { Enrollment } from '@EnrollmentServices/enrollment';
+import Button from '@Atoms/Button';
+import { Course } from '@EnrollmentServices/enrollment';
 
 interface CourseListTableProps {
-  form: UseFormReturn<Enrollment, any, undefined>;
+  onSelectClick: (item: Course) => void;
 }
 
-const CourseListTable = ({ form }: CourseListTableProps) => {
-  const selectedCourse = form.watch('course') || null;
+const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
@@ -36,13 +32,7 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
       Header: <div css={styles.tableLabel}>{__('Name', 'tutor')}</div>,
       Cell: (item) => {
         return (
-          <div css={styles.checkboxWrapper}>
-            <Radio
-              onChange={() => {
-                form.setValue('course', item);
-              }}
-              checked={selectedCourse?.id === item.id}
-            />
+          <div css={styles.courseItemWrapper}>
             <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
             <div css={styles.courseItem}>
               <div>{item.title}</div>
@@ -54,12 +44,19 @@ const CourseListTable = ({ form }: CourseListTableProps) => {
       width: 600,
     },
     {
-      Header: __('Price', 'tutor'),
+      Header: <div css={styles.tablePriceLabel}>{__('Price', 'tutor')}</div>,
       Cell: (item) => {
         return (
-          <div css={styles.price}>
-            <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
-            {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+          <div css={styles.priceWrapper}>
+            <div data-button>
+              <Button size="small" onClick={() => onSelectClick(item)}>
+                {__('Select', 'tutor')}
+              </Button>
+            </div>
+            <div css={styles.price} data-price>
+              <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
+              {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+            </div>
           </div>
         );
       },
@@ -107,17 +104,33 @@ const styles = {
   tableLabel: css`
     text-align: left;
   `,
+  tablePriceLabel: css`
+    text-align: right;
+  `,
   tableActions: css`
     padding: ${spacing[20]};
   `,
   tableWrapper: css`
     max-height: calc(100vh - 350px);
     overflow: auto;
+
+    tr {
+      &:hover {
+        &:hover {
+          [data-button] {
+            display: block;
+          }
+          [data-price] {
+            display: none;
+          }
+        }
+      }
+    }
   `,
   paginatorWrapper: css`
     margin: ${spacing[20]} ${spacing[16]};
   `,
-  checkboxWrapper: css`
+  courseItemWrapper: css`
     display: flex;
     align-items: center;
     gap: ${spacing[12]};
@@ -131,9 +144,11 @@ const styles = {
     height: 48px;
     border-radius: ${borderRadius[4]};
   `,
-  checkboxLabel: css`
-    ${typography.body()};
-    color: ${colorPalate.text.neutral};
+  priceWrapper: css`
+    text-align: right;
+    [data-button] {
+      display: none;
+    }
   `,
   price: css`
     display: flex;
