@@ -299,6 +299,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
 };
 
 export default GoogleMeetForm;
+
 const styles = {
   container: css`
     ${styleUtils.display.flex('column')}
@@ -313,12 +314,12 @@ const styles = {
     }
   `,
   formWrapper: css`
-    ${styleUtils.display.flex('column')}
+    ${styleUtils.display.flex('column')};
+    ${styleUtils.overflowYAuto};
     padding-inline: ${spacing[12]};
     padding-bottom: ${spacing[8]};
     gap: ${spacing[12]};
     height: 400px;
-    overflow-y: auto;
   `,
   dateLabel: css`
     ${typography.caption('medium')}
