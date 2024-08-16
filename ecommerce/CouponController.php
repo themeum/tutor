@@ -266,7 +266,7 @@ class CouponController extends BaseController {
 		$search_term = '';
 
 		$filter = json_decode( wp_unslash( $_POST['filter'] ) );
-		if ( ! empty( $filter ) ) {
+		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
 			$search_term = Input::sanitize( $filter->search );
 		}
 
@@ -596,17 +596,17 @@ class CouponController extends BaseController {
 				$args['s'] = $search_term;
 			}
 
-			$courses = Course::get_paid_course( $args );
+			$courses = ( new CourseModel() )->get_paid_courses( $args );
 
-			$response['total_items'] = $courses->found_posts;
+			$response['total_items'] = is_a( $courses, 'WP_Query' ) ? $courses->found_posts : 0;
 
-			if ( $courses->have_posts() ) {
+			if ( is_a( $courses, 'WP_Query' ) && $courses->have_posts() ) {
 				$courses = $courses->get_posts();
 				foreach ( $courses as $course ) {
 					$response['results'][] = Course::get_mini_info( $course );
 				}
 			}
-		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
+		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php', false ) ) {
 			$args = array(
 				'post_type'      => 'course-bundle',
 				'posts_per_page' => $limit,
@@ -618,11 +618,11 @@ class CouponController extends BaseController {
 				$args['s'] = $search_term;
 			}
 
-			$bundles = Course::get_paid_course( $args );
+			$bundles = ( new CourseModel() )->get_paid_courses( $args );
 
-			$response['total_items'] = $bundles->found_posts;
+			$response['total_items'] = is_a( $bundles, 'WP_Query' ) ? $bundles->found_posts : 0;
 
-			if ( $bundles->have_posts() ) {
+			if ( is_a( $bundles, 'WP_Query' ) && $bundles->have_posts() ) {
 				$bundles = $bundles->get_posts();
 				foreach ( $bundles as $bundle ) {
 					$response['results'][] = Course::get_mini_info( $bundle );

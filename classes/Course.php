@@ -2664,39 +2664,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Get paid course
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $args Array of args to override default.
-	 *
-	 * @return \WP_Query
-	 */
-	public static function get_paid_course( array $args = array() ) {
-		$default_args = array(
-			'post_type'      => tutor()->course_post_type,
-			'posts_per_page' => 10,
-			'offset'         => 0,
-			'post_status'    => 'publish',
-			'meta_query'     => array(
-				'relation'     => 'AND',
-				'paid_clause'  => array(
-					'key'   => self::COURSE_PRICE_TYPE_META,
-					'value' => 'paid',
-				),
-				'price_clause' => array(
-					'key'     => self::COURSE_PRICE_META,
-					'compare' => 'EXISTS',
-				),
-			),
-		);
-
-		$args = wp_parse_args( $args, $default_args );
-
-		return new \WP_Query( $args );
-	}
-
-	/**
 	 * Get course/bundle mini info
 	 *
 	 * @since 3.0.0
@@ -2714,7 +2681,7 @@ class Course extends Tutor_Base {
 			'sale_price'    => tutor_get_formatted_price( get_post_meta( $post->ID, self::COURSE_SALE_PRICE_META, true ) ),
 		);
 
-		if ( 'course-bundle' === $post->post_type && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
+		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php', false ) ) {
 			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
 		}
 
