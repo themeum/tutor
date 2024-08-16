@@ -2,6 +2,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorPalate, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { styleUtils } from '@Utils/style-utils';
 import { parseNumberOnly } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type FocusEvent, type KeyboardEvent, useEffect, useId, useRef } from 'react';
@@ -94,6 +95,7 @@ const TextInput = ({
           readOnly={readOnly}
           disabled={disabled}
           autoComplete="off"
+          data-input
         />
 
         {variant === 'search' && (
@@ -131,61 +133,57 @@ const styles = {
     gap: ${spacing[4]};
     width: 100%;
 
-    ${
-      isInlineLabel &&
-      css`
+    ${isInlineLabel &&
+    css`
       flex-direction: row;
       align-items: center;
       gap: ${spacing[12]};
       justify-content: space-between;
       height: 32px;
-    `
-    }
+    `}
   `,
   label: (isInlineLabel = false) => css`
     ${typography.caption()}
 
-    ${
-      isInlineLabel &&
-      css`
+    ${isInlineLabel &&
+    css`
       color: ${colorPalate.text.default};
-    `
-    }
+    `}
   `,
   inputWrapper: css`
     position: relative;
   `,
   input: (variant: Variant) => css`
-    ${typography.body()}
+    /** Increasing the css specificity */
+    &[data-input] {
+      ${typography.body()}
 
-    width: 100%;
-    height: 40px;
-    border-radius: ${borderRadius[5]};
-    border: 1px solid ${colorTokens.stroke.default};
-    padding: 0 ${spacing[32]} 0 ${spacing[12]};
-    color: ${colorPalate.text.default};
-    appearance: textfield;
+      width: 100%;
+      height: 40px;
+      border-radius: ${borderRadius[5]};
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: 0 ${spacing[32]} 0 ${spacing[12]};
+      color: ${colorPalate.text.default};
+      appearance: textfield;
 
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus};
-    }
+      :focus {
+        ${styleUtils.inputFocus};
+      }
 
-    ::-webkit-outer-spin-button,
-    ::-webkit-inner-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
+      ::-webkit-outer-spin-button,
+      ::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
 
-    ::placeholder {
-      color: ${colorTokens.text.subdued};
-    }
+      ::placeholder {
+        color: ${colorTokens.text.subdued};
+      }
 
-    ${
-      variant === 'search' &&
+      ${variant === 'search' &&
       css`
-      padding-left: ${spacing[36]};
-    `
+        padding-left: ${spacing[36]};
+      `}
     }
   `,
   rightIconButton: css`
