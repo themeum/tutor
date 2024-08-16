@@ -2681,7 +2681,7 @@ class Course extends Tutor_Base {
 			'sale_price'    => tutor_get_formatted_price( get_post_meta( $post->ID, self::COURSE_SALE_PRICE_META, true ) ),
 		);
 
-		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php', false ) ) {
+		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
 			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
 		}
 
