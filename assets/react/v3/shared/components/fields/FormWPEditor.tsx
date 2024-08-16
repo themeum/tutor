@@ -1,10 +1,12 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { rgba } from 'polished';
 
 import Button from '@Atoms/Button';
 import WPEditor from '@Atoms/WPEditor';
 
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 import { useModal } from '@Components/modals/Modal';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -14,6 +16,7 @@ import type { Editor } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
+import { makeFirstCharacterUpperCase } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
@@ -30,7 +33,9 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
-  droip: 'droip',
+  droip: 'droipColorized',
+  elementor: 'elementorColorized',
+  gutenberg: 'gutenbergColorized',
 };
 
 const FormWPEditor = ({
@@ -52,23 +57,35 @@ const FormWPEditor = ({
   const editorLabel = hasCustomEditorSupport ? (
     <div css={styles.editorLabel}>
       <span>{label}</span>
-      <div css={styles.editorsButtonWrapper}>
-        <span>{__('Edit with', 'tutor')}</span>
-        <div css={styles.customEditorButtons}>
-          <For each={editors}>
-            {(editor) => (
-              <button
-                key={editor.name}
-                type="button"
-                css={styles.customEditorButton}
-                onClick={() => showModal({ component: EditorModal, props: { editorUsed: editor } })}
-              >
-                {editor.label}
-              </button>
-            )}
-          </For>
+      <Show when={editors.length && editorUsed.name === 'classic'}>
+        <div css={styles.editorsButtonWrapper}>
+          <span>{__('Edit with', 'tutor')}</span>
+          <div css={styles.customEditorButtons}>
+            <For each={editors}>
+              {(editor) => (
+                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.name)} delay={200}>
+                  <button
+                    key={editor.name}
+                    type="button"
+                    css={styles.customEditorButton}
+                    onClick={() =>
+                      showModal({
+                        component: EditorModal,
+                        props: {
+                          editorUsed: editor,
+                          icon: <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />,
+                        },
+                      })
+                    }
+                  >
+                    <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
+                  </button>
+                </Tooltip>
+              )}
+            </For>
+          </div>
         </div>
-      </div>
+      </Show>
     </div>
   ) : (
     label
@@ -106,8 +123,10 @@ const FormWPEditor = ({
               fallback={
                 <div css={styles.editorOverlay}>
                   <Button
-                    variant="primary"
+                    variant="tertiary"
+                    size="small"
                     loading={loading}
+                    buttonCss={styles.editWithButton}
                     icon={
                       customEditorIcons[editorUsed.name] && (
                         <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
@@ -120,6 +139,7 @@ const FormWPEditor = ({
                         props: {
                           title: __(`${editorUsed.name} Editor`, 'tutor'),
                           editorUsed: editorUsed,
+                          icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
                         },
                       })
                     }
@@ -169,11 +189,18 @@ const styles = {
   `,
   customEditorButton: css`
     ${styleUtils.resetButton}
+    display: flex;
+    align-items: center;
   `,
   editorOverlay: css`
     height: 360px;
     ${styleUtils.flexCenter()};
-    background-color: ${colorTokens.bg.gray20};
+    background-color: ${rgba(colorTokens.background.modal, 0.6)};
     border-radius: ${borderRadius.card};
+  `,
+  editWithButton: css`
+    background: ${colorTokens.action.secondary};
+    color: ${colorTokens.text.primary};
+    box-shadow: inset 0 -1px 0 0 ${rgba('#1112133D', 0.24)}, 0 1px 0 0 ${rgba('#1112133D', 0.8)};
   `,
 };
