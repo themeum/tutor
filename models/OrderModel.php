@@ -66,6 +66,7 @@ class OrderModel {
 	 */
 	const TYPE_SINGLE_ORDER = 'single_order';
 	const TYPE_SUBSCRIPTION = 'subscription';
+	const TYPE_RENEWAL      = 'renewal';
 
 	/**
 	 * Order table name
