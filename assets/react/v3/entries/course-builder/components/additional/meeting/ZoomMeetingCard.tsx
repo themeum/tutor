@@ -5,6 +5,8 @@ import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import Popover from '@Molecules/Popover';
 
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -14,8 +16,6 @@ import { DateFormats } from '@Config/constants';
 import { type ZoomMeeting, useDeleteZoomMeetingMutation } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 import ZoomMeetingForm from './ZoomMeetingForm';
