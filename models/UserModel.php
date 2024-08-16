@@ -41,4 +41,54 @@ class UserModel {
 
 		return new \WP_User_Query( $args );
 	}
+
+	/**
+	 * Get unenrolled users of a course/bundle
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param [type]  $object_id Course/Bundle id.
+	 * @param array   $where Where condition.
+	 * @param array   $search_clause Search condition.
+	 * @param integer $limit List limit.
+	 * @param integer $offset Offset.
+	 *
+	 * @return array
+	 */
+	public function get_unenrolled_users( $object_id, $where = array(), $search_clause = array(), $limit = 10, $offset = 0 ) {
+		global $wpdb;
+
+		$primary_table  = "{$wpdb->users} AS u";
+		$joining_tables = array(
+			array(
+				'type'  => 'INNER',
+				'table' => "{$wpdb->posts} p",
+				'on'    => "p.post_type = 'tutor_enrolled' AND p.post_parent = {$object_id} AND u.ID <> p.post_author",
+			),
+		);
+
+		$response = QueryHelper::get_joined_data(
+			$primary_table,
+			$joining_tables,
+			array(
+				'u.ID',
+				'u.user_login',
+				'u.user_email',
+				'u.display_name',
+				'p.post_author',
+			),
+			$where,
+			$search_clause,
+			'ID',
+			$limit,
+			$offset
+		);
+
+		foreach ( $response['results'] as $result ) {
+			// set avatar url.
+			$result->avatar_url = get_avatar_url( $result->ID );
+		}
+
+		return $response;
+	}
 }
