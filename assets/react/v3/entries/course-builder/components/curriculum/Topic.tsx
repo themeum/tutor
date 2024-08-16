@@ -373,7 +373,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 triggerRef={deleteRef}
                 closePopover={() => setIsDeletePopoverOpen(false)}
                 maxWidth="258px"
-                title={`Delete topic "${topic.title}"`}
+                title={`${__('Delete meeting')} "${topic.title}"`}
                 message={__(
                   'Are you sure you want to delete this content from your course? This cannot be undone.',
                   'tutor',
