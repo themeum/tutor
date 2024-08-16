@@ -48,20 +48,19 @@ class UserModel {
 	 * @since 3.0.0
 	 *
 	 * @param [type]  $object_id Course/Bundle id.
-	 * @param array   $where Where condition.
 	 * @param array   $search_clause Search condition.
 	 * @param integer $limit List limit.
 	 * @param integer $offset Offset.
 	 *
 	 * @return array
 	 */
-	public function get_unenrolled_users( $object_id, $where = array(), $search_clause = array(), $limit = 10, $offset = 0 ) {
+	public function get_unenrolled_users( $object_id, $search_clause = array(), $limit = 10, $offset = 0 ) {
 		global $wpdb;
 
 		$primary_table  = "{$wpdb->users} AS u";
 		$joining_tables = array(
 			array(
-				'type'  => 'INNER',
+				'type'  => 'LEFT',
 				'table' => "{$wpdb->posts} p",
 				'on'    => "p.post_type = 'tutor_enrolled' AND p.post_parent = {$object_id} AND u.ID <> p.post_author",
 			),
@@ -77,7 +76,9 @@ class UserModel {
 				'u.display_name',
 				'p.post_author',
 			),
-			$where,
+			array(
+				'coalesce(p.ID, 0)' => 0
+			),
 			$search_clause,
 			'ID',
 			$limit,

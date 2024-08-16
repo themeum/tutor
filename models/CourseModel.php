@@ -158,7 +158,7 @@ class CourseModel {
 	 *
 	 * @return \WP_Query
 	 */
-	public static function get_courses_with_args( array $args = array() ) {
+	public static function get_courses_by_args( array $args = array() ) {
 
 		$default_args = array(
 			'post_type'      => tutor()->course_post_type,
