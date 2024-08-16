@@ -148,6 +148,34 @@ class CourseModel {
 	}
 
 	/**
+	 * Get courses using provided args
+	 *
+	 * If user is not admin then it will return only current user's post
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $args Args.
+	 *
+	 * @return \WP_Query
+	 */
+	public static function get_courses_with_args( array $args = array() ) {
+
+		$default_args = array(
+			'post_type'      => tutor()->course_post_type,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+		);
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$default_args['author'] = get_current_user_id();
+		}
+
+		$args = wp_parse_args( $args, $default_args );
+
+		return new \WP_Query( $args );
+	}
+
+	/**
 	 * Get course count by instructor
 	 *
 	 * @since 1.0.0

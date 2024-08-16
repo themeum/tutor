@@ -427,8 +427,8 @@ class User {
 		tutor_utils()->check_current_user_capability();
 
 		$response = array(
-			'results'    => array(),
-			'total_item' => 0,
+			'results'     => array(),
+			'total_items' => 0,
 		);
 
 		$limit  = Input::post( 'limit', 10, Input::TYPE_INT );
@@ -453,7 +453,7 @@ class User {
 				$response['results'][] = $user;
 			}
 
-			$response['total_item'] = $user_list->get_total();
+			$response['total_items'] = $user_list->get_total();
 		}
 
 		return $response;
