@@ -54,8 +54,6 @@ const FormWPEditor = ({
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
-  console.log(editors);
-
   const editorLabel = hasCustomEditorSupport ? (
     <div css={styles.editorLabel}>
       <span>{label}</span>
