@@ -525,7 +525,17 @@ const CourseBasic = () => {
             <FormSelectUser
               {...controllerProps}
               label={__('Author', 'tutor')}
-              options={userList.data ?? []}
+              options={
+                userList.data?.map(
+                  (user) =>
+                    ({
+                      id: user.id,
+                      name: user.name,
+                      email: user.email,
+                      avatar_url: user.avatar_urls[48],
+                    }) as UserOption,
+                ) ?? []
+              }
               placeholder={__('Search to add author', 'tutor')}
               isSearchable
               disabled={!isAuthorEditable}
