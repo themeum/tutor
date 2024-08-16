@@ -230,8 +230,6 @@ const Notebook = () => {
     const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) || '{}');
 
     if (notebookData.content) {
-      console.log(notebookData.content);
-
       setContent(notebookData.content);
     }
   }, []);
