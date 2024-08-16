@@ -142,7 +142,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
         closePopover={noop}
         maxWidth="258px"
         title={`Delete meeting "${post_title}"`}
-        message="Are you sure you want to delete this meeting? This cannot be undone."
+        message={__('Are you sure you want to delete this meeting? This cannot be undone.')}
         animationType={AnimationType.slideUp}
         arrow="auto"
         hideArrow
