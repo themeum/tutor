@@ -260,13 +260,19 @@ class CouponController extends BaseController {
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$applies_to = Input::post( 'applies_to' );
-		$limit      = Input::post( 'limit', 10, Input::TYPE_INT );
-		$offset     = Input::post( 'offset', 0, Input::TYPE_INT );
+		$applies_to  = Input::post( 'applies_to' );
+		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
+		$search_term = '';
+
+		$filter = json_decode( wp_unslash( $_POST['filter'] ) );
+		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
+			$search_term = Input::sanitize( $filter->search );
+		}
 
 		if ( $this->model->is_specific_applies_to( $applies_to ) ) {
 			try {
-				$list = $this->get_application_list( $applies_to, $limit, $offset );
+				$list = $this->get_application_list( $applies_to, $limit, $offset, $search_term );
 				if ( $list ) {
 					$this->json_response(
 						__( 'Coupon application list retrieved successfully!' ),
@@ -567,10 +573,11 @@ class CouponController extends BaseController {
 	 * @param string $applies_to Applies to.
 	 * @param int    $limit      Number of items to fetch.
 	 * @param int    $offset     Offset for fetching items.
+	 * @param int    $search_term Search term.
 	 *
 	 * @return array
 	 */
-	public function get_application_list( string $applies_to, int $limit = 10, int $offset = 0 ) {
+	public function get_application_list( string $applies_to, int $limit = 10, int $offset = 0, $search_term = '' ) {
 
 		$response = array(
 			'total_items' => 0,
@@ -582,92 +589,68 @@ class CouponController extends BaseController {
 				'post_type'      => tutor()->course_post_type,
 				'posts_per_page' => $limit,
 				'offset'         => $offset,
-				'post_status'    => 'publish',
-				'meta_query'     => array(
-					'relation'     => 'AND',
-					'paid_clause'  => array(
-						'key'   => Course::COURSE_PRICE_TYPE_META,
-						'value' => 'paid',
-					),
-					'price_clause' => array(
-						'key'     => Course::COURSE_PRICE_META,
-						'compare' => 'EXISTS',
-					),
-				),
 			);
 
-			$courses = new \WP_Query( $args );
+			// Add search.
+			if ( $search_term ) {
+				$args['s'] = $search_term;
+			}
 
-			$response['total_items'] = $courses->found_posts;
+			$courses = ( new CourseModel() )->get_paid_courses( $args );
 
-			if ( $courses->have_posts() ) {
+			$response['total_items'] = is_a( $courses, 'WP_Query' ) ? $courses->found_posts : 0;
+
+			if ( is_a( $courses, 'WP_Query' ) && $courses->have_posts() ) {
 				$courses = $courses->get_posts();
 				foreach ( $courses as $course ) {
-
-					$response['results'][] = array(
-						'id'            => $course->ID,
-						'title'         => $course->post_title,
-						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $course->ID ),
-						'regular_price' => tutor_get_formatted_price( get_post_meta( $course->ID, Course::COURSE_PRICE_META, true ) ),
-						'sale_price'    => tutor_get_formatted_price( get_post_meta( $course->ID, Course::COURSE_SALE_PRICE_META, true ) ),
-					);
+					$response['results'][] = Course::get_mini_info( $course );
 				}
 			}
-		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && class_exists( 'TutorPro\CourseBundle\Models\BundleModel' ) ) {
+		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php', false ) ) {
 			$args = array(
 				'post_type'      => 'course-bundle',
 				'posts_per_page' => $limit,
 				'offset'         => $offset,
-				'post_status'    => 'publish',
-				'meta_query'     => array(
-					'relation'     => 'AND',
-					'paid_clause'  => array(
-						'key'   => Course::COURSE_PRICE_TYPE_META,
-						'value' => 'paid',
-					),
-					'price_clause' => array(
-						'key'     => Course::COURSE_PRICE_META,
-						'compare' => 'EXISTS',
-					),
-				),
 			);
 
-			$bundles = new \WP_Query( $args );
+			// Add search.
+			if ( $search_term ) {
+				$args['s'] = $search_term;
+			}
 
-			$response['total_items'] = $bundles->found_posts;
+			$bundles = ( new CourseModel() )->get_paid_courses( $args );
 
-			if ( $bundles->have_posts() ) {
+			$response['total_items'] = is_a( $bundles, 'WP_Query' ) ? $bundles->found_posts : 0;
+
+			if ( is_a( $bundles, 'WP_Query' ) && $bundles->have_posts() ) {
 				$bundles = $bundles->get_posts();
 				foreach ( $bundles as $bundle ) {
-					$response['results'][] = array(
-						'id'            => $bundle->ID,
-						'title'         => $bundle->post_title,
-						'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $bundle->ID ),
-						'course_count'  => count( BundleModel::get_bundle_course_ids( $bundle->ID ) ),
-						'regular_price' => tutor_get_formatted_price( get_post_meta( $bundle->ID, Course::COURSE_PRICE_META, true ) ),
-						'sale_price'    => tutor_get_formatted_price( get_post_meta( $bundle->ID, Course::COURSE_SALE_PRICE_META, true ) ),
-					);
+					$response['results'][] = Course::get_mini_info( $bundle );
 				}
 			}
 		} elseif ( $this->model::APPLIES_TO_SPECIFIC_CATEGORY === $applies_to ) {
 			$args = array(
-				'taxonomy'   => 'course-category',
-				'hide_empty' => true,
 				'number'     => $limit,
 				'offset'     => $offset,
+				'hide_empty' => true,
 			);
 
-			$terms = get_terms( $args );
-
-			$response['total_items'] = count(
-				get_terms(
-					array(
-						'taxonomy'   => 'course-category',
-						'hide_empty' => true,
-						'fields'     => 'ids',
-					)
-				)
+			$total_arg = array(
+				'fields'     => 'ids',
+				'taxonomy'   => 'course-category',
+				'hide_empty' => true,
 			);
+
+			// Add search.
+			if ( $search_term ) {
+				$args['search']      = $search_term;
+				$total_arg['search'] = $search_term;
+			}
+
+			$terms = tutor_utils()->get_course_categories( 0, $args );
+			$total = get_terms( $total_arg );
+
+			$response['total_items'] = is_array( $total ) ? count( $total ) : 0;
 
 			if ( ! is_wp_error( $terms ) ) {
 				foreach ( $terms as $term ) {

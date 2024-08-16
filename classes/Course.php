@@ -20,6 +20,7 @@ use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
+use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Course Class
@@ -2660,6 +2661,31 @@ class Course extends Tutor_Base {
 				}
 			}
 		);
+	}
+
+	/**
+	 * Get course/bundle mini info
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $post Course or bundle post.
+	 *
+	 * @return array
+	 */
+	public static function get_mini_info( object $post ) {
+		$info = array(
+			'id'            => $post->ID,
+			'title'         => $post->post_title,
+			'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $post->ID ),
+			'regular_price' => tutor_get_formatted_price( get_post_meta( $post->ID, self::COURSE_PRICE_META, true ) ),
+			'sale_price'    => tutor_get_formatted_price( get_post_meta( $post->ID, self::COURSE_SALE_PRICE_META, true ) ),
+		);
+
+		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php', false ) ) {
+			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
+		}
+
+		return $info;
 	}
 
 }
