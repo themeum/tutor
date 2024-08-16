@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Exception;
 use Tutor\Ecommerce\OrderActivitiesController;
 use Tutor\Helpers\QueryHelper;
 
@@ -57,6 +58,16 @@ class OrderModel {
 
 
 	/**
+	 * Order type
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const TYPE_SINGLE_ORDER = 'single_order';
+	const TYPE_SUBSCRIPTION = 'subscription';
+
+	/**
 	 * Order table name
 	 *
 	 * @since 3.0.0
@@ -66,13 +77,38 @@ class OrderModel {
 	private $table_name = 'tutor_orders';
 
 	/**
+	 * Order item table name
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	private $order_item_table = 'tutor_order_items';
+
+	/**
+	 * Order item fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var array
+	 */
+	private $order_items_fillable_fields = array(
+		'order_id',
+		'user_id',
+		'item_id',
+		'regular_price',
+		'sale_price',
+	);
+
+	/**
 	 * Resolve props & dependencies
 	 *
 	 * @since 3.0.0
 	 */
 	public function __construct() {
 		global $wpdb;
-		$this->table_name = $wpdb->prefix . $this->table_name;
+		$this->table_name       = $wpdb->prefix . $this->table_name;
+		$this->order_item_table = $wpdb->prefix . $this->order_item_table;
 	}
 
 	/**
@@ -121,6 +157,17 @@ class OrderModel {
 	}
 
 	/**
+	 * Get order items fillable fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function get_order_items_fillable_fields() {
+		return $this->order_items_fillable_fields;
+	}
+
+	/**
 	 * Get searchable fields
 	 *
 	 * This method is intendant to use with get order list
@@ -141,6 +188,96 @@ class OrderModel {
 			'u.user_login',
 			'u.user_email',
 		);
+	}
+
+	/**
+	 * Create order
+	 *
+	 * Note: validate data before using this method
+	 *
+	 * This method will also insert items if
+	 * item is set.
+	 *
+	 * Ex: data['order_items] = [
+	 *  user_id => 1,
+	 *  course_id => 1,
+	 *  regular_price => 100,
+	 *  sale_price => 90
+	 * ]
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data Order data based on db table.
+	 *
+	 * @throws \Exception Database error if occur.
+	 *
+	 * @return int Order id on success
+	 */
+	public function create_order( array $data ) {
+		$order_items = $data['items'] ?? null;
+		unset( $data['items'] );
+
+		global $wpdb;
+
+		// Start transaction.
+		$wpdb->query( 'START TRANSACTION' );
+
+		try {
+			$order_id = QueryHelper::insert( $this->table_name, $data );
+			if ( $order_id ) {
+				if ( $order_items ) {
+					$insert = $this->insert_order_items( $order_id, $order_items );
+					if ( $insert ) {
+						$wpdb->query( 'COMMIT' );
+						return $order_id;
+					} else {
+						$wpdb->query( 'ROLLBACK' );
+						throw new \Exception( __( 'Failed to insert order items', 'tutor' ) );
+					}
+				} else {
+					$wpdb->query( 'COMMIT' );
+					return $order_id;
+				}
+			}
+		} catch ( \Throwable $th ) {
+			throw new \Exception( $th->getMessage() );
+		}
+	}
+
+	/**
+	 * Insert order items
+	 *
+	 * Note: validate data before using this method
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int   $order_id Order ID.
+	 * @param array $items    Order items.
+	 *
+	 * @throws Exception Database error if occur.
+	 *
+	 * @return bool
+	 */
+	public function insert_order_items( int $order_id, array $items ): bool {
+		// Check if item is multi dimensional.
+		if ( ! isset( $items[0] ) ) {
+			$items = array( $items );
+		}
+
+		// Set order id on each item.
+		foreach ( $items as $key => $item ) {
+			$items[ $key ]['order_id'] = $order_id;
+		}
+
+		try {
+			$insert = QueryHelper::insert_multiple_rows(
+				$this->order_item_table,
+				$items
+			);
+			return $insert ? true : false;
+		} catch ( \Throwable $th ) {
+			throw new Exception( $th->getMessage() );
+		}
 	}
 
 	/**
@@ -232,13 +369,13 @@ class OrderModel {
 			array(
 				'type'  => 'LEFT',
 				'table' => "{$wpdb->prefix}posts AS p",
-				'on'    => 'p.ID = oi.course_id',
+				'on'    => 'p.ID = oi.item_id',
 			),
 		);
 
 		$where = array( 'order_id' => $order_id );
 
-		$select_columns = array( 'oi.course_id AS id', 'oi.regular_price', 'oi.sale_price', 'p.post_title AS title', 'p.post_type AS type' );
+		$select_columns = array( 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'p.post_title AS title', 'p.post_type AS type' );
 
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
