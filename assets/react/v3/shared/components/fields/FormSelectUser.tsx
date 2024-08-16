@@ -19,11 +19,8 @@ import FormFieldWrapper from './FormFieldWrapper';
 import { tutorConfig } from '@Config/config';
 import { TutorRoles } from '@Config/constants';
 import profileImage from '@Images/profile-photo.png';
-export interface UserOption {
-  id: number;
-  name: string;
-  email?: string;
-  avatar_url?: string;
+import type { User } from '@Services/users';
+export interface UserOption extends User {
   isRemoveAble?: boolean;
 }
 

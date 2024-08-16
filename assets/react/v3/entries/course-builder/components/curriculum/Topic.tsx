@@ -276,7 +276,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
             isDeletePopoverOpen,
           })}
         >
-          <div css={styles.headerContent}>
+          <div
+            css={styles.headerContent({
+              isSaved: topic.isSaved,
+            })}
+          >
             <div
               css={styles.grabberInput({ isOverlay })}
               onClick={() => onCollapse?.(topic.id)}
@@ -783,9 +787,13 @@ const styles = {
     `
     }
   `,
-  headerContent: css`
+  headerContent: ({
+    isSaved = true,
+  }: {
+    isSaved: boolean;
+  }) => css`
     display: grid;
-    grid-template-columns: 8fr 1fr;
+    grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
     width: 100%;
   `,

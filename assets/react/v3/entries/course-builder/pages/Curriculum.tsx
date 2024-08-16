@@ -111,13 +111,6 @@ const Curriculum = () => {
     return <LoadingOverlay />;
   }
 
-  const createDuplicateTopic = (data: CourseTopic) => {
-    setContent((previousTopic) => {
-      const newTopic = { ...data, ID: nanoid(), isCollapsed: false, isSaved: false };
-      return [...previousTopic, newTopic];
-    });
-  };
-
   return (
     <CourseDetailsProvider>
       <div css={styles.container}>
