@@ -54,6 +54,8 @@ const FormWPEditor = ({
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
+  console.log(editors);
+
   const editorLabel = hasCustomEditorSupport ? (
     <div css={styles.editorLabel}>
       <span>{label}</span>
@@ -74,6 +76,7 @@ const FormWPEditor = ({
                         props: {
                           editorUsed: editor,
                           icon: <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />,
+                          title: __(`${editor.name} Editor`, 'tutor'),
                         },
                       })
                     }
