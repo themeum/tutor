@@ -242,6 +242,8 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
 		add_action( 'wp_ajax_tutor_course_contents', array( $this, 'ajax_course_contents' ) );
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
+		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
+		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
 	}
 
 	/**
@@ -2710,6 +2712,39 @@ class Course extends Tutor_Base {
 		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
 
 		return $card_data;
+	}
+
+	/**
+	 * Filter user list access for instructor
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param bool $access access.
+	 *
+	 * @return bool
+	 */
+	public function user_list_access_for_instructor( $access ) {
+		$is_instructor = User::is_instructor();
+		return $access || $is_instructor;
+	}
+
+	/**
+	 * Filter user list args for instructor
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $args args.
+	 *
+	 * @return array
+	 */
+	public function user_list_args_for_instructor( $args ) {
+		if ( User::is_instructor() ) {
+			if ( isset( $args['fields'] ) && isset( $args['fields']['user_email'] ) ) {
+				unset( $args['fields']['user_email'] );
+			}
+		}
+
+		return $args;
 	}
 
 }
