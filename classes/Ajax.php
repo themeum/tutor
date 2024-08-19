@@ -505,6 +505,8 @@ class Ajax {
 	 */
 	public function addon_enable_disable() {
 
+		tutor_utils()->checking_nonce();
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
