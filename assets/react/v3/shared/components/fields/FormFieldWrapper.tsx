@@ -1,7 +1,7 @@
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -170,6 +170,7 @@ const styles = {
   `,
   errorLabel: (hasError: boolean) => css`
     ${typography.small()};
+    line-height: ${lineHeight[20]};
     display: flex;
     align-items: start;
     margin-top: ${spacing[4]};
