@@ -13,10 +13,13 @@ export interface Student {
 export interface Course {
   id: number;
   title: string;
-  image: '';
-  author: string;
+  image: string;
   regular_price: string;
   sale_price: string | null;
+  total_course?: number;
+  course_duration: string;
+  last_updated: string;
+  total_enrolled: number;
 }
 
 export interface Enrollment {
@@ -25,6 +28,25 @@ export interface Enrollment {
   payment_status: string;
   subscription: string;
 }
+
+const getCourseList = (params: PaginatedParams) => {
+  return authApiInstance.post<PaginatedResult<Course>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_course_bundle_list',
+    ...params,
+  });
+};
+
+export const useCurseListQuery = (params: PaginatedParams) => {
+  return useQuery({
+    queryKey: ['CurseList', params],
+    placeholderData: keepPreviousData,
+    queryFn: () => {
+      return getCourseList(params).then((res) => {
+        return res.data;
+      });
+    },
+  });
+};
 
 const getStudentList = (params: PaginatedParams) => {
   return authApiInstance.post<PaginatedResult<Student>>(endpoints.ADMIN_AJAX, {

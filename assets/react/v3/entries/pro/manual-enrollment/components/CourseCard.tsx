@@ -10,7 +10,7 @@ interface CourseCardProps {
   image: string;
   date: string;
   duration: string;
-  total_enrolled: string;
+  total_enrolled: number;
   handleReplaceClick: () => void;
 }
 

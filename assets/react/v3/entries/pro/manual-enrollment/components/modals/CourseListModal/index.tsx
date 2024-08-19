@@ -1,11 +1,10 @@
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
-import { Course } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
 import CourseListTable from './CourseListTable';
-import { Enrollment } from '@EnrollmentServices/enrollment';
+import { Course, Enrollment } from '@EnrollmentServices/enrollment';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

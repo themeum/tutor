@@ -20,6 +20,8 @@ function FormSelectCourse({ field, fieldState, disabled }: FormSelectCourseProps
 
   const selectedCourse = form.watch('course');
 
+  const hasError = !!fieldState.error;
+
   return (
     <FormFieldWrapper field={field} fieldState={fieldState} disabled={disabled}>
       {() => {
@@ -29,9 +31,9 @@ function FormSelectCourse({ field, fieldState, disabled }: FormSelectCourseProps
               <CourseCard
                 title={selectedCourse.title}
                 image={selectedCourse.image ?? coursePlaceholder}
-                date="28 Mar, 2020 10:50 am"
-                duration="6 h 30m"
-                total_enrolled="1050"
+                date={selectedCourse.last_updated}
+                duration={selectedCourse.course_duration}
+                total_enrolled={selectedCourse.total_enrolled}
                 handleReplaceClick={() => {
                   showModal({
                     component: CourseListModal,
@@ -45,7 +47,7 @@ function FormSelectCourse({ field, fieldState, disabled }: FormSelectCourseProps
               />
             ) : (
               <Button
-                variant="primary"
+                variant={hasError ? 'danger' : 'primary'}
                 isOutlined
                 buttonCss={styles.buttonStyle}
                 disabled={disabled}

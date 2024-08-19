@@ -5,12 +5,11 @@ import { css } from '@emotion/react';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
-import { useAppliesToQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import SearchField from './SearchField';
 import Button from '@Atoms/Button';
-import { Course } from '@EnrollmentServices/enrollment';
+import { Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
@@ -20,8 +19,8 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
-  const courseListQuery = useAppliesToQuery({
-    applies_to: 'specific_courses',
+
+  const courseListQuery = useCurseListQuery({
     offset,
     limit: itemsPerPage,
     filter: pageInfo.filter,
@@ -34,9 +33,11 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
         return (
           <div css={styles.courseItemWrapper}>
             <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
-            <div css={styles.courseItem}>
-              <div>{item.title}</div>
-              <p>{item.author}</p>
+            <div css={styles.courseContent}>
+              {item.total_course && (
+                <div css={styles.bundleBadge}>{sprintf(__('%d Course Bundle', 'tutor'), item.total_course)}</div>
+              )}
+              <div css={styles.title}>{item.title}</div>
             </div>
           </div>
         );
@@ -133,11 +134,20 @@ const styles = {
   courseItemWrapper: css`
     display: flex;
     align-items: center;
-    gap: ${spacing[12]};
+    gap: ${spacing[16]};
   `,
-  courseItem: css`
+  courseContent: css``,
+  bundleBadge: css`
+    ${typography.tiny()};
+    display: inline-block;
+    padding: 0px ${spacing[8]};
+    background-color: #9342e7;
+    color: ${colorTokens.text.white};
+    border-radius: ${borderRadius[40]};
+  `,
+  title: css`
     ${typography.caption()};
-    margin-left: ${spacing[4]};
+    color: ${colorTokens.text.primary};
   `,
   thumbnail: css`
     width: 48px;
