@@ -18,7 +18,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -373,7 +373,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 triggerRef={deleteRef}
                 closePopover={() => setIsDeletePopoverOpen(false)}
                 maxWidth="258px"
-                title={`${__('Delete meeting')} "${topic.title}"`}
+                title={sprintf(__('Delete topic "%s"', 'tutor'), topic.title)}
                 message={__(
                   'Are you sure you want to delete this content from your course? This cannot be undone.',
                   'tutor',

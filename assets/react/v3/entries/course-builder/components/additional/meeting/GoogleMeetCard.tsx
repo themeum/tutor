@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useRef, useState } from 'react';
 
@@ -141,7 +141,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
         triggerRef={deleteRef}
         closePopover={noop}
         maxWidth="258px"
-        title={`${__('Delete meeting')} "${post_title}"`}
+        title={sprintf(__('Delete "%s"', 'tutor'), post_title)}
         message={__('Are you sure you want to delete this meeting? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
         arrow="auto"
