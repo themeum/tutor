@@ -10,12 +10,14 @@ interface StudentCardProps {
   name: string;
   email: string;
   avatar?: string;
-  handleRemoveClick: () => void;
+  hasSideBorders?: boolean;
+  onItemClick?: () => void;
+  onRemoveClick?: () => void;
 }
 
-function StudentCard({ name, email, avatar, handleRemoveClick }: StudentCardProps) {
+function StudentCard({ name, email, avatar, hasSideBorders = false, onItemClick, onRemoveClick }: StudentCardProps) {
   return (
-    <div css={styles.studentItem}>
+    <div css={styles.studentItem(hasSideBorders, !!onItemClick)} onClick={onItemClick}>
       <div css={styles.studentThumb}>
         <img src={avatar || coursePlaceholder} css={styles.thumbnail} alt="course item" />
       </div>
@@ -23,11 +25,13 @@ function StudentCard({ name, email, avatar, handleRemoveClick }: StudentCardProp
         <div css={styles.studentTitle}>{name}</div>
         <div css={styles.studentSubTitle}>{email}</div>
       </div>
-      <div data-student-item-cross>
-        <Button variant="text" onClick={handleRemoveClick}>
-          <SVGIcon name="cross" width={24} height={24} />
-        </Button>
-      </div>
+      {onRemoveClick && (
+        <div data-student-item-cross>
+          <Button variant="text" onClick={onRemoveClick}>
+            <SVGIcon name="cross" width={24} height={24} />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
@@ -35,15 +39,24 @@ function StudentCard({ name, email, avatar, handleRemoveClick }: StudentCardProp
 export default StudentCard;
 
 const styles = {
-  studentItem: css`
+  studentItem: (hasSideBorders: boolean, hasOnClick: boolean) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[8]} ${spacing[16]};
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
     transition: background-color 0.25s ease-in;
-    border-left: 1px solid ${colorTokens.stroke.white};
-    border-right: 1px solid ${colorTokens.stroke.white};
     border-bottom: 1px solid ${colorTokens.stroke.disable};
+
+    ${hasOnClick &&
+    css`
+      cursor: pointer;
+    `}
+
+    ${hasSideBorders &&
+    css`
+      border-left: 1px solid ${colorTokens.stroke.white};
+      border-right: 1px solid ${colorTokens.stroke.white};
+    `}
 
     [data-student-item-cross] {
       visibility: hidden;
@@ -51,8 +64,13 @@ const styles = {
 
     &:hover {
       background-color: ${colorTokens.background.hover};
-      border-left: 1px solid ${colorTokens.stroke.disable};
-      border-right: 1px solid ${colorTokens.stroke.disable};
+
+      ${hasSideBorders &&
+      css`
+        border-left: 1px solid ${colorTokens.stroke.disable};
+        border-right: 1px solid ${colorTokens.stroke.disable};
+      `}
+
       [data-student-item-cross] {
         visibility: visible;
       }

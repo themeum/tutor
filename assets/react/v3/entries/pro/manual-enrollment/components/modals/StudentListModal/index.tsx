@@ -21,7 +21,7 @@ function SelectStudentModal({ title, closeModal, actions, form }: SelectStudentM
   });
 
   function handleApply() {
-    form.setValue('students', _form.getValues('students'));
+    form.setValue('students', _form.getValues('students'), { shouldValidate: true });
     closeModal({ action: 'CONFIRM' });
   }
 
@@ -46,7 +46,7 @@ export default SelectStudentModal;
 
 const styles = {
   modalWrapper: css`
-    width: 720px;
+    width: 480px;
   `,
   footer: css`
     box-shadow: 0px 1px 0px 0px #e4e5e7 inset;

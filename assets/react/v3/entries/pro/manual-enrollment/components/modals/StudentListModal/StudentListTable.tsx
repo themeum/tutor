@@ -67,10 +67,12 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
               }}
               checked={courseList.map((course) => course.id).includes(item.id)}
             />
-            <img src={item.avatar || coursePlaceholder} css={styles.thumbnail} alt="course item" />
-            <div css={styles.courseItem}>
-              <div>{item.name}</div>
-              <p>{item.email}</p>
+            <div css={styles.studentInfo}>
+              <img src={item.avatar_url || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+              <div>
+                <div css={styles.title}>{item.display_name}</div>
+                <p css={styles.subTitle}>{item.user_email}</p>
+              </div>
             </div>
           </div>
         );
@@ -96,7 +98,7 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
       <div css={styles.tableWrapper}>
         <Table
           columns={columns}
-          data={(studentListQuery.data.results) ?? []}
+          data={studentListQuery.data.results ?? []}
           itemsPerPage={itemsPerPage}
           loading={studentListQuery.isFetching || studentListQuery.isRefetching}
         />
@@ -132,27 +134,28 @@ const styles = {
     align-items: center;
     gap: ${spacing[12]};
   `,
-  courseItem: css`
-    ${typography.caption()};
-    margin-left: ${spacing[4]};
+  studentInfo: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
   `,
   thumbnail: css`
-    width: 48px;
-    height: 48px;
-    border-radius: ${borderRadius[4]};
+    width: 34px;
+    height: 34px;
+    border-radius: ${borderRadius.circle};
+  `,
+  title: css`
+    ${typography.body('medium')};
+    color: ${colorTokens.text.primary};
+  `,
+  subTitle: css`
+    ${typography.small()};
+    color: ${colorTokens.text.subdued};
+    margin: 0px;
   `,
   checkboxLabel: css`
     ${typography.body()};
     color: ${colorPalate.text.neutral};
-  `,
-  price: css`
-    display: flex;
-    gap: ${spacing[4]};
-    justify-content: end;
-  `,
-  discountPrice: css`
-    text-decoration: line-through;
-    color: ${colorTokens.text.subdued};
   `,
   errorMessage: css`
     height: 100px;

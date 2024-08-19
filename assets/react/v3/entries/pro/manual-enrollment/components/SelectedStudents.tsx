@@ -1,6 +1,6 @@
 import { colorTokens, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { typography } from '@Config/typography';
 import StudentCard from './StudentCard';
 import { Enrollment, Student } from '@EnrollmentServices/enrollment';
@@ -21,14 +21,17 @@ function SelectedStudents({ form, students }: SelectedStudentsProps) {
 
   return (
     <div css={styles.selectedWrapper}>
-      <div css={styles.selectedCount}>{students.length} Students selected</div>
+      <div css={styles.selectedCount}>
+        {sprintf(_n('%d Student selected', '%d Students selected', students.length, 'text-domain'), students.length)}
+      </div>
       {students?.map((item) => (
         <StudentCard
           key={item.id}
-          name={item.name}
-          email={item.email}
-          avatar={item.avatar}
-          handleRemoveClick={() => removesSelectedItem(item.id)}
+          name={item.display_name}
+          email={item.user_email}
+          avatar={item.avatar_url}
+          hasSideBorders
+          onRemoveClick={() => removesSelectedItem(item.id)}
         />
       ))}
     </div>

@@ -5,9 +5,9 @@ import { PaginatedParams, PaginatedResult } from '@Utils/types';
 
 export interface Student {
   id: number;
-  name: string;
-  email: string;
-  avatar: string;
+  display_name: string;
+  user_email: string;
+  avatar_url: string;
 }
 
 export interface Course {
@@ -28,7 +28,7 @@ export interface Enrollment {
 
 const getStudentList = (params: PaginatedParams) => {
   return authApiInstance.post<PaginatedResult<Student>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_applies_to_list',
+    action: 'tutor_user_list',
     ...params,
   });
 };
@@ -37,7 +37,6 @@ export const useStudentListQuery = (params: PaginatedParams) => {
   return useQuery({
     queryKey: ['StudentList', params],
     placeholderData: keepPreviousData,
-    enabled: false,
     queryFn: () => {
       return getStudentList(params).then((res) => {
         return res.data;

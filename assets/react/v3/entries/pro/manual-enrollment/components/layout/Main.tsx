@@ -17,33 +17,7 @@ function Main() {
   const form = useFormWithGlobalError<Enrollment>({
     defaultValues: {
       course: null,
-      // students: [],
-      students: [
-        {
-          id: 1,
-          name: 'John Doe',
-          email: 'example@example.com',
-          avatar: 'http://1.gravatar.com/avatar/d93e0f5b9e6206a877ee7b6f0c008273?s=96&d=mm&r=g',
-        },
-        {
-          id: 2,
-          name: 'John Doe',
-          email: 'example@example.com',
-          avatar: 'http://1.gravatar.com/avatar/d93e0f5b9e6206a877ee7b6f0c008273?s=96&d=mm&r=g',
-        },
-        {
-          id: 3,
-          name: 'John Doe',
-          email: 'example@example.com',
-          avatar: 'http://1.gravatar.com/avatar/d93e0f5b9e6206a877ee7b6f0c008273?s=96&d=mm&r=g',
-        },
-        {
-          id: 4,
-          name: 'John Doe',
-          email: 'example@example.com',
-          avatar: 'http://1.gravatar.com/avatar/d93e0f5b9e6206a877ee7b6f0c008273?s=96&d=mm&r=g',
-        },
-      ],
+      students: [],
       payment_status: '',
       subscription: '',
     },
@@ -86,7 +60,11 @@ function Main() {
                   control={form.control}
                   rules={requiredRule()}
                   render={(controllerProps) => (
-                    <FormSelectStudents {...controllerProps} label={__('Students', 'tutor')} disabled={!course} />
+                    <FormSelectStudents
+                      {...controllerProps}
+                      label={__('Students', 'tutor')}
+                      disabled={!course}
+                    />
                   )}
                 />
               </div>
