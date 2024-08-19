@@ -1,4 +1,3 @@
-import Container from '@Components/Container';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
@@ -10,10 +9,8 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import { requiredRule } from '@Utils/validation';
 import FormSelectCourse from '@EnrollmentComponents/FormSelectCourse';
 import FormSelectStudents from '@EnrollmentComponents/FormSelectStudents';
-import { Box } from '@Atoms/Box';
 
 function Main() {
-  const params = new URLSearchParams(window.location.search);
   const form = useFormWithGlobalError<Enrollment>({
     defaultValues: {
       course: null,
@@ -36,16 +33,15 @@ function Main() {
     },
   ];
 
-  const subscriptionOptions = [
-    {
-      label: __('One', 'tutor'),
-      value: 'one',
-    },
-    {
-      label: __('Two', 'tutor'),
-      value: 'two',
-    },
-  ];
+  const isSubscriptionCourse = !!course?.plans?.length;
+
+  const subscriptionOptions =
+    course?.plans?.map((item) => {
+      return {
+        label: item.plan_name,
+        value: item.id,
+      };
+    }) ?? [];
 
   return (
     <div css={styles.wrapper}>
@@ -60,11 +56,7 @@ function Main() {
                   control={form.control}
                   rules={requiredRule()}
                   render={(controllerProps) => (
-                    <FormSelectStudents
-                      {...controllerProps}
-                      label={__('Students', 'tutor')}
-                      disabled={!course}
-                    />
+                    <FormSelectStudents {...controllerProps} label={__('Students', 'tutor')} disabled={!course} />
                   )}
                 />
               </div>
@@ -89,19 +81,22 @@ function Main() {
                   />
                 )}
               />
-              <Controller
-                name="payment_status"
-                control={form.control}
-                rules={requiredRule()}
-                render={(controllerProps) => (
-                  <FormSelectInput
-                    {...controllerProps}
-                    label={__('Subscription', 'tutor')}
-                    options={subscriptionOptions}
-                    placeholder={__('Select subscription', 'tutor')}
-                  />
-                )}
-              />
+
+              {isSubscriptionCourse && (
+                <Controller
+                  name="subscription"
+                  control={form.control}
+                  rules={requiredRule()}
+                  render={(controllerProps) => (
+                    <FormSelectInput
+                      {...controllerProps}
+                      label={__('Subscription', 'tutor')}
+                      options={subscriptionOptions}
+                      placeholder={__('Select subscription', 'tutor')}
+                    />
+                  )}
+                />
+              )}
             </div>
           </div>
         </div>

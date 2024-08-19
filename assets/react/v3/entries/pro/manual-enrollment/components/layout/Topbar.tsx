@@ -1,10 +1,9 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import Container from '@Components/Container';
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { Enrollment } from '@EnrollmentServices/enrollment';
+import { Enrollment, useCreateEnrollmentMutation } from '@EnrollmentServices/enrollment';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -13,10 +12,23 @@ import { useFormContext } from 'react-hook-form';
 export const TOPBAR_HEIGHT = 80;
 
 function Topbar() {
-  const form = useFormContext();
+  const form = useFormContext<Enrollment>();
 
-  async function handleSubmit<Enrollment>(data: Enrollment) {
-    console.log(data);
+  const createEnrollmentMutation = useCreateEnrollmentMutation();
+
+  async function handleSubmit(data: Enrollment) {
+    const isSubscriptionCourse = !!data.course?.plans?.length;
+
+    const response = await createEnrollmentMutation.mutateAsync({
+      student_ids: data.students.map((item) => item.id),
+      object_ids: data.course ? (isSubscriptionCourse ? [Number(data.subscription)] : [data.course.id]) : [],
+      payment_status: data.payment_status,
+      order_type: isSubscriptionCourse ? 'subscription' : 'single_order',
+    });
+
+    if (response.status_code === 200) {
+      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=enrollments`;
+    }
   }
 
   function handleGoBack() {
@@ -38,7 +50,11 @@ function Topbar() {
             </div>
           </div>
           <div css={styles.right}>
-            <Button variant="primary" onClick={form.handleSubmit(handleSubmit)}>
+            <Button
+              variant="primary"
+              onClick={form.handleSubmit(handleSubmit)}
+              loading={createEnrollmentMutation.isPending}
+            >
               {__('Enroll Students', 'tutor')}
             </Button>
           </div>
@@ -78,10 +94,6 @@ const styles = {
   right: css`
     display: flex;
     gap: ${spacing[12]};
-  `,
-  updateMessage: css`
-    ${typography.body()};
-    color: ${colorTokens.text.subdued};
   `,
   backButton: css`
     ${styleUtils.resetButton};

@@ -4,7 +4,6 @@ import { __ } from '@wordpress/i18n';
 import Button from '@Atoms/Button';
 import { useModal } from '@Components/modals/Modal';
 import { Course, Enrollment } from '@EnrollmentServices/enrollment';
-import coursePlaceholder from '@Images/placeholder.png';
 import CourseListModal from '@EnrollmentComponents/modals/CourseListModal';
 import CourseCard from '@EnrollmentComponents/CourseCard';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
@@ -29,11 +28,8 @@ function FormSelectCourse({ field, fieldState, disabled }: FormSelectCourseProps
           <div css={styles.wrapper}>
             {selectedCourse ? (
               <CourseCard
-                title={selectedCourse.title}
-                image={selectedCourse.image ?? coursePlaceholder}
-                date={selectedCourse.last_updated}
-                duration={selectedCourse.course_duration}
-                total_enrolled={selectedCourse.total_enrolled}
+                course={selectedCourse}
+                isSubscriptionCourse={!!selectedCourse.plans?.length}
                 handleReplaceClick={() => {
                   showModal({
                     component: CourseListModal,

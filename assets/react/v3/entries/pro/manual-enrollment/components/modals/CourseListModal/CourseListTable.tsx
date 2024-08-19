@@ -10,6 +10,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import SearchField from './SearchField';
 import Button from '@Atoms/Button';
 import { Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
+import SVGIcon from '@Atoms/SVGIcon';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
@@ -37,12 +38,17 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
               {item.total_course && (
                 <div css={styles.bundleBadge}>{sprintf(__('%d Course Bundle', 'tutor'), item.total_course)}</div>
               )}
+              {item.plan_start_price && (
+                <div css={styles.subscriptionBadge}>
+                  <SVGIcon name="dollar-recurring" width={16} height={16} />
+                  {__('Subscription', 'tutor')}
+                </div>
+              )}
               <div css={styles.title}>{item.title}</div>
             </div>
           </div>
         );
       },
-      width: 600,
     },
     {
       Header: <div css={styles.tablePriceLabel}>{__('Price', 'tutor')}</div>,
@@ -55,8 +61,17 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
               </Button>
             </div>
             <div css={styles.price} data-price>
-              <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
-              {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+              {item.plan_start_price ? (
+                <>
+                  <span css={styles.startingFrom}>{__('Starting from ', 'tutor')}</span>
+                  {item.plan_start_price}
+                </>
+              ) : (
+                <>
+                  <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
+                  {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+                </>
+              )}
             </div>
           </div>
         );
@@ -145,6 +160,16 @@ const styles = {
     color: ${colorTokens.text.white};
     border-radius: ${borderRadius[40]};
   `,
+  subscriptionBadge: css`
+    ${typography.tiny()};
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0px ${spacing[6]} 0px ${spacing[4]};
+    background-color: ${colorTokens.color.warning[90]};
+    color: ${colorTokens.text.white};
+    border-radius: ${borderRadius[40]};
+  `,
   title: css`
     ${typography.caption()};
     color: ${colorTokens.text.primary};
@@ -161,9 +186,13 @@ const styles = {
     }
   `,
   price: css`
+    ${typography.caption()};
     display: flex;
     gap: ${spacing[4]};
     justify-content: end;
+  `,
+  startingFrom: css`
+    color: ${colorTokens.text.hints};
   `,
   discountPrice: css`
     text-decoration: line-through;

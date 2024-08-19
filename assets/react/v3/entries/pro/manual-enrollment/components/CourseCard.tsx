@@ -1,20 +1,19 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
+import { Course } from '@EnrollmentServices/enrollment';
 import { __ } from '@wordpress/i18n';
 
 interface CourseCardProps {
-  title: string;
-  image: string;
-  date: string;
-  duration: string;
-  total_enrolled: number;
+  course: Course;
+  isSubscriptionCourse: boolean;
   handleReplaceClick: () => void;
 }
 
-function CourseCard({ title, image, date, duration, total_enrolled, handleReplaceClick }: CourseCardProps) {
+function CourseCard({ course, isSubscriptionCourse, handleReplaceClick }: CourseCardProps) {
+  const { title, image, last_updated, course_duration, total_enrolled, regular_price, sale_price } = course;
   return (
     <div css={styles.wrapper}>
       <div css={styles.overlay} data-overlay>
@@ -30,12 +29,12 @@ function CourseCard({ title, image, date, duration, total_enrolled, handleReplac
         <img src={image} alt={title} />
       </div>
       <div css={styles.content}>
-        <div css={styles.time}>{date}</div>
+        <div css={styles.time}>{last_updated}</div>
         <div css={styles.title}>{title}</div>
         <div css={styles.bottom}>
           <div>
             <SVGIcon name="clock" width={20} height={20} />
-            <span>{duration}</span>
+            <span>{course_duration}</span>
           </div>
           <div>
             <SVGIcon name="user" width={20} height={20} />
@@ -43,6 +42,13 @@ function CourseCard({ title, image, date, duration, total_enrolled, handleReplac
           </div>
         </div>
       </div>
+      {!isSubscriptionCourse && (
+        <div css={styles.footer}>
+          <span css={styles.priceLabel}>{__('Price:', 'tutor')}</span>
+          <span css={styles.price}>{sale_price ? sale_price : regular_price}</span>
+          {sale_price && <span css={styles.discountPrice}>{regular_price}</span>}
+        </div>
+      )}
     </div>
   );
 }
@@ -53,6 +59,7 @@ const styles = {
   wrapper: css`
     border: 1px solid ${colorTokens.stroke.border};
     border-radius: ${borderRadius[6]};
+    overflow: hidden;
     position: relative;
 
     &:hover {
@@ -81,15 +88,11 @@ const styles = {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-top-left-radius: ${spacing[4]};
-      border-top-right-radius: ${spacing[4]};
     }
   `,
   content: css`
     background-color: ${colorTokens.background.white};
     padding: ${spacing[16]} ${spacing[20]} ${spacing[20]};
-    border-bottom-left-radius: ${spacing[6]};
-    border-bottom-right-radius: ${spacing[6]};
   `,
   time: css`
     ${typography.small()};
@@ -117,5 +120,25 @@ const styles = {
     svg {
       color: ${colorTokens.text.hints};
     }
+  `,
+  footer: css`
+    ${typography.caption()};
+    background-color: ${colorTokens.background.white};
+    padding: ${spacing[12]} ${spacing[20]};
+    border-top: 1px solid ${colorTokens.stroke.divider};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+  `,
+  priceLabel: css`
+    color: ${colorTokens.text.hints};
+  `,
+  price: css`
+    font-weight: ${fontWeight.medium};
+    color: ${colorTokens.text.primary};
+  `,
+  discountPrice: css`
+    text-decoration: line-through;
+    color: ${colorTokens.text.subdued};
   `,
 };
