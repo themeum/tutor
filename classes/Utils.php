@@ -1264,12 +1264,19 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @param int $course_id course id.
-	 * @param int $user_id user id.
+	 * @since 3.0.0
+	 *
+	 * $is_complete parameter added to check with completed status
+	 * Default value set true for backward compatibility. It set
+	 * false then it will just check record.
+	 *
+	 * @param int  $course_id course id.
+	 * @param int  $user_id user id.
+	 * @param bool $is_complete Whether to enrollment completed or not.
 	 *
 	 * @return array|bool|null|object
 	 */
-	public function is_enrolled( $course_id = 0, $user_id = 0 ) {
+	public function is_enrolled( $course_id = 0, $user_id = 0, bool $is_complete = true ) {
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
@@ -1279,25 +1286,29 @@ class Utils {
 
 		$get_enrolled_info = TutorCache::get( $cache_key );
 		if ( false === $get_enrolled_info ) {
+			$status_clause = '';
+			if ( $is_complete ) {
+				$status_clause = "AND post_status = 'completed' ";
+			}
+
 			$get_enrolled_info = $wpdb->get_row(
 				$wpdb->prepare(
-					"SELECT ID,
-						post_author,
-						post_date,
-						post_date_gmt,
-						post_title
-				FROM 	{$wpdb->posts}
-				WHERE 	post_author>0 
-						AND post_parent>0
-						AND post_type = %s
-						AND post_parent = %d
-						AND post_author = %d
-						AND post_status = %s;
+				"SELECT ID,
+					post_author,
+					post_date,
+					post_date_gmt,
+					post_title
+				FROM {$wpdb->posts}
+				WHERE post_author > 0 
+					AND post_parent > 0
+					AND post_type = %s
+					AND post_parent = %d
+					AND post_author = %d
+					{$status_clause};
 				",
-					'tutor_enrolled',
-					$course_id,
-					$user_id,
-					'completed'
+				'tutor_enrolled',
+				$course_id,
+				$user_id
 				)
 			);
 			TutorCache::set( $cache_key, $get_enrolled_info );
@@ -6633,22 +6644,31 @@ class Utils {
 	 *
 	 * @return array
 	 */
-	public function get_course_categories( $parent = 0 ) {
-		$args = apply_filters(
-			'tutor_get_course_categories_args',
-			array(
-				'taxonomy'   => 'course-category',
-				'hide_empty' => false,
-				'parent'     => $parent,
-			)
+	public function get_course_categories( $parent = 0, $custom_args = array() ) {
+		$default_args = array(
+			'taxonomy'   => 'course-category',
+			'hide_empty' => false,
 		);
+
+		if ( $parent > 0 ) {
+			$default_args['parent'] = $parent;
+		}
+
+		$default = apply_filters(
+			'tutor_get_course_categories_args',
+			$default_args
+		);
+
+		$args = wp_parse_args( $custom_args, $default );
 
 		$terms = get_terms( $args );
 
 		$children = array();
 		foreach ( $terms as $term ) {
-			$term->children             = $this->get_course_categories( $term->term_id );
-			$children[ $term->term_id ] = $term;
+			if ( is_object( $term ) ) {
+				$term->children             = $this->get_course_categories( $term->term_id );
+				$children[ $term->term_id ] = $term;
+			}
 		}
 
 		return $children;

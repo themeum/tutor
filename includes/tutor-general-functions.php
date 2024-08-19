@@ -1514,11 +1514,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * @return string|void
 		 */
 		function tutor_get_formatted_price( $price ) {
-			if ( ! $price ) {
-				return;
-			}
-
-			$price = Input::sanitize( $price );
+			$price = floatval( Input::sanitize( $price ) );
 
 			$currency_symbol    = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL );
 			$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION );

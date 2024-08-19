@@ -196,6 +196,7 @@ export interface ZoomMeeting {
       auto_recording: 'none' | 'local' | 'cloud';
     };
   };
+  meeting_starts_at: string;
 }
 
 export interface GoogleMeet {
