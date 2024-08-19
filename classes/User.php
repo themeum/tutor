@@ -10,7 +10,9 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\UserModel;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -22,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class User {
+	use JsonResponse;
 
 	const STUDENT    = 'subscriber';
 	const INSTRUCTOR = 'tutor_instructor';
@@ -419,12 +422,15 @@ class User {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return array
+	 * @return void
 	 */
 	public function ajax_user_list() {
 		tutor_utils()->check_nonce();
 
-		tutor_utils()->check_current_user_capability();
+		$can_access = apply_filters( 'tutor_user_list_access', current_user_can( 'manage_options' ) );
+		if ( ! $can_access ) {
+			$this->json_response( tutor_utils()->error_message( 'forbidden' ), HttpHelper::STATUS_FORBIDDEN );
+		}
 
 		$response = array(
 			'results'     => array(),
@@ -439,13 +445,14 @@ class User {
 			'offset' => $offset,
 		);
 
-		$filter = json_decode( wp_unslash( $_POST['filter'] ) );
+		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
 			$args['search']         = $filter->search;
 			$args['search_columns'] = array( 'user_login', 'user_email', 'user_nicename', 'ID' );
 		}
 
 		$user_list = $this->model->get_users_list( $args );
+
 		if ( is_object( $user_list ) ) {
 			foreach ( $user_list->get_results() as $user ) {
 				// Set user avatar.
@@ -456,6 +463,9 @@ class User {
 			$response['total_items'] = $user_list->get_total();
 		}
 
-		return $response;
+		$this->json_response(
+			__( 'User list fetched successfully!', 'tutor' ),
+			$response
+		);
 	}
 }

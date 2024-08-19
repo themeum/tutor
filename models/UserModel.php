@@ -14,7 +14,7 @@ use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
 /**
- * Coupon model class
+ * UserModel class
  */
 class UserModel {
 
@@ -24,6 +24,8 @@ class UserModel {
 	 * @since 3.0.0
 	 *
 	 * @see https://developer.wordpress.org/reference/classes/wp_user_query/
+	 *
+	 * @param array $args args.
 	 *
 	 * @return \WP_User_Query
 	 */
@@ -38,6 +40,7 @@ class UserModel {
 		);
 
 		$args = wp_parse_args( $args, $default_args );
+		$args = apply_filters( 'tutor_user_list_args', $args );
 
 		return new \WP_User_Query( $args );
 	}
@@ -47,7 +50,7 @@ class UserModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param [type]  $object_id Course/Bundle id.
+	 * @param int     $object_id Course/Bundle id.
 	 * @param array   $search_clause Search condition.
 	 * @param integer $limit List limit.
 	 * @param integer $offset Offset.
@@ -77,7 +80,7 @@ class UserModel {
 				'p.post_author',
 			),
 			array(
-				'coalesce(p.ID, 0)' => 0
+				'coalesce(p.ID, 0)' => 0,
 			),
 			$search_clause,
 			'ID',
