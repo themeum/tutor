@@ -9,7 +9,7 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 import { useModal } from '@Components/modals/Modal';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
@@ -144,6 +144,7 @@ const FormWPEditor = ({
                             title: __(`${editorUsed.name} Editor`, 'tutor'),
                             editorUsed: editorUsed,
                             icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
+                            zIndex: zIndex.highest,
                           },
                         })
                       }
