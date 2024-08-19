@@ -447,7 +447,7 @@ class User {
 
 		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
-			$args['search']         = $filter->search;
+			$args['search']         = Input::sanitize( $filter->search );
 			$args['search_columns'] = array( 'user_login', 'user_email', 'user_nicename', 'ID' );
 		}
 
