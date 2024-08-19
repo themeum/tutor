@@ -21,6 +21,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -86,9 +87,11 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
     <>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <button type="button" onClick={handleAddQuestion}>
-          <SVGIcon name="plusSquareBrand" />
-        </button>
+        <Show when={!createQuizQuestion.isPending} fallback={<LoadingSpinner size={32} />}>
+          <button disabled={createQuizQuestion.isPending} type="button" onClick={handleAddQuestion}>
+            <SVGIcon name="plusSquareBrand" width={32} height={32} />
+          </button>
+        </Show>
       </div>
 
       <div css={styles.questionList}>
