@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
@@ -54,6 +54,8 @@ const CourseBasic = () => {
   });
   const navigate = useNavigate();
   const { state } = useLocation();
+
+  const [userSearchText, setUserSearchText] = useState('');
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
@@ -134,10 +136,7 @@ const CourseBasic = () => {
     },
   ];
 
-  const userList = useUserListQuery({
-    context: 'edit',
-    roles: [],
-  });
+  const userList = useUserListQuery(userSearchText);
 
   const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
 
@@ -530,19 +529,19 @@ const CourseBasic = () => {
                   (user) =>
                     ({
                       id: user.id,
-                      name: user.name,
-                      email: user.email,
-                      avatar_url: user.avatar_urls[48],
+                      name: user.name || '',
+                      email: user.email || '',
+                      avatar_url: user.avatar_url || '',
                     }) as UserOption,
                 ) ?? []
               }
               placeholder={__('Search to add author', 'tutor')}
               isSearchable
               disabled={!isAuthorEditable}
-              loading={userList.isLoading && !controllerProps.field.value}
+              loading={userList.isLoading}
               onChange={() => {
-                const courseInstructors = form.getValues('course_instructors');
                 const previousAuthor = courseDetails?.post_author;
+                const courseInstructors = form.getValues('course_instructors');
                 const isAlreadyAdded = !!courseInstructors.find(
                   (instructor) => String(instructor.id) === String(previousAuthor?.ID),
                 );
@@ -555,10 +554,12 @@ const CourseBasic = () => {
                   isRemoveAble: true,
                 };
 
-                form.setValue(
-                  'course_instructors',
-                  isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor],
-                );
+                const updatedInstructors = isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor];
+
+                form.setValue('course_instructors', updatedInstructors);
+              }}
+              handleSearchOnChange={(searchText) => {
+                setUserSearchText(searchText);
               }}
             />
           )}

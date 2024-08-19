@@ -141,7 +141,9 @@ const FormSelectUser = ({
                     </div>
                   </div>
 
-                  <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
+                  <Show when={!loading}>
+                    <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
+                  </Show>
                 </button>
               )}
 
@@ -236,6 +238,29 @@ const FormSelectUser = ({
                 ref={popoverRef}
               >
                 <ul css={[styles.options]}>
+                  {!isMultiSelect && (
+                    <li css={styles.inputWrapperListItem}>
+                      <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
+                        <div css={styles.leftIcon}>
+                          <SVGIcon name="search" width={24} height={24} />
+                        </div>
+                        <input
+                          {...restInputProps}
+                          // biome-ignore lint/a11y/noAutofocus: <explanation>
+                          autoFocus
+                          className="tutor-input-field"
+                          css={[inputCss, styles.input]}
+                          autoComplete="off"
+                          readOnly={readOnly || !isSearchable}
+                          placeholder={placeholder}
+                          value={searchText}
+                          onChange={(event) => {
+                            setSearchText(event.target.value);
+                          }}
+                        />
+                      </div>
+                    </li>
+                  )}
                   <Show
                     when={filteredOption.length > 0}
                     fallback={
@@ -244,29 +269,6 @@ const FormSelectUser = ({
                       </li>
                     }
                   >
-                    {!isMultiSelect && (
-                      <li css={styles.inputWrapperListItem}>
-                        <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
-                          <div css={styles.leftIcon}>
-                            <SVGIcon name="search" width={24} height={24} />
-                          </div>
-                          <input
-                            {...restInputProps}
-                            // biome-ignore lint/a11y/noAutofocus: <explanation>
-                            autoFocus
-                            className="tutor-input-field"
-                            css={[inputCss, styles.input]}
-                            autoComplete="off"
-                            readOnly={readOnly || !isSearchable}
-                            placeholder={placeholder}
-                            value={searchText}
-                            onChange={(event) => {
-                              setSearchText(event.target.value);
-                            }}
-                          />
-                        </div>
-                      </li>
-                    )}
                     {filteredOption.map((instructor) => (
                       <li key={String(instructor.id)} css={styles.optionItem}>
                         <button
