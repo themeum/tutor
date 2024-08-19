@@ -606,7 +606,7 @@ class CouponController extends BaseController {
 					$response['results'][] = Course::get_mini_info( $course );
 				}
 			}
-		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php', false ) ) {
+		} elseif ( $this->model::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
 			$args = array(
 				'post_type'      => 'course-bundle',
 				'posts_per_page' => $limit,

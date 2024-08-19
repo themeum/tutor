@@ -2681,11 +2681,35 @@ class Course extends Tutor_Base {
 			'sale_price'    => tutor_get_formatted_price( get_post_meta( $post->ID, self::COURSE_SALE_PRICE_META, true ) ),
 		);
 
-		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php', false ) ) {
+		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
 			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
 		}
 
 		return $info;
+	}
+
+	/**
+	 * Get course/bundle card data
+	 *
+	 * This method will return all data that contain in
+	 * course card
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $post Course or bundle post.
+	 *
+	 * @return array
+	 */
+	public static function get_card_data( object $post ) {
+		$info = self::get_mini_info( $post );
+
+		$info['last_updated']    = tutor_i18n_get_formated_date( $post->post_modified_at );
+		$info['course_duration'] = tutor_utils()->get_course_duration( $post->ID, false );
+		$info['total_enrolled']  = tutor_utils()->count_enrolled_users_by_course( $post->ID );
+
+		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
+
+		return $card_data;
 	}
 
 }
