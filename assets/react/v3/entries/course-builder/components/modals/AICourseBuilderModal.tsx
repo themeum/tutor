@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 
 interface AICourseBuilderModalProps extends ModalProps {}
 
-const DecideComponent = ({ closeModal }: { closeModal: () => void }) => {
+const Component = ({ closeModal }: { closeModal: () => void }) => {
   const { currentStep } = useContentGenerationContext();
 
   if (currentStep === 'prompt') {
@@ -26,10 +26,11 @@ const AICourseBuilderModal = ({ closeModal }: AICourseBuilderModalProps) => {
       document.body.style.overflow = 'initial';
     };
   }, []);
+
   return (
     <ContentGenerationContextProvider>
       <div css={styles.wrapper}>
-        <DecideComponent closeModal={closeModal} />
+        <Component closeModal={closeModal} />
       </div>
     </ContentGenerationContextProvider>
   );

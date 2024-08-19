@@ -1,142 +1,171 @@
+import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+import For from '@Controls/For';
 import Show from '@Controls/Show';
-import src from '@Images/mock/mock-image-1.png';
+import { useGenerateCourseContentMutation } from '@CourseBuilderServices/magic-ai';
+import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ContentAccordion from './ContentAccordion';
-import ContentSkeletonLoader from './ContentSkeletonLoader';
+import { type Content, type Loading, useContentGenerationContext } from './ContentGenerationContext';
+import ContentSkeleton from './loaders/ContentSkeleton';
+import DescriptionSkeleton from './loaders/DescriptionSkeleton';
+import ImageSkeleton from './loaders/ImageSkeleton';
+import TitleSkeleton from './loaders/TitleSkeleton';
+
+interface LoadingStep {
+  type: keyof Loading;
+  loading_label: string;
+  completed_label: string;
+  completed: boolean;
+}
+
+const defaultSteps: LoadingStep[] = [
+  {
+    type: 'title',
+    loading_label: __('Generating course title...', 'tutor'),
+    completed_label: __('Course title created.', 'tutor'),
+    completed: false,
+  },
+  {
+    type: 'image',
+    loading_label: __('Generating course banner image...', 'tutor'),
+    completed_label: __('Course banner image created.', 'tutor'),
+    completed: false,
+  },
+  {
+    type: 'description',
+    loading_label: __('Generating course description...', 'tutor'),
+    completed_label: __('Course description created.', 'tutor'),
+    completed: false,
+  },
+  {
+    type: 'content',
+    loading_label: __('Generating course contents...', 'tutor'),
+    completed_label: __('Course contents created.', 'tutor'),
+    completed: false,
+  },
+] as const;
 
 const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
-  const [loading, setLoading] = useState(false);
+  const { content, loading, updateLoading, updateContent } = useContentGenerationContext();
+  const generateCourseImageMutation = useGenerateCourseContentMutation('image');
+  const generateCourseDescriptionMutation = useGenerateCourseContentMutation('description');
+  const generateCourseContentMutation = useGenerateCourseContentMutation('content');
+  const [loadingSteps, setLoadingSteps] = useState(defaultSteps);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (!content.title) {
+      return;
+    }
+
+    generateCourseImageMutation.mutateAsync({ type: 'image', title: content.title }).then((response) => {
+      updateLoading({ image: false });
+      updateContent({ image: response.data });
+    });
+
+    generateCourseDescriptionMutation.mutateAsync({ type: 'description', title: content.title }).then((response) => {
+      updateLoading({ description: false });
+      updateContent({ description: response.data });
+    });
+
+    generateCourseContentMutation.mutateAsync({ type: 'content', title: content.title }).then((response) => {
+      updateLoading({ content: false });
+      updateContent({ content: response.data as unknown as Content[] });
+    });
+  }, [loading.title, content.title]);
+
+  useEffect(() => {
+    setLoadingSteps((previous) => {
+      return previous.map((item) => {
+        return { ...item, completed: !loading[item.type] };
+      });
+    });
+  }, [loading]);
+
   return (
     <div css={styles.container}>
       <div css={styles.wrapper}>
         <div css={styles.left}>
-          <Show
-            when={!loading}
-            fallback={
-              <div css={[styles.leftContentWrapper, css`margin-top: 20px;`]}>
-                <ContentSkeletonLoader />
-              </div>
-            }
-          >
-            <div css={styles.title}>
+          <div css={styles.title}>
+            <Show when={!loading.title} fallback={<TitleSkeleton />}>
               <SVGIcon name="book" width={40} height={40} />
-              <h5>Beginner’s Photography: Basic Camera Use and Theory</h5>
-            </div>
+              <h5 title={content.title}>{content.title}</h5>
+            </Show>
+          </div>
 
-            <div css={styles.leftContentWrapper}>
+          <div css={styles.leftContentWrapper}>
+            <Show when={!loading.image} fallback={<ImageSkeleton />}>
               <div css={styles.imageWrapper}>
-                <img src={src} alt="course banner" />
+                <img src={content.image} alt="course banner" />
               </div>
+            </Show>
 
+            <Show when={!loading.description} fallback={<DescriptionSkeleton />}>
               <div css={styles.section}>
                 <h5>{__('Course Info', 'tutor')}</h5>
                 <div css={styles.content}>
-                  <div>
-                    <h6>About Course</h6>
-                    Photography is a diverse and dynamic field, and there are numerous types and genres catering to
-                    different subjects, styles, and purposes.Feel free to adapt these quests based on your interests and
-                    the equipment you have. They are designed to encourage exploration, creativity.
-                  </div>
-                  <div>
-                    <h6>What will you learn? </h6>
-                    Photography is a diverse and dynamic field, and there are numerous types and genres catering to
-                    different subjects, styles, and purposes. Feel free to adapt these quests based on your interests
-                    and the equipment you have
-                  </div>
+                  <div dangerouslySetInnerHTML={{ __html: content.description }} />
                 </div>
               </div>
+            </Show>
+            <Show when={!loading.content} fallback={<ContentSkeleton />}>
               <div css={styles.section}>
                 <h5>{__('Course Content', 'tutor')}</h5>
                 <div css={styles.content}>
                   <ContentAccordion />
                 </div>
               </div>
-            </div>
-          </Show>
+            </Show>
+          </div>
         </div>
         <div css={styles.right}>
           <div css={styles.rightContents}>
-            <div css={styles.box({ deactivated: true })}>
-              <div>
-                <SVGIcon name="magicAiColorize" width={24} height={24} />
-              </div>
-              <div css={styles.boxContent}>
-                <h6>You are all set!</h6>
-                <p>Your course outline is ready for you! You have just created these course items.</p>
-                <div css={styles.items}>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    12 Topics.
-                  </div>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    124 Lessons in total.
-                  </div>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    16 Quizzes.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div css={styles.box({ deactivated: true })}>
+            <div css={styles.box({ deactivated: false })}>
               <SVGIcon name="magicAiColorize" width={24} height={24} />
               <div css={styles.boxContent}>
-                <h6>Regenerated!</h6>
-                <p>Your course outline is ready for you! You have just created these course items.</p>
+                <h6>{__('Generating course content', 'tutor')}</h6>
                 <div css={styles.items}>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    12 Topics.
-                  </div>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    124 Lessons in total.
-                  </div>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    16 Quizzes.
-                  </div>
+                  <For each={loadingSteps}>
+                    {(step, index) => {
+                      return (
+                        <div css={styles.item}>
+                          <Show
+                            key={index}
+                            when={step.completed}
+                            fallback={
+                              <>
+                                <GradientLoadingSpinner />
+                                {step.loading_label}
+                              </>
+                            }
+                          >
+                            <SVGIcon name="checkFilledWhite" width={24} height={24} />
+                            {step.completed_label}
+                          </Show>
+                        </div>
+                      );
+                    }}
+                  </For>
                 </div>
-              </div>
-            </div>
-            <div css={styles.box({ deactivated: false })}>
-              <div>
-                <SVGIcon name="magicAiColorize" width={24} height={24} />
-              </div>
-              <div css={styles.boxContent}>
-                <h6>A little difference is made!</h6>
-                <p>Your course outline is ready for you! You have just created these course items.</p>
-                <div css={styles.items}>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    12 Topics.
+
+                <Show when={loadingSteps.every((item) => item.completed)}>
+                  <div css={styles.boxFooter}>
+                    <MagicButton variant="primary_outline">
+                      <SVGIcon name="tryAgain" width={24} height={24} />
+                      Regenerate course
+                    </MagicButton>
+                    <MagicButton variant="primary_outline">
+                      <SVGIcon name="magicWand" width={24} height={24} />
+                      Make a little different
+                    </MagicButton>
                   </div>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    124 Lessons in total.
-                  </div>
-                  <div css={styles.item}>
-                    <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                    16 Quizzes.
-                  </div>
-                </div>
-                <div css={styles.boxFooter}>
-                  <MagicButton variant="primary_outline">
-                    <SVGIcon name="tryAgain" width={24} height={24} />
-                    Regenerate course
-                  </MagicButton>
-                  <MagicButton variant="primary_outline">
-                    <SVGIcon name="magicWand" width={24} height={24} />
-                    Make a little different
-                  </MagicButton>
-                </div>
+                </Show>
               </div>
             </div>
           </div>
@@ -145,7 +174,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             <MagicButton variant="primary_outline" onClick={onClose}>
               {__('Cancel', 'tutor')}
             </MagicButton>
-            <MagicButton onClick={() => setLoading((previous) => !previous)}>
+            <MagicButton
+              onClick={() => {
+                alert('@TODO: will be implemented later.');
+              }}
+            >
               {__('Append the course', 'tutor')}
             </MagicButton>
           </div>
@@ -290,6 +323,7 @@ const styles = {
 		flex-direction: column;
 		gap: ${spacing[16]};
 		overflow-y: auto;
+		padding-bottom: ${spacing[32]};
 
 		${Breakpoint.smallTablet} {
 			width: 80%;
@@ -314,15 +348,16 @@ const styles = {
 		align-items: center;
 		gap: ${spacing[8]};
 		color: ${colorTokens.icon.default};
-		position: sticky;
-		top: 0;
+		// position: sticky;
+		// top: 0;
 		z-index: ${zIndex.header};
-		height: 40px;	
-		padding: ${spacing[32]} ${spacing[40]} ${spacing[16]} ${spacing[40]};	
+		min-height: 40px;	
+		padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};	
 		background-color: ${colorTokens.background.white};
 
 		& > h5 {
 			${typography.heading5('medium')};
+			${styleUtils.textEllipsis};
 			color: ${colorTokens.text.ai.purple};
 		}
 	`,

@@ -1,17 +1,21 @@
 import { borderRadius, colorTokens } from '@Config/styles';
 import { isNumber } from '@Utils/types';
 import { css, keyframes } from '@emotion/react';
+import { forwardRef } from 'react';
 
-interface SkeletonProps {
+interface SkeletonProps extends React.HTMLAttributes<HTMLSpanElement> {
   width?: number | string;
   height?: number | string;
   animation?: boolean;
   isMagicAi?: boolean;
+  isRound?: boolean;
 }
 
-const Skeleton = ({ width = '100%', height = 16, animation = false, isMagicAi = false }: SkeletonProps) => {
-  return <span css={styles.skeleton(width, height, animation, isMagicAi)} />;
-};
+const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
+  ({ width = '100%', height = 16, animation = false, isMagicAi = false, isRound = false, className }, ref) => {
+    return <span ref={ref} css={styles.skeleton(width, height, animation, isMagicAi, isRound)} className={className} />;
+  },
+);
 
 export default Skeleton;
 
@@ -30,7 +34,13 @@ const animations = {
 };
 
 const styles = {
-  skeleton: (width: number | string, height: number | string, animation: boolean, isMagicAi: boolean) => css`
+  skeleton: (
+    width: number | string,
+    height: number | string,
+    animation: boolean,
+    isMagicAi: boolean,
+    isRound: boolean,
+  ) => css`
     display: block;
     width: ${isNumber(width) ? `${width}px` : width};
     height: ${isNumber(height) ? `${height}px` : height};
@@ -39,6 +49,13 @@ const styles = {
     position: relative;
     -webkit-mask-image: -webkit-radial-gradient(center, white, black);
     overflow: hidden;
+
+		${
+      isRound &&
+      css`
+			border-radius: ${borderRadius.circle};
+		`
+    }
 
     ${
       animation &&
@@ -52,8 +69,7 @@ const styles = {
         ${
           isMagicAi &&
           css`
-						background: linear-gradient(89.17deg, #FEF4FF 0.8%, #F9D3FF 50.09%, #FEF4FF 96.31%);
-						transform: rotate(-16deg);
+						background: linear-gradient(89.17deg, #FEF4FF 0.2%, #F9D3FF 50.09%, #FEF4FF 96.31%);
 				`
         }
 

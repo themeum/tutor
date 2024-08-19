@@ -4,6 +4,7 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { modal } from '@Config/constants';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { useGenerateCourseContentMutation } from '@CourseBuilderServices/magic-ai';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -20,13 +21,22 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
       prompt: '',
     },
   });
-  const { setCurrentStep } = useContentGenerationContext();
+
+  const { setCurrentStep, updateContent, updateLoading } = useContentGenerationContext();
+  const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
+
   return (
     <form
       css={styles.container}
-      onSubmit={form.handleSubmit((values) => {
-        console.log(values);
+      onSubmit={form.handleSubmit(async (values) => {
         setCurrentStep('generation');
+        updateLoading({ title: true, image: true, description: true, content: true });
+        const response = await generateCourseTitleMutation.mutateAsync({ type: 'title', prompt: values.prompt });
+        updateLoading({ title: false });
+
+        if (response.data) {
+          updateContent({ title: response.data });
+        }
       })}
     >
       <div css={styles.header}>

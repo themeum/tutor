@@ -85,4 +85,15 @@ final class Helper {
 
 		return $options;
 	}
+
+	/**
+	 * Check if a content is a valid JSON string or not.
+	 *
+	 * @param string $content The string content to check.
+	 * @return boolean
+	 */
+	public static function is_valid_json( string $content ) {
+		json_decode( $content );
+		return json_last_error() === JSON_ERROR_NONE;
+	}
 }

@@ -17,15 +17,7 @@ interface ImageResponse {
 }
 
 const generateImage = (payload: ImagePayload) => {
-  const promises = Array.from({ length: 4 }).map(() => {
-    return wpAjaxInstance.get<WPResponse<ImageResponse>>(endpoints.GENERATE_AI_IMAGE, {
-      params: payload,
-    });
-  });
-
-  return Promise.all(promises).then((response) => {
-    return response.flatMap((item) => item.data.data) as unknown as { url: string; b64_json: string }[];
-  });
+  return wpAjaxInstance.post<ImagePayload, WPResponse<ImageResponse>>(endpoints.GENERATE_AI_IMAGE, payload);
 };
 
 export const useMagicImageGenerationMutation = () => {
@@ -119,7 +111,6 @@ export const useModifyContentMutation = () => {
 
 interface UseImagePayload {
   image: string;
-  course_id: number;
 }
 
 const storeImage = (payload: UseImagePayload) => {
@@ -139,19 +130,31 @@ export const useStoreAIGeneratedImageMutation = () => {
   });
 };
 
-interface CourseGenerationPayload {
+export type ContentType = 'title' | 'image' | 'description' | 'content';
+
+interface CourseGenerationTitle {
+  type: Extract<ContentType, 'title'>;
   prompt: string;
 }
 
+interface CourseGenerationOther {
+  type: Omit<ContentType, 'title'>;
+  title: string;
+}
+
+type CourseGenerationPayload = Prettify<CourseGenerationTitle | CourseGenerationOther>;
+
 const generateCourseContent = (payload: CourseGenerationPayload) => {
-  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<{ title: string; description: string }>>(
-    endpoints.GENERATE_COURSE_CONTENT,
-    payload,
-  );
+  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<string>>(endpoints.GENERATE_COURSE_CONTENT, payload);
 };
 
-export const useGenerateCourseContentMutation = () => {
+export const useGenerateCourseContentMutation = (type: ContentType) => {
+  const { showToast } = useToast();
   return useMutation({
+    mutationKey: ['GenerateCourseContent', type],
     mutationFn: generateCourseContent,
+    onError(error) {
+      showToast({ type: 'danger', message: error.message });
+    },
   });
 };

@@ -18,8 +18,8 @@ import { styleUtils } from '@Utils/style-utils';
 import type { OptionWithImage } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import GenerativeLoading from './GenerativeLoading';
 import {
   type MagicImageGenerationFormFields,
   type StyleType,
@@ -101,40 +101,43 @@ export const ImageGeneration = () => {
   });
   const { images, setImages } = useMagicImageGeneration();
   const magicImageGenerationMutation = useMagicImageGenerationMutation();
+  const [showEmptyState, setShowEmptyState] = useState(true);
+  const [imageLoading, setImageLoading] = useState([false, false, false, false]);
 
   return (
     <form
       css={magicAIStyles.wrapper}
       onSubmit={form.handleSubmit(async (values) => {
-        const response = await magicImageGenerationMutation.mutateAsync(values);
+        setImageLoading([true, true, true, true]);
+        setShowEmptyState(false);
+        await Promise.all(
+          Array.from({ length: 4 }).map((_, index) => {
+            return magicImageGenerationMutation.mutateAsync(values).then((response) => {
+              setImages((previous) => {
+                const copy = [...previous];
+                copy[index] = response.data.data?.[0]?.b64_json ?? null;
+                return copy;
+              });
 
-        if (response.length > 0) {
-          setImages(response.map((item) => item.b64_json));
-        }
+              setImageLoading((previous) => {
+                const copy = [...previous];
+                copy[index] = false;
+                return copy;
+              });
+            });
+          }),
+        );
       })}
     >
       <div css={magicAIStyles.left}>
-        <Show
-          when={!magicImageGenerationMutation.isPending}
-          fallback={
-            <div
-              css={css`
-              margin-block: ${spacing[24]};
-            `}
-            >
-              <GenerativeLoading />
-            </div>
-          }
-        >
-          <Show when={images.length > 0} fallback={<SVGIcon name="magicAiPlaceholder" width={72} height={72} />}>
-            <div css={styles.images}>
-              <For each={images}>
-                {(src, index) => {
-                  return <AiImageItem key={index} src={src} />;
-                }}
-              </For>
-            </div>
-          </Show>
+        <Show when={!showEmptyState} fallback={<SVGIcon name="magicAiPlaceholder" width={72} height={72} />}>
+          <div css={styles.images}>
+            <For each={images}>
+              {(src, index) => {
+                return <AiImageItem key={index} src={src} loading={imageLoading[index]} index={index} />;
+              }}
+            </For>
+          </div>
         </Show>
       </div>
       <div css={magicAIStyles.right}>

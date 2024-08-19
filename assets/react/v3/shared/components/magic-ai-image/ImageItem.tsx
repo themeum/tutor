@@ -10,7 +10,7 @@ import { downloadBase64Image } from '@Utils/magic-ai';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 import { nanoid } from '@Utils/util';
-import { css } from '@emotion/react';
+import { css, keyframes } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { type DropdownState, useMagicImageGeneration } from './ImageContext';
@@ -38,11 +38,15 @@ const options: Option<DropdownState>[] = [
   },
 ];
 
-export const AiImageItem = ({ src }: { src: string }) => {
+export const AiImageItem = ({ src, loading, index }: { src: string | null; loading: boolean; index: number }) => {
   const ref = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const { onDropdownMenuChange, setCurrentImage, onCloseModal, field } = useMagicImageGeneration();
   const storeAIGeneratedImageMutation = useStoreAIGeneratedImageMutation();
+
+  if (loading || !src) {
+    return <div css={styles.loader(index + 1)} />;
+  }
 
   return (
     <>
@@ -53,7 +57,10 @@ export const AiImageItem = ({ src }: { src: string }) => {
             <MagicButton
               variant="primary"
               onClick={async () => {
-                const response = await storeAIGeneratedImageMutation.mutateAsync({ image: src, course_id: 417 });
+                if (!src) {
+                  return;
+                }
+                const response = await storeAIGeneratedImageMutation.mutateAsync({ image: src });
 
                 if (response.data) {
                   field.onChange(response.data);
@@ -116,7 +123,64 @@ export const AiImageItem = ({ src }: { src: string }) => {
   );
 };
 
+const loader = keyframes`
+		0% {
+      opacity: 0.3;
+    }
+		25% {
+			opacity: 0.5;
+		}
+    50% {
+      opacity: 0.7;
+    }
+		75% {
+			opacity: 0.5;
+		}
+    100% {
+      opacity: 0.3;
+    }
+`;
+
 const styles = {
+  loader: (index: number) => css`
+		border-radius: ${borderRadius[12]};
+		background: linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%);
+		position: relative;
+		width: 100%;
+		height: 100%;
+		background-size: 612px 612px;
+		opacity: 0.3;
+		transition: opacity 0.5s ease;
+		animation: ${loader} 2s linear infinite;
+
+		${
+      index === 1 &&
+      css`
+			background-position: top left;
+		`
+    }
+		${
+      index === 2 &&
+      css`
+			background-position: top right;
+			animation-delay: 0.5s;
+		`
+    }
+		${
+      index === 3 &&
+      css`
+			background-position: bottom left;
+			animation-delay: 1.5s;
+		`
+    }
+		${
+      index === 4 &&
+      css`
+			background-position: bottom right;
+			animation-delay: 1s;
+		`
+    }
+	`,
   image: css`
 		width: 100%;
     height: 100%;

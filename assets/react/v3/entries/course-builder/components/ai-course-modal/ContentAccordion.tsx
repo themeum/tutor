@@ -4,20 +4,22 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
-import { type ReactNode, useState } from 'react';
+import { __ } from '@wordpress/i18n';
+import { type ReactNode, useEffect, useState } from 'react';
+import { useContentGenerationContext } from './ContentGenerationContext';
 
 interface AccordionContent {
   type: 'lesson' | 'assignment' | 'quiz';
   title: string;
 }
 interface AccordionItem {
-  title: string;
+  name: string;
   content: AccordionContent[];
   is_active: boolean;
 }
 const accordionContent: AccordionItem[] = [
   {
-    title: 'Introduction',
+    name: 'Introduction',
     is_active: true,
     content: [
       {
@@ -35,7 +37,7 @@ const accordionContent: AccordionItem[] = [
     ],
   },
   {
-    title: 'Sensors, Pixels and Resolution',
+    name: 'Sensors, Pixels and Resolution',
     is_active: false,
     content: [
       {
@@ -53,7 +55,7 @@ const accordionContent: AccordionItem[] = [
     ],
   },
   {
-    title: 'Course outline',
+    name: 'Course outline',
     is_active: false,
     content: [
       {
@@ -71,7 +73,7 @@ const accordionContent: AccordionItem[] = [
     ],
   },
   {
-    title: 'Hand on exercise',
+    name: 'Hand on exercise',
     is_active: false,
     content: [
       {
@@ -105,9 +107,11 @@ const AccordionItem = ({
       <div css={styles.title}>
         <div css={styles.titleAndIcon}>
           <SVGIcon name="chevronDown" width={24} height={24} />
-          <p>{content.title}</p>
+          <p>{content.name}</p>
         </div>
-        <p>{content.content.length} Contents</p>
+        <p>
+          {content.content.length} {__('Contents', 'tutor')}
+        </p>
       </div>
       <div css={styles.content(content.is_active)}>
         <For each={content.content}>
@@ -126,7 +130,15 @@ const AccordionItem = ({
 };
 
 const ContentAccordion = () => {
+  const { content } = useContentGenerationContext();
   const [items, setItems] = useState<AccordionItem[]>(accordionContent);
+
+  useEffect(() => {
+    if (content.content) {
+      // setItems(content.content.map((item) => ({ ...item, is_active: false })));
+    }
+  }, [content.content]);
+
   return (
     <div css={styles.wrapper}>
       <For each={items}>

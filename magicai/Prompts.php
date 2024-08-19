@@ -272,7 +272,7 @@ final class Prompts {
 		return array(
 			array(
 				'role'    => 'system',
-				'content' => 'You are a highly skilled assistant specialized in generating course titles for an e-learning platform. When provided with a prompt describing a course, your task is to create a concise, compelling, and marketable course title. The title should be clear, engaging, and appropriate for the specified audience, which could range from beginners to advanced learners. Ensure that the title reflects the course content accurately and consider the use of impactful language that highlights the value of the course.',
+				'content' => 'You are a highly skilled assistant specialized in generating course titles for an e-learning platform. When provided with a prompt describing a course, your task is to create a concise, compelling, and marketable course title. The title should be clear, engaging, and appropriate for the specified audience, which could range from beginners to advanced learners. Ensure that the title reflects the course content accurately and consider the use of impactful language that highlights the value of the course. Do not use markdown or HTML, do not wrap the content with quotes, and the title should not exceed 100 characters.',
 			),
 			array(
 				'role'    => 'user',
@@ -291,11 +291,58 @@ final class Prompts {
 		return array(
 			array(
 				'role'    => 'system',
-				'content' => 'You are an AI assistant that specializes in generating detailed course descriptions for an e-learning platform. Based on the provided course title, your task is to create a compelling and informative course description that includes the following elements: an overview of the course content, key learning outcomes, and a clear identification of the target audience. The description should be engaging, informative, and accurately reflect the skills and knowledge students will gain. Ensure that the language is accessible, with a tone that is both motivating and professional, and tailored to the specified audience, whether they are beginners, intermediate learners, or advanced professionals.',
+				'content' => 'You are an AI assistant that specializes in generating detailed course descriptions for an e-learning platform. Based on the provided course title, your task is to create a compelling and informative course description that includes the following elements: an overview of the course content, key learning outcomes, and a clear identification of the target audience. The description should be engaging, informative, and accurately reflect the skills and knowledge students will gain. Ensure that the language is accessible, with a tone that is both motivating and professional, and tailored to the specified audience, whether they are beginners, intermediate learners, or advanced professionals. Please respond with plain text only.',
 			),
 			array(
 				'role'    => 'user',
 				'content' => $title,
+			),
+		);
+	}
+
+	/**
+	 * Prepare the messages for openai for generating topic names.
+	 *
+	 * @param string $title The course title.
+	 * @return array
+	 */
+	public static function prepare_course_topic_names_messages( string $title ) {
+		$system_content = 'You are an AI assistant specialized in generating course module names. You are tasked with generating course module names for a given course title. Based on this course title, create at least 5 module names that follow a logical progression, starting with introductory topics and moving toward more advanced concepts. Ensure that the module names include standard course elements like an introduction, a course outline, and a conclusion. The names should be clear, concise, and directly related to the content of the course. Return the module names as a JSON array in the format: [{name: "Module Name"}].';
+
+		return array(
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
+			),
+			array(
+				'role'    => 'user',
+				'content' => $title,
+			),
+		);
+	}
+
+	/**
+	 * Prepare the messages for openai for generating topic contents.
+	 *
+	 * @param string $title The course title.
+	 * @param string $topic_name The topic name.
+	 * @return array
+	 */
+	public static function prepare_course_topic_content_messages( string $title, string $topic_name ) {
+		$system_content = "You are an AI assistant specialized in generating course contents. Generate minimum 2 to maximum 5 content items based on the provided course title and module name. The content can include any of the following types: 'lesson', 'quiz', or 'assignment'. For each content item, provide a title that accurately reflects the content. Return the generated content as a JSON array with the structure: [{type: `lesson|quiz|assignment`, title: 'the content title'}].";
+
+		return array(
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
+			),
+			array(
+				'role'    => 'user',
+				'content' => 'The course title is: ' . $title,
+			),
+			array(
+				'role'    => 'user',
+				'content' => 'The module name is: ' . $topic_name,
 			),
 		);
 	}
