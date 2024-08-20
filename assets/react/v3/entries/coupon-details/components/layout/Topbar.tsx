@@ -8,7 +8,7 @@ import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { convertFormDataToPayload, Coupon, useCreateCouponMutation, useUpdateCouponMutation } from '@CouponServices/coupon';
-import { toCapitalize } from '@CourseBuilderUtils/utils';
+import { toCapitalize } from '@Utils/util';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
