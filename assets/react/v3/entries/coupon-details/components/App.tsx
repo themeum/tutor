@@ -1,6 +1,6 @@
 import ToastProvider from '@Atoms/Toast';
 import { ModalProvider } from '@Components/modals/Modal';
-import RTLProvider from '@CourseBuilderComponents/layouts/RTLProvider';
+import RTLProvider from '@Components/RTLProvider';
 import { createGlobalCss } from '@Utils/style-utils';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
