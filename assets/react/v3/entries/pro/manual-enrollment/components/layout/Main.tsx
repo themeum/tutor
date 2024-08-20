@@ -15,7 +15,7 @@ function Main() {
     defaultValues: {
       course: null,
       students: [],
-      payment_status: '',
+      payment_status: 'paid',
       subscription: '',
     },
   });
@@ -50,18 +50,6 @@ function Main() {
         <div css={styles.container}>
           <div css={styles.content}>
             <div css={styles.left}>
-              <div css={styles.studentsWrapper}>
-                <Controller
-                  name="students"
-                  control={form.control}
-                  rules={requiredRule()}
-                  render={(controllerProps) => (
-                    <FormSelectStudents {...controllerProps} label={__('Students', 'tutor')} disabled={!course} />
-                  )}
-                />
-              </div>
-            </div>
-            <div css={styles.right}>
               <Controller
                 name="course"
                 control={form.control}
@@ -98,6 +86,18 @@ function Main() {
                 />
               )}
             </div>
+            <div css={styles.right}>
+              <div css={styles.studentsWrapper}>
+                <Controller
+                  name="students"
+                  control={form.control}
+                  rules={requiredRule()}
+                  render={(controllerProps) => (
+                    <FormSelectStudents {...controllerProps} label={__('Students', 'tutor')} disabled={!course} />
+                  )}
+                />
+              </div>
+            </div>
           </div>
         </div>
       </FormProvider>
@@ -120,21 +120,18 @@ const styles = {
     min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
     width: 100%;
     display: grid;
-    grid-template-columns: 1fr 255px;
+    grid-template-columns: 255px 1fr;
     gap: ${spacing[24]};
   `,
   left: css`
     display: flex;
     flex-direction: column;
-    gap: ${spacing[16]};
-    border-right: 1px solid ${colorTokens.stroke.divider};
-    padding-right: ${spacing[24]};
+    gap: ${spacing[12]};
     padding-top: ${spacing[32]};
   `,
   right: css`
-    display: flex;
-    flex-direction: column;
-    gap: ${spacing[12]};
+    border-left: 1px solid ${colorTokens.stroke.divider};
+    padding-left: ${spacing[24]};
     padding-top: ${spacing[32]};
   `,
   studentsWrapper: css`
