@@ -61,6 +61,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
 
 const styles = {
 	container: css`
+		position: relative;
 		display: flex;
 		align-items: center;
 		cursor: pointer;
