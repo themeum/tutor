@@ -15,6 +15,7 @@ import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
 import {
+  type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   type QuizQuestionType,
@@ -32,7 +33,7 @@ import { nanoid } from '@Utils/util';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: () => void;
+  onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
 }
 
@@ -117,7 +118,7 @@ const FormMultipleChoiceAndOrdering = ({
     field.onChange({
       ...inputValue,
       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: 'update',
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
       }),
       image_id: '',
       image_url: '',
@@ -283,7 +284,7 @@ const FormMultipleChoiceAndOrdering = ({
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  onDuplicateOption();
+                  onDuplicateOption(inputValue);
                   // handleDuplicateAnswer();
                 }}
               >
@@ -367,6 +368,12 @@ const FormMultipleChoiceAndOrdering = ({
                   event.stopPropagation();
                   if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
                     // await createQuizAnswer();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: 'update',
+                      }),
+                    });
                     setIsEditing(false);
                   }
                 }}

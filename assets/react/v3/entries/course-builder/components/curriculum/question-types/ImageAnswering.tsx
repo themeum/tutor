@@ -24,7 +24,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo } from '@Utils/util';
+import { nanoid } from '@Utils/util';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
@@ -51,18 +51,18 @@ const ImageAnswering = () => {
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
 
-  const filteredOptionsFields = optionsFields.reduce(
-    (allOptions, option, index) => {
-      if (option.belongs_question_type === 'image_answering') {
-        allOptions.push({
-          ...option,
-          index: index,
-        });
-      }
-      return allOptions;
-    },
-    [] as Array<QuizQuestionOption & { index: number }>,
-  );
+  // const filteredOptionFields = optionsFields.reduce(
+  //   (allOptions, option, index) => {
+  //     if (option.belongs_question_type === 'image_answering') {
+  //       allOptions.push({
+  //         ...option,
+  //         index: index,
+  //       });
+  //     }
+  //     return allOptions;
+  //   },
+  //   [] as Array<QuizQuestionOption & { index: number }>,
+  // );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -78,8 +78,8 @@ const ImageAnswering = () => {
       return null;
     }
 
-    return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
-  }, [activeSortId, filteredOptionsFields]);
+    return optionsFields.find((item) => item.answer_id === activeSortId);
+  }, [activeSortId, optionsFields]);
 
   return (
     <div css={styles.optionWrapper}>
@@ -100,16 +100,16 @@ const ImageAnswering = () => {
             const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
             const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
-            const updatedOptionsOrder = moveTo(
-              form.watch(`questions.${activeQuestionIndex}.question_answers`),
-              activeIndex,
-              overIndex,
-            );
+            // const updatedOptionsOrder = moveTo(
+            //   form.watch(`questions.${activeQuestionIndex}.question_answers`),
+            //   activeIndex,
+            //   overIndex,
+            // );
 
-            quizQuestionAnswerOrderingMutation.mutate({
-              question_id: activeQuestionId,
-              sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
-            });
+            // quizQuestionAnswerOrderingMutation.mutate({
+            //   question_id: activeQuestionId,
+            //   sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
+            // });
 
             moveOption(activeIndex, overIndex);
           }
@@ -118,31 +118,31 @@ const ImageAnswering = () => {
         }}
       >
         <SortableContext
-          items={filteredOptionsFields.map((item) => ({ ...item, id: item.answer_id }))}
+          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
-          <For each={filteredOptionsFields}>
+          <For each={optionsFields}>
             {(option, index) => (
               <Controller
-                key={`${option.answer_id}-${option.index}`}
+                key={`${option.answer_id}-${index}`}
                 control={form.control}
-                name={
-                  `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
-                }
+                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
                 render={(controllerProps) => (
                   <FormImageAnswering
                     {...controllerProps}
-                    onDuplicateOption={(answerId) => {
+                    onDuplicateOption={(data) => {
                       const duplicateOption: QuizQuestionOption = {
-                        ...option,
-                        answer_id: answerId || '',
-                        answer_title: `${option.answer_title} (Copy)`,
+                        ...data,
+                        _data_status: 'new',
+                        answer_id: nanoid(),
+                        answer_title: `${data.answer_title} (Copy)`,
                         is_correct: '0',
                       };
-                      const duplicateIndex = option.index - 1;
+
+                      const duplicateIndex = index + 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
-                    onRemoveOption={() => removeOption(option.index)}
+                    onRemoveOption={() => removeOption(index)}
                     index={index}
                   />
                 )}
@@ -155,28 +155,28 @@ const ImageAnswering = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = filteredOptionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
                     control={form.control}
                     name={
-                      `questions.${activeQuestionIndex}.question_answers.${item.index}` as 'questions.0.question_answers.0'
+                      `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
                       <FormImageAnswering
                         {...controllerProps}
-                        onDuplicateOption={(answerId) => {
+                        onDuplicateOption={() => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
-                            answer_id: answerId || '',
+                            answer_id: nanoid(),
                             answer_title: `${item.answer_title} (Copy)`,
                             is_correct: '0',
                           };
-                          const duplicateIndex = item.index - 1;
+                          const duplicateIndex = index + 1;
                           insertOption(duplicateIndex, duplicateOption);
                         }}
-                        onRemoveOption={() => removeOption(item.index)}
+                        onRemoveOption={() => removeOption(index)}
                         index={index}
                       />
                     )}
@@ -194,7 +194,8 @@ const ImageAnswering = () => {
         onClick={() =>
           appendOption(
             {
-              answer_id: '',
+              _data_status: 'new',
+              answer_id: nanoid(),
               answer_title: '',
               is_correct: '0',
               belongs_question_id: activeQuestionId,

@@ -123,15 +123,15 @@ const Matching = () => {
                     {...controllerProps}
                     index={index}
                     onRemoveOption={() => removeOption(index)}
-                    onDuplicateOption={() => {
+                    onDuplicateOption={(data) => {
                       const duplicateOption: QuizQuestionOption = {
-                        ...option,
+                        ...data,
                         _data_status: 'new',
                         answer_id: nanoid(),
-                        answer_title: `${option.answer_title} (copy)`,
+                        answer_title: `${data.answer_title} (copy)`,
                         is_correct: '0',
                       };
-                      const duplicateIndex = index - 1;
+                      const duplicateIndex = index + 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
                   />
@@ -186,7 +186,7 @@ const Matching = () => {
           appendOption(
             {
               _data_status: 'new',
-              answer_id: '',
+              answer_id: nanoid(),
               answer_title: '',
               is_correct: '0',
               belongs_question_id: activeQuestionId,

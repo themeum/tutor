@@ -29,6 +29,7 @@ import type { IconCollection } from '@Utils/types';
 interface QuestionProps {
   question: QuizQuestion;
   index: number;
+  onDuplicateQuestion: (question: QuizQuestion) => void;
   onRemoveQuestion: () => void;
 }
 
@@ -45,7 +46,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
 
 const courseId = getCourseId();
 
-const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
+const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
@@ -55,20 +56,20 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
   const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation(quizId);
   const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
-  const handleDuplicateQuestion = () => {
-    duplicateContentMutation.mutate({
-      course_id: courseId,
-      content_id: question.question_id,
-      content_type: 'question',
-    });
-    setSelectedQuestionId('');
-  };
+  // const handleDuplicateQuestion = () => {
+  //   duplicateContentMutation.mutate({
+  //     course_id: courseId,
+  //     content_id: question.question_id,
+  //     content_type: 'question',
+  //   });
+  //   setSelectedQuestionId('');
+  // };
 
-  const handleDeleteQuestion = () => {
-    deleteQuizQuestionMutation.mutate(question.question_id);
-    onRemoveQuestion();
-    setSelectedQuestionId('');
-  };
+  // const handleDeleteQuestion = () => {
+  //   deleteQuizQuestionMutation.mutate(question.question_id);
+  //   onRemoveQuestion();
+  //   setSelectedQuestionId('');
+  // };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -169,7 +170,8 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            handleDuplicateQuestion();
+            onDuplicateQuestion(question);
+            setSelectedQuestionId('');
           }}
         />
         <ThreeDots.Option
@@ -178,7 +180,9 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
           icon={<SVGIcon name="delete" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            handleDeleteQuestion();
+            // handleDeleteQuestion();
+            onRemoveQuestion();
+            setSelectedQuestionId('');
           }}
         />
       </ThreeDots>

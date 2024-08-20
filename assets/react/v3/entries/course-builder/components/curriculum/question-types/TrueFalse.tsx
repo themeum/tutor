@@ -24,7 +24,6 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { type QuizForm, useQuizQuestionAnswerOrderingMutation } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -71,38 +70,6 @@ const TrueFalse = () => {
 
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (currentOptions.length !== 0) {
-      return;
-    }
-
-    form.setValue(`questions.${activeQuestionIndex}.question_answers`, [
-      {
-        _data_status: 'new',
-        answer_id: nanoid(),
-        answer_title: 'True',
-        is_correct: '1',
-        belongs_question_type: 'true_false',
-        answer_order: 1,
-        answer_two_gap_match: '',
-        answer_view_format: 'text',
-        belongs_question_id: activeQuestionId,
-      },
-      {
-        _data_status: 'new',
-        answer_id: nanoid(),
-        answer_title: 'False',
-        is_correct: '0',
-        belongs_question_type: 'true_false',
-        answer_order: 2,
-        answer_two_gap_match: '',
-        answer_view_format: 'text',
-        belongs_question_id: activeQuestionId,
-      },
-    ]);
-  }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

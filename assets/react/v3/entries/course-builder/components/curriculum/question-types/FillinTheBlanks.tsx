@@ -4,7 +4,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import FormFillInTheBlanks from '@Components/fields/quiz/FormFillinTheBlanks';
 import { spacing } from '@Config/styles';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 
 const FillInTheBlanks = () => {
@@ -16,27 +16,25 @@ const FillInTheBlanks = () => {
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
 
-  const filteredOptionsFields = optionsFields.reduce(
-    (allOptions, option, index) => {
-      if (option?.belongs_question_type === 'fill_in_the_blank') {
-        allOptions.push({
-          ...option,
-          index: index,
-        });
-      }
-      return allOptions;
-    },
-    [] as Array<QuizQuestionOption & { index: number }>,
-  );
+  // const filteredOptionFields = optionsFields.reduce(
+  //   (allOptions, option, index) => {
+  //     if (option?.belongs_question_type === 'fill_in_the_blank') {
+  //       allOptions.push({
+  //         ...option,
+  //         index: index,
+  //       });
+  //     }
+  //     return allOptions;
+  //   },
+  //   [] as Array<QuizQuestionOption & { index: number }>,
+  // );
 
   return (
     <div css={styles.optionWrapper}>
       <Controller
-        key={filteredOptionsFields.length ? JSON.stringify(filteredOptionsFields[0]) : ''}
+        key={optionsFields.length ? JSON.stringify(optionsFields[0]) : ''}
         control={form.control}
-        name={
-          `questions.${activeQuestionIndex}.question_answers.${filteredOptionsFields[0]?.index}` as 'questions.0.question_answers.0'
-        }
+        name={`questions.${activeQuestionIndex}.question_answers.0}` as 'questions.0.question_answers.0'}
         render={(controllerProps) => <FormFillInTheBlanks {...controllerProps} />}
       />
     </div>

@@ -128,11 +128,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     }
 
     setIsEdit(false);
-    if (!localQuizId || !isSubmit) {
-      setLocalQuizId(123);
-      return;
-    }
-
     console.log(data);
     const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, quizId || '');
 
@@ -296,9 +291,13 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                                 variant="secondary"
                                 type="submit"
                                 size="small"
-                                onClick={form.handleSubmit((data) =>
-                                  onQuizFormSubmit(data, localQuizId ? false : true),
-                                )}
+                                onClick={() => {
+                                  if (!form.getValues('quiz_title')) {
+                                    form.trigger('quiz_title');
+                                    return;
+                                  }
+                                  setIsEdit(false);
+                                }}
                               >
                                 {__('Ok', 'tutor')}
                               </Button>

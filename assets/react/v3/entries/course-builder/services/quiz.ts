@@ -52,7 +52,6 @@ interface BaseQuizQuestion {
   question_id: ID;
   question_title: string;
   question_description: string;
-  randomizeQuestion: boolean;
   question_mark: number;
   answer_explanation: string;
   question_order: number;
@@ -67,12 +66,7 @@ interface BaseQuizQuestion {
   question_answers: QuizQuestionOption[];
 }
 
-interface TrueFalseQuizQuestion extends BaseQuizQuestion {
-  question_type: 'true_false';
-  question_answers: QuizQuestionOption[];
-}
-
-export interface MultipleChoiceQuizQuestion extends BaseQuizQuestion {
+interface MultipleChoiceQuizQuestion extends BaseQuizQuestion {
   question_type: 'multiple_choice' | 'single_choice';
   has_multiple_correct_answer: boolean;
 }
@@ -82,24 +76,19 @@ interface MatchingQuizQuestion extends BaseQuizQuestion {
   is_image_matching: boolean;
 }
 
-interface ImageAnsweringQuizQuestion extends BaseQuizQuestion {
-  question_type: 'image_answering';
-}
-
-interface FillInTheBlanksQuizQuestion extends BaseQuizQuestion {
-  question_type: 'fill_in_the_blank';
-}
-
-export interface OrderingQuizQuestion extends BaseQuizQuestion {
-  question_type: 'ordering';
-}
-
-interface OtherQuizQuestion extends BaseQuizQuestion {
-  question_type: Exclude<
-    QuizQuestionType,
-    'true_false' | 'multiple_choice' | 'matching' | 'image_answering' | 'fill_in_the_blanks' | 'ordering'
-  >;
-}
+// interface OtherQuizQuestion extends BaseQuizQuestion {
+//   question_type: Exclude<
+//     QuizQuestionType,
+//     | 'true_false'
+//     | 'multiple_choice'
+//     | 'matching'
+//     | 'image_answering'
+//     | 'fill_in_the_blank'
+//     | 'ordering'
+//     | 'image_matching'
+//     | 'single_choice'
+//   >;
+// }
 
 interface ImportQuizPayload {
   topic_id: ID;
@@ -155,14 +144,7 @@ export interface QuizDetailsResponse {
   questions: Omit<QuizQuestion, '_data_status'>[];
 }
 
-export type QuizQuestion =
-  | TrueFalseQuizQuestion
-  | MultipleChoiceQuizQuestion
-  | MatchingQuizQuestion
-  | ImageAnsweringQuizQuestion
-  | FillInTheBlanksQuizQuestion
-  | OrderingQuizQuestion
-  | OtherQuizQuestion;
+export type QuizQuestion = MultipleChoiceQuizQuestion | MatchingQuizQuestion | BaseQuizQuestion;
 
 export interface QuizForm {
   _data_status: 'new' | 'update' | 'no_change';
@@ -226,7 +208,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
     question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
     question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
-    question.randomizeQuestion = !!Number(question.question_settings.randomize_options);
 
     switch (question.question_type) {
       case 'single_choice': {

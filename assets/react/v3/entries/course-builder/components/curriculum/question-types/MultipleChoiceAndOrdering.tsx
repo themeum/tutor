@@ -175,12 +175,12 @@ const MultipleChoiceAndOrdering = () => {
                 render={(controllerProps) => (
                   <FormMultipleChoiceAndOrdering
                     {...controllerProps}
-                    onDuplicateOption={() => {
+                    onDuplicateOption={(data) => {
                       const duplicateOption: QuizQuestionOption = {
-                        ...option,
+                        ...data,
                         _data_status: 'new',
                         answer_id: nanoid(),
-                        answer_title: `${option.answer_title} (copy)`,
+                        answer_title: `${data.answer_title} (copy)`,
                         is_correct: '0',
                       };
                       const duplicateIndex = index + 1;

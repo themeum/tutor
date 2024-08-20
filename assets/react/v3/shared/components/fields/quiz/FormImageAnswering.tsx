@@ -9,8 +9,10 @@ import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
 import {
+  type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
+  calculateQuizDataStatus,
   useDeleteQuizAnswerMutation,
   useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
@@ -19,7 +21,7 @@ import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
@@ -29,7 +31,7 @@ import { nanoid } from '@Utils/util';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: (answerId: ID) => void;
+  onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
 }
 
@@ -80,6 +82,9 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
 
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: id,
       image_url: url,
     });
@@ -88,45 +93,48 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: '',
       image_url: '',
     });
   };
 
-  const handleDuplicateAnswer = async () => {
-    const response = await duplicateContentMutation.mutateAsync({
-      course_id: courseId,
-      content_id: inputValue.answer_id,
-      content_type: 'answer',
-    });
-    if (response.data) {
-      onDuplicateOption?.(response.data);
-    }
-  };
+  // const handleDuplicateAnswer = async () => {
+  //   const response = await duplicateContentMutation.mutateAsync({
+  //     course_id: courseId,
+  //     content_id: inputValue.answer_id,
+  //     content_type: 'answer',
+  //   });
+  //   if (response.data) {
+  //     onDuplicateOption?.(response.data);
+  //   }
+  // };
 
-  const createQuizAnswer = async () => {
-    const response = await createQuizAnswerMutation.mutateAsync({
-      ...(inputValue.answer_id && {
-        answer_id: inputValue.answer_id,
-      }),
-      question_id: inputValue.belongs_question_id,
-      answer_title: inputValue.answer_title,
-      image_id: inputValue.image_id || '',
-      answer_view_format: 'text_image',
-      question_type: 'image_answering',
-    });
+  // const createQuizAnswer = async () => {
+  //   const response = await createQuizAnswerMutation.mutateAsync({
+  //     ...(inputValue.answer_id && {
+  //       answer_id: inputValue.answer_id,
+  //     }),
+  //     question_id: inputValue.belongs_question_id,
+  //     answer_title: inputValue.answer_title,
+  //     image_id: inputValue.image_id || '',
+  //     answer_view_format: 'text_image',
+  //     question_type: 'image_answering',
+  //   });
 
-    if (response.status_code === 201 || response.status_code === 200) {
-      setIsEditing(false);
+  //   if (response.status_code === 201 || response.status_code === 200) {
+  //     setIsEditing(false);
 
-      if (!inputValue.answer_id && response.data) {
-        field.onChange({
-          ...inputValue,
-          answer_id: response.data,
-        });
-      }
-    }
-  };
+  //     if (!inputValue.answer_id && response.data) {
+  //       field.onChange({
+  //         ...inputValue,
+  //         answer_id: response.data,
+  //       });
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
@@ -179,7 +187,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleDuplicateAnswer();
+                  onDuplicateOption(inputValue);
                 }}
               >
                 <SVGIcon name="copyPaste" width={24} height={24} />
@@ -190,7 +198,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
+                  // deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                   onRemoveOption();
                 }}
               >
@@ -232,7 +240,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   title: inputValue.image_url || '',
                 }}
                 buttonText={__('Upload Image', 'tutor')}
-                infoText={__('Size: 700x430 pixels', 'tutor')}
+                infoText={__('Standard Size: 700x430 pixels', 'tutor')}
                 uploadHandler={uploadHandler}
                 clearHandler={clearHandler}
                 emptyImageCss={styles.emptyImageInput}
@@ -252,13 +260,22 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
                       answer_title: event.target.value,
                     });
                   }}
                   onKeyDown={async (event) => {
                     event.stopPropagation();
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
-                      await createQuizAnswer();
+                      // await createQuizAnswer();
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                      });
                       setIsEditing(false);
                     }
                   }}
@@ -290,7 +307,14 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    await createQuizAnswer();
+                    // await createQuizAnswer();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                    });
+                    setIsEditing(false);
                   }}
                   disabled={!inputValue.answer_title || !inputValue.image_id}
                 >

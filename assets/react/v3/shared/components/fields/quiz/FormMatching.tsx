@@ -31,7 +31,7 @@ import { isDefined } from '@Utils/types';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: () => void;
+  onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
 }
 
@@ -192,7 +192,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  onDuplicateOption();
+                  onDuplicateOption(inputValue);
                   // handleDuplicateAnswer();
                 }}
               >

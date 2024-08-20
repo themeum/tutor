@@ -29,6 +29,7 @@ import Show from '@Controls/Show';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import {
   type QuizForm,
+  type QuizQuestion,
   type QuizQuestionType,
   useCreateQuizQuestionMutation,
   useQuizQuestionSortingMutation,
@@ -37,7 +38,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection, Option } from '@Utils/types';
-import { moveTo, nanoid } from '@Utils/util';
+import { nanoid, noop } from '@Utils/util';
 
 interface QuestionListProps {
   quizId?: ID;
@@ -99,6 +100,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   const {
     remove: removeQuestion,
     append: appendQuestion,
+    insert: insertQuestion,
     move: moveQuestion,
     fields: questionFields,
   } = useFieldArray({
@@ -131,20 +133,69 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
       question_title: `Question ${questionFields.length + 1}`,
       question_description: '',
       question_type: questionType,
-      question_answers: [],
+      question_answers:
+        questionType === 'true_false'
+          ? [
+              {
+                answer_id: nanoid(),
+                _data_status: 'new',
+                answer_title: __('True', 'tutor'),
+                is_correct: '1',
+                answer_order: 1,
+                answer_two_gap_match: '',
+                answer_view_format: 'text',
+                belongs_question_id: questionId,
+                belongs_question_type: 'true_false',
+              },
+              {
+                answer_id: nanoid(),
+                _data_status: 'new',
+                answer_title: __('False', 'tutor'),
+                is_correct: '0',
+                answer_order: 2,
+                answer_two_gap_match: '',
+                answer_view_format: 'text',
+                belongs_question_id: questionId,
+                belongs_question_type: 'true_false',
+              },
+            ]
+          : [],
       answer_explanation: '',
-      imageMatching: false,
-      multipleCorrectAnswer: false,
       question_mark: 1,
       question_order: questionFields.length + 1,
-    });
+      question_settings: {
+        answer_required: false,
+        question_mark: 1,
+        question_type: questionType,
+        randomize_options: false,
+        show_question_mark: true,
+      },
+    } as QuizQuestion);
     setActiveQuestionId(questionId);
     setIsOpen(false);
   };
 
-  if (!quizId) {
+  const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
+    const convertedQuestion: QuizQuestion = {
+      ...data,
+      question_id: nanoid(),
+      _data_status: 'new',
+      question_title: `${data.question_title} (Copy)`,
+      question_answers: data.question_answers.map((answer) => ({
+        ...answer,
+        answer_id: nanoid(),
+        _data_status: 'new',
+      })),
+    };
+    const duplicateQuestionIndex = index + 1;
+    insertQuestion(duplicateQuestionIndex, convertedQuestion);
+  };
+
+  if (!form.getValues('quiz_title')) {
     return null;
   }
+
+  console.log('questionFields', questionFields);
 
   return (
     <>
@@ -181,11 +232,11 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                 const activeIndex = questionFields.findIndex((item) => item.question_id === active.id);
                 const overIndex = questionFields.findIndex((item) => item.question_id === over.id);
 
-                const updatedQuestionOrder = moveTo(form.watch('questions'), activeIndex, overIndex);
-                quizQuestionSortingMutation.mutate({
-                  quiz_id: quizId,
-                  sorted_question_ids: updatedQuestionOrder.map((question) => question.question_id),
-                });
+                // const updatedQuestionOrder = moveTo(form.watch('questions'), activeIndex, overIndex);
+                // quizQuestionSortingMutation.mutate({
+                //   quiz_id: quizId,
+                //   sorted_question_ids: updatedQuestionOrder.map((question) => question.question_id),
+                // });
                 moveQuestion(activeIndex, overIndex);
               }
 
@@ -196,12 +247,15 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
               items={questionFields.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
-              <For each={form.getValues('questions')}>
+              <For each={questionFields}>
                 {(question, index) => (
                   <Question
                     key={question.question_id}
                     question={question}
                     index={index}
+                    onDuplicateQuestion={(data) => {
+                      handleDuplicateQuestion(data, index);
+                    }}
                     onRemoveQuestion={() => {
                       removeQuestion(index);
                       setActiveQuestionId('');
@@ -221,6 +275,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                         key={item.question_id}
                         question={item}
                         index={index}
+                        onDuplicateQuestion={noop}
                         onRemoveQuestion={() => {
                           removeQuestion(index);
                           setActiveQuestionId('');
