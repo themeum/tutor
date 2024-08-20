@@ -721,7 +721,7 @@ class Settings {
 		$options = array();
 
 		foreach ( $currencies as $currency ) {
-			$options[ $currency['code'] ] = $currency['code'] . '(' . html_entity_decode( wp_unslash( $currency['symbol'] ) ) . ')';
+			$options[ $currency['code'] ] = $currency['code'] . '(' . $currency['symbol'] . ')';
 		}
 		return $options;
 	}
