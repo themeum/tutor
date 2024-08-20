@@ -56,11 +56,7 @@ function Main() {
                   control={form.control}
                   rules={requiredRule()}
                   render={(controllerProps) => (
-                    <FormSelectStudents
-                      {...controllerProps}
-                      label={__('Students', 'tutor')}
-                      //disabled={!course}
-                    />
+                    <FormSelectStudents {...controllerProps} label={__('Students', 'tutor')} disabled={!course} />
                   )}
                 />
               </div>
