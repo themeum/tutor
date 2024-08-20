@@ -721,7 +721,7 @@ class Settings {
 		$options = array();
 
 		foreach ( $currencies as $currency ) {
-			$options[ $currency['code'] ] = $currency['code'] . '(' . $currency['symbol'] . ')';
+			$options[ $currency['code'] ] = $currency['code'] . ' (' . $currency['symbol'] . ')';
 		}
 		return $options;
 	}
