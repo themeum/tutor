@@ -54,7 +54,9 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
             fallback={
               <>
                 <span>•</span>
-                <span>{subscription.recurring_limit.toString().padStart(2, '0')} Times</span>
+                <span>
+                  {subscription.recurring_limit.toString().padStart(2, '0')} {__('Times', 'tutor')}
+                </span>
               </>
             }
           >

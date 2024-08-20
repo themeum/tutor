@@ -45,6 +45,7 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   characterCount?: { maxLimit: number; inputCharacter: number };
   isSecondary?: boolean;
   inputStyle?: SerializedStyles;
+  replaceEntireLabel?: boolean;
 }
 
 const styles = {
@@ -194,9 +195,9 @@ const styles = {
       color: ${colorTokens.color.black[30]};
     }
   `,
-  label: (isInlineLabel: boolean) => css`
-    width: 100%;
+  label: (isInlineLabel: boolean, replaceEntireLabel: boolean) => css`
     ${typography.caption()};
+    width: ${replaceEntireLabel ? '100%' : 'auto'};
     color: ${colorTokens.text.title};
 
     ${
@@ -238,6 +239,7 @@ const FormFieldWrapper = <T,>({
   characterCount,
   isSecondary = false,
   inputStyle,
+  replaceEntireLabel = false,
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
 
@@ -283,12 +285,12 @@ const FormFieldWrapper = <T,>({
         {(label || helpText) && (
           <div css={styles.labelContainer}>
             {label && (
-              <label htmlFor={id} css={styles.label(isInlineLabel)}>
+              <label htmlFor={id} css={styles.label(isInlineLabel, replaceEntireLabel)}>
                 {label}
               </label>
             )}
 
-            {helpText && (
+            {helpText && !replaceEntireLabel && (
               <Tooltip content={helpText} placement="top" allowHTML>
                 <SVGIcon name="info" width={20} height={20} />
               </Tooltip>
