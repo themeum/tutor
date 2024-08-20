@@ -62,15 +62,12 @@ const Notebook = () => {
     event.currentTarget.contentEditable = 'false';
 
     const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) ?? '{}');
-    const tempDiv = document.createElement('div');
-    tempDiv.innerHTML = event.currentTarget.innerHTML;
-    const text = tempDiv.innerText ?? '';
 
     setToLocalStorage(
       LocalStorageKeys.notebook,
       JSON.stringify({
         ...notebookData,
-        content: text,
+        content: event.currentTarget.innerHTML,
       }),
     );
   };
@@ -442,10 +439,10 @@ const styles = {
   }: {
     isCollapsed: boolean;
   }) => css`
+    ${styleUtils.overflowYAuto};
 		padding-inline: ${spacing[16]};
 		outline: none;
 		word-wrap: break-word;
-		overflow-y: auto;
 		height: 100%;
     white-space: pre-wrap;
 

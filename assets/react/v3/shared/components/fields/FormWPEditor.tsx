@@ -5,10 +5,11 @@ import { rgba } from 'polished';
 import Button from '@Atoms/Button';
 import WPEditor from '@Atoms/WPEditor';
 
+import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 import { useModal } from '@Components/modals/Modal';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
@@ -74,6 +75,7 @@ const FormWPEditor = ({
                         props: {
                           editorUsed: editor,
                           icon: <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />,
+                          title: __(`${editor.name} Editor`, 'tutor'),
                         },
                       })
                     }
@@ -122,30 +124,34 @@ const FormWPEditor = ({
               when={editorUsed.name === 'classic' && !loading}
               fallback={
                 <div css={styles.editorOverlay}>
-                  <Button
-                    variant="tertiary"
-                    size="small"
-                    loading={loading}
-                    buttonCss={styles.editWithButton}
-                    icon={
-                      customEditorIcons[editorUsed.name] && (
-                        <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
-                      )
-                    }
-                    onClick={() =>
-                      editorUsed &&
-                      showModal({
-                        component: EditorModal,
-                        props: {
-                          title: __(`${editorUsed.name} Editor`, 'tutor'),
-                          editorUsed: editorUsed,
-                          icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
-                        },
-                      })
-                    }
-                  >
-                    {editorUsed?.label}
-                  </Button>
+                  {loading ? (
+                    <LoadingOverlay />
+                  ) : (
+                    <Button
+                      variant="tertiary"
+                      size="small"
+                      buttonCss={styles.editWithButton}
+                      icon={
+                        customEditorIcons[editorUsed.name] && (
+                          <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
+                        )
+                      }
+                      onClick={() =>
+                        editorUsed &&
+                        showModal({
+                          component: EditorModal,
+                          props: {
+                            title: __(`${editorUsed.name} Editor`, 'tutor'),
+                            editorUsed: editorUsed,
+                            icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
+                            zIndex: zIndex.highest,
+                          },
+                        })
+                      }
+                    >
+                      {editorUsed?.label}
+                    </Button>
+                  )}
                 </div>
               }
             >

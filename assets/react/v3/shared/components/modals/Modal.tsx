@@ -32,6 +32,7 @@ export type ModalProps = {
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
   actions?: React.ReactNode;
+  zIndex?: number;
 };
 
 type PromiseResolvePayload<A extends string = string> = { action: A; [key: string]: unknown };
@@ -64,6 +65,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
+      zIndex?: number;
     }[];
   }>({
     modals: [],
@@ -73,7 +75,10 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     return new Promise((resolve) => {
       setState((previousState) => ({
         ...previousState,
-        modals: [...previousState.modals, { component, props, resolve, closeOnOutsideClick, id: nanoid() }],
+        modals: [
+          ...previousState.modals,
+          { component, props, resolve, closeOnOutsideClick, id: nanoid(), zIndex: props?.zIndex || zIndex.modal },
+        ],
       }));
     });
   }, []);
@@ -104,9 +109,16 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       {children}
       {transitions((style, modal) => {
         return (
-          <div css={styles.container}>
+          <div
+            css={[
+              styles.container,
+              {
+                zIndex: modal.zIndex,
+              },
+            ]}
+          >
             <AnimatedDiv style={style} hideOnOverflow={false}>
-              {React.createElement(modal.component, { ...modal.props, closeModal })}
+              {React.createElement(modal.component, { ...modal.props, closeModal, zIndex: modal.zIndex })}
             </AnimatedDiv>
             <div
               css={styles.backdrop}

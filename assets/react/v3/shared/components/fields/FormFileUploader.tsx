@@ -36,86 +36,47 @@ type FormFileUploaderProps = {
   maxFileSize?: number; // in bytes
 } & FormControllerProps<Media[] | Media | null>;
 
+const iconMapping: { [key: string]: string[] } = {
+  iso: ['iso'],
+  dwg: ['dwg'],
+  pdf: ['pdf'],
+  doc: ['doc', 'docx'],
+  csv: ['csv'],
+  xls: ['xls', 'xlsx'],
+  ppt: ['ppt', 'pptx'],
+  zip: ['zip'],
+  archive: ['rar', '7z', 'tar', 'gz'],
+  txt: ['txt'],
+  rtf: ['rtf'],
+  text: ['log'],
+  jpg: ['jpg'],
+  png: ['png'],
+  image: ['jpeg', 'gif', 'webp', 'avif'],
+  mp3: ['mp3'],
+  fla: ['fla'],
+  audio: ['ogg', 'wav', 'wma'],
+  mp4: ['mp4'],
+  avi: ['avi'],
+  ai: ['ai'],
+  videoFile: ['mkv', 'mpeg', 'flv', 'mov', 'wmv'],
+  svg: ['svg'],
+  css: ['css'],
+  javascript: ['js'],
+  xml: ['xml'],
+  html: ['html'],
+  exe: ['exe'],
+  psd: ['psd'],
+  jsonFile: ['json'],
+  dbf: ['dbf'],
+};
+
 const fileIcon = (fileExtension: string): IconCollection => {
-  switch (fileExtension) {
-    case 'iso':
-      return 'iso';
-    case 'dwg':
-      return 'dwg';
-    case 'pdf':
-      return 'pdf';
-    case 'doc':
-    case 'docx':
-      return 'doc';
-    case 'csv':
-      return 'csv';
-    case 'xls':
-    case 'xlsx':
-      return 'xls';
-    case 'ppt':
-    case 'pptx':
-      return 'ppt';
-    case 'zip':
-      return 'zip';
-    case 'rar':
-    case '7z':
-    case 'tar':
-    case 'gz':
-      return 'archive';
-    case 'txt':
-      return 'txt';
-    case 'rtf':
-      return 'rtf';
-    case 'log':
-      return 'text';
-    case 'jpg':
-      return 'jpg';
-    case 'png':
-      return 'png';
-    case 'jpeg':
-    case 'gif':
-      return 'image';
-    case 'mp3':
-      return 'mp3';
-    case 'fla':
-      return 'fla';
-    case 'ogg':
-    case 'wav':
-    case 'wma':
-      return 'audio';
-    case 'mp4':
-      return 'mp4';
-    case 'avi':
-      return 'avi';
-    case 'ai':
-      return 'ai';
-    case 'mkv':
-    case 'mpeg':
-    case 'flv':
-    case 'mov':
-    case 'wmv':
-      return 'videoFile';
-    case 'svg':
-      return 'svg';
-    case 'css':
-      return 'css';
-    case 'js':
-      return 'javascript';
-    case 'xml':
-      return 'xml';
-    case 'html':
-      return 'html';
-    case 'exe':
-      return 'exe';
-    case 'psd':
-      return 'psd';
-    case 'json':
-      return 'jsonFile';
-    case 'dbf':
-      return 'dbf';
-    default:
-      return 'file';
+  for (const [icon, extensions] of Object.entries(iconMapping)) {
+    if (extensions.includes(fileExtension)) {
+      return icon as IconCollection;
+    }
   }
+  return 'file';
 };
 
 const FormFileUploader = ({

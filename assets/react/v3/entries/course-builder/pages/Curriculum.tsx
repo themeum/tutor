@@ -66,7 +66,7 @@ const Curriculum = () => {
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
-  const [currentExpandedTopic, setCurrentExpandedTopic] = useState<ID>('');
+  const [currentExpandedTopics, setCurrentExpandedTopics] = useState<ID[]>([]);
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
@@ -83,7 +83,7 @@ const Curriculum = () => {
     setContent(
       courseCurriculumQuery.data.map((item, index) => ({
         ...item,
-        isCollapsed: currentExpandedTopic ? currentExpandedTopic !== item.id : index > 0,
+        isCollapsed: currentExpandedTopics.length ? !currentExpandedTopics.includes(item.id) : index !== 0,
         isSaved: true,
       })),
     );
@@ -110,13 +110,6 @@ const Curriculum = () => {
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
   }
-
-  const createDuplicateTopic = (data: CourseTopic) => {
-    setContent((previousTopic) => {
-      const newTopic = { ...data, ID: nanoid(), isCollapsed: false, isSaved: false };
-      return [...previousTopic, newTopic];
-    });
-  };
 
   return (
     <CourseDetailsProvider>
@@ -243,8 +236,10 @@ const Curriculum = () => {
                               setContent((previous) =>
                                 previous.map((item) => {
                                   if (item.id === topicId) {
-                                    setCurrentExpandedTopic(
-                                      item.isCollapsed ? topicId : currentExpandedTopic === topicId ? '' : topicId,
+                                    setCurrentExpandedTopics((previousTopics) =>
+                                      item.isCollapsed
+                                        ? [...previousTopics, item.id]
+                                        : previousTopics.filter((id) => id !== item.id),
                                     );
                                     return { ...item, isCollapsed: !item.isCollapsed };
                                   }
@@ -253,11 +248,15 @@ const Curriculum = () => {
                                 }),
                               );
                             }}
-                            onCopy={() => {
-                              createDuplicateTopic(topic);
+                            onCopy={(topicId) => {
+                              setCurrentExpandedTopics([topicId]);
                             }}
                             onEdit={(topicId) => {
-                              setCurrentExpandedTopic(topicId);
+                              setCurrentExpandedTopics((previousTopics) =>
+                                previousTopics.includes(topicId)
+                                  ? previousTopics.filter((id) => id !== topicId)
+                                  : [...previousTopics, topicId],
+                              );
                             }}
                             onSort={(activeIndex, overIndex) => {
                               const previousContent = content;

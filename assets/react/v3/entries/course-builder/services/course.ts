@@ -6,6 +6,7 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 
+import type { UserOption } from '@Components/fields/FormSelectUser';
 import { tutorConfig } from '@Config/config';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
@@ -44,7 +45,7 @@ export interface CourseFormData {
   course_sale_price: string;
   course_categories: number[];
   course_tags: Tag[];
-  course_instructors: User[];
+  course_instructors: UserOption[];
   enable_qna: boolean;
   is_public_course: boolean;
   course_level: CourseLevel;
