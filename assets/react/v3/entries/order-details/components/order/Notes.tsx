@@ -13,7 +13,7 @@ function Notes() {
 	return (
 		<Box bordered css={styleUtils.boxReset}>
 			<BoxTitle separator>{__('Notes', 'tutor')}</BoxTitle>
-			<div css={styles.content}>{note}</div>
+			<div css={styles.content}>{note?.length ? note : __('No notes', 'tutor')}</div>
 		</Box>
 	);
 }
