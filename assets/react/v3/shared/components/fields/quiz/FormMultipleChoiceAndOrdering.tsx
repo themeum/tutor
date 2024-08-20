@@ -261,11 +261,11 @@ const FormMultipleChoiceAndOrdering = ({
             </Show>
           </div>
 
-          <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
-            <SVGIcon name="dragVertical" height={24} width={24} />
-          </button>
+          <Show when={!isEditing && inputValue.is_saved}>
+            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+              <SVGIcon name="dragVertical" height={24} width={24} />
+            </button>
 
-          <Show when={inputValue.answer_id}>
             <div css={styles.optionActions}>
               <button
                 type="button"
@@ -406,6 +406,7 @@ const FormMultipleChoiceAndOrdering = ({
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                         _data_status: 'update',
                       }),
+                      is_saved: true,
                     });
                     setIsEditing(false);
                     // await createQuizAnswer();

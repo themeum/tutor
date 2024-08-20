@@ -34,6 +34,7 @@ export type QuizQuestionType =
 
 export interface QuizQuestionOption {
   _data_status: QuizDataStatus;
+  is_saved: boolean;
   answer_id: ID;
   belongs_question_id: ID;
   belongs_question_type: QuizQuestionType;
@@ -76,19 +77,9 @@ interface MatchingQuizQuestion extends BaseQuizQuestion {
   is_image_matching: boolean;
 }
 
-// interface OtherQuizQuestion extends BaseQuizQuestion {
-//   question_type: Exclude<
-//     QuizQuestionType,
-//     | 'true_false'
-//     | 'multiple_choice'
-//     | 'matching'
-//     | 'image_answering'
-//     | 'fill_in_the_blank'
-//     | 'ordering'
-//     | 'image_matching'
-//     | 'single_choice'
-//   >;
-// }
+interface OtherQuizQuestion extends BaseQuizQuestion {
+  question_type: Exclude<QuizQuestionType, 'single_choice' | 'multiple_choice' | 'matching' | 'image_answering'>;
+}
 
 interface ImportQuizPayload {
   topic_id: ID;
@@ -144,7 +135,7 @@ export interface QuizDetailsResponse {
   questions: Omit<QuizQuestion, '_data_status'>[];
 }
 
-export type QuizQuestion = MultipleChoiceQuizQuestion | MatchingQuizQuestion | BaseQuizQuestion;
+export type QuizQuestion = OtherQuizQuestion | MultipleChoiceQuizQuestion | MatchingQuizQuestion;
 
 export interface QuizForm {
   _data_status: 'new' | 'update' | 'no_change';
@@ -208,6 +199,11 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
     question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
     question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
+    question.question_answers = question.question_answers.map((answer) => ({
+      ...answer,
+      _data_status: 'no_change',
+      is_saved: true,
+    }));
 
     switch (question.question_type) {
       case 'single_choice': {
@@ -262,10 +258,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
         return {
           ...question,
           _data_status: 'no_change',
-          question_answers: question.question_answers.map((answer) => ({
-            ...answer,
-            _data_status: 'no_change',
-          })),
         } as QuizQuestion;
     }
   };

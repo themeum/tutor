@@ -127,6 +127,7 @@ const Matching = () => {
                       const duplicateOption: QuizQuestionOption = {
                         ...data,
                         _data_status: 'new',
+                        is_saved: true,
                         answer_id: nanoid(),
                         answer_title: `${data.answer_title} (copy)`,
                         is_correct: '0',
@@ -161,6 +162,7 @@ const Matching = () => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
                             _data_status: 'new',
+                            is_saved: true,
                             answer_id: nanoid(),
                             answer_title: `${item.answer_title} (copy)`,
                             is_correct: '0',
@@ -186,6 +188,7 @@ const Matching = () => {
           appendOption(
             {
               _data_status: 'new',
+              is_saved: false,
               answer_id: nanoid(),
               answer_title: '',
               is_correct: '0',

@@ -24,7 +24,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import type { QuizForm, QuizQuestionOption, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import type { QuizDataStatus, QuizForm, QuizQuestionOption, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
 
@@ -55,6 +55,7 @@ const MultipleChoiceAndOrdering = () => {
     append: appendOption,
     insert: insertOption,
     remove: removeOption,
+    replace: replaceOption,
     move: moveOption,
   } = useFieldArray({
     control: form.control,
@@ -93,6 +94,19 @@ const MultipleChoiceAndOrdering = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (!hasMultipleCorrectAnswer && !isInitialRenderRef.current) {
+      const resetOptions = optionsFields.map((option) => ({
+        ...option,
+        is_correct: '0' as '0' | '1',
+        _data_status: 'update' as QuizDataStatus,
+      }));
+      form.setValue(`questions.${activeQuestionIndex}.question_answers`, resetOptions);
+    }
+    isInitialRenderRef.current = false;
+  }, [hasMultipleCorrectAnswer]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
     if (hasMultipleCorrectAnswer) {
       return;
     }
@@ -118,8 +132,8 @@ const MultipleChoiceAndOrdering = () => {
       }
     }
 
+    replaceOption(updatedOptions);
     isInitialRenderRef.current = false;
-    form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
   }, [currentOptions]);
 
   return (
@@ -169,7 +183,7 @@ const MultipleChoiceAndOrdering = () => {
           <For each={optionsFields}>
             {(option, index) => (
               <Controller
-                key={`${option.answer_id}-${index}-${option.is_correct}`}
+                key={JSON.stringify(option)}
                 control={form.control}
                 name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
                 render={(controllerProps) => (
@@ -179,6 +193,7 @@ const MultipleChoiceAndOrdering = () => {
                       const duplicateOption: QuizQuestionOption = {
                         ...data,
                         _data_status: 'new',
+                        is_saved: true,
                         answer_id: nanoid(),
                         answer_title: `${data.answer_title} (copy)`,
                         is_correct: '0',
@@ -214,6 +229,7 @@ const MultipleChoiceAndOrdering = () => {
                           const duplicateOption: QuizQuestionOption = {
                             ...item,
                             _data_status: 'new',
+                            is_saved: true,
                             answer_id: nanoid(),
                             answer_title: `${item.answer_title} (copy)`,
                             is_correct: '0',
@@ -240,6 +256,7 @@ const MultipleChoiceAndOrdering = () => {
           appendOption(
             {
               _data_status: 'new',
+              is_saved: false,
               answer_id: nanoid(),
               answer_title: '',
               is_correct: '0',

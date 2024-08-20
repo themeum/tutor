@@ -139,6 +139,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
               {
                 answer_id: nanoid(),
                 _data_status: 'new',
+                is_saved: true,
                 answer_title: __('True', 'tutor'),
                 is_correct: '1',
                 answer_order: 1,
@@ -149,6 +150,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
               },
               {
                 answer_id: nanoid(),
+                is_saved: true,
                 _data_status: 'new',
                 answer_title: __('False', 'tutor'),
                 is_correct: '0',
@@ -194,8 +196,6 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   if (!form.getValues('quiz_title')) {
     return null;
   }
-
-  console.log('questionFields', questionFields);
 
   return (
     <>

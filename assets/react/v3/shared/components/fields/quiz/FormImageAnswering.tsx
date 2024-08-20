@@ -164,11 +164,11 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
         <div css={styles.optionHeader}>
           <div css={styles.optionCounter({ isEditing })}>{String.fromCharCode(65 + index)}</div>
 
-          <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
-            <SVGIcon name="dragVertical" height={24} width={24} />
-          </button>
+          <Show when={!isEditing && inputValue.is_saved}>
+            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+              <SVGIcon name="dragVertical" height={24} width={24} />
+            </button>
 
-          <Show when={inputValue.answer_id}>
             <div css={styles.optionActions}>
               <button
                 type="button"

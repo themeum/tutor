@@ -169,11 +169,11 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
             {String.fromCharCode(65 + index)}
           </div>
 
-          <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
-            <SVGIcon name="dragVertical" height={24} width={24} />
-          </button>
+          <Show when={!isEditing && inputValue.is_saved}>
+            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+              <SVGIcon name="dragVertical" height={24} width={24} />
+            </button>
 
-          <Show when={inputValue.answer_id}>
             <div css={styles.optionActions}>
               <button
                 type="button"
@@ -352,7 +352,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       !inputValue.answer_title &&
                       !inputValue.image_id &&
                       !inputValue.answer_two_gap_match &&
-                      !inputValue.answer_id
+                      !inputValue.is_saved
                     ) {
                       onRemoveOption();
                     }
@@ -366,6 +366,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   size="small"
                   onClick={(event) => {
                     event.stopPropagation();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                      is_saved: true,
+                    });
                     setIsEditing(false);
                     // await createQuizAnswer();
                   }}

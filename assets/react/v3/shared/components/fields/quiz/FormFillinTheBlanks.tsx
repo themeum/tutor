@@ -26,6 +26,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const { activeQuestionId, quizId } = useQuizModalContext();
   const inputValue = field.value ?? {
     _data_status: 'new',
+    is_saved: false,
     answer_id: '',
     answer_title: '',
     belongs_question_id: activeQuestionId,
@@ -86,7 +87,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
         <div css={styles.optionHeader}>
           <div css={styles.optionTitle}>{__('Fill in the blanks', 'tutor')}</div>
 
-          <Show when={inputValue.answer_id}>
+          <Show when={inputValue.is_saved}>
             <div css={styles.optionActions}>
               <button
                 type="button"
@@ -148,12 +149,21 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
                       answer_title: event.target.value,
                     });
                   }}
                   onKeyDown={async (event) => {
                     event.stopPropagation();
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                      });
                       // await createQuizAnswer();
                       setIsEditing(false);
                     }
