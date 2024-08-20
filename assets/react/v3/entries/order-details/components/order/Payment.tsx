@@ -57,7 +57,7 @@ function Payment() {
 				</div>
 			</BoxTitle>
 			<div css={styles.content}>
-				<Box bordered>
+				<Box bordered css={styleUtils.boxReset}>
 					<div css={styles.item({ action: 'regular' })}>
 						<div>{__('Subtotal', 'tutor')}</div>
 						<div>
