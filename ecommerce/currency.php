@@ -31,14 +31,14 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'EUR',
-				'symbol'       => "\u20ac",
+				'symbol'       => "€",
 				'name'         => 'Euro',
 				'locale'       => 'en-eu',
 				'numeric_code' => 978,
 			),
 			array(
 				'code'         => 'GBP',
-				'symbol'       => "\u00a3",
+				'symbol'       => "£",
 				'name'         => 'British Pound',
 				'locale'       => 'en-gb',
 				'numeric_code' => 826,
@@ -59,7 +59,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'AFN',
-				'symbol'       => "\u060b",
+				'symbol'       => "؋",
 				'name'         => 'Afghanistan Afghani',
 				'locale'       => 'fa-af',
 				'numeric_code' => 971,
@@ -80,7 +80,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'ANG',
-				'symbol'       => "\u0192",
+				'symbol'       => "ƒ",
 				'name'         => 'Netherlands Antillean Gulden',
 				'locale'       => 'nl-an',
 				'numeric_code' => 532,
@@ -115,7 +115,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'AZN',
-				'symbol'       => "\u20bc",
+				'symbol'       => "₼",
 				'name'         => 'Azerbaijani Manat',
 				'locale'       => 'az-az',
 				'numeric_code' => 944,
@@ -136,7 +136,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'BDT',
-				'symbol'       => "\u09f3",
+				'symbol'       => "৳",
 				'name'         => 'Bangladeshi Taka',
 				'locale'       => 'bn-bd',
 				'numeric_code' => 50,
@@ -248,7 +248,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'CNY',
-				'symbol'       => "\u00a5",
+				'symbol'       => "¥",
 				'name'         => 'Chinese\/Yuan Renminbi',
 				'locale'       => 'zh-cn',
 				'numeric_code' => 156,
@@ -262,7 +262,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'CRC',
-				'symbol'       => "\u20a1",
+				'symbol'       => "₡",
 				'name'         => 'Costa Rican Colon',
 				'locale'       => 'es-cr',
 				'numeric_code' => 188,
@@ -283,7 +283,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'CZK',
-				'symbol'       => "K\u010d",
+				'symbol'       => "Kč",
 				'name'         => 'Czech Koruna',
 				'locale'       => 'cs-cz',
 				'numeric_code' => 203,
@@ -325,7 +325,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'EGP',
-				'symbol'       => "\u00a3",
+				'symbol'       => "£",
 				'name'         => 'Egyptian Pound',
 				'locale'       => 'ar-eg',
 				'numeric_code' => 818,
@@ -353,7 +353,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'FKP',
-				'symbol'       => "\u00a3",
+				'symbol'       => "£",
 				'name'         => 'Falkland Islands Pound',
 				'locale'       => 'en-fk',
 				'numeric_code' => 238,
@@ -367,14 +367,14 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'GHS',
-				'symbol'       => "\u20b5",
+				'symbol'       => "₵",
 				'name'         => 'Ghanaian Cedi',
 				'locale'       => 'en-gh',
 				'numeric_code' => 936,
 			),
 			array(
 				'code'         => 'GIP',
-				'symbol'       => "\u00a3",
+				'symbol'       => "£",
 				'name'         => 'Gibraltar Pound',
 				'locale'       => 'en-gi',
 				'numeric_code' => 292,
@@ -458,14 +458,14 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'ILS',
-				'symbol'       => "\u20aa",
+				'symbol'       => "₪",
 				'name'         => 'Israeli New Sheqel',
 				'locale'       => 'he-il',
 				'numeric_code' => 376,
 			),
 			array(
 				'code'         => 'INR',
-				'symbol'       => "\u20b9",
+				'symbol'       => "₹",
 				'name'         => 'Indian Rupee',
 				'locale'       => 'hi-in',
 				'numeric_code' => 356,
@@ -507,7 +507,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'JPY',
-				'symbol'       => "\u00a5",
+				'symbol'       => "¥",
 				'name'         => 'Japanese Yen',
 				'locale'       => 'ja-jp',
 				'numeric_code' => 392,
@@ -528,7 +528,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'KHR',
-				'symbol'       => "\u17db",
+				'symbol'       => "៛",
 				'name'         => 'Cambodian Riel',
 				'locale'       => 'km-kh',
 				'numeric_code' => 116,
@@ -542,14 +542,14 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'KPW',
-				'symbol'       => "\u20a9",
+				'symbol'       => "₩",
 				'name'         => 'North Korean Won',
 				'locale'       => 'ko-kp',
 				'numeric_code' => 408,
 			),
 			array(
 				'code'         => 'KRW',
-				'symbol'       => "\u20a9",
+				'symbol'       => "₩",
 				'name'         => 'South Korean Won',
 				'locale'       => 'ko-kr',
 				'numeric_code' => 410,
@@ -570,21 +570,21 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'KZT',
-				'symbol'       => "\u20b8",
+				'symbol'       => "₸",
 				'name'         => 'Kazakhstani Tenge',
 				'locale'       => 'kk-kz',
 				'numeric_code' => 398,
 			),
 			array(
 				'code'         => 'LAK',
-				'symbol'       => "\u20ad",
+				'symbol'       => "₭",
 				'name'         => 'Lao Kip',
 				'locale'       => 'lo-la',
 				'numeric_code' => 418,
 			),
 			array(
 				'code'         => 'LBP',
-				'symbol'       => "\u00a3",
+				'symbol'       => "L£",
 				'name'         => 'Lebanese Pound',
 				'locale'       => 'ar-lb',
 				'numeric_code' => 422,
@@ -668,7 +668,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'MNT',
-				'symbol'       => "\u20ae",
+				'symbol'       => "₮",
 				'name'         => 'Mongolian Tugrik',
 				'locale'       => 'mn-mn',
 				'numeric_code' => 496,
@@ -738,7 +738,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'NGN',
-				'symbol'       => "\u20a6",
+				'symbol'       => "₦",
 				'name'         => 'Nigerian Naira',
 				'locale'       => 'en-ng',
 				'numeric_code' => 566,
@@ -759,7 +759,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'NPR',
-				'symbol'       => "\u0930\u0941",
+				'symbol'       => "NPR",
 				'name'         => 'Nepalese Rupee',
 				'locale'       => 'ne-np',
 				'numeric_code' => 524,
@@ -801,7 +801,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'PHP',
-				'symbol'       => "\u20b1",
+				'symbol'       => "₱",
 				'name'         => 'Philippine Peso',
 				'locale'       => 'en-ph',
 				'numeric_code' => 608,
@@ -815,14 +815,14 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'PLN',
-				'symbol'       => "z\u0142",
+				'symbol'       => "zł",
 				'name'         => 'Polish Zloty',
 				'locale'       => 'pl-pl',
 				'numeric_code' => 985,
 			),
 			array(
 				'code'         => 'PYG',
-				'symbol'       => "\u20b2",
+				'symbol'       => "₲",
 				'name'         => 'Paraguayan Guarani',
 				'locale'       => 'es-py',
 				'numeric_code' => 600,
@@ -850,7 +850,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'RUB',
-				'symbol'       => "\u20bd",
+				'symbol'       => "₽",
 				'name'         => 'Russian Ruble',
 				'locale'       => 'ru-ru',
 				'numeric_code' => 643,
@@ -899,7 +899,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'SHP',
-				'symbol'       => "\u00a3",
+				'symbol'       => "£",
 				'name'         => 'Saint Helena Pound',
 				'locale'       => 'en-sh',
 				'numeric_code' => 654,
@@ -927,7 +927,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'SYP',
-				'symbol'       => "\u00a3",
+				'symbol'       => "£",
 				'name'         => 'Syrian Pound',
 				'locale'       => 'ar-sy',
 				'numeric_code' => 760,
@@ -941,7 +941,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'THB',
-				'symbol'       => "\u0e3f",
+				'symbol'       => "฿",
 				'name'         => 'Thai Baht',
 				'locale'       => 'th-th',
 				'numeric_code' => 764,
@@ -1032,7 +1032,7 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 			),
 			array(
 				'code'         => 'VND',
-				'symbol'       => "\u20ab",
+				'symbol'       => "₫",
 				'name'         => 'Vietnamese Dong',
 				'locale'       => 'vi-VN',
 				'numeric_code' => 704,
