@@ -22,7 +22,7 @@ function SelectedStudents({ form, students }: SelectedStudentsProps) {
   return (
     <div css={styles.selectedWrapper}>
       <div css={styles.selectedCount}>
-        {sprintf(_n('%d Student selected', '%d Students selected', students.length, 'text-domain'), students.length)}
+        {sprintf(_n('%d Student selected', '%d Students selected', students.length, 'tutor'), students.length)}
       </div>
       {students?.map((item) => (
         <StudentCard
