@@ -46,10 +46,10 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
       is_correct: '1',
     });
 
-    markAnswerAsCorrectMutation.mutate({
-      answerId: inputValue.answer_id,
-      isCorrect: '1',
-    });
+    // markAnswerAsCorrectMutation.mutate({
+    //   answerId: inputValue.answer_id,
+    //   isCorrect: '1',
+    // });
   };
 
   return (

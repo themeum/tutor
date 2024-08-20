@@ -20,7 +20,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
@@ -29,7 +29,7 @@ import { isDefined } from '@Utils/types';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: (answerId: ID) => void;
+  onDuplicateOption: () => void;
   onRemoveOption: () => void;
 }
 
@@ -51,7 +51,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
 
   const imageMatching = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.imageMatching` as 'questions.0.imageMatching',
+    name: `questions.${activeQuestionIndex}.is_image_matching` as 'questions.0.is_image_matching',
     defaultValue: false,
   });
 
@@ -125,16 +125,16 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
     }
   };
 
-  const handleDuplicateAnswer = async () => {
-    const response = await duplicateContentMutation.mutateAsync({
-      course_id: courseId,
-      content_id: inputValue.answer_id,
-      content_type: 'answer',
-    });
-    if (response.data) {
-      onDuplicateOption?.(response.data);
-    }
-  };
+  // const handleDuplicateAnswer = async () => {
+  //   const response = await duplicateContentMutation.mutateAsync({
+  //     course_id: courseId,
+  //     content_id: inputValue.answer_id,
+  //     content_type: 'answer',
+  //   });
+  //   if (response.data) {
+  //     onDuplicateOption?.(response.data);
+  //   }
+  // };
 
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
@@ -184,7 +184,8 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleDuplicateAnswer();
+                  onDuplicateOption();
+                  // handleDuplicateAnswer();
                 }}
               >
                 <SVGIcon name="copyPaste" width={24} height={24} />
@@ -195,7 +196,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
+                  // deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                   onRemoveOption();
                 }}
               >
@@ -277,7 +278,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     inputValue.answer_title &&
                     inputValue.answer_two_gap_match
                   ) {
-                    await createQuizAnswer();
+                    // await createQuizAnswer();
                     setIsEditing(false);
                   }
                 }}

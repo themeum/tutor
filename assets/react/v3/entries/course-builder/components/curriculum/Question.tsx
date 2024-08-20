@@ -13,7 +13,6 @@ import {
   type QuizForm,
   type QuizQuestion,
   type QuizQuestionType,
-  convertQuizQuestionFormDataToPayloadForUpdate,
   useDeleteQuizQuestionMutation,
   useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
@@ -81,7 +80,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
     transition,
     opacity: isDragging ? 0.3 : undefined,
   };
-  console.log(activeQuestionId, activeQuestionIndex);
+
   return (
     <div
       {...attributes}
@@ -91,27 +90,29 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       style={style}
       tabIndex={-1}
       onClick={() => {
-        const hasMultipleAnswers = form.watch(`questions.${activeQuestionIndex}.has_multiple_correct_answer`);
+        const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
 
-        const currentQuestionType = () => {
-          const questionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+        // const currentQuestionType = () => {
+        //   const questionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
 
-          if (questionType === 'multiple_choice' && !hasMultipleAnswers) {
-            return 'single_choice';
-          }
-          return questionType;
-        };
+        //   if (questionType === 'multiple_choice' && !hasMultipleAnswers) {
+        //     return 'single_choice';
+        //   }
+        //   return questionType;
+        // };
 
-        if (['single_choice', 'multiple_choice', 'true_false'].includes(currentQuestionType())) {
+        if (['multiple_choice', 'true_false'].includes(activeQuestionType)) {
           const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
 
           if (answers.length === 0) {
+            showToast({
+              message: __('Please add answers', 'tutor'),
+              type: 'danger',
+            });
             return;
           }
 
-          const hasCorrectAnswer = answers.some(
-            (answer) => answer.belongs_question_type === currentQuestionType() && answer.is_correct === '1',
-          );
+          const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
 
           if (!hasCorrectAnswer) {
             showToast({
@@ -122,15 +123,15 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
           }
         }
 
-        const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
-        updateQuizQuestionMutation.mutate(payload);
+        // const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+        // updateQuizQuestionMutation.mutate(payload);
 
         setActiveQuestionId(question.question_id);
       }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
-          updateQuizQuestionMutation.mutate(payload);
+          // const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
+          // updateQuizQuestionMutation.mutate(payload);
 
           setActiveQuestionId(question.question_id);
         }

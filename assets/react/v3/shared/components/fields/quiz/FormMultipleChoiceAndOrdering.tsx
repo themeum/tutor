@@ -13,7 +13,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
+import { useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
 import {
   type QuizForm,
   type QuizQuestionOption,
@@ -31,7 +31,7 @@ import { nanoid } from '@Utils/util';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: (answerId: ID) => void;
+  onDuplicateOption: () => void;
   onRemoveOption: () => void;
 }
 
@@ -54,15 +54,15 @@ const FormMultipleChoiceAndOrdering = ({
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const multipleCorrectAnswer = useWatch({
+  const hasMultipleCorrectAnswer = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
+    name: `questions.${activeQuestionIndex}.has_multiple_correct_answer` as 'questions.0.has_multiple_correct_answer',
     defaultValue: false,
   });
   const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
     if (currentQuestionType === 'multiple_choice') {
-      return multipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
+      return hasMultipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
     }
 
     return 'ordering';
@@ -120,46 +120,46 @@ const FormMultipleChoiceAndOrdering = ({
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
-      is_correct: multipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
+      is_correct: hasMultipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
     });
-    markAnswerAsCorrectMutation.mutate({
-      answerId: inputValue.answer_id,
-      isCorrect: inputValue.is_correct === '1' ? '0' : '1',
-    });
+    // markAnswerAsCorrectMutation.mutate({
+    //   answerId: inputValue.answer_id,
+    //   isCorrect: inputValue.is_correct === '1' ? '0' : '1',
+    // });
   };
 
-  const handleDuplicateAnswer = async () => {
-    const response = await duplicateContentMutation.mutateAsync({
-      course_id: courseId,
-      content_id: inputValue.answer_id,
-      content_type: 'answer',
-    });
-    if (response.data) {
-      onDuplicateOption?.(response.data);
-    }
-  };
+  // const handleDuplicateAnswer = async () => {
+  //   const response = await duplicateContentMutation.mutateAsync({
+  //     course_id: courseId,
+  //     content_id: inputValue.answer_id,
+  //     content_type: 'answer',
+  //   });
+  //   if (response.data) {
+  //     onDuplicateOption?.(response.data);
+  //   }
+  // };
 
-  const createQuizAnswer = async () => {
-    const response = await saveQuizAnswerMutation.mutateAsync({
-      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-      question_id: inputValue.belongs_question_id,
-      answer_title: inputValue.answer_title,
-      image_id: inputValue.image_id || '',
-      answer_view_format: 'text_image',
-      question_type: filterByQuestionType(currentQuestionType),
-    });
+  // const createQuizAnswer = async () => {
+  //   const response = await saveQuizAnswerMutation.mutateAsync({
+  //     ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
+  //     question_id: inputValue.belongs_question_id,
+  //     answer_title: inputValue.answer_title,
+  //     image_id: inputValue.image_id || '',
+  //     answer_view_format: 'text_image',
+  //     question_type: filterByQuestionType(currentQuestionType),
+  //   });
 
-    if (response.status_code === 201 || response.status_code === 200) {
-      setIsEditing(false);
+  //   if (response.status_code === 201 || response.status_code === 200) {
+  //     setIsEditing(false);
 
-      if (!inputValue.answer_id && response.data) {
-        field.onChange({
-          ...inputValue,
-          answer_id: response.data,
-        });
-      }
-    }
-  };
+  //     if (!inputValue.answer_id && response.data) {
+  //       field.onChange({
+  //         ...inputValue,
+  //         answer_id: response.data,
+  //       });
+  //     }
+  //   }
+  // };
 
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
@@ -173,7 +173,7 @@ const FormMultipleChoiceAndOrdering = ({
       css={styles.option({
         isSelected: !!Number(inputValue.is_correct),
         isEditing,
-        isMultipleChoice: multipleCorrectAnswer,
+        isMultipleChoice: hasMultipleCorrectAnswer,
       })}
       ref={setNodeRef}
       style={style}
@@ -181,7 +181,7 @@ const FormMultipleChoiceAndOrdering = ({
       <Show when={currentQuestionType === 'multiple_choice'}>
         <button css={styleUtils.resetButton} type="button" onClick={handleCorrectAnswer}>
           <Show
-            when={multipleCorrectAnswer}
+            when={hasMultipleCorrectAnswer}
             fallback={
               <SVGIcon
                 data-check-icon
@@ -273,7 +273,8 @@ const FormMultipleChoiceAndOrdering = ({
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleDuplicateAnswer();
+                  onDuplicateOption();
+                  // handleDuplicateAnswer();
                 }}
               >
                 <SVGIcon name="copyPaste" width={24} height={24} />
@@ -284,7 +285,7 @@ const FormMultipleChoiceAndOrdering = ({
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
+                  // deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                   onRemoveOption();
                 }}
               >
@@ -352,7 +353,7 @@ const FormMultipleChoiceAndOrdering = ({
                 onKeyDown={async (event) => {
                   event.stopPropagation();
                   if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
-                    await createQuizAnswer();
+                    // await createQuizAnswer();
                     setIsEditing(false);
                   }
                 }}
@@ -380,7 +381,8 @@ const FormMultipleChoiceAndOrdering = ({
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    await createQuizAnswer();
+                    setIsEditing(false);
+                    // await createQuizAnswer();
                   }}
                   disabled={!inputValue.answer_title && inputValue.image_url === ''}
                 >
