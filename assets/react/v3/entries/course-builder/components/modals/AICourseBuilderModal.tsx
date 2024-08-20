@@ -40,6 +40,8 @@ export default AICourseBuilderModal;
 
 const styles = {
   wrapper: css`
-		
+		width: 100vw;
+		height: 100vh;
+		position: relative;
 	`,
 };

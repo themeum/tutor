@@ -13,41 +13,25 @@ const ContentSkeleton = () => {
         <Skeleton isMagicAi animation width="80%" height="16px" />
         <Skeleton isMagicAi animation width="20%" height="16px" />
       </div>
-
-      <div css={styles.spacer}>
-        <div css={styles.group}>
-          <Skeleton isMagicAi animation width="16px" height="16px" isRound />
-          <Skeleton isMagicAi animation width="50%" height="16px" />
-        </div>
-        <div css={styles.group}>
-          <Skeleton isMagicAi animation width="16px" height="16px" isRound />
-          <Skeleton isMagicAi animation width="40%" height="16px" />
-        </div>
-        <div css={styles.group}>
-          <Skeleton isMagicAi animation width="16px" height="16px" isRound />
-          <Skeleton isMagicAi animation width="80%" height="16px" />
-        </div>
-      </div>
-
       <div css={styles.group}>
         <Skeleton isMagicAi animation width="16px" height="16px" isRound />
-        <Skeleton isMagicAi animation width="80%" height="16px" />
+        <Skeleton isMagicAi animation width="85%" height="16px" />
         <Skeleton isMagicAi animation width="20%" height="16px" />
       </div>
-
-      <div css={styles.spacer}>
-        <div css={styles.group}>
-          <Skeleton isMagicAi animation width="16px" height="16px" isRound />
-          <Skeleton isMagicAi animation width="50%" height="16px" />
-        </div>
-        <div css={styles.group}>
-          <Skeleton isMagicAi animation width="16px" height="16px" isRound />
-          <Skeleton isMagicAi animation width="40%" height="16px" />
-        </div>
-        <div css={styles.group}>
-          <Skeleton isMagicAi animation width="16px" height="16px" isRound />
-          <Skeleton isMagicAi animation width="80%" height="16px" />
-        </div>
+      <div css={styles.group}>
+        <Skeleton isMagicAi animation width="16px" height="16px" isRound />
+        <Skeleton isMagicAi animation width="90%" height="16px" />
+        <Skeleton isMagicAi animation width="20%" height="16px" />
+      </div>
+      <div css={styles.group}>
+        <Skeleton isMagicAi animation width="16px" height="16px" isRound />
+        <Skeleton isMagicAi animation width="60%" height="16px" />
+        <Skeleton isMagicAi animation width="20%" height="16px" />
+      </div>
+      <div css={styles.group}>
+        <Skeleton isMagicAi animation width="16px" height="16px" isRound />
+        <Skeleton isMagicAi animation width="70%" height="16px" />
+        <Skeleton isMagicAi animation width="20%" height="16px" />
       </div>
     </div>
   );
@@ -66,11 +50,5 @@ const styles = {
 		display: flex;
 		gap: ${spacing[16]};
 		align-items: center;
-	`,
-  spacer: css`
-		margin-left: ${spacing[16]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
 	`,
 };

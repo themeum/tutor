@@ -329,7 +329,7 @@ final class Prompts {
 	 * @return array
 	 */
 	public static function prepare_course_topic_content_messages( string $title, string $topic_name ) {
-		$system_content = "You are an AI assistant specialized in generating course contents. Generate minimum 2 to maximum 5 content items based on the provided course title and module name. The content can include any of the following types: 'lesson', 'quiz', or 'assignment'. For each content item, provide a title that accurately reflects the content. Return the generated content as a JSON array with the structure: [{type: `lesson|quiz|assignment`, title: 'the content title'}].";
+		$system_content = "You are an AI assistant specialized in generating course contents. Generate minimum 2 to maximum 5 content items based on the provided course title and module name. The content can include any of the following types: 'lesson', 'quiz', or 'assignment'. For each content item, provide a title and a description that accurately reflects the content. Return the generated content as a JSON array with the structure: [{type: `lesson|quiz|assignment`, title: 'the content title', description: 'the content description'}].";
 
 		return array(
 			array(
@@ -343,6 +343,74 @@ final class Prompts {
 			array(
 				'role'    => 'user',
 				'content' => 'The module name is: ' . $topic_name,
+			),
+		);
+	}
+
+	/**
+	 * Prepare the messages for the openai chat API for generating quiz content.
+	 *
+	 * @param string $title The course title.
+	 * @param string $topic_name The course module/topic name.
+	 * @param string $quiz_title The quiz title.
+	 * @return array
+	 * @since 3.0.0
+	 */
+	public static function prepare_quiz_questions_messages( string $title, string $topic_name, string $quiz_title ) {
+		$system_content = "You are an intelligent assistant tasked with creating quiz questions for a course. You are provided a course title, a course module name, and a quiz title.
+    Please generate a minimum of 3 and a maximum of 5 quiz questions of the following types:
+    - True/False
+    - Multiple Choice
+    - Open-Ended
+
+    Each question must have:
+    - A clear question title.
+    - A brief description that adds context to the question.
+    - For true/false questions: two options - 'true' and 'false'.
+    - For multiple-choice questions: several answer options with one correct answer.
+    - For open-ended questions: no options (only the question and description).
+
+		Additionally, please ensure that some of the questions have a question mark ('?') as the value of the title.
+
+		The response should be in **valid JSON** format as follows, and make sure not to use any suffix or prefix with the response:
+
+    [
+      {
+        'title': 'the question title?',
+				'type': 'true_false|open_ended|multiple_choice',
+        'options': [
+          {
+            'name': 'option name',
+            'is_correct_answer': true
+          },
+          {
+            'name': 'option name',
+            'is_correct_answer': false
+          }
+        ]
+      }
+    ]
+
+    Please ensure that the provided JSON is valid and properly structured. Include a variety of question types (true/false, multiple-choice, and open-ended), and make sure the content relates to the course and module.
+    Make sure the number of questions falls between 3 to 5, with some having '?' as the title.
+		";
+
+		return array(
+			array(
+				'role'    => 'system',
+				'content' => $system_content,
+			),
+			array(
+				'role'    => 'user',
+				'content' => 'The course title: ' . $title,
+			),
+			array(
+				'role'    => 'user',
+				'content' => 'The module name: ' . $topic_name,
+			),
+			array(
+				'role'    => 'user',
+				'content' => 'The quiz title: ' . $quiz_title,
 			),
 		);
 	}

@@ -22,7 +22,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
     },
   });
 
-  const { setCurrentStep, updateContent, updateLoading } = useContentGenerationContext();
+  const { setCurrentStep, updateContents, updateLoading } = useContentGenerationContext();
   const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
 
   return (
@@ -30,12 +30,12 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
       css={styles.container}
       onSubmit={form.handleSubmit(async (values) => {
         setCurrentStep('generation');
-        updateLoading({ title: true, image: true, description: true, content: true });
+        updateLoading({ title: true, image: true, description: true, content: true, topic: true, quiz: true });
         const response = await generateCourseTitleMutation.mutateAsync({ type: 'title', prompt: values.prompt });
         updateLoading({ title: false });
 
         if (response.data) {
-          updateContent({ title: response.data });
+          updateContents({ title: response.data });
         }
       })}
     >
@@ -78,14 +78,15 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
 export default BasicPrompt;
 const styles = {
   container: css`
-		position: relative;
+		position: absolute;
 		background: ${colorTokens.background.white};
 		max-width: 1218px;
 		box-shadow: ${shadow.modal};
 		border-radius: ${borderRadius[10]};
 		overflow: hidden;
 		top: 50%;
-		margin-top: 120px;
+		left: 50%;
+		translate: -50% -50%;
 		
 		${Breakpoint.smallTablet} {
 			width: 90%;

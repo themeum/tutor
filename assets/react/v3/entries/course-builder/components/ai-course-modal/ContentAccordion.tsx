@@ -2,11 +2,13 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
+import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useState } from 'react';
 import { useContentGenerationContext } from './ContentGenerationContext';
+import TopicContentSkeleton from './loaders/TopicContentSkeleton';
 
 interface AccordionContent {
   type: 'lesson' | 'assignment' | 'quiz';
@@ -102,6 +104,8 @@ const AccordionItem = ({
   content,
   setIsActive,
 }: { isActive: boolean; setIsActive: () => void; content: AccordionItem }) => {
+  const { loading } = useContentGenerationContext();
+  const isLoading = loading.content && content.content.length === 0;
   return (
     <div onClick={setIsActive} onKeyDown={noop} css={css`cursor: pointer;`}>
       <div css={styles.title}>
@@ -114,30 +118,32 @@ const AccordionItem = ({
         </p>
       </div>
       <div css={styles.content(content.is_active)}>
-        <For each={content.content}>
-          {(item, idx) => {
-            return (
-              <div css={styles.contentItem} key={idx}>
-                {icons[item.type]}
-                <span>{item.title}</span>
-              </div>
-            );
-          }}
-        </For>
+        <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
+          <For each={content.content}>
+            {(item, idx) => {
+              return (
+                <div css={styles.contentItem} key={idx}>
+                  {icons[item.type]}
+                  <span>{item.title}</span>
+                </div>
+              );
+            }}
+          </For>
+        </Show>
       </div>
     </div>
   );
 };
 
 const ContentAccordion = () => {
-  const { content } = useContentGenerationContext();
-  const [items, setItems] = useState<AccordionItem[]>(accordionContent);
+  const { currentContent } = useContentGenerationContext();
+  const [items, setItems] = useState<AccordionItem[]>([]);
 
   useEffect(() => {
-    if (content.content) {
-      // setItems(content.content.map((item) => ({ ...item, is_active: false })));
+    if (currentContent.topics) {
+      setItems(currentContent.topics.map((item) => ({ ...item }) as AccordionItem));
     }
-  }, [content.content]);
+  }, [currentContent.topics]);
 
   return (
     <div css={styles.wrapper}>
@@ -150,9 +156,9 @@ const ContentAccordion = () => {
               isActive={index === 0}
               setIsActive={() => {
                 setItems((previous) => {
-                  const updated = [...previous].map((item) => ({ ...item, is_active: false }));
-                  updated[index].is_active = true;
-                  return updated;
+                  const copy = [...previous].map((item) => ({ ...item, is_active: false }));
+                  copy[index].is_active = true;
+                  return copy;
                 });
               }}
             />

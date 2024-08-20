@@ -1,6 +1,7 @@
 import { useToast } from '@Atoms/Toast';
 import type { StyleType } from '@Components/magic-ai-image/ImageContext';
 import type { ChatFormat, ChatLanguage, ChatTone } from '@Config/magic-ai';
+import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { Prettify, WPResponse } from '@Utils/types';
@@ -130,7 +131,7 @@ export const useStoreAIGeneratedImageMutation = () => {
   });
 };
 
-export type ContentType = 'title' | 'image' | 'description' | 'content';
+export type ContentType = 'title' | 'image' | 'description' | 'topic_names';
 
 interface CourseGenerationTitle {
   type: Extract<ContentType, 'title'>;
@@ -153,6 +154,99 @@ export const useGenerateCourseContentMutation = (type: ContentType) => {
   return useMutation({
     mutationKey: ['GenerateCourseContent', type],
     mutationFn: generateCourseContent,
+    onError(error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
+
+interface CourseTopicPayload {
+  type: ContentType;
+  title: string;
+}
+
+const generateCourseTopicNames = (payload: CourseTopicPayload) => {
+  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<{ name: string }[]>>(
+    endpoints.GENERATE_COURSE_CONTENT,
+    payload,
+  );
+};
+
+export const useGenerateCourseTopicNamesMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: generateCourseTopicNames,
+    onError(error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
+
+interface TopicContentPayload {
+  title: string;
+  topic_name: string;
+  index: number;
+}
+
+const generateCourseTopicContent = (payload: TopicContentPayload) => {
+  return wpAjaxInstance.post<TopicContentPayload, WPResponse<{ topic_contents: TopicContent[]; index: number }>>(
+    endpoints.GENERATE_COURSE_TOPIC_CONTENT,
+    payload,
+  );
+};
+
+export const useGenerateCourseTopicContentMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: generateCourseTopicContent,
+    onError(error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
+
+interface SaveContentPayload {
+  content: string;
+  course_id: number;
+}
+
+const saveAIGeneratedCourseContent = (payload: SaveContentPayload) => {
+  return wpAjaxInstance.post(endpoints.SAVE_AI_GENERATED_COURSE_CONTENT, payload);
+};
+export const useSaveAIGeneratedCourseContentMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: saveAIGeneratedCourseContent,
+    onError(error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
+
+interface QuizQuestionsPayload {
+  title: string;
+  topic_name: string;
+  quiz_title: string;
+}
+
+export interface QuizContent {
+  title: string;
+  type: 'true_false' | 'multiple_choice' | 'open_ended';
+  description: string;
+  options?: { name: string; is_correct_answer: boolean }[];
+}
+
+const generateQuizQuestions = (payload: QuizQuestionsPayload) => {
+  return wpAjaxInstance.post<QuizQuestionsPayload, WPResponse<QuizContent[]>>(
+    endpoints.GENERATE_QUIZ_QUESTIONS,
+    payload,
+  );
+};
+
+export const useGenerateQuizQuestionsMutation = () => {
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: generateQuizQuestions,
     onError(error) {
       showToast({ type: 'danger', message: error.message });
     },

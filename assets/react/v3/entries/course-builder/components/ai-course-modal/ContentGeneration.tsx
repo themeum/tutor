@@ -1,90 +1,175 @@
 import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
+import { useToast } from '@Atoms/Toast';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { useGenerateCourseContentMutation } from '@CourseBuilderServices/magic-ai';
+import {
+  useGenerateCourseContentMutation,
+  useGenerateCourseTopicContentMutation,
+  useGenerateCourseTopicNamesMutation,
+  useGenerateQuizQuestionsMutation,
+  useSaveAIGeneratedCourseContentMutation,
+} from '@CourseBuilderServices/magic-ai';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
+import { getObjectKeys, getObjectValues } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
+import { Controller } from 'react-hook-form';
 import ContentAccordion from './ContentAccordion';
-import { type Content, type Loading, useContentGenerationContext } from './ContentGenerationContext';
+import { type Loading, type Topic, useContentGenerationContext } from './ContentGenerationContext';
 import ContentSkeleton from './loaders/ContentSkeleton';
 import DescriptionSkeleton from './loaders/DescriptionSkeleton';
 import ImageSkeleton from './loaders/ImageSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
 interface LoadingStep {
-  type: keyof Loading;
   loading_label: string;
   completed_label: string;
   completed: boolean;
+  index?: number;
 }
 
-const defaultSteps: LoadingStep[] = [
-  {
-    type: 'title',
-    loading_label: __('Generating course title...', 'tutor'),
-    completed_label: __('Course title created.', 'tutor'),
+const defaultSteps: Record<keyof Loading, LoadingStep> = {
+  title: {
+    loading_label: __('Now generating course title...', 'tutor'),
+    completed_label: __('Course title generated.', 'tutor'),
     completed: false,
   },
-  {
-    type: 'image',
-    loading_label: __('Generating course banner image...', 'tutor'),
-    completed_label: __('Course banner image created.', 'tutor'),
+  image: {
+    loading_label: __('Now generating course banner image...', 'tutor'),
+    completed_label: __('Course banner image generated.', 'tutor'),
     completed: false,
   },
-  {
-    type: 'description',
-    loading_label: __('Generating course description...', 'tutor'),
-    completed_label: __('Course description created.', 'tutor'),
+  description: {
+    loading_label: __('Now generating course description...', 'tutor'),
+    completed_label: __('Course description generated.', 'tutor'),
     completed: false,
   },
-  {
-    type: 'content',
-    loading_label: __('Generating course contents...', 'tutor'),
-    completed_label: __('Course contents created.', 'tutor'),
+  topic: {
+    loading_label: __('Now generating topic names...', 'tutor'),
+    completed_label: __('Course topics generated', 'tutor'),
     completed: false,
   },
-] as const;
+  content: {
+    loading_label: __('Now generating course contents...', 'tutor'),
+    completed_label: __('Course contents generated', 'tutor'),
+    completed: false,
+  },
+  quiz: {
+    loading_label: __('Now generating quiz questions...', 'tutor'),
+    completed_label: __('Quiz questions generated', 'tutor'),
+    completed: false,
+  },
+};
 
 const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
-  const { content, loading, updateLoading, updateContent } = useContentGenerationContext();
+  const [loadingSteps, setLoadingSteps] = useState(defaultSteps);
+  const [isCreateNewCourse, setIsCreateNewCourse] = useState(false);
+  const { currentContent, loading, updateLoading, updateContents, setPointer } = useContentGenerationContext();
+  const params = new URLSearchParams(window.location.search);
+  const courseId = Number(params.get('course_id'));
+
   const generateCourseImageMutation = useGenerateCourseContentMutation('image');
   const generateCourseDescriptionMutation = useGenerateCourseContentMutation('description');
-  const generateCourseContentMutation = useGenerateCourseContentMutation('content');
-  const [loadingSteps, setLoadingSteps] = useState(defaultSteps);
+  const generateCourseTopicsMutation = useGenerateCourseTopicNamesMutation();
+  const generateCourseTopicContentMutation = useGenerateCourseTopicContentMutation();
+  const saveAIGeneratedCourseContentMutation = useSaveAIGeneratedCourseContentMutation();
+  const generateQuizQuestionsMutation = useGenerateQuizQuestionsMutation();
+  const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
+
+  const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
+
+  const { showToast } = useToast();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (!content.title) {
+    if (!currentContent.title) {
       return;
     }
 
-    generateCourseImageMutation.mutateAsync({ type: 'image', title: content.title }).then((response) => {
+    generateCourseImageMutation.mutateAsync({ type: 'image', title: currentContent.title }).then((response) => {
       updateLoading({ image: false });
-      updateContent({ image: response.data });
+      updateContents({ image: response.data });
     });
 
-    generateCourseDescriptionMutation.mutateAsync({ type: 'description', title: content.title }).then((response) => {
-      updateLoading({ description: false });
-      updateContent({ description: response.data });
-    });
+    generateCourseDescriptionMutation
+      .mutateAsync({ type: 'description', title: currentContent.title })
+      .then((response) => {
+        updateLoading({ description: false });
+        updateContents({ description: response.data });
+      });
 
-    generateCourseContentMutation.mutateAsync({ type: 'content', title: content.title }).then((response) => {
-      updateLoading({ content: false });
-      updateContent({ content: response.data as unknown as Content[] });
-    });
-  }, [loading.title, content.title]);
+    generateCourseTopicsMutation
+      .mutateAsync({ type: 'topic_names', title: currentContent.title })
+      .then(async (response) => {
+        updateLoading({ topic: false });
+        const topics = response.data.map(
+          (item) =>
+            ({
+              ...item,
+              content: [],
+              is_active: true,
+            }) as Topic,
+        );
+
+        updateContents({ topics });
+
+        const promises = topics.map((item, index) => {
+          return generateCourseTopicContentMutation
+            .mutateAsync({ title: currentContent.title, topic_name: item.name, index })
+            .then((data) => {
+              const { index: idx, topic_contents } = data.data;
+              topics[idx].content ||= [];
+              topics[idx].content.push(...topic_contents);
+              updateContents({ topics });
+            });
+        });
+
+        await Promise.allSettled(promises);
+        updateLoading({ content: false });
+
+        /** Generate quiz contents  */
+        const quizPromises = [];
+
+        for (let i = 0; i < topics.length; i++) {
+          const topic = topics[i];
+          for (let j = 0; j < topic.content.length; j++) {
+            const quizContent = topic.content[j];
+            if (quizContent.type === 'quiz') {
+              const promise = generateQuizQuestionsMutation
+                .mutateAsync({
+                  title: currentContent.title,
+                  topic_name: topic.name,
+                  quiz_title: quizContent.title,
+                })
+                .then((response) => {
+                  topics[i].content[j].questions ||= [];
+                  topics[i].content[j].questions = response.data;
+                });
+              quizPromises.push(promise);
+            }
+          }
+        }
+
+        await Promise.allSettled(quizPromises);
+        updateLoading({ quiz: false });
+      });
+  }, [loading.title, currentContent?.title]);
 
   useEffect(() => {
     setLoadingSteps((previous) => {
-      return previous.map((item) => {
-        return { ...item, completed: !loading[item.type] };
-      });
+      const copy = { ...previous };
+      const keys = getObjectKeys(loading);
+      for (const key of keys) {
+        copy[key].completed = !loading[key];
+      }
+      return copy;
     });
   }, [loading]);
 
@@ -95,14 +180,14 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           <div css={styles.title}>
             <Show when={!loading.title} fallback={<TitleSkeleton />}>
               <SVGIcon name="book" width={40} height={40} />
-              <h5 title={content.title}>{content.title}</h5>
+              <h5 title={currentContent.title}>{currentContent.title}</h5>
             </Show>
           </div>
 
           <div css={styles.leftContentWrapper}>
             <Show when={!loading.image} fallback={<ImageSkeleton />}>
               <div css={styles.imageWrapper}>
-                <img src={content.image} alt="course banner" />
+                <img src={currentContent.image} alt="course banner" />
               </div>
             </Show>
 
@@ -110,11 +195,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               <div css={styles.section}>
                 <h5>{__('Course Info', 'tutor')}</h5>
                 <div css={styles.content}>
-                  <div dangerouslySetInnerHTML={{ __html: content.description }} />
+                  <div dangerouslySetInnerHTML={{ __html: currentContent.description }} />
                 </div>
               </div>
             </Show>
-            <Show when={!loading.content} fallback={<ContentSkeleton />}>
+            <Show when={!loading.topic} fallback={<ContentSkeleton />}>
               <div css={styles.section}>
                 <h5>{__('Course Content', 'tutor')}</h5>
                 <div css={styles.content}>
@@ -131,12 +216,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               <div css={styles.boxContent}>
                 <h6>{__('Generating course content', 'tutor')}</h6>
                 <div css={styles.items}>
-                  <For each={loadingSteps}>
-                    {(step, index) => {
+                  <For each={getObjectKeys(loadingSteps)}>
+                    {(stepKey, index) => {
+                      const step = loadingSteps[stepKey];
+
                       return (
-                        <div css={styles.item}>
+                        <div css={styles.item} key={index}>
                           <Show
-                            key={index}
                             when={step.completed}
                             fallback={
                               <>
@@ -153,21 +239,81 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     }}
                   </For>
                 </div>
-
-                <Show when={loadingSteps.every((item) => item.completed)}>
+                <Show when={getObjectValues(loading).every((item) => !item)}>
                   <div css={styles.boxFooter}>
                     <MagicButton variant="primary_outline">
                       <SVGIcon name="tryAgain" width={24} height={24} />
-                      Regenerate course
+                      {__('Regenerate course', 'tutor')}
                     </MagicButton>
-                    <MagicButton variant="primary_outline">
+                    <MagicButton
+                      variant="primary_outline"
+                      onClick={() => {
+                        setIsCreateNewCourse(true);
+                      }}
+                    >
                       <SVGIcon name="magicWand" width={24} height={24} />
-                      Make a little different
+                      {__('Create a new course', 'tutor')}
                     </MagicButton>
                   </div>
                 </Show>
               </div>
             </div>
+
+            <Show when={isCreateNewCourse}>
+              <div css={styles.box({ deactivated: false })}>
+                <form
+                  css={styles.regenerateForm}
+                  onSubmit={form.handleSubmit(async (values) => {
+                    updateLoading({
+                      title: true,
+                      image: true,
+                      description: true,
+                      content: true,
+                      topic: true,
+                      quiz: true,
+                    });
+                    setPointer((previous) => previous + 1);
+                    const response = await generateCourseTitleMutation.mutateAsync({
+                      type: 'title',
+                      prompt: values.prompt,
+                    });
+                    updateLoading({ title: false });
+
+                    if (response.data) {
+                      updateContents({ title: response.data });
+                    }
+                  })}
+                >
+                  <Controller
+                    control={form.control}
+                    name="prompt"
+                    render={(props) => (
+                      <FormTextareaInput
+                        {...props}
+                        isMagicAi
+                        placeholder={__('Type your desired course topic. e.g. Learning piano, Cooking 101..', 'tutor')}
+                        rows={4}
+                      />
+                    )}
+                  />
+                  <div css={styles.formButtons}>
+                    <MagicButton
+                      variant="primary_outline"
+                      onClick={() => {
+                        setIsCreateNewCourse(false);
+                        setPointer((previous) => previous - 1);
+                      }}
+                    >
+                      {__('Cancel', 'tutor')}
+                    </MagicButton>
+                    <MagicButton type="submit">
+                      <SVGIcon name="magicWand" width={24} height={24} />
+                      {__('Create now', 'tutor')}
+                    </MagicButton>
+                  </div>
+                </form>
+              </div>
+            </Show>
           </div>
 
           <div css={styles.rightFooter}>
@@ -176,7 +322,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </MagicButton>
             <MagicButton
               onClick={() => {
-                alert('@TODO: will be implemented later.');
+                setPointer((previous) => previous + 1);
+                saveAIGeneratedCourseContentMutation.mutate({
+                  course_id: courseId,
+                  content: JSON.stringify(currentContent),
+                });
+                onClose();
+                showToast({ type: 'success', message: 'Course content stored into a local file.' });
               }}
             >
               {__('Append the course', 'tutor')}
@@ -211,6 +363,23 @@ const styles = {
 			gap: ${spacing[16]};
 		}
 	`,
+  regenerateForm: css`
+		display: flex;
+		flex-direction: column;
+		gap: ${spacing[16]};
+		width: 100%;
+
+		button {
+			width: auto;
+		}
+	`,
+  formButtons: css`
+		display: flex;
+		width: 100%;
+		justify-content: end;
+		align-items: center;
+		gap: ${spacing[16]};
+	`,
   leftContentWrapper: css`
 		display: flex;
 		flex-direction: column;
@@ -223,8 +392,7 @@ const styles = {
 		border-radius: ${borderRadius[8]};
 		border: 1px solid ${colorTokens.bg.brand};
 		padding: ${spacing[16]} ${spacing[12]};
-		display: grid;
-		grid-template-columns: 24px auto;
+		display: flex;
 		gap: ${spacing[12]};
 
 		svg {
@@ -286,6 +454,7 @@ const styles = {
 		gap: ${spacing[8]};
 		${typography.caption()};
 		color: ${colorTokens.text.title};
+		${styleUtils.textEllipsis};
 
 		svg {
 			color: ${colorTokens.stroke.success.fill70};
@@ -348,8 +517,6 @@ const styles = {
 		align-items: center;
 		gap: ${spacing[8]};
 		color: ${colorTokens.icon.default};
-		// position: sticky;
-		// top: 0;
 		z-index: ${zIndex.header};
 		min-height: 40px;	
 		padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};	

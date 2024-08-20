@@ -99,7 +99,7 @@ class TextController {
 			throw new InvalidArgumentException( sprintf( 'There is no such a type %s exists.', esc_html( $type ) ) );
 		}
 
-		$method = 'prepare_' . $type . '_input';
+		$method = 'prepare_' . $type . '_messages';
 
 		if ( ! method_exists( Prompts::class, $method ) ) {
 			throw new InvalidArgumentException(
