@@ -1,7 +1,6 @@
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 import { useFormContext } from 'react-hook-form';
-import { __ } from '@wordpress/i18n';
 import Button from '@Atoms/Button';
 import StudentListModal from '@EnrollmentComponents/modals/StudentListModal';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
@@ -16,6 +15,7 @@ import { useState } from 'react';
 import StudentCard from './StudentCard';
 import { useDebounce } from '@Hooks/useDebounce';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
+const { __ } = wp.i18n;
 
 interface FormSelectStudentsProps extends FormControllerProps<Student[]> {
   label?: string;
@@ -28,12 +28,16 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
   const form = useFormContext<Enrollment>();
   const { showModal } = useModal();
 
+  const course = form.watch('course');
+  const students = form.watch('students') ?? [];
+
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
 
   const studentListQuery = useStudentListQuery({
     offset: 0,
     limit: 10,
+    object_id: course?.id,
     filter: {
       search: debouncedSearchText,
     },
@@ -47,11 +51,8 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
     isDropdown: true,
   });
 
-  const students = form.watch('students') ?? [];
-  const hasError = !!fieldState.error;
-
   function handleItemClick(item: Student) {
-    const isAlreadySelected = students.find((student) => student.id === item.id);
+    const isAlreadySelected = students.find((student) => student.ID === item.ID);
     if (!isAlreadySelected) {
       form.setValue('students', [...students, item]);
     }
@@ -107,7 +108,7 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                 ) : studentListResult.length > 0 ? (
                   studentListResult.map((item) => (
                     <StudentCard
-                      key={item.id}
+                      key={item.ID}
                       name={item.display_name}
                       email={item.user_email}
                       avatar={item.avatar_url}

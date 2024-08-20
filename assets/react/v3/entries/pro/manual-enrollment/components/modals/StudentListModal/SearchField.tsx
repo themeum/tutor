@@ -3,9 +3,9 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Filter } from '@Hooks/usePaginatedTable';
-import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
+const { __ } = wp.i18n;
 
 interface FilterFormValues {
 	search: string;

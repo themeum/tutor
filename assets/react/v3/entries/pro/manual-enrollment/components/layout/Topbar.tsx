@@ -6,8 +6,8 @@ import { typography } from '@Config/typography';
 import { Enrollment, useCreateEnrollmentMutation } from '@EnrollmentServices/enrollment';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
+const { __ } = wp.i18n;
 
 export const TOPBAR_HEIGHT = 80;
 
@@ -20,7 +20,7 @@ function Topbar() {
     const isSubscriptionCourse = !!data.course?.plans?.length;
 
     const response = await createEnrollmentMutation.mutateAsync({
-      student_ids: data.students.map((item) => item.id),
+      student_ids: data.students.map((item) => item.ID),
       object_ids: data.course ? (isSubscriptionCourse ? [Number(data.subscription)] : [data.course.id]) : [],
       payment_status: data.payment_status,
       order_type: isSubscriptionCourse ? 'subscription' : 'single_order',
@@ -45,7 +45,7 @@ function Topbar() {
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>{__('Manual Enrolment', 'tutor')}</h4>
+                <h4 css={typography.heading5('medium')}>{__('Manual Enrollment', 'tutor')}</h4>
               </div>
             </div>
           </div>

@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { useFormContext } from 'react-hook-form';
-import { __ } from '@wordpress/i18n';
 import Button from '@Atoms/Button';
 import { useModal } from '@Components/modals/Modal';
 import { Course, Enrollment } from '@EnrollmentServices/enrollment';
@@ -8,6 +7,7 @@ import CourseListModal from '@EnrollmentComponents/modals/CourseListModal';
 import CourseCard from '@EnrollmentComponents/CourseCard';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import { FormControllerProps } from '@Utils/form';
+const { __ } = wp.i18n;
 
 interface FormSelectCourseProps extends FormControllerProps<Course | null> {
   disabled?: boolean;

@@ -1,6 +1,5 @@
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import coursePlaceholder from '@Images/common/course-placeholder.png';

@@ -1,10 +1,10 @@
 import { colorTokens, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
-import { __, _n, sprintf } from '@wordpress/i18n';
 import { typography } from '@Config/typography';
 import StudentCard from './StudentCard';
 import { Enrollment, Student } from '@EnrollmentServices/enrollment';
 import { UseFormReturn } from 'react-hook-form';
+const { __, _n, sprintf } = wp.i18n;
 
 interface SelectedStudentsProps {
   form: UseFormReturn<Enrollment>;
@@ -12,10 +12,10 @@ interface SelectedStudentsProps {
 }
 
 function SelectedStudents({ form, students }: SelectedStudentsProps) {
-  function removesSelectedItem(id: number) {
+  function removesSelectedItem(id: String) {
     form.setValue(
       'students',
-      students?.filter((item) => item.id !== id)
+      students?.filter((item) => item.ID !== id)
     );
   }
 
@@ -26,12 +26,12 @@ function SelectedStudents({ form, students }: SelectedStudentsProps) {
       </div>
       {students?.map((item) => (
         <StudentCard
-          key={item.id}
+          key={item.ID}
           name={item.display_name}
           email={item.user_email}
           avatar={item.avatar_url}
           hasSideBorders
-          onRemoveClick={() => removesSelectedItem(item.id)}
+          onRemoveClick={() => removesSelectedItem(item.ID)}
         />
       ))}
     </div>

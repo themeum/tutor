@@ -6,7 +6,7 @@ import { ErrorResponse } from '@Utils/form';
 import { PaginatedParams, PaginatedResult } from '@Utils/types';
 
 export interface Student {
-  id: number;
+  ID: string;
   display_name: string;
   user_email: string;
   avatar_url: string;
@@ -60,7 +60,7 @@ export interface Enrollment {
 }
 
 interface EnrollmentPayload {
-  student_ids: number[];
+  student_ids: string[];
   object_ids: number[];
   payment_status: string;
   order_type: string;
@@ -111,14 +111,17 @@ export const useCurseListQuery = (params: PaginatedParams) => {
   });
 };
 
-const getStudentList = (params: PaginatedParams) => {
+interface GetStudentListParams extends PaginatedParams {
+  object_id?: number;
+}
+const getStudentList = (params: GetStudentListParams) => {
   return authApiInstance.post<PaginatedResult<Student>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_user_list',
+    action: 'tutor_unenrolled_users',
     ...params,
   });
 };
 
-export const useStudentListQuery = (params: PaginatedParams) => {
+export const useStudentListQuery = (params: GetStudentListParams) => {
   return useQuery({
     queryKey: ['StudentList', params],
     placeholderData: keepPreviousData,

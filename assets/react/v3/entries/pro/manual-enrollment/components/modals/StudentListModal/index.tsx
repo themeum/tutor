@@ -4,10 +4,10 @@ import type { ModalProps } from '@Components/modals/Modal';
 import { spacing } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
 import StudentListTable from './StudentListTable';
 import { Enrollment } from '@EnrollmentServices/enrollment';
+const { __ } = wp.i18n;
 
 interface SelectStudentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

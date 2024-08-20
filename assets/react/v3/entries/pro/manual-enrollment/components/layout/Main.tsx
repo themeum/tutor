@@ -3,12 +3,12 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { Controller, FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
-import { __ } from '@wordpress/i18n';
 import { Enrollment } from '@EnrollmentServices/enrollment';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { requiredRule } from '@Utils/validation';
 import FormSelectCourse from '@EnrollmentComponents/FormSelectCourse';
 import FormSelectStudents from '@EnrollmentComponents/FormSelectStudents';
+const { __ } = wp.i18n;
 
 function Main() {
   const form = useFormWithGlobalError<Enrollment>({
@@ -50,13 +50,17 @@ function Main() {
         <div css={styles.container}>
           <div css={styles.content}>
             <div css={styles.left}>
-              <div css={styles.studentsWrapper} title="Please select a course first!">
+              <div css={styles.studentsWrapper}>
                 <Controller
                   name="students"
                   control={form.control}
                   rules={requiredRule()}
                   render={(controllerProps) => (
-                    <FormSelectStudents {...controllerProps} label={__('Students', 'tutor')} disabled={!course} />
+                    <FormSelectStudents
+                      {...controllerProps}
+                      label={__('Students', 'tutor')}
+                      //disabled={!course}
+                    />
                   )}
                 />
               </div>

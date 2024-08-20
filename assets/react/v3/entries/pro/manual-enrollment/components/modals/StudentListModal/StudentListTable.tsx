@@ -6,26 +6,28 @@ import { css } from '@emotion/react';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
-
-import coursePlaceholder from '@Images/common/course-placeholder.png';
-import { __ } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 import { Enrollment, Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
+const { __ } = wp.i18n;
 
 interface StudentListTableProps {
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 
 const StudentListTable = ({ form }: StudentListTableProps) => {
+  const course = form.watch('course');
   const courseList = form.watch('students') || [];
+
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
+
   const studentListQuery = useStudentListQuery({
     offset,
     limit: itemsPerPage,
     filter: pageInfo.filter,
+    object_id: course?.id,
   });
 
   function toggleSelection(isChecked = false) {
@@ -35,7 +37,7 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
   function handleAllIsChecked() {
     return (
       courseList.length === studentListQuery.data?.results.length &&
-      courseList?.every((item) => studentListQuery.data?.results?.map((result) => result.id).includes(item.id))
+      courseList?.every((item) => studentListQuery.data?.results?.map((result) => result.ID).includes(item.ID))
     );
   }
 
@@ -56,7 +58,7 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const filteredItems = courseList.filter((course) => course.id !== item.id);
+                const filteredItems = courseList.filter((course) => course.ID !== item.ID);
                 const isNewItem = filteredItems?.length === courseList.length;
 
                 if (isNewItem) {
@@ -65,10 +67,10 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
                   form.setValue('students', filteredItems);
                 }
               }}
-              checked={courseList.map((course) => course.id).includes(item.id)}
+              checked={courseList.map((course) => course.ID).includes(item.ID)}
             />
             <div css={styles.studentInfo}>
-              <img src={item.avatar_url || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+              <img src={item.avatar_url} css={styles.thumbnail} alt={__('Student item', 'tutor')} />
               <div>
                 <div css={styles.title}>{item.display_name}</div>
                 <p css={styles.subTitle}>{item.user_email}</p>

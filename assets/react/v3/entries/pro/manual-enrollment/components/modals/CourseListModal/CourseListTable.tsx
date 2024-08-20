@@ -5,12 +5,11 @@ import { css } from '@emotion/react';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { Column } from '@Molecules/Table';
-import coursePlaceholder from '@Images/common/course-placeholder.png';
-import { __, sprintf } from '@wordpress/i18n';
 import SearchField from './SearchField';
 import Button from '@Atoms/Button';
 import { Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
 import SVGIcon from '@Atoms/SVGIcon';
+const { __, sprintf } = wp.i18n;
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
@@ -33,7 +32,7 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
       Cell: (item) => {
         return (
           <div css={styles.courseItemWrapper}>
-            <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+            <img src={item.image} css={styles.thumbnail} alt={__('Course item', 'tutor')} />
             <div css={styles.courseContent}>
               {item.total_course && (
                 <div css={styles.bundleBadge}>{sprintf(__('%d Course Bundle', 'tutor'), item.total_course)}</div>
