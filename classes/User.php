@@ -10,6 +10,10 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
+use Tutor\Models\UserModel;
+use Tutor\Traits\JsonResponse;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,6 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class User {
+	use JsonResponse;
 
 	const STUDENT    = 'subscriber';
 	const INSTRUCTOR = 'tutor_instructor';
@@ -27,6 +32,15 @@ class User {
 
 	const REVIEW_POPUP_META = 'tutor_review_course_popup';
 	const LAST_LOGIN_META   = 'tutor_last_login';
+
+	/**
+	 * User model
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var UserModel
+	 */
+	private $model;
 
 	/**
 	 * Registration notice
@@ -48,6 +62,7 @@ class User {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
+		$this->model = new UserModel();
 		if ( ! $register_hooks ) {
 			return;
 		}
@@ -64,6 +79,8 @@ class User {
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
 		add_action( 'wp_login', array( $this, 'update_user_last_login' ), 10, 2 );
+
+		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 	}
 
 	/**
@@ -397,5 +414,58 @@ class User {
 	 */
 	public function update_user_last_login( $user_login, $user ) {
 		update_user_meta( $user->ID, self::LAST_LOGIN_META, time() );
+	}
+
+	/**
+	 * Get user list with pagination & support
+	 * search term
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_user_list() {
+		tutor_utils()->check_nonce();
+
+		$can_access = apply_filters( 'tutor_user_list_access', current_user_can( 'manage_options' ) );
+		if ( ! $can_access ) {
+			$this->json_response( tutor_utils()->error_message( 'forbidden' ), HttpHelper::STATUS_FORBIDDEN );
+		}
+
+		$response = array(
+			'results'     => array(),
+			'total_items' => 0,
+		);
+
+		$limit  = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset = Input::post( 'offset', 0, Input::TYPE_INT );
+
+		$args = array(
+			'limit'  => $limit,
+			'offset' => $offset,
+		);
+
+		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
+		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) && ! empty( $filter->search ) ) {
+			$args['search']         = '*' . Input::sanitize( $filter->search ) . '*';
+			$args['search_columns'] = array( 'user_login', 'user_email', 'user_nicename', 'display_name', 'ID' );
+		}
+
+		$user_list = $this->model->get_users_list( $args );
+
+		if ( is_object( $user_list ) ) {
+			foreach ( $user_list->get_results() as $user ) {
+				// Set user avatar.
+				$user->avatar_url      = get_avatar_url( $user->ID, array( 'size' => 32 ) );
+				$response['results'][] = $user;
+			}
+
+			$response['total_items'] = $user_list->get_total();
+		}
+
+		$this->json_response(
+			__( 'User list fetched successfully!', 'tutor' ),
+			$response
+		);
 	}
 }

@@ -30,6 +30,7 @@ import {
 import { type ID, useAssignmentDetailsQuery, useSaveAssignmentMutation } from '@CourseBuilderServices/curriculum';
 import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { styleUtils } from '@Utils/style-utils';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -116,6 +117,8 @@ const AssignmentModal = ({
     shouldFocusError: true,
   });
 
+  const isFormDirty = form.formState.isDirty;
+
   const prerequisiteCourses = assignmentDetails?.content_drip_settings?.course_prerequisites
     ? assignmentDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
     : [];
@@ -165,23 +168,29 @@ const AssignmentModal = ({
   return (
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      icon={icon}
-      title={title}
+      icon={isFormDirty && assignmentId ? <SVGIcon name="warning" width={24} height={24} /> : icon}
+      title={isFormDirty && assignmentId ? __('Unsaved Changes', 'tutor') : title}
       subtitle={subtitle}
       actions={
-        <>
-          <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
-            {__('Cancel', 'tutor')}
-          </Button>
-          <Button
-            loading={saveAssignmentMutation.isPending}
-            variant="primary"
-            size="small"
-            onClick={form.handleSubmit(onSubmit)}
-          >
-            {assignmentId ? __('Update', 'tutor') : __('Save', 'tutor')}
-          </Button>
-        </>
+        isFormDirty ? (
+          <>
+            <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
+              {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+            </Button>
+            <Button
+              loading={saveAssignmentMutation.isPending}
+              variant="primary"
+              size="small"
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              {assignmentId ? __('Update', 'tutor') : __('Save', 'tutor')}
+            </Button>
+          </>
+        ) : (
+          <button css={styleUtils.crossButton} type="button" onClick={() => closeModal({ action: 'CLOSE' })}>
+            <SVGIcon name="cross" width={32} height={32} />
+          </button>
+        )
       }
     >
       <div css={styles.wrapper}>

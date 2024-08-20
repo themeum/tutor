@@ -14,6 +14,7 @@ interface ConfirmationPopoverProps<TRef> {
   title: string;
   message: string | ReactNode;
   onConfirmation: () => void;
+  onCancel?: () => void;
   isLoading?: boolean;
   arrow?: arrowPosition;
   gap?: number;
@@ -43,6 +44,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
   title,
   message,
   onConfirmation,
+  onCancel,
   isLoading = false,
   gap,
   maxWidth,
@@ -80,7 +82,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
             <p css={styles.description}>{message}</p>
           </div>
           <div css={styles.footer({ isDelete: confirmButton?.isDelete ?? false })}>
-            <Button variant={cancelButton?.variant ?? 'text'} size="small" onClick={() => closePopover()}>
+            <Button variant={cancelButton?.variant ?? 'text'} size="small" onClick={onCancel ?? closePopover}>
               {cancelButton?.text ?? __('Cancel', 'tutor')}
             </Button>
             <Button

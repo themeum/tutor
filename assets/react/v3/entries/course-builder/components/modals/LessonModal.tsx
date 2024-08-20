@@ -32,6 +32,7 @@ import {
 import { type ID, useLessonDetailsQuery, useSaveLessonMutation } from '@CourseBuilderServices/curriculum';
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { styleUtils } from '@Utils/style-utils';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -99,6 +100,8 @@ const LessonModal = ({
     shouldFocusError: true,
   });
 
+  const isFormDirty = form.formState.isDirty;
+
   const prerequisiteCourses = lessonDetails?.content_drip_settings?.course_prerequisites
     ? lessonDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
     : [];
@@ -161,23 +164,29 @@ const LessonModal = ({
   return (
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      icon={icon}
-      title={title}
+      icon={isFormDirty && lessonId ? <SVGIcon name="warning" width={24} height={24} /> : icon}
+      title={isFormDirty && lessonId ? __('Unsaved Changes', 'tutor') : title}
       subtitle={subtitle}
       actions={
-        <>
-          <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
-            {__('Cancel', 'tutor')}
-          </Button>
-          <Button
-            loading={saveLessonMutation.isPending}
-            variant="primary"
-            size="small"
-            onClick={form.handleSubmit(onSubmit)}
-          >
-            {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
-          </Button>
-        </>
+        isFormDirty ? (
+          <>
+            <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
+              {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+            </Button>
+            <Button
+              loading={saveLessonMutation.isPending}
+              variant="primary"
+              size="small"
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
+            </Button>
+          </>
+        ) : (
+          <button css={styleUtils.crossButton} type="button" onClick={() => closeModal({ action: 'CLOSE' })}>
+            <SVGIcon name="cross" width={32} height={32} />
+          </button>
+        )
       }
     >
       <div css={styles.wrapper}>
@@ -467,6 +476,7 @@ const styles = {
     color: ${colorTokens.text.title};
   `,
   lessonPreview: css`
+    background-color: ${colorTokens.background.white};
     padding: ${spacing[12]};
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
