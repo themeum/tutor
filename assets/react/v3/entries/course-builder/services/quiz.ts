@@ -18,6 +18,8 @@ import type { ErrorResponse } from '@Utils/form';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
 
+type QuizDataStatus = 'new' | 'update' | 'no_change';
+
 export type QuizQuestionType =
   | 'true_false'
   | 'single_choice'
@@ -31,6 +33,7 @@ export type QuizQuestionType =
   | 'ordering';
 
 export interface QuizQuestionOption {
+  _data_status: QuizDataStatus;
   answer_id: ID;
   belongs_question_id: ID;
   belongs_question_type: QuizQuestionType;
@@ -45,6 +48,7 @@ export interface QuizQuestionOption {
 
 // Define a base interface for common properties
 interface BaseQuizQuestion {
+  _data_status: QuizDataStatus;
   question_id: ID;
   question_title: string;
   question_description: string;
@@ -69,30 +73,25 @@ interface TrueFalseQuizQuestion extends BaseQuizQuestion {
 }
 
 export interface MultipleChoiceQuizQuestion extends BaseQuizQuestion {
-  question_type: 'multiple_choice';
-  multipleCorrectAnswer: boolean;
-  question_answers: QuizQuestionOption[];
+  question_type: 'multiple_choice' | 'single_choice';
+  has_multiple_correct_answer: boolean;
 }
 
 interface MatchingQuizQuestion extends BaseQuizQuestion {
-  question_type: 'matching';
-  imageMatching: boolean;
-  question_answers: QuizQuestionOption[];
+  question_type: 'matching' | 'image_matching';
+  is_image_matching: boolean;
 }
 
 interface ImageAnsweringQuizQuestion extends BaseQuizQuestion {
   question_type: 'image_answering';
-  question_answers: QuizQuestionOption[];
 }
 
 interface FillInTheBlanksQuizQuestion extends BaseQuizQuestion {
   question_type: 'fill_in_the_blank';
-  question_answers: QuizQuestionOption[];
 }
 
 export interface OrderingQuizQuestion extends BaseQuizQuestion {
   question_type: 'ordering';
-  question_answers: QuizQuestionOption[];
 }
 
 interface OtherQuizQuestion extends BaseQuizQuestion {
@@ -153,7 +152,7 @@ export interface QuizDetailsResponse {
       prerequisites: [];
     };
   };
-  questions: QuizQuestion[];
+  questions: Omit<QuizQuestion, '_data_status'>[];
 }
 
 export type QuizQuestion =
@@ -166,6 +165,7 @@ export type QuizQuestion =
   | OtherQuizQuestion;
 
 export interface QuizForm {
+  _data_status: 'new' | 'update' | 'no_change';
   quiz_title: string;
   quiz_description: string;
   quiz_option: {
@@ -223,7 +223,7 @@ interface SaveQuizQuestionAnswerPayload {
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
-  const convertedQuestion = (question: QuizQuestion): QuizQuestion => {
+  const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
     question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
     question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
     question.randomizeQuestion = !!Number(question.question_settings.randomize_options);
@@ -231,9 +231,10 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     switch (question.question_type) {
       case 'single_choice': {
         return {
-          ...question,
+          ...(question as MultipleChoiceQuizQuestion),
+          _data_status: 'no_change',
           question_type: 'multiple_choice',
-          multipleCorrectAnswer: false,
+          has_multiple_correct_answer: false,
           question_settings: {
             ...question.question_settings,
             question_type: 'multiple_choice',
@@ -243,8 +244,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'multiple_choice': {
         return {
           ...question,
+          _data_status: 'no_change',
           question_type: 'multiple_choice',
-          multipleCorrectAnswer: true,
+          has_multiple_correct_answer: true,
           question_settings: {
             ...question.question_settings,
             question_type: 'multiple_choice',
@@ -254,8 +256,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'matching': {
         return {
           ...question,
+          _data_status: 'no_change',
           question_type: 'matching',
-          imageMatching: false,
+          is_image_matching: false,
           question_settings: {
             ...question.question_settings,
             question_type: 'matching',
@@ -264,9 +267,10 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       }
       case 'image_matching': {
         return {
-          ...question,
+          ...(question as MatchingQuizQuestion),
+          _data_status: 'no_change',
           question_type: 'matching',
-          imageMatching: true,
+          is_image_matching: true,
           question_settings: {
             ...question.question_settings,
             question_type: 'matching',
@@ -274,11 +278,19 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
         };
       }
       default:
-        return question;
+        return {
+          ...question,
+          _data_status: 'no_change',
+          question_answers: question.question_answers.map((answer) => ({
+            ...answer,
+            _data_status: 'no_change',
+          })),
+        } as QuizQuestion;
     }
   };
 
   return {
+    _data_status: 'no_change',
     quiz_title: quiz.post_title || '',
     quiz_description: quiz.post_content || '',
     quiz_option: {
@@ -339,26 +351,14 @@ export const convertQuizFormDataToPayload = (
 };
 
 export const convertQuizQuestionFormDataToPayloadForUpdate = (data: QuizQuestion): QuizUpdateQuestionPayload => {
-  const finalQuestionType = () => {
-    switch (data.question_type) {
-      case 'multiple_choice': {
-        return (data as MultipleChoiceQuizQuestion).multipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
-      }
-      case 'matching':
-        return (data as MatchingQuizQuestion).imageMatching ? 'image_matching' : 'matching';
-      default:
-        return data.question_type;
-    }
-  };
-
   return {
     question_id: data.question_id,
     question_title: data.question_title,
     question_description: data.question_description,
-    question_type: finalQuestionType(),
+    question_type: data.question_type,
     question_mark: data.question_mark,
     answer_explanation: data.answer_explanation,
-    'question_settings[question_type]': finalQuestionType(),
+    'question_settings[question_type]': data.question_type,
     'question_settings[answer_required]': data.question_settings.answer_required ? 1 : 0,
     'question_settings[question_mark]': data.question_mark,
   };

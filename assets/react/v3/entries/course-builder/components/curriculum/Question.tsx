@@ -81,17 +81,17 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
     transition,
     opacity: isDragging ? 0.3 : undefined,
   };
-
+  console.log(activeQuestionId, activeQuestionIndex);
   return (
     <div
       {...attributes}
       key={question.question_id}
-      css={styles.questionItem({ isActive: Number(activeQuestionId) === Number(question.question_id), isDragging })}
+      css={styles.questionItem({ isActive: String(activeQuestionId) === String(question.question_id), isDragging })}
       ref={setNodeRef}
       style={style}
       tabIndex={-1}
       onClick={() => {
-        const hasMultipleAnswers = form.watch(`questions.${activeQuestionIndex}.multipleCorrectAnswer`);
+        const hasMultipleAnswers = form.watch(`questions.${activeQuestionIndex}.has_multiple_correct_answer`);
 
         const currentQuestionType = () => {
           const questionType = form.watch(`questions.${activeQuestionIndex}.question_type`);

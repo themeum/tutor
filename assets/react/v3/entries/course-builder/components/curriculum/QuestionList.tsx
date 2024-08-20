@@ -12,7 +12,7 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -29,18 +29,67 @@ import Show from '@Controls/Show';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import {
   type QuizForm,
+  type QuizQuestionType,
   useCreateQuizQuestionMutation,
   useQuizQuestionSortingMutation,
 } from '@CourseBuilderServices/quiz';
+import { AnimationType } from '@Hooks/useAnimation';
+import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo } from '@Utils/util';
+import type { IconCollection, Option } from '@Utils/types';
+import { moveTo, nanoid } from '@Utils/util';
 
 interface QuestionListProps {
   quizId?: ID;
 }
 
+const questionTypeOptions: Option<QuizQuestionType>[] = [
+  {
+    label: __('True/ False', 'tutor'),
+    value: 'true_false',
+    icon: 'quizTrueFalse',
+  },
+  {
+    label: __('Multiple Choice', 'tutor'),
+    value: 'multiple_choice',
+    icon: 'quizMultiChoice',
+  },
+  {
+    label: __('Open Ended/ Essay', 'tutor'),
+    value: 'open_ended',
+    icon: 'quizEssay',
+  },
+  {
+    label: __('Fill in the Blanks', 'tutor'),
+    value: 'fill_in_the_blank',
+    icon: 'quizFillInTheBlanks',
+  },
+  {
+    label: __('Short Answer', 'tutor'),
+    value: 'short_answer',
+    icon: 'quizShortAnswer',
+  },
+  {
+    label: __('Matching', 'tutor'),
+    value: 'matching',
+    icon: 'quizImageMatching',
+  },
+  {
+    label: __('Image Answering', 'tutor'),
+    value: 'image_answering',
+    icon: 'quizImageAnswer',
+  },
+  {
+    label: __('Ordering', 'tutor'),
+    value: 'ordering',
+    icon: 'quizOrdering',
+  },
+];
+
 const QuestionList = ({ quizId }: QuestionListProps) => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
   const { setActiveQuestionId } = useQuizModalContext();
@@ -49,6 +98,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
 
   const {
     remove: removeQuestion,
+    append: appendQuestion,
     move: moveQuestion,
     fields: questionFields,
   } = useFieldArray({
@@ -73,10 +123,22 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
     return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
 
-  const handleAddQuestion = () => {
-    if (quizId) {
-      createQuizQuestion.mutate(quizId);
-    }
+  const handleAddQuestion = (questionType: QuizQuestionType) => {
+    const questionId = nanoid();
+    appendQuestion({
+      question_id: questionId,
+      question_title: `Question ${questionFields.length + 1}`,
+      question_description: '',
+      question_type: questionType,
+      question_answers: [],
+      answer_explanation: '',
+      imageMatching: false,
+      multipleCorrectAnswer: false,
+      question_mark: 1,
+      question_order: questionFields.length + 1,
+    });
+    setActiveQuestionId(questionId);
+    setIsOpen(false);
   };
 
   if (!quizId) {
@@ -88,7 +150,12 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
         <Show when={!createQuizQuestion.isPending} fallback={<LoadingSpinner size={32} />}>
-          <button disabled={createQuizQuestion.isPending} type="button" onClick={handleAddQuestion}>
+          <button
+            ref={addButtonRef}
+            disabled={createQuizQuestion.isPending}
+            type="button"
+            onClick={() => setIsOpen(true)}
+          >
             <SVGIcon name="plusSquareBrand" width={32} height={32} />
           </button>
         </Show>
@@ -166,6 +233,34 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
             )}
           </DndContext>
         </Show>
+        <Popover
+          gap={4}
+          maxWidth={'240px'}
+          arrow="top"
+          triggerRef={addButtonRef}
+          isOpen={isOpen}
+          closePopover={() => setIsOpen(false)}
+          animationType={AnimationType.slideUp}
+        >
+          <div css={styles.questionOptionsWrapper}>
+            <span css={styles.questionTypeOptionsTitle}>{__('Select Question Types')}</span>
+            {questionTypeOptions.map((option) => (
+              <button
+                key={option.value}
+                type="button"
+                css={styles.questionTypeOption}
+                onClick={() => {
+                  handleAddQuestion(option.value);
+                  // createQuizQuestion.mutate(quizId, { question_type: option.value });
+                  // setIsOpen(false);
+                }}
+              >
+                <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
+                <span>{option.label}</span>
+              </button>
+            ))}
+          </div>
+        </Popover>
       </div>
     </>
   );
@@ -199,5 +294,36 @@ const styles = {
   `,
   questionList: css`
     padding: ${spacing[8]} ${spacing[20]};
+  `,
+  questionTypeOptionsTitle: css`
+    ${typography.caption('medium')};
+    color: ${colorTokens.text.subdued};
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
+  `,
+  questionOptionsWrapper: css`
+    display: flex;
+    flex-direction: column;
+    padding-block: ${spacing[6]};
+  `,
+  questionTypeOption: css`
+    ${styleUtils.resetButton};
+    width: 100%;
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
+    transition: background-color 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    gap: ${spacing[10]};
+    border: 2px solid transparent;
+
+    :hover {
+      background-color: ${colorTokens.background.hover};
+      color: ${colorTokens.text.title};
+    }
+
+    :focus,
+    :active {
+      border-color: ${colorTokens.stroke.brand};
+    }
   `,
 };

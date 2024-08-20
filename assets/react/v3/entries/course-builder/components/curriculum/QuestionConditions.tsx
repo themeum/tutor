@@ -3,65 +3,60 @@ import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 
+import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import type { Option } from '@Utils/types';
+import type { IconCollection } from '@Utils/types';
 
-export const questionTypeOptions: Option<QuizQuestionType>[] = [
-  {
+const questionTypes = {
+  true_false: {
     label: __('True/ False', 'tutor'),
-    value: 'true_false',
     icon: 'quizTrueFalse',
   },
-  {
+  multiple_choice: {
     label: __('Multiple Choice', 'tutor'),
-    value: 'multiple_choice',
     icon: 'quizMultiChoice',
   },
-  {
+  open_ended: {
     label: __('Open Ended/ Essay', 'tutor'),
-    value: 'open_ended',
     icon: 'quizEssay',
   },
-  {
+  fill_in_the_blank: {
     label: __('Fill in the Blanks', 'tutor'),
-    value: 'fill_in_the_blank',
     icon: 'quizFillInTheBlanks',
   },
-  {
+  short_answer: {
     label: __('Short Answer', 'tutor'),
-    value: 'short_answer',
     icon: 'quizShortAnswer',
   },
-  {
+  matching: {
     label: __('Matching', 'tutor'),
-    value: 'matching',
     icon: 'quizImageMatching',
   },
-  {
+  image_answering: {
     label: __('Image Answering', 'tutor'),
-    value: 'image_answering',
     icon: 'quizImageAnswer',
   },
-  {
+  ordering: {
     label: __('Ordering', 'tutor'),
-    value: 'ordering',
     icon: 'quizOrdering',
   },
-];
+};
 
 const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as Omit<
+    QuizQuestionType,
+    'single_choice' | 'image_matching'
+  >;
 
   if (!activeQuestionId) {
     return (
@@ -74,13 +69,22 @@ const QuestionConditions = () => {
   return (
     <div key={`${activeQuestionId}-${activeQuestionIndex}`}>
       <div css={styles.questionTypeWrapper}>
-        <Controller
+        {/* <Controller
           control={form.control}
           name={`questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type'}
           render={(controllerProps) => (
             <FormSelectInput {...controllerProps} label={__('Question Type', 'tutor')} options={questionTypeOptions} />
           )}
-        />
+        /> */}
+        <div css={typography.caption('medium')}>{__('Question Type', 'tutor')}</div>
+        <div css={styles.questionType}>
+          <SVGIcon
+            name={questionTypes[activeQuestionType as keyof typeof questionTypes].icon as IconCollection}
+            width={32}
+            height={32}
+          />
+          <span>{questionTypes[activeQuestionType as keyof typeof questionTypes].label}</span>
+        </div>
       </div>
 
       <div css={styles.conditions}>
@@ -90,7 +94,9 @@ const QuestionConditions = () => {
           <Show when={activeQuestionType === 'multiple_choice'}>
             <Controller
               control={form.control}
-              name={`questions.${activeQuestionIndex}.multipleCorrectAnswer` as 'questions.0.multipleCorrectAnswer'}
+              name={
+                `questions.${activeQuestionIndex}.has_multiple_correct_answer` as 'questions.0.has_multiple_correct_answer'
+              }
               render={(controllerProps) => (
                 <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
               )}
@@ -100,7 +106,7 @@ const QuestionConditions = () => {
           <Show when={activeQuestionType === 'matching'}>
             <Controller
               control={form.control}
-              name={`questions.${activeQuestionIndex}.imageMatching` as 'questions.0.imageMatching'}
+              name={`questions.${activeQuestionIndex}.is_image_matching` as 'questions.0.is_image_matching'}
               render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />}
             />
           </Show>
@@ -154,10 +160,16 @@ export default QuestionConditions;
 
 const styles = {
   questionTypeWrapper: css`
+    ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
+    gap: ${spacing[10]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
   `,
-
+  questionType: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[10]};
+  `,
   conditions: css`
     padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
     p {
