@@ -309,7 +309,7 @@ export default function SubscriptionItem({
                           }
 
                           if (Number(value) <= 0) {
-                            return __('Plan duration must be greater than 0', 'tutor');
+                            return __('Renew plan must be greater than 0', 'tutor');
                           }
                           return true;
                         },
@@ -317,8 +317,8 @@ export default function SubscriptionItem({
                       render={(controllerProps) => (
                         <FormInputWithPresets
                           {...controllerProps}
-                          label={__('Length of the plan', 'tutor')}
-                          placeholder={__('Select the length of the plan', 'tutor')}
+                          label={__('Renew Plan', 'tutor')}
+                          placeholder={__('Select or type times to renewing the plan', 'tutor')}
                           content={controllerProps.field.value !== 'Until cancelled' && `${__('Times', 'tutor')}`}
                           contentPosition="right"
                           type="number"
