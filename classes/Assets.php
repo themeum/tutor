@@ -318,11 +318,6 @@ class Assets {
 	public function modify_localize_data( $localize_data ) {
 		global $post;
 
-		// WP REST nonce added for admin user.
-		if ( User::is_admin() ) {
-			$localize_data['wp_rest_nonce'] = wp_create_nonce( 'wp_rest' );
-		}
-
 		if ( is_admin() ) {
 			$taxonomy = Input::get( 'taxonomy' );
 			if ( 'course-category' === $taxonomy || 'course-tag' === $taxonomy ) {
