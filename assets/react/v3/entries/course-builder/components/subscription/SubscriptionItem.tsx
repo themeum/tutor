@@ -402,7 +402,7 @@ export default function SubscriptionItem({
                         <FormSelectInput
                           {...controllerProps}
                           label={<div>&nbsp;</div>}
-                          placeholder={__('Enter trial duration', 'tutor')}
+                          placeholder={__('Enter trial duration unit', 'tutor')}
                           options={[
                             { label: __('Hour(s)', 'tutor'), value: 'hour' },
                             { label: __('Day(s)', 'tutor'), value: 'day' },
