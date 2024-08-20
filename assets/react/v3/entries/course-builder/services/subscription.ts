@@ -24,7 +24,7 @@ export type Subscription = {
   sale_price: string;
   sale_price_from: string; // start date
   sale_price_to: string; // end date
-  plan_duration: string; // 0 for until canceled
+  recurring_limit: string; // 0 for until canceled
   provide_certificate: '0' | '1';
   enrollment_fee: string;
   trial_value: string;
@@ -61,7 +61,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   sale_price_from_time: '',
   sale_price_to_date: '',
   sale_price_to_time: '',
-  plan_duration: 'Until cancelled',
+  recurring_limit: 'Until cancelled',
   do_not_provide_certificate: false,
   enrollment_fee: '0',
   trial_value: '1',
@@ -114,7 +114,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     is_featured: !!Number(subscription.is_featured),
     featured_text: subscription.featured_text ?? '',
     regular_price: subscription.regular_price ?? '0',
-    plan_duration: subscription.plan_duration === '0' ? 'Until cancelled' : subscription.plan_duration,
+    recurring_limit: subscription.recurring_limit === '0' ? 'Until cancelled' : subscription.recurring_limit,
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
@@ -151,7 +151,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
       recurring_interval: formData.recurring_interval,
     }),
     regular_price: formData.regular_price,
-    plan_duration: formData.plan_duration === 'Until cancelled' ? '0' : formData.plan_duration,
+    recurring_limit: formData.recurring_limit === 'Until cancelled' ? '0' : formData.recurring_limit,
     is_featured: formData.is_featured ? '1' : '0',
     ...(formData.is_featured && { featured_text: formData.featured_text }),
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
@@ -184,7 +184,7 @@ export type SubscriptionPayload = {
   sale_price?: string;
   sale_price_from?: string; // start date
   sale_price_to?: string; // end date
-  plan_duration: string; // 30, 60, 90, 120, 365 and 0 for until canceled
+  recurring_limit: string; // 0 for until canceled
   provide_certificate: '0' | '1';
   is_featured: '0' | '1';
   featured_text?: string;
