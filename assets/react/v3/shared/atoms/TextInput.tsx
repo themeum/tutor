@@ -107,7 +107,7 @@ const TextInput = ({
         {isClearable && !!value && (
           <div css={styles.rightIconButton}>
             <Button variant="text" onClick={() => onChange('')}>
-              <SVGIcon name="cross" />
+              <SVGIcon name="cross" width={24} height={24} />
             </Button>
           </div>
         )}

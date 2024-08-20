@@ -79,6 +79,7 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                 onFocus={() => setIsOpen(true)}
                 onChange={setSearchText}
                 disabled={disabled}
+                isClearable
               />
               <Button
                 variant="tertiary"
