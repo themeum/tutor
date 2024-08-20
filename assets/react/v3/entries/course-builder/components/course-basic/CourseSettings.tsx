@@ -17,6 +17,7 @@ import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
@@ -118,26 +119,27 @@ const CourseSettings = () => {
               )}
             />
 
-            {/* @TODO: Add condition based on tutor pro and tutor settings */}
-            <Controller
-              name="enrollment_expiry"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  label={__('Enrollment Expiration', 'tutor')}
-                  helpText={__(
-                    "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                    'tutor',
-                  )}
-                  placeholder="0"
-                  type="number"
-                  isClearable
-                  selectOnFocus
-                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                />
-              )}
-            />
+            <Show when={tutorConfig.settings.enrollment_expiry_enabled === 'on'}>
+              <Controller
+                name="enrollment_expiry"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Enrollment Expiration', 'tutor')}
+                    helpText={__(
+                      "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
+                      'tutor',
+                    )}
+                    placeholder="0"
+                    type="number"
+                    isClearable
+                    selectOnFocus
+                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                  />
+                )}
+              />
+            </Show>
 
             <div css={styles.courseAndQna}>
               <Controller
@@ -153,18 +155,20 @@ const CourseSettings = () => {
                 )}
               />
 
-              <Controller
-                name="enable_qna"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormSwitch
-                    {...controllerProps}
-                    label={__('Q&A', 'tutor')}
-                    helpText={__('Enable Q&A section for your course', 'tutor')}
-                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                  />
-                )}
-              />
+              <Show when={tutorConfig.settings.enable_q_and_a_on_course === 'on'}>
+                <Controller
+                  name="enable_qna"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormSwitch
+                      {...controllerProps}
+                      label={__('Q&A', 'tutor')}
+                      helpText={__('Enable Q&A section for your course', 'tutor')}
+                      loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                    />
+                  )}
+                />
+              </Show>
             </div>
           </div>
         )}
@@ -221,7 +225,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
-    padding: ${spacing[16]} ${spacing[32]} ${spacing[32]} ${spacing[32]};
+    padding: ${spacing[16]} ${spacing[32]} ${spacing[48]} ${spacing[32]};
     background-color: ${colorTokens.background.white};
   `,
   courseAndQna: css`

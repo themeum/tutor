@@ -12,16 +12,19 @@ export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
 
 export type Subscription = {
   id: string;
+  payment_type: 'onetime' | 'recurring';
   plan_type: 'course' | 'category' | 'full_site';
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value: string;
   recurring_interval: Omit<DurationUnit, 'hour'>;
+  is_featured: '0' | '1';
+  featured_text: string;
   regular_price: string;
   sale_price: string;
   sale_price_from: string; // start date
   sale_price_to: string; // end date
-  plan_duration_days: string; // 30, 60, 90, 120, 365 and 0 for until canceled
+  plan_duration: string; // 0 for until canceled
   provide_certificate: '0' | '1';
   enrollment_fee: string;
   trial_value: string;
@@ -29,11 +32,12 @@ export type Subscription = {
 };
 
 export interface SubscriptionFormData
-  extends Omit<Subscription, 'provide_certificate' | 'sale_price_from' | 'sale_price_to'> {
+  extends Omit<Subscription, 'provide_certificate' | 'sale_price_from' | 'sale_price_to' | 'is_featured'> {
   charge_enrollment_fee: boolean;
   enable_free_trial: boolean;
   offer_sale_price: boolean;
   schedule_sale_price: boolean;
+  is_featured: boolean;
   do_not_provide_certificate: boolean;
   sale_price_from_date: string;
   sale_price_from_time: string;
@@ -43,21 +47,24 @@ export interface SubscriptionFormData
 
 export const defaultSubscriptionFormData: SubscriptionFormData = {
   id: '0',
+  payment_type: 'recurring',
   plan_type: 'course',
   assign_id: '0',
   plan_name: '',
   recurring_value: '1',
   recurring_interval: 'month',
+  is_featured: false,
+  featured_text: '',
   regular_price: '0',
   sale_price: '0',
   sale_price_from_date: '',
   sale_price_from_time: '',
   sale_price_to_date: '',
   sale_price_to_time: '',
-  plan_duration_days: '0',
+  plan_duration: 'Until cancelled',
   do_not_provide_certificate: false,
   enrollment_fee: '0',
-  trial_value: '0',
+  trial_value: '1',
   trial_interval: 'day',
   charge_enrollment_fee: false,
   enable_free_trial: false,
@@ -98,16 +105,16 @@ const convertDaysToPlanLength = (days: number, recurring_interval: Omit<Duration
 export const convertSubscriptionToFormData = (subscription: Subscription): SubscriptionFormData => {
   return {
     id: subscription.id,
+    payment_type: subscription.payment_type ?? 'recurring',
     plan_type: subscription.plan_type ?? 'course',
     assign_id: subscription.assign_id,
     plan_name: subscription.plan_name ?? '',
     recurring_value: subscription.recurring_value ?? '0',
     recurring_interval: subscription.recurring_interval ?? 'month',
+    is_featured: !!Number(subscription.is_featured),
+    featured_text: subscription.featured_text ?? '',
     regular_price: subscription.regular_price ?? '0',
-    plan_duration_days: convertDaysToPlanLength(
-      Number(subscription.plan_duration_days),
-      subscription.recurring_interval,
-    ),
+    plan_duration: subscription.plan_duration === '0' ? 'Until cancelled' : subscription.plan_duration,
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
@@ -115,7 +122,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     charge_enrollment_fee: !!Number(subscription.enrollment_fee),
     enable_free_trial: !!Number(subscription.trial_value),
     offer_sale_price: !!Number(subscription.sale_price),
-    schedule_sale_price: !!Number(subscription.sale_price_from),
+    schedule_sale_price: !!subscription.sale_price_from,
     do_not_provide_certificate: !Number(subscription.provide_certificate),
     sale_price_from_date: subscription.sale_price_from
       ? format(parseISO(subscription.sale_price_from), DateFormats.yearMonthDay)
@@ -133,16 +140,20 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
 };
 
 export const convertFormDataToSubscription = (formData: SubscriptionFormData): SubscriptionPayload => {
-  console.log(formData.id);
   return {
     ...(formData.id && String(formData.id) !== '0' && { id: formData.id }),
+    payment_type: formData.payment_type,
     plan_type: formData.plan_type,
     assign_id: formData.assign_id,
     plan_name: formData.plan_name,
-    recurring_value: formData.recurring_value,
-    recurring_interval: formData.recurring_interval,
+    ...(formData.payment_type === 'recurring' && {
+      recurring_value: formData.recurring_value,
+      recurring_interval: formData.recurring_interval,
+    }),
     regular_price: formData.regular_price,
-    plan_duration_days: convertPlanLengthToDays(formData.recurring_interval, Number(formData.plan_duration_days)),
+    plan_duration: formData.plan_duration === 'Until cancelled' ? '0' : formData.plan_duration,
+    is_featured: formData.is_featured ? '1' : '0',
+    ...(formData.is_featured && { featured_text: formData.featured_text }),
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
     ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),
     sale_price: formData.offer_sale_price ? formData.sale_price : '0',
@@ -163,17 +174,20 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
 
 export type SubscriptionPayload = {
   id?: string; // only for update
+  payment_type: 'onetime' | 'recurring';
   plan_type: 'course' | 'category' | 'full_site';
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
-  recurring_value: string;
-  recurring_interval: Omit<DurationUnit, 'hour'>;
+  recurring_value?: string;
+  recurring_interval?: Omit<DurationUnit, 'hour'>;
   regular_price: string;
   sale_price?: string;
   sale_price_from?: string; // start date
   sale_price_to?: string; // end date
-  plan_duration_days: string; // 30, 60, 90, 120, 365 and 0 for until canceled
+  plan_duration: string; // 30, 60, 90, 120, 365 and 0 for until canceled
   provide_certificate: '0' | '1';
+  is_featured: '0' | '1';
+  featured_text?: string;
   enrollment_fee?: string;
   trial_value?: string;
   trial_interval?: DurationUnit;
@@ -207,7 +221,7 @@ export const useSaveCourseSubscriptionMutation = (courseId: number) => {
   return useMutation({
     mutationFn: (subscription: SubscriptionPayload) => saveCourseSubscription(courseId, subscription),
     onSuccess: (response) => {
-      if (response.data) {
+      if (response.status_code === 200 || response.status_code === 201) {
         showToast({
           message: response.message,
           type: 'success',

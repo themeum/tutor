@@ -1,3 +1,4 @@
+import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -25,12 +26,19 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
 export function PreviewItem({ subscription }: { subscription: SubscriptionFormData }) {
   return (
     <div css={styles.item}>
-      <p css={styles.title}>{subscription.plan_name}</p>
+      <p css={styles.title}>
+        {subscription.plan_name}
+        <Show when={subscription.is_featured}>
+          <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
+        </Show>
+      </p>
       <div css={styles.information}>
-        <span>
-          {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
-          {formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}
-        </span>
+        <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
+          <span>
+            {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
+            {formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}
+          </span>
+        </Show>
 
         <Show when={subscription.enable_free_trial}>
           <span>•</span>
@@ -38,6 +46,24 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
             {subscription.trial_value.toString().padStart(2, '0')}{' '}
             {formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value))} {__('trial', 'tutor')}
           </span>
+        </Show>
+
+        <Show when={subscription.payment_type !== 'onetime'}>
+          <Show
+            when={subscription.plan_duration === 'Until cancelled'}
+            fallback={
+              <>
+                <span>•</span>
+                <span>
+                  {subscription.plan_duration.toString().padStart(2, '0')}{' '}
+                  {formatRepeatUnit(subscription.recurring_interval, Number(subscription.plan_duration))}
+                </span>
+              </>
+            }
+          >
+            <span>•</span>
+            <span>{__('Until Cancellation', 'tutor')}</span>
+          </Show>
         </Show>
       </div>
     </div>
@@ -61,6 +87,8 @@ const styles = {
   title: css`
 		${typography.caption('medium')};
 		color: ${colorTokens.text.primary};
+    display: flex;
+    align-items: center;
 	`,
   information: css`
 		${typography.small()};
@@ -70,4 +98,7 @@ const styles = {
 		flex-wrap: wrap;
 		gap: ${spacing[4]};
 	`,
+  featuredIcon: css`
+    color: ${colorTokens.icon.brand};
+  `,
 };

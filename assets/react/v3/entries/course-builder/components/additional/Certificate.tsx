@@ -122,7 +122,11 @@ const Certificate = () => {
               ]}
               onClick={() => handleOrientationChange('landscape')}
             >
-              <SVGIcon name="landscape" width={32} height={32} />
+              <SVGIcon
+                name={activeOrientation === 'landscape' ? 'landscapeFilled' : 'landscape'}
+                width={32}
+                height={32}
+              />
             </button>
             <button
               type="button"
@@ -134,7 +138,7 @@ const Certificate = () => {
               ]}
               onClick={() => handleOrientationChange('portrait')}
             >
-              <SVGIcon name="portrait" width={32} height={32} />
+              <SVGIcon name={activeOrientation === 'portrait' ? 'portraitFilled' : 'portrait'} width={32} height={32} />
             </button>
           </div>
         </div>

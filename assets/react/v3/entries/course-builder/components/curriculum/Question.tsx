@@ -54,7 +54,7 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
 
   const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(quizId);
   const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation();
+  const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
   const handleDuplicateQuestion = () => {
     duplicateContentMutation.mutate({

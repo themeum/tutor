@@ -195,6 +195,7 @@ const styles = {
     }
   `,
   label: (isInlineLabel: boolean) => css`
+    width: 100%;
     ${typography.caption()};
     color: ${colorTokens.text.title};
 

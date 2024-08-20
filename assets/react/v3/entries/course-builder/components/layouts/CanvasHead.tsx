@@ -10,13 +10,18 @@ type CanvasHeadProps = {
   title: string;
   backUrl?: string;
   rightButton?: ReactElement;
+  isExternalUrl?: boolean;
 };
 
-const CanvasHead = ({ title, backUrl, rightButton }: CanvasHeadProps) => {
+const CanvasHead = ({ title, backUrl, rightButton, isExternalUrl }: CanvasHeadProps) => {
   const navigate = useNavigate();
 
   const handleBackClick = () => {
     if (backUrl) {
+      if (isExternalUrl) {
+        window.location.href = backUrl;
+        return;
+      }
       navigate(backUrl);
     } else {
       navigate(-1);

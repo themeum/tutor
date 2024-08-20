@@ -16,20 +16,19 @@ import { useDebounce } from '@Hooks/useDebounce';
 import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
+import { tutorConfig } from '@Config/config';
+import { TutorRoles } from '@Config/constants';
 import profileImage from '@Images/profile-photo.png';
-
-interface User {
-  id: number;
-  name: string;
-  email?: string;
-  avatar_url?: string;
+import type { User } from '@Services/users';
+export interface UserOption extends User {
+  isRemoveAble?: boolean;
 }
 
 type FormSelectUserProps = {
   label?: string;
   placeholder?: string;
-  options: User[];
-  onChange?: (selectedOption: User | User[]) => void;
+  options: UserOption[];
+  onChange?: (selectedOption: UserOption | UserOption[]) => void;
   handleSearchOnChange?: (searchText: string) => void;
   isMultiSelect?: boolean;
   disabled?: boolean;
@@ -39,9 +38,11 @@ type FormSelectUserProps = {
   isHidden?: boolean;
   responsive?: boolean;
   helpText?: string;
-} & FormControllerProps<User | User[] | null>;
+  emptyStateText?: string;
+  isInstructorMode?: boolean;
+} & FormControllerProps<UserOption | UserOption[] | null>;
 
-const userPlaceholderData: User = {
+const userPlaceholderData: UserOption = {
   id: 0,
   name: __('Click to select user', 'tutor'),
   email: 'example@example.com',
@@ -62,9 +63,12 @@ const FormSelectUser = ({
   loading,
   isSearchable = false,
   helpText,
+  emptyStateText = __('No user selected', 'tutor'),
+  isInstructorMode = false,
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
+  const isCurrentUserAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -137,7 +141,9 @@ const FormSelectUser = ({
                     </div>
                   </div>
 
-                  <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
+                  <Show when={!loading}>
+                    <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
+                  </Show>
                 </button>
               )}
 
@@ -181,20 +187,36 @@ const FormSelectUser = ({
                         </div>
                       </div>
 
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteSelection(instructor.id)}
-                        css={styles.instructorDeleteButton}
-                        data-instructor-delete-button
+                      <Show
+                        when={isInstructorMode}
+                        fallback={
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSelection(instructor.id)}
+                            css={styles.instructorDeleteButton}
+                            data-instructor-delete-button
+                          >
+                            <SVGIcon name="cross" width={32} height={32} />
+                          </button>
+                        }
                       >
-                        <SVGIcon name="cross" width={32} height={32} />
-                      </button>
+                        <Show when={isCurrentUserAdmin || instructor.isRemoveAble}>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteSelection(instructor.id)}
+                            css={styles.instructorDeleteButton}
+                            data-instructor-delete-button
+                          >
+                            <SVGIcon name="cross" width={32} height={32} />
+                          </button>
+                        </Show>
+                      </Show>
                     </div>
                   ))}
                 </div>
               ) : (
                 <div css={styles.emptyState}>
-                  <p>{__('No user selected', 'tutor')}</p>
+                  <p>{emptyStateText}</p>
                 </div>
               ))}
             <Portal
@@ -216,6 +238,29 @@ const FormSelectUser = ({
                 ref={popoverRef}
               >
                 <ul css={[styles.options]}>
+                  {!isMultiSelect && (
+                    <li css={styles.inputWrapperListItem}>
+                      <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
+                        <div css={styles.leftIcon}>
+                          <SVGIcon name="search" width={24} height={24} />
+                        </div>
+                        <input
+                          {...restInputProps}
+                          // biome-ignore lint/a11y/noAutofocus: <explanation>
+                          autoFocus
+                          className="tutor-input-field"
+                          css={[inputCss, styles.input]}
+                          autoComplete="off"
+                          readOnly={readOnly || !isSearchable}
+                          placeholder={placeholder}
+                          value={searchText}
+                          onChange={(event) => {
+                            setSearchText(event.target.value);
+                          }}
+                        />
+                      </div>
+                    </li>
+                  )}
                   <Show
                     when={filteredOption.length > 0}
                     fallback={
@@ -224,36 +269,19 @@ const FormSelectUser = ({
                       </li>
                     }
                   >
-                    {!isMultiSelect && (
-                      <li css={styles.inputWrapperListItem}>
-                        <div css={[styles.inputWrapper, styles.portalInputWrapper]}>
-                          <div css={styles.leftIcon}>
-                            <SVGIcon name="search" width={24} height={24} />
-                          </div>
-                          <input
-                            {...restInputProps}
-                            // biome-ignore lint/a11y/noAutofocus: <explanation>
-                            autoFocus
-                            className="tutor-input-field"
-                            css={[inputCss, styles.input]}
-                            autoComplete="off"
-                            readOnly={readOnly || !isSearchable}
-                            placeholder={placeholder}
-                            value={searchText}
-                            onChange={(event) => {
-                              setSearchText(event.target.value);
-                            }}
-                          />
-                        </div>
-                      </li>
-                    )}
                     {filteredOption.map((instructor) => (
                       <li key={String(instructor.id)} css={styles.optionItem}>
                         <button
                           type="button"
                           css={styles.label}
                           onClick={() => {
-                            const newValue = Array.isArray(inputValue) ? [...inputValue, instructor] : instructor;
+                            const selectedValue = isInstructorMode
+                              ? {
+                                  ...instructor,
+                                  isRemoveAble: true,
+                                }
+                              : instructor;
+                            const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
                             field.onChange(newValue);
                             setSearchText('');
                             onChange(newValue);

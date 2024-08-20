@@ -117,6 +117,7 @@ class CouponModel {
 		'discount_type',
 		'discount_amount',
 		'applies_to',
+		'applies_to_items',
 		'total_usage_limit',
 		'per_user_usage_limit',
 		'purchase_requirement',
@@ -679,25 +680,14 @@ class CouponModel {
 	 *
 	 * @return object Detail of discount on object format.
 	 *
-	 * For ex: {
-	 *     total_price: 100,
-	 *    {
-	 *     course_id: 1,
-	 *     regular_price: 80
-	 *     discount_price: 60
-	 *    },
-	 *    {
-	 *     course_id: 2,
-	 *     regular_price: 40
-	 *     discount_price: 0
-	 *    }
-	 * }
+	 * For ex: { total_price: 60, items: [{course_id, regular_price, sale_price}]}
 	 */
 	public function apply_coupon_discount( $course_ids, $coupon_code ) {
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
 		$response                = array();
 		$response['total_price'] = 0;
+		$response['is_applied']  = false;
 
 		$should_apply_coupon = false;
 
@@ -723,12 +713,15 @@ class CouponModel {
 					// Apply discount if pass all checks.
 					if ( $should_apply_coupon ) {
 						$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+						if ( ! $response['is_applied'] ) {
+							$response['is_applied'] = true;
+						}
 					}
 				}
 			}
 
-			$response['course_items'][] = (object) array(
-				'course_id'      => $course_id,
+			$response['items'][] = (object) array(
+				'item_id'        => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
 			);
@@ -750,20 +743,14 @@ class CouponModel {
 	 *
 	 * @return object Detail of discount on object format.
 	 *
-	 * For ex: {
-	 *     total_price: 60,
-	 *    {
-	 *     course_id: 1,
-	 *     regular_price, 80,
-	 *     discount_price: 60
-	 *    },
-	 * }
+	 * For ex: { total_price: 60, items: [{course_id, regular_price, sale_price}]}
 	 */
 	public function apply_automatic_coupon_discount( $course_ids ) {
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
 		$response                = array();
 		$response['total_price'] = 0;
+		$response['is_applied']  = false;
 
 		$should_apply_coupon = false;
 
@@ -794,6 +781,11 @@ class CouponModel {
 								// Apply discount if pass all checks.
 								if ( $should_apply_coupon ) {
 									$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+
+									// Set a flag to determine if coupon applied.
+									if ( ! $response['is_applied'] ) {
+										$response['is_applied'] = true;
+									}
 								}
 							}
 						}
@@ -801,8 +793,8 @@ class CouponModel {
 				}
 			}
 
-			$response['course_items'][] = (object) array(
-				'course_id'      => $course_id,
+			$response['items'][] = (object) array(
+				'item_id'        => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
 			);
@@ -1029,7 +1021,7 @@ class CouponModel {
 		$response     = array();
 
 		foreach ( $applications as $application_id ) {
-			$application = $this->get_application_details( $application_id );
+			$application = $this->get_application_details( $application_id, $coupon->applies_to );
 
 			if ( $application ) {
 				$response[] = $application;
@@ -1048,9 +1040,9 @@ class CouponModel {
 	 *
 	 * @return array
 	 */
-	public function get_application_details( int $id ): array {
+	public function get_application_details( int $id, string $applies_to ): array {
 		$response = array();
-		if ( tutor()->course_post_type === get_post_type( $id ) || 'course-bundle' === get_post_type( $id ) ) {
+		if ( self::APPLIES_TO_SPECIFIC_BUNDLES === $applies_to || self::APPLIES_TO_SPECIFIC_COURSES === $applies_to ) {
 			$post = get_post( $id );
 
 			if ( $post ) {
@@ -1058,8 +1050,8 @@ class CouponModel {
 					'id'            => $id,
 					'title'         => get_the_title( $id ),
 					'image'         => get_the_post_thumbnail_url( $id ),
-					'regular_price' => get_post_meta( $id, Course::COURSE_PRICE_META, true ),
-					'sale_price'    => get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ),
+					'regular_price' => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_PRICE_META, true ) ),
+					'sale_price'    => tutor_get_formatted_price( get_post_meta( $id, Course::COURSE_SALE_PRICE_META, true ) ),
 				);
 			}
 		} elseif ( term_exists( $id ) ) {
@@ -1068,9 +1060,10 @@ class CouponModel {
 			if ( $term ) {
 				$thumb_id = get_term_meta( $id, 'thumbnail_id', true );
 				$response = array(
-					'id'    => $id,
-					'title' => $term->name,
-					'image' => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+					'id'            => $id,
+					'title'         => $term->name,
+					'image'         => $thumb_id ? wp_get_attachment_thumb_url( $thumb_id ) : '',
+					'total_courses' => (int) $term->count,
 				);
 			}
 		}
