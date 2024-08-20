@@ -6,6 +6,7 @@ declare module '*.jpeg';
 declare module '*.jpg';
 
 declare global {
+  const wp: any;
   interface Window {
     // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
     wp: any;

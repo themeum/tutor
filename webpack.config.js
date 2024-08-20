@@ -72,12 +72,20 @@ module.exports = (env, options) => {
 				'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
 				'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
 			},
+			clean: true,
+		},
+		{
+			dest_path: '../tutor-pro/addons/enrollments/assets/js',
+			src_files: {
+				'manual-enrollment.min': './assets/react/v3/entries/pro/manual-enrollment/index.tsx',
+			},
+			clean: false,
 		},
 	];
 
 	const configEditors = [];
 	for (let i = 0; i < react_blueprints.length; i++) {
-		const { src_files, dest_path } = react_blueprints[i];
+		const { src_files, dest_path, clean } = react_blueprints[i];
 
 		configEditors.push(
 			Object.assign({}, config, {
@@ -86,7 +94,7 @@ module.exports = (env, options) => {
 				output: {
 					path: path.resolve(dest_path),
 					filename: '[name].js',
-					clean: true,
+					clean: clean,
 				},
 				resolve: {
 					extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -118,8 +126,8 @@ module.exports = (env, options) => {
 						'@OrderContexts': path.resolve(__dirname, './assets/react/v3/entries/order-details/contexts/'),
 						'@CouponComponents': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/components/'),
 						'@CouponServices': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/services/'),
-						'@CouponAtoms': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/atoms/'),
-						'@CouponContexts': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/contexts/'),
+						'@EnrollmentComponents': path.resolve(__dirname, './assets/react/v3/entries/pro/manual-enrollment/components/'),
+						'@EnrollmentServices': path.resolve(__dirname, './assets/react/v3/entries/pro/manual-enrollment/services/'),
 					},
 				},
 			}),

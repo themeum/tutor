@@ -86,7 +86,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   const closeModal = useCallback<ModalContextType['closeModal']>((data = { action: 'CLOSE' }) => {
     setState((previousState) => {
       const lastModal = previousState.modals[previousState.modals.length - 1];
-      lastModal.resolve(data);
+      lastModal?.resolve(data);
       return {
         ...previousState,
         modals: previousState.modals.slice(0, previousState.modals.length - 1),
