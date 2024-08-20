@@ -10,8 +10,10 @@ import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import {
+  type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
+  calculateQuizDataStatus,
   useDeleteQuizAnswerMutation,
   useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
@@ -89,6 +91,9 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
 
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: id,
       image_url: url,
     });
@@ -97,33 +102,36 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: '',
       image_url: '',
     });
   };
 
-  const createQuizAnswer = async () => {
-    const response = await createQuizAnswerMutation.mutateAsync({
-      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-      question_id: inputValue.belongs_question_id,
-      answer_title: inputValue.answer_title,
-      image_id: inputValue.image_id || '',
-      answer_view_format: 'text_image',
-      matched_answer_title: inputValue.answer_two_gap_match,
-      question_type: imageMatching ? 'image_matching' : 'matching',
-    });
+  // const createQuizAnswer = async () => {
+  //   const response = await createQuizAnswerMutation.mutateAsync({
+  //     ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
+  //     question_id: inputValue.belongs_question_id,
+  //     answer_title: inputValue.answer_title,
+  //     image_id: inputValue.image_id || '',
+  //     answer_view_format: 'text_image',
+  //     matched_answer_title: inputValue.answer_two_gap_match,
+  //     question_type: imageMatching ? 'image_matching' : 'matching',
+  //   });
 
-    if (response.status_code === 201 || response.status_code === 200) {
-      setIsEditing(false);
+  //   if (response.status_code === 201 || response.status_code === 200) {
+  //     setIsEditing(false);
 
-      if (!inputValue.answer_id && response.data) {
-        field.onChange({
-          ...inputValue,
-          answer_id: response.data,
-        });
-      }
-    }
-  };
+  //     if (!inputValue.answer_id && response.data) {
+  //       field.onChange({
+  //         ...inputValue,
+  //         answer_id: response.data,
+  //       });
+  //     }
+  //   }
+  // };
 
   // const handleDuplicateAnswer = async () => {
   //   const response = await duplicateContentMutation.mutateAsync({
@@ -247,7 +255,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     url: inputValue.image_url || '',
                     title: inputValue.image_url || '',
                   }}
-                  infoText={__('Size: 700x430 pixels', 'tutor')}
+                  infoText={__('Standard Size: 700x430 pixels', 'tutor')}
                   uploadHandler={uploadHandler}
                   clearHandler={clearHandler}
                   emptyImageCss={styles.emptyImageInput}
@@ -267,6 +275,9 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 onChange={(event) => {
                   field.onChange({
                     ...inputValue,
+                    ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                      _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                    }),
                     answer_title: event.target.value,
                   });
                 }}
@@ -279,6 +290,12 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     inputValue.answer_two_gap_match
                   ) {
                     // await createQuizAnswer();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                    });
                     setIsEditing(false);
                   }
                 }}
@@ -296,10 +313,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
                       answer_two_gap_match: event.target.value,
                     });
                   }}
-                  onKeyDown={async (event) => {
+                  onKeyDown={(event) => {
                     event.stopPropagation();
                     if (
                       (event.metaKey || event.ctrlKey) &&
@@ -307,7 +327,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       inputValue.answer_title &&
                       inputValue.answer_two_gap_match
                     ) {
-                      await createQuizAnswer();
+                      // await createQuizAnswer();
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                      });
                       setIsEditing(false);
                     }
                   }}
@@ -338,9 +364,10 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
-                  onClick={async (event) => {
+                  onClick={(event) => {
                     event.stopPropagation();
-                    await createQuizAnswer();
+                    setIsEditing(false);
+                    // await createQuizAnswer();
                   }}
                   disabled={
                     !inputValue.answer_title ||

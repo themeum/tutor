@@ -18,6 +18,7 @@ import {
   type QuizForm,
   type QuizQuestionOption,
   type QuizQuestionType,
+  calculateQuizDataStatus,
   useDeleteQuizAnswerMutation,
   useMarkAnswerAsCorrectMutation,
   useSaveQuizAnswerMutation,
@@ -104,6 +105,9 @@ const FormMultipleChoiceAndOrdering = ({
 
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: 'update',
+      }),
       image_id: id,
       image_url: url,
     });
@@ -112,6 +116,9 @@ const FormMultipleChoiceAndOrdering = ({
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: 'update',
+      }),
       image_id: '',
       image_url: '',
     });
@@ -120,6 +127,9 @@ const FormMultipleChoiceAndOrdering = ({
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: 'update',
+      }),
       is_correct: hasMultipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
     });
     // markAnswerAsCorrectMutation.mutate({
@@ -347,6 +357,9 @@ const FormMultipleChoiceAndOrdering = ({
 
                   field.onChange({
                     ...inputValue,
+                    ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                      _data_status: 'update',
+                    }),
                     answer_title: value,
                   });
                 }}
@@ -381,6 +394,12 @@ const FormMultipleChoiceAndOrdering = ({
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: 'update',
+                      }),
+                    });
                     setIsEditing(false);
                     // await createQuizAnswer();
                   }}

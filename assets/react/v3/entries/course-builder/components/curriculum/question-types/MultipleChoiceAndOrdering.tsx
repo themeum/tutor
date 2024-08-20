@@ -24,12 +24,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import {
-  type QuizForm,
-  type QuizQuestionOption,
-  type QuizQuestionType,
-  useQuizQuestionAnswerOrderingMutation,
-} from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestionOption, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
 
@@ -53,7 +48,7 @@ const MultipleChoiceAndOrdering = () => {
     return 'ordering';
   };
 
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
+  // const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
   const {
     fields: optionsFields,

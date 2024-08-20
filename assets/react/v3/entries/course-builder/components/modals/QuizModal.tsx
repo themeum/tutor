@@ -22,7 +22,6 @@ import { QuizModalContextProvider } from '@CourseBuilderContexts/QuizModalContex
 import {
   type QuizForm,
   convertQuizFormDataToPayload,
-  convertQuizQuestionFormDataToPayloadForUpdate,
   convertQuizResponseToFormData,
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
@@ -116,7 +115,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
 
-  const onQuizFormSubmit = async (data: QuizForm) => {
+  const onQuizFormSubmit = async (data: QuizForm, isSubmit: boolean) => {
     if (!data.quiz_title) {
       setActiveTab('details');
 
@@ -128,14 +127,22 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
       return;
     }
 
-    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, quizId || '');
-    const response = await saveQuizMutation.mutateAsync(payload);
-
-    if (response.data) {
-      setIsEdit(false);
-      setLocalQuizId(response.data);
-      closeModal({ action: 'CONFIRM' });
+    setIsEdit(false);
+    if (!localQuizId || !isSubmit) {
+      setLocalQuizId(123);
+      return;
     }
+
+    console.log(data);
+    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, quizId || '');
+
+    // const response = await saveQuizMutation.mutateAsync(payload);
+
+    // if (response.data) {
+    //   setIsEdit(false);
+    //   setLocalQuizId(response.data);
+    //   closeModal({ action: 'CONFIRM' });
+    // }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -203,22 +210,22 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                     size="small"
                     onClick={async () => {
                       if (activeQuestionIndex < 0) {
-                        await form.handleSubmit(onQuizFormSubmit)();
+                        await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
                         return;
                       }
 
-                      const payload = form.watch(`questions.${activeQuestionIndex}`);
+                      // const payload = form.watch(`questions.${activeQuestionIndex}`);
 
-                      try {
-                        await updateQuizQuestionMutation.mutateAsync(
-                          convertQuizQuestionFormDataToPayloadForUpdate(payload),
-                        );
-                      } catch (error) {
-                        console.log(error);
-                        return;
-                      }
+                      // try {
+                      //   await updateQuizQuestionMutation.mutateAsync(
+                      //     convertQuizQuestionFormDataToPayloadForUpdate(payload),
+                      //   );
+                      // } catch (error) {
+                      //   console.log(error);
+                      //   return;
+                      // }
 
-                      await form.handleSubmit(onQuizFormSubmit)();
+                      await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
                     }}
                   >
                     {__('Save', 'tutor')}
@@ -289,7 +296,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                                 variant="secondary"
                                 type="submit"
                                 size="small"
-                                onClick={form.handleSubmit(onQuizFormSubmit)}
+                                onClick={form.handleSubmit((data) =>
+                                  onQuizFormSubmit(data, localQuizId ? false : true),
+                                )}
                               >
                                 {__('Ok', 'tutor')}
                               </Button>

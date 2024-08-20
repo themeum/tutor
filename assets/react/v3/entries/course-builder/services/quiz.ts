@@ -18,7 +18,7 @@ import type { ErrorResponse } from '@Utils/form';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
 
-type QuizDataStatus = 'new' | 'update' | 'no_change';
+export type QuizDataStatus = 'new' | 'update' | 'no_change';
 
 export type QuizQuestionType =
   | 'true_false'
@@ -810,4 +810,20 @@ export const useMarkAnswerAsCorrectMutation = (quizId: ID) => {
       });
     },
   });
+};
+
+export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatus: QuizDataStatus) => {
+  if (currentStatus === dataStatus) {
+    return null;
+  }
+
+  if (dataStatus === 'new') {
+    return 'new';
+  }
+
+  if ((dataStatus === 'update' || dataStatus === 'no_change') && currentStatus === 'update') {
+    return 'update';
+  }
+
+  return 'no_change';
 };

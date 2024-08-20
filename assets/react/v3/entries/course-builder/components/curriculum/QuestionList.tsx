@@ -126,6 +126,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   const handleAddQuestion = (questionType: QuizQuestionType) => {
     const questionId = nanoid();
     appendQuestion({
+      _data_status: 'new',
       question_id: questionId,
       question_title: `Question ${questionFields.length + 1}`,
       question_description: '',

@@ -6,7 +6,11 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizQuestionOption, useMarkAnswerAsCorrectMutation } from '@CourseBuilderServices/quiz';
+import {
+  type QuizQuestionOption,
+  calculateQuizDataStatus,
+  useMarkAnswerAsCorrectMutation,
+} from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -43,6 +47,9 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
   const handleCorrectAnswer = () => {
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: 'update',
+      }),
       is_correct: '1',
     });
 

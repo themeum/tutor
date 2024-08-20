@@ -60,7 +60,7 @@ const QuestionConditions = () => {
 
   if (!activeQuestionId) {
     return (
-      <p css={styles.questionTypeWrapper}>
+      <p css={styles.emptyQuestions}>
         {__('Question Type', 'tutor')} (<span css={{ color: colorTokens.text.error }}>{__('Pending', 'tutor')}</span>)
       </p>
     );
@@ -159,6 +159,11 @@ const QuestionConditions = () => {
 export default QuestionConditions;
 
 const styles = {
+  emptyQuestions: css`
+    padding: ${spacing[12]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
+    ${typography.caption('medium')};
+  `,
+
   questionTypeWrapper: css`
     ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[32]} ${spacing[24]} ${spacing[24]};
