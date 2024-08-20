@@ -8,9 +8,13 @@
  * @since 2.0.0
  */
 
+use Tutor\Ecommerce\CheckoutController;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+CheckoutController::generate_payment_link();
 
 use TUTOR\Input;
 
