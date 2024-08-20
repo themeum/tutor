@@ -187,7 +187,7 @@ class OrderController {
 	 * @throws \Exception Throw exception if data not valid or
 	 * any other exception occur.
 	 *
-	 * @return true on success
+	 * @return int order id.
 	 */
 	public function create_order( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array() ) {
 		$items          = Input::sanitize_array( $items );
@@ -253,7 +253,8 @@ class OrderController {
 			do_action( 'tutor_before_order_create', $order_data );
 			$order_id = $this->model->create_order( $order_data );
 			if ( $order_id ) {
-				do_action( 'tutor_after_order_create', $order_id, $order_data );
+				$order_data['id'] = $order_id;
+				do_action( 'tutor_order_placed', $order_data );
 				return $order_id;
 			}
 		} catch ( \Throwable $th ) {
