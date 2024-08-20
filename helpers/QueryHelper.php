@@ -245,6 +245,10 @@ class QueryHelper {
 	 * @return  string
 	 *
 	 * @since 2.0.9
+	 *
+	 * @since 3.0.0
+	 * Null value support added, if need to check with
+	 * null: [name => 'null'] we can pass
 	 */
 	public static function build_where_clause( array $where ) {
 		$arr = array();
@@ -252,8 +256,12 @@ class QueryHelper {
 			if ( is_array( $value ) ) {
 				$value = array( $field, 'IN', $value );
 			} else {
-				$value = is_numeric( $value ) ? $value : "'" . $value . "'";
-				$value = array( $field, '=', $value );
+				if ( 'null' == $value ) {
+					$value = array( $field, 'IS', 'NULL');
+				} else {
+					$value = is_numeric( $value ) ? $value : "'" . $value . "'";
+					$value = array( $field, '=', $value );
+				}
 			}
 
 			$arr[] = self::make_clause( $value );
