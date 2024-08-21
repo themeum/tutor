@@ -297,8 +297,8 @@ const styles = {
       ${
         currentQuestionType === 'ordering' &&
         css`
-        padding-left: ${spacing[40]};
-      `
+          padding-left: ${spacing[40]};
+        `
       }
     `,
   addOptionButton: ({

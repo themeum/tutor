@@ -388,7 +388,7 @@ const FormMultipleChoiceAndOrdering = ({
                     setIsEditing(false);
                     field.onChange(previousValue);
 
-                    if (!inputValue.answer_title && !inputValue.image_url && !inputValue.answer_id) {
+                    if ((!inputValue.answer_title && !inputValue.image_url) || !inputValue.is_saved) {
                       onRemoveOption();
                     }
                   }}
@@ -449,6 +449,8 @@ const styles = {
   
       [data-check-icon] {
         opacity: 0;
+        pointer-events: none;
+        color: ${colorTokens.icon.default};
         ${
           !isMultipleChoice &&
           css`
@@ -470,6 +472,7 @@ const styles = {
         [data-visually-hidden] {
           opacity: 1;
         }
+        
         ${
           !isEditing &&
           css`
@@ -519,6 +522,7 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
+      transition: all 0.2s ease;
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};

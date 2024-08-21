@@ -19,6 +19,7 @@ import {
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { nanoid } from '@Utils/util';
 
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
@@ -27,7 +28,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const inputValue = field.value ?? {
     _data_status: 'new',
     is_saved: false,
-    answer_id: '',
+    answer_id: nanoid(),
     answer_title: '',
     belongs_question_id: activeQuestionId,
     belongs_question_type: 'fill_in_the_blank',

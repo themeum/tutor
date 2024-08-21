@@ -92,6 +92,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
       tabIndex={-1}
       onClick={() => {
         const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+        const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
 
         // const currentQuestionType = () => {
         //   const questionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
@@ -103,8 +104,6 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         // };
 
         if (['multiple_choice', 'true_false'].includes(activeQuestionType)) {
-          const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
-
           if (answers.length === 0) {
             showToast({
               message: __('Please add answers', 'tutor'),
