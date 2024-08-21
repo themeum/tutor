@@ -7,6 +7,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
+  type QuizDataStatus,
   type QuizQuestionOption,
   calculateQuizDataStatus,
   useMarkAnswerAsCorrectMutation,
@@ -48,7 +49,7 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
     field.onChange({
       ...inputValue,
       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: 'update',
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
       }),
       is_correct: '1',
     });

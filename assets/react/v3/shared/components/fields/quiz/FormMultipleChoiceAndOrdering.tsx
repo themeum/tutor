@@ -129,7 +129,7 @@ const FormMultipleChoiceAndOrdering = ({
     field.onChange({
       ...inputValue,
       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: 'update',
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
       }),
       is_correct: hasMultipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
     });
@@ -359,7 +359,7 @@ const FormMultipleChoiceAndOrdering = ({
                   field.onChange({
                     ...inputValue,
                     ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                      _data_status: 'update',
+                      _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
                     }),
                     answer_title: value,
                   });
@@ -371,7 +371,7 @@ const FormMultipleChoiceAndOrdering = ({
                     field.onChange({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: 'update',
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
                       }),
                     });
                     setIsEditing(false);
@@ -404,7 +404,7 @@ const FormMultipleChoiceAndOrdering = ({
                     field.onChange({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: 'update',
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
                       }),
                       is_saved: true,
                     });

@@ -87,11 +87,11 @@ class QuizBuilder {
 	 * @return array
 	 */
 	public function prepare_answer_data( $question_id, $question_type, $answer ) {
-		$answer_title         = Input::sanitize( $answer['answer_title'], '' );
+		$answer_title         = Input::sanitize( $answer['answer_title'] ?? '', '' );
 		$is_correct           = Input::sanitize( $answer['is_correct'], 0, Input::TYPE_INT );
-		$image_id             = Input::sanitize( $answer['image_id'] );
-		$answer_two_gap_match = Input::sanitize( $answer['answer_two_gap_match'] );
-		$answer_view_format   = Input::sanitize( $answer['answer_view_format'] );
+		$image_id             = Input::sanitize( $answer['image_id'] ?? null );
+		$answer_two_gap_match = Input::sanitize( $answer['answer_two_gap_match'] ?? '' );
+		$answer_view_format   = Input::sanitize( $answer['answer_view_format'] ?? '' );
 		$answer_settings      = null;
 
 		$answer_data = array(
@@ -204,7 +204,7 @@ class QuizBuilder {
 	public function ajax_quiz_builder_save() {
 		tutor_utils()->checking_nonce();
 
-		$payload    = $_POST['payload'] ?? array();//phpcs:ignore
+		$payload    = json_decode( wp_unslash( $_POST['payload'] ?? '{}' ), true );//phpcs:ignore
 		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$topic_id   = Input::post( 'topic_id', 0, Input::TYPE_INT );
 		$course_cls = new Course( false );

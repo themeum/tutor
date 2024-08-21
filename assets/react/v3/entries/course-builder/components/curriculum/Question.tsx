@@ -106,7 +106,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         if (['multiple_choice', 'true_false'].includes(activeQuestionType)) {
           if (answers.length === 0) {
             showToast({
-              message: __('Please add answer', 'tutor'),
+              message: __('Please add option', 'tutor'),
               type: 'danger',
             });
             return;

@@ -87,7 +87,9 @@ interface ImportQuizPayload {
 interface QuizPayload {
   course_id: ID;
   topic_id: ID;
-  payload: QuizForm;
+  payload: QuizDetailsResponse & {
+    _data_status: QuizDataStatus;
+  };
 }
 
 export interface QuizDetailsResponse {
@@ -183,8 +185,10 @@ interface SaveQuizQuestionAnswerPayload {
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
-    question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
-    question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
+    if (question.question_settings) {
+      question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
+      question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
+    }
     question.question_answers = question.question_answers.map((answer) => ({
       ...answer,
       _data_status: 'no_change',
@@ -293,39 +297,71 @@ export const convertQuizFormDataToPayload = (
     payload: {
       ID: formData.ID,
       _data_status: formData._data_status,
-      quiz_title: formData.quiz_title,
-      quiz_description: formData.quiz_description,
-      quiz_option: formData.quiz_option,
-      questions: formData.questions.map(
-        (question) =>
-          ({
-            _data_status: question._data_status,
-            question_id: question.question_id,
-            question_title: question.question_title,
-            question_description: question.question_description,
+      post_title: formData.quiz_title,
+      post_content: formData.quiz_description,
+      quiz_option: {
+        attempts_allowed: formData.quiz_option.attempts_allowed,
+        content_drip_settings: formData.quiz_option.content_drip_settings,
+        feedback_mode: formData.quiz_option.feedback_mode,
+        hide_question_number_overview: formData.quiz_option.hide_question_number_overview ? '1' : '0',
+        hide_quiz_time_display: formData.quiz_option.hide_quiz_time_display ? '1' : '0',
+        max_questions_for_answer: formData.quiz_option.max_questions_for_answer,
+        open_ended_answer_characters_limit: formData.quiz_option.open_ended_answer_characters_limit,
+        pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
+        passing_grade: formData.quiz_option.passing_grade,
+        question_layout_view: formData.quiz_option.question_layout_view,
+        questions_order: formData.quiz_option.questions_order,
+        quiz_auto_start: formData.quiz_option.quiz_auto_start ? '1' : '0',
+        short_answer_characters_limit: formData.quiz_option.short_answer_characters_limit,
+        time_limit: {
+          time_type: formData.quiz_option.time_limit.time_type,
+          time_value: formData.quiz_option.time_limit.time_value,
+        },
+      },
+      questions: formData.questions.map((question) => {
+        console.log('question', question);
+        return {
+          _data_status: question._data_status,
+          question_id: question.question_id,
+          question_title: question.question_title,
+          question_description: question.question_description,
+          question_mark: question.question_mark,
+          answer_explanation: question.answer_explanation,
+          question_type: question.question_type,
+          question_order: question.question_order,
+          question_settings: {
+            answer_required: question.question_settings.answer_required ? '1' : '0',
             question_mark: question.question_mark,
-            answer_explanation: question.answer_explanation,
-            question_type: question.question_type,
-            question_settings: question.question_settings,
-
-            question_answers: question.question_answers.map(
-              (answer) =>
-                ({
-                  _data_status: answer._data_status,
-                  answer_id: answer.answer_id,
-                  belongs_question_id: question.question_id,
-                  belongs_question_type: question.question_type,
-                  answer_title: answer.answer_title,
-                  is_correct: answer.is_correct ? '1' : '0',
-                  image_id: answer.image_id,
-                  image_url: answer.image_url,
-                  answer_two_gap_match: answer.answer_two_gap_match,
-                  answer_view_format: answer.answer_view_format,
-                  answer_order: answer.answer_order,
-                }) as QuizQuestionOption,
-            ),
-          }) as QuizQuestion,
-      ),
+            question_type: question.question_type as QuizQuestionType,
+            randomize_options: question.question_settings.randomize_options ? '1' : '0',
+            show_question_mark: question.question_settings.show_question_mark ? '1' : '0',
+            ...(question.question_type === 'multiple_choice' && {
+              has_multiple_correct_answer: (question as MultipleChoiceQuizQuestion).has_multiple_correct_answer
+                ? '1'
+                : '0',
+            }),
+            ...(question.question_type === 'matching' && {
+              is_image_matching: (question as MatchingQuizQuestion).is_image_matching ? '1' : '0',
+            }),
+          } as QuizQuestion['question_settings'],
+          question_answers: question.question_answers.map(
+            (answer) =>
+              ({
+                _data_status: answer._data_status,
+                answer_id: answer.answer_id,
+                belongs_question_id: question.question_id,
+                belongs_question_type: question.question_type,
+                answer_title: answer.answer_title,
+                is_correct: answer.is_correct,
+                image_id: answer.image_id,
+                image_url: answer.image_url,
+                answer_two_gap_match: answer.answer_two_gap_match,
+                answer_view_format: answer.answer_view_format,
+                answer_order: answer.answer_order,
+              }) as QuizQuestionOption,
+          ),
+        } as QuizQuestion;
+      }),
     },
     // quiz_title: formData.quiz_title,
     // quiz_description: formData.quiz_description,

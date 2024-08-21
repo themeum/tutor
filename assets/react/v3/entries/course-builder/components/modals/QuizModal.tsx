@@ -105,6 +105,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   // console.log(isFormDirty);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isFormDirty) {
@@ -119,7 +120,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
-  }, [isFormDirty, form]);
+  }, [isFormDirty]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -171,7 +172,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
       if (answers.length === 0) {
         setActiveTab('details');
         showToast({
-          message: __('Please add answer', 'tutor'),
+          message: __('Please add option', 'tutor'),
           type: 'danger',
         });
         return;

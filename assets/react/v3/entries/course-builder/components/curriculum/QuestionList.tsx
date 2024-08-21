@@ -23,6 +23,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { useToast } from '@Atoms/Toast';
+import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -38,53 +39,66 @@ import {
 import { AnimationType } from '@Hooks/useAnimation';
 import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection, Option } from '@Utils/types';
+import type { IconCollection } from '@Utils/types';
 import { nanoid, noop } from '@Utils/util';
 
 interface QuestionListProps {
   quizId?: ID;
 }
 
-const questionTypeOptions: Option<QuizQuestionType>[] = [
+const questionTypeOptions: {
+  label: string;
+  value: QuizQuestionType;
+  icon: IconCollection;
+  isPro: boolean;
+}[] = [
   {
     label: __('True/ False', 'tutor'),
     value: 'true_false',
     icon: 'quizTrueFalse',
+    isPro: false,
   },
   {
     label: __('Multiple Choice', 'tutor'),
     value: 'multiple_choice',
     icon: 'quizMultiChoice',
+    isPro: false,
   },
   {
     label: __('Open Ended/ Essay', 'tutor'),
     value: 'open_ended',
     icon: 'quizEssay',
+    isPro: false,
   },
   {
     label: __('Fill in the Blanks', 'tutor'),
     value: 'fill_in_the_blank',
     icon: 'quizFillInTheBlanks',
+    isPro: false,
   },
   {
     label: __('Short Answer', 'tutor'),
     value: 'short_answer',
     icon: 'quizShortAnswer',
+    isPro: true,
   },
   {
     label: __('Matching', 'tutor'),
     value: 'matching',
     icon: 'quizImageMatching',
+    isPro: true,
   },
   {
     label: __('Image Answering', 'tutor'),
     value: 'image_answering',
     icon: 'quizImageAnswer',
+    isPro: true,
   },
   {
     label: __('Ordering', 'tutor'),
     value: 'ordering',
     icon: 'quizOrdering',
+    isPro: true,
   },
 ];
 
@@ -134,9 +148,10 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
 
       if (answers.length === 0) {
         showToast({
-          message: __('Please add answer', 'tutor'),
+          message: __('Please add option', 'tutor'),
           type: 'danger',
         });
+        setIsOpen(false);
         return;
       }
 
@@ -344,14 +359,17 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                 key={option.value}
                 type="button"
                 css={styles.questionTypeOption}
+                disabled={option.isPro && !tutorConfig.tutor_pro_url}
                 onClick={() => {
-                  handleAddQuestion(option.value);
+                  handleAddQuestion(option.value as QuizQuestionType);
                   // createQuizQuestion.mutate(quizId, { question_type: option.value });
                   // setIsOpen(false);
                 }}
               >
                 <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
                 <span>{option.label}</span>
+
+                {/* Need to add lock or pro identifier */}
               </button>
             ))}
           </div>
@@ -411,13 +429,17 @@ const styles = {
     gap: ${spacing[10]};
     border: 2px solid transparent;
 
-    :hover {
+    :disabled {
+      cursor: not-allowed;
+    }
+
+    :hover:enabled {
       background-color: ${colorTokens.background.hover};
       color: ${colorTokens.text.title};
     }
 
-    :focus,
-    :active {
+    :focus:enabled,
+    :active:enabled {
       border-color: ${colorTokens.stroke.brand};
     }
   `,
