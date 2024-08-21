@@ -96,7 +96,7 @@ class ImageController {
 			return $prompt;
 		}
 
-		$style_prompt = $style_prompts[ $style ];
+		$style_prompt = 'You are an intelligent assistant tasked with generating banner images for an e-learning application. ' . $style_prompts[ $style ];
 
 		return str_replace( '{user_prompt}', $prompt, $style_prompt );
 	}
@@ -127,7 +127,7 @@ class ImageController {
 			'model'           => Models::DALL_E_3,
 			'prompt'          => $prompt,
 			'n'               => 1,
-			'size'            => Sizes::REGULAR,
+			'size'            => Sizes::LANDSCAPE,
 			'response_format' => 'b64_json',
 		);
 

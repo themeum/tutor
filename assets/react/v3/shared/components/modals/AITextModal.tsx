@@ -7,7 +7,7 @@ import { PromptControls } from '@Components/magic-ai-content/PromptControls';
 import SkeletonLoader from '@Components/magic-ai-content/SkeletonLoader';
 import { inspirationPrompts } from '@Components/magic-ai-image/ImageContext';
 import { type ChatFormat, type ChatLanguage, type ChatTone, languageOptions, toneOptions } from '@Config/magic-ai';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
@@ -180,20 +180,27 @@ const AITextModal = <T extends FieldValues>({
               <div>
                 <div css={styles.actionBar}>
                   <div css={styles.navigation}>
-                    <Button
-                      variant="text"
-                      onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
-                      disabled={pointer === 0}
-                    >
-                      <SVGIcon name="chevronLeft" width={20} height={20} />
-                    </Button>
-                    <Button
-                      variant="text"
-                      onClick={() => setPointer((previous) => Math.min(content.length - 1, previous + 1))}
-                      disabled={pointer === content.length - 1}
-                    >
-                      <SVGIcon name="chevronRight" width={20} height={20} />
-                    </Button>
+                    <Show when={content.length > 1}>
+                      <Button
+                        variant="text"
+                        onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
+                        disabled={pointer === 0}
+                      >
+                        <SVGIcon name="chevronLeft" width={20} height={20} />
+                      </Button>
+
+                      <div css={styles.pageInfo}>
+                        <span>{pointer + 1}</span> / {content.length}
+                      </div>
+
+                      <Button
+                        variant="text"
+                        onClick={() => setPointer((previous) => Math.min(content.length - 1, previous + 1))}
+                        disabled={pointer === content.length - 1}
+                      >
+                        <SVGIcon name="chevronRight" width={20} height={20} />
+                      </Button>
+                    </Show>
                   </div>
                   <Button
                     variant="text"
@@ -372,6 +379,15 @@ const styles = {
 			width: fit-content;
 		}
 	`,
+  pageInfo: css`
+		${typography.caption()};
+		color: ${colorTokens.text.hints};
+		
+		& > span {
+			font-weight: ${fontWeight.medium};
+			color: ${colorTokens.text.primary};
+		}
+	`,
   inspireButton: css`
 		${styleUtils.resetButton};	
 		${typography.small()};
@@ -395,6 +411,8 @@ const styles = {
 	`,
   navigation: css`
 		margin-left: -${spacing[8]};
+		display: flex;
+		align-items: center;
 	`,
   content: css`
 		${typography.caption()};

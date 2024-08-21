@@ -35,7 +35,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
         updateLoading({ title: false });
 
         if (response.data) {
-          updateContents({ title: response.data });
+          updateContents({ title: response.data, prompt: values.prompt });
         }
       })}
     >

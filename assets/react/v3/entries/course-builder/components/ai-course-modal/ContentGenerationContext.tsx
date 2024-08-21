@@ -1,6 +1,6 @@
 import type { QuizContent } from '@CourseBuilderServices/magic-ai';
 import { noop } from '@Utils/util';
-import React, { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 export type CourseContentStep = 'prompt' | 'generation';
 
@@ -15,6 +15,7 @@ export interface Topic {
   content: TopicContent[];
 }
 export interface CourseContent {
+  prompt: string;
   title: string;
   description: string;
   image: string;
@@ -36,62 +37,89 @@ interface ContextType {
   pointer: number;
   setPointer: React.Dispatch<React.SetStateAction<number>>;
   updateContents: (value: Partial<CourseContent>) => void;
-  loading: Loading;
+  loading: Loading[];
   updateLoading: (value: Partial<Loading>) => void;
   currentContent: CourseContent;
+  currentLoading: Loading;
+  appendContent: () => void;
+  removeContent: () => void;
+  appendLoading: () => void;
+  removeLoading: () => void;
 }
 
-const defaultContents: CourseContent[] = [
-  {
-    title: '',
-    description: '',
-    image: '',
-    topics: [],
-  },
-];
+export const defaultContent: CourseContent = {
+  prompt: '',
+  title: '',
+  description: '',
+  image: '',
+  topics: [],
+};
+
+export const defaultLoading: Loading = {
+  title: false,
+  description: false,
+  image: false,
+  topic: false,
+  content: false,
+  quiz: false,
+};
 
 const Context = React.createContext<ContextType>({
   currentStep: 'prompt',
   setCurrentStep: noop,
-  contents: defaultContents,
+  contents: [defaultContent],
   updateContents: noop,
   pointer: 0,
   setPointer: noop,
-  currentContent: defaultContents[0],
-  loading: {
-    title: false,
-    image: false,
-    description: false,
-    content: false,
-    topic: false,
-    quiz: false,
-  },
+  appendContent: noop,
+  removeContent: noop,
+  appendLoading: noop,
+  removeLoading: noop,
+  currentContent: {} as CourseContent,
+  loading: [
+    {
+      title: false,
+      image: false,
+      description: false,
+      content: false,
+      topic: false,
+      quiz: false,
+    },
+  ],
+  currentLoading: {} as Loading,
   updateLoading: noop,
 });
 export const useContentGenerationContext = () => useContext(Context);
 
 const ContentGenerationContextProvider = ({ children }: { children: ReactNode }) => {
   const [currentStep, setCurrentStep] = useState<CourseContentStep>('prompt');
-  const [contents, setContents] = useState<CourseContent[]>(defaultContents);
+  const [contents, setContents] = useState<CourseContent[]>([defaultContent]);
   const [pointer, setPointer] = useState(0);
-  const [loading, setLoading] = useState<Loading>({
-    title: false,
-    image: false,
-    description: false,
-    content: false,
-    topic: false,
-    quiz: false,
-  });
+  const [loading, setLoading] = useState<Loading[]>([
+    {
+      title: false,
+      image: false,
+      description: false,
+      content: false,
+      topic: false,
+      quiz: false,
+    },
+  ]);
 
   const currentContent = useMemo(() => {
     return contents[pointer];
   }, [pointer, contents]);
 
+  const currentLoading = useMemo(() => {
+    return loading[pointer];
+  }, [pointer, loading]);
+
   const updateContents = useCallback(
     (value: Partial<CourseContent>) => {
+      console.log({ value, pointer });
       setContents((previous) => {
         const copy = [...previous];
-        copy[pointer] ||= defaultContents[0];
+        copy[pointer] ||= defaultContent;
         copy[pointer] = { ...copy[pointer], ...value };
         return copy;
       });
@@ -99,13 +127,33 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
     [pointer],
   );
 
-  const updateLoading = useCallback((value: Partial<Loading>) => {
-    setLoading((previous) => ({ ...previous, ...value }));
+  const updateLoading = useCallback(
+    (value: Partial<Loading>) => {
+      setLoading((previous) => {
+        const copy = [...previous];
+        copy[pointer] ||= defaultLoading;
+        copy[pointer] = { ...copy[pointer], ...value };
+        return copy;
+      });
+    },
+    [pointer],
+  );
+
+  const appendContent = useCallback(() => {
+    setContents((previous) => [...previous, defaultContent]);
   }, []);
 
-  useEffect(() => {
-    console.log({ contents });
-  }, [contents]);
+  const removeContent = useCallback(() => {
+    setContents((previous) => [...previous].splice(0, -1));
+  }, []);
+
+  const appendLoading = useCallback(() => {
+    setLoading((previous) => [...previous, defaultLoading]);
+  }, []);
+
+  const removeLoading = useCallback(() => {
+    setLoading((previous) => [...previous].splice(0, -1));
+  }, []);
 
   return (
     <Context.Provider
@@ -118,7 +166,12 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
         setPointer,
         updateContents,
         loading,
+        currentLoading,
         updateLoading,
+        appendContent,
+        removeContent,
+        appendLoading,
+        removeLoading,
       }}
     >
       {children}

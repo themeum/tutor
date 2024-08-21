@@ -1,8 +1,10 @@
+import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
+import type { QuizContent } from '@CourseBuilderServices/magic-ai';
 import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -13,6 +15,7 @@ import TopicContentSkeleton from './loaders/TopicContentSkeleton';
 interface AccordionContent {
   type: 'lesson' | 'assignment' | 'quiz';
   title: string;
+  questions?: QuizContent[];
 }
 interface AccordionItem {
   name: string;
@@ -104,8 +107,8 @@ const AccordionItem = ({
   content,
   setIsActive,
 }: { isActive: boolean; setIsActive: () => void; content: AccordionItem }) => {
-  const { loading } = useContentGenerationContext();
-  const isLoading = loading.content && content.content.length === 0;
+  const { currentLoading } = useContentGenerationContext();
+  const isLoading = currentLoading.content && content.content.length === 0;
   return (
     <div onClick={setIsActive} onKeyDown={noop} css={css`cursor: pointer;`}>
       <div css={styles.title}>
@@ -123,7 +126,12 @@ const AccordionItem = ({
             {(item, idx) => {
               return (
                 <div css={styles.contentItem} key={idx}>
-                  {icons[item.type]}
+                  {item.type === 'quiz' && !currentLoading.content && currentLoading.quiz && !item?.questions ? (
+                    <GradientLoadingSpinner />
+                  ) : (
+                    icons[item.type]
+                  )}
+
                   <span>{item.title}</span>
                 </div>
               );

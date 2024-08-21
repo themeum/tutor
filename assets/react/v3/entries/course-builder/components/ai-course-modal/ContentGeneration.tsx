@@ -71,7 +71,20 @@ const defaultSteps: Record<keyof Loading, LoadingStep> = {
 const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const [loadingSteps, setLoadingSteps] = useState(defaultSteps);
   const [isCreateNewCourse, setIsCreateNewCourse] = useState(false);
-  const { currentContent, loading, updateLoading, updateContents, setPointer } = useContentGenerationContext();
+  const {
+    contents,
+    loading,
+    pointer,
+    currentContent,
+    currentLoading,
+    updateLoading,
+    updateContents,
+    setPointer,
+    appendContent,
+    removeContent,
+    appendLoading,
+    removeLoading,
+  } = useContentGenerationContext();
   const params = new URLSearchParams(window.location.search);
   const courseId = Number(params.get('course_id'));
 
@@ -160,38 +173,39 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
         await Promise.allSettled(quizPromises);
         updateLoading({ quiz: false });
       });
-  }, [loading.title, currentContent?.title]);
+  }, [currentLoading.title, currentContent.title]);
 
   useEffect(() => {
     setLoadingSteps((previous) => {
       const copy = { ...previous };
-      const keys = getObjectKeys(loading);
+      const keys = getObjectKeys(currentLoading);
       for (const key of keys) {
-        copy[key].completed = !loading[key];
+        copy[key].completed = !currentLoading[key];
       }
       return copy;
     });
-  }, [loading]);
+  }, [currentLoading]);
+  const isLoading = getObjectValues(currentLoading).some((item) => item);
 
   return (
     <div css={styles.container}>
       <div css={styles.wrapper}>
         <div css={styles.left}>
           <div css={styles.title}>
-            <Show when={!loading.title} fallback={<TitleSkeleton />}>
+            <Show when={!currentLoading.title} fallback={<TitleSkeleton />}>
               <SVGIcon name="book" width={40} height={40} />
               <h5 title={currentContent.title}>{currentContent.title}</h5>
             </Show>
           </div>
 
           <div css={styles.leftContentWrapper}>
-            <Show when={!loading.image} fallback={<ImageSkeleton />}>
+            <Show when={!currentLoading.image} fallback={<ImageSkeleton />}>
               <div css={styles.imageWrapper}>
                 <img src={currentContent.image} alt="course banner" />
               </div>
             </Show>
 
-            <Show when={!loading.description} fallback={<DescriptionSkeleton />}>
+            <Show when={!currentLoading.description} fallback={<DescriptionSkeleton />}>
               <div css={styles.section}>
                 <h5>{__('Course Info', 'tutor')}</h5>
                 <div css={styles.content}>
@@ -199,7 +213,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 </div>
               </div>
             </Show>
-            <Show when={!loading.topic} fallback={<ContentSkeleton />}>
+            <Show when={!currentLoading.topic} fallback={<ContentSkeleton />}>
               <div css={styles.section}>
                 <h5>{__('Course Content', 'tutor')}</h5>
                 <div css={styles.content}>
@@ -211,76 +225,143 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
         </div>
         <div css={styles.right}>
           <div css={styles.rightContents}>
-            <div css={styles.box({ deactivated: false })}>
-              <SVGIcon name="magicAiColorize" width={24} height={24} />
-              <div css={styles.boxContent}>
-                <h6>{__('Generating course content', 'tutor')}</h6>
-                <div css={styles.items}>
-                  <For each={getObjectKeys(loadingSteps)}>
-                    {(stepKey, index) => {
-                      const step = loadingSteps[stepKey];
+            <For each={loading}>
+              {(_, index) => {
+                if (pointer === index && isCreateNewCourse) {
+                  return null;
+                }
+                const isDeactivated = pointer !== index;
+                const showButtons = index === loading.length - 1;
 
-                      return (
-                        <div css={styles.item} key={index}>
-                          <Show
-                            when={step.completed}
-                            fallback={
-                              <>
-                                <GradientLoadingSpinner />
-                                {step.loading_label}
-                              </>
-                            }
+                return (
+                  <div css={styles.box({ deactivated: isDeactivated })} key={index}>
+                    <SVGIcon name="magicAiColorize" width={24} height={24} />
+                    <div css={styles.boxContent}>
+                      <h6>{__('Generating course content', 'tutor')}</h6>
+                      <div css={styles.items}>
+                        <For each={getObjectKeys(loadingSteps)}>
+                          {(stepKey, index) => {
+                            const step = loadingSteps[stepKey];
+
+                            return (
+                              <div css={styles.item} key={index}>
+                                <Show when={isDeactivated}>
+                                  <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                  {step.completed_label}
+                                </Show>
+                                <Show when={!isDeactivated}>
+                                  <Show
+                                    when={step.completed}
+                                    fallback={
+                                      <>
+                                        <GradientLoadingSpinner />
+                                        {step.loading_label}
+                                      </>
+                                    }
+                                  >
+                                    <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                    {step.completed_label}
+                                  </Show>
+                                </Show>
+                              </div>
+                            );
+                          }}
+                        </For>
+                        <button
+                          type="button"
+                          css={css`
+														${styleUtils.resetButton};
+														position: absolute;
+														top: 0;
+														left: 0;
+														width: 100%;
+														height: 100%;
+													`}
+                          onClick={() => setPointer(index)}
+                          disabled={isLoading}
+                        />
+                      </div>
+
+                      <div css={styles.boxFooter}>
+                        <Show when={showButtons}>
+                          <MagicButton
+                            variant="primary_outline"
+                            disabled={isLoading}
+                            onClick={async () => {
+                              setIsCreateNewCourse(true);
+                              setPointer(loading.length);
+                              appendLoading();
+                              appendContent();
+
+                              updateLoading({
+                                title: true,
+                                image: true,
+                                description: true,
+                                topic: true,
+                                content: true,
+                                quiz: true,
+                              });
+
+                              const response = await generateCourseTitleMutation.mutateAsync({
+                                type: 'title',
+                                prompt: contents[index].prompt,
+                              });
+
+                              updateLoading({ title: false });
+
+                              if (response.data) {
+                                updateContents({ title: response.data });
+                              }
+                            }}
                           >
-                            <SVGIcon name="checkFilledWhite" width={24} height={24} />
-                            {step.completed_label}
-                          </Show>
-                        </div>
-                      );
-                    }}
-                  </For>
-                </div>
-                <Show when={getObjectValues(loading).every((item) => !item)}>
-                  <div css={styles.boxFooter}>
-                    <MagicButton variant="primary_outline">
-                      <SVGIcon name="tryAgain" width={24} height={24} />
-                      {__('Regenerate course', 'tutor')}
-                    </MagicButton>
-                    <MagicButton
-                      variant="primary_outline"
-                      onClick={() => {
-                        setIsCreateNewCourse(true);
-                      }}
-                    >
-                      <SVGIcon name="magicWand" width={24} height={24} />
-                      {__('Create a new course', 'tutor')}
-                    </MagicButton>
+                            <SVGIcon name="magicWand" width={24} height={24} />
+                            {__('Create a new course', 'tutor')}
+                          </MagicButton>
+                        </Show>
+
+                        <MagicButton
+                          variant="outline"
+                          disabled={isLoading || !contents[index].prompt}
+                          onClick={() => {
+                            setPointer(loading.length);
+                            appendLoading();
+                            appendContent();
+                          }}
+                        >
+                          <SVGIcon name="tryAgain" width={24} height={24} />
+                          {__('Regenerate course', 'tutor')}
+                        </MagicButton>
+                      </div>
+                    </div>
                   </div>
-                </Show>
-              </div>
-            </div>
+                );
+              }}
+            </For>
 
             <Show when={isCreateNewCourse}>
-              <div css={styles.box({ deactivated: false })}>
+              <div css={styles.box({ deactivated: true })}>
                 <form
                   css={styles.regenerateForm}
                   onSubmit={form.handleSubmit(async (values) => {
+                    setIsCreateNewCourse(false);
                     updateLoading({
                       title: true,
                       image: true,
                       description: true,
-                      content: true,
                       topic: true,
+                      content: true,
                       quiz: true,
                     });
-                    setPointer((previous) => previous + 1);
                     const response = await generateCourseTitleMutation.mutateAsync({
                       type: 'title',
                       prompt: values.prompt,
                     });
+
                     updateLoading({ title: false });
+                    form.reset();
 
                     if (response.data) {
-                      updateContents({ title: response.data });
+                      updateContents({ title: response.data, prompt: values.prompt });
                     }
                   })}
                 >
@@ -299,14 +380,17 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                   <div css={styles.formButtons}>
                     <MagicButton
                       variant="primary_outline"
+                      disabled={isLoading}
                       onClick={() => {
                         setIsCreateNewCourse(false);
                         setPointer((previous) => previous - 1);
+                        removeContent();
+                        removeLoading();
                       }}
                     >
                       {__('Cancel', 'tutor')}
                     </MagicButton>
-                    <MagicButton type="submit">
+                    <MagicButton type="submit" disabled={isLoading}>
                       <SVGIcon name="magicWand" width={24} height={24} />
                       {__('Create now', 'tutor')}
                     </MagicButton>
@@ -317,12 +401,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <div css={styles.rightFooter}>
-            <MagicButton variant="primary_outline" onClick={onClose}>
+            <MagicButton variant="primary_outline" onClick={onClose} disabled={isLoading}>
               {__('Cancel', 'tutor')}
             </MagicButton>
             <MagicButton
+              variant="primary"
+              disabled={isLoading}
               onClick={() => {
-                setPointer((previous) => previous + 1);
                 saveAIGeneratedCourseContentMutation.mutate({
                   course_id: courseId,
                   content: JSON.stringify(currentContent),
@@ -394,7 +479,9 @@ const styles = {
 		padding: ${spacing[16]} ${spacing[12]};
 		display: flex;
 		gap: ${spacing[12]};
-
+		transition: border 0.3s ease;
+		cursor: pointer;
+		
 		svg {
 			flex-shrink: 0;
 		}
@@ -402,16 +489,32 @@ const styles = {
 		${
       deactivated &&
       css`
-			svg {
+			[data-check-icon] {
 				color: ${colorTokens.icon.disable.muted} !important;
 			}
 		`
     }
+
+		${
+      !deactivated &&
+      css`
+			border-color: ${colorTokens.stroke.brand};
+			`
+    }
+
+		&:hover {
+				border-color: ${colorTokens.stroke.brand};
+		}
 	`,
   boxFooter: css`
 		display: flex;
 		align-items: center;
 		gap: ${spacing[16]};
+		justify-content: end;
+
+		button {
+			width: auto;
+		}
 	`,
   rightContents: css`
 		display: flex;
@@ -432,6 +535,7 @@ const styles = {
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[12]};
+		width: 100%;
 
 		h6 {
 			${typography.body('medium')};
@@ -447,6 +551,7 @@ const styles = {
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[4]};
+		position: relative;
 	`,
   item: css`
 		display: flex;
