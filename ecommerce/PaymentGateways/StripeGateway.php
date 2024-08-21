@@ -52,7 +52,7 @@ class StripeGateway extends GatewayBase {
 	 *
 	 * @return string
 	 */
-	public function get_root_dir_name() {
+	public function get_root_dir_name():string {
 		return $this->dir_name;
 	}
 
@@ -63,7 +63,7 @@ class StripeGateway extends GatewayBase {
 	 *
 	 * @return string
 	 */
-	public function get_payment_class() {
+	public function get_payment_class():string {
 		return $this->payment_class;
 	}
 
@@ -74,7 +74,7 @@ class StripeGateway extends GatewayBase {
 	 *
 	 * @return string
 	 */
-	public function get_config_class() {
+	public function get_config_class():string {
 		return $this->config_class;
 	}
 }

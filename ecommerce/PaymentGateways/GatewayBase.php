@@ -32,7 +32,7 @@ abstract class GatewayBase {
 	 *
 	 * @var string
 	 */
-	abstract public function get_root_dir_name();
+	abstract public function get_root_dir_name():string;
 
 	/**
 	 * Payment class from payment hub
@@ -41,7 +41,7 @@ abstract class GatewayBase {
 	 *
 	 * @var string
 	 */
-	abstract public function get_payment_class();
+	abstract public function get_payment_class():string;
 
 	/**
 	 * Config class
@@ -50,7 +50,7 @@ abstract class GatewayBase {
 	 *
 	 * @since 3.0.0
 	 */
-	abstract public function get_config_class();
+	abstract public function get_config_class():string;
 
 	/**
 	 * Include autoload file & init payment object
@@ -63,6 +63,10 @@ abstract class GatewayBase {
 		}
 
 		$this->payment = ( new PaymentHub( $this->get_payment_class(), $this->get_config_class() ) )->make();
+
+		if ( ! $this->payment ) {
+			throw new \Exception( 'Failed to initialize payment for gateway: ' . static::class );
+		}
 	}
 
 	/**
@@ -77,6 +81,10 @@ abstract class GatewayBase {
 	 * @return void
 	 */
 	public function setup_payment_and_redirect( $data ) {
+		if ( ! $this->payment ) {
+			throw new \Exception( 'Payment object is not initialized.' );
+		}
+
 		try {
 			$this->payment->setData( $data );
 
@@ -96,6 +104,10 @@ abstract class GatewayBase {
 	 * @return object
 	 */
 	public function get_webhook_data() {
+		if ( ! $this->payment ) {
+			throw new \Exception( 'Payment object is not initialized.' );
+		}
+
 		$obj = new stdClass();
 
 		try {
