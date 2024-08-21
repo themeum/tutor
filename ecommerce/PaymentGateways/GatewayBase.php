@@ -54,6 +54,12 @@ abstract class GatewayBase {
 
 	/**
 	 * Include autoload file & init payment object
+	 *
+	 * @since 3.0.0
+	 *
+	 * @throws \Exception Throw exception if error occur.
+	 *
+	 * @return void
 	 */
 	public function __construct() {
 		$autoload_file = tutor()->path . 'ecommerce/PaymentGateways/' . $this->get_root_dir_name() . '/vendor/autoload.php';
