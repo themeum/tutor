@@ -1,4 +1,5 @@
 import { useToast } from '@Atoms/Toast';
+import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authApiInstance } from '@Utils/api';
@@ -221,6 +222,7 @@ export const useCreateCouponMutation = () => {
 	return useMutation({
 		mutationFn: createCoupon,
 		onSuccess: (response) => {
+			window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_coupons`;
 			showToast({ type: 'success', message: response.message });
 		},
 		onError: (error: ErrorResponse) => {
