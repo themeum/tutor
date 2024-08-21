@@ -1,0 +1,265 @@
+<?php
+/**
+ * Quiz Builder
+ *
+ * @package Tutor\Classes
+ * @author Themeum <support@themeum.com>
+ * @link https://themeum.com
+ * @since 3.0.0
+ */
+
+namespace TUTOR;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+use Tutor\Helpers\HttpHelper;
+use Tutor\Models\QuizModel;
+use Tutor\Traits\JsonResponse;
+
+/**
+ * Class QuizBuilder
+ *
+ * @since 1.0.0
+ */
+class QuizBuilder {
+	use JsonResponse;
+
+	const TRACKING_KEY   = '_data_status';
+	const FLAG_NEW       = 'new';
+	const FLAG_UPDATE    = 'update';
+	const FLAG_NO_CHANGE = 'no_change';
+
+	/**
+	 * Register hooks and dependencies.
+	 *
+	 * @param boolean $register_hooks register hooks or not.
+	 */
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
+		}
+
+		add_action( 'wp_ajax_tutor_quiz_builder_save', array( $this, 'ajax_quiz_builder_save' ) );
+	}
+
+
+	/**
+	 * Prepare question data.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int   $quiz_id quiz id.
+	 * @param array $question question data.
+	 *
+	 * @return array
+	 */
+	private function prepare_question_data( $quiz_id, $question ) {
+		$question_title    = Input::sanitize( $question['question_title'], '' );
+		$question_type     = Input::sanitize( $question['question_type'], '' );
+		$question_mark     = Input::sanitize( $question['question_mark'], 1, Input::TYPE_INT );
+		$question_settings = Input::sanitize( $question['question_settings'], array() );
+
+		add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
+		$question_description = Input::sanitize( $question['question_description'], '', Input::TYPE_KSES_POST );
+		remove_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
+
+		$data = array(
+			'quiz_id'              => $quiz_id,
+			'question_title'       => $question_title,
+			'question_description' => $question_description,
+			'question_type'        => $question_type,
+			'question_mark'        => $question_mark,
+			'question_settings'    => maybe_unserialize( $question_settings ),
+		);
+
+		return apply_filters( 'tutor_quiz_question_data', $data );
+	}
+
+	/**
+	 * Prepare answer data.
+	 *
+	 * @param int    $question_id question id.
+	 * @param string $question_type question type.
+	 * @param array  $answer answer data.
+	 *
+	 * @return array
+	 */
+	public function prepare_answer_data( $question_id, $question_type, $answer ) {
+		$answer_title         = Input::sanitize( $answer['answer_title'], '' );
+		$is_correct           = Input::sanitize( $answer['is_correct'], 0, Input::TYPE_INT );
+		$image_id             = Input::sanitize( $answer['image_id'] );
+		$answer_two_gap_match = Input::sanitize( $answer['answer_two_gap_match'] );
+		$answer_view_format   = Input::sanitize( $answer['answer_view_format'] );
+		$answer_settings      = null;
+
+		$answer_data = array(
+			'belongs_question_id'   => $question_id,
+			'belongs_question_type' => $question_type,
+			'answer_title'          => $answer_title,
+			'is_correct'            => $is_correct,
+			'image_id'              => $image_id,
+			'answer_two_gap_match'  => $answer_two_gap_match,
+			'answer_view_format'    => $answer_view_format,
+			'answer_settings'       => $answer_settings,
+		);
+
+		return $answer_data;
+	}
+
+	/**
+	 * Save quiz questions.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int   $quiz_id quiz id.
+	 * @param array $questions questions data.
+	 *
+	 * @return void
+	 */
+	public function save_questions( $quiz_id, $questions ) {
+		global $wpdb;
+		$questions_table = $wpdb->prefix . 'tutor_quiz_questions';
+		$answers_table   = $wpdb->prefix . 'tutor_quiz_question_answers';
+
+		$question_order = 0;
+		foreach ( $questions as $question ) {
+			$data_status      = isset( $question[ self::TRACKING_KEY ] ) ? $question[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
+			$question_type    = Input::sanitize( $question['question_type'] );
+			$question_data    = $this->prepare_question_data( $quiz_id, $question );
+			$question_answers = isset( $question['question_answers'] ) ? $question['question_answers'] : array();
+
+			// New question.
+			if ( self::FLAG_NEW === $data_status ) {
+				$wpdb->insert( $questions_table, $question_data );
+				$question_id = $wpdb->insert_id;
+			}
+
+			// Update question.
+			if ( self::FLAG_UPDATE === $data_status ) {
+				$question_id = (int) $question['question_id'];
+				$wpdb->update(
+					$questions_table,
+					$question_data,
+					array( 'question_id' => $question_id )
+				);
+			}
+
+			if ( self::FLAG_NO_CHANGE === $data_status ) {
+				$answer_id = $question['question_id'];
+			}
+
+			// Save sort order.
+			$question_order++;
+			$wpdb->update(
+				$questions_table,
+				array( 'question_order' => $question_order ),
+				array( 'question_id' => $question_id )
+			);
+
+			// Save question's answers.
+			$answer_order = 0;
+			foreach ( $question_answers as $answer ) {
+				$data_status = isset( $answer[ self::TRACKING_KEY ] ) ? $answer[ self::TRACKING_KEY ] : self::FLAG_NO_CHANGE;
+				$answer_data = $this->prepare_answer_data( $question_id, $question_type, $answer );
+
+				// New answer.
+				if ( self::FLAG_NEW === $data_status ) {
+					$wpdb->insert( $answers_table, $answer_data );
+					$answer_id = $wpdb->insert_id;
+				}
+
+				if ( self::FLAG_UPDATE === $data_status ) {
+					$answer_id = $answer['answer_id'];
+					$wpdb->update(
+						$answers_table,
+						$answer_data,
+						array( 'answer_id' => $answer_id )
+					);
+				}
+
+				if ( self::FLAG_NO_CHANGE === $data_status ) {
+					$answer_id = $answer['answer_id'];
+				}
+
+				// Save sort order.
+				$answer_order++;
+				$wpdb->update(
+					$answers_table,
+					array( 'answer_order' => $answer_order ),
+					array( 'answer_id' => $answer_id )
+				);
+			}
+		}
+	}
+
+	/**
+	 * Create or update quiz from new course builder.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void json response.
+	 */
+	public function ajax_quiz_builder_save() {
+		tutor_utils()->checking_nonce();
+
+		$payload    = $_POST['payload'] ?? array();//phpcs:ignore
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$topic_id   = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$course_cls = new Course( false );
+
+		$course_cls->check_access( $course_id );
+
+		$is_update     = isset( $payload['ID'] );
+		$quiz_id       = $is_update ? $payload['ID'] : null;
+		$next_order_id = tutor_utils()->get_next_course_content_order_id( $topic_id, $quiz_id );
+		$questions     = isset( $payload['questions'] ) ? $payload['questions'] : array();
+
+		$quiz_data = array(
+			'post_type'    => tutor()->quiz_post_type,
+			'post_title'   => Input::sanitize( $payload['post_title'] ?? '' ),
+			'post_content' => Input::sanitize( $payload['post_content'] ?? '' ),
+			'post_status'  => 'publish',
+			'post_author'  => get_current_user_id(),
+			'post_parent'  => $topic_id,
+			'menu_order'   => $next_order_id,
+		);
+
+		global $wpdb;
+		$wpdb->query( 'START TRANSACTION' );
+
+		try {
+			// Add or update the quiz.
+			if ( $is_update ) {
+				$quiz_data['ID'] = $quiz_id;
+			}
+
+			$quiz_id = wp_insert_post( $quiz_data );
+			do_action( ( $is_update ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
+
+			// Save quiz settings.
+			$quiz_option = Input::sanitize_array( $payload['quiz_option'] ?? array() ); //phpcs:ignore
+			update_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, $quiz_option );
+			do_action( 'tutor_quiz_settings_updated', $quiz_id );
+
+			// Save quiz questions.
+			if ( count( $questions ) ) {
+				$this->save_questions( $quiz_id, $questions );
+			}
+
+			$wpdb->query( 'COMMIT' );
+		} catch ( \Throwable $th ) {
+			$wpdb->query( 'ROLLBACK' );
+
+			$this->json_response(
+				__( 'Something went wrong', 'tutor' ),
+				$th->getMessage(),
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
+
+		$quiz_details = QuizModel::get_quiz_details( $quiz_id );
+		$this->json_response( __( 'Quiz saved successfully', 'tutor' ), $quiz_details );
+	}
+}
