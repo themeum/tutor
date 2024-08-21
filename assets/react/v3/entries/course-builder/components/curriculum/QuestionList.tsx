@@ -22,6 +22,7 @@ import Question from '@CourseBuilderComponents/curriculum/Question';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { useToast } from '@Atoms/Toast';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -93,7 +94,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { setActiveQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, setActiveQuestionId } = useQuizModalContext();
   const createQuizQuestion = useCreateQuizQuestionMutation();
   const quizQuestionSortingMutation = useQuizQuestionSortingMutation();
 
@@ -108,6 +109,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
     name: 'questions',
   });
 
+  const { showToast } = useToast();
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -126,6 +128,28 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   }, [activeSortId, questionFields]);
 
   const handleAddQuestion = (questionType: QuizQuestionType) => {
+    if (activeQuestionIndex !== -1) {
+      const answers =
+        form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
+
+      if (answers.length === 0) {
+        showToast({
+          message: __('Please add answer', 'tutor'),
+          type: 'danger',
+        });
+        return;
+      }
+
+      const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
+      if (['true_false', 'multiple_choice'].includes(questionType) && !hasCorrectAnswer) {
+        showToast({
+          message: __('Please select a correct answer', 'tutor'),
+          type: 'danger',
+        });
+        return;
+      }
+    }
+
     const questionId = nanoid();
     appendQuestion({
       _data_status: 'new',
@@ -161,7 +185,22 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                 belongs_question_type: 'true_false',
               },
             ]
-          : [],
+          : questionType === 'fill_in_the_blank'
+            ? [
+                {
+                  _data_status: 'new',
+                  is_saved: false,
+                  answer_id: nanoid(),
+                  answer_title: '',
+                  belongs_question_id: questionId,
+                  belongs_question_type: 'fill_in_the_blank',
+                  answer_two_gap_match: '',
+                  answer_view_format: '',
+                  answer_order: 0,
+                  is_correct: '0',
+                },
+              ]
+            : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,

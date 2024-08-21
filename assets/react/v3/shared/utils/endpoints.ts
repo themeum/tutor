@@ -18,6 +18,9 @@ const endpoints = {
   DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
   DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
   SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
+
+  // Quiz
+  SAVE_QUIZ: 'tutor_quiz_builder_save',
 };
 
 export default endpoints;

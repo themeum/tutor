@@ -170,7 +170,13 @@ const LessonModal = ({
       actions={
         isFormDirty ? (
           <>
-            <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                lessonId ? form.reset() : closeModal({ action: 'CLOSE' });
+              }}
+            >
               {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
