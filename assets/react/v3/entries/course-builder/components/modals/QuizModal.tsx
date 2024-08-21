@@ -95,6 +95,26 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     shouldFocusError: true,
   });
 
+  const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
+
+  // console.log(isFormDirty);
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isFormDirty) {
+        e.preventDefault();
+        return;
+      }
+
+      form.reset();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isFormDirty, form]);
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!getQuizDetailsQuery.data) {
@@ -131,13 +151,13 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     console.log(data);
     const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, quizId || '');
 
-    // const response = await saveQuizMutation.mutateAsync(payload);
+    const response = await saveQuizMutation.mutateAsync(payload);
 
-    // if (response.data) {
-    //   setIsEdit(false);
-    //   setLocalQuizId(response.data);
-    //   closeModal({ action: 'CONFIRM' });
-    // }
+    if (response.data) {
+      setIsEdit(false);
+      setLocalQuizId(response.data);
+      closeModal({ action: 'CONFIRM' });
+    }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -147,8 +167,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     }
   }, [isEdit]);
 
-  const { isDirty } = form.formState;
-
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''}>
@@ -156,7 +174,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={icon}
-            title={title}
+            title={isFormDirty && quizId ? __('Unsaved Changes', 'tutor') : title}
             subtitle={subtitle}
             headerChildren={
               <Tabs
@@ -175,58 +193,64 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               />
             }
             actions={
-              <>
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={() => {
-                    if (isDirty) {
-                      setIsConfirmationOpen(true);
-                      return;
-                    }
-
-                    closeModal();
-                  }}
-                  ref={cancelRef}
-                >
-                  {__('Cancel', 'tutor')}
-                </Button>
-                <Show
-                  when={activeTab === 'settings' || quizId}
-                  fallback={
-                    <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
-                      {__('Next', 'tutor')}
-                    </Button>
-                  }
-                >
+              isFormDirty ? (
+                <>
                   <Button
-                    loading={saveQuizMutation.isPending}
-                    variant="primary"
+                    variant="text"
                     size="small"
-                    onClick={async () => {
-                      if (activeQuestionIndex < 0) {
-                        await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
+                    onClick={() => {
+                      if (isFormDirty) {
+                        setIsConfirmationOpen(true);
                         return;
                       }
 
-                      // const payload = form.watch(`questions.${activeQuestionIndex}`);
-
-                      // try {
-                      //   await updateQuizQuestionMutation.mutateAsync(
-                      //     convertQuizQuestionFormDataToPayloadForUpdate(payload),
-                      //   );
-                      // } catch (error) {
-                      //   console.log(error);
-                      //   return;
-                      // }
-
-                      await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
+                      closeModal();
                     }}
+                    ref={cancelRef}
                   >
-                    {__('Save', 'tutor')}
+                    {quizId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
                   </Button>
-                </Show>
-              </>
+                  <Show
+                    when={activeTab === 'settings' || quizId}
+                    fallback={
+                      <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                        {__('Next', 'tutor')}
+                      </Button>
+                    }
+                  >
+                    <Button
+                      loading={saveQuizMutation.isPending}
+                      variant="primary"
+                      size="small"
+                      onClick={async () => {
+                        if (activeQuestionIndex < 0) {
+                          await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
+                          return;
+                        }
+
+                        // const payload = form.watch(`questions.${activeQuestionIndex}`);
+
+                        // try {
+                        //   await updateQuizQuestionMutation.mutateAsync(
+                        //     convertQuizQuestionFormDataToPayloadForUpdate(payload),
+                        //   );
+                        // } catch (error) {
+                        //   console.log(error);
+                        //   return;
+                        // }
+
+                        await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
+                      }}
+                    >
+                      {__('Save', 'tutor')}
+                    </Button>
+                  </Show>
+                </>
+              ) : (
+                <button css={styleUtils.crossButton} type="button" onClick={() => closeModal({ action: 'CLOSE' })}>
+                  <SVGIcon name="cross" width={32} height={32} />
+                </button>
+              )
             }
           >
             <div css={styles.wrapper}>
@@ -332,7 +356,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               message={__('There is unsaved changes.', 'tutor')}
               animationType={AnimationType.slideUp}
               arrow="top"
-              positionModifier={{ top: -50, left: 0 }}
+              positionModifier={{ top: -50, left: quizId ? 87 : 25 }}
               hideArrow
               confirmButton={{
                 text: __('Yes', 'tutor'),
@@ -343,6 +367,10 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                 variant: 'text',
               }}
               onConfirmation={() => {
+                form.reset();
+                if (quizId) {
+                  return;
+                }
                 closeModal();
               }}
             />

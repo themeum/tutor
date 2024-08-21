@@ -10,9 +10,7 @@ import type {
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
 
-import { Addons } from '@Config/constants';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { authApiInstance } from '@Utils/api';
+import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { ContentDripType, TutorMutationResponse } from './course';
@@ -89,21 +87,7 @@ interface ImportQuizPayload {
 interface QuizPayload {
   quiz_id?: ID; // only for update
   topic_id: ID;
-  quiz_title: string;
-  quiz_description: string;
-
-  'quiz_option[time_limit][time_value]': number;
-  'quiz_option[time_limit][time_type]': QuizTimeLimit;
-  'quiz_option[feedback_mode]': QuizFeedbackMode;
-  'quiz_option[attempts_allowed]': number;
-  'quiz_option[passing_grade]': number;
-  'quiz_option[max_questions_for_answer]': number;
-  'quiz_option[question_layout_view]': QuizLayoutView;
-  'quiz_option[questions_order]': QuizQuestionsOrder;
-  'quiz_option[short_answer_characters_limit]': number;
-  'quiz_option[open_ended_answer_characters_limit]': number;
-  'quiz_option[hide_quiz_time_display]'?: 1 | 0;
-  'quiz_option[pass_is_required]'?: 1 | 0; // when => content_drip enabled + drip settings sequential + retry mode
+  payload: QuizForm;
 }
 
 export interface QuizDetailsResponse {
@@ -302,24 +286,60 @@ export const convertQuizFormDataToPayload = (
   return {
     ...(quizId && { quiz_id: quizId }),
     topic_id: topicId,
-    quiz_title: formData.quiz_title,
-    quiz_description: formData.quiz_description,
-    'quiz_option[time_limit][time_value]': formData.quiz_option.time_limit.time_value,
-    'quiz_option[time_limit][time_type]': formData.quiz_option.time_limit.time_type,
-    'quiz_option[feedback_mode]': formData.quiz_option.feedback_mode,
-    'quiz_option[attempts_allowed]': formData.quiz_option.attempts_allowed,
-    'quiz_option[passing_grade]': formData.quiz_option.passing_grade,
-    'quiz_option[max_questions_for_answer]': formData.quiz_option.max_questions_for_answer,
-    'quiz_option[question_layout_view]': formData.quiz_option.question_layout_view,
-    'quiz_option[questions_order]': formData.quiz_option.questions_order,
-    'quiz_option[short_answer_characters_limit]': formData.quiz_option.short_answer_characters_limit,
-    'quiz_option[open_ended_answer_characters_limit]': formData.quiz_option.open_ended_answer_characters_limit,
-    'quiz_option[hide_quiz_time_display]': formData.quiz_option.hide_quiz_time_display ? 1 : 0,
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_sequentially' &&
-      formData.quiz_option.feedback_mode === 'retry' && {
-        'quiz_option[pass_is_required]': formData.quiz_option.pass_is_required ? 1 : 0,
-      }),
+    payload: {
+      _data_status: formData._data_status,
+      quiz_title: formData.quiz_title,
+      quiz_description: formData.quiz_description,
+      quiz_option: formData.quiz_option,
+      questions: formData.questions.map(
+        (question) =>
+          ({
+            _data_status: question._data_status,
+            question_id: question.question_id,
+            question_title: question.question_title,
+            question_description: question.question_description,
+            question_mark: question.question_mark,
+            answer_explanation: question.answer_explanation,
+            question_type: question.question_type,
+            question_settings: question.question_settings,
+
+            question_answers: question.question_answers.map(
+              (answer) =>
+                ({
+                  _data_status: answer._data_status,
+                  answer_id: answer.answer_id,
+                  belongs_question_id: question.question_id,
+                  belongs_question_type: question.question_type,
+                  answer_title: answer.answer_title,
+                  is_correct: answer.is_correct ? '1' : '0',
+                  image_id: answer.image_id,
+                  image_url: answer.image_url,
+                  answer_two_gap_match: answer.answer_two_gap_match,
+                  answer_view_format: answer.answer_view_format,
+                  answer_order: answer.answer_order,
+                }) as QuizQuestionOption,
+            ),
+          }) as QuizQuestion,
+      ),
+    },
+    // quiz_title: formData.quiz_title,
+    // quiz_description: formData.quiz_description,
+    // 'quiz_option[time_limit][time_value]': formData.quiz_option.time_limit.time_value,
+    // 'quiz_option[time_limit][time_type]': formData.quiz_option.time_limit.time_type,
+    // 'quiz_option[feedback_mode]': formData.quiz_option.feedback_mode,
+    // 'quiz_option[attempts_allowed]': formData.quiz_option.attempts_allowed,
+    // 'quiz_option[passing_grade]': formData.quiz_option.passing_grade,
+    // 'quiz_option[max_questions_for_answer]': formData.quiz_option.max_questions_for_answer,
+    // 'quiz_option[question_layout_view]': formData.quiz_option.question_layout_view,
+    // 'quiz_option[questions_order]': formData.quiz_option.questions_order,
+    // 'quiz_option[short_answer_characters_limit]': formData.quiz_option.short_answer_characters_limit,
+    // 'quiz_option[open_ended_answer_characters_limit]': formData.quiz_option.open_ended_answer_characters_limit,
+    // 'quiz_option[hide_quiz_time_display]': formData.quiz_option.hide_quiz_time_display ? 1 : 0,
+    // ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+    //   contentDripType === 'unlock_sequentially' &&
+    //   formData.quiz_option.feedback_mode === 'retry' && {
+    //     'quiz_option[pass_is_required]': formData.quiz_option.pass_is_required ? 1 : 0,
+    //   }),
   };
 };
 
@@ -438,8 +458,7 @@ export const useExportQuizMutation = () => {
 };
 
 const saveQuiz = (payload: QuizPayload) => {
-  return authApiInstance.post<QuizPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_save',
+  return wpAjaxInstance.post<QuizPayload, TutorMutationResponse<number>>(endpoints.SAVE_QUIZ, {
     ...payload,
   });
 };

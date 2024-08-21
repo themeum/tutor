@@ -174,7 +174,13 @@ const AssignmentModal = ({
       actions={
         isFormDirty ? (
           <>
-            <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                assignmentId ? form.reset() : closeModal({ action: 'CLOSE' });
+              }}
+            >
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
