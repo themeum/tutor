@@ -51,7 +51,7 @@ const Matching = () => {
 
   const imageMatching = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.is_image_matching` as 'questions.0.is_image_matching',
+    name: `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching',
     defaultValue: false,
   });
 

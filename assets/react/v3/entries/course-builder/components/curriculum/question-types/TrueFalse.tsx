@@ -85,7 +85,7 @@ const TrueFalse = () => {
 
     const changedOptionIndex = optionsFields.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
-    const updatedOptions = [...optionsFields];
+    const updatedOptions = [...currentOptions];
     updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
 
     for (const [index, option] of updatedOptions.entries()) {

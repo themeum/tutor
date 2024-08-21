@@ -95,7 +95,7 @@ const QuestionConditions = () => {
             <Controller
               control={form.control}
               name={
-                `questions.${activeQuestionIndex}.has_multiple_correct_answer` as 'questions.0.has_multiple_correct_answer'
+                `questions.${activeQuestionIndex}.question_settings.has_multiple_correct_answer` as 'questions.0.question_settings.has_multiple_correct_answer'
               }
               render={(controllerProps) => (
                 <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
@@ -106,7 +106,9 @@ const QuestionConditions = () => {
           <Show when={activeQuestionType === 'matching'}>
             <Controller
               control={form.control}
-              name={`questions.${activeQuestionIndex}.is_image_matching` as 'questions.0.is_image_matching'}
+              name={
+                `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching'
+              }
               render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />}
             />
           </Show>
@@ -121,7 +123,9 @@ const QuestionConditions = () => {
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.randomizeQuestion` as 'questions.0.randomizeQuestion'}
+            name={
+              `questions.${activeQuestionIndex}.question_settings.randomize_options` as 'questions.0.question_settings.randomize_options'
+            }
             render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />}
           />
 

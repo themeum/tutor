@@ -236,7 +236,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
       ...data,
       question_id: nanoid(),
       _data_status: 'new',
-      question_title: `${data.question_title} (Copy)`,
+      question_title: `${data.question_title} (copy)`,
       question_answers: data.question_answers.map((answer) => ({
         ...answer,
         answer_id: nanoid(),

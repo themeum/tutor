@@ -18,7 +18,6 @@ import {
   type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
-  type QuizQuestionType,
   calculateQuizDataStatus,
   useDeleteQuizAnswerMutation,
   useMarkAnswerAsCorrectMutation,
@@ -58,17 +57,17 @@ const FormMultipleChoiceAndOrdering = ({
 
   const hasMultipleCorrectAnswer = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.has_multiple_correct_answer` as 'questions.0.has_multiple_correct_answer',
+    name: `questions.${activeQuestionIndex}.question_settings.has_multiple_correct_answer` as 'questions.0.question_settings.has_multiple_correct_answer',
     defaultValue: false,
   });
   const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-  const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
-    if (currentQuestionType === 'multiple_choice') {
-      return hasMultipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
-    }
+  // const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
+  //   if (currentQuestionType === 'multiple_choice') {
+  //     return hasMultipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
+  //   }
 
-    return 'ordering';
-  };
+  //   return 'ordering';
+  // };
 
   const saveQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
   const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
@@ -190,7 +189,7 @@ const FormMultipleChoiceAndOrdering = ({
       style={style}
     >
       <Show when={currentQuestionType === 'multiple_choice'}>
-        <button css={styleUtils.resetButton} type="button" onClick={handleCorrectAnswer}>
+        <button key={inputValue.is_correct} css={styleUtils.resetButton} type="button" onClick={handleCorrectAnswer}>
           <Show
             when={hasMultipleCorrectAnswer}
             fallback={
@@ -411,7 +410,7 @@ const FormMultipleChoiceAndOrdering = ({
                     setIsEditing(false);
                     // await createQuizAnswer();
                   }}
-                  disabled={!inputValue.answer_title && inputValue.image_url === ''}
+                  disabled={!inputValue.answer_title && !inputValue.image_url}
                 >
                   {__('Ok', 'tutor')}
                 </Button>
@@ -458,28 +457,10 @@ const styles = {
           `
         }
       }
-      [data-visually-hidden] {
-        opacity: 0;
-      }
-      [data-edit-button] {
-        opacity: 0;
-      }
   
       &:hover {
         [data-check-icon] {
           opacity: 1;
-        }
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-        
-        ${
-          !isEditing &&
-          css`
-          [data-edit-button] {
-            opacity: 1;
-          }
-        `
         }
       }
   
@@ -499,14 +480,6 @@ const styles = {
           }
         `
       }
-      ${
-        isEditing &&
-        css`
-        [data-edit-button] {
-          opacity: 0;
-        }
-      `
-      }
     `,
   optionLabel: ({
     isSelected,
@@ -522,10 +495,30 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
-      transition: all 0.2s ease;
+
+      [data-visually-hidden] {
+        opacity: 0;
+      }
+
+      [data-edit-button] {
+        opacity: 0;
+      }
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+
+        [data-visually-hidden] {
+          opacity: 1;
+        }
+
+        ${
+          !isEditing &&
+          css`
+            [data-edit-button] {
+              opacity: 1;
+            }
+          `
+        }
       }
   
       ${
