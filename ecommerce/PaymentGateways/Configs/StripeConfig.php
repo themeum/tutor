@@ -1,6 +1,6 @@
 <?php
 
-namespace Tutor\Ecommerce\PaymentGateways;
+namespace Tutor\PaymentGateways\Configs;
 
 use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
 use Ollyo\PaymentHub\Core\Payment\BaseConfig;
@@ -10,7 +10,7 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	protected $name = 'stripe';
 
 	public function __construct() {
-		 parent::__construct();
+		parent::__construct();
 	}
 
 	public function getMode(): string {
