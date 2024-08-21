@@ -35,8 +35,10 @@ import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import { useToast } from '@Atoms/Toast';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { ID } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { isDefined } from '@Utils/types';
@@ -55,6 +57,8 @@ export type QuizQuestionsOrder = 'rand' | 'sorting' | 'asc' | 'desc';
 
 type QuizTabs = 'details' | 'settings';
 
+const courseId = getCourseId();
+
 const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
@@ -65,6 +69,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   const saveQuizMutation = useSaveQuizMutation();
   const getQuizDetailsQuery = useGetQuizDetailsQuery(localQuizId);
   const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(localQuizId);
+
+  const { showToast } = useToast();
 
   const form = useFormWithGlobalError<QuizForm>({
     defaultValues: {
@@ -135,7 +141,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
 
-  const onQuizFormSubmit = async (data: QuizForm, isSubmit: boolean) => {
+  const onQuizFormSubmit = async (data: QuizForm, activeQuestionIndex: number) => {
     if (!data.quiz_title) {
       setActiveTab('details');
 
@@ -147,15 +153,51 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
       return;
     }
 
+    if (data.questions.length === 0) {
+      setActiveTab('details');
+      showToast({
+        message: __('Please add a question', 'tutor'),
+        type: 'danger',
+      });
+
+      return;
+    }
+
+    if (activeQuestionIndex !== -1) {
+      const answers =
+        form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
+      const questionType = form.watch(`questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type');
+
+      if (answers.length === 0) {
+        setActiveTab('details');
+        showToast({
+          message: __('Please add answer', 'tutor'),
+          type: 'danger',
+        });
+        return;
+      }
+
+      const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
+      if (['true_false', 'multiple_choice'].includes(questionType) && !hasCorrectAnswer) {
+        setActiveTab('details');
+        showToast({
+          message: __('Please select a correct answer', 'tutor'),
+          type: 'danger',
+        });
+        return;
+      }
+    }
+
     setIsEdit(false);
-    console.log(data);
-    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, quizId || '');
+    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId, quizId || '');
+
+    console.log(payload);
 
     const response = await saveQuizMutation.mutateAsync(payload);
 
     if (response.data) {
       setIsEdit(false);
-      setLocalQuizId(response.data);
+      setLocalQuizId(response.data.ID);
       closeModal({ action: 'CONFIRM' });
     }
   };
@@ -224,7 +266,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                       size="small"
                       onClick={async () => {
                         if (activeQuestionIndex < 0) {
-                          await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
+                          await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
                           return;
                         }
 
@@ -239,7 +281,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                         //   return;
                         // }
 
-                        await form.handleSubmit((data) => onQuizFormSubmit(data, true))();
+                        await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
                       }}
                     >
                       {__('Save', 'tutor')}

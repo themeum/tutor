@@ -85,12 +85,13 @@ interface ImportQuizPayload {
 }
 
 interface QuizPayload {
-  quiz_id?: ID; // only for update
+  course_id: ID;
   topic_id: ID;
   payload: QuizForm;
 }
 
 export interface QuizDetailsResponse {
+  ID: ID;
   post_title: string;
   post_content: string;
   quiz_option: {
@@ -122,6 +123,7 @@ export interface QuizDetailsResponse {
 export type QuizQuestion = OtherQuizQuestion | MultipleChoiceQuizQuestion | MatchingQuizQuestion;
 
 export interface QuizForm {
+  ID: ID;
   _data_status: 'new' | 'update' | 'no_change';
   quiz_title: string;
   quiz_description: string;
@@ -247,6 +249,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
   };
 
   return {
+    ID: quiz.ID,
     _data_status: 'no_change',
     quiz_title: quiz.post_title || '',
     quiz_description: quiz.post_content || '',
@@ -281,12 +284,14 @@ export const convertQuizFormDataToPayload = (
   formData: QuizForm,
   topicId: ID,
   contentDripType: ContentDripType,
+  courseId: ID,
   quizId?: ID,
 ): QuizPayload => {
   return {
-    ...(quizId && { quiz_id: quizId }),
+    course_id: courseId,
     topic_id: topicId,
     payload: {
+      ID: formData.ID,
       _data_status: formData._data_status,
       quiz_title: formData.quiz_title,
       quiz_description: formData.quiz_description,
@@ -458,7 +463,8 @@ export const useExportQuizMutation = () => {
 };
 
 const saveQuiz = (payload: QuizPayload) => {
-  return wpAjaxInstance.post<QuizPayload, TutorMutationResponse<number>>(endpoints.SAVE_QUIZ, {
+  return wpAjaxInstance.post<QuizPayload, AxiosResponse<QuizDetailsResponse>>(endpoints.SAVE_QUIZ, {
+    action: 'tutor_quiz_builder_save',
     ...payload,
   });
 };
@@ -475,7 +481,7 @@ export const useSaveQuizMutation = () => {
           queryKey: ['Topic'],
         });
         showToast({
-          message: __(response.message, 'tutor'),
+          message: __('Quiz created successfully', 'tutor'),
           type: 'success',
         });
       }

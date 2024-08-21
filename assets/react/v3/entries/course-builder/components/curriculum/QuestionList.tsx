@@ -128,7 +128,6 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   }, [activeSortId, questionFields]);
 
   const handleAddQuestion = (questionType: QuizQuestionType) => {
-    console.log(activeQuestionIndex);
     if (activeQuestionIndex !== -1) {
       const answers =
         form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
