@@ -80,13 +80,17 @@ const Curriculum = () => {
     if (!courseCurriculumQuery.data) {
       return;
     }
-    setContent(
-      courseCurriculumQuery.data.map((item, index) => ({
+    setContent((previousContent) => {
+      if (!previousContent.length) {
+        setCurrentExpandedTopics([courseCurriculumQuery.data[0].id]);
+      }
+
+      return courseCurriculumQuery.data.map((item, index) => ({
         ...item,
-        isCollapsed: currentExpandedTopics.length ? !currentExpandedTopics.includes(item.id) : index !== 0,
+        isCollapsed: previousContent.length ? !currentExpandedTopics.includes(item.id) : index !== 0,
         isSaved: true,
-      })),
-    );
+      }));
+    });
   }, [courseCurriculumQuery.data]);
 
   const activeSortItem = useMemo(() => {
@@ -231,21 +235,26 @@ const Curriculum = () => {
                           <Topic
                             key={topic.id}
                             topic={topic}
-                            onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
+                            onDelete={() => {
+                              setContent((previous) => previous.filter((_, idx) => idx !== index));
+                              setCurrentExpandedTopics((previousTopics) =>
+                                previousTopics.filter((id) => id !== topic.id),
+                              );
+                            }}
                             onCollapse={(topicId) => {
                               setContent((previous) =>
                                 previous.map((item) => {
                                   if (item.id === topicId) {
-                                    setCurrentExpandedTopics((previousTopics) =>
-                                      item.isCollapsed
-                                        ? [...previousTopics, item.id]
-                                        : previousTopics.filter((id) => id !== item.id),
-                                    );
                                     return { ...item, isCollapsed: !item.isCollapsed };
                                   }
-
                                   return item;
                                 }),
+                              );
+
+                              setCurrentExpandedTopics((previousTopics) =>
+                                previousTopics.includes(topicId)
+                                  ? previousTopics.filter((id) => id !== topicId)
+                                  : [...previousTopics, topicId],
                               );
                             }}
                             onCopy={(topicId) => {
