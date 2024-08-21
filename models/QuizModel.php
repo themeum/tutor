@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
+use TUTOR\Quiz;
 
 /**
  * Class QuizModel
@@ -1112,5 +1113,33 @@ class QuizModel {
 		);
 
 		return $max_id + 1;
+	}
+
+	/**
+	 * Get quiz details by quiz id.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $quiz_id quiz id.
+	 *
+	 * @return object
+	 */
+	public static function get_quiz_details( $quiz_id ) {
+		$quiz              = get_post( $quiz_id );
+		$quiz->quiz_option = get_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, true );
+		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
+
+		if ( ! is_array( $quiz->questions ) ) {
+			$quiz->questions = array();
+		}
+
+		foreach ( $quiz->questions as $question ) {
+			$question->question_answers = self::get_question_answers( $question->question_id );
+			if ( isset( $question->question_settings ) ) {
+				$question->question_settings = maybe_unserialize( $question->question_settings );
+			}
+		}
+
+		return $quiz;
 	}
 }
