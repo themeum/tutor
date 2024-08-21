@@ -65,7 +65,7 @@ class UserModel {
 			array(
 				'type'  => 'LEFT',
 				'table' => "{$wpdb->posts} p",
-				'on'    => "p.post_type = 'tutor_enrolled' AND p.post_parent = {$object_id} AND u.ID <> p.post_author",
+				'on'    => "p.post_type = 'tutor_enrolled' AND p.post_parent = {$object_id} AND u.ID = p.post_author",
 			),
 		);
 
@@ -80,7 +80,7 @@ class UserModel {
 				'p.post_author',
 			),
 			array(
-				'coalesce(p.ID, 0)' => 0,
+				'p.post_author' => 'null',
 			),
 			$search_clause,
 			'ID',

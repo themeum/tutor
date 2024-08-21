@@ -54,6 +54,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { useToast } from '@Atoms/Toast';
 import Tooltip from '@Atoms/Tooltip';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
@@ -340,17 +341,19 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 </Tooltip>
               </Show>
               <Show when={topic.isSaved}>
-                <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-                  <button
-                    type="button"
-                    css={styles.actionButton}
-                    disabled={!topic.isSaved}
-                    data-visually-hidden
-                    onClick={handleDuplicateTopic}
-                  >
-                    <SVGIcon name="copyPaste" width={24} height={24} />
-                  </button>
-                </Tooltip>
+                <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
+                  <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      disabled={!topic.isSaved}
+                      data-visually-hidden
+                      onClick={handleDuplicateTopic}
+                    >
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </Tooltip>
+                </Show>
               </Show>
               <Show when={topic.isSaved}>
                 <Tooltip content={__('Delete', 'tutor')} delay={200}>

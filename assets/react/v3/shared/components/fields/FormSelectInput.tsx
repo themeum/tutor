@@ -492,9 +492,7 @@ const styles = {
     position: absolute;
     overflow: hidden auto;
     min-width: 16px;
-    min-height: 16px;
     max-width: calc(100% - 32px);
-    max-height: calc(100% - 32px);
   `,
   caretButton: ({ isOpen = false }: { isOpen: boolean }) => css`
     ${styleUtils.resetButton};

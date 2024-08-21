@@ -33,10 +33,8 @@ import { styleUtils } from '@Utils/style-utils';
 
 import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
 import { tutorConfig } from '@Config/config';
-import { makeFirstCharacterUpperCase } from '@Utils/util';
 import { requiredRule } from '@Utils/validation';
 import { OfferSalePrice } from './OfferSalePrice';
-import { formatRepeatUnit } from './PreviewItem';
 
 const courseId = getCourseId();
 const { tutor_currency } = tutorConfig;
@@ -120,7 +118,7 @@ export default function SubscriptionItem({
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
     ...lifetimePresets.map((preset) => ({
-      label: `${preset.toString()} ${formatRepeatUnit(recurringInterval, preset)}`,
+      label: `${preset.toString()} ${__('Times', 'tutor')}`,
       value: String(preset),
     })),
     {
@@ -299,40 +297,37 @@ export default function SubscriptionItem({
                         />
                       )}
                     />
-                  </div>
 
-                  <Controller
-                    control={form.control}
-                    name="plan_duration"
-                    rules={{
-                      ...requiredRule(),
-                      validate: (value) => {
-                        if (value === 'Until cancelled') {
+                    <Controller
+                      control={form.control}
+                      name="recurring_limit"
+                      rules={{
+                        ...requiredRule(),
+                        validate: (value) => {
+                          if (value === 'Until cancelled') {
+                            return true;
+                          }
+
+                          if (Number(value) <= 0) {
+                            return __('Renew plan must be greater than 0', 'tutor');
+                          }
                           return true;
-                        }
-
-                        if (Number(value) <= 0) {
-                          return __('Plan duration must be greater than 0', 'tutor');
-                        }
-                        return true;
-                      },
-                    }}
-                    render={(controllerProps) => (
-                      <FormInputWithPresets
-                        {...controllerProps}
-                        label={__('Length of the plan', 'tutor')}
-                        placeholder={__('Select the length of the plan', 'tutor')}
-                        content={
-                          controllerProps.field.value !== 'Until cancelled' &&
-                          `${makeFirstCharacterUpperCase(recurringInterval as string)}(s)`
-                        }
-                        contentPosition="right"
-                        type="number"
-                        presetOptions={lifetimeOptions}
-                        selectOnFocus
-                      />
-                    )}
-                  />
+                        },
+                      }}
+                      render={(controllerProps) => (
+                        <FormInputWithPresets
+                          {...controllerProps}
+                          label={__('Renew Plan', 'tutor')}
+                          placeholder={__('Select or type times to renewing the plan', 'tutor')}
+                          content={controllerProps.field.value !== 'Until cancelled' && `${__('Times', 'tutor')}`}
+                          contentPosition="right"
+                          type="number"
+                          presetOptions={lifetimeOptions}
+                          selectOnFocus
+                        />
+                      )}
+                    />
+                  </div>
                 </Show>
 
                 <Controller
@@ -407,7 +402,7 @@ export default function SubscriptionItem({
                         <FormSelectInput
                           {...controllerProps}
                           label={<div>&nbsp;</div>}
-                          placeholder={__('Enter trial duration', 'tutor')}
+                          placeholder={__('Enter trial duration unit', 'tutor')}
                           options={[
                             { label: __('Hour(s)', 'tutor'), value: 'hour' },
                             { label: __('Day(s)', 'tutor'), value: 'day' },
@@ -629,7 +624,7 @@ const styles = {
 	`,
   inputGroup: css`
 		display: grid;
-		grid-template-columns: 2fr 1fr 1fr;
+		grid-template-columns: 1fr 0.56fr 1fr 1fr;
 		align-items: start;
 		gap: ${spacing[8]};
 	`,

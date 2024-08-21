@@ -102,6 +102,7 @@ const FormWPEditor = ({
       readOnly={readOnly}
       placeholder={placeholder}
       helpText={helpText}
+      replaceEntireLabel
     >
       {() => {
         return (
