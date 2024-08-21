@@ -9,6 +9,7 @@ import Show from '@Controls/Show';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useOrderContext } from '@OrderContexts/order-context';
 import { useAdminCommentMutation } from '@OrderServices/order';
+import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -24,7 +25,7 @@ function Activities() {
 		},
 	});
 	return (
-		<Box>
+		<Box bordered css={styleUtils.boxReset}>
 			<BoxTitle separator tooltip={__('You can see all the activities against this order chronologically.', 'tutor')}>
 				{__('Order activities')}
 			</BoxTitle>

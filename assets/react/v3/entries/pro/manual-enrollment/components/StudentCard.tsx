@@ -10,13 +10,22 @@ interface StudentCardProps {
   email: string;
   avatar?: string;
   hasSideBorders?: boolean;
+  isSelected?: boolean;
   onItemClick?: () => void;
   onRemoveClick?: () => void;
 }
 
-function StudentCard({ name, email, avatar, hasSideBorders = false, onItemClick, onRemoveClick }: StudentCardProps) {
+function StudentCard({
+  name,
+  email,
+  avatar,
+  hasSideBorders = false,
+  isSelected = false,
+  onItemClick,
+  onRemoveClick,
+}: StudentCardProps) {
   return (
-    <div css={styles.studentItem(hasSideBorders, !!onItemClick)} onClick={onItemClick}>
+    <div css={styles.studentItem(hasSideBorders, !!onItemClick, isSelected)} onClick={onItemClick}>
       <div css={styles.studentThumb}>
         <img src={avatar || coursePlaceholder} css={styles.thumbnail} alt="course item" />
       </div>
@@ -38,17 +47,31 @@ function StudentCard({ name, email, avatar, hasSideBorders = false, onItemClick,
 export default StudentCard;
 
 const styles = {
-  studentItem: (hasSideBorders: boolean, hasOnClick: boolean) => css`
+  studentItem: (hasSideBorders: boolean, hasOnClick: boolean, isSelected: boolean) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[8]} ${spacing[16]};
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
     transition: background-color 0.25s ease-in;
     border-bottom: 1px solid ${colorTokens.stroke.disable};
+    position: relative;
 
     ${hasOnClick &&
     css`
       cursor: pointer;
+    `}
+
+    ${isSelected &&
+    css`
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 3px;
+        background-color: ${colorTokens.background.brand};
+      }
     `}
 
     ${hasSideBorders &&
