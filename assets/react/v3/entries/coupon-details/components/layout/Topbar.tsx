@@ -8,7 +8,7 @@ import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { convertFormDataToPayload, Coupon, useCreateCouponMutation, useUpdateCouponMutation } from '@CouponServices/coupon';
-import { toCapitalize } from '@Utils/util';
+import { makeFirstCharacterUpperCase } from '@Utils/util';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -53,7 +53,7 @@ function Topbar() {
 						<div>
 							<div css={styles.headerContent}>
 								<h4 css={typography.heading5('medium')}>{__('Create coupon', 'tutor')}</h4>
-								<TutorBadge variant={statusVariant[coupon.coupon_status]}>{toCapitalize(coupon.coupon_status)}</TutorBadge>
+								<TutorBadge variant={statusVariant[coupon.coupon_status]}>{makeFirstCharacterUpperCase(coupon.coupon_status)}</TutorBadge>
 							</div>
 							<Show
 								when={coupon.updated_at_gmt && coupon.coupon_update_by.length}

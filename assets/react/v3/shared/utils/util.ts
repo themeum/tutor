@@ -222,6 +222,8 @@ export const arrayIntersect = <T>(first: T[], second: T[]) => {
 };
 
 export const makeFirstCharacterUpperCase = (word: string) => {
+  if (!word) return word;
+
   const firstCharacterUpperCase = word.charAt(0).toUpperCase();
   const wordWithoutFirstCharacter = word.slice(1);
 
@@ -280,8 +282,3 @@ export const formatSeconds = (seconds: number) => {
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };
-
-export function toCapitalize(str: string) {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
