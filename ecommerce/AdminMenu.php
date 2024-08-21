@@ -30,6 +30,7 @@ class AdminMenu {
 	 */
 	public function register_menu() {
 		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), __( 'Orders', 'tutor' ), 'manage_options', OrderController::PAGE_SLUG, array( $this, 'orders_view' ) );
+		do_action( 'tutor_after_orders_admin_menu' );
 		add_submenu_page( 'tutor', __( 'Coupons', 'tutor' ), __( 'Coupons', 'tutor' ), 'manage_options', CouponController::PAGE_SLUG, array( $this, 'coupons_view' ) );
 	}
 

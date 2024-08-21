@@ -89,7 +89,7 @@ class Settings {
 								'label'          => __( 'Currency Symbol', 'tutor' ),
 								'select_options' => true,
 								'options'        => self::get_currency_options(),
-								'default'        => '$',
+								'default'        => 'USD',
 								'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),
 							),
 							array(
