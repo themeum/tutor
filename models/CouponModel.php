@@ -136,7 +136,6 @@ class CouponModel {
 	private $required_fields = array(
 		'coupon_status',
 		'coupon_type',
-		'coupon_code',
 		'coupon_title',
 		'discount_type',
 		'discount_amount',
