@@ -867,6 +867,7 @@ final class Tutor {
 
 		$orders_table = "CREATE TABLE {$wpdb->prefix}tutor_orders (
 			id BIGINT(20) UNSIGNED AUTO_INCREMENT,
+			parent_id BIGINT(20) UNSIGNED DEFAULT 0, -- for subscription order, store subscription record id
 			transaction_id BIGINT(20) UNSIGNED COMMENT 'Transaction id from payment gateway',
 			user_id BIGINT(20) UNSIGNED NOT NULL,
 			order_type VARCHAR(50) NOT NULL, -- single_order, subscription
