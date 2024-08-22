@@ -1,3 +1,4 @@
+import type { UserOption } from '@Components/fields/FormSelectUser';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
@@ -48,7 +49,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     preview_link: data.preview_link,
 
     ...(isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS) && {
-      course_instructor_ids: data.course_instructors.map((item) => item.id),
+      course_instructor_ids: [...data.course_instructors.map((item) => item.id), Number(data.post_author?.id)],
     }),
 
     ...(isAddonEnabled(Addons.TUTOR_PREREQUISITES) && {
@@ -150,14 +151,18 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_product_id:
       String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:
-      courseDetails.course_instructors?.map((item) => {
-        return {
-          id: item.id,
-          name: item.display_name,
-          email: item.user_email,
-          avatar_url: item.avatar_url,
-        };
-      }) ?? [],
+      courseDetails.course_instructors?.reduce((instructors, item) => {
+        if (String(item.id) !== String(courseDetails.post_author.ID)) {
+          instructors.push({
+            id: item.id,
+            name: item.display_name,
+            email: item.user_email,
+            avatar_url: item.avatar_url,
+            isRemoveAble: false,
+          });
+        }
+        return instructors;
+      }, [] as UserOption[]) ?? [],
     preview_link: courseDetails.preview_link ?? '',
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
@@ -254,11 +259,6 @@ type Addon = `${Addons}`;
 export const isAddonEnabled = (addon: Addon) => {
   return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
 };
-
-export function toCapitalize(str: string) {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
 
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
   const videoId = Number.parseInt(videoUrl.split('/').pop() || '', 10);

@@ -1,7 +1,7 @@
 import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -277,7 +277,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         triggerRef={deleteRef}
         closePopover={() => setIsDeletePopoverOpen(false)}
         maxWidth="258px"
-        title={`${__('Delete', 'tutor')} "${content.title}"`}
+        title={sprintf(__('Delete "%s"', 'tutor'), content.title)}
         message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
         animationType={AnimationType.slideUp}
         arrow="auto"

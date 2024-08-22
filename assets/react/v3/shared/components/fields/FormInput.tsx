@@ -84,13 +84,7 @@ const FormInput = ({
   if (fieldType === 'number') {
     inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
   }
-  if (fieldType === 'number') {
-    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
-  }
 
-  if (maxLimit) {
-    characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
-  }
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
@@ -148,7 +142,6 @@ const FormInput = ({
 
                   const fieldValue: string | number = fieldType === 'number' ? parseNumberOnly(value) : value;
 
-                  field.onChange(fieldValue);
                   field.onChange(fieldValue);
 
                   if (onChange) {

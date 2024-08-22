@@ -32,5 +32,8 @@
         "allow-plugins": {
             "php-http/discovery": true
         }
+    },
+    "require": {
+        "nesbot/carbon": "^2.0"
     }
 }

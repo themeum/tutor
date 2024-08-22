@@ -108,7 +108,7 @@ class ImageController {
 	 * @since 3.0.0
 	 */
 	public function generate_image() {
-		tutor_utils()->checking_nonce();
+		tutor_utils()->check_nonce();
 
 		$prompt = Input::post( 'prompt' );
 		$style  = Input::post( 'style' );
@@ -153,7 +153,7 @@ class ImageController {
 	 * @since 3.0.0
 	 */
 	public function magic_fill_image() {
-		tutor_utils()->checking_nonce();
+		tutor_utils()->check_nonce();
 
 		$prompt         = Input::post( 'prompt' );
 		$image          = Input::post( 'image' );
@@ -193,7 +193,7 @@ class ImageController {
 	 * @since 3.0.0
 	 */
 	public function use_magic_image() {
-		tutor_utils()->checking_nonce();
+		tutor_utils()->check_nonce();
 
 		$image = Input::post( 'image' );
 

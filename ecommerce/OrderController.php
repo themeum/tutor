@@ -15,6 +15,7 @@ use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
 use Tutor\Models\OrderActivitiesModel;
 use Tutor\Models\OrderModel;
@@ -166,6 +167,102 @@ class OrderController {
 	}
 
 	/**
+	 * Create order based on the arguments
+	 *
+	 * Note: This method assumes nonce & user cap has been validated.
+	 *
+	 * Note: This method will validate data so it could be
+	 * used without validation.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id Typically student.
+	 * @param array  $items Key value pairs based on order_items table.
+	 * @param string $payment_status Order payment status.
+	 * @param string $order_type Type single_order/subscription.
+	 * @param mixed  $coupon_code Optional, if not provided automatic coupon.
+	 * @param array  $args Optional, Args to set data such as fees, tax, etc.
+	 * Even to modify $order_data.
+	 *
+	 * @throws \Exception Throw exception if data not valid or
+	 * any other exception occur.
+	 *
+	 * @return int order id.
+	 */
+	public function create_order( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array() ) {
+		$items          = Input::sanitize_array( $items );
+		$payment_status = Input::sanitize( $payment_status );
+		$coupon_code    = Input::sanitize( $coupon_code );
+
+		$allowed_item_fields = $this->model->get_order_items_fillable_fields();
+		unset( $allowed_item_fields['order_id'] );
+
+		// Validate order items.
+		if ( ! isset( $items[0] ) ) {
+			$items = array( $items );
+		}
+
+		foreach ( $items as $item ) {
+			$has_diff_items_fields = array_diff_key( $item, array_flip( $allowed_item_fields ) );
+			if ( $has_diff_items_fields ) {
+				throw new \Exception( __( 'Invalid order item data provided', 'tutor' ) );
+			}
+		}
+
+		// Validate payment status.
+		if ( ! in_array( $payment_status, array_keys( $this->model->get_payment_status() ) ) ) {
+			throw new \Exception( __( 'Invalid payment status', 'tutor' ) );
+		}
+
+		$coupon_model = new CouponModel();
+
+		$coupon = $coupon_code ? $coupon_model->get_coupon( array( 'coupon_code' => $coupon_code ) ) : null;
+
+		$price_details = $coupon ? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code ) : $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ) );
+
+		$subtotal_price = 0;
+		foreach ( $items as $item ) {
+			$subtotal_price += $item['regular_price'];
+		}
+
+		$order_data = array(
+			'items'           => $items,
+			'payment_status'  => $payment_status,
+			'order_type'      => $order_type,
+			'coupon_code'     => $coupon_code,
+			'subtotal_price'  => $subtotal_price,
+			'total_price'     => $price_details->total_price,
+			'net_payment'     => $price_details->total_price,
+			'user_id'         => $user_id,
+			'payment_status'  => $payment_status,
+			'order_status'    => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
+			'coupon_code'     => $coupon_code,
+			'discount_type'   => $coupon->discount_type,
+			'discount_type'   => $coupon->discount_amount,
+			'discount_reason' => $coupon->discount_reason,
+			'created_at_gmt'  => current_time( 'mysql', true ),
+			'created_by'      => get_current_user_id(),
+			'updated_at_gmt'  => current_time( 'mysql', true ),
+			'updated_by'      => get_current_user_id(),
+		);
+
+		// Update data with arguments.
+		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
+
+		try {
+			do_action( 'tutor_before_order_create', $order_data );
+			$order_id = $this->model->create_order( $order_data );
+			if ( $order_id ) {
+				$order_data['id'] = $order_id;
+				do_action( 'tutor_order_placed', $order_data );
+				return $order_id;
+			}
+		} catch ( \Throwable $th ) {
+			throw new \Exception( $th->getMessage() );
+		}
+	}
+
+	/**
 	 * Retrieve order data by order ID and respond with JSON.
 	 *
 	 * This function retrieves the order ID from the POST request, validates it,
@@ -246,16 +343,15 @@ class OrderController {
 			);
 		}
 
-		do_action( 'tutor_before_order_mark_as_paid', $params );
+		do_action( 'tutor_before_order_mark_as_paid', $params['order_id'] );
 
-		$payload                 = new \stdClass();
-		$payload->order_id       = $params['order_id'];
-		$payload->note           = $params['note'];
-		$payload->payment_status = $this->model::PAYMENT_PAID;
+		$data = array(
+			'payment_status' => $this->model::PAYMENT_PAID,
+			'order_status'   => $this->model::ORDER_COMPLETED,
+			'note'           => $params['note'],
+		);
 
-		$response = $this->model->payment_status_update( $payload );
-
-		do_action( 'tutor_after_order_mark_as_paid', $params );
+		$response = $this->model->update_order( $params['order_id'], $data );
 
 		if ( ! $response ) {
 			$this->json_response(
@@ -265,6 +361,7 @@ class OrderController {
 			);
 		}
 
+		do_action( 'tutor_after_order_mark_as_paid', $params['order_id'] );
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 

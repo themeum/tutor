@@ -88,10 +88,7 @@ class Settings {
 								'type'           => 'select',
 								'label'          => __( 'Currency Symbol', 'tutor' ),
 								'select_options' => true,
-								'options'        => array(
-									'$' => 'USD Dollar',
-									'U' => 'Euro',
-								),
+								'options'        => self::get_currency_options(),
 								'default'        => 'USD',
 								'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),
 							),
@@ -708,6 +705,48 @@ class Settings {
 		}
 
 		return $config_fields;
+	}
+
+	/**
+	 * Get currency options where key is symbol
+	 * and code is value
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_currency_options() {
+		$currencies = get_tutor_currencies();
+
+		$options = array();
+
+		foreach ( $currencies as $currency ) {
+			$options[ $currency['code'] ] = $currency['code'] . ' (' . $currency['symbol'] . ')';
+		}
+		return $options;
+	}
+
+	/**
+	 * Get currency options where key is symbol
+	 * and code is value
+	 *
+	 * It will return $ as default
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $code Currency code.
+	 *
+	 * @return string
+	 */
+	public static function get_currency_symbol_by_code( $code ) {
+		$currencies = get_tutor_currencies();
+		$search     = array_search( $code, array_column( $currencies, 'code' ) );
+
+		if ( false !== $search ) {
+			return $currencies[ $search ]['symbol'];
+		} else {
+			return '$';
+		}
 	}
 
 }

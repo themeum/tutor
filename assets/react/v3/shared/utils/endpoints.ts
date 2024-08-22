@@ -3,6 +3,7 @@ const endpoints = {
   TAGS: 'course-tag',
   CATEGORIES: 'course-category',
   USERS: 'users',
+  USERS_LIST: 'tutor_user_list',
   ORDER_DETAILS: 'tutor_order_details',
   ADMIN_COMMENT: 'tutor_order_comment',
   ORDER_MARK_AS_PAID: 'tutor_order_paid',

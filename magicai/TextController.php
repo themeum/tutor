@@ -62,7 +62,7 @@ class TextController {
 	 * @since 3.0.0
 	 */
 	public function generate_text_content() {
-		tutor_utils()->checking_nonce();
+		tutor_utils()->check_nonce();
 		$is_html = Input::post( 'is_html', false, Input::TYPE_BOOL );
 
 		try {
@@ -85,7 +85,7 @@ class TextController {
 	 * @since 3.0.0
 	 */
 	public function modify_text_content() {
-		tutor_utils()->checking_nonce();
+		tutor_utils()->check_nonce();
 
 		$type            = Input::post( 'type' );
 		$is_html         = Input::post( 'is_html', false, Input::TYPE_BOOL );

@@ -148,6 +148,34 @@ class CourseModel {
 	}
 
 	/**
+	 * Get courses using provided args
+	 *
+	 * If user is not admin then it will return only current user's post
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $args Args.
+	 *
+	 * @return \WP_Query
+	 */
+	public static function get_courses_by_args( array $args = array() ) {
+
+		$default_args = array(
+			'post_type'      => tutor()->course_post_type,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+		);
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$default_args['author'] = get_current_user_id();
+		}
+
+		$args = wp_parse_args( $args, $default_args );
+
+		return new \WP_Query( $args );
+	}
+
+	/**
 	 * Get course count by instructor
 	 *
 	 * @since 1.0.0
@@ -572,25 +600,31 @@ class CourseModel {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param string $meta_key course product id meta key.
-	 * @param array  $args wp_query args.
+	 * @since 3.0.0
 	 *
-	 * @return array
+	 * Meta key removed and default meta query updated
+	 *
+	 * @param array $args wp_query args.
+	 *
+	 * @return \WP_Query
 	 */
-	public static function get_paid_courses( string $meta_key, array $args = array() ): array {
+	public static function get_paid_courses( array $args = array() ) {
 		$current_user = wp_get_current_user();
+
 		$default_args = array(
-			'post_type'      => 'courses',
-			'post_status'    => 'publish',
-			'no_found_rows'  => true,
+			'post_type'      => tutor()->course_post_type,
 			'posts_per_page' => -1,
-			'relation'       => 'AND',
+			'offset'         => 0,
+			'post_status'    => 'publish',
 			'meta_query'     => array(
-				array(
-					'key'     => sanitize_text_field( $meta_key ),
-					'value'   => 0,
-					'compare' => '!=',
-					'type'    => 'NUMERIC',
+				'relation'     => 'AND',
+				'paid_clause'  => array(
+					'key'   => Course::COURSE_PRICE_TYPE_META,
+					'value' => 'paid',
+				),
+				'price_clause' => array(
+					'key'     => Course::COURSE_PRICE_META,
+					'compare' => 'EXISTS',
 				),
 			),
 		);
@@ -600,13 +634,9 @@ class CourseModel {
 			$args['author'] = $current_user->ID;
 		}
 
-		$query = new \WP_Query( wp_parse_args( $args, $default_args ) );
+		$args = wp_parse_args( $args, $default_args );
+		return new \WP_Query( $args );
 
-		if ( $query->have_posts() ) {
-			return $query->posts;
-		}
-
-		return array();
 	}
 
 	/**

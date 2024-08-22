@@ -4,6 +4,7 @@ import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useOrderContext } from '@OrderContexts/order-context';
+import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -12,7 +13,7 @@ function Student() {
 	const { order } = useOrderContext();
 	const { student } = order;
 	return (
-		<Box bordered>
+		<Box bordered css={styleUtils.boxReset}>
 			<BoxTitle separator>{__('Student', 'tutor')}</BoxTitle>
 			<div css={styles.content}>
 				<Avatar image={student.image} name={student.name} />

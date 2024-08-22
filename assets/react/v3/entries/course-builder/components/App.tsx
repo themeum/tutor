@@ -1,12 +1,12 @@
 import ToastProvider from '@Atoms/Toast';
 import { ModalProvider } from '@Components/modals/Modal';
+import RTLProvider from '@Components/RTLProvider';
 import routes from '@CourseBuilderConfig/routes';
 import { createGlobalCss } from '@Utils/style-utils';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useRoutes } from 'react-router-dom';
-import RTLProvider from './layouts/RTLProvider';
 
 const App = () => {
   const [queryClient] = useState(

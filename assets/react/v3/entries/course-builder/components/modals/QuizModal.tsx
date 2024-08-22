@@ -75,16 +75,16 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
           time_type: 'minutes',
         },
         hide_quiz_time_display: false,
-        feedback_mode: 'default',
-        attempts_allowed: 0,
-        passing_grade: 0,
-        max_questions_for_answer: 0,
+        feedback_mode: 'retry',
+        attempts_allowed: 10,
+        passing_grade: 80,
+        max_questions_for_answer: 10,
         quiz_auto_start: false,
         question_layout_view: '',
         questions_order: 'rand',
         hide_question_number_overview: false,
-        short_answer_characters_limit: 0,
-        open_ended_answer_characters_limit: 0,
+        short_answer_characters_limit: 200,
+        open_ended_answer_characters_limit: 500,
         content_drip_settings: {
           unlock_date: '',
           after_xdays_of_enroll: 0,
@@ -134,6 +134,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     if (response.data) {
       setIsEdit(false);
       setLocalQuizId(response.data);
+      closeModal({ action: 'CONFIRM' });
     }
   };
 
@@ -218,7 +219,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                       }
 
                       await form.handleSubmit(onQuizFormSubmit)();
-                      closeModal({ action: 'CONFIRM' });
                     }}
                   >
                     {__('Save', 'tutor')}

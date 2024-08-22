@@ -2,6 +2,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Container from '@Components/Container';
 import { useModal } from '@Components/modals/Modal';
+import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -21,12 +22,17 @@ function Topbar() {
   const { order } = useOrderContext();
 
   const { showModal } = useModal();
+
+  function handleGoBack() {
+    window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_orders`;
+  }
+
   return (
     <div css={styles.wrapper}>
       <Container>
         <div css={styles.innerWrapper}>
           <div css={styles.left}>
-            <button type="button" css={styles.backButton} onClick={() => alert('@TODO: will be implemented later.')}>
+            <button type="button" css={styles.backButton} onClick={handleGoBack}>
               <SVGIcon name="arrowLeft" width={26} height={26} />
             </button>
             <div>

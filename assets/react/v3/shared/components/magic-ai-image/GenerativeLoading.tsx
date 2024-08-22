@@ -1,4 +1,4 @@
-import { borderRadius, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { css, keyframes } from '@emotion/react';
 import React from 'react';
 
@@ -54,7 +54,7 @@ const styles = {
 	`,
   item: css`
 		border-radius: ${borderRadius[12]};
-		background: linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%);
+		background: ${colorTokens.ai.gradient_1};
 		position: relative;
 		width: 100%;
 		height: 100%;

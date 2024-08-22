@@ -30,6 +30,7 @@ import {
 import { type ID, useAssignmentDetailsQuery, useSaveAssignmentMutation } from '@CourseBuilderServices/curriculum';
 import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { styleUtils } from '@Utils/style-utils';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -45,8 +46,8 @@ export interface AssignmentForm {
   summary: string;
   attachments: Media[];
   time_duration: {
-    time: string;
-    value: TimeLimitUnit;
+    value: string;
+    time: TimeLimitUnit;
   };
   total_mark: number;
   pass_mark: number;
@@ -100,8 +101,8 @@ const AssignmentModal = ({
       summary: '',
       attachments: [],
       time_duration: {
-        time: '0',
-        value: 'weeks',
+        value: '0',
+        time: 'weeks',
       },
       total_mark: 10,
       pass_mark: 5,
@@ -115,6 +116,8 @@ const AssignmentModal = ({
     },
     shouldFocusError: true,
   });
+
+  const isFormDirty = form.formState.isDirty;
 
   const prerequisiteCourses = assignmentDetails?.content_drip_settings?.course_prerequisites
     ? assignmentDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
@@ -133,8 +136,8 @@ const AssignmentModal = ({
         summary: assignmentDetails.post_content || '',
         attachments: assignmentDetails.attachments || [],
         time_duration: {
-          time: assignmentDetails.assignment_option.time_duration.time,
-          value: (assignmentDetails.assignment_option.time_duration.value as TimeLimitUnit) || 'weeks',
+          value: assignmentDetails.assignment_option.time_duration.value || '0',
+          time: (assignmentDetails.assignment_option.time_duration.time as TimeLimitUnit) || 'weeks',
         },
         total_mark: assignmentDetails.assignment_option.total_mark || 10,
         pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
@@ -165,23 +168,29 @@ const AssignmentModal = ({
   return (
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      icon={icon}
-      title={title}
+      icon={isFormDirty && assignmentId ? <SVGIcon name="warning" width={24} height={24} /> : icon}
+      title={isFormDirty && assignmentId ? __('Unsaved Changes', 'tutor') : title}
       subtitle={subtitle}
       actions={
-        <>
-          <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
-            {__('Cancel', 'tutor')}
-          </Button>
-          <Button
-            loading={saveAssignmentMutation.isPending}
-            variant="primary"
-            size="small"
-            onClick={form.handleSubmit(onSubmit)}
-          >
-            {assignmentId ? __('Update', 'tutor') : __('Save', 'tutor')}
-          </Button>
-        </>
+        isFormDirty ? (
+          <>
+            <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
+              {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+            </Button>
+            <Button
+              loading={saveAssignmentMutation.isPending}
+              variant="primary"
+              size="small"
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              {assignmentId ? __('Update', 'tutor') : __('Save', 'tutor')}
+            </Button>
+          </>
+        ) : (
+          <button css={styleUtils.crossButton} type="button" onClick={() => closeModal({ action: 'CLOSE' })}>
+            <SVGIcon name="cross" width={32} height={32} />
+          </button>
+        )
       }
     >
       <div css={styles.wrapper}>
@@ -306,7 +315,7 @@ const AssignmentModal = ({
 
             <div css={styles.timeLimit}>
               <Controller
-                name="time_duration.time"
+                name="time_duration.value"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInput
@@ -321,7 +330,7 @@ const AssignmentModal = ({
               />
 
               <Controller
-                name="time_duration.value"
+                name="time_duration.time"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormSelectInput

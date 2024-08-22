@@ -136,7 +136,7 @@ const MagicFill = () => {
                   setPointer(1);
                 }}
               >
-                Revert to Original
+                {__('Revert to Original', 'tutor')}
               </MagicButton>
               <Separator variant="vertical" css={css`min-height: 16px;`} />
               <div css={styles.undoRedo}>
@@ -294,7 +294,7 @@ const styles = {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.7) 18.05%, rgba(255, 100, 113, 0.7) 30.25%, rgba(207, 110, 189, 0.7) 55.42%, rgba(164, 119, 209, 0.7) 71.66%, rgba(62, 100, 222, 0.7) 97.9%);
+    background: ${colorTokens.ai.gradient_1};
     opacity: 0.6;
     transition: 0.5s ease opacity;
     animation: ${animations.loading} 1s linear infinite;

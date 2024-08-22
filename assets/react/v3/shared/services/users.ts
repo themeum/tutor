@@ -1,4 +1,4 @@
-import { wpAjaxInstance, wpAuthApiInstance } from '@Utils/api';
+import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { useQuery } from '@tanstack/react-query';
 
@@ -10,14 +10,13 @@ export interface User {
 }
 
 export interface UserResponse {
-  id: number;
-  name: string;
-  email: string;
-  avatar_urls: {
-    24: string;
-    48: string;
-    96: string;
-  };
+  results: {
+    id: number;
+    display_name: string;
+    user_email: string;
+    avatar_url: string;
+  }[];
+  total_items: number;
 }
 
 export interface InstructorListResponse {
@@ -27,20 +26,28 @@ export interface InstructorListResponse {
   user_email: string;
 }
 
-export interface UserParams {
-  context: string;
-  roles: string[];
-  search?: string;
-}
-
-const getUserList = (params: UserParams) => {
-  return wpAuthApiInstance.get<UserResponse[]>(endpoints.USERS, { params });
+const getUserList = (search: string) => {
+  return wpAjaxInstance.get<UserResponse>(endpoints.USERS_LIST, {
+    params: {
+      filter: {
+        search,
+      },
+    },
+  });
 };
 
-export const useUserListQuery = (params: UserParams) => {
+export const useUserListQuery = (search: string) => {
   return useQuery({
-    queryKey: ['UserList', params],
-    queryFn: () => getUserList(params).then((res) => res.data),
+    queryKey: ['UserList', search],
+    queryFn: () =>
+      getUserList(search).then((res) =>
+        res.data.results.map((user) => ({
+          id: user.id,
+          name: user.display_name,
+          email: user.user_email,
+          avatar_url: user.avatar_url,
+        })),
+      ),
   });
 };
 

@@ -805,14 +805,14 @@ if ( ! function_exists( 'tutor_get_formated_date' ) ) {
 	 *
 	 * @return string ( date )
 	 */
-	function tutor_get_formated_date( string $require_format = '', string $user_date ) {
+	function tutor_get_formated_date( string $require_format = '', string $user_date = '' ) {
 		$require_format = $require_format ?: 'Y-m-d';
 
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
 			$formatted_date = date_format( $date, $require_format );
 		} else {
-			$formatted_date = date( $require_format, strtotime( $user_date ) );
+			$formatted_date = gmdate( $require_format, strtotime( $user_date ) );
 		}
 		return $formatted_date;
 	}
@@ -1514,17 +1514,13 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * @return string|void
 		 */
 		function tutor_get_formatted_price( $price ) {
-			if ( ! $price ) {
-				return;
-			}
+			$price = floatval( Input::sanitize( $price ) );
 
-			$price = Input::sanitize( $price );
-
-			$currency_symbol    = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL );
-			$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION );
-			$thousand_separator = tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR );
-			$decimal_separator  = tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR );
-			$no_of_decimal      = tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS );
+			$currency_symbol    = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) );
+			$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' );
+			$thousand_separator = tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' );
+			$decimal_separator  = tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' );
+			$no_of_decimal      = tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' );
 
 			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
 			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;

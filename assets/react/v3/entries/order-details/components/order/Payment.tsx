@@ -57,7 +57,7 @@ function Payment() {
 				</div>
 			</BoxTitle>
 			<div css={styles.content}>
-				<Box bordered>
+				<Box bordered css={styleUtils.boxReset}>
 					<div css={styles.item({ action: 'regular' })}>
 						<div>{__('Subtotal', 'tutor')}</div>
 						<div>
@@ -229,7 +229,7 @@ export default Payment;
 
 const styles = {
 	content: css`
-		padding: ${spacing[12]} ${spacing[20]} ${spacing[16]} ${spacing[0]};
+		padding-top: ${spacing[12]};
 	`,
 	paymentTitle: css`
 		display: flex;

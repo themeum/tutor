@@ -222,6 +222,8 @@ export const arrayIntersect = <T>(first: T[], second: T[]) => {
 };
 
 export const makeFirstCharacterUpperCase = (word: string) => {
+  if (!word) return word;
+
   const firstCharacterUpperCase = word.charAt(0).toUpperCase();
   const wordWithoutFirstCharacter = word.slice(1);
 

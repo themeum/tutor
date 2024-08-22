@@ -225,7 +225,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
-    padding: ${spacing[16]} ${spacing[32]} ${spacing[32]} ${spacing[32]};
+    padding: ${spacing[16]} ${spacing[32]} ${spacing[48]} ${spacing[32]};
     background-color: ${colorTokens.background.white};
   `,
   courseAndQna: css`

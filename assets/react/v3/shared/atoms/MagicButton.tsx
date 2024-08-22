@@ -56,11 +56,11 @@ const styles = {
 		}
 	`,
   default: css`
-		background: linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%);
+		background: ${colorTokens.ai.gradient_1};
 		color: ${colorTokens.text.white};
 
 		&:hover {
-			background: linear-gradient(71.97deg, #FF9645 18.57%, #FF6471 63.71%, #CF6EBD 87.71%, #9B62D4 107.71%, #3E64DE 132.85%);
+			background: ${colorTokens.ai.gradient_2};
 		}
 	`,
   secondary: css`
@@ -79,7 +79,7 @@ const styles = {
 			position: absolute;
 			inset: 0;
 			border: 1px solid;
-			background: linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%);
+			background: ${colorTokens.ai.gradient_1};
 			color: ${colorTokens.text.primary};
 			border: 1px solid transparent;
 			-webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
@@ -89,7 +89,7 @@ const styles = {
 
 		&:hover {
 			&::before {
-				background: linear-gradient(0deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%);
+				background: ${colorTokens.ai.gradient_2};
 			}
 		}
 	`,
