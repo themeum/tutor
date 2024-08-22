@@ -75,13 +75,6 @@ const QuestionConditions = () => {
   return (
     <div key={`${activeQuestionId}-${activeQuestionIndex}`}>
       <div css={styles.questionTypeWrapper}>
-        {/* <Controller
-          control={form.control}
-          name={`questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type'}
-          render={(controllerProps) => (
-            <FormSelectInput {...controllerProps} label={__('Question Type', 'tutor')} options={questionTypeOptions} />
-          )}
-        /> */}
         <div css={typography.caption('medium')}>{__('Question Type', 'tutor')}</div>
         <div css={styles.questionType}>
           <SVGIcon
