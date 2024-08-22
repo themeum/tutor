@@ -2,8 +2,6 @@
 /**
  * Billing form fields child template
  *
- * Using variables from parent template
- *
  * @package Tutor\Templates
  * @subpackage Dashboard\Settings
  * @author Themeum <support@themeum.com>
@@ -11,6 +9,20 @@
  * @since 3.0.0
  */
 
+use Tutor\Ecommerce\BillingController;
+
+$billing_controller = new BillingController();
+$billing_info       = $billing_controller->get_billing_info();
+
+$billing_first_name = $billing_info->billing_first_name ?? '';
+$billing_last_name  = $billing_info->billing_last_name ?? '';
+$billing_email      = $billing_info->billing_email ?? '';
+$billing_phone      = $billing_info->billing_phone ?? '';
+$billing_zip_code   = $billing_info->billing_zip_code ?? '';
+$billing_address    = $billing_info->billing_address ?? '';
+$billing_country    = $billing_info->billing_country ?? '';
+$billing_state      = $billing_info->billing_state ?? '';
+$billing_city       = $billing_info->billing_city ?? '';
 ?>
 
 <div class="tutor-row">
