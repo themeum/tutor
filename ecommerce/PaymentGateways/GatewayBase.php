@@ -83,6 +83,7 @@ abstract class GatewayBase {
 	 * @param mixed $data Data to be sent to the gateway.
 	 *
 	 * @throws \Exception Throw exception if error occur.
+	 * @throws \Throwable Throw a throwable if error occur inside payment hub.
 	 *
 	 * @return void
 	 */
@@ -96,7 +97,7 @@ abstract class GatewayBase {
 
 			$this->payment->createPayment();
 		} catch ( \Throwable $th ) {
-			throw new \Exception( $th->getMessage() );
+			throw $th;
 		}
 	}
 
@@ -106,6 +107,7 @@ abstract class GatewayBase {
 	 * @since 3.0.0
 	 *
 	 * @throws \Exception Throw exception if error occur.
+	 * @throws \Throwable Throw a throwable if error occur inside payment hub.
 	 *
 	 * @return object
 	 */
@@ -124,7 +126,7 @@ abstract class GatewayBase {
 
 			return $obj;
 		} catch ( \Throwable $th ) {
-			throw new \Exception( $th->getMessage() );
+			throw $th;
 		}
 	}
 }
