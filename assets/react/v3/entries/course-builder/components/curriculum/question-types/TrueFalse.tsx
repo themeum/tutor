@@ -22,8 +22,15 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { type QuizForm, useQuizQuestionAnswerOrderingMutation } from '@CourseBuilderServices/quiz';
+import {
+  type QuizDataStatus,
+  type QuizForm,
+  type QuizQuestionOption,
+  calculateQuizDataStatus,
+  useQuizQuestionAnswerOrderingMutation,
+} from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
+import { noop } from '@Utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -32,7 +39,11 @@ const TrueFalse = () => {
 
   const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
-  const { fields: optionsFields, move: moveOption } = useFieldArray({
+  const {
+    fields: optionsFields,
+    move: moveOption,
+    replace: replaceOption,
+  } = useFieldArray({
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
@@ -90,7 +101,13 @@ const TrueFalse = () => {
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, is_correct: '0' };
+        updatedOptions[index] = {
+          ...option,
+          ...(calculateQuizDataStatus(option._data_status, 'update') && {
+            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+          }),
+          is_correct: '0' as '0' | '1',
+        };
       }
     }
 
@@ -143,7 +160,23 @@ const TrueFalse = () => {
                 key={`${option.answer_id}-${option.is_correct}`}
                 control={form.control}
                 name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
-                render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
+                render={(controllerProps) => (
+                  <FormTrueFalse
+                    {...controllerProps}
+                    index={index}
+                    onCheckCorrectAnswer={() => {
+                      const updatedOptions = currentOptions.map((item) => ({
+                        ...item,
+                        ...(calculateQuizDataStatus(item._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+                        }),
+                        is_correct: item.answer_id === option.answer_id ? '1' : '0',
+                      })) as QuizQuestionOption[];
+
+                      replaceOption(updatedOptions);
+                    }}
+                  />
+                )}
               />
             )}
           </For>
@@ -161,7 +194,9 @@ const TrueFalse = () => {
                     name={
                       `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
                     }
-                    render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
+                    render={(controllerProps) => (
+                      <FormTrueFalse {...controllerProps} index={index} onCheckCorrectAnswer={noop} />
+                    )}
                   />
                 );
               }}

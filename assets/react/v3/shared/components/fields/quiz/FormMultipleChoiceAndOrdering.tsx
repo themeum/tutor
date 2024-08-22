@@ -34,6 +34,7 @@ interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQue
   index: number;
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
+  onCheckCorrectAnswer: () => void;
 }
 
 const courseId = getCourseId();
@@ -42,6 +43,7 @@ const FormMultipleChoiceAndOrdering = ({
   field,
   onDuplicateOption,
   onRemoveOption,
+  onCheckCorrectAnswer,
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
   const form = useFormContext<QuizForm>();
@@ -78,7 +80,7 @@ const FormMultipleChoiceAndOrdering = ({
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
     isDefined(inputValue.image_id) && isDefined(inputValue.image_url),
   );
-  const [previousValue] = useState<QuizQuestionOption>(inputValue);
+  const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value?.answer_id || 0,
@@ -106,7 +108,7 @@ const FormMultipleChoiceAndOrdering = ({
     field.onChange({
       ...inputValue,
       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: 'update',
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
       }),
       image_id: id,
       image_url: url,
@@ -125,13 +127,14 @@ const FormMultipleChoiceAndOrdering = ({
   };
 
   const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
-      }),
-      is_correct: hasMultipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
-    });
+    onCheckCorrectAnswer();
+    // field.onChange({
+    //   ...inputValue,
+    //   ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+    //     _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+    //   }),
+    //   is_correct: hasMultipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
+    // });
     // markAnswerAsCorrectMutation.mutate({
     //   answerId: inputValue.answer_id,
     //   isCorrect: inputValue.is_correct === '1' ? '0' : '1',
@@ -387,7 +390,7 @@ const FormMultipleChoiceAndOrdering = ({
                     setIsEditing(false);
                     field.onChange(previousValue);
 
-                    if ((!inputValue.answer_title && !inputValue.image_url) || !inputValue.is_saved) {
+                    if (!inputValue.is_saved) {
                       onRemoveOption();
                     }
                   }}
@@ -401,6 +404,13 @@ const FormMultipleChoiceAndOrdering = ({
                   onClick={async (event) => {
                     event.stopPropagation();
                     field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                      is_saved: true,
+                    });
+                    setPreviousValue({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                         _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,

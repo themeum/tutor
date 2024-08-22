@@ -60,19 +60,12 @@ const MultipleChoiceAndOrdering = () => {
     append: appendOption,
     insert: insertOption,
     remove: removeOption,
+    update: updateOption,
     replace: replaceOption,
     move: moveOption,
   } = useFieldArray({
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers`,
-    rules: {
-      validate: (options) => {
-        if (options.length < 2) {
-          return __('At least two options are required.', 'tutor');
-        }
-        return true;
-      },
-    },
   });
 
   const sensors = useSensors(
@@ -119,45 +112,6 @@ const MultipleChoiceAndOrdering = () => {
     }
     isInitialRenderRef.current = false;
   }, [hasMultipleCorrectAnswer]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (hasMultipleCorrectAnswer) {
-      return;
-    }
-
-    const changedOptions = currentOptions.filter((option) => {
-      const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
-      const previousOption = optionsFields[index];
-      return previousOption && option.is_correct !== previousOption.is_correct;
-    });
-
-    if (changedOptions.length === 0) {
-      return;
-    }
-
-    const changedOptionIndex = currentOptions.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
-
-    const updatedOptions = [...currentOptions];
-    updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
-
-    for (const [index, option] of updatedOptions.entries()) {
-      if (index !== changedOptionIndex) {
-        updatedOptions[index] = {
-          ...option,
-          ...(calculateQuizDataStatus(option._data_status, 'update') && {
-            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
-          }),
-          is_correct: '0' as '0' | '1',
-        };
-      }
-    }
-
-    replaceOption(updatedOptions);
-    isInitialRenderRef.current = false;
-  }, [currentOptions]);
-
-  // console.log(optionsFields);
 
   return (
     <div
@@ -224,7 +178,36 @@ const MultipleChoiceAndOrdering = () => {
                       const duplicateIndex = index + 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
-                    onRemoveOption={() => removeOption(index)}
+                    onRemoveOption={() => {
+                      removeOption(index);
+
+                      if (option._data_status !== 'new') {
+                        form.setValue('deleted_answer_ids', [
+                          ...form.getValues('deleted_answer_ids'),
+                          option.answer_id,
+                        ]);
+                      }
+                    }}
+                    onCheckCorrectAnswer={() => {
+                      if (hasMultipleCorrectAnswer) {
+                        updateOption(index, {
+                          ...option,
+                          ...(calculateQuizDataStatus(option._data_status, 'update') && {
+                            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+                          }),
+                          is_correct: option.is_correct === '1' ? '0' : '1',
+                        });
+                      } else {
+                        const updatedOptions = currentOptions.map((item) => ({
+                          ...item,
+                          ...(calculateQuizDataStatus(item._data_status, 'update') && {
+                            _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+                          }),
+                          is_correct: item.answer_id === option.answer_id ? '1' : '0',
+                        })) as QuizQuestionOption[];
+                        replaceOption(updatedOptions);
+                      }
+                    }}
                     index={index}
                   />
                 )}
@@ -261,6 +244,28 @@ const MultipleChoiceAndOrdering = () => {
                           insertOption(duplicateIndex, duplicateOption);
                         }}
                         onRemoveOption={() => removeOption(index)}
+                        onCheckCorrectAnswer={() => {
+                          if (hasMultipleCorrectAnswer) {
+                            console.log('when hasMultipleCorrectAnswer');
+                            updateOption(index, {
+                              ...item,
+                              ...(calculateQuizDataStatus(item._data_status, 'update') && {
+                                _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+                              }),
+                              is_correct: item.is_correct === '1' ? '0' : '1',
+                            });
+                          } else {
+                            console.log('when not hasMultipleCorrectAnswer');
+                            const updatedOptions = currentOptions.map((option) => ({
+                              ...option,
+                              ...(calculateQuizDataStatus(option._data_status, 'update') && {
+                                _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+                              }),
+                              is_correct: option.answer_id === item.answer_id ? '1' : '0',
+                            })) as QuizQuestionOption[];
+                            replaceOption(updatedOptions);
+                          }
+                        }}
                         index={index}
                       />
                     )}

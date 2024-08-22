@@ -64,7 +64,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
   );
-  const [previousValue] = useState<QuizQuestionOption>(inputValue);
+  const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value.answer_id || 0,
@@ -348,12 +348,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     setIsEditing(false);
                     field.onChange(previousValue);
 
-                    if (
-                      !inputValue.answer_title &&
-                      !inputValue.image_id &&
-                      !inputValue.answer_two_gap_match &&
-                      !inputValue.is_saved
-                    ) {
+                    if (!inputValue.is_saved) {
                       onRemoveOption();
                     }
                   }}
@@ -367,6 +362,14 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   onClick={(event) => {
                     event.stopPropagation();
                     field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                      is_saved: true,
+                    });
+
+                    setPreviousValue({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                         _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
