@@ -10,6 +10,7 @@ import type {
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
 
+import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
@@ -74,7 +75,8 @@ interface ImportQuizPayload {
   csv_file: File;
 }
 
-interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'> {
+interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings' | 'answer_explanation'> {
+  answer_explanation?: string;
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: '0' | '1';
@@ -335,7 +337,9 @@ export const convertQuizFormDataToPayload = (
           question_title: question.question_title,
           question_description: question.question_description,
           question_mark: question.question_settings.question_mark,
-          answer_explanation: question.answer_explanation,
+          ...(!!tutorConfig.tutor_pro_url && {
+            answer_explanation: question.answer_explanation,
+          }),
           question_type: question.question_type,
           question_order: question.question_order,
           question_settings: {
