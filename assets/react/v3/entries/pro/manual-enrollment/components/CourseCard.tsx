@@ -4,7 +4,7 @@ import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { Course } from '@EnrollmentServices/enrollment';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 interface CourseCardProps {
   course: Course;

@@ -9,7 +9,7 @@ import Table, { Column } from '@Molecules/Table';
 import { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 import { Enrollment, Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 interface StudentListTableProps {
   form: UseFormReturn<Enrollment, any, undefined>;

@@ -7,7 +7,7 @@ import CourseListModal from '@EnrollmentComponents/modals/CourseListModal';
 import CourseCard from '@EnrollmentComponents/CourseCard';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import { FormControllerProps } from '@Utils/form';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 interface FormSelectCourseProps extends FormControllerProps<Course | null> {
   disabled?: boolean;
