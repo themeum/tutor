@@ -31,7 +31,7 @@ import {
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { nanoid, noop } from '@Utils/util';
 
 const MultipleChoiceAndOrdering = () => {
   const isInitialRenderRef = useRef(false);
@@ -81,6 +81,47 @@ const MultipleChoiceAndOrdering = () => {
 
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
+
+  const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
+    if (hasMultipleCorrectAnswer) {
+      updateOption(index, {
+        ...option,
+        ...(calculateQuizDataStatus(option._data_status, 'update') && {
+          _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+        }),
+        is_correct: option.is_correct === '1' ? '0' : '1',
+      });
+    } else {
+      const updatedOptions = currentOptions.map((item) => ({
+        ...item,
+        ...(calculateQuizDataStatus(item._data_status, 'update') && {
+          _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+        }),
+        is_correct: item.answer_id === option.answer_id ? '1' : '0',
+      })) as QuizQuestionOption[];
+      replaceOption(updatedOptions);
+    }
+  };
+
+  const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
+    const duplicateOption: QuizQuestionOption = {
+      ...data,
+      _data_status: 'new',
+      is_saved: true,
+      answer_id: nanoid(),
+      answer_title: `${data.answer_title} (copy)`,
+      is_correct: '0',
+    };
+    const duplicateIndex = index + 1;
+    insertOption(duplicateIndex, duplicateOption);
+  };
+  const handleDeleteOption = (index: number, option: QuizQuestionOption) => {
+    removeOption(index);
+
+    if (option._data_status !== 'new') {
+      form.setValue('deleted_answer_ids', [...form.getValues('deleted_answer_ids'), option.answer_id]);
+    }
+  };
 
   useEffect(() => {
     isInitialRenderRef.current = true;
@@ -146,48 +187,9 @@ const MultipleChoiceAndOrdering = () => {
                 render={(controllerProps) => (
                   <FormMultipleChoiceAndOrdering
                     {...controllerProps}
-                    onDuplicateOption={(data) => {
-                      const duplicateOption: QuizQuestionOption = {
-                        ...data,
-                        _data_status: 'new',
-                        is_saved: true,
-                        answer_id: nanoid(),
-                        answer_title: `${data.answer_title} (copy)`,
-                        is_correct: '0',
-                      };
-                      const duplicateIndex = index + 1;
-                      insertOption(duplicateIndex, duplicateOption);
-                    }}
-                    onRemoveOption={() => {
-                      removeOption(index);
-
-                      if (option._data_status !== 'new') {
-                        form.setValue('deleted_answer_ids', [
-                          ...form.getValues('deleted_answer_ids'),
-                          option.answer_id,
-                        ]);
-                      }
-                    }}
-                    onCheckCorrectAnswer={() => {
-                      if (hasMultipleCorrectAnswer) {
-                        updateOption(index, {
-                          ...option,
-                          ...(calculateQuizDataStatus(option._data_status, 'update') && {
-                            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
-                          }),
-                          is_correct: option.is_correct === '1' ? '0' : '1',
-                        });
-                      } else {
-                        const updatedOptions = currentOptions.map((item) => ({
-                          ...item,
-                          ...(calculateQuizDataStatus(item._data_status, 'update') && {
-                            _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
-                          }),
-                          is_correct: item.answer_id === option.answer_id ? '1' : '0',
-                        })) as QuizQuestionOption[];
-                        replaceOption(updatedOptions);
-                      }
-                    }}
+                    onDuplicateOption={(data) => handleDuplicateOption(index, data)}
+                    onRemoveOption={() => handleDeleteOption(index, option)}
+                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
                     index={index}
                   />
                 )}
@@ -211,39 +213,9 @@ const MultipleChoiceAndOrdering = () => {
                     render={(controllerProps) => (
                       <FormMultipleChoiceAndOrdering
                         {...controllerProps}
-                        onDuplicateOption={() => {
-                          const duplicateOption: QuizQuestionOption = {
-                            ...item,
-                            _data_status: 'new',
-                            is_saved: true,
-                            answer_id: nanoid(),
-                            answer_title: `${item.answer_title} (copy)`,
-                            is_correct: '0',
-                          };
-                          const duplicateIndex = index + 1;
-                          insertOption(duplicateIndex, duplicateOption);
-                        }}
-                        onRemoveOption={() => removeOption(index)}
-                        onCheckCorrectAnswer={() => {
-                          if (hasMultipleCorrectAnswer) {
-                            updateOption(index, {
-                              ...item,
-                              ...(calculateQuizDataStatus(item._data_status, 'update') && {
-                                _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
-                              }),
-                              is_correct: item.is_correct === '1' ? '0' : '1',
-                            });
-                          } else {
-                            const updatedOptions = currentOptions.map((option) => ({
-                              ...option,
-                              ...(calculateQuizDataStatus(option._data_status, 'update') && {
-                                _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
-                              }),
-                              is_correct: option.answer_id === item.answer_id ? '1' : '0',
-                            })) as QuizQuestionOption[];
-                            replaceOption(updatedOptions);
-                          }
-                        }}
+                        onDuplicateOption={noop}
+                        onRemoveOption={noop}
+                        onCheckCorrectAnswer={noop}
                         index={index}
                       />
                     )}

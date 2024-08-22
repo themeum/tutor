@@ -7,7 +7,6 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
 
 import Show from '@Controls/Show';
 
@@ -120,6 +119,10 @@ const FormInput = ({
 
                   const fieldValue: string | number = fieldType === 'number' ? parseNumberOnly(value) : value;
 
+                  if (maxLimit && fieldValue.toString().length >= maxLimit + 2) {
+                    return;
+                  }
+
                   field.onChange(fieldValue);
 
                   if (onChange) {
@@ -186,10 +189,10 @@ const styles = {
 		position: relative;
 		display: flex;
 
-		& input {
-			${isClearable && `padding-right: ${spacing[36]};`};
-			${typography.body()}
-			width: 100%;
+		input {
+			&.tutor-input-field {
+        ${isClearable && `padding-right: ${spacing[36]};`};
+      }
 		}
 	`,
   clearButton: css`

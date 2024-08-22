@@ -347,7 +347,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                         </Show>
                       </div>
 
-                      <QuestionList quizId={quizId} />
+                      <QuestionList />
                     </Show>
                   </div>
                 </Show>

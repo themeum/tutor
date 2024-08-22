@@ -259,14 +259,22 @@ const CourseBasic = () => {
               control={form.control}
               rules={{ ...requiredRule(), ...maxValueRule({ maxValue: 255 }) }}
               render={(controllerProps) => (
+                // <FormInput
+                //   {...controllerProps}
+                //   label={__('Course Title', 'tutor')}
+                //   maxLimit={255}
+                //   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
+                //   isClearable
+                //   selectOnFocus
+                //   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                // />
                 <FormInput
                   {...controllerProps}
                   label={__('Course Title', 'tutor')}
-                  maxLimit={255}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
-                  isClearable
+                  maxLimit={245}
                   selectOnFocus
-                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  isClearable
                 />
               )}
             />

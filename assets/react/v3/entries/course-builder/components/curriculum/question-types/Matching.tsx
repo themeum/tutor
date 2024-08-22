@@ -25,7 +25,7 @@ import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { nanoid, noop } from '@Utils/util';
 
 const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -66,6 +66,27 @@ const Matching = () => {
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
+  const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
+    const duplicateOption: QuizQuestionOption = {
+      ...data,
+      _data_status: 'new',
+      is_saved: true,
+      answer_id: nanoid(),
+      answer_title: `${data.answer_title} (copy)`,
+      is_correct: '0',
+    };
+    const duplicateIndex = index + 1;
+    insertOption(duplicateIndex, duplicateOption);
+  };
+
+  const handleDeleteOption = (index: number, option: QuizQuestionOption) => {
+    removeOption(index);
+
+    if (option._data_status !== 'new') {
+      form.setValue('deleted_answer_ids', [...form.getValues('deleted_answer_ids'), option.answer_id]);
+    }
+  };
+
   return (
     <div css={styles.optionWrapper}>
       <DndContext
@@ -105,28 +126,8 @@ const Matching = () => {
                   <FormMatching
                     {...controllerProps}
                     index={index}
-                    onRemoveOption={() => {
-                      removeOption(index);
-
-                      if (option._data_status !== 'new') {
-                        form.setValue('deleted_answer_ids', [
-                          ...form.getValues('deleted_answer_ids'),
-                          option.answer_id,
-                        ]);
-                      }
-                    }}
-                    onDuplicateOption={(data) => {
-                      const duplicateOption: QuizQuestionOption = {
-                        ...data,
-                        _data_status: 'new',
-                        is_saved: true,
-                        answer_id: nanoid(),
-                        answer_title: `${data.answer_title} (copy)`,
-                        is_correct: '0',
-                      };
-                      const duplicateIndex = index + 1;
-                      insertOption(duplicateIndex, duplicateOption);
-                    }}
+                    onDuplicateOption={(data) => handleDuplicateOption(index, data)}
+                    onRemoveOption={() => handleDeleteOption(index, option)}
                   />
                 )}
               />
@@ -147,23 +148,7 @@ const Matching = () => {
                       `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
-                      <FormMatching
-                        {...controllerProps}
-                        index={index}
-                        onDuplicateOption={() => {
-                          const duplicateOption: QuizQuestionOption = {
-                            ...item,
-                            _data_status: 'new',
-                            is_saved: true,
-                            answer_id: nanoid(),
-                            answer_title: `${item.answer_title} (copy)`,
-                            is_correct: '0',
-                          };
-                          const duplicateIndex = index + 1;
-                          insertOption(duplicateIndex, duplicateOption);
-                        }}
-                        onRemoveOption={() => removeOption(index)}
-                      />
+                      <FormMatching {...controllerProps} index={index} onDuplicateOption={noop} onRemoveOption={noop} />
                     )}
                   />
                 );

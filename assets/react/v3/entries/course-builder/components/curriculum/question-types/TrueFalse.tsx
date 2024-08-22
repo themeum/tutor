@@ -68,6 +68,18 @@ const TrueFalse = () => {
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
 
+  const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
+    const updatedOptions = currentOptions.map((item) => ({
+      ...item,
+      ...(calculateQuizDataStatus(item._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+      }),
+      is_correct: item.answer_id === option.answer_id ? '1' : '0',
+    })) as QuizQuestionOption[];
+
+    replaceOption(updatedOptions);
+  };
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
@@ -139,17 +151,7 @@ const TrueFalse = () => {
                   <FormTrueFalse
                     {...controllerProps}
                     index={index}
-                    onCheckCorrectAnswer={() => {
-                      const updatedOptions = currentOptions.map((item) => ({
-                        ...item,
-                        ...(calculateQuizDataStatus(item._data_status, 'update') && {
-                          _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
-                        }),
-                        is_correct: item.answer_id === option.answer_id ? '1' : '0',
-                      })) as QuizQuestionOption[];
-
-                      replaceOption(updatedOptions);
-                    }}
+                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
                   />
                 )}
               />

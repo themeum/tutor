@@ -371,34 +371,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   </button>
                 </Tooltip>
               </Show>
-              <ConfirmationPopover
-                isOpen={isDeletePopoverOpen}
-                triggerRef={deleteRef}
-                closePopover={() => setIsDeletePopoverOpen(false)}
-                maxWidth="258px"
-                title={sprintf(__('Delete topic "%s"', 'tutor'), topic.title)}
-                message={__(
-                  'Are you sure you want to delete this content from your course? This cannot be undone.',
-                  'tutor',
-                )}
-                animationType={AnimationType.slideUp}
-                arrow="auto"
-                hideArrow
-                confirmButton={{
-                  text: __('Delete', 'tutor'),
-                  variant: 'text',
-                  isDelete: true,
-                }}
-                cancelButton={{
-                  text: __('Cancel', 'tutor'),
-                  variant: 'text',
-                }}
-                onConfirmation={async () => {
-                  await deleteTopicMutation.mutateAsync(topic.id);
-                  setIsDeletePopoverOpen(false);
-                  onDelete?.();
-                }}
-              />
 
               <Show when={topic.isSaved}>
                 <button
@@ -408,8 +380,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   onClick={() => {
                     onCollapse?.(topic.id);
                   }}
+                  data-toggle-collapse
                 >
-                  <SVGIcon name={topic.isCollapsed ? 'chevronDown' : 'chevronUp'} />
+                  <SVGIcon name={'chevronDown'} />
                 </button>
               </Show>
             </div>
@@ -677,6 +650,32 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
         accept=".csv"
       />
 
+      <ConfirmationPopover
+        isOpen={isDeletePopoverOpen}
+        triggerRef={deleteRef}
+        closePopover={() => setIsDeletePopoverOpen(false)}
+        maxWidth="258px"
+        title={sprintf(__('Delete topic "%s"', 'tutor'), topic.title)}
+        message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
+        animationType={AnimationType.slideUp}
+        arrow="auto"
+        hideArrow
+        confirmButton={{
+          text: __('Delete', 'tutor'),
+          variant: 'text',
+          isDelete: true,
+        }}
+        cancelButton={{
+          text: __('Cancel', 'tutor'),
+          variant: 'text',
+        }}
+        onConfirmation={async () => {
+          await deleteTopicMutation.mutateAsync(topic.id);
+          setIsDeletePopoverOpen(false);
+          onDelete?.();
+        }}
+      />
+
       <Popover
         triggerRef={triggerGoogleMeetRef}
         isOpen={meetingType === 'tutor-google-meet'}
@@ -761,11 +760,21 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
 
+    [data-toggle-collapse] {
+      transition: transform 0.3s ease-in-out;
+      ${
+        !isCollapsed &&
+        css`
+          transform: rotate(180deg);
+        `
+      }
+    }
+
     ${
       !isCollapsed &&
       css`
-      border-bottom: 1px solid ${colorTokens.stroke.divider};
-    `
+        border-bottom: 1px solid ${colorTokens.stroke.divider};
+      `
     }
 
     ${

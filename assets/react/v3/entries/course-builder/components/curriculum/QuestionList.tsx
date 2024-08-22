@@ -16,35 +16,29 @@ import { useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
+import { useToast } from '@Atoms/Toast';
+import Popover from '@Molecules/Popover';
 
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { useToast } from '@Atoms/Toast';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import type { ID } from '@CourseBuilderServices/curriculum';
 import {
   type QuizForm,
   type QuizQuestion,
   type QuizQuestionType,
   useCreateQuizQuestionMutation,
-  useQuizQuestionSortingMutation,
 } from '@CourseBuilderServices/quiz';
 import { AnimationType } from '@Hooks/useAnimation';
-import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { nanoid, noop } from '@Utils/util';
-
-interface QuestionListProps {
-  quizId?: ID;
-}
 
 const questionTypeOptions: {
   label: string;
@@ -102,7 +96,7 @@ const questionTypeOptions: {
   },
 ];
 
-const QuestionList = ({ quizId }: QuestionListProps) => {
+const QuestionList = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const addButtonRef = useRef<HTMLButtonElement>(null);
@@ -110,7 +104,6 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   const form = useFormContext<QuizForm>();
   const { activeQuestionIndex, setActiveQuestionId } = useQuizModalContext();
   const createQuizQuestion = useCreateQuizQuestionMutation();
-  const quizQuestionSortingMutation = useQuizQuestionSortingMutation();
 
   const {
     remove: removeQuestion,
@@ -334,10 +327,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                         question={item}
                         index={index}
                         onDuplicateQuestion={noop}
-                        onRemoveQuestion={() => {
-                          removeQuestion(index);
-                          setActiveQuestionId('');
-                        }}
+                        onRemoveQuestion={noop}
                       />
                     );
                   }}
