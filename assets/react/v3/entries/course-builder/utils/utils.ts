@@ -262,11 +262,6 @@ export const isAddonEnabled = (addon: Addon) => {
   return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
 };
 
-export function toCapitalize(str: string) {
-  if (!str) return str;
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-}
-
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
   const videoId = Number.parseInt(videoUrl.split('/').pop() || '', 10);
   const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
