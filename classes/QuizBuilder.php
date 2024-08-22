@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 
@@ -59,7 +60,7 @@ class QuizBuilder {
 		$question_title    = Input::sanitize( $question['question_title'], '' );
 		$question_type     = Input::sanitize( $question['question_type'], '' );
 		$question_mark     = Input::sanitize( $question['question_mark'], 1, Input::TYPE_INT );
-		$question_settings = Input::sanitize( $question['question_settings'], array() );
+		$question_settings = Input::sanitize_array( $question['question_settings'] );
 
 		add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
 		$question_description = Input::sanitize( $question['question_description'], '', Input::TYPE_KSES_POST );
@@ -71,7 +72,7 @@ class QuizBuilder {
 			'question_description' => $question_description,
 			'question_type'        => $question_type,
 			'question_mark'        => $question_mark,
-			'question_settings'    => maybe_unserialize( $question_settings ),
+			'question_settings'    => maybe_serialize( $question_settings ),
 		);
 
 		return apply_filters( 'tutor_quiz_question_data', $data );
@@ -88,7 +89,7 @@ class QuizBuilder {
 	 */
 	public function prepare_answer_data( $question_id, $question_type, $answer ) {
 		$answer_title         = Input::sanitize( $answer['answer_title'] ?? '', '' );
-		$is_correct           = Input::sanitize( $answer['is_correct'], 0, Input::TYPE_INT );
+		$is_correct           = Input::sanitize( $answer['is_correct'] ?? 0, 0, Input::TYPE_INT );
 		$image_id             = Input::sanitize( $answer['image_id'] ?? null );
 		$answer_two_gap_match = Input::sanitize( $answer['answer_two_gap_match'] ?? '' );
 		$answer_view_format   = Input::sanitize( $answer['answer_view_format'] ?? '' );
@@ -195,6 +196,60 @@ class QuizBuilder {
 	}
 
 	/**
+	 * Validate payload.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $payload payload.
+	 *
+	 * @return object consist success, errors.
+	 */
+	public function validate_payload( $payload ) {
+		$errors  = array();
+		$success = true;
+
+		if ( ! is_array( $payload ) ) {
+			$success           = false;
+			$errors['payload'] = __( 'Invalid payload', 'tutor' );
+		}
+
+		$rules = array(
+			'post_title'  => 'required',
+			'quiz_option' => 'required|is_array',
+			'questions'   => 'required|is_array',
+		);
+
+		$validation = ValidationHelper::validate(
+			$rules,
+			$payload
+		);
+
+		if ( ! $validation->success ) {
+			$success = false;
+			$errors  = array_merge( $errors, $validation->errors );
+		}
+
+		foreach ( $payload['questions'] as $question ) {
+			if ( ! isset( $question[ self::TRACKING_KEY ] ) ) {
+				$success                      = false;
+				$errors[ self::TRACKING_KEY ] = sprintf( __( '%s is required for each question', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
+				break;
+			}
+
+			if ( ! in_array( $question[ self::TRACKING_KEY ], array( self::FLAG_NEW, self::FLAG_UPDATE, self::FLAG_NO_CHANGE ), true ) ) {
+				$success                      = false;
+				$errors[ self::TRACKING_KEY ] = sprintf( __( 'Invalid value for %s', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
+				break;
+			}
+		}
+
+		return (object) array(
+			'success' => $success,
+			'errors'  => $errors,
+		);
+	}
+
+	/**
 	 * Create or update quiz from new course builder.
 	 *
 	 * @since 3.0.0
@@ -204,12 +259,25 @@ class QuizBuilder {
 	public function ajax_quiz_builder_save() {
 		tutor_utils()->checking_nonce();
 
-		$payload    = json_decode( wp_unslash( $_POST['payload'] ?? '{}' ), true );//phpcs:ignore
+		$payload    = $_POST['payload'] ?? array(); //phpcs:ignore
+		if ( is_string( $payload ) ) {
+			$payload = json_decode( $payload, true );
+		}
+
 		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
 		$topic_id   = Input::post( 'topic_id', 0, Input::TYPE_INT );
 		$course_cls = new Course( false );
 
 		$course_cls->check_access( $course_id );
+
+		$validation = $this->validate_payload( $payload );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				tutor_utils()->error_message( 'validation_error' ),
+				$validation->errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
 
 		$is_update     = isset( $payload['ID'] );
 		$quiz_id       = $is_update ? $payload['ID'] : null;
