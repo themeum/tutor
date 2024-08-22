@@ -31,10 +31,10 @@ export type DropdownState = 'generation' | 'magic-fill' | 'magic-erase' | 'varia
 
 interface ImageContextType<T extends FieldValues> {
   state: DropdownState;
-  images: string[];
+  images: (string | null)[];
   currentImage: string;
   setCurrentImage: React.Dispatch<React.SetStateAction<string>>;
-  setImages: React.Dispatch<React.SetStateAction<string[]>>;
+  setImages: React.Dispatch<React.SetStateAction<(string | null)[]>>;
   onDropdownMenuChange: (value: DropdownState) => void;
   field: ControllerRenderProps<T, Path<T>>;
   fieldState: ControllerFieldState;
@@ -85,7 +85,7 @@ export const MagicImageGenerationProvider = <T extends FieldValues>({
   });
   const [dropdownState, setDropdownState] = useState<DropdownState>('generation');
   const [currentImage, setCurrentImage] = useState('');
-  const [images, setImages] = useState<string[]>([]);
+  const [images, setImages] = useState<(string | null)[]>([null, null, null, null]);
   const onDropdownMenuChange = useCallback((value: DropdownState) => {
     setDropdownState(value);
   }, []);

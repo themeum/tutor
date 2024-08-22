@@ -6,4 +6,5 @@ export const CourseBuilderRouteConfigs = {
   CourseCurriculum: defineRoute('/curriculum'),
   CourseAdditional: defineRoute('/additional'),
   CourseCertificate: defineRoute('/certificate'),
+  IconList: defineRoute('/icons'),
 };

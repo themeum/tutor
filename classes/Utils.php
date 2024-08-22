@@ -918,7 +918,7 @@ class Utils {
 					 */
 					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completed_count++;
+						++$completed_count;
 					}
 				} elseif ( 'tutor-google-meet' === $content->post_type ) {
 					/**
@@ -928,7 +928,7 @@ class Utils {
 					 */
 					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completed_count++;
+						++$completed_count;
 					}
 				}
 			}
@@ -3762,12 +3762,10 @@ class Utils {
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<i class="tutor-icon-star-bold" data-rating-value="' . $i . '"></i>';
-			} else {
-				if ( ( $current_rating - $i ) >= -0.5 ) {
+			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
-				} else {
-					$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
-				}
+			} else {
+				$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
 			}
 		}
 
@@ -3841,12 +3839,10 @@ class Utils {
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<span class="tutor-icon-star-bold" data-rating-value="' . $i . '"></span>';
-			} else {
-				if ( ( $current_rating - $i ) >= -0.5 ) {
+			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
-				} else {
-					$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
-				}
+			} else {
+				$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
 			}
 		}
 
@@ -7426,7 +7422,7 @@ class Utils {
 						$next_id = $ids[ $next_i ];
 					}
 				}
-				$i++;
+				++$i;
 			}
 		}
 
@@ -9127,26 +9123,26 @@ class Utils {
 					case $lesson_post_type:
 						$is_lesson_completed = $this->is_completed_lesson( $content->ID, $user_id );
 						if ( $is_lesson_completed ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $quiz_post_type:
 						$has_attempt = $this->has_attempted_quiz( $user_id, $content->ID );
 						if ( $has_attempt ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $assignment_post_type:
 						$is_assignment_completed = $this->is_assignment_submitted( $content->ID, $user_id );
 						if ( $is_assignment_completed ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $zoom_lesson_post_type:
 						if ( \class_exists( '\TUTOR_ZOOM\Zoom' ) ) {
 							$is_zoom_lesson_completed = \TUTOR_ZOOM\Zoom::is_zoom_lesson_done( '', $content->ID, $user_id );
 							if ( $is_zoom_lesson_completed ) {
-								$completed++;
+								++$completed;
 							}
 						}
 						break;
@@ -9155,7 +9151,7 @@ class Utils {
 							if ( \TutorPro\GoogleMeet\Validator\Validator::is_addon_enabled() ) {
 								$is_completed = \TutorPro\GoogleMeet\Frontend\Frontend::is_lesson_completed( false, $content->ID, $user_id );
 								if ( $is_completed ) {
-									$completed++;
+									++$completed;
 								}
 							}
 						}
@@ -9734,7 +9730,7 @@ class Utils {
 		);
 
 		foreach ( $results as $result ) {
-			$course_meta[ $result->course_id ][ $post_type ]++;
+			++$course_meta[ $result->course_id ][ $post_type ];
 		}
 
 		return $course_meta;
@@ -9996,7 +9992,7 @@ class Utils {
 	 *
 	 * @return array allowed tags
 	 */
-	public function allowed_icon_tags( array $tags = array() ):array {
+	public function allowed_icon_tags( array $tags = array() ): array {
 		$defaults = array(
 			'span' => array(
 				'class' => true,

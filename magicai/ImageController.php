@@ -23,7 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * OrderController class
+ * Image controller class.
+ * This class is responsible for generating image using openai.
  *
  * @since 3.0.0
  */
@@ -70,7 +71,6 @@ class ImageController {
 	 * @param string $prompt The user prompt for generating image.
 	 * @param string $style The style of the output image.
 	 * @return string
-	 *
 	 * @since 3.0.0
 	 */
 	private static function generate_prompt( $prompt, $style ) {
@@ -96,7 +96,7 @@ class ImageController {
 			return $prompt;
 		}
 
-		$style_prompt = $style_prompts[ $style ];
+		$style_prompt = 'You are an intelligent assistant tasked with generating banner images for an e-learning application. ' . $style_prompts[ $style ];
 
 		return str_replace( '{user_prompt}', $prompt, $style_prompt );
 	}
@@ -127,12 +127,12 @@ class ImageController {
 			'model'           => Models::DALL_E_3,
 			'prompt'          => $prompt,
 			'n'               => 1,
-			'size'            => Sizes::REGULAR,
+			'size'            => Sizes::LANDSCAPE,
 			'response_format' => 'b64_json',
 		);
 
 		try {
-			$client   = Helper::get_client();
+			$client   = Helper::get_openai_client();
 			$response = $client->images()->create( $input );
 			$response = $response->toArray();
 
@@ -171,7 +171,7 @@ class ImageController {
 		);
 
 		try {
-			$client   = Helper::get_client();
+			$client   = Helper::get_openai_client();
 			$response = $client->images()->edit( $input );
 			$response = $response->toArray();
 

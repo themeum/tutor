@@ -225,6 +225,9 @@ export const colorTokens = {
     },
     wp: '#2271b1',
     magicAi: '#484F66',
+    ai: {
+      purple: '#9D50FF',
+    },
   },
   surface: {
     tutor: '#ffffff',
@@ -421,6 +424,7 @@ export const colorTokens = {
     error: '#f46363',
     success: '#24a148',
     light: '#f9fafc',
+    brand: '#E6ECFF',
   },
   ribbon: {
     red: 'linear-gradient(to bottom, #ee0014 0%,#c10010 12.23%,#ee0014 100%)',

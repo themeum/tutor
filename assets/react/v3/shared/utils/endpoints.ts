@@ -24,6 +24,11 @@ const endpoints = {
   MAGIC_TEXT_GENERATION: 'tutor_generate_text_content',
   MAGIC_AI_MODIFY_CONTENT: 'tutor_modify_text_content',
   USE_AI_GENERATED_IMAGE: 'tutor_use_magic_image',
+
+  GENERATE_COURSE_CONTENT: 'tutor_generate_course_content',
+  GENERATE_COURSE_TOPIC_CONTENT: 'tutor_generate_course_topic_content',
+  SAVE_AI_GENERATED_COURSE_CONTENT: 'tutor_save_ai_generated_course_content',
+  GENERATE_QUIZ_QUESTIONS: 'tutor_generate_quiz_questions',
 };
 
 export default endpoints;

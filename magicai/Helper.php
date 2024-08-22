@@ -14,6 +14,7 @@ use OpenAI;
 use OpenAI\Client;
 use Parsedown;
 use RuntimeException;
+use Tutor\MagicAI\Constants\Models;
 
 /**
  * Helper class for openai related functionalities.
@@ -37,7 +38,7 @@ final class Helper {
 	 * @throws RuntimeException If openai api key is not found.
 	 * @since 3.0.0
 	 */
-	public static function get_client() {
+	public static function get_openai_client() {
 		if ( is_null( self::$client ) ) {
 			$api_key = tutor_utils()->get_option( 'chatgpt_api_key' );
 
@@ -63,5 +64,36 @@ final class Helper {
 		$markdown->setSafeMode( true );
 
 		return $markdown->text( $content );
+	}
+
+	/**
+	 * Create the openai chat input options.
+	 *
+	 * @param array $messages The chat messages.
+	 * @param array $options Optional options for overwriting the model, temperature etc.
+	 * @return array
+	 * @since 3.0.0
+	 */
+	public static function create_openai_chat_input( array $messages, array $options = array() ) {
+		$default_options = array(
+			'model'       => Models::GPT_4O,
+			'temperature' => 0.7,
+		);
+
+		$options             = array_merge( $default_options, $options );
+		$options['messages'] = $messages;
+
+		return $options;
+	}
+
+	/**
+	 * Check if a content is a valid JSON string or not.
+	 *
+	 * @param string $content The string content to check.
+	 * @return boolean
+	 */
+	public static function is_valid_json( string $content ) {
+		json_decode( $content );
+		return json_last_error() === JSON_ERROR_NONE;
 	}
 }
