@@ -106,7 +106,7 @@ const styles = {
   `,
   bottom: css`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 2fr 1fr;
     align-items: center;
 
     > div {
