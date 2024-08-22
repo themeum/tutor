@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Input;
+use Tutor\PaymentGateways\Configs\StripeConfig;
 
 /**
  * Configure ecommerce settings
@@ -623,11 +624,7 @@ class Settings {
 	 * @return array
 	 */
 	public static function get_stripe_config_keys() {
-		return array(
-			'stripe_environment'           => 'environment',
-			'stripe_secret_key'            => 'text',
-			'stripe_webhook_signature_key' => 'textarea',
-		);
+		return StripeConfig::get_config_keys();
 	}
 
 	/**

@@ -15,6 +15,19 @@ use Ollyo\PaymentHub\Core\Payment\BaseConfig;
  */
 class StripeConfig extends BaseConfig implements ConfigContract {
 
+	use PaymentUrlsTrait;
+
+	/**
+	 * Constants for configuration keys.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const ENV_KEY               = 'stripe_environment';
+	const SECRET_KEY            = 'stripe_secret_key';
+	const WEBHOOK_SIGNATURE_KEY = 'stripe_webhook_signature_key';
+
 	/**
 	 * The name of the payment gateway.
 	 *
@@ -36,6 +49,21 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	}
 
 	/**
+	 * Get config keys for settings
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_config_keys() {
+		return array(
+			self::ENV_KEY               => 'environment',
+			self::SECRET_KEY            => 'text',
+			self::WEBHOOK_SIGNATURE_KEY => 'text',
+		);
+	}
+
+	/**
 	 * Retrieves the mode of the Stripe payment gateway.
 	 *
 	 * @since 3.0.0
@@ -43,7 +71,7 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	 * @return string The mode of the payment gateway ('test' or 'live').
 	 */
 	public function getMode(): string {
-		return 'test';
+		return tutor_utils( self::ENV_KEY, 'test' );
 	}
 
 	/**
@@ -54,7 +82,7 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	 * @return string The secret key.
 	 */
 	public function getSecretKey(): string {
-		return 'sk_test_51OqvUtJyMznDJzqj9g7WK5VtJT74zFM7g8ThxhA3xRi0MHdgWHo80jOVhuLTw43t7cyFNBAA1wJub0f0Y7y6zZgi00RU2ICFWB';
+		return tutor_utils( self::SECRET_KEY );
 	}
 
 	/**
@@ -65,50 +93,7 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	 * @return string The public key.
 	 */
 	public function getPublicKey(): string {
-		return 'pk_test_51NpAwGGaf8qt0ZC3Rl5BDL7PG5gVbcWq8UZ6P5rlR0yKa0bKpT3yurs86kC38Id5fBP8uG7vRcneQydCMWhbu23B00SZC7lKza';
+		return tutor_utils( self::WEBHOOK_SIGNATURE_KEY );
 	}
 
-	/**
-	 * Retrieves the webhook secret key for Stripe.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string The webhook secret key.
-	 */
-	public function getWebhookSecretKey(): string {
-		return 'whsec_Ry1wTuFrQbCuqAtS4tNPghV9KP6Raixb';
-	}
-
-	/**
-	 * Retrieves the webhook URL for Stripe.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string The webhook URL.
-	 */
-	public function getWebhookUrl(): string {
-		return 'https://tutorabcd.com/webhook/2';
-	}
-
-	/**
-	 * Retrieves the success URL for the payment process.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string The success URL.
-	 */
-	public function getSuccessUrl(): string {
-		return 'https://example.com/success';
-	}
-
-	/**
-	 * Retrieves the cancel URL for the payment process.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return string The cancel URL.
-	 */
-	public function getCancelUrl(): string {
-		return 'https://example.com/cancel';
-	}
 }
