@@ -230,20 +230,20 @@ class QuizBuilder {
 
 		foreach ( $payload['questions'] as $question ) {
 			if ( ! isset( $question[ self::TRACKING_KEY ] ) ) {
-				$success                      = false;
-				$errors[ self::TRACKING_KEY ] = sprintf( __( '%s is required for each question', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
+				$success                        = false;
+				$errors[ self::TRACKING_KEY ][] = sprintf( __( '%s is required for each question', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
 				break;
 			}
 
 			if ( ! in_array( $question[ self::TRACKING_KEY ], array( self::FLAG_NEW, self::FLAG_UPDATE, self::FLAG_NO_CHANGE ), true ) ) {
-				$success                      = false;
-				$errors[ self::TRACKING_KEY ] = sprintf( __( 'Invalid value for %s', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
+				$success                        = false;
+				$errors[ self::TRACKING_KEY ][] = sprintf( __( 'Invalid value for %s', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
 				break;
 			}
 
 			if ( ! isset( $question['question_settings'] ) || ! is_array( $question['question_settings'] ) ) {
-				$success                     = false;
-				$errors['question_settings'] = __( 'Question settings is required with array data', 'tutor' );
+				$success                       = false;
+				$errors['question_settings'][] = __( 'Question settings is required with array data', 'tutor' );
 				break;
 			}
 		}
@@ -255,7 +255,7 @@ class QuizBuilder {
 	}
 
 	/**
-	 * Handle delete.
+	 * Handle delete questions and answers.
 	 *
 	 * @since 3.0.0
 	 *
@@ -283,32 +283,26 @@ class QuizBuilder {
 	}
 
 	/**
-	 * Create or update quiz from new course builder.
+	 * Create or update quiz.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return void json response.
+	 * @param int   $topic_id topic id.
+	 * @param array $payload payload.
+	 *
+	 * @return object consist success, errors.
 	 */
-	public function ajax_quiz_builder_save() {
-		tutor_utils()->checking_nonce();
-
-		$payload    = $_POST['payload'] ?? array(); //phpcs:ignore
-		if ( is_string( $payload ) ) {
-			$payload = json_decode( wp_unslash( $payload ), true );
-		}
-
-		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
-		$topic_id   = Input::post( 'topic_id', 0, Input::TYPE_INT );
-		$course_cls = new Course( false );
-
-		$course_cls->check_access( $course_id );
+	public function save_quiz( $topic_id, $payload ) {
+		$success = true;
+		$data    = null;
+		$errors  = array();
 
 		$validation = $this->validate_payload( $payload );
+
 		if ( ! $validation->success ) {
-			$this->json_response(
-				tutor_utils()->error_message( 'validation_error' ),
-				$validation->errors,
-				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			return (object) array(
+				'success' => false,
+				'errors'  => $validation->errors,
 			);
 		}
 
@@ -355,17 +349,52 @@ class QuizBuilder {
 			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids );
 
 			$wpdb->query( 'COMMIT' );
+
+			$data = $quiz_id;
+
 		} catch ( \Throwable $th ) {
 			$wpdb->query( 'ROLLBACK' );
 
-			$this->json_response(
-				__( 'Something went wrong', 'tutor' ),
-				$th->getMessage(),
-				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
-			);
+			$success         = false;
+			$errors['500'][] = $th->getMessage();
 		}
 
-		$quiz_details = QuizModel::get_quiz_details( $quiz_id );
-		$this->json_response( __( 'Quiz saved successfully', 'tutor' ), $quiz_details );
+		return (object) array(
+			'success' => $success,
+			'data'    => $data,
+			'errors'  => $errors,
+		);
+	}
+
+	/**
+	 * Create or update quiz from new course builder.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void json response.
+	 */
+	public function ajax_quiz_builder_save() {
+		tutor_utils()->checking_nonce();
+
+		$payload    = $_POST['payload'] ?? array(); //phpcs:ignore
+		if ( is_string( $payload ) ) {
+			$payload = json_decode( wp_unslash( $payload ), true );
+		}
+
+		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$topic_id   = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$course_cls = new Course( false );
+
+		$course_cls->check_access( $course_id );
+
+		$result = $this->save_quiz( $topic_id, $payload );
+		if ( $result->success ) {
+			$quiz_id      = $result->data;
+			$quiz_details = QuizModel::get_quiz_details( $quiz_id );
+			$this->json_response( __( 'Quiz saved successfully', 'tutor' ), $quiz_details );
+		} else {
+			$this->json_response( __( 'Error', 'tutor' ), $result->errors, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
 	}
 }
