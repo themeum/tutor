@@ -282,7 +282,6 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    background-color: ${colorTokens.background.white};
   `,
   leftIcon: ({
     hasDescription = false,
