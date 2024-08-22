@@ -43,8 +43,8 @@
 			"@OrderContexts/*": ["assets/react/v3/entries/order-details/contexts/*"],
 			"@CouponComponents/*": ["assets/react/v3/entries/coupon-details/components/*"],
 			"@CouponServices/*": ["assets/react/v3/entries/coupon-details/services/*"],
-			"@CouponAtoms/*": ["assets/react/v3/entries/coupon-details/atoms/*"],
-			"@CouponContexts/*": ["assets/react/v3/entries/coupon-details/contexts/*"]
+			"@EnrollmentComponents/*": ["assets/react/v3/entries/pro/manual-enrollment/components/*"],
+			"@EnrollmentServices/*": ["assets/react/v3/entries/pro/manual-enrollment/services/*"]
 		}
 	},
 	"include": ["./assets/react/v3"],

@@ -42,6 +42,7 @@ export type ModalProps = {
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
   actions?: React.ReactNode;
+  zIndex?: number;
 };
 
 type ModalContextType = {
@@ -74,6 +75,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
       isMagicAi?: boolean;
+      zIndex?: number;
     }[];
   }>({
     modals: [],
@@ -97,7 +99,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   const closeModal = useCallback<ModalContextType['closeModal']>((data = { action: 'CLOSE' }) => {
     setState((previousState) => {
       const lastModal = previousState.modals[previousState.modals.length - 1];
-      lastModal.resolve(data);
+      lastModal?.resolve(data);
       return {
         ...previousState,
         modals: previousState.modals.slice(0, previousState.modals.length - 1),
@@ -120,9 +122,16 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       {children}
       {transitions((style, modal) => {
         return (
-          <div css={styles.container}>
+          <div
+            css={[
+              styles.container,
+              {
+                zIndex: modal.zIndex,
+              },
+            ]}
+          >
             <AnimatedDiv style={style} hideOnOverflow={false}>
-              {React.createElement(modal.component, { ...modal.props, closeModal })}
+              {React.createElement(modal.component, { ...modal.props, closeModal, zIndex: modal.zIndex })}
             </AnimatedDiv>
             <div
               css={styles.backdrop({ magicAi: modal.isMagicAi })}

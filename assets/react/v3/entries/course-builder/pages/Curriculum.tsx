@@ -66,7 +66,7 @@ const Curriculum = () => {
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [content, setContent] = useState<CourseTopicWithCollapse[]>([]);
-  const [currentExpandedTopic, setCurrentExpandedTopic] = useState<ID>('');
+  const [currentExpandedTopics, setCurrentExpandedTopics] = useState<ID[]>([]);
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
@@ -80,13 +80,17 @@ const Curriculum = () => {
     if (!courseCurriculumQuery.data) {
       return;
     }
-    setContent(
-      courseCurriculumQuery.data.map((item, index) => ({
+    setContent((previousContent) => {
+      if (!previousContent.length) {
+        setCurrentExpandedTopics([courseCurriculumQuery.data[0].id]);
+      }
+
+      return courseCurriculumQuery.data.map((item, index) => ({
         ...item,
-        isCollapsed: currentExpandedTopic ? currentExpandedTopic !== item.id : index > 0,
+        isCollapsed: previousContent.length ? !currentExpandedTopics.includes(item.id) : index !== 0,
         isSaved: true,
-      })),
-    );
+      }));
+    });
   }, [courseCurriculumQuery.data]);
 
   const activeSortItem = useMemo(() => {
@@ -110,13 +114,6 @@ const Curriculum = () => {
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
   }
-
-  const createDuplicateTopic = (data: CourseTopic) => {
-    setContent((previousTopic) => {
-      const newTopic = { ...data, ID: nanoid(), isCollapsed: false, isSaved: false };
-      return [...previousTopic, newTopic];
-    });
-  };
 
   return (
     <CourseDetailsProvider>
@@ -238,26 +235,37 @@ const Curriculum = () => {
                           <Topic
                             key={topic.id}
                             topic={topic}
-                            onDelete={() => setContent((previous) => previous.filter((_, idx) => idx !== index))}
+                            onDelete={() => {
+                              setContent((previous) => previous.filter((_, idx) => idx !== index));
+                              setCurrentExpandedTopics((previousTopics) =>
+                                previousTopics.filter((id) => id !== topic.id),
+                              );
+                            }}
                             onCollapse={(topicId) => {
                               setContent((previous) =>
                                 previous.map((item) => {
                                   if (item.id === topicId) {
-                                    setCurrentExpandedTopic(
-                                      item.isCollapsed ? topicId : currentExpandedTopic === topicId ? '' : topicId,
-                                    );
                                     return { ...item, isCollapsed: !item.isCollapsed };
                                   }
-
                                   return item;
                                 }),
                               );
+
+                              setCurrentExpandedTopics((previousTopics) =>
+                                previousTopics.includes(topicId)
+                                  ? previousTopics.filter((id) => id !== topicId)
+                                  : [...previousTopics, topicId],
+                              );
                             }}
-                            onCopy={() => {
-                              createDuplicateTopic(topic);
+                            onCopy={(topicId) => {
+                              setCurrentExpandedTopics([topicId]);
                             }}
                             onEdit={(topicId) => {
-                              setCurrentExpandedTopic(topicId);
+                              setCurrentExpandedTopics((previousTopics) =>
+                                previousTopics.includes(topicId)
+                                  ? previousTopics.filter((id) => id !== topicId)
+                                  : [...previousTopics, topicId],
+                              );
                             }}
                             onSort={(activeIndex, overIndex) => {
                               const previousContent = content;

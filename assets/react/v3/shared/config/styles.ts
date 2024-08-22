@@ -197,6 +197,12 @@ export const colorTokens = {
     black: '#092844',
   },
 
+  ai: {
+    gradient_1:
+      'linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%)',
+    gradient_2:
+      'linear-gradient(71.97deg, #FF9645 18.57%, #FF6471 63.71%, #CF6EBD 87.71%, #9B62D4 107.71%, #3E64DE 132.85%)',
+  },
   text: {
     primary: '#212327',
     title: '#41454f',

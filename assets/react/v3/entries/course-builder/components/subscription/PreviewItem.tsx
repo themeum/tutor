@@ -28,7 +28,7 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
     <div css={styles.item}>
       <p css={styles.title}>
         {subscription.plan_name}
-        <Show when={subscription.is_recommended}>
+        <Show when={subscription.is_featured}>
           <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
         </Show>
       </p>
@@ -50,13 +50,12 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
 
         <Show when={subscription.payment_type !== 'onetime'}>
           <Show
-            when={subscription.plan_duration === 'Until cancelled'}
+            when={subscription.recurring_limit === 'Until cancelled'}
             fallback={
               <>
                 <span>•</span>
                 <span>
-                  {subscription.plan_duration.toString().padStart(2, '0')}{' '}
-                  {formatRepeatUnit(subscription.recurring_interval, Number(subscription.plan_duration))}
+                  {subscription.recurring_limit.toString().padStart(2, '0')} {__('Times', 'tutor')}
                 </span>
               </>
             }

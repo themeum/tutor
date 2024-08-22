@@ -18,7 +18,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -54,6 +54,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { useToast } from '@Atoms/Toast';
 import Tooltip from '@Atoms/Tooltip';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
@@ -74,7 +75,7 @@ import { moveTo, noop } from '@Utils/util';
 interface TopicProps {
   topic: CourseTopicWithCollapse;
   onDelete?: () => void;
-  onCopy?: () => void;
+  onCopy?: (topicId: ID) => void;
   onSort?: (activeIndex: number, overIndex: number) => void;
   onCollapse?: (topicId: ID) => void;
   onEdit?: (topicId: ID) => void;
@@ -220,12 +221,16 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     opacity: isDragging ? 0.3 : undefined,
   };
 
-  const handleDuplicateTopic = () => {
-    duplicateContentMutation.mutate({
+  const handleDuplicateTopic = async () => {
+    const response = await duplicateContentMutation.mutateAsync({
       course_id: courseId,
       content_id: topic.id,
       content_type: 'topic',
     });
+
+    if (response.data) {
+      onCopy?.(response.data);
+    }
   };
 
   const handleSubmit = async (values: TopicForm) => {
@@ -237,7 +242,9 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     });
 
     if (response.data) {
-      onEdit?.(response.data);
+      if (response.status_code === 201) {
+        onEdit?.(response.data);
+      }
       setIsEdit(false);
     }
   };
@@ -270,7 +277,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
             isDeletePopoverOpen,
           })}
         >
-          <div css={styles.headerContent}>
+          <div
+            css={styles.headerContent({
+              isSaved: topic.isSaved,
+            })}
+          >
             <div
               css={styles.grabberInput({ isOverlay })}
               onClick={() => onCollapse?.(topic.id)}
@@ -312,7 +323,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
             </div>
             <div css={styles.actions}>
               <Show when={!isEdit}>
-                <Tooltip content={__('Edit', 'tutor')}>
+                <Tooltip content={__('Edit', 'tutor')} delay={200}>
                   <button
                     type="button"
                     css={styles.actionButton}
@@ -330,20 +341,22 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 </Tooltip>
               </Show>
               <Show when={topic.isSaved}>
-                <Tooltip content={__('Duplicate', 'tutor')}>
-                  <button
-                    type="button"
-                    css={styles.actionButton}
-                    disabled={!topic.isSaved}
-                    data-visually-hidden
-                    onClick={handleDuplicateTopic}
-                  >
-                    <SVGIcon name="copyPaste" width={24} height={24} />
-                  </button>
-                </Tooltip>
+                <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
+                  <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      disabled={!topic.isSaved}
+                      data-visually-hidden
+                      onClick={handleDuplicateTopic}
+                    >
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </Tooltip>
+                </Show>
               </Show>
               <Show when={topic.isSaved}>
-                <Tooltip content={__('Delete', 'tutor')}>
+                <Tooltip content={__('Delete', 'tutor')} delay={200}>
                   <button
                     type="button"
                     css={styles.actionButton}
@@ -363,8 +376,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 triggerRef={deleteRef}
                 closePopover={() => setIsDeletePopoverOpen(false)}
                 maxWidth="258px"
-                title={`Delete topic "${topic.title}"`}
-                message="Are you sure you want to delete this content from your course? This cannot be undone."
+                title={sprintf(__('Delete topic "%s"', 'tutor'), topic.title)}
+                message={__(
+                  'Are you sure you want to delete this content from your course? This cannot be undone.',
+                  'tutor',
+                )}
                 animationType={AnimationType.slideUp}
                 arrow="auto"
                 hideArrow
@@ -777,9 +793,13 @@ const styles = {
     `
     }
   `,
-  headerContent: css`
+  headerContent: ({
+    isSaved = true,
+  }: {
+    isSaved: boolean;
+  }) => css`
     display: grid;
-    grid-template-columns: 8fr 1fr;
+    grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
     width: 100%;
   `,
