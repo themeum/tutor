@@ -143,7 +143,16 @@ const ImageAnswering = () => {
                       const duplicateIndex = index + 1;
                       insertOption(duplicateIndex, duplicateOption);
                     }}
-                    onRemoveOption={() => removeOption(index)}
+                    onRemoveOption={() => {
+                      removeOption(index);
+
+                      if (option._data_status !== 'new') {
+                        form.setValue('deleted_answer_ids', [
+                          ...form.getValues('deleted_answer_ids'),
+                          option.answer_id,
+                        ]);
+                      }
+                    }}
                     index={index}
                   />
                 )}

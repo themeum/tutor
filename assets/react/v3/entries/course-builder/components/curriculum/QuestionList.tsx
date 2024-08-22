@@ -313,6 +313,13 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                     onRemoveQuestion={() => {
                       removeQuestion(index);
                       setActiveQuestionId('');
+
+                      if (question._data_status !== 'new') {
+                        form.setValue('deleted_question_ids', [
+                          ...form.getValues('deleted_question_ids'),
+                          question.question_id,
+                        ]);
+                      }
                     }}
                   />
                 )}

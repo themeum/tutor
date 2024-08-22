@@ -122,7 +122,16 @@ const Matching = () => {
                   <FormMatching
                     {...controllerProps}
                     index={index}
-                    onRemoveOption={() => removeOption(index)}
+                    onRemoveOption={() => {
+                      removeOption(index);
+
+                      if (option._data_status !== 'new') {
+                        form.setValue('deleted_answer_ids', [
+                          ...form.getValues('deleted_answer_ids'),
+                          option.answer_id,
+                        ]);
+                      }
+                    }}
                     onDuplicateOption={(data) => {
                       const duplicateOption: QuizQuestionOption = {
                         ...data,

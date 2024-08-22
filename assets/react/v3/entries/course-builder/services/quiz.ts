@@ -94,6 +94,8 @@ interface QuizPayload {
   course_id: ID;
   topic_id: ID;
   payload: QuizResponseWithStatus;
+  deleted_question_ids?: ID[];
+  deleted_answer_ids?: ID[];
 }
 
 export interface QuizDetailsResponse {
@@ -154,6 +156,8 @@ export interface QuizForm {
     };
   };
   questions: QuizQuestion[];
+  deleted_question_ids: ID[];
+  deleted_answer_ids: ID[];
 }
 
 interface QuizUpdateQuestionPayload {
@@ -279,6 +283,8 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       },
     },
     questions: (quiz.questions || []).map((question) => convertedQuestion(question)),
+    deleted_question_ids: [],
+    deleted_answer_ids: [],
   };
 };
 
@@ -364,6 +370,8 @@ export const convertQuizFormDataToPayload = (
         };
       }),
     },
+    deleted_question_ids: formData.deleted_question_ids,
+    deleted_answer_ids: formData.deleted_answer_ids,
     // quiz_title: formData.quiz_title,
     // quiz_description: formData.quiz_description,
     // 'quiz_option[time_limit][time_value]': formData.quiz_option.time_limit.time_value,
@@ -514,6 +522,8 @@ export const useSaveQuizMutation = () => {
     mutationFn: saveQuiz,
     onSuccess: (response) => {
       if (response.data) {
+        queryClient.setQueryData(['Quiz', response.data.ID], response.data);
+
         queryClient.invalidateQueries({
           queryKey: ['Topic'],
         });

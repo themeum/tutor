@@ -6,12 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import {
-  type QuizDataStatus,
-  type QuizQuestionOption,
-  calculateQuizDataStatus,
-  useMarkAnswerAsCorrectMutation,
-} from '@CourseBuilderServices/quiz';
+import { type QuizQuestionOption, useMarkAnswerAsCorrectMutation } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -19,9 +14,10 @@ import { nanoid } from '@Utils/util';
 
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
+  onCheckCorrectAnswer: () => void;
 }
 
-const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
+const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProps) => {
   const { activeQuestionId, quizId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
@@ -46,13 +42,14 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
   };
 
   const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
-      }),
-      is_correct: '1',
-    });
+    onCheckCorrectAnswer();
+    // field.onChange({
+    //   ...inputValue,
+    //   ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+    //     _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+    //   }),
+    //   is_correct: '1',
+    // });
 
     // markAnswerAsCorrectMutation.mutate({
     //   answerId: inputValue.answer_id,

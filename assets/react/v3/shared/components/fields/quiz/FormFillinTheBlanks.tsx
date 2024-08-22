@@ -43,7 +43,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
-  const [previousValue] = useState<QuizQuestionOption>(inputValue);
+  const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const totalDashesInTitle = inputValue.answer_title?.match(/{dash}/g)?.length || 0;
   const totalAnswers = inputValue.answer_two_gap_match?.split('|').length || 0;
@@ -259,6 +259,15 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                         _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        is_saved: true,
+                      }),
+                    });
+
+                    setPreviousValue({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        is_saved: true,
                       }),
                     });
 
