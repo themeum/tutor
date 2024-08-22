@@ -226,7 +226,6 @@ const MultipleChoiceAndOrdering = () => {
                         onRemoveOption={() => removeOption(index)}
                         onCheckCorrectAnswer={() => {
                           if (hasMultipleCorrectAnswer) {
-                            console.log('when hasMultipleCorrectAnswer');
                             updateOption(index, {
                               ...item,
                               ...(calculateQuizDataStatus(item._data_status, 'update') && {
@@ -235,7 +234,6 @@ const MultipleChoiceAndOrdering = () => {
                               is_correct: item.is_correct === '1' ? '0' : '1',
                             });
                           } else {
-                            console.log('when not hasMultipleCorrectAnswer');
                             const updatedOptions = currentOptions.map((option) => ({
                               ...option,
                               ...(calculateQuizDataStatus(option._data_status, 'update') && {

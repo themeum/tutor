@@ -1,6 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import config, { tutorConfig } from '@Config/config';
+import { TutorRoles } from '@Config/constants';
 import {
   borderRadius,
   colorPalate,
@@ -32,7 +33,7 @@ const courseId = getCourseId();
 const Header = () => {
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
-  const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private'>(
+  const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private' | 'trash'>(
     form.watch('post_status'),
   );
 
@@ -45,7 +46,10 @@ const Header = () => {
   const postDate = useWatch({ name: 'post_date' });
   const isPostDateDirty = form.formState.dirtyFields.post_date;
 
-  const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future') => {
+  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const hasTrashAccess = tutorConfig.settings.instructor_can_delete_course === 'on' || isAdmin;
+
+  const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
       Promise.resolve().then(() => {
         form.trigger(field);
@@ -78,11 +82,10 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     const determinePostStatus = () => {
-      console.log({
-        postVisibility,
-        postDate,
-        postStatus,
-      });
+      if (postStatus === 'trash') {
+        return 'trash';
+      }
+
       if (postVisibility === 'private') {
         return 'private';
       }
@@ -153,7 +156,9 @@ const Header = () => {
 
     const moveToTrashItem = {
       text: <>{__('Move to trash', 'tutor')}</>,
-      onClick: () => alert('@TODO: will be implemented later.'),
+      onClick: () => {
+        form.handleSubmit((data) => handleSubmit(data, 'trash'))();
+      },
       isDanger: true,
     };
 

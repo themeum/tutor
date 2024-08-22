@@ -329,7 +329,6 @@ export const convertQuizFormDataToPayload = (
           }),
       },
       questions: formData.questions.map((question) => {
-        console.log('question', question);
         return {
           _data_status: question._data_status,
           question_id: question.question_id,
