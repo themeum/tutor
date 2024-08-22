@@ -25,7 +25,6 @@ import {
   convertQuizResponseToFormData,
   useGetQuizDetailsQuery,
   useSaveQuizMutation,
-  useUpdateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
 
 import { modal } from '@Config/constants';
@@ -62,13 +61,11 @@ const courseId = getCourseId();
 const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
-  const [localQuizId, setLocalQuizId] = useState<ID>(quizId || '');
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
   const saveQuizMutation = useSaveQuizMutation();
-  const getQuizDetailsQuery = useGetQuizDetailsQuery(localQuizId);
-  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(localQuizId);
+  const getQuizDetailsQuery = useGetQuizDetailsQuery(quizId || '');
 
   const { showToast } = useToast();
 
@@ -103,8 +100,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
 
-  // console.log(isFormDirty);
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
@@ -133,16 +128,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     form.reset(convertedData);
   }, [getQuizDetailsQuery.data]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (localQuizId) {
-      getQuizDetailsQuery.refetch();
-    }
-  }, [localQuizId]);
-
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
-
-  // const formData = form.watch();
 
   const onQuizFormSubmit = async (data: QuizForm, activeQuestionIndex: number) => {
     if (!data.quiz_title) {
@@ -198,7 +184,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
     if (response.data) {
       setIsEdit(false);
-      setLocalQuizId(response.data.ID);
       closeModal({ action: 'CONFIRM' });
     }
   };
@@ -270,17 +255,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                           await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
                           return;
                         }
-
-                        // const payload = form.watch(`questions.${activeQuestionIndex}`);
-
-                        // try {
-                        //   await updateQuizQuestionMutation.mutateAsync(
-                        //     convertQuizQuestionFormDataToPayloadForUpdate(payload),
-                        //   );
-                        // } catch (error) {
-                        //   console.log(error);
-                        //   return;
-                        // }
 
                         await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
                       }}
@@ -373,7 +347,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                         </Show>
                       </div>
 
-                      <QuestionList quizId={localQuizId} />
+                      <QuestionList quizId={quizId} />
                     </Show>
                   </div>
                 </Show>

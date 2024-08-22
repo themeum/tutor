@@ -288,12 +288,6 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
               if (active.id !== over.id) {
                 const activeIndex = questionFields.findIndex((item) => item.question_id === active.id);
                 const overIndex = questionFields.findIndex((item) => item.question_id === over.id);
-
-                // const updatedQuestionOrder = moveTo(form.watch('questions'), activeIndex, overIndex);
-                // quizQuestionSortingMutation.mutate({
-                //   quiz_id: quizId,
-                //   sorted_question_ids: updatedQuestionOrder.map((question) => question.question_id),
-                // });
                 moveQuestion(activeIndex, overIndex);
               }
 
@@ -372,8 +366,6 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
                 disabled={option.isPro && !tutorConfig.tutor_pro_url}
                 onClick={() => {
                   handleAddQuestion(option.value as QuizQuestionType);
-                  // createQuizQuestion.mutate(quizId, { question_type: option.value });
-                  // setIsOpen(false);
                 }}
               >
                 <SVGIcon name={option.icon as IconCollection} width={24} height={24} />

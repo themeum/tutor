@@ -9,19 +9,12 @@ import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import {
-  type QuizForm,
-  type QuizQuestion,
-  type QuizQuestionType,
-  useDeleteQuizQuestionMutation,
-  useUpdateQuizQuestionMutation,
-} from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 import { useToast } from '@Atoms/Toast';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -44,32 +37,11 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   ordering: 'quizOrdering',
 };
 
-const courseId = getCourseId();
-
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
   const { showToast } = useToast();
-
-  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(quizId);
-  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation(quizId);
-
-  // const handleDuplicateQuestion = () => {
-  //   duplicateContentMutation.mutate({
-  //     course_id: courseId,
-  //     content_id: question.question_id,
-  //     content_type: 'question',
-  //   });
-  //   setSelectedQuestionId('');
-  // };
-
-  // const handleDeleteQuestion = () => {
-  //   deleteQuizQuestionMutation.mutate(question.question_id);
-  //   onRemoveQuestion();
-  //   setSelectedQuestionId('');
-  // };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -94,15 +66,6 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
         const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
 
-        // const currentQuestionType = () => {
-        //   const questionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-
-        //   if (questionType === 'multiple_choice' && !hasMultipleAnswers) {
-        //     return 'single_choice';
-        //   }
-        //   return questionType;
-        // };
-
         if (['multiple_choice', 'true_false'].includes(activeQuestionType)) {
           if (answers.length === 0) {
             showToast({
@@ -123,16 +86,10 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
           }
         }
 
-        // const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
-        // updateQuizQuestionMutation.mutate(payload);
-
         setActiveQuestionId(question.question_id);
       }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          // const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
-          // updateQuizQuestionMutation.mutate(payload);
-
           setActiveQuestionId(question.question_id);
         }
       }}
@@ -179,7 +136,6 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
           icon={<SVGIcon name="delete" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            // handleDeleteQuestion();
             onRemoveQuestion();
             setSelectedQuestionId('');
           }}

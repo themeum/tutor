@@ -27,7 +27,6 @@ import {
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
-  useQuizQuestionAnswerOrderingMutation,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
@@ -35,9 +34,7 @@ import { noop } from '@Utils/util';
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
-
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
+  const { activeQuestionIndex } = useQuizModalContext();
 
   const {
     fields: optionsFields,
@@ -47,17 +44,6 @@ const TrueFalse = () => {
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
-
-  // const filteredOptionsFields = optionsFields.reduce(
-  //   (allOptions, option, index) => {
-  //     if (option.belongs_question_type === 'true_false') {
-  //       allOptions.push({ ...option, index: index });
-  //     }
-
-  //     return allOptions;
-  //   },
-  //   [] as Array<QuizQuestionOption & { index: number }>,
-  // );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -132,17 +118,6 @@ const TrueFalse = () => {
           if (active.id !== over.id) {
             const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
             const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
-
-            // const updatedOptionsOrder = moveTo(
-            //   form.watch(`questions.${activeQuestionIndex}.question_answers`),
-            //   activeIndex,
-            //   overIndex,
-            // );
-
-            // quizQuestionAnswerOrderingMutation.mutate({
-            //   question_id: activeQuestionId,
-            //   sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
-            // });
 
             moveOption(activeIndex, overIndex);
           }

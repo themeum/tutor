@@ -6,7 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizQuestionOption, useMarkAnswerAsCorrectMutation } from '@CourseBuilderServices/quiz';
+import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -28,8 +28,6 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProp
     belongs_question_type: 'true_false',
   };
 
-  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
-
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value.answer_id || 0,
     animateLayoutChanges,
@@ -41,22 +39,6 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProp
     opacity: isDragging ? 0.3 : undefined,
   };
 
-  const handleCorrectAnswer = () => {
-    onCheckCorrectAnswer();
-    // field.onChange({
-    //   ...inputValue,
-    //   ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-    //     _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
-    //   }),
-    //   is_correct: '1',
-    // });
-
-    // markAnswerAsCorrectMutation.mutate({
-    //   answerId: inputValue.answer_id,
-    //   isCorrect: '1',
-    // });
-  };
-
   return (
     <div
       {...attributes}
@@ -64,7 +46,7 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProp
       ref={setNodeRef}
       style={style}
     >
-      <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
+      <button type="button" css={styleUtils.resetButton} onClick={onCheckCorrectAnswer}>
         <SVGIcon
           data-check-icon
           name={Number(field.value.is_correct) ? 'checkFilled' : 'check'}

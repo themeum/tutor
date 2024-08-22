@@ -9,25 +9,12 @@ import { styleUtils } from '@Utils/style-utils';
 
 const FillInTheBlanks = () => {
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex } = useQuizModalContext();
 
   const { fields: optionsFields } = useFieldArray({
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
-
-  // const filteredOptionFields = optionsFields.reduce(
-  //   (allOptions, option, index) => {
-  //     if (option?.belongs_question_type === 'fill_in_the_blank') {
-  //       allOptions.push({
-  //         ...option,
-  //         index: index,
-  //       });
-  //     }
-  //     return allOptions;
-  //   },
-  //   [] as Array<QuizQuestionOption & { index: number }>,
-  // );
 
   return (
     <div css={styles.optionWrapper}>

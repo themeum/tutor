@@ -48,7 +48,6 @@ export interface QuizQuestionOption {
   answer_order: number;
 }
 
-// Define a base interface for common properties
 export interface QuizQuestion {
   _data_status: QuizDataStatus;
   question_id: ID;
@@ -376,24 +375,6 @@ export const convertQuizFormDataToPayload = (
     },
     deleted_question_ids: formData.deleted_question_ids,
     deleted_answer_ids: formData.deleted_answer_ids,
-    // quiz_title: formData.quiz_title,
-    // quiz_description: formData.quiz_description,
-    // 'quiz_option[time_limit][time_value]': formData.quiz_option.time_limit.time_value,
-    // 'quiz_option[time_limit][time_type]': formData.quiz_option.time_limit.time_type,
-    // 'quiz_option[feedback_mode]': formData.quiz_option.feedback_mode,
-    // 'quiz_option[attempts_allowed]': formData.quiz_option.attempts_allowed,
-    // 'quiz_option[passing_grade]': formData.quiz_option.passing_grade,
-    // 'quiz_option[max_questions_for_answer]': formData.quiz_option.max_questions_for_answer,
-    // 'quiz_option[question_layout_view]': formData.quiz_option.question_layout_view,
-    // 'quiz_option[questions_order]': formData.quiz_option.questions_order,
-    // 'quiz_option[short_answer_characters_limit]': formData.quiz_option.short_answer_characters_limit,
-    // 'quiz_option[open_ended_answer_characters_limit]': formData.quiz_option.open_ended_answer_characters_limit,
-    // 'quiz_option[hide_quiz_time_display]': formData.quiz_option.hide_quiz_time_display ? 1 : 0,
-    // ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-    //   contentDripType === 'unlock_sequentially' &&
-    //   formData.quiz_option.feedback_mode === 'retry' && {
-    //     'quiz_option[pass_is_required]': formData.quiz_option.pass_is_required ? 1 : 0,
-    //   }),
   };
 };
 

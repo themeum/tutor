@@ -10,12 +10,7 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import {
-  type QuizDataStatus,
-  type QuizQuestionOption,
-  calculateQuizDataStatus,
-  useSaveQuizAnswerMutation,
-} from '@CourseBuilderServices/quiz';
+import { type QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
@@ -40,8 +35,6 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const fillInTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
 
-  const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
@@ -53,28 +46,6 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
     inputValue.answer_two_gap_match &&
     totalDashesInTitle !== totalAnswers
   );
-
-  // const createQuizAnswer = async () => {
-  //   const response = await createQuizAnswerMutation.mutateAsync({
-  //     ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-  //     question_id: inputValue.belongs_question_id,
-  //     answer_title: inputValue.answer_title,
-  //     answer_two_gap_match: inputValue.answer_two_gap_match,
-  //     image_id: inputValue.image_id || '',
-  //     question_type: 'fill_in_the_blank',
-  //   });
-
-  //   if (response.status_code === 201 || response.status_code === 200) {
-  //     setIsEditing(false);
-
-  //     if (!inputValue.answer_id && response.data) {
-  //       field.onChange({
-  //         ...inputValue,
-  //         answer_id: response.data,
-  //       });
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
@@ -165,7 +136,6 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                           _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
                         }),
                       });
-                      // await createQuizAnswer();
                       setIsEditing(false);
                     }
                   }}
@@ -202,7 +172,6 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   }}
                   onKeyDown={async (event) => {
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_two_gap_match) {
-                      // await createQuizAnswer();
                       field.onChange({
                         ...inputValue,
                         ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
@@ -254,7 +223,6 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     if (hasError) {
                       return;
                     }
-                    // await createQuizAnswer();
                     field.onChange({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {

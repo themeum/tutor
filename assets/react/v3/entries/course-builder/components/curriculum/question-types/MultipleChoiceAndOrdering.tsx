@@ -45,15 +45,6 @@ const MultipleChoiceAndOrdering = () => {
   });
 
   const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-  // const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
-  //   if (currentQuestionType === 'multiple_choice') {
-  //     return hasMultipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
-  //   }
-
-  //   return 'ordering';
-  // };
-
-  // const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
   const {
     fields: optionsFields,
@@ -135,17 +126,6 @@ const MultipleChoiceAndOrdering = () => {
           if (active.id !== over.id) {
             const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
             const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
-
-            // const updatedOptionsOrder = moveTo(
-            //   form.watch(`questions.${activeQuestionIndex}.question_answers`),
-            //   activeIndex,
-            //   overIndex,
-            // );
-
-            // quizQuestionAnswerOrderingMutation.mutate({
-            //   question_id: activeQuestionId,
-            //   sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
-            // });
 
             moveOption(activeIndex, overIndex);
           }

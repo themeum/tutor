@@ -58,10 +58,7 @@ const Header = () => {
     };
 
     if (data.course_price_type === 'paid') {
-      if (
-        (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'edd') &&
-        !data.course_product_id
-      ) {
+      if (tutorConfig.settings.monetize_by === 'edd' && !data.course_product_id) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
@@ -81,12 +78,23 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     const determinePostStatus = () => {
+      console.log({
+        postVisibility,
+        postDate,
+        postStatus,
+      });
+      if (postVisibility === 'private') {
+        return 'private';
+      }
+
+      if (postStatus === 'future' && postVisibility !== 'private') {
+        return 'future';
+      }
+
       if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
         return 'publish';
       }
-      if (postVisibility === 'private' && postStatus !== 'draft' && postStatus !== 'future') {
-        return 'private';
-      }
+
       return postStatus;
     };
 

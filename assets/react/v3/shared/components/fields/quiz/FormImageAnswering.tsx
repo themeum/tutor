@@ -3,17 +3,14 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
 import {
   type QuizDataStatus,
-  type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
-  useDeleteQuizAnswerMutation,
   useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 
@@ -21,8 +18,6 @@ import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -35,11 +30,8 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
   onRemoveOption: () => void;
 }
 
-const courseId = getCourseId();
-
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
-  const form = useFormContext<QuizForm>();
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
+  const { activeQuestionId, quizId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
     answer_id: nanoid(),
@@ -51,8 +43,6 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
   const inputRef = useRef<HTMLInputElement>(null);
 
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
@@ -100,41 +90,6 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
       image_url: '',
     });
   };
-
-  // const handleDuplicateAnswer = async () => {
-  //   const response = await duplicateContentMutation.mutateAsync({
-  //     course_id: courseId,
-  //     content_id: inputValue.answer_id,
-  //     content_type: 'answer',
-  //   });
-  //   if (response.data) {
-  //     onDuplicateOption?.(response.data);
-  //   }
-  // };
-
-  // const createQuizAnswer = async () => {
-  //   const response = await createQuizAnswerMutation.mutateAsync({
-  //     ...(inputValue.answer_id && {
-  //       answer_id: inputValue.answer_id,
-  //     }),
-  //     question_id: inputValue.belongs_question_id,
-  //     answer_title: inputValue.answer_title,
-  //     image_id: inputValue.image_id || '',
-  //     answer_view_format: 'text_image',
-  //     question_type: 'image_answering',
-  //   });
-
-  //   if (response.status_code === 201 || response.status_code === 200) {
-  //     setIsEditing(false);
-
-  //     if (!inputValue.answer_id && response.data) {
-  //       field.onChange({
-  //         ...inputValue,
-  //         answer_id: response.data,
-  //       });
-  //     }
-  //   }
-  // };
 
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
@@ -198,7 +153,6 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  // deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                   onRemoveOption();
                 }}
               >
@@ -269,7 +223,6 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   onKeyDown={async (event) => {
                     event.stopPropagation();
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
-                      // await createQuizAnswer();
                       field.onChange({
                         ...inputValue,
                         ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
@@ -311,7 +264,6 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    // await createQuizAnswer();
                     field.onChange({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {

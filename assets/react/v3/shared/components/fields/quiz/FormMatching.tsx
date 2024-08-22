@@ -14,7 +14,6 @@ import {
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
-  useDeleteQuizAnswerMutation,
   useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 
@@ -22,8 +21,6 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -34,8 +31,6 @@ interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
 }
-
-const courseId = getCourseId();
 
 const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
   const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
@@ -58,8 +53,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   });
 
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
@@ -110,40 +103,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
     });
   };
 
-  // const createQuizAnswer = async () => {
-  //   const response = await createQuizAnswerMutation.mutateAsync({
-  //     ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-  //     question_id: inputValue.belongs_question_id,
-  //     answer_title: inputValue.answer_title,
-  //     image_id: inputValue.image_id || '',
-  //     answer_view_format: 'text_image',
-  //     matched_answer_title: inputValue.answer_two_gap_match,
-  //     question_type: imageMatching ? 'image_matching' : 'matching',
-  //   });
-
-  //   if (response.status_code === 201 || response.status_code === 200) {
-  //     setIsEditing(false);
-
-  //     if (!inputValue.answer_id && response.data) {
-  //       field.onChange({
-  //         ...inputValue,
-  //         answer_id: response.data,
-  //       });
-  //     }
-  //   }
-  // };
-
-  // const handleDuplicateAnswer = async () => {
-  //   const response = await duplicateContentMutation.mutateAsync({
-  //     course_id: courseId,
-  //     content_id: inputValue.answer_id,
-  //     content_type: 'answer',
-  //   });
-  //   if (response.data) {
-  //     onDuplicateOption?.(response.data);
-  //   }
-  // };
-
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
       inputRef.current.focus();
@@ -193,7 +152,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 onClick={(event) => {
                   event.stopPropagation();
                   onDuplicateOption(inputValue);
-                  // handleDuplicateAnswer();
                 }}
               >
                 <SVGIcon name="copyPaste" width={24} height={24} />
@@ -204,7 +162,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  // deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                   onRemoveOption();
                 }}
               >
@@ -289,7 +246,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     inputValue.answer_title &&
                     inputValue.answer_two_gap_match
                   ) {
-                    // await createQuizAnswer();
                     field.onChange({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
@@ -327,7 +283,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       inputValue.answer_title &&
                       inputValue.answer_two_gap_match
                     ) {
-                      // await createQuizAnswer();
                       field.onChange({
                         ...inputValue,
                         ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
@@ -377,7 +332,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       is_saved: true,
                     });
                     setIsEditing(false);
-                    // await createQuizAnswer();
                   }}
                   disabled={
                     !inputValue.answer_title ||
