@@ -865,6 +865,17 @@ class Course extends Tutor_Base {
 			$this->json_response( __( 'Invalid input', 'tutor' ), $errors, HttpHelper::STATUS_UNPROCESSABLE_ENTITY );
 		}
 
+		/**
+		 * Can trash a course when user is admin or option `instructor_can_delete_course` is turned on.
+		 */
+		if ( CourseModel::STATUS_TRASH === $params['post_status'] ) {
+			if ( User::is_admin() || tutor_utils()->get_option( 'instructor_can_delete_course', false ) ) {
+				$params['post_status'] = CourseModel::STATUS_TRASH;
+			} else {
+				unset( $params['post_status'] );
+			}
+		}
+
 		$params['ID'] = $course_id;
 		$update_id    = wp_update_post( $params, false );
 		if ( is_wp_error( $update_id ) ) {
