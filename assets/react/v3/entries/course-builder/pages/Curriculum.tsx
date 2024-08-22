@@ -77,9 +77,10 @@ const Curriculum = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (!courseCurriculumQuery.data) {
+    if (!courseCurriculumQuery.data?.length) {
       return;
     }
+
     setContent((previousContent) => {
       if (!previousContent.length) {
         setCurrentExpandedTopics([courseCurriculumQuery.data[0].id]);
