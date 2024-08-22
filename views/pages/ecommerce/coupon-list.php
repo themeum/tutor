@@ -99,11 +99,8 @@ $filters = array(
 							<th>
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</th>
-							<th>
+							<th colspan="2">
 								<?php esc_html_e( 'Uses', 'tutor' ); ?>
-							</th>
-							<th  width="10%">
-							<?php esc_html_e( 'Action', 'tutor' ); ?>
 							</th>
 						</tr>
 					</thead>
@@ -157,15 +154,12 @@ $filters = array(
 											<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
+											<?php if ( 'trash' === $active_tab ) : ?>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 												</button>
 												<div id="table-dashboard-coupon-list-<?php echo esc_attr( $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-													<!-- <a class="tutor-dropdown-item" href="javascript:void">
-														<i class="tutor-icon-copy tutor-mr-8" area-hidden="true"></i>
-														<span><?php esc_html_e( 'Duplicate', 'tutor' ); ?></span>
-													</a> -->
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-delete-permanently"
 														data-tutor-modal-target="tutor-common-confirmation-modal" data-action="tutor_coupon_permanent_delete" data-id="<?php echo esc_attr( $coupon->id ); ?>">
 														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
@@ -175,6 +169,7 @@ $filters = array(
 													</a>
 												</div>
 											</div>
+											<?php endif ?>
 										</div>
 									</td>
 								</tr>
