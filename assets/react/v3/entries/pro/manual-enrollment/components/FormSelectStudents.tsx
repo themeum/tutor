@@ -79,7 +79,6 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                 onFocus={() => setIsOpen(true)}
                 onChange={setSearchText}
                 disabled={disabled}
-                isClearable
               />
               <Button
                 variant="tertiary"
@@ -113,6 +112,7 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                       name={item.display_name}
                       email={item.user_email}
                       avatar={item.avatar_url}
+                      isSelected={!!students.find((student) => student.ID === item.ID)}
                       onItemClick={() => handleItemClick(item)}
                     />
                   ))
