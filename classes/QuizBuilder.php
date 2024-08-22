@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
@@ -254,6 +255,34 @@ class QuizBuilder {
 	}
 
 	/**
+	 * Handle delete.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $deleted_question_ids question ids.
+	 * @param array $deleted_answer_ids answer ids.
+	 *
+	 * @return void
+	 */
+	public function handle_delete( $deleted_question_ids = array(), $deleted_answer_ids = array() ) {
+		global $wpdb;
+		$deleted_question_ids = array_filter( $deleted_question_ids, 'is_numeric' );
+		$deleted_answer_ids   = array_filter( $deleted_answer_ids, 'is_numeric' );
+
+		if ( count( $deleted_question_ids ) ) {
+			$id_str = QueryHelper::prepare_in_clause( $deleted_question_ids );
+            //phpcs:ignore -- sanitized $id_str.
+            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id IN (" . $id_str . ')' );
+		}
+
+		if ( count( $deleted_answer_ids ) ) {
+			$id_str = QueryHelper::prepare_in_clause( $deleted_answer_ids );
+            //phpcs:ignore -- sanitized $id_str.
+            $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE answer_id IN (" . $id_str . ')' );
+		}
+	}
+
+	/**
 	 * Create or update quiz from new course builder.
 	 *
 	 * @since 3.0.0
@@ -319,6 +348,11 @@ class QuizBuilder {
 			if ( count( $questions ) ) {
 				$this->save_questions( $quiz_id, $questions );
 			}
+
+			// Delete questions and answers.
+			$deleted_question_ids = Input::post( 'deleted_question_ids', array(), Input::TYPE_ARRAY );
+			$deleted_answer_ids   = Input::post( 'deleted_answer_ids', array(), Input::TYPE_ARRAY );
+			$this->handle_delete( $deleted_question_ids, $deleted_answer_ids );
 
 			$wpdb->query( 'COMMIT' );
 		} catch ( \Throwable $th ) {
