@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 
 /**
@@ -68,6 +70,7 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
+		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) );
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
@@ -82,7 +85,7 @@ $filters = array(
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Title', 'tutor' ); ?>
+								<?php esc_html_e( 'Name', 'tutor' ); ?>
 							</th>
 							<th>
 								<?php esc_html_e( 'Discount', 'tutor' ); ?>
@@ -122,15 +125,15 @@ $filters = array(
 											<?php echo esc_html( $coupon->coupon_title ); ?>
 										</div>
 									</td>
-									
+
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( $coupon->discount_amount ); ?>
+											<?php echo esc_html( 'flat' === $coupon->discount_type ? $currency_symbol . $coupon->discount_amount : $coupon->discount_amount . '%' ); ?>
 										</div>
 									</td>
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( $coupon->discount_type ); ?>
+											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Amount', 'tutor' ) : __( 'Percent', 'tutor' ) ); ?>
 										</div>
 									</td>
 
@@ -173,7 +176,6 @@ $filters = array(
 												</div>
 											</div>
 										</div>
-										
 									</td>
 								</tr>
 							<?php endforeach; ?>
