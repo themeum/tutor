@@ -1,7 +1,7 @@
 {
     "version": "1.0.0",
-    "name": "ahamed/payment-hub",
-    "description": "Global payment gateway implementation for wp and joomla",
+    "name": "themeum/tutor",
+    "description": "Global payment gateway implementation for Tutor",
     "type": "library",
     "license": "MIT",
     "autoload": {
@@ -9,12 +9,6 @@
             "Ollyo\\PaymentHub\\": "src/"
         }
     },
-    "authors": [
-        {
-            "name": "sajeeb ahamed",
-            "email": "sajeeb07ahamed@gmail.com"
-        }
-    ],
     "require": {
         "guzzlehttp/guzzle": "^7.8"
     }
