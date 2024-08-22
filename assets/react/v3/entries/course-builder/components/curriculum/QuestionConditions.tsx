@@ -10,7 +10,12 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import {
+  type QuizDataStatus,
+  type QuizForm,
+  type QuizQuestionType,
+  calculateQuizDataStatus,
+} from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 
@@ -57,6 +62,7 @@ const QuestionConditions = () => {
     QuizQuestionType,
     'single_choice' | 'image_matching'
   >;
+  const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   if (!activeQuestionId) {
     return (
@@ -79,11 +85,15 @@ const QuestionConditions = () => {
         <div css={typography.caption('medium')}>{__('Question Type', 'tutor')}</div>
         <div css={styles.questionType}>
           <SVGIcon
-            name={questionTypes[activeQuestionType as keyof typeof questionTypes].icon as IconCollection}
+            name={
+              activeQuestionType
+                ? (questionTypes[activeQuestionType as keyof typeof questionTypes].icon as IconCollection)
+                : 'quizTrueFalse'
+            }
             width={32}
             height={32}
           />
-          <span>{questionTypes[activeQuestionType as keyof typeof questionTypes].label}</span>
+          <span>{activeQuestionType ? questionTypes[activeQuestionType as keyof typeof questionTypes].label : ''}</span>
         </div>
       </div>
 
@@ -98,7 +108,17 @@ const QuestionConditions = () => {
                 `questions.${activeQuestionIndex}.question_settings.has_multiple_correct_answer` as 'questions.0.question_settings.has_multiple_correct_answer'
               }
               render={(controllerProps) => (
-                <FormSwitch {...controllerProps} label={__('Multiple Correct Answer', 'tutor')} />
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Multiple Correct Answer', 'tutor')}
+                  onChange={() => {
+                    calculateQuizDataStatus(activeDataStatus, 'update') &&
+                      form.setValue(
+                        `questions.${activeQuestionIndex}._data_status`,
+                        calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      );
+                  }}
+                />
               )}
             />
           </Show>
@@ -109,7 +129,19 @@ const QuestionConditions = () => {
               name={
                 `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching'
               }
-              render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Image Matching', 'tutor')} />}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Image Matching', 'tutor')}
+                  onChange={() => {
+                    calculateQuizDataStatus(activeDataStatus, 'update') &&
+                      form.setValue(
+                        `questions.${activeQuestionIndex}._data_status`,
+                        calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      );
+                  }}
+                />
+              )}
             />
           </Show>
 
@@ -118,7 +150,19 @@ const QuestionConditions = () => {
             name={
               `questions.${activeQuestionIndex}.question_settings.answer_required` as 'questions.0.question_settings.answer_required'
             }
-            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Answer Required', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormSwitch
+                {...controllerProps}
+                label={__('Answer Required', 'tutor')}
+                onChange={() => {
+                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
+              />
+            )}
           />
 
           <Controller
@@ -126,12 +170,26 @@ const QuestionConditions = () => {
             name={
               `questions.${activeQuestionIndex}.question_settings.randomize_options` as 'questions.0.question_settings.randomize_options'
             }
-            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Randomize Choice', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormSwitch
+                {...controllerProps}
+                label={__('Randomize Choice', 'tutor')}
+                onChange={() => {
+                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
+              />
+            )}
           />
 
           <Controller
             control={form.control}
-            name={`questions.${activeQuestionIndex}.question_mark` as 'questions.0.question_mark'}
+            name={
+              `questions.${activeQuestionIndex}.question_settings.question_mark` as 'questions.0.question_settings.question_mark'
+            }
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
@@ -143,6 +201,13 @@ const QuestionConditions = () => {
                 style={css`
                   max-width: 72px;
                 `}
+                onChange={() => {
+                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
               />
             )}
           />
@@ -152,7 +217,19 @@ const QuestionConditions = () => {
             name={
               `questions.${activeQuestionIndex}.question_settings.show_question_mark` as 'questions.0.question_settings.show_question_mark'
             }
-            render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Display Points', 'tutor')} />}
+            render={(controllerProps) => (
+              <FormSwitch
+                {...controllerProps}
+                label={__('Display Points', 'tutor')}
+                onChange={() => {
+                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
+              />
+            )}
           />
         </div>
       </div>
