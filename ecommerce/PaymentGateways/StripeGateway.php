@@ -37,7 +37,7 @@ class StripeGateway extends GatewayBase {
 	private $config_class = StripeConfig::class;
 
 	/**
-	 * Payment gateway config class
+	 * Payment core class
 	 *
 	 * @since 3.0.0
 	 *
