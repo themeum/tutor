@@ -21,7 +21,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * AI generator TextController class
+ * Text controller class.
+ * This class is responsible for generating text content using openai.
  *
  * @since 3.0.0
  */
@@ -56,24 +57,32 @@ class TextController {
 	}
 
 	/**
-	 * Generate image using the user prompt and the styles
+	 * Generating the text content from a user prompt, along with the tone, format, language, etc.
 	 *
 	 * @return void
 	 * @since 3.0.0
 	 */
 	public function generate_text_content() {
 		tutor_utils()->check_nonce();
-		$is_html = Input::post( 'is_html', false, Input::TYPE_BOOL );
+
+		$input = array(
+			'prompt'     => Input::post( 'prompt', '' ),
+			'tone'       => Input::post( 'tone', 'formal' ),
+			'format'     => Input::post( 'format', 'essay' ),
+			'language'   => Input::post( 'language', 'english' ),
+			'characters' => Input::post( 'characters', 250 ),
+			'is_html'    => Input::post( 'is_html', false, Input::TYPE_BOOL ),
+		);
 
 		try {
-			$client   = Helper::get_client();
+			$client   = Helper::get_openai_client();
 			$response = $client->chat()->create(
 				Helper::create_openai_chat_input(
-					Prompts::prepare_text_generation_messages()
+					Prompts::prepare_text_generation_messages( $input )
 				)
 			);
 			$content  = $response->choices[0]->message->content;
-			$content  = $is_html ? Helper::markdown_to_html( $content ) : $content;
+			$content  = $input['is_html'] ? Helper::markdown_to_html( $content ) : $content;
 
 			$this->json_response( __( 'Content generated', 'tutor' ), $content );
 		} catch ( Exception $error ) {
@@ -82,7 +91,8 @@ class TextController {
 	}
 
 	/**
-	 * Modify the text content by using openai
+	 * Modify previously generated text content by using openai.
+	 * You can modify the tone, language, even make the content shorter or longer and also rephrase the content.
 	 *
 	 * @return void
 	 * @throws InvalidArgumentException If the provided payloads are not valid.
@@ -99,6 +109,20 @@ class TextController {
 			throw new InvalidArgumentException( sprintf( 'There is no such a type %s exists.', esc_html( $type ) ) );
 		}
 
+		$arguments = array(
+			Input::post( 'content', '' ),
+			Input::post( 'is_html', false, Input::TYPE_BOOL ),
+		);
+
+		switch ( $type ) {
+			case 'change_tone':
+				$arguments[] = Input::post( 'tone', '' );
+				break;
+			case 'translation':
+				$arguments[] = Input::post( 'language', '' );
+				break;
+		}
+
 		$method = 'prepare_' . $type . '_messages';
 
 		if ( ! method_exists( Prompts::class, $method ) ) {
@@ -112,11 +136,11 @@ class TextController {
 		}
 
 		$input = Helper::create_openai_chat_input(
-			Prompts::$method()
+			call_user_func_array( array( Prompts::class, $method ), $arguments )
 		);
 
 		try {
-			$client   = Helper::get_client();
+			$client   = Helper::get_openai_client();
 			$response = $client->chat()->create( $input );
 			$content  = $response->choices[0]->message->content;
 			$content  = $is_html ? Helper::markdown_to_html( $content ) : $content;

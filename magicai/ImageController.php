@@ -23,7 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * OrderController class
+ * Image controller class.
+ * This class is responsible for generating image using openai.
  *
  * @since 3.0.0
  */
@@ -70,7 +71,6 @@ class ImageController {
 	 * @param string $prompt The user prompt for generating image.
 	 * @param string $style The style of the output image.
 	 * @return string
-	 *
 	 * @since 3.0.0
 	 */
 	private static function generate_prompt( $prompt, $style ) {
@@ -132,7 +132,7 @@ class ImageController {
 		);
 
 		try {
-			$client   = Helper::get_client();
+			$client   = Helper::get_openai_client();
 			$response = $client->images()->create( $input );
 			$response = $response->toArray();
 
@@ -171,7 +171,7 @@ class ImageController {
 		);
 
 		try {
-			$client   = Helper::get_client();
+			$client   = Helper::get_openai_client();
 			$response = $client->images()->edit( $input );
 			$response = $response->toArray();
 

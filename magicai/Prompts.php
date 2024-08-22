@@ -10,11 +10,8 @@
 
 namespace Tutor\MagicAI;
 
-use TUTOR\Input;
-use Tutor\MagicAI\Constants\Models;
-
 /**
- * Helper class for generating AI prompts for text generation
+ * Helper class for generating AI prompts used by openai.
  *
  * @since 3.0.0
  */
@@ -22,18 +19,11 @@ final class Prompts {
 	/**
 	 * Create the system message for generating text content using tone, format, language, etc.
 	 *
+	 * @param array $input The request payload inputs for generating the prompt.
 	 * @return string
 	 * @since   3.0.0
 	 */
-	private static function create_system_message() {
-		$input = array(
-			'tone'       => Input::post( 'tone', 'formal' ),
-			'format'     => Input::post( 'format', 'essay' ),
-			'language'   => Input::post( 'language', 'english' ),
-			'characters' => Input::post( 'characters', 250 ),
-			'is_html'    => Input::post( 'is_html', false, Input::TYPE_BOOL ),
-		);
-
+	private static function create_system_message( array $input ) {
 		$system_content = 'You are a friendly and helpful assistant. You will be provided a prompt, and your task to generate a {format}. The content will be in the {language} language and has a {tone} tone. Make sure the content will not exceed the length of {characters} characters.';
 
 		if ( ! $input['is_html'] ) {
@@ -50,20 +40,19 @@ final class Prompts {
 	/**
 	 * Prepare the input array for generating text content from the request prompt.
 	 *
+	 * @param array $input The request payload inputs for generating the prompt.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_text_generation_messages() {
-		$prompt = Input::post( 'prompt', '' );
-
+	public static function prepare_text_generation_messages( array $input ) {
 		return array(
 			array(
 				'role'    => 'system',
-				'content' => self::create_system_message(),
+				'content' => self::create_system_message( $input ),
 			),
 			array(
 				'role'    => 'user',
-				'content' => $prompt,
+				'content' => $input['prompt'],
 			),
 		);
 	}
@@ -71,13 +60,13 @@ final class Prompts {
 	/**
 	 * Prepare the input array for translating content to a specific language.
 	 *
+	 * @param string $content The content to modify.
+	 * @param bool   $is_html If the should come in HTML or plain text.
+	 * @param string $language The target language.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_translation_messages() {
-		$content        = Input::post( 'content', '' );
-		$language       = Input::post( 'language', '' );
-		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
+	public static function prepare_translation_messages( string $content, bool $is_html, string $language ) {
 		$system_content = 'Your task is to translate the provided text into {language}. Identify the original language if needed and ensure the translation accurately conveys the meaning of the original content.';
 		$system_content = str_replace( '{language}', $language, $system_content );
 
@@ -100,12 +89,12 @@ final class Prompts {
 	/**
 	 * Prepare the input array for rephrasing content
 	 *
+	 * @param string $content The content to modify.
+	 * @param bool   $is_html If the should come in HTML or plain text.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_rephrase_messages() {
-		$content        = Input::post( 'content', '' );
-		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
+	public static function prepare_rephrase_messages( string $content, bool $is_html ) {
 		$system_content = 'Your task is to rephrase any text content provided to you, ensuring that the original meaning is preserved while expressing it differently.';
 
 		if ( ! $is_html ) {
@@ -127,12 +116,12 @@ final class Prompts {
 	/**
 	 * Prepare the input array for making the content shorten.
 	 *
+	 * @param string $content The content to modify.
+	 * @param bool   $is_html If the should come in HTML or plain text.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_make_shorter_messages() {
-		$content        = Input::post( 'content', '' );
-		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
+	public static function prepare_make_shorter_messages( string $content, bool $is_html ) {
 		$system_content = 'Your task is to condense the provided text, retaining the key points and meaning while making the content as concise as possible.';
 
 		if ( ! $is_html ) {
@@ -154,13 +143,13 @@ final class Prompts {
 	/**
 	 * Prepare the input array for changing the tone of the content.
 	 *
+	 * @param string $content The content to modify.
+	 * @param bool   $is_html If the should come in HTML or plain text.
+	 * @param string $tone  The target content tone.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_change_tone_messages() {
-		$content        = Input::post( 'content', '' );
-		$tone           = Input::post( 'tone', '' );
-		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
+	public static function prepare_change_tone_messages( string $content, bool $is_html, string $tone ) {
 		$system_content = "Your task is to change the tone of the provided text to match the specified style, which is {tone}. Ensure that the content's meaning remains consistent while reflecting this new tone.";
 		$system_content = str_replace( '{tone}', $tone, $system_content );
 
@@ -183,12 +172,12 @@ final class Prompts {
 	/**
 	 * Prepare the input array for converting the content into bullet points.
 	 *
+	 * @param string $content The content to modify.
+	 * @param bool   $is_html If the should come in HTML or plain text.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_write_as_bullets_messages() {
-		$content        = Input::post( 'content', '' );
-		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
+	public static function prepare_write_as_bullets_messages( string $content, bool $is_html ) {
 		$system_content = 'Your task is to rewrite the provided text as bullet points. Ensure that each point is clear and concise while preserving the original meaning.';
 
 		if ( ! $is_html ) {
@@ -210,12 +199,12 @@ final class Prompts {
 	/**
 	 * Prepare the input array for making the content larger.
 	 *
+	 * @param string $content The content to modify.
+	 * @param bool   $is_html If the should come in HTML or plain text.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_make_longer_messages() {
-		$content        = Input::post( 'content', '' );
-		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
+	public static function prepare_make_longer_messages( string $content, bool $is_html ) {
 		$system_content = 'Your task is to expand the provided text, adding more detail and depth while maintaining the original meaning and intent.';
 
 		if ( ! $is_html ) {
@@ -237,12 +226,12 @@ final class Prompts {
 	/**
 	 * Prepare the input array for simplifying the language of the generated content.
 	 *
+	 * @param string $content The content to modify.
+	 * @param bool   $is_html If the should come in HTML or plain text.
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public static function prepare_simplify_language_messages() {
-		$content        = Input::post( 'content', '' );
-		$is_html        = Input::post( 'is_html', false, Input::TYPE_BOOL );
+	public static function prepare_simplify_language_messages( string $content, bool $is_html ) {
 		$system_content = 'Your task is to simplify the language of the provided text, making it easier to understand while preserving the original meaning.';
 
 		if ( ! $is_html ) {
@@ -264,11 +253,11 @@ final class Prompts {
 	/**
 	 * Prepare the input array for creating the course title.
 	 *
+	 * @param string $prompt The input prompt for generating course title.
 	 * @return array
+	 * @since 3.0.0
 	 */
-	public static function prepare_course_title_messages() {
-		$prompt = Input::post( 'prompt' );
-
+	public static function prepare_course_title_messages( string $prompt ) {
 		return array(
 			array(
 				'role'    => 'system',
@@ -286,6 +275,7 @@ final class Prompts {
 	 *
 	 * @param string $title The course title.
 	 * @return array
+	 * @since 3.0.0
 	 */
 	public static function prepare_course_description_messages( string $title ) {
 		return array(
@@ -305,6 +295,7 @@ final class Prompts {
 	 *
 	 * @param string $title The course title.
 	 * @return array
+	 * @since 3.0.0
 	 */
 	public static function prepare_course_topic_names_messages( string $title ) {
 		$system_content = 'You are an AI assistant specialized in generating course module names. You are tasked with generating course module names for a given course title. Based on this course title, create at least 5 module names that follow a logical progression, starting with introductory topics and moving toward more advanced concepts. Ensure that the module names include standard course elements like an introduction, a course outline, and a conclusion. The names should be clear, concise, and directly related to the content of the course. Return the module names as a JSON array in the format: [{name: "Module Name"}].';
@@ -327,6 +318,7 @@ final class Prompts {
 	 * @param string $title The course title.
 	 * @param string $topic_name The topic name.
 	 * @return array
+	 * @since 3.0.0
 	 */
 	public static function prepare_course_topic_content_messages( string $title, string $topic_name ) {
 		$system_content = "You are an AI assistant specialized in generating course contents. Generate minimum 2 to maximum 5 content items based on the provided course title and module name. The content can include any of the following types: 'lesson', 'quiz', or 'assignment'. For each content item, provide a title and a description that accurately reflects the content. Return the generated content as a JSON array with the structure: [{type: `lesson|quiz|assignment`, title: 'the content title', description: 'the content description'}].";

@@ -15,14 +15,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * MagicAI content generation controller base class
+ * The base class for instantiating the controllers.
+ * The controllers are responsible for generating text, image, course contents by using openai.
  *
  * @since 3.0.0
  */
 class MagicAI {
 
 	/**
-	 * The constructor method for instantiating the AI Controllers
+	 * The constructor method for instantiating the AI Controllers.
 	 *
 	 * @since 3.0.0
 	 */

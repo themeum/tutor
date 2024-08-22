@@ -38,7 +38,7 @@ final class Helper {
 	 * @throws RuntimeException If openai api key is not found.
 	 * @since 3.0.0
 	 */
-	public static function get_client() {
+	public static function get_openai_client() {
 		if ( is_null( self::$client ) ) {
 			$api_key = tutor_utils()->get_option( 'chatgpt_api_key' );
 
