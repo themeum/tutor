@@ -19,6 +19,9 @@ const couponTypeOptions = [
 ];
 
 function CouponInfo() {
+	const params = new URLSearchParams(window.location.search);
+  	const courseId = params.get('coupon_id');
+
 	const form = useFormContext<Coupon>();
 	const couponType = form.watch('coupon_type');
 
@@ -44,6 +47,7 @@ function CouponInfo() {
 						label={__('Deduction type', 'tutor')}
 						options={couponTypeOptions}
 						wrapperCss={styles.radioWrapper}
+						disabled={!!courseId}
 					/>
 				)}
 			/>
@@ -71,12 +75,15 @@ function CouponInfo() {
 								{...controllerProps}
 								label={__('Coupon code', 'tutor')}
 								placeholder={__('SUMMER20', 'tutor')}
+								disabled={!!courseId}
 							/>
 						)}
 					/>
-					<Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
-						{__('Generate code', 'tutor')}
-					</Button>
+					{!courseId && (
+						<Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
+							{__('Generate code', 'tutor')}
+						</Button>
+					)}
 				</div>
 			)}
 		</Box>

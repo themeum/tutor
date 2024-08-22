@@ -99,6 +99,7 @@ export interface GetCouponResponse {
 	per_user_usage_limit: string | null;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
 	purchase_requirement_value?: string;
+	coupon_usage: number;
 	start_date_gmt: string;
 	expire_date_gmt: string | null;
 	created_at_gmt: string;
