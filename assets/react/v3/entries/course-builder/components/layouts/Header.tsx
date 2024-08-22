@@ -157,7 +157,10 @@ const Header = () => {
     const moveToTrashItem = {
       text: <>{__('Move to trash', 'tutor')}</>,
       onClick: () => {
-        form.handleSubmit((data) => handleSubmit(data, 'trash'))();
+        if (hasTrashAccess) {
+          form.handleSubmit((data) => handleSubmit(data, 'trash'))();
+          window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`;
+        }
       },
       isDanger: true,
     };
