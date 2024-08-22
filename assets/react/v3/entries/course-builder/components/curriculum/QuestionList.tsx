@@ -156,11 +156,14 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
       }
 
       const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-      if (['true_false', 'multiple_choice'].includes(questionType) && !hasCorrectAnswer) {
+      const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+
+      if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
         showToast({
           message: __('Please select a correct answer', 'tutor'),
           type: 'danger',
         });
+        setIsOpen(false);
         return;
       }
     }
@@ -252,7 +255,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
   }
 
   return (
-    <>
+    <div>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
         <Show when={!createQuizQuestion.isPending} fallback={<LoadingSpinner size={32} />}>
@@ -382,7 +385,7 @@ const QuestionList = ({ quizId }: QuestionListProps) => {
           </div>
         </Popover>
       </div>
-    </>
+    </div>
   );
 };
 
@@ -413,7 +416,8 @@ const styles = {
     }
   `,
   questionList: css`
-    padding: ${spacing[8]} ${spacing[20]};
+    ${styleUtils.overflowYAuto};
+    padding: ${spacing[8]} 0 ${spacing[8]} ${spacing[20]};
   `,
   questionTypeOptionsTitle: css`
     ${typography.caption('medium')};

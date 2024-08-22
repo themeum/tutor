@@ -31,6 +31,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 
+import Tooltip from '@Atoms/Tooltip';
 import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
 import { tutorConfig } from '@Config/config';
 import { requiredRule } from '@Utils/validation';
@@ -157,25 +158,28 @@ export default function SubscriptionItem({
 
         <div css={styles.actions(subscription.isExpanded)}>
           <Show when={!subscription.isExpanded}>
-            <button
-              type="button"
-              onClick={() => toggleCollapse(subscription.id)}
-              title={__('Edit subscription title', 'tutor')}
-            >
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
+            <Tooltip content={__('Edit plan', 'tutor')} delay={200}>
+              <button type="button" onClick={() => toggleCollapse(subscription.id)}>
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </Tooltip>
           </Show>
           <Show when={subscription.id}>
-            <button type="button" title={__('Duplicate subscription', 'tutor')} onClick={handleDuplicateSubscription}>
-              <SVGIcon name="copyPaste" width={24} height={24} />
-            </button>
-            <button type="button" title={__('Delete subscription', 'tutor')} onClick={handleDeleteSubscription}>
-              <SVGIcon name="delete" width={24} height={24} />
-            </button>
+            <Tooltip content={__('Duplicate plan', 'tutor')} delay={200}>
+              <button type="button" onClick={handleDuplicateSubscription}>
+                <SVGIcon name="copyPaste" width={24} height={24} />
+              </button>
+            </Tooltip>
+            <Tooltip content={__('Delete plan', 'tutor')} delay={200}>
+              <button type="button" onClick={handleDeleteSubscription}>
+                <SVGIcon name="delete" width={24} height={24} />
+              </button>
+            </Tooltip>
             <button
               type="button"
               onClick={() => toggleCollapse(subscription.id)}
-              title={__('Collapse/expand subscription', 'tutor')}
+              data-collapse-button
+              title={__('Collapse/expand plan', 'tutor')}
             >
               <SVGIcon name="chevronDown" width={24} height={24} />
             </button>
@@ -192,7 +196,7 @@ export default function SubscriptionItem({
                   name="plan_name"
                   rules={requiredRule()}
                   render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder="Enter subscription name" label="Subscription name" />
+                    <FormInput {...controllerProps} placeholder="Enter plan name" label="Plan name" />
                   )}
                 />
 
@@ -229,7 +233,7 @@ export default function SubscriptionItem({
                           {...controllerProps}
                           label={__('Price', 'tutor')}
                           content={tutor_currency?.symbol || '$'}
-                          placeholder={__('Subscription price', 'tutor')}
+                          placeholder={__('Plan price', 'tutor')}
                           selectOnFocus
                           contentCss={styleUtils.inputCurrencyStyle}
                         />
@@ -254,7 +258,7 @@ export default function SubscriptionItem({
                           {...controllerProps}
                           label={__('Price', 'tutor')}
                           content={tutor_currency?.symbol || '$'}
-                          placeholder={__('Subscription price', 'tutor')}
+                          placeholder={__('Plan price', 'tutor')}
                           selectOnFocus
                           contentCss={styleUtils.inputCurrencyStyle}
                         />
@@ -428,7 +432,7 @@ export default function SubscriptionItem({
                   control={form.control}
                   name="is_featured"
                   render={(controllerProps) => (
-                    <FormCheckbox {...controllerProps} label={__('Feature this subscription', 'tutor')} />
+                    <FormCheckbox {...controllerProps} label={__('Feature this plan', 'tutor')} />
                   )}
                 />
 
@@ -588,7 +592,7 @@ const styles = {
 			justify-content: center;
 			transition: color 0.3s ease;
 
-			&:last-of-type {
+			&[data-collapse-button] {
 				transition: transform 0.3s ease;
 
 				svg {

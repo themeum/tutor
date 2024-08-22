@@ -199,6 +199,7 @@ const styles = {
     isActive: boolean;
     isDragging: boolean;
   }) => css`
+    margin-right: ${spacing[20]};
     padding: ${spacing[10]} ${spacing[8]};
     display: flex;
     align-items: center;

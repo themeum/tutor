@@ -138,6 +138,7 @@ export default QuestionForm;
 const styles = {
   questionForm: css`
     ${styleUtils.display.flex('column')};
+    padding-right: ${spacing[48]};
     gap: ${spacing[16]};
     animation: fadeIn 0.25s ease-in-out;
 
@@ -171,5 +172,6 @@ const styles = {
   `,
   emptyState: css`
     padding-left: ${spacing[40]}; 
+    padding-right: ${spacing[48]};
   `,
 };
