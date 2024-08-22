@@ -22,6 +22,7 @@ import {
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -233,11 +234,13 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
             </button>
           </Tooltip>
           <Show when={type !== 'tutor_zoom_meeting' && type !== 'tutor-google-meet'}>
-            <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-              <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-            </Tooltip>
+            <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
+              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+                <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                  <SVGIcon name="copyPaste" width={24} height={24} />
+                </button>
+              </Tooltip>
+            </Show>
           </Show>
           <Tooltip content={__('Delete', 'tutor')} delay={200}>
             <button
