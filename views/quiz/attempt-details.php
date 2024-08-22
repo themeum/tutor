@@ -711,7 +711,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												<td class="result">
 												<?php
 												if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) && 'h5p_question' === $answer->question_type ) {
-													$attempt_results = \TUTOR_H5P\H5P::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
+													$attempt_results = \TUTOR_H5P\Utils::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
 													$has_response    = true;
 													if ( is_array( $attempt_results ) && 1 === count( $attempt_results ) ) {
 														if ( is_null( $attempt_results[0]->response ) ) {
