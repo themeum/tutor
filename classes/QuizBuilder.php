@@ -52,19 +52,16 @@ class QuizBuilder {
 	 * @since 3.0.0
 	 *
 	 * @param int   $quiz_id quiz id.
-	 * @param array $question question data.
+	 * @param array $input question data.
 	 *
 	 * @return array
 	 */
-	private function prepare_question_data( $quiz_id, $question ) {
-		$question_title    = Input::sanitize( $question['question_title'], '' );
-		$question_type     = Input::sanitize( $question['question_type'], '' );
-		$question_mark     = Input::sanitize( $question['question_mark'], 1, Input::TYPE_INT );
-		$question_settings = Input::sanitize_array( $question['question_settings'] );
-
-		add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
-		$question_description = Input::sanitize( $question['question_description'], '', Input::TYPE_KSES_POST );
-		remove_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
+	private function prepare_question_data( $quiz_id, $input ) {
+		$question_title       = Input::sanitize( $input['question_title'], '' );
+		$question_description = Input::sanitize( $input['question_description'] ?? '', '' );
+		$question_type        = Input::sanitize( $input['question_type'], '' );
+		$question_mark        = Input::sanitize( $input['question_mark'], 1, Input::TYPE_INT );
+		$question_settings    = Input::sanitize_array( $input['question_settings'] );
 
 		$data = array(
 			'quiz_id'              => $quiz_id,
@@ -75,7 +72,7 @@ class QuizBuilder {
 			'question_settings'    => maybe_serialize( $question_settings ),
 		);
 
-		return apply_filters( 'tutor_quiz_question_data', $data );
+		return apply_filters( 'tutor_quiz_question_data', $data, $input );
 	}
 
 	/**
@@ -83,16 +80,16 @@ class QuizBuilder {
 	 *
 	 * @param int    $question_id question id.
 	 * @param string $question_type question type.
-	 * @param array  $answer answer data.
+	 * @param array  $input answer data.
 	 *
 	 * @return array
 	 */
-	public function prepare_answer_data( $question_id, $question_type, $answer ) {
-		$answer_title         = Input::sanitize( $answer['answer_title'] ?? '', '' );
-		$is_correct           = Input::sanitize( $answer['is_correct'] ?? 0, 0, Input::TYPE_INT );
-		$image_id             = Input::sanitize( $answer['image_id'] ?? null );
-		$answer_two_gap_match = Input::sanitize( $answer['answer_two_gap_match'] ?? '' );
-		$answer_view_format   = Input::sanitize( $answer['answer_view_format'] ?? '' );
+	public function prepare_answer_data( $question_id, $question_type, $input ) {
+		$answer_title         = Input::sanitize( $input['answer_title'] ?? '', '' );
+		$is_correct           = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
+		$image_id             = Input::sanitize( $input['image_id'] ?? null );
+		$answer_two_gap_match = Input::sanitize( $input['answer_two_gap_match'] ?? '' );
+		$answer_view_format   = Input::sanitize( $input['answer_view_format'] ?? '' );
 		$answer_settings      = null;
 
 		$answer_data = array(
@@ -148,7 +145,7 @@ class QuizBuilder {
 			}
 
 			if ( self::FLAG_NO_CHANGE === $data_status ) {
-				$answer_id = $question['question_id'];
+				$question_id = $question['question_id'];
 			}
 
 			// Save sort order.
@@ -171,6 +168,7 @@ class QuizBuilder {
 					$answer_id = $wpdb->insert_id;
 				}
 
+				// Update answer.
 				if ( self::FLAG_UPDATE === $data_status ) {
 					$answer_id = $answer['answer_id'];
 					$wpdb->update(
@@ -241,6 +239,12 @@ class QuizBuilder {
 				$errors[ self::TRACKING_KEY ] = sprintf( __( 'Invalid value for %s', 'tutor' ), self::TRACKING_KEY ); //phpcs:ignore
 				break;
 			}
+
+			if ( ! isset( $question['question_settings'] ) || ! is_array( $question['question_settings'] ) ) {
+				$success                     = false;
+				$errors['question_settings'] = __( 'Question settings is required with array data', 'tutor' );
+				break;
+			}
 		}
 
 		return (object) array(
@@ -261,7 +265,7 @@ class QuizBuilder {
 
 		$payload    = $_POST['payload'] ?? array(); //phpcs:ignore
 		if ( is_string( $payload ) ) {
-			$payload = json_decode( $payload, true );
+			$payload = json_decode( wp_unslash( $payload ), true );
 		}
 
 		$course_id  = Input::post( 'course_id', 0, Input::TYPE_INT );
