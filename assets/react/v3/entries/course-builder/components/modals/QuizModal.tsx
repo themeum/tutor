@@ -142,6 +142,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
 
+  // const formData = form.watch();
+
   const onQuizFormSubmit = async (data: QuizForm, activeQuestionIndex: number) => {
     if (!data.quiz_title) {
       setActiveTab('details');
@@ -191,8 +193,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
     setIsEdit(false);
     const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId, quizId || '');
-
-    console.log(payload);
 
     const response = await saveQuizMutation.mutateAsync(payload);
 

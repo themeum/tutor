@@ -24,7 +24,12 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import type { QuizDataStatus, QuizForm, QuizQuestionOption, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import {
+  type QuizDataStatus,
+  type QuizForm,
+  type QuizQuestionOption,
+  calculateQuizDataStatus,
+} from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
 
@@ -35,18 +40,18 @@ const MultipleChoiceAndOrdering = () => {
   const { activeQuestionIndex, activeQuestionId, quizId } = useQuizModalContext();
   const hasMultipleCorrectAnswer = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.has_multiple_correct_answer` as 'questions.0.has_multiple_correct_answer',
+    name: `questions.${activeQuestionIndex}.question_settings.has_multiple_correct_answer` as 'questions.0.question_settings.has_multiple_correct_answer',
     defaultValue: false,
   });
 
   const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-  const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
-    if (currentQuestionType === 'multiple_choice') {
-      return hasMultipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
-    }
+  // const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
+  //   if (currentQuestionType === 'multiple_choice') {
+  //     return hasMultipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
+  //   }
 
-    return 'ordering';
-  };
+  //   return 'ordering';
+  // };
 
   // const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
 
@@ -60,6 +65,14 @@ const MultipleChoiceAndOrdering = () => {
   } = useFieldArray({
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers`,
+    rules: {
+      validate: (options) => {
+        if (options.length < 2) {
+          return __('At least two options are required.', 'tutor');
+        }
+        return true;
+      },
+    },
   });
 
   const sensors = useSensors(
@@ -95,12 +108,14 @@ const MultipleChoiceAndOrdering = () => {
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!hasMultipleCorrectAnswer && !isInitialRenderRef.current) {
-      const resetOptions = optionsFields.map((option) => ({
+      const resetOptions = currentOptions.map((option) => ({
         ...option,
+        ...(calculateQuizDataStatus(option._data_status, 'update') && {
+          _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+        }),
         is_correct: '0' as '0' | '1',
-        _data_status: 'update' as QuizDataStatus,
       }));
-      form.setValue(`questions.${activeQuestionIndex}.question_answers`, resetOptions);
+      replaceOption(resetOptions);
     }
     isInitialRenderRef.current = false;
   }, [hasMultipleCorrectAnswer]);
@@ -128,13 +143,21 @@ const MultipleChoiceAndOrdering = () => {
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, is_correct: '0' };
+        updatedOptions[index] = {
+          ...option,
+          ...(calculateQuizDataStatus(option._data_status, 'update') && {
+            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+          }),
+          is_correct: '0' as '0' | '1',
+        };
       }
     }
 
     replaceOption(updatedOptions);
     isInitialRenderRef.current = false;
   }, [currentOptions]);
+
+  // console.log(optionsFields);
 
   return (
     <div
@@ -183,7 +206,7 @@ const MultipleChoiceAndOrdering = () => {
           <For each={optionsFields}>
             {(option, index) => (
               <Controller
-                key={JSON.stringify(option)}
+                key={`${option.answer_id}-${option.is_correct}`}
                 control={form.control}
                 name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
                 render={(controllerProps) => (
@@ -214,7 +237,7 @@ const MultipleChoiceAndOrdering = () => {
           <DragOverlay>
             <Show when={activeSortItem}>
               {(item) => {
-                const index = optionsFields.findIndex((option) => option.answer_id === item.answer_id);
+                const index = currentOptions.findIndex((option) => option.answer_id === item.answer_id);
                 return (
                   <Controller
                     key={activeSortId}
@@ -261,7 +284,7 @@ const MultipleChoiceAndOrdering = () => {
               answer_title: '',
               is_correct: '0',
               belongs_question_id: activeQuestionId,
-              belongs_question_type: filterByQuestionType(currentQuestionType),
+              belongs_question_type: currentQuestionType,
               answer_order: optionsFields.length,
               answer_two_gap_match: '',
               answer_view_format: '',

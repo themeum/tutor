@@ -232,7 +232,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                 </div>
               </div>
               <div css={styles.optionInputButtons}>
-                <Show when={inputValue.answer_id}>
+                <Show when={inputValue.is_saved}>
                   <Button
                     variant="text"
                     size="small"
