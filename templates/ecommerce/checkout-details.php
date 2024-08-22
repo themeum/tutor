@@ -8,13 +8,17 @@
  * @since 3.0.0
  */
 
-$plan_id                  = get_query_var( 'plan', 0 );
-$plan_info                = new stdClass();
-$plan_info->title         = '';
-$plan_info->regular_price = '';
-$plan_info->sale_price    = '';
+use TUTOR\Input;
+
+$plan_id   = Input::get( 'plan', 0 );
+$plan_info = new stdClass();
 
 $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
+
+/**
+ * Course/Bundle ids to apply coupon
+ */
+$object_ids = array();
 ?>
 
 <div class="tutor-checkout-details">
@@ -25,16 +29,22 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
 
 		<div class="tutor-checkout-courses">
 			<?php
-			if ( ! empty( $plan_info->title ) && ! empty( $plan->regular_price ) ) :
-				$subtotal      = $plan_info->regular_price;
-				$regular_price = $plan_info->regular_price;
-				$sale_price    = $plan_info->sale_price;
+			if ( isset( $plan_info->plan_name, $plan_info->regular_price ) ) :
+
+				$regular_price  = $plan_info->regular_price;
+				$sale_price     = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
+				$enrollment_fee = floatval( $plan_info->enrollment_fee );
+
+				$subtotal  = $sale_price ? $sale_price : $regular_price;
+				$subtotal += $enrollment_fee;
+
+				array_push( $object_ids, $plan_info->course_id );
 				?>
 			<div class="tutor-checkout-course-item">
 				<div class="tutor-checkout-course-content">
 					<div>
 						<h6 class="tutor-checkout-course-title">
-							<?php echo esc_html( $plan_info->title ); ?>
+							<?php echo esc_html( $plan_info->plan_name ); ?>
 						</h6>
 						<div class="tutor-checkout-coupon-badge tutor-d-none">
 							<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,6 +53,7 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
 							<span>WINTERISHERE</span>
 						</div>
 					</div>
+
 					<div class="tutor-text-right">
 						<div class="tutor-fw-bold">
                             <?php echo tutor_get_formatted_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
@@ -54,6 +65,18 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
 						<?php endif; ?>
 					</div>
 				</div>
+				<?php if ( $enrollment_fee > 0 ) : ?>
+					<div class="tutor-checkout-course-content">
+						<div>
+							<?php echo esc_html_e( 'Enrollment Fee', 'tutor' ); ?>
+						</div>
+						<div class="tutor-text-right">
+							<div class="tutor-fw-bold">
+								<?php echo tutor_get_formatted_price( $enrollment_fee ); //phpcs:ignore ?>
+							</div>
+						</div>
+					</div>
+				<?php endif; ?>
 			</div>
 			<?php else : ?>
 				<?php
@@ -66,6 +89,8 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
 						$sale_price    = $course_price->sale_price;
 
 						$subtotal += $sale_price ? $sale_price : $regular_price;
+
+						array_push( $object_ids, $course->ID );
 						?>
 						<div class="tutor-checkout-course-item">
 							<?php if ( tutor()->has_pro && 'course-bundle' === $course->post_type ) : ?>
@@ -127,7 +152,7 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
 		</div>
 		<div class="tutor-checkout-coupon-form tutor-d-none">
 			<input type="text" placeholder="<?php esc_html_e( 'Add coupon code', 'tutor' ); ?>">
-			<button type="button" class="tutor-btn tutor-btn-secondary"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
+			<button type="button" class="tutor-btn tutor-btn-secondary" data-object-ids="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
 		</div>
 		<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper tutor-d-none">
 			<div class="tutor-checkout-coupon-badge tutor-has-delete-button">

@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
+use TUTOR\Input;
 
 /**
  * Coupon model class
@@ -476,8 +477,10 @@ class CouponModel {
 	public function get_user_usage_count( $coupon_code, $user_id ) {
 		return QueryHelper::get_count(
 			$this->coupon_usage_table,
-			array( 'coupon_code' => $coupon_code ),
-			array( 'user_id' => $user_id ),
+			array(
+				'coupon_code' => $coupon_code,
+				'user_id'     => $user_id,
+			),
 			array(),
 			'*'
 		);
@@ -683,6 +686,8 @@ class CouponModel {
 	 * For ex: { total_price: 60, items: [{course_id, regular_price, sale_price}]}
 	 */
 	public function apply_coupon_discount( $course_ids, $coupon_code ) {
+		$plan_id = Input::get( 'plan', 0 );
+
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
 		$response                = array();
@@ -692,7 +697,11 @@ class CouponModel {
 		$should_apply_coupon = false;
 
 		foreach ( $course_ids as $course_id ) {
-			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
+			$course_price = tutor_utils()->get_raw_course_price( $course_id );
+			if ( $plan_id ) {
+				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $plan_id );
+			}
+
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
 			$discount_price = 0;

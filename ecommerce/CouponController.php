@@ -679,11 +679,11 @@ class CouponController extends BaseController {
 	public function ajax_apply_coupon() {
 		tutor_utils()->check_nonce();
 
-		$course_ids  = Input::post( 'course_ids' );
-		$course_ids  = array_filter( explode( ',', $course_ids ), 'is_numeric' );
+		$object_ids  = Input::post( 'object_ids' ); // Course/bundle ids.
+		$object_ids  = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 		$coupon_code = Input::post( 'coupon_code' );
 
-		if ( empty( $course_ids ) ) {
+		if ( empty( $object_ids ) ) {
 			$this->json_response(
 				tutor_utils()->error_message( 'invalid_req' ),
 				null,
@@ -691,12 +691,28 @@ class CouponController extends BaseController {
 			);
 		}
 
-		$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $course_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $course_ids );
+		try {
+			$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $object_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $object_ids );
 
-		$this->json_response(
-			__( 'Coupon applied successfully', 'tutor' ),
-			$discount_price
-		);
+			if ( $discount_price->is_applied ) {
+				$this->json_response(
+					__( 'Coupon applied successfully', 'tutor' ),
+					$discount_price
+				);
+			} else {
+				$this->json_response(
+					__( 'Coupon code is not applicable!', 'tutor' ),
+					null,
+					HttpHelper::STATUS_BAD_REQUEST
+				);
+			}
+		} catch ( \Throwable $th ) {
+			$this->json_response(
+				$th->getMessage(),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
 	}
 
 	/**

@@ -52,23 +52,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData();
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-            formData.set('action', 'tutor_checkout_apply_coupon');
+            formData.set('action', 'tutor_apply_coupon');
             formData.set('coupon_code', couponCode);
+            formData.set('object_ids', checkoutCouponButton.dataset.objectIds);
 
             try {
                 checkoutCouponButton.setAttribute('disabled', 'disabled');
                 checkoutCouponButton.classList.add('is-loading');
 
                 const post = await ajaxHandler(formData);
-                const { success, data = defaultErrorMessage } = await post.json();
+                const { status_code, data, message = defaultErrorMessage } = await post.json();
 
-                if (success) {
-                    tutor_toast(__('Success', 'tutor'), data, 'success');
+                if (status_code === 200 ) {
+                    tutor_toast(__('Success', 'tutor'), message, 'success');
                     checkoutCouponWrapper.classList.remove('tutor-d-none');
                     checkoutCouponForm.classList.add('tutor-d-none');
                     // @TODO: Display coupon code and price reduction.
                 } else {
-                    tutor_toast(__('Failed', 'tutor'), data, 'error');
+                    tutor_toast(__('Failed', 'tutor'), message, 'error');
                 }
             } catch (error) {
                 tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
