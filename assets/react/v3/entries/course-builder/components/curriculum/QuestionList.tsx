@@ -1,5 +1,6 @@
 import {
   DndContext,
+  type DragEndEvent,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
@@ -243,6 +244,26 @@ const QuestionList = () => {
     insertQuestion(duplicateQuestionIndex, convertedQuestion);
   };
 
+  const handleDeleteQuestion = (index: number, question: QuizQuestion) => {
+    removeQuestion(index);
+    setActiveQuestionId('');
+
+    if (question._data_status !== 'new') {
+      form.setValue('deleted_question_ids', [...form.getValues('deleted_question_ids'), question.question_id]);
+    }
+  };
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const activeIndex = questionFields.findIndex((question) => question.question_id === active.id);
+    const overIndex = questionFields.findIndex((question) => question.question_id === over.id);
+    moveQuestion(activeIndex, overIndex);
+  };
+
   if (!form.getValues('quiz_title')) {
     return null;
   }
@@ -272,20 +293,7 @@ const QuestionList = () => {
             onDragStart={(event) => {
               setActiveSortId(event.active.id);
             }}
-            onDragEnd={(event) => {
-              const { active, over } = event;
-              if (!over) {
-                return;
-              }
-
-              if (active.id !== over.id) {
-                const activeIndex = questionFields.findIndex((item) => item.question_id === active.id);
-                const overIndex = questionFields.findIndex((item) => item.question_id === over.id);
-                moveQuestion(activeIndex, overIndex);
-              }
-
-              setActiveSortId(null);
-            }}
+            onDragEnd={(event) => handleDragEnd(event)}
           >
             <SortableContext
               items={questionFields.map((item) => ({ ...item, id: item.question_id }))}
@@ -300,17 +308,7 @@ const QuestionList = () => {
                     onDuplicateQuestion={(data) => {
                       handleDuplicateQuestion(data, index);
                     }}
-                    onRemoveQuestion={() => {
-                      removeQuestion(index);
-                      setActiveQuestionId('');
-
-                      if (question._data_status !== 'new') {
-                        form.setValue('deleted_question_ids', [
-                          ...form.getValues('deleted_question_ids'),
-                          question.question_id,
-                        ]);
-                      }
-                    }}
+                    onRemoveQuestion={() => handleDeleteQuestion(index, question)}
                   />
                 )}
               </For>

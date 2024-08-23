@@ -119,10 +119,6 @@ const FormInput = ({
 
                   const fieldValue: string | number = fieldType === 'number' ? parseNumberOnly(value) : value;
 
-                  if (maxLimit && fieldValue.toString().length >= maxLimit + 2) {
-                    return;
-                  }
-
                   field.onChange(fieldValue);
 
                   if (onChange) {
