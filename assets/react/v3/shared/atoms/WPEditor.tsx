@@ -52,7 +52,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       relative_urls: 0,
       remove_script_host: 0,
       plugins:
-        'charmap,colorpicker,hr,lists,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview',
+        'charmap,colorpicker,hr,lists,image,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview',
       skin: 'lightgray',
       submit_patch: true,
       link_context_toolbar: false,
@@ -226,7 +226,11 @@ const WPEditor = ({ value = '', onChange, isMinimal }: WPEditorProps) => {
   }, []);
 
   return (
-    <div css={styles.wrapper}>
+    <div
+      css={styles.wrapper({
+        isMinimal,
+      })}
+    >
       <textarea ref={editorRef} id={editorId} defaultValue={value} />
     </div>
   );
@@ -235,7 +239,11 @@ const WPEditor = ({ value = '', onChange, isMinimal }: WPEditorProps) => {
 export default WPEditor;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({
+    isMinimal,
+  }: {
+    isMinimal?: boolean;
+  }) => css`
     flex: 1;
 
     .wp-editor-tools {
@@ -267,6 +275,13 @@ const styles = {
       border-top-left-radius: ${borderRadius[6]};
       background-color: ${colorTokens.background.default};
       border-color: ${colorTokens.stroke.default};
+
+      ${
+        isMinimal &&
+        css`
+          border-top-right-radius: ${borderRadius[6]};
+        `
+      }
     }
 
     .mce-top-part::before {
@@ -282,6 +297,16 @@ const styles = {
     .mce-tinymce {
       box-shadow: none;
       background-color: transparent;
+    }
+
+    ${
+      isMinimal &&
+      css`
+        .mce-tinymce.mce-container {
+          border: 1px solid ${colorTokens.stroke.default};
+          border-radius: ${borderRadius[6]};
+        }
+      `
     }
 
     textarea {
