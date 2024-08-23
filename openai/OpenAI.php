@@ -11,6 +11,7 @@
 namespace Tutor\OpenAI;
 
 use Tutor\OpenAI\Factory;
+use Tutor\OpenAI\Client;
 
 /**
  * The root class for making openai client
@@ -21,10 +22,10 @@ final class OpenAI {
 	 *
 	 * @param string $api_key The api key for the openai.
 	 * @param string $organization The organization value.
-	 * @return OpenAI\Client
+	 * @return Client
 	 * @since 3.0.0
 	 */
-	public static function client( string $api_key, string $organization = null ) {
+	public static function client( string $api_key, $organization = null ) {
 		return self::factory()
 			->with_api_key( $api_key )
 			->with_organization( $organization )
@@ -39,7 +40,7 @@ final class OpenAI {
 	 * @return Factory
 	 * @since 3.0.0
 	 */
-	public static function factory() {
+	private static function factory() {
 		return new Factory();
 	}
 }

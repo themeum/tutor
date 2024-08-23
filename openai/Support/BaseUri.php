@@ -8,6 +8,8 @@
  * @since 3.0.0
  */
 
+namespace Tutor\OpenAI\Support;
+
 /**
  * The base uri generation class.
  *

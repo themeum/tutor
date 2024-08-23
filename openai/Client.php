@@ -11,12 +11,15 @@
 namespace Tutor\OpenAI;
 
 use Tutor\OpenAI\Contracts\TransporterContract;
+use Tutor\OpenAI\Resources\Chat;
+use Tutor\OpenAI\Contracts\ClientContract;
+use Tutor\OpenAI\Resources\Edits;
+use Tutor\OpenAI\Resources\Images;
 
 /**
  * The openai client
  */
 final class Client {
-
 	/**
 	 * The transporter instance with required metadata.
 	 *
@@ -37,19 +40,30 @@ final class Client {
 	/**
 	 * The image generation client instance
 	 *
-	 * @return void
+	 * @return ClientContract
 	 * @since 3.0.0
 	 */
 	public function images() {
-		// return the image client.
+		return new Images( $this->transporter );
 	}
 
 	/**
 	 * The chat completion client instance.
 	 *
-	 * @return void
+	 * @return ClientContract
+	 * @since 3.0.0
 	 */
 	public function chat() {
-		// return the chat client.
+		return new Chat( $this->transporter );
+	}
+
+	/**
+	 * The chat completion client instance.
+	 *
+	 * @return ClientContract
+	 * @since 3.0.0
+	 */
+	public function edits() {
+		return new Edits( $this->transporter );
 	}
 }

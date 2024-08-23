@@ -10,8 +10,9 @@
 
 namespace Tutor\OpenAI;
 
-use BaseUri;
-use Tutor\OpenAI\Contracts\TransporterContract;
+use Tutor\OpenAI\Client;
+use Tutor\OpenAI\Constants\ContentTypes;
+use Tutor\OpenAI\Support\BaseUri;
 use Tutor\OpenAI\Support\Header;
 use Tutor\OpenAI\Transporters\HttpTransporter;
 
@@ -116,7 +117,7 @@ final class Factory {
 		$base_uri = BaseUri::from( $this->base_uri ?? 'api.openai.com/v1' );
 		$headers  = Header::create();
 
-		$headers->with_content_type( 'application/json' );
+		$headers->with_content_type( ContentTypes::MULTIPART );
 
 		if ( ! is_null( $this->api_key ) ) {
 			$headers->with_authorization( $this->api_key );
@@ -132,10 +133,8 @@ final class Factory {
 			}
 		}
 
-		$headers = $headers->make();
-
-		$http_transport = new HttpTransporter( $base_uri, $headers );
-
-		return new Client( $http_transport );
+		return new Client(
+			new HttpTransporter( $base_uri, $headers )
+		);
 	}
 }

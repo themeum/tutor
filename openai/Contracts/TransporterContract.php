@@ -10,6 +10,9 @@
 
 namespace Tutor\OpenAI\Contracts;
 
+use Tutor\OpenAI\Support\Payload;
+use Tutor\OpenAI\Http\Response;
+
 /**
  * The transporter interface
  *
@@ -19,9 +22,8 @@ interface TransporterContract {
 	/**
 	 * Send the request to the requested endpoint
 	 *
-	 * @param string $endpoint The request endpoint.
-	 * @param array  $payload The request payload.
-	 * @return void
+	 * @param Payload $route A route instance.
+	 * @return Response
 	 */
-	public function send( string $endpoint, array $payload );
+	public function request( Payload $route );
 }

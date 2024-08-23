@@ -11,6 +11,9 @@
 namespace Tutor\OpenAI\Transporters;
 
 use Tutor\OpenAI\Contracts\TransporterContract;
+use Tutor\OpenAI\Http\Response;
+use Tutor\OpenAI\Support\Header;
+use Tutor\OpenAI\Support\Payload;
 
 /**
  * The HTTP request transporter. Use the WP transporter by default.
@@ -19,7 +22,7 @@ use Tutor\OpenAI\Contracts\TransporterContract;
  */
 final class HttpTransporter implements TransporterContract {
 	/**
-	 * The base uri
+	 * The base request uri.
 	 *
 	 * @var string|null
 	 * @since 3.0.0
@@ -29,20 +32,20 @@ final class HttpTransporter implements TransporterContract {
 	/**
 	 * The request headers
 	 *
-	 * @var array<string, string>
+	 * @var Header
 	 * @since 3.0.0
 	 */
-	private $headers = array();
+	private $headers = null;
 
 	/**
 	 * The constructor method for the HttpTransporter
 	 *
 	 * @param string $base_uri The base uri.
-	 * @param array  $headers The request headers.
+	 * @param Header $headers The request headers.
 	 *
 	 * @since 3.0.0
 	 */
-	public function __construct( string $base_uri, array $headers, ) {
+	public function __construct( string $base_uri, Header $headers ) {
 		$this->base_uri = $base_uri;
 		$this->headers  = $headers;
 	}
@@ -50,11 +53,14 @@ final class HttpTransporter implements TransporterContract {
 	/**
 	 * Send the request to the requested endpoint
 	 *
-	 * @param string $endpoint The request endpoint.
-	 * @param array  $payload The request payload.
-	 * @return void
+	 * @param Payload $payload The route instance.
+	 * @return Response
 	 */
-	public function send( string $endpoint, array $payload ) {
-		// Send the request.
+	public function request( Payload $payload ) {
+		$this->headers->with_content_type( $payload->get_content_type() );
+
+		return Response::create(
+			$payload->build( $this->base_uri, $this->headers )
+		);
 	}
 }

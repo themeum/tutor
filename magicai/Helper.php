@@ -15,6 +15,7 @@ use OpenAI\Client;
 use Parsedown;
 use RuntimeException;
 use Tutor\MagicAI\Constants\Models;
+use Tutor\OpenAI\OpenAI as OpenAIOpenAI;
 
 /**
  * Helper class for openai related functionalities.
@@ -47,6 +48,7 @@ final class Helper {
 			}
 
 			self::$client = OpenAI::client( $api_key );
+			// self::$client = OpenAIOpenAI::client( $api_key );
 		}
 
 		return self::$client;
