@@ -13,7 +13,7 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifier
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
@@ -97,9 +97,14 @@ const questionTypeOptions: {
   },
 ];
 
-const QuestionList = () => {
+const QuestionList = ({
+  isEditing,
+}: {
+  isEditing: boolean;
+}) => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
+  const questionListRef = useRef<HTMLDivElement>(null);
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
@@ -221,7 +226,7 @@ const QuestionList = () => {
         question_mark: 1,
         question_type: questionType,
         randomize_options: false,
-        show_question_mark: true,
+        show_question_mark: false,
       },
     } as QuizQuestion);
     setActiveQuestionId(questionId);
@@ -264,6 +269,20 @@ const QuestionList = () => {
     moveQuestion(activeIndex, overIndex);
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (questionListRef.current) {
+      console.log(
+        questionListRef.current.getBoundingClientRect().top,
+        window.innerHeight,
+        questionListRef.current.getBoundingClientRect().top > window.innerHeight,
+      );
+      questionListRef.current.style.maxHeight = `${
+        window.innerHeight - questionListRef.current.getBoundingClientRect().top
+      }px`;
+    }
+  }, [questionListRef.current, isEditing]);
+
   if (!form.getValues('quiz_title')) {
     return null;
   }
@@ -284,7 +303,7 @@ const QuestionList = () => {
         </Show>
       </div>
 
-      <div css={styles.questionList}>
+      <div ref={questionListRef} css={styles.questionList}>
         <Show when={questionFields.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
           <DndContext
             sensors={sensors}

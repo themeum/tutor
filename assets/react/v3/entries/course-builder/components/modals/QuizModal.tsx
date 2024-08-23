@@ -307,7 +307,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                                 <FormTextareaInput
                                   {...controllerProps}
                                   placeholder={__('Add a summary', 'tutor')}
-                                  enableResize
+                                  enableResize={false}
                                   rows={2}
                                 />
                               )}
@@ -347,7 +347,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                         </Show>
                       </div>
 
-                      <QuestionList />
+                      <QuestionList isEditing={isEdit} />
                     </Show>
                   </div>
                 </Show>
