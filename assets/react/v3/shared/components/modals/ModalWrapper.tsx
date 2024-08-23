@@ -48,7 +48,9 @@ const ModalWrapper = ({
                 <div css={styles.iconWithTitle}>
                   <Show when={icon}>{icon}</Show>
                   <Show when={title}>
-                    <h6 css={styles.title}>{title}</h6>
+                    <h6 css={styles.title} title={title}>
+                      {title}
+                    </h6>
                   </Show>
                 </div>
                 <Show when={subtitle}>
@@ -133,6 +135,7 @@ const styles = {
     display: inline-flex;
     align-items: center;
     gap: ${spacing[4]};
+    flex-shrink: 0;
     color: ${colorTokens.icon.default};
   `,
   title: css`

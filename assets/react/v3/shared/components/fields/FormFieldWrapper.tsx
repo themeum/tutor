@@ -8,6 +8,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import type { ReactNode } from 'react';
 
 interface InputOptions {
@@ -303,7 +304,11 @@ const FormFieldWrapper = <T,>({
           <Tooltip
             placement="right"
             hideOnClick={false}
-            content={characterCount.maxLimit - characterCount.inputCharacter}
+            content={
+              characterCount.maxLimit - characterCount.inputCharacter >= 0
+                ? characterCount.maxLimit - characterCount.inputCharacter
+                : __('Limit exceeded', 'tutor')
+            }
           >
             {inputContent}
           </Tooltip>

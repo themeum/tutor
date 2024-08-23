@@ -42,7 +42,7 @@ import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
-import { maxValueRule, requiredRule } from '@Utils/validation';
+import { maxLimitRule, requiredRule } from '@Utils/validation';
 
 const courseId = getCourseId();
 
@@ -257,7 +257,7 @@ const CourseBasic = () => {
             <Controller
               name="post_title"
               control={form.control}
-              rules={{ ...requiredRule(), ...maxValueRule({ maxValue: 255 }) }}
+              rules={{ ...requiredRule(), ...maxLimitRule(255) }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}

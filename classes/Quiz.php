@@ -28,6 +28,8 @@ use Tutor\Traits\JsonResponse;
 class Quiz {
 	use JsonResponse;
 
+	const META_QUIZ_OPTION = 'tutor_quiz_option';
+
 	/**
 	 * Allowed attrs
 	 *
@@ -1023,9 +1025,7 @@ class Quiz {
 	 * @return void
 	 */
 	public function ajax_quiz_details() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$quiz_id = Input::post( 'quiz_id', 0, Input::TYPE_INT );
 		if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
@@ -1036,22 +1036,7 @@ class Quiz {
 			);
 		}
 
-		$quiz              = get_post( $quiz_id );
-		$quiz->quiz_option = get_post_meta( $quiz_id, 'tutor_quiz_option', true );
-		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
-
-		if ( ! is_array( $quiz->questions ) ) {
-			$quiz->questions = array();
-		}
-
-		foreach ( $quiz->questions as $question ) {
-			$question->question_answers = QuizModel::get_question_answers( $question->question_id );
-			if ( isset( $question->question_settings ) ) {
-				$question->question_settings = maybe_unserialize( $question->question_settings );
-			}
-		}
-
-		$data = apply_filters( 'tutor_quiz_details_response', $quiz, $quiz_id );
+		$data = QuizModel::get_quiz_details( $quiz_id );
 
 		$this->json_response(
 			__( 'Quiz data fetched successfully', 'tutor' ),

@@ -546,6 +546,13 @@ final class Tutor {
 		$this->rest_auth       = new RestAuth();
 
 		/**
+		 * New Course Builder.
+		 *
+		 * @since 3.0.0
+		 */
+		new QuizBuilder();
+
+		/**
 		 * Tutor native e-commerce
 		 *
 		 * @since 3.0.0

@@ -10,17 +10,20 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizQuestionOption, useSaveQuizAnswerMutation } from '@CourseBuilderServices/quiz';
+import { type QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { nanoid } from '@Utils/util';
 
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const { activeQuestionId, quizId } = useQuizModalContext();
   const inputValue = field.value ?? {
-    answer_id: '',
+    _data_status: 'new',
+    is_saved: false,
+    answer_id: nanoid(),
     answer_title: '',
     belongs_question_id: activeQuestionId,
     belongs_question_type: 'fill_in_the_blank',
@@ -32,35 +35,17 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const fillInTheBlanksCorrectAnswer = inputValue.answer_two_gap_match?.split('|');
 
-  const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title || !inputValue.answer_two_gap_match);
-  const [previousValue] = useState<QuizQuestionOption>(inputValue);
+  const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const totalDashesInTitle = inputValue.answer_title?.match(/{dash}/g)?.length || 0;
   const totalAnswers = inputValue.answer_two_gap_match?.split('|').length || 0;
 
-  const createQuizAnswer = async () => {
-    const response = await createQuizAnswerMutation.mutateAsync({
-      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-      question_id: inputValue.belongs_question_id,
-      answer_title: inputValue.answer_title,
-      answer_two_gap_match: inputValue.answer_two_gap_match,
-      image_id: inputValue.image_id || '',
-      question_type: 'fill_in_the_blank',
-    });
-
-    if (response.status_code === 201 || response.status_code === 200) {
-      setIsEditing(false);
-
-      if (!inputValue.answer_id && response.data) {
-        field.onChange({
-          ...inputValue,
-          answer_id: response.data,
-        });
-      }
-    }
-  };
+  const hasError = !!(
+    inputValue.answer_title &&
+    inputValue.answer_two_gap_match &&
+    totalDashesInTitle !== totalAnswers
+  );
 
   useEffect(() => {
     if (isDefined(inputRef.current) && isEditing) {
@@ -74,7 +59,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
         <div css={styles.optionHeader}>
           <div css={styles.optionTitle}>{__('Fill in the blanks', 'tutor')}</div>
 
-          <Show when={inputValue.answer_id}>
+          <Show when={inputValue.is_saved}>
             <div css={styles.optionActions}>
               <button
                 type="button"
@@ -136,13 +121,21 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
                       answer_title: event.target.value,
                     });
                   }}
                   onKeyDown={async (event) => {
                     event.stopPropagation();
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
-                      await createQuizAnswer();
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                      });
                       setIsEditing(false);
                     }
                   }}
@@ -171,21 +164,25 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
                       answer_two_gap_match: event.target.value,
                     });
                   }}
                   onKeyDown={async (event) => {
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_two_gap_match) {
-                      await createQuizAnswer();
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                      });
                       setIsEditing(false);
                     }
                   }}
                 />
-                <Show
-                  when={
-                    inputValue.answer_title && inputValue.answer_two_gap_match && totalDashesInTitle !== totalAnswers
-                  }
-                >
+                <Show when={hasError}>
                   <div css={styles.errorMessage}>
                     <SVGIcon name="info" height={20} width={20} />
                     <p>
@@ -204,7 +201,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                 </div>
               </div>
               <div css={styles.optionInputButtons}>
-                <Show when={inputValue.answer_id}>
+                <Show when={inputValue.is_saved}>
                   <Button
                     variant="text"
                     size="small"
@@ -222,9 +219,29 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    await createQuizAnswer();
+
+                    if (hasError) {
+                      return;
+                    }
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        is_saved: true,
+                      }),
+                    });
+
+                    setPreviousValue({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        is_saved: true,
+                      }),
+                    });
+
+                    setIsEditing(false);
                   }}
-                  disabled={!inputValue.answer_title || !inputValue.answer_two_gap_match}
+                  disabled={!inputValue.answer_title || !inputValue.answer_two_gap_match || hasError}
                 >
                   {__('Ok', 'tutor')}
                 </Button>

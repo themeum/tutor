@@ -877,7 +877,7 @@ class Course extends Tutor_Base {
 		}
 
 		$params['ID'] = $course_id;
-		$update_id    = wp_update_post( $params, false );
+		$update_id    = wp_update_post( $params, true );
 		if ( is_wp_error( $update_id ) ) {
 			$this->json_response( $update_id->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
 		}
