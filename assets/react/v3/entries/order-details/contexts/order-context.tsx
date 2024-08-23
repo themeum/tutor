@@ -1,4 +1,4 @@
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import { LoadingSection } from '@Atoms/LoadingSpinner';
 import { type Order, useOrderDetailsQuery } from '@OrderServices/order';
 import React from 'react';
 
@@ -16,7 +16,7 @@ export const OrderProvider = ({ children, orderId }: { children: React.ReactNode
 	const orderDetailsQuery = useOrderDetailsQuery(orderId);
 
 	if (orderDetailsQuery.isLoading) {
-		return <LoadingOverlay />;
+		return <LoadingSection />;
 	}
 
 	if (!orderDetailsQuery.data) {
