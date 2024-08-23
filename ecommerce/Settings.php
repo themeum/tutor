@@ -624,7 +624,12 @@ class Settings {
 	 * @return array
 	 */
 	public static function get_stripe_config_keys() {
-		return StripeConfig::get_config_keys();
+		return array(
+			'stripe_environment'           => 'environment',
+			'stripe_secret_key'            => 'text',
+			'stripe_public_key'            => 'text',
+			'stripe_webhook_signature_key' => 'text',
+		);
 	}
 
 	/**

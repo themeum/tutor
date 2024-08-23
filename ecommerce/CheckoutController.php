@@ -10,14 +10,12 @@
 
 namespace Tutor\Ecommerce;
 
-use Ollyo\PaymentHub\PaymentHub;
-use Ollyo\PaymentHub\Payments\Stripe\Stripe;
-use Tutor\Ecommerce\PaymentGateways\StripeConfig;
 use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
+use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -47,7 +45,7 @@ class CheckoutController {
 	 */
 	public function __construct( $register_hooks = true ) {
 		if ( $register_hooks ) {
-			add_action( 'wp_ajax_tutor_pay_now', array( $this, 'ajax_pay_now' ) );
+			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 		}
 	}
@@ -121,15 +119,15 @@ class CheckoutController {
 	 *
 	 * @return void
 	 */
-	public function ajax_pay_now() {
+	public function pay_now() {
 		tutor_utils()->check_nonce();
 
 		$request = Input::sanitize_array( $_POST );
 
-		$course_ids  = $request['course_ids'] ?? '';
+		$object_ids  = $request['object_ids'] ?? '';
 		$coupon_code = $request['coupon_code'] ?? '';
 
-		if ( empty( $course_ids ) ) {
+		if ( empty( $object_ids ) ) {
 			$this->json_response(
 				__( 'Invalid cart items' ),
 				'',
@@ -138,10 +136,13 @@ class CheckoutController {
 		}
 
 		$coupon_model  = new CouponModel();
-		$course_ids    = array_filter( explode( ',', $course_ids ), 'is_numeric' );
-		$price_details = $coupon_model->apply_coupon_discount( $course_ids, $coupon_code );
+		$object_ids    = array_filter( explode( ',', $object_ids ), 'is_numeric' );
+		$price_details = $coupon_model->apply_coupon_discount( $object_ids, $coupon_code );
 
-		// @TODO Prepare payment data.
+		$payment_data = $this->prepare_payment_data( $object_ids, $price_details );
+
+		$stripe = Ecommerce::get_payment_gateway_object( StripeGateway::class );
+		$stripe->setup_payment_and_redirect( $payment_data );
 	}
 
 	/**
@@ -149,13 +150,117 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int|array $course_ids Course id or array of ids.
+	 * @param int|array $object_ids Course/bundle id or array of ids.
 	 * @param array     $price_details Detail price.
 	 *
-	 * @return void
+	 * @return mixed
 	 */
-	public function prepare_payment_data( $course_ids, $price_details ) {
+	public function prepare_payment_data( $object_ids, $price_details ) {
+		return (object) array(
 
+			'items'                                   => (object) array(
+				array(
+					'item_id'                           => 1,
+					'item_name'                         => 'Sample Product 1',
+					'regular_price'                     => 100.00,
+					'regular_price_in_smallest_unit'    => 10000,
+					'quantity'                          => 3,
+					'discounted_price'                  => 90.00,
+					'discounted_price_in_smallest_unit' => 9000,
+					'image'                             => 'https://example.com/image.jpg',
+				),
+				array(
+					'item_id'                           => 2,
+					'item_name'                         => 'Sample Product 2',
+					'regular_price'                     => 300.00,
+					'regular_price_in_smallest_unit'    => 30000,
+					'quantity'                          => 1,
+					'discounted_price'                  => 0,
+					'discounted_price_in_smallest_unit' => 0,
+					'image'                             => 'https://example.com/image.jpg',
+				),
+			),
+			'subtotal'                                => 570.00,
+			'subtotal_in_smallest_unit'               => 57000,
+			'total_price'                             => 550.00,
+			'total_price_in_smallest_unit'            => 55000,
+			'order_id'                                => '67530756',
+			'store_name'                              => 'Sample Store Name',
+			'order_description'                       => 'Sample Order Description',
+			'tax'                                     => 230.00,
+			'tax_in_smallest_unit'                    => 23000,
+			'currency'                                => (object) array(
+				'code'         => 'USD',
+				'symbol'       => '$',
+				'name'         => 'US Dollar',
+				'locale'       => 'en-us',
+				'numeric_code' => 840,
+			),
+			'country'                                 => (object) array(
+				'name'         => 'United States',
+				'numeric_code' => '840',
+				'alpha_2'      => 'US',
+				'alpha_3'      => 'USA',
+				'phone_code'   => '1',
+			),
+			'shipping_charge'                         => 150.00,
+			'shipping_charge_in_smallest_unit'        => 15000,
+			'coupon_discount'                         => 400.00,
+			'coupon_discount_amount_in_smallest_unit' => 40000,
+			'shipping_address'                        => (object) array(
+				'name'         => 'John Doe',
+				'address1'     => '123 Main St',
+				'address2'     => 'Apt 4B',
+				'city'         => 'New York',
+				'state'        => 'Manhattan',
+				'region'       => 'NY',
+				'postal_code'  => '10001',
+				'country'      => (object) array(
+					'name'         => 'United States',
+					'numeric_code' => '840',
+					'alpha_2'      => 'US',
+					'alpha_3'      => 'USA',
+				),
+				'phone_number' => '123-456-7890',
+				'email'        => 'john-doe@example.com',
+			),
+			'billing_address'                         => (object) array(
+				'name'         => 'John Doe',
+				'address1'     => '123 Main St',
+				'address2'     => 'Apt 4B',
+				'city'         => 'New York',
+				'state'        => 'Manhattan',
+				'region'       => 'NY',
+				'postal_code'  => '10001',
+				'country'      => (object) array(
+					'name'         => 'United States',
+					'numeric_code' => '840',
+					'alpha_2'      => 'US',
+					'alpha_3'      => 'USA',
+				),
+				'phone_number' => '123-456-7890',
+				'email'        => 'john-doe@example.com',
+			),
+			'decimal_separator'                       => '.',
+			'thousand_separator'                      => ',',
+			'customer'                                => (object) array(
+				'name'         => 'John Doe',
+				'address1'     => '123 Main St',
+				'address2'     => 'Apt 4B',
+				'city'         => 'New York',
+				'state'        => 'Manhattan',
+				'region'       => 'NY',
+				'postal_code'  => '10001',
+				'country'      => (object) array(
+					'name'         => 'United States',
+					'numeric_code' => '840',
+					'alpha_2'      => 'US',
+					'alpha_3'      => 'USA',
+				),
+				'email'        => 'john-doe@example.com',
+				'phone_number' => '123-456-7890',
+			),
+		);
 	}
 
 	/**

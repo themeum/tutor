@@ -27,7 +27,8 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 
 ?>
 <div class="tutor-checkout-page">
-	<div>
+	<form method="post">
+		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
 			<div class="tutor-col-md-6">
 				<div class="tutor-checkout-billing">
@@ -72,5 +73,5 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 				?>
 			</div>
 		</div>
-	</div>
+	</form>
 </div>

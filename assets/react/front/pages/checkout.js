@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (checkoutPageWrapper) {
         const checkoutForm = document.querySelector("#tutor-checkout-form");
-        const payNowButton = document.querySelector("#tutor-checkout-pay-now-button");
+        // const payNowButton = document.querySelector("#tutor-checkout-pay-now-button");
 
         const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
         const paymentOptionInput = paymentOptionsWrapper.querySelector("input[name=payment_method]");
@@ -87,29 +87,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Handle checkout form submit
-        checkoutForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // checkoutForm.addEventListener('submit', async (e) => {
+        //     e.preventDefault();
 
-            const formData = new FormData(checkoutForm);
+        //     const formData = new FormData(checkoutForm);
 
-            try {
-                payNowButton.setAttribute('disabled', 'disabled');
-                payNowButton.classList.add('is-loading');
+        //     try {
+        //         payNowButton.setAttribute('disabled', 'disabled');
+        //         payNowButton.classList.add('is-loading');
 
-                const post = await ajaxHandler(formData);
-                const { success, data = defaultErrorMessage } = await post.json();
+        //         const post = await ajaxHandler(formData);
+        //         const { success, data = defaultErrorMessage } = await post.json();
 
-                if (success) {
-                    tutor_toast(__('Success', 'tutor'), data, 'success');
-                } else {
-                    tutor_toast(__('Failed', 'tutor'), data, 'error');
-                }
-            } catch (error) {
-                tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-            } finally {
-                payNowButton.removeAttribute('disabled');
-                payNowButton.classList.remove('is-loading');
-            }
-        });
+        //         if (success) {
+        //             tutor_toast(__('Success', 'tutor'), data, 'success');
+        //         } else {
+        //             tutor_toast(__('Failed', 'tutor'), data, 'error');
+        //         }
+        //     } catch (error) {
+        //         tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+        //     } finally {
+        //         payNowButton.removeAttribute('disabled');
+        //         payNowButton.classList.remove('is-loading');
+        //     }
+        // });
     }
 });

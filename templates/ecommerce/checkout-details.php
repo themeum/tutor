@@ -151,7 +151,7 @@ $object_ids = array();
 			</button>
 		</div>
 		<div class="tutor-checkout-coupon-form tutor-d-none">
-			<input type="text" placeholder="<?php esc_html_e( 'Add coupon code', 'tutor' ); ?>">
+			<input type="text" name="coupon_code" placeholder="<?php esc_html_e( 'Add coupon code', 'tutor' ); ?>">
 			<button type="button" class="tutor-btn tutor-btn-secondary" data-object-ids="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
 		</div>
 		<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper tutor-d-none">
@@ -190,7 +190,7 @@ $object_ids = array();
 				</div>
 			</div>
 		<?php endif; ?>
-
+		<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
 		<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
 			<?php esc_html_e( 'Pay Now', 'tutor' ); ?>
 		</button>

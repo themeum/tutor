@@ -26,6 +26,7 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	 */
 	const ENV_KEY               = 'stripe_environment';
 	const SECRET_KEY            = 'stripe_secret_key';
+	const PUBLIC_KEY            = 'stripe_public_key';
 	const WEBHOOK_SIGNATURE_KEY = 'stripe_webhook_signature_key';
 
 	/**
@@ -49,21 +50,6 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	}
 
 	/**
-	 * Get config keys for settings
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_config_keys() {
-		return array(
-			self::ENV_KEY               => 'environment',
-			self::SECRET_KEY            => 'text',
-			self::WEBHOOK_SIGNATURE_KEY => 'text',
-		);
-	}
-
-	/**
 	 * Retrieves the mode of the Stripe payment gateway.
 	 *
 	 * @since 3.0.0
@@ -71,7 +57,7 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	 * @return string The mode of the payment gateway ('test' or 'live').
 	 */
 	public function getMode(): string {
-		return tutor_utils( self::ENV_KEY, 'test' );
+		return tutor_utils()->get_option( self::ENV_KEY, 'test' );
 	}
 
 	/**
@@ -82,7 +68,7 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	 * @return string The secret key.
 	 */
 	public function getSecretKey(): string {
-		return tutor_utils( self::SECRET_KEY );
+		return tutor_utils()->get_option( self::SECRET_KEY );
 	}
 
 	/**
@@ -93,7 +79,18 @@ class StripeConfig extends BaseConfig implements ConfigContract {
 	 * @return string The public key.
 	 */
 	public function getPublicKey(): string {
-		return tutor_utils( self::WEBHOOK_SIGNATURE_KEY );
+		return tutor_utils()->get_option( self::PUBLIC_KEY );
+	}
+
+	/**
+	 * Retrieves the webhook key for the Stripe payment gateway.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string The public key.
+	 */
+	public function getWebhookSecretKey(): string {
+		return tutor_utils()->get_option( self::WEBHOOK_SIGNATURE_KEY );
 	}
 
 }
