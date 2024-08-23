@@ -683,7 +683,7 @@ class CouponModel {
 	 *
 	 * @return object Detail of discount on object format.
 	 *
-	 * For ex: { total_price: 60, items: [{course_id, regular_price, sale_price}]}
+	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
 	public function apply_coupon_discount( $course_ids, $coupon_code ) {
 		$plan_id = Input::get( 'plan', 0 );
@@ -752,7 +752,7 @@ class CouponModel {
 	 *
 	 * @return object Detail of discount on object format.
 	 *
-	 * For ex: { total_price: 60, items: [{course_id, regular_price, sale_price}]}
+	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
 	public function apply_automatic_coupon_discount( $course_ids ) {
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );

@@ -12,9 +12,11 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
+use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
+use Tutor\Models\OrderModel;
 use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -47,6 +49,7 @@ class CheckoutController {
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
+			add_action( 'tutor_order_placed', array( $this, 'proceed_to_payment' ) );
 		}
 	}
 
@@ -122,6 +125,11 @@ class CheckoutController {
 	public function pay_now() {
 		tutor_utils()->check_nonce();
 
+		$coupon_model  = new CouponModel();
+		$billing_model = new BillingModel();
+
+		$current_user_id = get_current_user_id();
+
 		$request = Input::sanitize_array( $_POST );
 
 		$object_ids  = $request['object_ids'] ?? '';
@@ -135,14 +143,26 @@ class CheckoutController {
 			);
 		}
 
-		$coupon_model  = new CouponModel();
-		$object_ids    = array_filter( explode( ',', $object_ids ), 'is_numeric' );
-		$price_details = $coupon_model->apply_coupon_discount( $object_ids, $coupon_code );
+		$object_ids = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 
-		$payment_data = $this->prepare_payment_data( $object_ids, $price_details );
+		$price_details = $coupon_code ? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code ) : $coupon_model->apply_automatic_coupon_discount( $object_ids );
 
-		$stripe = Ecommerce::get_payment_gateway_object( StripeGateway::class );
-		$stripe->setup_payment_and_redirect( $payment_data );
+		$billing_info = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
+
+		$billing_model->update( $billing_info, array( 'user_id' => $current_user_id ) );
+
+		$items = array();
+
+		foreach ( $price_details->items as $item ) {
+			$items[] = array(
+				'user_id'       => $current_user_id,
+				'item_id'       => $item->item_id,
+				'regular_price' => $item->regular_price,
+				'sale_price'    => $item->discount_price,
+			);
+		}
+
+		( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $coupon_code );
 	}
 
 	/**
@@ -150,63 +170,73 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int|array $object_ids Course/bundle id or array of ids.
-	 * @param array     $price_details Detail price.
+	 * @param array $order Order object.
 	 *
 	 * @return mixed
 	 */
-	public function prepare_payment_data( $object_ids, $price_details ) {
+	public function proceed_to_payment( array $order ) {
+		$site_info     = get_bloginfo();
+		$order_user_id = $order['user_id'];
+
+		$items          = array();
+		$subtotal_price = $order['subtotal_price'];
+		$total_price    = $order['subtotal_price'];
+
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL );
+		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
+		$currency_info   = tutor_get_currencies_info_code( $currency_code );
+
+		$billing_info = ( new BillingModel() )->get_info( $order_user_id );
+
+		$billing  = array();
+		$shipping = array();
+		$country  = array();
+
+		foreach ( $order['items'] as $item ) {
+			$subtotal_price += $item->regular_price;
+
+			$items[] = array(
+				'item_id'                           => $item->item_id,
+				'item_name'                         => get_the_title( $item->item_id ),
+				'regular_price'                     => floatval( $item->regular_price ),
+				'regular_price_in_smallest_unit'    => intval( $item->regular_price * 100 ),
+				'quantity'                          => 1,
+				'discounted_price'                  => floatval( $item->discount_price ),
+				'discounted_price_in_smallest_unit' => intval( $item->discount_price * 100 ),
+				'image'                             => get_the_post_thumbnail_url( $item->item_id ),
+			);
+		}
+
 		return (object) array(
 
-			'items'                                   => (object) array(
-				array(
-					'item_id'                           => 1,
-					'item_name'                         => 'Sample Product 1',
-					'regular_price'                     => 100.00,
-					'regular_price_in_smallest_unit'    => 10000,
-					'quantity'                          => 3,
-					'discounted_price'                  => 90.00,
-					'discounted_price_in_smallest_unit' => 9000,
-					'image'                             => 'https://example.com/image.jpg',
-				),
-				array(
-					'item_id'                           => 2,
-					'item_name'                         => 'Sample Product 2',
-					'regular_price'                     => 300.00,
-					'regular_price_in_smallest_unit'    => 30000,
-					'quantity'                          => 1,
-					'discounted_price'                  => 0,
-					'discounted_price_in_smallest_unit' => 0,
-					'image'                             => 'https://example.com/image.jpg',
-				),
-			),
-			'subtotal'                                => 570.00,
-			'subtotal_in_smallest_unit'               => 57000,
-			'total_price'                             => 550.00,
-			'total_price_in_smallest_unit'            => 55000,
-			'order_id'                                => '67530756',
-			'store_name'                              => 'Sample Store Name',
-			'order_description'                       => 'Sample Order Description',
-			'tax'                                     => 230.00,
-			'tax_in_smallest_unit'                    => 23000,
+			'items'                                   => (object) $items,
+			'subtotal'                                => floatval( $subtotal_price ),
+			'subtotal_in_smallest_unit'               => floatval( $subtotal_price * 100 ),
+			'total_price'                             => floatval( $total_price ),
+			'total_price_in_smallest_unit'            => floatval( $total_price * 100 ),
+			'order_id'                                => $order['id'],
+			'store_name'                              => $site_info['name'],
+			'order_description'                       => 'Tutor Order',
+			'tax'                                     => 0,
+			'tax_in_smallest_unit'                    => floatval( 0 * 100 ),
 			'currency'                                => (object) array(
-				'code'         => 'USD',
-				'symbol'       => '$',
-				'name'         => 'US Dollar',
-				'locale'       => 'en-us',
-				'numeric_code' => 840,
+				'code'         => $currency_code,
+				'symbol'       => $currency_symbol,
+				'name'         => $currency_info['name'],
+				'locale'       => $currency_info['locale'],
+				'numeric_code' => $currency_info['numeric_code'],
 			),
 			'country'                                 => (object) array(
-				'name'         => 'United States',
-				'numeric_code' => '840',
-				'alpha_2'      => 'US',
-				'alpha_3'      => 'USA',
-				'phone_code'   => '1',
+				'name'         => $billing_info['billing_country'] ?? '',
+				'numeric_code' => '',
+				'alpha_2'      => '',
+				'alpha_3'      => '',
+				'phone_code'   => '',
 			),
-			'shipping_charge'                         => 150.00,
-			'shipping_charge_in_smallest_unit'        => 15000,
-			'coupon_discount'                         => 400.00,
-			'coupon_discount_amount_in_smallest_unit' => 40000,
+			'shipping_charge'                         => 0,
+			'shipping_charge_in_smallest_unit'        => 0,
+			'coupon_discount'                         => floatval( $order['discount_amount'] ),
+			'coupon_discount_amount_in_smallest_unit' => floatval( $order['discount_amount'] * 100 ),
 			'shipping_address'                        => (object) array(
 				'name'         => 'John Doe',
 				'address1'     => '123 Main St',

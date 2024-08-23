@@ -89,18 +89,17 @@ class BillingModel {
 	 * Update billing info
 	 *
 	 * @param array $data Bulling info data.
+	 * @param array $where Where condition.
 	 *
 	 * @return bool True on success, false on failure.
 	 */
-	public function update( $data ) {
+	public function update( $data, $where ) {
 		global $wpdb;
 
 		return QueryHelper::update(
 			"{$wpdb->prefix}tutor_customers",
 			$data,
-			array(
-				'user_id' => $data['user_id'],
-			),
+			$where,
 		);
 	}
 

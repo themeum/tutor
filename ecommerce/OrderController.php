@@ -238,7 +238,7 @@ class OrderController {
 			'order_status'    => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
 			'coupon_code'     => $coupon_code,
 			'discount_type'   => $coupon->discount_type,
-			'discount_type'   => $coupon->discount_amount,
+			'discount_amount' => $coupon->discount_amount,
 			'discount_reason' => $coupon->discount_reason,
 			'created_at_gmt'  => current_time( 'mysql', true ),
 			'created_by'      => get_current_user_id(),
