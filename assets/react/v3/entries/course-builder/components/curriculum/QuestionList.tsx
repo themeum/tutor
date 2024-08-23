@@ -17,7 +17,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import Popover from '@Molecules/Popover';
@@ -30,12 +29,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import {
-  type QuizForm,
-  type QuizQuestion,
-  type QuizQuestionType,
-  useCreateQuizQuestionMutation,
-} from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
@@ -110,8 +104,6 @@ const QuestionList = ({
 
   const form = useFormContext<QuizForm>();
   const { activeQuestionIndex, setActiveQuestionId } = useQuizModalContext();
-  const createQuizQuestion = useCreateQuizQuestionMutation();
-
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -140,6 +132,8 @@ const QuestionList = ({
 
     return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
+
+  const questions = form.watch('questions') || [];
 
   const handleAddQuestion = (questionType: QuizQuestionType) => {
     const validation = validateQuizQuestion(activeQuestionIndex, form);
@@ -225,37 +219,13 @@ const QuestionList = ({
       return;
     }
 
-    const answers =
-      form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
-    const isAllSaved = answers.every((answer) => answer.is_saved);
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
 
-    if (answers.length === 0 && !['open_ended', 'short_answer'].includes(currentQuestion.question_type)) {
+    if (validation !== true) {
       showToast({
-        message: __('Please add option', 'tutor'),
-        type: 'danger',
+        message: validation.message,
+        type: validation.type as 'danger',
       });
-      setIsOpen(false);
-      return;
-    }
-
-    if (!isAllSaved) {
-      showToast({
-        message: __('Please save all new options before moving to another question', 'tutor'),
-        type: 'danger',
-      });
-      setIsOpen(false);
-      return;
-    }
-
-    const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-    const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-
-    if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
-      showToast({
-        message: __('Please select a correct answer', 'tutor'),
-        type: 'danger',
-      });
-      setIsOpen(false);
       return;
     }
 
@@ -311,20 +281,13 @@ const QuestionList = ({
     <div>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <Show when={!createQuizQuestion.isPending} fallback={<LoadingSpinner size={32} />}>
-          <button
-            ref={addButtonRef}
-            disabled={createQuizQuestion.isPending}
-            type="button"
-            onClick={() => setIsOpen(true)}
-          >
-            <SVGIcon name="plusSquareBrand" width={32} height={32} />
-          </button>
-        </Show>
+        <button ref={addButtonRef} type="button" onClick={() => setIsOpen(true)}>
+          <SVGIcon name="plusSquareBrand" width={32} height={32} />
+        </button>
       </div>
 
       <div ref={questionListRef} css={styles.questionList}>
-        <Show when={questionFields.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
+        <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -335,10 +298,10 @@ const QuestionList = ({
             onDragEnd={(event) => handleDragEnd(event)}
           >
             <SortableContext
-              items={questionFields.map((item) => ({ ...item, id: item.question_id }))}
+              items={questions.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
-              <For each={questionFields}>
+              <For each={questions}>
                 {(question, index) => (
                   <Question
                     key={question.question_id}
