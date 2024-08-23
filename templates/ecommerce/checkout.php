@@ -52,14 +52,28 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 						</h5>
 						<div class="tutor-checkout-payment-options">
 							<input type="hidden" name="payment_method">
-							<button type="button" data-payment-method="paypal">
-								<img src="<?php echo esc_url( tutor()->url . 'assets/images/paypal.svg' ); ?>" alt="paypal" />
-								Paypal
-							</button>
-							<button type="button" data-payment-method="stripe">
-								<img src="<?php echo esc_url( tutor()->url . 'assets/images/stripe.svg' ); ?>" alt="stripe" />
-								Stripe
-							</button>
+							<?php
+							$payment_gateways = tutor_get_all_active_payment_gateways();
+							if ( is_array( $payment_gateways ) && count( $payment_gateways ) ) {
+								foreach ( $payment_gateways['automate'] as $key => $gateway ) {
+									list( $label, $icon ) = array_values( $gateway );
+									?>
+										<button type="button" data-payment-method="<?php echo esc_attr( $key ); ?>">
+											<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
+											<?php echo esc_html( $label ); ?>
+										</button>
+									<?php
+								}
+								foreach ( $payment_gateways['manual'] as $gateway ) {
+									list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
+									?>
+										<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>">
+											<?php echo esc_html( $label ); ?>
+										</button>
+									<?php
+								}
+							}
+							?>
 						</div>
 					</div>
 				</div>

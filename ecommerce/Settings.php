@@ -528,10 +528,12 @@ class Settings {
 			'paypal' => array(
 				'label'     => 'Paypal',
 				'is_active' => self::is_active( 'paypal' ),
+				'icon'      => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
 			),
 			'stripe' => array(
 				'label'     => 'Stripe',
 				'is_active' => self::is_active( 'stripe' ),
+				'icon'      => esc_url_raw( tutor()->url . 'assets/images/stripe.svg' ),
 			),
 		);
 
