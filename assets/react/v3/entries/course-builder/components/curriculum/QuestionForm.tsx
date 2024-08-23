@@ -117,6 +117,7 @@ const QuestionForm = () => {
           render={(controllerProps) => (
             <FormAnswerExplanation
               {...controllerProps}
+              label={__('Answer Explanation', 'tutor')}
               placeholder={__('Write answer explanation...', 'tutor')}
               onChange={() => {
                 calculateQuizDataStatus(dataStatus, 'update') &&

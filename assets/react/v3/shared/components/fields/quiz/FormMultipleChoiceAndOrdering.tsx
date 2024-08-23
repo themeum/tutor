@@ -18,7 +18,6 @@ import {
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
-  useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
@@ -57,8 +56,6 @@ const FormMultipleChoiceAndOrdering = ({
     defaultValue: false,
   });
   const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-
-  const saveQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.is_saved || (!inputValue.answer_title && !inputValue.image_url),
@@ -347,7 +344,6 @@ const FormMultipleChoiceAndOrdering = ({
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
-                  loading={saveQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
                   onClick={async (event) => {
