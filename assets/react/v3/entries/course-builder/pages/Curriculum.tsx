@@ -322,7 +322,7 @@ const Curriculum = () => {
                               currentExpandedTopics.current = [topicId];
                             }}
                             onEdit={(topicId) => {
-                              currentExpandedTopics.current = [...currentExpandedTopics.current, topicId];
+                              currentExpandedTopics.current = [topicId];
                             }}
                             onSort={(activeIndex, overIndex) => handleTopicSort(index, topic, activeIndex, overIndex)}
                           />
@@ -364,6 +364,7 @@ const Curriculum = () => {
                       },
                     ];
                   });
+                  currentExpandedTopics.current = [];
                 }}
               >
                 {__('Add Topic', 'tutor')}

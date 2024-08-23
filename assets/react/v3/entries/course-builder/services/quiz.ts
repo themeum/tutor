@@ -87,9 +87,16 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
   };
 }
 
-interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions'> {
+interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' | 'quiz_option'> {
   _data_status: QuizDataStatus;
   questions: QuizQuestionsForPayload[];
+  quiz_option: Omit<QuizDetailsResponse['quiz_option'], 'content_drip_settings'> & {
+    content_drip_settings?: {
+      unlock_date: string;
+      after_xdays_of_enroll: number;
+      prerequisites: [];
+    };
+  };
 }
 interface QuizPayload {
   course_id: ID;
@@ -194,6 +201,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     if (question.question_settings) {
       question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
       question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
+      question.question_settings.randomize_options = !!Number(question.question_settings.randomize_options);
     }
     question.question_answers = question.question_answers.map((answer) => ({
       ...answer,
@@ -294,7 +302,6 @@ export const convertQuizFormDataToPayload = (
   topicId: ID,
   contentDripType: ContentDripType,
   courseId: ID,
-  quizId?: ID,
 ): QuizPayload => {
   return {
     course_id: courseId,
@@ -306,7 +313,6 @@ export const convertQuizFormDataToPayload = (
       post_content: formData.quiz_description,
       quiz_option: {
         attempts_allowed: formData.quiz_option.attempts_allowed,
-        content_drip_settings: formData.quiz_option.content_drip_settings,
         feedback_mode: formData.quiz_option.feedback_mode,
         hide_question_number_overview: formData.quiz_option.hide_question_number_overview ? '1' : '0',
         hide_quiz_time_display: formData.quiz_option.hide_quiz_time_display ? '1' : '0',
@@ -327,6 +333,9 @@ export const convertQuizFormDataToPayload = (
           formData.quiz_option.feedback_mode === 'retry' && {
             pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
           }),
+        ...(isAddonEnabled(Addons.CONTENT_DRIP) && {
+          content_drip_settings: formData.quiz_option.content_drip_settings,
+        }),
       },
       questions: formData.questions.map((question) => {
         return {

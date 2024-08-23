@@ -36,6 +36,7 @@ import {
   type QuizQuestionType,
   useCreateQuizQuestionMutation,
 } from '@CourseBuilderServices/quiz';
+import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -141,40 +142,14 @@ const QuestionList = ({
   }, [activeSortId, questionFields]);
 
   const handleAddQuestion = (questionType: QuizQuestionType) => {
-    if (activeQuestionIndex !== -1) {
-      const answers =
-        form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
-      const isAllSaved = answers.every((answer) => answer.is_saved);
-
-      if (answers.length === 0 && !['open_ended', 'short_answer'].includes(questionType)) {
-        showToast({
-          message: __('Please add option', 'tutor'),
-          type: 'danger',
-        });
-        setIsOpen(false);
-        return;
-      }
-
-      if (!isAllSaved) {
-        showToast({
-          message: __('Please save all new options before moving to another question', 'tutor'),
-          type: 'danger',
-        });
-        setIsOpen(false);
-        return;
-      }
-
-      const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-      const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-
-      if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
-        showToast({
-          message: __('Please select a correct answer', 'tutor'),
-          type: 'danger',
-        });
-        setIsOpen(false);
-        return;
-      }
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    if (validation !== true) {
+      showToast({
+        message: validation.message,
+        type: validation.type as 'danger',
+      });
+      setIsOpen(false);
+      return;
     }
 
     const questionId = nanoid();
@@ -244,12 +219,52 @@ const QuestionList = ({
   };
 
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
+    const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
+
+    if (!currentQuestion) {
+      return;
+    }
+
+    const answers =
+      form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
+    const isAllSaved = answers.every((answer) => answer.is_saved);
+
+    if (answers.length === 0 && !['open_ended', 'short_answer'].includes(currentQuestion.question_type)) {
+      showToast({
+        message: __('Please add option', 'tutor'),
+        type: 'danger',
+      });
+      setIsOpen(false);
+      return;
+    }
+
+    if (!isAllSaved) {
+      showToast({
+        message: __('Please save all new options before moving to another question', 'tutor'),
+        type: 'danger',
+      });
+      setIsOpen(false);
+      return;
+    }
+
+    const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
+    const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+
+    if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
+      showToast({
+        message: __('Please select a correct answer', 'tutor'),
+        type: 'danger',
+      });
+      setIsOpen(false);
+      return;
+    }
+
     const convertedQuestion: QuizQuestion = {
       ...data,
       question_id: nanoid(),
       _data_status: 'new',
-      question_title: `${data.question_title} (copy)`,
-      question_answers: data.question_answers.map((answer) => ({
+      question_title: `${currentQuestion.question_title} (copy)`,
+      question_answers: currentQuestion.question_answers.map((answer) => ({
         ...answer,
         answer_id: nanoid(),
         _data_status: 'new',

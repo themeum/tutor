@@ -183,6 +183,9 @@ const QuestionConditions = () => {
             name={
               `questions.${activeQuestionIndex}.question_settings.question_mark` as 'questions.0.question_settings.question_mark'
             }
+            rules={{
+              min: 0,
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
@@ -192,7 +195,7 @@ const QuestionConditions = () => {
                 placeholder="0"
                 selectOnFocus
                 style={css`
-                  max-width: 72px;
+                  max-width: 80px;
                 `}
                 onChange={() => {
                   calculateQuizDataStatus(activeDataStatus, 'update') &&

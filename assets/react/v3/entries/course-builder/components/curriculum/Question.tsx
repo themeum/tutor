@@ -15,6 +15,7 @@ import { useToast } from '@Atoms/Toast';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { ID } from '@CourseBuilderServices/curriculum';
+import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -63,36 +64,18 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
       style={style}
       tabIndex={-1}
       onClick={() => {
-        const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-        const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
-        const isAllSaved = answers.every((answer) => answer.answer_id);
-
-        if (answers.length === 0 && !['open_ended', 'short_answer'].includes(activeQuestionType)) {
-          showToast({
-            message: __('Please add option', 'tutor'),
-            type: 'danger',
-          });
+        if (activeQuestionId === question.question_id) {
           return;
         }
 
-        if (!isAllSaved) {
+        const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+        if (validation !== true) {
           showToast({
-            message: __('Please save all new options before moving to another question', 'tutor'),
-            type: 'danger',
+            message: validation.message,
+            type: validation.type as 'danger',
           });
           return;
-        }
-
-        if (['multiple_choice', 'true_false'].includes(activeQuestionType)) {
-          const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-
-          if (!hasCorrectAnswer) {
-            showToast({
-              message: __('Please select a correct answer', 'tutor'),
-              type: 'danger',
-            });
-            return;
-          }
         }
 
         setActiveQuestionId(question.question_id);

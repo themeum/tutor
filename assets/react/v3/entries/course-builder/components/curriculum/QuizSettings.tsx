@@ -33,10 +33,9 @@ interface QuizSettingsProps {
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
   const form = useFormContext<QuizForm>();
   const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
+  const feedbackMode = form.watch('quiz_option.feedback_mode');
   const showPassRequired =
-    isAddonEnabled(Addons.CONTENT_DRIP) &&
-    contentDripType === 'unlock_sequentially' &&
-    form.watch('quiz_option.feedback_mode') === 'retry';
+    isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType === 'unlock_sequentially' && feedbackMode === 'retry';
 
   const prerequisiteCoursesForm = form.watch(
     'quiz_option.content_drip_settings.prerequisites',
@@ -51,7 +50,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
   return (
     <div css={styles.settings}>
-      <Card title={__('Basic Settings', 'tutor')}>
+      <Card title={__('Basic Settings', 'tutor')} collapsedAnimationDependencies={[feedbackMode]}>
         <div css={styles.formWrapper}>
           <div css={styles.timeWrapper}>
             <Controller
@@ -126,23 +125,25 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             )}
           />
 
-          <Controller
-            name="quiz_option.attempts_allowed"
-            control={form.control}
-            rules={{ max: 20, min: 0 }}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Attempts Allowed', 'tutor')}
-                helpText={__(
-                  'Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit',
-                  'tutor',
-                )}
-                selectOnFocus
-              />
-            )}
-          />
+          <Show when={feedbackMode === 'retry'}>
+            <Controller
+              name="quiz_option.attempts_allowed"
+              control={form.control}
+              rules={{ max: 20, min: 0 }}
+              render={(controllerProps) => (
+                <FormInput
+                  {...controllerProps}
+                  type="number"
+                  label={__('Attempts Allowed', 'tutor')}
+                  helpText={__(
+                    'Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit',
+                    'tutor',
+                  )}
+                  selectOnFocus
+                />
+              )}
+            />
+          </Show>
 
           <Show when={showPassRequired}>
             <Controller

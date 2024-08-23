@@ -37,7 +37,7 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import { useToast } from '@Atoms/Toast';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { ID } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { isDefined } from '@Utils/types';
@@ -148,37 +148,24 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
         message: __('Please add a question', 'tutor'),
         type: 'danger',
       });
+      return;
+    }
+
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+    if (validation !== true) {
+      showToast({
+        message: validation.message,
+        type: validation.type as 'danger',
+      });
+
+      setActiveTab('details');
 
       return;
     }
 
-    if (activeQuestionIndex !== -1) {
-      const answers =
-        form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
-      const questionType = form.watch(`questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type');
-
-      if (answers.length === 0) {
-        setActiveTab('details');
-        showToast({
-          message: __('Please add option', 'tutor'),
-          type: 'danger',
-        });
-        return;
-      }
-
-      const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-      if (['true_false', 'multiple_choice'].includes(questionType) && !hasCorrectAnswer) {
-        setActiveTab('details');
-        showToast({
-          message: __('Please select a correct answer', 'tutor'),
-          type: 'danger',
-        });
-        return;
-      }
-    }
-
     setIsEdit(false);
-    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId, quizId || '');
+    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId);
 
     const response = await saveQuizMutation.mutateAsync(payload);
 

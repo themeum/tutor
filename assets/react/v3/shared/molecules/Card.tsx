@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
-import { animated } from '@react-spring/web';
-import { type ReactNode, useRef, useState } from 'react';
+import { animated, useSpring } from '@react-spring/web';
+import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -9,7 +9,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
+import { isDefined } from '@Utils/types';
 
 interface CardProps {
   children: ReactNode;
@@ -21,6 +21,8 @@ interface CardProps {
   noSeparator?: boolean;
   hideArrow?: boolean;
   isAlternative?: boolean;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  collapsedAnimationDependencies?: any[];
 }
 
 const Card = ({
@@ -33,14 +35,33 @@ const Card = ({
   noSeparator = false,
   hideArrow = false,
   isAlternative = false,
+  collapsedAnimationDependencies,
 }: CardProps) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed);
   const cardRef = useRef<HTMLDivElement>(null);
 
-  const collapseAnimation = useCollapseExpandAnimation({
-    ref: cardRef,
-    isOpen: !isCollapsed,
-  });
+  const [collapseAnimation, collapseAnimate] = useSpring(
+    {
+      height: !isCollapsed ? cardRef.current?.scrollHeight : 0,
+      opacity: !isCollapsed ? 1 : 0,
+      overflow: 'hidden',
+      config: {
+        duration: 300,
+        easing: (t) => t * (2 - t),
+      },
+    },
+    [collapsedAnimationDependencies],
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isDefined(cardRef.current)) {
+      collapseAnimate.start({
+        height: !isCollapsed ? cardRef.current.scrollHeight : 0,
+        opacity: !isCollapsed ? 1 : 0,
+      });
+    }
+  }, [isCollapsed, ...(collapsedAnimationDependencies || [])]);
 
   return (
     <div css={styles.wrapper(hasBorder)}>
@@ -110,8 +131,8 @@ const styles = {
     ${
       isAlternative &&
       css`
-      padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
-    `
+        padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
+      `
     }
 	`,
   headerAndAction: css`

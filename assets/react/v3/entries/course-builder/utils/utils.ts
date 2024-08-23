@@ -5,7 +5,10 @@ import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentM
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import type { AssignmentPayload, ID, LessonPayload } from '@CourseBuilderServices/curriculum';
+import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { convertToGMT } from '@Utils/util';
+import { __ } from '@wordpress/i18n';
+import type { UseFormReturn } from 'react-hook-form';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
@@ -342,4 +345,37 @@ export const covertSecondsToHMS = (seconds: number) => {
   const minutes = Math.floor((seconds % 3600) / 60);
   const sec = seconds % 60;
   return { hours, minutes, seconds: sec };
+};
+
+export const validateQuizQuestion = (activeQuestionIndex: number, form: UseFormReturn<QuizForm>) => {
+  if (activeQuestionIndex !== -1) {
+    const answers =
+      form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
+    const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+    const isAllSaved = answers.every((answer) => answer.is_saved);
+    const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
+
+    if (answers.length === 0 && currentQuestionType !== 'open_ended' && currentQuestionType !== 'short_answer') {
+      return {
+        message: __('Please add option', 'tutor'),
+        type: 'danger',
+      };
+    }
+
+    if (!isAllSaved) {
+      return {
+        message: __('Please save all new options before moving to another question', 'tutor'),
+        type: 'danger',
+      };
+    }
+
+    if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
+      return {
+        message: __('Please select a correct answer', 'tutor'),
+        type: 'danger',
+      };
+    }
+  }
+
+  return true;
 };

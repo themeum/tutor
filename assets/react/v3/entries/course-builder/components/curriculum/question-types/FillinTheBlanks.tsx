@@ -21,7 +21,7 @@ const FillInTheBlanks = () => {
       <Controller
         key={optionsFields.length ? JSON.stringify(optionsFields[0]) : ''}
         control={form.control}
-        name={`questions.${activeQuestionIndex}.question_answers.0}` as 'questions.0.question_answers.0'}
+        name={`questions.${activeQuestionIndex}.question_answers.0` as 'questions.0.question_answers.0'}
         render={(controllerProps) => <FormFillInTheBlanks {...controllerProps} />}
       />
     </div>
