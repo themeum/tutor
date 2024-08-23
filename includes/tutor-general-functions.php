@@ -1529,3 +1529,17 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		}
 	}
 }
+
+if ( ! function_exists( 'tutor_is_json' ) ) {
+	/**
+	 * Check a string is valid JSON.
+	 *
+	 * @param string $string string.
+	 *
+	 * @return boolean
+	 */
+	function tutor_is_json( $string ) {
+		json_decode( $string );
+		return json_last_error() === JSON_ERROR_NONE;
+	}
+}

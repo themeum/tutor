@@ -125,7 +125,7 @@ class OrderActivitiesModel {
 		try {
 			foreach ( $order_activities as &$activity ) {
 				$values = new \stdClass();
-				if ( self::META_KEY_PARTIALLY_REFUND === $activity->meta_key || self::META_KEY_REFUND === $activity->meta_key ) {
+				if ( tutor_is_json( $activity->meta_value ) ) {
 					$values = json_decode( $activity->meta_value );
 				} else {
 					$values->message = $activity->meta_value;
