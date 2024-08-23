@@ -206,7 +206,7 @@ const LessonModal = ({
                 control={form.control}
                 rules={{
                   required: __('Lesson Name is required', 'tutor'),
-                  ...maxLimitRule(245),
+                  ...maxLimitRule(255),
                 }}
                 render={(controllerProps) => (
                   <FormInput

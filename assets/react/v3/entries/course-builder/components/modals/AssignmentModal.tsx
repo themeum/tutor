@@ -210,7 +210,7 @@ const AssignmentModal = ({
                 control={form.control}
                 rules={{
                   required: __('Assignment title is required', 'tutor'),
-                  ...maxLimitRule(245),
+                  ...maxLimitRule(255),
                 }}
                 render={(controllerProps) => (
                   <FormInput
