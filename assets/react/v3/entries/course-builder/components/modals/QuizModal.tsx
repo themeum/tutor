@@ -185,7 +185,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''}>
-        {(activeQuestionIndex) => (
+        {(activeQuestionIndex, setActiveQuestionId) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={icon}
@@ -373,6 +373,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               onConfirmation={() => {
                 form.reset();
                 if (quizId) {
+                  setActiveQuestionId('');
                   return;
                 }
                 closeModal();

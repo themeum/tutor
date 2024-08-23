@@ -65,11 +65,7 @@ const QuestionConditions = () => {
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   if (!activeQuestionId) {
-    return (
-      <p css={styles.emptyQuestions}>
-        {__('Question Type', 'tutor')} (<span css={{ color: colorTokens.text.error }}>{__('Pending', 'tutor')}</span>)
-      </p>
-    );
+    return <p css={styles.emptyQuestions}>{__('Create/Select a question to view details', 'tutor')}</p>;
   }
 
   return (
