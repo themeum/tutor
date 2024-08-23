@@ -65,16 +65,25 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
       onClick={() => {
         const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
         const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
+        const isAllSaved = answers.every((answer) => answer.answer_id);
+
+        if (answers.length === 0 && !['open_ended', 'short_answer'].includes(activeQuestionType)) {
+          showToast({
+            message: __('Please add option', 'tutor'),
+            type: 'danger',
+          });
+          return;
+        }
+
+        if (!isAllSaved) {
+          showToast({
+            message: __('Please save all new options before moving to another question', 'tutor'),
+            type: 'danger',
+          });
+          return;
+        }
 
         if (['multiple_choice', 'true_false'].includes(activeQuestionType)) {
-          if (answers.length === 0) {
-            showToast({
-              message: __('Please add option', 'tutor'),
-              type: 'danger',
-            });
-            return;
-          }
-
           const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
 
           if (!hasCorrectAnswer) {

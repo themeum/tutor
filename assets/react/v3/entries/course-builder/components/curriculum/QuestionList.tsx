@@ -144,10 +144,20 @@ const QuestionList = ({
     if (activeQuestionIndex !== -1) {
       const answers =
         form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
+      const isAllSaved = answers.every((answer) => answer.is_saved);
 
-      if (answers.length === 0) {
+      if (answers.length === 0 && !['open_ended', 'short_answer'].includes(questionType)) {
         showToast({
           message: __('Please add option', 'tutor'),
+          type: 'danger',
+        });
+        setIsOpen(false);
+        return;
+      }
+
+      if (!isAllSaved) {
+        showToast({
+          message: __('Please save all new options before moving to another question', 'tutor'),
           type: 'danger',
         });
         setIsOpen(false);
@@ -272,11 +282,6 @@ const QuestionList = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (questionListRef.current) {
-      console.log(
-        questionListRef.current.getBoundingClientRect().top,
-        window.innerHeight,
-        questionListRef.current.getBoundingClientRect().top > window.innerHeight,
-      );
       questionListRef.current.style.maxHeight = `${
         window.innerHeight - questionListRef.current.getBoundingClientRect().top
       }px`;

@@ -183,7 +183,11 @@ const Curriculum = () => {
       }),
     );
 
-    currentExpandedTopics.current = [...currentExpandedTopics.current, topicId];
+    if (!currentExpandedTopics.current.includes(topicId)) {
+      currentExpandedTopics.current = [...currentExpandedTopics.current, topicId];
+    } else {
+      currentExpandedTopics.current = currentExpandedTopics.current.filter((id) => id !== topicId);
+    }
   };
 
   const handleTopicSort = (index: number, topic: CourseTopicWithCollapse, activeIndex: number, overIndex: number) => {

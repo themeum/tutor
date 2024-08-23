@@ -307,7 +307,7 @@ const styles = {
     }
 
     &:hover {
-      border-color: ${colorTokens.stroke.default};
+      background-color: ${colorTokens.background.hover};
       [data-visually-hidden] {
         opacity: 1;
       }
@@ -319,7 +319,7 @@ const styles = {
   image: css`
     width: 100%;
     height: 100%;
-    border-radius: ${borderRadius.card};
+    border-radius: ${borderRadius[4]};
     object-fit: cover;
     object-position: center;
   `,
