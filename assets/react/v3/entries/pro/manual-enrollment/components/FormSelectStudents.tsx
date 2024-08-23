@@ -15,7 +15,7 @@ import { useState } from 'react';
 import StudentCard from './StudentCard';
 import { useDebounce } from '@Hooks/useDebounce';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 interface FormSelectStudentsProps extends FormControllerProps<Student[]> {
   label?: string;

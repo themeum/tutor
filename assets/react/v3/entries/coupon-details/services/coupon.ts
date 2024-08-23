@@ -1,4 +1,5 @@
 import { useToast } from '@Atoms/Toast';
+import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { authApiInstance } from '@Utils/api';
@@ -98,6 +99,7 @@ export interface GetCouponResponse {
 	per_user_usage_limit: string | null;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
 	purchase_requirement_value?: string;
+	coupon_usage: number;
 	start_date_gmt: string;
 	expire_date_gmt: string | null;
 	created_at_gmt: string;
@@ -221,6 +223,7 @@ export const useCreateCouponMutation = () => {
 	return useMutation({
 		mutationFn: createCoupon,
 		onSuccess: (response) => {
+			window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_coupons`;
 			showToast({ type: 'success', message: response.message });
 		},
 		onError: (error: ErrorResponse) => {

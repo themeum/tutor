@@ -152,6 +152,8 @@ class CouponController extends BaseController {
 		$data['created_by']     = get_current_user_id();
 		$data['created_at_gmt'] = current_time( 'mysql', true );
 		$data['updated_at_gmt'] = current_time( 'mysql', true );
+		$applies_to_items       = isset( $data['applies_to_items'] ) ? $data['applies_to_items'] : array();
+		unset( $data['applies_to_items'] );
 
 		// Set expire date if isset.
 		if ( isset( $data['expire_date_gmt'] ) ) {
@@ -161,9 +163,8 @@ class CouponController extends BaseController {
 		try {
 			$coupon_id = $this->model->create_coupon( $data );
 			if ( $coupon_id ) {
-				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
-					$applies_to_ids = array_column( $data['applies_to_items'], 'id' );
-					$this->model->insert_applies_to( $data['applies_to'], $applies_to_ids, $data['coupon_code'] );
+				if ( is_array( $applies_to_items ) && count( $applies_to_items ) ) {
+					$this->model->insert_applies_to( $data['applies_to'], $applies_to_items, $data['coupon_code'] );
 				}
 
 				$this->json_response( __( 'Coupon created successfully!', 'tutor' ) );

@@ -51,6 +51,7 @@ function Main() {
 					end_date: format(new Date(couponData.expire_date_gmt), DateFormats.yearMonthDay),
 					end_time: format(new Date(couponData.expire_date_gmt), DateFormats.hoursMinutes),
 				}),
+				coupon_uses: couponData.coupon_usage,
 				created_at_gmt: couponData.created_at_gmt,
 				updated_at_gmt: couponData.updated_at_gmt,
 				coupon_created_by: couponData.coupon_created_by,

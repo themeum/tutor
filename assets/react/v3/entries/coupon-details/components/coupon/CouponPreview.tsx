@@ -5,7 +5,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, _n, sprintf } from '@wordpress/i18n';
 import { format, isToday, isTomorrow } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
 
@@ -47,7 +47,7 @@ function CouponPreview() {
 
 	const discountText =
 		discountType === 'flat' ? `${tutor_currency?.symbol ?? '$'}${discountAmount ?? 0}` : `${discountAmount ?? 0}%`;
-	const totalUsedText = `${__('Total', 'tutor')} ${couponUsedCount} ${__('times used', 'tutor')}`;
+	const totalUsedText = couponUsedCount ? sprintf( __( 'Total %d times used', 'tutor' ), couponUsedCount ) : '';
 	const activeFromText = `${__('Active from ', 'tutor')} ${activeFromSuffix}`;
 
 	return (
@@ -60,7 +60,7 @@ function CouponPreview() {
 				<h1 css={styles.couponCode}>{couponType === 'automatic' ? __('Automatic', 'tutor') : couponCode}</h1>
 				{endDate && (
 					<p css={styles.couponSubtitle}>
-						{__('Valid until', 'tutor') + ' ' + format(new Date(endDate), DateFormats.validityDate)}
+						{sprintf( __('Valid until %s', 'tutor'), format(new Date(endDate), DateFormats.validityDate))}
 					</p>
 				)}
 			</div>
@@ -82,7 +82,9 @@ function CouponPreview() {
 				<div>
 					<h6 css={styles.previewListTitle}>{__('Type', 'tutor')}</h6>
 					<ul css={styles.previewList} data-preview-list>
-						<li>{`${discountText} ${__('off', 'tutor')} ${appliesToLabel[appliesTo]}`}</li>
+						<Show when={discountAmount}>
+							<li>{sprintf( __('%s off %s', 'tutor'), discountText, appliesToLabel[appliesTo])}</li>
+						</Show>
 					</ul>
 				</div>
 				<div>
@@ -91,7 +93,9 @@ function CouponPreview() {
 						<Show when={Number(perUserUsageLimit) === 1}>
 							<li>{__('One use per customer', 'tutor')}</li>
 						</Show>
-						<li>{activeFromText}</li>
+						<Show when={activeFromSuffix}>
+							<li>{activeFromText}</li>
+						</Show>
 					</ul>
 				</div>
 				<div>
@@ -100,7 +104,9 @@ function CouponPreview() {
 						<Show when={new Date(startDateTime) > new Date()}>
 							<li>{__('Not active yet', 'tutor')}</li>
 						</Show>
-						<li>{totalUsedText}</li>
+						<Show when={couponUsedCount}>
+							<li>{totalUsedText}</li>
+						</Show>
 					</ul>
 				</div>
 			</div>

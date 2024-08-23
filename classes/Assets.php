@@ -11,9 +11,9 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\CouponController;
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
+use Tutor\Ecommerce\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -134,11 +134,11 @@ class Assets {
 		}
 
 		$tutor_currency = array(
-			'symbol'             => tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL ),
-			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION ),
-			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR ),
-			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR ),
-			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS ),
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
+			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' ),
 		);
 
 		return array(
