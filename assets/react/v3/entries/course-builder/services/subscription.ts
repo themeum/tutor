@@ -114,7 +114,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     is_featured: !!Number(subscription.is_featured),
     featured_text: subscription.featured_text ?? '',
     regular_price: subscription.regular_price ?? '0',
-    recurring_limit: subscription.recurring_limit === '0' ? 'Until cancelled' : subscription.recurring_limit,
+    recurring_limit: subscription.recurring_limit === '0' ? 'Until cancelled' : subscription.recurring_limit || '',
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',

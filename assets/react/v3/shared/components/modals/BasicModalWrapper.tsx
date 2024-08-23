@@ -93,7 +93,7 @@ const styles = {
       css`
 				max-width: 100vw;
 				width: 100vw;
-				height: 100vh;
+				height: 95vh;
 			`
     }
 

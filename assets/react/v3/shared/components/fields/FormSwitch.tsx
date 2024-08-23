@@ -18,6 +18,7 @@ interface FormSwitchProps extends FormControllerProps<boolean> {
   helpText?: string;
   isHidden?: boolean;
   labelCss?: SerializedStyles;
+  onChange?: (value: boolean) => void;
 }
 
 const FormSwitch = ({
@@ -30,6 +31,7 @@ const FormSwitch = ({
   helpText,
   isHidden,
   labelCss,
+  onChange,
 }: FormSwitchProps) => {
   return (
     <FormFieldWrapper
@@ -53,6 +55,7 @@ const FormSwitch = ({
               labelPosition={labelPosition}
               onChange={() => {
                 field.onChange(!field.value);
+                onChange?.(!field.value);
               }}
             />
           </div>

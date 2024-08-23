@@ -1,15 +1,17 @@
 import type { UserOption } from '@Components/fields/FormSelectUser';
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import { Addons, DateFormats } from '@Config/constants';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import type { AssignmentPayload, ID, LessonPayload } from '@CourseBuilderServices/curriculum';
+import { convertToGMT } from '@Utils/util';
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
 export const convertCourseDataToPayload = (data: CourseFormData): any => {
   return {
     post_date: data.post_date,
+    post_date_gmt: convertToGMT(new Date(data.post_date), DateFormats.yearMonthDayHourMinuteSecond),
     post_title: data.post_title,
     post_name: data.post_name,
     ...(data.editor_used.name === 'classic' && {
