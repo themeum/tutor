@@ -187,9 +187,9 @@ class OrderController {
 	 * @throws \Exception Throw exception if data not valid or
 	 * any other exception occur.
 	 *
-	 * @return int order id.
+	 * @return mixed order id or order data.
 	 */
-	public function create_order( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array() ) {
+	public function create_order( int $user_id, array $items, string $payment_status, string $order_type, $coupon_code = null, array $args = array(), $return_id = true ) {
 		$items          = Input::sanitize_array( $items );
 		$payment_status = Input::sanitize( $payment_status );
 		$coupon_code    = Input::sanitize( $coupon_code );
@@ -255,7 +255,7 @@ class OrderController {
 			if ( $order_id ) {
 				$order_data['id'] = $order_id;
 				do_action( 'tutor_order_placed', $order_data );
-				return $order_id;
+				return $return_id ? $order_id : $order_data;
 			}
 		} catch ( \Throwable $th ) {
 			throw new \Exception( $th->getMessage() );

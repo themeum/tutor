@@ -49,7 +49,6 @@ class CheckoutController {
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
-			add_action( 'tutor_order_placed', array( $this, 'proceed_to_payment' ) );
 		}
 	}
 
@@ -118,7 +117,12 @@ class CheckoutController {
 	/**
 	 * Pay now ajax handler
 	 *
+	 * Create pending order, prepare payment data & proceed
+	 * to payment gateway
+	 *
 	 * @since 3.0.0
+	 *
+	 * @throws \Throwable Throw throwable if error occur.
 	 *
 	 * @return void
 	 */
@@ -132,8 +136,11 @@ class CheckoutController {
 
 		$request = Input::sanitize_array( $_POST );
 
-		$object_ids  = $request['object_ids'] ?? '';
-		$coupon_code = $request['coupon_code'] ?? '';
+		$object_ids     = $request['object_ids'] ?? '';
+		$coupon_code    = $request['coupon_code'] ?? '';
+		$payment_method = $request['payment_method'] ?? '';
+		$payment_type   = $request['payment_type'] ?? '';
+		$order_type     = $request['order_type'] ?? OrderModel::TYPE_SINGLE_ORDER;
 
 		if ( empty( $object_ids ) ) {
 			$this->json_response(
@@ -162,7 +169,21 @@ class CheckoutController {
 			);
 		}
 
-		( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $coupon_code );
+		$args = array(
+			'payment_method' => $payment_method,
+		);
+
+		try {
+			$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
+			if ( ! empty( $order_data ) ) {
+				if ( 'automate' === $payment_type ) {
+					$payment_data = $this->prepare_payment_data( $order_data );
+					$this->proceed_to_payment( $payment_data, $payment_method );
+				}
+			}
+		} catch ( \Throwable $th ) {
+			throw $th;
+		}
 	}
 
 	/**
@@ -174,9 +195,10 @@ class CheckoutController {
 	 *
 	 * @return mixed
 	 */
-	public function proceed_to_payment( array $order ) {
+	public function prepare_payment_data( array $order ) {
 		$site_info     = get_bloginfo();
 		$order_user_id = $order['user_id'];
+		$user_data     = get_userdata( $order_user_id );
 
 		$items          = array();
 		$subtotal_price = $order['subtotal_price'];
@@ -188,9 +210,30 @@ class CheckoutController {
 
 		$billing_info = ( new BillingModel() )->get_info( $order_user_id );
 
-		$billing  = array();
-		$shipping = array();
-		$country  = array();
+		$country = (object) array(
+			'name'         => $billing_info->billing_country ?? '',
+			'numeric_code' => '',
+			'alpha_2'      => '',
+			'alpha_3'      => '',
+			'phone_code'   => '',
+		);
+
+		$billing_name = trim( $billing_info['billing_fist_name'] . ' ' . $billing_info['last_name'] );
+
+		$shipping_and_billing = array(
+			'name'         => empty( $billing_name ) ? $user_data->display_name : $billing_name,
+			'address1'     => $billing_info->billing_address ?? '',
+			'address2'     => $billing_info->billing_address ?? '',
+			'city'         => $billing_info->billing_city ?? '',
+			'state'        => $billing_info->billing_state ?? '',
+			'region'       => '',
+			'postal_code'  => $billing_info->billing_zip_code ?? '',
+			'country'      => $country,
+			'phone_number' => $billing_info->billing_phone,
+			'email'        => $billing_info->billing_email,
+		);
+
+		$customer_info = $shipping_and_billing;
 
 		foreach ( $order['items'] as $item ) {
 			$subtotal_price += $item->regular_price;
@@ -208,7 +251,6 @@ class CheckoutController {
 		}
 
 		return (object) array(
-
 			'items'                                   => (object) $items,
 			'subtotal'                                => floatval( $subtotal_price ),
 			'subtotal_in_smallest_unit'               => floatval( $subtotal_price * 100 ),
@@ -226,71 +268,50 @@ class CheckoutController {
 				'locale'       => $currency_info['locale'],
 				'numeric_code' => $currency_info['numeric_code'],
 			),
-			'country'                                 => (object) array(
-				'name'         => $billing_info['billing_country'] ?? '',
-				'numeric_code' => '',
-				'alpha_2'      => '',
-				'alpha_3'      => '',
-				'phone_code'   => '',
-			),
+			'country'                                 => $country,
 			'shipping_charge'                         => 0,
 			'shipping_charge_in_smallest_unit'        => 0,
 			'coupon_discount'                         => floatval( $order['discount_amount'] ),
 			'coupon_discount_amount_in_smallest_unit' => floatval( $order['discount_amount'] * 100 ),
-			'shipping_address'                        => (object) array(
-				'name'         => 'John Doe',
-				'address1'     => '123 Main St',
-				'address2'     => 'Apt 4B',
-				'city'         => 'New York',
-				'state'        => 'Manhattan',
-				'region'       => 'NY',
-				'postal_code'  => '10001',
-				'country'      => (object) array(
-					'name'         => 'United States',
-					'numeric_code' => '840',
-					'alpha_2'      => 'US',
-					'alpha_3'      => 'USA',
-				),
-				'phone_number' => '123-456-7890',
-				'email'        => 'john-doe@example.com',
-			),
-			'billing_address'                         => (object) array(
-				'name'         => 'John Doe',
-				'address1'     => '123 Main St',
-				'address2'     => 'Apt 4B',
-				'city'         => 'New York',
-				'state'        => 'Manhattan',
-				'region'       => 'NY',
-				'postal_code'  => '10001',
-				'country'      => (object) array(
-					'name'         => 'United States',
-					'numeric_code' => '840',
-					'alpha_2'      => 'US',
-					'alpha_3'      => 'USA',
-				),
-				'phone_number' => '123-456-7890',
-				'email'        => 'john-doe@example.com',
-			),
-			'decimal_separator'                       => '.',
-			'thousand_separator'                      => ',',
-			'customer'                                => (object) array(
-				'name'         => 'John Doe',
-				'address1'     => '123 Main St',
-				'address2'     => 'Apt 4B',
-				'city'         => 'New York',
-				'state'        => 'Manhattan',
-				'region'       => 'NY',
-				'postal_code'  => '10001',
-				'country'      => (object) array(
-					'name'         => 'United States',
-					'numeric_code' => '840',
-					'alpha_2'      => 'US',
-					'alpha_3'      => 'USA',
-				),
-				'email'        => 'john-doe@example.com',
-				'phone_number' => '123-456-7890',
+			'shipping_address'                        => (object) $shipping_and_billing,
+			'billing_address'                         => (object) $shipping_and_billing,
+			'decimal_separator'                       => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
+			'thousand_separator'                      => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
+			'customer'                                => (object) $customer_info,
+		);
+	}
+
+	/**
+	 * Proceed to payment
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed  $payment_data Payment data for making order.
+	 * @param string $payment_method Payment method name.
+	 *
+	 * @throws \Throwable Throw throwable if error occur.
+	 *
+	 * @return void
+	 */
+	public function proceed_to_payment( $payment_data, $payment_method ) {
+		$gateways_with_class = array(
+			array(
+				'stripe' => StripeGateway::class,
 			),
 		);
+
+		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', $gateways_with_class, $payment_method );
+
+		foreach ( $gateways_with_class as $gateway_ref ) {
+			if ( isset( $gateway_ref[ $payment_method ] ) ) {
+				try {
+					$gateway_instance = Ecommerce::get_payment_gateway_object( $gateway_ref[ $payment_method ] );
+					$gateway_instance->setup_payment_and_redirect( $payment_data );
+				} catch ( \Throwable $th ) {
+					throw $th;
+				}
+			}
+		}
 	}
 
 	/**
