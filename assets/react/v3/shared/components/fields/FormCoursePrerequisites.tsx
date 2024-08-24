@@ -141,7 +141,12 @@ const FormCoursePrerequisites = ({
               <div css={styles.courseList}>
                 <For each={inputValue}>
                   {(course, index) => (
-                    <div key={index} css={styles.courseCard}>
+                    <div
+                      key={index}
+                      css={styles.courseCard({
+                        onPopover: false,
+                      })}
+                    >
                       <div css={styles.imageWrapper}>
                         <img src={course.featured_image} alt={course.post_title} css={styles.image} />
                       </div>
@@ -195,7 +200,9 @@ const FormCoursePrerequisites = ({
                         <li key={course.id}>
                           <button
                             type="button"
-                            css={styles.courseCard}
+                            css={styles.courseCard({
+                              onPopover: true,
+                            })}
                             onClick={() => {
                               field.onChange([...inputValue, course]);
                               onChange([...inputValue, course]);
@@ -257,11 +264,6 @@ const styles = {
       padding-right: ${spacing[32]};
       padding-left: ${spacing[36]};
     }
-
-    :focus {
-      outline: none;
-      box-shadow: ${shadow.focus}
-    }
   `,
   courseList: css`
     ${styleUtils.display.flex('column')}
@@ -285,9 +287,12 @@ const styles = {
     max-height: 400px;
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
-    min-width: 200px;
   `,
-  courseCard: css`
+  courseCard: ({
+    onPopover = false,
+  }: {
+    onPopover: boolean;
+  }) => css`
     ${styleUtils.resetButton};
     width: 100%;
     cursor: pointer;
@@ -308,6 +313,15 @@ const styles = {
 
     &:hover {
       background-color: ${colorTokens.background.hover};
+
+      ${
+        !onPopover &&
+        css`
+          background-color: ${colorTokens.background.white};
+          border-color: ${colorTokens.stroke.default};
+        `
+      }
+      
       [data-visually-hidden] {
         opacity: 1;
       }

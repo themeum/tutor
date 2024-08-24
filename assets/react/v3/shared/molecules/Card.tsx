@@ -50,7 +50,7 @@ const Card = ({
         easing: (t) => t * (2 - t),
       },
     },
-    [collapsedAnimationDependencies],
+    [isCollapsed, ...(collapsedAnimationDependencies || [])],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
