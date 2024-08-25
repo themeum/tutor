@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Course;
+use Tutor\Ecommerce\PaymentHandler;
 use TUTOR\Input;
 use Tutor\PaymentGateways\GatewayFactory;
 
@@ -64,6 +65,7 @@ class Ecommerce {
 		new CouponController();
 		new BillingController();
 		new HooksHandler();
+		new PaymentHandler();
 
 		// Include currency file.
 		require_once tutor()->path . 'ecommerce/currency.php';
