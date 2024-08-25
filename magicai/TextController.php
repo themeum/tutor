@@ -97,7 +97,7 @@ class TextController {
 			$response = $client->edits()->create(
 				array(
 					'model'           => 'dall-e-2',
-					'prompt'          => 'create an image of a tree with red color with 100 years old besides a river',
+					'prompt'          => 'an accurium with gold fish and a small cat fish.',
 					'n'               => 1,
 					'response_format' => 'url',
 					'size'            => '256x256',

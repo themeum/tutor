@@ -17,8 +17,14 @@ namespace Tutor\OpenAI\Support;
  */
 final class MultipartFormData {
 
-	// const BOUNDARY_PREFIX = '--TutorLMSBoundary';
-	const BOUNDARY_PREFIX = '--WebKitFormBoundary';
+	/**
+	 * The boundary prefix for the multipart form data.
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	const BOUNDARY_PREFIX = '--TutorLMSBoundary';
+
 	/**
 	 * The unique boundary value for the multipart/form-data.
 	 *
@@ -77,12 +83,11 @@ final class MultipartFormData {
 	/**
 	 * Add a resource to the FormData.
 	 *
-	 * @param string $name The key name of the resource.
-	 * @param mixed  $value The resource value.
+	 * @param string $boundary_resource The multipart boundary resource.
 	 * @return self
 	 */
-	public function add_resource( string $name, $value ) {
-		$this->resources[] = $this->create_form_data( $name, $value );
+	private function add_resource( string $boundary_resource ) {
+		$this->resources[] = $boundary_resource;
 
 		return $this;
 	}
@@ -113,14 +118,14 @@ final class MultipartFormData {
 	}
 
 	/**
-	 * Create the form-data payload string.
+	 * Create the form-data resource.
 	 *
 	 * @param string $name The resource name.
 	 * @param string $value The resource value.
 	 * @return string
 	 * @since 3.0.0
 	 */
-	private function create_form_data( string $name, string $value ) {
+	private function create_resource( string $name, string $value ) {
 		$boundary  = $this->get_boundary();
 		$form_data = array(
 			"--{$boundary}\r\n",
@@ -132,14 +137,14 @@ final class MultipartFormData {
 	}
 
 	/**
-	 * Create the form-data payload string for file.
+	 * Create the resource for the file input.
 	 *
 	 * @param string $name The resource name.
 	 * @param array  $value The resource value.
 	 * @return string
 	 * @since 3.0.0
 	 */
-	private function create_file_form_data( string $name, array $value ) {
+	private function create_file_resource( string $name, array $value ) {
 		$file_content = file_get_contents( $value['tmp_name'] );
 		$filename     = $value['name'];
 		$filetype     = $value['type'];
@@ -166,8 +171,7 @@ final class MultipartFormData {
 	private function prepare( string $name, $value ) {
 		if ( $this->is_file_value( $value ) ) {
 			$this->add_resource(
-				$name,
-				$this->create_file_form_data( $name, $value )
+				$this->create_file_resource( $name, $value )
 			);
 		} elseif ( is_array( $value ) ) {
 			foreach ( $value as $key => $nested_value ) {
@@ -175,7 +179,9 @@ final class MultipartFormData {
 				$this->prepare( $nested_name, $nested_value );
 			}
 		} else {
-			$this->add_resource( $name, $value );
+			$this->add_resource(
+				$this->create_resource( $name, $value )
+			);
 		}
 	}
 
