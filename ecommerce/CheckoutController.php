@@ -376,6 +376,21 @@ class CheckoutController {
 
 		if ( $payment_gateway_class ) {
 			try {
+				add_filter(
+					'tutor_ecommerce_payment_success_url_args',
+					function ( $args ) use ( $payment_data ) {
+						$args['order_id'] = $payment_data->order_id;
+						return $args;
+					}
+				);
+				add_filter(
+					'tutor_ecommerce_payment_cancelled_url_args',
+					function ( $args ) use ( $payment_data ) {
+						$args['order_id'] = $payment_data->order_id;
+						return $args;
+					}
+				);
+
 				$gateway_instance = Ecommerce::get_payment_gateway_object( $gateway_ref[ $payment_method ] );
 				$gateway_instance->setup_payment_and_redirect( $payment_data );
 			} catch ( \Throwable $th ) {
@@ -407,6 +422,8 @@ class CheckoutController {
 			}
 		}
 	}
+
+
 
 	/**
 	 * Validate pay now request
