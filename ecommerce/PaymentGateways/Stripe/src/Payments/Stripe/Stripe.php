@@ -7,8 +7,6 @@ use Throwable;
 use Stripe\Webhook;
 use RuntimeException;
 use Stripe\StripeClient;
-use Stripe\Checkout\Session;
-use Stripe\Stripe as StripeSDK;
 use Ollyo\PaymentHub\Core\Support\Arr;
 use Ollyo\PaymentHub\Core\Support\System;
 use Ollyo\PaymentHub\Core\Payment\BasePayment;
@@ -26,6 +24,14 @@ class Stripe extends BasePayment
 	 * @var RepositoryContract
 	 */
 	protected $config;
+
+	/**
+	 * The Stripe Api Client Instance
+	 *
+	 * @var   StripeClient
+	 * @since 1.0.0
+	 */
+	protected $client;
 
 	/**
 	 * Check if everything is OK before proceeding next.
@@ -51,8 +57,9 @@ class Stripe extends BasePayment
 	public function setup(): void
 	{
 		try {
-			StripeSDK::setApiKey($this->config->get('secret_key'));
+			$this->client = new StripeClient($this->config->get('secret_key'));
 			header('Content-Type: application/json');
+			
 		} catch (Throwable $error) {
 			throw $error;
 		}
@@ -67,7 +74,17 @@ class Stripe extends BasePayment
 	public function setData($data): void
 	{
 		try {
-			parent::setData($this->prepareData($data));
+			
+			$type = $data->type ?? 'one-time';
+			
+			switch ($type) {
+				case 'one-time':
+					parent::setData($this->prepareDataForOneTimePayment($data));		
+					break;
+				case 'recurring':
+					parent::setData($this->prepareDataForRecurring($data));
+					break;
+			}
 		} catch (Throwable $error) {
 			throw $error;
 		}
@@ -80,7 +97,7 @@ class Stripe extends BasePayment
 	 * @return array
 	 * @throws Throwable
 	 */
-	protected function prepareData($data): array
+	protected function prepareDataForOneTimePayment($data): array
 	{
 		$coupon = null;
 
@@ -95,23 +112,32 @@ class Stripe extends BasePayment
 		$couponId = !empty($coupon->id) ? $coupon->id : null;
 
 		$returnData = [
-			'line_items' 			=> static::getLineItems($data),
-			'metadata' 				=> [
+			'line_items' 					=> static::getLineItems($data),
+			'metadata' 						=> [
 				'payment_type' 	=> 'stripe',
 				'order_id' 		=> $data->order_id,
 				'coupon_id' 	=> $couponId,
 			],
-			'mode' 					=> 'payment',
-			'success_url' 			=> $this->config->get('success_url'),
-			'cancel_url' 			=> $this->config->get('cancel_url'),
-			'payment_intent_data' 	=> [
-				'metadata' => ['order_id' => $data->order_id, 'coupon_id' => $couponId]
+			'mode' 							=> 'payment',
+			'success_url' 					=> $this->config->get('success_url'),
+			'cancel_url' 					=> $this->config->get('cancel_url'),
+			'payment_intent_data' 			=> [
+				'metadata' 				=> ['order_id' => $data->order_id, 'coupon_id' => $couponId],
 			],
-			'shipping_options' 		=> $this->getShippingOptions($data),
+			'shipping_options' 				=> $this->getShippingOptions($data),
 		];
 
 		if (!is_null($couponId)) {
 			$returnData['discounts'] = [['coupon' => $couponId]];
+		}
+
+		if ($this->config->get('save_payment_method')) {
+			$returnData['payment_intent_data']['setup_future_usage'] = 'off_session';
+			$returnData['saved_payment_method_options'] 			 = ['payment_method_save' => 'enabled'];
+			$returnData['consent_collection'] 						 = [
+				'payment_method_reuse_agreement' => ['position' => 'auto']
+			];
+			$returnData['customer_creation'] 						 = 'always';		
 		}
 
 		return $returnData;
@@ -151,7 +177,7 @@ class Stripe extends BasePayment
 	public function createPayment()
 	{
 		try {
-			$session = Session::create($this->getData());
+			$session = $this->client->checkout->sessions->create($this->getData());
 
 			if ($session->url) {
 				header("Location: {$session->url}");
@@ -172,8 +198,7 @@ class Stripe extends BasePayment
 		$config = $this->getConfig();
 
 		try {
-			$client = new StripeClient($this->config->get('secret_key'));
-			$hooks  = $client->webhookEndpoints->all();
+			$hooks  = $this->client->webhookEndpoints->all();
 
 			$exists = Arr::make($hooks->data)->some(function($value) use($config) {
 				return $value->url === $config->get('webhook_url');
@@ -196,12 +221,11 @@ class Stripe extends BasePayment
 		$webhookUrl = $this->config->get('webhook_url');
 		
 		try {
-			$client = new StripeClient($this->config->get('secret_key'));
-			return $client->webhookEndpoints->create([
+			return $this->client->webhookEndpoints->create([
 				'url' 				=> $webhookUrl,
 				'enabled_events' 	=> [
 					'payment_intent.payment_failed',
-					'checkout.session.completed',
+					'payment_intent.succeeded',
 					'payment_intent.canceled'
 				]
 			]);
@@ -240,7 +264,7 @@ class Stripe extends BasePayment
 
 			$statusMap = [
 				'payment_intent.payment_failed' => 'failed',
-				'checkout.session.completed'    => 'paid',
+				'payment_intent.succeeded'    	=> 'paid',
 				'payment_intent.canceled'       => 'canceled'
 			];
 
@@ -280,8 +304,9 @@ class Stripe extends BasePayment
 
 			$returnData->id 				= $data->metadata->order_id;
 			$returnData->payment_status 	= $event->status;
-			$returnData->transaction_id 	= $data->payment_intent;
+			$returnData->transaction_id 	= $data->id;
 			$returnData->payment_payload 	= $payload->stream;
+			$returnData->payment_method		= $this->config->get('name');
 
 			return $returnData;
 		} catch (Throwable $error) {
@@ -291,10 +316,8 @@ class Stripe extends BasePayment
 
 	public function createCoupon($amount, $currency)
 	{
-		$client = new StripeClient($this->config->get('secret_key'));
-
 		try {
-			return $client->coupons->create([
+			return $this->client->coupons->create([
 				'amount_off' 	=>  $amount,
 				'duration' 		=> 'once',
 				'currency' 		=> strtolower($currency)
@@ -307,8 +330,7 @@ class Stripe extends BasePayment
 	public function deleteCoupon($couponId)
 	{
 		try {
-			$client = new StripeClient($this->config->get('secret_key'));
-			$client->coupons->delete($couponId);
+			$this->client->coupons->delete($couponId);
 		} catch (Throwable $error) {
 			throw $error;
 		}
@@ -347,5 +369,72 @@ class Stripe extends BasePayment
 			];
 		}
 		return $lineItems;
+	}
+
+	/**
+	 * Prepares the necessary data for processing a recurring payment.
+	 *
+	 * @param  object $data 	The data object containing payment and customer details.
+	 * @return array 			The prepared data array for the recurring payment.
+	 * @since  1.0.0
+	 */
+	protected function prepareDataForRecurring($data) : array
+	{
+		$previousPayload = json_decode($data->previous_payload)->data->object;
+		
+		return [
+			'amount' 				=> $data->amount_in_smallest_unit,
+			'currency' 				=> $data->currency->code,
+			'confirm' 				=> true,
+			'customer' 				=> $previousPayload->customer,
+			'metadata' 				=> ['order_id' => $data->order_id],
+			'payment_method' 		=> $previousPayload->payment_method,
+			'receipt_email' 		=> $data->customer->email,
+			'shipping' 				=> static::getShippingInfoForRecurring($data->shipping_address),
+			'payment_method_types' 	=> $previousPayload->payment_method_types
+		];
+	}
+
+	/**
+	 * Retrieves the shipping information for a recurring payment.
+	 *
+	 * @param 	object $shipping 	The shipping data object.
+	 * @return 	array 				The formatted shipping information array, or an empty array if no shipping data is 
+	 * provided.
+	 * @since   1.0.0
+	 */
+	private function getShippingInfoForRecurring($shipping) : array
+	{
+		if (empty($shipping)) {
+			return [];
+		}
+
+		return [
+			'address' => [
+				'city' 			=> $shipping->city,
+				'country' 		=> $shipping->country->alpha_2,
+				'line1' 		=> $shipping->address1,
+				'line2' 		=> $shipping->address2,
+				'postal_code' 	=> $shipping->postal_code,
+				'state' 		=> $shipping->state
+			],
+			'name' 	=> $shipping->name,
+			'phone' => $shipping->phone_number
+		];
+	}
+
+	/**
+	 * Creates a recurring payment intent using the prepared data.
+	 *
+	 * @throws Throwable If the payment intent creation fails.
+	 * @since  1.0.0
+	 */
+	public function createRecurringPayment() 
+	{
+		try {
+			$this->client->paymentIntents->create($this->getData());
+		} catch (Throwable $error) {
+			throw $error;
+		}
 	}
 }

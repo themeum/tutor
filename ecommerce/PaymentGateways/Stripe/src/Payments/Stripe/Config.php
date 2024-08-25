@@ -31,7 +31,7 @@ class Config extends BaseConfig implements ConfigContract
 
 	public function getWebhookSecretKey(): string
 	{
-		return 'whsec_Ry1wTuFrQbCuqAtS4tNPghV9KP6Raixb';
+		return 'whsec_RMFTFCzASgOILXAEKctN8WgWbFPrStZM';
 	}
 
 	public function getWebhookUrl(): string
@@ -47,5 +47,23 @@ class Config extends BaseConfig implements ConfigContract
 	public function getCancelUrl(): string
 	{
 		return 'https://example.com/cancel';	
+	}
+
+	/**
+	 * Determines whether the payment method should be saved for future use.
+	 *
+	 * @return bool  returns true to indicate the payment method should be saved, false otherwise.
+	 * @since  1.0.0
+	 */
+	private function savePaymentMethodForFutureUse() : bool
+	{
+		return true;
+	}
+
+	public function createConfig(): void
+	{
+		parent::createConfig();
+		
+		$this->updateConfig('save_payment_method', $this->savePaymentMethodForFutureUse());
 	}
 }
