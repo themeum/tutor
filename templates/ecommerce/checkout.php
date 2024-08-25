@@ -58,7 +58,7 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 								foreach ( $payment_gateways['automate'] as $key => $gateway ) {
 									list( $label, $icon ) = array_values( $gateway );
 									?>
-										<button type="button" data-payment-method="<?php echo esc_attr( $key ); ?>">
+										<button type="button" data-payment-method="<?php echo esc_attr( $key ); ?>" data-payment-type="automate">
 											<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
 											<?php echo esc_html( $label ); ?>
 										</button>
@@ -67,7 +67,7 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 								foreach ( $payment_gateways['manual'] as $gateway ) {
 									list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
 									?>
-										<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>">
+										<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual">
 											<?php echo esc_html( $label ); ?>
 										</button>
 									<?php

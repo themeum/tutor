@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
         const paymentOptionInput = paymentOptionsWrapper.querySelector("input[name=payment_method]");
+        const paymentTypeInput = document.querySelector("input[name=payment_type]");
         const paymentOptionButtons = paymentOptionsWrapper.querySelectorAll("button");
 
         const toggleCouponFormButton = document.querySelector("#tutor-toggle-coupon-form");
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.classList.add('active');
                 const paymentMethod = button.dataset.paymentMethod;
                 paymentOptionInput.value = paymentMethod;
+                paymentTypeInput.value = button.dataset.paymentType;
             })
         })
 

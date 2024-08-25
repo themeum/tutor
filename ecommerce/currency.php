@@ -1123,10 +1123,18 @@ if ( ! function_exists( 'tutor_get_currencies_info_code' ) ) {
 	 *
 	 * @return array
 	 */
-	function tutor_get_currencies_info_code( $code ) {
-		$currencies = array_flip( get_tutor_currencies() );
+	function tutor_get_currencies_info_by_code( $code ) {
+		$currencies = get_tutor_currencies();
+		$found      = null;
 
-		return $currencies[ $code ];
+		foreach ( $currencies as $currency ) {
+			$flip = array_flip( $currency );
+			if ( isset( $flip[ $code ] ) ) {
+				$found = $currency;
+				break;
+			}
+		}
+		return $found;
 	}
 }
 

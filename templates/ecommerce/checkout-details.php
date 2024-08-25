@@ -8,7 +8,9 @@
  * @since 3.0.0
  */
 
+use Tutor\Ecommerce\CheckoutController;
 use TUTOR\Input;
+use Tutor\Models\OrderModel;
 
 $plan_id   = Input::get( 'plan', 0 );
 $plan_info = new stdClass();
@@ -19,6 +21,7 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
  * Course/Bundle ids to apply coupon
  */
 $object_ids = array();
+$order_type = OrderModel::TYPE_SINGLE_ORDER;
 ?>
 
 <div class="tutor-checkout-details">
@@ -30,7 +33,7 @@ $object_ids = array();
 		<div class="tutor-checkout-courses">
 			<?php
 			if ( isset( $plan_info->plan_name, $plan_info->regular_price ) ) :
-
+				$order_type     = OrderModel::TYPE_SUBSCRIPTION;
 				$regular_price  = $plan_info->regular_price;
 				$sale_price     = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
 				$enrollment_fee = floatval( $plan_info->enrollment_fee );
@@ -191,8 +194,29 @@ $object_ids = array();
 			</div>
 		<?php endif; ?>
 		<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
+		<input type="hidden" name="order_type" value="<?php echo esc_attr( $order_type ); ?>">
+		<input type="hidden" name="payment_type" value="">
 		<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
 			<?php esc_html_e( 'Pay Now', 'tutor' ); ?>
 		</button>
 	</div>
+
+	<!-- handle errors -->
+	<?php
+	$pay_now_errors = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
+	if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) {
+		?>
+		<div class="tutor-p-32">
+			<div class="tutor-card p-2">
+				<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
+				<li class="tutor-text-danger"><?php echo esc_html( $pay_now_err ); ?></li>
+					<?php
+				endforeach;
+				delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
+				?>
+			</div>
+		 </div>
+	<?php } ?>
+
+	<!-- handle errors end -->
 </div>
