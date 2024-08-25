@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+use WP_REST_Server;
+
 /**
  * Payment handler class.
  */
