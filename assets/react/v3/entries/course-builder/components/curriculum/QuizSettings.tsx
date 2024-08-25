@@ -171,6 +171,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 label={__('Passing Grade', 'tutor')}
                 helpText={__('Set the passing percentage for this quiz', 'tutor')}
                 content="%"
+                contentPosition="right"
+                contentCss={styleUtils.inputCurrencyStyle}
               />
             )}
           />

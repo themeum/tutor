@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
-import { Controller, FormProvider } from 'react-hook-form';
+import { Controller, FormProvider, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -61,6 +61,7 @@ const courseId = getCourseId();
 const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
+  const [isEdit, setIsEdit] = useState(!isDefined(quizId));
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -99,6 +100,11 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   });
 
   const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
+  const questions = useWatch({
+    control: form.control,
+    name: 'questions',
+    defaultValue: [],
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -127,8 +133,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
     form.reset(convertedData);
   }, [getQuizDetailsQuery.data]);
-
-  const [isEdit, setIsEdit] = useState(!isDefined(quizId));
 
   const onQuizFormSubmit = async (data: QuizForm, activeQuestionIndex: number) => {
     if (!data.quiz_title) {
@@ -257,9 +261,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               )
             }
           >
-            <div css={styles.wrapper}>
+            <div css={styles.wrapper({ activeTab })}>
               <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
-                <Show when={activeTab === 'details'} fallback={<div />}>
+                <Show when={activeTab === 'details'}>
                   <div css={styles.left}>
                     <Show when={activeTab === 'details'}>
                       <div css={styles.quizTitleWrapper}>
@@ -343,7 +347,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                     <QuizSettings contentDripType={contentDripType} />
                   </Show>
                 </div>
-                <Show when={activeTab === 'details'} fallback={<div />}>
+                <Show when={activeTab === 'details'}>
                   <div css={styles.right}>
                     <QuestionConditions />
                   </div>
@@ -373,7 +377,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               onConfirmation={() => {
                 form.reset();
                 if (quizId) {
-                  setActiveQuestionId('');
+                  setActiveQuestionId(questions.length > 0 ? questions[0].question_id : '');
+
                   return;
                 }
                 closeModal();
@@ -389,11 +394,16 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 export default QuizModal;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({
+    activeTab,
+  }: {
+    activeTab: QuizTabs;
+  }) => css`
     width: 1217px;
     display: grid;
-    grid-template-columns: 352px 1fr 352px;
+    grid-template-columns: ${activeTab === 'details' ? '352px 1fr 352px' : '1fr'};
     height: 100%;
+
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
@@ -409,8 +419,9 @@ const styles = {
 		${
       activeTab === 'settings' &&
       css`
-			padding-top: ${spacing[24]};
-		`
+			  padding-top: ${spacing[24]};
+        padding-inline: 352px 352px; // 352px is the width of the left and right side
+		  `
     }
   `,
   right: css`

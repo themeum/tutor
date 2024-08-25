@@ -267,6 +267,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                 placeholder={__('Timezone', 'tutor')}
                 options={timeZonesOptions}
                 isSearchable
+                selectOnFocus
               />
             )}
           />
