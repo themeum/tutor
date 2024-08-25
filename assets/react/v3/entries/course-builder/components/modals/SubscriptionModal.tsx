@@ -108,7 +108,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
         >
           <div css={styles.container}>
             <div css={styles.header}>
-              <h6>{__('Subscriptions', 'tutor')}</h6>
+              <h6>{__('Subscription Plans', 'tutor')}</h6>
               <Button
                 variant="text"
                 onClick={() => {

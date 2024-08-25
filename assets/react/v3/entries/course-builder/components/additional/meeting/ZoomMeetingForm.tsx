@@ -104,7 +104,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(currentMeeting)) {
-      console.log('currentMeeting', currentMeeting);
       meetingForm.reset({
         meeting_name: currentMeeting.post_title,
         meeting_summary: currentMeeting.post_content,

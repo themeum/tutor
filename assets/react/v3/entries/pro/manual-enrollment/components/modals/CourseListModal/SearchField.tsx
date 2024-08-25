@@ -5,7 +5,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Filter } from '@Hooks/usePaginatedTable';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 interface FilterFormValues {
 	search: string;

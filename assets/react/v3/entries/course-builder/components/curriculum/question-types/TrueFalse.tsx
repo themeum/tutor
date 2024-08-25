@@ -23,35 +23,27 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import {
+  type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
-  useQuizQuestionAnswerOrderingMutation,
+  calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
-import { moveTo } from '@Utils/util';
+import { noop } from '@Utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
+  const { activeQuestionIndex } = useQuizModalContext();
 
-  const quizQuestionAnswerOrderingMutation = useQuizQuestionAnswerOrderingMutation(quizId);
-
-  const { fields: optionsFields, move: moveOption } = useFieldArray({
+  const {
+    fields: optionsFields,
+    move: moveOption,
+    replace: replaceOption,
+  } = useFieldArray({
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers',
   });
-
-  const filteredOptionsFields = optionsFields.reduce(
-    (allOptions, option, index) => {
-      if (option.belongs_question_type === 'true_false') {
-        allOptions.push({ ...option, index: index });
-      }
-
-      return allOptions;
-    },
-    [] as Array<QuizQuestionOption & { index: number }>,
-  );
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -73,8 +65,20 @@ const TrueFalse = () => {
       return null;
     }
 
-    return filteredOptionsFields.find((item) => item.answer_id === activeSortId);
-  }, [activeSortId, filteredOptionsFields]);
+    return optionsFields.find((item) => item.answer_id === activeSortId);
+  }, [activeSortId, optionsFields]);
+
+  const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
+    const updatedOptions = currentOptions.map((item) => ({
+      ...item,
+      ...(calculateQuizDataStatus(item._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+      }),
+      is_correct: item.answer_id === option.answer_id ? '1' : '0',
+    })) as QuizQuestionOption[];
+
+    replaceOption(updatedOptions);
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -90,12 +94,18 @@ const TrueFalse = () => {
 
     const changedOptionIndex = optionsFields.findIndex((item) => item.answer_id === changedOptions[0].answer_id);
 
-    const updatedOptions = [...optionsFields];
+    const updatedOptions = [...currentOptions];
     updatedOptions[changedOptionIndex] = Object.assign({}, updatedOptions[changedOptionIndex], { is_correct: '1' });
 
     for (const [index, option] of updatedOptions.entries()) {
       if (index !== changedOptionIndex) {
-        updatedOptions[index] = { ...option, is_correct: '0' };
+        updatedOptions[index] = {
+          ...option,
+          ...(calculateQuizDataStatus(option._data_status, 'update') && {
+            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+          }),
+          is_correct: '0' as '0' | '1',
+        };
       }
     }
 
@@ -121,17 +131,6 @@ const TrueFalse = () => {
             const activeIndex = optionsFields.findIndex((item) => item.answer_id === active.id);
             const overIndex = optionsFields.findIndex((item) => item.answer_id === over.id);
 
-            const updatedOptionsOrder = moveTo(
-              form.watch(`questions.${activeQuestionIndex}.question_answers`),
-              activeIndex,
-              overIndex,
-            );
-
-            quizQuestionAnswerOrderingMutation.mutate({
-              question_id: activeQuestionId,
-              sorted_answer_ids: updatedOptionsOrder.map((option) => option.answer_id),
-            });
-
             moveOption(activeIndex, overIndex);
           }
 
@@ -139,18 +138,22 @@ const TrueFalse = () => {
         }}
       >
         <SortableContext
-          items={filteredOptionsFields.map((item) => ({ ...item, id: item.answer_id }))}
+          items={optionsFields.map((item) => ({ ...item, id: item.answer_id }))}
           strategy={verticalListSortingStrategy}
         >
-          <For each={filteredOptionsFields}>
+          <For each={optionsFields}>
             {(option, index) => (
               <Controller
                 key={`${option.answer_id}-${option.is_correct}`}
                 control={form.control}
-                name={
-                  `questions.${activeQuestionIndex}.question_answers.${option.index}` as 'questions.0.question_answers.0'
-                }
-                render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
+                name={`questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'}
+                render={(controllerProps) => (
+                  <FormTrueFalse
+                    {...controllerProps}
+                    index={index}
+                    onCheckCorrectAnswer={() => handleCheckCorrectAnswer(index, option)}
+                  />
+                )}
               />
             )}
           </For>
@@ -168,7 +171,9 @@ const TrueFalse = () => {
                     name={
                       `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
                     }
-                    render={(controllerProps) => <FormTrueFalse {...controllerProps} index={index} />}
+                    render={(controllerProps) => (
+                      <FormTrueFalse {...controllerProps} index={index} onCheckCorrectAnswer={noop} />
+                    )}
                   />
                 );
               }}

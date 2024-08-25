@@ -33,7 +33,7 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
   return (
     <div css={styles.outer}>
       <div css={styles.header}>
-        <p>{__('Subscription List')}</p>
+        <p>{__('Subscription Plans List')}</p>
         <Show when={subscriptions.length > 0}>
           <button
             type="button"
@@ -42,7 +42,7 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
               showModal({
                 component: SubscriptionModal,
                 props: {
-                  title: __('Manage Subscriptions', 'tutor'),
+                  title: __('Manage Subscription Plans', 'tutor'),
                   icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
                 },
               });
@@ -63,7 +63,7 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
                 showModal({
                   component: SubscriptionModal,
                   props: {
-                    title: __('Create Subscriptions', 'tutor'),
+                    title: __('Create Plans', 'tutor'),
                     icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
                   },
                 });

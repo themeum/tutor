@@ -7,7 +7,7 @@ import { Enrollment, useCreateEnrollmentMutation } from '@EnrollmentServices/enr
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { useFormContext } from 'react-hook-form';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 export const TOPBAR_HEIGHT = 80;
 

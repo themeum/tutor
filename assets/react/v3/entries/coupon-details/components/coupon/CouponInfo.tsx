@@ -2,6 +2,7 @@ import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
 import FormInput from '@Components/fields/FormInput';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
+import FormSelectInput from '@Components/fields/FormSelectInput';
 import { DateFormats } from '@Config/constants';
 import { colorPalate, spacing } from '@Config/styles';
 import { Coupon } from '@CouponServices/coupon';
@@ -19,6 +20,10 @@ const couponTypeOptions = [
 ];
 
 function CouponInfo() {
+	const params = new URLSearchParams(window.location.search);
+  	const courseId = params.get('coupon_id');
+	const isEditMode = !!courseId;
+
 	const form = useFormContext<Coupon>();
 	const couponType = form.watch('coupon_type');
 
@@ -26,6 +31,21 @@ function CouponInfo() {
 		const newCouponCode = generateCouponCode();
 		form.setValue('coupon_code', newCouponCode, { shouldValidate: true });
 	}
+
+	const couponStatusOptions = [
+		{
+			label: __('Active', 'tutor'),
+			value: 'active'
+		},
+		{
+			label: __('Inactive', 'tutor'),
+			value: 'inactive'
+		},
+		{
+			label: __('Trash', 'tutor'),
+			value: 'trash'
+		},
+	];
 
 	return (
 		<Box bordered css={styles.discountWrapper}>
@@ -44,6 +64,7 @@ function CouponInfo() {
 						label={__('Deduction type', 'tutor')}
 						options={couponTypeOptions}
 						wrapperCss={styles.radioWrapper}
+						disabled={isEditMode}
 					/>
 				)}
 			/>
@@ -71,13 +92,31 @@ function CouponInfo() {
 								{...controllerProps}
 								label={__('Coupon code', 'tutor')}
 								placeholder={__('SUMMER20', 'tutor')}
+								disabled={isEditMode}
 							/>
 						)}
 					/>
-					<Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
-						{__('Generate code', 'tutor')}
-					</Button>
+					{!isEditMode && (
+						<Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
+							{__('Generate code', 'tutor')}
+						</Button>
+					)}
 				</div>
+			)}
+
+			{isEditMode && (
+				<Controller
+					name="coupon_status"
+					control={form.control}
+					rules={requiredRule()}
+					render={(controllerProps) => (
+						<FormSelectInput 
+							{...controllerProps} 
+							label={__('Coupon status', 'tutor')} 
+							options={couponStatusOptions}
+						/>
+					)}
+				/>
 			)}
 		</Box>
 	);

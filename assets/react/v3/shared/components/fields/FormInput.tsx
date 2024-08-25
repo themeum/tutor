@@ -7,7 +7,6 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
 
 import Show from '@Controls/Show';
 
@@ -208,10 +207,10 @@ const styles = {
 		position: relative;
 		display: flex;
 
-		& input {
-			${isClearable && `padding-right: ${spacing[36]};`};
-			${typography.body()}
-			width: 100%;
+		input {
+			&.tutor-input-field {
+        ${isClearable && `padding-right: ${spacing[36]};`};
+      }
 		}
 	`,
   clearButton: css`

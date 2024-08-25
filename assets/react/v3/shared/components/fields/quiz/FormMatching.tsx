@@ -10,9 +10,10 @@ import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import {
+  type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
-  useDeleteQuizAnswerMutation,
+  calculateQuizDataStatus,
   useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 
@@ -20,8 +21,6 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -29,11 +28,9 @@ import { isDefined } from '@Utils/types';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: (answerId: ID) => void;
+  onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
 }
-
-const courseId = getCourseId();
 
 const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
   const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
@@ -51,18 +48,16 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
 
   const imageMatching = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.imageMatching` as 'questions.0.imageMatching',
+    name: `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching',
     defaultValue: false,
   });
 
   const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
   );
-  const [previousValue] = useState<QuizQuestionOption>(inputValue);
+  const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value.answer_id || 0,
@@ -89,6 +84,9 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
 
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: id,
       image_url: url,
     });
@@ -97,43 +95,12 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: '',
       image_url: '',
     });
-  };
-
-  const createQuizAnswer = async () => {
-    const response = await createQuizAnswerMutation.mutateAsync({
-      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-      question_id: inputValue.belongs_question_id,
-      answer_title: inputValue.answer_title,
-      image_id: inputValue.image_id || '',
-      answer_view_format: 'text_image',
-      matched_answer_title: inputValue.answer_two_gap_match,
-      question_type: imageMatching ? 'image_matching' : 'matching',
-    });
-
-    if (response.status_code === 201 || response.status_code === 200) {
-      setIsEditing(false);
-
-      if (!inputValue.answer_id && response.data) {
-        field.onChange({
-          ...inputValue,
-          answer_id: response.data,
-        });
-      }
-    }
-  };
-
-  const handleDuplicateAnswer = async () => {
-    const response = await duplicateContentMutation.mutateAsync({
-      course_id: courseId,
-      content_id: inputValue.answer_id,
-      content_type: 'answer',
-    });
-    if (response.data) {
-      onDuplicateOption?.(response.data);
-    }
   };
 
   useEffect(() => {
@@ -161,11 +128,11 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
             {String.fromCharCode(65 + index)}
           </div>
 
-          <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
-            <SVGIcon name="dragVertical" height={24} width={24} />
-          </button>
+          <Show when={!isEditing && inputValue.is_saved}>
+            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+              <SVGIcon name="dragVertical" height={24} width={24} />
+            </button>
 
-          <Show when={inputValue.answer_id}>
             <div css={styles.optionActions}>
               <button
                 type="button"
@@ -184,7 +151,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleDuplicateAnswer();
+                  onDuplicateOption(inputValue);
                 }}
               >
                 <SVGIcon name="copyPaste" width={24} height={24} />
@@ -195,7 +162,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                   onRemoveOption();
                 }}
               >
@@ -246,7 +212,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     url: inputValue.image_url || '',
                     title: inputValue.image_url || '',
                   }}
-                  infoText={__('Size: 700x430 pixels', 'tutor')}
+                  infoText={__('Standard Size: 700x430 pixels', 'tutor')}
                   uploadHandler={uploadHandler}
                   clearHandler={clearHandler}
                   emptyImageCss={styles.emptyImageInput}
@@ -266,6 +232,9 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 onChange={(event) => {
                   field.onChange({
                     ...inputValue,
+                    ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                      _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                    }),
                     answer_title: event.target.value,
                   });
                 }}
@@ -277,7 +246,12 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     inputValue.answer_title &&
                     inputValue.answer_two_gap_match
                   ) {
-                    await createQuizAnswer();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                    });
                     setIsEditing(false);
                   }
                 }}
@@ -295,10 +269,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
                       answer_two_gap_match: event.target.value,
                     });
                   }}
-                  onKeyDown={async (event) => {
+                  onKeyDown={(event) => {
                     event.stopPropagation();
                     if (
                       (event.metaKey || event.ctrlKey) &&
@@ -306,7 +283,12 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       inputValue.answer_title &&
                       inputValue.answer_two_gap_match
                     ) {
-                      await createQuizAnswer();
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                      });
                       setIsEditing(false);
                     }
                   }}
@@ -321,12 +303,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                     setIsEditing(false);
                     field.onChange(previousValue);
 
-                    if (
-                      !inputValue.answer_title &&
-                      !inputValue.image_id &&
-                      !inputValue.answer_two_gap_match &&
-                      !inputValue.answer_id
-                    ) {
+                    if (!inputValue.is_saved) {
                       onRemoveOption();
                     }
                   }}
@@ -337,9 +314,24 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
-                  onClick={async (event) => {
+                  onClick={(event) => {
                     event.stopPropagation();
-                    await createQuizAnswer();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                      is_saved: true,
+                    });
+
+                    setPreviousValue({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                      is_saved: true,
+                    });
+                    setIsEditing(false);
                   }}
                   disabled={
                     !inputValue.answer_title ||

@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 
 /**
@@ -68,6 +70,7 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
+		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) );
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
@@ -82,7 +85,7 @@ $filters = array(
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Title', 'tutor' ); ?>
+								<?php esc_html_e( 'Name', 'tutor' ); ?>
 							</th>
 							<th>
 								<?php esc_html_e( 'Discount', 'tutor' ); ?>
@@ -96,11 +99,8 @@ $filters = array(
 							<th>
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</th>
-							<th>
+							<th colspan="2">
 								<?php esc_html_e( 'Uses', 'tutor' ); ?>
-							</th>
-							<th  width="10%">
-							<?php esc_html_e( 'Action', 'tutor' ); ?>
 							</th>
 						</tr>
 					</thead>
@@ -122,15 +122,15 @@ $filters = array(
 											<?php echo esc_html( $coupon->coupon_title ); ?>
 										</div>
 									</td>
-									
+
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( $coupon->discount_amount ); ?>
+											<?php echo esc_html( 'flat' === $coupon->discount_type ? $currency_symbol . $coupon->discount_amount : $coupon->discount_amount . '%' ); ?>
 										</div>
 									</td>
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( $coupon->discount_type ); ?>
+											<?php echo esc_html( 'flat' === $coupon->discount_type ? __( 'Amount', 'tutor' ) : __( 'Percent', 'tutor' ) ); ?>
 										</div>
 									</td>
 
@@ -154,15 +154,12 @@ $filters = array(
 											<a href="<?php echo esc_url( $coupon_page_url . '&action=edit&coupon_id=' . $coupon->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 												<?php esc_html_e( 'Edit', 'tutor' ); ?>
 											</a>
+											<?php if ( 'trash' === $active_tab ) : ?>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
 													<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 												</button>
 												<div id="table-dashboard-coupon-list-<?php echo esc_attr( $coupon->id ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-													<!-- <a class="tutor-dropdown-item" href="javascript:void">
-														<i class="tutor-icon-copy tutor-mr-8" area-hidden="true"></i>
-														<span><?php esc_html_e( 'Duplicate', 'tutor' ); ?></span>
-													</a> -->
 													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-delete-permanently"
 														data-tutor-modal-target="tutor-common-confirmation-modal" data-action="tutor_coupon_permanent_delete" data-id="<?php echo esc_attr( $coupon->id ); ?>">
 														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
@@ -172,8 +169,8 @@ $filters = array(
 													</a>
 												</div>
 											</div>
+											<?php endif ?>
 										</div>
-										
 									</td>
 								</tr>
 							<?php endforeach; ?>

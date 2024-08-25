@@ -31,6 +31,7 @@ import { type ID, useAssignmentDetailsQuery, useSaveAssignmentMutation } from '@
 import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
+import { maxLimitRule } from '@Utils/validation';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -115,6 +116,7 @@ const AssignmentModal = ({
       },
     },
     shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const isFormDirty = form.formState.isDirty;
@@ -174,7 +176,13 @@ const AssignmentModal = ({
       actions={
         isFormDirty ? (
           <>
-            <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                assignmentId ? form.reset() : closeModal({ action: 'CLOSE' });
+              }}
+            >
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
@@ -202,6 +210,7 @@ const AssignmentModal = ({
                 control={form.control}
                 rules={{
                   required: __('Assignment title is required', 'tutor'),
+                  ...maxLimitRule(255),
                 }}
                 render={(controllerProps) => (
                   <FormInput

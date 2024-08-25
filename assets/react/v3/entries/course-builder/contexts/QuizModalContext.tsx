@@ -43,7 +43,9 @@ export const QuizModalContextProvider = ({
     } else if (previousQuestions.current.length !== 0 && previousQuestions.current.length < questions.length) {
       const newQuestion = questions.find(
         (question) =>
-          !previousQuestions.current.some((prevQuestion) => prevQuestion.question_id === question.question_id),
+          !previousQuestions.current.some(
+            (prevQuestion) => String(prevQuestion.question_id) === String(question.question_id),
+          ),
       );
       setActiveQuestionId(newQuestion?.question_id || '');
     } else if (activeQuestionIndex === -1) {

@@ -24,6 +24,9 @@ const statusVariant = {
 } as const;
 
 function Topbar() {
+	const params = new URLSearchParams(window.location.search);
+  	const courseId = params.get('coupon_id');
+
 	const form = useFormContext<Coupon>();
 	const coupon = form.getValues();
 	const createCouponMutation = useCreateCouponMutation();
@@ -52,7 +55,9 @@ function Topbar() {
 						</button>
 						<div>
 							<div css={styles.headerContent}>
-								<h4 css={typography.heading5('medium')}>{__('Create coupon', 'tutor')}</h4>
+								<h4 css={typography.heading5('medium')}>
+									{courseId ? __('Update coupon', 'tutor') : __('Create coupon', 'tutor')}
+								</h4>
 								<TutorBadge variant={statusVariant[coupon.coupon_status]}>{makeFirstCharacterUpperCase(coupon.coupon_status)}</TutorBadge>
 							</div>
 							<Show
