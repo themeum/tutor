@@ -265,7 +265,7 @@ class CheckoutController {
 
 		$items          = array();
 		$subtotal_price = $order['subtotal_price'];
-		$total_price    = $order['subtotal_price'];
+		$total_price    = $order['total_price'];
 
 		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
@@ -299,8 +299,7 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		foreach ( $order['items'] as $item ) {
-			$item            = (object) $item;
-			$subtotal_price += $item->regular_price;
+			$item = (object) $item;
 
 			$items[] = array(
 				'item_id'                           => $item->item_id,
