@@ -1174,6 +1174,14 @@ class Course extends Tutor_Base {
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
+		wp_localize_script(
+			'mce-view',
+			'mceViewL10n',
+			array(
+				'shortcodes' => ! empty( $GLOBALS['shortcode_tags'] ) ? array_keys( $GLOBALS['shortcode_tags'] ) : array(),
+			)
+		);
+
 		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
 	}
 
