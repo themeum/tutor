@@ -255,7 +255,7 @@ class CheckoutController {
 						wp_safe_redirect(
 							add_query_arg(
 								array(
-									'tutor_order_status' => 'success',
+									'tutor_order_placement' => 'success',
 									'order_id'           => $order_data['id'],
 								),
 								home_url()

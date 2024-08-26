@@ -35,8 +35,8 @@ trait PaymentUrlsTrait {
 	 */
 	public function getSuccessUrl(): string {
 		$args = array(
-			'tutor_order_status' => 'success',
-			'order_id'           => 0,
+			'tutor_order_placement' => 'success',
+			'order_id'              => 0,
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_success_url_args', $args );
 		return add_query_arg( $args, home_url() );
@@ -51,8 +51,8 @@ trait PaymentUrlsTrait {
 	 */
 	public function getCancelUrl(): string {
 		$args = array(
-			'tutor_order_status' => 'cancelled',
-			'order_id'           => 0,
+			'tutor_order_placement' => 'failed',
+			'order_id'              => 0,
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_cancelled_url_args', $args );
 
