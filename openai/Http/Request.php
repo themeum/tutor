@@ -15,7 +15,7 @@ namespace Tutor\OpenAI\Http;
  *
  * @since 3.0.0
  */
-final class Request {
+class Request {
 	/**
 	 * 200 serial HTTP status code constants
 	 */

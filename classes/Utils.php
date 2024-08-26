@@ -1121,6 +1121,25 @@ class Utils {
 	}
 
 	/**
+	 * Check if the openai response has any error or not.
+	 * If there any error then send the error response, otherwise continue.
+	 *
+	 * @param array $response The openai response.
+	 * @return object
+	 * @since   3.0.0
+	 */
+	public function check_openai_response( array $response ) {
+		$status_code = $response['status_code'] ?? 200;
+
+		if ( $status_code >= 400 ) {
+			$error_message = $response['error_message'] ?? '';
+			$this->send_response( $response, null, $status_code );
+		}
+
+		return $response['data'];
+	}
+
+	/**
 	 * Check current user capability and send json response
 	 *
 	 * @since 3.0.0
@@ -1293,7 +1312,7 @@ class Utils {
 
 			$get_enrolled_info = $wpdb->get_row(
 				$wpdb->prepare(
-				"SELECT ID,
+					"SELECT ID,
 					post_author,
 					post_date,
 					post_date_gmt,
@@ -1306,9 +1325,9 @@ class Utils {
 					AND post_author = %d
 					{$status_clause};
 				",
-				'tutor_enrolled',
-				$course_id,
-				$user_id
+					'tutor_enrolled',
+					$course_id,
+					$user_id
 				)
 			);
 			TutorCache::set( $cache_key, $get_enrolled_info );

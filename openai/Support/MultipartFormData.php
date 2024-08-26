@@ -118,6 +118,67 @@ final class MultipartFormData {
 	}
 
 	/**
+	 * Check if a content is a valid JSON string or not.
+	 *
+	 * @param string $content The string content to check.
+	 * @return boolean
+	 */
+	private function is_valid_base64( $content ) {
+		return base64_encode( base64_decode( $content, true ) ) === $content;
+	}
+
+	/**
+	 * Check if provided resource is a base64 image or not.
+	 *
+	 * @param string $value The resource value.
+	 * @return boolean
+	 * @since 3.0.0
+	 */
+	private function is_base64_file_value( $value ) {
+		if ( false === strpos( $value, ',' ) ) {
+			return false;
+		}
+
+		$file_content = explode( ',', $value )[1];
+
+		if ( empty( $file_content ) ) {
+			return false;
+		}
+
+		if ( ! $this->is_valid_base64( $file_content ) ) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Create a resource for base64 file.
+	 *
+	 * @param string $name The resource name.
+	 * @param mixed  $value The resource content.
+	 * @return string
+	 * @since 3.0.0
+	 */
+	private function create_base64_file_resource( string $name, $value ) {
+		$parts        = explode( ',', $value, 2 );
+		$file_content = $parts[1];
+		$file_content = base64_decode( $file_content );
+		$boundary     = $this->get_boundary();
+		$filename     = 'image.png';
+		$filetype     = 'image/png';
+
+		$form_data = array(
+			"--{$boundary}\r\n",
+			"Content-Disposition: form-data; name=\"{$name}\"; filename=\"{$filename}\"\r\n",
+			"Content-Type: {$filetype}\r\n\r\n",
+			"{$file_content}\r\n",
+		);
+
+		return implode( '', $form_data );
+	}
+
+	/**
 	 * Create the form-data resource.
 	 *
 	 * @param string $name The resource name.
@@ -172,6 +233,10 @@ final class MultipartFormData {
 		if ( $this->is_file_value( $value ) ) {
 			$this->add_resource(
 				$this->create_file_resource( $name, $value )
+			);
+		} elseif ( $this->is_base64_file_value( $value ) ) {
+			$this->add_resource(
+				$this->create_base64_file_resource( $name, $value )
 			);
 		} elseif ( is_array( $value ) ) {
 			foreach ( $value as $key => $nested_value ) {

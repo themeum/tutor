@@ -15,7 +15,7 @@ interface ClientContract {
 	 * Create the resource for making http request.
 	 *
 	 * @param array $options The options to send to openai endpoint.
-	 * @return Response
+	 * @return array
 	 */
 	public function create( array $options );
 }

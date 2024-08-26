@@ -117,7 +117,7 @@ final class Factory {
 		$base_uri = BaseUri::from( $this->base_uri ?? 'api.openai.com/v1' );
 		$headers  = Header::create();
 
-		$headers->with_content_type( ContentTypes::MULTIPART );
+		$headers->with_content_type( ContentTypes::JSON );
 
 		if ( ! is_null( $this->api_key ) ) {
 			$headers->with_authorization( $this->api_key );

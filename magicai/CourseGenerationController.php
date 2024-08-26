@@ -84,6 +84,8 @@ class CourseGenerationController {
 				)
 			);
 
+			$response = tutor_utils()->check_openai_response( $response );
+
 			if ( ! empty( $response->choices ) ) {
 					return $response->choices[0]->message->content;
 			}
@@ -110,6 +112,8 @@ class CourseGenerationController {
 					Prompts::prepare_course_description_messages( $title )
 				)
 			);
+
+			$response = tutor_utils()->check_openai_response( $response );
 
 			if ( ! empty( $response->choices ) ) {
 					$content = $response->choices[0]->message->content;
@@ -145,8 +149,10 @@ class CourseGenerationController {
 					'response_format' => 'b64_json',
 				)
 			);
-			$response = $response->toArray();
-			return 'data:image/png;base64,' . $response['data'][0]['b64_json'];
+
+			$response = tutor_utils()->check_openai_response( $response );
+
+			return $response->data[0]->b64_json;
 		} catch ( Throwable $error ) {
 			throw $error;
 		}
@@ -169,6 +175,7 @@ class CourseGenerationController {
 			);
 
 			$response = $client->chat()->create( $input );
+			$response = tutor_utils()->check_openai_response( $response );
 			$content  = $response->choices[0]->message->content;
 			$content  = Helper::is_valid_json( $content ) ? json_decode( $content ) : array();
 			$modules  = ! empty( $content->modules ) ? $content->modules : array();
@@ -196,6 +203,7 @@ class CourseGenerationController {
 				Prompts::prepare_course_topic_content_messages( $title, $topic_name )
 			);
 			$response = $client->chat()->create( $input );
+			$response = tutor_utils()->check_openai_response( $response );
 			$content  = $response->choices[0]->message->content;
 			$content  = Helper::is_valid_json( $content ) ? json_decode( $content ) : array();
 
@@ -220,7 +228,6 @@ class CourseGenerationController {
 	public function course_content_generation() {
 		$type  = Input::post( 'type' );
 		$title = Input::post( 'title' );
-
 		try {
 			$method    = 'generate_course_' . $type;
 			$arguments = 'title' === $type ? array() : array( $title );
@@ -301,6 +308,7 @@ class CourseGenerationController {
 			);
 
 			$response = $client->chat()->create( $input );
+			$response = tutor_utils()->check_openai_response( $response );
 			$content  = $response->choices[0]->message->content;
 			$content  = Helper::is_valid_json( $content ) ? json_decode( $content ) : array();
 

@@ -20,7 +20,7 @@ use Tutor\OpenAI\Support\Payload;
  *
  * @since 3.0.0
  */
-final class HttpTransporter implements TransporterContract {
+class HttpTransporter implements TransporterContract {
 	/**
 	 * The base request uri.
 	 *
@@ -57,8 +57,6 @@ final class HttpTransporter implements TransporterContract {
 	 * @return Response
 	 */
 	public function request( Payload $payload ) {
-		$this->headers->with_content_type( $payload->get_content_type() );
-
 		return Response::create(
 			$payload->build( $this->base_uri, $this->headers )
 		);

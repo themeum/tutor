@@ -31,6 +31,7 @@ final class Chat implements ClientContract {
 	 */
 	public function create( array $options ) {
 		$payload = Payload::post( 'chat/completions', $options );
-		return $this->transporter->request( $payload )->request_json();
+
+		return $this->transporter->request( $payload )->json();
 	}
 }

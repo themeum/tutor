@@ -31,6 +31,6 @@ final class Images implements ClientContract {
 	 */
 	public function create( array $options ) {
 		$payload = Payload::post( 'images/generations', $options );
-		return $this->transporter->request( $payload )->request_json();
+		return $this->transporter->request( $payload )->as_base64_image();
 	}
 }

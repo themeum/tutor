@@ -106,7 +106,7 @@ final class Header {
 	 * @return array<string, string>
 	 * @since 3.0.0
 	 */
-	public function make() {
+	public function to_array() {
 		return $this->headers;
 	}
 }

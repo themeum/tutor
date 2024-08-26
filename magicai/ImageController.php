@@ -134,12 +134,7 @@ class ImageController {
 		try {
 			$client   = Helper::get_openai_client();
 			$response = $client->images()->create( $input );
-			$response = $response->toArray();
-
-			if ( ! empty( $response ) ) {
-				$response['data'][0]['b64_json'] = 'data:image/png;base64,' . $response['data'][0]['b64_json'];
-			}
-
+			$response = tutor_utils()->check_openai_response( $response );
 			$this->json_response( __( 'Image created', 'tutor' ), $response );
 		} catch ( Exception $error ) {
 			$this->json_response( $error->getMessage(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
@@ -157,8 +152,6 @@ class ImageController {
 
 		$prompt         = Input::post( 'prompt' );
 		$image          = Input::post( 'image' );
-		$base64         = explode( ',', $image )[1];
-		$image          = base64_decode( $base64 );
 		$revised_prompt = 'Fill the image and replace the selected area by {prompt}';
 
 		$input = array(
@@ -172,13 +165,8 @@ class ImageController {
 
 		try {
 			$client   = Helper::get_openai_client();
-			$response = $client->images()->edit( $input );
-			$response = $response->toArray();
-
-			if ( ! empty( $response ) ) {
-				$response['data'][0]['b64_json'] = 'data:image/png;base64,' . $response['data'][0]['b64_json'];
-			}
-
+			$response = $client->edits()->create( $input );
+			$response = tutor_utils()->check_openai_response( $response );
 			$this->json_response( __( 'Mask applied successfully.', 'tutor' ), $response );
 		} catch ( Exception $error ) {
 			$this->json_response( $error->getMessage(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );

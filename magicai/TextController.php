@@ -57,61 +57,6 @@ class TextController {
 		 * @since 3.0.0
 		 */
 		add_action( 'wp_ajax_tutor_modify_text_content', array( $this, 'modify_text_content' ) );
-
-		add_action( 'wp_ajax_tutor_test_new_openai', array( $this, 'test_openai' ) );
-	}
-
-	/**
-	 * Test endpoint function.
-	 */
-	public function test_openai() {
-
-		try {
-			$client = OpenAI::client( tutor_utils()->get_option( 'chatgpt_api_key' ) );
-			// $chat     = $client->chat();
-			// $response = $chat->create(
-			// array(
-			// 'model'       => 'gpt-4o',
-			// 'messages'    => array(
-			// array(
-			// 'role'    => 'system',
-			// 'content' => 'You are a helpful assistant could generate funny content.',
-			// ),
-			// array(
-			// 'role'    => 'user',
-			// 'content' => 'Tell me a joke.',
-			// ),
-			// ),
-			// 'temperature' => 0.7,
-			// )
-			// );
-			// $response = $client->images()->create(
-			// array(
-			// 'model'           => 'dall-e-2',
-			// 'prompt'          => 'create an image of a tree with 100 years old besides a river',
-			// 'n'               => 1,
-			// 'response_format' => 'url',
-			// 'size'            => '256x256',
-			// )
-			// );
-			$response = $client->edits()->create(
-				array(
-					'model'           => 'dall-e-2',
-					'prompt'          => 'an accurium with gold fish and a small cat fish.',
-					'n'               => 1,
-					'response_format' => 'url',
-					'size'            => '256x256',
-					'image'           => array(
-						'tmp_name' => '/Users/ahamed/Desktop/sample.png',
-						'name'     => 'sample.png',
-						'type'     => 'image/png',
-					),
-				)
-			);
-			$this->json_response( '', $response );
-		} catch ( Exception $error ) {
-			$this->json_response( $error->getMessage(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
-		}
 	}
 
 	/**
@@ -140,10 +85,9 @@ class TextController {
 				)
 			);
 
-			$this->json_response( __( 'Content generated', 'tutor' ), $response );
-
-			$content = $response->choices[0]->message->content;
-			$content = $input['is_html'] ? Helper::markdown_to_html( $content ) : $content;
+			$response = tutor_utils()->check_openai_response( $response );
+			$content  = $response->choices[0]->message->content;
+			$content  = $input['is_html'] ? Helper::markdown_to_html( $content ) : $content;
 
 			$this->json_response( __( 'Content generated', 'tutor' ), $content );
 		} catch ( Exception $error ) {
@@ -203,8 +147,11 @@ class TextController {
 		try {
 			$client   = Helper::get_openai_client();
 			$response = $client->chat()->create( $input );
-			$content  = $response->choices[0]->message->content;
-			$content  = $is_html ? Helper::markdown_to_html( $content ) : $content;
+
+			$response = tutor_utils()->check_openai_response( $response );
+
+			$content = $response->choices[0]->message->content;
+			$content = $is_html ? Helper::markdown_to_html( $content ) : $content;
 
 			$this->json_response( __( 'Content updated', 'tutor' ), $content );
 		} catch ( Exception $error ) {

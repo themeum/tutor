@@ -122,6 +122,6 @@ final class Payload {
 			$data = json_encode( $this->parameters, JSON_THROW_ON_ERROR );
 		}
 
-		return Request::post( $url, $data, $headers->make() );
+		return Request::post( $url, $data, $headers->to_array() );
 	}
 }

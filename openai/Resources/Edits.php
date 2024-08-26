@@ -31,6 +31,6 @@ final class Edits implements ClientContract {
 	 */
 	public function create( array $options ) {
 		$payload = Payload::multipart( 'images/edits', $options );
-		return $this->transporter->request( $payload )->request_json();
+		return $this->transporter->request( $payload )->as_base64_image();
 	}
 }

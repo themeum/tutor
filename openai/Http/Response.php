@@ -15,7 +15,7 @@ namespace Tutor\OpenAI\Http;
  *
  * @since 3.0.0
  */
-final class Response {
+class Response {
 	/**
 	 * The request instance.
 	 *
@@ -47,7 +47,7 @@ final class Response {
 	 * Parse tht request and make the response.
 	 *
 	 * @param string $type The response type. Available values json|raw.
-	 * @return array
+	 * @return array|object
 	 */
 	public function parse( string $type ) {
 		$response = array(
@@ -57,7 +57,19 @@ final class Response {
 		$has_error = $this->request->has_error();
 
 		if ( $has_error ) {
-			$response['message'] = $this->request->get_error_message();
+			$response['error_message'] = $this->request->get_error_message();
+
+			return $response;
+		}
+
+		$status_code = $this->request->get_status_code();
+
+		if ( $status_code >= 400 ) {
+			$data = $this->request->get_json();
+
+			if ( ! empty( $data->error ) ) {
+				$response['error_message'] = $data->error->message;
+			}
 
 			return $response;
 		}
@@ -80,7 +92,7 @@ final class Response {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public function request_json() {
+	public function json() {
 		return $this->parse( 'json' );
 	}
 
@@ -90,7 +102,33 @@ final class Response {
 	 * @return array
 	 * @since 3.0.0
 	 */
-	public function request_raw() {
+	public function raw() {
 		return $this->parse( 'raw' );
+	}
+
+	/**
+	 * Return the response as a response of base64 png image.
+	 *
+	 * @return array
+	 */
+	public function as_base64_image() {
+		$response = $this->json();
+
+		if ( $response['status_code'] >= 400 ) {
+			return $response;
+		}
+
+		$data = $response['data'] ?? array();
+
+		if ( ! empty( $data->data ) ) {
+			foreach ( $data->data as &$item ) {
+				$item->b64_json = 'data:image/png;base64,' . $item->b64_json;
+			}
+
+			unset( $item );
+			$response['data'] = $data;
+		}
+
+		return $response;
 	}
 }

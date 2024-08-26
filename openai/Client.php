@@ -19,7 +19,7 @@ use Tutor\OpenAI\Resources\Images;
 /**
  * The openai client
  */
-final class Client {
+class Client {
 	/**
 	 * The transporter instance with required metadata.
 	 *

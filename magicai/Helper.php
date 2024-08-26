@@ -10,12 +10,12 @@
 
 namespace Tutor\MagicAI;
 
-use OpenAI;
-use OpenAI\Client;
 use Parsedown;
 use RuntimeException;
 use Tutor\MagicAI\Constants\Models;
-use Tutor\OpenAI\OpenAI as OpenAIOpenAI;
+use Tutor\OpenAI\OpenAI;
+use Tutor\OpenAI\Client;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Helper class for openai related functionalities.
@@ -23,11 +23,12 @@ use Tutor\OpenAI\OpenAI as OpenAIOpenAI;
  * @since 3.0.0
  */
 final class Helper {
+	use JsonResponse;
 
 	/**
-	 * OpenAI\Client instance
+	 * Tutor OpenAI Client instance
 	 *
-	 * @var OpenAI\Client | null
+	 * @var Client | null
 	 * @since 3.0.0
 	 */
 	private static $client = null;
@@ -35,7 +36,7 @@ final class Helper {
 	/**
 	 * Get the instance of the OpenAI\Client
 	 *
-	 * @return OpenAI\Client
+	 * @return Client
 	 * @throws RuntimeException If openai api key is not found.
 	 * @since 3.0.0
 	 */
@@ -48,7 +49,6 @@ final class Helper {
 			}
 
 			self::$client = OpenAI::client( $api_key );
-			// self::$client = OpenAIOpenAI::client( $api_key );
 		}
 
 		return self::$client;
