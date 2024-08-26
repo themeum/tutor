@@ -235,6 +235,17 @@ class CheckoutController {
 					if ( 'automate' === $payment_type ) {
 						$payment_data = $this->prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method );
+					} else {
+						wp_safe_redirect(
+							add_query_arg(
+								array(
+									'tutor_order_status' => 'success',
+									'order_id'           => $order_data['id'],
+								),
+								home_url()
+							)
+						);
+						exit();
 					}
 				} else {
 					array_push( $errors, __( 'Failed to create order!', 'tutor' ) );

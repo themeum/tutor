@@ -49,8 +49,8 @@ trait PaymentUrlsTrait {
 	 */
 	public function getCancelUrl(): string {
 		$args = array(
-			'tutor_payment_status' => 'cancelled',
-			'order_id'             => 0,
+			'tutor_order_status' => 'cancelled',
+			'order_id'           => 0,
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_cancelled_url_args', $args );
 
