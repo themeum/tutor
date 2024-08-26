@@ -316,15 +316,16 @@ export const useDeleteContentMutation = () => {
           message: __(response.message, 'tutor'),
           type: 'success',
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
       }
     },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['Topic'],
       });
     },
   });

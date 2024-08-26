@@ -866,7 +866,7 @@ const styles = {
     color: ${colorTokens.text.hints};
     padding-inline: ${spacing[8]};
     margin-left: ${spacing[24]};
-    padding-bottom: ${spacing[8]};
+    padding-bottom: ${spacing[12]};
 
     ${
       !isEdit &&
