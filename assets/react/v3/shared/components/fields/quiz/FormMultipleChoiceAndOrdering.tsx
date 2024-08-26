@@ -115,6 +115,8 @@ const FormMultipleChoiceAndOrdering = ({
     }
   }, [isEditing]);
 
+  console.log(validationError);
+
   return (
     <div
       {...attributes}
@@ -320,8 +322,14 @@ const FormMultipleChoiceAndOrdering = ({
                       ...inputValue,
                       ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                         _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        is_saved: true,
                       }),
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
+
                     setIsEditing(false);
                   }
                 }}
@@ -366,7 +374,6 @@ const FormMultipleChoiceAndOrdering = ({
                     if (validationError?.type === 'save_option') {
                       setValidationError(null);
                     }
-
                     setIsEditing(false);
                   }}
                   disabled={!inputValue.answer_title && !inputValue.image_url}
