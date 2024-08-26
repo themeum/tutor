@@ -139,6 +139,7 @@ const MultipleChoiceAndOrdering = () => {
           _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
         }),
         is_correct: '0' as '0' | '1',
+        is_saved: true,
       }));
       replaceOption(resetOptions);
     }
