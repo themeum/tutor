@@ -65,11 +65,7 @@ const QuestionConditions = () => {
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   if (!activeQuestionId) {
-    return (
-      <p css={styles.emptyQuestions}>
-        {__('Question Type', 'tutor')} (<span css={{ color: colorTokens.text.error }}>{__('Pending', 'tutor')}</span>)
-      </p>
-    );
+    return <p css={styles.emptyQuestions}>{__('Create/Select a question to view details', 'tutor')}</p>;
   }
 
   return (
@@ -183,6 +179,9 @@ const QuestionConditions = () => {
             name={
               `questions.${activeQuestionIndex}.question_settings.question_mark` as 'questions.0.question_settings.question_mark'
             }
+            rules={{
+              min: 0,
+            }}
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
@@ -192,7 +191,7 @@ const QuestionConditions = () => {
                 placeholder="0"
                 selectOnFocus
                 style={css`
-                  max-width: 72px;
+                  max-width: 80px;
                 `}
                 onChange={() => {
                   calculateQuizDataStatus(activeDataStatus, 'update') &&

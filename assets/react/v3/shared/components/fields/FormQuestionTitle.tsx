@@ -220,7 +220,7 @@ const styles = {
     };
 
 		&:focus-within {
-      ${styleUtils.inputFocus};
+      ${isEdit && styleUtils.inputFocus}
     }
 
     ${

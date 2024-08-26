@@ -36,6 +36,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   style?: SerializedStyles;
   selectOnFocus?: boolean;
   autoFocus?: boolean;
+  allowNegative?: boolean;
 }
 
 const FormInput = ({
@@ -61,6 +62,7 @@ const FormInput = ({
   style,
   selectOnFocus = false,
   autoFocus = false,
+  allowNegative = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
 
@@ -73,7 +75,7 @@ const FormInput = ({
     | undefined = undefined;
 
   if (fieldType === 'number') {
-    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
+    inputValue = parseNumberOnly(`${inputValue}`, allowNegative).replace(/(\..*)\./g, '$1');
   }
 
   if (maxLimit) {

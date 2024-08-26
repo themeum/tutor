@@ -8,6 +8,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 interface WPEditorProps {
   value: string;
   onChange: (value: string) => void;
+  isMinimal?: boolean;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -17,7 +18,7 @@ if (!window.wp.editor.getDefaultSettings) {
   window.wp.editor.getDefaultSettings = () => ({});
 }
 
-function editorConfig(onChange: (value: string) => void, setIsFocused: (value: boolean) => void) {
+function editorConfig(onChange: (value: string) => void, setIsFocused: (value: boolean) => void, isMinimal?: boolean) {
   return {
     tinymce: {
       wpautop: true,
@@ -51,101 +52,106 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       relative_urls: 0,
       remove_script_host: 0,
       plugins:
-        'charmap,colorpicker,hr,lists,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview',
+        'charmap,colorpicker,hr,lists,image,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview',
       skin: 'lightgray',
       submit_patch: true,
       link_context_toolbar: false,
       theme: 'modern',
-      toolbar1: `formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,fullscreen,wp_adv,tutor_button${
-        isTutorPro ? ',codesample' : ''
-      }`,
+      toolbar1: isMinimal
+        ? `bold,italic,underline,image${isTutorPro ? ',codesample' : ''}`
+        : `formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,fullscreen,wp_adv,tutor_button${
+            isTutorPro ? ',codesample' : ''
+          }`,
+
       toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
       content_css: '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css',
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       setup: (editor: any) => {
-        editor.addButton('tutor_button', {
-          text: __('Tutor ShortCode', 'tutor'),
-          icon: false,
-          type: 'menubutton',
-          menu: [
-            {
-              text: __('Student Registration Form', 'tutor'),
-              onclick: () => {
-                editor.insertContent('[tutor_student_registration_form]');
+        if (!isMinimal) {
+          editor.addButton('tutor_button', {
+            text: __('Tutor ShortCode', 'tutor'),
+            icon: false,
+            type: 'menubutton',
+            menu: [
+              {
+                text: __('Student Registration Form', 'tutor'),
+                onclick: () => {
+                  editor.insertContent('[tutor_student_registration_form]');
+                },
               },
-            },
-            {
-              text: __('Instructor Registration Form', 'tutor'),
-              onclick: () => {
-                editor.insertContent('[tutor_instructor_registration_form]');
+              {
+                text: __('Instructor Registration Form', 'tutor'),
+                onclick: () => {
+                  editor.insertContent('[tutor_instructor_registration_form]');
+                },
               },
-            },
-            {
-              text: _x('Courses', 'tinyMCE button courses', 'tutor'),
-              onclick: () => {
-                editor.windowManager.open({
-                  title: __('Courses Shortcode', 'tutor'),
-                  body: [
-                    {
-                      type: 'textbox',
-                      name: 'id',
-                      label: __('Course id, separate by (,) comma', 'tutor'),
-                      value: '',
+              {
+                text: _x('Courses', 'tinyMCE button courses', 'tutor'),
+                onclick: () => {
+                  editor.windowManager.open({
+                    title: __('Courses Shortcode', 'tutor'),
+                    body: [
+                      {
+                        type: 'textbox',
+                        name: 'id',
+                        label: __('Course id, separate by (,) comma', 'tutor'),
+                        value: '',
+                      },
+                      {
+                        type: 'textbox',
+                        name: 'exclude_ids',
+                        label: __('Exclude Course IDS', 'tutor'),
+                        value: '',
+                      },
+                      {
+                        type: 'textbox',
+                        name: 'category',
+                        label: __('Category IDS', 'tutor'),
+                        value: '',
+                      },
+                      {
+                        type: 'listbox',
+                        name: 'orderby',
+                        label: _x('Order By', 'tinyMCE button order by', 'tutor'),
+                        onselect: () => {},
+                        values: [
+                          { text: 'ID', value: 'ID' },
+                          { text: 'title', value: 'title' },
+                          { text: 'rand', value: 'rand' },
+                          { text: 'date', value: 'date' },
+                          { text: 'menu_order', value: 'menu_order' },
+                          { text: 'post__in', value: 'post__in' },
+                        ],
+                      },
+                      {
+                        type: 'listbox',
+                        name: 'order',
+                        label: _x('Order', 'tinyMCE button order', 'tutor'),
+                        onselect: () => {},
+                        values: [
+                          { text: 'DESC', value: 'DESC' },
+                          { text: 'ASC', value: 'ASC' },
+                        ],
+                      },
+                      {
+                        type: 'textbox',
+                        name: 'count',
+                        label: __('Count', 'tutor'),
+                        value: '6',
+                      },
+                    ],
+                    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+                    onsubmit: (e: any) => {
+                      editor.insertContent(
+                        `[tutor_course id="${e.data.id}" exclude_ids="${e.data.exclude_ids}" category="${e.data.category}" orderby="${e.data.orderby}" order="${e.data.order}" count="${e.data.count}"]`,
+                      );
                     },
-                    {
-                      type: 'textbox',
-                      name: 'exclude_ids',
-                      label: __('Exclude Course IDS', 'tutor'),
-                      value: '',
-                    },
-                    {
-                      type: 'textbox',
-                      name: 'category',
-                      label: __('Category IDS', 'tutor'),
-                      value: '',
-                    },
-                    {
-                      type: 'listbox',
-                      name: 'orderby',
-                      label: _x('Order By', 'tinyMCE button order by', 'tutor'),
-                      onselect: () => {},
-                      values: [
-                        { text: 'ID', value: 'ID' },
-                        { text: 'title', value: 'title' },
-                        { text: 'rand', value: 'rand' },
-                        { text: 'date', value: 'date' },
-                        { text: 'menu_order', value: 'menu_order' },
-                        { text: 'post__in', value: 'post__in' },
-                      ],
-                    },
-                    {
-                      type: 'listbox',
-                      name: 'order',
-                      label: _x('Order', 'tinyMCE button order', 'tutor'),
-                      onselect: () => {},
-                      values: [
-                        { text: 'DESC', value: 'DESC' },
-                        { text: 'ASC', value: 'ASC' },
-                      ],
-                    },
-                    {
-                      type: 'textbox',
-                      name: 'count',
-                      label: __('Count', 'tutor'),
-                      value: '6',
-                    },
-                  ],
-                  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-                  onsubmit: (e: any) => {
-                    editor.insertContent(
-                      `[tutor_course id="${e.data.id}" exclude_ids="${e.data.exclude_ids}" category="${e.data.category}" orderby="${e.data.orderby}" order="${e.data.order}" count="${e.data.count}"]`,
-                    );
-                  },
-                });
+                  });
+                },
               },
-            },
-          ],
-        });
+            ],
+          });
+        }
         editor.on('change keyup paste', () => {
           onChange(editor.getContent());
         });
@@ -155,15 +161,17 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       wp_keep_scroll_position: false,
       wpeditimage_html5_captions: true,
     },
-    mediaButtons: true,
+    mediaButtons: isMinimal ? false : true,
     drag_drop_upload: true,
-    quicktags: {
-      buttons: ['strong', 'em', 'block', 'del', 'ins', 'img', 'ul', 'ol', 'li', 'code', 'more', 'close'],
-    },
+    quicktags: isMinimal
+      ? false
+      : {
+          buttons: ['strong', 'em', 'block', 'del', 'ins', 'img', 'ul', 'ol', 'li', 'code', 'more', 'close'],
+        },
   };
 }
 
-const WPEditor = ({ value = '', onChange }: WPEditorProps) => {
+const WPEditor = ({ value = '', onChange, isMinimal }: WPEditorProps) => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
   const [isFocused, setIsFocused] = useState(false);
@@ -195,7 +203,7 @@ const WPEditor = ({ value = '', onChange }: WPEditorProps) => {
   useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       window.wp.editor.remove(editorId);
-      window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused));
+      window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused, isMinimal));
 
       editorRef.current?.addEventListener('change', (e) => {
         onChange((e.target as HTMLInputElement)?.value);
@@ -218,7 +226,11 @@ const WPEditor = ({ value = '', onChange }: WPEditorProps) => {
   }, []);
 
   return (
-    <div css={styles.wrapper}>
+    <div
+      css={styles.wrapper({
+        isMinimal,
+      })}
+    >
       <textarea ref={editorRef} id={editorId} defaultValue={value} />
     </div>
   );
@@ -227,7 +239,11 @@ const WPEditor = ({ value = '', onChange }: WPEditorProps) => {
 export default WPEditor;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({
+    isMinimal,
+  }: {
+    isMinimal?: boolean;
+  }) => css`
     flex: 1;
 
     .wp-editor-tools {
@@ -259,6 +275,13 @@ const styles = {
       border-top-left-radius: ${borderRadius[6]};
       background-color: ${colorTokens.background.default};
       border-color: ${colorTokens.stroke.default};
+
+      ${
+        isMinimal &&
+        css`
+          border-top-right-radius: ${borderRadius[6]};
+        `
+      }
     }
 
     .mce-top-part::before {
@@ -274,6 +297,16 @@ const styles = {
     .mce-tinymce {
       box-shadow: none;
       background-color: transparent;
+    }
+
+    ${
+      isMinimal &&
+      css`
+        .mce-tinymce.mce-container {
+          border: 1px solid ${colorTokens.stroke.default};
+          border-radius: ${borderRadius[6]};
+        }
+      `
     }
 
     textarea {

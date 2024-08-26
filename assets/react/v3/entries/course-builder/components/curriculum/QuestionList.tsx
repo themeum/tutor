@@ -17,7 +17,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import Popover from '@Molecules/Popover';
@@ -30,12 +29,8 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import {
-  type QuizForm,
-  type QuizQuestion,
-  type QuizQuestionType,
-  useCreateQuizQuestionMutation,
-} from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -109,8 +104,6 @@ const QuestionList = ({
 
   const form = useFormContext<QuizForm>();
   const { activeQuestionIndex, setActiveQuestionId } = useQuizModalContext();
-  const createQuizQuestion = useCreateQuizQuestionMutation();
-
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -140,31 +133,17 @@ const QuestionList = ({
     return questionFields.find((item) => item.question_id === activeSortId);
   }, [activeSortId, questionFields]);
 
+  const questions = form.watch('questions') || [];
+
   const handleAddQuestion = (questionType: QuizQuestionType) => {
-    if (activeQuestionIndex !== -1) {
-      const answers =
-        form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
-
-      if (answers.length === 0) {
-        showToast({
-          message: __('Please add option', 'tutor'),
-          type: 'danger',
-        });
-        setIsOpen(false);
-        return;
-      }
-
-      const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-      const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-
-      if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
-        showToast({
-          message: __('Please select a correct answer', 'tutor'),
-          type: 'danger',
-        });
-        setIsOpen(false);
-        return;
-      }
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
+    if (validation !== true) {
+      showToast({
+        message: validation.message,
+        type: validation.type as 'danger',
+      });
+      setIsOpen(false);
+      return;
     }
 
     const questionId = nanoid();
@@ -234,12 +213,28 @@ const QuestionList = ({
   };
 
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
+    const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
+
+    if (!currentQuestion) {
+      return;
+    }
+
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+    if (validation !== true) {
+      showToast({
+        message: validation.message,
+        type: validation.type as 'danger',
+      });
+      return;
+    }
+
     const convertedQuestion: QuizQuestion = {
       ...data,
       question_id: nanoid(),
       _data_status: 'new',
-      question_title: `${data.question_title} (copy)`,
-      question_answers: data.question_answers.map((answer) => ({
+      question_title: `${currentQuestion.question_title} (copy)`,
+      question_answers: currentQuestion.question_answers.map((answer) => ({
         ...answer,
         answer_id: nanoid(),
         _data_status: 'new',
@@ -272,11 +267,6 @@ const QuestionList = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (questionListRef.current) {
-      console.log(
-        questionListRef.current.getBoundingClientRect().top,
-        window.innerHeight,
-        questionListRef.current.getBoundingClientRect().top > window.innerHeight,
-      );
       questionListRef.current.style.maxHeight = `${
         window.innerHeight - questionListRef.current.getBoundingClientRect().top
       }px`;
@@ -291,20 +281,13 @@ const QuestionList = ({
     <div>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <Show when={!createQuizQuestion.isPending} fallback={<LoadingSpinner size={32} />}>
-          <button
-            ref={addButtonRef}
-            disabled={createQuizQuestion.isPending}
-            type="button"
-            onClick={() => setIsOpen(true)}
-          >
-            <SVGIcon name="plusSquareBrand" width={32} height={32} />
-          </button>
-        </Show>
+        <button ref={addButtonRef} type="button" onClick={() => setIsOpen(true)}>
+          <SVGIcon name="plusSquareBrand" width={32} height={32} />
+        </button>
       </div>
 
       <div ref={questionListRef} css={styles.questionList}>
-        <Show when={questionFields.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
+        <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
@@ -315,10 +298,10 @@ const QuestionList = ({
             onDragEnd={(event) => handleDragEnd(event)}
           >
             <SortableContext
-              items={questionFields.map((item) => ({ ...item, id: item.question_id }))}
+              items={questions.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
-              <For each={questionFields}>
+              <For each={questions}>
                 {(question, index) => (
                   <Question
                     key={question.question_id}

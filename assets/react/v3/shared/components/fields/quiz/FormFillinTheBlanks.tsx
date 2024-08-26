@@ -19,7 +19,7 @@ import { nanoid } from '@Utils/util';
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
-  const { activeQuestionId, quizId } = useQuizModalContext();
+  const { activeQuestionId } = useQuizModalContext();
   const inputValue = field.value ?? {
     _data_status: 'new',
     is_saved: false,

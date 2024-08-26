@@ -29,6 +29,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   helpText?: string;
   onChange?: (value: string) => void;
   hasCustomEditorSupport?: boolean;
+  isMinimal?: boolean;
   editors?: Editor[];
   editorUsed?: Editor;
 }
@@ -50,6 +51,7 @@ const FormWPEditor = ({
   helpText,
   onChange,
   hasCustomEditorSupport = false,
+  isMinimal = false,
   editors = [],
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
 }: FormWPEditorProps) => {
@@ -118,6 +120,7 @@ const FormWPEditor = ({
                     onChange(value);
                   }
                 }}
+                isMinimal={isMinimal}
               />
             }
           >
@@ -165,6 +168,7 @@ const FormWPEditor = ({
                     onChange(value);
                   }
                 }}
+                isMinimal={isMinimal}
               />
             </Show>
           </Show>
