@@ -84,6 +84,10 @@ function tutor_get_translate_text() {
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
 		),
+		'expired'    => array(
+			'badge' => 'danger',
+			'text'  => __( 'Expired', 'tutor' ),
+		),
 		'blocked'    => array(
 			'badge' => 'danger',
 			'text'  => __( 'Blocked', 'tutor' ),
@@ -91,6 +95,10 @@ function tutor_get_translate_text() {
 		'cancel'     => array(
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
+		),
+		'hold' => array(
+			'badge' => 'warning',
+			'text'  => __( 'On Hold', 'tutor' ),
 		),
 		'on-hold'    => array(
 			'badge' => 'warning',

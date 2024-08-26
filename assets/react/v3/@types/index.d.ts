@@ -6,6 +6,7 @@ declare module '*.jpeg';
 declare module '*.jpg';
 
 declare global {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const wp: any;
   interface Window {
     // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
@@ -88,6 +89,7 @@ declare global {
         lesson_video_duration_youtube_api_key: string;
         enrollment_expiry_enabled: 'on' | 'off';
         enable_q_and_a_on_course: 'on' | 'off';
+        instructor_can_delete_course: 'on' | 'off';
       };
       tutor_currency: {
         decimal_separator: string;

@@ -2,27 +2,20 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import {
-  type QuizForm,
-  type QuizQuestion,
-  type QuizQuestionType,
-  convertQuizQuestionFormDataToPayloadForUpdate,
-  useDeleteQuizQuestionMutation,
-  useUpdateQuizQuestionMutation,
-} from '@CourseBuilderServices/quiz';
+import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 import { useToast } from '@Atoms/Toast';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import type { ID } from '@CourseBuilderServices/curriculum';
+import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -30,6 +23,7 @@ import type { IconCollection } from '@Utils/types';
 interface QuestionProps {
   question: QuizQuestion;
   index: number;
+  onDuplicateQuestion: (question: QuizQuestion) => void;
   onRemoveQuestion: () => void;
 }
 
@@ -44,32 +38,12 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   ordering: 'quizOrdering',
 };
 
-const courseId = getCourseId();
-
-const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId } = useQuizModalContext();
+const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
+  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
   const { showToast } = useToast();
-
-  const updateQuizQuestionMutation = useUpdateQuizQuestionMutation(quizId);
-  const deleteQuizQuestionMutation = useDeleteQuizQuestionMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation(quizId);
-
-  const handleDuplicateQuestion = () => {
-    duplicateContentMutation.mutate({
-      course_id: courseId,
-      content_id: question.question_id,
-      content_type: 'question',
-    });
-    setSelectedQuestionId('');
-  };
-
-  const handleDeleteQuestion = () => {
-    deleteQuizQuestionMutation.mutate(question.question_id);
-    onRemoveQuestion();
-    setSelectedQuestionId('');
-  };
+  const ref = useRef<HTMLDivElement>(null);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -82,56 +56,47 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
     opacity: isDragging ? 0.3 : undefined,
   };
 
+  useEffect(() => {
+    if (activeQuestionId === question.question_id) {
+      ref.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center',
+      });
+    }
+  }, [activeQuestionId, question.question_id]);
+
   return (
     <div
       {...attributes}
       key={question.question_id}
-      css={styles.questionItem({ isActive: Number(activeQuestionId) === Number(question.question_id), isDragging })}
-      ref={setNodeRef}
+      css={styles.questionItem({ isActive: String(activeQuestionId) === String(question.question_id), isDragging })}
+      ref={(element) => {
+        setNodeRef(element);
+        // @ts-expect-error
+        ref.current = element;
+      }}
       style={style}
       tabIndex={-1}
       onClick={() => {
-        const hasMultipleAnswers = form.watch(`questions.${activeQuestionIndex}.multipleCorrectAnswer`);
-
-        const currentQuestionType = () => {
-          const questionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-
-          if (questionType === 'multiple_choice' && !hasMultipleAnswers) {
-            return 'single_choice';
-          }
-          return questionType;
-        };
-
-        if (['single_choice', 'multiple_choice', 'true_false'].includes(currentQuestionType())) {
-          const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
-
-          if (answers.length === 0) {
-            return;
-          }
-
-          const hasCorrectAnswer = answers.some(
-            (answer) => answer.belongs_question_type === currentQuestionType() && answer.is_correct === '1',
-          );
-
-          if (!hasCorrectAnswer) {
-            showToast({
-              message: __('Please select a correct answer', 'tutor'),
-              type: 'danger',
-            });
-            return;
-          }
+        if (activeQuestionId === question.question_id) {
+          return;
         }
 
-        const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
-        updateQuizQuestionMutation.mutate(payload);
+        const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+        if (validation !== true) {
+          showToast({
+            message: validation.message,
+            type: validation.type as 'danger',
+          });
+          return;
+        }
 
         setActiveQuestionId(question.question_id);
       }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
-          const payload = convertQuizQuestionFormDataToPayloadForUpdate(form.watch(`questions.${activeQuestionIndex}`));
-          updateQuizQuestionMutation.mutate(payload);
-
           setActiveQuestionId(question.question_id);
         }
       }}
@@ -153,7 +118,18 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
       <span css={styles.questionTitle}>{question.question_title}</span>
       <ThreeDots
         isOpen={selectedQuestionId === question.question_id}
-        onClick={() => setSelectedQuestionId(question.question_id)}
+        onClick={(event) => {
+          const validation = validateQuizQuestion(activeQuestionIndex, form);
+          if (validation !== true) {
+            event.stopPropagation();
+            showToast({
+              message: validation.message,
+              type: validation.type as 'danger',
+            });
+            return;
+          }
+          setSelectedQuestionId(question.question_id);
+        }}
         closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
         maxWidth="150px"
@@ -168,7 +144,8 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            handleDuplicateQuestion();
+            onDuplicateQuestion(question);
+            setSelectedQuestionId('');
           }}
         />
         <ThreeDots.Option
@@ -177,7 +154,8 @@ const Question = ({ question, index, onRemoveQuestion }: QuestionProps) => {
           icon={<SVGIcon name="delete" width={24} height={24} />}
           onClick={(event) => {
             event.stopPropagation();
-            handleDeleteQuestion();
+            onRemoveQuestion();
+            setSelectedQuestionId('');
           }}
         />
       </ThreeDots>
@@ -195,6 +173,7 @@ const styles = {
     isActive: boolean;
     isDragging: boolean;
   }) => css`
+    margin-right: ${spacing[20]};
     padding: ${spacing[10]} ${spacing[8]};
     display: flex;
     align-items: center;

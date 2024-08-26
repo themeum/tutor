@@ -6,7 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizQuestionOption, useMarkAnswerAsCorrectMutation } from '@CourseBuilderServices/quiz';
+import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -14,9 +14,10 @@ import { nanoid } from '@Utils/util';
 
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
+  onCheckCorrectAnswer: () => void;
 }
 
-const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
+const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProps) => {
   const { activeQuestionId, quizId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
@@ -26,8 +27,6 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
     belongs_question_id: activeQuestionId,
     belongs_question_type: 'true_false',
   };
-
-  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value.answer_id || 0,
@@ -40,18 +39,6 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
     opacity: isDragging ? 0.3 : undefined,
   };
 
-  const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      is_correct: '1',
-    });
-
-    markAnswerAsCorrectMutation.mutate({
-      answerId: inputValue.answer_id,
-      isCorrect: '1',
-    });
-  };
-
   return (
     <div
       {...attributes}
@@ -59,7 +46,7 @@ const FormTrueFalse = ({ index, field }: FormTrueFalseProps) => {
       ref={setNodeRef}
       style={style}
     >
-      <button type="button" css={styleUtils.resetButton} onClick={handleCorrectAnswer}>
+      <button type="button" css={styleUtils.resetButton} onClick={onCheckCorrectAnswer}>
         <SVGIcon
           data-check-icon
           name={Number(field.value.is_correct) ? 'checkFilled' : 'check'}

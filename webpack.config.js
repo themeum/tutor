@@ -37,6 +37,9 @@ module.exports = (env, options) => {
 			],
 		},
 		plugins: [new webpack.ProvidePlugin({ React: 'react' })],
+		externals: {
+			'@wordpress/i18n': 'wp.i18n',
+		},
 		devtool: 'source-map',
 	};
 

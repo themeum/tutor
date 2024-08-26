@@ -9,7 +9,7 @@ import SearchField from './SearchField';
 import Button from '@Atoms/Button';
 import { Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
 import SVGIcon from '@Atoms/SVGIcon';
-const { __, sprintf } = wp.i18n;
+import { __, sprintf } from '@wordpress/i18n';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;

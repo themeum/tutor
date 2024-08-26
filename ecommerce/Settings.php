@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Input;
+use Tutor\PaymentGateways\Configs\StripeConfig;
 
 /**
  * Configure ecommerce settings
@@ -527,10 +528,12 @@ class Settings {
 			'paypal' => array(
 				'label'     => 'Paypal',
 				'is_active' => self::is_active( 'paypal' ),
+				'icon'      => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
 			),
 			'stripe' => array(
 				'label'     => 'Stripe',
 				'is_active' => self::is_active( 'stripe' ),
+				'icon'      => esc_url_raw( tutor()->url . 'assets/images/stripe.svg' ),
 			),
 		);
 
@@ -626,7 +629,8 @@ class Settings {
 		return array(
 			'stripe_environment'           => 'environment',
 			'stripe_secret_key'            => 'text',
-			'stripe_webhook_signature_key' => 'textarea',
+			'stripe_public_key'            => 'text',
+			'stripe_webhook_signature_key' => 'text',
 		);
 	}
 

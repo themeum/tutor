@@ -7,7 +7,6 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
 
 import Show from '@Controls/Show';
 
@@ -43,6 +42,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   generateWithAi?: boolean;
   onClickAiButton?: () => void;
   isMagicAi?: boolean;
+  allowNegative?: boolean;
 }
 
 const FormInput = ({
@@ -70,6 +70,7 @@ const FormInput = ({
   autoFocus = false,
   generateWithAi = false,
   isMagicAi = false,
+  allowNegative = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
   const { showModal } = useModal();
@@ -82,7 +83,7 @@ const FormInput = ({
       }
     | undefined = undefined;
   if (fieldType === 'number') {
-    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
+    inputValue = parseNumberOnly(`${inputValue}`, allowNegative).replace(/(\..*)\./g, '$1');
   }
 
   if (maxLimit) {
@@ -208,10 +209,10 @@ const styles = {
 		position: relative;
 		display: flex;
 
-		& input {
-			${isClearable && `padding-right: ${spacing[36]};`};
-			${typography.body()}
-			width: 100%;
+		input {
+			&.tutor-input-field {
+        ${isClearable && `padding-right: ${spacing[36]};`};
+      }
 		}
 	`,
   clearButton: css`

@@ -33,6 +33,7 @@ import { type ID, useLessonDetailsQuery, useSaveLessonMutation } from '@CourseBu
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
+import { maxLimitRule } from '@Utils/validation';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -98,6 +99,7 @@ const LessonModal = ({
       },
     },
     shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const isFormDirty = form.formState.isDirty;
@@ -170,7 +172,13 @@ const LessonModal = ({
       actions={
         isFormDirty ? (
           <>
-            <Button variant="text" size="small" onClick={() => closeModal({ action: 'CLOSE' })}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                lessonId ? form.reset() : closeModal({ action: 'CLOSE' });
+              }}
+            >
               {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
@@ -198,6 +206,7 @@ const LessonModal = ({
                 control={form.control}
                 rules={{
                   required: __('Lesson Name is required', 'tutor'),
+                  ...maxLimitRule(255),
                 }}
                 render={(controllerProps) => (
                   <FormInput

@@ -29,6 +29,9 @@ const endpoints = {
   GENERATE_COURSE_TOPIC_CONTENT: 'tutor_generate_course_topic_content',
   SAVE_AI_GENERATED_COURSE_CONTENT: 'tutor_save_ai_generated_course_content',
   GENERATE_QUIZ_QUESTIONS: 'tutor_generate_quiz_questions',
+
+  // Quiz
+  SAVE_QUIZ: 'tutor_quiz_builder_save',
 };
 
 export default endpoints;

@@ -1113,5 +1113,55 @@ if ( ! function_exists( 'tutor_currencies' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_get_currencies_info_code' ) ) {
+	/**
+	 * Get tutor currencies
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $code Currency code.
+	 *
+	 * @return array
+	 */
+	function tutor_get_currencies_info_by_code( $code ) {
+		$currencies = get_tutor_currencies();
+		$found      = null;
+
+		foreach ( $currencies as $currency ) {
+			$flip = array_flip( $currency );
+			if ( isset( $flip[ $code ] ) ) {
+				$found = $currency;
+				break;
+			}
+		}
+		return $found;
+	}
+}
+
+if ( ! function_exists( 'get_currency_symbol_by_code' ) ) {
+	/**
+	 * Get currency options where key is symbol
+	 * and code is value
+	 *
+	 * It will return $ as default
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $code Currency code.
+	 *
+	 * @return string
+	 */
+	function tutor_get_currency_symbol_by_code( $code ) {
+		$currencies = get_tutor_currencies();
+		$search     = array_search( $code, array_column( $currencies, 'code' ) );
+
+		if ( false !== $search ) {
+			return $currencies[ $search ]['symbol'];
+		} else {
+			return '$';
+		}
+	}
+}
+
 
 

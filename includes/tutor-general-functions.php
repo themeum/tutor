@@ -1426,10 +1426,10 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 				'manual'   => array(),
 			);
 
-			foreach ( Settings::get_default_automate_payment_gateways() as $gateway ) {
-				list( $label, $is_active) = array_values( $gateway );
+			foreach ( Settings::get_default_automate_payment_gateways() as $k => $gateway ) {
+				list( $label, $is_active, $icon ) = array_values( $gateway );
 				if ( $is_active ) {
-					$active_gateways['automate'][] = array( 'label' => $label );
+					$active_gateways['automate'][ $k ] = array( 'label' => $label, 'icon' => $icon );
 				}
 			}
 
@@ -1527,5 +1527,19 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 			return $price;
 		}
+	}
+}
+
+if ( ! function_exists( 'tutor_is_json' ) ) {
+	/**
+	 * Check a string is valid JSON.
+	 *
+	 * @param string $string string.
+	 *
+	 * @return boolean
+	 */
+	function tutor_is_json( $string ) {
+		json_decode( $string );
+		return json_last_error() === JSON_ERROR_NONE;
 	}
 }

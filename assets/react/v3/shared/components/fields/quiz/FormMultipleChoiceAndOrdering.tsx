@@ -13,16 +13,12 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type ID, useDuplicateContentMutation } from '@CourseBuilderServices/curriculum';
 import {
+  type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
-  type QuizQuestionType,
-  useDeleteQuizAnswerMutation,
-  useMarkAnswerAsCorrectMutation,
-  useSaveQuizAnswerMutation,
+  calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -31,16 +27,16 @@ import { nanoid } from '@Utils/util';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
-  onDuplicateOption: (answerId: ID) => void;
+  onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
+  onCheckCorrectAnswer: () => void;
 }
-
-const courseId = getCourseId();
 
 const FormMultipleChoiceAndOrdering = ({
   field,
   onDuplicateOption,
   onRemoveOption,
+  onCheckCorrectAnswer,
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
   const form = useFormContext<QuizForm>();
@@ -54,30 +50,20 @@ const FormMultipleChoiceAndOrdering = ({
   };
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const multipleCorrectAnswer = useWatch({
+  const hasMultipleCorrectAnswer = useWatch({
     control: form.control,
-    name: `questions.${activeQuestionIndex}.multipleCorrectAnswer`,
+    name: `questions.${activeQuestionIndex}.question_settings.has_multiple_correct_answer` as 'questions.0.question_settings.has_multiple_correct_answer',
     defaultValue: false,
   });
   const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-  const filterByQuestionType = (currentQuestionType: QuizQuestionType) => {
-    if (currentQuestionType === 'multiple_choice') {
-      return multipleCorrectAnswer ? 'multiple_choice' : 'single_choice';
-    }
 
-    return 'ordering';
-  };
-
-  const saveQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-  const deleteQuizAnswerMutation = useDeleteQuizAnswerMutation(quizId);
-  const markAnswerAsCorrectMutation = useMarkAnswerAsCorrectMutation(quizId);
-  const duplicateContentMutation = useDuplicateContentMutation(quizId);
-
-  const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
+  const [isEditing, setIsEditing] = useState(
+    !inputValue.is_saved || (!inputValue.answer_title && !inputValue.image_url),
+  );
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
     isDefined(inputValue.image_id) && isDefined(inputValue.image_url),
   );
-  const [previousValue] = useState<QuizQuestionOption>(inputValue);
+  const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: field.value?.answer_id || 0,
@@ -104,6 +90,9 @@ const FormMultipleChoiceAndOrdering = ({
 
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: id,
       image_url: url,
     });
@@ -112,53 +101,12 @@ const FormMultipleChoiceAndOrdering = ({
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
+      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      }),
       image_id: '',
       image_url: '',
     });
-  };
-
-  const handleCorrectAnswer = () => {
-    field.onChange({
-      ...inputValue,
-      is_correct: multipleCorrectAnswer ? (inputValue.is_correct === '1' ? '0' : '1') : '1',
-    });
-    markAnswerAsCorrectMutation.mutate({
-      answerId: inputValue.answer_id,
-      isCorrect: inputValue.is_correct === '1' ? '0' : '1',
-    });
-  };
-
-  const handleDuplicateAnswer = async () => {
-    const response = await duplicateContentMutation.mutateAsync({
-      course_id: courseId,
-      content_id: inputValue.answer_id,
-      content_type: 'answer',
-    });
-    if (response.data) {
-      onDuplicateOption?.(response.data);
-    }
-  };
-
-  const createQuizAnswer = async () => {
-    const response = await saveQuizAnswerMutation.mutateAsync({
-      ...(inputValue.answer_id && { answer_id: inputValue.answer_id }),
-      question_id: inputValue.belongs_question_id,
-      answer_title: inputValue.answer_title,
-      image_id: inputValue.image_id || '',
-      answer_view_format: 'text_image',
-      question_type: filterByQuestionType(currentQuestionType),
-    });
-
-    if (response.status_code === 201 || response.status_code === 200) {
-      setIsEditing(false);
-
-      if (!inputValue.answer_id && response.data) {
-        field.onChange({
-          ...inputValue,
-          answer_id: response.data,
-        });
-      }
-    }
   };
 
   useEffect(() => {
@@ -173,15 +121,21 @@ const FormMultipleChoiceAndOrdering = ({
       css={styles.option({
         isSelected: !!Number(inputValue.is_correct),
         isEditing,
-        isMultipleChoice: multipleCorrectAnswer,
+        isMultipleChoice: hasMultipleCorrectAnswer,
       })}
       ref={setNodeRef}
       style={style}
     >
       <Show when={currentQuestionType === 'multiple_choice'}>
-        <button css={styleUtils.resetButton} type="button" onClick={handleCorrectAnswer}>
+        <button
+          key={inputValue.is_correct}
+          css={styleUtils.resetButton}
+          data-check-button
+          type="button"
+          onClick={onCheckCorrectAnswer}
+        >
           <Show
-            when={multipleCorrectAnswer}
+            when={hasMultipleCorrectAnswer}
             fallback={
               <SVGIcon
                 data-check-icon
@@ -229,6 +183,14 @@ const FormMultipleChoiceAndOrdering = ({
                     icon={<SVGIcon name="removeImage" width={24} height={24} />}
                     onClick={(event) => {
                       event.stopPropagation();
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                        image_id: '',
+                        image_url: '',
+                      });
                       setIsUploadImageVisible(false);
                     }}
                   >
@@ -250,11 +212,11 @@ const FormMultipleChoiceAndOrdering = ({
             </Show>
           </div>
 
-          <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
-            <SVGIcon name="dragVertical" height={24} width={24} />
-          </button>
+          <Show when={!isEditing && inputValue.is_saved}>
+            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+              <SVGIcon name="dragVertical" height={24} width={24} />
+            </button>
 
-          <Show when={inputValue.answer_id}>
             <div css={styles.optionActions}>
               <button
                 type="button"
@@ -273,7 +235,7 @@ const FormMultipleChoiceAndOrdering = ({
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  handleDuplicateAnswer();
+                  onDuplicateOption(inputValue);
                 }}
               >
                 <SVGIcon name="copyPaste" width={24} height={24} />
@@ -284,7 +246,6 @@ const FormMultipleChoiceAndOrdering = ({
                 data-visually-hidden
                 onClick={(event) => {
                   event.stopPropagation();
-                  deleteQuizAnswerMutation.mutate(inputValue.answer_id);
                   onRemoveOption();
                 }}
               >
@@ -346,13 +307,21 @@ const FormMultipleChoiceAndOrdering = ({
 
                   field.onChange({
                     ...inputValue,
+                    ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                      _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                    }),
                     answer_title: value,
                   });
                 }}
                 onKeyDown={async (event) => {
                   event.stopPropagation();
                   if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
-                    await createQuizAnswer();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                    });
                     setIsEditing(false);
                   }
                 }}
@@ -367,7 +336,7 @@ const FormMultipleChoiceAndOrdering = ({
                     setIsEditing(false);
                     field.onChange(previousValue);
 
-                    if (!inputValue.answer_title && !inputValue.image_url && !inputValue.answer_id) {
+                    if (!inputValue.is_saved) {
                       onRemoveOption();
                     }
                   }}
@@ -375,14 +344,27 @@ const FormMultipleChoiceAndOrdering = ({
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
-                  loading={saveQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
                   onClick={async (event) => {
                     event.stopPropagation();
-                    await createQuizAnswer();
+                    field.onChange({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                      is_saved: true,
+                    });
+                    setPreviousValue({
+                      ...inputValue,
+                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      }),
+                      is_saved: true,
+                    });
+                    setIsEditing(false);
                   }}
-                  disabled={!inputValue.answer_title && inputValue.image_url === ''}
+                  disabled={!inputValue.answer_title && !inputValue.image_url}
                 >
                   {__('Ok', 'tutor')}
                 </Button>
@@ -420,6 +402,8 @@ const styles = {
   
       [data-check-icon] {
         opacity: 0;
+        pointer-events: none;
+        color: ${colorTokens.icon.default};
         ${
           !isMultipleChoice &&
           css`
@@ -427,27 +411,14 @@ const styles = {
           `
         }
       }
-      [data-visually-hidden] {
-        opacity: 0;
-      }
-      [data-edit-button] {
-        opacity: 0;
-      }
   
       &:hover {
         [data-check-icon] {
-          opacity: 1;
+          opacity: ${isEditing ? 0 : 1};
         }
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-        ${
-          !isEditing &&
-          css`
-          [data-edit-button] {
-            opacity: 1;
-          }
-        `
+
+        [data-check-button] {
+          visibility: ${isEditing ? 'hidden' : 'visible'};
         }
       }
   
@@ -467,14 +438,6 @@ const styles = {
           }
         `
       }
-      ${
-        isEditing &&
-        css`
-        [data-edit-button] {
-          opacity: 0;
-        }
-      `
-      }
     `,
   optionLabel: ({
     isSelected,
@@ -490,9 +453,30 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
+
+      [data-visually-hidden] {
+        opacity: 0;
+      }
+
+      [data-edit-button] {
+        opacity: 0;
+      }
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+
+        [data-visually-hidden] {
+          opacity: 1;
+        }
+
+        ${
+          !isEditing &&
+          css`
+            [data-edit-button] {
+              opacity: 1;
+            }
+          `
+        }
       }
   
       ${

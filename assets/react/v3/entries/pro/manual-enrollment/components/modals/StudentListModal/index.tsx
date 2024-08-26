@@ -7,7 +7,7 @@ import { css } from '@emotion/react';
 import { UseFormReturn } from 'react-hook-form';
 import StudentListTable from './StudentListTable';
 import { Enrollment } from '@EnrollmentServices/enrollment';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 interface SelectStudentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

@@ -1,6 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import config, { tutorConfig } from '@Config/config';
+import { TutorRoles } from '@Config/constants';
 import {
   borderRadius,
   colorPalate,
@@ -32,7 +33,7 @@ const courseId = getCourseId();
 const Header = () => {
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
-  const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private'>(
+  const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private' | 'trash'>(
     form.watch('post_status'),
   );
 
@@ -45,7 +46,10 @@ const Header = () => {
   const postDate = useWatch({ name: 'post_date' });
   const isPostDateDirty = form.formState.dirtyFields.post_date;
 
-  const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future') => {
+  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const hasTrashAccess = tutorConfig.settings.instructor_can_delete_course === 'on' || isAdmin;
+
+  const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
       Promise.resolve().then(() => {
         form.trigger(field);
@@ -58,10 +62,7 @@ const Header = () => {
     };
 
     if (data.course_price_type === 'paid') {
-      if (
-        (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'edd') &&
-        !data.course_product_id
-      ) {
+      if (tutorConfig.settings.monetize_by === 'edd' && !data.course_product_id) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
@@ -81,12 +82,22 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     const determinePostStatus = () => {
+      if (postStatus === 'trash') {
+        return 'trash';
+      }
+
+      if (postVisibility === 'private') {
+        return 'private';
+      }
+
+      if (postStatus === 'future' && postVisibility !== 'private') {
+        return 'future';
+      }
+
       if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
         return 'publish';
       }
-      if (postVisibility === 'private' && postStatus !== 'draft' && postStatus !== 'future') {
-        return 'private';
-      }
+
       return postStatus;
     };
 
@@ -145,7 +156,17 @@ const Header = () => {
 
     const moveToTrashItem = {
       text: <>{__('Move to trash', 'tutor')}</>,
-      onClick: () => alert('@TODO: will be implemented later.'),
+      onClick: async () => {
+        if (hasTrashAccess) {
+          try {
+            await form.handleSubmit((data) => handleSubmit(data, 'trash'))();
+          } catch (error) {
+            console.error(error);
+          } finally {
+            window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`;
+          }
+        }
+      },
       isDanger: true,
     };
 

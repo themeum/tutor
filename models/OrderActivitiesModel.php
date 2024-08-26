@@ -124,8 +124,12 @@ class OrderActivitiesModel {
 
 		try {
 			foreach ( $order_activities as &$activity ) {
-				$values       = new \stdClass();
-				$values       = json_decode( $activity->meta_value );
+				$values = new \stdClass();
+				if ( tutor_is_json( $activity->meta_value ) ) {
+					$values = json_decode( $activity->meta_value );
+				} else {
+					$values->message = $activity->meta_value;
+				}
 				$values->id   = (int) $activity->id;
 				$values->date = $activity->created_at_gmt;
 				$values->type = $activity->meta_key;

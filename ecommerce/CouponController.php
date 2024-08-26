@@ -152,6 +152,8 @@ class CouponController extends BaseController {
 		$data['created_by']     = get_current_user_id();
 		$data['created_at_gmt'] = current_time( 'mysql', true );
 		$data['updated_at_gmt'] = current_time( 'mysql', true );
+		$applies_to_items       = isset( $data['applies_to_items'] ) ? $data['applies_to_items'] : array();
+		unset( $data['applies_to_items'] );
 
 		// Set expire date if isset.
 		if ( isset( $data['expire_date_gmt'] ) ) {
@@ -161,9 +163,8 @@ class CouponController extends BaseController {
 		try {
 			$coupon_id = $this->model->create_coupon( $data );
 			if ( $coupon_id ) {
-				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
-					$applies_to_ids = array_column( $data['applies_to_items'], 'id' );
-					$this->model->insert_applies_to( $data['applies_to'], $applies_to_ids, $data['coupon_code'] );
+				if ( is_array( $applies_to_items ) && count( $applies_to_items ) ) {
+					$this->model->insert_applies_to( $data['applies_to'], $applies_to_items, $data['coupon_code'] );
 				}
 
 				$this->json_response( __( 'Coupon created successfully!', 'tutor' ) );
@@ -679,11 +680,11 @@ class CouponController extends BaseController {
 	public function ajax_apply_coupon() {
 		tutor_utils()->check_nonce();
 
-		$course_ids  = Input::post( 'course_ids' );
-		$course_ids  = array_filter( explode( ',', $course_ids ), 'is_numeric' );
+		$object_ids  = Input::post( 'object_ids' ); // Course/bundle ids.
+		$object_ids  = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 		$coupon_code = Input::post( 'coupon_code' );
 
-		if ( empty( $course_ids ) ) {
+		if ( empty( $object_ids ) ) {
 			$this->json_response(
 				tutor_utils()->error_message( 'invalid_req' ),
 				null,
@@ -691,12 +692,28 @@ class CouponController extends BaseController {
 			);
 		}
 
-		$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $course_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $course_ids );
+		try {
+			$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $object_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $object_ids );
 
-		$this->json_response(
-			__( 'Coupon applied successfully', 'tutor' ),
-			$discount_price
-		);
+			if ( $discount_price->is_applied ) {
+				$this->json_response(
+					__( 'Coupon applied successfully', 'tutor' ),
+					$discount_price
+				);
+			} else {
+				$this->json_response(
+					__( 'Coupon code is not applicable!', 'tutor' ),
+					null,
+					HttpHelper::STATUS_BAD_REQUEST
+				);
+			}
+		} catch ( \Throwable $th ) {
+			$this->json_response(
+				$th->getMessage(),
+				null,
+				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+			);
+		}
 	}
 
 	/**

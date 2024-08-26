@@ -9,7 +9,8 @@
             "Tutor\\Helpers\\":"helpers/",
             "Tutor\\Traits\\":"traits/",
             "Tutor\\Ecommerce\\":"ecommerce/",
-            "Tutor\\MagicAI\\":"magicai/"
+            "Tutor\\MagicAI\\":"magicai/",
+            "Tutor\\PaymentGateways\\":"ecommerce/PaymentGateways"
         }
     },
     "autoload-dev": {

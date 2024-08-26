@@ -18,7 +18,12 @@ import { typography } from '@Config/typography';
 import EmptyState from '@Molecules/EmptyState';
 import { styleUtils } from '@Utils/style-utils';
 
-import type { QuizForm, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import {
+  type QuizDataStatus,
+  type QuizForm,
+  type QuizQuestionType,
+  calculateQuizDataStatus,
+} from '@CourseBuilderServices/quiz';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 import FillInTheBlanks from './question-types/FillinTheBlanks';
@@ -29,6 +34,7 @@ const QuestionForm = () => {
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const questions = form.watch('questions') || [];
+  const dataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   const questionTypeForm = {
     true_false: <TrueFalse key={activeQuestionId} />,
@@ -68,7 +74,17 @@ const QuestionForm = () => {
             }}
             name={`questions.${activeQuestionIndex}.question_title` as 'questions.0.question_title'}
             render={(controllerProps) => (
-              <FormQuestionTitle {...controllerProps} placeholder={__('Write your question here..', 'tutor')} />
+              <FormQuestionTitle
+                {...controllerProps}
+                placeholder={__('Write your question here..', 'tutor')}
+                onChange={() => {
+                  calculateQuizDataStatus(dataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
+              />
             )}
           />
 
@@ -76,7 +92,17 @@ const QuestionForm = () => {
             control={form.control}
             name={`questions.${activeQuestionIndex}.question_description` as 'questions.0.question_description'}
             render={(controllerProps) => (
-              <FormQuestionDescription {...controllerProps} placeholder={__('Description (optional)', 'tutor')} />
+              <FormQuestionDescription
+                {...controllerProps}
+                placeholder={__('Description (optional)', 'tutor')}
+                onChange={() => {
+                  calculateQuizDataStatus(dataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
+              />
             )}
           />
         </div>
@@ -89,7 +115,18 @@ const QuestionForm = () => {
           control={form.control}
           name={`questions.${activeQuestionIndex}.answer_explanation` as 'questions.0.answer_explanation'}
           render={(controllerProps) => (
-            <FormAnswerExplanation {...controllerProps} placeholder={__('Write answer explanation...', 'tutor')} />
+            <FormAnswerExplanation
+              {...controllerProps}
+              label={__('Answer Explanation', 'tutor')}
+              placeholder={__('Write answer explanation...', 'tutor')}
+              onChange={() => {
+                calculateQuizDataStatus(dataStatus, 'update') &&
+                  form.setValue(
+                    `questions.${activeQuestionIndex}._data_status`,
+                    calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                  );
+              }}
+            />
           )}
         />
       </div>
@@ -102,6 +139,7 @@ export default QuestionForm;
 const styles = {
   questionForm: css`
     ${styleUtils.display.flex('column')};
+    padding-right: ${spacing[48]};
     gap: ${spacing[16]};
     animation: fadeIn 0.25s ease-in-out;
 
@@ -135,5 +173,6 @@ const styles = {
   `,
   emptyState: css`
     padding-left: ${spacing[40]}; 
+    padding-right: ${spacing[48]};
   `,
 };

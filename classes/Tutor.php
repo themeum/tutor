@@ -547,6 +547,13 @@ final class Tutor {
 		$this->rest_auth       = new RestAuth();
 
 		/**
+		 * New Course Builder.
+		 *
+		 * @since 3.0.0
+		 */
+		new QuizBuilder();
+
+		/**
 		 * Tutor native e-commerce
 		 *
 		 * @since 3.0.0
@@ -653,6 +660,7 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-template-functions.php';
 		include tutor()->path . 'includes/tutor-template-hook.php';
 		include tutor()->path . 'includes/translate-text.php';
+		include tutor()->path . 'includes/country.php';
 	}
 
 	/**

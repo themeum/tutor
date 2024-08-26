@@ -40,6 +40,7 @@ type FormSelectInputProps<T> = {
   isSecondary?: boolean;
   isMagicAi?: boolean;
   isAiOutline?: boolean;
+  selectOnFocus?: boolean;
 } & FormControllerProps<T | null>;
 
 const FormSelectInput = <T,>({
@@ -65,6 +66,7 @@ const FormSelectInput = <T,>({
   isSecondary = false,
   isMagicAi = false,
   isAiOutline = false,
+  selectOnFocus,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = () =>
     options.find((item) => item.value === field.value) || {
@@ -76,10 +78,12 @@ const FormSelectInput = <T,>({
   const hasDescription = useMemo(() => options.some((option) => isDefined(option.description)), [options]);
 
   const [inputValue, setInputValue] = useState(getInitialValue()?.label);
+  const [isSearching, setIsSearching] = useState(false);
   const [searchText, setSearchText] = useState('');
   const [isOpen, setIsOpen] = useState(false);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const optionRef = useRef<HTMLLIElement>(null);
 
   const selections = useMemo(() => {
     if (isSearchable) {
@@ -175,11 +179,19 @@ const FormSelectInput = <T,>({
                   autoComplete="off"
                   readOnly={readOnly || !isSearchable}
                   placeholder={placeholder}
-                  value={searchText || inputValue}
+                  value={isSearching ? searchText : inputValue}
                   title={inputValue}
+                  onFocus={
+                    selectOnFocus && isSearchable
+                      ? (event) => {
+                          event.target.select();
+                        }
+                      : undefined
+                  }
                   onChange={(event) => {
                     setInputValue(event.target.value);
                     if (isSearchable) {
+                      setIsSearching(true);
                       setSearchText(event.target.value);
                     }
                   }}
@@ -208,7 +220,14 @@ const FormSelectInput = <T,>({
               )}
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal
+              isOpen={isOpen}
+              onClickOutside={() => {
+                setIsOpen(false);
+                setIsSearching(false);
+                setSearchText('');
+              }}
+            >
               <div
                 css={[
                   styles.optionsWrapper,
@@ -225,6 +244,7 @@ const FormSelectInput = <T,>({
                   {selections.map((option) => (
                     <li
                       key={String(option.value)}
+                      ref={option.value === field.value ? optionRef : null}
                       css={styles.optionItem({
                         isSelected: option.value === field.value,
                       })}
@@ -234,8 +254,10 @@ const FormSelectInput = <T,>({
                         css={styles.label}
                         onClick={() => {
                           field.onChange(option.value);
-                          setSearchText('');
                           onChange(option);
+
+                          setSearchText('');
+                          setIsSearching(false);
                           setIsOpen(false);
                         }}
                         title={option.label}
@@ -291,7 +313,6 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    background-color: ${colorTokens.background.white};
     
     ${
       isAiOutline &&

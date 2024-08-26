@@ -32,6 +32,7 @@ class CourseModel {
 	const STATUS_PENDING    = 'pending';
 	const STATUS_PRIVATE    = 'private';
 	const STATUS_FUTURE     = 'future';
+	const STATUS_TRASH      = 'trash';
 
 	/**
 	 * Course completion modes
@@ -75,6 +76,7 @@ class CourseModel {
 			self::STATUS_PRIVATE,
 			self::STATUS_FUTURE,
 			self::STATUS_PENDING,
+			self::STATUS_TRASH,
 		);
 	}
 

@@ -4,7 +4,7 @@ import { typography } from '@Config/typography';
 import StudentCard from './StudentCard';
 import { Enrollment, Student } from '@EnrollmentServices/enrollment';
 import { UseFormReturn } from 'react-hook-form';
-const { __, _n, sprintf } = wp.i18n;
+import { __, _n, sprintf } from '@wordpress/i18n';
 
 interface SelectedStudentsProps {
   form: UseFormReturn<Enrollment>;

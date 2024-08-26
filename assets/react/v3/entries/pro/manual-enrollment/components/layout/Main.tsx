@@ -8,7 +8,7 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import { requiredRule } from '@Utils/validation';
 import FormSelectCourse from '@EnrollmentComponents/FormSelectCourse';
 import FormSelectStudents from '@EnrollmentComponents/FormSelectStudents';
-const { __ } = wp.i18n;
+import { __ } from '@wordpress/i18n';
 
 function Main() {
   const form = useFormWithGlobalError<Enrollment>({

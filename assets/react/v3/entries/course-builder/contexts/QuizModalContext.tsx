@@ -26,7 +26,9 @@ export const QuizModalContextProvider = ({
   children,
   quizId,
 }: {
-  children: React.ReactNode | ((item: NonNullable<number>) => React.ReactNode);
+  children:
+    | React.ReactNode
+    | ((item: NonNullable<number>, setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>) => React.ReactNode);
   quizId: ID;
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
@@ -43,7 +45,9 @@ export const QuizModalContextProvider = ({
     } else if (previousQuestions.current.length !== 0 && previousQuestions.current.length < questions.length) {
       const newQuestion = questions.find(
         (question) =>
-          !previousQuestions.current.some((prevQuestion) => prevQuestion.question_id === question.question_id),
+          !previousQuestions.current.some(
+            (prevQuestion) => String(prevQuestion.question_id) === String(question.question_id),
+          ),
       );
       setActiveQuestionId(newQuestion?.question_id || '');
     } else if (activeQuestionIndex === -1) {
@@ -61,7 +65,7 @@ export const QuizModalContextProvider = ({
 
   return (
     <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId }}>
-      {typeof children === 'function' ? children(activeQuestionIndex) : children}
+      {typeof children === 'function' ? children(activeQuestionIndex, setActiveQuestionId) : children}
     </QuizModalContext.Provider>
   );
 };

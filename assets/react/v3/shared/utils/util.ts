@@ -1,9 +1,11 @@
 import collection from '@Config/icon-list';
 import type { Category, CategoryWithChildren } from '@Services/category';
 import {
+  addMinutes,
   differenceInDays,
   endOfMonth,
   endOfYear,
+  format,
   isSameDay,
   isToday,
   isYesterday,
@@ -15,6 +17,7 @@ import {
 import type { DateRange } from 'react-day-picker';
 import { v4 as uuidv4 } from 'uuid';
 
+import { DateFormats } from '@Config/constants';
 import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
@@ -244,8 +247,8 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   return `${Number.parseFloat((bytes / kilobit ** index).toFixed(decimal))} ${sizes[index]}`;
 };
 
-export const parseNumberOnly = (value: string) => {
-  return value.replace(/[^-0-9.]/g, '');
+export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
+  return value.replace(allowNegative ? /[^0-9.-]/g : /[^0-9]/g, '');
 };
 
 export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: number) => {
@@ -307,3 +310,14 @@ export function objectToQueryParams(obj: Record<string, string>) {
 
   return params.toString();
 }
+
+export const convertToGMT = (date: Date, dateFormat = DateFormats.yearMonthDayHourMinuteSecond) => {
+  // Calculate the GMT offset in minutes
+  const offsetInMinutes = date.getTimezoneOffset();
+
+  // Convert the date to GMT by adding the offset
+  const gmtDate = addMinutes(date, offsetInMinutes);
+
+  // Format and return the GMT date
+  return format(gmtDate, dateFormat);
+};

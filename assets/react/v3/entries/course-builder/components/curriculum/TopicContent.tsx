@@ -22,6 +22,7 @@ import {
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -34,6 +35,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
+import { noop } from '@Utils/util';
 
 interface TopicContentProps {
   type: ContentType;
@@ -205,7 +207,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
           <div data-bar-icon>
             <SVGIcon name="bars" width={24} height={24} />
           </div>
-          <p css={styles.title}>
+          <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
             <Show when={type === 'tutor_quiz' && !!content.total_question}>
               <span data-question-count>({content.total_question} Questions)</span>
@@ -233,11 +235,13 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
             </button>
           </Tooltip>
           <Show when={type !== 'tutor_zoom_meeting' && type !== 'tutor-google-meet'}>
-            <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-              <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-            </Tooltip>
+            <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
+              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+                <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                  <SVGIcon name="copyPaste" width={24} height={24} />
+                </button>
+              </Tooltip>
+            </Show>
           </Show>
           <Tooltip content={__('Delete', 'tutor')} delay={200}>
             <button
@@ -309,7 +313,6 @@ const styles = {
   }) => css`
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
-    cursor: pointer;
     border: 1px solid transparent;
     border-radius: ${borderRadius[6]};
     display: flex;
@@ -374,6 +377,7 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
+    cursor: pointer;
     [data-question-count] {
       color: ${colorTokens.text.hints};
     }
@@ -383,6 +387,7 @@ const styles = {
     align-items: center;
     gap: ${spacing[8]};
     cursor: grab;
+    flex-grow: 1;
 
     [data-bar-icon] {
       display: none;
