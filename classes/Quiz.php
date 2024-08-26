@@ -153,6 +153,57 @@ class Quiz {
 	}
 
 	/**
+	 * Get quiz default settings.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_default_quiz_settings() {
+		$settings = array(
+			'time_limit'                         => array(
+				'time_type'  => 'minutes',
+				'time_value' => 0,
+			),
+			'attempts_allowed'                   => 10,
+			'feedback_mode'                      => 'retry',
+			'hide_question_number_overview'      => 0,
+			'hide_quiz_time_display'             => 0,
+			'max_questions_for_answer'           => 10,
+			'open_ended_answer_characters_limit' => 500,
+			'pass_is_required'                   => 0,
+			'passing_grade'                      => 80,
+			'question_layout_view'               => '',
+			'questions_order'                    => 'rand',
+			'quiz_auto_start'                    => 0,
+			'short_answer_characters_limit'      => 200,
+		);
+
+		return apply_filters( 'tutor_quiz_default_settings', $settings );
+	}
+
+	/**
+	 * Get question default settings.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $type type of question.
+	 *
+	 * @return array
+	 */
+	public static function get_default_question_settings( $type ) {
+		$settings = array(
+			'question_type'      => $type,
+			'question_mark'      => 1,
+			'answer_required'    => 0,
+			'randomize_options'  => 0,
+			'show_question_mark' => 0,
+		);
+
+		return apply_filters( 'tutor_question_default_settings', $settings );
+	}
+
+	/**
 	 * Get quiz modes
 	 *
 	 * @since 2.6.0
