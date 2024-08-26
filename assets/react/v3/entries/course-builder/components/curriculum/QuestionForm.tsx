@@ -30,10 +30,13 @@ import {
 } from '@CourseBuilderServices/quiz';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
+import { useEffect, useRef } from 'react';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId, validationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
+
+  const alertRef = useRef<HTMLDivElement>(null);
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const questions = form.watch('questions') || [];
@@ -49,6 +52,16 @@ const QuestionForm = () => {
     image_answering: <ImageAnswering key={activeQuestionId} />,
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
   } as const;
+
+  useEffect(() => {
+    if (validationError && alertRef.current) {
+      alertRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center',
+      });
+    }
+  }, [validationError]);
 
   if (!activeQuestionId && !form.formState.isLoading && questions.length === 0) {
     return (
@@ -112,7 +125,7 @@ const QuestionForm = () => {
       </div>
 
       <Show when={validationError}>
-        <div css={styles.alertWrapper}>
+        <div ref={alertRef} css={styles.alertWrapper}>
           <Alert type="danger" icon="warning">
             {validationError?.message}
           </Alert>
