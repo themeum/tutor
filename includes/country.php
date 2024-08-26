@@ -23234,7 +23234,11 @@ if ( ! function_exists( 'get_country_info_by_name' ) ) {
      * @return array|null
      */
     function get_country_info_by_name( $country_name ) {
-        $countries = array_flip( tutor_get_country_list() );
-        return isset( $countries[$country_name] ) ? $countries[$country_name] : null;
+        $countries = tutor_get_country_list();
+        foreach ( $countries as $country ) {
+            if ( strtolower( $country['name'] ) === strtolower( $country_name ) ) {
+                return $country;
+            }
+        }
     }
 }
