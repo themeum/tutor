@@ -364,7 +364,7 @@ export const validateQuizQuestion = (activeQuestionIndex: number, form: UseFormR
 
     if (!isAllSaved) {
       return {
-        message: __('Please save all new options before moving to another question', 'tutor'),
+        message: __('Please finish editing all newly created options.', 'tutor'),
         type: 'danger',
       };
     }
