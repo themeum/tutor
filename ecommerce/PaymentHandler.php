@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Ollyo\PaymentHub\PaymentHub;
 use TUTOR\Input;
 use WP_REST_Server;
 
@@ -55,7 +56,33 @@ class PaymentHandler {
 	 * @return void
 	 */
 	public function handle_ecommerce_webhook() {
-		// @TODO implementation of webhook handler.
+		$webhook_data = (object) array(
+			'get'    => $_GET,
+			'post'   => $_POST,
+			'server' => $_SERVER,
+			'stream' => file_get_contents( 'php://input' ),
+		);
+
+		$payment_method = Input::get( 'payment_method' );
+
+		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
+
+		$payment_gateway_class        = null;
+		$payment_gateway_config_class = null;
+		foreach ( $gateways_with_class as $gateway_ref ) {
+			if ( isset( $gateway_ref[ $payment_method ] ) ) {
+				$payment_gateway_class        = $gateway_ref[ $payment_method ]['gateway_class'];
+				$payment_gateway_config_class = $gateway_ref[ $payment_method ]['config_class'];
+			}
+		}
+
+		if ( $payment_gateway_class && $payment_gateway_config_class ) {
+			$payment = ( new PaymentHub( $payment_gateway_class, $payment_gateway_config_class ) )->make();
+			$res     = $payment->verifyAndCreateOrderData( $webhook_data );
+			if ( is_object( $res ) ) {
+				// @TODO need to implement event listener action.
+			}
+		}
 	}
 
 	public function load_order_status_template( $template ) {
