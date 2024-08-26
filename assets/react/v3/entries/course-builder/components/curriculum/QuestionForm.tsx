@@ -2,10 +2,14 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import Alert from '@Atoms/Alert';
+import EmptyState from '@Molecules/EmptyState';
+
 import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
 import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 
+import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
@@ -15,10 +19,8 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import EmptyState from '@Molecules/EmptyState';
 import { styleUtils } from '@Utils/style-utils';
 
-import Alert from '@Atoms/Alert';
 import Show from '@Controls/Show';
 import {
   type QuizDataStatus,
@@ -28,7 +30,6 @@ import {
 } from '@CourseBuilderServices/quiz';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
-import FillInTheBlanks from './question-types/FillinTheBlanks';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId, validationError } = useQuizModalContext();
@@ -187,6 +188,15 @@ const styles = {
   `,
   alertWrapper: css`
     padding-left: ${spacing[40]};
-    transition: all 0.15s ease-in-out;
+    animation: fadeIn 0.25s ease-in-out;
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
   `,
 };

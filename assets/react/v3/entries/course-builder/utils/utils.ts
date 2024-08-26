@@ -353,7 +353,7 @@ export const validateQuizQuestion = (
 ):
   | {
       message: string;
-      type: 'question' | 'quiz' | 'correct_answer' | 'option' | 'save_option';
+      type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
     }
   | true => {
   if (activeQuestionIndex !== -1) {
@@ -366,7 +366,7 @@ export const validateQuizQuestion = (
     if (answers.length === 0 && currentQuestionType !== 'open_ended' && currentQuestionType !== 'short_answer') {
       return {
         message: __('Please add an option.', 'tutor'),
-        type: 'option',
+        type: 'add_option',
       };
     }
 

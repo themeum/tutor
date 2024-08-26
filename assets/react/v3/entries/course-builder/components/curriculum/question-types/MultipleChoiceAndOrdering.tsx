@@ -255,7 +255,7 @@ const MultipleChoiceAndOrdering = () => {
             },
           );
 
-          if (validationError?.type === 'option') {
+          if (validationError?.type === 'add_option') {
             setValidationError(null);
           }
         }}
