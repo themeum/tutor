@@ -391,11 +391,13 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
           <Show
             when={isEdit}
             fallback={
-              <animated.div style={{ ...collapseAnimationDescription }}>
-                <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
-                  {form.watch('summary')}
-                </div>
-              </animated.div>
+              <Show when={topic.summary.length > 0}>
+                <animated.div style={{ ...collapseAnimationDescription }}>
+                  <div css={styles.description({ isEdit })} ref={descriptionRef} onDoubleClick={() => setIsEdit(true)}>
+                    {form.watch('summary')}
+                  </div>
+                </animated.div>
+              </Show>
             }
           >
             <div css={styles.description({ isEdit })}>
@@ -443,74 +445,76 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
         </div>
         <animated.div style={{ ...collapseAnimation }}>
           <div css={styles.content} ref={topicRef}>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
-              onDragStart={(event) => {
-                setActiveSortId(event.active.id);
-              }}
-              onDragEnd={(event) => {
-                const { active, over } = event;
-                if (!over) {
-                  return;
-                }
+            <Show when={content.length > 0}>
+              <DndContext
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                onDragStart={(event) => {
+                  setActiveSortId(event.active.id);
+                }}
+                onDragEnd={(event) => {
+                  const { active, over } = event;
+                  if (!over) {
+                    return;
+                  }
 
-                if (active.id !== over.id) {
-                  const activeIndex = content.findIndex((item) => item.ID === active.id);
-                  const overIndex = content.findIndex((item) => item.ID === over.id);
-                  onSort?.(activeIndex, overIndex);
-                  setContent(moveTo(content, activeIndex, overIndex));
-                }
-              }}
-            >
-              <SortableContext
-                items={content.map((item) => ({ ...item, id: item.ID }))}
-                strategy={verticalListSortingStrategy}
+                  if (active.id !== over.id) {
+                    const activeIndex = content.findIndex((item) => item.ID === active.id);
+                    const overIndex = content.findIndex((item) => item.ID === over.id);
+                    onSort?.(activeIndex, overIndex);
+                    setContent(moveTo(content, activeIndex, overIndex));
+                  }
+                }}
               >
-                <div>
-                  <For each={content}>
-                    {(content) => {
-                      return (
+                <SortableContext
+                  items={content.map((item) => ({ ...item, id: item.ID }))}
+                  strategy={verticalListSortingStrategy}
+                >
+                  <div>
+                    <For each={content}>
+                      {(content) => {
+                        return (
+                          <TopicContent
+                            key={content.ID}
+                            type={content.post_type}
+                            topic={topic}
+                            content={{
+                              id: content.ID,
+                              title: content.post_title,
+                              total_question: content.total_question || 0,
+                            }}
+                            onDelete={() => {
+                              setContent((previousContent) => previousContent.filter((item) => item.ID !== content.ID));
+                            }}
+                          />
+                        );
+                      }}
+                    </For>
+                  </div>
+                </SortableContext>
+
+                {createPortal(
+                  <DragOverlay>
+                    <Show when={activeSortItem}>
+                      {(content) => (
                         <TopicContent
-                          key={content.ID}
-                          type={content.post_type}
                           topic={topic}
                           content={{
                             id: content.ID,
                             title: content.post_title,
                             total_question: content.total_question || 0,
                           }}
-                          onDelete={() => {
-                            setContent((previousContent) => previousContent.filter((item) => item.ID !== content.ID));
-                          }}
+                          type={content.post_type}
+                          isDragging
                         />
-                      );
-                    }}
-                  </For>
-                </div>
-              </SortableContext>
-
-              {createPortal(
-                <DragOverlay>
-                  <Show when={activeSortItem}>
-                    {(content) => (
-                      <TopicContent
-                        topic={topic}
-                        content={{
-                          id: content.ID,
-                          title: content.post_title,
-                          total_question: content.total_question || 0,
-                        }}
-                        type={content.post_type}
-                        isDragging
-                      />
-                    )}
-                  </Show>
-                </DragOverlay>,
-                document.body,
-              )}
-            </DndContext>
+                      )}
+                    </Show>
+                  </DragOverlay>,
+                  document.body,
+                )}
+              </DndContext>
+            </Show>
 
             <div css={styles.contentButtons}>
               <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
@@ -758,7 +762,6 @@ const styles = {
   }) => css`
     padding: ${spacing[12]} ${spacing[16]};
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
 
     [data-toggle-collapse] {
       transition: transform 0.3s ease-in-out;
@@ -778,11 +781,10 @@ const styles = {
     }
 
     ${
-      isCollapsed &&
       !isEdit &&
       css`
-      padding-bottom: 0;
-    `
+        padding-bottom: 0;
+      `
     }
 
     ${
@@ -811,6 +813,7 @@ const styles = {
     grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
     width: 100%;
+    padding-bottom: ${spacing[12]};
   `,
   grabberInput: ({ isOverlay = false }) => css`
     ${styleUtils.display.flex()};
@@ -863,20 +866,20 @@ const styles = {
     color: ${colorTokens.text.hints};
     padding-inline: ${spacing[8]};
     margin-left: ${spacing[24]};
-    margin-bottom: ${spacing[8]};
+    padding-bottom: ${spacing[8]};
 
     ${
       !isEdit &&
       css`
-      ${styleUtils.text.ellipsis(2)};
-    `
+        ${styleUtils.text.ellipsis(2)};
+      `
     }
 
     ${
       isEdit &&
       css`
-      padding-right: 0;
-    `
+        padding-right: 0;
+      `
     }
   `,
   footer: css`

@@ -40,7 +40,7 @@ const FormMultipleChoiceAndOrdering = ({
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
   const form = useFormContext<QuizForm>();
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
@@ -362,6 +362,11 @@ const FormMultipleChoiceAndOrdering = ({
                       }),
                       is_saved: true,
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
+
                     setIsEditing(false);
                   }}
                   disabled={!inputValue.answer_title && !inputValue.image_url}
