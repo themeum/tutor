@@ -10,7 +10,6 @@
 
 namespace Tutor\Ecommerce;
 
-use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -18,8 +17,6 @@ use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
-use Tutor\PaymentGateways\PaypalGateway;
-use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -60,6 +57,15 @@ class CheckoutController {
 	 * @var string
 	 */
 	const PAY_NOW_ERROR_TRANSIENT_KEY = 'tutor_pay_now_errors';
+
+	/**
+	 * Pay now alert transient key
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const PAY_NOW_ALERT_MSG_TRANSIENT_KEY = 'tutor_pay_now_alert_msg';
 
 	/**
 	 * Constructor.
@@ -138,7 +144,8 @@ class CheckoutController {
 	public function pay_now() {
 		tutor_utils()->check_nonce();
 
-		$errors = array();
+		$errors     = array();
+		$order_data = null;
 
 		$coupon_model  = new CouponModel();
 		$billing_model = new BillingModel();
@@ -229,14 +236,44 @@ class CheckoutController {
 			'payment_method' => $payment_method,
 		);
 
+		global $wpdb;
+
+		// Start transaction.
+		$wpdb->query( 'START TRANSACTION' );
+
 		try {
 			if ( empty( $errors ) ) {
 				$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
 				if ( ! empty( $order_data ) ) {
 					if ( 'automate' === $payment_type ) {
+						// Commit.
+						$wpdb->query( 'COMMIT' );
+
+						// Set alert message transient.
+						set_transient(
+							self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+							array(
+								'status'  => 'success',
+								'message' => __( 'Your order has been placed successfully!', 'tutor' ),
+							),
+						);
+
 						$payment_data = $this->prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method );
+
 					} else {
+						// Commit Transaction.
+						$wpdb->query( 'COMMIT' );
+
+						// Set alert message transient.
+						set_transient(
+							self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+							array(
+								'status'  => 'success',
+								'message' => __( 'You order has been placed successfully!', 'tutor' ),
+							),
+						);
+
 						wp_safe_redirect(
 							add_query_arg(
 								array(
@@ -249,15 +286,49 @@ class CheckoutController {
 						exit();
 					}
 				} else {
-					array_push( $errors, __( 'Failed to create order!', 'tutor' ) );
+					array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
 					set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+					set_transient(
+						self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+						array(
+							'status'  => 'success',
+							'message' => __( 'Failed to place order!', 'tutor' ),
+						),
+					);
+
+					// Rollback.
+					$wpdb->query( 'ROLLBACK' );
 				}
 			} else {
 				set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+				set_transient(
+					self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+					array(
+						'status'  => 'success',
+						'message' => __( 'Failed to place order!', 'tutor' ),
+					),
+				);
+
+				// Rollback.
+				$wpdb->query( 'ROLLBACK' );
 			}
 		} catch ( \Throwable $th ) {
 			array_push( $errors, $th->getMessage() );
 			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+
+			// Rollback transaction.
+			$wpdb->query( 'ROLLBACK' );
+
+			// Set alert message transient.
+			if ( empty( $order_data ) ) {
+				set_transient(
+					self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+					array(
+						'status'  => 'failed',
+						'message' => __( 'Failed to place order!', 'tutor' ),
+					),
+				);
+			}
 		}
 	}
 
@@ -377,12 +448,20 @@ class CheckoutController {
 		$payment_gateway_class = null;
 		foreach ( $gateways_with_class as $gateway_ref ) {
 			if ( isset( $gateway_ref[ $payment_method ] ) ) {
-				$payment_gateway_class = $gateway_ref[ $payment_method ];
+				$payment_gateway_class = $gateway_ref[ $payment_method ]['gateway_class'];
 			}
 		}
 
 		if ( $payment_gateway_class ) {
 			try {
+				add_filter(
+					'tutor_ecommerce_webhook_url',
+					function( $url ) use ( $payment_method ) {
+						$url = add_query_arg( array( 'payment_method' => $payment_method ), $url );
+						return $url;
+					}
+				);
+
 				add_filter(
 					'tutor_ecommerce_payment_success_url_args',
 					function ( $args ) use ( $payment_data ) {

@@ -203,10 +203,20 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 
 	<!-- handle errors -->
 	<?php
-	$pay_now_errors = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
+	$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
+	$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
+
 	if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) {
 		?>
 		<div class="tutor-p-32">
+			<?php
+			if ( $pay_now_alert_msg ) :
+				list( $order_status, $message ) = $pay_now_alert_msg;
+				?>
+			<div class="tutor-alert tutor-alert-<?php echo esc_attr( $order_status ); ?>">
+				<?php echo esc_html( $message ); ?>
+			</div>
+			<?php endif; ?>
 			<div class="tutor-card p-2">
 				<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
 				<li class="tutor-text-danger"><?php echo esc_html( $pay_now_err ); ?></li>
