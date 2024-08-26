@@ -18,6 +18,8 @@ import { typography } from '@Config/typography';
 import EmptyState from '@Molecules/EmptyState';
 import { styleUtils } from '@Utils/style-utils';
 
+import Alert from '@Atoms/Alert';
+import Show from '@Controls/Show';
 import {
   type QuizDataStatus,
   type QuizForm,
@@ -29,7 +31,7 @@ import emptyStateImage from '@Images/empty-state-illustration.webp';
 import FillInTheBlanks from './question-types/FillinTheBlanks';
 
 const QuestionForm = () => {
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
@@ -108,6 +110,14 @@ const QuestionForm = () => {
         </div>
       </div>
 
+      <Show when={validationError}>
+        <div css={styles.alertWrapper}>
+          <Alert type="danger" icon="warning">
+            {validationError?.message}
+          </Alert>
+        </div>
+      </Show>
+
       {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]}
 
       <div css={styles.questionAnswer}>
@@ -174,5 +184,9 @@ const styles = {
   emptyState: css`
     padding-left: ${spacing[40]}; 
     padding-right: ${spacing[48]};
+  `,
+  alertWrapper: css`
+    padding-left: ${spacing[40]};
+    transition: all 0.15s ease-in-out;
   `,
 };

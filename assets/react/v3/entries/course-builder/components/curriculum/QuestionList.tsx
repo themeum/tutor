@@ -103,7 +103,7 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, setActiveQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -138,10 +138,7 @@ const QuestionList = ({
   const handleAddQuestion = (questionType: QuizQuestionType) => {
     const validation = validateQuizQuestion(activeQuestionIndex, form);
     if (validation !== true) {
-      showToast({
-        message: validation.message,
-        type: validation.type as 'danger',
-      });
+      setValidationError(validation);
       setIsOpen(false);
       return;
     }
@@ -208,6 +205,7 @@ const QuestionList = ({
         show_question_mark: false,
       },
     } as QuizQuestion);
+    setValidationError(null);
     setActiveQuestionId(questionId);
     setIsOpen(false);
   };
