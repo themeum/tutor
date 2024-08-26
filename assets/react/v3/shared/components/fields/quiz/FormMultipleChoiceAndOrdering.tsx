@@ -115,8 +115,6 @@ const FormMultipleChoiceAndOrdering = ({
     }
   }, [isEditing]);
 
-  console.log(validationError);
-
   return (
     <div
       {...attributes}
