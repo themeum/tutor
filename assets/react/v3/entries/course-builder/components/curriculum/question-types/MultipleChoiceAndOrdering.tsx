@@ -146,8 +146,6 @@ const MultipleChoiceAndOrdering = () => {
     isInitialRenderRef.current = false;
   }, [hasMultipleCorrectAnswer]);
 
-  console.log(isInitialRenderRef.current);
-
   return (
     <div
       css={styles.optionWrapper({
