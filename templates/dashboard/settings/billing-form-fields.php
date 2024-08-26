@@ -60,8 +60,11 @@ $billing_city       = $billing_info->billing_city ?? '';
 			</label>
 			<select name="billing_country" class="tutor-form-select" required>
 				<option value=""><?php esc_html_e( 'Select Country', 'tutor' ); ?></option>
-				<?php foreach ( tutils()->country_options() as $key => $name ) : ?>
-					<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $billing_country, $key ); ?>>
+				<?php
+				$countries = array_column( tutor_get_country_list(), 'name' );
+				foreach ( $countries as $name ) :
+					?>
+					<option value="<?php echo esc_attr( $name ); ?>" <?php selected( $billing_country, $name ); ?>>
 						<?php echo esc_html( $name ); ?>
 					</option>
 				<?php endforeach; ?>
