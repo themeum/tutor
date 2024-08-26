@@ -10,6 +10,16 @@ interface QuizModalContextProps {
   activeQuestionId: ID;
   setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
   quizId: ID;
+  validationError: {
+    message: string;
+    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+  } | null;
+  setValidationError: React.Dispatch<
+    React.SetStateAction<{
+      message: string;
+      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    } | null>
+  >;
 }
 
 const QuizModalContext = createContext<QuizModalContextProps | null>(null);
@@ -25,16 +35,34 @@ export const useQuizModalContext = () => {
 export const QuizModalContextProvider = ({
   children,
   quizId,
+  validationError: propsValidationError,
 }: {
   children:
     | React.ReactNode
-    | ((item: NonNullable<number>, setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>) => React.ReactNode);
+    | ((
+        item: NonNullable<number>,
+        setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>,
+        setValidationError: React.Dispatch<
+          React.SetStateAction<{
+            message: string;
+            type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+          } | null>
+        >,
+      ) => React.ReactNode);
   quizId: ID;
+  validationError?: {
+    message: string;
+    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+  } | null;
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
   const form = useFormContext<QuizForm>();
   const questions = form.watch('questions') || [];
   const previousQuestions = useRef<QuizQuestion[]>(questions);
+  const [validationError, setValidationError] = useState<{
+    message: string;
+    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+  } | null>(propsValidationError || null);
 
   const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);
 
@@ -64,8 +92,19 @@ export const QuizModalContextProvider = ({
   }, [activeQuestionIndex, activeQuestionId]);
 
   return (
-    <QuizModalContext.Provider value={{ activeQuestionIndex, activeQuestionId, setActiveQuestionId, quizId }}>
-      {typeof children === 'function' ? children(activeQuestionIndex, setActiveQuestionId) : children}
+    <QuizModalContext.Provider
+      value={{
+        activeQuestionIndex,
+        activeQuestionId,
+        setActiveQuestionId,
+        quizId,
+        validationError,
+        setValidationError,
+      }}
+    >
+      {typeof children === 'function'
+        ? children(activeQuestionIndex, setActiveQuestionId, setValidationError)
+        : children}
     </QuizModalContext.Provider>
   );
 };

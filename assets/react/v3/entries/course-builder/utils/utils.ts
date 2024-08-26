@@ -347,7 +347,15 @@ export const covertSecondsToHMS = (seconds: number) => {
   return { hours, minutes, seconds: sec };
 };
 
-export const validateQuizQuestion = (activeQuestionIndex: number, form: UseFormReturn<QuizForm>) => {
+export const validateQuizQuestion = (
+  activeQuestionIndex: number,
+  form: UseFormReturn<QuizForm>,
+):
+  | {
+      message: string;
+      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    }
+  | true => {
   if (activeQuestionIndex !== -1) {
     const answers =
       form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
@@ -357,22 +365,22 @@ export const validateQuizQuestion = (activeQuestionIndex: number, form: UseFormR
 
     if (answers.length === 0 && currentQuestionType !== 'open_ended' && currentQuestionType !== 'short_answer') {
       return {
-        message: __('Please add option', 'tutor'),
-        type: 'danger',
+        message: __('Please add an option.', 'tutor'),
+        type: 'add_option',
       };
     }
 
     if (!isAllSaved) {
       return {
         message: __('Please finish editing all newly created options.', 'tutor'),
-        type: 'danger',
+        type: 'save_option',
       };
     }
 
     if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
       return {
-        message: __('Please select a correct answer', 'tutor'),
-        type: 'danger',
+        message: __('Please select a correct answer.', 'tutor'),
+        type: 'correct_option',
       };
     }
   }

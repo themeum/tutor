@@ -139,7 +139,7 @@ const styles = {
     transition: background 0.15s ease-in-out;
 
     & label {
-      ${typography.caption()}
+      ${typography.caption()};
       margin-bottom: ${spacing[6]};
       color: ${colorTokens.text.title};
     }
@@ -174,7 +174,7 @@ const styles = {
     cursor: text;
 
     & textarea {
-      ${typography.heading6()}
+      ${typography.caption()}
       height: auto;
       resize: none;
 
@@ -185,8 +185,8 @@ const styles = {
       ${
         enableResize &&
         css`
-        resize: vertical;
-      `
+          resize: vertical;
+        `
       }
     }
   `,
@@ -204,7 +204,7 @@ const styles = {
     }
   `,
   placeholder: css`
-    ${typography.heading6()}
+    ${typography.caption()}
     color: ${colorTokens.text.hints};
     height: 100%;
     inset: 0;
