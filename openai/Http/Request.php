@@ -10,8 +10,6 @@
 
 namespace Tutor\OpenAI\Http;
 
-use Tutor\Helpers\HttpHelper;
-
 /**
  * Extend the HttpHelper class for consistency.
  *
@@ -43,6 +41,14 @@ final class Request {
 	const STATUS_SERVICE_UNAVAILABLE   = 503;
 	const STATUS_BAD_GATEWAY           = 502;
 	const STATUS_GATEWAY_TIMEOUT       = 504;
+
+	/**
+	 * Set the request timeout for the http requests.
+	 *
+	 * @var float The timeout value.
+	 * @since 3.0.0
+	 */
+	const REQUEST_TIMEOUT = 60;
 
 	/**
 	 * Response body
@@ -124,7 +130,7 @@ final class Request {
 			array(
 				'body'    => $data,
 				'headers' => $headers,
-				'timeout' => 120,
+				'timeout' => self::REQUEST_TIMEOUT,
 			),
 		);
 

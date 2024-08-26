@@ -62,7 +62,7 @@ class TextController {
 	}
 
 	/**
-	 * test function.
+	 * Test endpoint function.
 	 */
 	public function test_openai() {
 
