@@ -46,7 +46,6 @@ const styles = {
 	wrapper: css`
 		background-color: ${colorTokens.background.default};
 	`,
-
 	content: css`
 		min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
 		width: 100%;
