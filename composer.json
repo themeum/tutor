@@ -8,7 +8,8 @@
             "Tutor\\Models\\":"models/",
             "Tutor\\Helpers\\":"helpers/",
             "Tutor\\Traits\\":"traits/",
-            "Tutor\\Ecommerce\\":"ecommerce/"
+            "Tutor\\Ecommerce\\":"ecommerce/",
+            "Tutor\\PaymentGateways\\":"ecommerce/PaymentGateways"
         }
     },
     "autoload-dev": {
