@@ -236,43 +236,21 @@ class CheckoutController {
 			'payment_method' => $payment_method,
 		);
 
-		global $wpdb;
-
-		// Start transaction.
-		$wpdb->query( 'START TRANSACTION' );
-
 		try {
 			if ( empty( $errors ) ) {
 				$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
 				if ( ! empty( $order_data ) ) {
 					if ( 'automate' === $payment_type ) {
-						// Commit.
-						$wpdb->query( 'COMMIT' );
 
 						// Set alert message transient.
-						set_transient(
-							self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
-							array(
-								'status'  => 'success',
-								'message' => __( 'Your order has been placed successfully!', 'tutor' ),
-							),
-						);
+						$this->set_pay_now_alert_msg( $order_data );
 
 						$payment_data = $this->prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method );
 
 					} else {
-						// Commit Transaction.
-						$wpdb->query( 'COMMIT' );
-
 						// Set alert message transient.
-						set_transient(
-							self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
-							array(
-								'status'  => 'success',
-								'message' => __( 'You order has been placed successfully!', 'tutor' ),
-							),
-						);
+						$this->set_pay_now_alert_msg( $order_data );
 
 						wp_safe_redirect(
 							add_query_arg(
@@ -288,47 +266,18 @@ class CheckoutController {
 				} else {
 					array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
 					set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
-					set_transient(
-						self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
-						array(
-							'status'  => 'success',
-							'message' => __( 'Failed to place order!', 'tutor' ),
-						),
-					);
-
-					// Rollback.
-					$wpdb->query( 'ROLLBACK' );
+					$this->set_pay_now_alert_msg( $order_data );
 				}
 			} else {
 				set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
-				set_transient(
-					self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
-					array(
-						'status'  => 'success',
-						'message' => __( 'Failed to place order!', 'tutor' ),
-					),
-				);
-
-				// Rollback.
-				$wpdb->query( 'ROLLBACK' );
+				$this->set_pay_now_alert_msg( $order_data );
 			}
 		} catch ( \Throwable $th ) {
 			array_push( $errors, $th->getMessage() );
 			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
 
-			// Rollback transaction.
-			$wpdb->query( 'ROLLBACK' );
-
 			// Set alert message transient.
-			if ( empty( $order_data ) ) {
-				set_transient(
-					self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
-					array(
-						'status'  => 'failed',
-						'message' => __( 'Failed to place order!', 'tutor' ),
-					),
-				);
-			}
+			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
 
@@ -509,6 +458,36 @@ class CheckoutController {
 		}
 	}
 
+	/**
+	 * Set alert message on the transient based on
+	 * order data
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $order_data Order data or null. If order
+	 * data is falsy then failed message will be set.
+	 *
+	 * @return void
+	 */
+	private function set_pay_now_alert_msg( $order_data ) {
+		if ( empty( $order_data ) ) {
+			set_transient(
+				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+				array(
+					'alert'  => 'danger',
+					'message' => __( 'Failed to place order!', 'tutor' ),
+				),
+			);
+		} else {
+			set_transient(
+				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+				array(
+					'alert'  => 'success',
+					'message' => __( 'Your order has been placed successfully!', 'tutor' ),
+				),
+			);
+		}
+	}
 
 
 	/**

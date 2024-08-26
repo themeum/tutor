@@ -35,8 +35,8 @@ trait PaymentUrlsTrait {
 	 */
 	public function getSuccessUrl(): string {
 		$args = array(
-			'tutor_payment_status' => 'success',
-			'order_id'             => 0,
+			'tutor_order_status' => 'success',
+			'order_id'           => 0,
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_success_url_args', $args );
 		return add_query_arg( $args, home_url() );
