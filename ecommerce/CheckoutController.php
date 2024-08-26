@@ -18,6 +18,7 @@ use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
+use Tutor\PaymentGateways\PaypalGateway;
 use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -346,7 +347,7 @@ class CheckoutController {
 			'shipping_charge'                         => 0,
 			'shipping_charge_in_smallest_unit'        => 0,
 			'coupon_discount'                         => floatval( $order['discount_amount'] ),
-			'coupon_discount_amount_in_smallest_unit' => intval( floatval( $total_price ) * 100 ),
+			'coupon_discount_amount_in_smallest_unit' => intval( floatval( $order['discount_amount'] ) * 100 ),
 			'shipping_address'                        => (object) $shipping_and_billing,
 			'billing_address'                         => (object) $shipping_and_billing,
 			'decimal_separator'                       => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
@@ -369,13 +370,7 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function proceed_to_payment( $payment_data, $payment_method ) {
-		$gateways_with_class = array(
-			array(
-				'stripe' => StripeGateway::class,
-			),
-		);
-
-		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', $gateways_with_class, $payment_method );
+		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
 		$payment_gateway_class = null;
 		foreach ( $gateways_with_class as $gateway_ref ) {
@@ -401,7 +396,7 @@ class CheckoutController {
 					}
 				);
 
-				$gateway_instance = Ecommerce::get_payment_gateway_object( $gateway_ref[ $payment_method ] );
+				$gateway_instance = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
 				$gateway_instance->setup_payment_and_redirect( $payment_data );
 			} catch ( \Throwable $th ) {
 				throw $th;
