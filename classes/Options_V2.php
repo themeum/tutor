@@ -157,6 +157,7 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_export_settings() {
+		tutor_utils()->checking_nonce();
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );

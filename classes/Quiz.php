@@ -436,6 +436,7 @@ class Quiz {
 		if ( Input::post( 'tutor_action' ) !== 'tutor_answering_quiz_question' ) {
 			return;
 		}
+		tutor_utils()->checking_nonce();
 		// submit quiz attempts.
 		if ( self::tutor_quiz_attemp_submit() ) {
 			wp_send_json_success();
@@ -1699,6 +1700,10 @@ class Quiz {
 		global $wpdb;
 
 		$answer_id = Input::post( 'answer_id', 0, Input::TYPE_INT );
+
+		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		}
 		// get question info.
 		$belong_question = $wpdb->get_row(
 			$wpdb->prepare(
@@ -1731,9 +1736,6 @@ class Quiz {
 
 		$input_value = Input::post( 'inputValue', '' );
 
-		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
 
 		$answer = $wpdb->get_row(
 			$wpdb->prepare(
