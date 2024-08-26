@@ -138,7 +138,6 @@ class BillingController extends BaseController {
 	 * Get billing information for the current user.
 	 *
 	 * @since 3.0.0
-	 *
 	 * @return mixed The user's billing information.
 	 */
 	public function get_billing_info() {

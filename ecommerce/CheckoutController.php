@@ -285,12 +285,14 @@ class CheckoutController {
 
 		$billing_info = ( new BillingModel() )->get_info( $order_user_id );
 
+		$country_info = tutor_get_country_info_by_name( $billing_info->billing_country );
+
 		$country = (object) array(
-			'name'         => $billing_info->billing_country ?? '',
-			'numeric_code' => '',
-			'alpha_2'      => '',
-			'alpha_3'      => '',
-			'phone_code'   => '',
+			'name'         => $country_info['name'],
+			'numeric_code' => $country_info['numeric_code'],
+			'alpha_2'      => $country_info['alpha_2'],
+			'alpha_3'      => $country_info['alpha_3'],
+			'phone_code'   => $country_info['phone_code'],
 		);
 
 		$billing_name = $billing_info ? trim( $billing_info->billing_fist_name . ' ' . $billing_info->billing_last_name ) : $user_data->display_name;
