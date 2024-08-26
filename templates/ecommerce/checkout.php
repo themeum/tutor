@@ -67,7 +67,7 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 								foreach ( $payment_gateways['manual'] as $gateway ) {
 									list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
 									?>
-										<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual">
+										<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
 											<?php echo esc_html( $label ); ?>
 										</button>
 									<?php
