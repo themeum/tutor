@@ -1,0 +1,15 @@
+{
+    "version": "1.0.0",
+    "name": "themeum/tutor",
+    "type": "library",
+    "description": "Tutor plugin for WordPress",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ollyo\\PaymentHub\\": "src/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.8"
+    }
+}

@@ -37,7 +37,7 @@ const MultipleChoiceAndOrdering = () => {
   const isInitialRenderRef = useRef(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, activeQuestionId, quizId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const hasMultipleCorrectAnswer = useWatch({
     control: form.control,
     name: `questions.${activeQuestionIndex}.question_settings.has_multiple_correct_answer` as 'questions.0.question_settings.has_multiple_correct_answer',
@@ -101,6 +101,10 @@ const MultipleChoiceAndOrdering = () => {
       })) as QuizQuestionOption[];
       replaceOption(updatedOptions);
     }
+
+    if (validationError?.type === 'correct_option') {
+      setValidationError(null);
+    }
   };
 
   const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
@@ -139,6 +143,7 @@ const MultipleChoiceAndOrdering = () => {
           _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
         }),
         is_correct: '0' as '0' | '1',
+        is_saved: true,
       }));
       replaceOption(resetOptions);
     }
@@ -230,7 +235,7 @@ const MultipleChoiceAndOrdering = () => {
 
       <button
         type="button"
-        onClick={() =>
+        onClick={() => {
           appendOption(
             {
               _data_status: 'new',
@@ -248,8 +253,12 @@ const MultipleChoiceAndOrdering = () => {
               shouldFocus: true,
               focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
             },
-          )
-        }
+          );
+
+          if (validationError?.type === 'add_option') {
+            setValidationError(null);
+          }
+        }}
         css={styles.addOptionButton({
           currentQuestionType: currentQuestionType as 'multiple_choice' | 'ordering',
         })}

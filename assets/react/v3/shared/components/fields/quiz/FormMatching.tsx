@@ -14,7 +14,6 @@ import {
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
-  useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -33,7 +32,7 @@ interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
 }
 
 const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const inputValue = field.value ?? {
@@ -51,8 +50,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
     name: `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching',
     defaultValue: false,
   });
-
-  const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(
     !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
@@ -311,7 +308,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
-                  loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
                   onClick={(event) => {
@@ -331,6 +327,10 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       }),
                       is_saved: true,
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
                     setIsEditing(false);
                   }}
                   disabled={

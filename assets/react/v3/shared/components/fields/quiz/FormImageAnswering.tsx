@@ -7,12 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
-import {
-  type QuizDataStatus,
-  type QuizQuestionOption,
-  calculateQuizDataStatus,
-  useSaveQuizAnswerMutation,
-} from '@CourseBuilderServices/quiz';
+import { type QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -31,7 +26,7 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
 }
 
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
-  const { activeQuestionId, quizId } = useQuizModalContext();
+  const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
 
   const inputValue = field.value ?? {
     answer_id: nanoid(),
@@ -41,8 +36,6 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
     belongs_question_type: 'image_answering',
   };
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const createQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
 
   const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_id && !inputValue.image_url);
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
@@ -259,7 +252,6 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
-                  loading={createQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
                   onClick={async (event) => {
@@ -279,6 +271,10 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                       }),
                       is_saved: true,
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
 
                     setIsEditing(false);
                   }}

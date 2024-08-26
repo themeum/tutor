@@ -436,7 +436,8 @@ export interface GoogleMeetMeetingPayload {
   'post-id'?: ID; //only update
   'event-id'?: ID; //only update
   attendees: 'Yes' | 'No';
-  course_id: ID; // for course builder set topic id
+  course_id: ID; // for additional
+  topic_id?: ID; // for course builder
   meeting_title: string;
   meeting_summary: string;
   meeting_start_date: string; // yyyy-mm-dd
@@ -607,6 +608,7 @@ export const useSaveZoomMeetingMutation = () => {
         showToast({ type: 'success', message: __(response.message, 'tutor') });
 
         if (payload.click_form === 'course_builder') {
+          console.log('payload.course_id', payload.course_id);
           queryClient.invalidateQueries({
             queryKey: ['Topic', payload.course_id],
           });
@@ -662,9 +664,26 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
 };
 
 const saveGoogleMeet = (payload: GoogleMeetMeetingPayload) => {
+  const convertedPayload: GoogleMeetMeetingPayload = {
+    ...(payload['post-id'] &&
+      payload['event-id'] && {
+        'post-id': payload['post-id'],
+        'event-id': payload['event-id'],
+      }),
+    course_id: payload.topic_id ? payload.topic_id : payload.course_id,
+    meeting_summary: payload.meeting_summary,
+    meeting_title: payload.meeting_title,
+    meeting_start_date: payload.meeting_start_date,
+    meeting_start_time: payload.meeting_start_time,
+    meeting_end_date: payload.meeting_end_date,
+    meeting_end_time: payload.meeting_end_time,
+    meeting_timezone: payload.meeting_timezone,
+    meeting_attendees_enroll_students: payload.meeting_attendees_enroll_students,
+    attendees: payload.attendees,
+  };
   return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
     action: 'tutor_google_meet_new_meeting',
-    ...payload,
+    ...convertedPayload,
   });
 };
 
@@ -677,13 +696,16 @@ export const useSaveGoogleMeetMutation = () => {
     onSuccess: (response, payload) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
-      queryClient.invalidateQueries({
-        queryKey: ['CourseDetails', payload.course_id],
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Topic', payload.course_id],
-      });
+      console.log();
+      if (payload.topic_id) {
+        queryClient.invalidateQueries({
+          queryKey: ['Topic', payload.course_id],
+        });
+      } else {
+        queryClient.invalidateQueries({
+          queryKey: ['CourseDetails', payload.course_id],
+        });
+      }
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
@@ -711,6 +733,8 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
       });
+
+      console.log();
 
       queryClient.invalidateQueries({
         queryKey: ['Topic', Number(courseId)],

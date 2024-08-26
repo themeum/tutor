@@ -29,12 +29,8 @@ interface FormAnswerExplanationProps extends FormControllerProps<string | null> 
   isSecondary?: boolean;
 }
 
-const DEFAULT_ROWS = 6;
-
 const FormAnswerExplanation = ({
   label,
-  rows = DEFAULT_ROWS,
-  columns,
   maxLimit,
   field,
   fieldState,
@@ -44,10 +40,6 @@ const FormAnswerExplanation = ({
   placeholder,
   helpText,
   onChange,
-  onKeyDown,
-  isHidden,
-  enableResize = false,
-  isSecondary = false,
 }: FormAnswerExplanationProps) => {
   const inputValue = field.value ?? '';
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -127,6 +119,7 @@ const FormAnswerExplanation = ({
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
+          isMinimal
         />
         <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
           <Button

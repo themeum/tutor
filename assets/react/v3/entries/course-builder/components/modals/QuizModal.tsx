@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
-import { Controller, FormProvider } from 'react-hook-form';
+import { Controller, FormProvider, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -37,7 +37,7 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import { useToast } from '@Atoms/Toast';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { ID } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { isDefined } from '@Utils/types';
@@ -61,6 +61,7 @@ const courseId = getCourseId();
 const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
+  const [isEdit, setIsEdit] = useState(!isDefined(quizId));
 
   const cancelRef = useRef<HTMLButtonElement>(null);
 
@@ -99,6 +100,11 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   });
 
   const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
+  const questions = useWatch({
+    control: form.control,
+    name: 'questions',
+    defaultValue: [],
+  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -128,9 +134,16 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     form.reset(convertedData);
   }, [getQuizDetailsQuery.data]);
 
-  const [isEdit, setIsEdit] = useState(!isDefined(quizId));
-
-  const onQuizFormSubmit = async (data: QuizForm, activeQuestionIndex: number) => {
+  const onQuizFormSubmit = async (
+    data: QuizForm,
+    activeQuestionIndex: number,
+    setValidationError: React.Dispatch<
+      React.SetStateAction<{
+        message: string;
+        type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+      } | null>
+    >,
+  ) => {
     if (!data.quiz_title) {
       setActiveTab('details');
 
@@ -148,37 +161,21 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
         message: __('Please add a question', 'tutor'),
         type: 'danger',
       });
+      return;
+    }
+
+    const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+    if (validation !== true) {
+      setValidationError(validation);
+
+      setActiveTab('details');
 
       return;
     }
 
-    if (activeQuestionIndex !== -1) {
-      const answers =
-        form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
-      const questionType = form.watch(`questions.${activeQuestionIndex}.question_type` as 'questions.0.question_type');
-
-      if (answers.length === 0) {
-        setActiveTab('details');
-        showToast({
-          message: __('Please add option', 'tutor'),
-          type: 'danger',
-        });
-        return;
-      }
-
-      const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-      if (['true_false', 'multiple_choice'].includes(questionType) && !hasCorrectAnswer) {
-        setActiveTab('details');
-        showToast({
-          message: __('Please select a correct answer', 'tutor'),
-          type: 'danger',
-        });
-        return;
-      }
-    }
-
     setIsEdit(false);
-    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId, quizId || '');
+    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId);
 
     const response = await saveQuizMutation.mutateAsync(payload);
 
@@ -198,7 +195,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''}>
-        {(activeQuestionIndex) => (
+        {(activeQuestionIndex, setActiveQuestionId, setValidationError) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={icon}
@@ -252,11 +249,15 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                       size="small"
                       onClick={async () => {
                         if (activeQuestionIndex < 0) {
-                          await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
+                          await form.handleSubmit((data) =>
+                            onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                          )();
                           return;
                         }
 
-                        await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
+                        await form.handleSubmit((data) =>
+                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                        )();
                       }}
                     >
                       {__('Save', 'tutor')}
@@ -270,9 +271,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               )
             }
           >
-            <div css={styles.wrapper}>
+            <div css={styles.wrapper({ activeTab })}>
               <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
-                <Show when={activeTab === 'details'} fallback={<div />}>
+                <Show when={activeTab === 'details'}>
                   <div css={styles.left}>
                     <Show when={activeTab === 'details'}>
                       <div css={styles.quizTitleWrapper}>
@@ -356,7 +357,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                     <QuizSettings contentDripType={contentDripType} />
                   </Show>
                 </div>
-                <Show when={activeTab === 'details'} fallback={<div />}>
+                <Show when={activeTab === 'details'}>
                   <div css={styles.right}>
                     <QuestionConditions />
                   </div>
@@ -386,6 +387,8 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               onConfirmation={() => {
                 form.reset();
                 if (quizId) {
+                  setActiveQuestionId(questions.length > 0 ? questions[0].question_id : '');
+
                   return;
                 }
                 closeModal();
@@ -401,11 +404,16 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 export default QuizModal;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({
+    activeTab,
+  }: {
+    activeTab: QuizTabs;
+  }) => css`
     width: 1217px;
     display: grid;
-    grid-template-columns: 352px 1fr 352px;
+    grid-template-columns: ${activeTab === 'details' ? '352px 1fr 352px' : '1fr'};
     height: 100%;
+
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
@@ -421,8 +429,9 @@ const styles = {
 		${
       activeTab === 'settings' &&
       css`
-			padding-top: ${spacing[24]};
-		`
+			  padding-top: ${spacing[24]};
+        padding-inline: 352px 352px; // 352px is the width of the left and right side
+		  `
     }
   `,
   right: css`

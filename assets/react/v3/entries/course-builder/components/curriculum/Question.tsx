@@ -2,7 +2,7 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
@@ -15,6 +15,7 @@ import { useToast } from '@Atoms/Toast';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { ID } from '@CourseBuilderServices/curriculum';
+import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -38,10 +39,11 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
 };
 
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
   const { showToast } = useToast();
+  const ref = useRef<HTMLDivElement>(null);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: question.question_id,
@@ -54,38 +56,41 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
     opacity: isDragging ? 0.3 : undefined,
   };
 
+  useEffect(() => {
+    if (activeQuestionId === question.question_id) {
+      ref.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center',
+      });
+    }
+  }, [activeQuestionId, question.question_id]);
+
   return (
     <div
       {...attributes}
       key={question.question_id}
       css={styles.questionItem({ isActive: String(activeQuestionId) === String(question.question_id), isDragging })}
-      ref={setNodeRef}
+      ref={(element) => {
+        setNodeRef(element);
+        // @ts-expect-error
+        ref.current = element;
+      }}
       style={style}
       tabIndex={-1}
       onClick={() => {
-        const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
-        const answers = form.watch(`questions.${activeQuestionIndex}.question_answers`);
-
-        if (['multiple_choice', 'true_false'].includes(activeQuestionType)) {
-          if (answers.length === 0) {
-            showToast({
-              message: __('Please add option', 'tutor'),
-              type: 'danger',
-            });
-            return;
-          }
-
-          const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
-
-          if (!hasCorrectAnswer) {
-            showToast({
-              message: __('Please select a correct answer', 'tutor'),
-              type: 'danger',
-            });
-            return;
-          }
+        if (activeQuestionId === question.question_id) {
+          return;
         }
 
+        const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+        if (validation !== true) {
+          setValidationError(validation);
+          return;
+        }
+
+        setValidationError(null);
         setActiveQuestionId(question.question_id);
       }}
       onKeyDown={(event) => {
@@ -111,7 +116,15 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
       <span css={styles.questionTitle}>{question.question_title}</span>
       <ThreeDots
         isOpen={selectedQuestionId === question.question_id}
-        onClick={() => setSelectedQuestionId(question.question_id)}
+        onClick={(event) => {
+          const validation = validateQuizQuestion(activeQuestionIndex, form);
+          if (validation !== true) {
+            event.stopPropagation();
+            setValidationError(validation);
+            return;
+          }
+          setSelectedQuestionId(question.question_id);
+        }}
         closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
         maxWidth="150px"

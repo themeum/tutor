@@ -87,9 +87,16 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
   };
 }
 
-interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions'> {
+interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' | 'quiz_option'> {
   _data_status: QuizDataStatus;
   questions: QuizQuestionsForPayload[];
+  quiz_option: Omit<QuizDetailsResponse['quiz_option'], 'content_drip_settings'> & {
+    content_drip_settings?: {
+      unlock_date: string;
+      after_xdays_of_enroll: number;
+      prerequisites: [];
+    };
+  };
 }
 interface QuizPayload {
   course_id: ID;
@@ -194,6 +201,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     if (question.question_settings) {
       question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
       question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
+      question.question_settings.randomize_options = !!Number(question.question_settings.randomize_options);
     }
     question.question_answers = question.question_answers.map((answer) => ({
       ...answer,
@@ -294,7 +302,6 @@ export const convertQuizFormDataToPayload = (
   topicId: ID,
   contentDripType: ContentDripType,
   courseId: ID,
-  quizId?: ID,
 ): QuizPayload => {
   return {
     course_id: courseId,
@@ -306,7 +313,6 @@ export const convertQuizFormDataToPayload = (
       post_content: formData.quiz_description,
       quiz_option: {
         attempts_allowed: formData.quiz_option.attempts_allowed,
-        content_drip_settings: formData.quiz_option.content_drip_settings,
         feedback_mode: formData.quiz_option.feedback_mode,
         hide_question_number_overview: formData.quiz_option.hide_question_number_overview ? '1' : '0',
         hide_quiz_time_display: formData.quiz_option.hide_quiz_time_display ? '1' : '0',
@@ -327,6 +333,9 @@ export const convertQuizFormDataToPayload = (
           formData.quiz_option.feedback_mode === 'retry' && {
             pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
           }),
+        ...(isAddonEnabled(Addons.CONTENT_DRIP) && {
+          content_drip_settings: formData.quiz_option.content_drip_settings,
+        }),
       },
       questions: formData.questions.map((question) => {
         return {
@@ -538,306 +547,6 @@ export const useGetQuizDetailsQuery = (quizId: ID) => {
     queryKey: ['Quiz', quizId],
     queryFn: () => getQuizDetails(quizId).then((response) => response.data),
     enabled: !!quizId,
-  });
-};
-
-const createQuizQuestion = (quizId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse<QuizQuestion>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_create',
-    quiz_id: quizId,
-  });
-};
-
-export const useCreateQuizQuestionMutation = () => {
-  const { showToast } = useToast();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: createQuizQuestion,
-    onSuccess: (response, payload) => {
-      if (response.data) {
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-
-        queryClient.setQueryData(['Quiz', payload], (oldData: QuizDetailsResponse) => {
-          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
-          if (oldDataCopy) {
-            return {
-              ...oldDataCopy,
-              questions: oldData.questions.length ? [...oldData.questions, response.data] : [response.data],
-            };
-          }
-          return oldDataCopy;
-        });
-      }
-    },
-    onError: (error: ErrorResponse, quizId) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', quizId],
-      });
-    },
-  });
-};
-
-const updateQuizQuestion = (payload: QuizUpdateQuestionPayload) => {
-  return authApiInstance.post<QuizUpdateQuestionPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_update',
-    ...payload,
-  });
-};
-
-export const useUpdateQuizQuestionMutation = (quizId: ID) => {
-  const { showToast } = useToast();
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: updateQuizQuestion,
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', quizId],
-      });
-    },
-  });
-};
-
-const quizQuestionSorting = (payload: { quiz_id: ID; sorted_question_ids: ID[] }) => {
-  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_sorting',
-    ...payload,
-  });
-};
-
-export const useQuizQuestionSortingMutation = () => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: quizQuestionSorting,
-    onSuccess: (response) => {
-      if (response.data) {
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-      }
-    },
-    onError: (error: ErrorResponse, payload) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', payload.quiz_id],
-      });
-    },
-  });
-};
-
-const deleteQuizQuestion = (questionId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_delete',
-    question_id: questionId,
-  });
-};
-
-export const useDeleteQuizQuestionMutation = (quizId: ID) => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: deleteQuizQuestion,
-    onSuccess: (response) => {
-      if (response.data) {
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: ['Topic'],
-        });
-
-        queryClient.invalidateQueries({
-          queryKey: ['Quiz', quizId],
-        });
-      }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-    },
-  });
-};
-
-const quizQuestionAnswerOrdering = (payload: QuizQuestionAnswerOrderingPayload) => {
-  return authApiInstance.post<QuizQuestionAnswerOrderingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_answer_sorting',
-    ...payload,
-  });
-};
-
-export const useQuizQuestionAnswerOrderingMutation = (quizId: ID) => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: quizQuestionAnswerOrdering,
-    onSuccess: (response, payload) => {
-      if (response.status_code === 200) {
-        queryClient.setQueryData(['Quiz', quizId], (oldData: QuizDetailsResponse) => {
-          const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as QuizDetailsResponse;
-          if (!oldDataCopy) {
-            return;
-          }
-
-          return {
-            ...oldDataCopy,
-            questions: oldDataCopy.questions.map((question) => {
-              if (String(question.question_id) !== String(payload.question_id)) {
-                return question;
-              }
-
-              return {
-                ...question,
-                question_answers: payload.sorted_answer_ids.map((answerId, index) => {
-                  const answer = question.question_answers.find((a) => String(a.answer_id) === String(answerId));
-                  if (answer) {
-                    return {
-                      ...answer,
-                      answer_order: index,
-                    };
-                  }
-                  return answer;
-                }),
-              };
-            }),
-          };
-        });
-      }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', quizId],
-      });
-    },
-  });
-};
-
-const saveQuizAnswer = (payload: SaveQuizQuestionAnswerPayload) => {
-  return authApiInstance.post<SaveQuizQuestionAnswerPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_answer_save',
-    ...payload,
-  });
-};
-
-export const useSaveQuizAnswerMutation = (quizId: ID) => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: saveQuizAnswer,
-    onSuccess: (response) => {
-      if (response.status_code === 200 || response.status_code === 201) {
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-      }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', quizId],
-      });
-    },
-  });
-};
-
-const deleteQuizQuestionAnswer = (answerId: ID) => {
-  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_question_answer_delete',
-    answer_id: answerId,
-  });
-};
-
-export const useDeleteQuizAnswerMutation = (quizId: ID) => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: deleteQuizQuestionAnswer,
-    onSuccess: (response) => {
-      if (response.status_code === 200) {
-        showToast({
-          message: __(response.message, 'tutor'),
-          type: 'success',
-        });
-      }
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', quizId],
-      });
-    },
-  });
-};
-
-const markAnswerAsCorrect = (payload: {
-  answerId: ID;
-  isCorrect: '1' | '0';
-}) => {
-  return authApiInstance.post<ID, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_mark_answer_as_correct',
-    answer_id: payload.answerId,
-    is_correct: payload.isCorrect,
-  });
-};
-
-export const useMarkAnswerAsCorrectMutation = (quizId: ID) => {
-  const queryClient = useQueryClient();
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: markAnswerAsCorrect,
-    onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
-
-      queryClient.invalidateQueries({
-        queryKey: ['Quiz', quizId],
-      });
-    },
   });
 };
 

@@ -247,8 +247,8 @@ export const formatBytes = (bytes: number, decimals = 2) => {
   return `${Number.parseFloat((bytes / kilobit ** index).toFixed(decimal))} ${sizes[index]}`;
 };
 
-export const parseNumberOnly = (value: string) => {
-  return value.replace(/[^-0-9.]/g, '');
+export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
+  return value.replace(allowNegative ? /[^0-9.-]/g : /[^0-9]/g, '');
 };
 
 export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: number) => {

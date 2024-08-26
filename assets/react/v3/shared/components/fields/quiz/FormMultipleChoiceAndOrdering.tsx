@@ -18,7 +18,6 @@ import {
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
-  useSaveQuizAnswerMutation,
 } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
@@ -41,7 +40,7 @@ const FormMultipleChoiceAndOrdering = ({
   index,
 }: FormMultipleChoiceAndOrderingProps) => {
   const form = useFormContext<QuizForm>();
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
   const inputValue = field.value ?? {
     answer_id: nanoid(),
     answer_title: '',
@@ -58,9 +57,9 @@ const FormMultipleChoiceAndOrdering = ({
   });
   const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
 
-  const saveQuizAnswerMutation = useSaveQuizAnswerMutation(quizId);
-
-  const [isEditing, setIsEditing] = useState(!inputValue.answer_title && !inputValue.image_url);
+  const [isEditing, setIsEditing] = useState(
+    !inputValue.is_saved || (!inputValue.answer_title && !inputValue.image_url),
+  );
   const [isUploadImageVisible, setIsUploadImageVisible] = useState(
     isDefined(inputValue.image_id) && isDefined(inputValue.image_url),
   );
@@ -128,7 +127,13 @@ const FormMultipleChoiceAndOrdering = ({
       style={style}
     >
       <Show when={currentQuestionType === 'multiple_choice'}>
-        <button key={inputValue.is_correct} css={styleUtils.resetButton} type="button" onClick={onCheckCorrectAnswer}>
+        <button
+          key={inputValue.is_correct}
+          css={styleUtils.resetButton}
+          data-check-button
+          type="button"
+          onClick={onCheckCorrectAnswer}
+        >
           <Show
             when={hasMultipleCorrectAnswer}
             fallback={
@@ -178,6 +183,14 @@ const FormMultipleChoiceAndOrdering = ({
                     icon={<SVGIcon name="removeImage" width={24} height={24} />}
                     onClick={(event) => {
                       event.stopPropagation();
+                      field.onChange({
+                        ...inputValue,
+                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
+                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        }),
+                        image_id: '',
+                        image_url: '',
+                      });
                       setIsUploadImageVisible(false);
                     }}
                   >
@@ -331,7 +344,6 @@ const FormMultipleChoiceAndOrdering = ({
                   {__('Cancel', 'tutor')}
                 </Button>
                 <Button
-                  loading={saveQuizAnswerMutation.isPending}
                   variant="secondary"
                   size="small"
                   onClick={async (event) => {
@@ -350,6 +362,11 @@ const FormMultipleChoiceAndOrdering = ({
                       }),
                       is_saved: true,
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
+
                     setIsEditing(false);
                   }}
                   disabled={!inputValue.answer_title && !inputValue.image_url}
@@ -402,7 +419,11 @@ const styles = {
   
       &:hover {
         [data-check-icon] {
-          opacity: 1;
+          opacity: ${isEditing ? 0 : 1};
+        }
+
+        [data-check-button] {
+          visibility: ${isEditing ? 'hidden' : 'visible'};
         }
       }
   

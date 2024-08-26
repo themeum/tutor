@@ -7,10 +7,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     if (checkoutPageWrapper) {
         const checkoutForm = document.querySelector("#tutor-checkout-form");
-        const payNowButton = document.querySelector("#tutor-checkout-pay-now-button");
+        // const payNowButton = document.querySelector("#tutor-checkout-pay-now-button");
 
         const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
         const paymentOptionInput = paymentOptionsWrapper.querySelector("input[name=payment_method]");
+        const paymentTypeInput = document.querySelector("input[name=payment_type]");
         const paymentOptionButtons = paymentOptionsWrapper.querySelectorAll("button");
 
         const toggleCouponFormButton = document.querySelector("#tutor-toggle-coupon-form");
@@ -28,6 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.classList.add('active');
                 const paymentMethod = button.dataset.paymentMethod;
                 paymentOptionInput.value = paymentMethod;
+                paymentTypeInput.value = button.dataset.paymentType;
             })
         })
 
@@ -52,23 +54,24 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const formData = new FormData();
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-            formData.set('action', 'tutor_checkout_apply_coupon');
+            formData.set('action', 'tutor_apply_coupon');
             formData.set('coupon_code', couponCode);
+            formData.set('object_ids', checkoutCouponButton.dataset.objectIds);
 
             try {
                 checkoutCouponButton.setAttribute('disabled', 'disabled');
                 checkoutCouponButton.classList.add('is-loading');
 
                 const post = await ajaxHandler(formData);
-                const { success, data = defaultErrorMessage } = await post.json();
+                const { status_code, data, message = defaultErrorMessage } = await post.json();
 
-                if (success) {
-                    tutor_toast(__('Success', 'tutor'), data, 'success');
+                if (status_code === 200 ) {
+                    tutor_toast(__('Success', 'tutor'), message, 'success');
                     checkoutCouponWrapper.classList.remove('tutor-d-none');
                     checkoutCouponForm.classList.add('tutor-d-none');
                     // @TODO: Display coupon code and price reduction.
                 } else {
-                    tutor_toast(__('Failed', 'tutor'), data, 'error');
+                    tutor_toast(__('Failed', 'tutor'), message, 'error');
                 }
             } catch (error) {
                 tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
@@ -86,29 +89,29 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Handle checkout form submit
-        checkoutForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // checkoutForm.addEventListener('submit', async (e) => {
+        //     e.preventDefault();
 
-            const formData = new FormData(checkoutForm);
+        //     const formData = new FormData(checkoutForm);
 
-            try {
-                payNowButton.setAttribute('disabled', 'disabled');
-                payNowButton.classList.add('is-loading');
+        //     try {
+        //         payNowButton.setAttribute('disabled', 'disabled');
+        //         payNowButton.classList.add('is-loading');
 
-                const post = await ajaxHandler(formData);
-                const { success, data = defaultErrorMessage } = await post.json();
+        //         const post = await ajaxHandler(formData);
+        //         const { success, data = defaultErrorMessage } = await post.json();
 
-                if (success) {
-                    tutor_toast(__('Success', 'tutor'), data, 'success');
-                } else {
-                    tutor_toast(__('Failed', 'tutor'), data, 'error');
-                }
-            } catch (error) {
-                tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-            } finally {
-                payNowButton.removeAttribute('disabled');
-                payNowButton.classList.remove('is-loading');
-            }
-        });
+        //         if (success) {
+        //             tutor_toast(__('Success', 'tutor'), data, 'success');
+        //         } else {
+        //             tutor_toast(__('Failed', 'tutor'), data, 'error');
+        //         }
+        //     } catch (error) {
+        //         tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+        //     } finally {
+        //         payNowButton.removeAttribute('disabled');
+        //         payNowButton.classList.remove('is-loading');
+        //     }
+        // });
     }
 });

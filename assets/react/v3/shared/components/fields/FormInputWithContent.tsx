@@ -106,7 +106,9 @@ const FormInputWithContent = ({
               data-input
             />
 
-            {contentPosition === 'right' && <div css={styles.inputRightContent(showVerticalBar, size)}>{content}</div>}
+            {contentPosition === 'right' && (
+              <div css={[styles.inputRightContent(showVerticalBar, size), contentCss]}>{content}</div>
+            )}
           </div>
         );
       }}

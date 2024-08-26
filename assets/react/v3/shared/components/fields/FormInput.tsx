@@ -42,6 +42,7 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   generateWithAi?: boolean;
   onClickAiButton?: () => void;
   isMagicAi?: boolean;
+  allowNegative?: boolean;
 }
 
 const FormInput = ({
@@ -69,6 +70,7 @@ const FormInput = ({
   autoFocus = false,
   generateWithAi = false,
   isMagicAi = false,
+  allowNegative = false,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
   const { showModal } = useModal();
@@ -81,7 +83,7 @@ const FormInput = ({
       }
     | undefined = undefined;
   if (fieldType === 'number') {
-    inputValue = parseNumberOnly(`${inputValue}`).replace(/(\..*)\./g, '$1');
+    inputValue = parseNumberOnly(`${inputValue}`, allowNegative).replace(/(\..*)\./g, '$1');
   }
 
   if (maxLimit) {
