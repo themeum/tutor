@@ -14,6 +14,8 @@ use TUTOR\Course;
 use Tutor\Ecommerce\PaymentHandler;
 use TUTOR\Input;
 use Tutor\PaymentGateways\GatewayFactory;
+use Tutor\PaymentGateways\PaypalGateway;
+use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -133,5 +135,25 @@ class Ecommerce {
 		} catch ( \Throwable $th ) {
 			throw new \Exception( $th->getMessage() );
 		}
+	}
+
+	/**
+	 * Get payment gateways with reference class
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function payment_gateways_with_ref() {
+		$arr = array(
+			array(
+				'stripe' => StripeGateway::class,
+			),
+			array(
+				'paypal' => PaypalGateway::class,
+			),
+		);
+
+		return $arr;
 	}
 }
