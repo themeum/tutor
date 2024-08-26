@@ -154,6 +154,7 @@ export const ImageGeneration = () => {
                   rows={4}
                   isMagicAi
                   disabled={magicImageGenerationMutation.isPending}
+                  enableResize={false}
                 />
               )}
             />
