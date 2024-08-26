@@ -140,7 +140,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     setValidationError: React.Dispatch<
       React.SetStateAction<{
         message: string;
-        type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
+        type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
       } | null>
     >,
   ) => {

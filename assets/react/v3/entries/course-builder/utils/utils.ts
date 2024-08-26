@@ -353,7 +353,7 @@ export const validateQuizQuestion = (
 ):
   | {
       message: string;
-      type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
+      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
     }
   | true => {
   if (activeQuestionIndex !== -1) {
@@ -380,7 +380,7 @@ export const validateQuizQuestion = (
     if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
       return {
         message: __('Please select a correct answer.', 'tutor'),
-        type: 'correct_answer',
+        type: 'correct_option',
       };
     }
   }

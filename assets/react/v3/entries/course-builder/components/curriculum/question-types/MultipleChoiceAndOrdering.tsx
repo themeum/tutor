@@ -102,7 +102,7 @@ const MultipleChoiceAndOrdering = () => {
       replaceOption(updatedOptions);
     }
 
-    if (validationError?.type === 'correct_answer') {
+    if (validationError?.type === 'correct_option') {
       setValidationError(null);
     }
   };

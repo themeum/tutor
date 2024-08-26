@@ -12,12 +12,12 @@ interface QuizModalContextProps {
   quizId: ID;
   validationError: {
     message: string;
-    type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
+    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
   } | null;
   setValidationError: React.Dispatch<
     React.SetStateAction<{
       message: string;
-      type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
+      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
     } | null>
   >;
 }
@@ -45,14 +45,14 @@ export const QuizModalContextProvider = ({
         setValidationError: React.Dispatch<
           React.SetStateAction<{
             message: string;
-            type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
+            type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
           } | null>
         >,
       ) => React.ReactNode);
   quizId: ID;
   validationError?: {
     message: string;
-    type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
+    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
   } | null;
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
@@ -61,7 +61,7 @@ export const QuizModalContextProvider = ({
   const previousQuestions = useRef<QuizQuestion[]>(questions);
   const [validationError, setValidationError] = useState<{
     message: string;
-    type: 'question' | 'quiz' | 'correct_answer' | 'add_option' | 'save_option';
+    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
   } | null>(propsValidationError || null);
 
   const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);
