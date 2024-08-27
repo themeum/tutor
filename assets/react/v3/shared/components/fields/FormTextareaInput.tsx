@@ -3,6 +3,10 @@ import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { css } from '@emotion/react';
 
+import SVGIcon from '@Atoms/SVGIcon';
+import AITextModal from '@Components/modals/AITextModal';
+import { useModal } from '@Components/modals/Modal';
+import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTextareaInputProps extends FormControllerProps<string | null> {
@@ -20,6 +24,8 @@ interface FormTextareaInputProps extends FormControllerProps<string | null> {
   isHidden?: boolean;
   enableResize?: boolean;
   isSecondary?: boolean;
+  isMagicAi?: boolean;
+  generateWithAi?: boolean;
 }
 
 const DEFAULT_ROWS = 6;
@@ -41,8 +47,11 @@ const FormTextareaInput = ({
   isHidden,
   enableResize = true,
   isSecondary = false,
+  isMagicAi = false,
+  generateWithAi = false,
 }: FormTextareaInputProps) => {
   const inputValue = field.value ?? '';
+  const { showModal } = useModal();
 
   let characterCount: { maxLimit: number; inputCharacter: number } | undefined = undefined;
 
@@ -63,6 +72,21 @@ const FormTextareaInput = ({
       isHidden={isHidden}
       characterCount={characterCount}
       isSecondary={isSecondary}
+      isMagicAi={isMagicAi}
+      generateWithAi={generateWithAi}
+      onClickAiButton={() => {
+        showModal({
+          component: AITextModal,
+          isMagicAi: true,
+          props: {
+            title: __('AI Studio', 'tutor'),
+            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+            field,
+            fieldState,
+            is_html: true,
+          },
+        });
+      }}
     >
       {(inputProps) => {
         return (

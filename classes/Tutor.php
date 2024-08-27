@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\MagicAI\MagicAI;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -558,6 +559,11 @@ final class Tutor {
 		 * @since 3.0.0
 		 */
 		new Ecommerce();
+
+		/**
+		 * Tutor AI generation controller
+		 */
+		new MagicAI();
 
 		/**
 		 * Run Method

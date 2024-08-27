@@ -32,7 +32,7 @@ interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
 }
 
 const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
-  const { activeQuestionId, activeQuestionIndex, quizId } = useQuizModalContext();
+  const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const inputValue = field.value ?? {
@@ -284,8 +284,14 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                         ...inputValue,
                         ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                           _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                          is_saved: true,
                         }),
                       });
+
+                      if (validationError?.type === 'save_option') {
+                        setValidationError(null);
+                      }
+
                       setIsEditing(false);
                     }
                   }}
@@ -327,6 +333,10 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                       }),
                       is_saved: true,
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
                     setIsEditing(false);
                   }}
                   disabled={

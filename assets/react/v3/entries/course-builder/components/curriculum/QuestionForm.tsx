@@ -2,10 +2,14 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import Alert from '@Atoms/Alert';
+import EmptyState from '@Molecules/EmptyState';
+
 import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
 import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
 
+import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
 import Matching from '@CourseBuilderComponents/curriculum/question-types/Matching';
 import MultipleChoiceAndOrdering from '@CourseBuilderComponents/curriculum/question-types/MultipleChoiceAndOrdering';
@@ -15,9 +19,9 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import EmptyState from '@Molecules/EmptyState';
 import { styleUtils } from '@Utils/style-utils';
 
+import Show from '@Controls/Show';
 import {
   type QuizDataStatus,
   type QuizForm,
@@ -26,11 +30,13 @@ import {
 } from '@CourseBuilderServices/quiz';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
-import FillInTheBlanks from './question-types/FillinTheBlanks';
+import { useEffect, useRef } from 'react';
 
 const QuestionForm = () => {
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
+
+  const alertRef = useRef<HTMLDivElement>(null);
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const questions = form.watch('questions') || [];
@@ -46,6 +52,16 @@ const QuestionForm = () => {
     image_answering: <ImageAnswering key={activeQuestionId} />,
     ordering: <MultipleChoiceAndOrdering key={activeQuestionId} />,
   } as const;
+
+  useEffect(() => {
+    if (validationError && alertRef.current) {
+      alertRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center',
+      });
+    }
+  }, [validationError]);
 
   if (!activeQuestionId && !form.formState.isLoading && questions.length === 0) {
     return (
@@ -107,6 +123,14 @@ const QuestionForm = () => {
           />
         </div>
       </div>
+
+      <Show when={validationError}>
+        <div ref={alertRef} css={styles.alertWrapper}>
+          <Alert type="danger" icon="warning">
+            {validationError?.message}
+          </Alert>
+        </div>
+      </Show>
 
       {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]}
 
@@ -174,5 +198,18 @@ const styles = {
   emptyState: css`
     padding-left: ${spacing[40]}; 
     padding-right: ${spacing[48]};
+  `,
+  alertWrapper: css`
+    padding-left: ${spacing[40]};
+    animation: fadeIn 0.25s ease-in-out;
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
   `,
 };

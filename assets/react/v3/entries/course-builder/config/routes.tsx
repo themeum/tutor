@@ -6,6 +6,7 @@ import { CourseBuilderRouteConfigs } from './route-configs';
 const CourseBasicPage = React.lazy(() => import('@CourseBuilderPages/CourseBasic'));
 const CourseCurriculumPage = React.lazy(() => import('@CourseBuilderPages/Curriculum'));
 const CourseAdditionalPage = React.lazy(() => import('@CourseBuilderPages/Additional'));
+const IconListPage = React.lazy(() => import('@CourseBuilderPages/IconList'));
 
 const routes: RouteObject[] = [
   {
@@ -27,6 +28,10 @@ const routes: RouteObject[] = [
       {
         path: CourseBuilderRouteConfigs.CourseAdditional.template,
         element: <RouteSuspense component={<CourseAdditionalPage />} />,
+      },
+      {
+        path: CourseBuilderRouteConfigs.IconList.template,
+        element: <RouteSuspense component={<IconListPage />} />,
       },
     ],
   },

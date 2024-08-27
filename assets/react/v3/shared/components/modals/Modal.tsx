@@ -5,12 +5,21 @@ import { css } from '@emotion/react';
 import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 const styles = {
-  backdrop: css`
+  backdrop: ({ magicAi = false }: { magicAi?: boolean }) => css`
     position: fixed;
     background-color: ${colorTokens.background.modal};
     opacity: 0.7;
     inset: 0;
     z-index: ${zIndex.negative};
+
+    ${
+      magicAi &&
+      css`
+      background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.4) 18.05%, rgba(255, 100, 113, 0.4) 30.25%, rgba(207, 110, 189, 0.4) 55.42%, rgba(164, 119, 209, 0.4) 71.66%, rgba(62, 100, 222, 0.4) 97.9%);
+      opacity: 1;
+      backdrop-filter: blur(10px); 
+    `
+    }
   `,
   container: css`
     z-index: ${zIndex.modal};
@@ -24,6 +33,7 @@ const styles = {
   `,
 };
 
+export type PromiseResolvePayload<A extends string = string> = { action: A; [key: string]: unknown };
 export type ModalProps = {
   closeModal: (param?: PromiseResolvePayload<'CLOSE'>) => void;
   icon?: React.ReactNode;
@@ -35,13 +45,12 @@ export type ModalProps = {
   zIndex?: number;
 };
 
-type PromiseResolvePayload<A extends string = string> = { action: A; [key: string]: unknown };
-
 type ModalContextType = {
   showModal<P extends ModalProps>(options: {
     component: React.FunctionComponent<P>;
     props?: Omit<P, 'closeModal'>;
     closeOnOutsideClick?: boolean;
+    isMagicAi?: boolean;
   }): Promise<NonNullable<Parameters<P['closeModal']>[0]> | PromiseResolvePayload<'CLOSE'>>;
   closeModal(data?: PromiseResolvePayload): void;
   hasModalOnStack?: boolean;
@@ -65,23 +74,27 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
+      isMagicAi?: boolean;
       zIndex?: number;
     }[];
   }>({
     modals: [],
   });
 
-  const showModal = useCallback<ModalContextType['showModal']>(({ component, props, closeOnOutsideClick = false }) => {
-    return new Promise((resolve) => {
-      setState((previousState) => ({
-        ...previousState,
-        modals: [
-          ...previousState.modals,
-          { component, props, resolve, closeOnOutsideClick, id: nanoid(), zIndex: props?.zIndex || zIndex.modal },
-        ],
-      }));
-    });
-  }, []);
+  const showModal = useCallback<ModalContextType['showModal']>(
+    ({ component, props, closeOnOutsideClick = false, isMagicAi = false }) => {
+      return new Promise((resolve) => {
+        setState((previousState) => ({
+          ...previousState,
+          modals: [
+            ...previousState.modals,
+            { component, props, resolve, closeOnOutsideClick, id: nanoid(), isMagicAi },
+          ],
+        }));
+      });
+    },
+    [],
+  );
 
   const closeModal = useCallback<ModalContextType['closeModal']>((data = { action: 'CLOSE' }) => {
     setState((previousState) => {
@@ -121,7 +134,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               {React.createElement(modal.component, { ...modal.props, closeModal, zIndex: modal.zIndex })}
             </AnimatedDiv>
             <div
-              css={styles.backdrop}
+              css={styles.backdrop({ magicAi: modal.isMagicAi })}
               onKeyUp={noop}
               tabIndex={-1}
               // This is not ideal to attach a click event on a non-interactive element like div,

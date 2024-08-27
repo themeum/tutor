@@ -19,6 +19,17 @@ const endpoints = {
   DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
   SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
 
+  GENERATE_AI_IMAGE: 'tutor_generate_image',
+  MAGIC_FILL_AI_IMAGE: 'tutor_magic_fill_image',
+  MAGIC_TEXT_GENERATION: 'tutor_generate_text_content',
+  MAGIC_AI_MODIFY_CONTENT: 'tutor_modify_text_content',
+  USE_AI_GENERATED_IMAGE: 'tutor_use_magic_image',
+
+  GENERATE_COURSE_CONTENT: 'tutor_generate_course_content',
+  GENERATE_COURSE_TOPIC_CONTENT: 'tutor_generate_course_topic_content',
+  SAVE_AI_GENERATED_COURSE_CONTENT: 'tutor_save_ai_generated_course_content',
+  GENERATE_QUIZ_QUESTIONS: 'tutor_generate_quiz_questions',
+
   // Quiz
   SAVE_QUIZ: 'tutor_quiz_builder_save',
 };

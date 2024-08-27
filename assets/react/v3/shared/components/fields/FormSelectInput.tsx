@@ -38,6 +38,8 @@ type FormSelectInputProps<T> = {
   leftIcon?: ReactNode;
   dataAttribute?: string;
   isSecondary?: boolean;
+  isMagicAi?: boolean;
+  isAiOutline?: boolean;
   selectOnFocus?: boolean;
 } & FormControllerProps<T | null>;
 
@@ -62,6 +64,8 @@ const FormSelectInput = <T,>({
   removeBorder,
   dataAttribute,
   isSecondary = false,
+  isMagicAi = false,
+  isAiOutline = false,
   selectOnFocus,
 }: FormSelectInputProps<T>) => {
   const getInitialValue = () =>
@@ -105,24 +109,14 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
-      if (optionRef.current && getInitialValue()?.value) {
-        const timeoutId = setTimeout(() => {
-          optionRef.current?.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-            inline: 'center',
-          });
-        }, 150);
-
-        return () => {
-          clearTimeout(timeoutId);
-        };
-      }
+      setInputValue(getInitialValue()?.label);
     }
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
@@ -137,13 +131,14 @@ const FormSelectInput = <T,>({
       helpText={helpText}
       removeBorder={removeBorder}
       isSecondary={isSecondary}
+      isMagicAi={isMagicAi}
     >
       {(inputProps) => {
         const { css: inputCss, ...restInputProps } = inputProps;
 
         return (
           <div css={styles.mainWrapper}>
-            <div css={styles.inputWrapper} ref={triggerRef}>
+            <div css={styles.inputWrapper(isAiOutline)} ref={triggerRef}>
               <div css={styles.leftIcon({ hasDescription })}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
@@ -177,6 +172,8 @@ const FormSelectInput = <T,>({
                       hasLeftIcon: !!leftIcon || !!selectedItem?.icon,
                       hasDescription,
                       hasError: !!fieldState.error,
+                      isMagicAi,
+                      isAiOutline,
                     }),
                   ]}
                   autoComplete="off"
@@ -310,12 +307,30 @@ const styles = {
   mainWrapper: css`
     width: 100%;
   `,
-  inputWrapper: css`
+  inputWrapper: (isAiOutline = false) => css`
     width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: relative;
+    
+    ${
+      isAiOutline &&
+      css`
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: ${colorTokens.ai.gradient_1};
+        color: ${colorTokens.text.primary};
+        border: 1px solid transparent;
+        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        border-radius: 6px;
+      }
+    `
+    }
   `,
   leftIcon: ({
     hasDescription = false,
@@ -339,7 +354,15 @@ const styles = {
     hasLeftIcon,
     hasDescription,
     hasError = false,
-  }: { hasLeftIcon: boolean; hasDescription: boolean; hasError: boolean }) => css`
+    isMagicAi = false,
+    isAiOutline = false,
+  }: {
+    hasLeftIcon: boolean;
+    hasDescription: boolean;
+    hasError: boolean;
+    isMagicAi: boolean;
+    isAiOutline: boolean;
+  }) => css`
     &[data-select] {
       ${typography.body()};
       width: 100%;
@@ -373,8 +396,25 @@ const styles = {
       `
       }
 
+      ${
+        isAiOutline &&
+        css`
+        position: relative;
+        border: none;
+        background: transparent;
+      `
+      }
+
       :focus {
         ${styleUtils.inputFocus};
+
+        ${
+          isMagicAi &&
+          css`
+          outline-color: ${colorTokens.stroke.magicAi};
+          background-color: ${colorTokens.background.magicAi[8]};
+        `
+        }
 
         ${
           hasError &&
