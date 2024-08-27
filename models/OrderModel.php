@@ -677,7 +677,7 @@ class OrderModel {
 		} else {
 			if ( $time_period ) {
 				if ( 'today' === $time_period ) {
-					$time_period_clause = 'AND  DATE(o.created_at_gm) = CURDATE()';
+					$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
 				} elseif ( 'monthly' === $time_period ) {
 					$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
 				} else {
