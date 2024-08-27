@@ -33,8 +33,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 const paymentMethod = button.dataset.paymentMethod;
                 paymentOptionInput.value = paymentMethod;
                 paymentTypeInput.value = button.dataset.paymentType;
-            })
-        })
+
+                const paymentInstructions = button.dataset.paymentInstruction;
+                if (paymentInstructions) {
+                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                } else {
+                    document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                }
+            });
+        });
 
         // Handle toggle coupon form button click
         toggleCouponFormButton.addEventListener('click', () => {

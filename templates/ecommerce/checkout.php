@@ -75,6 +75,7 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 							}
 							?>
 						</div>
+						<div class="tutor-payment-instructions tutor-d-none"></div>
 					</div>
 				</div>
 			</div>

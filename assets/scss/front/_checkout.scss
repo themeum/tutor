@@ -163,6 +163,15 @@
             }
         }
     }
+
+    .tutor-payment-instructions {
+        background-color: #ffffff;
+        border-radius: 6px;
+        padding: 16px;
+        margin-top: 16px;
+        white-space: pre-line;
+    }
+
     .tutor-checkout-coupon-form {
         background-color: #ffffff;
         border: 1px solid var(--tutor-border-color);
