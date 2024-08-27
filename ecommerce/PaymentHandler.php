@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use TUTOR\Input;
 use WP_REST_Server;
 
 /**
@@ -24,6 +25,7 @@ class PaymentHandler {
 	 */
 	public function __construct() {
 		add_action( 'rest_api_init', array( $this, 'register_webhook_route' ) );
+		add_filter( 'template_include', array( $this, 'load_order_status_template' ) );
 	}
 
 	/**
@@ -54,5 +56,33 @@ class PaymentHandler {
 	 */
 	public function handle_ecommerce_webhook() {
 		// @TODO implementation of webhook handler.
+	}
+
+	public function load_order_status_template( $template ) {
+		$placement_status = Input::get( 'tutor_order_placement' );
+		$order_id         = Input::get( 'order_id', 0, Input::TYPE_INT );
+
+		if ( $placement_status && $order_id ) {
+			if ( 'success' === $placement_status ) {
+				tutor_load_template(
+					'ecommerce.order-placement-success',
+					array(
+						'order_status' => $placement_status,
+						'order_id'     => $order_id,
+					)
+				);
+			} else {
+				tutor_load_template(
+					'ecommerce.order-placement-failed',
+					array(
+						'order_status' => $placement_status,
+						'order_id'     => $order_id,
+					)
+				);
+			}
+			exit();
+		}
+
+		return $template;
 	}
 }

@@ -10,7 +10,6 @@
 
 namespace Tutor\Ecommerce;
 
-use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -18,8 +17,6 @@ use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
-use Tutor\PaymentGateways\PaypalGateway;
-use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -60,6 +57,15 @@ class CheckoutController {
 	 * @var string
 	 */
 	const PAY_NOW_ERROR_TRANSIENT_KEY = 'tutor_pay_now_errors';
+
+	/**
+	 * Pay now alert transient key
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const PAY_NOW_ALERT_MSG_TRANSIENT_KEY = 'tutor_pay_now_alert_msg';
 
 	/**
 	 * Constructor.
@@ -138,7 +144,8 @@ class CheckoutController {
 	public function pay_now() {
 		tutor_utils()->check_nonce();
 
-		$errors = array();
+		$errors     = array();
+		$order_data = null;
 
 		$coupon_model  = new CouponModel();
 		$billing_model = new BillingModel();
@@ -234,13 +241,21 @@ class CheckoutController {
 				$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
 				if ( ! empty( $order_data ) ) {
 					if ( 'automate' === $payment_type ) {
+
+						// Set alert message transient.
+						$this->set_pay_now_alert_msg( $order_data );
+
 						$payment_data = $this->prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method );
+
 					} else {
+						// Set alert message transient.
+						$this->set_pay_now_alert_msg( $order_data );
+
 						wp_safe_redirect(
 							add_query_arg(
 								array(
-									'tutor_order_status' => 'success',
+									'tutor_order_placement' => 'success',
 									'order_id'           => $order_data['id'],
 								),
 								home_url()
@@ -249,15 +264,20 @@ class CheckoutController {
 						exit();
 					}
 				} else {
-					array_push( $errors, __( 'Failed to create order!', 'tutor' ) );
+					array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
 					set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+					$this->set_pay_now_alert_msg( $order_data );
 				}
 			} else {
 				set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+				$this->set_pay_now_alert_msg( $order_data );
 			}
 		} catch ( \Throwable $th ) {
 			array_push( $errors, $th->getMessage() );
 			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+
+			// Set alert message transient.
+			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
 
@@ -285,12 +305,14 @@ class CheckoutController {
 
 		$billing_info = ( new BillingModel() )->get_info( $order_user_id );
 
+		$country_info = tutor_get_country_info_by_name( $billing_info->billing_country );
+
 		$country = (object) array(
-			'name'         => $billing_info->billing_country ?? '',
-			'numeric_code' => '',
-			'alpha_2'      => '',
-			'alpha_3'      => '',
-			'phone_code'   => '',
+			'name'         => $country_info['name'],
+			'numeric_code' => $country_info['numeric_code'],
+			'alpha_2'      => $country_info['alpha_2'],
+			'alpha_3'      => $country_info['alpha_3'],
+			'phone_code'   => $country_info['phone_code'],
 		);
 
 		$billing_name = $billing_info ? trim( $billing_info->billing_fist_name . ' ' . $billing_info->billing_last_name ) : $user_data->display_name;
@@ -346,8 +368,8 @@ class CheckoutController {
 			'country'                                 => $country,
 			'shipping_charge'                         => 0,
 			'shipping_charge_in_smallest_unit'        => 0,
-			'coupon_discount'                         => floatval( $order['discount_amount'] ),
-			'coupon_discount_amount_in_smallest_unit' => intval( floatval( $order['discount_amount'] ) * 100 ),
+			'coupon_discount'                         => 0,
+			'coupon_discount_amount_in_smallest_unit' => 0,
 			'shipping_address'                        => (object) $shipping_and_billing,
 			'billing_address'                         => (object) $shipping_and_billing,
 			'decimal_separator'                       => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
@@ -375,12 +397,20 @@ class CheckoutController {
 		$payment_gateway_class = null;
 		foreach ( $gateways_with_class as $gateway_ref ) {
 			if ( isset( $gateway_ref[ $payment_method ] ) ) {
-				$payment_gateway_class = $gateway_ref[ $payment_method ];
+				$payment_gateway_class = $gateway_ref[ $payment_method ]['gateway_class'];
 			}
 		}
 
 		if ( $payment_gateway_class ) {
 			try {
+				add_filter(
+					'tutor_ecommerce_webhook_url',
+					function( $url ) use ( $payment_method ) {
+						$url = add_query_arg( array( 'payment_method' => $payment_method ), $url );
+						return $url;
+					}
+				);
+
 				add_filter(
 					'tutor_ecommerce_payment_success_url_args',
 					function ( $args ) use ( $payment_data ) {
@@ -428,6 +458,36 @@ class CheckoutController {
 		}
 	}
 
+	/**
+	 * Set alert message on the transient based on
+	 * order data
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $order_data Order data or null. If order
+	 * data is falsy then failed message will be set.
+	 *
+	 * @return void
+	 */
+	private function set_pay_now_alert_msg( $order_data ) {
+		if ( empty( $order_data ) ) {
+			set_transient(
+				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+				array(
+					'alert'  => 'danger',
+					'message' => __( 'Failed to place order!', 'tutor' ),
+				),
+			);
+		} else {
+			set_transient(
+				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+				array(
+					'alert'  => 'success',
+					'message' => __( 'Your order has been placed successfully!', 'tutor' ),
+				),
+			);
+		}
+	}
 
 
 	/**
