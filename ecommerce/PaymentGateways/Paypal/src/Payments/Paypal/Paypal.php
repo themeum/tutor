@@ -161,7 +161,7 @@ class Paypal extends BasePayment
     {
         $returnData = [
             'currency_code' => $data['currency']->code,
-            'value'         => $data['total_price']
+            'value'         => (string) $data['total_price']
         ];
 
         Arr::make([
@@ -574,10 +574,10 @@ class Paypal extends BasePayment
             return [
                 'name'          => $item['item_name'],
                 'quantity'      => (string) $item['quantity'],
-                'image_url'     => Path::clean($item['image']),
+                'image_url'     => $item['image'] ? Path::clean($item['image']) : null,
                 'unit_amount'   => [
                     'currency_code' => $currency,
-                    'value'         => $price
+                    'value'         => (string) $price
                 ]
             ];
         }, (array) $data['items']);
