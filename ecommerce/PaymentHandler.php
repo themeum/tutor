@@ -67,20 +67,26 @@ class PaymentHandler {
 
 		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
-		$payment_gateway_class        = null;
-		$payment_gateway_config_class = null;
+		$payment_gateway_class = null;
 		foreach ( $gateways_with_class as $gateway_ref ) {
 			if ( isset( $gateway_ref[ $payment_method ] ) ) {
-				$payment_gateway_class        = $gateway_ref[ $payment_method ]['gateway_class'];
-				$payment_gateway_config_class = $gateway_ref[ $payment_method ]['config_class'];
+				$payment_gateway_class = $gateway_ref[ $payment_method ]['gateway_class'];
 			}
 		}
 
-		if ( $payment_gateway_class && $payment_gateway_config_class ) {
-			$payment = ( new PaymentHub( $payment_gateway_class, $payment_gateway_config_class ) )->make();
-			$res     = $payment->verifyAndCreateOrderData( $webhook_data );
-			if ( is_object( $res ) ) {
-				// @TODO need to implement event listener action.
+		if ( $payment_gateway_class ) {
+			$payment = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
+			try {
+				$res = $payment->verify_webhook_signature( $webhook_data );
+				if ( is_object( $res ) ) {
+					do_action( 'tutor_order_payment_updated', $res );
+					if ( property_exists( $res, 'redirectUrl' ) ) {
+						wp_safe_redirect( $res->redirectUrl );
+						exit();
+					}
+				}
+			} catch ( \Throwable $th ) {
+				error_log( 'Tutor webhook verification failed ' . $th->getMessage() );
 			}
 		}
 	}

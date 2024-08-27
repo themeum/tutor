@@ -21,7 +21,8 @@ trait PaymentUrlsTrait {
 	 * @return string The webhook URL.
 	 */
 	public function getWebhookUrl(): string {
-		$url = home_url( 'tutor/v1/ecommerce-webhook' );
+		// $url = home_url( 'tutor/v1/ecommerce-webhook' );
+		$url = 'https://1ff9-103-205-69-223.ngrok-free.app/wp-json/tutor/v1/ecommerce-webhook';
 
 		return apply_filters( 'tutor_ecommerce_webhook_url', $url );
 	}
