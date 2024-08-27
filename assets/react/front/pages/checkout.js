@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Handle apply coupon button click
         checkoutCouponButton.addEventListener('click', async (e) => {
+            const url = new URL(window.location.href);
+            const plan = url.searchParams.get('plan');
             const couponCode = checkoutCouponInput.value;
 
             if (couponCode.length === 0) {
@@ -68,6 +70,9 @@ document.addEventListener('DOMContentLoaded', function () {
             formData.set('action', 'tutor_apply_coupon');
             formData.set('coupon_code', couponCode);
             formData.set('object_ids', checkoutCouponButton.dataset.objectIds);
+            if (plan) {
+                formData.set('plan', plan);
+            }
 
             try {
                 checkoutCouponButton.setAttribute('disabled', 'disabled');
