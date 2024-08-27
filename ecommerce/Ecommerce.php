@@ -13,6 +13,8 @@ namespace Tutor\Ecommerce;
 use TUTOR\Course;
 use Tutor\Ecommerce\PaymentHandler;
 use TUTOR\Input;
+use Tutor\PaymentGateways\Configs\PaypalConfig;
+use Tutor\PaymentGateways\Configs\StripeConfig;
 use Tutor\PaymentGateways\GatewayFactory;
 use Tutor\PaymentGateways\PaypalGateway;
 use Tutor\PaymentGateways\StripeGateway;
@@ -147,10 +149,16 @@ class Ecommerce {
 	public static function payment_gateways_with_ref() {
 		$arr = array(
 			array(
-				'stripe' => StripeGateway::class,
+				'stripe' => array(
+					'gateway_class' => StripeGateway::class,
+					'config_class'  => StripeConfig::class,
+				),
 			),
 			array(
-				'paypal' => PaypalGateway::class,
+				'paypal' => array(
+					'gateway_class' => PaypalGateway::class,
+					'config_class'  => PaypalConfig::class,
+				),
 			),
 		);
 

@@ -203,20 +203,32 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 
 	<!-- handle errors -->
 	<?php
-	$pay_now_errors = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
-	if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) {
+	$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
+	$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
+	?>
+	<div class="tutor-p-32">
+		<?php
+		if ( ! empty( $pay_now_alert_msg ) ) :
+			list( $alert, $message ) = array_values( $pay_now_alert_msg );
+			?>
+		<div class="tutor-alert tutor-alert-<?php echo esc_attr( $alert ); ?>">
+			<?php echo esc_html( $message ); ?>
+		</div>
+			<?php
+			delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
+		 endif;
 		?>
-		<div class="tutor-p-32">
-			<div class="tutor-card p-2">
-				<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
-				<li class="tutor-text-danger"><?php echo esc_html( $pay_now_err ); ?></li>
-					<?php
-				endforeach;
-				delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
-				?>
-			</div>
-		 </div>
-	<?php } ?>
 
+		<?php if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) : ?>
+		<div class="tutor-card p-2">
+			<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
+			<li class="tutor-text-danger"><?php echo esc_html( $pay_now_err ); ?></li>
+				<?php
+			endforeach;
+			delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
+			?>
+		</div>
+		<?php endif; ?>
+	</div>
 	<!-- handle errors end -->
 </div>

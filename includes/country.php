@@ -23225,7 +23225,7 @@ if ( ! function_exists( 'tutor_get_country_list' ) ) {
     }
 }
 
-if ( ! function_exists( 'get_country_info_by_name' ) ) {
+if ( ! function_exists( 'tutor_get_country_info_by_name' ) ) {
     /**
      * Get country info by country name 
      *
@@ -23233,7 +23233,7 @@ if ( ! function_exists( 'get_country_info_by_name' ) ) {
      *
      * @return array|null
      */
-    function get_country_info_by_name( $country_name ) {
+    function tutor_get_country_info_by_name( $country_name ) {
         $countries = tutor_get_country_list();
         foreach ( $countries as $country ) {
             if ( strtolower( $country['name'] ) === strtolower( $country_name ) ) {
