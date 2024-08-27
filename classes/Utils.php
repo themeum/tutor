@@ -10190,4 +10190,52 @@ class Utils {
 
 		return apply_filters( 'tutor_course_builder_editor_used', $editor, $post_id );
 	}
+
+	/**
+	 * Upload base64 string image.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $base64_image_str base64 image string.
+	 * @param string $filename filename.
+	 *
+	 * @return object consist of id, title, url.
+	 *
+	 * @throws \Exception If upload failed.
+	 */
+	public function upload_base64_image( $base64_image_str, $filename = null ) {
+		try {
+			$arr = explode( ',', $base64_image_str, 2 );
+			if ( ! isset( $arr[1] ) ) {
+				throw new \Exception( 'Invalid base64 string' );
+			}
+
+			$filename   = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			$image_data = base64_decode( $arr[1] );
+			$uploaded   = wp_upload_bits( $filename, null, $image_data );
+
+			if ( ! empty( $uploaded['error'] ) ) {
+				throw new \Exception( $uploaded['error'] );
+			}
+
+			$attachment = array(
+				'guid'           => $uploaded['url'],
+				'post_mime_type' => $uploaded['type'],
+				'post_title'     => $filename,
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+
+			$media_id = wp_insert_attachment( $attachment, $uploaded['file'] );
+
+			return (object) array(
+				'id'    => $media_id,
+				'url'   => $uploaded['url'],
+				'title' => $filename,
+			);
+
+		} catch ( \Exception $e ) {
+			throw new \Exception( $e->getMessage() );
+		}
+	}
 }
