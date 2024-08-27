@@ -55,6 +55,8 @@ class HooksHandler {
 
 		add_action( 'tutor_after_order_bulk_action', array( $this, 'manage_earnings' ), 10, 2 );
 		add_action( 'tutor_after_order_mark_as_paid', array( $this, 'after_order_mark_as_paid' ), 10 );
+
+		add_action( 'tutor_order_payment_updated', array( $this, 'handle_payment_updated_webhook' ) );
 	}
 
 	/**
@@ -219,6 +221,55 @@ class HooksHandler {
 				// @TODO need to handle subscription order.
 			}
 		}
+	}
+
+	/**
+	 * Handle payment updated webhook
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $res Response data.
+	 *
+	 * @see https://github.com/ahamed/payment-hub/tree/dev
+	 * for response structure
+	 *
+	 * @return void
+	 */
+	public function handle_payment_updated_webhook( $res ) {
+		$order_id           = $res->id;
+		$new_payment_status = $res->payment_status;
+		$transaction_id     = $res->transaction_id;
+
+		$order_model   = ( new OrderModel() );
+		$order_details = $order_model->get_order_by_id( $order_id );
+		if ( $order_details ) {
+			$prev_payment_status = $order_details->payment_status;
+
+			$order_data = array(
+				'order_status'    => $order_details->order_status,
+				'payment_status'  => $new_payment_status,
+				'payment_payload' => $res->payment_payload,
+				'transaction_id'  => $transaction_id,
+				'updated_at_gmt'  => current_time( 'mysql', true ),
+			);
+
+			switch ( $new_payment_status ) {
+				case $order_model::PAYMENT_PAID:
+					$order_data['order_status'] = $order_model::ORDER_COMPLETED;
+					break;
+				case $order_model::PAYMENT_FAILED:
+				case $order_model::PAYMENT_REFUNDED:
+					$order_data['order_status'] = $order_model::ORDER_CANCELLED;
+					break;
+			}
+
+			$update = $order_model->update_order( $order_id, $order_data );
+			if ( $update ) {
+				// Provide hook after update order.
+				do_action( 'tutor_order_payment_status_changed', $order_id, $prev_payment_status, $new_payment_status );
+			}
+		}
+
 	}
 }
 

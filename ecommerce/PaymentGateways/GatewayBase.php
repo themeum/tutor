@@ -138,13 +138,13 @@ abstract class GatewayBase {
 	 * @throws \Exception Throw exception if error occur.
 	 * @throws \Throwable Throw a throwable if error occur inside payment hub.
 	 *
-	 * @return object
+	 * @return mixed
 	 */
 	public function verify_webhook_signature( $webhook_data ) {
 		if ( ! $this->payment ) {
 			throw new \Exception( 'Payment object is not initialized.' );
 		}
 
-		$this->payment->verifyAndCreateOrderData( $webhook_data );
+		return $this->payment->verifyAndCreateOrderData( $webhook_data );
 	}
 }

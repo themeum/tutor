@@ -10,7 +10,6 @@
 
 namespace Tutor\Ecommerce;
 
-use Ollyo\PaymentHub\PaymentHub;
 use TUTOR\Input;
 use WP_REST_Server;
 
