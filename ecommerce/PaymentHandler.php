@@ -91,6 +91,17 @@ class PaymentHandler {
 		}
 	}
 
+	/**
+	 * Load order status template
+	 *
+	 * It will load success or failed template based on order status
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $template Default template.
+	 *
+	 * @return string
+	 */
 	public function load_order_status_template( $template ) {
 		$placement_status = Input::get( 'tutor_order_placement' );
 		$order_id         = Input::get( 'order_id', 0, Input::TYPE_INT );
