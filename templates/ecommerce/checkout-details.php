@@ -95,7 +95,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 
 						array_push( $object_ids, $course->ID );
 						?>
-						<div class="tutor-checkout-course-item">
+						<div class="tutor-checkout-course-item" data-course-id="<?php echo esc_attr( $course->ID ); ?>">
 							<?php if ( tutor()->has_pro && 'course-bundle' === $course->post_type ) : ?>
 							<div class="tutor-checkout-course-bundle-badge">
 								<?php
@@ -117,7 +117,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 										<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 											<path d="M4.48736 3.73748C4.63569 3.73748 4.7807 3.78147 4.90403 3.86388C5.02737 3.94629 5.1235 4.06342 5.18027 4.20047C5.23703 4.33751 5.25188 4.48831 5.22294 4.6338C5.19401 4.77929 5.12258 4.91292 5.01769 5.01781C4.9128 5.1227 4.77916 5.19413 4.63367 5.22307C4.48819 5.25201 4.33739 5.23716 4.20034 5.18039C4.0633 5.12363 3.94616 5.0275 3.86375 4.90416C3.78134 4.78082 3.73736 4.63582 3.73736 4.48748C3.73736 4.28857 3.81637 4.0978 3.95703 3.95715C4.09768 3.8165 4.28844 3.73748 4.48736 3.73748ZM6.38169 2.17392L8.26801 4.06024L8.43583 4.22806L9.82102 5.61325C10.0091 5.80177 10.1151 6.05695 10.116 6.32325C10.1166 6.45393 10.0911 6.58341 10.0408 6.70403C9.99052 6.82466 9.91657 6.93397 9.82332 7.02553L9.82354 7.02574L7.02563 9.82366L7.02541 9.82344C6.93386 9.91669 6.82454 9.99064 6.70392 10.0409C6.58329 10.0912 6.45381 10.1168 6.32314 10.1161C6.19232 10.1166 6.06271 10.0912 5.94172 10.0414C5.82074 9.99166 5.71078 9.9185 5.61814 9.82614L4.22793 8.43596L4.06011 8.26814L2.17879 6.38682C2.08511 6.29386 2.0108 6.18325 1.96017 6.06137C1.90953 5.9395 1.88357 5.80879 1.88379 5.67682V4.68183V2.88392C1.88455 2.61894 1.99016 2.36502 2.17753 2.17765C2.3649 1.99028 2.61881 1.88468 2.88379 1.88392H4.6817H5.67668C5.80749 1.88347 5.93711 1.90886 6.05809 1.95863C6.17908 2.0084 6.28904 2.08156 6.38169 2.17392ZM7.73084 4.93304L7.56302 4.76522L5.6817 2.88392H2.88379V5.68183L4.93291 7.73097L6.32261 9.12067L9.11651 6.31874L9.11601 6.31824L7.73084 4.93304Z" fill="currentColor"/>
 										</svg>
-										<span>WINTERISHERE</span>
+										<span></span>
 									</div>
 								</div>
 								<div class="tutor-text-right">
@@ -147,7 +147,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
                 <?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?>
 			</div>
 		</div>
-		<div class="tutor-checkout-summary-item">
+		<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 			<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
 			<button type="button" id="tutor-toggle-coupon-form" class="tutor-btn tutor-btn-link">
 				<?php esc_html_e( 'Click here', 'tutor' ); ?>
@@ -162,14 +162,14 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 				<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 					<path d="M7.4799 6.22906C7.72713 6.22906 7.9688 6.30237 8.17437 6.43972C8.37993 6.57707 8.54014 6.77229 8.63475 7.0007C8.72936 7.22911 8.75412 7.48044 8.70588 7.72292C8.65765 7.96539 8.5386 8.18812 8.36379 8.36294C8.18897 8.53775 7.96624 8.65681 7.72376 8.70504C7.48129 8.75327 7.22996 8.72851 7.00155 8.6339C6.77314 8.53929 6.57792 8.37908 6.44057 8.17352C6.30321 7.96796 6.2299 7.72628 6.2299 7.47905C6.2299 7.14753 6.3616 6.82959 6.59602 6.59517C6.83044 6.36075 7.14838 6.22906 7.4799 6.22906ZM10.6371 3.62311L13.781 6.76699L14.0607 7.04669L16.3693 9.35534C16.6828 9.66953 16.8595 10.0948 16.861 10.5387C16.8621 10.7565 16.8194 10.9723 16.7356 11.1733C16.6518 11.3743 16.5286 11.5565 16.3732 11.7091L16.3735 11.7095L11.7104 16.3727L11.71 16.3723C11.5574 16.5277 11.3752 16.651 11.1742 16.7348C10.9731 16.8186 10.7573 16.8612 10.5395 16.8601C10.3215 16.8609 10.1055 16.8186 9.90385 16.7356C9.70222 16.6527 9.51894 16.5307 9.36454 16.3768L7.04753 14.0599L6.76783 13.7801L3.63229 10.6446C3.47616 10.4897 3.35231 10.3053 3.26792 10.1022C3.18352 9.89909 3.14026 9.68124 3.14063 9.46129V7.80296V4.80645C3.1419 4.36481 3.3179 3.94163 3.63019 3.62934C3.94247 3.31706 4.36566 3.14105 4.80729 3.13978H7.80381H9.4621C9.68013 3.13904 9.89616 3.18136 10.0978 3.2643C10.2994 3.34724 10.4827 3.46918 10.6371 3.62311ZM12.8857 8.22165L12.606 7.94195L9.47048 4.80645H4.80729V9.46964L8.22249 12.8849L10.5387 15.201L15.1952 10.5312L15.1943 10.5303L12.8857 8.22165Z" fill="#4B505C"/>
 				</svg>
-				<span>WINTERISHERE</span>
+				<span></span>
 				<button type="button" id="tutor-checkout-remove-coupon">
 					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M5.54243 5.36494C5.78651 5.12087 6.18224 5.12087 6.42632 5.36494L10.1775 9.11612L13.9287 5.36494C14.1727 5.12087 14.5685 5.12087 14.8125 5.36494C15.0566 5.60902 15.0566 6.00475 14.8125 6.24883L11.0614 10L14.8125 13.7512C15.0566 13.9952 15.0566 14.391 14.8125 14.6351C14.5685 14.8791 14.1727 14.8791 13.9287 14.6351L10.1775 10.8839L6.42632 14.6351C6.18224 14.8791 5.78651 14.8791 5.54243 14.6351C5.29836 14.391 5.29836 13.9952 5.54243 13.7512L9.29361 10L5.54243 6.24883C5.29836 6.00475 5.29836 5.60902 5.54243 5.36494Z" fill="#9197A8"/>
 					</svg>
 				</button>
 			</div>
-			<div class="tutor-fw-bold">-$10.00</div>
+			<div class="tutor-fw-bold tutor-discount-amount"></div>
 		</div>
 		<div class="tutor-checkout-summary-item">
 			<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
@@ -180,13 +180,13 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 	<div class="tutor-p-32">
 		<div class="tutor-checkout-summary-item tutor-mb-40">
 			<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
-            <div class="tutor-fw-bold"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
+            <div class="tutor-fw-bold tutor-checkout-grand-total"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
 		</div>
 
 		<?php if ( null !== $tutor_toc_page_link ) : ?>
 			<div class="tutor-mb-16">
 				<div class="tutor-form-check">
-					<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input">
+					<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
 					<label for="tutor_checkout_agree_to_terms">
 						<?php esc_html_e( 'I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
 					</label>
@@ -205,30 +205,34 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 	<?php
 	$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
 	$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
-	?>
-	<div class="tutor-p-32">
+	if ( $pay_now_errors || $pay_now_alert_msg ) :
+		?>
+	<div class="tutor-px-32 tutor-mb-32">
 		<?php
 		if ( ! empty( $pay_now_alert_msg ) ) :
 			list( $alert, $message ) = array_values( $pay_now_alert_msg );
 			?>
-		<div class="tutor-alert tutor-alert-<?php echo esc_attr( $alert ); ?>">
-			<?php echo esc_html( $message ); ?>
-		</div>
+			<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?>">
+				<div class="tutor-color-success"><?php echo esc_html( $message ); ?></div>
+			</div>
 			<?php
 			delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
-		 endif;
+		endif;
 		?>
 
 		<?php if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) : ?>
-		<div class="tutor-card p-2">
-			<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
-			<li class="tutor-text-danger"><?php echo esc_html( $pay_now_err ); ?></li>
-				<?php
-			endforeach;
-			delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
-			?>
+		<div class="tutor-alert tutor-danger">
+			<ul class="tutor-mb-0">
+				<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
+					<li class="tutor-color-danger"><?php echo esc_html( $pay_now_err ); ?></li>
+					<?php
+				endforeach;
+				delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
+				?>
+			</ul>
 		</div>
 		<?php endif; ?>
 	</div>
+	<?php endif; ?>
 	<!-- handle errors end -->
 </div>

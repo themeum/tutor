@@ -693,7 +693,7 @@ class CouponController extends BaseController {
 		}
 
 		try {
-			$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $object_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $object_ids );
+			$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $object_ids, $coupon_code, true ) : $this->model->apply_automatic_coupon_discount( $object_ids );
 
 			if ( $discount_price->is_applied ) {
 				$this->json_response(
