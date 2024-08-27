@@ -18,18 +18,20 @@ import FormSelectUser, { type UserOption } from '@Components/fields/FormSelectUs
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
-
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
+import MagicButton from '@Atoms/MagicButton';
+import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -54,6 +56,7 @@ const CourseBasic = () => {
   });
   const navigate = useNavigate();
   const { state } = useLocation();
+  const { showModal } = useModal();
 
   const [userSearchText, setUserSearchText] = useState('');
 
@@ -250,6 +253,30 @@ const CourseBasic = () => {
           title={__('Course Basic', 'tutor')}
           backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
           isExternalUrl
+          rightButton={
+            <div>
+              <MagicButton
+                css={css`
+                display: inline-flex;
+                align-items: center;
+                gap: ${spacing[4]};
+              `}
+                onClick={() => {
+                  showModal({
+                    component: AICourseBuilderModal,
+                    isMagicAi: true,
+                    props: {
+                      title: __('Create with AI', 'tutor'),
+                      icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                    },
+                  });
+                }}
+              >
+                <SVGIcon name="magicAi" width={24} height={24} />
+                {__('Generate with AI', 'tutor')}
+              </MagicButton>
+            </div>
+          }
         />
 
         <div css={styles.fieldsWrapper}>
@@ -266,6 +293,8 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
+                  isMagicAi
+                  generateWithAi
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
@@ -291,6 +320,8 @@ const CourseBasic = () => {
               <FormWPEditor
                 {...controllerProps}
                 label={__('Description', 'tutor')}
+                isMagicAi
+                generateWithAi
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
@@ -354,6 +385,7 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Standard Size: 800x450 pixels', 'tutor')}
+              generateWithAi
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}

@@ -14,5 +14,6 @@ const styles = {
 		max-width: ${CONTAINER_WIDTH}px;
 		margin: 0 auto;
 		height: 100%;
+		width: 100%;
 	`,
 };

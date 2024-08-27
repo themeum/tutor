@@ -19,7 +19,7 @@ import { nanoid } from '@Utils/util';
 interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
-  const { activeQuestionId } = useQuizModalContext();
+  const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const inputValue = field.value ?? {
     _data_status: 'new',
     is_saved: false,
@@ -176,8 +176,14 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                         ...inputValue,
                         ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                           _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                          is_saved: true,
                         }),
                       });
+
+                      if (validationError?.type === 'save_option') {
+                        setValidationError(null);
+                      }
+
                       setIsEditing(false);
                     }
                   }}
@@ -238,6 +244,10 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                         is_saved: true,
                       }),
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
 
                     setIsEditing(false);
                   }}

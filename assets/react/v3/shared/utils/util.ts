@@ -18,7 +18,7 @@ import type { DateRange } from 'react-day-picker';
 import { v4 as uuidv4 } from 'uuid';
 
 import { DateFormats } from '@Config/constants';
-import type { IconCollection, PaginatedParams } from './types';
+import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {
@@ -285,6 +285,31 @@ export const formatSeconds = (seconds: number) => {
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };
+export const getObjectKeys = <T extends {}>(object: T) => {
+  if (!isDefined(object) || !isObject(object)) {
+    return [] as (keyof T)[];
+  }
+  return Object.keys(object) as (keyof T)[];
+};
+
+export const getObjectValues = <T extends {}, K extends keyof T = keyof T>(object: T): T[K][] => {
+  return Object.values(object);
+};
+export const getObjectEntries = <T extends {}, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
+  return Object.entries(object) as [K, T[K]][];
+};
+
+export function objectToQueryParams(obj: Record<string, string>) {
+  const params = new URLSearchParams();
+
+  for (const key in obj) {
+    if (key in obj) {
+      params.append(key, obj[key]);
+    }
+  }
+
+  return params.toString();
+}
 
 export const convertToGMT = (date: Date, dateFormat = DateFormats.yearMonthDayHourMinuteSecond) => {
   // Calculate the GMT offset in minutes

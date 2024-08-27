@@ -8,6 +8,7 @@ import WPEditor from '@Atoms/WPEditor';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
@@ -28,10 +29,13 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   placeholder?: string;
   helpText?: string;
   onChange?: (value: string) => void;
+  generateWithAi?: boolean;
+  onClickAiButton?: () => void;
   hasCustomEditorSupport?: boolean;
   isMinimal?: boolean;
   editors?: Editor[];
   editorUsed?: Editor;
+  isMagicAi?: boolean;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -50,10 +54,13 @@ const FormWPEditor = ({
   placeholder,
   helpText,
   onChange,
+  generateWithAi = false,
+  onClickAiButton,
   hasCustomEditorSupport = false,
   isMinimal = false,
   editors = [],
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
+  isMagicAi = false,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -104,6 +111,21 @@ const FormWPEditor = ({
       readOnly={readOnly}
       placeholder={placeholder}
       helpText={helpText}
+      generateWithAi={generateWithAi}
+      isMagicAi={isMagicAi}
+      onClickAiButton={() => {
+        showModal({
+          component: AITextModal,
+          isMagicAi: true,
+          props: {
+            title: __('AI Studio', 'tutor'),
+            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+            field,
+            fieldState,
+            is_html: true,
+          },
+        });
+      }}
       replaceEntireLabel
     >
       {() => {

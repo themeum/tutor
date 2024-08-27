@@ -26,7 +26,7 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
 }
 
 const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
-  const { activeQuestionId, quizId } = useQuizModalContext();
+  const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
 
   const inputValue = field.value ?? {
     answer_id: nanoid(),
@@ -220,8 +220,14 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                         ...inputValue,
                         ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
                           _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                          is_saved: true,
                         }),
                       });
+
+                      if (validationError?.type === 'save_option') {
+                        setValidationError(null);
+                      }
+
                       setIsEditing(false);
                     }
                   }}
@@ -271,6 +277,10 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
                       }),
                       is_saved: true,
                     });
+
+                    if (validationError?.type === 'save_option') {
+                      setValidationError(null);
+                    }
 
                     setIsEditing(false);
                   }}

@@ -134,7 +134,16 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     form.reset(convertedData);
   }, [getQuizDetailsQuery.data]);
 
-  const onQuizFormSubmit = async (data: QuizForm, activeQuestionIndex: number) => {
+  const onQuizFormSubmit = async (
+    data: QuizForm,
+    activeQuestionIndex: number,
+    setValidationError: React.Dispatch<
+      React.SetStateAction<{
+        message: string;
+        type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+      } | null>
+    >,
+  ) => {
     if (!data.quiz_title) {
       setActiveTab('details');
 
@@ -158,10 +167,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     const validation = validateQuizQuestion(activeQuestionIndex, form);
 
     if (validation !== true) {
-      showToast({
-        message: validation.message,
-        type: validation.type as 'danger',
-      });
+      setValidationError(validation);
 
       setActiveTab('details');
 
@@ -189,7 +195,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''}>
-        {(activeQuestionIndex, setActiveQuestionId) => (
+        {(activeQuestionIndex, setActiveQuestionId, setValidationError) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={icon}
@@ -243,11 +249,15 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                       size="small"
                       onClick={async () => {
                         if (activeQuestionIndex < 0) {
-                          await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
+                          await form.handleSubmit((data) =>
+                            onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                          )();
                           return;
                         }
 
-                        await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
+                        await form.handleSubmit((data) =>
+                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                        )();
                       }}
                     >
                       {__('Save', 'tutor')}
