@@ -57,6 +57,8 @@ class HooksHandler {
 		add_action( 'tutor_after_order_mark_as_paid', array( $this, 'after_order_mark_as_paid' ), 10 );
 
 		add_action( 'tutor_order_payment_updated', array( $this, 'handle_payment_updated_webhook' ) );
+
+		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 3 );
 	}
 
 	/**
@@ -187,7 +189,7 @@ class HooksHandler {
 					$has_enrollment = tutor_utils()->is_enrolled( $course_id, $student_id, false );
 					if ( $has_enrollment ) {
 						// Update enrollment.
-						$update = tutor_utils()->update_enrollments( 'completed', array( $has_enrollment->ID ), 'enrolled' );
+						$update = tutor_utils()->update_enrollments( 'completed', array( $has_enrollment->ID ) );
 
 						if ( $update ) {
 							$earnings->prepare_order_earnings( $order_id );
@@ -240,8 +242,7 @@ class HooksHandler {
 		$new_payment_status = $res->payment_status;
 		$transaction_id     = $res->transaction_id;
 
-		$order_model   = ( new OrderModel() );
-		$order_details = $order_model->get_order_by_id( $order_id );
+		$order_details = $this->order_model->get_order_by_id( $order_id );
 		if ( $order_details ) {
 			$prev_payment_status = $order_details->payment_status;
 
@@ -254,22 +255,109 @@ class HooksHandler {
 			);
 
 			switch ( $new_payment_status ) {
-				case $order_model::PAYMENT_PAID:
-					$order_data['order_status'] = $order_model::ORDER_COMPLETED;
+				case $this->order_model::PAYMENT_PAID:
+					$order_data['order_status'] = $this->order_model::ORDER_COMPLETED;
 					break;
-				case $order_model::PAYMENT_FAILED:
-				case $order_model::PAYMENT_REFUNDED:
-					$order_data['order_status'] = $order_model::ORDER_CANCELLED;
+				case $this->order_model::PAYMENT_FAILED:
+				case $this->order_model::PAYMENT_REFUNDED:
+					$order_data['order_status'] = $this->order_model::ORDER_CANCELLED;
 					break;
 			}
 
-			$update = $order_model->update_order( $order_id, $order_data );
+			$update = $this->order_model->update_order( $order_id, $order_data );
 			if ( $update ) {
 				// Provide hook after update order.
 				do_action( 'tutor_order_payment_status_changed', $order_id, $prev_payment_status, $new_payment_status );
 			}
 		}
 
+	}
+
+	/**
+	 * Update enrollment & earnings based on payment status
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $order_id Order id.
+	 * @param string $prev_payment_status previous payment status.
+	 * @param string $new_payment_status new payment status.
+	 *
+	 * @return void
+	 */
+	public function handle_payment_status_changed( $order_id, $prev_payment_status, $new_payment_status ) {
+		$earnings = Earnings::get_instance();
+
+		$order      = $this->order_model->get_order_by_id( $order_id );
+		$student_id = $order->student->id;
+		switch ( $new_payment_status ) {
+			case $this->order_model::PAYMENT_PAID:
+				foreach ( $order->items as $item ) {
+					$course_id = $item->id;
+					if ( $this->order_model::TYPE_SUBSCRIPTION === $order->order_type ) {
+						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $item->id );
+					}
+
+					$has_enrollment = tutor_utils()->is_enrolled( $course_id, $student_id, false );
+					if ( $has_enrollment ) {
+						// Update enrollment.
+						$update = tutor_utils()->update_enrollments( 'completed', array( $has_enrollment->ID ) );
+
+						if ( $update ) {
+							$earnings->prepare_order_earnings( $order_id );
+							$earnings->store_earnings();
+							do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
+						} else {
+							// Log error message with student id and course id.
+							error_log( "Error updating enrollment for student {$student_id} and course {$course_id}" );
+						}
+					} else {
+						// Insert enrollment.
+						add_filter(
+							'tutor_enroll_data',
+							function( $enroll_data ) {
+								$enroll_data['enroll_status'] = 'completed';
+								return $enroll_data;
+							}
+						);
+
+						$enrollment_id = tutor_utils()->do_enroll( $course_id, $order_id, $student_id );
+						if ( $enrollment_id ) {
+							$earnings->prepare_order_earnings( $order_id );
+							$earnings->store_earnings();
+						} else {
+							// Log error message with student id and course id.
+							error_log( "Error updating enrollment for student {$student_id} and course {$course_id}" );
+						}
+					}
+				}
+				break;
+
+			case $this->order_model::PAYMENT_FAILED:
+			case $this->order_model::PAYMENT_REFUNDED:
+				foreach ( $order->items as $item ) {
+					$course_id = $item->id;
+					if ( $this->order_model::TYPE_SUBSCRIPTION === $order->order_type ) {
+						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $item->id );
+					}
+
+					$has_enrollment = tutor_utils()->is_enrolled( $course_id, $student_id, false );
+					if ( $has_enrollment ) {
+						// Update enrollment.
+						$update = tutor_utils()->update_enrollments( 'cancelled', array( $has_enrollment->ID ) );
+
+						if ( $update ) {
+							$earnings->prepare_order_earnings( $order_id );
+							$earnings->store_earnings();
+							do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
+						}
+					} else {
+						$earnings->prepare_order_earnings( $order_id );
+						$earnings->store_earnings();
+					}
+				}
+				break;
+			default:
+		}
 	}
 }
 
