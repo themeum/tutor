@@ -21,7 +21,9 @@ trait PaymentUrlsTrait {
 	 * @return string The webhook URL.
 	 */
 	public function getWebhookUrl(): string {
-		return home_url( 'tutor/v1/ecommerce-webhook' );
+		$url = home_url( 'tutor/v1/ecommerce-webhook' );
+
+		return apply_filters( 'tutor_ecommerce_webhook_url', $url );
 	}
 
 	/**
@@ -33,8 +35,8 @@ trait PaymentUrlsTrait {
 	 */
 	public function getSuccessUrl(): string {
 		$args = array(
-			'tutor_payment_status' => 'success',
-			'order_id'             => 0,
+			'tutor_order_placement' => 'success',
+			'order_id'              => 0,
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_success_url_args', $args );
 		return add_query_arg( $args, home_url() );
@@ -49,8 +51,8 @@ trait PaymentUrlsTrait {
 	 */
 	public function getCancelUrl(): string {
 		$args = array(
-			'tutor_order_status' => 'cancelled',
-			'order_id'           => 0,
+			'tutor_order_placement' => 'failed',
+			'order_id'              => 0,
 		);
 		$args = apply_filters( 'tutor_ecommerce_payment_cancelled_url_args', $args );
 
