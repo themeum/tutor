@@ -51,7 +51,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         css={[styles.button({ variant, isOutlined, size, loading, disabled }), buttonCss]}
         onClick={onClick}
         tabIndex={tabIndex}
-        disabled={disabled}
+        disabled={disabled || loading}
       >
         {loading && !disabled && (
           <span css={styles.spinner}>
@@ -120,185 +120,185 @@ const styles = {
 		${
       size === 'large' &&
       css`
-			padding: ${spacing[12]} ${spacing[40]};
-		`
+				padding: ${spacing[12]} ${spacing[40]};
+			`
     }
 
 		${
       size === 'small' &&
       css`
-			${typography.small('medium')};
-			padding: ${spacing[6]} ${spacing[16]};
-		`
+				${typography.small('medium')};
+				padding: ${spacing[6]} ${spacing[16]};
+			`
     }
     
     ${
       variant === 'primary' &&
       css`
-			background-color: ${colorTokens.action.primary.default};
-			color: ${colorTokens.text.white};
+				background-color: ${colorTokens.action.primary.default};
+				color: ${colorTokens.text.white};
+
+					svg {
+						color: ${colorTokens.icon.white};
+					}
+
+					&:hover {
+						background-color: ${!disabled && colorTokens.action.primary.hover};
+					}
+
+					&:focus {
+						background-color: ${colorTokens.action.primary.hover};
+						box-shadow: ${shadow.focus};
+					}
+
+					&:active {
+						background-color: ${!disabled && colorTokens.action.primary.active};
+						box-shadow: none;
+					}
+
+				${
+          isOutlined &&
+          css`
+						background-color: transparent;
+						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
+						color: ${colorTokens.text.brand};
+
+								svg {
+									color: ${colorTokens.icon.brand};
+								}
+
+								&:hover {
+									color: ${colorTokens.text.white};
+
+									svg {
+										color: ${colorTokens.icon.white};
+									}
+								}
+
+								&:focus {
+									color: ${colorTokens.text.white};
+
+									svg {
+										color: ${colorTokens.icon.white};
+									}
+								}
+
+								&:active {
+									color: ${colorTokens.text.white};
+
+							svg {
+								color: ${colorTokens.icon.white};
+							}
+						}
+					`
+        }
+
+				${
+          (disabled || loading) &&
+          css`
+						background-color: ${colorTokens.action.primary.disable};
+						color: ${colorTokens.text.disable};
+						svg {
+							color: ${colorTokens.icon.disable.default};
+						}
+
+						${
+              isOutlined &&
+              css`
+								background-color: transparent;
+								box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
+						`
+            }
+				`
+        }
+			`
+    }
+
+    ${
+      variant === 'WP' &&
+      css`
+				background-color: ${colorTokens.action.primary.wp};
+				color: ${colorTokens.text.white};
 
 				svg {
 					color: ${colorTokens.icon.white};
 				}
 
 				&:hover {
-					background-color: ${colorTokens.action.primary.hover};
+					background-color: ${colorTokens.action.primary.wp_hover};
 				}
 
 				&:focus {
-					background-color: ${colorTokens.action.primary.hover};
+					background-color: ${colorTokens.action.primary.wp_hover};
 					box-shadow: ${shadow.focus};
 				}
 
 				&:active {
-					background-color: ${colorTokens.action.primary.active};
+					background-color: ${colorTokens.action.primary.wp};
 					box-shadow: none;
 				}
 
-			${
-        isOutlined &&
-        css`
-				background-color: transparent;
-				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
-				color: ${colorTokens.text.brand};
+				${
+          isOutlined &&
+          css`
+						background-color: transparent;
+						box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
+						color: ${colorTokens.text.wp};
 
-						svg {
-							color: ${colorTokens.icon.brand};
-						}
+							svg {
+								color: ${colorTokens.icon.brand};
+							}
 
-						&:hover {
-							color: ${colorTokens.text.white};
+							&:hover {
+								color: ${colorTokens.text.white};
+
+								svg {
+									color: ${colorTokens.icon.white};
+								}
+							}
+
+							&:focus {
+								color: ${colorTokens.text.white};
+
+								svg {
+									color: ${colorTokens.icon.white};
+								}
+							}
+
+							&:active {
+								color: ${colorTokens.text.white};
 
 							svg {
 								color: ${colorTokens.icon.white};
 							}
 						}
-
-						&:focus {
-							color: ${colorTokens.text.white};
-
-							svg {
-								color: ${colorTokens.icon.white};
-							}
-						}
-
-						&:active {
-							color: ${colorTokens.text.white};
-
-					svg {
-						color: ${colorTokens.icon.white};
-					}
-				}
-			`
-      }
+					`
+        }
 
 			${
         (disabled || loading) &&
         css`
-				background-color: ${colorTokens.action.primary.disable};
-				color: ${colorTokens.text.disable};
-				svg {
-					color: ${colorTokens.icon.disable.default};
-				}
-
-				${
-          isOutlined &&
-          css`
-					background-color: transparent;
-					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-
+					background-color: ${colorTokens.action.primary.disable};
+					color: ${colorTokens.text.disable};
 					svg {
 						color: ${colorTokens.icon.disable.default};
 					}
-				`
-        }
-			`
-      }
-		`
-    }
 
-    ${
-      variant === 'WP' &&
-      css`
-			background-color: ${colorTokens.action.primary.wp};
-			color: ${colorTokens.text.white};
-
-			svg {
-				color: ${colorTokens.icon.white};
-			}
-
-			&:hover {
-				background-color: ${colorTokens.action.primary.wp_hover};
-			}
-
-			&:focus {
-				background-color: ${colorTokens.action.primary.wp_hover};
-				box-shadow: ${shadow.focus};
-			}
-
-			&:active {
-				background-color: ${colorTokens.action.primary.wp};
-				box-shadow: none;
-			}
-
-			${
-        isOutlined &&
-        css`
-				background-color: transparent;
-				box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
-				color: ${colorTokens.text.wp};
-
-					svg {
-						color: ${colorTokens.icon.brand};
-					}
-
-					&:hover {
-						color: ${colorTokens.text.white};
+					${
+            isOutlined &&
+            css`
+						background-color: transparent;
+						box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
 						svg {
-							color: ${colorTokens.icon.white};
+							color: ${colorTokens.icon.disable.default};
 						}
-					}
-
-					&:focus {
-						color: ${colorTokens.text.white};
-
-						svg {
-							color: ${colorTokens.icon.white};
-						}
-					}
-
-					&:active {
-						color: ${colorTokens.text.white};
-
-					svg {
-						color: ${colorTokens.icon.white};
-					}
-				}
-			`
-      }
-
-			${
-        (disabled || loading) &&
-        css`
-				background-color: ${colorTokens.action.primary.disable};
-				color: ${colorTokens.text.disable};
-				svg {
-					color: ${colorTokens.icon.disable.default};
-				}
-
-				${
-          isOutlined &&
-          css`
-					background-color: transparent;
-					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-
-					svg {
-						color: ${colorTokens.icon.disable.default};
-					}
-				`
-        }
+					`
+          }
 			`
       }
 		`
@@ -307,195 +307,195 @@ const styles = {
     ${
       variant === 'secondary' &&
       css`
-			background-color: ${colorTokens.action.secondary.default};
-			color: ${colorTokens.text.brand};
-
-				svg {
-					color: ${colorTokens.icon.brand};
-				}
-
-				&:hover {
-					background-color: ${colorTokens.action.secondary.hover};
-				}
-
-				&:focus {
-					background-color: ${colorTokens.action.secondary.hover};
-					box-shadow: ${shadow.focus};
-				}
-
-				&:active {
-					background-color: ${colorTokens.action.secondary.active};
-					box-shadow: none;
-				}
-
-			${
-        isOutlined &&
-        css`
-				background-color: transparent;
-				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.neutral};
+				background-color: ${colorTokens.action.secondary.default};
 				color: ${colorTokens.text.brand};
 
-				svg {
-					color: ${colorTokens.icon.brand};
-				}
-			`
-      }
+					svg {
+						color: ${colorTokens.icon.brand};
+					}
 
-			${
-        (disabled || loading) &&
-        css`
-				background-color: ${colorTokens.action.primary.disable};
-				color: ${colorTokens.text.disable};
+					&:hover {
+						background-color: ${!disabled && colorTokens.action.secondary.hover};
+					}
 
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
+					&:focus {
+						background-color: ${colorTokens.action.secondary.hover};
+						box-shadow: ${shadow.focus};
+					}
+
+					&:active {
+						background-color: ${!disabled && colorTokens.action.secondary.active};
+						box-shadow: none;
+					}
 
 				${
           isOutlined &&
           css`
-					background-color: transparent;
-					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+						background-color: transparent;
+						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.neutral};
+						color: ${colorTokens.text.brand};
 
-					svg {
-						color: ${colorTokens.icon.disable.default};
-					}
-				`
+						svg {
+							color: ${colorTokens.icon.brand};
+						}
+					`
+        }
+
+				${
+          (disabled || loading) &&
+          css`
+						background-color: ${colorTokens.action.primary.disable};
+						color: ${colorTokens.text.disable};
+
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
+
+						${
+              isOutlined &&
+              css`
+								background-color: transparent;
+								box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
+							`
+            }
+					`
         }
 			`
-      }
-		`
     }
 
     ${
       variant === 'tertiary' &&
       css`
-			background-color: ${colorTokens.action.outline.default};
-			color: ${colorTokens.text.subdued};
-			box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
-
-				svg {
-					color: ${colorTokens.icon.hints};
-				}
-
-				&:hover {
-					background-color: ${colorTokens.background.hover};
-					box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
-					color: ${colorTokens.text.title};
-
-					svg {
-						color: ${colorTokens.icon.brand};
-					}
-				}
-
-				&:focus {
-					box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
-					color: ${colorTokens.text.title};
-
-					svg {
-						color: ${colorTokens.icon.brand};
-					}
-				}
-
-				&:active {
-					background-color: ${colorTokens.background.active};
-					box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
-					color: ${colorTokens.text.title};
+				background-color: ${colorTokens.action.outline.default};
+				color: ${colorTokens.text.subdued};
+				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
 
 					svg {
 						color: ${colorTokens.icon.hints};
 					}
-				}
 
-			${
-        isOutlined &&
-        css`
-				background-color: transparent;
-			`
-      }
-
-			${
-        (disabled || loading) &&
-        css`
-				background-color: ${colorTokens.action.primary.disable};
-				color: ${colorTokens.text.disable};
-				box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+					&:hover {
+						background-color: ${!disabled && colorTokens.background.hover};
+						box-shadow: ${!disabled && `inset 0 0 0 1px ${colorTokens.stroke.hover}`}
+						color: ${colorTokens.text.title};
 
 						svg {
-							color: ${colorTokens.icon.disable.default};
+							color: ${colorTokens.icon.brand};
 						}
+					}
+
+					&:focus {
+						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
+						color: ${colorTokens.text.title};
+
+						svg {
+							color: ${colorTokens.icon.brand};
+						}
+					}
+
+					&:active {
+						background-color: ${colorTokens.background.active};
+						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
+						color: ${colorTokens.text.title};
+
+						svg {
+							color: ${colorTokens.icon.hints};
+						}
+					}
 
 				${
           isOutlined &&
           css`
-					background-color: transparent;
+						background-color: transparent;
+					`
+        }
+
+				${
+          (disabled || loading) &&
+          css`
+					background-color: ${colorTokens.action.primary.disable};
+					color: ${colorTokens.text.disable};
 					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
-					svg {
-						color: ${colorTokens.icon.disable.default};
-					}
+							svg {
+								color: ${colorTokens.icon.disable.default};
+							}
+
+					${
+            isOutlined &&
+            css`
+							background-color: transparent;
+							box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+							svg {
+								color: ${colorTokens.icon.disable.default};
+							}
+					`
+          }
 				`
         }
 			`
-      }
-		`
     }
 
     ${
       variant === 'danger' &&
       css`
-			background-color: ${colorTokens.background.status.errorFail};
-			color: ${colorTokens.text.error};
+				background-color: ${colorTokens.background.status.errorFail};
+				color: ${colorTokens.text.error};
 
-				svg {
-					color: ${colorTokens.icon.error};
-				}
+					svg {
+						color: ${colorTokens.icon.error};
+					}
 
-				&:hover {
-					background-color: ${colorTokens.background.status.errorFail};
-				}
+					&:hover {
+						background-color: ${!disabled && colorTokens.background.status.errorFail};
+					}
 
-				&:focus {
-					box-shadow: ${shadow.focus};
-				}
+					&:focus {
+						box-shadow: ${shadow.focus};
+					}
 
-				&:active {
-					background-color: ${colorTokens.background.status.errorFail};
-					box-shadow: none;
-				}
-
-			${
-        isOutlined &&
-        css`
-				background-color: transparent;
-				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.danger};
-			`
-      }
-
-			${
-        (disabled || loading) &&
-        css`
-				background-color: ${colorTokens.action.primary.disable};
-				color: ${colorTokens.text.disable};
-
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
+					&:active {
+						background-color: ${!disabled && colorTokens.background.status.errorFail};
+						box-shadow: none;
+					}
 
 				${
           isOutlined &&
           css`
-					background-color: transparent;
-					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+						background-color: transparent;
+						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.danger};
+					`
+        }
 
-					svg {
-						color: ${colorTokens.icon.disable.default};
-					}
-				`
+				${
+          (disabled || loading) &&
+          css`
+						background-color: ${colorTokens.action.primary.disable};
+						color: ${colorTokens.text.disable};
+
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
+
+						${
+              isOutlined &&
+              css`
+								background-color: transparent;
+								box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
+							`
+            }
+					`
         }
 			`
-      }
-		`
     }
 
     ${
@@ -555,14 +555,14 @@ const styles = {
 			color: ${colorTokens.text.disable};
 
 			svg {
-				color: ${colorTokens.icon.disable.muted};
+				color: ${colorTokens.icon.disable.default};
 			}
 
 			&:hover {
 				color: ${colorTokens.text.disable};
 
 				svg {
-					color: ${colorTokens.icon.disable.muted};
+					color: ${colorTokens.icon.disable.default};
 				}
 			}
 		}
@@ -575,8 +575,8 @@ const styles = {
       loading &&
       !disabled &&
       css`
-			color: transparent;
-		`
+				color: transparent;
+			`
     }
 	`,
   buttonIcon: ({
@@ -594,9 +594,9 @@ const styles = {
 		${
       iconPosition === 'right' &&
       css`
-			margin-right: 0;
-			margin-left: ${spacing[4]};
-		`
+				margin-right: 0;
+				margin-left: ${spacing[4]};
+			`
     }
 
 		${
@@ -609,8 +609,8 @@ const styles = {
     ${
       !hasChildren &&
       css`
-			margin-inline: 0;
-		`
+				margin-inline: 0;
+			`
     }
 	`,
   spinner: css`

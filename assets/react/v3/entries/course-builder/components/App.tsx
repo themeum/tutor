@@ -1,6 +1,6 @@
 import ToastProvider from '@Atoms/Toast';
-import { ModalProvider } from '@Components/modals/Modal';
 import RTLProvider from '@Components/RTLProvider';
+import { ModalProvider } from '@Components/modals/Modal';
 import routes from '@CourseBuilderConfig/routes';
 import { createGlobalCss } from '@Utils/style-utils';
 import { Global } from '@emotion/react';

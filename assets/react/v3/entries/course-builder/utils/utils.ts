@@ -130,7 +130,9 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       return 'regular';
     })(),
     course_price_type:
-      courseDetails.course_pricing.type === 'subscription' ? 'free' : courseDetails.course_pricing.type,
+      courseDetails.course_pricing.type === 'subscription' || !courseDetails.course_pricing.type
+        ? 'free'
+        : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
