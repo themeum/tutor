@@ -63,6 +63,7 @@ class Ecommerce {
 		new CouponController();
 		new BillingController();
 		new HooksHandler();
+		new EmailController();
 
 		// Include currency file.
 		require_once tutor()->path . 'ecommerce/currency.php';
