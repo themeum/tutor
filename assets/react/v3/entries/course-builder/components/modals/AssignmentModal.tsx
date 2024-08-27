@@ -291,6 +291,7 @@ const AssignmentModal = ({
                           {__('Unlock Date', 'tutor')}
                         </div>
                       }
+                      placeholder={__('Select Unlock Date', 'tutor')}
                       helpText={__(
                         'This lesson will be available from the given date. Leave empty to make it available immediately.',
                         'tutor',
