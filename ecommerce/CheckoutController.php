@@ -315,7 +315,7 @@ class CheckoutController {
 			'phone_code'   => $country_info['phone_code'],
 		);
 
-		$billing_name = $billing_info ? trim( $billing_info->billing_fist_name . ' ' . $billing_info->billing_last_name ) : $user_data->display_name;
+		$billing_name = $billing_info ? trim( $billing_info->billing_first_name . ' ' . $billing_info->billing_last_name ) : $user_data->display_name;
 
 		$shipping_and_billing = array(
 			'name'         => $billing_name,
