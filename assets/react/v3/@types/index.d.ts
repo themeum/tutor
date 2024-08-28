@@ -92,12 +92,14 @@ declare global {
         instructor_can_delete_course: 'on' | 'off';
       };
       tutor_currency: {
+        symbol: string;
+        currency: string;
+        position: string;
+        thousand_separator: string;
         decimal_separator: string;
         no_of_decimal: string;
-        position: string;
-        symbol: string;
-        thousand_separator: string;
       };
+      local: string;
     };
     wpApiSettings: {
       nonce: string;

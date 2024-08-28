@@ -11,7 +11,7 @@ import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
 import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
 import type { PaymentStatus } from '@OrderServices/order';
-import { calculateDiscountValue, createPriceFormatter } from '@Utils/currency';
+import { calculateDiscountValue, formatPrice } from '@Utils/currency';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -47,7 +47,6 @@ function PaymentActionButton({
 function Payment() {
 	const { showModal } = useModal();
 	const { order } = useOrderContext();
-	const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
 	return (
 		<Box bordered>
 			<BoxTitle>
