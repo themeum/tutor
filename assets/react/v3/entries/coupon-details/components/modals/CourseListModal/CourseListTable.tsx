@@ -9,7 +9,7 @@ import Table, { Column } from '@Molecules/Table';
 
 import { Coupon, Course, useAppliesToQuery } from '@CouponServices/coupon';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 
@@ -77,15 +77,20 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
 					</div>
 				);
 			},
-			width: 600,
 		},
 		{
 			Header: __('Price', 'tutor'),
 			Cell: (item) => {
 				return (
 					<div css={styles.price}>
-						<span>{item.sale_price ? item.sale_price : item.regular_price}</span>
-						{item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+						{item.plan_start_price ? (
+							<span css={styles.startingFrom}>{sprintf( __('Starting from %s', 'tutor'), item.plan_start_price)}</span>
+						) : (
+							<>
+								<span>{item.sale_price ? item.sale_price : item.regular_price}</span>
+								{item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+							</>
+						)}
 					</div>
 				);
 			},
@@ -172,5 +177,8 @@ const styles = {
 		display: flex;
 		align-items: center;
 		justify-content: center;
+	`,
+	startingFrom: css`
+		color: ${colorTokens.text.hints};
 	`,
 };

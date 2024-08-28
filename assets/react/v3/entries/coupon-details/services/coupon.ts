@@ -20,6 +20,7 @@ export interface Course {
 	author: string;
 	regular_price: string;
 	sale_price: string | null;
+	plan_start_price?: string;
 }
 
 export interface CourseCategory {
