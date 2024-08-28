@@ -221,7 +221,9 @@ const FormTopicPrerequisites = ({
                             color: ${icons[content.post_type].color};
                           `}
                         />
-                        <span css={styles.title}>{content.post_title}</span>
+                        <span css={styles.title} title={content.post_title}>
+                          {content.post_title}
+                        </span>
                         <Show when={content.post_type === 'tutor_quiz'}>
                           <span css={typography.tiny()}>{`(${content.total_question} Questions)`}</span>
                         </Show>
@@ -270,7 +272,9 @@ const FormTopicPrerequisites = ({
                     <For each={filteredOption}>
                       {(topic) => (
                         <li key={topic.id} css={styles.group}>
-                          <span css={styles.groupTitle}>{topic.title}</span>
+                          <span css={styles.groupTitle} title={topic.title}>
+                            {topic.title}
+                          </span>
                           <For each={topic.contents}>
                             {(content) => (
                               <button
@@ -283,6 +287,7 @@ const FormTopicPrerequisites = ({
                                   const updatedValue = [...inputValue, content.ID];
                                   field.onChange(updatedValue);
                                   onChange(updatedValue);
+                                  setIsOpen(false);
                                 }}
                               >
                                 <div
@@ -299,7 +304,9 @@ const FormTopicPrerequisites = ({
                                         color: ${icons[content.post_type].color};
                                       `}
                                   />
-                                  <span css={styles.title}>{content.post_title}</span>
+                                  <span css={styles.title} title={content.post_title}>
+                                    {content.post_title}
+                                  </span>
                                   <Show when={content.post_type === 'tutor_quiz'}>
                                     <span css={typography.tiny()}>{`(${content.total_question} Questions)`}</span>
                                   </Show>
@@ -362,7 +369,7 @@ const styles = {
     margin-top: ${spacing[8]};
     ${styleUtils.overflowYAuto};
     overflow-x: visible;
-    padding: 1px;
+    padding: 1px; // Fix the scrollbar issue
   `,
   optionsWrapper: css`
     position: absolute;
@@ -417,11 +424,11 @@ const styles = {
     padding: ${spacing[10]} 0;
 
     :not(:last-child) {
-      border-bottom: 1px solid ${colorTokens.stroke.default};
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
     }
   `,
   groupTitle: css`
-    ${typography.small('bold')};
+    ${typography.small('semiBold')};
     ${styleUtils.text.ellipsis(1)};
     padding-inline: ${spacing[10]};
     margin-bottom: ${spacing[8]};
