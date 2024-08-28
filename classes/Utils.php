@@ -1124,16 +1124,17 @@ class Utils {
 	 * Check if the openai response has any error or not.
 	 * If there any error then send the error response, otherwise continue.
 	 *
-	 * @param array $response The openai response.
-	 * @return object
 	 * @since   3.0.0
+	 *
+	 * @param array $response The openai response.
+	 * @return mixed
 	 */
 	public function check_openai_response( array $response ) {
 		$status_code = $response['status_code'] ?? 200;
 
 		if ( $status_code >= 400 ) {
 			$error_message = $response['error_message'] ?? '';
-			$this->send_response( $response, null, $status_code );
+			$this->json_response( $error_message, null, $status_code );
 		}
 
 		return $response['data'];
