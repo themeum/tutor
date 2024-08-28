@@ -12,6 +12,7 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Earnings;
+use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use TutorPro\CourseBundle\Models\BundleModel;
 
@@ -60,6 +61,8 @@ class HooksHandler {
 		add_action( 'tutor_order_payment_updated', array( $this, 'handle_payment_updated_webhook' ) );
 
 		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 3 );
+
+		add_action( 'tutor_order_placed', array( $this, 'handle_new_order_placed' ) );
 	}
 
 	/**
@@ -366,6 +369,26 @@ class HooksHandler {
 				}
 				break;
 			default:
+		}
+	}
+
+	/**
+	 * Handle new order placement
+	 *
+	 * Clear cart items
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $order_data Order data.
+	 *
+	 * @return void
+	 */
+	public function handle_new_order_placed( array $order_data ) {
+		$user_id = $order_data['user_id'];
+		$items   = $order_data['items'];
+
+		foreach ( $items as $item ) {
+			( new CartModel() )->clear_user_cart( $user_id );
 		}
 	}
 }
