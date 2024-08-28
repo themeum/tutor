@@ -131,7 +131,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									foreach ( $items as $item ) {
 										$course_id = $item->id;
 										if ( OrderModel::TYPE_SUBSCRIPTION ) {
-											$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $item->id );
+											$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 										}
 										?>
 										<li>
