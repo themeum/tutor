@@ -170,62 +170,9 @@ class HooksHandler {
 	 * @return void
 	 */
 	public function after_order_mark_as_paid( $order_id ) {
-		$earnings = Earnings::get_instance();
-
-		$data = (object) array(
-			'order_id'   => $order_id,
-			'meta_key'   => $this->order_activities_model::META_KEY_HISTORY,
-			'meta_value' => 'Order mark as paid',
-		);
-
-		$this->order_activities_model->add_order_meta( $data );
-
-		// Update enrollment.
 		$order = $this->order_model->get_order_by_id( $order_id );
 		if ( $order ) {
-			$order_type = $order->order_type;
-			$student_id = $order->student->id;
-			$items      = $order->courses;
-
-			if ( $this->order_model::TYPE_SINGLE_ORDER === $order_type ) {
-				foreach ( $items as $item ) {
-					$course_id      = $item->id;
-					$has_enrollment = tutor_utils()->is_enrolled( $course_id, $student_id, false );
-					if ( $has_enrollment ) {
-						// Update enrollment.
-						$update = tutor_utils()->update_enrollments( 'completed', array( $has_enrollment->ID ) );
-
-						if ( $update ) {
-							$earnings->prepare_order_earnings( $order_id );
-							$earnings->store_earnings();
-							do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
-						} else {
-							// Log error message with student id and course id.
-							error_log( "Error updating enrollment for student {$student_id} and course {$course_id}" );
-						}
-					} else {
-						// Insert enrollment.
-						add_filter(
-							'tutor_enroll_data',
-							function( $enroll_data ) {
-								$enroll_data['enroll_status'] = 'completed';
-								return $enroll_data;
-							}
-						);
-
-						$enrollment_id = tutor_utils()->do_enroll( $course_id, $order_id, $student_id );
-						if ( $enrollment_id ) {
-							$earnings->prepare_order_earnings( $order_id );
-							$earnings->store_earnings();
-						} else {
-							// Log error message with student id and course id.
-							error_log( "Error updating enrollment for student {$student_id} and course {$course_id}" );
-						}
-					}
-				}
-			} else {
-				// @TODO need to handle subscription order.
-			}
+			$this->handle_payment_status_changed( $order->id, $this->order_model::PAYMENT_UNPAID, $order->payment_status );
 		}
 	}
 
@@ -235,9 +182,7 @@ class HooksHandler {
 	 * @since 3.0.0
 	 *
 	 * @param object $res Response data.
-	 *
-	 * @see https://github.com/ahamed/payment-hub/tree/dev
-	 * for response structure
+	 * {order_id, transaction_id, payment_status, payment_method, redirectUrl}.
 	 *
 	 * @return void
 	 */
@@ -370,6 +315,15 @@ class HooksHandler {
 				break;
 			default:
 		}
+
+		// Store activity.
+		$data = (object) array(
+			'order_id'   => $order_id,
+			'meta_key'   => $this->order_activities_model::META_KEY_HISTORY,
+			'meta_value' => 'Order mark as ' . $new_payment_status,
+		);
+
+		$this->order_activities_model->add_order_meta( $data );
 	}
 
 	/**
