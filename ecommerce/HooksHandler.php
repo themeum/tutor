@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Earnings;
 use Tutor\Models\OrderModel;
+use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Handle custom hooks
@@ -247,11 +248,11 @@ class HooksHandler {
 			$prev_payment_status = $order_details->payment_status;
 
 			$order_data = array(
-				'order_status'    => $order_details->order_status,
-				'payment_status'  => $new_payment_status,
-				'payment_payload' => $res->payment_payload,
-				'transaction_id'  => $transaction_id,
-				'updated_at_gmt'  => current_time( 'mysql', true ),
+				'order_status'     => $order_details->order_status,
+				'payment_status'   => $new_payment_status,
+				'payment_payloads' => $res->payment_payload,
+				'transaction_id'   => $transaction_id,
+				'updated_at_gmt'   => current_time( 'mysql', true ),
 			);
 
 			switch ( $new_payment_status ) {
@@ -292,7 +293,7 @@ class HooksHandler {
 		switch ( $new_payment_status ) {
 			case $this->order_model::PAYMENT_PAID:
 				foreach ( $order->items as $item ) {
-					$course_id = $item->id;
+					$course_id = $item->id; // It could be course/bundle/plan id.
 					if ( $this->order_model::TYPE_SUBSCRIPTION === $order->order_type ) {
 						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 					}
@@ -303,6 +304,10 @@ class HooksHandler {
 						$update = tutor_utils()->update_enrollments( 'completed', array( $has_enrollment->ID ) );
 
 						if ( $update ) {
+							if ( tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) && 'course-bundle' === get_post_type( $course_id ) ) {
+								BundleModel::enroll_to_bundle_courses( $course_id, $student_id );
+							}
+
 							$earnings->prepare_order_earnings( $order_id );
 							$earnings->store_earnings();
 							do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
@@ -322,6 +327,10 @@ class HooksHandler {
 
 						$enrollment_id = tutor_utils()->do_enroll( $course_id, $order_id, $student_id );
 						if ( $enrollment_id ) {
+							if ( tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) && 'course-bundle' === get_post_type( $course_id ) ) {
+								BundleModel::enroll_to_bundle_courses( $course_id, $student_id );
+							}
+
 							$earnings->prepare_order_earnings( $order_id );
 							$earnings->store_earnings();
 						} else {
