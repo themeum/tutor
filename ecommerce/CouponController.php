@@ -683,7 +683,7 @@ class CouponController extends BaseController {
 		$object_ids  = Input::post( 'object_ids' ); // Course/bundle ids.
 		$object_ids  = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 		$coupon_code = Input::post( 'coupon_code' );
-		$plan        = Input::post( 'plan' );
+		$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
 
 		if ( empty( $object_ids ) ) {
 			$this->json_response(

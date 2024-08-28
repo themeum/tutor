@@ -687,7 +687,7 @@ class CouponModel {
 	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
 	public function apply_coupon_discount( $course_ids, $coupon_code, $plan_id = null, $format_price = false ) {
-		$plan_id = $plan_id ? $plan_id : Input::get( 'plan', 0 );
+		$plan_id = (int) $plan_id ? $plan_id : Input::get( 'plan', 0 );
 
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
