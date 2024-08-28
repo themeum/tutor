@@ -1,3 +1,5 @@
+import { tutorConfig } from "@Config/config";
+
 export const createPriceFormatter = ({
   locale,
   currency,
@@ -13,6 +15,11 @@ export const createPriceFormatter = ({
     return formatter.format(price);
   };
 };
+
+export const formatPrice = createPriceFormatter({
+  locale: tutorConfig.local?.replace('_', '-') ?? 'en-US',
+  currency: tutorConfig.tutor_currency.currency ?? 'USD',
+});
 
 export const calculateDiscountedPrice = ({
   discount_type,

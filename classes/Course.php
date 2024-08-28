@@ -2709,7 +2709,9 @@ class Course extends Tutor_Base {
 			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
 		}
 
-		return $info;
+		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
+
+		return $card_data;
 	}
 
 	/**

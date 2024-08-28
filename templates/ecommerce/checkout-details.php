@@ -201,7 +201,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 	$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
 	if ( $pay_now_errors || $pay_now_alert_msg ) :
 		?>
-	<div class="tutor-px-32 tutor-mb-32">
+	<div class="tutor-px-32 tutor-mb-32 tutor-break-word">
 		<?php
 		if ( ! empty( $pay_now_alert_msg ) ) :
 			list( $alert, $message ) = array_values( $pay_now_alert_msg );

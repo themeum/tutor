@@ -619,14 +619,9 @@ class CourseModel {
 			'offset'         => 0,
 			'post_status'    => 'publish',
 			'meta_query'     => array(
-				'relation'     => 'AND',
 				'paid_clause'  => array(
 					'key'   => Course::COURSE_PRICE_TYPE_META,
-					'value' => 'paid',
-				),
-				'price_clause' => array(
-					'key'     => Course::COURSE_PRICE_META,
-					'compare' => 'EXISTS',
+					'value' => array( 'paid', 'subscription' ),
 				),
 			),
 		);
