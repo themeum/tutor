@@ -683,6 +683,7 @@ class CouponController extends BaseController {
 		$object_ids  = Input::post( 'object_ids' ); // Course/bundle ids.
 		$object_ids  = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 		$coupon_code = Input::post( 'coupon_code' );
+		$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
 
 		if ( empty( $object_ids ) ) {
 			$this->json_response(
@@ -693,7 +694,7 @@ class CouponController extends BaseController {
 		}
 
 		try {
-			$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $object_ids, $coupon_code ) : $this->model->apply_automatic_coupon_discount( $object_ids );
+			$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $object_ids, $coupon_code, $plan, true ) : $this->model->apply_automatic_coupon_discount( $object_ids );
 
 			if ( $discount_price->is_applied ) {
 				$this->json_response(

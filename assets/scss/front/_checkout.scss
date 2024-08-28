@@ -39,6 +39,12 @@
         justify-content: space-between;
         gap: 56px;
     }
+    .tutor-checkout-enrollment-fee {
+        display: flex;
+        align-items: start;
+        justify-content: space-between;
+        font-size: 14px;
+    }
     .tutor-checkout-course-bundle-badge {
         display: inline-block;
         font-size: 11px;
@@ -136,6 +142,7 @@
     .tutor-checkout-payment-options {
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         gap: 8px;
 
         button {
@@ -162,6 +169,15 @@
             }
         }
     }
+
+    .tutor-payment-instructions {
+        background-color: #ffffff;
+        border-radius: 6px;
+        padding: 16px;
+        margin-top: 16px;
+        white-space: pre-line;
+    }
+
     .tutor-checkout-coupon-form {
         background-color: #ffffff;
         border: 1px solid var(--tutor-border-color);
