@@ -40,7 +40,7 @@ class PaymentHandler {
 			'tutor/v1',
 			'/ecommerce-webhook',
 			array(
-				'methods'             => WP_REST_Server::CREATABLE,
+				'methods'             => WP_REST_Server::ALLMETHODS,
 				'callback'            => array( $this, 'handle_ecommerce_webhook' ),
 				'permission_callback' => '__return_true', // Allows public access to the route.
 			)

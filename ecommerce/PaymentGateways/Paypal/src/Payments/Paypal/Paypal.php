@@ -525,7 +525,7 @@ class Paypal extends BasePayment
             $returnData->payment_payload      = json_encode($payloadStream);
             $returnData->payment_method       = $this->config->get('name');
             $returnData->payment_error_reason = $errorMessage;
-            $returnData->redirectURl          = $paymentType !== 'recurring' ? $this->config->get('cancel_url') : null;
+            $returnData->redirectUrl          = $paymentType !== 'recurring' ? $this->config->get('cancel_url') : null;
             
         } else {        
             $transactionInfo             = $payloadStream->purchase_units[0]->payments->captures[0];
@@ -534,7 +534,7 @@ class Paypal extends BasePayment
             $returnData->transaction_id  = $transactionInfo->id;
             $returnData->payment_payload = json_encode($payloadStream);
             $returnData->payment_method  = $this->config->get('name');
-            $returnData->redirectURl     = $paymentType !== 'recurring' ? $this->config->get('success_url') : null;
+            $returnData->redirectUrl     = $paymentType !== 'recurring' ? $this->config->get('success_url') : null;
         }
 
         return $returnData;
