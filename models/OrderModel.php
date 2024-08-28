@@ -322,7 +322,7 @@ class OrderModel {
 		$student->image           = get_avatar_url( $order_data->user_id );
 
 		$order_data->student         = $student;
-		$order_data->courses         = $this->get_order_items_by_id( $order_id );
+		$order_data->items           = $this->get_order_items_by_id( $order_id );
 		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
 		$order_data->net_payment     = (float) $order_data->net_payment;
