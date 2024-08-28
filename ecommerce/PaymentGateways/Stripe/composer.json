@@ -2,7 +2,7 @@
     "version": "1.0.0",
     "name": "themeum/tutor",
     "type": "library",
-    "description": "Tutor plugin for WordPress",
+    "description": "Stripe payment gateway integration with Tutor LMS",
     "license": "MIT",
     "autoload": {
         "psr-4": {
@@ -13,3 +13,4 @@
         "guzzlehttp/guzzle": "^7.8"
     }
 }
+
