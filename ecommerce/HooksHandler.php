@@ -294,7 +294,7 @@ class HooksHandler {
 				foreach ( $order->items as $item ) {
 					$course_id = $item->id;
 					if ( $this->order_model::TYPE_SUBSCRIPTION === $order->order_type ) {
-						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $item->id );
+						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 					}
 
 					$has_enrollment = tutor_utils()->is_enrolled( $course_id, $student_id, false );
