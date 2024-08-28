@@ -119,15 +119,17 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					<tbody>
 						<?php
 						if ( is_array( $orders ) && count( $orders ) ) :
-								$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 							?>
-							<?php foreach ( $orders as $order ) : ?>
+							<?php
+							foreach ( $orders as $order ) :
+								?>
 								<tr>
 								<td>
 									#<?php echo esc_html( $order->id ); ?>
 								</td>
 								<td>
 									<?php
+									$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 									foreach ( $items as $item ) {
 										$course_id = $item->id;
 										if ( OrderModel::TYPE_SUBSCRIPTION ) {
@@ -135,7 +137,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										}
 										?>
 										<li>
-											<?php echo esc_html( get_the_title( $course_id ) ); ?>
+										<?php echo esc_html( get_the_title( $course_id ) ); ?>
 										</li>
 										<?php
 									}

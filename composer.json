@@ -33,6 +33,7 @@
     "scripts": {
         "post-install-cmd": [
             "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Stripe",
+            "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Stripe/src/Payments/Stripe",
             "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal"
         ]
     }
