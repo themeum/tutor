@@ -16,10 +16,10 @@ function Summary() {
 			<BoxTitle>{__('Order Summary', 'tutor')}</BoxTitle>
 			<Box css={styles.innerBox} bordered>
 				<Show
-					when={order.courses.length > 0}
+					when={order.items.length > 0}
 					fallback={<div css={styles.noCourse}>{__('No course added.', 'tutor')}</div>}
 				>
-					<For each={order.courses}>{(course) => <OrderItem key={course.id} item={course} />}</For>
+					<For each={order.items}>{(course) => <OrderItem key={course.id} item={course} />}</For>
 				</Show>
 			</Box>
 		</Box>

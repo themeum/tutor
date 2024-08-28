@@ -3,7 +3,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import coursePlaceholder from '@Images/orders/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
-import { createPriceFormatter } from '@Utils/currency';
+import { formatPrice } from '@Utils/currency';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
@@ -13,7 +13,6 @@ interface OrderItemProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ className, item }, ref) => {
-  const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
   return (
     <div className={className} ref={ref} css={styles.wrapper}>
       <div css={styles.left}>

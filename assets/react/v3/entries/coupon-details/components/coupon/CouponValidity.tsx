@@ -68,7 +68,7 @@ function CouponValidity() {
 								name="end_date"
 								control={form.control}
 								rules={requiredRule()}
-								render={(controllerProps) => <FormDateInput {...controllerProps} placeholder="2030-10-24" />}
+								render={(controllerProps) => <FormDateInput {...controllerProps} placeholder="2030-10-24" disabledBefore={startDate} />}
 							/>
 							<Controller
 								name="end_time"
