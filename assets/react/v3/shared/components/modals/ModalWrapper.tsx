@@ -181,6 +181,7 @@ const styles = {
   content: css`
     height: calc(100% - ${modal.HEADER_HEIGHT + modal.MARGIN_TOP}px);
     background-color: ${colorTokens.surface.courseBuilder};
-    overflow: auto;
+    overflow-x: hidden;
+    ${styleUtils.overflowYAuto}
   `,
 };

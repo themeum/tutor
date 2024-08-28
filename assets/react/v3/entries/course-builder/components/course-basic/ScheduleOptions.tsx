@@ -26,6 +26,7 @@ const courseId = getCourseId();
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
   const postDate = useWatch({ name: 'post_date' });
+  const [previousPostDate, setPreviousPostDate] = useState(postDate);
   const scheduleForm = useFormWithGlobalError<ScheduleForm>({
     defaultValues: {
       schedule_date: format(new Date(), DateFormats.yearMonthDay),
@@ -41,6 +42,10 @@ const ScheduleOptions = () => {
   const scheduleTime = scheduleForm.watch('schedule_time') ?? '';
 
   const handleCancel = () => {
+    scheduleForm.reset({
+      schedule_date: format(parseISO(previousPostDate), DateFormats.yearMonthDay),
+      schedule_time: format(parseISO(previousPostDate), DateFormats.hoursMinutes),
+    });
     setShowForm(false);
   };
 
@@ -56,6 +61,9 @@ const ScheduleOptions = () => {
       {
         shouldDirty: true,
       },
+    );
+    setPreviousPostDate(
+      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond),
     );
   };
 
