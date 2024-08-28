@@ -109,14 +109,12 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
-    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
@@ -241,34 +239,39 @@ const FormSelectInput = <T,>({
               >
                 <ul css={[styles.options(removeOptionsMinWidth)]}>
                   {!!listLabel && <li css={styles.listLabel}>{listLabel}</li>}
-                  {selections.map((option) => (
-                    <li
-                      key={String(option.value)}
-                      ref={option.value === field.value ? optionRef : null}
-                      css={styles.optionItem({
-                        isSelected: option.value === field.value,
-                      })}
-                    >
-                      <button
-                        type="button"
-                        css={styles.label}
-                        onClick={() => {
-                          field.onChange(option.value);
-                          onChange(option);
-
-                          setSearchText('');
-                          setIsSearching(false);
-                          setIsOpen(false);
-                        }}
-                        title={option.label}
+                  <Show
+                    when={selections.length > 0}
+                    fallback={<li css={styles.emptyState}>{__('No options available', 'tutor')}</li>}
+                  >
+                    {selections.map((option) => (
+                      <li
+                        key={String(option.value)}
+                        ref={option.value === field.value ? optionRef : null}
+                        css={styles.optionItem({
+                          isSelected: option.value === field.value,
+                        })}
                       >
-                        <Show when={option.icon}>
-                          <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
-                        </Show>
-                        <span>{option.label}</span>
-                      </button>
-                    </li>
-                  ))}
+                        <button
+                          type="button"
+                          css={styles.label}
+                          onClick={() => {
+                            field.onChange(option.value);
+                            onChange(option);
+
+                            setSearchText('');
+                            setIsSearching(false);
+                            setIsOpen(false);
+                          }}
+                          title={option.label}
+                        >
+                          <Show when={option.icon}>
+                            <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
+                          </Show>
+                          <span>{option.label}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </Show>
 
                   {isClearable && (
                     <div
@@ -585,5 +588,9 @@ const styles = {
       transform: rotate(180deg);
     `
     }
+  `,
+  emptyState: css`
+    ${styleUtils.flexCenter()};
+    padding: ${spacing[8]};
   `,
 };

@@ -7,7 +7,6 @@ import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
@@ -19,21 +18,23 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
+import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type ContentDripType,
-  type PrerequisiteCourses,
-  usePrerequisiteCoursesQuery,
-} from '@CourseBuilderServices/course';
-import { type ID, useLessonDetailsQuery, useSaveLessonMutation } from '@CourseBuilderServices/curriculum';
+  type CourseTopic,
+  type ID,
+  useLessonDetailsQuery,
+  useSaveLessonMutation,
+} from '@CourseBuilderServices/curriculum';
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
 import { maxLimitRule } from '@Utils/validation';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -57,7 +58,7 @@ export interface LessonForm {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    prerequisites: PrerequisiteCourses[];
+    prerequisites: ID[];
   };
 }
 
@@ -73,11 +74,12 @@ const LessonModal = ({
   contentDripType,
 }: LessonModalProps) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
+  const queryClient = useQueryClient();
 
   const { data: lessonDetails } = getLessonDetailsQuery;
+  const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
@@ -102,16 +104,8 @@ const LessonModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.isDirty;
-
-  const prerequisiteCourses = lessonDetails?.content_drip_settings?.course_prerequisites
-    ? lessonDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
-    : [];
-
-  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
-    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites',
-  );
+  // Need to do RND about WPEditor
+  // const isFormDirty = false; /*form.formState.isDirty;*/
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -135,24 +129,19 @@ const LessonModal = ({
         content_drip_settings: {
           unlock_date: lessonDetails.content_drip_settings?.unlock_date || '',
           after_xdays_of_enroll: lessonDetails.content_drip_settings?.after_xdays_of_enroll || '',
-          prerequisites: lessonDetails.content_drip_settings?.course_prerequisites || [],
+          prerequisites: lessonDetails.content_drip_settings?.prerequisites || [],
         },
       });
-
-      const timeoutId = setTimeout(() => {
-        form.setFocus('title');
-      }, 0);
-
-      return () => {
-        clearTimeout(timeoutId);
-      };
     }
-  }, [lessonDetails]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    form.setFocus('title');
-  }, []);
+    const timeoutId = setTimeout(() => {
+      form.setFocus('title');
+    }, 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [lessonDetails]);
 
   const onSubmit = async (data: LessonForm) => {
     const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
@@ -166,35 +155,29 @@ const LessonModal = ({
   return (
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      icon={isFormDirty && lessonId ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-      title={isFormDirty && lessonId ? __('Unsaved Changes', 'tutor') : title}
+      icon={icon}
+      title={title}
       subtitle={subtitle}
       actions={
-        isFormDirty ? (
-          <>
-            <Button
-              variant="text"
-              size="small"
-              onClick={() => {
-                lessonId ? form.reset() : closeModal({ action: 'CLOSE' });
-              }}
-            >
-              {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
-            </Button>
-            <Button
-              loading={saveLessonMutation.isPending}
-              variant="primary"
-              size="small"
-              onClick={form.handleSubmit(onSubmit)}
-            >
-              {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
-            </Button>
-          </>
-        ) : (
-          <button css={styleUtils.crossButton} type="button" onClick={() => closeModal({ action: 'CLOSE' })}>
-            <SVGIcon name="cross" width={32} height={32} />
-          </button>
-        )
+        <>
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => {
+              closeModal({ action: 'CLOSE' });
+            }}
+          >
+            {__('Cancel', 'tutor')}
+          </Button>
+          <Button
+            loading={saveLessonMutation.isPending}
+            variant="primary"
+            size="small"
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
+          </Button>
+        </>
       }
     >
       <div css={styles.wrapper}>
@@ -371,7 +354,7 @@ const LessonModal = ({
                   name="content_drip_settings.prerequisites"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormCoursePrerequisites
+                    <FormTopicPrerequisites
                       {...controllerProps}
                       label={
                         <div css={styles.contentDripLabel}>
@@ -380,7 +363,22 @@ const LessonModal = ({
                         </div>
                       }
                       placeholder={__('Select Prerequisite', 'tutor')}
-                      options={prerequisiteCoursesQuery.data || []}
+                      options={
+                        topics.reduce((topics, topic) => {
+                          if (topic.id === topicId) {
+                            topics.push({
+                              ...topic,
+                              contents: topic.contents.filter((content) => content.ID !== lessonId),
+                            });
+                          } else {
+                            topics.push(topic);
+                          }
+                          return topics;
+                        }, [] as CourseTopic[]) ||
+                        [] ||
+                        []
+                      }
+                      isSearchable
                       helpText={__('Select items that should be complete before this item', 'tutor')}
                     />
                   )}

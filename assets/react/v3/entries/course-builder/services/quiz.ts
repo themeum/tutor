@@ -94,7 +94,7 @@ interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' |
     content_drip_settings?: {
       unlock_date: string;
       after_xdays_of_enroll: number;
-      prerequisites: [];
+      prerequisites: ID[];
     };
   };
 }
@@ -160,7 +160,7 @@ export interface QuizForm {
     content_drip_settings: {
       unlock_date: string;
       after_xdays_of_enroll: number;
-      prerequisites: [];
+      prerequisites: ID[];
     };
   };
   questions: QuizQuestion[];
