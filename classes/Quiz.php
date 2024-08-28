@@ -1736,7 +1736,6 @@ class Quiz {
 
 		$input_value = Input::post( 'inputValue', '' );
 
-
 		$answer = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT * 
