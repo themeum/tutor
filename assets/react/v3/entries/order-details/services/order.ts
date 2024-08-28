@@ -81,7 +81,7 @@ export interface Order {
   payment_payloads: string | null;
   order_status: OrderStatus;
   student: Student;
-  courses: OrderSummaryItem[];
+  items: OrderSummaryItem[];
   subtotal_price: number;
   discount_amount: number;
   discount_reason: string;
