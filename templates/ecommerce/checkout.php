@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Ecommerce\CartController;
+use TUTOR\Input;
 
 $tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 
@@ -64,13 +65,18 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 										</button>
 									<?php
 								}
-								foreach ( $payment_gateways['manual'] as $gateway ) {
-									list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
-									?>
-										<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
-											<?php echo esc_html( $label ); ?>
-										</button>
-									<?php
+
+								// Show manual payment for only regular order.
+								$plan_id = Input::get( 'plan', 0, Input::TYPE_INT );
+								if ( ! $plan_id ) {
+									foreach ( $payment_gateways['manual'] as $gateway ) {
+										list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
+										?>
+											<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
+												<?php echo esc_html( $label ); ?>
+											</button>
+										<?php
+									}
 								}
 							}
 							?>

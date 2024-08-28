@@ -18,6 +18,24 @@ use Tutor\Helpers\QueryHelper;
 class CartModel {
 
 	/**
+	 * Cart table name
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	private $table_name = 'tutor_carts';
+
+	/**
+	 * Resolve props
+	 *
+	 * @since 3.0.0
+	 */
+	public function __construct() {
+		$this->table_name = $GLOBALS['wpdb']->prefix . $this->table_name;
+	}
+
+	/**
 	 * Add a course to the user's cart.
 	 *
 	 * @param int $user_id User ID.
@@ -213,6 +231,24 @@ class CartModel {
 		);
 
 		return (bool) $cart_data['total_count'];
+	}
+
+	/**
+	 * Delete cart data using user id
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $user_id User ID.
+	 *
+	 * @return boolean
+	 */
+	public function clear_user_cart( $user_id ) {
+		return QueryHelper::delete(
+			"{$this->table_name}",
+			array(
+				'user_id' => $user_id,
+			)
+		);
 	}
 
 }

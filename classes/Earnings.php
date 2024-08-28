@@ -81,13 +81,13 @@ class Earnings extends Singleton {
 
 		$order_model   = new OrderModel();
 		$order_details = $order_model->get_order_by_id( $order_id );
-		$courses       = is_object( $order_details ) && property_exists( $order_details, 'courses' ) ? $order_details->courses : array();
+		$items         = is_object( $order_details ) && property_exists( $order_details, 'items' ) ? $order_details->items : array();
 
-		if ( is_array( $courses ) && count( $courses ) ) {
-			foreach ( $courses as $course ) {
-				$total_price = $course->sale_price ? $course->sale_price : $course->regular_price;
+		if ( is_array( $items ) && count( $items ) ) {
+			foreach ( $items as $item ) {
+				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
 
-				$this->earning_data = $this->prepare_earning_data( $total_price, $course->id, $order_id, $order_details->order_status );
+				$this->earning_data = $this->prepare_earning_data( $total_price, $item->id, $order_id, $order_details->order_status );
 			}
 		}
 	}

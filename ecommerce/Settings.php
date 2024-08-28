@@ -526,14 +526,16 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'     => 'Paypal',
-				'is_active' => self::is_active( 'paypal' ),
-				'icon'      => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
+				'label'             => 'Paypal',
+				'is_active'         => self::is_active( 'paypal' ),
+				'icon'              => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
+				'support_recurring' => true,
 			),
 			'stripe' => array(
-				'label'     => 'Stripe',
-				'is_active' => self::is_active( 'stripe' ),
-				'icon'      => esc_url_raw( tutor()->url . 'assets/images/stripe.svg' ),
+				'label'             => 'Stripe',
+				'is_active'         => self::is_active( 'stripe' ),
+				'icon'              => esc_url_raw( tutor()->url . 'assets/images/stripe.svg' ),
+				'support_recurring' => true,
 			),
 		);
 

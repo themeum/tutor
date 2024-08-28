@@ -40,7 +40,7 @@ class PaymentHandler {
 			'tutor/v1',
 			'/ecommerce-webhook',
 			array(
-				'methods'             => WP_REST_Server::CREATABLE,
+				'methods'             => WP_REST_Server::ALLMETHODS,
 				'callback'            => array( $this, 'handle_ecommerce_webhook' ),
 				'permission_callback' => '__return_true', // Allows public access to the route.
 			)
@@ -75,17 +75,13 @@ class PaymentHandler {
 
 		if ( $payment_gateway_class ) {
 			$payment = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
-			try {
-				$res = $payment->verify_webhook_signature( $webhook_data );
-				if ( is_object( $res ) ) {
-					do_action( 'tutor_order_payment_updated', $res );
-					if ( property_exists( $res, 'redirectUrl' ) ) {
-						wp_safe_redirect( $res->redirectUrl );
-						exit();
-					}
+			$res     = $payment->verify_webhook_signature( $webhook_data );
+			if ( is_object( $res ) ) {
+				do_action( 'tutor_order_payment_updated', $res );
+				if ( property_exists( $res, 'redirectUrl' ) ) {
+					wp_safe_redirect( $res->redirectUrl );
+					exit();
 				}
-			} catch ( \Throwable $th ) {
-				error_log( 'Tutor webhook verification failed ' . $th->getMessage() );
 			}
 		}
 	}

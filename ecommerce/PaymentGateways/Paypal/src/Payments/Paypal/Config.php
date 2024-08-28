@@ -39,11 +39,6 @@ class Config extends BaseConfig implements ConfigContract
 		return 'https://payment-hub.test/cancel.php';
 	}
 
-	public function getWebhookID(): string
-	{
-		return '0UY57069JY177242L';
-	}
-
 	public function getWebhookUrl(): string
 	{
 		return 'https://example.com/webhook';
@@ -94,13 +89,24 @@ class Config extends BaseConfig implements ConfigContract
         parent::createConfig();
 
         $config = [
-            'webhook_id'     => $this->getWebhookID(),
-            'client_id'      => $this->getClientID(),
-            'merchant_email' => $this->getMerchantEmail(),
-            'api_url'        => $this->getApiURL(),
-            'client_secret'  => $this->getClientSecret()
+            'client_id'      		=> $this->getClientID(),
+            'merchant_email' 		=> $this->getMerchantEmail(),
+            'api_url'        		=> $this->getApiURL(),
+            'client_secret'  		=> $this->getClientSecret(),
+			'save_payment_method'   => $this->savePaymentMethodForFutureUse()
         ];
 
         $this->updateConfig($config);
     }
+
+	/**
+	 * Determines whether the payment method should be saved for future use.
+	 *
+	 * @return bool  returns true to indicate the payment method should be saved, false otherwise.
+	 * @since  1.0.0
+	 */
+	private function savePaymentMethodForFutureUse() : bool
+	{
+		return true;
+	}
 }

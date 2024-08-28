@@ -343,7 +343,6 @@ class CheckoutController {
 				'quantity'                          => 1,
 				'discounted_price'                  => floatval( $item->sale_price ),
 				'discounted_price_in_smallest_unit' => intval( floatval( $item->sale_price ) * 100 ),
-				'image'                             => get_the_post_thumbnail_url( $item->item_id ),
 			);
 		}
 
