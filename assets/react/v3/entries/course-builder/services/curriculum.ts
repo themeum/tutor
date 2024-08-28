@@ -88,14 +88,14 @@ export interface LessonPayload {
   description: string;
   thumbnail_id: ID | null;
 
-  'video[source]'?: string;
-  'video[source_video_id]'?: ID;
-  'video[poster]'?: string;
-  'video[source_external_url]'?: string;
-  'video[source_shortcode]'?: string;
-  'video[source_youtube]'?: string;
-  'video[source_vimeo]'?: string;
-  'video[source_embedded]'?: string;
+  'video[source]': string;
+  'video[source_video_id]': ID;
+  'video[poster]': string;
+  'video[source_external_url]': string;
+  'video[source_shortcode]': string;
+  'video[source_youtube]': string;
+  'video[source_vimeo]': string;
+  'video[source_embedded]': string;
 
   'video[runtime][hours]': number;
   'video[runtime][minutes]': number;
