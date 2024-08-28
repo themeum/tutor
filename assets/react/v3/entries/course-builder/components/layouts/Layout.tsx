@@ -23,7 +23,9 @@ const Layout = () => {
 
   useEffect(() => {
     if (courseDetailsQuery.data) {
-      form.reset(convertCourseDataToFormData(courseDetailsQuery.data));
+      form.reset(convertCourseDataToFormData(courseDetailsQuery.data), {
+        keepDirtyValues: true,
+      });
     }
   }, [courseDetailsQuery.data, form.reset]);
 

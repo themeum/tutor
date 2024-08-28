@@ -226,6 +226,10 @@ const CourseBasic = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (tutorConfig.settings.monetize_by !== 'wc') {
+      return;
+    }
+
     if (wcProductDetailsQuery.isSuccess && wcProductDetailsQuery.data) {
       if (state?.isError) {
         navigate('/basics', { state: { isError: false } });

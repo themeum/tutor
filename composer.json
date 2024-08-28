@@ -9,8 +9,6 @@
             "Tutor\\Helpers\\":"helpers/",
             "Tutor\\Traits\\":"traits/",
             "Tutor\\Ecommerce\\":"ecommerce/",
-            "Tutor\\MagicAI\\":"magicai/",
-            "Tutor\\OpenAI\\":"openai/",
             "Tutor\\PaymentGateways\\":"ecommerce/PaymentGateways"
         }
     },
@@ -19,11 +17,11 @@
             "TutorTest\\": "tests/phpunit"
         }
     },
+    "require": {
+        "nesbot/carbon": "^2.0"
+    },
     "require-dev": {
         "phpunit/phpunit": "^9",
         "yoast/phpunit-polyfills": "^1.0"
-    },
-    "require": {
-        "nesbot/carbon": "^2.0"
     }
 }

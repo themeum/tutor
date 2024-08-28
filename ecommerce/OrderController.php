@@ -1023,6 +1023,15 @@ class OrderController {
 	}
 
 	/**
+	 * Undocumented function
+	 *
+	 * @return void
+	 */
+	public function get_user_orders() {
+		
+	}
+
+	/**
 	 * Validate input data based on predefined rules.
 	 *
 	 * This protected method validates the provided data array against a set of

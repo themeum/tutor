@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
-import { useEffect, useRef, useState } from 'react';
+import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
 
 import Button from '@Atoms/Button';
 
@@ -7,9 +8,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
 
-import { __ } from '@wordpress/i18n';
 import FormWPEditor from './FormWPEditor';
 
 interface FormAnswerExplanationProps extends FormControllerProps<string | null> {
@@ -42,29 +41,9 @@ const FormAnswerExplanation = ({
   onChange,
 }: FormAnswerExplanationProps) => {
   const inputValue = field.value ?? '';
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [previousValue, setPreviousValue] = useState<string>(inputValue);
-
-  let characterCount:
-    | {
-        maxLimit: number;
-        inputCharacter: number;
-      }
-    | undefined = undefined;
-
-  if (maxLimit) {
-    characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
-  }
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (isDefined(textareaRef.current)) {
-      textareaRef.current.focus();
-      setPreviousValue(inputValue);
-    }
-  }, [isEdit, textareaRef.current]);
 
   return (
     <div css={styles.container({ isEdit: isEdit || !!inputValue })}>
@@ -119,6 +98,7 @@ const FormAnswerExplanation = ({
           onChange={onChange}
           placeholder={placeholder}
           readOnly={readOnly}
+          autoFocus
           isMinimal
         />
         <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
@@ -136,6 +116,7 @@ const FormAnswerExplanation = ({
             variant="secondary"
             size="small"
             onClick={() => {
+              setPreviousValue(field.value ?? '');
               setIsEdit(false);
             }}
             disabled={field.value === previousValue}

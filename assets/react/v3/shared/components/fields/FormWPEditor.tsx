@@ -36,6 +36,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   editors?: Editor[];
   editorUsed?: Editor;
   isMagicAi?: boolean;
+  autoFocus?: boolean;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -61,6 +62,7 @@ const FormWPEditor = ({
   editors = [],
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
   isMagicAi = false,
+  autoFocus = false,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -143,6 +145,7 @@ const FormWPEditor = ({
                   }
                 }}
                 isMinimal={isMinimal}
+                autoFocus={autoFocus}
               />
             }
           >

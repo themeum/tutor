@@ -58,7 +58,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Country', 'tutor' ); ?>
 			</label>
-			<select name="billing_country" class="tutor-form-select" required>
+			<select name="billing_country" class="tutor-form-control" required>
 				<option value=""><?php esc_html_e( 'Select Country', 'tutor' ); ?></option>
 				<?php
 				$countries = array_column( tutor_get_country_list(), 'name' );
