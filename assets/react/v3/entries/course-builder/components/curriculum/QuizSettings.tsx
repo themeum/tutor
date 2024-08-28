@@ -10,19 +10,18 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormDateInput from '@Components/fields/FormDateInput';
+import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
-import {
-  type ContentDripType,
-  type PrerequisiteCourses,
-  usePrerequisiteCoursesQuery,
-} from '@CourseBuilderServices/course';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import type { ContentDripType } from '@CourseBuilderServices/course';
+import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
+import { useQueryClient } from '@tanstack/react-query';
 
 const courseId = getCourseId();
 
@@ -31,26 +30,20 @@ interface QuizSettingsProps {
 }
 
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
+  const { quizId } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
-  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
   const feedbackMode = form.watch('quiz_option.feedback_mode');
   const showPassRequired =
     isAddonEnabled(Addons.CONTENT_DRIP) && contentDripType === 'unlock_sequentially' && feedbackMode === 'retry';
+  const prerequisites = form.watch('quiz_option.content_drip_settings.prerequisites');
 
-  const prerequisiteCoursesForm = form.watch(
-    'quiz_option.content_drip_settings.prerequisites',
-  ) as PrerequisiteCourses[];
+  const queryClient = useQueryClient();
 
-  const prerequisiteCourses = prerequisiteCoursesForm ? prerequisiteCoursesForm.map((item) => String(item.id)) : [];
-
-  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
-    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites',
-  );
+  const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
   return (
     <div css={styles.settings}>
-      <Card title={__('Basic Settings', 'tutor')} collapsedAnimationDependencies={[feedbackMode]}>
+      <Card title={__('Basic Settings', 'tutor')} collapsedAnimationDependencies={[feedbackMode, prerequisites.length]}>
         <div css={styles.formWrapper}>
           <div css={styles.timeWrapper}>
             <Controller
@@ -245,7 +238,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 name="quiz_option.content_drip_settings.prerequisites"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormCoursePrerequisites
+                  <FormTopicPrerequisites
                     {...controllerProps}
                     label={
                       <div css={styles.contentDripLabel}>
@@ -254,7 +247,16 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       </div>
                     }
                     placeholder={__('Select Prerequisite', 'tutor')}
-                    options={prerequisiteCoursesQuery.data || []}
+                    options={
+                      topics.reduce((topics, topic) => {
+                        topics.push({
+                          ...topic,
+                          contents: topic.contents.filter((content) => content.ID !== quizId),
+                        });
+
+                        return topics;
+                      }, [] as CourseTopic[]) || []
+                    }
                     helpText={__('Select items that should be complete before this item', 'tutor')}
                   />
                 )}

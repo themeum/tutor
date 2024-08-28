@@ -5,12 +5,7 @@ import type { AxiosResponse } from 'axios';
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type {
-  GoogleMeet,
-  PrerequisiteCourses,
-  TutorMutationResponse,
-  ZoomMeeting,
-} from '@CourseBuilderServices/course';
+import type { GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -43,7 +38,7 @@ export interface Lesson extends Content {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    course_prerequisites: PrerequisiteCourses[];
+    prerequisites: ID[];
   };
 }
 export interface Assignment extends Content {
@@ -61,7 +56,7 @@ export interface Assignment extends Content {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    course_prerequisites: PrerequisiteCourses[];
+    prerequisites: ID[];
   };
 }
 
@@ -93,14 +88,14 @@ export interface LessonPayload {
   description: string;
   thumbnail_id: ID | null;
 
-  'video[source]': string;
-  'video[source_video_id]': ID;
-  'video[poster]': string;
-  'video[source_external_url]': string;
-  'video[source_shortcode]': string;
-  'video[source_youtube]': string;
-  'video[source_vimeo]': string;
-  'video[source_embedded]': string;
+  'video[source]'?: string;
+  'video[source_video_id]'?: ID;
+  'video[poster]'?: string;
+  'video[source_external_url]'?: string;
+  'video[source_shortcode]'?: string;
+  'video[source_youtube]'?: string;
+  'video[source_vimeo]'?: string;
+  'video[source_embedded]'?: string;
 
   'video[runtime][hours]': number;
   'video[runtime][minutes]': number;
