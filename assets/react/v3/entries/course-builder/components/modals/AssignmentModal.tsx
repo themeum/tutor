@@ -380,6 +380,14 @@ const AssignmentModal = ({
             <Controller
               name="pass_mark"
               control={form.control}
+              rules={{
+                validate: (value) => {
+                  if (value > form.getValues('total_mark')) {
+                    return __('Pass mark cannot be greater than total mark', 'tutor');
+                  }
+                  return true;
+                },
+              }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
