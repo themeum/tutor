@@ -51,22 +51,22 @@ class CheckoutController {
 	const PAGE_ID_OPTION_NAME = 'tutor_checkout_page_id';
 
 	/**
-	 * Pay now error session key
+	 * Pay now error transient key
 	 *
 	 * @since 3.0.0
 	 *
 	 * @var string
 	 */
-	const PAY_NOW_ERROR_SESSION_KEY = 'tutor_pay_now_errors';
+	const PAY_NOW_ERROR_TRANSIENT_KEY = 'tutor_pay_now_errors_';
 
 	/**
-	 * Pay now alert session key
+	 * Pay now alert transient key
 	 *
 	 * @since 3.0.0
 	 *
 	 * @var string
 	 */
-	const PAY_NOW_ALERT_MSG_SESSION_KEY = 'tutor_pay_now_alert_msg';
+	const PAY_NOW_ALERT_MSG_TRANSIENT_KEY = 'tutor_pay_now_alert_msg_';
 
 	/**
 	 * Constructor.
@@ -190,7 +190,7 @@ class CheckoutController {
 
 		// Return if validation failed.
 		if ( ! empty( $errors ) ) {
-			SessionHelper::set( self::PAY_NOW_ERROR_SESSION_KEY, $errors );
+			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
 			return;
 		}
 
@@ -265,11 +265,11 @@ class CheckoutController {
 				}
 			} else {
 				array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
-				SessionHelper::set( self::PAY_NOW_ERROR_SESSION_KEY, $errors );
+				set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
 				$this->set_pay_now_alert_msg( $order_data );
 			}
 		} else {
-			SessionHelper::set( self::PAY_NOW_ERROR_SESSION_KEY, $errors );
+			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id, $errors );
 			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
@@ -462,17 +462,18 @@ class CheckoutController {
 	 * @return void
 	 */
 	private function set_pay_now_alert_msg( $order_data ) {
+		$user_id = $order_data ? $order_data['user_id'] : get_current_user_id();
 		if ( empty( $order_data ) ) {
-			SessionHelper::set(
-				self::PAY_NOW_ALERT_MSG_SESSION_KEY,
+			set_transient(
+				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id,
 				array(
 					'alert'   => 'danger',
 					'message' => __( 'Failed to place order!', 'tutor' ),
 				),
 			);
 		} else {
-			SessionHelper::set(
-				self::PAY_NOW_ALERT_MSG_SESSION_KEY,
+			set_transient(
+				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id,
 				array(
 					'alert'   => 'success',
 					'message' => __( 'Your order has been placed successfully!', 'tutor' ),

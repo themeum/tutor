@@ -13,6 +13,7 @@ use Tutor\Helpers\SessionHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
 
+$user_id   = get_current_user_id();
 $plan_id   = Input::get( 'plan', 0 );
 $plan_info = new stdClass();
 
@@ -198,11 +199,11 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 
 	<!-- handle errors -->
 	<?php
-	$pay_now_errors    = SessionHelper::get( CheckoutController::PAY_NOW_ERROR_SESSION_KEY );
-	$pay_now_alert_msg = SessionHelper::get( CheckoutController::PAY_NOW_ALERT_MSG_SESSION_KEY );
+	$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
+	$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
 
-	SessionHelper::unset( CheckoutController::PAY_NOW_ALERT_MSG_SESSION_KEY );
-	SessionHelper::unset( CheckoutController::PAY_NOW_ERROR_SESSION_KEY );
+	delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+	delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
 	if ( $pay_now_errors || $pay_now_alert_msg ) :
 		?>
 	<div class="tutor-px-32 tutor-mb-32 tutor-break-word">
