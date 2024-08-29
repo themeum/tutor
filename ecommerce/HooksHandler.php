@@ -268,7 +268,7 @@ class HooksHandler {
 						add_filter(
 							'tutor_enroll_data',
 							function( $enroll_data ) {
-								$enroll_data['enroll_status'] = 'completed';
+								$enroll_data['post_status'] = 'completed';
 								return $enroll_data;
 							}
 						);
