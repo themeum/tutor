@@ -532,7 +532,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         topicId: topic.id,
                         title: __('Lesson', 'tutor'),
                         icon: <SVGIcon name="lesson" width={24} height={24} />,
-                        subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
+                        subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                       },
                     });
                   }}
@@ -553,7 +553,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Quiz', 'tutor'),
                         icon: <SVGIcon name="quiz" width={24} height={24} />,
-                        subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
+                        subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                       },
                     });
                   }}
@@ -574,7 +574,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
-                        subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
+                        subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                       },
                     });
                   }}
@@ -899,6 +899,7 @@ const styles = {
     isDragging: boolean;
   }) => css`
     ${styleUtils.resetButton};
+    ${styleUtils.flexCenter()};
     cursor: ${isDragging ? 'grabbing' : 'grab'};
   `,
 };
