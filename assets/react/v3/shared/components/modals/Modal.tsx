@@ -1,4 +1,4 @@
-import { colorTokens, zIndex as configZIndex } from '@Config/styles';
+import { colorTokens, zIndex } from '@Config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { nanoid, noop } from '@Utils/util';
 import { css } from '@emotion/react';
@@ -10,7 +10,7 @@ const styles = {
     background-color: ${colorTokens.background.modal};
     opacity: 0.7;
     inset: 0;
-    z-index: ${configZIndex.negative};
+    z-index: ${zIndex.negative};
 
     ${
       magicAi &&
@@ -22,7 +22,7 @@ const styles = {
     }
   `,
   container: css`
-    z-index: ${configZIndex.modal};
+    z-index: ${zIndex.modal};
     position: fixed;
     display: flex;
     justify-content: center;
@@ -50,7 +50,7 @@ type ModalContextType = {
     props?: Omit<P, 'closeModal'>;
     closeOnOutsideClick?: boolean;
     isMagicAi?: boolean;
-    zIndex?: number;
+    depthIndex?: number;
   }): Promise<NonNullable<Parameters<P['closeModal']>[0]> | PromiseResolvePayload<'CLOSE'>>;
   closeModal(data?: PromiseResolvePayload): void;
   hasModalOnStack?: boolean;
@@ -75,14 +75,14 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
       isMagicAi?: boolean;
-      zIndex?: number;
+      depthIndex?: number;
     }[];
   }>({
     modals: [],
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(
-    ({ component, props, closeOnOutsideClick = false, isMagicAi = false, zIndex = configZIndex.modal }) => {
+    ({ component, props, closeOnOutsideClick = false, isMagicAi = false, depthIndex = zIndex.modal }) => {
       return new Promise((resolve) => {
         setState((previousState) => ({
           ...previousState,
@@ -94,7 +94,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               resolve,
               closeOnOutsideClick,
               id: nanoid(),
-              zIndex,
+              depthIndex,
               isMagicAi,
             },
           ],
@@ -134,7 +134,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
             css={[
               styles.container,
               {
-                zIndex: modal.zIndex,
+                zIndex: modal.depthIndex,
               },
             ]}
           >

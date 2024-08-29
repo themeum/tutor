@@ -8,6 +8,8 @@ import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 import { usePrevious } from './usePrevious';
 
+const ANIMATION_DURATION_WITH_THRESHHOLD = 200;
+
 enum ArrowPosition {
   left = 'left',
   right = 'right',
@@ -178,7 +180,7 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
         if (!hasPopoverOnStack) {
           document.body.style.overflow = 'initial';
         }
-      }, 200); // this is the total of -> duration of the animation + threshold + 30ms
+      }, ANIMATION_DURATION_WITH_THRESHHOLD);
     };
   }, [isOpen]);
 
