@@ -504,7 +504,6 @@ class CheckoutController {
 		$validation_rules = array(
 			'object_ids'     => 'required',
 			'payment_method' => 'required',
-			'payment_type'   => 'required',
 			'order_type'     => "required|match_string:{$order_types}",
 		);
 
