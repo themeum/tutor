@@ -563,7 +563,7 @@ final class Tutor {
 		/**
 		 * Tutor AI generation controller
 		 */
-		// new MagicAI();
+		new MagicAI();
 
 		/**
 		 * Run Method
