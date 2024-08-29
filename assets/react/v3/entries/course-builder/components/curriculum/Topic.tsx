@@ -57,6 +57,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { useToast } from '@Atoms/Toast';
 import Tooltip from '@Atoms/Tooltip';
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
@@ -64,7 +65,7 @@ import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMee
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFileUploader } from '@Molecules/FileUploader';
 import Popover from '@Molecules/Popover';
 import { animateLayoutChanges } from '@Utils/dndkit';
@@ -560,27 +561,29 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 >
                   {__('Quiz', 'tutor')}
                 </Button>
-                <Button
-                  variant="tertiary"
-                  isOutlined
-                  size="small"
-                  icon={<SVGIcon name="plus" width={24} height={24} />}
-                  disabled={!topic.isSaved}
-                  onClick={() => {
-                    showModal({
-                      component: AssignmentModal,
-                      props: {
-                        topicId: topic.id,
-                        contentDripType: courseDetailsForm.watch('contentDripType'),
-                        title: __('Assignment', 'tutor'),
-                        icon: <SVGIcon name="assignment" width={24} height={24} />,
-                        subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
-                      },
-                    });
-                  }}
-                >
-                  {__('Assignment', 'tutor')}
-                </Button>
+                <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
+                  <Button
+                    variant="tertiary"
+                    isOutlined
+                    size="small"
+                    icon={<SVGIcon name="plus" width={24} height={24} />}
+                    disabled={!topic.isSaved}
+                    onClick={() => {
+                      showModal({
+                        component: AssignmentModal,
+                        props: {
+                          topicId: topic.id,
+                          contentDripType: courseDetailsForm.watch('contentDripType'),
+                          title: __('Assignment', 'tutor'),
+                          icon: <SVGIcon name="assignment" width={24} height={24} />,
+                          subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
+                        },
+                      });
+                    }}
+                  >
+                    {__('Assignment', 'tutor')}
+                  </Button>
+                </Show>
               </div>
               <div css={styles.footerButtons}>
                 <Show
