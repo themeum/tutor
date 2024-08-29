@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Helpers\SessionHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -50,22 +51,22 @@ class CheckoutController {
 	const PAGE_ID_OPTION_NAME = 'tutor_checkout_page_id';
 
 	/**
-	 * Pay now error transient key
+	 * Pay now error session key
 	 *
 	 * @since 3.0.0
 	 *
 	 * @var string
 	 */
-	const PAY_NOW_ERROR_TRANSIENT_KEY = 'tutor_pay_now_errors';
+	const PAY_NOW_ERROR_SESSION_KEY = 'tutor_pay_now_errors';
 
 	/**
-	 * Pay now alert transient key
+	 * Pay now alert session key
 	 *
 	 * @since 3.0.0
 	 *
 	 * @var string
 	 */
-	const PAY_NOW_ALERT_MSG_TRANSIENT_KEY = 'tutor_pay_now_alert_msg';
+	const PAY_NOW_ALERT_MSG_SESSION_KEY = 'tutor_pay_now_alert_msg';
 
 	/**
 	 * Constructor.
@@ -189,7 +190,7 @@ class CheckoutController {
 
 		// Return if validation failed.
 		if ( ! empty( $errors ) ) {
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors, 60 );
+			SessionHelper::set( self::PAY_NOW_ERROR_SESSION_KEY, $errors );
 			return;
 		}
 
@@ -236,47 +237,39 @@ class CheckoutController {
 			'payment_method' => $payment_method,
 		);
 
-		try {
-			if ( empty( $errors ) ) {
-				$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
-				if ( ! empty( $order_data ) ) {
-					if ( 'automate' === $payment_type ) {
-
-						// Set alert message transient.
-						$this->set_pay_now_alert_msg( $order_data );
-
+		if ( empty( $errors ) ) {
+			$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
+			if ( ! empty( $order_data ) ) {
+				if ( 'automate' === $payment_type ) {
+					try {
 						$payment_data = $this->prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method );
-
-					} else {
-						// Set alert message transient.
-						$this->set_pay_now_alert_msg( $order_data );
-
-						wp_safe_redirect(
-							add_query_arg(
-								array(
-									'tutor_order_placement' => 'success',
-									'order_id'           => $order_data['id'],
-								),
-								home_url()
-							)
-						);
+					} catch ( \Throwable $th ) {
+						wp_safe_redirect( home_url( '?tutor_order_placement=failed&order_id=' . $order_data['id'] ) );
 						exit();
 					}
 				} else {
-					array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
-					set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+					// Set alert message session.
 					$this->set_pay_now_alert_msg( $order_data );
+
+					wp_safe_redirect(
+						add_query_arg(
+							array(
+								'tutor_order_placement' => 'success',
+								'order_id'              => $order_data['id'],
+							),
+							home_url()
+						)
+					);
+					exit();
 				}
 			} else {
-				set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
+				array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
+				SessionHelper::set( self::PAY_NOW_ERROR_SESSION_KEY, $errors );
 				$this->set_pay_now_alert_msg( $order_data );
 			}
-		} catch ( \Throwable $th ) {
-			array_push( $errors, $th->getMessage() );
-			set_transient( self::PAY_NOW_ERROR_TRANSIENT_KEY, $errors );
-
-			// Set alert message transient.
+		} else {
+			SessionHelper::set( self::PAY_NOW_ERROR_SESSION_KEY, $errors );
 			$this->set_pay_now_alert_msg( $order_data );
 		}
 	}
@@ -458,7 +451,7 @@ class CheckoutController {
 	}
 
 	/**
-	 * Set alert message on the transient based on
+	 * Set alert message on the session based on
 	 * order data
 	 *
 	 * @since 3.0.0
@@ -470,18 +463,18 @@ class CheckoutController {
 	 */
 	private function set_pay_now_alert_msg( $order_data ) {
 		if ( empty( $order_data ) ) {
-			set_transient(
-				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+			SessionHelper::set(
+				self::PAY_NOW_ALERT_MSG_SESSION_KEY,
 				array(
-					'alert'  => 'danger',
+					'alert'   => 'danger',
 					'message' => __( 'Failed to place order!', 'tutor' ),
 				),
 			);
 		} else {
-			set_transient(
-				self::PAY_NOW_ALERT_MSG_TRANSIENT_KEY,
+			SessionHelper::set(
+				self::PAY_NOW_ALERT_MSG_SESSION_KEY,
 				array(
-					'alert'  => 'success',
+					'alert'   => 'success',
 					'message' => __( 'Your order has been placed successfully!', 'tutor' ),
 				),
 			);

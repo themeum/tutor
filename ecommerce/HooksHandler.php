@@ -62,7 +62,7 @@ class HooksHandler {
 
 		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 3 );
 
-		add_action( 'tutor_order_placed', array( $this, 'handle_new_order_placed' ) );
+		add_action( 'tutor_order_placement_success', array( $this, 'handle_order_placement_success' ) );
 	}
 
 	/**
@@ -333,17 +333,15 @@ class HooksHandler {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $order_data Order data.
+	 * @param int $order_id Order id.
 	 *
 	 * @return void
 	 */
-	public function handle_new_order_placed( array $order_data ) {
-		$user_id = $order_data['user_id'];
-		$items   = $order_data['items'];
+	public function handle_order_placement_success( int $order_id ) {
+		$order_data = $this->order_model->get_order_by_id( $order_id );
+		$user_id    = $order_data->student->id;
 
-		foreach ( $items as $item ) {
-			( new CartModel() )->clear_user_cart( $user_id );
-		}
+		( new CartModel() )->clear_user_cart( $user_id );
 	}
 }
 
