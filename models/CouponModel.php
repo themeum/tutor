@@ -764,9 +764,10 @@ class CouponModel {
 	public function apply_automatic_coupon_discount( $course_ids ) {
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
-		$response                = array();
-		$response['total_price'] = 0;
-		$response['is_applied']  = false;
+		$response                 = array();
+		$response['total_price']  = 0;
+		$response['coupon_title'] = '';
+		$response['is_applied']   = false;
 
 		$should_apply_coupon = false;
 
@@ -796,7 +797,8 @@ class CouponModel {
 
 								// Apply discount if pass all checks.
 								if ( $should_apply_coupon ) {
-									$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+									$discount_price           = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+									$response['coupon_title'] = $coupon->coupon_title;
 
 									// Set a flag to determine if coupon applied.
 									if ( ! $response['is_applied'] ) {
@@ -813,6 +815,7 @@ class CouponModel {
 				'item_id'        => $course_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
+				'is_applied'     => $should_apply_coupon,
 			);
 
 			$response['total_price'] += $discount_price ? $discount_price : $reg_price;
