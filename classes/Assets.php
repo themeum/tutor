@@ -133,14 +133,14 @@ class Assets {
 			);
 		}
 
-		// $tutor_currency = array(
-		// 	'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) ),
-		// 	'currency'           => tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL ),
-		// 	'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' ),
-		// 	'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' ),
-		// 	'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
-		// 	'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' ),
-		// );
+		$tutor_currency = array(
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) ),
+			'currency'           => tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
+			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' ),
+		);
 
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
@@ -167,9 +167,9 @@ class Assets {
 			'quiz_answer_display_time'     => 1000 * (int) tutor_utils()->get_option( 'quiz_answer_display_time' ),
 			'is_ssl'                       => is_ssl(),
 			'course_list_page_url'         => admin_url( 'admin.php?page=tutor' ),
-			// 'course_post_type'             => tutor()->course_post_type,
-			// 'tutor_currency'               => $tutor_currency,
-			// 'local'                        => get_locale(),
+			'course_post_type'             => tutor()->course_post_type,
+			'tutor_currency'               => $tutor_currency,
+			'local'                        => get_locale(),
 		);
 	}
 
