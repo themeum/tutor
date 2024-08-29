@@ -6,7 +6,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useMarkAsPaidMutation } from '@OrderServices/order';
-import { createPriceFormatter } from '@Utils/currency';
+import { formatPrice } from '@Utils/currency';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
@@ -28,7 +28,6 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
       note: '',
     },
   });
-  const formatPrice = createPriceFormatter({ currency: 'USD', locale: 'en-US' });
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>

@@ -322,7 +322,7 @@ class OrderModel {
 		$student->image           = get_avatar_url( $order_data->user_id );
 
 		$order_data->student         = $student;
-		$order_data->courses         = $this->get_order_items_by_id( $order_id );
+		$order_data->items           = $this->get_order_items_by_id( $order_id );
 		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
 		$order_data->net_payment     = (float) $order_data->net_payment;
@@ -433,7 +433,7 @@ class OrderModel {
 		$return_data = (object) array(
 			'id'       => $customer_data->id,
 			'user_id'  => $customer_data->user_id,
-			'name'     => $customer_data->billing_name,
+			'name'     => $customer_data->billing_first_name . ' ' . $customer_data->billing_last_name,
 			'email'    => $customer_data->billing_email,
 			'phone'    => $customer_data->billing_phone,
 			'address'  => $customer_data->billing_address,
@@ -640,6 +640,78 @@ class OrderModel {
 		);
 		$primary_table = "{$this->table_name} o";
 		return QueryHelper::get_joined_count( $primary_table, $join_table, $where, $search_clause );
+	}
+
+	/**
+	 * Get order of a user
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $time_period $time_period Sorting time period,
+	 * supported time periods are: today, monthly & yearly.
+	 * @param string $start_date $start_date For date range sorting.
+	 * @param string $end_date $end_date For date range sorting.
+	 * @param int    $user_id  User id for fetching order list.
+	 * @param int    $limit  Limit to fetch record.
+	 * @param int    $offset  Offset to fetch record.
+	 *
+	 * @throws \Exception Throw exception if database error occur.
+	 *
+	 * @return array
+	 */
+	public function get_user_orders( $time_period = null, $start_date = null, $end_date = null, int $user_id = 0, $limit = 10, int $offset = 0 ) {
+		$user_id = $user_id ? $user_id : get_current_user_id();
+
+		$response = array(
+			'results'     => array(),
+			'total_count' => 0,
+		);
+
+		global $wpdb;
+
+		$time_period_clause = '';
+		$date_range_clause  = '';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = "AND created_at_gmt BETWEEN DATE( '$start_date') AND DATE( '$end_date')";
+		} else {
+			if ( $time_period ) {
+				if ( 'today' === $time_period ) {
+					$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
+				} elseif ( 'monthly' === $time_period ) {
+					$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
+				} else {
+					$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
+				}
+			}
+		}
+
+		$query = $wpdb->prepare(
+			"SELECT
+				SQL_CALC_FOUND_ROWS
+				o.* 
+				FROM $this->table_name AS o
+				WHERE o.user_id = %d
+				{$time_period_clause}
+				{$date_range_clause}
+				ORDER BY o.id DESC
+				LIMIT %d OFFSET %d
+			",
+			$user_id,
+			$limit,
+			$offset
+		);
+
+		$results = $wpdb->get_results( $query );
+
+		if ( $wpdb->last_error ) {
+			throw new \Exception( $wpdb->last_error );
+		} else {
+			$response['results']     = $results;
+			$response['total_count'] = is_array( $results ) && count( $results ) ? (int) $wpdb->get_var( 'SELECT FOUND_ROWS()' ) : 0;
+		}
+
+		return $response;
 	}
 
 	/**

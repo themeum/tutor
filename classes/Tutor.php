@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\MagicAI\MagicAI;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -560,6 +561,11 @@ final class Tutor {
 		new Ecommerce();
 
 		/**
+		 * Tutor AI generation controller
+		 */
+		new MagicAI();
+
+		/**
 		 * Run Method
 		 *
 		 * @since v.1.2.0
@@ -654,6 +660,7 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-template-functions.php';
 		include tutor()->path . 'includes/tutor-template-hook.php';
 		include tutor()->path . 'includes/translate-text.php';
+		include tutor()->path . 'includes/country.php';
 	}
 
 	/**
@@ -875,7 +882,7 @@ final class Tutor {
 		$orders_table = "CREATE TABLE {$wpdb->prefix}tutor_orders (
 			id BIGINT(20) UNSIGNED AUTO_INCREMENT,
 			parent_id BIGINT(20) UNSIGNED DEFAULT 0, -- for subscription order, store subscription record id
-			transaction_id BIGINT(20) UNSIGNED COMMENT 'Transaction id from payment gateway',
+			transaction_id VARCHAR(255) COMMENT 'Transaction id from payment gateway',
 			user_id BIGINT(20) UNSIGNED NOT NULL,
 			order_type VARCHAR(50) NOT NULL, -- single_order, subscription
 			order_status VARCHAR(50) NOT NULL,

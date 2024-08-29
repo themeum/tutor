@@ -11,7 +11,13 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Course;
+use Tutor\Ecommerce\PaymentHandler;
 use TUTOR\Input;
+use Tutor\PaymentGateways\Configs\PaypalConfig;
+use Tutor\PaymentGateways\Configs\StripeConfig;
+use Tutor\PaymentGateways\GatewayFactory;
+use Tutor\PaymentGateways\PaypalGateway;
+use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -64,6 +70,7 @@ class Ecommerce {
 		new BillingController();
 		new HooksHandler();
 		new EmailController();
+		new PaymentHandler();
 
 		// Include currency file.
 		require_once tutor()->path . 'ecommerce/currency.php';
@@ -107,6 +114,54 @@ class Ecommerce {
 	 */
 	public function add_monetization_option( $arr ) {
 		$arr[ self::MONETIZE_BY ] = __( 'Tutor', 'tutor' );
+
+		return $arr;
+	}
+
+	/**
+	 * Create & return payment gateway object
+	 *
+	 * Return instance expose setup_payment_and_redirect & get_webhook_data
+	 * methods for creating payments.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $gateway Reference class of gateway.
+	 *
+	 * @throws \Exception Throw exception if error occur.
+	 *
+	 * @return GatewayBase
+	 */
+	public static function get_payment_gateway_object( string $gateway ) {
+		try {
+			return GatewayFactory::create( $gateway );
+		} catch ( \Throwable $th ) {
+			throw new \Exception( $th->getMessage() );
+		}
+	}
+
+	/**
+	 * Get payment gateways with reference class
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function payment_gateways_with_ref() {
+		$arr = array(
+			array(
+				'stripe' => array(
+					'gateway_class' => StripeGateway::class,
+					'config_class'  => StripeConfig::class,
+				),
+			),
+			array(
+				'paypal' => array(
+					'gateway_class' => PaypalGateway::class,
+					'config_class'  => PaypalConfig::class,
+				),
+			),
+		);
 
 		return $arr;
 	}

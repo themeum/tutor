@@ -8,7 +8,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useRefundOrderMutation } from '@OrderServices/order';
-import { createPriceFormatter } from '@Utils/currency';
+import { formatPrice } from '@Utils/currency';
 import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -35,7 +35,6 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
       reason: '',
     },
   });
-  const formatPrice = createPriceFormatter({ locale: 'en-US', currency: 'USD' });
   const amount = form.watch('amount', 0);
 
   return (

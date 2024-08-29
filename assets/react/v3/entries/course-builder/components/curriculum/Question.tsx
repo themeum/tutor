@@ -39,7 +39,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
 };
 
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
   const { showToast } = useToast();
@@ -86,13 +86,11 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         const validation = validateQuizQuestion(activeQuestionIndex, form);
 
         if (validation !== true) {
-          showToast({
-            message: validation.message,
-            type: validation.type as 'danger',
-          });
+          setValidationError(validation);
           return;
         }
 
+        setValidationError(null);
         setActiveQuestionId(question.question_id);
       }}
       onKeyDown={(event) => {
@@ -122,10 +120,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
           const validation = validateQuizQuestion(activeQuestionIndex, form);
           if (validation !== true) {
             event.stopPropagation();
-            showToast({
-              message: validation.message,
-              type: validation.type as 'danger',
-            });
+            setValidationError(validation);
             return;
           }
           setSelectedQuestionId(question.question_id);

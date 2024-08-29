@@ -1,5 +1,6 @@
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens } from '@Config/styles';
+import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __, _x } from '@wordpress/i18n';
@@ -9,6 +10,7 @@ interface WPEditorProps {
   value: string;
   onChange: (value: string) => void;
   isMinimal?: boolean;
+  autoFocus?: boolean;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -171,10 +173,15 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
   };
 }
 
-const WPEditor = ({ value = '', onChange, isMinimal }: WPEditorProps) => {
+const WPEditor = ({ value = '', onChange, isMinimal, autoFocus = false }: WPEditorProps) => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(autoFocus);
+
+  const handleOnChange = (event: Event) => {
+    const target = event.target as HTMLTextAreaElement;
+    onChange(target.value);
+  };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const updateEditorContent = useCallback(
@@ -205,22 +212,14 @@ const WPEditor = ({ value = '', onChange, isMinimal }: WPEditorProps) => {
       window.wp.editor.remove(editorId);
       window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused, isMinimal));
 
-      editorRef.current?.addEventListener('change', (e) => {
-        onChange((e.target as HTMLInputElement)?.value);
-      });
-      editorRef.current?.addEventListener('input', (e) => {
-        onChange((e.target as HTMLInputElement)?.value);
-      });
+      editorRef.current?.addEventListener('change', handleOnChange);
+      editorRef.current?.addEventListener('input', handleOnChange);
 
       return () => {
         window.wp.editor.remove(editorId);
 
-        editorRef.current?.removeEventListener('change', (e) => {
-          onChange((e.target as HTMLInputElement)?.value);
-        });
-        editorRef.current?.removeEventListener('input', (e) => {
-          onChange((e.target as HTMLInputElement)?.value);
-        });
+        editorRef.current?.removeEventListener('change', handleOnChange);
+        editorRef.current?.removeEventListener('input', handleOnChange);
       };
     }
   }, []);
@@ -229,6 +228,7 @@ const WPEditor = ({ value = '', onChange, isMinimal }: WPEditorProps) => {
     <div
       css={styles.wrapper({
         isMinimal,
+        isFocused,
       })}
     >
       <textarea ref={editorRef} id={editorId} defaultValue={value} />
@@ -241,8 +241,10 @@ export default WPEditor;
 const styles = {
   wrapper: ({
     isMinimal,
+    isFocused,
   }: {
     isMinimal?: boolean;
+    isFocused: boolean;
   }) => css`
     flex: 1;
 
@@ -256,6 +258,17 @@ const styles = {
       border-bottom-left-radius: ${borderRadius[6]};
       border-bottom-right-radius: ${borderRadius[6]};
       background-color: ${colorTokens.background.white};
+
+      ${
+        isFocused &&
+        css`
+          ${styleUtils.inputFocus}
+        `
+      }
+
+      :focus-within {
+        ${styleUtils.inputFocus}
+      }
     }
 
     .wp-switch-editor {
@@ -305,6 +318,13 @@ const styles = {
         .mce-tinymce.mce-container {
           border: 1px solid ${colorTokens.stroke.default};
           border-radius: ${borderRadius[6]};
+
+          ${
+            isFocused &&
+            css`
+              ${styleUtils.inputFocus}
+            `
+          }
         }
       `
     }

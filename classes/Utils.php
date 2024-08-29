@@ -918,7 +918,7 @@ class Utils {
 					 */
 					$is_completed = apply_filters( 'tutor_is_zoom_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completed_count++;
+						++$completed_count;
 					}
 				} elseif ( 'tutor-google-meet' === $content->post_type ) {
 					/**
@@ -928,7 +928,7 @@ class Utils {
 					 */
 					$is_completed = apply_filters( 'tutor_google_meet_lesson_done', false, $content->ID, $user_id );
 					if ( $is_completed ) {
-						$completed_count++;
+						++$completed_count;
 					}
 				}
 			}
@@ -1293,7 +1293,7 @@ class Utils {
 
 			$get_enrolled_info = $wpdb->get_row(
 				$wpdb->prepare(
-				"SELECT ID,
+					"SELECT ID,
 					post_author,
 					post_date,
 					post_date_gmt,
@@ -1306,9 +1306,9 @@ class Utils {
 					AND post_author = %d
 					{$status_clause};
 				",
-				'tutor_enrolled',
-				$course_id,
-				$user_id
+					'tutor_enrolled',
+					$course_id,
+					$user_id
 				)
 			);
 			TutorCache::set( $cache_key, $get_enrolled_info );
@@ -3762,12 +3762,10 @@ class Utils {
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<i class="tutor-icon-star-bold" data-rating-value="' . $i . '"></i>';
-			} else {
-				if ( ( $current_rating - $i ) >= -0.5 ) {
+			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<i class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></i>';
-				} else {
-					$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
-				}
+			} else {
+				$output .= '<i class="tutor-icon-star-line" data-rating-value="' . $i . '"></i>';
 			}
 		}
 
@@ -3841,12 +3839,10 @@ class Utils {
 		for ( $i = 1; $i <= 5; $i++ ) {
 			if ( (int) $current_rating >= $i ) {
 				$output .= '<span class="tutor-icon-star-bold" data-rating-value="' . $i . '"></span>';
-			} else {
-				if ( ( $current_rating - $i ) >= -0.5 ) {
+			} elseif ( ( $current_rating - $i ) >= -0.5 ) {
 					$output .= '<span class="tutor-icon-star-half-bold" data-rating-value="' . $i . '"></span>';
-				} else {
-					$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
-				}
+			} else {
+				$output .= '<span class="tutor-icon-star-line" data-rating-value="' . $i . '"></span>';
 			}
 		}
 
@@ -7426,7 +7422,7 @@ class Utils {
 						$next_id = $ids[ $next_i ];
 					}
 				}
-				$i++;
+				++$i;
 			}
 		}
 
@@ -9127,26 +9123,26 @@ class Utils {
 					case $lesson_post_type:
 						$is_lesson_completed = $this->is_completed_lesson( $content->ID, $user_id );
 						if ( $is_lesson_completed ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $quiz_post_type:
 						$has_attempt = $this->has_attempted_quiz( $user_id, $content->ID );
 						if ( $has_attempt ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $assignment_post_type:
 						$is_assignment_completed = $this->is_assignment_submitted( $content->ID, $user_id );
 						if ( $is_assignment_completed ) {
-							$completed++;
+							++$completed;
 						}
 						break;
 					case $zoom_lesson_post_type:
 						if ( \class_exists( '\TUTOR_ZOOM\Zoom' ) ) {
 							$is_zoom_lesson_completed = \TUTOR_ZOOM\Zoom::is_zoom_lesson_done( '', $content->ID, $user_id );
 							if ( $is_zoom_lesson_completed ) {
-								$completed++;
+								++$completed;
 							}
 						}
 						break;
@@ -9155,7 +9151,7 @@ class Utils {
 							if ( \TutorPro\GoogleMeet\Validator\Validator::is_addon_enabled() ) {
 								$is_completed = \TutorPro\GoogleMeet\Frontend\Frontend::is_lesson_completed( false, $content->ID, $user_id );
 								if ( $is_completed ) {
-									$completed++;
+									++$completed;
 								}
 							}
 						}
@@ -9260,7 +9256,7 @@ class Utils {
 	 * @return array array of menu items.
 	 */
 	public function default_menus(): array {
-		return array(
+		$items = array(
 			'index'            => array(
 				'title' => __( 'Dashboard', 'tutor' ),
 				'icon'  => 'tutor-icon-dashboard',
@@ -9285,15 +9281,21 @@ class Utils {
 				'title' => __( 'My Quiz Attempts', 'tutor' ),
 				'icon'  => 'tutor-icon-quiz-attempt',
 			),
-			'purchase_history' => array(
-				'title' => __( 'Order History', 'tutor' ),
-				'icon'  => 'tutor-icon-cart-bold',
-			),
-			'question-answer'  => array(
-				'title' => __( 'Question & Answer', 'tutor' ),
-				'icon'  => 'tutor-icon-question',
-			),
 		);
+
+		$items['purchase_history'] = array(
+			'title' => __( 'Order History', 'tutor' ),
+			'icon'  => 'tutor-icon-cart-bold',
+		);
+
+		$items = apply_filters( 'tutor_pro_after_order_history_menu', $items );
+
+		$items['question-answer'] = array(
+			'title' => __( 'Question & Answer', 'tutor' ),
+			'icon'  => 'tutor-icon-question',
+		);
+
+		return $items;
 	}
 
 	/**
@@ -9734,7 +9736,7 @@ class Utils {
 		);
 
 		foreach ( $results as $result ) {
-			$course_meta[ $result->course_id ][ $post_type ]++;
+			++$course_meta[ $result->course_id ][ $post_type ];
 		}
 
 		return $course_meta;
@@ -9996,7 +9998,7 @@ class Utils {
 	 *
 	 * @return array allowed tags
 	 */
-	public function allowed_icon_tags( array $tags = array() ):array {
+	public function allowed_icon_tags( array $tags = array() ): array {
 		$defaults = array(
 			'span' => array(
 				'class' => true,
@@ -10101,211 +10103,6 @@ class Utils {
 	}
 
 	/**
-	 * Get all the countries info
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function country_options() {
-		$options = array(
-			'AF' => 'Afghanistan',
-			'AL' => 'Albania',
-			'DZ' => 'Algeria',
-			'AD' => 'Andorra',
-			'AO' => 'Angola',
-			'AR' => 'Argentina',
-			'AM' => 'Armenia',
-			'AW' => 'Aruba',
-			'AU' => 'Australia',
-			'AT' => 'Austria',
-			'AZ' => 'Azerbaijan',
-			'BH' => 'Bahrain',
-			'BD' => 'Bangladesh',
-			'BY' => 'Belarus',
-			'BE' => 'Belgium',
-			'BZ' => 'Belize',
-			'BJ' => 'Benin',
-			'BT' => 'Bhutan',
-			'BO' => 'Bolivia',
-			'BA' => 'Bosnia And Herzegovina',
-			'BW' => 'Botswana',
-			'BR' => 'Brazil',
-			'IO' => 'British Indian Ocean Territory',
-			'BN' => 'Brunei Darussalam',
-			'BG' => 'Bulgaria',
-			'BF' => 'Burkina Faso',
-			'BI' => 'Burundi',
-			'KH' => 'Cambodia',
-			'CA' => 'Canada',
-			'CM' => 'Cameroon',
-			'CV' => 'Cape Verde',
-			'CF' => 'Central African Republic',
-			'TD' => 'Chad',
-			'CL' => 'Chile',
-			'CN' => 'China',
-			'CO' => 'Colombia',
-			'KM' => 'Comoros',
-			'CG' => 'Congo',
-			'CD' => 'Congo, Democratic Republic',
-			'CK' => 'Cook Islands',
-			'CR' => 'Costa Rica',
-			'CI' => "Cote D'Ivoire",
-			'HR' => 'Croatia',
-			'CU' => 'Cuba',
-			'CY' => 'Cyprus',
-			'CZ' => 'Czech Republic',
-			'DK' => 'Denmark',
-			'DJ' => 'Djibouti',
-			'EC' => 'Ecuador',
-			'EG' => 'Egypt',
-			'SV' => 'El Salvador',
-			'GQ' => 'Equatorial Guinea',
-			'ER' => 'Eritrea',
-			'EE' => 'Estonia',
-			'ET' => 'Ethiopia',
-			'FK' => 'Falkland Islands (Malvinas)',
-			'FO' => 'Faroe Islands',
-			'FJ' => 'Fiji',
-			'FI' => 'Finland',
-			'FR' => 'France',
-			'PF' => 'French Polynesia',
-			'GA' => 'Gabon',
-			'GM' => 'Gambia',
-			'GE' => 'Georgia',
-			'DE' => 'Germany',
-			'GH' => 'Ghana',
-			'GI' => 'Gibraltar',
-			'GR' => 'Greece',
-			'GL' => 'Greenland',
-			'GT' => 'Guatemala',
-			'GN' => 'Guinea',
-			'GW' => 'Guinea-Bissau',
-			'GY' => 'Guyana',
-			'HT' => 'Haiti',
-			'HN' => 'Honduras',
-			'HK' => 'Hong Kong',
-			'HU' => 'Hungary',
-			'IS' => 'Iceland',
-			'IN' => 'India',
-			'ID' => 'Indonesia',
-			'IR' => 'Iran, Islamic Republic Of',
-			'IQ' => 'Iraq',
-			'IE' => 'Ireland',
-			'IL' => 'Israel',
-			'IT' => 'Italy',
-			'JP' => 'Japan',
-			'JO' => 'Jordan',
-			'KP' => 'North Korea',
-			'KE' => 'Kenya',
-			'KI' => 'Kiribati',
-			'KR' => 'South Korea',
-			'KW' => 'Kuwait',
-			'KG' => 'Kyrgyzstan',
-			'LA' => "Lao People's Democratic Republic",
-			'LV' => 'Latvia',
-			'LB' => 'Lebanon',
-			'LS' => 'Lesotho',
-			'LR' => 'Liberia',
-			'LY' => 'Libyan Arab Jamahiriya',
-			'LI' => 'Liechtenstein',
-			'LT' => 'Lithuania',
-			'LU' => 'Luxembourg',
-			'MO' => 'Macao',
-			'MK' => 'Macedonia',
-			'MG' => 'Madagascar',
-			'MW' => 'Malawi',
-			'MY' => 'Malaysia',
-			'MV' => 'Maldives',
-			'ML' => 'Mali',
-			'MT' => 'Malta',
-			'MH' => 'Marshall Islands',
-			'MR' => 'Mauritania',
-			'MU' => 'Mauritius',
-			'MX' => 'Mexico',
-			'FM' => 'Micronesia, Federated States Of',
-			'MD' => 'Moldova',
-			'MC' => 'Monaco',
-			'MN' => 'Mongolia',
-			'ME' => 'Montenegro',
-			'MA' => 'Morocco',
-			'MZ' => 'Mozambique',
-			'NA' => 'Namibia',
-			'NL' => 'Netherlands',
-			'NC' => 'New Caledonia',
-			'NZ' => 'New Zealand',
-			'NI' => 'Nicaragua',
-			'NE' => 'Niger',
-			'NG' => 'Nigeria',
-			'NU' => 'Niue',
-			'NF' => 'Norfolk Island',
-			'NO' => 'Norway',
-			'OM' => 'Oman',
-			'PK' => 'Pakistan',
-			'PA' => 'Panama',
-			'PG' => 'Papua New Guinea',
-			'PY' => 'Paraguay',
-			'PE' => 'Peru',
-			'PH' => 'Philippines',
-			'PL' => 'Poland',
-			'PT' => 'Portugal',
-			'QA' => 'Qatar',
-			'RO' => 'Romania',
-			'RU' => 'Russian Federation',
-			'RW' => 'Rwanda',
-			'WS' => 'Samoa',
-			'SM' => 'San Marino',
-			'ST' => 'Sao Tome And Principe',
-			'SA' => 'Saudi Arabia',
-			'SN' => 'Senegal',
-			'RS' => 'Serbia',
-			'SC' => 'Seychelles',
-			'SL' => 'Sierra Leone',
-			'SG' => 'Singapore',
-			'SK' => 'Slovakia',
-			'SI' => 'Slovenia',
-			'SB' => 'Solomon Islands',
-			'SO' => 'Somalia',
-			'ZA' => 'South Africa',
-			'ES' => 'Spain',
-			'LK' => 'Sri Lanka',
-			'SD' => 'Sudan',
-			'SR' => 'Suriname',
-			'SZ' => 'Swaziland',
-			'SE' => 'Sweden',
-			'CH' => 'Switzerland',
-			'SY' => 'Syrian Arab Republic',
-			'TW' => 'Taiwan',
-			'TJ' => 'Tajikistan',
-			'TZ' => 'Tanzania',
-			'TH' => 'Thailand',
-			'TL' => 'Timor-Leste',
-			'TG' => 'Togo',
-			'TK' => 'Tokelau',
-			'TO' => 'Tonga',
-			'TN' => 'Tunisia',
-			'TR' => 'Turkey',
-			'TM' => 'Turkmenistan',
-			'TV' => 'Tuvalu',
-			'UG' => 'Uganda',
-			'UA' => 'Ukraine',
-			'AE' => 'United Arab Emirates',
-			'GB' => 'United Kingdom',
-			'US' => 'United States',
-			'UY' => 'Uruguay',
-			'VU' => 'Vanuatu',
-			'VE' => 'Venezuela',
-			'VN' => 'Viet Nam',
-			'WF' => 'Wallis And Futuna',
-			'YE' => 'Yemen',
-			'ZM' => 'Zambia',
-			'ZW' => 'Zimbabwe',
-		);
-
-		return $options;
-	}
-
-	/**
 	 * Get editor list for post content.
 	 *
 	 * @since 3.0.0
@@ -10398,5 +10195,53 @@ class Utils {
 		}
 
 		return apply_filters( 'tutor_course_builder_editor_used', $editor, $post_id );
+	}
+
+	/**
+	 * Upload base64 string image.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $base64_image_str base64 image string.
+	 * @param string $filename filename.
+	 *
+	 * @return object consist of id, title, url.
+	 *
+	 * @throws \Exception If upload failed.
+	 */
+	public function upload_base64_image( $base64_image_str, $filename = null ) {
+		try {
+			$arr = explode( ',', $base64_image_str, 2 );
+			if ( ! isset( $arr[1] ) ) {
+				throw new \Exception( 'Invalid base64 string' );
+			}
+
+			$filename   = empty( $filename ) ? uniqid( 'image-' ) . '.png' : $filename;
+			$image_data = base64_decode( $arr[1] );
+			$uploaded   = wp_upload_bits( $filename, null, $image_data );
+
+			if ( ! empty( $uploaded['error'] ) ) {
+				throw new \Exception( $uploaded['error'] );
+			}
+
+			$attachment = array(
+				'guid'           => $uploaded['url'],
+				'post_mime_type' => $uploaded['type'],
+				'post_title'     => $filename,
+				'post_content'   => '',
+				'post_status'    => 'inherit',
+			);
+
+			$media_id = wp_insert_attachment( $attachment, $uploaded['file'] );
+
+			return (object) array(
+				'id'    => $media_id,
+				'url'   => $uploaded['url'],
+				'title' => $filename,
+			);
+
+		} catch ( \Exception $e ) {
+			throw new \Exception( $e->getMessage() );
+		}
 	}
 }

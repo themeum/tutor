@@ -258,32 +258,36 @@ const FormVideoInput = ({
       [`source_${source}`]: data.videoUrl,
     };
 
-    if (source === 'vimeo') {
-      const duration = await getVimeoVideoDuration(data.videoUrl);
-      if (onGetDuration && duration) {
-        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-      }
-    }
-
-    if (source === 'external_url') {
-      const duration = await getExternalVideoDuration(data.videoUrl);
-
-      if (onGetDuration && duration) {
-        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-      }
-    }
-
-    if (source === 'youtube' && tutorConfig.settings.lesson_video_duration_youtube_api_key) {
-      const duration = await getYouTubeVideoDuration(data.videoUrl);
-
-      if (onGetDuration && duration) {
-        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-      }
-    }
-
     field.onChange(updateFieldValue(fieldValue, updatedValue));
     onChange?.(updateFieldValue(fieldValue, updatedValue));
     setIsOpen(false);
+
+    try {
+      if (source === 'vimeo') {
+        const duration = await getVimeoVideoDuration(data.videoUrl);
+        if (onGetDuration && duration) {
+          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+        }
+      }
+
+      if (source === 'external_url') {
+        const duration = await getExternalVideoDuration(data.videoUrl);
+
+        if (onGetDuration && duration) {
+          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+        }
+      }
+
+      if (source === 'youtube' && tutorConfig.settings.lesson_video_duration_youtube_api_key) {
+        const duration = await getYouTubeVideoDuration(data.videoUrl);
+
+        if (onGetDuration && duration) {
+          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+        }
+      }
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

@@ -25,7 +25,7 @@ function Student() {
 						</span>
 						<span>
 							{__('Enrolled course numbers: ')}
-							{order.courses.map((course) => `#${course.id}`).join(', ')}
+							{order.items.map((course) => `#${course.id}`).join(', ')}
 						</span>
 					</div>
 					<div css={styles.row}>

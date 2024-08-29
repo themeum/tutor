@@ -96,6 +96,7 @@ const DropdownButton = ({
           ]}
           onClick={onClick}
           tabIndex={tabIndex}
+          disabled={disabled || loading}
         >
           {loading && !disabled && (
             <span css={styles.spinner}>
@@ -239,8 +240,8 @@ const styles = {
     ${
       size === 'large' &&
       css`
-      padding: ${spacing[12]} ${spacing[32]};
-    `
+        padding: ${spacing[12]} ${spacing[32]};
+      `
     }
 
     ${
@@ -267,11 +268,11 @@ const styles = {
         }
 
         ${
-          (disabled || loading) &&
+          disabled &&
           css`
-          background-color: ${colorTokens.action.primary.disable};
-          color: ${colorTokens.text.disable};
-        `
+            background-color: ${colorTokens.action.primary.disable};
+            color: ${colorTokens.text.disable};
+          `
         }
       `
     }
@@ -421,12 +422,10 @@ const styles = {
     `
     }
 
-    ${
-      (disabled || loading) &&
-      css`
-        pointer-events: none;
-      `
+    :disabled {
+      cursor: not-allowed;
     }
+
   `,
   buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
     display: flex;

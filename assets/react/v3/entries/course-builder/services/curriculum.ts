@@ -5,12 +5,7 @@ import type { AxiosResponse } from 'axios';
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type {
-  GoogleMeet,
-  PrerequisiteCourses,
-  TutorMutationResponse,
-  ZoomMeeting,
-} from '@CourseBuilderServices/course';
+import type { GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -43,7 +38,7 @@ export interface Lesson extends Content {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    course_prerequisites: PrerequisiteCourses[];
+    prerequisites: ID[];
   };
 }
 export interface Assignment extends Content {
@@ -61,7 +56,7 @@ export interface Assignment extends Content {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    course_prerequisites: PrerequisiteCourses[];
+    prerequisites: ID[];
   };
 }
 
@@ -316,15 +311,16 @@ export const useDeleteContentMutation = () => {
           message: __(response.message, 'tutor'),
           type: 'success',
         });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
       }
     },
     onError: (error: ErrorResponse) => {
       showToast({
         message: error.response.data.message,
         type: 'danger',
-      });
-      queryClient.invalidateQueries({
-        queryKey: ['Topic'],
       });
     },
   });

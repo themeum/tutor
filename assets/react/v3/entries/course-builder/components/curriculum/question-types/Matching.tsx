@@ -30,7 +30,7 @@ import { nanoid, noop } from '@Utils/util';
 const Matching = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, activeQuestionId, quizId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
 
   const {
     fields: optionsFields,
@@ -161,7 +161,7 @@ const Matching = () => {
 
       <button
         type="button"
-        onClick={() =>
+        onClick={() => {
           appendOption(
             {
               _data_status: 'new',
@@ -179,8 +179,12 @@ const Matching = () => {
               shouldFocus: true,
               focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
             },
-          )
-        }
+          );
+
+          if (validationError?.type === 'add_option') {
+            setValidationError(null);
+          }
+        }}
         css={styles.addOptionButton}
       >
         <SVGIcon name="plus" height={24} width={24} />

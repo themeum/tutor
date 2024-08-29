@@ -134,7 +134,16 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     form.reset(convertedData);
   }, [getQuizDetailsQuery.data]);
 
-  const onQuizFormSubmit = async (data: QuizForm, activeQuestionIndex: number) => {
+  const onQuizFormSubmit = async (
+    data: QuizForm,
+    activeQuestionIndex: number,
+    setValidationError: React.Dispatch<
+      React.SetStateAction<{
+        message: string;
+        type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+      } | null>
+    >,
+  ) => {
     if (!data.quiz_title) {
       setActiveTab('details');
 
@@ -158,10 +167,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
     const validation = validateQuizQuestion(activeQuestionIndex, form);
 
     if (validation !== true) {
-      showToast({
-        message: validation.message,
-        type: validation.type as 'danger',
-      });
+      setValidationError(validation);
 
       setActiveTab('details');
 
@@ -189,11 +195,11 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''}>
-        {(activeQuestionIndex, setActiveQuestionId) => (
+        {(activeQuestionIndex, setActiveQuestionId, setValidationError) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={icon}
-            title={isFormDirty && quizId ? __('Unsaved Changes', 'tutor') : title}
+            title={title}
             subtitle={subtitle}
             headerChildren={
               <Tabs
@@ -212,53 +218,51 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               />
             }
             actions={
-              isFormDirty ? (
-                <>
+              <>
+                <Button
+                  variant="text"
+                  size="small"
+                  onClick={() => {
+                    if (isFormDirty) {
+                      setIsConfirmationOpen(true);
+                      return;
+                    }
+
+                    closeModal();
+                  }}
+                  ref={cancelRef}
+                >
+                  {__('Cancel', 'tutor')}
+                </Button>
+                <Show
+                  when={activeTab === 'settings' || quizId}
+                  fallback={
+                    <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                      {__('Next', 'tutor')}
+                    </Button>
+                  }
+                >
                   <Button
-                    variant="text"
+                    loading={saveQuizMutation.isPending}
+                    variant="primary"
                     size="small"
-                    onClick={() => {
-                      if (isFormDirty) {
-                        setIsConfirmationOpen(true);
+                    onClick={async () => {
+                      if (activeQuestionIndex < 0) {
+                        await form.handleSubmit((data) =>
+                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                        )();
                         return;
                       }
 
-                      closeModal();
+                      await form.handleSubmit((data) =>
+                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                      )();
                     }}
-                    ref={cancelRef}
                   >
-                    {quizId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+                    {__('Save', 'tutor')}
                   </Button>
-                  <Show
-                    when={activeTab === 'settings' || quizId}
-                    fallback={
-                      <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
-                        {__('Next', 'tutor')}
-                      </Button>
-                    }
-                  >
-                    <Button
-                      loading={saveQuizMutation.isPending}
-                      variant="primary"
-                      size="small"
-                      onClick={async () => {
-                        if (activeQuestionIndex < 0) {
-                          await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
-                          return;
-                        }
-
-                        await form.handleSubmit((data) => onQuizFormSubmit(data, activeQuestionIndex))();
-                      }}
-                    >
-                      {__('Save', 'tutor')}
-                    </Button>
-                  </Show>
-                </>
-              ) : (
-                <button css={styleUtils.crossButton} type="button" onClick={() => closeModal({ action: 'CLOSE' })}>
-                  <SVGIcon name="cross" width={32} height={32} />
-                </button>
-              )
+                </Show>
+              </>
             }
           >
             <div css={styles.wrapper({ activeTab })}>
@@ -364,7 +368,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               message={__('There is unsaved changes.', 'tutor')}
               animationType={AnimationType.slideUp}
               arrow="top"
-              positionModifier={{ top: -50, left: quizId ? 87 : 25 }}
+              positionModifier={{ top: -50, left: 0 }}
               hideArrow
               confirmButton={{
                 text: __('Yes', 'tutor'),
@@ -376,11 +380,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               }}
               onConfirmation={() => {
                 form.reset();
-                if (quizId) {
-                  setActiveQuestionId(questions.length > 0 ? questions[0].question_id : '');
-
-                  return;
-                }
                 closeModal();
               }}
             />

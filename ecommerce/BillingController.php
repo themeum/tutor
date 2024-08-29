@@ -118,7 +118,7 @@ class BillingController extends BaseController {
 		$billing_info = $this->get_billing_info();
 
 		if ( $billing_info ) {
-			$response = $this->model->update( $data );
+			$response = $this->model->update( $data, array( 'user_id' => $user_id ) );
 		} else {
 			$response = $this->model->insert( $data );
 		}
@@ -138,7 +138,6 @@ class BillingController extends BaseController {
 	 * Get billing information for the current user.
 	 *
 	 * @since 3.0.0
-	 *
 	 * @return mixed The user's billing information.
 	 */
 	public function get_billing_info() {

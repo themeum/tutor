@@ -1,10 +1,13 @@
-import ToastProvider from '@Atoms/Toast';
-import { ModalProvider } from '@Components/modals/Modal';
-import RTLProvider from '@Components/RTLProvider';
-import { createGlobalCss } from '@Utils/style-utils';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
+
+import ToastProvider from '@Atoms/Toast';
+
+import RTLProvider from '@Components/RTLProvider';
+import { ModalProvider } from '@Components/modals/Modal';
+
+import { createGlobalCss } from '@Utils/style-utils';
 import Main from './layout/Main';
 
 function App() {

@@ -57,7 +57,21 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
       return;
     }
 
-    setItems(courseSubscriptions.map((item) => ({ ...convertSubscriptionToFormData(item), isExpanded: false })));
+    setItems((previousItems) => {
+      if (previousItems.length === 0) {
+        return courseSubscriptions.map((subscription) => ({
+          ...convertSubscriptionToFormData(subscription),
+          isExpanded: false,
+        }));
+      }
+      return courseSubscriptions.map((subscription) => {
+        const existingItem = previousItems.find((item) => item.id === subscription.id);
+        if (existingItem) {
+          return { ...existingItem, ...convertSubscriptionToFormData(subscription) };
+        }
+        return { ...convertSubscriptionToFormData(subscription), isExpanded: false };
+      });
+    });
   }, [courseSubscriptions]);
 
   const sensors = useSensors(

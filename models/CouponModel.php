@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
+use TUTOR\Input;
 
 /**
  * Coupon model class
@@ -475,8 +476,10 @@ class CouponModel {
 	public function get_user_usage_count( $coupon_code, $user_id ) {
 		return QueryHelper::get_count(
 			$this->coupon_usage_table,
-			array( 'coupon_code' => $coupon_code ),
-			array( 'user_id' => $user_id ),
+			array(
+				'coupon_code' => $coupon_code,
+				'user_id'     => $user_id,
+			),
 			array(),
 			'*'
 		);
@@ -676,28 +679,38 @@ class CouponModel {
 	 *
 	 * @param int|array $course_ids Required, course id or array of ids.
 	 * @param mixed     $coupon_code Required, coupon code.
+	 * @param int       $plan_id Optional, Plan id.
+	 * @param bool      $format_price Optional, should format price.
 	 *
 	 * @return object Detail of discount on object format.
 	 *
-	 * For ex: { total_price: 60, items: [{course_id, regular_price, sale_price}]}
+	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
-	public function apply_coupon_discount( $course_ids, $coupon_code ) {
+	public function apply_coupon_discount( $course_ids, $coupon_code, $plan_id = null, $format_price = false ) {
+		$plan_id = (int) $plan_id ? $plan_id : Input::get( 'plan', 0 );
+
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
-		$response                = array();
-		$response['total_price'] = 0;
-		$response['is_applied']  = false;
+		$response                   = array();
+		$response['total_price']    = 0;
+		$response['deducted_price'] = 0;
+		$response['is_applied']     = false;
 
 		$should_apply_coupon = false;
 
 		foreach ( $course_ids as $course_id ) {
-			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
+			$course_price = tutor_utils()->get_raw_course_price( $course_id );
+			if ( $plan_id ) {
+				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $plan_id );
+			}
+
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
 			$discount_price = 0;
 
 			if ( $sale_price ) {
-				$discount_price = $sale_price;
+				$discount_price      = $sale_price;
+				$should_apply_coupon = false;
 			} else {
 				$coupon = $this->get_coupon( array( 'coupon_code' => $coupon_code ) );
 				if ( $coupon ) {
@@ -711,7 +724,8 @@ class CouponModel {
 
 					// Apply discount if pass all checks.
 					if ( $should_apply_coupon ) {
-						$discount_price = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+						$discount_price              = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
+						$response['deducted_price'] += $reg_price - $discount_price;
 						if ( ! $response['is_applied'] ) {
 							$response['is_applied'] = true;
 						}
@@ -721,13 +735,16 @@ class CouponModel {
 
 			$response['items'][] = (object) array(
 				'item_id'        => $course_id,
-				'regular_price'  => $reg_price,
-				'discount_price' => $discount_price,
+				'regular_price'  => $format_price ? tutor_get_formatted_price( $reg_price ) : $reg_price,
+				'discount_price' => $reg_price ? tutor_get_formatted_price( $discount_price ) : $discount_price,
+				'is_applied'     => $should_apply_coupon,
 			);
 
 			$response['total_price'] += $discount_price > 0 ? $discount_price : $reg_price;
 		}
 
+		$response['deducted_price'] = $format_price ? tutor_get_formatted_price( $response['deducted_price'] ) : $response['deducted_price'];
+		$response['total_price']    = $format_price ? tutor_get_formatted_price( $response['total_price'] ) : $response['total_price'];
 		return (object) $response;
 	}
 
@@ -742,7 +759,7 @@ class CouponModel {
 	 *
 	 * @return object Detail of discount on object format.
 	 *
-	 * For ex: { total_price: 60, items: [{course_id, regular_price, sale_price}]}
+	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
 	public function apply_automatic_coupon_discount( $course_ids ) {
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );

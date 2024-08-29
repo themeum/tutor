@@ -41,7 +41,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     course_level: data.course_level,
     'course_settings[maximum_students]': data.maximum_students,
     'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
-    'course_settings[enable_content_drip]': data.isContentDripEnabled ? 1 : 0,
+    'course_settings[enable_content_drip]': data.contentDripType ? 1 : 0,
     'course_settings[content_drip_type]': data.contentDripType,
     'course_settings[enable_tutor_bp]': data.enable_tutor_bp ? 1 : 0,
 
@@ -74,7 +74,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
       'video[source_vimeo]': data.video.source_vimeo,
       'video[source_embedded]': data.video.source_embedded,
     }),
-    tutor_attachments: data.course_attachments?.map((item) => item.id) ?? [],
+    tutor_attachments: (data.course_attachments || []).map((item) => item.id) ?? [],
     bp_attached_group_ids: data.bp_attached_group_ids,
   };
 };
@@ -130,7 +130,9 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       return 'regular';
     })(),
     course_price_type:
-      courseDetails.course_pricing.type === 'subscription' ? 'free' : courseDetails.course_pricing.type,
+      courseDetails.course_pricing.type === 'subscription' || !courseDetails.course_pricing.type
+        ? 'free'
+        : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
@@ -190,7 +192,8 @@ export const convertLessonDataToPayload = (
     title: data.title,
     description: data.description,
     thumbnail_id: data.thumbnail?.id ?? null,
-    'video[source]': data.video?.source || '',
+
+    'video[source]': data.video?.source || '-1',
     'video[source_video_id]': data.video?.source_video_id || '',
     'video[poster]': data.video?.poster || '',
     'video[source_external_url]': data.video?.source_external_url || '',
@@ -203,7 +206,7 @@ export const convertLessonDataToPayload = (
     'video[runtime][minutes]': data.duration.minute || 0,
     'video[runtime][seconds]': data.duration.second || 0,
     ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
-    tutor_attachments: data.tutor_attachments.map((attachment) => attachment.id),
+    tutor_attachments: (data.tutor_attachments || []).map((attachment) => attachment.id),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'unlock_by_date' && {
         'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
@@ -214,7 +217,7 @@ export const convertLessonDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
       }),
   };
 };
@@ -230,7 +233,7 @@ export const convertAssignmentDataToPayload = (
     topic_id: topicId,
     title: data.title,
     summary: data.summary,
-    attachments: data.attachments.map((attachment) => attachment.id),
+    attachments: (data.attachments || []).map((attachment) => attachment.id),
     'assignment_option[time_duration][time]': data.time_duration.time,
     'assignment_option[time_duration][value]': data.time_duration.value,
     'assignment_option[total_mark]': data.total_mark,
@@ -248,7 +251,7 @@ export const convertAssignmentDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites.map((item) => item.id) || [],
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
       }),
   };
 };
@@ -347,7 +350,15 @@ export const covertSecondsToHMS = (seconds: number) => {
   return { hours, minutes, seconds: sec };
 };
 
-export const validateQuizQuestion = (activeQuestionIndex: number, form: UseFormReturn<QuizForm>) => {
+export const validateQuizQuestion = (
+  activeQuestionIndex: number,
+  form: UseFormReturn<QuizForm>,
+):
+  | {
+      message: string;
+      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    }
+  | true => {
   if (activeQuestionIndex !== -1) {
     const answers =
       form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
@@ -357,22 +368,22 @@ export const validateQuizQuestion = (activeQuestionIndex: number, form: UseFormR
 
     if (answers.length === 0 && currentQuestionType !== 'open_ended' && currentQuestionType !== 'short_answer') {
       return {
-        message: __('Please add option', 'tutor'),
-        type: 'danger',
+        message: __('Please add an option.', 'tutor'),
+        type: 'add_option',
       };
     }
 
     if (!isAllSaved) {
       return {
         message: __('Please finish editing all newly created options.', 'tutor'),
-        type: 'danger',
+        type: 'save_option',
       };
     }
 
     if (['true_false', 'multiple_choice'].includes(currentQuestionType) && !hasCorrectAnswer) {
       return {
-        message: __('Please select a correct answer', 'tutor'),
-        type: 'danger',
+        message: __('Please select a correct answer.', 'tutor'),
+        type: 'correct_option',
       };
     }
   }

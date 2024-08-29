@@ -53,12 +53,12 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         tabIndex={tabIndex}
         disabled={disabled || loading}
       >
-        {loading && (
+        {loading && !disabled && (
           <span css={styles.spinner}>
             <SVGIcon name="spinner" width={18} height={18} />
           </span>
         )}
-        <span css={[styles.buttonContent({ loading }), buttonContentCss]}>
+        <span css={[styles.buttonContent({ loading, disabled }), buttonContentCss]}>
           {icon && iconPosition === 'left' && (
             <span css={styles.buttonIcon({ iconPosition, loading, hasChildren: !!children })}>{icon}</span>
           )}
@@ -138,23 +138,23 @@ const styles = {
 				background-color: ${colorTokens.action.primary.default};
 				color: ${colorTokens.text.white};
 
-				svg {
-					color: ${colorTokens.icon.white};
-				}
+					svg {
+						color: ${colorTokens.icon.white};
+					}
 
-				&:hover {
-					background-color: ${colorTokens.action.primary.hover};
-				}
+					&:hover {
+						background-color: ${!disabled && colorTokens.action.primary.hover};
+					}
 
-				&:focus {
-					background-color: ${colorTokens.action.primary.hover};
-					box-shadow: ${shadow.focus};
-				}
+					&:focus {
+						background-color: ${colorTokens.action.primary.hover};
+						box-shadow: ${shadow.focus};
+					}
 
-				&:active {
-					background-color: ${colorTokens.action.primary.active};
-					box-shadow: none;
-				}
+					&:active {
+						background-color: ${!disabled && colorTokens.action.primary.active};
+						box-shadow: none;
+					}
 
 				${
           isOutlined &&
@@ -163,28 +163,114 @@ const styles = {
 						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
 						color: ${colorTokens.text.brand};
 
+								svg {
+									color: ${colorTokens.icon.brand};
+								}
+
+								&:hover {
+									color: ${colorTokens.text.white};
+
+									svg {
+										color: ${colorTokens.icon.white};
+									}
+								}
+
+								&:focus {
+									color: ${colorTokens.text.white};
+
+									svg {
+										color: ${colorTokens.icon.white};
+									}
+								}
+
+								&:active {
+									color: ${colorTokens.text.white};
+
+							svg {
+								color: ${colorTokens.icon.white};
+							}
+						}
+					`
+        }
+
+				${
+          (disabled || loading) &&
+          css`
+						background-color: ${colorTokens.action.primary.disable};
+						color: ${colorTokens.text.disable};
 						svg {
-							color: ${colorTokens.icon.brand};
+							color: ${colorTokens.icon.disable.default};
 						}
 
-						&:hover {
-							color: ${colorTokens.text.white};
+						${
+              isOutlined &&
+              css`
+								background-color: transparent;
+								box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
+						`
+            }
+				`
+        }
+			`
+    }
+
+    ${
+      variant === 'WP' &&
+      css`
+				background-color: ${colorTokens.action.primary.wp};
+				color: ${colorTokens.text.white};
+
+				svg {
+					color: ${colorTokens.icon.white};
+				}
+
+				&:hover {
+					background-color: ${colorTokens.action.primary.wp_hover};
+				}
+
+				&:focus {
+					background-color: ${colorTokens.action.primary.wp_hover};
+					box-shadow: ${shadow.focus};
+				}
+
+				&:active {
+					background-color: ${colorTokens.action.primary.wp};
+					box-shadow: none;
+				}
+
+				${
+          isOutlined &&
+          css`
+						background-color: transparent;
+						box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
+						color: ${colorTokens.text.wp};
 
 							svg {
-								color: ${colorTokens.icon.white};
+								color: ${colorTokens.icon.brand};
 							}
-						}
 
-						&:focus {
-							color: ${colorTokens.text.white};
+							&:hover {
+								color: ${colorTokens.text.white};
 
-							svg {
-								color: ${colorTokens.icon.white};
+								svg {
+									color: ${colorTokens.icon.white};
+								}
 							}
-						}
 
-						&:active {
-							color: ${colorTokens.text.white};
+							&:focus {
+								color: ${colorTokens.text.white};
+
+								svg {
+									color: ${colorTokens.icon.white};
+								}
+							}
+
+							&:active {
+								color: ${colorTokens.text.white};
 
 							svg {
 								color: ${colorTokens.icon.white};
@@ -213,93 +299,7 @@ const styles = {
 						}
 					`
           }
-				`
-      }
-		`
-    }
-
-    ${
-      variant === 'WP' &&
-      css`
-			background-color: ${colorTokens.action.primary.wp};
-			color: ${colorTokens.text.white};
-
-			svg {
-				color: ${colorTokens.icon.white};
-			}
-
-			&:hover {
-				background-color: ${colorTokens.action.primary.wp_hover};
-			}
-
-			&:focus {
-				background-color: ${colorTokens.action.primary.wp_hover};
-				box-shadow: ${shadow.focus};
-			}
-
-			&:active {
-				background-color: ${colorTokens.action.primary.wp};
-				box-shadow: none;
-			}
-
-			${
-        isOutlined &&
-        css`
-					background-color: transparent;
-					box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
-					color: ${colorTokens.text.wp};
-
-					svg {
-						color: ${colorTokens.icon.brand};
-					}
-
-					&:hover {
-						color: ${colorTokens.text.white};
-
-						svg {
-							color: ${colorTokens.icon.white};
-						}
-					}
-
-					&:focus {
-						color: ${colorTokens.text.white};
-
-						svg {
-							color: ${colorTokens.icon.white};
-						}
-					}
-
-					&:active {
-						color: ${colorTokens.text.white};
-
-						svg {
-							color: ${colorTokens.icon.white};
-						}
-					}
-				`
-      }
-
-			${
-        (disabled || loading) &&
-        css`
-					background-color: ${colorTokens.action.primary.disable};
-					color: ${colorTokens.text.disable};
-					svg {
-						color: ${colorTokens.icon.disable.default};
-					}
-
-					${
-            isOutlined &&
-            css`
-						background-color: transparent;
-						box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
-					`
-          }
-				`
+			`
       }
 		`
     }
@@ -310,23 +310,23 @@ const styles = {
 				background-color: ${colorTokens.action.secondary.default};
 				color: ${colorTokens.text.brand};
 
-				svg {
-					color: ${colorTokens.icon.brand};
-				}
+					svg {
+						color: ${colorTokens.icon.brand};
+					}
 
-				&:hover {
-					background-color: ${colorTokens.action.secondary.hover};
-				}
+					&:hover {
+						background-color: ${!disabled && colorTokens.action.secondary.hover};
+					}
 
-				&:focus {
-					background-color: ${colorTokens.action.secondary.hover};
-					box-shadow: ${shadow.focus};
-				}
+					&:focus {
+						background-color: ${colorTokens.action.secondary.hover};
+						box-shadow: ${shadow.focus};
+					}
 
-				&:active {
-					background-color: ${colorTokens.action.secondary.active};
-					box-shadow: none;
-				}
+					&:active {
+						background-color: ${!disabled && colorTokens.action.secondary.active};
+						box-shadow: none;
+					}
 
 				${
           isOutlined &&
@@ -347,83 +347,9 @@ const styles = {
 						background-color: ${colorTokens.action.primary.disable};
 						color: ${colorTokens.text.disable};
 
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
-
-						${
-              isOutlined &&
-              css`
-							background-color: transparent;
-							box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-
-							svg {
-								color: ${colorTokens.icon.disable.default};
-							}
-						`
-            }
-				`
-        }
-			`
-    }
-
-    ${
-      variant === 'tertiary' &&
-      css`
-				background-color: ${colorTokens.action.outline.default};
-				color: ${colorTokens.text.subdued};
-				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
-
-				svg {
-					color: ${colorTokens.icon.hints};
-				}
-
-				&:hover {
-					background-color: ${colorTokens.background.hover};
-					box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
-					color: ${colorTokens.text.title};
-
-					svg {
-						color: ${colorTokens.icon.brand};
-					}
-				}
-
-				&:focus {
-					box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
-					color: ${colorTokens.text.title};
-
-					svg {
-						color: ${colorTokens.icon.brand};
-					}
-				}
-
-				&:active {
-					background-color: ${colorTokens.background.active};
-					box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
-					color: ${colorTokens.text.title};
-
-					svg {
-						color: ${colorTokens.icon.hints};
-					}
-				}
-
-				${
-          isOutlined &&
-          css`
-						background-color: transparent;
-					`
-        }
-
-				${
-          (disabled || loading) &&
-          css`
-						background-color: ${colorTokens.action.primary.disable};
-						color: ${colorTokens.text.disable};
-						box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
-
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
 
 						${
               isOutlined &&
@@ -442,27 +368,101 @@ const styles = {
     }
 
     ${
+      variant === 'tertiary' &&
+      css`
+				background-color: ${colorTokens.action.outline.default};
+				color: ${colorTokens.text.subdued};
+				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
+
+					svg {
+						color: ${colorTokens.icon.hints};
+					}
+
+					&:hover {
+						background-color: ${!disabled && colorTokens.background.hover};
+						box-shadow: ${!disabled && `inset 0 0 0 1px ${colorTokens.stroke.hover}`}
+						color: ${colorTokens.text.title};
+
+						svg {
+							color: ${colorTokens.icon.brand};
+						}
+					}
+
+					&:focus {
+						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default}, ${shadow.focus};
+						color: ${colorTokens.text.title};
+
+						svg {
+							color: ${colorTokens.icon.brand};
+						}
+					}
+
+					&:active {
+						background-color: ${colorTokens.background.active};
+						box-shadow: inset 0 0 0 1px ${colorTokens.stroke.hover};
+						color: ${colorTokens.text.title};
+
+						svg {
+							color: ${colorTokens.icon.hints};
+						}
+					}
+
+				${
+          isOutlined &&
+          css`
+						background-color: transparent;
+					`
+        }
+
+				${
+          (disabled || loading) &&
+          css`
+					background-color: ${colorTokens.action.primary.disable};
+					color: ${colorTokens.text.disable};
+					box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+							svg {
+								color: ${colorTokens.icon.disable.default};
+							}
+
+					${
+            isOutlined &&
+            css`
+							background-color: transparent;
+							box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+
+							svg {
+								color: ${colorTokens.icon.disable.default};
+							}
+					`
+          }
+				`
+        }
+			`
+    }
+
+    ${
       variant === 'danger' &&
       css`
 				background-color: ${colorTokens.background.status.errorFail};
 				color: ${colorTokens.text.error};
 
-				svg {
-					color: ${colorTokens.icon.error};
-				}
+					svg {
+						color: ${colorTokens.icon.error};
+					}
 
-				&:hover {
-					background-color: ${colorTokens.background.status.errorFail};
-				}
+					&:hover {
+						background-color: ${!disabled && colorTokens.background.status.errorFail};
+					}
 
-				&:focus {
-					box-shadow: ${shadow.focus};
-				}
+					&:focus {
+						box-shadow: ${shadow.focus};
+					}
 
-				&:active {
-					background-color: ${colorTokens.background.status.errorFail};
-					box-shadow: none;
-				}
+					&:active {
+						background-color: ${!disabled && colorTokens.background.status.errorFail};
+						box-shadow: none;
+					}
 
 				${
           isOutlined &&
@@ -478,20 +478,20 @@ const styles = {
 						background-color: ${colorTokens.action.primary.disable};
 						color: ${colorTokens.text.disable};
 
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
 
 						${
               isOutlined &&
               css`
-							background-color: transparent;
-							box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
+								background-color: transparent;
+								box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
-							svg {
-								color: ${colorTokens.icon.disable.default};
-							}
-						`
+								svg {
+									color: ${colorTokens.icon.disable.default};
+								}
+							`
             }
 					`
         }
@@ -501,23 +501,23 @@ const styles = {
     ${
       variant === 'text' &&
       css`
-				background-color: transparent;
-				color: ${colorTokens.text.subdued};
-				padding: ${spacing[8]};
+			background-color: transparent;
+			color: ${colorTokens.text.subdued};
+			padding: ${spacing[8]};
 
-				${
-          size === 'large' &&
-          css`
-						padding: ${spacing[12]} ${spacing[8]};
-					`
-        }
+			${
+        size === 'large' &&
+        css`
+				padding: ${spacing[12]} ${spacing[8]};
+			`
+      }
 
-				${
-          size === 'small' &&
-          css`
-						padding: ${spacing[4]} ${spacing[8]};
-					`
-        }
+			${
+        size === 'small' &&
+        css`
+				padding: ${spacing[4]} ${spacing[8]};
+			`
+      }
 
 				svg {
 					color: ${colorTokens.icon.hints};
@@ -537,33 +537,43 @@ const styles = {
 					}
 				}
 
-				${
-          (disabled || loading) &&
-          css`
-						color: ${colorTokens.text.disable};
+			${
+        (disabled || loading) &&
+        css`
+				color: ${colorTokens.text.disable};
 
-						svg {
-							color: ${colorTokens.icon.disable.default};
-						}
-					`
-        }
+				svg {
+					color: ${colorTokens.icon.disable.default};
+				}
 			`
+      }
+		`
     }
 
-    ${
-      (disabled || loading) &&
-      css`
-				pointer-events: none;
-				cursor: not-allowed;
-			`
-    }
+    &:disabled {
+			cursor: not-allowed;
+			color: ${colorTokens.text.disable};
+
+			svg {
+				color: ${colorTokens.icon.disable.default};
+			}
+
+			&:hover {
+				color: ${colorTokens.text.disable};
+
+				svg {
+					color: ${colorTokens.icon.disable.default};
+				}
+			}
+		}
 	`,
-  buttonContent: ({ loading }: { loading: boolean }) => css`
+  buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
 		${styleUtils.display.flex()};
 		align-items: center;
 
 		${
       loading &&
+      !disabled &&
       css`
 				color: transparent;
 			`
@@ -592,8 +602,8 @@ const styles = {
 		${
       loading &&
       css`
-				opacity: 0;
-			`
+			opacity: 0;
+		`
     }
 
     ${

@@ -14,7 +14,7 @@ import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 import coursePlaceholder from '@Images/common/course-placeholder.png';
 import { typography } from '@Config/typography';
@@ -111,8 +111,14 @@ function CouponDiscount() {
 							title={item.title}
 							subTitle={
 								<div css={styles.price}>
-									<span>{item.sale_price ? item.sale_price : item.regular_price}</span>
-									{item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+									{item.plan_start_price ? (
+										<span css={styles.startingFrom}>{sprintf( __('Starting from %s', 'tutor'), item.plan_start_price)}</span>
+									) : (
+										<>
+											<span>{item.sale_price ? item.sale_price : item.regular_price}</span>
+											{item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+										</>
+									)}
 								</div>
 							}
 							handleDeleteClick={() => removesSelectedItem('courses', item.id)}
@@ -277,5 +283,8 @@ const styles = {
 		width: 48px;
 		height: 48px;
 		border-radius: ${borderRadius[4]};
+	`,
+	startingFrom: css`
+		color: ${colorTokens.text.hints};
 	`,
 };

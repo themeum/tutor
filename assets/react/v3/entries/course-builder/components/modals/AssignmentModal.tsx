@@ -7,7 +7,6 @@ import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import type { Media } from '@Components/fields/FormImageInput';
@@ -18,20 +17,22 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
+import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type ContentDripType,
-  type PrerequisiteCourses,
-  usePrerequisiteCoursesQuery,
-} from '@CourseBuilderServices/course';
-import { type ID, useAssignmentDetailsQuery, useSaveAssignmentMutation } from '@CourseBuilderServices/curriculum';
+  type CourseTopic,
+  type ID,
+  useAssignmentDetailsQuery,
+  useSaveAssignmentMutation,
+} from '@CourseBuilderServices/curriculum';
 import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
 import { maxLimitRule } from '@Utils/validation';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -57,7 +58,7 @@ export interface AssignmentForm {
   content_drip_settings: {
     unlock_date: string;
     after_xdays_of_enroll: string;
-    prerequisites: PrerequisiteCourses[];
+    prerequisites: ID[];
   };
 }
 
@@ -90,11 +91,12 @@ const AssignmentModal = ({
   subtitle,
   contentDripType,
 }: AssignmentModalProps) => {
-  const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
   const getAssignmentDetailsQuery = useAssignmentDetailsQuery(assignmentId, topicId);
   const saveAssignmentMutation = useSaveAssignmentMutation(courseId);
+  const queryClient = useQueryClient();
 
   const { data: assignmentDetails } = getAssignmentDetailsQuery;
+  const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
   const form = useFormWithGlobalError<AssignmentForm>({
     defaultValues: {
@@ -119,44 +121,45 @@ const AssignmentModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.isDirty;
-
-  const prerequisiteCourses = assignmentDetails?.content_drip_settings?.course_prerequisites
-    ? assignmentDetails?.content_drip_settings?.course_prerequisites.map((item) => String(item.id))
-    : [];
-
-  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
-    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    isPrerequisiteAddonEnabled && contentDripType === 'after_finishing_prerequisites',
-  );
+  // Need to do RND about WPEditor
+  // const isFormDirty = false; /*form.formState.isDirty;*/
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (assignmentDetails) {
-      form.reset({
-        title: assignmentDetails.post_title || '',
-        summary: assignmentDetails.post_content || '',
-        attachments: assignmentDetails.attachments || [],
-        time_duration: {
-          value: assignmentDetails.assignment_option.time_duration.value || '0',
-          time: (assignmentDetails.assignment_option.time_duration.time as TimeLimitUnit) || 'weeks',
+      form.reset(
+        {
+          title: assignmentDetails.post_title || '',
+          summary: assignmentDetails.post_content || '',
+          attachments: assignmentDetails.attachments || [],
+          time_duration: {
+            value: assignmentDetails.assignment_option.time_duration.value || '0',
+            time: (assignmentDetails.assignment_option.time_duration.time as TimeLimitUnit) || 'weeks',
+          },
+          total_mark: assignmentDetails.assignment_option.total_mark || 10,
+          pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
+          upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
+          upload_file_size_limit: assignmentDetails.assignment_option.upload_file_size_limit || 2,
+          content_drip_settings: {
+            unlock_date: assignmentDetails.content_drip_settings.unlock_date || '',
+            after_xdays_of_enroll: assignmentDetails.content_drip_settings.after_xdays_of_enroll || '',
+            prerequisites: assignmentDetails.content_drip_settings.prerequisites || [],
+          },
         },
-        total_mark: assignmentDetails.assignment_option.total_mark || 10,
-        pass_mark: assignmentDetails.assignment_option.pass_mark || 5,
-        upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
-        upload_file_size_limit: assignmentDetails.assignment_option.upload_file_size_limit || 2,
-        content_drip_settings: {
-          unlock_date: assignmentDetails.content_drip_settings.unlock_date || '',
-          after_xdays_of_enroll: assignmentDetails.content_drip_settings.after_xdays_of_enroll || '',
-          prerequisites: assignmentDetails.content_drip_settings.course_prerequisites || [],
+        {
+          keepDirty: false,
         },
-      });
+      );
     }
-  }, [assignmentDetails]);
 
-  useEffect(() => {
-    form.setFocus('title');
-  }, [form]);
+    const timeoutId = setTimeout(() => {
+      form.setFocus('title');
+    }, 0);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [assignmentDetails]);
 
   const onSubmit = async (data: AssignmentForm) => {
     const payload = convertAssignmentDataToPayload(data, assignmentId, topicId, contentDripType);
@@ -170,35 +173,29 @@ const AssignmentModal = ({
   return (
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      icon={isFormDirty && assignmentId ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-      title={isFormDirty && assignmentId ? __('Unsaved Changes', 'tutor') : title}
+      icon={icon}
+      title={title}
       subtitle={subtitle}
       actions={
-        isFormDirty ? (
-          <>
-            <Button
-              variant="text"
-              size="small"
-              onClick={() => {
-                assignmentId ? form.reset() : closeModal({ action: 'CLOSE' });
-              }}
-            >
-              {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
-            </Button>
-            <Button
-              loading={saveAssignmentMutation.isPending}
-              variant="primary"
-              size="small"
-              onClick={form.handleSubmit(onSubmit)}
-            >
-              {assignmentId ? __('Update', 'tutor') : __('Save', 'tutor')}
-            </Button>
-          </>
-        ) : (
-          <button css={styleUtils.crossButton} type="button" onClick={() => closeModal({ action: 'CLOSE' })}>
-            <SVGIcon name="cross" width={32} height={32} />
-          </button>
-        )
+        <>
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => {
+              closeModal({ action: 'CLOSE' });
+            }}
+          >
+            {__('Cancel', 'tutor')}
+          </Button>
+          <Button
+            loading={saveAssignmentMutation.isPending}
+            variant="primary"
+            size="small"
+            onClick={form.handleSubmit(onSubmit)}
+          >
+            {assignmentId ? __('Update', 'tutor') : __('Save', 'tutor')}
+          </Button>
+        </>
       }
     >
       <div css={styles.wrapper}>
@@ -291,6 +288,7 @@ const AssignmentModal = ({
                           {__('Unlock Date', 'tutor')}
                         </div>
                       }
+                      placeholder={__('Select Unlock Date', 'tutor')}
                       helpText={__(
                         'This lesson will be available from the given date. Leave empty to make it available immediately.',
                         'tutor',
@@ -305,7 +303,7 @@ const AssignmentModal = ({
                   name="content_drip_settings.prerequisites"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormCoursePrerequisites
+                    <FormTopicPrerequisites
                       {...controllerProps}
                       label={
                         <div css={styles.contentDripLabel}>
@@ -314,7 +312,19 @@ const AssignmentModal = ({
                         </div>
                       }
                       placeholder={__('Select Prerequisite', 'tutor')}
-                      options={prerequisiteCoursesQuery.data || []}
+                      options={
+                        topics.reduce((topics, topic) => {
+                          if (topic.id === topicId) {
+                            topics.push({
+                              ...topic,
+                              contents: topic.contents.filter((content) => content.ID !== assignmentId),
+                            });
+                          } else {
+                            topics.push(topic);
+                          }
+                          return topics;
+                        }, [] as CourseTopic[]) || []
+                      }
                       helpText={__('Select items that should be complete before this item', 'tutor')}
                     />
                   )}
@@ -370,6 +380,14 @@ const AssignmentModal = ({
             <Controller
               name="pass_mark"
               control={form.control}
+              rules={{
+                validate: (value) => {
+                  if (value > form.getValues('total_mark')) {
+                    return __('Pass mark cannot be greater than total mark', 'tutor');
+                  }
+                  return true;
+                },
+              }}
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
