@@ -229,7 +229,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
           _data_status: 'no_change',
           question_settings: {
             ...question.question_settings,
-            has_multiple_correct_answer: !!Number(question.question_settings.has_multiple_correct_answer),
+            has_multiple_correct_answer:
+              !!Number(question.question_settings.has_multiple_correct_answer) ||
+              question.question_answers.filter((answer) => answer.is_correct === '1').length > 1,
           },
         };
       }
@@ -239,7 +241,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
           _data_status: 'no_change',
           question_settings: {
             ...question.question_settings,
-            is_image_matching: !!Number(question.question_settings.is_image_matching),
+            is_image_matching:
+              !!Number(question.question_settings.is_image_matching) ||
+              question.question_answers.some((answer) => !!answer.image_id),
           },
         };
       }
@@ -371,7 +375,10 @@ export const convertQuizFormDataToPayload = (
                 belongs_question_type: question.question_type,
                 answer_title: answer.answer_title,
                 is_correct: answer.is_correct,
-                image_id: answer.image_id,
+                image_id:
+                  question.question_type === 'matching' && !question.question_settings.is_image_matching
+                    ? ''
+                    : answer.image_id,
                 image_url: answer.image_url,
                 answer_two_gap_match: answer.answer_two_gap_match,
                 answer_view_format: answer.answer_view_format,
