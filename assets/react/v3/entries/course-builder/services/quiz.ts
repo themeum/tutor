@@ -180,22 +180,6 @@ interface QuizUpdateQuestionPayload {
   'question_settings[question_mark]': number;
 }
 
-interface QuizQuestionAnswerOrderingPayload {
-  question_id: ID;
-  sorted_answer_ids: ID[];
-}
-
-interface SaveQuizQuestionAnswerPayload {
-  question_id: ID;
-  answer_id?: ID; //only for update
-  answer_title: string;
-  image_id: ID;
-  question_type?: QuizQuestionType;
-  answer_view_format?: string;
-  answer_two_gap_match?: string;
-  matched_answer_title?: string; //only when question type matching or image matching
-}
-
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
     if (question.question_settings) {
@@ -229,9 +213,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
           _data_status: 'no_change',
           question_settings: {
             ...question.question_settings,
-            has_multiple_correct_answer:
-              !!Number(question.question_settings.has_multiple_correct_answer) ||
-              question.question_answers.filter((answer) => answer.is_correct === '1').length > 1,
+            has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer
+              ? !!Number(question.question_settings.has_multiple_correct_answer)
+              : true,
           },
         };
       }
@@ -241,9 +225,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
           _data_status: 'no_change',
           question_settings: {
             ...question.question_settings,
-            is_image_matching:
-              !!Number(question.question_settings.is_image_matching) ||
-              question.question_answers.some((answer) => !!answer.image_id),
+            is_image_matching: question.question_settings.is_image_matching
+              ? !!Number(question.question_settings.is_image_matching)
+              : false,
           },
         };
       }
@@ -379,7 +363,10 @@ export const convertQuizFormDataToPayload = (
                   question.question_type === 'matching' && !question.question_settings.is_image_matching
                     ? ''
                     : answer.image_id,
-                image_url: answer.image_url,
+                image_url:
+                  question.question_type === 'matching' && !question.question_settings.is_image_matching
+                    ? ''
+                    : answer.image_url,
                 answer_two_gap_match: answer.answer_two_gap_match,
                 answer_view_format: answer.answer_view_format,
                 answer_order: answer.answer_order,
