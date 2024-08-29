@@ -433,7 +433,7 @@ class OrderModel {
 		$return_data = (object) array(
 			'id'       => $customer_data->id,
 			'user_id'  => $customer_data->user_id,
-			'name'     => $customer_data->billing_name,
+			'name'     => $customer_data->billing_first_name . ' ' . $customer_data->billing_last_name,
 			'email'    => $customer_data->billing_email,
 			'phone'    => $customer_data->billing_phone,
 			'address'  => $customer_data->billing_address,
