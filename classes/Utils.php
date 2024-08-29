@@ -1293,7 +1293,7 @@ class Utils {
 
 			$get_enrolled_info = $wpdb->get_row(
 				$wpdb->prepare(
-				"SELECT ID,
+					"SELECT ID,
 					post_author,
 					post_date,
 					post_date_gmt,
@@ -1306,9 +1306,9 @@ class Utils {
 					AND post_author = %d
 					{$status_clause};
 				",
-				'tutor_enrolled',
-				$course_id,
-				$user_id
+					'tutor_enrolled',
+					$course_id,
+					$user_id
 				)
 			);
 			TutorCache::set( $cache_key, $get_enrolled_info );
@@ -9256,7 +9256,7 @@ class Utils {
 	 * @return array array of menu items.
 	 */
 	public function default_menus(): array {
-		return array(
+		$items = array(
 			'index'            => array(
 				'title' => __( 'Dashboard', 'tutor' ),
 				'icon'  => 'tutor-icon-dashboard',
@@ -9281,15 +9281,21 @@ class Utils {
 				'title' => __( 'My Quiz Attempts', 'tutor' ),
 				'icon'  => 'tutor-icon-quiz-attempt',
 			),
-			'purchase_history' => array(
-				'title' => __( 'Order History', 'tutor' ),
-				'icon'  => 'tutor-icon-cart-bold',
-			),
-			'question-answer'  => array(
-				'title' => __( 'Question & Answer', 'tutor' ),
-				'icon'  => 'tutor-icon-question',
-			),
 		);
+
+		$items['purchase_history'] = array(
+			'title' => __( 'Order History', 'tutor' ),
+			'icon'  => 'tutor-icon-cart-bold',
+		);
+
+		$items = apply_filters( 'tutor_pro_after_order_history_menu', $items );
+
+		$items['question-answer'] = array(
+			'title' => __( 'Question & Answer', 'tutor' ),
+			'icon'  => 'tutor-icon-question',
+		);
+
+		return $items;
 	}
 
 	/**
