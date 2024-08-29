@@ -47,6 +47,7 @@ class CartModel {
 		global $wpdb;
 
 		$current_time = current_time( 'mysql', true );
+		$user_cart_id = 0;
 
 		$user_cart = QueryHelper::get_row(
 			"{$wpdb->prefix}tutor_carts",
@@ -56,9 +57,9 @@ class CartModel {
 			'id'
 		);
 
-		$user_cart_id = $user_cart->id;
-
-		if ( ! $user_cart_id ) {
+		if ( $user_cart ) {
+			$user_cart_id = $user_cart->id;
+		} else {
 			$user_cart_id = QueryHelper::insert(
 				"{$wpdb->prefix}tutor_carts",
 				array(
