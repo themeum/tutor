@@ -103,6 +103,7 @@ class PaymentHandler {
 
 		if ( $placement_status && $order_id ) {
 			if ( 'success' === $placement_status ) {
+				do_action( 'tutor_order_placement_success', $order_id );
 				tutor_load_template(
 					'ecommerce.order-placement-success',
 					array(
@@ -111,6 +112,7 @@ class PaymentHandler {
 					)
 				);
 			} else {
+				do_action( 'tutor_order_placement_failed', $order_id );
 				tutor_load_template(
 					'ecommerce.order-placement-failed',
 					array(
