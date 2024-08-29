@@ -368,8 +368,6 @@ const styles = {
     height: 100%;
     margin-top: ${spacing[8]};
     ${styleUtils.overflowYAuto};
-    overflow-x: visible;
-    padding: 1px; // Fix the scrollbar issue
   `,
   optionsWrapper: css`
     position: absolute;
@@ -441,7 +439,6 @@ const styles = {
     position: relative;
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
-    border: 1px solid transparent;
     border-radius: ${borderRadius[6]};
     display: flex;
     justify-content: space-between;
@@ -473,7 +470,7 @@ const styles = {
         !onPopover &&
         css`
           background-color: ${colorTokens.background.white};
-          border-color: ${colorTokens.stroke.default};
+          outline: 1px solid ${colorTokens.stroke.default};
 
           [data-visually-hidden] {
             opacity: 1;
