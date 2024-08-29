@@ -220,7 +220,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 		<div class="tutor-alert tutor-danger">
 			<ul class="tutor-mb-0">
 				<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
-					<li class="tutor-color-danger"><?php echo esc_html( $pay_now_err ); ?></li>
+					<li class="tutor-color-danger"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $pay_now_err ) ) ); ?></li>
 				<?php endforeach; ?>
 			</ul>
 		</div>
