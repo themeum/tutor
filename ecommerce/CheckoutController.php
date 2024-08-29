@@ -435,8 +435,9 @@ class CheckoutController {
 	 */
 	public function restrict_checkout_page() {
 		$page_id = self::get_page_id();
+		$plan_id = isset( $_GET['plan'] ) ? $_GET['plan'] : null;
 
-		if ( is_page( $page_id ) ) {
+		if ( is_page( $page_id ) && ! $plan_id ) {
 			$cart_controller = new CartController();
 			$cart_model      = new CartModel();
 
