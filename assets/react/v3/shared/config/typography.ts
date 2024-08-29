@@ -1,7 +1,7 @@
 import { colorPalate, fontFamily, fontSize, fontWeight, lineHeight } from '@Config/styles';
 import { css } from '@emotion/react';
 
-type TypefaceKeys = 'regular' | 'medium' | 'bold';
+type TypefaceKeys = 'regular' | 'medium' | 'semiBold' | 'bold';
 
 export const typography = {
   heading1: (typeface: TypefaceKeys = 'regular') => css`

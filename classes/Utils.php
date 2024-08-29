@@ -9276,7 +9276,7 @@ class Utils {
 	 * @return array array of menu items.
 	 */
 	public function default_menus(): array {
-		return array(
+		$items = array(
 			'index'            => array(
 				'title' => __( 'Dashboard', 'tutor' ),
 				'icon'  => 'tutor-icon-dashboard',
@@ -9301,15 +9301,21 @@ class Utils {
 				'title' => __( 'My Quiz Attempts', 'tutor' ),
 				'icon'  => 'tutor-icon-quiz-attempt',
 			),
-			'purchase_history' => array(
-				'title' => __( 'Order History', 'tutor' ),
-				'icon'  => 'tutor-icon-cart-bold',
-			),
-			'question-answer'  => array(
-				'title' => __( 'Question & Answer', 'tutor' ),
-				'icon'  => 'tutor-icon-question',
-			),
 		);
+
+		$items['purchase_history'] = array(
+			'title' => __( 'Order History', 'tutor' ),
+			'icon'  => 'tutor-icon-cart-bold',
+		);
+
+		$items = apply_filters( 'tutor_pro_after_order_history_menu', $items );
+
+		$items['question-answer'] = array(
+			'title' => __( 'Question & Answer', 'tutor' ),
+			'icon'  => 'tutor-icon-question',
+		);
+
+		return $items;
 	}
 
 	/**

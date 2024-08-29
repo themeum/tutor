@@ -9,9 +9,11 @@
  */
 
 use Tutor\Ecommerce\CheckoutController;
+use Tutor\Helpers\SessionHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
 
+$user_id   = get_current_user_id();
 $plan_id   = Input::get( 'plan', 0 );
 $plan_info = new stdClass();
 
@@ -197,8 +199,11 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 
 	<!-- handle errors -->
 	<?php
-	$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
-	$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
+	$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
+	$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+
+	delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+	delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
 	if ( $pay_now_errors || $pay_now_alert_msg ) :
 		?>
 	<div class="tutor-px-32 tutor-mb-32 tutor-break-word">
@@ -209,20 +214,14 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 			<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?>">
 				<div class="tutor-color-success"><?php echo esc_html( $message ); ?></div>
 			</div>
-			<?php
-			delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY );
-		endif;
-		?>
+		<?php endif; ?>
 
 		<?php if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) : ?>
 		<div class="tutor-alert tutor-danger">
 			<ul class="tutor-mb-0">
 				<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
-					<li class="tutor-color-danger"><?php echo esc_html( $pay_now_err ); ?></li>
-					<?php
-				endforeach;
-				delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY );
-				?>
+					<li class="tutor-color-danger"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $pay_now_err ) ) ); ?></li>
+				<?php endforeach; ?>
 			</ul>
 		</div>
 		<?php endif; ?>
