@@ -11,7 +11,7 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { format, isBefore, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -92,7 +92,7 @@ const ScheduleOptions = () => {
         </div>
         <Show
           when={showForm}
-          fallback={<div css={styles.scheduleInfo}>{__(`${scheduleDate} at ${scheduleTime}`, 'tutor')}</div>}
+          fallback={<div css={styles.scheduleInfo}>{sprintf(__('%s at %s', 'tutor'), scheduleDate, scheduleTime)}</div>}
         >
           <div css={styleUtils.dateAndTimeWrapper}>
             <Controller
@@ -102,7 +102,7 @@ const ScheduleOptions = () => {
                 required: __('Schedule date is required', 'tutor'),
               }}
               render={(controllerProps) => (
-                <FormDateInput {...controllerProps} isClearable={false} placeholder="yyyy-mm-dd" />
+                <FormDateInput {...controllerProps} isClearable={false} placeholder={__('yyyy-mm-dd', 'tutor')} />
               )}
             />
 
@@ -113,7 +113,12 @@ const ScheduleOptions = () => {
                 required: __('Schedule time is required', 'tutor'),
               }}
               render={(controllerProps) => (
-                <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
+                <FormTimeInput
+                  {...controllerProps}
+                  interval={60}
+                  isClearable={false}
+                  placeholder={__('hh:mm A', 'tutor')}
+                />
               )}
             />
           </div>

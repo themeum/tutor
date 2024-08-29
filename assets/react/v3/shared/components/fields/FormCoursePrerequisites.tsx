@@ -191,7 +191,7 @@ const FormCoursePrerequisites = ({
                     when={filteredOption.length > 0}
                     fallback={
                       <li css={styles.emptyOption}>
-                        <p>{__('No courses found')}</p>
+                        <p>{__('No courses found', 'tutor')}</p>
                       </li>
                     }
                   >

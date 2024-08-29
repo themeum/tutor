@@ -345,7 +345,7 @@ const QuestionList = ({
           animationType={AnimationType.slideUp}
         >
           <div css={styles.questionOptionsWrapper}>
-            <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type')}</span>
+            <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>
             {questionTypeOptions.map((option) => (
               <button
                 key={option.value}

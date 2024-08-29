@@ -200,8 +200,8 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               width={24}
               height={24}
               style={css`
-              color: ${icon.color};
-            `}
+								color: ${icon.color};
+							`}
             />
           </div>
           <div data-bar-icon>

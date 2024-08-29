@@ -574,7 +574,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
-                        subtitle: `${__('Topic:', 'tutor')}  ${topic.title}`,
+                        subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                       },
                     });
                   }}

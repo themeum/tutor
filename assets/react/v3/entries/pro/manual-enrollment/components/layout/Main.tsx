@@ -1,14 +1,14 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { css } from '@emotion/react';
-import { Controller, FormProvider } from 'react-hook-form';
-import Topbar, { TOPBAR_HEIGHT } from './Topbar';
-import { Enrollment } from '@EnrollmentServices/enrollment';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import { requiredRule } from '@Utils/validation';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import FormSelectCourse from '@EnrollmentComponents/FormSelectCourse';
 import FormSelectStudents from '@EnrollmentComponents/FormSelectStudents';
+import type { Enrollment } from '@EnrollmentServices/enrollment';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { Controller, FormProvider } from 'react-hook-form';
+import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {
   const form = useFormWithGlobalError<Enrollment>({
