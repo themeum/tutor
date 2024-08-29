@@ -736,7 +736,7 @@ class CouponModel {
 			$response['items'][] = (object) array(
 				'item_id'        => $course_id,
 				'regular_price'  => $format_price ? tutor_get_formatted_price( $reg_price ) : $reg_price,
-				'discount_price' => $reg_price ? tutor_get_formatted_price( $discount_price ) : $discount_price,
+				'discount_price' => $format_price ? tutor_get_formatted_price( $discount_price ) : $discount_price,
 				'is_applied'     => $should_apply_coupon,
 			);
 
