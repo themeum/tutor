@@ -694,6 +694,7 @@ class OrderModel {
 				WHERE o.user_id = %d
 				{$time_period_clause}
 				{$date_range_clause}
+				ORDER BY o.id DESC
 				LIMIT %d OFFSET %d
 			",
 			$user_id,
