@@ -31,13 +31,22 @@ use TUTOR\Quiz;
 <div id="quiz-builder-tab-questions" class="quiz-builder-tab-container tutor-mb-32">
 	<div class="quiz-builder-questions-wrap">
 		<?php
-		$questions = ( $quiz_id && $quiz_id > 0 ) ? tutor_utils()->get_questions_by_quiz( $quiz_id ) : array();
+		$questions          = ( $quiz_id && $quiz_id > 0 ) ? tutor_utils()->get_questions_by_quiz( $quiz_id ) : array();
+		$h5p_thumbnail_path = tutor()->url . 'assets/addons/h5p/thumbnail.png';
 
 		if ( $questions ) {
+			if ( ! tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+				$questions = array_filter(
+					$questions,
+					function ( $question ) {
+						return 'h5p_question' !== $question->question_type;
+					}
+				);
+			}
 			foreach ( $questions as $question ) {
 				$id_target = 'quiz-popup-menu-' . $question->question_id;
 				?>
-				<div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
+				<div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo esc_attr( $question->question_id ); ?>" <?php echo 'h5p_question' === $question->question_type ? 'data-h5p-question-id= ' . esc_attr( $question->question_id ) : ''; ?> >
 					<div class="tutor-quiz-item-label">
 						<span class="tutor-quiz-item-draggable tutor-icon-drag question-sorting"></span>
 						<h6 class="tutor-quiz-item-name">
@@ -47,8 +56,17 @@ use TUTOR\Quiz;
 					<div class="tutor-quiz-item-action tutor-align-center">
 						<div class="tutor-quiz-item-type">
 							<?php
+							if ( 'h5p_question' === $question->question_type ) {
+								?>
+								<span class="tooltip-btn tutor-d-flex tutor-align-center">
+									<img class="tutor-quiz-type-icon" src="<?php echo esc_url( $h5p_thumbnail_path ); ?>"/>
+									<?php esc_html_e( 'H5P question', 'tutor' ); ?>
+								</span>
+								<?php
+							} else {
 								$type = tutor_utils()->get_question_types( $question->question_type );
 								echo wp_kses( stripslashes( $type['icon'] ), tutor_utils()->allowed_icon_tags() ) . ' ' . esc_html( $type['name'] );
+							}
 							?>
 						</div>
 						<div class="tutor-dropdown-parent">
@@ -56,18 +74,30 @@ use TUTOR\Quiz;
 								<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 							</button>
 							<ul class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
+								<?php if ( 'h5p_question' !== $question->question_type ) : ?>
 								<li>
 									<a href="#" class="tutor-dropdown-item tutor-quiz-open-question-form" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
 										<span class="tutor-icon-edit tutor-mr-8" area-hidden="true"></span>
 										<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 									</a>
 								</li>
+								<?php endif; ?>
+								<?php if ( 'h5p_question' === $question->question_type ) : ?>
+								<li>
+									<a href="#" class="tutor-dropdown-item tutor-h5p-question-trash" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
+										<span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
+										<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
+									</a>
+								</li>
+								<?php else : ?>
 								<li>
 									<a href="#" class="tutor-dropdown-item tutor-quiz-question-trash" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
 										<span class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></span>
 										<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
 									</a>
 								</li>
+								<?php endif; ?>
+
 							</ul>
 						</div>
 					</div>
@@ -83,7 +113,15 @@ use TUTOR\Quiz;
 			<i class="tutor-icon-plus-square tutor-mr-8" area-hidden="true"></i>
 			<?php esc_html_e( 'Add Question', 'tutor' ); ?>
 		</a>
+		<?php if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) : ?>
+		<a href="javascript:;" class="tutor-interactive-quiz-list tutor-btn tutor-btn-outline-primary tutor-btn-md">
+			<i class="tutor-icon-plus-square tutor-mr-8" area-hidden="true"></i>
+			<?php esc_html_e( 'Add Interactive Question', 'tutor' ); ?>
+		</a>
+		<?php endif; ?>
 	</div>
+
+	
 </div>
 
 <div id="quiz-builder-tab-settings" class="quiz-builder-tab-container">

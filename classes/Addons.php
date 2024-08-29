@@ -142,6 +142,10 @@ class Addons {
 				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
 				'description' => __( 'Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor' ),
 			),
+			'h5p'                      => array(
+				'name'        => __( 'H5P Integration', 'tutor' ),
+				'description' => __( 'Create interactive content for your courses.', 'tutor' ),
+			),
 		);
 
 		return $addons;

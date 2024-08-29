@@ -333,6 +333,10 @@ window.jQuery(document).ready(function($) {
 					btn.addClass('is-loading').attr('disabled', true);
 				},
 				success: function(data) {
+					if (!data.success) {
+						tutor_toast('Error', get_response_message(data), 'error');
+						return;
+					}
 					if (quiz_id && quiz_id != 0) {
 						// Update if exists already
 						$('#tutor-quiz-' + quiz_id).replaceWith(data.data.output_quiz_row);
@@ -359,6 +363,27 @@ window.jQuery(document).ready(function($) {
 				},
 			});
 		} else if (current_tab == 'quiz-builder-tab-questions') {
+			
+			//Check if h5p question are added. If it is added then set the
+			//layout to be question below each other
+			//h5p content only works on that layout
+			let h5p_quiz_question = $('[data-h5p-question-id]');
+			if ( h5p_quiz_question.length > 0 ) {
+				$('[name="quiz_option[question_layout_view]"] option:selected').removeAttr('selected');
+				$('[name="quiz_option[question_layout_view]"] option[value="question_below_each_other"]').attr("selected", "selected");
+				$('[name="quiz_option[question_layout_view]"]').css("pointer-events", "none");
+				$('[name="quiz_option[question_layout_view]"]').css("cursor", "none");
+				$('[name="quiz_option[question_layout_view]"]').css("background-color", "gainsboro");
+				$('[name="quiz_option[question_layout_view]"]').css("color", "gray");
+
+			}
+			else{
+				$('[name="quiz_option[question_layout_view]"]').css("pointer-events", "all");
+				$('[name="quiz_option[question_layout_view]"]').css("cursor", "pointer");
+				$('[name="quiz_option[question_layout_view]"]').css("background-color", "");
+				$('[name="quiz_option[question_layout_view]"]').css("color", "");
+			}
+
 			step_switch(modal, true);
 		}
 	});

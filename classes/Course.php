@@ -244,6 +244,13 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
 		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
+
+		/**
+		 * Remove wp trash button if instructor settings is disabled
+		 *
+		 * @since 2.7.3
+		 */
+		add_action( 'tutor_option_save_after', array( $this, 'disable_course_trash_instructor' ) );
 	}
 
 	/**
@@ -1213,6 +1220,25 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Remove move to trash button on WordPress editor for instructor.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return void
+	 */
+	public function disable_course_trash_instructor() {
+		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+		$role           = get_role( tutor()->instructor_role );
+		if ( ! $can_trash_post ) {
+			$role->remove_cap( 'delete_tutor_courses' );
+			$role->remove_cap( 'delete_tutor_course' );
+		} else {
+			$role->add_cap( 'delete_tutor_courses' );
+			$role->add_cap( 'delete_tutor_course' );
+		}
+	}
+
+	/**
 	 * Add enroll require login class
 	 *
 	 * @since 2.6.0
@@ -1870,7 +1896,26 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
 		}
 
-		CourseModel::delete_course( $course_id );
+		// Check if user is only an instructor.
+		if ( ! current_user_can( 'administrator' ) ) {
+			// Check if instructor can trash course.
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+
+			if ( ! $can_trash_post ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
+		$trash_course = wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_status' => 'trash',
+			)
+		);
+
+		if ( $trash_course ) {
+			wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
+		}
 		wp_send_json_success();
 	}
 
@@ -2235,7 +2280,7 @@ class Course extends Tutor_Base {
 
 		return array_filter(
 			$items,
-			function( $item ) use ( $is_enrolled ) {
+			function ( $item ) use ( $is_enrolled ) {
 				if ( isset( $item['require_enrolment'] ) && $item['require_enrolment'] ) {
 					return $is_enrolled;
 				}
@@ -2260,6 +2305,7 @@ class Course extends Tutor_Base {
 		add_action( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
 	}
 
+
 	/**
 	 * Tutor product meta query
 	 *
@@ -2283,8 +2329,38 @@ class Course extends Tutor_Base {
 	 * @return \WP_Query
 	 */
 	public function filter_woocommerce_product_query( $wp_query ) {
-		$wp_query->set( 'meta_query', array( $this->tutor_product_meta_query() ) );
+		$product_ids = $this->get_connected_wc_product_ids();
+		$wp_query->set( 'post__not_in', $product_ids );
 		return $wp_query;
+	}
+
+	/**
+	 * Get connected woocommerce product ids for course and course bundle
+	 *
+	 * @since 2.7.2
+	 *
+	 * @return array
+	 */
+	public function get_connected_wc_product_ids() {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_value product_id
+				FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
+				AND pm.meta_key = %s
+				WHERE post_type IN( 'courses','course-bundle' )",
+				'_tutor_course_product_id'
+			)
+		);
+
+		$ids = array();
+		if ( is_array( $results ) && count( $results ) ) {
+			$ids = array_column( $results, 'product_id' );
+		}
+
+		return $ids;
 	}
 
 	/**

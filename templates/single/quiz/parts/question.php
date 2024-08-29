@@ -66,11 +66,12 @@
 			$previous_question = $question_i > 1 ? $questions[ $question_i - 1 ] : false;
 			?>
 				<div id="quiz-attempt-single-question-<?php echo esc_attr( $question->question_id ); ?>" 
-					 class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo esc_attr( $question_i ); ?>" 
-					 style="display: <?php echo esc_attr( $style_display ); ?> ;" 
-					 <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-" . esc_attr( $next_question->question_id ) . "'" : ''; ?> 
-					 data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>"  
-					 data-question_index="<?php echo esc_attr( $question_i ); ?>">
+					class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo esc_attr( $question_i ); ?>" 
+					style="display: <?php echo esc_attr( $style_display ); ?> ;" 
+					<?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-" . esc_attr( $next_question->question_id ) . "'" : ''; ?> 
+					<?php echo 'h5p_question' === $question->question_type ? 'data-h5p-quiz-content-id=' . esc_attr( $question->question_description ) : ''; ?>
+					data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>"  
+					data-question_index="<?php echo esc_attr( $question_i ); ?>">
 
 					<div class="quiz-question tutor-mt-44 tutor-mr-md-100">
 					<?php
@@ -121,13 +122,22 @@
 						);
 					}
 
-					$question_description = wp_unslash( $question->question_description );
-					if ( $question_description ) {
-						$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
-						if ( tutor()->has_pro ) {
-							do_action( 'tutor_quiz_question_desc_render', $markup, $question );
-						} else {
-							echo wp_kses_post( $markup );
+					if ( 'h5p_question' !== $question->question_type ) {
+						$question_description = wp_unslash( $question->question_description );
+						if ( $question_description ) {
+							$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
+							if ( tutor()->has_pro ) {
+								do_action( 'tutor_quiz_question_desc_render', $markup, $question );
+							} else {
+								echo wp_kses_post( $markup );
+							}
+						}
+					}
+
+					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+						if ( 'h5p_question' === $question->question_type ) {
+							$h5p_short_code = '[h5p id=' . $question->question_description . ']';
+							echo do_shortcode( $h5p_short_code );
 						}
 					}
 					?>
@@ -174,6 +184,13 @@
 					// Short Answer.
 					if ( 'short_answer' === $question_type ) {
 						require 'short-answer.php';
+					}
+
+					// H5P.
+					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+						if ( 'h5p_question' === $question_type ) {
+							require TUTOR_H5P()->path . 'views/h5p-question-answer.php';
+						}
 					}
 					?>
 

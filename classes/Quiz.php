@@ -501,6 +501,7 @@ class Quiz {
 		if ( Input::post( 'tutor_action' ) !== 'tutor_answering_quiz_question' ) {
 			return;
 		}
+		tutor_utils()->checking_nonce();
 		// submit quiz attempts.
 		if ( self::tutor_quiz_attemp_submit() ) {
 			wp_send_json_success();
@@ -591,6 +592,23 @@ class Quiz {
 				);
 				$total_question_marks = $wpdb->get_var( $query );
 				//phpcs:enable
+
+				// Check if h5p addon is enabled.
+				if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+					// Update the total marks to include the marks from h5p questions.
+					foreach ( $question_ids as $question_id ) {
+						$question       = QuizModel::get_quiz_question_by_id( $question_id );
+						$question_type  = $question->question_type;
+						$attempt_result = \TUTOR_H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+
+						if ( 'h5p_question' === $question_type ) {
+							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
+								$h5p_attempt_answer    = $attempt_result[0];
+								$total_question_marks += $h5p_attempt_answer->max_score;
+							}
+						}
+					}
+				}
 
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
@@ -788,6 +806,21 @@ class Quiz {
 					if ( in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ) ) ) {
 						$answers_data['is_correct'] = null;
 						$review_required            = true;
+					}
+					// Check if h5p addon is enabled.
+					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+						// Check if it is a h5p question.
+						if ( 'h5p_question' === $question_type ) {
+							$attempt_result = \TUTOR_H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+							// Set the h5p question answer to tutor quiz attempt result.
+							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
+								$h5p_question_answer           = $attempt_result[0];
+								$answers_data['question_mark'] = $h5p_question_answer->max_score;
+								$answers_data['achieved_mark'] = $h5p_question_answer->raw_score;
+								$answers_data['is_correct']    = $h5p_question_answer->max_score === $h5p_question_answer->raw_score;
+								$total_marks                  += $h5p_question_answer->raw_score;
+							}
+						}
 					}
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
@@ -1029,6 +1062,12 @@ class Quiz {
 				null,
 				HttpHelper::STATUS_FORBIDDEN
 			);
+		}
+
+		if ( 0 !== $topic_id && 0 !== $quiz_id ) {
+			if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			}
 		}
 
 		// Prepare quiz data to save in database.
@@ -1912,6 +1951,10 @@ class Quiz {
 
 		$answer_id = Input::post( 'answer_id', 0, Input::TYPE_INT );
 
+		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		}
+
 		// get question info.
 		$belong_question = $wpdb->get_row(
 			$wpdb->prepare(
@@ -2063,16 +2106,21 @@ class Quiz {
 	 */
 	public function attempt_delete() {
 		tutor_utils()->checking_nonce();
-		if ( current_user_can( 'administrator' ) || current_user_can( tutor()->instructor_role ) ) {
-			$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
-			if ( $attempt_id ) {
-				QuizModel::delete_quiz_attempt( $attempt_id );
-				wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
-			} else {
-				wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
-			}
+
+		$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
+		$attempt    = tutor_utils()->get_attempt( $attempt_id );
+		if ( ! $attempt ) {
+			wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
+		}
+
+		$user_id   = get_current_user_id();
+		$course_id = $attempt->course_id;
+
+		if ( tutor_utils()->can_user_edit_course( $user_id, $course_id ) ) {
+			QuizModel::delete_quiz_attempt( $attempt_id );
+			wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
 		} else {
-			wp_send_json_error( __( 'You are not authorized to perform this action!', 'tutor' ) );
+			wp_send_json_error( tutor_utils()->error_message() );
 		}
 	}
 

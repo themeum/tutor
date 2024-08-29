@@ -215,6 +215,14 @@ window.jQuery(document).ready(function($) {
 				$that.addClass('is-loading').attr('disabled', true);
 			},
 			success: function(data) {
+				if (!data.success) {
+					tutor_toast(
+						__('Error', 'tutor'),
+						get_response_message(data),
+						'error',
+					);
+					return;
+				}
 				if (data.success) {
 					$('#tutor-course-content-wrap').html(data.data.course_contents);
 					enable_sorting_topic_lesson();

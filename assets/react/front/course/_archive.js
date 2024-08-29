@@ -55,7 +55,6 @@ const getAllUrlParams = () => {
             param_array[key] = value;
         }
     });
-
     return param_array;
 }
 
@@ -126,6 +125,53 @@ window.jQuery(document).ready($ => {
 
         content_container.html('<div class="tutor-spinner-wrap"><span class="tutor-spinner" area-hidden="true"></span></div>');
         course_filter_container.find('[action-tutor-clear-filter]').closest('.tutor-widget-course-filter').removeClass('tutor-d-none');
+        
+        if (!('category' in filter_criteria.supported_filters)) {
+            const filter_property = 'tutor-course-filter-category';
+            const category_keys = Object.keys(params).filter((val) => val.includes(filter_property));
+            if (category_keys.length > 0) {
+                const category_ids = [];
+                category_keys.forEach((category_key) => {
+                    category_ids.push(params[category_key]);
+                });
+                filter_criteria['tutor-course-filter-category'] = [...new Set(category_ids)];
+            }
+            else {
+                filter_criteria['tutor-course-filter-category'] = JSON.parse($("#course_filter_categories").val());
+            }
+
+        }
+
+        const exclude_ids_property = 'tutor-course-filter-exclude-ids';
+        const exclude_id_keys = Object.keys(params).filter((val) => val.includes(exclude_ids_property));
+        const exclude_ids = [];
+        if (exclude_id_keys.length > 0) {
+            exclude_id_keys.forEach((exclude_id) => {
+                exclude_ids.push(params[exclude_id]);
+            });
+            filter_criteria['tutor-course-filter-exclude-ids'] = [...new Set(exclude_ids)];
+        }
+        else {
+            if ($('#course_filter_exclude_ids').length) {
+                filter_criteria['tutor-course-filter-exclude-ids'] = JSON.parse($("#course_filter_exclude_ids").val());
+            }
+        }
+
+        const post_ids_property = 'tutor-course-filter-post-ids';
+        const post_id_keys = Object.keys(params).filter((val) => val.includes(post_ids_property));
+        const post_ids = [];
+        if (post_id_keys.length > 0) {
+            post_id_keys.forEach((post_id) => {
+                post_ids.push(params[post_id]);
+            });
+            filter_criteria['tutor-course-filter-post-ids'] = [...new Set(post_ids)];
+        }
+        else {
+            if ($('#course_filter_post_ids').length) {
+                filter_criteria['tutor-course-filter-post-ids'] = JSON.parse($("#course_filter_post_ids").val());
+            }
+        }
+
 
         $.ajax({
             url: window._tutorobject.ajaxurl,
