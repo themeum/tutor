@@ -1,4 +1,3 @@
-import { useModal } from '@Components/modals/Modal';
 import { zIndex } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -70,13 +69,8 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
 
     const triggerRect = triggerRef.current.getBoundingClientRect();
     const popoverRect = popoverRef.current.getBoundingClientRect();
-    const { height: previousPopoverHeight, top: previousPopoverTop } = previousPopoverRect || {};
     const popoverWidth = popoverRect.width || triggerRect.width;
     const popoverHeight = popoverRect.height;
-
-    if (previousPopoverHeight === popoverHeight && previousPopoverTop === popoverRect.top) {
-      return;
-    }
 
     let calculatedPosition: { top: number; left: number } = { top: 0, left: 0 };
     let arrowPlacement: PopoverPosition['arrowPlacement'] = ArrowPosition.bottom;
@@ -160,7 +154,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     }
 
     setPosition({ ...calculatedPosition, arrowPlacement });
-  }, [triggerRef, popoverRef, previousPopoverRect, triggerWidth, isOpen, gap, arrow, isDropdown]);
+  }, [triggerRef, popoverRef, triggerWidth, isOpen, gap, arrow, isDropdown]);
 
   return { position, triggerWidth, triggerRef, popoverRef };
 };
@@ -173,21 +167,20 @@ interface PortalProps {
 }
 
 export const Portal = ({ isOpen, children, onClickOutside, animationType = AnimationType.slideDown }: PortalProps) => {
-  // We can determine if there any modal opens by using this `hasModalOnStack`
-  // If there any modal opens then we will not set the overflow value to initial.
-  const { hasModalOnStack } = useModal();
-
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      if (!hasModalOnStack) {
-        document.body.style.overflow = 'initial';
-      }
+      setTimeout(() => {
+        const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
+        if (!hasPopoverOnStack) {
+          document.body.style.overflow = 'initial';
+        }
+      }, 200); // this is the total of -> duration of the animation + threshold + 30ms
     };
-  }, [isOpen, hasModalOnStack]);
+  }, [isOpen]);
 
   const { transitions } = useAnimation({
     data: isOpen,
@@ -198,7 +191,7 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
     if (openState) {
       return createPortal(
         <AnimatedDiv css={styles.wrapper} style={style}>
-          <div role="presentation">
+          <div className="tutor-portal-popover" role="presentation">
             <div
               css={styles.backdrop}
               onKeyUp={noop}
