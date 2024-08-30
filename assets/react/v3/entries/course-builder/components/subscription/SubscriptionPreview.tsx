@@ -33,7 +33,7 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
   return (
     <div css={styles.outer}>
       <div css={styles.header}>
-        <p>{__('Subscription Plans List')}</p>
+        <p>{__('Subscription Plans List', 'tutor')}</p>
         <Show when={subscriptions.length > 0}>
           <button
             type="button"

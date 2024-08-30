@@ -58,7 +58,7 @@ const reasonOptions: (Option<CancellationReason> & { explanation?: string })[] =
   {
     label: __('Courses unavailable', 'tutor'),
     value: 'matter_of_unavailability',
-    explanation: __('Unfortunately the courses selected on this order is not anymore available.'),
+    explanation: __('Unfortunately the courses selected on this order is not anymore available.', 'tutor'),
   },
   {
     label: __('Other', 'tutor'),
@@ -77,7 +77,10 @@ function CancelOrderModal({ title, closeModal, actions, total }: CancelOrderModa
   const reasonValue = form.watch('reason');
   const explanation =
     reasonOptions.find((item) => item.value === reasonValue)?.explanation ??
-    __('Please select a reason for the order cancellation. Your input is valuable for understanding the cause.');
+    __(
+      'Please select a reason for the order cancellation. Your input is valuable for understanding the cause.',
+      'tutor',
+    );
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
@@ -99,7 +102,7 @@ function CancelOrderModal({ title, closeModal, actions, total }: CancelOrderModa
                 {...props}
                 label={__('Reason for cancellation', 'tutor')}
                 options={reasonOptions}
-                placeholder={__('Select a reason')}
+                placeholder={__('Select a reason', 'tutor')}
               />
             )}
           />

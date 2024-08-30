@@ -13,7 +13,7 @@ import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
 import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 
 export const TOPBAR_HEIGHT = 96;
@@ -37,9 +37,7 @@ function Topbar() {
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>
-                  {__('Order', 'tutor')} #{order.id}
-                </h4>
+                <h4 css={typography.heading5('medium')}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
                 <Show when={order.payment_status}>
                   <PaymentBadge status={order.payment_status} />
                 </Show>
@@ -51,15 +49,21 @@ function Topbar() {
                 when={order.updated_at_gmt}
                 fallback={
                   <p css={styles.updateMessage}>
-                    {__('Created by ')} {order.created_by} {__(' at ', 'tutor')}
-                    {format(new Date(order.created_at_gmt), DateFormats.activityDate)}
+                    {sprintf(
+                      __('Created by %s at %s', 'tutor'),
+                      order.created_by,
+                      format(new Date(order.created_at_gmt), DateFormats.activityDate),
+                    )}
                   </p>
                 }
               >
                 {(date) => (
                   <p css={styles.updateMessage}>
-                    {__('Update by ')} {order.updated_by} {__(' at ', 'tutor')}
-                    {format(new Date(date), DateFormats.activityDate)}
+                    {sprintf(
+                      __('Updated by %s at %s', 'tutor'),
+                      order.updated_by,
+                      format(new Date(date), DateFormats.activityDate),
+                    )}
                   </p>
                 )}
               </Show>
@@ -72,7 +76,7 @@ function Topbar() {
                 component: CancelOrderModal,
                 props: {
                   total: 30,
-                  title: __('Cancel order #', 'tutor') + order.id,
+                  title: sprintf(__('Cancel order #%s', 'tutor'), order.id),
                 },
               });
             }}

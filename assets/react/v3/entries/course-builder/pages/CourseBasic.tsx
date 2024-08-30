@@ -346,7 +346,7 @@ const CourseBasic = () => {
             <FormSelectInput
               {...controllerProps}
               label={__('Visibility Status', 'tutor')}
-              placeholder="Select visibility status"
+              placeholder={__('Select visibility status', 'tutor')}
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
@@ -456,6 +456,7 @@ const CourseBasic = () => {
                 options={wcProductOptions(wcProductsQuery.data)}
                 helpText={__(
                   'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
+                  'tutor',
                 )}
                 isSearchable
                 loading={wcProductsQuery.isLoading && !controllerProps.field.value}
@@ -549,7 +550,7 @@ const CourseBasic = () => {
           name="course_tags"
           control={form.control}
           render={(controllerProps) => (
-            <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} placeholder="Add tags" />
+            <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} placeholder={__('Add tags', 'tutor')} />
           )}
         />
 

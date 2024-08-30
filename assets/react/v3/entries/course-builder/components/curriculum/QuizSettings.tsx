@@ -291,7 +291,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 <FormSelectInput
                   {...controllerProps}
                   label={__('Question Layout', 'tutor')}
-                  placeholder="Select an option"
+                  placeholder={__('Select an option', 'tutor')}
                   options={[
                     { label: __('Single question', 'tutor'), value: 'single_question' },
                     { label: __('Question Pagination', 'tutor'), value: 'question_pagination' },
@@ -308,7 +308,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 <FormSelectInput
                   {...controllerProps}
                   label={__('Question Order', 'tutor')}
-                  placeholder="Select an option"
+                  placeholder={__('Select an option', 'tutor')}
                   options={[
                     { label: __('Random', 'tutor'), value: 'rand' },
                     { label: __('Sorting', 'tutor'), value: 'sorting' },
