@@ -181,6 +181,14 @@ interface QuizUpdateQuestionPayload {
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
+  const calculateQuizDataStatus = (answer: QuizQuestionOption) => {
+    if (answer.image_url) {
+      return answer.answer_view_format === 'text_image' ? 'no_change' : 'update';
+    }
+
+    return answer.answer_view_format === 'text' ? 'no_change' : 'update';
+  };
+
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
     if (question.question_settings) {
       question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
@@ -201,7 +209,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
           question_type: 'multiple_choice',
           question_answers: question.question_answers.map((answer) => ({
             ...answer,
-            _data_status: answer.answer_view_format !== 'text' ? 'update' : 'no_change',
+            _data_status: calculateQuizDataStatus(answer),
             answer_view_format: answer.image_url ? 'text_image' : 'text',
             is_correct: answer.is_correct === '1' ? '1' : '0',
           })),
@@ -218,7 +226,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
           _data_status: question.question_settings.has_multiple_correct_answer ? 'no_change' : 'update',
           question_answers: question.question_answers.map((answer) => ({
             ...answer,
-            _data_status: answer.answer_view_format !== 'text' ? 'update' : 'no_change',
+            _data_status: calculateQuizDataStatus(answer),
             answer_view_format: answer.image_url ? 'text_image' : 'text',
             is_correct: answer.is_correct === '1' ? '1' : '0',
           })),
