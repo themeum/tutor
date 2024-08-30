@@ -199,6 +199,12 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
           ...question,
           _data_status: 'update',
           question_type: 'multiple_choice',
+          question_answers: question.question_answers.map((answer) => ({
+            ...answer,
+            _data_status: answer.answer_view_format !== 'text' ? 'update' : 'no_change',
+            answer_view_format: answer.image_url ? 'text_image' : 'text',
+            is_correct: answer.is_correct === '1' ? '1' : '0',
+          })),
           question_settings: {
             ...question.question_settings,
             question_type: 'multiple_choice',
@@ -210,6 +216,12 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
         return {
           ...question,
           _data_status: question.question_settings.has_multiple_correct_answer ? 'no_change' : 'update',
+          question_answers: question.question_answers.map((answer) => ({
+            ...answer,
+            _data_status: answer.answer_view_format !== 'text' ? 'update' : 'no_change',
+            answer_view_format: answer.image_url ? 'text_image' : 'text',
+            is_correct: answer.is_correct === '1' ? '1' : '0',
+          })),
           question_settings: {
             ...question.question_settings,
             has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer
