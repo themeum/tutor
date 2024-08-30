@@ -2,15 +2,16 @@ import Button from '@Atoms/Button';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { spacing } from '@Config/styles';
+import type { Enrollment } from '@EnrollmentServices/enrollment';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
-import { UseFormReturn } from 'react-hook-form';
-import StudentListTable from './StudentListTable';
-import { Enrollment } from '@EnrollmentServices/enrollment';
 import { __ } from '@wordpress/i18n';
+import type { UseFormReturn } from 'react-hook-form';
+import StudentListTable from './StudentListTable';
 
 interface SelectStudentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 

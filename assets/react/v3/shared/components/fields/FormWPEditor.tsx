@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { rgba } from 'polished';
 
 import Button from '@Atoms/Button';
@@ -86,8 +86,9 @@ const FormWPEditor = ({
                         props: {
                           editorUsed: editor,
                           icon: <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />,
-                          title: __(`${editor.name} Editor`, 'tutor'),
+                          title: sprintf(__('%s editor', 'tutor'), editor.name),
                         },
+                        depthIndex: zIndex.highest,
                       })
                     }
                   >
@@ -170,11 +171,11 @@ const FormWPEditor = ({
                         showModal({
                           component: EditorModal,
                           props: {
-                            title: __(`${editorUsed.name} Editor`, 'tutor'),
+                            title: sprintf(__('%s editor', 'tutor'), editorUsed.name),
                             editorUsed: editorUsed,
                             icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
-                            zIndex: zIndex.highest,
                           },
+                          depthIndex: zIndex.highest,
                         })
                       }
                     >

@@ -42,7 +42,6 @@ export type ModalProps = {
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
   actions?: React.ReactNode;
-  zIndex?: number;
 };
 
 type ModalContextType = {
@@ -51,6 +50,7 @@ type ModalContextType = {
     props?: Omit<P, 'closeModal'>;
     closeOnOutsideClick?: boolean;
     isMagicAi?: boolean;
+    depthIndex?: number;
   }): Promise<NonNullable<Parameters<P['closeModal']>[0]> | PromiseResolvePayload<'CLOSE'>>;
   closeModal(data?: PromiseResolvePayload): void;
   hasModalOnStack?: boolean;
@@ -75,20 +75,28 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
       isMagicAi?: boolean;
-      zIndex?: number;
+      depthIndex?: number;
     }[];
   }>({
     modals: [],
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(
-    ({ component, props, closeOnOutsideClick = false, isMagicAi = false }) => {
+    ({ component, props, closeOnOutsideClick = false, isMagicAi = false, depthIndex = zIndex.modal }) => {
       return new Promise((resolve) => {
         setState((previousState) => ({
           ...previousState,
           modals: [
             ...previousState.modals,
-            { component, props, resolve, closeOnOutsideClick, id: nanoid(), isMagicAi },
+            {
+              component,
+              props,
+              resolve,
+              closeOnOutsideClick,
+              id: nanoid(),
+              depthIndex,
+              isMagicAi,
+            },
           ],
         }));
       });
@@ -126,12 +134,12 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
             css={[
               styles.container,
               {
-                zIndex: modal.zIndex,
+                zIndex: modal.depthIndex,
               },
             ]}
           >
             <AnimatedDiv style={style} hideOnOverflow={false}>
-              {React.createElement(modal.component, { ...modal.props, closeModal, zIndex: modal.zIndex })}
+              {React.createElement(modal.component, { ...modal.props, closeModal })}
             </AnimatedDiv>
             <div
               css={styles.backdrop({ magicAi: modal.isMagicAi })}

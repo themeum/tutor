@@ -138,10 +138,13 @@ class BillingController extends BaseController {
 	 * Get billing information for the current user.
 	 *
 	 * @since 3.0.0
+	 *
+	 * @param int $user_id User id.
+	 *
 	 * @return mixed The user's billing information.
 	 */
-	public function get_billing_info() {
-		$user_id = get_current_user_id();
+	public function get_billing_info( $user_id = 0 ) {
+		$user_id = tutor_utils()->get_user_id( $user_id );
 		return $this->model->get_info( $user_id );
 	}
 

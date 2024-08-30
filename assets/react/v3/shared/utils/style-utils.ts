@@ -301,6 +301,20 @@ export const styleUtils = {
 			border-radius: ${borderRadius[30]};
 		}
 	`,
+  overflowXAuto: css`
+		overflow-x: auto;
+
+		::-webkit-scrollbar {
+			background-color: ${colorTokens.primary[40]};
+			height: 3px;
+		}
+
+		::-webkit-scrollbar-thumb {
+			background-color: ${colorTokens.design.brand};
+			border-radius: ${borderRadius[30]};
+		}
+	`,
+
   textEllipsis: css`
 		text-overflow: ellipsis;
 		overflow: hidden;
