@@ -54,6 +54,10 @@ class Ecommerce {
 
 		add_filter( 'tutor_monetization_options', array( $this, 'add_monetization_option' ) );
 
+		new Settings();
+		// Include currency file.
+		require_once tutor()->path . 'ecommerce/currency.php';
+
 		if ( ! tutor_utils()->is_monetize_by_tutor() ) {
 			return;
 		}
@@ -61,7 +65,6 @@ class Ecommerce {
 		add_action( 'save_post_' . tutor()->course_post_type, array( $this, 'save_price' ), 10, 2 );
 
 		new AdminMenu();
-		new Settings();
 		new CartController();
 		new CheckoutController();
 		new OrderController();
@@ -71,8 +74,7 @@ class Ecommerce {
 		new HooksHandler();
 		new PaymentHandler();
 
-		// Include currency file.
-		require_once tutor()->path . 'ecommerce/currency.php';
+
 	}
 
 	/**
