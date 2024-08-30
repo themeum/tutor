@@ -561,11 +561,6 @@ final class Tutor {
 		new Ecommerce();
 
 		/**
-		 * Tutor AI generation controller
-		 */
-		// new MagicAI();
-
-		/**
 		 * Run Method
 		 *
 		 * @since v.1.2.0
