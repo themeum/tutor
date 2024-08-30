@@ -756,6 +756,7 @@ class CouponModel {
 	 * @since 3.0.0
 	 *
 	 * @param int|array $course_ids Required, course id or array of ids.
+	 * @param int       $plan_id Optional, plan id.
 	 *
 	 * @return object Detail of discount on object format.
 	 *
