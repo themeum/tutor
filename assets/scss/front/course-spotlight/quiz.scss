@@ -296,6 +296,16 @@
 					}
 				}
 			}
+
+			.tutor-matching-item{
+				display: flex; 
+				flex-direction:column;
+				margin-right:10px;
+				.tutor-matching-image{
+					border-radius: 6px;
+					overflow: hidden;
+				}
+			}
 		}
 		#quiz-ordering-ans-area {
 			counter-reset: serial-number;

@@ -42,6 +42,14 @@ if ( $stat['text'] && ! $stat['image'] && ! $stat['text_image'] ) {
 	$class = 'tutor-quiz-multiple-variation';
 }
 //phpcs:enable WordPress.WP.GlobalVariablesOverride.Prohibited
+
+/**
+ * Type single_choice removed. It's handled by multiple_choice type.
+ *
+ * @since 3.0.0
+ */
+$multiple_answer_allowed = isset( $question_settings['has_multiple_correct_answer'] ) && '1' === $question_settings['has_multiple_correct_answer'];
+$choice_type             = $multiple_answer_allowed ? 'checkbox' : 'radio';
 ?>
 
 <div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo esc_attr( $question_type ); ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?>">
