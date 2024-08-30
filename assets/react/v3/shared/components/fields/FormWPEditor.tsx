@@ -88,6 +88,7 @@ const FormWPEditor = ({
                           icon: <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />,
                           title: sprintf(__('%s editor', 'tutor'), editor.name),
                         },
+                        depthIndex: zIndex.highest,
                       })
                     }
                   >
@@ -173,8 +174,8 @@ const FormWPEditor = ({
                             title: sprintf(__('%s editor', 'tutor'), editorUsed.name),
                             editorUsed: editorUsed,
                             icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
-                            zIndex: zIndex.highest,
                           },
+                          depthIndex: zIndex.highest,
                         })
                       }
                     >

@@ -46,6 +46,7 @@ const ScheduleOptions = () => {
       schedule_date: format(parseISO(previousPostDate), DateFormats.yearMonthDay),
       schedule_time: format(parseISO(previousPostDate), DateFormats.hoursMinutes),
     });
+
     setShowForm(false);
   };
 
@@ -74,6 +75,7 @@ const ScheduleOptions = () => {
         schedule_date: format(parseISO(postDate), DateFormats.yearMonthDay),
         schedule_time: format(parseISO(postDate), DateFormats.hoursMinutes),
       });
+      setPreviousPostDate(postDate);
     }
   }, [postDate]);
 

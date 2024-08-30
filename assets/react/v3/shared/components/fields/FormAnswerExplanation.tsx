@@ -9,6 +9,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 
+import { styleUtils } from '@Utils/style-utils';
 import FormWPEditor from './FormWPEditor';
 
 interface FormAnswerExplanationProps extends FormControllerProps<string | null> {
@@ -79,6 +80,7 @@ const FormAnswerExplanation = ({
             >
               <div css={styles.answerLabel}>{__('Answer explanation', 'tutor')}</div>
               <p
+                css={styles.answerParagraph}
                 dangerouslySetInnerHTML={{
                   __html: inputValue,
                 }}
@@ -254,5 +256,10 @@ const styles = {
   answerLabel: css`
     ${typography.caption()}
     color: ${colorTokens.text.title};
+  `,
+  answerParagraph: css`
+    pre {
+      ${styleUtils.overflowXAuto}
+    }
   `,
 };
