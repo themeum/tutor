@@ -52,8 +52,9 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   });
 
   const [isEditing, setIsEditing] = useState(
-    !inputValue.answer_title && !inputValue.answer_two_gap_match && !inputValue.image_url,
+    !inputValue.answer_title || imageMatching ? !inputValue.image_url : !inputValue.answer_two_gap_match,
   );
+
   const [previousValue, setPreviousValue] = useState<QuizQuestionOption>(inputValue);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({

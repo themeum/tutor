@@ -197,9 +197,8 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'single_choice': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: 'update',
           question_type: 'multiple_choice',
-
           question_settings: {
             ...question.question_settings,
             question_type: 'multiple_choice',
@@ -210,7 +209,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'multiple_choice': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: question.question_settings.has_multiple_correct_answer ? 'no_change' : 'update',
           question_settings: {
             ...question.question_settings,
             has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer
@@ -222,7 +221,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'matching': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: question.question_settings.is_image_matching ? 'no_change' : 'update',
           question_settings: {
             ...question.question_settings,
             is_image_matching: question.question_settings.is_image_matching
@@ -234,7 +233,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'image_matching': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: 'update',
           question_type: 'matching',
           question_settings: {
             ...question.question_settings,
