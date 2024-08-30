@@ -2,16 +2,17 @@ import Checkbox from '@Atoms/CheckBox';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
+import { type Enrollment, type Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
-import Table, { Column } from '@Molecules/Table';
-import { UseFormReturn } from 'react-hook-form';
-import SearchField from './SearchField';
-import { Enrollment, Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
+import Table, { type Column } from '@Molecules/Table';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import type { UseFormReturn } from 'react-hook-form';
+import SearchField from './SearchField';
 
 interface StudentListTableProps {
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 
@@ -51,7 +52,7 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
           labelCss={styles.checkboxLabel}
         />
       ) : (
-        __('#', 'tutor')
+        '#'
       ),
       Cell: (item) => {
         return (

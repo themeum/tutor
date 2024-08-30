@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
 import { LoadingSection } from '@Atoms/LoadingSpinner';
@@ -225,7 +225,9 @@ const FormTopicPrerequisites = ({
                           {content.post_title}
                         </span>
                         <Show when={content.post_type === 'tutor_quiz'}>
-                          <span css={typography.tiny()}>{`(${content.total_question} Questions)`}</span>
+                          <span css={typography.tiny()}>
+                            {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
+                          </span>
                         </Show>
                       </div>
                       <button
@@ -265,7 +267,7 @@ const FormTopicPrerequisites = ({
                     when={filteredOption.length > 0}
                     fallback={
                       <li css={styles.emptyOption}>
-                        <p>{__('No topics content found')}</p>
+                        <p>{__('No topics content found', 'tutor')}</p>
                       </li>
                     }
                   >
@@ -308,7 +310,9 @@ const FormTopicPrerequisites = ({
                                     {content.post_title}
                                   </span>
                                   <Show when={content.post_type === 'tutor_quiz'}>
-                                    <span css={typography.tiny()}>{`(${content.total_question} Questions)`}</span>
+                                    <span css={typography.tiny()}>
+                                      {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
+                                    </span>
                                   </Show>
                                 </div>
                               </button>
@@ -368,6 +372,7 @@ const styles = {
     height: 100%;
     margin-top: ${spacing[8]};
     ${styleUtils.overflowYAuto};
+    padding: 1px; // fix the box-shadow issue
   `,
   optionsWrapper: css`
     position: absolute;
@@ -440,6 +445,7 @@ const styles = {
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
     border-radius: ${borderRadius[6]};
+    border: 1px solid transparent;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -470,7 +476,7 @@ const styles = {
         !onPopover &&
         css`
           background-color: ${colorTokens.background.white};
-          outline: 1px solid ${colorTokens.stroke.default};
+          border-color: ${colorTokens.stroke.default};
 
           [data-visually-hidden] {
             opacity: 1;

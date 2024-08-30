@@ -1,21 +1,21 @@
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { css } from '@emotion/react';
-import { useFormContext } from 'react-hook-form';
 import Button from '@Atoms/Button';
-import StudentListModal from '@EnrollmentComponents/modals/StudentListModal';
+import { LoadingSection } from '@Atoms/LoadingSpinner';
+import TextInput from '@Atoms/TextInput';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import { useModal } from '@Components/modals/Modal';
-import { Enrollment, Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
-import TextInput from '@Atoms/TextInput';
-import SelectedStudents from './SelectedStudents';
-import { FormControllerProps } from '@Utils/form';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { styleUtils } from '@Utils/style-utils';
-import { useState } from 'react';
-import StudentCard from './StudentCard';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import StudentListModal from '@EnrollmentComponents/modals/StudentListModal';
+import { type Enrollment, type Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
 import { useDebounce } from '@Hooks/useDebounce';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
+import SelectedStudents from './SelectedStudents';
+import StudentCard from './StudentCard';
 
 interface FormSelectStudentsProps extends FormControllerProps<Student[]> {
   label?: string;
