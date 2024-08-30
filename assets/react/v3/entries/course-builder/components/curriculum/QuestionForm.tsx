@@ -183,7 +183,7 @@ const styles = {
     gap: ${spacing[4]};
   `,
   questionIndex: css`
-    margin-top: ${spacing[8]};
+    margin-top: ${spacing[10]};
     ${typography.heading6()};
     color: ${colorTokens.text.hints};
   `,

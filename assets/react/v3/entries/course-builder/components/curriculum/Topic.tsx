@@ -589,18 +589,20 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 <Show
                   when={hasLiveAddons}
                   fallback={
-                    <Button
-                      variant="tertiary"
-                      isOutlined
-                      size="small"
-                      icon={<SVGIcon name="download" width={24} height={24} />}
-                      disabled={!topic.isSaved}
-                      onClick={() => {
-                        fileInputRef?.current?.click();
-                      }}
-                    >
-                      {__('Import Quiz', 'tutor')}
-                    </Button>
+                    <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+                      <Button
+                        variant="tertiary"
+                        isOutlined
+                        size="small"
+                        icon={<SVGIcon name="download" width={24} height={24} />}
+                        disabled={!topic.isSaved}
+                        onClick={() => {
+                          fileInputRef?.current?.click();
+                        }}
+                      >
+                        {__('Import Quiz', 'tutor')}
+                      </Button>
+                    </Show>
                   }
                 >
                   <ThreeDots
@@ -632,13 +634,15 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                       icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
                       onClick={() => setMeetingType('tutor_zoom_meeting')}
                     />
-                    <ThreeDots.Option
-                      text={__('Import Quiz', 'tutor')}
-                      onClick={() => {
-                        fileInputRef?.current?.click();
-                      }}
-                      icon={<SVGIcon name="downloadColorize" width={24} height={24} isColorIcon />}
-                    />
+                    <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+                      <ThreeDots.Option
+                        text={__('Import Quiz', 'tutor')}
+                        onClick={() => {
+                          fileInputRef?.current?.click();
+                        }}
+                        icon={<SVGIcon name="downloadColorize" width={24} height={24} isColorIcon />}
+                      />
+                    </Show>
                   </ThreeDots>
                 </Show>
               </div>
