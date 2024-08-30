@@ -88,8 +88,8 @@ const LiveClass = () => {
             <EmptyState
               size="small"
               removeBorder={false}
-              emptyStateImage="https://via.placeholder.com/360x360"
-              emptyStateImage2x="https://via.placeholder.com/760x760"
+              emptyStateImage={emptyStateImage}
+              emptyStateImage2x={emptyStateImage2x}
               imageAltText="No live class addons found"
               title={__('You can use this feature by activating Google meet, Zoom or Jitsi from addons', 'tutor')}
               description={__(
