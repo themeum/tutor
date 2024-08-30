@@ -222,7 +222,7 @@ class OrderController {
 
 		$subtotal_price = 0;
 		foreach ( $price_details->items as $item ) {
-			$subtotal_price += floatval( $item->discount_price );
+			$subtotal_price += floatval( $item->discount_price ? $item->discount_price : $item->regular_price );
 		}
 
 		$order_data = array(
@@ -444,10 +444,10 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		$order_id                      = Input::post( 'order_id' );
-		$amount                        = (float) Input::post( 'amount' );
-		$reason                        = Input::post( 'reason' );
-		$remove_student_from_enrolment = Input::post( 'is_remove_enrolment' );
+		$order_id          = Input::post( 'order_id' );
+		$amount            = (float) Input::post( 'amount' );
+		$reason            = Input::post( 'reason' );
+		$cancel_enrollment = Input::post( 'is_remove_enrolment' );
 
 		$meta_value = array(
 			'amount'  => $amount,
@@ -465,8 +465,10 @@ class OrderController {
 			);
 		}
 
-		$meta_key = OrderActivitiesModel::META_KEY_REFUND;
+		$order_status   = $order_data->order_status;
+		$payment_status = $order_data->payment_status;
 
+		$meta_key = OrderActivitiesModel::META_KEY_REFUND;
 		if ( $amount < (float) $order_data->net_payment ) {
 			$meta_key = OrderActivitiesModel::META_KEY_PARTIALLY_REFUND;
 		}
@@ -474,8 +476,6 @@ class OrderController {
 		if ( OrderActivitiesModel::META_KEY_PARTIALLY_REFUND === $meta_key ) {
 			$meta_value['message'] = __( 'Partially refunded by ', 'tutor' ) . get_userdata( get_current_user_id() )->display_name;
 		}
-
-		// @TODO: need to update the net_payment after making refund
 
 		$params = array(
 			'order_id'   => $order_id,
@@ -503,9 +503,34 @@ class OrderController {
 		$activity_model = new OrderActivitiesModel();
 		$response       = $activity_model->add_order_meta( $payload );
 
-		do_action( 'tutor_after_order_refund', $params );
+		if ( $response ) {
+			// Update net payment.
+			$refund_amount = $this->model->get_refund_amount( $order_id );
 
-		if ( ! $response ) {
+			$net_payment = floatval( $order_data->total_price ) - floatval( $refund_amount );
+			if ( 'refund' === $meta_key ) {
+				$payment_status = $this->model::PAYMENT_REFUNDED;
+			} else {
+				$payment_status = $this->model::PAYMENT_PARTIALLY_REFUNDED;
+			}
+
+			if ( 'true' == $cancel_enrollment ) {
+				$order_status = $this->model::ORDER_CANCELLED;
+			}
+
+			$update_data = array(
+				'net_payment'    => $net_payment,
+				'refund_amount'  => $refund_amount,
+				'payment_status' => $payment_status,
+				'order_status'   => $order_status,
+			);
+
+			$this->model->update_order( $order_id, $update_data );
+
+			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status, $cancel_enrollment );
+
+			$this->json_response( __( 'Order refund successful', 'tutor' ) );
+		} else {
 			$this->json_response(
 				__( 'Failed to make refund', 'tutor' ),
 				null,
@@ -513,11 +538,6 @@ class OrderController {
 			);
 		}
 
-		if ( $remove_student_from_enrolment ) {
-			// @TODO: need to remove student from enrolment
-		}
-
-		$this->json_response( __( 'Order refund successful', 'tutor' ) );
 	}
 
 	/**
@@ -599,17 +619,10 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		$params = array(
-			'order_id'        => Input::post( 'order_id' ),
-			'discount_type'   => Input::post( 'discount_type' ),
-			'discount_amount' => Input::post( 'discount_amount' ),
-			'discount_reason' => Input::post( 'discount_reason' ),
-		);
-
-		do_action( 'tutor_before_add_order_discount', $params );
+		$request = Input::sanitize_array( $_POST );
 
 		// Validate request.
-		$validation = $this->validate( $params );
+		$validation = $this->validate( $request );
 		if ( ! $validation->success ) {
 			$this->json_response(
 				tutor_utils()->error_message( HttpHelper::STATUS_BAD_REQUEST ),
@@ -618,22 +631,43 @@ class OrderController {
 			);
 		}
 
-		$payload = new \stdClass();
-		$payload = (object) $params;
+		$request = (object) $request;
 
-		$response = $this->model->add_order_discount( $payload );
+		try {
+			$order = $this->model->get_order_by_id( $request->order_id );
 
-		do_action( 'tutor_after_add_order_discount', $params );
+			$discount_amount = $this->model->calculate_discount_amount( $request->discount_type, $request->discount_amount, $order->subtotal_price );
 
-		if ( ! $response ) {
+			$order_prices = $this->model->recalculate_order_prices( floatval( $order->subtotal_price ), floatval( $order->tax_amount ), floatval( $discount_amount ) );
+
+			$order_data = array(
+				'discount_amount' => $request->discount_amount,
+				'discount_reason' => $request->discount_reason,
+				'discount_type'   => $request->discount_type,
+				'subtotal_price'  => $order_prices->subtotal_price,
+				'total_price'     => $order_prices->total_price,
+			);
+
+			$update = $this->model->update_order( $request->order_id, $order_data );
+			if ( ! $update ) {
+				$this->json_response(
+					__( 'Failed to add a discount', 'tutor' ),
+					null,
+					HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+				);
+			}
+
+			do_action( 'tutor_after_add_order_discount', $request );
+
+			$this->json_response( __( 'Order discount successful added', 'tutor' ) );
+		} catch ( \Throwable $th ) {
 			$this->json_response(
 				__( 'Failed to add a discount', 'tutor' ),
-				null,
+				$th->getMessage(),
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
 
-		$this->json_response( __( 'Order discount successful added', 'tutor' ) );
 	}
 
 	/**
@@ -1028,7 +1062,7 @@ class OrderController {
 	 * @return void
 	 */
 	public function get_user_orders() {
-		
+
 	}
 
 	/**

@@ -864,9 +864,10 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int    $order_id      The ID of the order to recalculate prices for.
-	 * @param string $discount_type Optional. The type of discount to apply.
-	 * @param float  $discount_value Optional. The value of the discount to apply.
+	 * @param float $subtotal_price Order subtotal_price.
+	 * @param float $tax_amount Order tax amount.
+	 * @param float $discount_amount Optional. The type of discount to apply.
+	 * @param float $refund_amount Optional. The value of the discount to apply.
 	 *
 	 * @return object An object containing the recalculated prices:
 	 *                  - sub_total (float): The sum of order item prices.
@@ -875,40 +876,16 @@ class OrderModel {
 	 *                  - total_price (float): The total price after applying discount and tax.
 	 *                  - net_price (float): The final price after accounting for refunds.
 	 */
-	public function recalculate_order_prices( $order_id, $discount_type = null, $discount_value = null ) {
-		$order_data = $this->get_order_by_id( $order_id );
-
-		// get the order item prices/sub_total.
-		$sub_total = $order_data->subtotal_price;
-
-		// get discount/coupon amount.
-		$discount_amount = 0;
-
-		$discount_type  = ! empty( $discount_type ) ? $discount_type : $order_data->discount_type;
-		$discount_value = ! empty( $discount_value ) ? $discount_value : $order_data->discount_amount;
-
-		if ( ! empty( $discount_type ) && ! empty( $discount_value ) ) {
-			$discount_amount = $this->calculate_discount_amount( $discount_type, $discount_value, $sub_total );
-		}
-
-		// get tax amount.
-		$tax_amount = (float) $order_data->tax_amount ?? 0;
+	public function recalculate_order_prices( float $subtotal_price, float $tax_amount = 0, float $discount_amount = 0, float $refund_amount = 0 ) {
 
 		// calculate total (sub_total - discount + tax).
-		$total = ( $sub_total - $discount_amount ) + $tax_amount;
-
-		// get refund values if refunded.
-		$refund_amount = 0;
-		if ( self::PAYMENT_REFUNDED === $order_data->payment_status || self::PAYMENT_PARTIALLY_REFUNDED === $order_data->payment_status ) {
-			// refund amount code here.
-			$refund_amount = $this->get_refund_amount( $order_id );
-		}
+		$total = ( $subtotal_price - $discount_amount ) + $tax_amount;
 
 		// update net_price (total - refund_amount).
 		$net_price = $total - $refund_amount;
 
 		$response                  = new \stdClass();
-		$response->sub_total       = $sub_total;
+		$response->subtotal_price  = $subtotal_price;
 		$response->discount_amount = $discount_amount;
 		$response->tax_amount      = $tax_amount;
 		$response->total_price     = $total;
@@ -932,8 +909,8 @@ class OrderModel {
 	 * @return float The discounted price after applying the discount.
 	 */
 	public function calculate_discount_amount( $discount_type, $discount_amount, $sub_total ) {
-		if ( 'percent' === $discount_type ) {
-			$discounted_price = (float) $sub_total - ( (float) $sub_total * (float) $discount_amount ) / 100;
+		if ( 'percentage' === $discount_type ) {
+			$discounted_price = (float) $sub_total * ( ( (float) $discount_amount / 100 ) );
 		} else {
 			$discounted_price = (float) $sub_total - (float) $discount_amount;
 		}
@@ -956,22 +933,11 @@ class OrderModel {
 	public function get_refund_amount( $order_id ) {
 		global $wpdb;
 
-		$table    = $wpdb->prefix . 'tutor_ordermeta';
-		$where_id = OrderActivitiesModel::META_KEY_REFUND . ',' . OrderActivitiesModel::META_KEY_PARTIALLY_REFUND;
+		$table     = $wpdb->prefix . 'tutor_ordermeta';
+		$meta_keys = array( OrderActivitiesModel::META_KEY_REFUND, OrderActivitiesModel::META_KEY_PARTIALLY_REFUND );
 
-		$refund_records = $wpdb->get_results(
-			$wpdb->prepare(
-				'SELECT *
-					FROM %s
-					WHERE order_id = %d
-					AND meta_key IN ( %s )
-					ORDER BY created_at_gmt DESC
-				',
-				$table,
-				$order_id,
-				$where_id
-			)
-		);
+		$where          = array( 'meta_key' => $meta_keys, 'order_id' => $order_id );
+		$refund_records = QueryHelper::get_all( $table, $where, 'created_at_gmt' );
 
 		$refund_amount = 0;
 
