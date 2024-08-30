@@ -761,7 +761,7 @@ class CouponModel {
 	 *
 	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
-	public function apply_automatic_coupon_discount( $course_ids ) {
+	public function apply_automatic_coupon_discount( $course_ids, $plan_id = 0 ) {
 		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
 
 		$response                 = array();
@@ -772,7 +772,12 @@ class CouponModel {
 		$should_apply_coupon = false;
 
 		foreach ( $course_ids as $course_id ) {
-			$course_price   = tutor_utils()->get_raw_course_price( $course_id );
+			$course_price = tutor_utils()->get_raw_course_price( $course_id );
+
+			if ( $plan_id ) {
+				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $plan_id );
+			}
+
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
 			$discount_price = 0;
@@ -962,7 +967,7 @@ class CouponModel {
 	public function has_coupon_validity( object $coupon ): bool {
 		$now         = time();
 		$start_date  = strtotime( $coupon->start_date_gmt );
-		$expire_date = strtotime( $coupon->expire_date_gmt );
+		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : 0;
 
 		// Check if the current time is within the start and expiry dates.
 		return ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
@@ -981,12 +986,12 @@ class CouponModel {
 	public function has_user_usage_limit( object $coupon, int $user_id ): bool {
 		$has_limit = true;
 
-		$coupon_usage_limit = (int) $coupon->coupon_usage_limit;
-		$user_usage_limit   = (int) $coupon->per_user_usage_limit;
+		$total_usage_limit = (int) $coupon->total_usage_limit;
+		$user_usage_limit  = (int) $coupon->per_user_usage_limit;
 
-		if ( $coupon_usage_limit > 0 ) {
+		if ( $total_usage_limit > 0 ) {
 			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
-			if ( $coupon_usage_count >= $coupon_usage_limit ) {
+			if ( $coupon_usage_count >= $total_usage_limit ) {
 				$has_limit = false;
 			}
 		}

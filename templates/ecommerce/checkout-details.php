@@ -36,10 +36,21 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 		<div class="tutor-checkout-courses">
 			<?php
 			if ( isset( $plan_info->plan_name, $plan_info->regular_price ) ) :
-				$order_type     = OrderModel::TYPE_SUBSCRIPTION;
-				$regular_price  = $plan_info->regular_price;
-				$sale_price     = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
-				$enrollment_fee = floatval( $plan_info->enrollment_fee );
+				$automatic_coupon = ( new CouponModel() )->apply_automatic_coupon_discount( $plan_info->course_id, $plan_id );
+				$order_type       = OrderModel::TYPE_SUBSCRIPTION;
+				$regular_price    = $plan_info->regular_price;
+				$sale_price       = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
+				$enrollment_fee   = floatval( $plan_info->enrollment_fee );
+
+				if ( $automatic_coupon->is_applied ) {
+					foreach ( $automatic_coupon->items as $item ) {
+						if ( $item->item_id === $plan_info->course_id ) {
+							$regular_price = $item->regular_price;
+							$sale_price    = $item->discount_price;
+							break;
+						}
+					}
+				}
 
 				$subtotal  = $sale_price ? $sale_price : $regular_price;
 				$subtotal += $enrollment_fee;
@@ -52,6 +63,14 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 						<h6 class="tutor-checkout-course-title">
 							<?php echo esc_html( $plan_info->plan_name ); ?>
 						</h6>
+						<?php if ( $automatic_coupon->is_applied ) : ?>
+						<div class="tutor-checkout-coupon-badge">
+							<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+								<path d="M4.48736 3.73748C4.63569 3.73748 4.7807 3.78147 4.90403 3.86388C5.02737 3.94629 5.1235 4.06342 5.18027 4.20047C5.23703 4.33751 5.25188 4.48831 5.22294 4.6338C5.19401 4.77929 5.12258 4.91292 5.01769 5.01781C4.9128 5.1227 4.77916 5.19413 4.63367 5.22307C4.48819 5.25201 4.33739 5.23716 4.20034 5.18039C4.0633 5.12363 3.94616 5.0275 3.86375 4.90416C3.78134 4.78082 3.73736 4.63582 3.73736 4.48748C3.73736 4.28857 3.81637 4.0978 3.95703 3.95715C4.09768 3.8165 4.28844 3.73748 4.48736 3.73748ZM6.38169 2.17392L8.26801 4.06024L8.43583 4.22806L9.82102 5.61325C10.0091 5.80177 10.1151 6.05695 10.116 6.32325C10.1166 6.45393 10.0911 6.58341 10.0408 6.70403C9.99052 6.82466 9.91657 6.93397 9.82332 7.02553L9.82354 7.02574L7.02563 9.82366L7.02541 9.82344C6.93386 9.91669 6.82454 9.99064 6.70392 10.0409C6.58329 10.0912 6.45381 10.1168 6.32314 10.1161C6.19232 10.1166 6.06271 10.0912 5.94172 10.0414C5.82074 9.99166 5.71078 9.9185 5.61814 9.82614L4.22793 8.43596L4.06011 8.26814L2.17879 6.38682C2.08511 6.29386 2.0108 6.18325 1.96017 6.06137C1.90953 5.9395 1.88357 5.80879 1.88379 5.67682V4.68183V2.88392C1.88455 2.61894 1.99016 2.36502 2.17753 2.17765C2.3649 1.99028 2.61881 1.88468 2.88379 1.88392H4.6817H5.67668C5.80749 1.88347 5.93711 1.90886 6.05809 1.95863C6.17908 2.0084 6.28904 2.08156 6.38169 2.17392ZM7.73084 4.93304L7.56302 4.76522L5.6817 2.88392H2.88379V5.68183L4.93291 7.73097L6.32261 9.12067L9.11651 6.31874L9.11601 6.31824L7.73084 4.93304Z" fill="currentColor"/>
+							</svg>
+							<span><?php echo esc_html( $automatic_coupon->coupon_title ); ?></span>
+						</div>
+						<?php endif; ?>
 					</div>
 
 					<div class="tutor-text-right">
@@ -158,7 +177,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
                 <?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?>
 			</div>
 		</div>
-		<?php if ( ! $automatic_coupon->is_applied ) : ?>
+		<?php if ( ! isset( $automatic_coupon ) || ! $automatic_coupon->is_applied ) : ?>
 		<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 			<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
 			<button type="button" id="tutor-toggle-coupon-form" class="tutor-btn tutor-btn-link">
