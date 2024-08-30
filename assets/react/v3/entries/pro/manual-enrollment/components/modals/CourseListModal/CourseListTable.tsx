@@ -1,15 +1,15 @@
+import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { css } from '@emotion/react';
+import { type Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
-import Table, { Column } from '@Molecules/Table';
-import SearchField from './SearchField';
-import Button from '@Atoms/Button';
-import { Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
-import SVGIcon from '@Atoms/SVGIcon';
+import Table, { type Column } from '@Molecules/Table';
+import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import SearchField from './SearchField';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
@@ -62,7 +62,9 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
             <div css={styles.price} data-price>
               {item.plan_start_price ? (
                 <>
-                  <span css={styles.startingFrom}>{sprintf( __('Starting from %s', 'tutor'), item.plan_start_price)}</span>
+                  <span css={styles.startingFrom}>
+                    {sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)}
+                  </span>
                 </>
               ) : (
                 <>

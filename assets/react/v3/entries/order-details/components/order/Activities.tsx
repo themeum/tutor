@@ -17,82 +17,82 @@ import { format } from 'date-fns';
 import { Controller } from 'react-hook-form';
 
 function Activities() {
-	const { order } = useOrderContext();
-	const adminCommentMutation = useAdminCommentMutation();
-	const form = useFormWithGlobalError<{ comment: string }>({
-		defaultValues: {
-			comment: '',
-		},
-	});
-	return (
-		<Box bordered css={styleUtils.boxReset}>
-			<BoxTitle separator tooltip={__('You can see all the activities against this order chronologically.', 'tutor')}>
-				{__('Order activities')}
-			</BoxTitle>
-			<div css={styles.content}>
-				<div css={styles.activities}>
-					<div css={styles.activityItem}>
-						<span css={styles.dot} />
-						<form
-							onSubmit={form.handleSubmit((values) => {
-								adminCommentMutation.mutate({ order_id: order.id, comment: values.comment });
-								form.reset();
-							})}
-							css={styles.form}
-						>
-							<Controller
-								control={form.control}
-								name="comment"
-								rules={{ ...requiredRule() }}
-								render={(props) => (
-									<FormTextareaInput
-										{...props}
-										label={__('Add a comment (Only you and other staff can see comments)', 'tutor')}
-										placeholder={__('Write a comment for this order...', 'tutor')}
-										rows={3}
-									/>
-								)}
-							/>
-							<Button type="submit" variant="primary" size="small" isOutlined loading={adminCommentMutation.isPending}>
-								{__('Post', 'tutor')}
-							</Button>
-						</form>
-					</div>
-					<Show when={order.activities}>
-						{(activities) => (
-							<For each={activities}>
-								{(activity) => (
-									<div css={styles.activityItem} key={activity.id}>
-										<span css={styles.dot} />
-										<div css={styles.innerContent}>
-											<span>{format(new Date(activity.date), DateFormats.activityDate)}</span>
-											<span>{activity.message}</span>
-										</div>
-									</div>
-								)}
-							</For>
-						)}
-					</Show>
-				</div>
-			</div>
-		</Box>
-	);
+  const { order } = useOrderContext();
+  const adminCommentMutation = useAdminCommentMutation();
+  const form = useFormWithGlobalError<{ comment: string }>({
+    defaultValues: {
+      comment: '',
+    },
+  });
+  return (
+    <Box bordered css={styleUtils.boxReset}>
+      <BoxTitle separator tooltip={__('You can see all the activities against this order chronologically.', 'tutor')}>
+        {__('Order activities', 'tutor')}
+      </BoxTitle>
+      <div css={styles.content}>
+        <div css={styles.activities}>
+          <div css={styles.activityItem}>
+            <span css={styles.dot} />
+            <form
+              onSubmit={form.handleSubmit((values) => {
+                adminCommentMutation.mutate({ order_id: order.id, comment: values.comment });
+                form.reset();
+              })}
+              css={styles.form}
+            >
+              <Controller
+                control={form.control}
+                name="comment"
+                rules={{ ...requiredRule() }}
+                render={(props) => (
+                  <FormTextareaInput
+                    {...props}
+                    label={__('Add a comment (Only you and other staff can see comments)', 'tutor')}
+                    placeholder={__('Write a comment for this order...', 'tutor')}
+                    rows={3}
+                  />
+                )}
+              />
+              <Button type="submit" variant="primary" size="small" isOutlined loading={adminCommentMutation.isPending}>
+                {__('Post', 'tutor')}
+              </Button>
+            </form>
+          </div>
+          <Show when={order.activities}>
+            {(activities) => (
+              <For each={activities}>
+                {(activity) => (
+                  <div css={styles.activityItem} key={activity.id}>
+                    <span css={styles.dot} />
+                    <div css={styles.innerContent}>
+                      <span>{format(new Date(activity.date), DateFormats.activityDate)}</span>
+                      <span>{activity.message}</span>
+                    </div>
+                  </div>
+                )}
+              </For>
+            )}
+          </Show>
+        </div>
+      </div>
+    </Box>
+  );
 }
 
 export default Activities;
 
 const styles = {
-	content: css`
+  content: css`
 		padding: ${spacing[16]} ${spacing[24]};
 	`,
-	activities: css`
+  activities: css`
 		border-left: 1px solid ${colorTokens.stroke.divider};
 		padding-left: ${spacing[20]};
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[24]};
 	`,
-	form: css`
+  form: css`
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[20]};
@@ -101,7 +101,7 @@ const styles = {
 			align-self: end;
 		}
 	`,
-	dot: css`
+  dot: css`
 		position: absolute;
 		width: 16px;
 		height: 16px;
@@ -122,7 +122,7 @@ const styles = {
 			background-color: ${colorTokens.icon.hover};
 		}
 	`,
-	activityItem: css`
+  activityItem: css`
 		position: relative;
 		&:last-of-type::before {
 			content: '';
@@ -143,7 +143,7 @@ const styles = {
 			background: ${colorTokens.background.white};
 		}
 	`,
-	innerContent: css`
+  innerContent: css`
 		display: flex;
 		flex-direction: column;
 

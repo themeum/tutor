@@ -2,8 +2,8 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import type { Course } from '@EnrollmentServices/enrollment';
 import { css } from '@emotion/react';
-import { Course } from '@EnrollmentServices/enrollment';
 import { __ } from '@wordpress/i18n';
 
 interface CourseCardProps {

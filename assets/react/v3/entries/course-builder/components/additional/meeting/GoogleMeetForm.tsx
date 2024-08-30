@@ -65,7 +65,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
         ? format(new Date(currentMeeting.meeting_data.end_datetime), DateFormats.hoursMinutes)
         : '',
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
-      meeting_enrolledAsAttendee: currentMeeting?.meeting_data.attendees === 'Yes' ? true : false,
+      meeting_enrolledAsAttendee: currentMeeting?.meeting_data.attendees === 'Yes',
     },
     shouldFocusError: true,
   });
@@ -126,7 +126,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
           ? format(new Date(currentMeeting.meeting_data.end_datetime), DateFormats.hoursMinutes)
           : '',
         meeting_timezone: currentMeeting.meeting_data.timezone,
-        meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes' ? true : false,
+        meeting_enrolledAsAttendee: currentMeeting.meeting_data.attendees === 'Yes',
       });
     }
 

@@ -40,7 +40,7 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
       >
         <div css={styles.formContent}>
           <p css={styles.availableMessage}>
-            {__('This will create an order. Mark this order as paid if you received ')}{' '}
+            {__('This will create an order. Mark this order as paid if you received ', 'tutor')}
             <span>{formatPrice(total)}</span> {__(' manually.', 'tutor')}
           </p>
           <Controller

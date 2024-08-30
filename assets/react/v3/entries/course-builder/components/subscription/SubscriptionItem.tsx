@@ -196,7 +196,11 @@ export default function SubscriptionItem({
                   name="plan_name"
                   rules={requiredRule()}
                   render={(controllerProps) => (
-                    <FormInput {...controllerProps} placeholder="Enter plan name" label="Plan name" />
+                    <FormInput
+                      {...controllerProps}
+                      placeholder={__('Enter plan name', 'tutor')}
+                      label={__('Plan name', 'tutor')}
+                    />
                   )}
                 />
 
@@ -271,7 +275,7 @@ export default function SubscriptionItem({
                         ...requiredRule(),
                         validate: (value) => {
                           if (Number(value) < 1) {
-                            return __('This value must be equal to or greater than 1');
+                            return __('This value must be equal to or greater than 1', 'tutor');
                           }
                         },
                       }}
@@ -323,7 +327,7 @@ export default function SubscriptionItem({
                           {...controllerProps}
                           label={__('Renew Plan', 'tutor')}
                           placeholder={__('Select or type times to renewing the plan', 'tutor')}
-                          content={controllerProps.field.value !== 'Until cancelled' && `${__('Times', 'tutor')}`}
+                          content={controllerProps.field.value !== 'Until cancelled' && __('Times', 'tutor')}
                           contentPosition="right"
                           type="number"
                           presetOptions={lifetimeOptions}
@@ -360,7 +364,7 @@ export default function SubscriptionItem({
                         {...controllerProps}
                         label={__('Enrolment fee', 'tutor')}
                         content={tutor_currency?.symbol || '$'}
-                        placeholder={__('Enter enrolment fee')}
+                        placeholder={__('Enter enrolment fee', 'tutor')}
                         selectOnFocus
                         contentCss={styleUtils.inputCurrencyStyle}
                       />
