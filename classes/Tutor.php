@@ -11,7 +11,6 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\MagicAI\MagicAI;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -656,6 +655,11 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-template-hook.php';
 		include tutor()->path . 'includes/translate-text.php';
 		include tutor()->path . 'includes/country.php';
+
+		$tutor_droip_path = tutor()->path . 'tutor-droip/tutor-droip-elements.php';
+		if ( file_exists( $tutor_droip_path ) ) {
+			include tutor()->path . 'tutor-droip/tutor-droip-elements.php';
+		}
 	}
 
 	/**
