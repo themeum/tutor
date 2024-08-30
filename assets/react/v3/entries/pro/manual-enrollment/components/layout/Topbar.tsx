@@ -3,11 +3,11 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { Enrollment, useCreateEnrollmentMutation } from '@EnrollmentServices/enrollment';
+import { type Enrollment, useCreateEnrollmentMutation } from '@EnrollmentServices/enrollment';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import { useFormContext } from 'react-hook-form';
 import { __ } from '@wordpress/i18n';
+import { useFormContext } from 'react-hook-form';
 
 export const TOPBAR_HEIGHT = 80;
 

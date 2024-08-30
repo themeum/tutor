@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -123,7 +123,7 @@ const FormFileUploader = ({
     const newFiles = selected.reduce((allFiles: Media[], file: WpMediaDetails) => {
       if (maxFileSize && file.filesizeInBytes && file.filesizeInBytes > maxFileSize) {
         showToast({
-          message: `${file.title} ${__(' size exceeds the limit', 'tutor')}`,
+          message: sprintf(__('%s size exceeds the limit', 'tutor'), file.title),
           type: 'danger',
         });
         return allFiles;
@@ -155,7 +155,7 @@ const FormFileUploader = ({
 
     if (maxFiles && totalFiles > maxFiles) {
       showToast({
-        message: __(`You can not upload more than ${maxFiles} files in total`, 'tutor'),
+        message: sprintf(__('You can not upload more than %d files in total', 'tutor'), maxFiles),
         type: 'danger',
       });
       return;

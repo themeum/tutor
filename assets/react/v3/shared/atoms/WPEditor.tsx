@@ -163,7 +163,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       wp_keep_scroll_position: false,
       wpeditimage_html5_captions: true,
     },
-    mediaButtons: isMinimal ? false : true,
+    mediaButtons: !isMinimal,
     drag_drop_upload: true,
     quicktags: isMinimal
       ? false

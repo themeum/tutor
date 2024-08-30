@@ -4,7 +4,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { DurationUnit, SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {
@@ -35,16 +35,22 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
       <div css={styles.information}>
         <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
           <span>
-            {__('Renew every', 'tutor')} {subscription.recurring_value.toString().padStart(2, '0')}{' '}
-            {formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value))}
+            {sprintf(
+              __('Renew every %s %s', 'tutor'),
+              subscription.recurring_value.toString().padStart(2, '0'),
+              formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
+            )}
           </span>
         </Show>
 
         <Show when={subscription.enable_free_trial}>
           <span>•</span>
           <span>
-            {subscription.trial_value.toString().padStart(2, '0')}{' '}
-            {formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value))} {__('trial', 'tutor')}
+            {sprintf(
+              __('%s %s trial', 'tutor'),
+              subscription.trial_value.toString().padStart(2, '0'),
+              formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value)),
+            )}
           </span>
         </Show>
 

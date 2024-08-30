@@ -109,12 +109,14 @@ const FormSelectInput = <T,>({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     setInputValue(getInitialValue()?.label);
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [field.value, getInitialValue]);
 
   useEffect(() => {
     if (isOpen) {
       setInputValue(getInitialValue()?.label);
     }
+    // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
   return (
