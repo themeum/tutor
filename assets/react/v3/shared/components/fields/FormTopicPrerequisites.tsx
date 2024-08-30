@@ -368,6 +368,7 @@ const styles = {
     height: 100%;
     margin-top: ${spacing[8]};
     ${styleUtils.overflowYAuto};
+    padding: 1px; // fix the box-shadow issue
   `,
   optionsWrapper: css`
     position: absolute;
@@ -440,6 +441,7 @@ const styles = {
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
     border-radius: ${borderRadius[6]};
+    border: 1px solid transparent;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -470,7 +472,7 @@ const styles = {
         !onPopover &&
         css`
           background-color: ${colorTokens.background.white};
-          outline: 1px solid ${colorTokens.stroke.default};
+          border-color: ${colorTokens.stroke.default};
 
           [data-visually-hidden] {
             opacity: 1;

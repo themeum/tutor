@@ -86,7 +86,7 @@ const ThreeDots = ({
         type="button"
         ref={ref}
         onClick={onClick}
-        css={styles.button({ isOpen, isInverse })}
+        css={styles.button({ isOpen, isInverse, isDisabled: disabled })}
         disabled={disabled}
         {...props}
       >
@@ -208,7 +208,7 @@ const styles = {
     `
     }
   `,
-  button: ({ isOpen = false, isInverse = false }) => css`
+  button: ({ isOpen = false, isInverse = false, isDisabled = false }) => css`
     ${styleUtils.resetButton};
     width: 32px;
     height: 32px;
@@ -233,24 +233,28 @@ const styles = {
     ${
       isOpen &&
       css`
-      background-color: ${colorTokens.background.hover};
-      svg {
-        color: ${colorTokens.icon.brand};
-      }
-    `
+        background-color: ${colorTokens.background.hover};
+        svg {
+          color: ${colorTokens.icon.brand};
+        }
+      `
     }
 
     ${
       isInverse &&
       css`
-      background-color: ${colorTokens.background.white};
-      :hover {
         background-color: ${colorTokens.background.white};
-        svg {
-          color: ${colorTokens.icon.brand};
+        :hover {
+          background-color: ${colorTokens.background.white};
+          svg {
+            color: ${!isDisabled && colorTokens.icon.brand};
+          }
         }
-      }
-    `
+      `
+    }
+
+    :disabled {
+      cursor: not-allowed;
     }
   `,
 };
