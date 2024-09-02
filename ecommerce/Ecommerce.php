@@ -72,6 +72,7 @@ class Ecommerce {
 		new CouponController();
 		new BillingController();
 		new HooksHandler();
+		new EmailController();
 		new PaymentHandler();
 
 

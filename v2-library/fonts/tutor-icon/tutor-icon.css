@@ -1,20 +1,20 @@
 @font-face {
-	  font-family: 'tutor';
-	  src: url("../fonts/tutor.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-  }
+  font-family: 'tutor';
+  src: url("../fonts/tutor.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
 
 @font-face {
-    font-family: 'tutor';
-    src: url('../fonts/tutor-v2.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-    font-display: block;
-  }
+  font-family: 'tutor';
+  src: url('../fonts/tutor-v2.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
   
-  [class^="tutor-icon-"], [class*=" tutor-icon-"] {
+[class^="tutor-icon-"], [class*=" tutor-icon-"] {
 	/* use !important to prevent issues with browser extensions that change fonts */
 	font-family: 'tutor' !important;
 	speak: never;
@@ -27,7 +27,7 @@
 	/* Better Font Rendering =========== */
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-  }
+}
 
 
 /* tutor v2 new icons */
@@ -64,6 +64,21 @@
 }
 .tutor-icon-align-right:before {
   content: "\f910";
+}
+.tutor-icon-receipt-percent:before {
+  content: "\f911";
+}
+.tutor-icon-credit-card:before {
+  content: "\f912";
+}
+.tutor-icon-change:before {
+  content: "\f913";
+}
+.tutor-icon-tag:before {
+  content: "\f914";
+}
+.tutor-icon-subscription:before {
+  content: "\f915";
 }
 
 /* tutor old fonts */
