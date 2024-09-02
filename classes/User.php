@@ -320,7 +320,7 @@ class User {
 		}
 
 		$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
-		if ( empty( $timezone ) ) {
+		if ( self::is_admin() || empty( $timezone ) ) {
 			$timezone = wp_timezone_string();
 		}
 
