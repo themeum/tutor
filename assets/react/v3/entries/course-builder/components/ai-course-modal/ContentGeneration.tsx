@@ -108,7 +108,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
     generateCourseImageMutation.mutateAsync({ type: 'image', title: currentContent.title }).then((response) => {
       updateLoading({ image: false });
-      updateContents({ image: response.data });
+      updateContents({ featured_image: response.data });
     });
 
     generateCourseDescriptionMutation
@@ -126,7 +126,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           (item) =>
             ({
               ...item,
-              content: [],
+              contents: [],
               is_active: true,
             }) as Topic,
         );
@@ -135,11 +135,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
         const promises = topics.map((item, index) => {
           return generateCourseTopicContentMutation
-            .mutateAsync({ title: currentContent.title, topic_name: item.name, index })
+            .mutateAsync({ title: currentContent.title, topic_name: item.title, index })
             .then((data) => {
               const { index: idx, topic_contents } = data.data;
-              topics[idx].content ||= [];
-              topics[idx].content.push(...topic_contents);
+              topics[idx].contents ||= [];
+              topics[idx].contents.push(...topic_contents);
               updateContents({ topics });
             });
         });
@@ -152,18 +152,18 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
         for (let i = 0; i < topics.length; i++) {
           const topic = topics[i];
-          for (let j = 0; j < topic.content.length; j++) {
-            const quizContent = topic.content[j];
+          for (let j = 0; j < topic.contents.length; j++) {
+            const quizContent = topic.contents[j];
             if (quizContent.type === 'quiz') {
               const promise = generateQuizQuestionsMutation
                 .mutateAsync({
                   title: currentContent.title,
-                  topic_name: topic.name,
+                  topic_name: topic.title,
                   quiz_title: quizContent.title,
                 })
                 .then((response) => {
-                  topics[i].content[j].questions ||= [];
-                  topics[i].content[j].questions = response.data;
+                  topics[i].contents[j].questions ||= [];
+                  topics[i].contents[j].questions = response.data;
                 });
               quizPromises.push(promise);
             }
@@ -201,7 +201,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           <div css={styles.leftContentWrapper}>
             <Show when={!currentLoading.image} fallback={<ImageSkeleton />}>
               <div css={styles.imageWrapper}>
-                <img src={currentContent.image} alt="course banner" />
+                <img src={currentContent.featured_image} alt="course banner" />
               </div>
             </Show>
 
@@ -410,7 +410,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               onClick={() => {
                 saveAIGeneratedCourseContentMutation.mutate({
                   course_id: courseId,
-                  content: JSON.stringify(currentContent),
+                  payload: JSON.stringify(currentContent),
                 });
                 onClose();
                 showToast({ type: 'success', message: 'Course content stored into a local file.' });

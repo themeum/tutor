@@ -23,6 +23,7 @@ import {
 } from '@CourseBuilderServices/curriculum';
 
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -30,7 +31,7 @@ import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMe
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useExportQuizMutation } from '@CourseBuilderServices/quiz';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { styleUtils } from '@Utils/style-utils';
@@ -200,8 +201,8 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               width={24}
               height={24}
               style={css`
-              color: ${icon.color};
-            `}
+								color: ${icon.color};
+							`}
             />
           </div>
           <div data-bar-icon>
@@ -216,7 +217,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         </div>
 
         <div css={styles.actions} data-actions>
-          <Show when={type === 'tutor_quiz'}>
+          <Show when={type === 'tutor_quiz' && isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
             <Tooltip content={__('Export Quiz', 'tutor')} delay={200}>
               <button
                 type="button"

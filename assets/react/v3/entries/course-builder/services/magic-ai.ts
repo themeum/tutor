@@ -5,7 +5,7 @@ import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/Cont
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { Prettify, WPResponse } from '@Utils/types';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 interface ImagePayload {
   prompt: string;
@@ -166,7 +166,7 @@ interface CourseTopicPayload {
 }
 
 const generateCourseTopicNames = (payload: CourseTopicPayload) => {
-  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<{ name: string }[]>>(
+  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<{ title: string }[]>>(
     endpoints.GENERATE_COURSE_CONTENT,
     payload,
   );
@@ -206,17 +206,22 @@ export const useGenerateCourseTopicContentMutation = () => {
 };
 
 interface SaveContentPayload {
-  content: string;
   course_id: number;
+  payload: string;
 }
 
 const saveAIGeneratedCourseContent = (payload: SaveContentPayload) => {
   return wpAjaxInstance.post(endpoints.SAVE_AI_GENERATED_COURSE_CONTENT, payload);
 };
+
 export const useSaveAIGeneratedCourseContentMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: saveAIGeneratedCourseContent,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ['CourseDetails'] });
+    },
     onError(error) {
       showToast({ type: 'danger', message: error.message });
     },
@@ -233,7 +238,7 @@ export interface QuizContent {
   title: string;
   type: 'true_false' | 'multiple_choice' | 'open_ended';
   description: string;
-  options?: { name: string; is_correct_answer: boolean }[];
+  options?: { name: string; is_correct: boolean }[];
 }
 
 const generateQuizQuestions = (payload: QuizQuestionsPayload) => {

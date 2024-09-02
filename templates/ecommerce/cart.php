@@ -125,7 +125,7 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 				<div class="tutor-cart-empty-state">
 					<img src="<?php echo esc_url( tutor()->url ); ?>assets/images/empty-cart.svg" alt="<?php esc_html_e( 'Empty shopping cart', 'tutor' ); ?>" />
 					<p><?php esc_html_e( 'No courses in the card', 'tutor' ); ?></p>
-					<a href="<?php echo esc_url( home_url() ); ?>" class="tutor-btn tutor-btn-lg tutor-btn-primary"><?php esc_html_e( 'Continue Browsing', 'tutor' ); ?></a>
+					<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-btn tutor-btn-lg tutor-btn-primary"><?php esc_html_e( 'Continue Browsing', 'tutor' ); ?></a>
 				</div>
 			<?php endif; ?>
 		</div>

@@ -247,7 +247,7 @@ const MultipleChoiceAndOrdering = () => {
               belongs_question_type: currentQuestionType,
               answer_order: optionsFields.length,
               answer_two_gap_match: '',
-              answer_view_format: '',
+              answer_view_format: currentQuestionType === 'multiple_choice' ? 'text' : '',
             },
             {
               shouldFocus: true,

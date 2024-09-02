@@ -95,6 +95,7 @@ const FormMultipleChoiceAndOrdering = ({
       }),
       image_id: id,
       image_url: url,
+      answer_view_format: 'text_image',
     });
   });
 
@@ -106,6 +107,7 @@ const FormMultipleChoiceAndOrdering = ({
       }),
       image_id: '',
       image_url: '',
+      answer_view_format: 'text',
     });
   };
 

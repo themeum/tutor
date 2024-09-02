@@ -9,7 +9,7 @@ import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useState } from 'react';
-import { useContentGenerationContext } from './ContentGenerationContext';
+import { type Topic, useContentGenerationContext } from './ContentGenerationContext';
 import TopicContentSkeleton from './loaders/TopicContentSkeleton';
 
 interface AccordionContent {
@@ -17,85 +17,9 @@ interface AccordionContent {
   title: string;
   questions?: QuizContent[];
 }
-interface AccordionItem {
-  name: string;
-  content: AccordionContent[];
+interface AccordionItemData extends Topic {
   is_active: boolean;
 }
-const accordionContent: AccordionItem[] = [
-  {
-    name: 'Introduction',
-    is_active: true,
-    content: [
-      {
-        type: 'lesson',
-        title: 'Business studies, often simply called business',
-      },
-      {
-        type: 'quiz',
-        title: 'Business studies, often simply called',
-      },
-      {
-        type: 'assignment',
-        title: 'Business studies, often simply called business, is a field of study that',
-      },
-    ],
-  },
-  {
-    name: 'Sensors, Pixels and Resolution',
-    is_active: false,
-    content: [
-      {
-        type: 'lesson',
-        title: 'Business studies, often simply called business',
-      },
-      {
-        type: 'quiz',
-        title: 'Business studies, often simply called',
-      },
-      {
-        type: 'assignment',
-        title: 'Business studies, often simply called business, is a field of study that',
-      },
-    ],
-  },
-  {
-    name: 'Course outline',
-    is_active: false,
-    content: [
-      {
-        type: 'lesson',
-        title: 'Business studies, often simply called business',
-      },
-      {
-        type: 'quiz',
-        title: 'Business studies, often simply called',
-      },
-      {
-        type: 'assignment',
-        title: 'Business studies, often simply called business, is a field of study that',
-      },
-    ],
-  },
-  {
-    name: 'Hand on exercise',
-    is_active: false,
-    content: [
-      {
-        type: 'lesson',
-        title: 'Business studies, often simply called business',
-      },
-      {
-        type: 'quiz',
-        title: 'Business studies, often simply called',
-      },
-      {
-        type: 'assignment',
-        title: 'Business studies, often simply called business, is a field of study that',
-      },
-    ],
-  },
-];
 
 const icons: Record<'lesson' | 'quiz' | 'assignment', ReactNode> = {
   lesson: <SVGIcon name="lesson" width={24} height={24} data-lesson-icon />,
@@ -104,25 +28,25 @@ const icons: Record<'lesson' | 'quiz' | 'assignment', ReactNode> = {
 };
 
 const AccordionItem = ({
-  content,
+  data,
   setIsActive,
-}: { isActive: boolean; setIsActive: () => void; content: AccordionItem }) => {
+}: { isActive: boolean; setIsActive: () => void; data: AccordionItemData }) => {
   const { currentLoading } = useContentGenerationContext();
-  const isLoading = currentLoading.content && content.content.length === 0;
+  const isLoading = currentLoading.content && data.contents.length === 0;
   return (
     <div onClick={setIsActive} onKeyDown={noop} css={css`cursor: pointer;`}>
       <div css={styles.title}>
         <div css={styles.titleAndIcon}>
           <SVGIcon name="chevronDown" width={24} height={24} />
-          <p>{content.name}</p>
+          <p>{data.title}</p>
         </div>
         <p>
-          {content.content.length} {__('Contents', 'tutor')}
+          {data.contents.length} {__('Contents', 'tutor')}
         </p>
       </div>
-      <div css={styles.content(content.is_active)}>
+      <div css={styles.content(data.is_active)}>
         <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
-          <For each={content.content}>
+          <For each={data.contents}>
             {(item, idx) => {
               return (
                 <div css={styles.contentItem} key={idx}>
@@ -145,11 +69,11 @@ const AccordionItem = ({
 
 const ContentAccordion = () => {
   const { currentContent } = useContentGenerationContext();
-  const [items, setItems] = useState<AccordionItem[]>([]);
+  const [items, setItems] = useState<AccordionItemData[]>([]);
 
   useEffect(() => {
     if (currentContent.topics) {
-      setItems(currentContent.topics.map((item) => ({ ...item }) as AccordionItem));
+      setItems(currentContent.topics.map((item) => ({ ...item }) as AccordionItemData));
     }
   }, [currentContent.topics]);
 
@@ -159,7 +83,7 @@ const ContentAccordion = () => {
         {(content, index) => {
           return (
             <AccordionItem
-              content={content}
+              data={content}
               key={index}
               isActive={index === 0}
               setIsActive={() => {

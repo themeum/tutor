@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
-import Tabs from '@Molecules/Tabs';
+import Tabs, { type TabItem } from '@Molecules/Tabs';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
@@ -34,7 +34,7 @@ const CourseSettings = () => {
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
 
-  const tabList = [
+  const tabList: TabItem<string>[] = [
     {
       label: __('General', 'tutor'),
       value: 'general',
@@ -44,7 +44,7 @@ const CourseSettings = () => {
       label: __('Content Drip', 'tutor'),
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
-      activeBadge: isContentDripActive ? true : false,
+      activeBadge: !!isContentDripActive,
     },
     ...(isAddonEnabled(Addons.BUDDYPRESS)
       ? [
@@ -52,7 +52,7 @@ const CourseSettings = () => {
             label: __('BuddyPress', 'tutor'),
             value: 'buddyPress',
             icon: <SVGIcon name="buddyPress" width={24} height={24} />,
-            activeBadge: isBuddyPressEnabled ? true : false,
+            activeBadge: !!isBuddyPressEnabled,
           },
         ]
       : []),
@@ -60,19 +60,19 @@ const CourseSettings = () => {
 
   const difficultyLevelOptions = [
     {
-      label: 'All Levels',
+      label: __('All Levels', 'tutor'),
       value: 'all_levels',
     },
     {
-      label: 'Beginner',
+      label: __('Beginner', 'tutor'),
       value: 'beginner',
     },
     {
-      label: 'Intermediate',
+      label: __('Intermediate', 'tutor'),
       value: 'intermediate',
     },
     {
-      label: 'Expert',
+      label: __('Expert', 'tutor'),
       value: 'expert',
     },
   ];

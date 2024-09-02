@@ -180,23 +180,15 @@ interface QuizUpdateQuestionPayload {
   'question_settings[question_mark]': number;
 }
 
-interface QuizQuestionAnswerOrderingPayload {
-  question_id: ID;
-  sorted_answer_ids: ID[];
-}
-
-interface SaveQuizQuestionAnswerPayload {
-  question_id: ID;
-  answer_id?: ID; //only for update
-  answer_title: string;
-  image_id: ID;
-  question_type?: QuizQuestionType;
-  answer_view_format?: string;
-  answer_two_gap_match?: string;
-  matched_answer_title?: string; //only when question type matching or image matching
-}
-
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
+  const calculateQuizDataStatus = (answer: QuizQuestionOption) => {
+    if (answer.image_url) {
+      return answer.answer_view_format === 'text_image' ? 'no_change' : 'update';
+    }
+
+    return answer.answer_view_format === 'text' ? 'no_change' : 'update';
+  };
+
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
     if (question.question_settings) {
       question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
@@ -213,9 +205,14 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'single_choice': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: 'update',
           question_type: 'multiple_choice',
-
+          question_answers: question.question_answers.map((answer) => ({
+            ...answer,
+            _data_status: calculateQuizDataStatus(answer),
+            answer_view_format: answer.image_url ? 'text_image' : 'text',
+            is_correct: answer.is_correct === '1' ? '1' : '0',
+          })),
           question_settings: {
             ...question.question_settings,
             question_type: 'multiple_choice',
@@ -226,27 +223,37 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'multiple_choice': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: question.question_settings.has_multiple_correct_answer ? 'no_change' : 'update',
+          question_answers: question.question_answers.map((answer) => ({
+            ...answer,
+            _data_status: calculateQuizDataStatus(answer),
+            answer_view_format: answer.image_url ? 'text_image' : 'text',
+            is_correct: answer.is_correct === '1' ? '1' : '0',
+          })),
           question_settings: {
             ...question.question_settings,
-            has_multiple_correct_answer: !!Number(question.question_settings.has_multiple_correct_answer),
+            has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer
+              ? !!Number(question.question_settings.has_multiple_correct_answer)
+              : true,
           },
         };
       }
       case 'matching': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: question.question_settings.is_image_matching ? 'no_change' : 'update',
           question_settings: {
             ...question.question_settings,
-            is_image_matching: !!Number(question.question_settings.is_image_matching),
+            is_image_matching: question.question_settings.is_image_matching
+              ? !!Number(question.question_settings.is_image_matching)
+              : false,
           },
         };
       }
       case 'image_matching': {
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: 'update',
           question_type: 'matching',
           question_settings: {
             ...question.question_settings,
@@ -371,8 +378,14 @@ export const convertQuizFormDataToPayload = (
                 belongs_question_type: question.question_type,
                 answer_title: answer.answer_title,
                 is_correct: answer.is_correct,
-                image_id: answer.image_id,
-                image_url: answer.image_url,
+                image_id:
+                  question.question_type === 'matching' && !question.question_settings.is_image_matching
+                    ? ''
+                    : answer.image_id,
+                image_url:
+                  question.question_type === 'matching' && !question.question_settings.is_image_matching
+                    ? ''
+                    : answer.image_url,
                 answer_two_gap_match: answer.answer_two_gap_match,
                 answer_view_format: answer.answer_view_format,
                 answer_order: answer.answer_order,
