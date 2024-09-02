@@ -88,6 +88,8 @@ class User {
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
 		add_action( 'wp_login', array( $this, 'update_user_last_login' ), 10, 2 );
+		add_action( 'login_form', array( $this, 'add_timezone_input' ) );
+		add_action( 'wp_login', array( $this, 'set_timezone' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 	}
@@ -445,6 +447,45 @@ class User {
 	 */
 	public function update_user_last_login( $user_login, $user ) {
 		update_user_meta( $user->ID, self::LAST_LOGIN_META, time() );
+	}
+
+	/**
+	 * Add timezone input field to login form.
+	 *
+	 * @since 3.0.0
+	 */
+	public function add_timezone_input() {
+		?>
+		<input type="hidden" name="timezone" value="<?php echo esc_attr( wp_timezone_string() ); ?>" />
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const timezone = document.querySelector('input[name="timezone"]');
+				if ( timezone) {
+					const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					timezone.value = tz
+				}
+			});
+		</script>
+		<?php
+	}
+
+	/**
+	 * Set user timezone if not it set.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string   $user_login active user name.
+	 * @param \WP_User $user User object data.
+	 *
+	 * @return void
+	 */
+	public function set_timezone( $user_login, $user ) {
+		if ( Input::has( 'timezone' ) ) {
+			$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
+			if ( empty( $timezone ) ) {
+				update_user_meta( $user->ID, self::TIMEZONE_META, Input::post( 'timezone', wp_timezone_string() ) );
+			}
+		}
 	}
 
 	/**
