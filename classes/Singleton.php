@@ -41,13 +41,6 @@ abstract class Singleton {
 	protected function __clone() { }
 
 	/**
-	 * Prevent object unserialize
-	 *
-	 * @access protected
-	 */
-	protected function __wakeup() { }
-
-	/**
 	 * Get instance of class.
 	 *
 	 * @return static
