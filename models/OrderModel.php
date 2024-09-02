@@ -715,6 +715,81 @@ class OrderModel {
 	}
 
 	/**
+	 * Get total refunds by user_id (instructor), optionally can set period ( today | monthly| yearly )
+	 *
+	 * Optionally can set start date & end date to get enrollment list from date range
+	 *
+	 * If period or date range not pass then it will return all time enrollment list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id User id.
+	 * @param string $period Time period.
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 *
+	 * @return array
+	 */
+	public function get_refunds_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = null ): array {
+		$response = array(
+			'refunds'       => array(),
+			'total_refunds' => 0,
+		);
+
+		global $wpdb;
+
+		$user_clause       = '';
+		$date_range_clause = '';
+		$period_clause     = '';
+		$course_clause     = '';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = "AND o.created_at_gmt BETWEEN DATE( '$start_date') AND DATE( '$end_date')";
+		} else {
+			$period_clause = $this->get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( $user_id ) {
+			$user_clause = "AND c.post_author = $user_id";
+		}
+
+		if ( $course_id ) {
+			$course_clause = "AND i.item_id = $course_id";
+		}
+
+		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
+
+		$refunds = $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT (SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100 ) AS total,created_at_gmt AS date_format
+				FROM %s AS o
+				LEFT JOIN %s AS i
+					ON i.order_id = o.id
+				LEFT JOIN %s AS c
+					ON c.id = i.item_id
+				WHERE 1 = %d
+				%s %s %s %s
+				',
+				$wpdb->prefix . 'tutor_order_items',
+				$wpdb->posts,
+				$this->table_name,
+				$commission,
+				1,
+				$user_clause,
+				$period_clause,
+				$date_range_clause,
+				$course_clause
+			)
+		);
+
+		foreach ( $refunds as $refund ) {
+			$response['total_refunds'] += $refund->total;
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Update the payment status of an order.
 	 *
 	 * This function updates the payment status and note of an order in the database.
@@ -991,4 +1066,41 @@ class OrderModel {
 		return $status;
 	}
 
+	/**
+	 * Get period clause based on the provided period.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $column Table.column name, ex: table.created_at.
+	 * @param string $period Period for filter refund data.
+	 *
+	 * @return string
+	 */
+	private function get_period_clause( string $column, string $period = '' ) {
+		$period_clause = '';
+		switch ( $period ) {
+			case 'today':
+				$period_clause = ' AND  DATE($column) = CURDATE() ';
+				break;
+			case 'monthly':
+				$period_clause = ' AND  MONTH($column) = MONTH(CURDATE()) ';
+				break;
+			case 'yearly':
+				$period_clause = ' AND  YEAR($column) = YEAR(CURDATE()) ';
+				break;
+			case 'last30days':
+				$period_clause = ' AND  DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE() ';
+				break;
+			case 'last90days':
+				$period_clause = ' AND  DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND CURDATE() ';
+				break;
+			case 'last365days':
+				$period_clause = ' AND  DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 365 DAY) AND CURDATE() ';
+				break;
+			default:
+				break;
+		}
+
+		return $period_clause;
+	}
 }

@@ -6129,7 +6129,9 @@ class Utils {
 	 * @return int|string
 	 */
 	public function tutor_price( $price = 0 ) {
-		if ( function_exists( 'wc_price' ) ) {
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			return tutor_get_formatted_price( $price );
+		} elseif ( function_exists( 'wc_price' ) ) {
 			return wc_price( $price );
 		} elseif ( function_exists( 'edd_currency_filter' ) ) {
 			return edd_currency_filter( edd_format_amount( $price ) );

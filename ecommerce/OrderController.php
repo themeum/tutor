@@ -146,6 +146,7 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
+			add_filter( 'tutor_refund_data', array( $this, 'filter_refund_data' ), 10, 4 );
 		}
 	}
 
@@ -1057,12 +1058,25 @@ class OrderController {
 	}
 
 	/**
-	 * Undocumented function
+	 * Filter refund data if monetization is Tutor
 	 *
-	 * @return void
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id Current user id.
+	 * @param string $period  Period for filter refund data.
+	 * @param string $start_date Filter start date.
+	 * @param string $end_date Filter end date.
+	 *
+	 * @return array
 	 */
-	public function get_user_orders() {
+	public function filter_refund_data( $user_id, $period, $start_date, $end_date ) {
+		// Sanitize params.
+		$user_id    = sanitize_text_field( $user_id );
+		$period     = sanitize_text_field( $period );
+		$start_date = sanitize_text_field( $start_date );
+		$end_date   = sanitize_text_field( $end_date );
 
+		return $this->model->get_refunds_by_user( $user_id, $period, $start_date, $end_date );
 	}
 
 	/**
