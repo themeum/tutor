@@ -30,8 +30,17 @@ class User {
 	const INSTRUCTOR = 'tutor_instructor';
 	const ADMIN      = 'administrator';
 
-	const REVIEW_POPUP_META = 'tutor_review_course_popup';
-	const LAST_LOGIN_META   = 'tutor_last_login';
+	/**
+	 * User meta keys.
+	 */
+	const REVIEW_POPUP_META      = 'tutor_review_course_popup';
+	const LAST_LOGIN_META        = 'tutor_last_login';
+	const TIMEZONE_META          = '_tutor_timezone';
+	const PROFILE_PHOTO_META     = '_tutor_profile_photo';
+	const PHONE_NUMBER_META      = 'phone_number';
+	const COVER_PHOTO_META       = '_tutor_cover_photo';
+	const PROFILE_BIO_META       = '_tutor_profile_bio';
+	const PROFILE_JOB_TITLE_META = '_tutor_profile_job_title';
 
 	/**
 	 * User model
@@ -79,6 +88,8 @@ class User {
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
 		add_action( 'wp_login', array( $this, 'update_user_last_login' ), 10, 2 );
+		add_action( 'login_form', array( $this, 'add_timezone_input' ) );
+		add_action( 'wp_login', array( $this, 'set_timezone' ), 10, 2 );
 
 		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 	}
@@ -299,6 +310,26 @@ class User {
 	}
 
 	/**
+	 * Get user timezone string.
+	 *
+	 * @param int|object $user user id or user object. Default: current user.
+	 *
+	 * @return string user timezone string, fallback site timezone string.
+	 */
+	public static function get_user_timezone_string( $user = 0 ) {
+		if ( is_numeric( $user ) ) {
+			$user = get_user_by( 'id', tutor_utils()->get_user_id( $user ) );
+		}
+
+		$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
+		if ( self::is_admin() || empty( $timezone ) ) {
+			$timezone = wp_timezone_string();
+		}
+
+		return $timezone;
+	}
+
+	/**
 	 * Profile update
 	 *
 	 * @since 1.0.0
@@ -312,13 +343,15 @@ class User {
 			return;
 		}
 
-		$_tutor_profile_job_title = Input::post( '_tutor_profile_job_title', '' );
-		$_tutor_profile_bio       = Input::post( '_tutor_profile_bio', '', Input::TYPE_KSES_POST );
-		$_tutor_profile_image     = Input::post( '_tutor_profile_photo', '', Input::TYPE_KSES_POST );
+		$timezone                 = Input::post( 'timezone', '' );
+		$_tutor_profile_job_title = Input::post( self::PROFILE_JOB_TITLE_META, '' );
+		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
+		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
 
-		update_user_meta( $user_id, '_tutor_profile_job_title', $_tutor_profile_job_title );
-		update_user_meta( $user_id, '_tutor_profile_bio', $_tutor_profile_bio );
-		update_user_meta( $user_id, '_tutor_profile_photo', $_tutor_profile_image );
+		update_user_meta( $user_id, self::PROFILE_JOB_TITLE_META, $_tutor_profile_job_title );
+		update_user_meta( $user_id, self::PROFILE_BIO_META, $_tutor_profile_bio );
+		update_user_meta( $user_id, self::PROFILE_PHOTO_META, $_tutor_profile_image );
+		update_user_meta( $user_id, self::TIMEZONE_META, $timezone );
 	}
 
 	/**
@@ -414,6 +447,45 @@ class User {
 	 */
 	public function update_user_last_login( $user_login, $user ) {
 		update_user_meta( $user->ID, self::LAST_LOGIN_META, time() );
+	}
+
+	/**
+	 * Add timezone input field to login form.
+	 *
+	 * @since 3.0.0
+	 */
+	public function add_timezone_input() {
+		?>
+		<input type="hidden" name="timezone" value="<?php echo esc_attr( wp_timezone_string() ); ?>" />
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const timezone = document.querySelector('input[name="timezone"]');
+				if ( timezone) {
+					const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					timezone.value = tz
+				}
+			});
+		</script>
+		<?php
+	}
+
+	/**
+	 * Set user timezone if not it set.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string   $user_login active user name.
+	 * @param \WP_User $user User object data.
+	 *
+	 * @return void
+	 */
+	public function set_timezone( $user_login, $user ) {
+		if ( Input::has( 'timezone' ) ) {
+			$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
+			if ( empty( $timezone ) ) {
+				update_user_meta( $user->ID, self::TIMEZONE_META, Input::post( 'timezone', wp_timezone_string() ) );
+			}
+		}
 	}
 
 	/**
