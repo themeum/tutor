@@ -368,6 +368,7 @@ class HooksHandler {
 						BundleModel::enroll_to_bundle_courses( $course_id, $student_id );
 					}
 
+					update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
 					do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
 				} else {
 					// Log error message with student id and course id.
@@ -389,6 +390,7 @@ class HooksHandler {
 						if ( tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) && 'course-bundle' === get_post_type( $course_id ) ) {
 							BundleModel::enroll_to_bundle_courses( $course_id, $student_id );
 						}
+						update_post_meta( $enrollment_id, '_tutor_enrolled_by_order_id', $order_id );
 					} else {
 						// Log error message with student id and course id.
 						error_log( "Error updating enrollment for student {$student_id} and course {$course_id}" );

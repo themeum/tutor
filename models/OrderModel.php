@@ -980,6 +980,12 @@ class OrderModel {
 			case self::PAYMENT_FAILED:
 				$status = self::ORDER_CANCELLED;
 				break;
+			case self::ORDER_TRASH:
+				$status = self::ORDER_TRASH;
+				break;
+			case 'delete':
+				$status = self::ORDER_CANCELLED;
+				break;
 		}
 
 		return $status;
