@@ -952,4 +952,37 @@ class OrderModel {
 		return $refund_amount;
 	}
 
+	/**
+	 * Get order status based on the payment status
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $payment_status Order payment status.
+	 *
+	 * @return string
+	 */
+	public function get_order_status_by_payment_status( $payment_status ) {
+		$status = '';
+
+		switch ( $payment_status ) {
+			case self::PAYMENT_PAID:
+				$status = self::ORDER_COMPLETED;
+				break;
+			case self::PAYMENT_UNPAID:
+				$status = self::ORDER_INCOMPLETE;
+				break;
+			case self::PAYMENT_PARTIALLY_REFUNDED:
+				$status = self::ORDER_COMPLETED;
+				break;
+			case self::PAYMENT_REFUNDED:
+				$status = self::ORDER_CANCELLED;
+				break;
+			case self::PAYMENT_FAILED:
+				$status = self::ORDER_CANCELLED;
+				break;
+		}
+
+		return $status;
+	}
+
 }

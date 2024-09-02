@@ -1286,7 +1286,7 @@ class Utils {
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
 		$get_enrolled_info = TutorCache::get( $cache_key );
-		if ( false === $get_enrolled_info ) {
+		if ( ! $get_enrolled_info ) {
 			$status_clause = '';
 			if ( $is_complete ) {
 				$status_clause = "AND post_status = 'completed' ";
