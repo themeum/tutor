@@ -30,8 +30,17 @@ class User {
 	const INSTRUCTOR = 'tutor_instructor';
 	const ADMIN      = 'administrator';
 
-	const REVIEW_POPUP_META = 'tutor_review_course_popup';
-	const LAST_LOGIN_META   = 'tutor_last_login';
+	/**
+	 * User meta keys.
+	 */
+	const REVIEW_POPUP_META      = 'tutor_review_course_popup';
+	const LAST_LOGIN_META        = 'tutor_last_login';
+	const TIMEZONE_META          = '_tutor_timezone';
+	const PROFILE_PHOTO_META     = '_tutor_profile_photo';
+	const PHONE_NUMBER_META      = 'phone_number';
+	const COVER_PHOTO_META       = '_tutor_cover_photo';
+	const PROFILE_BIO_META       = '_tutor_profile_bio';
+	const PROFILE_JOB_TITLE_META = '_tutor_profile_job_title';
 
 	/**
 	 * User model
@@ -299,6 +308,26 @@ class User {
 	}
 
 	/**
+	 * Get user timezone string.
+	 *
+	 * @param int|object $user user id or user object. Default: current user.
+	 *
+	 * @return string user timezone string, fallback site timezone string.
+	 */
+	public static function get_user_timezone_string( $user = 0 ) {
+		if ( is_numeric( $user ) ) {
+			$user = get_user_by( 'id', tutor_utils()->get_user_id( $user ) );
+		}
+
+		$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
+		if ( empty( $timezone ) ) {
+			$timezone = wp_timezone_string();
+		}
+
+		return $timezone;
+	}
+
+	/**
 	 * Profile update
 	 *
 	 * @since 1.0.0
@@ -312,13 +341,15 @@ class User {
 			return;
 		}
 
-		$_tutor_profile_job_title = Input::post( '_tutor_profile_job_title', '' );
-		$_tutor_profile_bio       = Input::post( '_tutor_profile_bio', '', Input::TYPE_KSES_POST );
-		$_tutor_profile_image     = Input::post( '_tutor_profile_photo', '', Input::TYPE_KSES_POST );
+		$timezone                 = Input::post( 'timezone', '' );
+		$_tutor_profile_job_title = Input::post( self::PROFILE_JOB_TITLE_META, '' );
+		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
+		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
 
-		update_user_meta( $user_id, '_tutor_profile_job_title', $_tutor_profile_job_title );
-		update_user_meta( $user_id, '_tutor_profile_bio', $_tutor_profile_bio );
-		update_user_meta( $user_id, '_tutor_profile_photo', $_tutor_profile_image );
+		update_user_meta( $user_id, self::PROFILE_JOB_TITLE_META, $_tutor_profile_job_title );
+		update_user_meta( $user_id, self::PROFILE_BIO_META, $_tutor_profile_bio );
+		update_user_meta( $user_id, self::PROFILE_PHOTO_META, $_tutor_profile_image );
+		update_user_meta( $user_id, self::TIMEZONE_META, $timezone );
 	}
 
 	/**
