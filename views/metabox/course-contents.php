@@ -177,25 +177,9 @@ use Tutor\Models\CourseModel;
 									</a>
 									<div class="tutor-course-content-top-right-action">
 										<?php if ( $is_topic ) : ?>
-											<?php if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) : ?>
-												<?php
-												$lesson_content = maybe_unserialize( $content->post_content );
-												?>
-												<?php if ( is_array( $lesson_content ) && count( $lesson_content ) && 'h5p_lesson' === $lesson_content['lesson_type'] ) : ?>
-												<a href="javascript:;" class="open-tutor-h5p-lesson-modal tutor-iconic-btn" data-lesson-id="<?php echo esc_attr( $content->ID ); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>" data-content-id="<?php echo isset( $lesson_content['h5p_content_id'] ) ? esc_attr( $lesson_content['h5p_content_id'] ) : ''; ?> ">
-													<span class="tutor-icon-edit" area-hidden="true"></span>
-												</a>
-												<?php else : ?>
-												<a href="javascript:;" class="open-tutor-lesson-modal tutor-iconic-btn" data-lesson-id="<?php echo esc_attr( $content->ID ); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>">
-													<span class="tutor-icon-edit" area-hidden="true"></span>
-												</a>
-												<?php endif; ?>
-											<?php else : ?>
 											<a href="javascript:;" class="open-tutor-lesson-modal tutor-iconic-btn" data-lesson-id="<?php echo esc_attr( $content->ID ); ?>" data-topic-id="<?php echo esc_attr( $topic->ID ); ?>">
 												<span class="tutor-icon-edit" area-hidden="true"></span>
 											</a>
-											<?php endif; ?>
-
 										<?php endif; ?>
 										<a href="javascript:;" class="tutor-delete-lesson-btn tutor-iconic-btn" data-lesson-id="<?php echo esc_attr( $content->ID ); ?>">
 											<span class="tutor-icon-trash-can-line" area-hidden="true"></span>
