@@ -2,6 +2,8 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -9,14 +11,18 @@ export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubsc
   return (
     <div css={styles.wrapper}>
       <div css={styles.banner}>
-        <SVGIcon name="imagePreviewLine" width={40} height={30} />
+        <img
+          src={emptyStateImage}
+          srcSet={`${emptyStateImage} ${emptyStateImage2x} 2x`}
+          alt={__('Empty state banner', 'tutor')}
+        />
       </div>
 
       <div css={styles.content}>
         <h5>{__('Create subscription to boost your sell', 'tutor')}</h5>
         <p>
           {__(
-            'when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
+            'When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
             'tutor',
           )}
         </p>
@@ -75,8 +81,16 @@ const styles = {
     align-items: center;
     justify-content: center;
     border-radius: ${borderRadius[8]};
-    svg {
-      fill: none;
+		position: relative;
+		overflow: hidden;
+
+    img {
+      position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
     }
   `,
 };

@@ -265,10 +265,7 @@ const Curriculum = () => {
                   emptyStateImage2x={emptyStateImage2x}
                   imageAltText={__('Empty State Illustration', 'tutor')}
                   title={__('Create the course journey from here!', 'tutor')}
-                  description={__(
-                    'when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
-                    'tutor',
-                  )}
+                  description={__('Start building your course by adding Topics, Lessons, and Quizzes.', 'tutor')}
                   actions={
                     <Button
                       variant="secondary"

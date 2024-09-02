@@ -7,18 +7,19 @@ export type CourseContentStep = 'prompt' | 'generation';
 export interface TopicContent {
   type: 'lesson' | 'quiz' | 'assignment';
   title: string;
+  description: string;
   questions?: QuizContent[];
 }
 
 export interface Topic {
-  name: string;
-  content: TopicContent[];
+  title: string;
+  contents: TopicContent[];
 }
 export interface CourseContent {
   prompt: string;
   title: string;
   description: string;
-  image: string;
+  featured_image: string;
   topics: Topic[];
 }
 
@@ -51,7 +52,7 @@ export const defaultContent: CourseContent = {
   prompt: '',
   title: '',
   description: '',
-  image: '',
+  featured_image: '',
   topics: [],
 };
 

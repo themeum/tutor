@@ -31,7 +31,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       amount: 0,
-      is_remove_enrolment: true,
+      is_remove_enrolment: false,
       reason: '',
     },
   });
@@ -78,12 +78,6 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
 
           <Controller
             control={form.control}
-            name="is_remove_enrolment"
-            render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrolment', 'tutor')} />}
-          />
-
-          <Controller
-            control={form.control}
             name="reason"
             rules={{ ...requiredRule() }}
             render={(props) => (
@@ -95,6 +89,12 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
                 enableResize
               />
             )}
+          />
+
+          <Controller
+            control={form.control}
+            name="is_remove_enrolment"
+            render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrolment', 'tutor')} />}
           />
         </div>
         <div css={styles.footer}>

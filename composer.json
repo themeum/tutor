@@ -1,40 +1,39 @@
 {
-    "name": "themeum/tutor",
-    "type": "library",
-    "description": "Tutor plugin for WordPress",
-    "autoload": {
-        "psr-4": {
-            "Tutor\\Cache\\":"cache/",
-            "Tutor\\Models\\":"models/",
-            "Tutor\\Helpers\\":"helpers/",
-            "Tutor\\Traits\\":"traits/",
-            "Tutor\\Ecommerce\\":"ecommerce/",
-            "Tutor\\MagicAI\\":"magicai/",
-            "Tutor\\PaymentGateways\\":"ecommerce/PaymentGateways"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "TutorTest\\": "tests/phpunit"
-        }
-    },
-    "require": {
-        "nesbot/carbon": "^2.0"
-    },
-    "require-dev": {
-        "phpunit/phpunit": "^9",
-        "yoast/phpunit-polyfills": "^1.0"
-    },
-    "config": {
-        "allow-plugins": {
-            "php-http/discovery": true
-        }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Stripe",
-            "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Stripe/src/Payments/Stripe",
-            "composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal"
-        ]
-    }
+	"name": "themeum/tutor",
+	"type": "library",
+	"description": "Tutor plugin for WordPress",
+	"autoload": {
+		"psr-4": {
+			"Tutor\\Cache\\": "cache/",
+			"Tutor\\Models\\": "models/",
+			"Tutor\\Helpers\\": "helpers/",
+			"Tutor\\Traits\\": "traits/",
+			"Tutor\\Ecommerce\\": "ecommerce/",
+			"Tutor\\PaymentGateways\\": "ecommerce/PaymentGateways"
+		}
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"TutorTest\\": "tests/phpunit"
+		}
+	},
+	"require": {
+		"nesbot/carbon": "^2.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "^9",
+		"yoast/phpunit-polyfills": "^1.0"
+	},
+	"config": {
+		"allow-plugins": {
+			"php-http/discovery": true
+		}
+	},
+	"scripts": {
+		"post-install-cmd": [
+			"composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Stripe",
+			"composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Stripe/src/Payments/Stripe",
+			"composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal"
+		]
+	}
 }

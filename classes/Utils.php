@@ -1120,6 +1120,7 @@ class Utils {
 		}
 	}
 
+
 	/**
 	 * Check current user capability and send json response
 	 *

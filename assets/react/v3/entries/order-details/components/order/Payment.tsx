@@ -84,7 +84,7 @@ function Payment() {
                             reason: '',
                             type: 'percentage',
                           },
-                          total_price: order.net_payment,
+                          total_price: order.subtotal_price,
                           order_id: order.id,
                         },
                       })
@@ -113,7 +113,7 @@ function Payment() {
                           reason: order.discount_reason ?? '',
                           type: order.discount_type ?? 'percentage',
                         },
-                        total_price: order.net_payment,
+                        total_price: order.subtotal_price,
                         order_id: order.id,
                       },
                     });
@@ -132,8 +132,8 @@ function Payment() {
                   calculateDiscountValue({
                     discount_amount: order.discount_amount,
                     discount_type: order.discount_type,
-                    total: order.net_payment,
-                  }),
+                    total: order.subtotal_price,
+                  })
                 )}
               </div>
             </Show>
@@ -197,7 +197,7 @@ function Payment() {
                   component: RefundModal,
                   props: {
                     title: __('Refund', 'tutor'),
-                    available_amount: order.net_payment,
+                    available_amount: order.refunds?.length ? order.net_payment : order.total_price,
                     order_id: order.id,
                   },
                 });
@@ -208,7 +208,7 @@ function Payment() {
                   component: MarkAsPaidModal,
                   props: {
                     title: __('Mark as Paid', 'tutor'),
-                    total: order.net_payment,
+                    total: order.total_price,
                     order_id: order.id,
                   },
                 });
@@ -225,82 +225,78 @@ export default Payment;
 
 const styles = {
   content: css`
-		padding-top: ${spacing[12]};
-	`,
+    padding-top: ${spacing[12]};
+  `,
   paymentTitle: css`
-		display: flex;
-		gap: ${spacing[4]};
-		align-items: center;
-	`,
+    display: flex;
+    gap: ${spacing[4]};
+    align-items: center;
+  `,
   markAsPaid: css`
-		margin-top: ${spacing[12]};
-		text-align: right;
-	`,
+    margin-top: ${spacing[12]};
+    text-align: right;
+  `,
   discountTitleWrapper: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		&:hover {
-			button {
-				opacity: 1;
-			}
-		}
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    &:hover {
+      button {
+        opacity: 1;
+      }
+    }
+  `,
   editDiscountButton: css`
-		${styleUtils.resetButton};
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		opacity: 0;
-		transition: 0.3s ease opacity;
-		color: ${colorTokens.icon.brand};
-	`,
+    ${styleUtils.resetButton};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: 0.3s ease opacity;
+    color: ${colorTokens.icon.brand};
+  `,
   item: ({ action = 'regular' }: { action: 'regular' | 'bold' | 'destructive' }) => css`
-		${typography.caption()};
-		display: grid;
-		grid-template-columns: 120px 1fr auto;
-		align-items: center;
-		min-height: 32px;
-		color: ${colorTokens.text.primary};
-		padding-inline: ${spacing[12]};
+    ${typography.caption()};
+    display: grid;
+    grid-template-columns: 120px 1fr auto;
+    align-items: center;
+    min-height: 32px;
+    color: ${colorTokens.text.primary};
+    padding-inline: ${spacing[12]};
 
-		${
-      action === 'bold' &&
-      css`
-			font-weight: ${fontWeight.bold};
-		`
-    }
+    ${action === 'bold' &&
+    css`
+      font-weight: ${fontWeight.bold};
+    `}
 
-		${
-      action === 'destructive' &&
-      css`
-			& > div:first-of-type {
-				color: ${colorTokens.text.error};
-			}
-		`
-    }
+    ${action === 'destructive' &&
+    css`
+      & > div:first-of-type {
+        color: ${colorTokens.text.error};
+      }
+    `}
 
 		& > div:nth-of-type(2) {
-			color: ${colorTokens.text.subdued};
-		}
+      color: ${colorTokens.text.subdued};
+    }
 
-		:first-of-type {
-			padding-top: ${spacing[4]};
-		}
+    :first-of-type {
+      padding-top: ${spacing[4]};
+    }
 
-		:last-of-type {
-			padding-bottom: ${spacing[4]};
-		}
-	`,
+    :last-of-type {
+      padding-bottom: ${spacing[4]};
+    }
+  `,
   separator: css`
-		height: 1px;
-		width: 100%;
-		background-color: ${colorTokens.stroke.divider};
-		margin-block: ${spacing[12]};
-	`,
+    height: 1px;
+    width: 100%;
+    background-color: ${colorTokens.stroke.divider};
+    margin-block: ${spacing[12]};
+  `,
   discountButton: css`
-		${styleUtils.resetButton};
-		${typography.small('medium')};
-		color: ${colorTokens.brand.blue};
-	`,
+    ${styleUtils.resetButton};
+    ${typography.small('medium')};
+    color: ${colorTokens.brand.blue};
+  `,
 };

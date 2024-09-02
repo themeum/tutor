@@ -60,7 +60,7 @@ class HooksHandler {
 
 		add_action( 'tutor_order_payment_updated', array( $this, 'handle_payment_updated_webhook' ) );
 
-		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 3 );
+		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 4 );
 
 		add_action( 'tutor_order_placement_success', array( $this, 'handle_order_placement_success' ) );
 	}
@@ -230,10 +230,11 @@ class HooksHandler {
 	 * @param int    $order_id Order id.
 	 * @param string $prev_payment_status previous payment status.
 	 * @param string $new_payment_status new payment status.
+	 * @param string $cancel_enrollment Will be only applied if payment refunded.
 	 *
 	 * @return void
 	 */
-	public function handle_payment_status_changed( $order_id, $prev_payment_status, $new_payment_status ) {
+	public function handle_payment_status_changed( $order_id, $prev_payment_status, $new_payment_status, $cancel_enrollment = true ) {
 		$earnings = Earnings::get_instance();
 
 		$order      = $this->order_model->get_order_by_id( $order_id );
@@ -297,19 +298,18 @@ class HooksHandler {
 						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $item->id );
 					}
 
-					$has_enrollment = tutor_utils()->is_enrolled( $course_id, $student_id, false );
-					if ( $has_enrollment ) {
-						// Update enrollment.
-						$update = tutor_utils()->update_enrollments( 'cancelled', array( $has_enrollment->ID ) );
+					$earnings->prepare_order_earnings( $order_id );
+					$earnings->store_earnings();
 
-						if ( $update ) {
-							$earnings->prepare_order_earnings( $order_id );
-							$earnings->store_earnings();
-							do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
+					if ( $cancel_enrollment ) {
+						$has_enrollment = tutor_utils()->is_enrolled( $course_id, $student_id, false );
+						if ( $has_enrollment ) {
+							// Update enrollment.
+							$update = tutor_utils()->update_enrollments( 'cancelled', array( $has_enrollment->ID ) );
+							if ( $update ) {
+								do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
+							}
 						}
-					} else {
-						$earnings->prepare_order_earnings( $order_id );
-						$earnings->store_earnings();
 					}
 				}
 				break;
