@@ -32,12 +32,15 @@ final class DateTimeHelper extends Carbon {
 	 * @return string
 	 */
 	public static function get_gmt_to_user_timezone_date( string $gmt_date, string $format = null ): string {
-		$default_format  = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
+		$default_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
+		$format         = is_null( $format ) ? $default_format : $format;
+
 		$date            = new \DateTime( $gmt_date );
 		$timezone_string = User::get_user_timezone_string();
 
 		$timezone = new \DateTimeZone( $timezone_string );
 		$date->setTimezone( $timezone );
-		return $date->format( is_null( $format ) ? $default_format : $format );
+
+		return date_i18n( $format, $date->getTimestamp() );
 	}
 }
