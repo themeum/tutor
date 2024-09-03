@@ -146,7 +146,6 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
-			add_filter( 'tutor_refund_data', array( $this, 'filter_refund_data' ), 10, 4 );
 		}
 	}
 
@@ -1062,23 +1061,23 @@ class OrderController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array  $response Default response.
 	 * @param int    $user_id Current user id.
 	 * @param string $period  Period for filter refund data.
 	 * @param string $start_date Filter start date.
 	 * @param string $end_date Filter end date.
+	 * @param int    $course_id Course id.
 	 *
 	 * @return array
 	 */
-	public function filter_refund_data( $response, $user_id, $period, $start_date, $end_date ) {
+	public function get_refund_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
 		// Sanitize params.
-		$user_id    = Input::sanitize( $user_id, 0, Input::TYPE_INT );
-		$user_id    = $user_id ? $user_id : get_current_user_id();
+		$user_id    = (int) $user_id ? $user_id : get_current_user_id();
 		$period     = Input::sanitize( $period );
 		$start_date = Input::sanitize( $start_date );
 		$end_date   = Input::sanitize( $end_date );
+		$course_id  = (int) $course_id;
 
-		return $this->model->get_refunds_by_user( $user_id, $period, $start_date, $end_date );
+		return $this->model->get_refunds_by_user( $user_id, $period, $start_date, $end_date, $course_id );
 	}
 
 	/**

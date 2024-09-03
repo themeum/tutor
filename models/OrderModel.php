@@ -723,14 +723,16 @@ class OrderModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int    $user_id User id.
+	 * @param int    $user_id User id, if user not have admin access
+	 * then only this user's refund amount will fetched.
 	 * @param string $period Time period.
 	 * @param string $start_date Start date.
 	 * @param string $end_date End date.
+	 * @param int    $course_id Course id.
 	 *
 	 * @return array
 	 */
-	public function get_refunds_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = null ): array {
+	public function get_refunds_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = 0 ): array {
 		$response = array(
 			'refunds'       => array(),
 			'total_refunds' => 0,
@@ -745,43 +747,47 @@ class OrderModel {
 		$commission_clause = '';
 
 		if ( $start_date && $end_date ) {
-			$date_range_clause = "AND o.created_at_gmt BETWEEN DATE( '$start_date') AND DATE( '$end_date')";
+			$date_range_clause = $wpdb->prepare(
+				'AND o.created_at_gmt BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
 		} else {
-			$period_clause = $this->get_period_clause( 'o.created_at_gmt', $period );
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
 		}
 
 		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
-			$user_clause = "AND c.post_author = $user_id";
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
 		if ( $course_id ) {
-			$course_clause = "AND i.item_id = $course_id";
+			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
 		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
 		if ( $commission ) {
-			$commission_clause = "(COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * {$commission} / 100, 0)) AS total";
+			$commission_clause = $wpdb->prepare(
+				'COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100, 0) AS total',
+				$commission
+			);
 		} else {
-			$commission_clause = "(COALESCE((SUM(o.refund_amount), 0)) AS total";
+			$commission_clause = 'COALESCE(SUM(o.refund_amount), 0) AS total';
 		}
-		
+
 		$item_table = $wpdb->prefix . 'tutor_order_items';
-		$refunds = $wpdb->get_results(
+		$refunds    = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
 				{$commission_clause},
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
-				LEFT JOIN {$item_table} AS i
-					ON i.order_id = o.id
-				LEFT JOIN {$wpdb->posts} AS c
-					ON c.id = i.item_id
+				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
 				WHERE 1 = %d
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
-				{$course_clause}
-				",
+				{$course_clause}",
 				1
 			)
 		);
@@ -1015,7 +1021,10 @@ class OrderModel {
 		$table     = $wpdb->prefix . 'tutor_ordermeta';
 		$meta_keys = array( OrderActivitiesModel::META_KEY_REFUND, OrderActivitiesModel::META_KEY_PARTIALLY_REFUND );
 
-		$where          = array( 'meta_key' => $meta_keys, 'order_id' => $order_id );
+		$where          = array(
+			'meta_key' => $meta_keys,
+			'order_id' => $order_id,
+		);
 		$refund_records = QueryHelper::get_all( $table, $where, 'created_at_gmt' );
 
 		$refund_amount = 0;
@@ -1068,43 +1077,5 @@ class OrderModel {
 		}
 
 		return $status;
-	}
-
-	/**
-	 * Get period clause based on the provided period.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $column Table.column name, ex: table.created_at.
-	 * @param string $period Period for filter refund data.
-	 *
-	 * @return string
-	 */
-	private function get_period_clause( string $column, string $period = '' ) {
-		$period_clause = '';
-		switch ( $period ) {
-			case 'today':
-				$period_clause = ' AND  DATE($column) = CURDATE() ';
-				break;
-			case 'monthly':
-				$period_clause = ' AND  MONTH($column) = MONTH(CURDATE()) ';
-				break;
-			case 'yearly':
-				$period_clause = ' AND  YEAR($column) = YEAR(CURDATE()) ';
-				break;
-			case 'last30days':
-				$period_clause = ' AND  DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE() ';
-				break;
-			case 'last90days':
-				$period_clause = ' AND  DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND CURDATE() ';
-				break;
-			case 'last365days':
-				$period_clause = ' AND  DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 365 DAY) AND CURDATE() ';
-				break;
-			default:
-				break;
-		}
-
-		return $period_clause;
 	}
 }

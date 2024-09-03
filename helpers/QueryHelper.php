@@ -823,4 +823,42 @@ class QueryHelper {
 		return $response;
 	}
 
+	/**
+	 * Get period clause based on the provided period.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $column Table.column name, ex: table.created_at.
+	 * @param string $period Period for filter refund data.
+	 *
+	 * @return string
+	 */
+	public static function get_period_clause( string $column, string $period = '' ) {
+		$period_clause = '';
+		switch ( $period ) {
+			case 'today':
+				$period_clause = "AND DATE($column) = CURDATE()";
+				break;
+			case 'monthly':
+				$period_clause = "AND MONTH($column) = MONTH(CURDATE())";
+				break;
+			case 'yearly':
+				$period_clause = "AND YEAR($column) = YEAR(CURDATE())";
+				break;
+			case 'last30days':
+				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 30 DAY) AND CURDATE()";
+				break;
+			case 'last90days':
+				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 90 DAY) AND CURDATE()";
+				break;
+			case 'last365days':
+				$period_clause = "AND DATE($column) BETWEEN DATE_SUB(CURDATE(), INTERVAL 365 DAY) AND CURDATE()";
+				break;
+			default:
+				break;
+		}
+
+		return $period_clause;
+	}
+
 }
