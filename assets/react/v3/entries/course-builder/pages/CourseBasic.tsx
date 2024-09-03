@@ -71,11 +71,6 @@ const CourseBasic = () => {
     (instructor) => String(instructor.id) === String(currentUser.data.id),
   );
 
-  console.log({
-    instructors: courseDetails?.course_instructors,
-    isInstructor,
-  });
-
   const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
