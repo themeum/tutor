@@ -202,7 +202,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 2.7.3
 		 */
-		add_action( 'admin_init', array( $this, 'disable_course_trash_instructor' ) );
+		add_action( 'tutor_option_save_after', array( $this, 'disable_course_trash_instructor' ) );
 	}
 
 	/**
@@ -213,17 +213,14 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function disable_course_trash_instructor() {
-		if ( current_user_can( 'edit_tutor_course' ) && ! current_user_can( 'administrator' ) ) {
-			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
-			$role           = get_role( tutor()->instructor_role );
-
-			if ( ! $can_trash_post ) {
-				$role->remove_cap( 'delete_tutor_courses' );
-				$role->remove_cap( 'delete_tutor_course' );
-			} else {
-				$role->add_cap( 'delete_tutor_courses' );
-				$role->add_cap( 'delete_tutor_course' );
-			}
+		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+		$role           = get_role( tutor()->instructor_role );
+		if ( ! $can_trash_post ) {
+			$role->remove_cap( 'delete_tutor_courses' );
+			$role->remove_cap( 'delete_tutor_course' );
+		} else {
+			$role->add_cap( 'delete_tutor_courses' );
+			$role->add_cap( 'delete_tutor_course' );
 		}
 	}
 

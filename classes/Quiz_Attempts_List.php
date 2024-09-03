@@ -89,6 +89,10 @@ class Quiz_Attempts_List {
 	public function get_quiz_attempts_stat() {
 		global $wpdb;
 
+		if ( wp_doing_ajax() ) {
+			tutor_utils()->checking_nonce();
+		}
+
 		/**
 		 * Parse `passing_grade` value from `attempt_info` serialized data.
 		 *
