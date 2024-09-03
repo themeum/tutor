@@ -1062,6 +1062,7 @@ class OrderController {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @param array  $response Default response.
 	 * @param int    $user_id Current user id.
 	 * @param string $period  Period for filter refund data.
 	 * @param string $start_date Filter start date.
@@ -1069,12 +1070,13 @@ class OrderController {
 	 *
 	 * @return array
 	 */
-	public function filter_refund_data( $user_id, $period, $start_date, $end_date ) {
+	public function filter_refund_data( $response, $user_id, $period, $start_date, $end_date ) {
 		// Sanitize params.
-		$user_id    = sanitize_text_field( $user_id );
-		$period     = sanitize_text_field( $period );
-		$start_date = sanitize_text_field( $start_date );
-		$end_date   = sanitize_text_field( $end_date );
+		$user_id    = Input::sanitize( $user_id, 0, Input::TYPE_INT );
+		$user_id    = $user_id ? $user_id : get_current_user_id();
+		$period     = Input::sanitize( $period );
+		$start_date = Input::sanitize( $start_date );
+		$end_date   = Input::sanitize( $end_date );
 
 		return $this->model->get_refunds_by_user( $user_id, $period, $start_date, $end_date );
 	}

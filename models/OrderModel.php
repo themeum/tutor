@@ -742,6 +742,7 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$course_clause     = '';
+		$commission_clause = '';
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = "AND o.created_at_gmt BETWEEN DATE( '$start_date') AND DATE( '$end_date')";
@@ -749,7 +750,7 @@ class OrderModel {
 			$period_clause = $this->get_period_clause( 'o.created_at_gmt', $period );
 		}
 
-		if ( $user_id ) {
+		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
 			$user_clause = "AND c.post_author = $user_id";
 		}
 
@@ -758,27 +759,30 @@ class OrderModel {
 		}
 
 		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
-
+		if ( $commission ) {
+			$commission_clause = "(COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * {$commission} / 100, 0)) AS total";
+		} else {
+			$commission_clause = "(COALESCE((SUM(o.refund_amount), 0)) AS total";
+		}
+		
+		$item_table = $wpdb->prefix . 'tutor_order_items';
 		$refunds = $wpdb->get_results(
 			$wpdb->prepare(
-				'SELECT (SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100 ) AS total,created_at_gmt AS date_format
-				FROM %s AS o
-				LEFT JOIN %s AS i
+				"SELECT 
+				{$commission_clause},
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				LEFT JOIN {$item_table} AS i
 					ON i.order_id = o.id
-				LEFT JOIN %s AS c
+				LEFT JOIN {$wpdb->posts} AS c
 					ON c.id = i.item_id
 				WHERE 1 = %d
-				%s %s %s %s
-				',
-				$wpdb->prefix . 'tutor_order_items',
-				$wpdb->posts,
-				$this->table_name,
-				$commission,
-				1,
-				$user_clause,
-				$period_clause,
-				$date_range_clause,
-				$course_clause
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$course_clause}
+				",
+				1
 			)
 		);
 
