@@ -1,7 +1,15 @@
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import { format, isBefore, parseISO } from 'date-fns';
+import { useEffect, useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
+
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -10,11 +18,6 @@ import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { format, isBefore, parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 interface ScheduleForm {
   schedule_date: string;

@@ -24,18 +24,15 @@ import { createPortal } from 'react-dom';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
+import { useToast } from '@Atoms/Toast';
+import Tooltip from '@Atoms/Tooltip';
 
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import { useFileUploader } from '@Molecules/FileUploader';
+import Popover from '@Molecules/Popover';
 import ThreeDots from '@Molecules/ThreeDots';
-
-import {
-  type ID,
-  type Content as TopicContentType,
-  useDeleteTopicMutation,
-  useDuplicateContentMutation,
-  useSaveTopicMutation,
-} from '@CourseBuilderServices/curriculum';
 
 import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -54,9 +51,6 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { useToast } from '@Atoms/Toast';
-import Tooltip from '@Atoms/Tooltip';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -64,10 +58,15 @@ import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMe
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
+import {
+  type ID,
+  type Content as TopicContentType,
+  useDeleteTopicMutation,
+  useDuplicateContentMutation,
+  useSaveTopicMutation,
+} from '@CourseBuilderServices/curriculum';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFileUploader } from '@Molecules/FileUploader';
-import Popover from '@Molecules/Popover';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';

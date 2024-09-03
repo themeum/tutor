@@ -6,6 +6,7 @@ import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
 import EmptyState from '@Molecules/EmptyState';
 import Tabs from '@Molecules/Tabs';
@@ -21,7 +22,6 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-import Tooltip from '@Atoms/Tooltip';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 

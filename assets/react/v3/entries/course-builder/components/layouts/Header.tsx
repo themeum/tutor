@@ -1,5 +1,13 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { isBefore } from 'date-fns';
+import { useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import config, { tutorConfig } from '@Config/config';
 import { TutorRoles } from '@Config/constants';
 import {
@@ -20,12 +28,7 @@ import { convertCourseDataToPayload, getCourseId } from '@CourseBuilderUtils/uti
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { isBefore } from 'date-fns';
-import { useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+
 import Tracker from './Tracker';
 
 const courseId = getCourseId();

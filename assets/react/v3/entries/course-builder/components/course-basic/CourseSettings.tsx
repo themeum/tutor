@@ -4,13 +4,13 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tabs, { type TabItem } from '@Molecules/Tabs';
 
 import FormInput from '@Components/fields/FormInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 
-import Button from '@Atoms/Button';
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';

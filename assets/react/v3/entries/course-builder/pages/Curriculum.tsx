@@ -25,6 +25,7 @@ import EmptyState from '@Molecules/EmptyState';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 
 import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -41,7 +42,6 @@ import { droppableMeasuringStrategy } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { moveTo, nanoid } from '@Utils/util';
 
-import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 
