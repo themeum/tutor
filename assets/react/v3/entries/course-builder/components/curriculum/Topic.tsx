@@ -88,7 +88,8 @@ interface TopicForm {
   summary: string;
 }
 
-const hasLiveAddons = true;
+const hasLiveAddons =
+  isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION) || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 
 const courseId = getCourseId();
 

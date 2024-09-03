@@ -67,7 +67,6 @@ const ContentDripSettings = () => {
         {__('You can schedule your course content using the above content drip options', 'tutor')}
       </p>
 
-      {/* @TODO: should be save on change */}
       <Controller
         name="contentDripType"
         control={form.control}

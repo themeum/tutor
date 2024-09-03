@@ -74,7 +74,28 @@ const Curriculum = () => {
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
 
   useEffect(() => {
-    setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
+    setContent((previous) => {
+      if (allCollapsed) {
+        currentExpandedTopics.current = [];
+      }
+
+      if (!allCollapsed) {
+        currentExpandedTopics.current = previous.reduce((acc, item) => {
+          if (item.isSaved) {
+            acc.push(item.id);
+          }
+          return acc;
+        }, [] as ID[]);
+      }
+
+      return previous.map((item) => {
+        if (!item.isSaved) {
+          return item;
+        }
+
+        return { ...item, isCollapsed: allCollapsed };
+      });
+    });
   }, [allCollapsed]);
 
   useEffect(() => {
@@ -246,9 +267,11 @@ const Curriculum = () => {
             title={__('Curriculum', 'tutor')}
             backUrl="/basics"
             rightButton={
-              <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
-                {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
-              </Button>
+              <Show when={content.some((item) => item.isSaved)}>
+                <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
+                  {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
+                </Button>
+              </Show>
             }
           />
 

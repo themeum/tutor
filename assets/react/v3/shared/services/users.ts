@@ -31,6 +31,7 @@ const getUserList = (search: string) => {
     params: {
       filter: {
         search,
+        roles: ['tutor_instructor', 'administrator'],
       },
     },
   });
