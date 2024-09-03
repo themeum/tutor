@@ -942,7 +942,7 @@ class CouponModel {
 			$min_amount  = $coupon->purchase_requirement_value;
 			foreach ( $course_ids as $course_id ) {
 				$course_price = tutor_utils()->get_raw_course_price( $course_id );
-				$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->reg_price;
+				$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->regular_price;
 			}
 
 			if ( $total_price < $min_amount ) {
