@@ -196,6 +196,7 @@ class Student {
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
 		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
+		$timezone                = Input::post( 'timezone', '' );
 
 		$display_name = sanitize_text_field( tutor_utils()->input_old( 'display_name' ) );
 
@@ -208,9 +209,10 @@ class Student {
 		$user_id  = wp_update_user( $userdata );
 
 		if ( ! is_wp_error( $user_id ) ) {
-			update_user_meta( $user_id, 'phone_number', $phone_number );
-			update_user_meta( $user_id, '_tutor_profile_bio', $tutor_profile_bio );
-			update_user_meta( $user_id, '_tutor_profile_job_title', $tutor_profile_job_title );
+			update_user_meta( $user_id, User::PHONE_NUMBER_META, $phone_number );
+			update_user_meta( $user_id, User::PROFILE_BIO_META, $tutor_profile_bio );
+			update_user_meta( $user_id, User::PROFILE_JOB_TITLE_META, $tutor_profile_job_title );
+			update_user_meta( $user_id, User::TIMEZONE_META, $timezone );
 
 			$tutor_user_social = tutor_utils()->tutor_user_social_icons();
 			foreach ( $tutor_user_social as $key => $social ) {
@@ -222,6 +224,7 @@ class Student {
 				}
 			}
 		}
+
 		do_action( 'tutor_profile_update_after', $user_id );
 
 		wp_send_json_success( array( 'message' => __( 'Profile Updated', 'tutor' ) ) );
