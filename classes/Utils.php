@@ -9310,7 +9310,7 @@ class Utils {
 			'icon'  => 'tutor-icon-cart-bold',
 		);
 
-		$items = apply_filters( 'tutor_pro_after_order_history_menu', $items );
+		$items = apply_filters( 'tutor_after_order_history_menu', $items );
 
 		$items['question-answer'] = array(
 			'title' => __( 'Question & Answer', 'tutor' ),
