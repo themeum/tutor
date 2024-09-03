@@ -150,7 +150,8 @@ const Header = () => {
           <SVGIcon name="linkExternal" width={24} height={24} />
         </div>
       ),
-      onClick: !courseId || (postStatus === 'draft' && courseId) ? () => window.open(previewLink, '_blank') : noop,
+      onClick:
+        !courseId || (postStatus === 'draft' && courseId) ? () => window.open(previewLink, '_blank', 'noopener') : noop,
       isDanger: false,
     };
 
@@ -195,7 +196,7 @@ const Header = () => {
           ? `${config.TUTOR_API_BASE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
           : `${config.TUTOR_API_BASE_URL}/wp-admin/post-new.php?post_type=courses`;
 
-        window.open(legacyUrl, '_blank');
+        window.open(legacyUrl, '_blank', 'noopener');
       },
       isDanger: false,
     };
@@ -218,7 +219,7 @@ const Header = () => {
         type="button"
         css={[styleUtils.resetButton, styles.logo]}
         onClick={() => {
-          window.open(tutorConfig.tutor_frontend_dashboard_url, '_blank');
+          window.open(tutorConfig.tutor_frontend_dashboard_url, '_blank', 'noopener');
         }}
       >
         <Logo width={108} height={24} />
@@ -238,7 +239,7 @@ const Header = () => {
                 icon={<SVGIcon name="linkExternal" width={24} height={24} />}
                 iconPosition="right"
                 onClick={() => {
-                  window.open(previewLink, '_blank');
+                  window.open(previewLink, '_blank', 'noopener');
                 }}
                 disabled={!previewLink}
               >

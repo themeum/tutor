@@ -113,7 +113,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
               size="small"
               type="button"
               onClick={() => {
-                window.open(meeting_data.start_url, '_blank');
+                window.open(meeting_data.start_url, '_blank', 'noopener');
               }}
             >
               {__('Start Meeting', 'tutor')}

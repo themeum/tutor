@@ -127,7 +127,7 @@ const Certificate = () => {
               variant="primary"
               size="small"
               onClick={() => {
-                window.open(config.TUTOR_PRICING_PAGE, '_blank');
+                window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
               }}
               icon={<SVGIcon name="crown" width={24} height={24} />}
             >

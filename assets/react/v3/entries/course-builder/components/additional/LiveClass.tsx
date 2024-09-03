@@ -73,7 +73,7 @@ const LiveClass = () => {
                 size="small"
                 icon={<SVGIcon name="crown" width={24} height={24} />}
                 onClick={() => {
-                  window.open(config.TUTOR_PRICING_PAGE, '_blank');
+                  window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
                 }}
               >
                 {__('Get Tutor LMS Pro', 'tutor')}
@@ -100,7 +100,7 @@ const LiveClass = () => {
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    window.open(config.TUTOR_ADDONS_PAGE, '_blank');
+                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
                   }}
                 >
                   {__('Go to addons', 'tutor')}

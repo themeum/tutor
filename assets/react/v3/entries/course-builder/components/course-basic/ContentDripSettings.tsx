@@ -1,7 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import { tutorConfig } from '@Config/config';
+import config, { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -46,7 +46,14 @@ const ContentDripSettings = () => {
           {__('You can schedule your course content using  content drip options', 'tutor')}
         </p>
         {/* @TODO: Redirect to tutor pro url */}
-        <Button icon={<SVGIcon name="crown" width={24} height={24} />}>{__('Get Tutor LMS Pro', 'tutor')}</Button>
+        <Button
+          icon={<SVGIcon name="crown" width={24} height={24} />}
+          onClick={() => {
+            window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+          }}
+        >
+          {__('Get Tutor LMS Pro', 'tutor')}
+        </Button>
       </div>
     );
   }
