@@ -10,8 +10,6 @@
 
 namespace Tutor\Ecommerce;
 
-use TUTOR_EMAIL\EmailPlaceholder;
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
