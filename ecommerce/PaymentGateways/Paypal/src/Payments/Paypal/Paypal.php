@@ -604,7 +604,7 @@ class Paypal extends BasePayment
             return [
                 'name'          => $item['item_name'],
                 'quantity'      => (string) $item['quantity'],
-                'image_url'     => $item['image'] ? Path::clean($item['image']) : null,
+                'image_url'     => isset($item['image']) && $item['image'] ? Path::clean($item['image']) : null,
                 'unit_amount'   => [
                     'currency_code' => $currency,
                     'value'         => (string) $price
