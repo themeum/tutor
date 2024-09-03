@@ -48,7 +48,6 @@ const ContentDripSettings = () => {
         <p css={styles.dripNoProDescription}>
           {__('You can schedule your course content using  content drip options', 'tutor')}
         </p>
-        {/* @TODO: Redirect to tutor pro url */}
         <Button
           icon={<SVGIcon name="crown" width={24} height={24} />}
           onClick={() => {
