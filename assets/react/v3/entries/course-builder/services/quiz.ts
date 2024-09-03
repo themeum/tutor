@@ -211,7 +211,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
             ...answer,
             _data_status: calculateQuizDataStatus(answer),
             answer_view_format: answer.image_url ? 'text_image' : 'text',
-            is_correct: answer.is_correct === '1' ? '1' : '0',
           })),
           question_settings: {
             ...question.question_settings,
@@ -228,7 +227,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
             ...answer,
             _data_status: calculateQuizDataStatus(answer),
             answer_view_format: answer.image_url ? 'text_image' : 'text',
-            is_correct: answer.is_correct === '1' ? '1' : '0',
           })),
           question_settings: {
             ...question.question_settings,

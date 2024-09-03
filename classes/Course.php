@@ -2768,6 +2768,11 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
+		if ( isset( $filter->role ) && is_array( $filter->role ) ) {
+			$args['role__in'] = array_map( 'sanitize_text_field', $filter->role );
+		}
+
 		return $args;
 	}
 

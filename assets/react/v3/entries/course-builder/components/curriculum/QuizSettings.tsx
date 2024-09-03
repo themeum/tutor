@@ -1,17 +1,18 @@
 import FormInput from '@Components/fields/FormInput';
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import Card from '@Molecules/Card';
 
+import FormDateInput from '@Components/fields/FormDateInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
-
-import FormDateInput from '@Components/fields/FormDateInput';
 import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
+
 import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
@@ -21,7 +22,6 @@ import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { useQueryClient } from '@tanstack/react-query';
 
 const courseId = getCourseId();
 
