@@ -715,6 +715,91 @@ class OrderModel {
 	}
 
 	/**
+	 * Get total refunds by user_id (instructor), optionally can set period ( today | monthly| yearly )
+	 *
+	 * Optionally can set start date & end date to get enrollment list from date range
+	 *
+	 * If period or date range not pass then it will return all time enrollment list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id User id, if user not have admin access
+	 * then only this user's refund amount will fetched.
+	 * @param string $period Time period.
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_refunds_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = 0 ): array {
+		$response = array(
+			'refunds'       => array(),
+			'total_refunds' => 0,
+		);
+
+		global $wpdb;
+
+		$user_clause       = '';
+		$date_range_clause = '';
+		$period_clause     = '';
+		$course_clause     = '';
+		$commission_clause = '';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = $wpdb->prepare(
+				'AND o.created_at_gmt BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
+		} else {
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+		}
+
+		if ( $course_id ) {
+			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+		}
+
+		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
+		if ( $commission ) {
+			$commission_clause = $wpdb->prepare(
+				'COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100, 0) AS total',
+				$commission
+			);
+		} else {
+			$commission_clause = 'COALESCE(SUM(o.refund_amount), 0) AS total';
+		}
+
+		$item_table = $wpdb->prefix . 'tutor_order_items';
+		$refunds    = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+				{$commission_clause},
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				WHERE 1 = %d
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$course_clause}",
+				1
+			)
+		);
+
+		foreach ( $refunds as $refund ) {
+			$response['total_refunds'] += $refund->total;
+		}
+
+		return $response;
+	}
+
+	/**
 	 * Update the payment status of an order.
 	 *
 	 * This function updates the payment status and note of an order in the database.
@@ -936,7 +1021,10 @@ class OrderModel {
 		$table     = $wpdb->prefix . 'tutor_ordermeta';
 		$meta_keys = array( OrderActivitiesModel::META_KEY_REFUND, OrderActivitiesModel::META_KEY_PARTIALLY_REFUND );
 
-		$where          = array( 'meta_key' => $meta_keys, 'order_id' => $order_id );
+		$where          = array(
+			'meta_key' => $meta_keys,
+			'order_id' => $order_id,
+		);
 		$refund_records = QueryHelper::get_all( $table, $where, 'created_at_gmt' );
 
 		$refund_amount = 0;
@@ -952,4 +1040,42 @@ class OrderModel {
 		return $refund_amount;
 	}
 
+	/**
+	 * Get order status based on the payment status
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $payment_status Order payment status.
+	 *
+	 * @return string
+	 */
+	public function get_order_status_by_payment_status( $payment_status ) {
+		$status = '';
+
+		switch ( $payment_status ) {
+			case self::PAYMENT_PAID:
+				$status = self::ORDER_COMPLETED;
+				break;
+			case self::PAYMENT_UNPAID:
+				$status = self::ORDER_INCOMPLETE;
+				break;
+			case self::PAYMENT_PARTIALLY_REFUNDED:
+				$status = self::ORDER_COMPLETED;
+				break;
+			case self::PAYMENT_REFUNDED:
+				$status = self::ORDER_CANCELLED;
+				break;
+			case self::PAYMENT_FAILED:
+				$status = self::ORDER_CANCELLED;
+				break;
+			case self::ORDER_TRASH:
+				$status = self::ORDER_TRASH;
+				break;
+			case 'delete':
+				$status = self::ORDER_CANCELLED;
+				break;
+		}
+
+		return $status;
+	}
 }

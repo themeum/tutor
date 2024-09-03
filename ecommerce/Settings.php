@@ -11,7 +11,6 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Input;
-use Tutor\PaymentGateways\Configs\StripeConfig;
 
 /**
  * Configure ecommerce settings
