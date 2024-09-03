@@ -6,6 +6,7 @@ use Throwable;
 use ErrorException;
 use GuzzleHttp\Client;
 use Ollyo\PaymentHub\Core\Support\Arr;
+use Ollyo\PaymentHub\Core\Support\Uri;
 use Ollyo\PaymentHub\Core\Support\Path;
 use Ollyo\PaymentHub\Core\Support\System;
 use GuzzleHttp\Exception\RequestException;
@@ -276,7 +277,7 @@ class Paypal extends BasePayment
      * @return object The response from the PayPal API, decoded from JSON.
      * @since  1.0.0
      */
-    protected function createOrder()
+    protected function createOrder() : object
     {
         $headers = [
             'Content-Type'      => 'application/json',
@@ -312,17 +313,18 @@ class Paypal extends BasePayment
     {
         try {   
              
-            if ($payload->server['REQUEST_METHOD'] === 'GET' || static::checkQueryParams($payload->get)) {
+            if ($payload->server['REQUEST_METHOD'] === 'GET' && static::checkQueryParams($payload->get)) {
                 
-                $data = static::verifyPaymentAuthentication($payload->get);
-                return $this->processApprovedOrder($data);
+                $paymentData               = static::verifyPaymentAuthentication($payload->get);
+                $paymentData->encodedData  = $payload->get['encodedData'];
+                return $this->processApprovedOrder($paymentData);
                 
             } elseif ($payload->server['REQUEST_METHOD'] === 'POST' && !empty($payload->stream)) {
                 
-                $data = json_decode($payload->stream);
+                $paymentData = json_decode($payload->stream);
 
-                if($data->payment_type === 'recurring') {
-                    return $this->setReturnData($data);
+                if($paymentData->payment_type === 'recurring') {
+                    return $this->setReturnData($paymentData);
                 }
             }
  
@@ -331,7 +333,7 @@ class Paypal extends BasePayment
             
             // Handle the error response
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();
-            return $this->setReturnData($data, $errorMessage);
+            return $this->setReturnData($paymentData, $errorMessage);
         }
     }
 
@@ -373,6 +375,8 @@ class Paypal extends BasePayment
         if (isset($_GET['ba_token'])) {
             $responseData->payment_source->paypal->billing_agreement_id = $_GET['ba_token'];
         }
+        
+        $responseData->encodedData = $payloadStream->encodedData ?? null;
 
         return $responseData;
     }
@@ -507,7 +511,7 @@ class Paypal extends BasePayment
      * @return object                     The constructed order data object.
      * @since  1.0.0
      */
-    private function setReturnData($payloadStream, $errorMessage = null)
+    private function setReturnData($payloadStream, $errorMessage = null) : object
     {
         $returnData = System::defaultOrderData();
 
@@ -518,24 +522,28 @@ class Paypal extends BasePayment
         ];
 
         $paymentType = $payloadStream->payment_type ?? 'one-time';
+        
+        // Set Redirect Url if it is `one-time` payment.
+        if (!is_null($payloadStream->encodedData) && $paymentType === 'one-time') {
+            
+            $decodedData                = json_decode(base64_decode($payloadStream->encodedData));        
+            $returnData->redirectUrl    = $errorMessage ? $decodedData->cancel_url : $decodedData->success_url;
+        }
 
         if ($errorMessage) {          
             $returnData->id                   = $payloadStream->purchase_units[0]->custom_id;
             $returnData->payment_status       = 'failed';
-            $returnData->payment_payload      = json_encode($payloadStream);
-            $returnData->payment_method       = $this->config->get('name');
             $returnData->payment_error_reason = $errorMessage;
-            $returnData->redirectUrl          = $paymentType !== 'recurring' ? $this->config->get('cancel_url') : null;
-            
+           
         } else {        
             $transactionInfo             = $payloadStream->purchase_units[0]->payments->captures[0];
             $returnData->id              = $transactionInfo->custom_id;
             $returnData->payment_status  = $statusMap[$transactionInfo->status];
             $returnData->transaction_id  = $transactionInfo->id;
-            $returnData->payment_payload = json_encode($payloadStream);
-            $returnData->payment_method  = $this->config->get('name');
-            $returnData->redirectUrl     = $paymentType !== 'recurring' ? $this->config->get('success_url') : null;
         }
+
+        $returnData->payment_payload = json_encode($payloadStream);
+        $returnData->payment_method  = $this->config->get('name');
 
         return $returnData;
     }
@@ -550,7 +558,7 @@ class Paypal extends BasePayment
      * @return bool                     Returns true if the order is approved for capture, false otherwise.
      * @since  1.0.0
      */
-    private function isOrderApproved($payloadStream)
+    private function isOrderApproved($payloadStream) : bool
     {
         return $payloadStream->intent === 'CAPTURE' && $payloadStream->status === 'APPROVED';
     }
@@ -623,7 +631,7 @@ class Paypal extends BasePayment
                     'vault'                 => (object)[
                         'id' => $this->previousPayload->payment_source->paypal->attributes->vault->id
                     ],
-                    'billing_agreement_id'  => $this->previousPayload->payment_source->paypal->attributes->billing_agreement_id                  
+                    'billing_agreement_id'  => $this->previousPayload->payment_source->paypal->billing_agreement_id                  
                 ];
 
                 $responseData->payment_type = 'recurring';
@@ -655,7 +663,7 @@ class Paypal extends BasePayment
      */
     private function checkQueryParams($params) : bool
     {
-        return $params['token'] && $params['PayerID'];
+        return $params['token'] && $params['PayerID'] && $params['encodedData'];
     }
 
 
@@ -666,7 +674,7 @@ class Paypal extends BasePayment
      * @return  object          The response data from the PayPal API, containing order details.
      * @since   1.0.0
      */
-    private function verifyPaymentAuthentication($payload)
+    private function verifyPaymentAuthentication($payload) : object
     {         
         $headers = [
             'Content-Type'  => 'application/json',
@@ -724,14 +732,14 @@ class Paypal extends BasePayment
      * @return void
      * @since  1.0.0
      */
-    private function getPaymentSourceForOneTime(&$returnData) 
+    private function getPaymentSourceForOneTime(&$returnData) : void
     {
         $returnData['payment_source']['paypal'] = [
 
             'experience_context' => [
                 'user_action'               => 'PAY_NOW',
                 'payment_method_preference' => 'UNRESTRICTED',
-                'return_url'                => $this->config->get('webhook_url'),
+                'return_url'                => $this->updateWebhookUrl(),
                 'cancel_url'                => $this->config->get('cancel_url'),
             ]
         ];
@@ -752,8 +760,8 @@ class Paypal extends BasePayment
      * @return void
      * @since  1.0.0
      */
-    private function getPaymentSourceForRecurring(&$returnData) {
-        
+    private function getPaymentSourceForRecurring(&$returnData) : void
+    {
         $vaultID        = $this->previousPayload->payment_source->paypal->attributes->vault->id;
         $vaultDetails   = static::getVaultDetails($vaultID);
 
@@ -799,7 +807,7 @@ class Paypal extends BasePayment
      * @since  1.0.0
      */
 
-    private function isOrderCompleted($payloadStream)
+    private function isOrderCompleted($payloadStream) : bool
     {
         return $payloadStream->intent === 'CAPTURE' && $payloadStream->status === 'COMPLETED';
     }
@@ -807,15 +815,34 @@ class Paypal extends BasePayment
     /**
      * Creates an amount array for recurring payments.
      *
-     * @param  array $data  The data array containing currency and amount information.
+     * @param  Arr   $data  The data array containing currency and amount information.
      * @return array        Returns an array with currency code and amount value.
      * @since  1.0.0
      */
-    private function createAmountForRecurring($data) : array
+    private function createAmountForRecurring(Arr $data) : array
     {
         return [
             'currency_code' => $data['currency']->code,
             'value'         => (string) $data['amount'],
         ];
+    }
+
+    /**
+     * Updates the webhook URL by appending encoded success and cancel URLs as a query parameter.
+     *
+     * @return string The updated webhook URL with the encoded data appended.
+     * @since  1.0.0
+     */
+    private function updateWebhookUrl() : string
+    {
+        $encodedUrlData = base64_encode(json_encode([
+            'success_url'   => $this->config->get('success_url'), 
+            'cancel_url'    => $this->config->get('cancel_url')]
+        ));
+        
+        $webhookUrl = Uri::getInstance($this->config->get('webhook_url'));
+        $webhookUrl->setVar('encodedData', $encodedUrlData);
+
+        return $webhookUrl->__toString();
     }
 }
