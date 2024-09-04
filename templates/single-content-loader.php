@@ -56,7 +56,9 @@ get_tutor_header();
 
 $show_mark_as_complete = false;
 
-if ( tutor()->lesson_post_type === $post->post_type ) {
+$lesson_post_types = array( tutor()->lesson_post_type, tutor()->zoom_post_type, tutor()->meet_post_type );
+
+if ( in_array($post->post_type, $lesson_post_types) ) {
 	$show_mark_as_complete = apply_filters( 'tutor_lesson_show_mark_as_complete', true );
 }
 
