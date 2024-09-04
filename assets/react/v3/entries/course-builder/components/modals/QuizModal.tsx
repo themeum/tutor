@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
-import { Controller, FormProvider, useWatch } from 'react-hook-form';
+import { Controller, FormProvider } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
@@ -36,7 +36,7 @@ import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -47,6 +47,7 @@ interface QuizModalProps extends ModalProps {
   topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   contentDripType: ContentDripType;
+  contentType?: ContentType;
 }
 
 export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
@@ -58,7 +59,16 @@ type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
 
-const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
+const QuizModal = ({
+  closeModal,
+  icon,
+  title,
+  subtitle,
+  quizId,
+  topicId,
+  contentDripType,
+  contentType,
+}: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
@@ -100,11 +110,6 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
   });
 
   const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
-  const questions = useWatch({
-    control: form.control,
-    name: 'questions',
-    defaultValue: [],
-  });
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -194,7 +199,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   return (
     <FormProvider {...form}>
-      <QuizModalContextProvider quizId={quizId || ''}>
+      <QuizModalContextProvider quizId={quizId || ''} contentType={contentType || 'tutor_quiz'}>
         {(activeQuestionIndex, setValidationError) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
@@ -351,7 +356,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                     <QuizSettings contentDripType={contentDripType} />
                   </Show>
                 </div>
-                <Show when={activeTab === 'details'}>
+                <Show when={activeTab === 'details' && contentType !== 'tutor_h5p_quiz'}>
                   <div css={styles.right}>
                     <QuestionConditions />
                   </div>

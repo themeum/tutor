@@ -561,6 +561,29 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 >
                   {__('Quiz', 'tutor')}
                 </Button>
+                <Show when={isAddonEnabled(Addons.H5P_Integration)}>
+                  <Button
+                    variant="tertiary"
+                    isOutlined
+                    size="small"
+                    icon={<SVGIcon name="plus" width={24} height={24} />}
+                    onClick={() => {
+                      showModal({
+                        component: QuizModal,
+                        props: {
+                          topicId: topic.id,
+                          contentDripType: courseDetailsForm.watch('contentDripType'),
+                          title: __('Interactive Quiz', 'tutor'),
+                          icon: <SVGIcon name="quiz" width={24} height={24} />,
+                          subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
+                          contentType: 'tutor_h5p_quiz',
+                        },
+                      });
+                    }}
+                  >
+                    {__('Interactive Quiz', 'tutor')}
+                  </Button>
+                </Show>
                 <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
                   <Button
                     variant="tertiary"

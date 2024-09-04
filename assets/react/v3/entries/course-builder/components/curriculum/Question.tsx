@@ -35,6 +35,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   matching: 'quizImageMatching',
   image_answering: 'quizImageAnswer',
   ordering: 'quizOrdering',
+  h5p: 'quizTrueFalse',
 };
 
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {

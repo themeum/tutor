@@ -24,12 +24,14 @@ import Popover from '@Molecules/Popover';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
+import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
+import type { H5PContent, QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
@@ -103,7 +105,7 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, setActiveQuestionId, setValidationError } = useQuizModalContext();
+  const { activeQuestionIndex, setActiveQuestionId, setValidationError, contentType } = useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -116,6 +118,7 @@ const QuestionList = ({
   });
 
   const { showToast } = useToast();
+  const { showModal } = useModal();
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -135,7 +138,7 @@ const QuestionList = ({
 
   const questions = form.watch('questions') || [];
 
-  const handleAddQuestion = (questionType: QuizQuestionType) => {
+  const handleAddQuestion = (questionType: QuizQuestionType, content?: H5PContent) => {
     const validation = validateQuizQuestion(activeQuestionIndex, form);
     if (validation !== true) {
       setValidationError(validation);
@@ -147,8 +150,8 @@ const QuestionList = ({
     appendQuestion({
       _data_status: 'new',
       question_id: questionId,
-      question_title: `Question ${questionFields.length + 1}`,
-      question_description: '',
+      question_title: questionType === 'h5p' ? content?.title : `Question ${questionFields.length + 1}`,
+      question_description: questionType === 'h5p' ? content?.id : '',
       question_type: questionType,
       question_answers:
         questionType === 'true_false'
@@ -279,7 +282,25 @@ const QuestionList = ({
     <div>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <button ref={addButtonRef} type="button" onClick={() => setIsOpen(true)}>
+        <button
+          ref={addButtonRef}
+          type="button"
+          onClick={() => {
+            if (contentType === 'tutor_h5p_quiz') {
+              showModal({
+                component: H5PContentListModal,
+                props: {
+                  title: __('Select H5P Content', 'tutor'),
+                  onAddContent: (content) => {
+                    handleAddQuestion('h5p', content);
+                  },
+                },
+              });
+            } else {
+              setIsOpen(true);
+            }
+          }}
+        >
           <SVGIcon name="plusSquareBrand" width={32} height={32} />
         </button>
       </div>

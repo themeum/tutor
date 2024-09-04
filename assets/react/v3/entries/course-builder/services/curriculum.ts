@@ -12,7 +12,14 @@ import type { ErrorResponse } from '@Utils/form';
 
 export type ID = string | number;
 
-export type ContentType = 'tutor-google-meet' | 'tutor_zoom_meeting' | 'lesson' | 'tutor_quiz' | 'tutor_assignments';
+export type ContentType =
+  | 'tutor-google-meet'
+  | 'tutor_zoom_meeting'
+  | 'lesson'
+  | 'tutor_quiz'
+  | 'tutor_assignments'
+  | 'tutor_h5p_quiz';
+
 export interface Content {
   ID: ID;
   post_title: string;
@@ -20,6 +27,7 @@ export interface Content {
   post_name: string | null;
   post_type: ContentType;
   total_question?: number;
+  quiz_type?: 'tutor_h5p_quiz';
 }
 
 export interface Lesson extends Content {
@@ -161,7 +169,16 @@ const getCourseTopic = (courseId: ID) => {
 export const useCourseTopicQuery = (courseId: ID) => {
   return useQuery({
     queryKey: ['Topic', courseId],
-    queryFn: () => getCourseTopic(courseId).then((res) => res.data),
+    queryFn: () =>
+      getCourseTopic(courseId).then((res) => {
+        return res.data.map((topic) => ({
+          ...topic,
+          contents: topic.contents.map((content) => ({
+            ...content,
+            post_type: content.quiz_type ? 'tutor_h5p_quiz' : content.post_type,
+          })),
+        }));
+      }),
     enabled: !!courseId,
   });
 };

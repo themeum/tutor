@@ -17,7 +17,7 @@ import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { ContentDripType, TutorMutationResponse } from './course';
-import type { ID } from './curriculum';
+import type { ContentType, ID } from './curriculum';
 
 export type QuizDataStatus = 'new' | 'update' | 'no_change';
 
@@ -31,7 +31,8 @@ export type QuizQuestionType =
   | 'matching'
   | 'image_matching'
   | 'image_answering'
-  | 'ordering';
+  | 'ordering'
+  | 'h5p';
 
 export interface QuizQuestionOption {
   _data_status: QuizDataStatus;
@@ -96,6 +97,7 @@ interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' |
       after_xdays_of_enroll: number;
       prerequisites: ID[];
     };
+    quiz_type?: string;
   };
 }
 interface QuizPayload {
@@ -162,6 +164,7 @@ export interface QuizForm {
       after_xdays_of_enroll: number;
       prerequisites: ID[];
     };
+    quiz_type?: string;
   };
   questions: QuizQuestion[];
   deleted_question_ids: ID[];
@@ -178,6 +181,19 @@ interface QuizUpdateQuestionPayload {
   'question_settings[question_type]': string;
   'question_settings[answer_required]': 0 | 1;
   'question_settings[question_mark]': number;
+}
+
+export interface H5PContent {
+  id: ID;
+  title: string;
+  content_type: string;
+  user_id: ID;
+  user_name: string;
+  updated_at: string;
+}
+
+interface H5PContentResponse {
+  output: H5PContent[];
 }
 
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
@@ -341,6 +357,10 @@ export const convertQuizFormDataToPayload = (
         ...(isAddonEnabled(Addons.CONTENT_DRIP) && {
           content_drip_settings: formData.quiz_option.content_drip_settings,
         }),
+        ...(isAddonEnabled(Addons.H5P_Integration) &&
+          formData.questions.every((question) => question.question_type === 'h5p') && {
+            quiz_type: 'tutor_h5p_quiz',
+          }),
       },
       questions: formData.questions.map((question) => {
         return {
@@ -575,4 +595,36 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
   }
 
   return 'no_change';
+};
+
+const getH5PQuizContents = () => {
+  return wpAjaxInstance.get<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT).then((response) => response.data);
+};
+
+export const useGetH5PQuizContentsQuery = () => {
+  return useQuery({
+    queryKey: ['H5PQuizContents'],
+    queryFn: getH5PQuizContents,
+  });
+};
+
+const getH5PQuizContentById = (id: ID) => {
+  return wpAjaxInstance
+    .post<
+      ID,
+      AxiosResponse<{
+        output: string;
+      }>
+    >(endpoints.GET_H5P_QUIZ_CONTENT_BY_ID, {
+      content_id: id,
+    })
+    .then((response) => response.data);
+};
+
+export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: ContentType) => {
+  return useQuery({
+    queryKey: ['H5PQuizContent', id],
+    queryFn: () => getH5PQuizContentById(id),
+    enabled: !!id && contentType === 'tutor_h5p_quiz',
+  });
 };

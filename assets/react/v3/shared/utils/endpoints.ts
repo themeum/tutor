@@ -32,6 +32,8 @@ const endpoints = {
 
   // Quiz
   SAVE_QUIZ: 'tutor_quiz_builder_save',
+  GET_H5P_QUIZ_CONTENT: 'tutor_h5p_list_quiz_contents',
+  GET_H5P_QUIZ_CONTENT_BY_ID: 'tutor_h5p_quiz_content_by_id',
 };
 
 export default endpoints;

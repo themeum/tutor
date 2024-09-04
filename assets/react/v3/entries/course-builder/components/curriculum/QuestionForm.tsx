@@ -27,13 +27,14 @@ import {
   type QuizForm,
   type QuizQuestionType,
   calculateQuizDataStatus,
+  useGetH5PQuizContentByIdQuery,
 } from '@CourseBuilderServices/quiz';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 import { useEffect, useRef } from 'react';
 
 const QuestionForm = () => {
-  const { activeQuestionIndex, activeQuestionId, validationError } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError, contentType } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const alertRef = useRef<HTMLDivElement>(null);
@@ -41,6 +42,11 @@ const QuestionForm = () => {
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const questions = form.watch('questions') || [];
   const dataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
+
+  const getH5PContentByIdQuery = useGetH5PQuizContentByIdQuery(
+    questions[activeQuestionIndex]?.question_description,
+    contentType,
+  );
 
   const questionTypeForm = {
     true_false: <TrueFalse key={activeQuestionId} />,
@@ -124,6 +130,8 @@ const QuestionForm = () => {
         </div>
       </div>
 
+      <div dangerouslySetInnerHTML={{ __html: getH5PContentByIdQuery.data?.output || '' }} />
+
       <Show when={validationError}>
         <div ref={alertRef} css={styles.alertWrapper}>
           <Alert type="danger" icon="warning">
@@ -132,7 +140,7 @@ const QuestionForm = () => {
         </div>
       </Show>
 
-      {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]}
+      {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching' | 'h5p'>]}
 
       <div css={styles.questionAnswer}>
         <Controller
