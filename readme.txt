@@ -286,7 +286,8 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 = 2.7.5 - September 04, 2024
 
-Fix: Enhanced plugin security
+Fix: Fixed the malfunctioning export feature for Tutor LMS settings.
+Fix: Enhanced the user role capabilities verification.
 
 = 2.7.4 - July 31, 2024
 
