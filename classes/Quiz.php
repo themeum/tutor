@@ -601,7 +601,7 @@ class Quiz {
 						$question_type  = $question->question_type;
 						$attempt_result = \TUTOR_H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
 
-						if ( 'h5p_question' === $question_type ) {
+						if ( 'h5p' === $question_type ) {
 							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
 								$h5p_attempt_answer    = $attempt_result[0];
 								$total_question_marks += $h5p_attempt_answer->max_score;
@@ -810,7 +810,7 @@ class Quiz {
 					// Check if h5p addon is enabled.
 					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
 						// Check if it is a h5p question.
-						if ( 'h5p_question' === $question_type ) {
+						if ( 'h5p' === $question_type ) {
 							$attempt_result = \TUTOR_H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
 							// Set the h5p question answer to tutor quiz attempt result.
 							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {

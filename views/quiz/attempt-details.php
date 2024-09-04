@@ -390,7 +390,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
 													<div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
 													<?php
-													if ( 'h5p_question' === $answer->question_type ) {
+													if ( 'h5p' === $answer->question_type ) {
 														?>
 														<span class="tooltip-btn tutor-d-flex tutor-align-center">
 															<img class="tutor-quiz-type-icon" src="<?php echo esc_url( $h5p_thumbnail_path ); ?>"/>
@@ -405,7 +405,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													?>
 														<span class="tooltip-txt tooltip-top">
 														<?php
-														if ( 'h5p_question' === $answer->question_type ) {
+														if ( 'h5p' === $answer->question_type ) {
 																echo esc_html( 'H5P' );
 														} else {
 																echo esc_html( $type['name'] ?? '' );
@@ -710,7 +710,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											?>
 												<td class="result">
 												<?php
-												if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) && 'h5p_question' === $answer->question_type ) {
+												if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) && 'h5p' === $answer->question_type ) {
 													$attempt_results = \TUTOR_H5P\Utils::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
 													$has_response    = true;
 													if ( is_array( $attempt_results ) && 1 === count( $attempt_results ) ) {
