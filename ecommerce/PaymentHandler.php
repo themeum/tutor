@@ -64,9 +64,11 @@ class PaymentHandler {
 
 		$payment_method = Input::get( 'payment_method' );
 
-		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
+		$payment_gateways = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
-		$payment_gateway_class = $gateways_with_class[ $payment_method ] ?? null;
+		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
+								? $payment_gateways[ $payment_method ]['gateway_class']
+								: null;
 
 		if ( $payment_gateway_class ) {
 			$payment = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
