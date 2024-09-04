@@ -1,8 +1,8 @@
 {
     "version": "1.0.0",
     "name": "themeum/tutor",
+    "description": "Global payment gateway implementation for wp and joomla",
     "type": "library",
-    "description": "Tutor plugin for WordPress",
     "license": "MIT",
     "require": {
         "stripe/stripe-php": "^14.9"
