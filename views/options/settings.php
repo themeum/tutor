@@ -106,6 +106,8 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 				<div class="tutor-col-10 tutor-col-lg-9">
 					<div class="tutor-option-tab-pages tutor-py-24 tutor-pl-40">
 						<?php
+						// Tutor monetization fields will loaded regardless of
+						// which monetization is enabled to keep settings data alive.
 						foreach ( $option_fields as $key => $section ) {
 							$active_class = $active_tab == $key ? esc_attr( ' is-active' ) : '';
 

@@ -1286,7 +1286,7 @@ class Utils {
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
 		$get_enrolled_info = TutorCache::get( $cache_key );
-		if ( false === $get_enrolled_info ) {
+		if ( ! $get_enrolled_info ) {
 			$status_clause = '';
 			if ( $is_complete ) {
 				$status_clause = "AND post_status = 'completed' ";
@@ -6150,7 +6150,9 @@ class Utils {
 	 * @return int|string
 	 */
 	public function tutor_price( $price = 0 ) {
-		if ( function_exists( 'wc_price' ) ) {
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			return tutor_get_formatted_price( $price );
+		} elseif ( function_exists( 'wc_price' ) ) {
 			return wc_price( $price );
 		} elseif ( function_exists( 'edd_currency_filter' ) ) {
 			return edd_currency_filter( edd_format_amount( $price ) );

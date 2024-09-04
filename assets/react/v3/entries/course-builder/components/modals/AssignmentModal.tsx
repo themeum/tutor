@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
@@ -13,11 +14,11 @@ import type { Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -32,7 +33,6 @@ import {
 import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { maxLimitRule } from '@Utils/validation';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;

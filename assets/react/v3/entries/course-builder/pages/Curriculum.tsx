@@ -25,6 +25,7 @@ import EmptyState from '@Molecules/EmptyState';
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 
 import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
 import For from '@Controls/For';
@@ -41,7 +42,6 @@ import { droppableMeasuringStrategy } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { moveTo, nanoid } from '@Utils/util';
 
-import { CourseDetailsProvider } from '@CourseBuilderContexts/CourseDetailsContext';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 
@@ -74,7 +74,28 @@ const Curriculum = () => {
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
 
   useEffect(() => {
-    setContent((previous) => previous.map((item) => ({ ...item, isCollapsed: allCollapsed })));
+    setContent((previous) => {
+      if (allCollapsed) {
+        currentExpandedTopics.current = [];
+      }
+
+      if (!allCollapsed) {
+        currentExpandedTopics.current = previous.reduce((acc, item) => {
+          if (item.isSaved) {
+            acc.push(item.id);
+          }
+          return acc;
+        }, [] as ID[]);
+      }
+
+      return previous.map((item) => {
+        if (!item.isSaved) {
+          return item;
+        }
+
+        return { ...item, isCollapsed: allCollapsed };
+      });
+    });
   }, [allCollapsed]);
 
   useEffect(() => {
@@ -246,9 +267,11 @@ const Curriculum = () => {
             title={__('Curriculum', 'tutor')}
             backUrl="/basics"
             rightButton={
-              <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
-                {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
-              </Button>
+              <Show when={content.some((item) => item.isSaved)}>
+                <Button variant="text" size="small" onClick={() => setAllCollapsed((previous) => !previous)}>
+                  {allCollapsed ? __('Expand All', 'tutor') : __('Collapse All', 'tutor')}
+                </Button>
+              </Show>
             }
           />
 

@@ -178,6 +178,7 @@ interface CourseDetailsPayload {
   action: string;
   course_id: number;
 }
+
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
 
 export interface ZoomMeeting {

@@ -132,7 +132,7 @@ const FormVideoInput = ({
           size="small"
           icon={<SVGIcon name="linkExternal" height={24} width={24} />}
           onClick={() => {
-            window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank');
+            window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
           }}
         >
           {__('Select from settings', 'tutor')}
