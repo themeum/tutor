@@ -161,30 +161,22 @@ tutor_load_template(
 							<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'About Lesson', 'tutor' ); ?>
 							</div>
-							<?php if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) : ?>
-								<?php
-									$lesson_content = maybe_unserialize( $post->post_content );
-								if ( is_array( $lesson_content ) && count( $lesson_content ) && 'h5p_lesson' === $lesson_content['lesson_type'] ) {
-									$h5p_content_id = isset( $lesson_content['h5p_content_id'] ) ? $lesson_content['h5p_content_id'] : 0;
-									$short_code     = "[h5p id='" . $h5p_content_id . "']";
-									?>
-									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper tutor-spotlight-h5p-lesson-content" data-h5p-content-id="<?php echo 0 !== $h5p_content_id ? esc_attr( $h5p_content_id ) : ''; ?>" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-topic-id="<?php echo esc_attr( $post->post_parent ); ?>">
-											<?php echo 0 !== $h5p_content_id ? do_shortcode( $short_code ) : ''; ?>
+							<?php
+							if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+								$content_id = \TUTOR_H5P\Utils::has_h5p_content_id( $post->post_content );
+								?>
+								<?php if ( $content_id > 0 ) : ?>
+									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper tutor-spotlight-h5p-lesson-content" data-h5p-content-id="<?php echo esc_attr( $content_id ); ?>" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-topic-id="<?php echo esc_attr( $post->post_parent ); ?>">
+										<?php the_content(); ?>
 									</div>
-									<?php
-								} else {
-									?>
+								<?php else : ?>
 									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
 										<?php the_content(); ?>
 									</div>
-									<?php
-								}
-								?>
-							<?php else : ?>
-							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
-								<?php the_content(); ?>
-							</div>
-							<?php endif; ?>
+								<?php endif; ?>
+								<?
+							}
+							?>
 						</div>
 					</div>
 				</div>
