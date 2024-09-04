@@ -153,7 +153,7 @@ class CheckoutController {
 
 		$current_user_id = get_current_user_id();
 
-		$request = Input::sanitize_array( $_POST );
+		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
@@ -432,7 +432,7 @@ class CheckoutController {
 	 */
 	public function restrict_checkout_page() {
 		$page_id = self::get_page_id();
-		$plan_id = isset( $_GET['plan'] ) ? $_GET['plan'] : null;
+		$plan_id = Input::get( 'plan' );
 
 		if ( is_page( $page_id ) && ! $plan_id ) {
 			$cart_controller = new CartController();
