@@ -425,20 +425,22 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		return (object) array(
-			'type'                    => 'recurring',
-			'previous_payload'        => $order_data->payment_payloads,
-			'amount'                  => floatval( $amount ),
-			'amount_in_smallest_unit' => floatval( $amount ) * 100,
-			'currency'                => (object) array(
+			'type'                              => 'recurring',
+			'previous_payload'                  => $order_data->payment_payloads,
+			'total_amount'                      => floatval( $amount ),
+			'total_amount_in_smallest_unit'     => floatval( $amount ) * 100,
+			'sub_total_amount'                  => floatval( $amount ),
+			'sub_total_amount_in_smallest_unit' => floatval( $amount ) * 100,
+			'currency'                          => (object) array(
 				'code'         => $currency_code,
 				'symbol'       => $currency_symbol,
 				'name'         => $currency_info['name'] ?? '',
 				'locale'       => $currency_info['locale'] ?? '',
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
-			'order_id'                => $order_id,
-			'customer'                => (object) $customer_info,
-			'shipping_address'        => (object) $shipping_and_billing,
+			'order_id'                          => $order_id,
+			'customer'                          => (object) $customer_info,
+			'shipping_address'                  => (object) $shipping_and_billing,
 		);
 	}
 
