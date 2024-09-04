@@ -10,6 +10,8 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Models\OrderModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -261,22 +263,63 @@ class EmailController {
 	}
 
 	/**
-	 * Order placed email
+	 * Send mail once new order place
 	 *
-	 * @param int $user_id user id.
+	 * @since 3.0.0
 	 *
-	 * @return void.
+	 * @param array $order_data Order data.
+	 *
+	 * @return void
 	 */
-	public function order_placed( $user_id ) {
+	public function order_placed( array $order_data ) {
 
-		$user = get_userdata( $user_id );
-		if ( false === $user ) {
-			return;
+		$order_data        = (object) $order_data;
+		$order_data->items = (object) $order_data->items;
+
+		$order_id = $order_data->id;
+
+		$student_ids    = array( $order_data->user_id );
+		$admin_ids      = array();
+		$instructor_ids = array();
+
+		// Set admin user ids.
+		$admin_users = get_users( array( 'role' => 'administrator' ) );
+
+		foreach ( $admin_users as $admin_user ) {
+			$admin_ids[] = $admin_user->ID;
 		}
 
+		// Set instructor ids.
+		foreach ( $order_data->items as $item ) {
+			$course_id = $item->item_id;
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data['order_type'] || OrderModel::TYPE_RENEWAL === $order_data['order_type'] ) {
+				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $order_data );
+			}
+			$instructor_ids[] = get_post_field( 'post_author', $course_id );
+		}
+
+		$this->send_email_to( 'email_to_students', 'new_order', $student_ids, $order_data );
+		$this->send_email_to( 'email_to_teachers', 'new_order', $instructor_ids, $order_data );
+		$this->send_email_to( 'email_to_admin', 'new_order', $admin_ids, $order_data );
+	}
+
+	/**
+	 * Send email to a specific recipient
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $recipient_type Recipient type like
+	 * email_to_students, email_to_teachers, email_to_admin.
+	 * @param  string $email_type New order/ order status updated.
+	 * @param  array  $recipients Recipients ids.
+	 * @param  object $order_data Order data.
+	 *
+	 * @return void
+	 */
+	private function send_email_to( $recipient_type, $email_type, $recipients, $order_data ) {
 		$site_url    = get_bloginfo( 'url' );
 		$site_name   = get_bloginfo( 'name' );
-		$option_data = $this->get_option_data( self::ORDER_EMAILS, 'new_order' );
+		$option_data = $this->get_option_data( $recipient_type, $email_type );
 		$header      = 'Content-Type: ' . $this->get_content_type() . "\r\n";
 		$header      = apply_filters( 'new_order_email_header', $header );
 
@@ -296,21 +339,30 @@ class EmailController {
 		$message   = html_entity_decode( $this->get_message( $email_tpl, array_keys( $replacable ), array_values( $replacable ) ) );
 
 		$this->send( $user->user_email, $subject, $message, $header );
-
 	}
 
 	/**
 	 * Setup email data
 	 *
-	 * @param int $email_config email config data.
+	 * @since 3.0.0
+	 *
+	 * @param array $email_config Default email config data.
 	 *
 	 * @return array.
 	 */
 	public function setup_email_config( $email_config ) {
-		$email_data = $this->get_email_data();
-		$email_data = array_merge( $email_config, $email_data );
+		$order_email = $this->get_email_data();
 
-		return $email_data;
+		$email_config['email_to_students']['new_order']            = $order_email['new_order'];
+		$email_config['email_to_students']['order_status_updated'] = $order_email['order_status_updated'];
+
+		$email_config['email_to_teachers']['new_order']            = $order_email['new_order'];
+		$email_config['email_to_teachers']['order_status_updated'] = $order_email['order_status_updated'];
+
+		$email_config['email_to_admin']['new_order']            = $order_email['new_order'];
+		$email_config['email_to_admin']['order_status_updated'] = $order_email['order_status_updated'];
+
+		return $email_config;
 	}
 	/**
 	 * Get email data.
@@ -319,96 +371,51 @@ class EmailController {
 	 */
 	public function get_email_data() {
 		$email_array = array(
-			'order_emails' => array(
-				'new_order'        => array(
-					'label'       => __( 'New order', 'tutor' ),
-					'default'     => 'on',
-					'template'    => 'order_new',
-					'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
-					'subject'     => __( 'Your order has been received!', 'tutor' ),
-					'heading'     => __( 'Your order has been received!', 'tutor' ),
-					'message'     => wp_json_encode(
-						'
-                        <p>Hi {student_name},</p>
-                        <p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
-                        <p>Below are the details of your order:</p>
-                        <ul>
-                            <li>Order ID : {order_id}</li>
-                            <li>Date: {order_date}</li>
-                            <li>Total: {order_total}</li>
-                        </ul>
-                        <p>We will let you know once your order has been completed and is ready for access.</p>
-                    '
-					),
-					'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
-					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+			'new_order'            => array(
+				'label'       => __( 'New order placed', 'tutor' ),
+				'default'     => 'on',
+				'template'    => 'order_new',
+				'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
+				'subject'     => __( 'Your order has been received!', 'tutor' ),
+				'heading'     => __( 'Your order has been received!', 'tutor' ),
+				'message'     => wp_json_encode(
+					'
+					<p>Hi {student_name},</p>
+					<p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
+					<p>Below are the details of your order:</p>
+					<ul>
+						<li>Order ID : {order_id}</li>
+						<li>Date: {order_date}</li>
+						<li>Total: {order_total}</li>
+					</ul>
+					<p>We will let you know once your order has been completed and is ready for access.</p>
+				'
 				),
-				'cancelled_order'  => array(
-					'label'       => __( 'Cancelled order', 'tutor-pro' ),
-					'default'     => 'on',
-					'template'    => 'order_cancelled',
-					'tooltip'     => 'Cancelled order emails are sent to chosen recipient(s) when orders have been marked cancelled.',
-					'subject'     => __( 'New order placed at {site_url}', 'tutor-pro' ),
-					'heading'     => __( 'Order placed successfully', 'tutor-pro' ),
-					'message'     => wp_json_encode( 'A new instructor has signed up on <strong>{site_url}</strong>.' ),
-					'footer_text' => __( 'You may reply to this email to communicate with the instructor.', 'tutor-pro' ),
-					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+				'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
+				// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+			),
+			'order_status_updated' => array(
+				'label'       => __( 'Order status updated', 'tutor' ),
+				'default'     => 'on',
+				'template'    => 'order_status_updated',
+				'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+				'subject'     => __( 'Your order status has been updated!', 'tutor' ),
+				'heading'     => __( 'Your order status has been updated!', 'tutor' ),
+				'message'     => wp_json_encode(
+					'
+					<p>Hi {student_name},</p>
+					<p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
+					<p>Below are the details of your order:</p>
+					<ul>
+						<li>Order ID : {order_id}</li>
+						<li>Date: {order_date}</li>
+						<li>Total: {order_total}</li>
+					</ul>
+					<p>We will let you know once your order has been completed and is ready for access.</p>
+				'
 				),
-				'failed_order'     => array(
-					'label'       => __( 'Failed order', 'tutor-pro' ),
-					'default'     => 'on',
-					'template'    => 'order_failed',
-					'tooltip'     => 'Enable this option to use numerical points instead of letter grades.',
-					'subject'     => __( 'New order placed at {site_url}', 'tutor-pro' ),
-					'heading'     => __( 'Order placed successfully', 'tutor-pro' ),
-					'message'     => wp_json_encode( 'A new instructor has signed up on <strong>{site_url}</strong>.' ),
-					'footer_text' => __( 'You may reply to this email to communicate with the instructor.', 'tutor-pro' ),
-					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
-				),
-				'on_hold_order'    => array(
-					'label'       => __( 'Order on-hold', 'tutor-pro' ),
-					'default'     => 'on',
-					'template'    => 'order_on_hold',
-					'tooltip'     => 'Enable this option to use numerical points instead of letter grades.',
-					'subject'     => __( 'New order placed at {site_url}', 'tutor-pro' ),
-					'heading'     => __( 'Order placed successfully', 'tutor-pro' ),
-					'message'     => wp_json_encode( 'A new instructor has signed up on <strong>{site_url}</strong>.' ),
-					'footer_text' => __( 'You may reply to this email to communicate with the instructor.', 'tutor-pro' ),
-					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
-				),
-				'processing_order' => array(
-					'label'       => __( 'Processing order', 'tutor-pro' ),
-					'default'     => 'on',
-					'template'    => 'order_processing',
-					'tooltip'     => 'Enable this option to use numerical points instead of letter grades.',
-					'subject'     => __( 'New order placed at {site_url}', 'tutor-pro' ),
-					'heading'     => __( 'Order placed successfully', 'tutor-pro' ),
-					'message'     => wp_json_encode( 'A new instructor has signed up on <strong>{site_url}</strong>.' ),
-					'footer_text' => __( 'You may reply to this email to communicate with the instructor.', 'tutor-pro' ),
-					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
-				),
-				'completed_order'  => array(
-					'label'       => __( 'Completed order', 'tutor-pro' ),
-					'default'     => 'on',
-					'template'    => 'order_completed',
-					'tooltip'     => 'Enable this option to use numerical points instead of letter grades.',
-					'subject'     => __( 'New order placed at {site_url}', 'tutor-pro' ),
-					'heading'     => __( 'Order placed successfully', 'tutor-pro' ),
-					'message'     => wp_json_encode( 'A new instructor has signed up on <strong>{site_url}</strong>.' ),
-					'footer_text' => __( 'You may reply to this email to communicate with the instructor.', 'tutor-pro' ),
-					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
-				),
-				'refunded_order'   => array(
-					'label'       => __( 'Refunded order', 'tutor-pro' ),
-					'default'     => 'on',
-					'template'    => 'order_refunded',
-					'tooltip'     => 'Enable this option to use numerical points instead of letter grades.',
-					'subject'     => __( 'New order placed at {site_url}', 'tutor-pro' ),
-					'heading'     => __( 'Order placed successfully', 'tutor-pro' ),
-					'message'     => wp_json_encode( 'A new instructor has signed up on <strong>{site_url}</strong>.' ),
-					'footer_text' => __( 'You may reply to this email to communicate with the instructor.', 'tutor-pro' ),
-					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
-				),
+				'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
+				// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 			),
 		);
 
