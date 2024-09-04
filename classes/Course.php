@@ -1082,26 +1082,19 @@ class Course extends Tutor_Base {
 
 		$has_pro         = tutor()->has_pro;
 		$has_access_role = User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) );
-		$backend_create  = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
-		$backend_edit    = $backend_create && Input::has( 'course_id' );
+
+		$course_id       = Input::get( 'course_id', 0, Input::TYPE_INT );
+		$backend_builder = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
+		$backend_edit    = $backend_builder && $course_id;
 
 		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
-		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_id' );
-		$frontend_edit       = $is_frontend_builder && Input::has( 'course_id' );
+		$frontend_edit       = $is_frontend_builder && $course_id;
 
-		// Create mode.
-		if ( $has_access_role && ( $backend_create || ( $has_pro && $frontend_create ) ) ) {
-			$this->load_course_builder_view();
-		}
-
-		// Edit mode.
 		if ( $has_access_role && ( $backend_edit || ( $has_pro && $frontend_edit ) ) ) {
-			$course_id        = Input::get( 'course_id', 0 );
-			$post_type        = get_post_type( $course_id );
-			$course_author    = (int) get_post_field( 'post_author', $course_id );
-			$is_course_author = get_current_user_id() === $course_author;
+			$post_type       = get_post_type( $course_id );
+			$can_edit_course = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 
-			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $is_course_author ) ) {
+			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
 				$this->load_course_builder_view();
 			}
 		}
