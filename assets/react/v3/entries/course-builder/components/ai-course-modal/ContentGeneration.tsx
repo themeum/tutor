@@ -1,3 +1,4 @@
+import Button from '@Atoms/Button';
 import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -7,22 +8,17 @@ import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import {
-  useGenerateCourseContentMutation,
-  useGenerateCourseTopicContentMutation,
-  useGenerateCourseTopicNamesMutation,
-  useGenerateQuizQuestionsMutation,
-  useSaveAIGeneratedCourseContentMutation,
-} from '@CourseBuilderServices/magic-ai';
+import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/magic-ai';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { getObjectKeys, getObjectValues } from '@Utils/util';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState, useTransition } from 'react';
 import { Controller } from 'react-hook-form';
+import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import ContentAccordion from './ContentAccordion';
-import { type Loading, type Topic, useContentGenerationContext } from './ContentGenerationContext';
+import { type Loading, useContentGenerationContext } from './ContentGenerationContext';
 import ContentSkeleton from './loaders/ContentSkeleton';
 import DescriptionSkeleton from './loaders/DescriptionSkeleton';
 import ImageSkeleton from './loaders/ImageSkeleton';
@@ -88,92 +84,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const params = new URLSearchParams(window.location.search);
   const courseId = Number(params.get('course_id'));
 
-  const generateCourseImageMutation = useGenerateCourseContentMutation('image');
-  const generateCourseDescriptionMutation = useGenerateCourseContentMutation('description');
-  const generateCourseTopicsMutation = useGenerateCourseTopicNamesMutation();
-  const generateCourseTopicContentMutation = useGenerateCourseTopicContentMutation();
+  const { startGeneration } = useGenerateCourseContent();
   const saveAIGeneratedCourseContentMutation = useSaveAIGeneratedCourseContentMutation();
-  const generateQuizQuestionsMutation = useGenerateQuizQuestionsMutation();
-  const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
 
   const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
-
+  const promptValue = form.watch('prompt');
   const { showToast } = useToast();
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!currentContent.title) {
-      return;
-    }
-
-    generateCourseImageMutation.mutateAsync({ type: 'image', title: currentContent.title }).then((response) => {
-      updateLoading({ image: false });
-      updateContents({ featured_image: response.data });
-    });
-
-    generateCourseDescriptionMutation
-      .mutateAsync({ type: 'description', title: currentContent.title })
-      .then((response) => {
-        updateLoading({ description: false });
-        updateContents({ description: response.data });
-      });
-
-    generateCourseTopicsMutation
-      .mutateAsync({ type: 'topic_names', title: currentContent.title })
-      .then(async (response) => {
-        updateLoading({ topic: false });
-        const topics = response.data.map(
-          (item) =>
-            ({
-              ...item,
-              contents: [],
-              is_active: true,
-            }) as Topic,
-        );
-
-        updateContents({ topics });
-
-        const promises = topics.map((item, index) => {
-          return generateCourseTopicContentMutation
-            .mutateAsync({ title: currentContent.title, topic_name: item.title, index })
-            .then((data) => {
-              const { index: idx, topic_contents } = data.data;
-              topics[idx].contents ||= [];
-              topics[idx].contents.push(...topic_contents);
-              updateContents({ topics });
-            });
-        });
-
-        await Promise.allSettled(promises);
-        updateLoading({ content: false });
-
-        /** Generate quiz contents  */
-        const quizPromises = [];
-
-        for (let i = 0; i < topics.length; i++) {
-          const topic = topics[i];
-          for (let j = 0; j < topic.contents.length; j++) {
-            const quizContent = topic.contents[j];
-            if (quizContent.type === 'quiz') {
-              const promise = generateQuizQuestionsMutation
-                .mutateAsync({
-                  title: currentContent.title,
-                  topic_name: topic.title,
-                  quiz_title: quizContent.title,
-                })
-                .then((response) => {
-                  topics[i].contents[j].questions ||= [];
-                  topics[i].contents[j].questions = response.data;
-                });
-              quizPromises.push(promise);
-            }
-          }
-        }
-
-        await Promise.allSettled(quizPromises);
-        updateLoading({ quiz: false });
-      });
-  }, [currentLoading.title, currentContent.title]);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     setLoadingSteps((previous) => {
@@ -185,6 +102,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
       return copy;
     });
   }, [currentLoading]);
+
   const isLoading = getObjectValues(currentLoading).some((item) => item);
 
   return (
@@ -224,6 +142,29 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           </div>
         </div>
         <div css={styles.right}>
+          <Show when={contents.length > 1}>
+            <div css={styles.navigator}>
+              <Button
+                variant="text"
+                disabled={pointer === 0}
+                onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
+              >
+                <SVGIcon name="chevronLeft" width={20} height={20} />
+              </Button>
+              <div css={styles.navigatorContent}>
+                <span>{pointer + 1}</span>
+                <span>/</span>
+                <span>{contents.length}</span>
+              </div>
+              <Button
+                variant="text"
+                disabled={pointer >= contents.length - 1}
+                onClick={() => setPointer((previous) => Math.min(contents.length - 1, previous + 1))}
+              >
+                <SVGIcon name="chevronRight" width={20} height={20} />
+              </Button>
+            </div>
+          </Show>
           <div css={styles.rightContents}>
             <For each={loading}>
               {(_, index) => {
@@ -232,41 +173,68 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 }
                 const isDeactivated = pointer !== index;
                 const showButtons = index === loading.length - 1;
+                const content = contents[index];
+                const isLoadingItem = getObjectValues(loading[index]).some((item) => item);
 
                 return (
                   <div css={styles.box({ deactivated: isDeactivated })} key={index}>
                     <SVGIcon name="magicAiColorize" width={24} height={24} />
                     <div css={styles.boxContent}>
-                      <h6>{__('Generating course content', 'tutor')}</h6>
+                      <h6>
+                        {isLoadingItem
+                          ? __('Generating course contents', 'tutor')
+                          : __('Generated course contents', 'tutor')}
+                      </h6>
+                      <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
                       <div css={styles.items}>
-                        <For each={getObjectKeys(loadingSteps)}>
-                          {(stepKey, index) => {
-                            const step = loadingSteps[stepKey];
+                        <Show
+                          when={isLoadingItem}
+                          fallback={
+                            <>
+                              <div css={styles.item}>
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Topics', 'tutor'), content.counts?.topics ?? 0)}
+                              </div>
+                              <div css={styles.item}>
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Lessons in total', 'tutor'), content.counts?.lessons ?? 0)}
+                              </div>
+                              <div css={styles.item}>
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes ?? 0)}
+                              </div>
+                            </>
+                          }
+                        >
+                          <For each={getObjectKeys(loadingSteps)}>
+                            {(stepKey, index) => {
+                              const step = loadingSteps[stepKey];
 
-                            return (
-                              <div css={styles.item} key={index}>
-                                <Show when={isDeactivated}>
-                                  <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                  {step.completed_label}
-                                </Show>
-                                <Show when={!isDeactivated}>
-                                  <Show
-                                    when={step.completed}
-                                    fallback={
-                                      <>
-                                        <GradientLoadingSpinner />
-                                        {step.loading_label}
-                                      </>
-                                    }
-                                  >
+                              return (
+                                <div css={styles.item} key={index}>
+                                  <Show when={isDeactivated}>
                                     <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
                                     {step.completed_label}
                                   </Show>
-                                </Show>
-                              </div>
-                            );
-                          }}
-                        </For>
+                                  <Show when={!isDeactivated}>
+                                    <Show
+                                      when={step.completed}
+                                      fallback={
+                                        <>
+                                          <GradientLoadingSpinner />
+                                          {step.loading_label}
+                                        </>
+                                      }
+                                    >
+                                      <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                      {step.completed_label}
+                                    </Show>
+                                  </Show>
+                                </div>
+                              );
+                            }}
+                          </For>
+                        </Show>
                         <button
                           type="button"
                           css={css`
@@ -278,7 +246,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 														height: 100%;
 													`}
                           onClick={() => setPointer(index)}
-                          disabled={isLoading}
+                          disabled={isLoadingItem}
                         />
                       </div>
 
@@ -286,32 +254,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                         <Show when={showButtons}>
                           <MagicButton
                             variant="primary_outline"
-                            disabled={isLoading}
+                            disabled={isLoadingItem}
                             onClick={async () => {
                               setIsCreateNewCourse(true);
                               setPointer(loading.length);
                               appendLoading();
                               appendContent();
-
-                              updateLoading({
-                                title: true,
-                                image: true,
-                                description: true,
-                                topic: true,
-                                content: true,
-                                quiz: true,
-                              });
-
-                              const response = await generateCourseTitleMutation.mutateAsync({
-                                type: 'title',
-                                prompt: contents[index].prompt,
-                              });
-
-                              updateLoading({ title: false });
-
-                              if (response.data) {
-                                updateContents({ title: response.data });
-                              }
                             }}
                           >
                             <SVGIcon name="magicWand" width={24} height={24} />
@@ -321,11 +269,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
                         <MagicButton
                           variant="outline"
-                          disabled={isLoading || !contents[index].prompt}
+                          disabled={isLoadingItem}
                           onClick={() => {
                             setPointer(loading.length);
                             appendLoading();
                             appendContent();
+                            startGeneration(contents[index].prompt, loading.length);
                           }}
                         >
                           <SVGIcon name="tryAgain" width={24} height={24} />
@@ -342,27 +291,9 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               <div css={styles.box({ deactivated: true })}>
                 <form
                   css={styles.regenerateForm}
-                  onSubmit={form.handleSubmit(async (values) => {
+                  onSubmit={form.handleSubmit((values) => {
                     setIsCreateNewCourse(false);
-                    updateLoading({
-                      title: true,
-                      image: true,
-                      description: true,
-                      topic: true,
-                      content: true,
-                      quiz: true,
-                    });
-                    const response = await generateCourseTitleMutation.mutateAsync({
-                      type: 'title',
-                      prompt: values.prompt,
-                    });
-
-                    updateLoading({ title: false });
-                    form.reset();
-
-                    if (response.data) {
-                      updateContents({ title: response.data, prompt: values.prompt });
-                    }
+                    startGeneration(values.prompt);
                   })}
                 >
                   <Controller
@@ -390,7 +321,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     >
                       {__('Cancel', 'tutor')}
                     </MagicButton>
-                    <MagicButton type="submit" disabled={isLoading}>
+                    <MagicButton type="submit" disabled={isLoading || !promptValue}>
                       <SVGIcon name="magicWand" width={24} height={24} />
                       {__('Create now', 'tutor')}
                     </MagicButton>
@@ -437,6 +368,25 @@ const styles = {
 		display: flex;
     justify-content: center;
     align-items: end;
+	`,
+  navigator: css`
+		display: flex;
+		align-items: center;
+		margin-left: -${spacing[16]};
+		margin-bottom: ${spacing[16]};
+	`,
+  navigatorContent: css`
+		display: flex;
+		align-items: center;
+		gap: ${spacing[4]};
+		
+		span {
+			${typography.caption()};
+		}
+
+		span:first-of-type {
+			color: ${colorTokens.text.primary};
+		}
 	`,
   wrapper: css`
 		display: flex;
@@ -530,6 +480,10 @@ const styles = {
 		align-items: center;
 		justify-content: center;
 		gap: ${spacing[12]};
+	`,
+  subtitle: css`
+		${typography.caption()};
+		color: ${colorTokens.text.title};
 	`,
   boxContent: css`
 		display: flex;
