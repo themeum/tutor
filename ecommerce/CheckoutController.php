@@ -153,7 +153,7 @@ class CheckoutController {
 
 		$current_user_id = get_current_user_id();
 
-		$request = Input::sanitize_array( $_POST );
+		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
@@ -384,9 +384,11 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function proceed_to_payment( $payment_data, $payment_method ) {
-		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
+		$payment_gateways = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
-		$payment_gateway_class = $gateways_with_class[ $payment_method ] ?? null;
+		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
+								? $payment_gateways[ $payment_method ]['gateway_class']
+								: null;
 
 		if ( $payment_gateway_class ) {
 			try {
@@ -430,7 +432,7 @@ class CheckoutController {
 	 */
 	public function restrict_checkout_page() {
 		$page_id = self::get_page_id();
-		$plan_id = isset( $_GET['plan'] ) ? $_GET['plan'] : null;
+		$plan_id = Input::get( 'plan' );
 
 		if ( is_page( $page_id ) && ! $plan_id ) {
 			$cart_controller = new CartController();
