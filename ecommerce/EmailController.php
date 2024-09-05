@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderModel;
+use TutorPro\Subscription\Models\PlanModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -276,8 +277,6 @@ class EmailController {
 		$order_data        = (object) $order_data;
 		$order_data->items = (object) $order_data->items;
 
-		$order_id = $order_data->id;
-
 		$student_ids    = array( $order_data->user_id );
 		$admin_ids      = array();
 		$instructor_ids = array();
@@ -291,16 +290,17 @@ class EmailController {
 
 		// Set instructor ids.
 		foreach ( $order_data->items as $item ) {
+			$item      = (object) $item;
 			$course_id = $item->item_id;
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data['order_type'] || OrderModel::TYPE_RENEWAL === $order_data['order_type'] ) {
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type || OrderModel::TYPE_RENEWAL === $order_data->order_type ) {
 				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $order_data );
 			}
 			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
-		$this->send_email_to( 'email_to_students', 'new_order', $student_ids, $order_data );
-		$this->send_email_to( 'email_to_teachers', 'new_order', $instructor_ids, $order_data );
-		$this->send_email_to( 'email_to_admin', 'new_order', $admin_ids, $order_data );
+		$this->send_email_to( 'email_to_students', 'new_order', $student_ids, $order_data->id );
+		$this->send_email_to( 'email_to_admin', 'new_order', $admin_ids, $order_data->id );
+		$this->send_email_to( 'email_to_teachers', 'new_order', $instructor_ids, $order_data->id );
 	}
 
 	/**
@@ -312,33 +312,66 @@ class EmailController {
 	 * email_to_students, email_to_teachers, email_to_admin.
 	 * @param  string $email_type New order/ order status updated.
 	 * @param  array  $recipients Recipients ids.
-	 * @param  object $order_data Order data.
+	 * @param  int    $order_id Order id.
 	 *
 	 * @return void
 	 */
-	private function send_email_to( $recipient_type, $email_type, $recipients, $order_data ) {
+	private function send_email_to( $recipient_type, $email_type, $recipients, $order_id ) {
 		$site_url    = get_bloginfo( 'url' );
 		$site_name   = get_bloginfo( 'name' );
 		$option_data = $this->get_option_data( $recipient_type, $email_type );
-		$header      = 'Content-Type: ' . $this->get_content_type() . "\r\n";
-		$header      = apply_filters( 'new_order_email_header', $header );
 
-		$replacable['{testing_email_notice}'] = '';
-		$replacable['{user_name}']            = tutor_utils()->get_user_name( $user );
-		$replacable['{site_url}']             = $site_url;
-		$replacable['{site_name}']            = $site_name;
-		$replacable['{dashboard_url}']        = tutor_utils()->get_tutor_dashboard_page_permalink();
-		$replacable['{logo}']                 = isset( $option_data['logo'] ) ? $option_data['logo'] : '';
-		$replacable['{email_heading}']        = $this->get_replaced_text( $option_data['heading'], array_keys( $replacable ), array_values( $replacable ) );
-		$replacable['{email_message}']        = $this->get_replaced_text( $this->prepare_message( $option_data['message'] ), array_keys( $replacable ), array_values( $replacable ) );
-		$subject                              = $this->get_replaced_text( $option_data['subject'], array_keys( $replacable ), array_values( $replacable ) );
+		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
+		$recipients = array_unique( $recipients );
+		foreach ( $recipients as $recipient ) {
+			// Ignore email when teachers himself admin.
+			// because admin email has already been send.
+			if ( 'email_to_teachers' === $recipient_type && user_can( $recipient, 'manage_options' ) ) {
+				continue;
+			}
 
-		ob_start();
-		$this->tutor_load_email_template( 'order_new' );
-		$email_tpl = apply_filters( 'tutor_email_tpl/order_new', ob_get_clean() );
-		$message   = html_entity_decode( $this->get_message( $email_tpl, array_keys( $replacable ), array_values( $replacable ) ) );
+			$user_data = get_userdata( $recipient );
+			$header    = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+			$header    = apply_filters( 'new_order_email_header', $header );
 
-		$this->send( $user->user_email, $subject, $message, $header );
+			$replacable['{testing_email_notice}'] = '';
+			$replacable['{user_name}']            = tutor_utils()->get_user_name( $user_data );
+			$replacable['{site_url}']             = $site_url;
+			$replacable['{site_name}']            = $site_name;
+
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type ) {
+				$plan = ( new PlanModel() )->get_plan( $order_data->items[0]->id );
+
+				$replacable['{course_name}'] = $plan->title;
+			} else {
+				$replacable['{course_name}'] = count( $order_data->items ) > 1 ? _n( 'Course', 'Courses', count( $order_data->items ) ) : $order_data->items[0]->title;
+			}
+
+			$replacable['{admin_order_url}'] = admin_url( 'admin.php?page=tutor_orders&action=edit&id=' . $order_id );
+
+			$replacable['{site_order_url}'] = site_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) );
+
+			$replacable['{order_id}']    = '#' . $order_data->id;
+			$replacable['{order_date}']  = tutor_i18n_get_formated_date( $order_data->created_at_gmt, get_option( 'date_format' ) );
+			$replacable['{order_total}'] = tutor_get_formatted_price( $order_data->total_price );
+
+			$replacable['{dashboard_url}'] = tutor_utils()->get_tutor_dashboard_page_permalink();
+			$replacable['{logo}']          = isset( $option_data['logo'] ) ? $option_data['logo'] : '';
+			$replacable['{email_heading}'] = $this->get_replaced_text( $option_data['heading'], array_keys( $replacable ), array_values( $replacable ) );
+
+			$replacable['{email_message}'] = $this->get_replaced_text( $this->prepare_message( $option_data['message'] ), array_keys( $replacable ), array_values( $replacable ) );
+
+			$replacable['{footer_text}'] = $this->get_replaced_text( $option_data['footer_text'], array_keys( $replacable ), array_values( $replacable ) );
+
+			$subject = $this->get_replaced_text( $option_data['subject'], array_keys( $replacable ), array_values( $replacable ) );
+
+			ob_start();
+			$this->tutor_load_email_template( 'order_new' );
+			$email_tpl = apply_filters( 'tutor_email_tpl/order_new', ob_get_clean() );
+			$message   = html_entity_decode( $this->get_message( $email_tpl, array_keys( $replacable ), array_values( $replacable ) ) );
+
+			$this->send( $user_data->user_email, $subject, $message, $header );
+		}
 	}
 
 	/**
@@ -353,17 +386,18 @@ class EmailController {
 	public function setup_email_config( $email_config ) {
 		$order_email = $this->get_email_data();
 
-		$email_config['email_to_students']['new_order']            = $order_email['new_order'];
-		$email_config['email_to_students']['order_status_updated'] = $order_email['order_status_updated'];
+		$email_config['email_to_students']['new_order']            = $order_email['email_to_students']['new_order'];
+		$email_config['email_to_students']['order_status_updated'] = $order_email['email_to_students']['order_status_updated'];
 
-		$email_config['email_to_teachers']['new_order']            = $order_email['new_order'];
-		$email_config['email_to_teachers']['order_status_updated'] = $order_email['order_status_updated'];
+		$email_config['email_to_teachers']['new_order']            = $order_email['email_to_teachers']['new_order'];
+		$email_config['email_to_teachers']['order_status_updated'] = $order_email['email_to_teachers']['order_status_updated'];
 
-		$email_config['email_to_admin']['new_order']            = $order_email['new_order'];
-		$email_config['email_to_admin']['order_status_updated'] = $order_email['order_status_updated'];
+		$email_config['email_to_admin']['new_order']            = $order_email['email_to_admin']['new_order'];
+		$email_config['email_to_admin']['order_status_updated'] = $order_email['email_to_admin']['order_status_updated'];
 
 		return $email_config;
 	}
+
 	/**
 	 * Get email data.
 	 *
@@ -371,51 +405,160 @@ class EmailController {
 	 */
 	public function get_email_data() {
 		$email_array = array(
-			'new_order'            => array(
-				'label'       => __( 'New order placed', 'tutor' ),
-				'default'     => 'on',
-				'template'    => 'order_new',
-				'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
-				'subject'     => __( 'Your order has been received!', 'tutor' ),
-				'heading'     => __( 'Your order has been received!', 'tutor' ),
-				'message'     => wp_json_encode(
+			'email_to_students' => array(
+				'new_order'            => array(
+					'label'       => __( 'New order placed', 'tutor' ),
+					'default'     => 'on',
+					'template'    => 'order_new',
+					'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
+					'subject'     => __( 'Your Order Confirmation for {course_name}', 'tutor' ),
+					'heading'     => __( 'Your order has been received!', 'tutor' ),
+					'message'     => wp_json_encode(
+						'
+						<p>Hi {user_name},</p>
+						<p>Thank you for purchasing! We’re excited to have you on board and can’t wait for you to start learning.</p>
+						<p>Order Details:</p>
+						<div>
+							<li>Order ID : {order_id}</li>
+							<li>Date: {order_date}</li>
+							<li>Total: {order_total}</li>
+							<a href="{site_order_url}">View Details</a>
+						</div>
+						<p>We will let you know once your order has been completed and is ready for access.</p>
 					'
-					<p>Hi {student_name},</p>
-					<p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
-					<p>Below are the details of your order:</p>
-					<ul>
-						<li>Order ID : {order_id}</li>
-						<li>Date: {order_date}</li>
-						<li>Total: {order_total}</li>
-					</ul>
-					<p>We will let you know once your order has been completed and is ready for access.</p>
-				'
+					),
+					'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
+					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 				),
-				'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
-				// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+				'order_status_updated' => array(
+					'label'       => __( 'Order status updated', 'tutor' ),
+					'default'     => 'on',
+					'template'    => 'order_status_updated',
+					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'subject'     => __( 'Your order status has been updated!', 'tutor' ),
+					'heading'     => __( 'Your order status has been updated!', 'tutor' ),
+					'message'     => wp_json_encode(
+						'
+						<p>Hi {user_name},</p>
+						<p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
+						<p>Below are the details of your order:</p>
+						<ul>
+							<li>Order ID : {order_id}</li>
+							<li>Date: {order_date}</li>
+							<li>Total: {order_total}</li>
+						</ul>
+						<p>We will let you know once your order has been completed and is ready for access.</p>
+					'
+					),
+					'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
+					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+				),
 			),
-			'order_status_updated' => array(
-				'label'       => __( 'Order status updated', 'tutor' ),
-				'default'     => 'on',
-				'template'    => 'order_status_updated',
-				'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
-				'subject'     => __( 'Your order status has been updated!', 'tutor' ),
-				'heading'     => __( 'Your order status has been updated!', 'tutor' ),
-				'message'     => wp_json_encode(
+			'email_to_teachers' => array(
+				'new_order'            => array(
+					'label'       => __( 'New order placed', 'tutor' ),
+					'default'     => 'on',
+					'template'    => 'order_new',
+					'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
+					'subject'     => __( 'New Order for Your Course: {course_name}!', 'tutor' ),
+					'heading'     => __( 'Your order has been received!', 'tutor' ),
+					'message'     => wp_json_encode(
+						'
+						<p>Hi {user_name},</p>
+						<p>We’re excited to let you know that a new order has been placed for your course, {course_name}.</p>
+						<p>Order Details:</p>
+						<ul>
+							<li>Order ID : {order_id}</li>
+							<li>Student Name: {student_name}</li>
+							<li>Date: {order_date}</li>
+							<li>Total: {order_total}</li>
+						</ul>
+						<p>Keep up the great work, and thank you for being part of our platform!</p>
 					'
-					<p>Hi {student_name},</p>
-					<p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
-					<p>Below are the details of your order:</p>
-					<ul>
-						<li>Order ID : {order_id}</li>
-						<li>Date: {order_date}</li>
-						<li>Total: {order_total}</li>
-					</ul>
-					<p>We will let you know once your order has been completed and is ready for access.</p>
-				'
+					),
+					'footer_text' => '
+						<div>
+							<li>Best Regards</li>
+							<li>{site_name}</li>
+						</div>
+					',
+					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 				),
-				'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
-				// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+				'order_status_updated' => array(
+					'label'       => __( 'Order status updated', 'tutor' ),
+					'default'     => 'on',
+					'template'    => 'order_status_updated',
+					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'subject'     => __( 'Your order status has been updated!', 'tutor' ),
+					'heading'     => __( 'Your order status has been updated!', 'tutor' ),
+					'message'     => wp_json_encode(
+						'
+						<p>Hi {user_name},</p>
+						<p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
+						<p>Below are the details of your order:</p>
+						<ul>
+							<li>Order ID : {order_id}</li>
+							<li>Date: {order_date}</li>
+							<li>Total: {order_total}</li>
+						</ul>
+						<p>We will let you know once your order has been completed and is ready for access.</p>
+					'
+					),
+					'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
+					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+				),
+			),
+			'email_to_admin'    => array(
+				'new_order'            => array(
+					'label'    => __( 'New order placed', 'tutor' ),
+					'default'  => 'on',
+					'template' => 'order_new',
+					'tooltip'  => 'New order emails are sent to chosen recipient(s) when a new order is received.',
+					'subject'  => __( 'New Order Received!', 'tutor' ),
+					'heading'  => __( 'A new order has just been placed.', 'tutor' ),
+					'message'  => wp_json_encode(
+						'
+						<p>Below are the details of your order:</p>
+						<ul>
+							<li>Order ID : {order_id}</li>
+							<li>Date: {order_date}</li>
+							<li>Total Amount: {order_total}</li>
+						</ul>
+						<a href="{admin_order_url}">Order Details</a>
+						<p>Please review the order and ensure everything is in place for the student\'s access to the course. Thank you.</p>
+					'
+					),
+					'footer'   => '
+						<div style="list-style:none;">
+							<li>Best Regards</li>
+							<li>{site_name}</li>
+						</div>
+					',
+					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+				),
+				'order_status_updated' => array(
+					'label'       => __( 'Order status updated', 'tutor' ),
+					'default'     => 'on',
+					'template'    => 'order_status_updated',
+					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'subject'     => __( 'Your order status has been updated!', 'tutor' ),
+					'heading'     => __( 'Your order status has been updated!', 'tutor' ),
+					'message'     => wp_json_encode(
+						'
+						<p>Hi {user_name},</p>
+						<p>Thank you for your order. We’ve received your order successfully, and it is now being processed.</p>
+						<p>Below are the details of your order:</p>
+						<ul>
+							<li>Order ID : {order_id}</li>
+							<li>Date: {order_date}</li>
+							<li>Total: {order_total}</li>
+						</ul>
+						<p>We will let you know once your order has been completed and is ready for access.</p>
+					'
+					),
+					'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
+					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
+				),
 			),
 		);
 
