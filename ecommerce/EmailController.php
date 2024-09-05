@@ -58,6 +58,7 @@ class EmailController {
 		}
 
 		add_action( 'wp_ajax_tutor_send_mail_test', array( $this, 'send_test_mail' ) );
+		add_action( 'tutor_order_placed', array( $this, 'order_placed' ) );
 
 		add_filter( 'tutor_pro/email/list', array( $this, 'setup_email_config' ) );
 	}
@@ -520,19 +521,19 @@ class EmailController {
 					'heading'  => __( 'A new order has just been placed.', 'tutor' ),
 					'message'  => wp_json_encode(
 						'
-						<p>Below are the details of your order:</p>
+						<p>Order Details:</p>
 						<ul>
 							<li>Order ID : {order_id}</li>
 							<li>Date: {order_date}</li>
 							<li>Total Amount: {order_total}</li>
 						</ul>
 						</br>
-						<a href="{admin_order_url}" class="tutor-btn tutor-btn-primary">Order Details</a>
+						<a href="{admin_order_url}" class="tutor-btn tutor-btn-primary">View Details</a>
 						</br>
 						<p>Please review the order and ensure everything is in place for the student\'s access to the course. Thank you.</p>
 					'
 					),
-					'footer'   => '
+					'footer_text'   => '
 						<div style="list-style:none;">
 							<li>Best Regards</li>
 							<li>{site_name}</li>
