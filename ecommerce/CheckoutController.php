@@ -382,11 +382,13 @@ class CheckoutController {
 	 *
 	 * @return mixed
 	 */
-	public static function prepare_recurring_payment_data( int $order_id, float $amount ) {
+	public static function prepare_recurring_payment_data( int $order_id ) {
 		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 		if ( ! $order_data ) {
 			throw new \Exception( __( 'Order not found!', 'tutor' ) );
 		}
+
+		$amount = $order_data->total_price;
 
 		$order_user_id = $order_data->student->id;
 		$user_data     = get_userdata( $order_user_id );
