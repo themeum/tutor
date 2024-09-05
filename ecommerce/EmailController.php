@@ -422,8 +422,10 @@ class EmailController {
 							<li>Order ID : {order_id}</li>
 							<li>Date: {order_date}</li>
 							<li>Total: {order_total}</li>
-							<a href="{site_order_url}">View Details</a>
+							</br>
+							<a href="{site_order_url}" class="tutor-btn tutor-btn-primary">View Details</a>
 						</div>
+						</br>
 						<p>We will let you know once your order has been completed and is ready for access.</p>
 					'
 					),
@@ -524,7 +526,9 @@ class EmailController {
 							<li>Date: {order_date}</li>
 							<li>Total Amount: {order_total}</li>
 						</ul>
-						<a href="{admin_order_url}">Order Details</a>
+						</br>
+						<a href="{admin_order_url}" class="tutor-btn tutor-btn-primary">Order Details</a>
+						</br>
 						<p>Please review the order and ensure everything is in place for the student\'s access to the course. Thank you.</p>
 					'
 					),
