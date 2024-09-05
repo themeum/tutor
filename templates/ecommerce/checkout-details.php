@@ -14,9 +14,10 @@ use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
 
-$user_id   = get_current_user_id();
-$plan_id   = Input::get( 'plan', 0 );
-$plan_info = new stdClass();
+$user_id      = get_current_user_id();
+$plan_id      = Input::get( 'plan', 0 );
+$plan_info    = new stdClass();
+$coupon_model = new CouponModel();
 
 $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
 
@@ -36,8 +37,8 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 		<div class="tutor-checkout-courses">
 			<?php
 			if ( isset( $plan_info->plan_name, $plan_info->regular_price ) ) :
-				$automatic_coupon = ( new CouponModel() )->apply_automatic_coupon_discount( $plan_info->course_id, $plan_id );
 				$order_type       = OrderModel::TYPE_SUBSCRIPTION;
+				$automatic_coupon = $coupon_model->apply_automatic_coupon_discount( $plan_info->id, $order_type );
 				$regular_price    = $plan_info->regular_price;
 				$sale_price       = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
 				$enrollment_fee   = floatval( $plan_info->enrollment_fee );

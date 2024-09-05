@@ -35,11 +35,10 @@ final class DateTimeHelper extends Carbon {
 		$default_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
 		$format         = is_null( $format ) ? $default_format : $format;
 
-		$date            = new \DateTime( $gmt_date );
 		$timezone_string = User::get_user_timezone_string();
 
 		$timezone = new \DateTimeZone( $timezone_string );
-		$date->setTimezone( $timezone );
+		$date     = new \DateTime( $gmt_date, $timezone );
 
 		return date_i18n( $format, $date->getTimestamp() );
 	}
