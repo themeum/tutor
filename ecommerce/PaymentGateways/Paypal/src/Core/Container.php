@@ -16,7 +16,7 @@ final class Container implements ContainerContract
 		return isset($this->services[$id]);
 	}
 
-	public function get($id): mixed
+	public function get($id)
 	{
 		if (!$this->has($id)) {
 			return null;

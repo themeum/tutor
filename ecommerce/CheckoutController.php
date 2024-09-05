@@ -245,6 +245,7 @@ class CheckoutController {
 						$payment_data = self::prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method );
 					} catch ( \Throwable $th ) {
+						error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
 						wp_safe_redirect( home_url( '?tutor_order_placement=failed&order_id=' . $order_data['id'] ) );
 						exit();
 					}
@@ -382,11 +383,13 @@ class CheckoutController {
 	 *
 	 * @return mixed
 	 */
-	public static function prepare_recurring_payment_data( int $order_id, float $amount ) {
+	public static function prepare_recurring_payment_data( int $order_id ) {
 		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 		if ( ! $order_data ) {
 			throw new \Exception( __( 'Order not found!', 'tutor' ) );
 		}
+
+		$amount = $order_data->total_price;
 
 		$order_user_id = $order_data->student->id;
 		$user_data     = get_userdata( $order_user_id );

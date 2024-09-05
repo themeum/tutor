@@ -60,7 +60,7 @@ abstract class BasePayment
 	 *
 	 * @return mixed
 	 */
-	public function getData(): mixed
+	public function getData()
 	{
 		return $this->data;
 	}

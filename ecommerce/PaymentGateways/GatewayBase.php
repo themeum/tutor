@@ -155,7 +155,6 @@ abstract class GatewayBase {
 	 * @since 3.0.0
 	 *
 	 * @param int   $order_id Order ID.
-	 * @param float $amount Payment amount.
 	 *
 	 * @throws \Throwable Throw throwable if error occur.
 	 * @throws \InvalidArgumentException Throw throwable if error occur.
@@ -163,20 +162,20 @@ abstract class GatewayBase {
 	 *
 	 * @return void
 	 */
-	public function make_recurring_payment( int $order_id, float $amount ) {
+	public function make_recurring_payment( int $order_id ) {
 		// Check if payment object is initialized.
 		if ( ! $this->payment ) {
 			throw new \InvalidArgumentException( 'Payment object is not initialized.' );
 		}
 
 		// Validate order ID and amount.
-		if ( $order_id <= 0 || $amount <= 0 ) {
+		if ( ! $order_id ) {
 			throw new \InvalidArgumentException( 'Invalid order ID or amount.' );
 		}
 
 		try {
 			// Prepare payment data.
-			$payment_data = CheckoutController::prepare_recurring_payment_data( $order_id, $amount );
+			$payment_data = CheckoutController::prepare_recurring_payment_data( $order_id );
 
 			if ( ! $payment_data ) {
 				throw new \RuntimeException( 'Failed to prepare recurring payment data.' );
