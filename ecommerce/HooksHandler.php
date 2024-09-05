@@ -141,7 +141,7 @@ class HooksHandler {
 	public function after_order_mark_as_paid( $order_id ) {
 		$order = $this->order_model->get_order_by_id( $order_id );
 		if ( $order ) {
-			$this->handle_payment_status_changed( $order->id, $this->order_model::PAYMENT_UNPAID, $order->payment_status );
+			do_action( 'tutor_order_payment_status_changed', $order_id, OrderModel::PAYMENT_UNPAID, $order->payment_status );
 		}
 	}
 

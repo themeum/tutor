@@ -59,6 +59,7 @@ class EmailController {
 
 		add_action( 'wp_ajax_tutor_send_mail_test', array( $this, 'send_test_mail' ) );
 		add_action( 'tutor_order_placed', array( $this, 'order_placed' ) );
+		add_action( 'tutor_order_payment_status_changed', array( $this, 'order_updated' ), 10, 4 );
 
 		add_filter( 'tutor_pro/email/list', array( $this, 'setup_email_config' ) );
 	}
@@ -302,6 +303,47 @@ class EmailController {
 		$this->send_email_to( 'email_to_students', 'new_order', $student_ids, $order_data->id );
 		$this->send_email_to( 'email_to_admin', 'new_order', $admin_ids, $order_data->id );
 		$this->send_email_to( 'email_to_teachers', 'new_order', $instructor_ids, $order_data->id );
+	}
+
+	/**
+	 * Send mail once new order place
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id Order id.
+	 * @param string $prev_payment_status Order previous payment status.
+	 * @param string $new_payment_status Order new status.
+	 *
+	 * @return void
+	 */
+	public function order_updated( $order_id, $prev_payment_status, $new_payment_status ) {
+
+		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
+
+		$student_ids    = array( $order_data->user_id );
+		$admin_ids      = array();
+		$instructor_ids = array();
+
+		// Set admin user ids.
+		$admin_users = get_users( array( 'role' => 'administrator' ) );
+
+		foreach ( $admin_users as $admin_user ) {
+			$admin_ids[] = $admin_user->ID;
+		}
+
+		// Set instructor ids.
+		foreach ( $order_data->items as $item ) {
+			$item      = (object) $item;
+			$course_id = $item->item_id;
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type || OrderModel::TYPE_RENEWAL === $order_data->order_type ) {
+				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $order_data );
+			}
+			$instructor_ids[] = get_post_field( 'post_author', $course_id );
+		}
+
+		$this->send_email_to( 'email_to_students', 'order_status_updated', $student_ids, $order_data->id );
+		$this->send_email_to( 'email_to_admin', 'order_status_updated', $admin_ids, $order_data->id );
+		$this->send_email_to( 'email_to_teachers', 'order_status_updated', $instructor_ids, $order_data->id );
 	}
 
 	/**
