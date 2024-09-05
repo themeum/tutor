@@ -62,8 +62,6 @@ class HooksHandler {
 
 		add_action( 'tutor_order_placement_success', array( $this, 'handle_order_placement_success' ) );
 
-		// New order placed hook.
-		add_action( 'tutor_order_placement_success', array( $this, 'tutor_order_placed' ) );
 	}
 
 	/**
@@ -224,7 +222,7 @@ class HooksHandler {
 	/**
 	 * Handle new order placement
 	 *
-	 * Clear cart items
+	 * Clear cart items, managing enrollment & earnings
 	 *
 	 * @since 3.0.0
 	 *
@@ -237,20 +235,8 @@ class HooksHandler {
 		$user_id    = $order_data->student->id;
 
 		( new CartModel() )->clear_user_cart( $user_id );
-	}
 
-	/**
-	 * Handle new order placed action
-	 *
-	 * Manage earnings, enrollments
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $order_id Order id.
-	 *
-	 * @return void
-	 */
-	public function tutor_order_placed( $order_id ) {
+		// Manage enrollment & earnings.
 		$order          = ( new OrderModel() )->get_order_by_id( $order_id );
 		$payment_status = $order->payment_status;
 
