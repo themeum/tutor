@@ -55,7 +55,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
 				$subtotal  = $sale_price ? $sale_price : $regular_price;
 				$subtotal += $enrollment_fee;
 
-				array_push( $object_ids, $plan_info->course_id );
+				array_push( $object_ids, $plan_info->id );
 				?>
 			<div class="tutor-checkout-course-item">
 				<div class="tutor-checkout-course-content">

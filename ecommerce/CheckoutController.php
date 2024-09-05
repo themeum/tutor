@@ -147,6 +147,7 @@ class CheckoutController {
 
 		$errors     = array();
 		$order_data = null;
+		$p = $_POST;
 
 		$coupon_model  = new CouponModel();
 		$billing_model = new BillingModel();
