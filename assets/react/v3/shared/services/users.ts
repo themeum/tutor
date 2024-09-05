@@ -1,3 +1,4 @@
+import { TutorRoles } from '@Config/constants';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { useQuery } from '@tanstack/react-query';
@@ -31,6 +32,7 @@ const getUserList = (search: string) => {
     params: {
       filter: {
         search,
+        role: [TutorRoles.ADMINISTRATOR, TutorRoles.TUTOR_INSTRUCTOR],
       },
     },
   });

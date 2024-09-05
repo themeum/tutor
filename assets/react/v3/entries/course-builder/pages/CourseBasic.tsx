@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
@@ -18,14 +19,13 @@ import FormSelectUser, { type UserOption } from '@Components/fields/FormSelectUs
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
+import { useModal } from '@Components/modals/Modal';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
-import MagicButton from '@Atoms/MagicButton';
-import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
@@ -67,14 +67,17 @@ const CourseBasic = () => {
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
-  const isInstructor = currentUser.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+  const isInstructor = (courseDetails?.course_instructors || []).find(
+    (instructor) => String(instructor.id) === String(currentUser.data.id),
+  );
+
   const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
     isTutorProEnabled &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
-    (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || ''));
+    (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '') || isInstructor);
 
   const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && (isAdministrator || isInstructor);
 
@@ -588,7 +591,7 @@ const CourseBasic = () => {
                   name: previousAuthor?.display_name,
                   email: previousAuthor.user_email,
                   avatar_url: previousAuthor?.tutor_profile_photo_url,
-                  isRemoveAble: true,
+                  isRemoveAble: String(previousAuthor?.ID) !== String(currentUser.data.id),
                 };
 
                 const updatedInstructors = isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor];

@@ -1,8 +1,12 @@
 import { css } from '@emotion/react';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 
+import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
+import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
@@ -14,8 +18,6 @@ import {
   usePrerequisiteCoursesQuery,
 } from '@CourseBuilderServices/course';
 
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
-import FormFileUploader from '@Components/fields/FormFileUploader';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -23,8 +25,6 @@ import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import Certificate from '../components/additional/Certificate';
 
 const courseId = getCourseId();

@@ -107,7 +107,7 @@ const CertificatePreviewModal = ({
                       type="button"
                       css={[styles.actionButton, styles.editButton]}
                       onClick={() => {
-                        window.open(editUrl, '_blank');
+                        window.open(editUrl, '_blank', 'noopener');
                       }}
                     >
                       <SVGIcon name="edit" width={40} height={40} />

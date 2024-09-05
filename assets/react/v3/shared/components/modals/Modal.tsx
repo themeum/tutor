@@ -1,8 +1,9 @@
+import { css } from '@emotion/react';
+import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+
 import { colorTokens, zIndex } from '@Config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
 import { nanoid, noop } from '@Utils/util';
-import { css } from '@emotion/react';
-import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 const styles = {
   backdrop: ({ magicAi = false }: { magicAi?: boolean }) => css`

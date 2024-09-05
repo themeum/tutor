@@ -73,7 +73,7 @@ const LiveClass = () => {
                 size="small"
                 icon={<SVGIcon name="crown" width={24} height={24} />}
                 onClick={() => {
-                  window.open(config.TUTOR_PRICING_PAGE, '_blank');
+                  window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
                 }}
               >
                 {__('Get Tutor LMS Pro', 'tutor')}
@@ -91,7 +91,7 @@ const LiveClass = () => {
               emptyStateImage={emptyStateImage}
               emptyStateImage2x={emptyStateImage2x}
               imageAltText={__('No live class addons found', 'tutor')}
-              title={__('You can use this feature by activating Google meet, Zoom or Jitsi from addons', 'tutor')}
+              title={__('You can use this feature by activating Google Meet Or Zoom from addons', 'tutor')}
               description={__(
                 'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
                 'tutor',
@@ -100,7 +100,7 @@ const LiveClass = () => {
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    window.open(config.TUTOR_ADDONS_PAGE, '_blank');
+                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
                   }}
                 >
                   {__('Go to addons', 'tutor')}

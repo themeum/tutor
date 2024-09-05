@@ -6,22 +6,20 @@ import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
-import { useDebounce } from '@Hooks/useDebounce';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { noop } from '@Utils/util';
-
-import FormFieldWrapper from './FormFieldWrapper';
-
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
+import { useDebounce } from '@Hooks/useDebounce';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
+import { noop } from '@Utils/util';
 
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
+import FormFieldWrapper from './FormFieldWrapper';
 
 type FormCoursePrerequisitesProps = {
   label?: string | React.ReactNode;
