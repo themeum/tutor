@@ -23,7 +23,7 @@ class Arr implements ArrayAccess
 		return isset($this->items[$key]);
 	}
 
-	public function get($key, $default = null): mixed
+	public function get($key, $default = null)
 	{
 		if (!$this->has($key)) {
 			return $default;
@@ -56,17 +56,17 @@ class Arr implements ArrayAccess
 		return $this->count();
 	}
 
-	public function pop(): mixed
+	public function pop()
 	{
 		return array_pop($this->items);
 	}
 
-	public function shift(): mixed
+	public function shift()
 	{
 		return array_shift($this->items);
 	}
 
-	public function top(): mixed
+	public function top()
 	{
 		if ($this->count() === 0) {
 			return null;
@@ -77,7 +77,7 @@ class Arr implements ArrayAccess
 		return $this->items[$length - 1];
 	}
 
-	public function front(): mixed
+	public function front()
 	{
 		if ($this->count() === 0) {
 			return null;
@@ -112,7 +112,7 @@ class Arr implements ArrayAccess
 		return $filteredArray;
 	}
 
-	public function find(callable $callable): mixed
+	public function find(callable $callable)
 	{
 		foreach ($this->items as $index => $value) {
 			if ($callable($value, $index)) {
@@ -162,22 +162,22 @@ class Arr implements ArrayAccess
 		return implode($glue, $this->items);
 	}
 
-	public function offsetExists(mixed $key): bool
+	public function offsetExists( $key): bool
 	{
 		return $this->has($key);
 	}
 
-	public function offsetGet(mixed $key): mixed
+	public function offsetGet( $key)
 	{
 		return $this->get($key);
 	}
 
-	public function offsetSet(mixed $key, mixed $value): void
+	public function offsetSet( $key, $value): void
 	{
 		$this->set($key, $value);
 	}
 
-	public function offsetUnset(mixed $key): void
+	public function offsetUnset( $key): void
 	{
 		unset($this->items[$key]);
 	}

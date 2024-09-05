@@ -140,7 +140,7 @@ class Repository implements ArrayAccess, RepositoryContract
 	 * @param string $key
 	 * @return mixed
 	 */
-	public function offsetGet($key): mixed
+	public function offsetGet($key)
 	{
 		return $this->get($key);
 	}
