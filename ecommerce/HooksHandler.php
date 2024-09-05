@@ -125,7 +125,7 @@ class HooksHandler {
 	 */
 	public function alter_course_price( $price, $course_id ) {
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
-			$price = tutor_get_formatted_price_html( $course_id, false );
+			$price = tutor_get_course_formatted_price_html( $course_id, false );
 		}
 
 		return $price;
