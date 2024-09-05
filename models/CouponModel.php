@@ -677,19 +677,18 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int|array $course_ids Required, course id or array of ids.
+	 * @param int|array $item_ids Required, course ids or plan id.
 	 * @param mixed     $coupon_code Required, coupon code.
-	 * @param int       $plan_id Optional, Plan id.
+	 * @param string    $order_type Optional, order type.
 	 * @param bool      $format_price Optional, should format price.
 	 *
 	 * @return object Detail of discount on object format.
 	 *
 	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
-	public function apply_coupon_discount( $course_ids, $coupon_code, $plan_id = null, $format_price = false ) {
-		$plan_id = (int) $plan_id ? $plan_id : Input::get( 'plan', 0 );
+	public function apply_coupon_discount( $item_ids, $coupon_code, $order_type = OrderModel::TYPE_SINGLE_ORDER, $format_price = false ) {
 
-		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
+		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
 
 		$response                   = array();
 		$response['total_price']    = 0;
@@ -698,10 +697,10 @@ class CouponModel {
 
 		$should_apply_coupon = false;
 
-		foreach ( $course_ids as $course_id ) {
-			$course_price = tutor_utils()->get_raw_course_price( $course_id );
-			if ( $plan_id ) {
-				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $plan_id );
+		foreach ( $item_ids as $item_id ) {
+			$course_price = tutor_utils()->get_raw_course_price( $item_id );
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
 			}
 
 			$reg_price      = $course_price->regular_price;
@@ -716,9 +715,9 @@ class CouponModel {
 				if ( $coupon ) {
 					$is_valid = $this->is_coupon_valid( $coupon );
 					if ( $is_valid ) {
-						$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_id, $coupon );
+						$is_meet_min_requirement = $this->is_coupon_requirement_meet( $item_ids, $coupon );
 						if ( $is_meet_min_requirement ) {
-							$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
+							$should_apply_coupon = $this->is_coupon_applicable( $coupon, $item_id );
 						}
 					}
 
@@ -734,7 +733,7 @@ class CouponModel {
 			}
 
 			$response['items'][] = (object) array(
-				'item_id'        => $course_id,
+				'item_id'        => $item_id,
 				'regular_price'  => $format_price ? tutor_get_formatted_price( $reg_price ) : $reg_price,
 				'discount_price' => $format_price ? tutor_get_formatted_price( $discount_price ) : $discount_price,
 				'is_applied'     => $should_apply_coupon,
@@ -755,15 +754,15 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int|array $course_ids Required, course id or array of ids.
-	 * @param int       $plan_id Optional, plan id.
+	 * @param int|array $item_ids Required, course ids or plan id.
+	 * @param string    $order_type order type.
 	 *
 	 * @return object Detail of discount on object format.
 	 *
 	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
-	public function apply_automatic_coupon_discount( $course_ids, $plan_id = 0 ) {
-		$course_ids = is_array( $course_ids ) ? $course_ids : array( $course_ids );
+	public function apply_automatic_coupon_discount( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER ) {
+		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
 
 		$response                 = array();
 		$response['total_price']  = 0;
@@ -772,11 +771,10 @@ class CouponModel {
 
 		$should_apply_coupon = false;
 
-		foreach ( $course_ids as $course_id ) {
-			$course_price = tutor_utils()->get_raw_course_price( $course_id );
-
-			if ( $plan_id ) {
-				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $plan_id );
+		foreach ( $item_ids as $item_id ) {
+			$course_price = tutor_utils()->get_raw_course_price( $item_id );
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
 			}
 
 			$reg_price      = $course_price->regular_price;
@@ -797,9 +795,9 @@ class CouponModel {
 					foreach ( $automatic_coupons as $coupon ) {
 						$is_valid = $this->is_coupon_valid( $coupon );
 						if ( $is_valid ) {
-							$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_ids, $coupon );
+							$is_meet_min_requirement = $this->is_coupon_requirement_meet( $item_ids, $coupon );
 							if ( $is_meet_min_requirement ) {
-								$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
+								$should_apply_coupon = $this->is_coupon_applicable( $coupon, $item_id );
 
 								// Apply discount if pass all checks.
 								if ( $should_apply_coupon ) {
@@ -818,7 +816,7 @@ class CouponModel {
 			}
 
 			$response['items'][] = (object) array(
-				'item_id'        => $course_id,
+				'item_id'        => $item_id,
 				'regular_price'  => $reg_price,
 				'discount_price' => $discount_price,
 				'is_applied'     => $should_apply_coupon,

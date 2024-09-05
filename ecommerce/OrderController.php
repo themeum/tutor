@@ -218,7 +218,9 @@ class OrderController {
 
 		$coupon = $coupon_code ? $coupon_model->get_coupon( array( 'coupon_code' => $coupon_code ) ) : null;
 
-		$price_details = $coupon ? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code ) : $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ) );
+		$price_details = $coupon
+						? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code, $order_type )
+						: $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ), $order_type );
 
 		$subtotal_price = 0;
 		foreach ( $price_details->items as $item ) {
