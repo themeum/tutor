@@ -365,7 +365,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					}
 
 					// Image answering also needs review since the answer texts are not meant to match exactly.
-					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ) ) ) {
+					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true ) ) {
 						$answer_status = null === $answer->is_correct ? 'pending' : 'wrong';
 					}
 					?>
@@ -508,7 +508,6 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																$answers[]                                 = $original_saved_answer;
 															}
 														}
-														
 													}
 
 													tutor_render_answer_list( $answers );
@@ -731,6 +730,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 								<?php endforeach; ?>
 							</tr>
 							
+
 							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status ); ?>
 
 							<?php

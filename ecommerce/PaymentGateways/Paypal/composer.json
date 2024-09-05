@@ -1,0 +1,15 @@
+{
+    "version": "1.0.0",
+    "name": "ahamed/payment-hub",
+    "description": "Stripe payment gateway integration with Tutor LMS",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ollyo\\PaymentHub\\": "src/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.8"
+    }
+}

@@ -8,7 +8,6 @@ var gulp = require('gulp'),
 	clean = require('gulp-clean'),
 	zip = require('gulp-zip'),
 	watch = require("gulp-watch"),
-	gulpIf = require("gulp-if"),
 	fs = require('fs'),
 	path = require('path'),
 	versionNumber = '';
@@ -16,11 +15,11 @@ var gulp = require('gulp'),
 try {
 	const data = fs.readFileSync('tutor.php', 'utf8');
 	versionNumber = data.match(/Version:\s*([\d.]+)/i)?.[1] || '';
-} catch (err) {}
+} catch (err) { }
 
 const build_name = 'tutor-' + versionNumber + '.zip';
 
-var onError = function(err) {
+var onError = function (err) {
 	notify.onError({
 		title: 'Gulp',
 		subtitle: 'Failure!',
@@ -41,11 +40,11 @@ var scss_blueprints = {
 		destination: 'tutor-setup.min.css',
 	},
 
-	tutor_v2: { src: 'v2-library/_src/scss/main.scss', mode: 'expanded', destination: 'tutor.min.css' },
-	tutor_v2_rtl: { src: 'v2-library/_src/scss/main.rtl.scss', mode: 'expanded', destination: 'tutor.rtl.min.css' },
-	
+	tutor_v2: { src: 'v2-library/src/scss/main.scss', mode: 'expanded', destination: 'tutor.min.css' },
+	tutor_v2_rtl: { src: 'v2-library/src/scss/main.rtl.scss', mode: 'expanded', destination: 'tutor.rtl.min.css' },
+
 	tutor_icon: {
-		src: 'v2-library/bundle/fonts/tutor-icon/tutor-icon.css',
+		src: 'v2-library/fonts/tutor-icon/tutor-icon.css',
 		mode: 'expanded',
 		destination: 'tutor-icon.min.css',
 	},
@@ -67,28 +66,21 @@ var task_keys = Object.keys(scss_blueprints);
 
 for (let task in scss_blueprints) {
 	let blueprint = scss_blueprints[task];
-	const isV2 = blueprint.src === 'v2-library/_src/scss/main.scss'
-	const isV2RTL = blueprint.src === 'v2-library/_src/scss/main.rtl.scss'
 
-	gulp.task(task, function() {
+	gulp.task(task, function () {
 		return gulp
 			.src(blueprint.src)
 			.pipe(plumber({ errorHandler: onError }))
 			.pipe(sourcemaps.init({ loadMaps: true, largeFile: true }))
 			.pipe(sass({ outputStyle: 'compressed', sass: require('sass') }))
 			.pipe(rename(blueprint.destination))
-			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'))
-			.pipe(gulpIf(isV2, rename('main.min.css')))
-			.pipe(gulpIf(isV2, gulp.dest('v2-library/bundle')))
-			.pipe(gulpIf(isV2, gulp.dest('.docz/static/v2-library/bundle')))
-			.pipe(gulpIf(isV2RTL, rename('main.rtl.min.css')))
-			.pipe(gulpIf(isV2RTL, gulp.dest('v2-library/bundle')));
+			.pipe(gulp.dest(blueprint.dest_path || 'assets/css'));
 	});
 }
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/gi;
-const js_files = [ 'tutor', 'tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup']
+const js_files = ['tutor', 'tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup']
 	.map((f) => 'assets/js/' + f + '.js:1')
 	.join(', ');
 function i18n_makepot(callback, target_dir) {
@@ -96,7 +88,7 @@ function i18n_makepot(callback, target_dir) {
 	var translation_texts = '';
 
 	// Loop through JS files inside js directory
-	fs.readdirSync(parent_dir).forEach(function(file_name) {
+	fs.readdirSync(parent_dir).forEach(function (file_name) {
 		if (file_name == 'node_modules' || file_name.indexOf('.') === 0) {
 			return;
 		}
@@ -110,11 +102,8 @@ function i18n_makepot(callback, target_dir) {
 		}
 
 		// Make sure only js extension file to process
-		if (stat.isFile() && path.extname(file_name) == '.js' && 
-			( 	full_path.indexOf('assets/react') > -1 
-				|| full_path.indexOf('v2-library/_src/js') > -1
-				|| full_path.indexOf('v2-library/src/components') > -1 
-			) 
+		if (stat.isFile() && (path.extname(file_name) == '.js' || path.extname(file_name) == '.tsx') &&
+			(full_path.indexOf('assets/react') > -1 || full_path.indexOf('v2-library/src') > -1)
 		) {
 			var codes = fs.readFileSync(full_path).toString();
 			var lines = codes.split('\n');
@@ -129,7 +118,7 @@ function i18n_makepot(callback, target_dir) {
 					// Parse the string
 
 					var string = found[n];
-					var delimeter = string[3]==' ' ? string[4] : string[3];
+					var delimeter = string[3] == ' ' ? string[4] : string[3];
 					var first_quote = string.indexOf(delimeter) + 1;
 					var second_quote = string.indexOf(delimeter, first_quote);
 					var text = string.slice(first_quote, second_quote);
@@ -153,8 +142,8 @@ function i18n_makepot(callback, target_dir) {
 	callback ? callback() : 0;
 }
 
-gulp.task('watch', function() {
-	return watch('./**/*.scss', function(e) {
+gulp.task('watch', function () {
+	return watch('./**/*.scss', function (e) {
 		if (e.history[0].includes('/front/')) {
 			gulp.parallel('tutor_front')();
 		} else if (e.history[0].includes('/admin-dashboard/')) {
@@ -171,7 +160,7 @@ gulp.task('watch', function() {
 	});
 });
 
-gulp.task('makepot', function() {
+gulp.task('makepot', function () {
 	return gulp
 		.src('**/*.php')
 		.pipe(
@@ -191,7 +180,7 @@ gulp.task('makepot', function() {
 /**
  * Build
  */
-gulp.task('clean-zip', function() {
+gulp.task('clean-zip', function () {
 	return gulp
 		.src('./' + build_name, {
 			read: false,
@@ -200,7 +189,7 @@ gulp.task('clean-zip', function() {
 		.pipe(clean());
 });
 
-gulp.task('clean-build', function() {
+gulp.task('clean-build', function () {
 	return gulp
 		.src('./build', {
 			read: false,
@@ -209,7 +198,7 @@ gulp.task('clean-build', function() {
 		.pipe(clean());
 });
 
-gulp.task('copy', function() {
+gulp.task('copy', function () {
 	return gulp
 		.src([
 			'./**/*.*',
@@ -259,15 +248,15 @@ gulp.task('copy', function() {
 });
 
 const ASSETS_FONTS_DIR = 'assets/fonts';
-const V2_LIBRARY_FONTS_DIR = 'v2-library/bundle/fonts/fonts/*';
+const V2_LIBRARY_FONTS_DIR = 'v2-library/fonts/fonts/*';
 
-gulp.task('copy-fonts', function() {
+gulp.task('copy-fonts', function () {
 	return gulp
 		.src(V2_LIBRARY_FONTS_DIR)
 		.pipe(gulp.dest(ASSETS_FONTS_DIR));
 });
 
-gulp.task('make-zip', function() {
+gulp.task('make-zip', function () {
 	return gulp
 		.src('./build/**/*.*')
 		.pipe(zip(build_name))

@@ -35,10 +35,10 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
 
 	$product_id = tutor_utils()->get_course_product_id( $course_id );
-	$product    = wc_get_product( $product_id );
+	$product    = function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : 0;
 
-	$total_enrolled   = tutor_utils()->count_enrolled_users_by_course( $course_id );
-	$maximum_students = tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
+	$total_enrolled   = (int) tutor_utils()->count_enrolled_users_by_course( $course_id );
+	$maximum_students = (int) tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
 
 	if ( 0 != $maximum_students && $total_enrolled != $maximum_students ) {
 		$total_booked = 100 / $maximum_students * $total_enrolled;

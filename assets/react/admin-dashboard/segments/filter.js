@@ -43,6 +43,24 @@ document.addEventListener('DOMContentLoaded', function () {
 			{ once: true },
 		);
 	}
+	const filterPaymentStatus = document.getElementById('tutor-backend-filter-payment-status');
+	filterPaymentStatus?.addEventListener(
+		'change',
+		(e) => {
+			window.location = urlPrams('payment-status', e.target.value);
+		},
+		{ once: true },
+	);
+	
+	const filterCouponStatus = document.getElementById('tutor-backend-filter-coupon-status');
+
+	filterCouponStatus?.addEventListener(
+		'change', 
+		(e) => {
+			window.location = urlPrams('coupon-status', e.target.value);
+		},
+		{ once: true },
+	);
 
 	const filterSearch = document.getElementById('tutor-admin-search-filter-form');
 	const search_field = document.getElementById('tutor-backend-filter-search');
@@ -187,8 +205,25 @@ document.addEventListener('DOMContentLoaded', function () {
 			const id = e.currentTarget.dataset.id;
 
 			if (commonConfirmForm) {
-				console.log(commonConfirmForm);
 				commonConfirmForm.elements.action.value = 'tutor_course_delete';
+				commonConfirmForm.elements.id.value = id;
+			}
+		};
+	}
+
+	/**
+	 * Handle permanent delete action
+	 *
+	 * @since 3.0.0
+	 */
+	const permanentDeleteElem = document.querySelectorAll('.tutor-delete-permanently');
+	for (let deleteElem of permanentDeleteElem) {
+		deleteElem.onclick = (e) => {
+			const id = e.currentTarget.dataset.id;
+			const action = e.currentTarget.dataset.action;
+
+			if (commonConfirmForm) {
+				commonConfirmForm.elements.action.value = action
 				commonConfirmForm.elements.id.value = id;
 			}
 		};

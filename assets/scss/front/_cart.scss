@@ -1,0 +1,170 @@
+.tutor-cart-page {
+    .tutor-cart-course-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        border: 1px solid var(--tutor-border-color);
+        border-radius: 6px;
+    }
+
+    .tutor-cart-course-item {
+        display: flex;
+        align-items: stretch;
+        gap: 24px;
+        padding: 30px;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--tutor-border-color);
+        }
+
+        .tutor-cart-course-thumb {
+            width: 160px;
+            height: 90px;
+            border-radius: 8px;
+            overflow: hidden;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .tutor-cart-course-title {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            a {
+                color: var(--tutor-body-color);
+                text-decoration: none;
+                
+                &:hover {
+                    opacity: 1;
+                }
+            }
+        }
+
+        .tutor-cart-course-info {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            margin-top: auto;
+
+            li {
+                font-size: 13px;
+                line-height: 18px;
+                color: #00000099;
+                position: relative;
+
+                &:not(&:last-child) {
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: 4px;
+                        right: -20px;
+                        height: 10px;
+                        width: 10px;
+                        background: #E3E6EB;
+                        border-radius: 50%;
+                    }
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        top: 6px;
+                        right: -18px;
+                        height: 6px;
+                        width: 6px;
+                        background-color: #4B505C;
+                        border-radius: 50%;
+                    }
+                }
+            }
+        }
+
+        .tutor-cart-course-price-wrapper {
+            margin-left: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: end;
+
+            .tutor-cart-course-price {
+                display: flex;
+                flex-direction: column;
+                align-items: end;
+                color: var(--tutor-body-color);
+            }
+
+            .tutor-cart-discount-price {
+                font-size: 13px;
+                color: #767C8E;
+                text-decoration: line-through;
+            }
+        }
+    }
+
+    .tutor-cart-course-bundle-badge {
+        display: inline-block;
+        width: fit-content;
+        font-size: 11px;
+        line-height: 16px;
+        background-color: #7A078D;
+        color: #ffffff;
+        border-radius: 13px;
+        padding: 0px 6px;
+    }
+
+    .tutor-cart-summery {
+        border: 1px solid var(--tutor-border-color);
+        border-radius: 6px;
+
+        .tutor-cart-summery-top {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            padding: 32px;
+            border-bottom: 1px solid var(--tutor-border-color);
+        }
+
+        .tutor-cart-summery-bottom {
+            padding: 32px;
+        }
+
+        .tutor-cart-summery-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--tutor-body-color);
+        }
+    }
+
+    .tutor-cart-empty-state {
+        max-width: 800px;
+        margin: 0 auto;
+        border:  1px solid var(--tutor-border-color);
+        border-radius: 6px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 32px;
+
+        p {
+            font-size: 24px;
+            line-height: 32px;
+            color: var(--tutor-body-color);
+            padding: 0px;
+            margin-bottom: 24px;
+        }
+
+        a {
+            width: 280px;
+            justify-content: center;
+        }
+    }
+}

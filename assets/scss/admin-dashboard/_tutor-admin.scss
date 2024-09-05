@@ -1795,3 +1795,7 @@ h2.tutor-page-heading {
     display: inline-block;
     line-height: 15px;
 }
+
+a:has(> span.tutor-create-course ) {
+	display: none!important;
+}

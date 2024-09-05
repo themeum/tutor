@@ -1,0 +1,16 @@
+{
+    "version": "1.0.0",
+    "name": "themeum/tutor",
+    "type": "library",
+    "description": "Stripe payment gateway integration with Tutor LMS",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ollyo\\PaymentHub\\": "src/"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^7.8"
+    }
+}
+

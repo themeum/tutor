@@ -9,8 +9,11 @@
  */
 
 use Tutor\Cache\FlashMessage;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
+use Tutor\Course;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -790,25 +793,26 @@ if ( ! function_exists( 'tutor_js_date_format_against_wp' ) ) {
 	}
 }
 
-/**
- * Convert date to desire format
- *
- * NOTE: mysql query use formated date from here
- * that's why date_i18n need to be ignore
- *
- * @param $format string
- *
- * @param $date string
- *
- * @return string ( date )
-*/
 if ( ! function_exists( 'tutor_get_formated_date' ) ) {
-	function tutor_get_formated_date( string $require_format, string $user_date ) {
+	/**
+	 * Convert date to desire format
+	 *
+	 * NOTE: mysql query use formated date from here
+	 * that's why date_i18n need to be ignore
+	 *
+	 * @param string $require_format string If empty Y-m-d is used.
+	 * @param string $user_date string Date.
+	 *
+	 * @return string ( date )
+	 */
+	function tutor_get_formated_date( string $require_format = '', string $user_date = '' ) {
+		$require_format = $require_format ?: 'Y-m-d';
+
 		$date = date_create( str_replace( '/', '-', $user_date ) );
 		if ( is_a( $date, 'DateTime' ) ) {
 			$formatted_date = date_format( $date, $require_format );
 		} else {
-			$formatted_date = date( $require_format, strtotime( $user_date ) );
+			$formatted_date = gmdate( $require_format, strtotime( $user_date ) );
 		}
 		return $formatted_date;
 	}
@@ -1222,14 +1226,14 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 				$is_completed_course = tutor_utils()->is_completed_course( $course_id, $user_id );
 				$course_progress     = (int) tutor_utils()->get_course_completed_percent( $course_id, $user_id );
 
-				if ( $course_progress > 0 || $course_progress < 100) {
+				if ( $course_progress > 0 || $course_progress < 100 ) {
 					$conditional_buttons->show_continue_learning_btn = true;
 				}
 
 				if ( $course_progress === 0 ) {
 					$conditional_buttons->show_start_learning_btn = true;
 				}
-				
+
 				if ( $can_complete_course ) {
 					$conditional_buttons->show_complete_course_btn = true;
 				}
@@ -1259,5 +1263,283 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 		}
 
 		return apply_filters( 'tutor_enrollment_buttons', $conditional_buttons );
+	}
+}
+
+if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
+	/**
+	 * Get list of global timezones
+	 *
+	 * @return array
+	 */
+	function tutor_global_timezone_lists() {
+		return array(
+			'Pacific/Midway'                 => '(GMT-11:00) Midway Island, Samoa ',
+			'Pacific/Pago_Pago'              => '(GMT-11:00) Pago Pago ',
+			'Pacific/Honolulu'               => '(GMT-10:00) Hawaii ',
+			'America/Anchorage'              => '(GMT-8:00) Alaska ',
+			'America/Vancouver'              => '(GMT-7:00) Vancouver ',
+			'America/Los_Angeles'            => '(GMT-7:00) Pacific Time (US and Canada) ',
+			'America/Tijuana'                => '(GMT-7:00) Tijuana ',
+			'America/Phoenix'                => '(GMT-7:00) Arizona ',
+			'America/Edmonton'               => '(GMT-6:00) Edmonton ',
+			'America/Denver'                 => '(GMT-6:00) Mountain Time (US and Canada) ',
+			'America/Mazatlan'               => '(GMT-6:00) Mazatlan ',
+			'America/Regina'                 => '(GMT-6:00) Saskatchewan ',
+			'America/Guatemala'              => '(GMT-6:00) Guatemala ',
+			'America/El_Salvador'            => '(GMT-6:00) El Salvador ',
+			'America/Managua'                => '(GMT-6:00) Managua ',
+			'America/Costa_Rica'             => '(GMT-6:00) Costa Rica ',
+			'America/Tegucigalpa'            => '(GMT-6:00) Tegucigalpa ',
+			'America/Winnipeg'               => '(GMT-5:00) Winnipeg ',
+			'America/Chicago'                => '(GMT-5:00) Central Time (US and Canada) ',
+			'America/Mexico_City'            => '(GMT-5:00) Mexico City ',
+			'America/Panama'                 => '(GMT-5:00) Panama ',
+			'America/Bogota'                 => '(GMT-5:00) Bogota ',
+			'America/Lima'                   => '(GMT-5:00) Lima ',
+			'America/Caracas'                => '(GMT-4:30) Caracas ',
+			'America/Montreal'               => '(GMT-4:00) Montreal ',
+			'America/New_York'               => '(GMT-4:00) Eastern Time (US and Canada) ',
+			'America/Indianapolis'           => '(GMT-4:00) Indiana (East) ',
+			'America/Puerto_Rico'            => '(GMT-4:00) Puerto Rico ',
+			'America/Santiago'               => '(GMT-4:00) Santiago ',
+			'America/Halifax'                => '(GMT-3:00) Halifax ',
+			'America/Montevideo'             => '(GMT-3:00) Montevideo ',
+			'America/Araguaina'              => '(GMT-3:00) Brasilia ',
+			'America/Argentina/Buenos_Aires' => '(GMT-3:00) Buenos Aires, Georgetown ',
+			'America/Sao_Paulo'              => '(GMT-3:00) Sao Paulo ',
+			'Canada/Atlantic'                => '(GMT-3:00) Atlantic Time (Canada) ',
+			'America/St_Johns'               => '(GMT-2:30) Newfoundland and Labrador ',
+			'America/Godthab'                => '(GMT-2:00) Greenland ',
+			'Atlantic/Cape_Verde'            => '(GMT-1:00) Cape Verde Islands ',
+			'Atlantic/Azores'                => '(GMT+0:00) Azores ',
+			'UTC'                            => '(GMT+0:00) Universal Time UTC ',
+			'Etc/Greenwich'                  => '(GMT+0:00) Greenwich Mean Time ',
+			'Atlantic/Reykjavik'             => '(GMT+0:00) Reykjavik ',
+			'Africa/Nouakchott'              => '(GMT+0:00) Nouakchott ',
+			'Europe/Dublin'                  => '(GMT+1:00) Dublin ',
+			'Europe/London'                  => '(GMT+1:00) London ',
+			'Europe/Lisbon'                  => '(GMT+1:00) Lisbon ',
+			'Africa/Casablanca'              => '(GMT+1:00) Casablanca ',
+			'Africa/Bangui'                  => '(GMT+1:00) West Central Africa ',
+			'Africa/Algiers'                 => '(GMT+1:00) Algiers ',
+			'Africa/Tunis'                   => '(GMT+1:00) Tunis ',
+			'Europe/Belgrade'                => '(GMT+2:00) Belgrade, Bratislava, Ljubljana ',
+			'CET'                            => '(GMT+2:00) Sarajevo, Skopje, Zagreb ',
+			'Europe/Oslo'                    => '(GMT+2:00) Oslo ',
+			'Europe/Copenhagen'              => '(GMT+2:00) Copenhagen ',
+			'Europe/Brussels'                => '(GMT+2:00) Brussels ',
+			'Europe/Berlin'                  => '(GMT+2:00) Amsterdam, Berlin, Rome, Stockholm, Vienna ',
+			'Europe/Amsterdam'               => '(GMT+2:00) Amsterdam ',
+			'Europe/Rome'                    => '(GMT+2:00) Rome ',
+			'Europe/Stockholm'               => '(GMT+2:00) Stockholm ',
+			'Europe/Vienna'                  => '(GMT+2:00) Vienna ',
+			'Europe/Luxembourg'              => '(GMT+2:00) Luxembourg ',
+			'Europe/Paris'                   => '(GMT+2:00) Paris ',
+			'Europe/Zurich'                  => '(GMT+2:00) Zurich ',
+			'Europe/Madrid'                  => '(GMT+2:00) Madrid ',
+			'Africa/Harare'                  => '(GMT+2:00) Harare, Pretoria ',
+			'Europe/Warsaw'                  => '(GMT+2:00) Warsaw ',
+			'Europe/Prague'                  => '(GMT+2:00) Prague Bratislava ',
+			'Europe/Budapest'                => '(GMT+2:00) Budapest ',
+			'Africa/Tripoli'                 => '(GMT+2:00) Tripoli ',
+			'Africa/Cairo'                   => '(GMT+2:00) Cairo ',
+			'Africa/Johannesburg'            => '(GMT+2:00) Johannesburg ',
+			'Europe/Helsinki'                => '(GMT+3:00) Helsinki ',
+			'Africa/Nairobi'                 => '(GMT+3:00) Nairobi ',
+			'Europe/Sofia'                   => '(GMT+3:00) Sofia ',
+			'Europe/Istanbul'                => '(GMT+3:00) Istanbul ',
+			'Europe/Athens'                  => '(GMT+3:00) Athens ',
+			'Europe/Bucharest'               => '(GMT+3:00) Bucharest ',
+			'Asia/Nicosia'                   => '(GMT+3:00) Nicosia ',
+			'Asia/Beirut'                    => '(GMT+3:00) Beirut ',
+			'Asia/Damascus'                  => '(GMT+3:00) Damascus ',
+			'Asia/Jerusalem'                 => '(GMT+3:00) Jerusalem ',
+			'Asia/Amman'                     => '(GMT+3:00) Amman ',
+			'Europe/Moscow'                  => '(GMT+3:00) Moscow ',
+			'Asia/Baghdad'                   => '(GMT+3:00) Baghdad ',
+			'Asia/Kuwait'                    => '(GMT+3:00) Kuwait ',
+			'Asia/Riyadh'                    => '(GMT+3:00) Riyadh ',
+			'Asia/Bahrain'                   => '(GMT+3:00) Bahrain ',
+			'Asia/Qatar'                     => '(GMT+3:00) Qatar ',
+			'Asia/Aden'                      => '(GMT+3:00) Aden ',
+			'Africa/Khartoum'                => '(GMT+3:00) Khartoum ',
+			'Africa/Djibouti'                => '(GMT+3:00) Djibouti ',
+			'Africa/Mogadishu'               => '(GMT+3:00) Mogadishu ',
+			'Europe/Kiev'                    => '(GMT+3:00) Kiev ',
+			'Asia/Dubai'                     => '(GMT+4:00) Dubai ',
+			'Asia/Muscat'                    => '(GMT+4:00) Muscat ',
+			'Asia/Tehran'                    => '(GMT+4:30) Tehran ',
+			'Asia/Kabul'                     => '(GMT+4:30) Kabul ',
+			'Asia/Baku'                      => '(GMT+5:00) Baku, Tbilisi, Yerevan ',
+			'Asia/Yekaterinburg'             => '(GMT+5:00) Yekaterinburg ',
+			'Asia/Tashkent'                  => '(GMT+5:00) Tashkent ',
+			'Asia/Karachi'                   => '(GMT+5:00) Islamabad, Karachi ',
+			'Asia/Calcutta'                  => '(GMT+5:30) India ',
+			'Asia/Kolkata'                   => '(GMT+5:30) Mumbai, Kolkata, New Delhi ',
+			'Asia/Kathmandu'                 => '(GMT+5:45) Kathmandu ',
+			'Asia/Novosibirsk'               => '(GMT+6:00) Novosibirsk ',
+			'Asia/Almaty'                    => '(GMT+6:00) Almaty ',
+			'Asia/Dacca'                     => '(GMT+6:00) Dacca ',
+			'Asia/Dhaka'                     => '(GMT+6:00) Astana, Dhaka ',
+			'Asia/Krasnoyarsk'               => '(GMT+7:00) Krasnoyarsk ',
+			'Asia/Bangkok'                   => '(GMT+7:00) Bangkok ',
+			'Asia/Saigon'                    => '(GMT+7:00) Vietnam ',
+			'Asia/Jakarta'                   => '(GMT+7:00) Jakarta ',
+			'Asia/Irkutsk'                   => '(GMT+8:00) Irkutsk, Ulaanbaatar ',
+			'Asia/Shanghai'                  => '(GMT+8:00) Beijing, Shanghai ',
+			'Asia/Hong_Kong'                 => '(GMT+8:00) Hong Kong ',
+			'Asia/Taipei'                    => '(GMT+8:00) Taipei ',
+			'Asia/Kuala_Lumpur'              => '(GMT+8:00) Kuala Lumpur ',
+			'Asia/Singapore'                 => '(GMT+8:00) Singapore ',
+			'Australia/Perth'                => '(GMT+8:00) Perth ',
+			'Asia/Yakutsk'                   => '(GMT+9:00) Yakutsk ',
+			'Asia/Seoul'                     => '(GMT+9:00) Seoul ',
+			'Asia/Tokyo'                     => '(GMT+9:00) Osaka, Sapporo, Tokyo ',
+			'Australia/Darwin'               => '(GMT+9:30) Darwin ',
+			'Australia/Adelaide'             => '(GMT+9:30) Adelaide ',
+			'Asia/Vladivostok'               => '(GMT+10:00) Vladivostok ',
+			'Pacific/Port_Moresby'           => '(GMT+10:00) Guam, Port Moresby ',
+			'Australia/Brisbane'             => '(GMT+10:00) Brisbane ',
+			'Australia/Sydney'               => '(GMT+10:00) Canberra, Melbourne, Sydney ',
+			'Australia/Hobart'               => '(GMT+10:00) Hobart ',
+			'Asia/Magadan'                   => '(GMT+10:00) Magadan ',
+			'SST'                            => '(GMT+11:00) Solomon Islands ',
+			'Pacific/Noumea'                 => '(GMT+11:00) New Caledonia ',
+			'Asia/Kamchatka'                 => '(GMT+12:00) Kamchatka ',
+			'Pacific/Fiji'                   => '(GMT+12:00) Fiji Islands, Marshall Islands ',
+			'Pacific/Auckland'               => '(GMT+12:00) Auckland, Wellington',
+		);
+	}
+
+	if ( ! function_exists( 'tutor_get_all_active_payment_gateways' ) ) {
+		/**
+		 * Get all active payment gateways including manual & automate
+		 *
+		 * @since 3.0.0
+		 *
+		 * @return array [ automate =>[], manual => [] ]
+		 */
+		function tutor_get_all_active_payment_gateways() {
+			$active_gateways = array(
+				'automate' => array(),
+				'manual'   => array(),
+			);
+
+			foreach ( Settings::get_default_automate_payment_gateways() as $k => $gateway ) {
+				list( $label, $is_active, $icon ) = array_values( $gateway );
+				if ( $is_active ) {
+					$active_gateways['automate'][ $k ] = array( 'label' => $label, 'icon' => $icon );
+				}
+			}
+
+			$manual_gateways = tutor_get_manual_payment_gateways();
+			if ( is_array( $manual_gateways ) && count( $manual_gateways ) ) {
+				foreach ( $manual_gateways as $gateway ) {
+					if ( isset( $gateway['is_enable'] ) && 'on' === $gateway['is_enable'] ) {
+						$active_gateways['manual'][] = array(
+							'label'                => $gateway['payment_method_name'],
+							'additional_details'   => $gateway['additional_details'],
+							'payment_instructions' => $gateway['payment_instructions'],
+						);
+					}
+				}
+			}
+
+			return apply_filters( 'tutor_active_payment_gateways', $active_gateways );
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_manual_payment_gateways' ) ) {
+		/**
+		 * Get manual payment gateways
+		 *
+		 * @since 3.0.0
+		 *
+		 * @return array
+		 */
+		function tutor_get_manual_payment_gateways() {
+			return get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
+		/**
+		 * Get course formatted price
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int     $course_id Course price.
+		 * @param boolean $echo Whether to echo content.
+		 *
+		 * @return string|void
+		 */
+		function tutor_get_formatted_price_html( $course_id, $echo = true ) {
+			$regular_price = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$sale_price    = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+
+			if ( ! $regular_price ) {
+				return;
+			}
+			ob_start();
+			?>
+				<div>
+					<?php if ( $sale_price ) : ?>
+						<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
+						<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
+					<?php else : ?>
+						<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
+					<?php endif; ?>
+				</div>
+			<?php
+			$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
+			if ( $echo ) {
+				echo $content; // PHPCS:ignore
+			} else {
+				return $content;
+			}
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_course_formatted_price' ) ) {
+		/**
+		 * Get course formatted price
+		 *
+		 * Formatting as per ecommerce price settings
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param mixed $price Raw price.
+		 *
+		 * @return string|void
+		 */
+		function tutor_get_formatted_price( $price ) {
+			$price = floatval( Input::sanitize( $price ) );
+
+			$currency_symbol    = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) );
+			$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' );
+			$thousand_separator = tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' );
+			$decimal_separator  = tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' );
+			$no_of_decimal      = tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' );
+
+			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
+			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
+
+			return $price;
+		}
+	}
+}
+
+if ( ! function_exists( 'tutor_is_json' ) ) {
+	/**
+	 * Check a string is valid JSON.
+	 *
+	 * @param string $string string.
+	 *
+	 * @return boolean
+	 */
+	function tutor_is_json( $string ) {
+		json_decode( $string );
+		return json_last_error() === JSON_ERROR_NONE;
 	}
 }

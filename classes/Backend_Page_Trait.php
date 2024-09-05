@@ -11,6 +11,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\OrderModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -192,6 +194,76 @@ trait Backend_Page_Trait {
 		return array(
 			'value'  => 'reject',
 			'option' => __( 'Reject', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Bulk action active
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function bulk_action_active(): array {
+		return array(
+			'value'  => 'active',
+			'option' => __( 'Active', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Bulk action inactive
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function bulk_action_inactive(): array {
+		return array(
+			'value'  => 'inactive',
+			'option' => __( 'Inactive', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Bulk action mark order payment status as paid
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function bulk_action_mark_order_paid(): array {
+		return array(
+			'value'  => OrderModel::PAYMENT_PAID,
+			'option' => __( 'Mark as paid', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Bulk action mark order payment status as unpaid
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function bulk_action_mark_order_unpaid(): array {
+		return array(
+			'value'  => OrderModel::PAYMENT_UNPAID,
+			'option' => __( 'Mark as unpaid', 'tutor' ),
+		);
+	}
+
+	/**
+	 * Bulk action mark order as trash
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function bulk_action_mark_order_trash(): array {
+		return array(
+			'value'  => OrderModel::ORDER_TRASH,
+			'option' => __( 'Trash', 'tutor' ),
 		);
 	}
 }

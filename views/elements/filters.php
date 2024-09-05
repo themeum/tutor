@@ -11,8 +11,14 @@
  * @since 2.0.0
  */
 
+use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
+use Tutor\Models\OrderModel;
+
+$current_page = Input::get( 'page', '' );
 
 if ( isset( $data ) ) : ?>
 	<div class="tutor-px-20">
@@ -129,6 +135,49 @@ if ( isset( $data ) ) : ?>
 						</div>
 					<?php endif; ?>
 
+					<?php if ( OrderController::PAGE_SLUG === $current_page ) : ?>
+						<div class="tutor-wp-dashboard-filter-item">
+							<label class="tutor-form-label">
+								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
+							</label>
+							<select class="tutor-form-select" id="tutor-backend-filter-payment-status" data-search="no">
+								<option value="">
+									<?php esc_html_e( 'Select', 'tutor' ); ?>
+								</option>
+							<?php
+								$payment_status        = OrderModel::get_payment_status();
+								$filter_payment_status = Input::get( 'payment-status', '' );
+							foreach ( $payment_status as $key => $value ) :
+								?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_payment_status, $key ); ?>>
+								<?php echo esc_html( $value ); ?>
+								</option>
+							<?php endforeach; ?>
+							</select>							
+						</div>
+					<?php endif; ?>
+					<?php if ( CouponController::PAGE_SLUG === $current_page ) : ?>
+						<div class="tutor-wp-dashboard-filter-item">
+							<label class="tutor-form-label">
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
+							</label>
+							<select class="tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
+								<option value="">
+									<?php esc_html_e( 'Select', 'tutor' ); ?>
+								</option>
+							<?php
+								$coupon_status        = CouponModel::get_coupon_status();
+								$filter_coupon_status = Input::get( 'coupon-status', '' );
+							foreach ( $coupon_status as $key => $value ) :
+								?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_coupon_status, $key ); ?>>
+								<?php echo esc_html( $value ); ?>
+								</option>
+							<?php endforeach; ?>
+							</select>							
+						</div>
+					<?php endif; ?>
+
 					<?php if ( ! isset( $data['sort_by'] ) || true == $data['sort_by'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
@@ -144,6 +193,7 @@ if ( isset( $data ) ) : ?>
 							</select>
 						</div>
 					<?php endif; ?>
+
 					<div class="tutor-wp-dashboard-filter-item">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Date', 'tutor' ); ?>
