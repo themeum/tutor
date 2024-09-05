@@ -63,7 +63,7 @@ class HooksHandler {
 		add_action( 'tutor_order_placement_success', array( $this, 'handle_order_placement_success' ) );
 
 		// New order placed hook.
-		add_action( 'tutor_order_placed', array( $this, 'tutor_order_placed' ) );
+		add_action( 'tutor_order_placement_success', array( $this, 'tutor_order_placed' ) );
 	}
 
 	/**
@@ -246,13 +246,13 @@ class HooksHandler {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $order_data Order data.
+	 * @param int $order_id Order id.
 	 *
 	 * @return void
 	 */
-	public function tutor_order_placed( $order_data ) {
-		$payment_status = $order_data['payment_status'];
-		$order_id       = $order_data['id'];
+	public function tutor_order_placed( $order_id ) {
+		$order          = ( new OrderModel() )->get_order_by_id( $order_id );
+		$payment_status = $order->payment_status;
 
 		$order_status = $this->order_model->get_order_status_by_payment_status( $payment_status );
 
@@ -298,7 +298,6 @@ class HooksHandler {
 					}
 
 					update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
-					do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
 				}
 			} else {
 				if ( $this->order_model::ORDER_COMPLETED ) {
