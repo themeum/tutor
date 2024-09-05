@@ -302,6 +302,12 @@ class HooksHandler {
 							BundleModel::enroll_to_bundle_courses( $course_id, $student_id );
 						}
 						update_post_meta( $enrollment_id, '_tutor_enrolled_by_order_id', $order_id );
+
+						// Check if action already added.
+						$fired = did_action( 'tutor_after_enrolled' );
+						if ( ! $fired ) {
+							do_action( 'tutor_after_enrolled', $course_id, $student_id, $enrollment_id );
+						}
 					} else {
 						// Log error message with student id and course id.
 						error_log( "Error updating enrollment for student {$student_id} and course {$course_id}" );

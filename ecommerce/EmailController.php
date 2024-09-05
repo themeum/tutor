@@ -350,7 +350,7 @@ class EmailController {
 
 			$replacable['{admin_order_url}'] = admin_url( 'admin.php?page=tutor_orders&action=edit&id=' . $order_id );
 
-			$replacable['{site_order_url}'] = site_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) );
+			$replacable['{site_order_url}'] = tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' );
 
 			$replacable['{order_id}']    = '#' . $order_data->id;
 			$replacable['{order_date}']  = tutor_i18n_get_formated_date( $order_data->created_at_gmt, get_option( 'date_format' ) );
