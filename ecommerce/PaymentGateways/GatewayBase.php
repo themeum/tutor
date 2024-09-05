@@ -12,6 +12,7 @@ namespace Tutor\PaymentGateways;
 
 use Ollyo\PaymentHub\PaymentHub;
 use stdClass;
+use Tutor\Ecommerce\CheckoutController;
 
 /**
  * Payment gateway base class
@@ -135,8 +136,8 @@ abstract class GatewayBase {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @param mixed $webhook_data Webhook data.
 	 * @throws \Exception Throw exception if error occur.
-	 * @throws \Throwable Throw a throwable if error occur inside payment hub.
 	 *
 	 * @return mixed
 	 */
@@ -147,4 +148,46 @@ abstract class GatewayBase {
 
 		return $this->payment->verifyAndCreateOrderData( $webhook_data );
 	}
+
+	/**
+	 * Make recurring payment against a order
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int   $order_id Order ID.
+	 *
+	 * @throws \Throwable Throw throwable if error occur.
+	 * @throws \InvalidArgumentException Throw throwable if error occur.
+	 * @throws \RuntimeException Throw throwable if error occur.
+	 *
+	 * @return void
+	 */
+	public function make_recurring_payment( int $order_id ) {
+		// Check if payment object is initialized.
+		if ( ! $this->payment ) {
+			throw new \InvalidArgumentException( 'Payment object is not initialized.' );
+		}
+
+		// Validate order ID and amount.
+		if ( ! $order_id ) {
+			throw new \InvalidArgumentException( 'Invalid order ID or amount.' );
+		}
+
+		try {
+			// Prepare payment data.
+			$payment_data = CheckoutController::prepare_recurring_payment_data( $order_id );
+
+			if ( ! $payment_data ) {
+				throw new \RuntimeException( 'Failed to prepare recurring payment data.' );
+			}
+
+			// Set payment data and initiate recurring payment.
+			$this->payment->setData( $payment_data );
+			$this->payment->createRecurringPayment();
+		} catch ( \Throwable $th ) {
+			// Catch and rethrow any exception.
+			throw $th;
+		}
+	}
+
 }

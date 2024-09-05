@@ -716,7 +716,7 @@ class CouponModel {
 				if ( $coupon ) {
 					$is_valid = $this->is_coupon_valid( $coupon );
 					if ( $is_valid ) {
-						$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_id, $coupon );
+						$is_meet_min_requirement = $this->is_coupon_requirement_meet( $course_ids, $coupon );
 						if ( $is_meet_min_requirement ) {
 							$should_apply_coupon = $this->is_coupon_applicable( $coupon, $course_id );
 						}

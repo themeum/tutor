@@ -3,7 +3,7 @@
 namespace Tutor\PaymentGateways\Configs;
 
 use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
-use Ollyo\PaymentHub\Core\Payment\BaseConfig;
+use Ollyo\PaymentHub\Payments\Stripe\Config;
 
 /**
  * StripeConfig class.
@@ -13,7 +13,7 @@ use Ollyo\PaymentHub\Core\Payment\BaseConfig;
  *
  * @since 3.0.0
  */
-class StripeConfig extends BaseConfig implements ConfigContract {
+class StripeConfig extends Config implements ConfigContract {
 
 	use PaymentUrlsTrait;
 

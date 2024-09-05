@@ -383,7 +383,7 @@ class Stripe extends BasePayment
 		$previousPayload = json_decode($data->previous_payload)->data->object;
 		
 		return [
-			'amount' 				=> $data->amount_in_smallest_unit,
+			'amount' 				=> $data->total_amount_in_smallest_unit,
 			'currency' 				=> $data->currency->code,
 			'confirm' 				=> true,
 			'customer' 				=> $previousPayload->customer,
