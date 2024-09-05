@@ -41,7 +41,6 @@ export const QuizModalContextProvider = ({
     | React.ReactNode
     | ((
         item: NonNullable<number>,
-        setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>,
         setValidationError: React.Dispatch<
           React.SetStateAction<{
             message: string;
@@ -102,9 +101,7 @@ export const QuizModalContextProvider = ({
         setValidationError,
       }}
     >
-      {typeof children === 'function'
-        ? children(activeQuestionIndex, setActiveQuestionId, setValidationError)
-        : children}
+      {typeof children === 'function' ? children(activeQuestionIndex, setValidationError) : children}
     </QuizModalContext.Provider>
   );
 };

@@ -1,12 +1,14 @@
+import { type SerializedStyles, css } from '@emotion/react';
+import { rgba } from 'polished';
+import React, { type MouseEvent, type ReactNode, useRef } from 'react';
+
 import SVGIcon from '@Atoms/SVGIcon';
+
 import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
-import { type SerializedStyles, css } from '@emotion/react';
-import React, { type MouseEvent, type ReactNode, useRef } from 'react';
 
-import { rgba } from 'polished';
 import Popover from './Popover';
 
 interface ThreeDotsOptionProps {

@@ -6,6 +6,7 @@ import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
 import EmptyState from '@Molecules/EmptyState';
 import Tabs from '@Molecules/Tabs';
@@ -47,6 +48,18 @@ const Certificate = () => {
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>('landscape');
   const [selectedCertificate, setSelectedCertificate] = useState(currentCertificateKey);
 
+  const hasLandScapeCertificatesForActiveTab = certificatesData.some(
+    (certificate) =>
+      certificate.orientation === 'landscape' &&
+      (activeCertificateTab === 'templates' ? certificate.is_default : !certificate.is_default),
+  );
+
+  const hasPortraitCertificatesForActiveTab = certificatesData.some(
+    (certificate) =>
+      certificate.orientation === 'portrait' &&
+      (activeCertificateTab === 'templates' ? certificate.is_default : !certificate.is_default),
+  );
+
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!currentCertificateKey) {
@@ -71,6 +84,22 @@ const Certificate = () => {
 
   const handleTabChange = (tab: CertificateTabValue) => {
     setActiveCertificateTab(tab);
+
+    setActiveOrientation((previousOrientation) => {
+      if (hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab) {
+        return previousOrientation;
+      }
+
+      if (hasLandScapeCertificatesForActiveTab) {
+        return 'landscape';
+      }
+
+      if (hasPortraitCertificatesForActiveTab) {
+        return 'portrait';
+      }
+
+      return 'landscape';
+    });
   };
 
   const handleOrientationChange = (orientation: 'landscape' | 'portrait') => {
@@ -98,7 +127,7 @@ const Certificate = () => {
               variant="primary"
               size="small"
               onClick={() => {
-                window.open(config.TUTOR_PRICING_PAGE, '_blank');
+                window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
               }}
               icon={<SVGIcon name="crown" width={24} height={24} />}
             >
@@ -112,34 +141,46 @@ const Certificate = () => {
         <div css={styles.tabs}>
           <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
           <div css={styles.orientation}>
-            <button
-              type="button"
-              css={[
-                styleUtils.resetButton,
-                styles.activeOrientation({
-                  isActive: activeOrientation === 'landscape',
-                }),
-              ]}
-              onClick={() => handleOrientationChange('landscape')}
-            >
-              <SVGIcon
-                name={activeOrientation === 'landscape' ? 'landscapeFilled' : 'landscape'}
-                width={32}
-                height={32}
-              />
-            </button>
-            <button
-              type="button"
-              css={[
-                styleUtils.resetButton,
-                styles.activeOrientation({
-                  isActive: activeOrientation === 'portrait',
-                }),
-              ]}
-              onClick={() => handleOrientationChange('portrait')}
-            >
-              <SVGIcon name={activeOrientation === 'portrait' ? 'portraitFilled' : 'portrait'} width={32} height={32} />
-            </button>
+            <Show when={hasLandScapeCertificatesForActiveTab}>
+              <Tooltip delay={200} content={__('Landscape', 'tutor')}>
+                <button
+                  type="button"
+                  css={[
+                    styleUtils.resetButton,
+                    styles.activeOrientation({
+                      isActive: activeOrientation === 'landscape',
+                    }),
+                  ]}
+                  onClick={() => handleOrientationChange('landscape')}
+                >
+                  <SVGIcon
+                    name={activeOrientation === 'landscape' ? 'landscapeFilled' : 'landscape'}
+                    width={32}
+                    height={32}
+                  />
+                </button>
+              </Tooltip>
+            </Show>
+            <Show when={hasPortraitCertificatesForActiveTab}>
+              <Tooltip delay={200} content={__('Portrait', 'tutor')}>
+                <button
+                  type="button"
+                  css={[
+                    styleUtils.resetButton,
+                    styles.activeOrientation({
+                      isActive: activeOrientation === 'portrait',
+                    }),
+                  ]}
+                  onClick={() => handleOrientationChange('portrait')}
+                >
+                  <SVGIcon
+                    name={activeOrientation === 'portrait' ? 'portraitFilled' : 'portrait'}
+                    width={32}
+                    height={32}
+                  />
+                </button>
+              </Tooltip>
+            </Show>
           </div>
         </div>
 

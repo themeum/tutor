@@ -3,13 +3,14 @@ import { __, sprintf } from '@wordpress/i18n';
 import { rgba } from 'polished';
 
 import Button from '@Atoms/Button';
-import WPEditor from '@Atoms/WPEditor';
-
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+import WPEditor from '@Atoms/WPEditor';
+
 import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
+
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -19,6 +20,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { makeFirstCharacterUpperCase } from '@Utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {

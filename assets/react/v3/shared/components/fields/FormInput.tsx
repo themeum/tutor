@@ -1,22 +1,20 @@
 import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-
-import Show from '@Controls/Show';
-
 import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
+
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
-import { __ } from '@wordpress/i18n';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
