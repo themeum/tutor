@@ -204,7 +204,9 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
 
-		$price_details = $coupon_code ? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code ) : $coupon_model->apply_automatic_coupon_discount( $object_ids );
+		$price_details = $coupon_code
+						? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code, $order_type )
+						: $coupon_model->apply_automatic_coupon_discount( $object_ids, $order_type );
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
@@ -292,6 +294,7 @@ class CheckoutController {
 		$items          = array();
 		$subtotal_price = $order['subtotal_price'];
 		$total_price    = $order['total_price'];
+		$order_type     = $order['order_type'];
 
 		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
@@ -327,11 +330,19 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		foreach ( $order['items'] as $item ) {
-			$item = (object) $item;
+			$item      = (object) $item;
+			$item_name = '';
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+				$plan_id   = $item->item_id;
+				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $plan_id );
+				$item_name = $plan_info->plan_name ?? '';
+			} else {
+				$item_name = get_the_title( $item->item_id );
+			}
 
 			$items[] = array(
 				'item_id'                           => $item->item_id,
-				'item_name'                         => get_the_title( $item->item_id ),
+				'item_name'                         => $item_name,
 				'regular_price'                     => floatval( $item->regular_price ),
 				'regular_price_in_smallest_unit'    => intval( floatval( $item->regular_price ) * 100 ),
 				'quantity'                          => 1,
