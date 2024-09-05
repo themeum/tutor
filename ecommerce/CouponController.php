@@ -18,6 +18,7 @@ use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
+use Tutor\Models\OrderModel;
 use Tutor\Traits\JsonResponse;
 use TutorPro\CourseBundle\Models\BundleModel;
 
@@ -43,7 +44,7 @@ class CouponController extends BaseController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @var Object
+	 * @var CouponModel
 	 */
 	private $model;
 
@@ -685,6 +686,11 @@ class CouponController extends BaseController {
 		$coupon_code = Input::post( 'coupon_code' );
 		$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
 
+		$order_type = OrderModel::TYPE_SINGLE_ORDER;
+		if ( $plan ) {
+			$order_type = OrderModel::TYPE_SUBSCRIPTION;
+		}
+
 		if ( empty( $object_ids ) ) {
 			$this->json_response(
 				tutor_utils()->error_message( 'invalid_req' ),
@@ -694,7 +700,9 @@ class CouponController extends BaseController {
 		}
 
 		try {
-			$discount_price = $coupon_code ? $this->model->apply_coupon_discount( $object_ids, $coupon_code, $plan, true ) : $this->model->apply_automatic_coupon_discount( $object_ids );
+			$discount_price = $coupon_code
+								? $this->model->apply_coupon_discount( $object_ids, $coupon_code, $order_type, true )
+								: $this->model->apply_automatic_coupon_discount( $object_ids, $order_type );
 
 			if ( $discount_price->is_applied ) {
 				$this->json_response(

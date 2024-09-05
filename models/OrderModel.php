@@ -337,7 +337,6 @@ class OrderModel {
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
 		$order_data->refunds    = $this->get_order_refunds( $order_id );
 
-		unset( $order_data->user_id );
 		unset( $student->billing_address->id );
 		unset( $student->billing_address->user_id );
 
