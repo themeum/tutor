@@ -364,7 +364,6 @@ class OrderController {
 		$order_id = $params['order_id'];
 		do_action( 'tutor_order_payment_status_changed', $order_id, $this->model::PAYMENT_UNPAID, $this->model::PAYMENT_PAID );
 
-		do_action( 'tutor_after_order_mark_as_paid', $order_id );
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 

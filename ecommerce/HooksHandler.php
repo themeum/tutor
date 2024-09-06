@@ -54,7 +54,6 @@ class HooksHandler {
 
 		// Order hooks.
 		add_action( 'tutor_after_order_bulk_action', array( $this, 'after_order_bulk_action' ), 10, 2 );
-		add_action( 'tutor_after_order_mark_as_paid', array( $this, 'after_order_mark_as_paid' ), 10 );
 
 		add_action( 'tutor_order_payment_updated', array( $this, 'handle_payment_updated_webhook' ) );
 
@@ -127,22 +126,6 @@ class HooksHandler {
 		}
 
 		return $price;
-	}
-
-	/**
-	 * Handle after order mark as paid event
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $order_id Order ID.
-	 *
-	 * @return void
-	 */
-	public function after_order_mark_as_paid( $order_id ) {
-		$order = $this->order_model->get_order_by_id( $order_id );
-		if ( $order ) {
-			do_action( 'tutor_order_payment_status_changed', $order_id, OrderModel::PAYMENT_UNPAID, $order->payment_status );
-		}
 	}
 
 	/**
@@ -269,7 +252,7 @@ class HooksHandler {
 
 		foreach ( $order->items as $item ) {
 			$course_id = $item->id; // It could be course/bundle/plan id.
-			if ( $this->order_model::TYPE_SUBSCRIPTION === $order->order_type ) {
+			if ( $this->order_model::TYPE_SINGLE_ORDER !== $order->order_type ) {
 				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 			}
 
