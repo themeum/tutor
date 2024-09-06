@@ -85,7 +85,7 @@ export const MagicImageGenerationProvider = <T extends FieldValues>({
   });
   const [dropdownState, setDropdownState] = useState<DropdownState>('generation');
   const [currentImage, setCurrentImage] = useState('');
-  const [images, setImages] = useState<(string | null)[]>([]);
+  const [images, setImages] = useState<(string | null)[]>([null, null, null, null]);
   const onDropdownMenuChange = useCallback((value: DropdownState) => {
     setDropdownState(value);
   }, []);

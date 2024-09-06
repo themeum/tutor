@@ -258,13 +258,13 @@ export default MagicFill;
 const animations = {
   loading: keyframes`
     0% {
-      opacity: 0.6;
+      opacity: 0;
     }
     50% {
-      opacity: 1;
+      opacity: 0.6;
     }
     100% {
-      opacity: 0.6;
+      opacity: 0;
     }
   `,
   walker: keyframes`

@@ -22,7 +22,7 @@ import retro from '@Images/ai-types/retro.png';
 import sketch from '@Images/ai-types/sketch.png';
 
 import { styleUtils } from '@Utils/style-utils';
-import type { OptionWithImage } from '@Utils/types';
+import { type OptionWithImage, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
@@ -115,6 +115,7 @@ export const ImageGeneration = () => {
   const promptValue = form.watch('prompt');
 
   const isDisabledButton = !styleValue || !promptValue;
+  const hasGeneratedImage = images.some(isDefined);
 
   return (
     <form
@@ -201,8 +202,8 @@ export const ImageGeneration = () => {
 
         <div css={magicAIStyles.rightFooter}>
           <MagicButton type="submit" disabled={magicImageGenerationMutation.isPending || isDisabledButton}>
-            <SVGIcon name={images.length > 0 ? 'reload' : 'magicAi'} width={24} height={24} />
-            {images.length > 0 ? __('Generate again', 'tutor') : __('Generate now', 'tutor')}
+            <SVGIcon name={hasGeneratedImage ? 'reload' : 'magicAi'} width={24} height={24} />
+            {hasGeneratedImage ? __('Generate again', 'tutor') : __('Generate now', 'tutor')}
           </MagicButton>
         </div>
       </div>
@@ -249,6 +250,11 @@ const styles = {
 		&:hover {
 			background-color: ${colorTokens.background.brand};
 			color: ${colorTokens.text.white};
+		}
+
+		&:disabled {
+			background-color: ${colorTokens.background.disable};
+			color: ${colorTokens.text.disable};
 		}
 	`,
 };
