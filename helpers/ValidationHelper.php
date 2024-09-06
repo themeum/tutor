@@ -138,7 +138,7 @@ class ValidationHelper {
 							}
 							break;
 						case 'date_format':
-							$format = $nested_rules[1];
+							$format = explode( ':', $rule, 2 )[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
 								$validation_pass             = false;
 								$validation_errors[ $key ][] = $key . __( ' invalid date format', 'tutor' );
