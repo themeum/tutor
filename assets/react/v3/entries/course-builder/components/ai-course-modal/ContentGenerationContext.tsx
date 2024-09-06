@@ -1,4 +1,5 @@
 import type { QuizContent } from '@CourseBuilderServices/magic-ai';
+import { isDefined } from '@Utils/types';
 import { noop } from '@Utils/util';
 import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
@@ -21,6 +22,13 @@ export interface CourseContent {
   description: string;
   featured_image: string;
   topics: Topic[];
+  counts?: {
+    topics: number;
+    lessons: number;
+    quizzes: number;
+    assignments: number;
+  };
+  time: number;
 }
 
 export interface Loading {
@@ -37,9 +45,9 @@ interface ContextType {
   contents: CourseContent[];
   pointer: number;
   setPointer: React.Dispatch<React.SetStateAction<number>>;
-  updateContents: (value: Partial<CourseContent>) => void;
+  updateContents: (value: Partial<CourseContent>, forcePointer?: number) => void;
   loading: Loading[];
-  updateLoading: (value: Partial<Loading>) => void;
+  updateLoading: (value: Partial<Loading>, forcePointer?: number) => void;
   currentContent: CourseContent;
   currentLoading: Loading;
   appendContent: () => void;
@@ -54,6 +62,7 @@ export const defaultContent: CourseContent = {
   description: '',
   featured_image: '',
   topics: [],
+  time: 0,
 };
 
 export const defaultLoading: Loading = {
@@ -116,12 +125,34 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   }, [pointer, loading]);
 
   const updateContents = useCallback(
-    (value: Partial<CourseContent>) => {
-      console.log({ value, pointer });
+    (value: Partial<CourseContent>, forcePointer?: number) => {
+      const totalTopics = value.topics?.length ?? 0;
+      const totalLessons =
+        value.topics?.reduce((acc, curr) => {
+          return acc + curr.contents.filter((item) => item.type === 'lesson').length;
+        }, 0) ?? 0;
+
+      const totalQuizzes =
+        value.topics?.reduce((acc, curr) => {
+          return acc + curr.contents.filter((item) => item.type === 'quiz').length;
+        }, 0) ?? 0;
+
+      const totalAssignments =
+        value.topics?.reduce((acc, curr) => {
+          return acc + curr.contents.filter((item) => item.type === 'assignment').length;
+        }, 0) ?? 0;
+
+      const pointerValue = isDefined(forcePointer) ? forcePointer : pointer;
+
       setContents((previous) => {
         const copy = [...previous];
-        copy[pointer] ||= defaultContent;
-        copy[pointer] = { ...copy[pointer], ...value };
+        copy[pointerValue] ||= defaultContent;
+        copy[pointerValue] = {
+          ...copy[pointerValue],
+          ...value,
+          counts: { topics: totalTopics, lessons: totalLessons, quizzes: totalQuizzes, assignments: totalAssignments },
+        };
+
         return copy;
       });
     },
@@ -129,11 +160,12 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   );
 
   const updateLoading = useCallback(
-    (value: Partial<Loading>) => {
+    (value: Partial<Loading>, forcePointer?: number) => {
+      const pointerValue = isDefined(forcePointer) ? forcePointer : pointer;
       setLoading((previous) => {
         const copy = [...previous];
-        copy[pointer] ||= defaultLoading;
-        copy[pointer] = { ...copy[pointer], ...value };
+        copy[pointerValue] ||= defaultLoading;
+        copy[pointerValue] = { ...copy[pointerValue], ...value };
         return copy;
       });
     },
@@ -145,7 +177,7 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   }, []);
 
   const removeContent = useCallback(() => {
-    setContents((previous) => [...previous].splice(0, -1));
+    setContents((previous) => [...previous].slice(0, -1));
   }, []);
 
   const appendLoading = useCallback(() => {
@@ -153,31 +185,27 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   }, []);
 
   const removeLoading = useCallback(() => {
-    setLoading((previous) => [...previous].splice(0, -1));
+    setLoading((previous) => [...previous].slice(0, -1));
   }, []);
 
-  return (
-    <Context.Provider
-      value={{
-        currentStep,
-        setCurrentStep,
-        contents,
-        currentContent,
-        pointer,
-        setPointer,
-        updateContents,
-        loading,
-        currentLoading,
-        updateLoading,
-        appendContent,
-        removeContent,
-        appendLoading,
-        removeLoading,
-      }}
-    >
-      {children}
-    </Context.Provider>
-  );
+  const providerValue = {
+    currentStep,
+    setCurrentStep,
+    contents,
+    currentContent,
+    pointer,
+    setPointer,
+    updateContents,
+    loading,
+    currentLoading,
+    updateLoading,
+    appendContent,
+    removeContent,
+    appendLoading,
+    removeLoading,
+  };
+
+  return <Context.Provider value={providerValue}>{children}</Context.Provider>;
 };
 
 export default ContentGenerationContextProvider;
