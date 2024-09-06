@@ -1,5 +1,4 @@
-import { Breakpoint, colorTokens, fontWeight, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { Breakpoint, spacing, zIndex } from '@Config/styles';
 import { css } from '@emotion/react';
 
 export const magicAIStyles = {
@@ -32,31 +31,5 @@ export const magicAIStyles = {
 		gap: ${spacing[8]};
 		margin-top: auto;
 		padding-top: ${spacing[32]};
-	`,
-  rightFooterInfo: css`
-		${typography.small()};
-		display: flex;
-		align-items: center;
-		justify-content: center;
-
-		& > a {
-			color: ${colorTokens.text.brand};
-			text-decoration: underline;
-			padding-left: ${spacing[12]};
-			font-weight: ${fontWeight.medium};
-		}
-
-		& > div {
-			display: flex;
-			align-items: center;
-			gap: ${spacing[4]};
-			color: ${colorTokens.text.title};
-			padding-right: ${spacing[12]};
-			border-right: 1px solid ${colorTokens.stroke.default};
-
-			svg {
-				color: ${colorTokens.icon.default};
-			}
-		}
 	`,
 };

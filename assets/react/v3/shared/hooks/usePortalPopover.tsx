@@ -8,7 +8,7 @@ import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 import { usePrevious } from './usePrevious';
 
-const ANIMATION_DURATION_WITH_THRESHHOLD = 200;
+const ANIMATION_DURATION_WITH_THRESHOLD = 200;
 
 enum ArrowPosition {
   left = 'left',
@@ -175,12 +175,15 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
     }
 
     return () => {
-      setTimeout(() => {
-        const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
-        if (!hasPopoverOnStack) {
-          document.body.style.overflow = 'initial';
-        }
-      }, ANIMATION_DURATION_WITH_THRESHHOLD);
+      document.body.style.overflow = 'initial';
+
+      // @todo: need to clarify why this is required.
+      // setTimeout(() => {
+      //   const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
+      //   if (!hasPopoverOnStack) {
+      //     document.body.style.overflow = 'initial';
+      //   }
+      // }, ANIMATION_DURATION_WITH_THRESHOLD);
     };
   }, [isOpen]);
 
