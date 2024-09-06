@@ -14,7 +14,8 @@ var gulp = require('gulp'),
 
 try {
 	const data = fs.readFileSync('tutor.php', 'utf8');
-	versionNumber = data.match(/Version:\s*([\d.]+)/i)?.[1] || '';
+	versionNumber = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+	console.log(versionNumber)
 } catch (err) { }
 
 const build_name = 'tutor-' + versionNumber + '.zip';
