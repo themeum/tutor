@@ -131,6 +131,7 @@ class Upgrader {
 	 * @return void
 	 */
 	public function upgrade_to_3_0_0() {
+		Tutor::tutor_activate();
 		CartController::create_cart_page();
 		CheckoutController::create_checkout_page();
 	}
@@ -195,14 +196,6 @@ class Upgrader {
 	 * @return void
 	 */
 	public function init_email_table_deployment( $upgrader_object, $options ) {
-
-		if ( $options['action'] == 'update' && $options['type'] == 'plugin' ) {
-			// Check if the updated plugin is Tutor.
-			if ( isset( $options['plugins'] ) && in_array( TUTOR_FILE, $options['plugins'] ) ) {
-				// Perform actions after plugin update.
-				\TUTOR\Tutor::tutor_activate();
-			}
-		}
 
 		if ( is_object( $upgrader_object ) && is_array( $upgrader_object->result ) && isset( $upgrader_object->result['destination_name'] ) && 'tutor-pro' == $upgrader_object->result['destination_name'] ) {
 			$addon_config = tutor_utils()->get_addon_config( 'tutor-pro/addons/tutor-email/tutor-email.php' );
