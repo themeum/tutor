@@ -322,9 +322,7 @@ class OrderController {
 	 * @return void
 	 */
 	public function order_mark_as_paid() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
@@ -363,7 +361,10 @@ class OrderController {
 			);
 		}
 
-		do_action( 'tutor_after_order_mark_as_paid', $params['order_id'] );
+		$order_id = $params['order_id'];
+		do_action( 'tutor_order_payment_status_changed', $order_id, $this->model::PAYMENT_UNPAID, $this->model::PAYMENT_PAID );
+
+		do_action( 'tutor_after_order_mark_as_paid', $order_id );
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 
