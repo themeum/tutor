@@ -225,25 +225,6 @@ class Course extends Tutor_Base {
 		 * @since 2.7.3
 		 */
 		add_action( 'tutor_option_save_after', array( $this, 'disable_course_trash_instructor' ) );
-	}
-
-	/**
-	 * Remove move to trash button on WordPress editor for instructor.
-	 *
-	 * @since 2.7.3
-	 *
-	 * @return void
-	 */
-	public function disable_course_trash_instructor() {
-		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
-		$role           = get_role( tutor()->instructor_role );
-		if ( ! $can_trash_post ) {
-			$role->remove_cap( 'delete_tutor_courses' );
-			$role->remove_cap( 'delete_tutor_course' );
-		} else {
-			$role->add_cap( 'delete_tutor_courses' );
-			$role->add_cap( 'delete_tutor_course' );
-		}
 
 		/**
 		 * New course builder
@@ -270,6 +251,25 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
 		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
+	}
+
+	/**
+	 * Remove move to trash button on WordPress editor for instructor.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return void
+	 */
+	public function disable_course_trash_instructor() {
+		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+		$role           = get_role( tutor()->instructor_role );
+		if ( ! $can_trash_post ) {
+			$role->remove_cap( 'delete_tutor_courses' );
+			$role->remove_cap( 'delete_tutor_course' );
+		} else {
+			$role->add_cap( 'delete_tutor_courses' );
+			$role->add_cap( 'delete_tutor_course' );
+		}
 	}
 
 	/**
