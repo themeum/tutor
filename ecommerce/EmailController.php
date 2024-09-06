@@ -300,9 +300,9 @@ class EmailController {
 			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
-		$this->send_email_to( 'email_to_students', 'new_order', $student_ids, $order_data->id );
-		$this->send_email_to( 'email_to_admin', 'new_order', $admin_ids, $order_data->id );
-		$this->send_email_to( 'email_to_teachers', 'new_order', $instructor_ids, $order_data->id );
+		$this->send_email_to( self::TO_STUDENTS, 'new_order', $student_ids, $order_data->id );
+		$this->send_email_to( self::TO_ADMIN, 'new_order', $admin_ids, $order_data->id );
+		$this->send_email_to( self::TO_TEACHERS, 'new_order', $instructor_ids, $order_data->id );
 	}
 
 	/**
@@ -341,9 +341,9 @@ class EmailController {
 			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
-		$this->send_email_to( 'email_to_students', 'order_status_updated', $student_ids, $order_data->id );
-		$this->send_email_to( 'email_to_admin', 'order_status_updated', $admin_ids, $order_data->id );
-		$this->send_email_to( 'email_to_teachers', 'order_status_updated', $instructor_ids, $order_data->id );
+		$this->send_email_to( self::TO_STUDENTS, 'order_status_updated', $student_ids, $order_data->id );
+		$this->send_email_to( self::TO_ADMIN, 'order_status_updated', $admin_ids, $order_data->id );
+		$this->send_email_to( self::TO_TEACHERS, 'order_status_updated', $instructor_ids, $order_data->id );
 	}
 
 	/**
@@ -429,14 +429,14 @@ class EmailController {
 	public function setup_email_config( $email_config ) {
 		$order_email = $this->get_email_data();
 
-		$email_config['email_to_students']['new_order']            = $order_email['email_to_students']['new_order'];
-		$email_config['email_to_students']['order_status_updated'] = $order_email['email_to_students']['order_status_updated'];
+		$email_config[ self::TO_STUDENTS ]['new_order']            = $order_email[ self::TO_STUDENTS ]['new_order'];
+		$email_config[ self::TO_STUDENTS ]['order_status_updated'] = $order_email['email_to_students']['order_status_updated'];
 
-		$email_config['email_to_teachers']['new_order']            = $order_email['email_to_teachers']['new_order'];
-		$email_config['email_to_teachers']['order_status_updated'] = $order_email['email_to_teachers']['order_status_updated'];
+		$email_config[ self::TO_TEACHERS ]['new_order']            = $order_email['email_to_teachers']['new_order'];
+		$email_config[ self::TO_TEACHERS ]['order_status_updated'] = $order_email['email_to_teachers']['order_status_updated'];
 
-		$email_config['email_to_admin']['new_order']            = $order_email['email_to_admin']['new_order'];
-		$email_config['email_to_admin']['order_status_updated'] = $order_email['email_to_admin']['order_status_updated'];
+		$email_config[ self::TO_ADMIN ]['new_order']            = $order_email['email_to_admin']['new_order'];
+		$email_config[ self::TO_ADMIN ]['order_status_updated'] = $order_email['email_to_admin']['order_status_updated'];
 
 		return $email_config;
 	}
@@ -552,13 +552,13 @@ class EmailController {
 			),
 			'email_to_admin'    => array(
 				'new_order'            => array(
-					'label'       => __( 'New order placed', 'tutor' ),
-					'default'     => 'on',
-					'template'    => 'order_new',
-					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
-					'subject'     => __( 'A New Order Has Been Placed on Your Platform!', 'tutor' ),
-					'heading'     => __( 'A New Order Has Been Placed on Your Platform!', 'tutor' ),
-					'message'     => wp_json_encode(
+					'label'    => __( 'New order placed', 'tutor' ),
+					'default'  => 'on',
+					'template' => 'order_new',
+					'tooltip'  => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
+					'subject'  => __( 'A New Order Has Been Placed on Your Platform!', 'tutor' ),
+					'heading'  => __( 'A New Order Has Been Placed on Your Platform!', 'tutor' ),
+					'message'  => wp_json_encode(
 						'
 						<p> ' . __( 'Below are the order details:', 'tutor' ) . ' </p>
 						<ul>
