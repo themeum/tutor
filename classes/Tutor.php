@@ -656,8 +656,9 @@ final class Tutor {
 		include tutor()->path . 'includes/translate-text.php';
 		include tutor()->path . 'includes/country.php';
 
+		$is_droip_active = is_plugin_active('droip/droip.php');
 		$tutor_droip_path = tutor()->path . 'tutor-droip/tutor-droip-elements.php';
-		if ( file_exists( $tutor_droip_path ) ) {
+		if ($is_droip_active && file_exists($tutor_droip_path)) {
 			include tutor()->path . 'tutor-droip/tutor-droip-elements.php';
 		}
 	}

@@ -243,6 +243,7 @@ gulp.task('copy', function () {
 			'!phpunit.xml',
 			'!phpcs.xml',
 			'!phpcs.xml.dist',
+			'!./tutor-droip/**',
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });
@@ -256,6 +257,12 @@ gulp.task('copy-fonts', function () {
 		.pipe(gulp.dest(ASSETS_FONTS_DIR));
 });
 
+gulp.task("copy-tutor-droip", function() {
+	return gulp
+		.src("tutor-droip/dist/**")
+		.pipe(gulp.dest("build/tutor/tutor-droip"));
+});
+
 gulp.task('make-zip', function () {
 	return gulp
 		.src('./build/**/*.*')
@@ -266,6 +273,6 @@ gulp.task('make-zip', function () {
 /**
  * Export tasks
  */
-exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'copy-fonts', 'make-zip', 'clean-build');
+exports.build = gulp.series(...task_keys, 'clean-zip', 'clean-build', 'makepot', i18n_makepot, 'copy', 'copy-fonts', 'copy-tutor-droip', 'make-zip', 'clean-build');
 exports.sass = gulp.parallel(...task_keys);
 exports.default = gulp.parallel(...task_keys, 'watch');
