@@ -125,7 +125,7 @@ class Assets {
 
 		if ( $userdata ) {
 			$current_user = array(
-				'roles' => $userdata->roles,
+				'roles' => array_values( $userdata->roles ),
 				'data'  => array(
 					'id'           => $userdata->ID,
 					'display_name' => $userdata->display_name,

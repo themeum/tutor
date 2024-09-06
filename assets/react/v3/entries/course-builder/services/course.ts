@@ -609,7 +609,6 @@ export const useSaveZoomMeetingMutation = () => {
         showToast({ type: 'success', message: __(response.message, 'tutor') });
 
         if (payload.click_form === 'course_builder') {
-          console.log('payload.course_id', payload.course_id);
           queryClient.invalidateQueries({
             queryKey: ['Topic', payload.course_id],
           });
@@ -697,7 +696,6 @@ export const useSaveGoogleMeetMutation = () => {
     onSuccess: (response, payload) => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
 
-      console.log();
       if (payload.topic_id) {
         queryClient.invalidateQueries({
           queryKey: ['Topic', payload.course_id],
@@ -734,8 +732,6 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
       queryClient.invalidateQueries({
         queryKey: ['CourseDetails', Number(courseId)],
       });
-
-      console.log();
 
       queryClient.invalidateQueries({
         queryKey: ['Topic', Number(courseId)],
