@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
 						const { data = {}, success, message = __('Settings Saved', 'tutor') } = resp || {};
 
 						if (success) {
-							// Disableing save btn after saved successfully
+							// Disabling save btn after saved successfully
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}

@@ -119,6 +119,31 @@ class Course_Filter {
 			),
 		);
 
+		$post_ids_array = tutils()->array_get( 'tutor-course-filter-post-ids', $sanitized_post, array() );
+
+		$post_ids_array = array_map(
+			function ( $post_id ) {
+				return (int) $post_id;
+			},
+			$post_ids_array
+		);
+
+		if ( count( $post_ids_array ) ) {
+			$args['post__in'] = $post_ids_array;
+		}
+
+		$exclude_ids_array = tutils()->array_get( 'tutor-course-filter-exclude-ids', $sanitized_post, array() );
+
+		$exclude_ids_array = array_map(
+			function ( $exclude_id ) {
+				return (int) $exclude_id;
+			},
+			$exclude_ids_array
+		);
+
+		if ( count( $exclude_ids_array ) ) {
+			$args['post__not_in'] = $exclude_ids_array;
+		}
 		// Prepare taxonomy.
 		foreach ( array( 'category', 'tag' ) as $taxonomy ) {
 

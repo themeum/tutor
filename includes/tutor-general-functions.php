@@ -1463,70 +1463,71 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		}
 	}
 
-	if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
-		/**
-		 * Get course formatted price
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param int     $course_id Course price.
-		 * @param boolean $echo Whether to echo content.
-		 *
-		 * @return string|void
-		 */
-		function tutor_get_formatted_price_html( $course_id, $echo = true ) {
-			$regular_price = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
-			$sale_price    = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+}
 
-			if ( ! $regular_price ) {
-				return;
-			}
-			ob_start();
-			?>
-				<div>
-					<?php if ( $sale_price ) : ?>
-						<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
-						<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
-					<?php else : ?>
-						<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
-					<?php endif; ?>
-				</div>
-			<?php
-			$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
-			if ( $echo ) {
-				echo $content; // PHPCS:ignore
-			} else {
-				return $content;
-			}
+if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
+	/**
+	 * Get course formatted price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int     $course_id Course price.
+	 * @param boolean $echo Whether to echo content.
+	 *
+	 * @return string|void
+	 */
+	function tutor_get_course_formatted_price_html( $course_id, $echo = true ) {
+		$regular_price = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+		$sale_price    = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+
+		if ( ! $regular_price ) {
+			return;
+		}
+		ob_start();
+		?>
+			<div>
+				<?php if ( $sale_price ) : ?>
+					<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
+					<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
+				<?php else : ?>
+					<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
+				<?php endif; ?>
+			</div>
+		<?php
+		$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
+		if ( $echo ) {
+			echo $content; // PHPCS:ignore
+		} else {
+			return $content;
 		}
 	}
+}
 
-	if ( ! function_exists( 'tutor_get_course_formatted_price' ) ) {
-		/**
-		 * Get course formatted price
-		 *
-		 * Formatting as per ecommerce price settings
-		 *
-		 * @since 3.0.0
-		 *
-		 * @param mixed $price Raw price.
-		 *
-		 * @return string|void
-		 */
-		function tutor_get_formatted_price( $price ) {
-			$price = floatval( Input::sanitize( $price ) );
+if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
+	/**
+	 * Get course formatted price
+	 *
+	 * Formatting as per ecommerce price settings
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $price Raw price.
+	 *
+	 * @return string|void
+	 */
+	function tutor_get_formatted_price( $price ) {
+		$price = floatval( Input::sanitize( $price ) );
 
-			$currency_symbol    = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) );
-			$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' );
-			$thousand_separator = tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' );
-			$decimal_separator  = tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' );
-			$no_of_decimal      = tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' );
+		$currency_symbol    = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) );
+		$currency_position  = tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' );
+		$thousand_separator = tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' );
+		$decimal_separator  = tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' );
+		$no_of_decimal      = tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' );
 
-			$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
-			$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
+		$price = number_format( $price, $no_of_decimal, $decimal_separator, $thousand_separator );
+		$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
 
-			return $price;
-		}
+		return $price;
 	}
 }
 

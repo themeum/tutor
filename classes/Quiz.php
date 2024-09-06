@@ -501,6 +501,7 @@ class Quiz {
 		if ( Input::post( 'tutor_action' ) !== 'tutor_answering_quiz_question' ) {
 			return;
 		}
+		tutor_utils()->checking_nonce();
 		// submit quiz attempts.
 		if ( self::tutor_quiz_attemp_submit() ) {
 			wp_send_json_success();
@@ -1029,6 +1030,12 @@ class Quiz {
 				null,
 				HttpHelper::STATUS_FORBIDDEN
 			);
+		}
+
+		if ( 0 !== $topic_id && 0 !== $ex_quiz_id ) {
+			if ( ! tutor_utils()->can_user_manage( 'quiz', $ex_quiz_id ) ) {
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			}
 		}
 
 		// Prepare quiz data to save in database.
@@ -1912,6 +1919,9 @@ class Quiz {
 
 		$answer_id = Input::post( 'answer_id', 0, Input::TYPE_INT );
 
+		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		}
 		// get question info.
 		$belong_question = $wpdb->get_row(
 			$wpdb->prepare(
@@ -1944,10 +1954,6 @@ class Quiz {
 		}
 
 		$is_correct = Input::post( 'is_correct', 0, Input::TYPE_INT );
-
-		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
 
 		$answer = $wpdb->get_row(
 			$wpdb->prepare(
@@ -2063,16 +2069,21 @@ class Quiz {
 	 */
 	public function attempt_delete() {
 		tutor_utils()->checking_nonce();
-		if ( current_user_can( 'administrator' ) || current_user_can( tutor()->instructor_role ) ) {
-			$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
-			if ( $attempt_id ) {
-				QuizModel::delete_quiz_attempt( $attempt_id );
-				wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
-			} else {
-				wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
-			}
+
+		$attempt_id = Input::post( 'id', 0, Input::TYPE_INT );
+		$attempt    = tutor_utils()->get_attempt( $attempt_id );
+		if ( ! $attempt ) {
+			wp_send_json_error( __( 'Invalid attempt ID', 'tutor' ) );
+		}
+
+		$user_id   = get_current_user_id();
+		$course_id = $attempt->course_id;
+
+		if ( tutor_utils()->can_user_edit_course( $user_id, $course_id ) ) {
+			QuizModel::delete_quiz_attempt( $attempt_id );
+			wp_send_json_success( __( 'Attempt deleted successfully!', 'tutor' ) );
 		} else {
-			wp_send_json_error( __( 'You are not authorized to perform this action!', 'tutor' ) );
+			wp_send_json_error( tutor_utils()->error_message() );
 		}
 	}
 

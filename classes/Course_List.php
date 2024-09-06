@@ -94,6 +94,18 @@ class Course_List {
 		if ( 'trash' !== $active_tab ) {
 			array_push( $actions, $this->bulk_action_trash() );
 		}
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
+			if ( ! $can_trash_post ) {
+				$actions = array_filter(
+					$actions,
+					function ( $val ) {
+						return 'trash' !== $val['value'];
+					}
+				);
+			}
+		}
 		return apply_filters( 'tutor_course_bulk_actions', $actions );
 	}
 
@@ -171,6 +183,9 @@ class Course_List {
 				'url'   => $url . '&data=trash',
 			),
 		);
+		if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'administrator' ) ) {
+			unset( $tabs[7] );
+		}
 		return apply_filters( 'tutor_course_tabs', $tabs );
 	}
 
@@ -264,13 +279,22 @@ class Course_List {
 
 		tutor_utils()->checking_nonce();
 
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			if ( current_user_can( 'edit_tutor_course' ) ) {
+				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
+
+				if ( 'publish' === $action && ! $can_publish_course ) {
+					wp_send_json_error( tutor_utils()->error_message() );
+				}
+			} else {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
@@ -318,14 +342,36 @@ class Course_List {
 	public static function tutor_change_course_status() {
 		tutor_utils()->checking_nonce();
 
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id' );
 		$course = get_post( $id );
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+
+			if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID ) ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+
+			$can_delete_course  = tutor_utils()->get_option( 'instructor_can_delete_course' );
+			$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
+
+			if ( 'publish' === $status && ! $can_publish_course ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+
+			if ( 'trash' === $status && $can_delete_course ) {
+				$args       = array(
+					'ID'          => $id,
+					'post_status' => $status,
+				);
+				$trash_post = wp_update_post( $args );
+
+				if ( $trash_post ) {
+					wp_send_json_success( __( 'Course trashed successfully', 'tutor' ) );
+				}
+			}
+		}
 
 		if ( CourseModel::POST_TYPE !== $course->post_type ) {
 			wp_send_json_error( tutor_utils()->error_message() );
