@@ -699,7 +699,7 @@ class CouponModel {
 
 		foreach ( $item_ids as $item_id ) {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
 				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
 			}
 
@@ -773,7 +773,7 @@ class CouponModel {
 
 		foreach ( $item_ids as $item_id ) {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
-			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
 				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
 			}
 
