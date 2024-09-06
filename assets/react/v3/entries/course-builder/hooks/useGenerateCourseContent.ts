@@ -19,8 +19,9 @@ export const useGenerateCourseContent = () => {
   const generateQuizQuestionsMutation = useGenerateQuizQuestionsMutation();
 
   const startGeneration = async (prompt: string, pointer?: number) => {
+    const start = Date.now();
+
     updateLoading({ title: true, image: true, description: true, content: true, topic: true, quiz: true }, pointer);
-    console.log({ prompt });
     const response = await generateCourseTitleMutation.mutateAsync({ type: 'title', prompt });
     updateLoading({ title: false }, pointer);
 
@@ -93,6 +94,8 @@ export const useGenerateCourseContent = () => {
 
       await Promise.allSettled(quizPromises);
       updateLoading({ quiz: false }, pointer);
+      const end = Date.now();
+      updateContents({ topics, time: end - start }, pointer);
     });
   };
 

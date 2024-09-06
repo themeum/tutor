@@ -168,9 +168,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           <div css={styles.rightContents}>
             <For each={loading}>
               {(_, index) => {
-                if (pointer === index && isCreateNewCourse) {
-                  return null;
-                }
                 const isDeactivated = pointer !== index;
                 const showButtons = index === loading.length - 1;
                 const content = contents[index];
@@ -193,15 +190,19 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                             <>
                               <div css={styles.item}>
                                 <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                {sprintf(__('%d Topics', 'tutor'), content.counts?.topics ?? 0)}
+                                {sprintf(__('%d Topics', 'tutor'), content.counts?.topics)}
                               </div>
                               <div css={styles.item}>
                                 <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                {sprintf(__('%d Lessons in total', 'tutor'), content.counts?.lessons ?? 0)}
+                                {sprintf(__('%d Lessons in total', 'tutor'), content.counts?.lessons)}
                               </div>
                               <div css={styles.item}>
                                 <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                {sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes ?? 0)}
+                                {sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)}
+                              </div>
+                              <div css={styles.item}>
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)}
                               </div>
                             </>
                           }
@@ -255,11 +256,8 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                           <MagicButton
                             variant="primary_outline"
                             disabled={isLoadingItem}
-                            onClick={async () => {
+                            onClick={() => {
                               setIsCreateNewCourse(true);
-                              setPointer(loading.length);
-                              appendLoading();
-                              appendContent();
                             }}
                           >
                             <SVGIcon name="magicWand" width={24} height={24} />
@@ -293,7 +291,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                   css={styles.regenerateForm}
                   onSubmit={form.handleSubmit((values) => {
                     setIsCreateNewCourse(false);
-                    startGeneration(values.prompt);
+                    setPointer(loading.length);
+                    appendLoading();
+                    appendContent();
+                    startGeneration(values.prompt, loading.length);
+                    form.reset();
                   })}
                 >
                   <Controller
@@ -314,9 +316,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                       disabled={isLoading}
                       onClick={() => {
                         setIsCreateNewCourse(false);
-                        setPointer((previous) => previous - 1);
-                        removeContent();
-                        removeLoading();
+                        form.reset();
                       }}
                     >
                       {__('Cancel', 'tutor')}
@@ -337,7 +337,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </MagicButton>
             <MagicButton
               variant="primary"
-              disabled={isLoading}
+              disabled={isLoading || isCreateNewCourse}
               onClick={() => {
                 saveAIGeneratedCourseContentMutation.mutate({
                   course_id: courseId,

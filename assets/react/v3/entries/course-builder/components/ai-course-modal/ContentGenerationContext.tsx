@@ -28,6 +28,7 @@ export interface CourseContent {
     quizzes: number;
     assignments: number;
   };
+  time: number;
 }
 
 export interface Loading {
@@ -61,6 +62,7 @@ export const defaultContent: CourseContent = {
   description: '',
   featured_image: '',
   topics: [],
+  time: 0,
 };
 
 export const defaultLoading: Loading = {
@@ -141,7 +143,6 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
         }, 0) ?? 0;
 
       const pointerValue = isDefined(forcePointer) ? forcePointer : pointer;
-      console.log({ pointerValue });
 
       setContents((previous) => {
         const copy = [...previous];
