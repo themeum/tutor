@@ -131,7 +131,13 @@ class Upgrader {
 	 * @return void
 	 */
 	public function upgrade_to_3_0_0() {
-		Tutor::tutor_activate();
+		global $wpdb;
+		$table_name   = $wpdb->prefix . 'tutor_orders';
+		$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
+		if ( ! $table_exists ) {
+			Tutor::tutor_activate();
+		}
+
 		CartController::create_cart_page();
 		CheckoutController::create_checkout_page();
 	}
