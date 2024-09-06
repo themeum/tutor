@@ -310,7 +310,7 @@ class EmailController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $order_id Order id.
+	 * @param int    $order_id Order id.
 	 * @param string $prev_payment_status Order previous payment status.
 	 * @param string $new_payment_status Order new status.
 	 *
@@ -453,26 +453,23 @@ class EmailController {
 					'label'       => __( 'New order placed', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_new',
-					'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
-					'subject'     => __( 'Your Order Confirmation for {course_name}', 'tutor' ),
+					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
+					'subject'     => __( 'Your order has been received! 🎉', 'tutor' ),
 					'heading'     => __( 'Your order has been received!', 'tutor' ),
 					'message'     => wp_json_encode(
 						'
-						<p>Hi {user_name},</p>
-						<p>Thank you for purchasing! We’re excited to have you on board and can’t wait for you to start learning.</p>
-						<p>Order Details:</p>
+						<p> ' . __( 'Hi', 'tutor' ) . '  {user_name},</p>
+						<p>
+							' . __( 'A new order has just been successfully placed on your platform. Below are the order details:', 'tutor' ) . '
+						</p>
 						<div>
-							<li>Order ID : {order_id}</li>
-							<li>Date: {order_date}</li>
-							<li>Total: {order_total}</li>
-							</br>
-							<a href="{site_order_url}" class="tutor-btn tutor-btn-primary">View Details</a>
+							<li>' . __( 'Order ID:', 'tutor' ) . ' #{order_id}</li>
+							<li>Order Date: {order_date}</li>
+							<li>Total Amount: {order_total}</li>
 						</div>
-						</br>
-						<p>We will let you know once your order has been completed and is ready for access.</p>
 					'
 					),
-					'footer_text' => __( 'Thank you for choosing {site_name}.', 'tutor' ),
+					'footer_text' => __( 'We will let you know once your order has been completed and is ready for access.', 'tutor' ),
 					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 				),
 				'order_status_updated' => array(
@@ -555,32 +552,28 @@ class EmailController {
 			),
 			'email_to_admin'    => array(
 				'new_order'            => array(
-					'label'    => __( 'New order placed', 'tutor' ),
-					'default'  => 'on',
-					'template' => 'order_new',
-					'tooltip'  => 'New order emails are sent to chosen recipient(s) when a new order is received.',
-					'subject'  => __( 'New Order Received!', 'tutor' ),
-					'heading'  => __( 'A new order has just been placed.', 'tutor' ),
-					'message'  => wp_json_encode(
+					'label'       => __( 'New order placed', 'tutor' ),
+					'default'     => 'on',
+					'template'    => 'order_new',
+					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
+					'subject'     => __( 'A New Order Has Been Placed on Your Platform!', 'tutor' ),
+					'heading'     => __( 'A New Order Has Been Placed on Your Platform!', 'tutor' ),
+					'message'     => wp_json_encode(
 						'
-						<p>Order Details:</p>
+						<p> ' . __( 'Below are the order details:', 'tutor' ) . ' </p>
 						<ul>
-							<li>Order ID : {order_id}</li>
-							<li>Date: {order_date}</li>
+							<li>Order ID: {order_id}</li>
+							<li>Order Date: {order_date}</li>
 							<li>Total Amount: {order_total}</li>
 						</ul>
-						</br>
-						<a href="{admin_order_url}" class="tutor-btn tutor-btn-primary">View Details</a>
-						</br>
+						<br>
 						<p>Please review the order and ensure everything is in place for the student\'s access to the course. Thank you.</p>
+						<br>
+						<div>Best Regards</div>
+						<div>{site_name}</div>
 					'
 					),
-					'footer_text'   => '
-						<div style="list-style:none;">
-							<li>Best Regards</li>
-							<li>{site_name}</li>
-						</div>
-					',
+					// 'footer_text' => '',
 					// 'placeholders' => EmailPlaceholder::only( array( 'site_url', 'site_name', 'instructor_name', 'review_url', 'instructor_email', 'signup_time' ) ),
 				),
 				'order_status_updated' => array(
