@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\Ecommerce;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -544,6 +546,20 @@ final class Tutor {
 		$this->rest_auth       = new RestAuth();
 
 		/**
+		 * New Course Builder.
+		 *
+		 * @since 3.0.0
+		 */
+		new QuizBuilder();
+
+		/**
+		 * Tutor native e-commerce
+		 *
+		 * @since 3.0.0
+		 */
+		new Ecommerce();
+
+		/**
 		 * Run Method
 		 *
 		 * @since v.1.2.0
@@ -638,6 +654,13 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-template-functions.php';
 		include tutor()->path . 'includes/tutor-template-hook.php';
 		include tutor()->path . 'includes/translate-text.php';
+		include tutor()->path . 'includes/country.php';
+
+		$is_droip_active = is_plugin_active('droip/droip.php');
+		$tutor_droip_path = tutor()->path . 'tutor-droip/tutor-droip-elements.php';
+		if ($is_droip_active && file_exists($tutor_droip_path)) {
+			include tutor()->path . 'tutor-droip/tutor-droip-elements.php';
+		}
 	}
 
 	/**
@@ -856,6 +879,154 @@ final class Tutor {
 			PRIMARY KEY (withdraw_id)
 		) $charset_collate;";
 
+		$orders_table = "CREATE TABLE {$wpdb->prefix}tutor_orders (
+			id BIGINT(20) UNSIGNED AUTO_INCREMENT,
+			parent_id BIGINT(20) UNSIGNED DEFAULT 0, -- for subscription order, store subscription record id
+			transaction_id VARCHAR(255) COMMENT 'Transaction id from payment gateway',
+			user_id BIGINT(20) UNSIGNED NOT NULL,
+			order_type VARCHAR(50) NOT NULL, -- single_order, subscription
+			order_status VARCHAR(50) NOT NULL,
+			payment_status VARCHAR(50) NOT NULL,
+			subtotal_price DECIMAL(13, 2) NOT NULL, -- price calculation based on course sale price
+			total_price DECIMAL(13, 2) NOT NULL, -- final price
+			net_payment DECIMAL(13, 2) NOT NULL, -- calculated price if any refund is done else same as total_price
+			coupon_code VARCHAR(255),
+			discount_type ENUM('percentage', 'flat') DEFAULT NULL,
+			discount_amount DECIMAL(13, 2),
+			discount_reason TEXT,
+			tax_rate DECIMAL(13, 2) COMMENT 'Tax percentage',
+			tax_amount DECIMAL(13, 2),
+			fees DECIMAL(13, 2), -- payment gateway fees
+			earnings DECIMAL(13, 2), -- net earning
+			refund_amount DECIMAL(13, 2), -- Refund amount
+			payment_method VARCHAR(255),
+			payment_payloads LONGTEXT,
+			note TEXT,
+			created_at_gmt DATETIME NOT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL,
+			updated_at_gmt DATETIME,
+			updated_by BIGINT(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			KEY user_id (user_id),
+			KEY order_type (order_type),
+			KEY payment_status (payment_status),
+			KEY order_status (order_status),
+			KEY transaction_id (transaction_id)
+		) $charset_collate;";
+
+		$order_meta_table = "CREATE TABLE {$wpdb->prefix}tutor_ordermeta (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			order_id BIGINT(20) UNSIGNED NOT NULL,
+			meta_key VARCHAR(255) NOT NULL,
+			meta_value LONGTEXT NOT NULL,
+			created_at_gmt DATETIME NOT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL,
+			updated_at_gmt DATETIME,
+			updated_by BIGINT(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			KEY order_id (order_id),
+			KEY meta_key (meta_key),
+			CONSTRAINT fk_tutor_ordermeta_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
+		) $charset_collate;";
+
+		$order_items_table = "CREATE TABLE {$wpdb->prefix}tutor_order_items (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			order_id BIGINT(20) UNSIGNED NOT NULL,
+			user_id BIGINT(20) UNSIGNED NOT NULL,
+			item_id BIGINT(20) UNSIGNED NOT NULL, -- course id/plan id
+			regular_price DECIMAL(13, 2) NOT NULL, -- course regular price
+			sale_price DECIMAL(13, 2) NULL, -- course sale price
+			PRIMARY KEY (id),
+			KEY order_id (order_id),
+			KEY item_id (item_id),
+			CONSTRAINT fk_tutor_order_item_order_id FOREIGN KEY (order_id) REFERENCES {$wpdb->prefix}tutor_orders(id) ON DELETE CASCADE
+		) $charset_collate;";
+
+		$coupons_table = "CREATE TABLE {$wpdb->prefix}tutor_coupons (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			coupon_status VARCHAR(50),
+			coupon_type VARCHAR(100) DEFAULT 'code', -- coupon type 'code' or 'automatic'
+			coupon_code VARCHAR(50) NOT NULL,
+			coupon_title VARCHAR(255) NOT NULL,
+			coupon_description TEXT,
+			discount_type ENUM('percentage', 'flat') NOT NULL,
+			discount_amount DECIMAL(13, 2) NOT NULL,
+			applies_to VARCHAR(100) DEFAULT 'all_courses_and_bundles', -- possible values 'all_courses_and_bundles', 'all_courses', 'all_bundles', 'specific_courses', 'specific_bundles', 'specific_category'
+			total_usage_limit INT(10) UNSIGNED DEFAULT NULL, -- null for unlimited usage
+			per_user_usage_limit TINYINT(4) UNSIGNED DEFAULT NULL, -- null for unlimited usage
+			purchase_requirement VARCHAR(50) DEFAULT 'no_minimum', -- possible values 'no_minimum', 'minimum_purchase', 'minimum_quantity'
+			purchase_requirement_value DECIMAL(13, 2),
+			start_date_gmt DATETIME NOT NULL,
+			expire_date_gmt DATETIME DEFAULT NULL,
+			created_at_gmt DATETIME NOT NULL,
+			created_by BIGINT(20) UNSIGNED NOT NULL,
+			updated_at_gmt DATETIME,
+			updated_by BIGINT(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			UNIQUE KEY coupon_code (coupon_code),
+			KEY start_date_gmt (start_date_gmt),
+			KEY expire_date_gmt (expire_date_gmt)
+		) $charset_collate;";
+
+		$coupon_applications_table = "CREATE TABLE {$wpdb->prefix}tutor_coupon_applications (
+			coupon_code VARCHAR(50) NOT NULL,
+			reference_id BIGINT(20) UNSIGNED NOT NULL,
+			KEY coupon_code (coupon_code),
+			KEY reference_id (reference_id),
+			CONSTRAINT fk_tutor_coupon_application_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE
+		) $charset_collate;";
+
+		$coupon_usage_table = "CREATE TABLE {$wpdb->prefix}tutor_coupon_usages (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			coupon_code VARCHAR(50) NOT NULL,
+			user_id BIGINT(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			KEY coupon_code (coupon_code),
+			KEY user_id (user_id),
+			CONSTRAINT fk_tutor_coupon_usage_coupon_code FOREIGN KEY (coupon_code) REFERENCES {$wpdb->prefix}tutor_coupons(coupon_code) ON DELETE CASCADE,
+			CONSTRAINT fk_tutor_coupon_usage_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
+		) $charset_collate;";
+
+		$cart_table = "CREATE TABLE {$wpdb->prefix}tutor_carts (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			user_id BIGINT(20) UNSIGNED DEFAULT NULL,
+			coupon_code VARCHAR(50) DEFAULT NULL,
+			created_at_gmt DATETIME NOT NULL,
+			updated_at_gmt DATETIME,
+			PRIMARY KEY (id),
+			KEY user_id (user_id),
+			KEY coupon_code (coupon_code),
+			CONSTRAINT fk_tutor_cart_user_id FOREIGN KEY (user_id) REFERENCES {$wpdb->prefix}users(ID) ON DELETE CASCADE
+		) $charset_collate;";
+
+		$cart_items_table = "CREATE TABLE {$wpdb->prefix}tutor_cart_items (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			cart_id BIGINT(20) UNSIGNED NOT NULL,
+			course_id BIGINT(20) UNSIGNED NOT NULL,
+			PRIMARY KEY (id),
+			KEY cart_id (cart_id),
+			KEY course_id (course_id),
+			CONSTRAINT fk_tutor_cart_item_cart_id FOREIGN KEY (cart_id) REFERENCES {$wpdb->prefix}tutor_carts(id) ON DELETE CASCADE,
+			CONSTRAINT fk_tutor_cart_item_course_id FOREIGN KEY (course_id) REFERENCES {$wpdb->prefix}posts(ID) ON DELETE CASCADE
+		) $charset_collate;";
+
+		$customer_table = "CREATE TABLE {$wpdb->prefix}tutor_customers (
+			id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+			user_id BIGINT(20) UNSIGNED DEFAULT NULL,
+			billing_first_name VARCHAR(255) NOT NULL,
+			billing_last_name VARCHAR(255) NOT NULL,
+			billing_email VARCHAR(255) NOT NULL,
+			billing_phone VARCHAR(20) NOT NULL,
+			billing_zip_code VARCHAR(20) NOT NULL,
+			billing_address TEXT NOT NULL,
+			billing_country VARCHAR(100) NOT NULL,
+			billing_state VARCHAR(100) NOT NULL,
+			billing_city VARCHAR(100) NOT NULL,
+			PRIMARY KEY (id),
+			KEY user_id (user_id),
+			KEY billing_email (billing_email)
+		) $charset_collate;";
+
 		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		dbDelta( $quiz_attempts_sql );
 		dbDelta( $quiz_attempt_answers );
@@ -863,6 +1034,15 @@ final class Tutor {
 		dbDelta( $tutor_quiz_question_answers );
 		dbDelta( $earning_table );
 		dbDelta( $withdraw_table );
+		dbDelta( $orders_table );
+		dbDelta( $order_meta_table );
+		dbDelta( $order_items_table );
+		dbDelta( $coupons_table );
+		dbDelta( $coupon_applications_table );
+		dbDelta( $coupon_usage_table );
+		dbDelta( $cart_table );
+		dbDelta( $cart_items_table );
+		dbDelta( $customer_table );
 	}
 
 	/**

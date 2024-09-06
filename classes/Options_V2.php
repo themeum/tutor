@@ -10,6 +10,10 @@
 
 namespace Tutor;
 
+use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -1725,7 +1729,7 @@ class Options_V2 {
 	 *
 	 * Generate Option Field
 	 */
-	public function generate_field( $field = array() ) {
+	public function generate_field( $field = array(), $blocks = array() ) {
 		ob_start();
 		if ( isset( $field['type'] ) ) {
 			include tutor()->path . "views/options/field-types/{$field['type']}.php";
@@ -1787,7 +1791,7 @@ class Options_V2 {
 	}
 
 	/**
-	 * Load template inside template dirctory
+	 * Load template inside template directory
 	 *
 	 * @since 2.0.0
 	 *

@@ -1,4 +1,7 @@
-import '../../../v2-library/_src/js/main';
+import '../../../v2-library/src/js/main';
+import ajaxHandler from '../admin-dashboard/segments/filter';
+import tutorFormData from "../helper/tutor-formdata";
+
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};
 	var nonce_key = nonce_data.nonce_key || '';
@@ -474,3 +477,38 @@ window.tutor_esc_attr = function(str) {
 window.addEventListener('tutor_modal_shown', (e) => {
 	selectSearchField('.tutor-form-select');
 })
+
+/**
+ * Create new draft course
+ * @since 3.0.0
+ */
+const createNewCourse = document.querySelector('a.tutor-create-new-course');
+if (createNewCourse) {
+	createNewCourse.onclick = async (e) => {
+		e.preventDefault();
+		const { __ } = wp.i18n;
+		
+		try {
+			createNewCourse.classList.add('is-loading');
+			createNewCourse.style.pointerEvents = 'none';
+
+			const from_dashboard = createNewCourse.classList.contains('tutor-dashboard-create-course')
+			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
+			const post = await ajaxHandler(formData);
+
+			const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
+			const { status_code, data, message } = await post.json();
+			if (status_code === 201) {
+				window.location = data;
+			} else {
+				tutor_toast(__('Failed', 'tutor'), message, 'error');
+			}
+		} catch (error) {
+			tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+		} finally {
+			createNewCourse.removeAttribute('disabled');
+			createNewCourse.classList.remove('is-loading');
+		}
+		
+	}
+}
