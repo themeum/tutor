@@ -33,9 +33,11 @@ const BasicModalWrapper = ({
 }: BasicModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
+    console.log('fire');
 
     return () => {
       document.body.style.overflow = 'initial';
+      console.log('clear');
     };
   }, []);
 

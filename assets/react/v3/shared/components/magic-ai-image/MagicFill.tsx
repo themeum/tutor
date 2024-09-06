@@ -248,13 +248,6 @@ const MagicFill = () => {
               {__('Use Image', 'tutor')}
             </MagicButton>
           </div>
-          <div css={magicAIStyles.rightFooterInfo}>
-            <div>
-              <SVGIcon name="seeds" width={20} height={20} />
-              {__('Use 1 of 50 icons', 'tutor')}
-            </div>
-            <a href="/">{__('Upgrade for more', 'tutor')}</a>
-          </div>
         </div>
       </div>
     </form>
