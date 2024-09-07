@@ -300,9 +300,17 @@ class EmailController {
 			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
-		$this->send_email_to( self::TO_STUDENTS, 'new_order', $student_ids, $order_data->id );
-		$this->send_email_to( self::TO_ADMIN, 'new_order', $admin_ids, $order_data->id );
-		$this->send_email_to( self::TO_TEACHERS, 'new_order', $instructor_ids, $order_data->id );
+		if ( tutor_utils()->get_option( self::TO_STUDENTS . '.new_order' ) ) {
+			$this->send_email_to( self::TO_STUDENTS, 'new_order', $student_ids, $order_data->id );
+		}
+
+		if ( tutor_utils()->get_option( self::TO_ADMIN . '.new_order' ) ) {
+			$this->send_email_to( self::TO_ADMIN, 'new_order', $admin_ids, $order_data->id );
+		}
+
+		if ( tutor_utils()->get_option( self::TO_TEACHERS . '.new_order' ) ) {
+			$this->send_email_to( self::TO_TEACHERS, 'new_order', $instructor_ids, $order_data->id );
+		}
 	}
 
 	/**
@@ -341,9 +349,17 @@ class EmailController {
 			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
-		$this->send_email_to( self::TO_STUDENTS, 'order_status_updated', $student_ids, $order_data->id );
-		$this->send_email_to( self::TO_ADMIN, 'order_status_updated', $admin_ids, $order_data->id );
-		$this->send_email_to( self::TO_TEACHERS, 'order_status_updated', $instructor_ids, $order_data->id );
+		if ( tutor_utils()->get_option( self::TO_STUDENTS . '.order_status_updated' ) ) {
+			$this->send_email_to( self::TO_STUDENTS, 'order_status_updated', $student_ids, $order_data->id );
+		}
+
+		if ( tutor_utils()->get_option( self::TO_ADMIN . '.order_status_updated' ) ) {
+			$this->send_email_to( self::TO_TEACHERS, 'order_status_updated', $instructor_ids, $order_data->id );
+		}
+
+		if ( tutor_utils()->get_option( self::TO_TEACHERS . '.order_status_updated' ) ) {
+			$this->send_email_to( self::TO_ADMIN, 'order_status_updated', $admin_ids, $order_data->id );
+		}
 	}
 
 	/**
@@ -466,7 +482,7 @@ class EmailController {
 							<div>
 								<p>%s</p>
 								<ul>
-									<li>%s #{order_id}</li>
+									<li>%s {order_id}</li>
 									<li>%s {order_date}</li>
 									<li>%s {order_total}</li>
 								</ul>
