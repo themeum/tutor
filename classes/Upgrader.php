@@ -131,6 +131,7 @@ class Upgrader {
 	 * @return void
 	 */
 	public function upgrade_to_3_0_0() {
+		Tutor::tutor_activate();
 		CartController::create_cart_page();
 		CheckoutController::create_checkout_page();
 	}

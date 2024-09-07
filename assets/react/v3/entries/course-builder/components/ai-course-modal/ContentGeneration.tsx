@@ -323,7 +323,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     </MagicButton>
                     <MagicButton type="submit" disabled={isLoading || !promptValue}>
                       <SVGIcon name="magicWand" width={24} height={24} />
-                      {__('Create now', 'tutor')}
+                      {__('Generate now', 'tutor')}
                     </MagicButton>
                   </div>
                 </form>
