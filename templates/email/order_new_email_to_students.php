@@ -1,11 +1,11 @@
 <?php
 /**
- * E-mail template for on-hold order
+ * E-mail template for new order
  *
- * @package TutorPro
+ * @package Tutor
  * @subpackage Templates\Email
  *
- * @since 2.5.0
+ * @since 3.0.0
  */
 
 ?>
@@ -14,13 +14,13 @@
 
 <head>
 	<meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
-	<?php require TUTOR_EMAIL()->path . 'views/email_styles.php'; ?>
+	<?php require TUTOR()->path . 'templates/email/email_styles.php'; ?>
 </head>
 
 <body>
 	<div class="tutor-email-body">
 		<div class="tutor-email-wrapper">
-			<?php require TUTOR_PRO()->path . 'templates/email/email_header.php'; ?>
+			<?php require TUTOR()->path . 'templates/email/email_header.php'; ?>
 			<div class="tutor-email-content">
 				<div class="tutor-mr-160">
 					<h6 data-source="email-heading" class="tutor-email-heading">{email_heading}</h6>
@@ -28,11 +28,11 @@
 				<br>
 				<div class="email-user-content" data-source="email-additional-message">{email_message}</div>
 				<br>
-
 				<div class="tutor-email-buttons">
-					<a href="{dashboard_url}" class="tutor-email-button"><?php esc_html_e( 'Go to Dashboard', 'tutor-pro' ); ?></a>
+				<a href="{site_order_url}" class="tutor-email-button"><?php esc_html_e( 'View Details', 'tutor-pro' ); ?></a>
 				</div>
 			</div>
+			<?php require TUTOR()->path . 'templates/email/email_footer.php'; ?>
 		</div>
 	</div>
 </body>
