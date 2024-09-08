@@ -331,6 +331,10 @@ class EmailController {
 
 		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 
+		if ( OrderModel::PAYMENT_PARTIALLY_REFUNDED === $new_payment_status || ( OrderModel::PAYMENT_REFUNDED === $new_payment_status && OrderModel::ORDER_COMPLETED === $order_data->order_status ) ) {
+			return;
+		}
+
 		$student_ids    = array( $order_data->user_id );
 		$admin_ids      = array();
 		$instructor_ids = array();
@@ -344,8 +348,7 @@ class EmailController {
 
 		// Set instructor ids.
 		foreach ( $order_data->items as $item ) {
-			$item      = (object) $item;
-			$course_id = $item->item_id;
+			$course_id = $item->id;
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type || OrderModel::TYPE_RENEWAL === $order_data->order_type ) {
 				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $course_id, $order_data );
 			}
@@ -416,8 +419,8 @@ class EmailController {
 			$replacable['{order_id}']             = '#' . $order_data->id;
 			$replacable['{order_date}']           = tutor_i18n_get_formated_date( $order_data->created_at_gmt, get_option( 'date_format' ) );
 			$replacable['{order_total}']          = tutor_get_formatted_price( $order_data->total_price );
-			$replacable['{order_status}']         = $order_data->order_status;
-			$replacable['{order_payment_status}'] = $order_data->order_payment_status;
+			$replacable['{order_status}']         = ucfirst( $order_data->order_status );
+			$replacable['{order_payment_status}'] = ucfirst( $order_data->payment_status );
 
 			$student = get_userdata( $order_data->student->id );
 			if ( is_a( $student, 'WP_User' ) ) {

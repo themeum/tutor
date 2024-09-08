@@ -498,7 +498,7 @@ class OrderModel {
 				$values->$key = $value;
 			}
 
-			$values->data = $refund->created_at_gmt;
+			$values->date = $refund->created_at_gmt;
 
 			$response[] = $values;
 		}

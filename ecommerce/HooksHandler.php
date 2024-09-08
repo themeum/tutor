@@ -53,14 +53,11 @@ class HooksHandler {
 		add_filter( 'get_tutor_course_price', array( $this, 'alter_course_price' ), 10, 2 );
 
 		// Order hooks.
-		add_action( 'tutor_after_order_bulk_action', array( $this, 'after_order_bulk_action' ), 10, 2 );
-
 		add_action( 'tutor_order_payment_updated', array( $this, 'handle_payment_updated_webhook' ) );
 
 		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 4 );
 
 		add_action( 'tutor_order_placement_success', array( $this, 'handle_order_placement_success' ) );
-
 	}
 
 	/**

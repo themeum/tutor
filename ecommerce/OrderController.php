@@ -897,7 +897,9 @@ class OrderController {
 		}
 
 		if ( $response ) {
-			do_action( 'tutor_after_order_bulk_action', $bulk_action, $bulk_ids );
+			foreach ( $bulk_ids as $id ) {
+				do_action( 'tutor_order_payment_status_changed', $id, '', $bulk_action );
+			}
 			wp_send_json_success( __( 'Order updated successfully.', 'tutor' ) );
 		} else {
 			wp_send_json_error( __( 'Failed to update order.', 'tutor' ) );
