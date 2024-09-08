@@ -262,7 +262,10 @@ class EmailController {
 	 * @return array
 	 */
 	public function get_option_data( $to_key, $trigger_key ) {
-		return $this->get_email_data()[ $to_key ][ $trigger_key ];
+		$email_data   = get_option( 'email_template_data' );
+		$default_data = $this->get_email_data();
+
+		return isset( $email_data[ $to_key ][ $trigger_key ] ) ? $email_data[ $to_key ][ $trigger_key ] : $default_data[ $to_key ][ $trigger_key ];
 	}
 
 	/**
@@ -408,11 +411,18 @@ class EmailController {
 
 			$replacable['{admin_order_url}'] = admin_url( 'admin.php?page=tutor_orders&action=edit&id=' . $order_id );
 
-			$replacable['{site_order_url}'] = tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' );
+			$replacable['{site_order_url}'] = 'email_to_students' === $recipient_type ? tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) : tutor_utils()->get_tutor_dashboard_page_permalink( 'analytics/statements' );
 
-			$replacable['{order_id}']    = '#' . $order_data->id;
-			$replacable['{order_date}']  = tutor_i18n_get_formated_date( $order_data->created_at_gmt, get_option( 'date_format' ) );
-			$replacable['{order_total}'] = tutor_get_formatted_price( $order_data->total_price );
+			$replacable['{order_id}']             = '#' . $order_data->id;
+			$replacable['{order_date}']           = tutor_i18n_get_formated_date( $order_data->created_at_gmt, get_option( 'date_format' ) );
+			$replacable['{order_total}']          = tutor_get_formatted_price( $order_data->total_price );
+			$replacable['{order_status}']         = $order_data->order_status;
+			$replacable['{order_payment_status}'] = $order_data->order_payment_status;
+
+			$student = get_userdata( $order_data->student->id );
+			if ( is_a( $student, 'WP_User' ) ) {
+				$replacable['{student_name}'] = $student->display_name;
+			}
 
 			$replacable['{dashboard_url}'] = tutor_utils()->get_tutor_dashboard_page_permalink();
 			$replacable['{logo}']          = isset( $option_data['logo'] ) ? $option_data['logo'] : '';
@@ -420,9 +430,7 @@ class EmailController {
 
 			$replacable['{email_message}'] = $this->get_replaced_text( $this->prepare_message( $option_data['message'] ), array_keys( $replacable ), array_values( $replacable ) );
 
-			if ( isset( $option_data['footer_text'] ) ) {
-				$replacable['footer_text'] = $option_data['footer_text'];
-			}
+			$replacable['{footer_text}'] = $this->get_replaced_text( $option_data['footer_text'], array_keys( $replacable ), array_values( $replacable ) );
 
 			$subject = $this->get_replaced_text( $option_data['subject'], array_keys( $replacable ), array_values( $replacable ) );
 

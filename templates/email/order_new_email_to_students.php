@@ -27,6 +27,10 @@
 				</div>
 				<br>
 				<div class="email-user-content" data-source="email-additional-message">{email_message}</div>
+				<br>
+				<div class="tutor-email-buttons">
+				<a href="{site_order_url}" class="tutor-email-button"><?php esc_html_e( 'View Details', 'tutor-pro' ); ?></a>
+				</div>
 			</div>
 			<?php require TUTOR()->path . 'templates/email/email_footer.php'; ?>
 		</div>
