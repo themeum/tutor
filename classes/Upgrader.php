@@ -132,9 +132,9 @@ class Upgrader {
 	 */
 	public function upgrade_to_3_0_0() {
 		global $wpdb;
-		$table_name   = $wpdb->prefix . 'tutor_orders';
-		$table_exists = $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) === $table_name;
-		if ( ! $table_exists ) {
+
+		$table_name = $wpdb->prefix . 'tutor_orders';
+		if ( ! QueryHelper::table_exists( $table_name ) ) {
 			Tutor::tutor_activate();
 		}
 
