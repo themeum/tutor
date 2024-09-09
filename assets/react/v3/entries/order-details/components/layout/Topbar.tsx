@@ -52,7 +52,7 @@ function Topbar() {
                     {sprintf(
                       __('Created by %s at %s', 'tutor'),
                       order.created_by,
-                      format(new Date(order.created_at_gmt), DateFormats.activityDate),
+                      format(new Date(order.created_at_gmt), DateFormats.activityDate)
                     )}
                   </p>
                 }
@@ -62,27 +62,30 @@ function Topbar() {
                     {sprintf(
                       __('Updated by %s at %s', 'tutor'),
                       order.updated_by,
-                      format(new Date(date), DateFormats.activityDate),
+                      format(new Date(date), DateFormats.activityDate)
                     )}
                   </p>
                 )}
               </Show>
             </div>
           </div>
-          <Button
-            variant="tertiary"
-            onClick={() => {
-              showModal({
-                component: CancelOrderModal,
-                props: {
-                  total: 30,
-                  title: sprintf(__('Cancel order #%s', 'tutor'), order.id),
-                },
-              });
-            }}
-          >
-            {__('Cancel Order', 'tutor')}
-          </Button>
+
+          {order.order_status !== 'cancelled' && (
+            <Button
+              variant="tertiary"
+              onClick={() => {
+                showModal({
+                  component: CancelOrderModal,
+                  props: {
+                    title: sprintf(__('Cancel order #%s', 'tutor'), order.id),
+                    order_id: order.id,
+                  },
+                });
+              }}
+            >
+              {__('Cancel Order', 'tutor')}
+            </Button>
+          )}
         </div>
       </Container>
     </div>
@@ -93,43 +96,43 @@ export default Topbar;
 
 const styles = {
   wrapper: css`
-		height: ${TOPBAR_HEIGHT}px;
-		background: ${colorTokens.background.white};
-	`,
+    height: ${TOPBAR_HEIGHT}px;
+    background: ${colorTokens.background.white};
+  `,
   innerWrapper: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		height: 100%;
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  `,
   headerContent: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
   left: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+  `,
   updateMessage: css`
-		${typography.body()};
-		color: ${colorTokens.text.subdued};
-	`,
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
+  `,
   backButton: css`
-		${styleUtils.resetButton};
-		background-color: transparent;
-		width: 32px;
-		height: 32px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border: 1px solid ${colorTokens.border.neutral};
-		border-radius: ${borderRadius[4]};
-		color: ${colorTokens.icon.default};
-		transition: color .3s ease-in-out;
+    ${styleUtils.resetButton};
+    background-color: transparent;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid ${colorTokens.border.neutral};
+    border-radius: ${borderRadius[4]};
+    color: ${colorTokens.icon.default};
+    transition: color 0.3s ease-in-out;
 
-		:hover {
-			color: ${colorTokens.icon.hover};
-		}
-	`,
+    :hover {
+      color: ${colorTokens.icon.hover};
+    }
+  `,
 };
