@@ -1073,6 +1073,9 @@ class OrderModel {
 			case 'delete':
 				$status = self::ORDER_CANCELLED;
 				break;
+			case self::ORDER_CANCELLED:
+				$status = self::ORDER_CANCELLED;
+				break;
 		}
 
 		return $status;

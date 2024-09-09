@@ -12,6 +12,7 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Earnings;
+use TUTOR\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -73,13 +74,14 @@ class HooksHandler {
 	public function after_order_bulk_action( $bulk_action, $bulk_ids ) {
 		$order_status = $this->order_model->get_order_status_by_payment_status( $bulk_action );
 
+		$cancel_reason = isset( $_POST['cancel_reason'] ) ? $_POST['cancel_reason'] : '';
 		foreach ( $bulk_ids as $order_id ) {
 			try {
 				$this->manage_earnings_and_enrollments( $order_status, $order_id );
 				$data = (object) array(
 					'order_id'   => $order_id,
 					'meta_key'   => $this->order_activities_model::META_KEY_HISTORY,
-					'meta_value' => "Order mark as {$bulk_action}",
+					'meta_value' => "Order mark as {$bulk_action} {$cancel_reason}",
 				);
 				$this->order_activities_model->add_order_meta( $data );
 			} catch ( \Throwable $th ) {
@@ -187,12 +189,22 @@ class HooksHandler {
 
 		$order_status = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
 
+		$cancel_reason = Input::post( 'cancel_reason' );
+
 		// Store activity.
 		$data = (object) array(
 			'order_id'   => $order_id,
 			'meta_key'   => $this->order_activities_model::META_KEY_HISTORY,
 			'meta_value' => 'Order mark as ' . $new_payment_status,
 		);
+
+		if ( $cancel_reason ) {
+			$meta_value       = array(
+				'message'       => 'Order mark as ' . $new_payment_status,
+				'cancel_reason' => $cancel_reason,
+			);
+			$data->meta_value = json_encode( $meta_value );
+		}
 
 		$this->order_activities_model->add_order_meta( $data );
 
