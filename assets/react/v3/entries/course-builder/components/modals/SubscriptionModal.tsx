@@ -31,7 +31,7 @@ import {
 import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -45,6 +45,9 @@ const courseId = getCourseId();
 export default function SubscriptionModal({ title, subtitle, icon, closeModal }: SubscriptionModalProps) {
   const queryClient = useQueryClient();
 
+  const isSubscriptionListLoading = !!useIsFetching({
+    queryKey: ['SubscriptionsList', courseId],
+  });
   const courseSubscriptions = queryClient.getQueryData(['SubscriptionsList', courseId]) as Subscription[];
   const sortSubscriptionMutation = useSortCourseSubscriptionsMutation(courseId);
 
@@ -219,6 +222,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                       return [...newItems, { ...defaultSubscriptionFormData, id: '', isExpanded: true }];
                     });
                   }}
+                  loading={isSubscriptionListLoading}
                 >
                   {__('Add Subscription', 'tutor')}
                 </Button>

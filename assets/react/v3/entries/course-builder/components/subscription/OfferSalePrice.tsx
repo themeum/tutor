@@ -84,7 +84,12 @@ export function OfferSalePrice({ form }: { form: UseFormReturn<SubscriptionFormD
                         required: __('Schedule date is required', 'tutor'),
                       }}
                       render={(controllerProps) => (
-                        <FormDateInput {...controllerProps} isClearable={false} placeholder="yyyy-mm-dd" />
+                        <FormDateInput
+                          {...controllerProps}
+                          isClearable={false}
+                          placeholder="yyyy-mm-dd"
+                          disabledBefore={new Date().toISOString()}
+                        />
                       )}
                     />
 
