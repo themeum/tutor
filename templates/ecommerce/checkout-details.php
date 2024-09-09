@@ -9,6 +9,7 @@
  */
 
 use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\OptionKeys;
 use Tutor\Helpers\SessionHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
@@ -26,6 +27,8 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
  */
 $object_ids = array();
 $order_type = OrderModel::TYPE_SINGLE_ORDER;
+
+$is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICABLE );
 ?>
 
 <div class="tutor-checkout-details">
@@ -174,7 +177,7 @@ $order_type = OrderModel::TYPE_SINGLE_ORDER;
                 <?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?>
 			</div>
 		</div>
-		<?php if ( ! isset( $automatic_coupon ) || ! $automatic_coupon->is_applied ) : ?>
+		<?php if ( $is_coupon_applicable && ( ! isset( $automatic_coupon ) || ! $automatic_coupon->is_applied ) ) : ?>
 		<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 			<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
 			<button type="button" id="tutor-toggle-coupon-form" class="tutor-btn tutor-btn-link">
