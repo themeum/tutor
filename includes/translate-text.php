@@ -77,7 +77,7 @@ function tutor_get_translate_text() {
 			'text'  => __( 'Processing', 'tutor' ),
 		),
 		'cancelled'  => array(
-			'badge' => 'danger',
+			'badge' => 'default',
 			'text'  => __( 'Cancelled', 'tutor' ),
 		),
 		'canceled'   => array(
@@ -113,7 +113,7 @@ function tutor_get_translate_text() {
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
 		'partially-refunded' => array(
-			'badge' => 'warning',
+			'badge' => 'default',
 			'text'  => __( 'Partially Refunded', 'tutor' ),
 		),
 		'refunded' => array(
@@ -121,7 +121,7 @@ function tutor_get_translate_text() {
 			'text'  => __( 'Refunded', 'tutor' ),
 		),
 		'unpaid' => array(
-			'badge' => 'default',
+			'badge' => 'warning',
 			'text'  => __( 'Unpaid', 'tutor' ),
 		),
 		'paid' => array(
