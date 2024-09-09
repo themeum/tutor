@@ -71,6 +71,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
 		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
 		add_action( 'wp_ajax_reset_settings_data', array( $this, 'reset_settings_data' ) );
+		add_action( 'tutor_option_monetize_by_changed', array( $this, 'handle_changed_monetization_option' ) );
 	}
 
 	/**
@@ -498,6 +499,23 @@ class Options_V2 {
 		);
 
 		wp_send_json( $data );
+	}
+
+	/**
+	 * Handle monetization option value change.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function handle_changed_monetization_option() {
+		add_filter(
+			'tutor_option_saved_data',
+			function( $res ) {
+				$res['reload_required'] = true;
+				return $res;
+			}
+		);
 	}
 
 	/**
@@ -1724,6 +1742,7 @@ class Options_V2 {
 	 * @since 2.0.0
 	 *
 	 * @param array $field field array.
+	 * @param array $blocks blocks array.
 	 *
 	 * @return void
 	 *
