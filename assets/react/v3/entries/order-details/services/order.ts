@@ -199,3 +199,28 @@ export const useOrderDiscountMutation = () => {
     },
   });
 };
+
+interface CancelPayload {
+  order_id: number;
+  cancel_reason: string;
+  note: string;
+  send_notification: boolean;
+}
+const cancelOrder = (params: CancelPayload) => {
+  return wpAjaxInstance.post(endpoints.ORDER_CANCEL, params);
+};
+
+export const useCancelOrderMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: cancelOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
+      showToast({ type: 'success', message: __('Order cancelled successfully.', 'tutor') });
+    },
+    onError: (error) => {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
