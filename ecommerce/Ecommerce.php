@@ -114,7 +114,7 @@ class Ecommerce {
 	 * @return array
 	 */
 	public function add_monetization_option( $arr ) {
-		$arr[ self::MONETIZE_BY ] = __( 'Tutor', 'tutor' );
+		$arr[ self::MONETIZE_BY ] = __( 'Native', 'tutor' );
 
 		return $arr;
 	}
