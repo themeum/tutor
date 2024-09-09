@@ -390,8 +390,8 @@ class OrderController {
 		}
 
 		$params = array(
-			'order_id'      => Input::post( 'order_id' ),
-			'cancel_reason' => Input::post( 'cancel_reason' ),
+			'order_id'     => Input::post( 'order_id' ),
+			'order_status' => $this->model::ORDER_CANCELLED,
 		);
 
 		// Validate request.
@@ -406,14 +406,7 @@ class OrderController {
 
 		do_action( 'tutor_before_order_cancel', $params );
 
-		$payload               = new \stdClass();
-		$payload               = (object) $params;
-		$payload->order_status = $this->model::ORDER_CANCELLED;
-
-		$response = $this->model->order_status_update( $payload );
-
-		do_action( 'tutor_after_order_cancel', $params );
-
+		$response = $this->model->update_order( $params['order_id'], $params );
 		if ( ! $response ) {
 			$this->json_response(
 				__( 'Failed to cancel order status', 'tutor' ),
@@ -421,6 +414,18 @@ class OrderController {
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
+
+		// Store activity.
+		$activity_model = new OrderActivitiesModel();
+		$data = (object) array(
+			'order_id'   => $params['order_id'],
+			'meta_key'   => $activity_model::META_KEY_CANCEL_REASON,
+			'meta_value' => Input::post( 'cancel_reason' ),
+		);
+
+		$activity_model->add_order_meta( $data );
+
+		do_action( 'tutor_order_payment_status_changed', $params['order_id'], '', $this->model::ORDER_CANCELLED, true );
 
 		$this->json_response( __( 'Order successfully canceled', 'tutor' ) );
 	}
