@@ -79,7 +79,10 @@ const CourseBasic = () => {
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '') || isInstructor);
 
-  const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && (isAdministrator || isInstructor);
+  const isAuthorEditable =
+    isTutorProEnabled &&
+    isMultiInstructorEnabled &&
+    (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || ''));
 
   const visibilityStatus = useWatch({
     control: form.control,
