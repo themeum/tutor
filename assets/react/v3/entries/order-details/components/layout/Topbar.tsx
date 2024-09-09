@@ -70,7 +70,7 @@ function Topbar() {
             </div>
           </div>
 
-          {order.order_status !== 'cancelled' && (
+          <Show when={order.order_status !== 'cancelled'}>
             <Button
               variant="tertiary"
               onClick={() => {
@@ -85,7 +85,7 @@ function Topbar() {
             >
               {__('Cancel Order', 'tutor')}
             </Button>
-          )}
+          </Show>
         </div>
       </Container>
     </div>

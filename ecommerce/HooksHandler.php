@@ -195,12 +195,12 @@ class HooksHandler {
 		$data = (object) array(
 			'order_id'   => $order_id,
 			'meta_key'   => $this->order_activities_model::META_KEY_HISTORY,
-			'meta_value' => 'Order mark as ' . $new_payment_status,
+			'meta_value' => 'Order marked as ' . $new_payment_status,
 		);
 
 		if ( $cancel_reason ) {
 			$meta_value       = array(
-				'message'       => 'Order mark as ' . $new_payment_status,
+				'message'       => 'Order marked as ' . $new_payment_status,
 				'cancel_reason' => $cancel_reason,
 			);
 			$data->meta_value = json_encode( $meta_value );
