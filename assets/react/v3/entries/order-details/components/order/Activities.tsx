@@ -1,3 +1,4 @@
+import Alert from '@Atoms/Alert';
 import { Box, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -67,6 +68,11 @@ function Activities() {
                     <div css={styles.innerContent}>
                       <span>{format(new Date(activity.date), DateFormats.activityDate)}</span>
                       <span>{activity.message}</span>
+                      <Show when={activity.cancel_reason}>
+                        <Alert type="info">
+                          {activity.cancel_reason}
+                        </Alert>
+                      </Show>
                     </div>
                   </div>
                 )}
@@ -83,76 +89,76 @@ export default Activities;
 
 const styles = {
   content: css`
-		padding: ${spacing[16]} ${spacing[24]};
-	`,
+    padding: ${spacing[16]} ${spacing[24]};
+  `,
   activities: css`
-		border-left: 1px solid ${colorTokens.stroke.divider};
-		padding-left: ${spacing[20]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[24]};
-	`,
+    border-left: 1px solid ${colorTokens.stroke.divider};
+    padding-left: ${spacing[20]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[24]};
+  `,
   form: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[20]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[20]};
 
-		button {
-			align-self: end;
-		}
-	`,
+    button {
+      align-self: end;
+    }
+  `,
   dot: css`
-		position: absolute;
-		width: 16px;
-		height: 16px;
-		left: -28px;
-		top: 2px;
-		border-radius: ${borderRadius.circle};
-		background-color: ${colorTokens.color.black[8]};
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: -28px;
+    top: 2px;
+    border-radius: ${borderRadius.circle};
+    background-color: ${colorTokens.color.black[8]};
 
-		&::before {
-			content: '';
-			position: absolute;
-			width: 8px;
-			height: 8px;
-			left: 50%;
-			top: 50%;
-			transform: translate(-50%, -50%);
-			border-radius: ${borderRadius.circle};
-			background-color: ${colorTokens.icon.hover};
-		}
-	`,
+    &::before {
+      content: '';
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: ${borderRadius.circle};
+      background-color: ${colorTokens.icon.hover};
+    }
+  `,
   activityItem: css`
-		position: relative;
-		&:last-of-type::before {
-			content: '';
-			position: absolute;
-			height: 100%;
-			width: 16px;
-			left: -28px;
-			background: ${colorTokens.background.white};
-		}
+    position: relative;
+    &:last-of-type::before {
+      content: '';
+      position: absolute;
+      height: 100%;
+      width: 16px;
+      left: -28px;
+      background: ${colorTokens.background.white};
+    }
 
-		&:first-of-type::before {
-			content: '';
-			position: absolute;
-			height: 4px;
-			width: 16px;
-			left: -28px;
-			top: 0;
-			background: ${colorTokens.background.white};
-		}
-	`,
+    &:first-of-type::before {
+      content: '';
+      position: absolute;
+      height: 4px;
+      width: 16px;
+      left: -28px;
+      top: 0;
+      background: ${colorTokens.background.white};
+    }
+  `,
   innerContent: css`
-		display: flex;
-		flex-direction: column;
+    display: flex;
+    flex-direction: column;
 
-		${typography.caption('medium')};
-		color: ${colorTokens.text.primary};
+    ${typography.caption('medium')};
+    color: ${colorTokens.text.primary};
 
-		& > span:first-of-type {
-			${typography.small()};
-			color: ${colorTokens.text.subdued};
-		}
-	`,
+    & > span:first-of-type {
+      ${typography.small()};
+      color: ${colorTokens.text.subdued};
+    }
+  `,
 };

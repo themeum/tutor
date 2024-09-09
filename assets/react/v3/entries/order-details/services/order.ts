@@ -65,6 +65,7 @@ export interface Activity {
   type: ActivityType;
   message: string;
   date: string;
+  cancel_reason?: string;
 }
 
 export interface Discount {
@@ -200,13 +201,7 @@ export const useOrderDiscountMutation = () => {
   });
 };
 
-interface CancelPayload {
-  order_id: number;
-  cancel_reason: string;
-  note: string;
-  send_notification: boolean;
-}
-const cancelOrder = (params: CancelPayload) => {
+const cancelOrder = (params: { order_id: number; cancel_reason: string }) => {
   return wpAjaxInstance.post(endpoints.ORDER_CANCEL, params);
 };
 

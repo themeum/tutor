@@ -92,9 +92,10 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
         onSubmit={form.handleSubmit(async (values) => {
           const response = await cancelOrderMutation.mutateAsync({
             order_id: order_id,
-            cancel_reason: values.reason,
-            note: values.note,
-            send_notification: values.send_notification,
+            cancel_reason:
+              values.reason === 'other'
+                ? values.note
+                : reasonOptions.find((item) => item.value === values.reason)?.explanation ?? '',
           });
 
           if (response) {
@@ -140,12 +141,6 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
               )}
             />
           </Show>
-
-          <Controller
-            control={form.control}
-            name="send_notification"
-            render={(props) => <FormCheckbox {...props} label={__('Send a notification to the customer', 'tutor')} />}
-          />
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
