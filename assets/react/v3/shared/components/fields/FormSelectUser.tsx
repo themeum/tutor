@@ -127,7 +127,7 @@ const FormSelectUser = ({
                   type="button"
                   css={styles.instructorItem({ isDefaultItem: true })}
                   onClick={() => setIsOpen((previousState) => !previousState)}
-                  disabled={readOnly || filteredOption.length === 0}
+                  disabled={readOnly || disabled || filteredOption.length === 0}
                 >
                   <div css={styles.instructorInfo}>
                     <img
