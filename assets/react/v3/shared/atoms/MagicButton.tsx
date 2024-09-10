@@ -43,17 +43,20 @@ const styles = {
 
 		&:focus-visible {
 			outline: none;
-			shadow: ${shadow.button};
+			box-shadow: ${shadow.button};
 		}
 
 		&:disabled {
-			background: ${colorTokens.action.primary.disable};
+			cursor: not-allowed;
+			// @TODO: this is disabled for now, need to discuss with design team
+			
+			/* background: ${colorTokens.action.primary.disable};
 			pointer-events: none;
 			color: ${colorTokens.text.disable};
 			border-color: ${colorTokens.stroke.disable};
 			&::before {
 				display: none;
-			}
+			} */
 		}
 	`,
   default: css`

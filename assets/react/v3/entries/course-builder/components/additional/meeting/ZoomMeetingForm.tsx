@@ -231,6 +231,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 placeholder={__('Select time zone', 'tutor')}
                 options={timeZonesOptions}
                 selectOnFocus
+                isSearchable
               />
             )}
           />

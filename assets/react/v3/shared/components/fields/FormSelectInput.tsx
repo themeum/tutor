@@ -100,6 +100,7 @@ const FormSelectInput = <T,>({
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [selections.length],
   });
 
   const additionalAttributes = {
