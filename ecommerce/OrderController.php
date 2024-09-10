@@ -1035,7 +1035,9 @@ class OrderController {
 		$search_term    = Input::get( 'search', '' );
 		$payment_status = Input::get( 'payment-status', '' );
 
-		$where_clause = array();
+		$where_clause = array(
+			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
+		);
 
 		if ( $date ) {
 			$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );
