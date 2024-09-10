@@ -31,9 +31,6 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
-
 import Certificate from '../components/additional/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -186,67 +183,122 @@ const Additional = () => {
           </div>
         </div>
 
-        <Show when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
-          <div css={styles.formSection}>
-            <div css={styles.titleAndSub}>
-              <div css={styles.title}>{__('Certificate', 'tutor')}</div>
-              <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+        <div css={styles.formSection}>
+          <div css={styles.titleAndSub}>
+            <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+            <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
 
-              <Certificate />
-            </div>
+            <Certificate />
           </div>
-        </Show>
+        </div>
+
         <Navigator styleModifier={styles.navigator} />
       </div>
 
       <div css={styles.sidebar}>
-        {isPrerequisiteAddonEnabled && (
-          <Controller
-            name="course_prerequisites"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormCoursePrerequisites
-                {...controllerProps}
-                label={__('Course prerequisites', 'tutor')}
-                placeholder={__('Search to add course prerequisites', 'tutor')}
-                options={prerequisiteCoursesQuery.data || []}
-                isSearchable
-                loading={
-                  prerequisiteCoursesQuery.isLoading || (!!isCourseDetailsFetching && !controllerProps.field.value)
+        <div>
+          <span css={styles.label}>
+            {__('Course prerequisites', 'tutor')}
+            {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+          </span>
+          <Show
+            when={isTutorPro && isPrerequisiteAddonEnabled}
+            fallback={
+              <EmptyState
+                size="small"
+                removeBorder={false}
+                title={__('Add prerequisites to your course', 'tutor')}
+                description={__(
+                  'Add prerequisites to your course to ensure that students have the necessary knowledge before enrolling.',
+                  'tutor',
+                )}
+                actions={
+                  <Show
+                    when={!isTutorPro}
+                    fallback={
+                      <Button
+                        size="small"
+                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                        onClick={() => {
+                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                        }}
+                      >
+                        {__('Enable Prerequisites Addon', 'tutor')}
+                      </Button>
+                    }
+                  >
+                    <Button
+                      size="small"
+                      icon={<SVGIcon name="crown" width={24} height={24} />}
+                      onClick={() => {
+                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                      }}
+                    >
+                      {__('Get Tutor LMS Pro', 'tutor')}
+                    </Button>
+                  </Show>
                 }
               />
-            )}
-          />
-        )}
+            }
+          >
+            <Controller
+              name="course_prerequisites"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCoursePrerequisites
+                  {...controllerProps}
+                  placeholder={__('Search to add course prerequisites', 'tutor')}
+                  options={prerequisiteCoursesQuery.data || []}
+                  isSearchable
+                  loading={
+                    prerequisiteCoursesQuery.isLoading || (!!isCourseDetailsFetching && !controllerProps.field.value)
+                  }
+                />
+              )}
+            />
+          </Show>
+        </div>
         <div css={styles.uploadAttachment}>
           <span css={styles.label}>
             {__('Attachments', 'tutor')}
             {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
           </span>
           <Show
-            when={isAddonEnabled(Addons.TUTOR_COURSE_ATTACHMENTS)}
+            when={isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_ATTACHMENTS)}
             fallback={
               <EmptyState
                 size="small"
                 removeBorder={false}
-                emptyStateImage={emptyStateImage}
-                emptyStateImage2x={emptyStateImage2x}
-                imageAltText={__('No course attachment addons found', 'tutor')}
                 title={__('Add attachments to provide additional resources to your students.', 'tutor')}
                 description={__(
                   `Provide additional resources to support your students' learning. Attachments can include PDFs, Word documents, or other helpful file types.`,
                   'tutor',
                 )}
                 actions={
-                  <Button
-                    size="small"
-                    icon={<SVGIcon name="crown" width={24} height={24} />}
-                    onClick={() => {
-                      window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-                    }}
+                  <Show
+                    when={!isTutorPro}
+                    fallback={
+                      <Button
+                        size="small"
+                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                        onClick={() => {
+                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                        }}
+                      >
+                        {__('Enable Course Attachments Addon', 'tutor')}
+                      </Button>
+                    }
                   >
-                    {__('Get Tutor LMS Pro', 'tutor')}
-                  </Button>
+                    <Button
+                      size="small"
+                      icon={<SVGIcon name="crown" width={24} height={24} />}
+                      onClick={() => {
+                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                      }}
+                    >
+                      {__('Get Tutor LMS Pro', 'tutor')}
+                    </Button>
+                  </Show>
                 }
               />
             }
@@ -366,7 +418,8 @@ const styles = {
     ${styleUtils.display.inlineFlex()}
     align-items: center;
     gap: ${spacing[2]};
-    ${typography.body()}
+    ${typography.body('medium')}
     color: ${colorTokens.text.title};
+    margin-bottom: ${spacing[8]};
   `,
 };
