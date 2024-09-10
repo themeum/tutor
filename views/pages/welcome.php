@@ -183,7 +183,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 		<div class="tutor-container">
 			<div class="tutor-row tutor-justify-center tutor-gx-xl-5">
 				<div class="tutor-col-lg-4 tutor-col-xl-3 tutor-mb-24 tutor-mb-lg-0">
-					<a class="tutor-btn tutor-btn-primary tutor-d-block" href="<?php echo esc_url( admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) ); ?>">
+					<a class="tutor-btn tutor-btn-primary tutor-d-block" href="<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>">
 						<?php esc_html_e( "Let's Start Building", 'tutor' ); ?>
 					</a>
 				</div>
