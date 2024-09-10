@@ -233,7 +233,6 @@ const Additional = () => {
               render={(controllerProps) => (
                 <FormCoursePrerequisites
                   {...controllerProps}
-                  label={__('Course prerequisites', 'tutor')}
                   placeholder={__('Search to add course prerequisites', 'tutor')}
                   options={prerequisiteCoursesQuery.data || []}
                   isSearchable
