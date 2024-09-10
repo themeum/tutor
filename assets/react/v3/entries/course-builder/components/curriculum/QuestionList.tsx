@@ -203,7 +203,7 @@ const QuestionList = ({
       question_order: questionFields.length + 1,
       question_settings: {
         answer_required: false,
-        question_mark: 1,
+        question_mark: contentType === 'tutor_h5p_quiz' ? 0 : 1,
         question_type: questionType,
         randomize_options: false,
         show_question_mark: false,

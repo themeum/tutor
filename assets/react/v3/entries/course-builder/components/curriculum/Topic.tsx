@@ -567,6 +567,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                     isOutlined
                     size="small"
                     icon={<SVGIcon name="plus" width={24} height={24} />}
+                    disabled={!topic.isSaved}
                     onClick={() => {
                       showModal({
                         component: QuizModal,
