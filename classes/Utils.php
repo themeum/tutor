@@ -6787,7 +6787,7 @@ class Utils {
 	public function course_edit_link( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$url = admin_url( "post.php?post={$course_id}&action=tutor" );
+		$url = admin_url( "admin.php?page=create-course&course_id={$course_id}" );
 		if ( tutor()->has_pro ) {
 			$url = $this->tutor_dashboard_url( 'create-course?course_id=' . $course_id );
 		}
