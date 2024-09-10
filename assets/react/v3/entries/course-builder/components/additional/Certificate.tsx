@@ -85,6 +85,18 @@ const Certificate = () => {
   const handleTabChange = (tab: CertificateTabValue) => {
     setActiveCertificateTab(tab);
 
+    const hasLandScapeCertificatesForActiveTab = certificatesData.some(
+      (certificate) =>
+        certificate.orientation === 'landscape' &&
+        (tab === 'templates' ? certificate.is_default : !certificate.is_default),
+    );
+
+    const hasPortraitCertificatesForActiveTab = certificatesData.some(
+      (certificate) =>
+        certificate.orientation === 'portrait' &&
+        (tab === 'templates' ? certificate.is_default : !certificate.is_default),
+    );
+
     setActiveOrientation((previousOrientation) => {
       if (hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab) {
         return previousOrientation;
@@ -212,7 +224,6 @@ const Certificate = () => {
                 <EmptyState
                   size="small"
                   title={__('No templates found', 'tutor')}
-                  description={__('No custom certificates found. Create a new one.', 'tutor')}
                   emptyStateImage={emptyStateImage}
                   emptyStateImage2x={emptyStateImage2x}
                   imageAltText={__('Illustration of a certificate', 'tutor')}

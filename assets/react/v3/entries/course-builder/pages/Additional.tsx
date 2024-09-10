@@ -198,7 +198,7 @@ const Additional = () => {
       <div css={styles.sidebar}>
         <div>
           <span css={styles.label}>
-            {__('Course prerequisites', 'tutor')}
+            {__('Course Prerequisites', 'tutor')}
             {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
           </span>
           <Show
