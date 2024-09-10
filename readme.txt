@@ -286,15 +286,16 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 = 3.0.0-beta1 - September 10, 2024
 
-New: Reimagined course and quiz builder
-New: Tutor AI Studio for building complete courses (Pro)
-New: Native payment systems for course sales
-New: Subscription system for recurring payments (Pro)
-New: Automated order emails
-New: Customizable order and subscription emails (Pro)
-New: Deep integration with Droip page builder for designing course lists and single pages
-Update: Refactored the entire course creation process for enhanced performance
-Update: Optimized the entire plugin for improved scalability
+New: Brand new course and quiz builder with a fresh, intuitive interface for a smoother course creation experience.
+New: Introducing groundbreaking AI Studio in Tutor LMS for generating complete courses, lessons, quizzes, thumbnails, etc with AI. (Pro)
+New: Seamlessly sell courses directly using Native Payment within Tutor LMS.
+New: Native Subscription system for recurring payments, perfect for membership-style eLearning programs. (Pro)
+New: Automated order emails to keep learners and instructors informed at every step of the payment process. (Pro)
+New: Customizable order and subscription emails for effortless communications. (Pro)
+New: Lesson note feature for instructors to jot down their course or lesson descriptions.
+New: Deep integration with Droip no-code website builder to design beautiful course single and listing pages.
+Update: Enhanced course creation process for faster, more efficient performance.
+Update: Optimized for improved scalability to ensure a smooth experience as your platform grows.
 
 = 2.7.5 - September 04, 2024
 
