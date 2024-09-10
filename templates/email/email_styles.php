@@ -7,28 +7,29 @@
  * @author Themeum
  */
 
-$has_pro = tutor()->has_pro;
-if ( $has_pro ) {
+$has_pro        = tutor()->has_pro;
+$email_settings = null;
+if ( $has_pro && class_exists( 'TUTOR_EMAIL\EmailSettings' ) ) {
 	$email_settings = new TUTOR_EMAIL\EmailSettings();
 }
 
 $email_logo_position   = get_tutor_option( 'email_logo_position', 'left' );
 $email_button_position = get_tutor_option( 'email_template_button_position', 'center' );
-$email_template_colors = $has_pro ? $email_settings::get_email_template_colors() : array();
+$email_template_colors = $email_settings ? $email_settings::get_email_template_colors() : array();
 
-$header_background_color      = $has_pro ? $email_settings::get_color( 'header_background_color', $email_template_colors ) : '#FFFFFF';
-$header_divider_color         = $has_pro ? $email_settings::get_color( 'header_divider_color', $email_template_colors ) : '#E0E2EA';
-$body_background_color        = $has_pro ? $email_settings::get_color( 'body_background_color', $email_template_colors ) : '#FFFFFF';
-$email_title_color            = $has_pro ? $email_settings::get_color( 'email_title_color', $email_template_colors ) : '#212327';
-$email_text_color             = $has_pro ? $email_settings::get_color( 'email_text_color', $email_template_colors ) : '#5B616F';
-$email_short_code_color       = $has_pro ? $email_settings::get_color( 'email_short_code_color', $email_template_colors ) : '#212327';
-$footnote_color               = $has_pro ? $email_settings::get_color( 'footnote_color', $email_template_colors ) : '#A4A8B2';
-$primary_button_color         = $has_pro ? $email_settings::get_color( 'primary_button_color', $email_template_colors ) : '#3E64DE';
-$primary_button_hover_color   = $has_pro ? $email_settings::get_color( 'primary_button_hover_color', $email_template_colors ) : '#395BCA';
-$primary_button_text_color    = $has_pro ? $email_settings::get_color( 'primary_button_text_color', $email_template_colors ) : '#FFFFFF';
-$secondary_button_color       = $has_pro ? $email_settings::get_color( 'secondary_button_color', $email_template_colors ) : '#FFFFFF';
-$secondary_button_hover_color = $has_pro ? $email_settings::get_color( 'secondary_button_hover_color', $email_template_colors ) : '#395BCA';
-$secondary_button_text_color  = $has_pro ? $email_settings::get_color( 'secondary_button_text_color', $email_template_colors ) : '#3E64DE';
+$header_background_color      = $email_settings ? $email_settings::get_color( 'header_background_color', $email_template_colors ) : '#FFFFFF';
+$header_divider_color         = $email_settings ? $email_settings::get_color( 'header_divider_color', $email_template_colors ) : '#E0E2EA';
+$body_background_color        = $email_settings ? $email_settings::get_color( 'body_background_color', $email_template_colors ) : '#FFFFFF';
+$email_title_color            = $email_settings ? $email_settings::get_color( 'email_title_color', $email_template_colors ) : '#212327';
+$email_text_color             = $email_settings ? $email_settings::get_color( 'email_text_color', $email_template_colors ) : '#5B616F';
+$email_short_code_color       = $email_settings ? $email_settings::get_color( 'email_short_code_color', $email_template_colors ) : '#212327';
+$footnote_color               = $email_settings ? $email_settings::get_color( 'footnote_color', $email_template_colors ) : '#A4A8B2';
+$primary_button_color         = $email_settings ? $email_settings::get_color( 'primary_button_color', $email_template_colors ) : '#3E64DE';
+$primary_button_hover_color   = $email_settings ? $email_settings::get_color( 'primary_button_hover_color', $email_template_colors ) : '#395BCA';
+$primary_button_text_color    = $email_settings ? $email_settings::get_color( 'primary_button_text_color', $email_template_colors ) : '#FFFFFF';
+$secondary_button_color       = $email_settings ? $email_settings::get_color( 'secondary_button_color', $email_template_colors ) : '#FFFFFF';
+$secondary_button_hover_color = $email_settings ? $email_settings::get_color( 'secondary_button_hover_color', $email_template_colors ) : '#395BCA';
+$secondary_button_text_color  = $email_settings ? $email_settings::get_color( 'secondary_button_text_color', $email_template_colors ) : '#3E64DE';
 ?>
 
 <style>
