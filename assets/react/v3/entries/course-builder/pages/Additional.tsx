@@ -224,7 +224,7 @@ const Additional = () => {
             {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
           </span>
           <Show
-            when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}
+            when={isAddonEnabled(Addons.TUTOR_COURSE_ATTACHMENTS)}
             fallback={
               <EmptyState
                 size="small"
