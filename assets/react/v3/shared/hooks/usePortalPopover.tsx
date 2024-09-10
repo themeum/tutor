@@ -6,7 +6,6 @@ import { createPortal } from 'react-dom';
 
 import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
-import { usePrevious } from './usePrevious';
 
 const ANIMATION_DURATION_WITH_THRESHOLD = 200;
 
@@ -29,6 +28,8 @@ interface PopoverHookArgs<T> {
     top: number;
     left: number;
   };
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  dependencies?: any[];
 }
 
 interface PopoverPosition {
@@ -47,12 +48,12 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     top: 0,
     left: 0,
   },
+  dependencies = [],
 }: PopoverHookArgs<T>) => {
   const triggerRef = useMemo(() => {
     return popoverTriggerRef || { current: null };
   }, [popoverTriggerRef]);
   const popoverRef = useRef<D>(null);
-  const previousPopoverRect = usePrevious(popoverRef.current?.getBoundingClientRect());
   const [triggerWidth, setTriggerWidth] = useState(0);
   const [position, setPosition] = useState<PopoverPosition>({ left: 0, top: 0, arrowPlacement: ArrowPosition.bottom });
 
@@ -156,7 +157,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     }
 
     setPosition({ ...calculatedPosition, arrowPlacement });
-  }, [triggerRef, popoverRef, triggerWidth, isOpen, gap, arrow, isDropdown]);
+  }, [triggerRef, popoverRef, triggerWidth, isOpen, gap, arrow, isDropdown, ...dependencies]);
 
   return { position, triggerWidth, triggerRef, popoverRef };
 };

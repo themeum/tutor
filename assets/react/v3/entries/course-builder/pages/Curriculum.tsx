@@ -73,7 +73,12 @@ const Curriculum = () => {
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (content.length === 0) {
+      return;
+    }
+
     setContent((previous) => {
       if (allCollapsed) {
         currentExpandedTopics.current = [];

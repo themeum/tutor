@@ -65,7 +65,7 @@ const ContentDripSettings = () => {
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="contentDrip" width={72} height={72} style={styles.dripIcon} />
         <h6 css={typography.body('medium')}>{__('Content Drip Addon is not enabled!', 'tutor')}</h6>
-        <p css={styles.dripNoProDescription}>{__('Please enable content drip addon to see options', 'tutor')}</p>
+        <p css={styles.dripNoProDescription}>{__('Please enable Content Drip addon to see options', 'tutor')}</p>
       </div>
     );
   }
