@@ -2775,7 +2775,7 @@ class Course extends Tutor_Base {
 		);
 
 		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
-			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post->ID ) );
+			$info['total_course'] = count( BundleModel::get_bundle_course_ids( $post-odal>ID ) );
 		}
 
 		$card_data = apply_filters( 'tutor_add_course_plan_info', $info, $post );
