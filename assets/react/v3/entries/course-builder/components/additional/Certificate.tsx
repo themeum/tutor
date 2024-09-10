@@ -34,6 +34,7 @@ const certificateTabs: { label: string; value: CertificateTabValue }[] = [
 
 const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
+const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
 const Certificate = () => {
   const queryClient = useQueryClient();
@@ -125,13 +126,13 @@ const Certificate = () => {
 
   return (
     <Show
-      when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}
+      when={isTutorPro && isCertificateAddonEnabled}
       fallback={
         <EmptyState
           size="small"
           title={__('Your students deserve certificates!', 'tutor')}
           description={
-            isAddonEnabled(Addons.TUTOR_CERTIFICATE)
+            !isTutorPro
               ? __('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')
               : __('Enable the Certificate Addon to start creating certificates for your students.', 'tutor')
           }
@@ -169,7 +170,7 @@ const Certificate = () => {
         />
       }
     >
-      <Show when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+      <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
           <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
           <div css={styles.orientation}>
