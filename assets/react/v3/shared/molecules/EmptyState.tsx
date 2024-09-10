@@ -59,9 +59,10 @@ const styles = {
     ${
       !removeBorder &&
       css`
-      border: 1px solid ${colorTokens.stroke.divider};
-      border-radius: ${borderRadius.card};
-    `
+        border: 1px solid ${colorTokens.stroke.divider};
+        border-radius: ${borderRadius.card};
+        background-color: ${colorTokens.background.white};
+      `
     }
 
     ${
