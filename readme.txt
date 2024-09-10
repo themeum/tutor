@@ -284,7 +284,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 3.0.0-beta1 - September 09, 2024
+= 3.0.0-beta1 - September 10, 2024
 
 New: Reimagined course and quiz builder
 New: Tutor AI Studio for building complete courses (Pro)
