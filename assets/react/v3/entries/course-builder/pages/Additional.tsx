@@ -5,6 +5,10 @@ import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+import EmptyState from '@Molecules/EmptyState';
+
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
@@ -18,6 +22,7 @@ import {
   usePrerequisiteCoursesQuery,
 } from '@CourseBuilderServices/course';
 
+import config, { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -25,8 +30,10 @@ import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
+
 import Certificate from '../components/additional/Certificate';
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
 
@@ -176,51 +183,136 @@ const Additional = () => {
           </div>
         </div>
 
-        <Show when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
-          <div css={styles.formSection}>
-            <div css={styles.titleAndSub}>
-              <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+        <div css={styles.formSection}>
+          <div css={styles.titleAndSub}>
+            <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+            <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
               <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+            </Show>
 
-              <Certificate />
-            </div>
+            <Certificate />
           </div>
-        </Show>
+        </div>
+
         <Navigator styleModifier={styles.navigator} />
       </div>
 
       <div css={styles.sidebar}>
-        {isPrerequisiteAddonEnabled && (
-          <Controller
-            name="course_prerequisites"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormCoursePrerequisites
-                {...controllerProps}
-                label={__('Course prerequisites', 'tutor')}
-                placeholder={__('Search to add course prerequisites', 'tutor')}
-                options={prerequisiteCoursesQuery.data || []}
-                isSearchable
-                loading={
-                  prerequisiteCoursesQuery.isLoading || (!!isCourseDetailsFetching && !controllerProps.field.value)
+        <div>
+          <span css={styles.label}>
+            {__('Course Prerequisites', 'tutor')}
+            {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+          </span>
+          <Show
+            when={isTutorPro && isPrerequisiteAddonEnabled}
+            fallback={
+              <EmptyState
+                size="small"
+                removeBorder={false}
+                title={__('Add prerequisites to your course', 'tutor')}
+                description={__(
+                  'Add prerequisites to your course to ensure that students have the necessary knowledge before enrolling.',
+                  'tutor',
+                )}
+                actions={
+                  <Show
+                    when={!isTutorPro}
+                    fallback={
+                      <Button
+                        size="small"
+                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                        onClick={() => {
+                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                        }}
+                      >
+                        {__('Enable Prerequisites Addon', 'tutor')}
+                      </Button>
+                    }
+                  >
+                    <Button
+                      size="small"
+                      icon={<SVGIcon name="crown" width={24} height={24} />}
+                      onClick={() => {
+                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                      }}
+                    >
+                      {__('Get Tutor LMS Pro', 'tutor')}
+                    </Button>
+                  </Show>
                 }
               />
-            )}
-          />
-        )}
+            }
+          >
+            <Controller
+              name="course_prerequisites"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCoursePrerequisites
+                  {...controllerProps}
+                  placeholder={__('Search to add course prerequisites', 'tutor')}
+                  options={prerequisiteCoursesQuery.data || []}
+                  isSearchable
+                  loading={
+                    prerequisiteCoursesQuery.isLoading || (!!isCourseDetailsFetching && !controllerProps.field.value)
+                  }
+                />
+              )}
+            />
+          </Show>
+        </div>
         <div css={styles.uploadAttachment}>
-          <Controller
-            name="course_attachments"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormFileUploader
-                {...controllerProps}
-                label={__('Attachments', 'tutor')}
-                buttonText={__('Upload Attachment', 'tutor')}
-                selectMultiple
+          <span css={styles.label}>
+            {__('Attachments', 'tutor')}
+            {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+          </span>
+          <Show
+            when={isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_ATTACHMENTS)}
+            fallback={
+              <EmptyState
+                size="small"
+                removeBorder={false}
+                title={__('Add attachments to provide additional resources to your students.', 'tutor')}
+                description={__(
+                  `Provide additional resources to support your students' learning. Attachments can include PDFs, Word documents, or other helpful file types.`,
+                  'tutor',
+                )}
+                actions={
+                  <Show
+                    when={!isTutorPro}
+                    fallback={
+                      <Button
+                        size="small"
+                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                        onClick={() => {
+                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                        }}
+                      >
+                        {__('Enable Course Attachments Addon', 'tutor')}
+                      </Button>
+                    }
+                  >
+                    <Button
+                      size="small"
+                      icon={<SVGIcon name="crown" width={24} height={24} />}
+                      onClick={() => {
+                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                      }}
+                    >
+                      {__('Get Tutor LMS Pro', 'tutor')}
+                    </Button>
+                  </Show>
+                }
               />
-            )}
-          />
+            }
+          >
+            <Controller
+              name="course_attachments"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormFileUploader {...controllerProps} buttonText={__('Upload Attachment', 'tutor')} selectMultiple />
+              )}
+            />
+          </Show>
         </div>
         <LiveClass />
       </div>
@@ -323,5 +415,13 @@ const styles = {
     isActive: boolean;
   }) => css`
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
+  `,
+  label: css`
+    ${styleUtils.display.inlineFlex()}
+    align-items: center;
+    gap: ${spacing[2]};
+    ${typography.body('medium')}
+    color: ${colorTokens.text.title};
+    margin-bottom: ${spacing[8]};
   `,
 };

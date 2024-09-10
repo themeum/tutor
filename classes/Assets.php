@@ -125,7 +125,7 @@ class Assets {
 
 		if ( $userdata ) {
 			$current_user = array(
-				'roles' => $userdata->roles,
+				'roles' => array_values( $userdata->roles ),
 				'data'  => array(
 					'id'           => $userdata->ID,
 					'display_name' => $userdata->display_name,
@@ -214,9 +214,10 @@ class Assets {
 			}
 
 			// @since 3.0.0 add tax react app on the settings page.
-			if ( 'tutor_settings' === $page ) {
-				wp_enqueue_script( 'tutor-tax-settings.min', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array(), TUTOR_VERSION, true );
-			}
+			// @TODO.
+			// if ( 'tutor_settings' === $page ) {
+			// wp_enqueue_script( 'tutor-tax-settings.min', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array(), TUTOR_VERSION, true );
+			// }
 		}
 	}
 

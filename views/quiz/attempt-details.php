@@ -522,7 +522,6 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																$answers[]                                 = $original_saved_answer;
 															}
 														}
-														
 													}
 
 													tutor_render_answer_list( $answers );

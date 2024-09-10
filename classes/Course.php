@@ -220,6 +220,13 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
 
 		/**
+		 * Remove wp trash button if instructor settings is disabled
+		 *
+		 * @since 2.7.3
+		 */
+		add_action( 'tutor_option_save_after', array( $this, 'disable_course_trash_instructor' ) );
+
+		/**
 		 * New course builder
 		 *
 		 * @since 3.0.0
@@ -244,13 +251,25 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
 		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
+	}
 
-		/**
-		 * Remove wp trash button if instructor settings is disabled
-		 *
-		 * @since 2.7.3
-		 */
-		add_action( 'tutor_option_save_after', array( $this, 'disable_course_trash_instructor' ) );
+	/**
+	 * Remove move to trash button on WordPress editor for instructor.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return void
+	 */
+	public function disable_course_trash_instructor() {
+		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+		$role           = get_role( tutor()->instructor_role );
+		if ( ! $can_trash_post ) {
+			$role->remove_cap( 'delete_tutor_courses' );
+			$role->remove_cap( 'delete_tutor_course' );
+		} else {
+			$role->add_cap( 'delete_tutor_courses' );
+			$role->add_cap( 'delete_tutor_course' );
+		}
 	}
 
 	/**
@@ -1093,26 +1112,19 @@ class Course extends Tutor_Base {
 
 		$has_pro         = tutor()->has_pro;
 		$has_access_role = User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) );
-		$backend_create  = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
-		$backend_edit    = $backend_create && Input::has( 'course_id' );
+
+		$course_id       = Input::get( 'course_id', 0, Input::TYPE_INT );
+		$backend_builder = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
+		$backend_edit    = $backend_builder && $course_id;
 
 		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
-		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_id' );
-		$frontend_edit       = $is_frontend_builder && Input::has( 'course_id' );
+		$frontend_edit       = $is_frontend_builder && $course_id;
 
-		// Create mode.
-		if ( $has_access_role && ( $backend_create || ( $has_pro && $frontend_create ) ) ) {
-			$this->load_course_builder_view();
-		}
-
-		// Edit mode.
 		if ( $has_access_role && ( $backend_edit || ( $has_pro && $frontend_edit ) ) ) {
-			$course_id        = Input::get( 'course_id', 0 );
-			$post_type        = get_post_type( $course_id );
-			$course_author    = (int) get_post_field( 'post_author', $course_id );
-			$is_course_author = get_current_user_id() === $course_author;
+			$post_type       = get_post_type( $course_id );
+			$can_edit_course = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 
-			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $is_course_author ) ) {
+			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
 				$this->load_course_builder_view();
 			}
 		}
@@ -1221,25 +1233,6 @@ class Course extends Tutor_Base {
 		include_once tutor()->path . 'views/pages/course-builder.php';
 		do_action( 'tutor_after_course_builder_load' );
 		exit( 0 );
-	}
-
-	/**
-	 * Remove move to trash button on WordPress editor for instructor.
-	 *
-	 * @since 2.7.3
-	 *
-	 * @return void
-	 */
-	public function disable_course_trash_instructor() {
-		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
-		$role           = get_role( tutor()->instructor_role );
-		if ( ! $can_trash_post ) {
-			$role->remove_cap( 'delete_tutor_courses' );
-			$role->remove_cap( 'delete_tutor_course' );
-		} else {
-			$role->add_cap( 'delete_tutor_courses' );
-			$role->add_cap( 'delete_tutor_course' );
-		}
 	}
 
 	/**
@@ -2726,7 +2719,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Load media scripts to support wp media lib on the course builder
+	 * Load media scripts
 	 *
 	 * @since 3.0.0
 	 *

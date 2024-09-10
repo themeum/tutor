@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 2.7.4
+Stable tag: 2.7.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -283,6 +283,24 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 
 == Changelog ==
+
+= 3.0.0-beta1 - September 10, 2024
+
+New: Brand new course and quiz builder with a fresh, intuitive interface for a smoother course creation experience.
+New: Introducing groundbreaking AI Studio in Tutor LMS for generating complete courses, lessons, quizzes, thumbnails, etc with AI. (Pro)
+New: Seamlessly sell courses directly using Native Payment within Tutor LMS.
+New: Native Subscription system for recurring payments, perfect for membership-style eLearning programs. (Pro)
+New: Automated order emails to keep learners and instructors informed at every step of the payment process. (Pro)
+New: Customizable order and subscription emails for effortless communications. (Pro)
+New: Lesson note feature for instructors to jot down their course or lesson descriptions.
+New: Deep integration with Droip no-code website builder to design beautiful course single and listing pages.
+Update: Enhanced course creation process for faster, more efficient performance.
+Update: Optimized for improved scalability to ensure a smooth experience as your platform grows.
+
+= 2.7.5 - September 04, 2024
+
+Fix: Fixed the malfunctioning export feature for Tutor LMS settings.
+Fix: Enhanced the user role capabilities verification.
 
 = 2.7.4 - July 31, 2024
 

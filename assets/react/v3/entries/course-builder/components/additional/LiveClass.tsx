@@ -28,7 +28,7 @@ import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 
-const isPro = !!tutorConfig.tutor_pro_url;
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 const isGoogleMeetAddonEnabled = isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION);
 
@@ -52,10 +52,10 @@ const LiveClass = () => {
     <div css={styles.liveClass}>
       <span css={styles.label}>
         {__('Live Class', 'tutor')}
-        {!isPro && <SVGIcon name="crown" width={24} height={24} />}
+        {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
       </span>
       <Show
-        when={isPro}
+        when={isTutorPro}
         fallback={
           <EmptyState
             size="small"

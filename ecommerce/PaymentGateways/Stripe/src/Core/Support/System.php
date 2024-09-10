@@ -1,6 +1,7 @@
 <?php
 namespace Ollyo\PaymentHub\Core\Support;
 
+use stdClass;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 
@@ -52,16 +53,42 @@ class System
 	 *
 	 * @return object
 	 */
-	public static function defaultOrderData(): object
+	public static function defaultOrderData($type = 'payment'): object
 	{
-		return (object) [
-			'id' 				   => null,
-			'payment_status' 	   => 'unpaid',
-			'payment_error_reason' => '',
-			'transaction_id' 	   => '',
-			'payment_method' 	   => '',
-			'payment_payload' 	   => ''
-		];
+		$returnData = new stdClass();
+		
+		if ($type === 'payment') {
+			$returnData = (object) [
+				'type' 							=> 'payment',
+				'id' 							=> null,
+				'payment_status' 				=> 'unpaid',
+				'payment_error_reason' 			=> '',
+				'transaction_id' 				=> '',
+				'payment_method' 				=> '',
+				'payment_payload' 				=> '',
+				'tax_amount_in_smallest_unit' 	=> '',
+				'tax_amount' 					=> '',
+				'fees_in_smallest_unit' 		=> '',
+				'fees' 							=> '',
+				'earnings_in_smallest_unit' 	=> '',
+				'earnings' 						=> ''
+			];
+			
+		} elseif ($type === 'refund') {
+			$returnData = (object) [
+				'type' 								=> 'refund',
+				'id' 								=> null,
+				'refund_status' 					=> '',
+				'refund_id' 						=> '',
+				'payment_method' 					=> '',
+				'refund_amount' 					=> '',
+				'refund_amount_in_smallest_unit' 	=> '',
+				'refund_error_reason' 				=> '',
+				'refund_payload' 					=> ''
+			];
+		}
+		
+		return $returnData;
 	}
 
 

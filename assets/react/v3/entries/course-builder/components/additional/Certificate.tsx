@@ -34,6 +34,7 @@ const certificateTabs: { label: string; value: CertificateTabValue }[] = [
 
 const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
+const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
 const Certificate = () => {
   const queryClient = useQueryClient();
@@ -85,6 +86,18 @@ const Certificate = () => {
   const handleTabChange = (tab: CertificateTabValue) => {
     setActiveCertificateTab(tab);
 
+    const hasLandScapeCertificatesForActiveTab = certificatesData.some(
+      (certificate) =>
+        certificate.orientation === 'landscape' &&
+        (tab === 'templates' ? certificate.is_default : !certificate.is_default),
+    );
+
+    const hasPortraitCertificatesForActiveTab = certificatesData.some(
+      (certificate) =>
+        certificate.orientation === 'portrait' &&
+        (tab === 'templates' ? certificate.is_default : !certificate.is_default),
+    );
+
     setActiveOrientation((previousOrientation) => {
       if (hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab) {
         return previousOrientation;
@@ -113,31 +126,51 @@ const Certificate = () => {
 
   return (
     <Show
-      when={isTutorPro}
+      when={isTutorPro && isCertificateAddonEnabled}
       fallback={
         <EmptyState
           size="small"
           title={__('Your students deserve certificates!', 'tutor')}
-          description={__('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')}
+          description={
+            !isTutorPro
+              ? __('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')
+              : __('Enable the Certificate Addon to start creating certificates for your students.', 'tutor')
+          }
           emptyStateImage={emptyStateImage}
           emptyStateImage2x={emptyStateImage2x}
           imageAltText={__('Illustration of a certificate', 'tutor')}
           actions={
-            <Button
-              variant="primary"
-              size="small"
-              onClick={() => {
-                window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-              }}
-              icon={<SVGIcon name="crown" width={24} height={24} />}
+            <Show
+              when={!isTutorPro}
+              fallback={
+                <Button
+                  variant="primary"
+                  size="small"
+                  onClick={() => {
+                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                  }}
+                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                >
+                  {__('Enable Certificate Addon', 'tutor')}
+                </Button>
+              }
             >
-              {__('Get Tutor LMS Pro', 'tutor')}
-            </Button>
+              <Button
+                variant="primary"
+                size="small"
+                onClick={() => {
+                  window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                }}
+                icon={<SVGIcon name="crown" width={24} height={24} />}
+              >
+                {__('Get Tutor LMS Pro', 'tutor')}
+              </Button>
+            </Show>
           }
         />
       }
     >
-      <Show when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+      <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
           <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
           <div css={styles.orientation}>

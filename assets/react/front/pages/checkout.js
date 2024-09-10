@@ -19,8 +19,8 @@ document.addEventListener('DOMContentLoaded', function () {
         const toggleCouponFormButton = document.querySelector("#tutor-toggle-coupon-form");
         const checkoutCouponForm = document.querySelector(".tutor-checkout-coupon-form");
         const checkoutHaveACoupon = document.querySelector(".tutor-have-a-coupon");
-        const checkoutCouponInput = checkoutCouponForm.querySelector("input");
-        const checkoutCouponButton = checkoutCouponForm.querySelector("button");
+        const checkoutCouponInput = checkoutCouponForm?.querySelector("input");
+        const checkoutCouponButton = checkoutCouponForm?.querySelector("button");
 
         const checkoutCouponWrapper = document.querySelector(".tutor-checkout-coupon-wrapper");
         const checkoutCouponRemove = document.querySelector("#tutor-checkout-remove-coupon");
@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Handle toggle coupon form button click
-        toggleCouponFormButton.addEventListener('click', () => {
+        toggleCouponFormButton?.addEventListener('click', () => {
             if (checkoutCouponForm.classList.contains('tutor-d-none')) {
                 checkoutCouponForm.classList.remove('tutor-d-none');
                 checkoutCouponInput.focus();
@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Handle apply coupon button click
-        checkoutCouponButton.addEventListener('click', async (e) => {
+        checkoutCouponButton?.addEventListener('click', async (e) => {
             const url = new URL(window.location.href);
             const plan = url.searchParams.get('plan');
             const couponCode = checkoutCouponInput.value;
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // Handle coupon remove button click
-        checkoutCouponRemove.addEventListener('click', (e) => {
+        checkoutCouponRemove?.addEventListener('click', (e) => {
             checkoutCourses.innerHTML = checkoutPrevCourses;
             checkoutGrandTotal.innerHTML = checkoutPrevGrandTotal;
             checkoutCouponWrapper.classList.add('tutor-d-none');

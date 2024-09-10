@@ -337,7 +337,6 @@ class OrderModel {
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
 		$order_data->refunds    = $this->get_order_refunds( $order_id );
 
-		unset( $order_data->user_id );
 		unset( $student->billing_address->id );
 		unset( $student->billing_address->user_id );
 
@@ -499,7 +498,7 @@ class OrderModel {
 				$values->$key = $value;
 			}
 
-			$values->data = $refund->created_at_gmt;
+			$values->date = $refund->created_at_gmt;
 
 			$response[] = $values;
 		}
@@ -1072,6 +1071,9 @@ class OrderModel {
 				$status = self::ORDER_TRASH;
 				break;
 			case 'delete':
+				$status = self::ORDER_CANCELLED;
+				break;
+			case self::ORDER_CANCELLED:
 				$status = self::ORDER_CANCELLED;
 				break;
 		}

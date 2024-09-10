@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
@@ -79,7 +80,8 @@ const CourseBasic = () => {
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '') || isInstructor);
 
-  const isAuthorEditable = isTutorProEnabled && isMultiInstructorEnabled && (isAdministrator || isInstructor);
+  const isAuthorEditable =
+    isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
 
   const visibilityStatus = useWatch({
     control: form.control,
@@ -262,26 +264,56 @@ const CourseBasic = () => {
           isExternalUrl
           rightButton={
             <div>
-              <MagicButton
-                css={css`
+              <Show
+                when={isTutorProEnabled}
+                fallback={
+                  <Tooltip delay={200} content={__('Pro Feature', 'tutor')}>
+                    <MagicButton
+                      css={css`
                 display: inline-flex;
                 align-items: center;
                 gap: ${spacing[4]};
               `}
-                onClick={() => {
-                  showModal({
-                    component: AICourseBuilderModal,
-                    isMagicAi: true,
-                    props: {
-                      title: __('Create with AI', 'tutor'),
-                      icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-                    },
-                  });
-                }}
+                      onClick={() => {
+                        showModal({
+                          component: AICourseBuilderModal,
+                          isMagicAi: true,
+                          props: {
+                            title: __('Create with AI', 'tutor'),
+                            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                          },
+                        });
+                      }}
+                      disabled={!isTutorProEnabled}
+                    >
+                      <SVGIcon name="magicAi" width={24} height={24} />
+                      {__('Generate with AI', 'tutor')}
+                    </MagicButton>
+                  </Tooltip>
+                }
               >
-                <SVGIcon name="magicAi" width={24} height={24} />
-                {__('Generate with AI', 'tutor')}
-              </MagicButton>
+                <MagicButton
+                  css={css`
+                  display: inline-flex;
+                  align-items: center;
+                  gap: ${spacing[4]};
+                `}
+                  onClick={() => {
+                    showModal({
+                      component: AICourseBuilderModal,
+                      isMagicAi: true,
+                      props: {
+                        title: __('Create with AI', 'tutor'),
+                        icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                      },
+                    });
+                  }}
+                  disabled={!isTutorProEnabled}
+                >
+                  <SVGIcon name="magicAi" width={24} height={24} />
+                  {__('Generate with AI', 'tutor')}
+                </MagicButton>
+              </Show>
             </div>
           }
         />

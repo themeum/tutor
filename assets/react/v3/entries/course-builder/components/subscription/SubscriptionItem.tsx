@@ -240,6 +240,7 @@ export default function SubscriptionItem({
                           placeholder={__('Plan price', 'tutor')}
                           selectOnFocus
                           contentCss={styleUtils.inputCurrencyStyle}
+                          type="number"
                         />
                       )}
                     />
@@ -265,6 +266,7 @@ export default function SubscriptionItem({
                           placeholder={__('Plan price', 'tutor')}
                           selectOnFocus
                           contentCss={styleUtils.inputCurrencyStyle}
+                          type="number"
                         />
                       )}
                     />
@@ -285,6 +287,7 @@ export default function SubscriptionItem({
                           label={__('Repeat every', 'tutor')}
                           placeholder={__('Repeat every', 'tutor')}
                           selectOnFocus
+                          type="number"
                         />
                       )}
                     />
@@ -367,6 +370,7 @@ export default function SubscriptionItem({
                         placeholder={__('Enter enrolment fee', 'tutor')}
                         selectOnFocus
                         contentCss={styleUtils.inputCurrencyStyle}
+                        type="number"
                       />
                     )}
                   />

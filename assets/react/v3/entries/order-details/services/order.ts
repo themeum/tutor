@@ -65,6 +65,7 @@ export interface Activity {
   type: ActivityType;
   message: string;
   date: string;
+  cancel_reason?: string;
 }
 
 export interface Discount {
@@ -195,6 +196,25 @@ export const useOrderDiscountMutation = () => {
       showToast({ type: 'success', message: __('Discount added successfully.', 'tutor') });
     },
     onError(error) {
+      showToast({ type: 'danger', message: error.message });
+    },
+  });
+};
+
+const cancelOrder = (params: { order_id: number; cancel_reason: string }) => {
+  return wpAjaxInstance.post(endpoints.ORDER_CANCEL, params);
+};
+
+export const useCancelOrderMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+  return useMutation({
+    mutationFn: cancelOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
+      showToast({ type: 'success', message: __('Order cancelled successfully.', 'tutor') });
+    },
+    onError: (error) => {
       showToast({ type: 'danger', message: error.message });
     },
   });

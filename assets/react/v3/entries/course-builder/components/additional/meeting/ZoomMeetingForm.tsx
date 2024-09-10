@@ -44,17 +44,14 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
   const zoomMeetingDetailsQuery = useZoomMeetingDetailsQuery(meetingId ? meetingId : '', topicId ? topicId : '');
 
   const currentMeeting = data ?? zoomMeetingDetailsQuery.data;
+  const meetingStartsAt = currentMeeting?.meeting_starts_at ?? currentMeeting?.meeting_data.start_time ?? '';
 
   const meetingForm = useFormWithGlobalError<ZoomMeetingFormData>({
     defaultValues: {
       meeting_name: currentMeeting?.post_title ?? '',
       meeting_summary: currentMeeting?.post_content ?? '',
-      meeting_date: currentMeeting?.meeting_starts_at
-        ? format(new Date(currentMeeting?.meeting_starts_at), DateFormats.yearMonthDay)
-        : '',
-      meeting_time: currentMeeting?.meeting_starts_at
-        ? format(new Date(currentMeeting?.meeting_starts_at), DateFormats.hoursMinutes)
-        : '',
+      meeting_date: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.yearMonthDay) : '',
+      meeting_time: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.hoursMinutes) : '',
       meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '60',
       meeting_duration_unit: currentMeeting?.meeting_data.duration_unit ?? 'min',
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
@@ -107,12 +104,8 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       meetingForm.reset({
         meeting_name: currentMeeting.post_title,
         meeting_summary: currentMeeting.post_content,
-        meeting_date: currentMeeting.meeting_starts_at
-          ? format(new Date(currentMeeting.meeting_starts_at), DateFormats.yearMonthDay)
-          : '',
-        meeting_time: currentMeeting.meeting_starts_at
-          ? format(new Date(currentMeeting.meeting_starts_at), DateFormats.hoursMinutes)
-          : '',
+        meeting_date: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.yearMonthDay) : '',
+        meeting_time: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.hoursMinutes) : '',
         meeting_duration: String(currentMeeting.meeting_data.duration),
         meeting_duration_unit: currentMeeting.meeting_data.duration_unit,
         meeting_timezone: currentMeeting.meeting_data.timezone,
@@ -234,11 +227,11 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
-                label={__('Time Zone', 'tutor')}
+                label={__('Timezone', 'tutor')}
                 placeholder={__('Select time zone', 'tutor')}
                 options={timeZonesOptions}
-                isSearchable
                 selectOnFocus
+                isSearchable
               />
             )}
           />

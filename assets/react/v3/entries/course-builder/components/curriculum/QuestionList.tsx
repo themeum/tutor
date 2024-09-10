@@ -24,6 +24,7 @@ import Popover from '@Molecules/Popover';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
+import Tooltip from '@Atoms/Tooltip';
 import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
@@ -368,20 +369,40 @@ const QuestionList = ({
           <div css={styles.questionOptionsWrapper}>
             <span css={styles.questionTypeOptionsTitle}>{__('Select Question Type', 'tutor')}</span>
             {questionTypeOptions.map((option) => (
-              <button
+              <Show
                 key={option.value}
-                type="button"
-                css={styles.questionTypeOption}
-                disabled={option.isPro && !tutorConfig.tutor_pro_url}
-                onClick={() => {
-                  handleAddQuestion(option.value as QuizQuestionType);
-                }}
+                when={option.isPro && !tutorConfig.tutor_pro_url}
+                fallback={
+                  <button
+                    key={option.value}
+                    type="button"
+                    css={styles.questionTypeOption}
+                    onClick={() => {
+                      handleAddQuestion(option.value as QuizQuestionType);
+                    }}
+                  >
+                    <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
+                    <span>{option.label}</span>
+                  </button>
+                }
               >
-                <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
-                <span>{option.label}</span>
+                <Tooltip delay={200} content={__('Pro Feature', 'tutor')} placement="left">
+                  <button
+                    key={option.value}
+                    type="button"
+                    css={styles.questionTypeOption}
+                    disabled
+                    onClick={() => {
+                      handleAddQuestion(option.value as QuizQuestionType);
+                    }}
+                  >
+                    <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
+                    <span>{option.label}</span>
 
-                {/* Need to add lock or pro identifier */}
-              </button>
+                    {/* @TODO: Need to add lock or pro identifier */}
+                  </button>
+                </Tooltip>
+              </Show>
             ))}
           </div>
         </Popover>

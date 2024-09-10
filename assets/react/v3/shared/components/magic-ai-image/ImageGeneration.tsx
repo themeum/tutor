@@ -7,15 +7,22 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useMagicImageGenerationMutation } from '@CourseBuilderServices/magic-ai';
-import threeDSrc from '@Images/ai-types/3d.jpg';
-import blackAndWhiteSrc from '@Images/ai-types/black-and-white.jpg';
-import cartoonSrc from '@Images/ai-types/cartoon.jpg';
-import illustrationSrc from '@Images/ai-types/illustration.jpg';
-import noneSrc from '@Images/ai-types/none.jpg';
-import photoSrc from '@Images/ai-types/photo.jpg';
-import sketchSrc from '@Images/ai-types/sketch.jpg';
+
+import threeD from '@Images/ai-types/3d.png';
+import blackAndWhite from '@Images/ai-types/black-and-white.png';
+import concept from '@Images/ai-types/concept.png';
+import dreamy from '@Images/ai-types/dreamy.png';
+import filmic from '@Images/ai-types/filmic.png';
+import illustration from '@Images/ai-types/illustration.png';
+import neon from '@Images/ai-types/neon.png';
+import none from '@Images/ai-types/none.jpg';
+import painting from '@Images/ai-types/painting.png';
+import photo from '@Images/ai-types/photo.png';
+import retro from '@Images/ai-types/retro.png';
+import sketch from '@Images/ai-types/sketch.png';
+
 import { styleUtils } from '@Utils/style-utils';
-import type { OptionWithImage } from '@Utils/types';
+import { type OptionWithImage, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
@@ -33,62 +40,62 @@ const styleOptions: OptionWithImage<StyleType>[] = [
   {
     label: __('None', 'tutor'),
     value: 'none',
-    image: noneSrc,
-  },
-  {
-    label: __('Filmic', 'tutor'),
-    value: 'filmic',
-    image: photoSrc,
+    image: none,
   },
   {
     label: __('Photo', 'tutor'),
     value: 'photo',
-    image: illustrationSrc,
+    image: photo,
   },
   {
     label: __('Neon', 'tutor'),
     value: 'neon',
-    image: illustrationSrc,
-  },
-  {
-    label: __('Dreamy', 'tutor'),
-    value: 'dreamy',
-    image: illustrationSrc,
-  },
-  {
-    label: __('Black and white', 'tutor'),
-    value: 'black-and-white',
-    image: blackAndWhiteSrc,
-  },
-  {
-    label: __('Retrowave', 'tutor'),
-    value: 'retrowave',
-    image: illustrationSrc,
+    image: neon,
   },
   {
     label: __('3D', 'tutor'),
     value: '3d',
-    image: threeDSrc,
-  },
-  {
-    label: __('Concept art', 'tutor'),
-    value: 'concept_art',
-    image: sketchSrc,
-  },
-  {
-    label: __('Sketch', 'tutor'),
-    value: 'sketch',
-    image: sketchSrc,
-  },
-  {
-    label: __('Illustration', 'tutor'),
-    value: 'illustration',
-    image: illustrationSrc,
+    image: threeD,
   },
   {
     label: __('Painting', 'tutor'),
     value: 'painting',
-    image: cartoonSrc,
+    image: painting,
+  },
+  {
+    label: __('Sketch', 'tutor'),
+    value: 'sketch',
+    image: sketch,
+  },
+  {
+    label: __('Concept', 'tutor'),
+    value: 'concept_art',
+    image: concept,
+  },
+  {
+    label: __('Illustration', 'tutor'),
+    value: 'illustration',
+    image: illustration,
+  },
+  {
+    label: __('Dreamy', 'tutor'),
+    value: 'dreamy',
+    image: dreamy,
+  },
+  {
+    label: __('Filmic', 'tutor'),
+    value: 'filmic',
+    image: filmic,
+  },
+  {
+    label: __('Retro', 'tutor'),
+    value: 'retrowave',
+    image: retro,
+  },
+  {
+    label: __('Black & White', 'tutor'),
+    value: 'black-and-white',
+    image: blackAndWhite,
   },
 ];
 
@@ -103,6 +110,12 @@ export const ImageGeneration = () => {
   const magicImageGenerationMutation = useMagicImageGenerationMutation();
   const [showEmptyState, setShowEmptyState] = useState(true);
   const [imageLoading, setImageLoading] = useState([false, false, false, false]);
+
+  const styleValue = form.watch('style');
+  const promptValue = form.watch('prompt');
+
+  const isDisabledButton = !styleValue || !promptValue;
+  const hasGeneratedImage = images.some(isDefined);
 
   return (
     <form
@@ -188,17 +201,10 @@ export const ImageGeneration = () => {
         </div>
 
         <div css={magicAIStyles.rightFooter}>
-          <MagicButton type="submit" disabled={magicImageGenerationMutation.isPending}>
-            <SVGIcon name={images.length > 0 ? 'reload' : 'magicAi'} width={24} height={24} />
-            {images.length > 0 ? __('Generate again', 'tutor') : __('Generate now', 'tutor')}
+          <MagicButton type="submit" disabled={magicImageGenerationMutation.isPending || isDisabledButton}>
+            <SVGIcon name={hasGeneratedImage ? 'reload' : 'magicAi'} width={24} height={24} />
+            {hasGeneratedImage ? __('Generate again', 'tutor') : __('Generate now', 'tutor')}
           </MagicButton>
-          <div css={magicAIStyles.rightFooterInfo}>
-            <div>
-              <SVGIcon name="seeds" width={20} height={20} />
-              {__('Use 1 of 50 icons', 'tutor')}
-            </div>
-            <a href="/">{__('Upgrade for more', 'tutor')}</a>
-          </div>
         </div>
       </div>
     </form>
@@ -244,6 +250,11 @@ const styles = {
 		&:hover {
 			background-color: ${colorTokens.background.brand};
 			color: ${colorTokens.text.white};
+		}
+
+		&:disabled {
+			background-color: ${colorTokens.background.disable};
+			color: ${colorTokens.text.disable};
 		}
 	`,
 };

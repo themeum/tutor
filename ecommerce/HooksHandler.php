@@ -12,6 +12,7 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Earnings;
+use TUTOR\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -53,17 +54,11 @@ class HooksHandler {
 		add_filter( 'get_tutor_course_price', array( $this, 'alter_course_price' ), 10, 2 );
 
 		// Order hooks.
-		add_action( 'tutor_after_order_bulk_action', array( $this, 'after_order_bulk_action' ), 10, 2 );
-		add_action( 'tutor_after_order_mark_as_paid', array( $this, 'after_order_mark_as_paid' ), 10 );
-
 		add_action( 'tutor_order_payment_updated', array( $this, 'handle_payment_updated_webhook' ) );
 
 		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 4 );
 
 		add_action( 'tutor_order_placement_success', array( $this, 'handle_order_placement_success' ) );
-
-		// New order placed hook.
-		add_action( 'tutor_order_placed', array( $this, 'tutor_order_placed' ) );
 	}
 
 	/**
@@ -79,13 +74,14 @@ class HooksHandler {
 	public function after_order_bulk_action( $bulk_action, $bulk_ids ) {
 		$order_status = $this->order_model->get_order_status_by_payment_status( $bulk_action );
 
+		$cancel_reason = isset( $_POST['cancel_reason'] ) ? $_POST['cancel_reason'] : '';
 		foreach ( $bulk_ids as $order_id ) {
 			try {
 				$this->manage_earnings_and_enrollments( $order_status, $order_id );
 				$data = (object) array(
 					'order_id'   => $order_id,
 					'meta_key'   => $this->order_activities_model::META_KEY_HISTORY,
-					'meta_value' => "Order mark as {$bulk_action}",
+					'meta_value' => "Order mark as {$bulk_action} {$cancel_reason}",
 				);
 				$this->order_activities_model->add_order_meta( $data );
 			} catch ( \Throwable $th ) {
@@ -125,26 +121,10 @@ class HooksHandler {
 	 */
 	public function alter_course_price( $price, $course_id ) {
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
-			$price = tutor_get_formatted_price_html( $course_id, false );
+			$price = tutor_get_course_formatted_price_html( $course_id, false );
 		}
 
 		return $price;
-	}
-
-	/**
-	 * Handle after order mark as paid event
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $order_id Order ID.
-	 *
-	 * @return void
-	 */
-	public function after_order_mark_as_paid( $order_id ) {
-		$order = $this->order_model->get_order_by_id( $order_id );
-		if ( $order ) {
-			$this->handle_payment_status_changed( $order->id, $this->order_model::PAYMENT_UNPAID, $order->payment_status );
-		}
 	}
 
 	/**
@@ -209,12 +189,22 @@ class HooksHandler {
 
 		$order_status = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
 
+		$cancel_reason = Input::post( 'cancel_reason' );
+
 		// Store activity.
 		$data = (object) array(
 			'order_id'   => $order_id,
 			'meta_key'   => $this->order_activities_model::META_KEY_HISTORY,
-			'meta_value' => 'Order mark as ' . $new_payment_status,
+			'meta_value' => 'Order marked as ' . $new_payment_status,
 		);
+
+		if ( $cancel_reason ) {
+			$meta_value       = array(
+				'message'       => 'Order marked as ' . $new_payment_status,
+				'cancel_reason' => $cancel_reason,
+			);
+			$data->meta_value = json_encode( $meta_value );
+		}
 
 		$this->order_activities_model->add_order_meta( $data );
 
@@ -224,7 +214,7 @@ class HooksHandler {
 	/**
 	 * Handle new order placement
 	 *
-	 * Clear cart items
+	 * Clear cart items, managing enrollment & earnings
 	 *
 	 * @since 3.0.0
 	 *
@@ -237,22 +227,10 @@ class HooksHandler {
 		$user_id    = $order_data->student->id;
 
 		( new CartModel() )->clear_user_cart( $user_id );
-	}
 
-	/**
-	 * Handle new order placed action
-	 *
-	 * Manage earnings, enrollments
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $order_data Order data.
-	 *
-	 * @return void
-	 */
-	public function tutor_order_placed( $order_data ) {
-		$payment_status = $order_data['payment_status'];
-		$order_id       = $order_data['id'];
+		// Manage enrollment & earnings.
+		$order          = ( new OrderModel() )->get_order_by_id( $order_id );
+		$payment_status = $order->payment_status;
 
 		$order_status = $this->order_model->get_order_status_by_payment_status( $payment_status );
 
@@ -283,7 +261,7 @@ class HooksHandler {
 
 		foreach ( $order->items as $item ) {
 			$course_id = $item->id; // It could be course/bundle/plan id.
-			if ( $this->order_model::TYPE_SUBSCRIPTION === $order->order_type ) {
+			if ( $this->order_model::TYPE_SINGLE_ORDER !== $order->order_type ) {
 				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 			}
 
@@ -298,7 +276,6 @@ class HooksHandler {
 					}
 
 					update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
-					do_action( 'tutor_after_enrolled', $course_id, $student_id, $has_enrollment->ID );
 				}
 			} else {
 				if ( $this->order_model::ORDER_COMPLETED ) {

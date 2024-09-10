@@ -218,7 +218,9 @@ class OrderController {
 
 		$coupon = $coupon_code ? $coupon_model->get_coupon( array( 'coupon_code' => $coupon_code ) ) : null;
 
-		$price_details = $coupon ? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code ) : $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ) );
+		$price_details = $coupon
+						? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code, $order_type )
+						: $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ), $order_type );
 
 		$subtotal_price = 0;
 		foreach ( $price_details->items as $item ) {
@@ -320,9 +322,7 @@ class OrderController {
 	 * @return void
 	 */
 	public function order_mark_as_paid() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		if ( ! current_user_can( 'manage_options' ) ) {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
@@ -361,7 +361,9 @@ class OrderController {
 			);
 		}
 
-		do_action( 'tutor_after_order_mark_as_paid', $params['order_id'] );
+		$order_id = $params['order_id'];
+		do_action( 'tutor_order_payment_status_changed', $order_id, $this->model::PAYMENT_UNPAID, $this->model::PAYMENT_PAID );
+
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 
@@ -388,8 +390,8 @@ class OrderController {
 		}
 
 		$params = array(
-			'order_id'      => Input::post( 'order_id' ),
-			'cancel_reason' => Input::post( 'cancel_reason' ),
+			'id'           => Input::post( 'order_id' ),
+			'order_status' => $this->model::ORDER_CANCELLED,
 		);
 
 		// Validate request.
@@ -404,14 +406,7 @@ class OrderController {
 
 		do_action( 'tutor_before_order_cancel', $params );
 
-		$payload               = new \stdClass();
-		$payload               = (object) $params;
-		$payload->order_status = $this->model::ORDER_CANCELLED;
-
-		$response = $this->model->order_status_update( $payload );
-
-		do_action( 'tutor_after_order_cancel', $params );
-
+		$response = $this->model->update_order( $params['id'], $params );
 		if ( ! $response ) {
 			$this->json_response(
 				__( 'Failed to cancel order status', 'tutor' ),
@@ -419,6 +414,8 @@ class OrderController {
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
+
+		do_action( 'tutor_order_payment_status_changed', $params['id'], '', $this->model::ORDER_CANCELLED, true );
 
 		$this->json_response( __( 'Order successfully canceled', 'tutor' ) );
 	}
@@ -895,7 +892,9 @@ class OrderController {
 		}
 
 		if ( $response ) {
-			do_action( 'tutor_after_order_bulk_action', $bulk_action, $bulk_ids );
+			foreach ( $bulk_ids as $id ) {
+				do_action( 'tutor_order_payment_status_changed', $id, '', $bulk_action );
+			}
 			wp_send_json_success( __( 'Order updated successfully.', 'tutor' ) );
 		} else {
 			wp_send_json_error( __( 'Failed to update order.', 'tutor' ) );
@@ -1036,7 +1035,9 @@ class OrderController {
 		$search_term    = Input::get( 'search', '' );
 		$payment_status = Input::get( 'payment-status', '' );
 
-		$where_clause = array();
+		$where_clause = array(
+			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
+		);
 
 		if ( $date ) {
 			$where_clause['date(o.created_at_gmt)'] = tutor_get_formated_date( '', $date );

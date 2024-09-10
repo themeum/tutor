@@ -248,13 +248,6 @@ const MagicFill = () => {
               {__('Use Image', 'tutor')}
             </MagicButton>
           </div>
-          <div css={magicAIStyles.rightFooterInfo}>
-            <div>
-              <SVGIcon name="seeds" width={20} height={20} />
-              {__('Use 1 of 50 icons', 'tutor')}
-            </div>
-            <a href="/">{__('Upgrade for more', 'tutor')}</a>
-          </div>
         </div>
       </div>
     </form>
@@ -265,13 +258,13 @@ export default MagicFill;
 const animations = {
   loading: keyframes`
     0% {
-      opacity: 0.6;
+      opacity: 0;
     }
     50% {
-      opacity: 1;
+      opacity: 0.6;
     }
     100% {
-      opacity: 0.6;
+      opacity: 0;
     }
   `,
   walker: keyframes`
