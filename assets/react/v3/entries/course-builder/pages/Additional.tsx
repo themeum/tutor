@@ -214,15 +214,30 @@ const Additional = () => {
                   'tutor',
                 )}
                 actions={
-                  <Button
-                    size="small"
-                    icon={<SVGIcon name="crown" width={24} height={24} />}
-                    onClick={() => {
-                      window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-                    }}
+                  <Show
+                    when={!isTutorPro}
+                    fallback={
+                      <Button
+                        size="small"
+                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                        onClick={() => {
+                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                        }}
+                      >
+                        {__('Enable Prerequisites Addon', 'tutor')}
+                      </Button>
+                    }
                   >
-                    {__('Get Tutor LMS Pro', 'tutor')}
-                  </Button>
+                    <Button
+                      size="small"
+                      icon={<SVGIcon name="crown" width={24} height={24} />}
+                      onClick={() => {
+                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                      }}
+                    >
+                      {__('Get Tutor LMS Pro', 'tutor')}
+                    </Button>
+                  </Show>
                 }
               />
             }
@@ -261,15 +276,30 @@ const Additional = () => {
                   'tutor',
                 )}
                 actions={
-                  <Button
-                    size="small"
-                    icon={<SVGIcon name="crown" width={24} height={24} />}
-                    onClick={() => {
-                      window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-                    }}
+                  <Show
+                    when={!isTutorPro}
+                    fallback={
+                      <Button
+                        size="small"
+                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                        onClick={() => {
+                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                        }}
+                      >
+                        {__('Enable Course Attachments Addon', 'tutor')}
+                      </Button>
+                    }
                   >
-                    {__('Get Tutor LMS Pro', 'tutor')}
-                  </Button>
+                    <Button
+                      size="small"
+                      icon={<SVGIcon name="crown" width={24} height={24} />}
+                      onClick={() => {
+                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                      }}
+                    >
+                      {__('Get Tutor LMS Pro', 'tutor')}
+                    </Button>
+                  </Show>
                 }
               />
             }
@@ -389,7 +419,7 @@ const styles = {
     ${styleUtils.display.inlineFlex()}
     align-items: center;
     gap: ${spacing[2]};
-    ${typography.body()}
+    ${typography.body('medium')}
     color: ${colorTokens.text.title};
     margin-bottom: ${spacing[8]};
   `,
