@@ -9,7 +9,7 @@
 
 $has_pro        = tutor()->has_pro;
 $email_settings = null;
-if ( $has_pro && class_exists( 'TUTOR_EMAIL\EmailSettings' ) ) {
+if ( $has_pro && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/tutor-email/tutor-email.php' ) ) {
 	$email_settings = new TUTOR_EMAIL\EmailSettings();
 }
 
