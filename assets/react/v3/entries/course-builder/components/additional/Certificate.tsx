@@ -125,26 +125,46 @@ const Certificate = () => {
 
   return (
     <Show
-      when={isTutorPro}
+      when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}
       fallback={
         <EmptyState
           size="small"
           title={__('Your students deserve certificates!', 'tutor')}
-          description={__('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')}
+          description={
+            isAddonEnabled(Addons.TUTOR_CERTIFICATE)
+              ? __('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')
+              : __('Enable the Certificate Addon to start creating certificates for your students.', 'tutor')
+          }
           emptyStateImage={emptyStateImage}
           emptyStateImage2x={emptyStateImage2x}
           imageAltText={__('Illustration of a certificate', 'tutor')}
           actions={
-            <Button
-              variant="primary"
-              size="small"
-              onClick={() => {
-                window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-              }}
-              icon={<SVGIcon name="crown" width={24} height={24} />}
+            <Show
+              when={!isTutorPro}
+              fallback={
+                <Button
+                  variant="primary"
+                  size="small"
+                  onClick={() => {
+                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                  }}
+                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                >
+                  {__('Enable Certificate Addon', 'tutor')}
+                </Button>
+              }
             >
-              {__('Get Tutor LMS Pro', 'tutor')}
-            </Button>
+              <Button
+                variant="primary"
+                size="small"
+                onClick={() => {
+                  window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                }}
+                icon={<SVGIcon name="crown" width={24} height={24} />}
+              >
+                {__('Get Tutor LMS Pro', 'tutor')}
+              </Button>
+            </Show>
           }
         />
       }
@@ -224,6 +244,7 @@ const Certificate = () => {
                 <EmptyState
                   size="small"
                   title={__('No templates found', 'tutor')}
+                  description={__('No custom certificates found. Create a new one.', 'tutor')}
                   emptyStateImage={emptyStateImage}
                   emptyStateImage2x={emptyStateImage2x}
                   imageAltText={__('Illustration of a certificate', 'tutor')}
