@@ -711,6 +711,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 												<?php
 												if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) && 'h5p' === $answer->question_type ) {
 													$attempt_results = \TUTOR_H5P\Utils::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
+													$score           = $attempt_results[0]->raw_score . '/' . $attempt_results[0]->max_score;
 													$has_response    = true;
 													if ( is_array( $attempt_results ) && 1 === count( $attempt_results ) ) {
 														if ( is_null( $attempt_results[0]->response ) ) {
@@ -729,19 +730,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														</a>
 														<?php
 													} else {
-														switch ( $answer_status ) {
-															case 'correct':
-																echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
-																break;
-
-															case 'pending':
-																echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
-																break;
-
-															case 'wrong':
-																echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
-																break;
-														}
+														?>
+														<span class="<?php echo $attempt_results[0]->max_score === $attempt_results[0]->raw_score ? 'tutor-color-success' : 'tutor-color-danger'; ?> tutor-fw-normal"><?php echo esc_html( $score ); ?></span>
+														<?php
 													}
 												} else {
 													switch ( $answer_status ) {
