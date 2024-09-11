@@ -10,17 +10,14 @@
 
 namespace Tutor\Helpers;
 
-use Carbon\Carbon;
 use TUTOR\User;
 
 /**
  * DateTimeHelper class
  *
  * @since 3.0.0
- *
- * @see https://carbon.nesbot.com/docs/
  */
-final class DateTimeHelper extends Carbon {
+final class DateTimeHelper {
 	/**
 	 * Get GMT date to user timezone date.
 	 *
