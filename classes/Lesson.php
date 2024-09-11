@@ -400,9 +400,7 @@ class Lesson extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_delete_lesson() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
@@ -414,13 +412,19 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
+		$content   = __( 'Lesson', 'tutor' );
+		$post_type = get_post_type( $lesson_id );
+		if ( tutor()->assignment_post_type === $post_type ) {
+			$content = __( 'Assignment', 'tutor' );
+		}
+
 		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
 			\TUTOR_H5P\H5P::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
 		}
 
 		wp_delete_post( $lesson_id, true );
 
-		$this->json_response( __( 'Lesson deleted successfully', 'tutor' ) );
+		$this->json_response( sprintf( __( '% deleted successfully', 'tutor' ), $content ) );
 	}
 
 

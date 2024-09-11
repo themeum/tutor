@@ -628,3 +628,37 @@ export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: ContentType) 
     enabled: !!id && contentType === 'tutor_h5p_quiz',
   });
 };
+
+const deleteQuiz = (quizId: ID) => {
+  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_delete',
+    quiz_id: quizId,
+  });
+};
+
+export const useDeleteQuizMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteQuiz,
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
+};
