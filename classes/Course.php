@@ -1154,6 +1154,7 @@ class Course extends Tutor_Base {
 		// If need more data.
 		$settings                            = get_option( 'tutor_option', array() );
 		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $settings['tutor_frontend_course_page_logo_id'] ?? 0 );
+		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $settings['chatgpt_api_key'] ?? '' );
 
 		$remove_settings = array(
 			'chatgpt_api_key',
