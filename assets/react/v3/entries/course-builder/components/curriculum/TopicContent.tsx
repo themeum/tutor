@@ -166,7 +166,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const handleDelete = () => {
     if (['lesson', 'tutor_assignments'].includes(type)) {
       deleteContentMutation.mutateAsync(content.id);
-    } else if (type === 'tutor_quiz') {
+    } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type) ) {
       deleteQuizMutation.mutateAsync(content.id);
     } else if (type === 'tutor-google-meet') {
       deleteGoogleMeetMutation.mutateAsync(content.id);
