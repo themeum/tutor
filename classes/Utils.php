@@ -10257,4 +10257,23 @@ class Utils {
 			throw new \Exception( $e->getMessage() );
 		}
 	}
+
+	/**
+	 * Get readable next cron schedule time.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $cron_hook cron hook name.
+	 * @param array  $args arguments.
+	 *
+	 * @return string
+	 */
+	public function get_readable_next_schedule( $cron_hook, $args = array() ) {
+		$next_timestamp = wp_next_scheduled( $cron_hook, $args );
+		if ( false === $next_timestamp ) {
+			return null;
+		}
+
+		return sprintf( __( '%s left','tutor' ), human_time_diff( $next_timestamp ) );
+	}
 }
