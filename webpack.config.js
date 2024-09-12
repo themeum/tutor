@@ -1,5 +1,6 @@
 const path = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 
 module.exports = (env, options) => {
@@ -38,6 +39,8 @@ module.exports = (env, options) => {
 		},
 		plugins: [new webpack.ProvidePlugin({ React: 'react' })],
 		externals: {
+			react: 'React',
+			'react-dom': 'ReactDOM',
 			'@wordpress/i18n': 'wp.i18n',
 		},
 		devtool: 'source-map',
@@ -46,6 +49,20 @@ module.exports = (env, options) => {
 	if ('production' === mode) {
 		config.devtool = false;
 		config.optimization = {
+			splitChunks: {
+				cacheGroups: {
+					vendors: {
+						test: /[\\/]node_modules[\\/]/,
+						name: 'tutor-vendors.min',
+						chunks: 'all',
+					},
+					shared: {
+						test: /[\\/]assets[\\/]react[\\/]v3[\\/]shared[\\/]/,
+						name: 'tutor-shared.min',
+						chunks: 'all',
+					},
+				},
+			},
 			minimize: true,
 			minimizer: [
 				new TerserPlugin({
@@ -55,6 +72,7 @@ module.exports = (env, options) => {
 						ecma: 6,
 						mangle: true,
 					},
+					extractComments: false,
 				}),
 			],
 		};
