@@ -784,7 +784,7 @@ class Ajax {
 		$url     = "https://www.googleapis.com/youtube/v3/videos?id=$video_id&part=contentDetails&key=$api_key";
 
 		$request = HttpHelper::get( $url );
-		if ( 200 === $request->get_status_code() ) {
+		if ( HttpHelper::STATUS_OK === $request->get_status_code() ) {
 			$response = $request->get_json();
 			if ( isset( $response->items[0]->contentDetails->duration ) ) {
 				$duration = $response->items[0]->contentDetails->duration;
