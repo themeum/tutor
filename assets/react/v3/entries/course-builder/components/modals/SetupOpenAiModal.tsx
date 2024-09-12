@@ -77,10 +77,6 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
                 isPassword
                 label={__('Open AI API key', 'tutor')}
                 placeholder={__('Enter your Open AI API key', 'tutor')}
-                helpText={__(
-                  'Find your Secret API key in your Open AI User settings and paste it here to connect Open AI with your Tutor LMS website.',
-                  'tutor',
-                )}
               />
             )}
           />
