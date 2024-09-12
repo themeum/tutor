@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -59,19 +59,13 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={__('Set Open AI API key', 'tutor')}>
       <div css={styles.wrapper}>
         <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
-          <span
-            css={styles.infoText}
-            dangerouslySetInnerHTML={{
-              __html: sprintf(
-                __(
-                  'Find your Secret API key in your %sOpen AI User settings%s and paste it here to connect Open AI with your Tutor LMS website.',
-                ),
-                // @TODO: need to confirm the URL
-                `<a href="${config.CHATGPT_PLATFORM_URL}" target="_blank" rel="noreferrer">`,
-                '</a>',
-              ),
-            }}
-          />
+          <span css={styles.infoText}>
+            {__('Find your Secret API key in your ', 'tutor')}
+            {/* @TODO: need to confirm the URL */}
+            <a href={config.CHATGPT_PLATFORM_URL}>{__('Open AI User settings', 'tutor')}</a>
+            {__(' and paste it here to connect Open AI with your Tutor LMS website.', 'tutor')}
+          </span>
+
           <Controller
             name="openAIApiKey"
             control={form.control}
