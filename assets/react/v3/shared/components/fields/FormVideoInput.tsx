@@ -495,7 +495,7 @@ const styles = {
   }) => css`
     width: 100%;
     height: 100%;
-    min-height: 196px;
+    min-height: 164px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -631,6 +631,7 @@ const styles = {
     ${styleUtils.resetButton};
     ${typography.small('medium')};
     color: ${colorTokens.text.brand};
+    margin-bottom: ${spacing[8]};
   `,
   removeButton: css`
     ${styleUtils.resetButton};

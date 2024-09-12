@@ -49,6 +49,7 @@ const Header = () => {
   const postDate = useWatch({ name: 'post_date' });
   const isPostDateDirty = form.formState.dirtyFields.post_date;
 
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
   const hasTrashAccess = tutorConfig.settings.instructor_can_delete_course === 'on' || isAdmin;
 
@@ -225,8 +226,14 @@ const Header = () => {
           window.open(tutorConfig.tutor_frontend_dashboard_url, '_blank', 'noopener');
         }}
       >
-        <Logo width={108} height={24} />
+        <Show
+          when={isTutorPro && tutorConfig.settings.course_builder_logo_url}
+          fallback={<Logo width={108} height={24} />}
+        >
+          {(logo) => <img src={logo} alt="Tutor LMS" />}
+        </Show>
       </button>
+
       <div css={styles.container}>
         <div css={styles.titleAndTacker}>
           <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
@@ -309,6 +316,13 @@ const styles = {
   `,
   logo: css`
     padding-left: ${spacing[32]};
+
+    img {
+      max-height: 24px;
+      width: auto;
+      object-fit: contain;
+      object-position: center;
+    }
   `,
   titleAndTacker: css`
     ${styleUtils.display.flex()};

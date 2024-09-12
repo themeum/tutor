@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useModal } from '@Components/modals/Modal';
 import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 
@@ -170,13 +171,17 @@ interface PortalProps {
 }
 
 export const Portal = ({ isOpen, children, onClickOutside, animationType = AnimationType.slideDown }: PortalProps) => {
+  const { hasModalOnStack } = useModal();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
 
     return () => {
-      document.body.style.overflow = 'initial';
+      if (!hasModalOnStack) {
+        document.body.style.overflow = 'initial';
+      }
 
       // @todo: need to clarify why this is required.
       // setTimeout(() => {
@@ -186,7 +191,7 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
       //   }
       // }, ANIMATION_DURATION_WITH_THRESHOLD);
     };
-  }, [isOpen]);
+  }, [isOpen, hasModalOnStack]);
 
   const { transitions } = useAnimation({
     data: isOpen,

@@ -441,10 +441,10 @@ export default LessonModal;
 
 const styles = {
   wrapper: css`
-    width: 1217px;
+    width: 1070px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 395px;
+    grid-template-columns: 1fr 338px;
     height: 100%;
     padding-inline: ${spacing[32]};
   `,

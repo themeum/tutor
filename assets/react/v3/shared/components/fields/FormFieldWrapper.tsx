@@ -1,7 +1,17 @@
+import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import type { ReactNode } from 'react';
+
+import Button from '@Atoms/Button';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
-import { tutorConfig } from '@Config/config';
+
+import { useModal } from '@Components/modals/Modal';
+import AiProIdentifierModal from '@CourseBuilderComponents/modals/AiProIdentifierModal';
+import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+
+import config, { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -9,9 +19,9 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import type { ReactNode } from 'react';
+
+import emptyStatImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 
 interface InputOptions {
   variant: unknown;
@@ -251,7 +261,16 @@ const styles = {
   alertIcon: css`
     flex-shrink: 0;
   `,
+  aiGradientText: css`
+    background: ${colorTokens.text.ai.gradient};
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  `,
 };
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+const hasOpenAiAPIKey = false; //@TODO: Add GPT API key from settings
 
 const FormFieldWrapper = <T,>({
   field,
@@ -276,8 +295,7 @@ const FormFieldWrapper = <T,>({
   replaceEntireLabel = false,
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
-
-  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const { showModal } = useModal();
 
   const inputCss = [
     styles.input({
@@ -325,20 +343,57 @@ const FormFieldWrapper = <T,>({
               <label htmlFor={id} css={styles.label(isInlineLabel, replaceEntireLabel)}>
                 {label}
                 <Show when={generateWithAi}>
-                  <Show
-                    when={!isTutorPro}
-                    fallback={
-                      <button type="button" onClick={onClickAiButton} css={styles.aiButton}>
-                        <SVGIcon name="magicAiColorize" width={32} height={32} />
-                      </button>
-                    }
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!isTutorPro) {
+                        showModal({
+                          component: AiProIdentifierModal,
+                          props: {
+                            title: (
+                              <>
+                                {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                                <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                                {__('feature', 'tutor')}
+                              </>
+                            ),
+                            featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+                            image: emptyStateImage,
+                            image2x: emptyStatImage2x,
+                            features: [
+                              __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
+                              __(
+                                ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                                'tutor',
+                              ),
+                              __(
+                                'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
+                                'tutor',
+                              ),
+                              __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
+                            ],
+                            footer: (
+                              <Button
+                                onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                                icon={<SVGIcon name="crown" width={24} height={24} />}
+                              >
+                                {__('Get Tutor LMS Pro', 'tutor')}
+                              </Button>
+                            ),
+                          },
+                        });
+                      } else if (!hasOpenAiAPIKey) {
+                        showModal({
+                          component: SetupOpenAiModal,
+                        });
+                      } else {
+                        onClickAiButton?.();
+                      }
+                    }}
+                    css={styles.aiButton}
                   >
-                    <Tooltip delay={200} content={__('Pro Feature', 'tutor')}>
-                      <button type="button" onClick={onClickAiButton} disabled css={styles.aiButton}>
-                        <SVGIcon name="magicAiColorize" width={32} height={32} />
-                      </button>
-                    </Tooltip>
-                  </Show>
+                    <SVGIcon name="magicAiColorize" width={32} height={32} />
+                  </button>
                 </Show>
               </label>
             )}

@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import Button from '@Atoms/Button';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
 
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
@@ -25,9 +25,11 @@ import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import AiProIdentifierModal from '@CourseBuilderComponents/modals/AiProIdentifierModal';
+import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
-import { tutorConfig } from '@Config/config';
+import config, { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -46,6 +48,9 @@ import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
+
+import emptyStatImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 
 const courseId = getCourseId();
 
@@ -66,7 +71,8 @@ const CourseBasic = () => {
   const currentUser = tutorConfig.current_user;
   const { tutor_currency } = tutorConfig;
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
-  const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const hasOpenAiAPIKey = false; // @TODO: Get this from settings
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
@@ -75,7 +81,7 @@ const CourseBasic = () => {
   const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
-    isTutorProEnabled &&
+    isTutorPro &&
     isMultiInstructorEnabled &&
     tutorConfig.settings.enable_course_marketplace === 'on' &&
     (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '') || isInstructor);
@@ -264,41 +270,54 @@ const CourseBasic = () => {
           isExternalUrl
           rightButton={
             <div>
-              <Show
-                when={isTutorProEnabled}
-                fallback={
-                  <Tooltip delay={200} content={__('Pro Feature', 'tutor')}>
-                    <MagicButton
-                      css={css`
-                display: inline-flex;
-                align-items: center;
-                gap: ${spacing[4]};
-              `}
-                      onClick={() => {
-                        showModal({
-                          component: AICourseBuilderModal,
-                          isMagicAi: true,
-                          props: {
-                            title: __('Create with AI', 'tutor'),
-                            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-                          },
-                        });
-                      }}
-                      disabled={!isTutorProEnabled}
-                    >
-                      <SVGIcon name="magicAi" width={24} height={24} />
-                      {__('Generate with AI', 'tutor')}
-                    </MagicButton>
-                  </Tooltip>
-                }
-              >
-                <MagicButton
-                  css={css`
+              <MagicButton
+                css={css`
                   display: inline-flex;
                   align-items: center;
                   gap: ${spacing[4]};
                 `}
-                  onClick={() => {
+                onClick={() => {
+                  if (!isTutorPro) {
+                    showModal({
+                      component: AiProIdentifierModal,
+                      props: {
+                        title: (
+                          <>
+                            {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                            <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                            {__('feature', 'tutor')}
+                          </>
+                        ),
+                        featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+                        image: emptyStateImage,
+                        image2x: emptyStatImage2x,
+                        features: [
+                          __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
+                          __(
+                            ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                            'tutor',
+                          ),
+                          __(
+                            'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
+                            'tutor',
+                          ),
+                          __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
+                        ],
+                        footer: (
+                          <Button
+                            onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                            icon={<SVGIcon name="crown" width={24} height={24} />}
+                          >
+                            {__('Get Tutor LMS Pro', 'tutor')}
+                          </Button>
+                        ),
+                      },
+                    });
+                  } else if (!hasOpenAiAPIKey) {
+                    showModal({
+                      component: SetupOpenAiModal,
+                    });
+                  } else {
                     showModal({
                       component: AICourseBuilderModal,
                       isMagicAi: true,
@@ -307,13 +326,12 @@ const CourseBasic = () => {
                         icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
                       },
                     });
-                  }}
-                  disabled={!isTutorProEnabled}
-                >
-                  <SVGIcon name="magicAi" width={24} height={24} />
-                  {__('Generate with AI', 'tutor')}
-                </MagicButton>
-              </Show>
+                  }
+                }}
+              >
+                <SVGIcon name="magicAi" width={24} height={24} />
+                {__('Generate with AI', 'tutor')}
+              </MagicButton>
             </div>
           }
         />
@@ -736,5 +754,10 @@ const styles = {
     ${styleUtils.flexCenter()};
     background-color: ${colorTokens.bg.gray20};
     border-radius: ${borderRadius.card};
+  `,
+  aiGradientText: css`
+    background: ${colorTokens.text.ai.gradient};
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   `,
 };

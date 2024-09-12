@@ -12,7 +12,7 @@ interface ModalWrapperProps {
   children: React.ReactNode;
   onClose: () => void;
   icon?: React.ReactNode;
-  title?: string;
+  title?: string | React.ReactNode;
   subtitle?: string;
   actions?: React.ReactNode;
   headerChildren?: React.ReactNode;
@@ -48,7 +48,7 @@ const ModalWrapper = ({
                 <div css={styles.iconWithTitle}>
                   <Show when={icon}>{icon}</Show>
                   <Show when={title}>
-                    <h6 css={styles.title} title={title}>
+                    <h6 css={styles.title} title={typeof title === 'string' ? title : ''}>
                       {title}
                     </h6>
                   </Show>
