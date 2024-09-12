@@ -24,7 +24,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import Logo from '@CourseBuilderPublic/images/logo.svg';
 import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
-import { convertCourseDataToPayload, getCourseId } from '@CourseBuilderUtils/utils';
+import { convertCourseDataToPayload, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
@@ -85,31 +85,11 @@ const Header = () => {
     const payload = convertCourseDataToPayload(data);
     setLocalPostStatus(postStatus);
 
-    const determinePostStatus = () => {
-      if (postStatus === 'trash') {
-        return 'trash';
-      }
-
-      if (postVisibility === 'private') {
-        return 'private';
-      }
-
-      if (postStatus === 'future' && postVisibility !== 'private') {
-        return 'future';
-      }
-
-      if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
-        return 'publish';
-      }
-
-      return postStatus;
-    };
-
     if (courseId) {
       updateCourseMutation.mutate({
         course_id: Number(courseId),
         ...payload,
-        post_status: determinePostStatus(),
+        post_status: determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility),
       });
       return;
     }

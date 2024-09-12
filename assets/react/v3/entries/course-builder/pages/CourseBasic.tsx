@@ -41,9 +41,15 @@ import {
   type PricingCategory,
   type WcProduct,
   useGetWcProductsQuery,
+  useUpdateCourseMutation,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import {
+  convertCourseDataToPayload,
+  determinePostStatus,
+  getCourseId,
+  isAddonEnabled,
+} from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
@@ -60,6 +66,7 @@ const CourseBasic = () => {
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
+  const updateCourseMutation = useUpdateCourseMutation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const { showModal } = useModal();
@@ -382,7 +389,21 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
-                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                loading={updateCourseMutation.isPending || (!!isCourseDetailsFetching && !controllerProps.field.value)}
+                onCustomEditorButtonClick={async () =>
+                  form.handleSubmit(async (data) => {
+                    const payload = convertCourseDataToPayload(data);
+
+                    await updateCourseMutation.mutateAsync({
+                      course_id: courseId,
+                      ...payload,
+                      post_status: determinePostStatus(
+                        form.getValues('post_status') as 'trash' | 'future' | 'draft',
+                        form.getValues('visibility') as 'private' | 'password_protected',
+                      ),
+                    });
+                  })()
+                }
               />
             )}
           />

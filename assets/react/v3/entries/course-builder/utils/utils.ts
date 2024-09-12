@@ -391,3 +391,26 @@ export const validateQuizQuestion = (
 
   return true;
 };
+
+export const determinePostStatus = (
+  postStatus: 'trash' | 'future' | 'draft',
+  postVisibility: 'private' | 'password_protected',
+) => {
+  if (postStatus === 'trash') {
+    return 'trash';
+  }
+
+  if (postVisibility === 'private') {
+    return 'private';
+  }
+
+  if (postStatus === 'future') {
+    return 'future';
+  }
+
+  if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
+    return 'publish';
+  }
+
+  return postStatus;
+};
