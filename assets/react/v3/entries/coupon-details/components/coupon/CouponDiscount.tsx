@@ -12,7 +12,7 @@ import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
 import { typography } from '@Config/typography';
 import type { Coupon } from '@CouponServices/coupon';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import coursePlaceholder from '@Images/common/course-placeholder.png';
+import coursePlaceholder from '@Images/course-placeholder.png';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
