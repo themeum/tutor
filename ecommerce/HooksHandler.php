@@ -151,6 +151,9 @@ class HooksHandler {
 				'payment_status'   => $new_payment_status,
 				'payment_payloads' => $res->payment_payload,
 				'transaction_id'   => $transaction_id,
+				'tax_amount'       => $res->tax_amount,
+				'earnings'         => $res->earnings,
+				'fees'             => $res->fees,
 				'updated_at_gmt'   => current_time( 'mysql', true ),
 			);
 

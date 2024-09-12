@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ccdb137d7fc80d9c2fd3b80031e5ae11",
+    "content-hash": "9996cf25c1b615535fc23afe25e62a71",
     "packages": [
         {
             "name": "brick/math",
@@ -64,20 +64,20 @@
         },
         {
             "name": "brick/money",
-            "version": "0.7.1",
+            "version": "0.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/brick/money.git",
-                "reference": "933b375c4cd31c9b5c34b2c8eaaafa2d43ea8f45"
+                "reference": "3cac1b014e91718f02724c54c08a2bdcd7cd2340"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/brick/money/zipball/933b375c4cd31c9b5c34b2c8eaaafa2d43ea8f45",
-                "reference": "933b375c4cd31c9b5c34b2c8eaaafa2d43ea8f45",
+                "url": "https://api.github.com/repos/brick/money/zipball/3cac1b014e91718f02724c54c08a2bdcd7cd2340",
+                "reference": "3cac1b014e91718f02724c54c08a2bdcd7cd2340",
                 "shasum": ""
             },
             "require": {
-                "brick/math": "~0.10.1 || ~0.11.0",
+                "brick/math": "~0.10.1",
                 "ext-json": "*",
                 "php": "^7.4 || ^8.0"
             },
@@ -87,7 +87,7 @@
                 "ext-pdo": "*",
                 "php-coveralls/php-coveralls": "^2.2",
                 "phpunit/phpunit": "^9.4.3",
-                "vimeo/psalm": "5.4.0"
+                "vimeo/psalm": "4.23.0"
             },
             "suggest": {
                 "ext-intl": "Required to format Money objects"
@@ -110,7 +110,7 @@
             ],
             "support": {
                 "issues": "https://github.com/brick/money/issues",
-                "source": "https://github.com/brick/money/tree/0.7.1"
+                "source": "https://github.com/brick/money/tree/0.7.0"
             },
             "funding": [
                 {
@@ -118,7 +118,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-01-15T23:31:13+00:00"
+            "time": "2022-10-05T22:11:12+00:00"
         }
     ],
     "packages-dev": [
