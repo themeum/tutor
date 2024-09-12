@@ -12,6 +12,7 @@ import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import config, { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { useSaveOpenAiSettingsMutation } from '@CourseBuilderServices/course';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
@@ -36,12 +37,17 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
     shouldFocusError: true,
   });
 
-  const handleSubmit = (data: OpenAiApiForm) => {
-    // @TODO: Implement API call to save OpenAI API key
-    console.log(data);
-    closeModal({
-      action: 'CONFIRM',
+  const saveOpenAiSettingsMutation = useSaveOpenAiSettingsMutation();
+
+  const handleSubmit = async (data: OpenAiApiForm) => {
+    const response = await saveOpenAiSettingsMutation.mutateAsync({
+      api_key: data.openAIApiKey,
+      chatgpt_enable: data.enable_open_ai ? 'on' : 'off',
     });
+
+    if (response.success) {
+      closeModal({ action: 'CONFIRM' });
+    }
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -103,7 +109,11 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
             >
               {__('Cancel', 'tutor')}
             </Button>
-            <Button size="small" onClick={form.handleSubmit(handleSubmit)}>
+            <Button
+              size="small"
+              onClick={form.handleSubmit(handleSubmit)}
+              loading={saveOpenAiSettingsMutation.isPending}
+            >
               {__('Save', 'tutor')}
             </Button>
           </div>

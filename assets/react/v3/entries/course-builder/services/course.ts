@@ -742,3 +742,37 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
     },
   });
 };
+
+const saveOpenAiSettingsKey = (payload: {
+  api_key: string;
+  chatgpt_enable: 'on' | 'off';
+}) => {
+  return wpAjaxInstance.post<
+    {
+      api_key: string;
+      chatgpt_enable: 'on' | 'off';
+    },
+    {
+      data: {
+        message: string;
+      };
+      success: boolean;
+    }
+  >(endpoints.OPEN_AI_SAVE_SETTINGS, {
+    ...payload,
+  });
+};
+
+export const useSaveOpenAiSettingsMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: saveOpenAiSettingsKey,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: __(response.data.message, 'tutor') });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};

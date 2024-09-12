@@ -270,7 +270,7 @@ const styles = {
 };
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
-const hasOpenAiAPIKey = false; //@TODO: Add GPT API key from settings
+const hasOpenAiAPIKey = tutorConfig.settings.chatgpt_key_exist;
 
 const FormFieldWrapper = <T,>({
   field,

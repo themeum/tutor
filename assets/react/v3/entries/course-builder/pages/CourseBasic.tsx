@@ -79,7 +79,7 @@ const CourseBasic = () => {
   const { tutor_currency } = tutorConfig;
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const hasOpenAiAPIKey = false; // @TODO: Get this from settings
+  const hasOpenAiAPIKey = tutorConfig.settings.chatgpt_key_exist;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
