@@ -775,10 +775,7 @@ class Ajax {
 			$this->json_response( __( 'Video ID is required', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
 		}
 
-		$has_access = User::is_admin() || User::is_instructor();
-		if ( ! $has_access ) {
-			$this->json_response( tutor_utils()->error_message(), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_current_user_capability( 'edit_tutor_course' );
 
 		$api_key = tutor_utils()->get_option( 'lesson_video_duration_youtube_api_key', '' );
 		$url     = "https://www.googleapis.com/youtube/v3/videos?id=$video_id&part=contentDetails&key=$api_key";
