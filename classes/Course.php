@@ -2693,7 +2693,7 @@ class Course extends Tutor_Base {
 	 * @return integer
 	 */
 	public static function create_wc_product( $title, $reg_price, $sale_price, $product_id = 0, $status = 'publish' ) {
-		$product_obj = new \WC_Product();
+		$product_obj = class_exists( '\WC_Product' ) ? new \WC_Product() : null;
 		if ( $product_id ) {
 			$product_obj = wc_get_product( $product_id );
 		}

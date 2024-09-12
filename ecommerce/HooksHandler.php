@@ -257,7 +257,7 @@ class HooksHandler {
 		$order      = $this->order_model->get_order_by_id( $order_id );
 		$student_id = $order->student->id;
 
-		$enrollment_status = OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : 'cancelled';
+		$enrollment_status = OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : 'cancel';
 		if ( ! $cancel_enrollment ) {
 			$enrollment_status = 'completed';
 		}
