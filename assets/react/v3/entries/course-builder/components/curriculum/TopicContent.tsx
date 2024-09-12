@@ -33,7 +33,7 @@ import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { useExportQuizMutation } from '@CourseBuilderServices/quiz';
+import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
@@ -125,6 +125,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const { showModal } = useModal();
   const duplicateContentMutation = useDuplicateContentMutation();
   const deleteContentMutation = useDeleteContentMutation();
+  const deleteQuizMutation = useDeleteQuizMutation();
   const deleteGoogleMeetMutation = useDeleteContentMutation();
   const deleteZoomMeetingMutation = useDeleteContentMutation();
   const exportQuizMutation = useExportQuizMutation();
@@ -156,8 +157,10 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   };
 
   const handleDelete = () => {
-    if (['lesson', 'tutor_assignments', 'tutor_quiz'].includes(type)) {
+    if (['lesson', 'tutor_assignments'].includes(type)) {
       deleteContentMutation.mutateAsync(content.id);
+    } else if (type === 'tutor_quiz') {
+      deleteQuizMutation.mutateAsync(content.id);
     } else if (type === 'tutor-google-meet') {
       deleteGoogleMeetMutation.mutateAsync(content.id);
     } else if (type === 'tutor_zoom_meeting') {
