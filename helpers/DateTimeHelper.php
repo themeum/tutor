@@ -10,7 +10,9 @@
 
 namespace Tutor\Helpers;
 
-use TUTOR\User;
+use DateInterval;
+use DateTime;
+use DateTimeZone;
 
 /**
  * DateTimeHelper class
@@ -18,6 +20,124 @@ use TUTOR\User;
  * @since 3.0.0
  */
 final class DateTimeHelper {
+	/**
+	 * Format constants
+	 */
+	const FORMAT_MYSQL     = 'Y-m-d H:i:s';
+	const FORMAT_TIMESTAMP = 'U';
+
+	/**
+	 * Interval constants
+	 */
+	const INTERVAL_HOUR  = 'hour';
+	const INTERVAL_DAY   = 'day';
+	const INTERVAL_WEEK  = 'week';
+	const INTERVAL_MONTH = 'month';
+	const INTERVAL_YEAR  = 'year';
+
+	/**
+	 * Date
+	 *
+	 * @var DateTime
+	 */
+	private $datetime;
+
+	/**
+	 * Create an instance.
+	 */
+	private static function instance() {
+		return new self();
+	}
+
+	/**
+	 * Get current time.
+	 *
+	 * @return self
+	 */
+	public static function now() {
+		$instance           = self::instance();
+		$instance->datetime = new DateTime();
+		return $instance;
+	}
+
+	/**
+	 * Create time from date time string or timestamp.
+	 *
+	 * @param string|int $datetime datetime string or timestamp.
+	 *
+	 * @return self
+	 */
+	public static function create( $datetime ) {
+		$instance           = self::instance();
+		$instance->datetime = new DateTime( $datetime );
+		return $instance;
+	}
+
+	/**
+	 * Set timezone
+	 *
+	 * @param string|DateTimeZone $timezone timezone string or object.
+	 *
+	 * @return self
+	 */
+	public function set_timezone( $timezone ) {
+		$tz = is_string( $timezone ) ? new DateTimeZone( $timezone ) : $timezone;
+		$this->datetime->setTimezone( $tz );
+		return $this;
+	}
+
+	/**
+	 * Get timestamp.
+	 *
+	 * @return int
+	 */
+	public function get_timestamp() {
+		return $this->datetime->getTimestamp();
+	}
+
+	/**
+	 * Add
+	 *
+	 * @param int    $number number of interval.
+	 * @param string $interval interval type (day, month, year, etc).
+	 *
+	 * @return self
+	 */
+	public function add( $number, $interval ) {
+		$this->datetime->add( DateInterval::createFromDateString( "{$number} {$interval}" ) );
+		return $this;
+	}
+
+	/**
+	 * Sub
+	 *
+	 * @param int    $number number of interval.
+	 * @param string $interval interval type (day, month, year, etc).
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return self
+	 */
+	public function sub( $number, $interval ) {
+		$this->datetime->sub( DateInterval::createFromDateString( "{$number} {$interval}" ) );
+		return $this;
+	}
+
+	/**
+	 * Format datetime ( WP i18 translation supported )
+	 *
+	 * @param string $format format for date. Default is mysql format.
+	 *
+	 * @return string
+	 */
+	public function format( $format = null ) {
+		return wp_date(
+			$format ? $format : self::FORMAT_MYSQL,
+			$this->get_timestamp(),
+			$this->datetime->getTimezone()
+		);
+	}
+
 	/**
 	 * Get GMT date to user timezone date.
 	 *
@@ -33,11 +153,8 @@ final class DateTimeHelper {
 		$default_format = get_option( 'date_format' ) . ', ' . get_option( 'time_format' );
 		$format         = is_null( $format ) ? $default_format : $format;
 
-		$timezone_string = User::get_user_timezone_string( $user );
-
-		$timezone = new \DateTimeZone( $timezone_string );
-		$date     = new \DateTime( $gmt_date, $timezone );
-
-		return date_i18n( $format, $date->getTimestamp() );
+		return self::create( $gmt_date )
+				->set_timezone( \TUTOR\User::get_user_timezone_string( $user ) )
+				->format( $format );
 	}
 }
