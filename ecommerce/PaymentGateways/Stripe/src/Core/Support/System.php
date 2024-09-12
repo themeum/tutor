@@ -2,6 +2,8 @@
 namespace Ollyo\PaymentHub\Core\Support;
 
 use stdClass;
+use Brick\Money\Money;
+use Brick\Math\RoundingMode;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 
@@ -66,11 +68,8 @@ class System
 				'transaction_id' 				=> '',
 				'payment_method' 				=> '',
 				'payment_payload' 				=> '',
-				'tax_amount_in_smallest_unit' 	=> '',
 				'tax_amount' 					=> '',
-				'fees_in_smallest_unit' 		=> '',
 				'fees' 							=> '',
-				'earnings_in_smallest_unit' 	=> '',
 				'earnings' 						=> ''
 			];
 			
@@ -82,7 +81,6 @@ class System
 				'refund_id' 						=> '',
 				'payment_method' 					=> '',
 				'refund_amount' 					=> '',
-				'refund_amount_in_smallest_unit' 	=> '',
 				'refund_error_reason' 				=> '',
 				'refund_payload' 					=> ''
 			];
@@ -160,5 +158,42 @@ class System
 		$address_2 = (strlen($data->address1) > $maxLength) ? mb_strimwidth($data->address1, $maxLength, $maxLength) : $data->address2;
 
 		return [$address_1, $address_2];
+	}
+
+	/**
+	 * Converts a major currency amount to its minor unit.
+	 *
+	 * @param  float|string $amount   	The major currency amount to convert.
+	 * @param  string       $currency 	The currency code to use for the conversion.
+	 *
+	 * @return int|null 				Returns the minor currency amount as an integer, or null if the amount is invalid.
+	 * @since  1.0.0
+	 */
+
+	public static function getMinorAmountBasedOnCurrency($amount, $currency)
+    {
+        if (!is_null($amount) || !empty($amount)) {
+            return Money::of((float)$amount, $currency, null, RoundingMode::HALF_UP)->getMinorAmount()->toInt();
+        }
+
+        return null;
+    }
+
+	/**
+	 * Converts a minor currency amount to its major unit equivalent.
+	 *
+	 * @param  int|string $amount   The minor currency amount to convert.
+	 * @param  string     $currency The currency code to use for the conversion.
+	 *
+	 * @return float|null 			Returns the major currency amount as a float, or null if the amount is invalid.
+	 * @since  1.0.0
+	 */
+	public static function convertMinorAmountToMajor($amount, $currency)
+	{
+		if (!is_null($amount) || !empty($amount)) {
+			return Money::ofMinor($amount, $currency, null, RoundingMode::HALF_UP)->getAmount()->toFloat();
+		}
+
+		return null;
 	}
 }
