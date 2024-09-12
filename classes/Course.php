@@ -1151,24 +1151,26 @@ class Course extends Tutor_Base {
 			$default_data['current_user']->data->tutor_profile_photo_url = $tutor_user->tutor_profile_photo_url;
 		}
 
-		// If need more data.
-		$settings                            = get_option( 'tutor_option', array() );
-		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $settings['tutor_frontend_course_page_logo_id'] ?? 0 );
-		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $settings['chatgpt_api_key'] ?? '' );
-
-		$remove_settings = array(
-			'chatgpt_api_key',
-			'recaptcha_v2_site_key',
-			'recaptcha_v3_site_key',
-			'twitter_app_key',
-			'twitter_app_key_secret',
-			'google_client_ID',
-			'facebook_app_ID',
+		/**
+		 * Localized only options to protect sensitive info like API keys.
+		 */
+		$required_options = array(
+			'monetize_by',
+			'enable_course_marketplace',
+			'course_permalink_base',
+			'supported_video_sources',
+			'enrollment_expiry_enabled',
+			'enable_q_and_a_on_course',
+			'instructor_can_delete_course',
+			'chatgpt_enable',
 		);
 
-		$new_data = array(
-			'settings' => array_diff_key( $settings, array_flip( $remove_settings ) ),
-		);
+		$full_settings                       = get_option( 'tutor_option', array() );
+		$settings                            = Options_V2::get_only( $required_options );
+		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
+		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+
+		$new_data = array( 'settings' => $settings );
 
 		$data = array_merge( $default_data, $new_data );
 
