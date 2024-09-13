@@ -182,12 +182,17 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
       return;
     }
 
-    setTimeout(() => {
+    // timeout to check if there is any popover on the stack after the animation is done
+    const timeoutId = setTimeout(() => {
       const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
       if (!hasPopoverOnStack && !hasModalOnStack) {
         document.body.style.overflow = 'initial';
       }
     }, ANIMATION_DURATION_WITH_THRESHOLD);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
   }, [isOpen, hasModalOnStack]);
 
   const { transitions } = useAnimation({

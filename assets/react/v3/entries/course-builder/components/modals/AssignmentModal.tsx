@@ -460,7 +460,7 @@ const styles = {
     gap: ${spacing[24]};
     position: sticky;
     top: 0;
-    z-index: ${zIndex.positive};
+    z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};
