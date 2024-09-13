@@ -20,6 +20,7 @@ export type WpMediaDetails = {
   id: number;
   url: string;
   title: string;
+  filename: string;
   date?: string;
   filesizeHumanReadable?: string;
   filesizeInBytes?: number;
@@ -116,6 +117,8 @@ const FormFileUploader = ({
   wpMedia.on('select', () => {
     const selected = wpMedia.state().get('selection').toJSON();
 
+    console.log(selected);
+
     const existingFileIds = new Set(
       Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : [],
     );
@@ -140,7 +143,7 @@ const FormFileUploader = ({
         name: file.title,
         size: file.filesizeHumanReadable,
         size_bytes: file.filesizeInBytes,
-        ext: file.subtype,
+        ext: file.filename.split('.').pop(),
       };
 
       if (!selectMultiple) {
@@ -330,6 +333,7 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
+    overflow: hidden;
   `,
   attachmentCardBody: css`
     ${styleUtils.display.flex('column')};
