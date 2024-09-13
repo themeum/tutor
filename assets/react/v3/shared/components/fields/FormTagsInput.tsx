@@ -44,13 +44,14 @@ const FormTagsInput = ({
 
   const [isOpen, setIsOpen] = useState(false);
 
+  const tagListQuery = useTagListQuery({ search: debouncedSearchText });
+  const createTagMutation = useCreateTagMutation();
+
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [tagListQuery.data?.length],
   });
-
-  const tagListQuery = useTagListQuery({ search: debouncedSearchText });
-  const createTagMutation = useCreateTagMutation();
 
   const handleCheckboxChange = (checked: boolean, tag: Tag) => {
     if (checked) {

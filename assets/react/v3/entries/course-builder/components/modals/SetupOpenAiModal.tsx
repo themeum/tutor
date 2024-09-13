@@ -41,11 +41,11 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
 
   const handleSubmit = async (data: OpenAiApiForm) => {
     const response = await saveOpenAiSettingsMutation.mutateAsync({
-      api_key: data.openAIApiKey,
-      chatgpt_enable: data.enable_open_ai ? 'on' : 'off',
+      chatgpt_api_key: data.openAIApiKey,
+      chatgpt_enable: data.enable_open_ai ? 1 : 0,
     });
 
-    if (response.success) {
+    if (response.status_code === 200) {
       closeModal({ action: 'CONFIRM' });
     }
   };

@@ -39,7 +39,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     enable_qna: data.enable_qna ? 'yes' : 'no',
     is_public_course: data.is_public_course ? 'yes' : 'no',
     course_level: data.course_level,
-    'course_settings[maximum_students]': data.maximum_students,
+    'course_settings[maximum_students]': data.maximum_students ?? 0,
     'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
     'course_settings[enable_content_drip]': data.contentDripType ? 1 : 0,
     'course_settings[content_drip_type]': data.contentDripType,

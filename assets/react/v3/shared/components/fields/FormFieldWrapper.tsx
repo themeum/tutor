@@ -357,13 +357,13 @@ const FormFieldWrapper = <T,>({
                                 {__('feature', 'tutor')}
                               </>
                             ),
-                            featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
                             image: emptyStateImage,
                             image2x: emptyStatImage2x,
+                            featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
                             features: [
                               __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
                               __(
-                                ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                                'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
                                 'tutor',
                               ),
                               __(

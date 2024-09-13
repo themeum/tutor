@@ -325,6 +325,7 @@ const AssignmentModal = ({
                           return topics;
                         }, [] as CourseTopic[]) || []
                       }
+                      isSearchable
                       helpText={__('Select items that should be complete before this item', 'tutor')}
                     />
                   )}
@@ -459,6 +460,7 @@ const styles = {
     gap: ${spacing[24]};
     position: sticky;
     top: 0;
+    z-index: ${zIndex.positive};
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};

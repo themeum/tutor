@@ -31,7 +31,7 @@ import SubscriptionPreview from '@CourseBuilderComponents/subscription/Subscript
 
 import config, { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
-import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
@@ -519,9 +519,6 @@ const CourseBasic = () => {
           <Controller
             name="course_product_id"
             control={form.control}
-            rules={{
-              ...requiredRule(),
-            }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
@@ -729,7 +726,6 @@ const styles = {
     min-height: calc(100vh - ${headerHeight}px);
     padding-left: ${spacing[32]};
     padding-block: ${spacing[24]};
-
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
@@ -778,6 +774,7 @@ const styles = {
   `,
   aiGradientText: css`
     background: ${colorTokens.text.ai.gradient};
+    background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   `,

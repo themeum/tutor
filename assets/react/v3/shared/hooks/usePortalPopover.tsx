@@ -178,19 +178,16 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
       document.body.style.overflow = 'hidden';
     }
 
-    return () => {
-      if (!hasModalOnStack) {
+    if (hasModalOnStack) {
+      return;
+    }
+
+    setTimeout(() => {
+      const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
+      if (!hasPopoverOnStack && !hasModalOnStack) {
         document.body.style.overflow = 'initial';
       }
-
-      // @todo: need to clarify why this is required.
-      // setTimeout(() => {
-      //   const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
-      //   if (!hasPopoverOnStack) {
-      //     document.body.style.overflow = 'initial';
-      //   }
-      // }, ANIMATION_DURATION_WITH_THRESHOLD);
-    };
+    }, ANIMATION_DURATION_WITH_THRESHOLD);
   }, [isOpen, hasModalOnStack]);
 
   const { transitions } = useAnimation({

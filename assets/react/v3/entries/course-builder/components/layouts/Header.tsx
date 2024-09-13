@@ -67,6 +67,7 @@ const Header = () => {
 
     if (data.course_price_type === 'paid') {
       if (tutorConfig.settings.monetize_by === 'edd' && !data.course_product_id) {
+        console.log('here');
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
@@ -74,7 +75,7 @@ const Header = () => {
 
       if (
         (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor') &&
-        !data.course_price
+        data.course_price === ''
       ) {
         navigateToBasicsWithError();
         triggerAndFocus('course_price');

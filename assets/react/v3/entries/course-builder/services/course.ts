@@ -744,20 +744,15 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
 };
 
 const saveOpenAiSettingsKey = (payload: {
-  api_key: string;
-  chatgpt_enable: 'on' | 'off';
+  chatgpt_api_key: string;
+  chatgpt_enable: 1 | 0;
 }) => {
   return wpAjaxInstance.post<
     {
-      api_key: string;
+      chatgpt_api_key: string;
       chatgpt_enable: 'on' | 'off';
     },
-    {
-      data: {
-        message: string;
-      };
-      success: boolean;
-    }
+    TutorMutationResponse<null>
   >(endpoints.OPEN_AI_SAVE_SETTINGS, {
     ...payload,
   });
@@ -769,7 +764,7 @@ export const useSaveOpenAiSettingsMutation = () => {
   return useMutation({
     mutationFn: saveOpenAiSettingsKey,
     onSuccess: (response) => {
-      showToast({ type: 'success', message: __(response.data.message, 'tutor') });
+      showToast({ type: 'success', message: __(response.message, 'tutor') });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: error.response.data.message });
