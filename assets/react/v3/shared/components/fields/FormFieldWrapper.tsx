@@ -8,7 +8,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { useModal } from '@Components/modals/Modal';
-import AiProIdentifierModal from '@CourseBuilderComponents/modals/AiProIdentifierModal';
+import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
 import config, { tutorConfig } from '@Config/config';
@@ -348,7 +348,7 @@ const FormFieldWrapper = <T,>({
                     onClick={() => {
                       if (!isTutorPro) {
                         showModal({
-                          component: AiProIdentifierModal,
+                          component: ProIdentifierModal,
                           props: {
                             title: (
                               <>

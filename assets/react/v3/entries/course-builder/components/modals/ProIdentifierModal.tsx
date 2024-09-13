@@ -12,7 +12,7 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-interface AiProIdentifierModalProps
+interface ProIdentifierModalProps
   extends Omit<ModalProps, 'entireHeader' | 'headerChildren' | 'icon' | 'subtitle' | 'actions'> {
   image?: string;
   image2x?: string;
@@ -23,7 +23,7 @@ interface AiProIdentifierModalProps
   footer?: React.ReactNode;
 }
 
-const AiProIdentifierModal = ({
+const ProIdentifierModal = ({
   title,
   message = __('This feature isn’t available on your current plan', 'tutor'),
   image,
@@ -32,7 +32,7 @@ const AiProIdentifierModal = ({
   closeModal,
   image2x,
   footer,
-}: AiProIdentifierModalProps) => {
+}: ProIdentifierModalProps) => {
   return (
     <BasicModalWrapper onClose={closeModal} entireHeader={<span css={styles.message}>{message}</span>}>
       <div css={styles.wrapper}>
@@ -71,7 +71,7 @@ const AiProIdentifierModal = ({
   );
 };
 
-export default AiProIdentifierModal;
+export default ProIdentifierModal;
 
 const styles = {
   wrapper: css`

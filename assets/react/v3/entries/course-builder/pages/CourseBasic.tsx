@@ -25,7 +25,7 @@ import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import AiProIdentifierModal from '@CourseBuilderComponents/modals/AiProIdentifierModal';
+import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
@@ -286,7 +286,7 @@ const CourseBasic = () => {
                 onClick={() => {
                   if (!isTutorPro) {
                     showModal({
-                      component: AiProIdentifierModal,
+                      component: ProIdentifierModal,
                       props: {
                         title: (
                           <>
