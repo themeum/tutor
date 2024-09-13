@@ -1,7 +1,5 @@
 {
     "version": "1.0.0",
-    "name": "themeum/tutor",
-    "description": "Global payment gateway implementation for wp and joomla",
     "type": "library",
     "license": "MIT",
     "require": {

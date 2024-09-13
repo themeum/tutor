@@ -77,8 +77,8 @@ class Paypal extends BasePayment
      * ensuring that the data is first prepared before setting it.
      * If an error occurs during data preparation, it is re-thrown.
      *
-     * @param  mixed     $data The data to be set.
-     * @throws Throwable       If an error occurs during data preparation, it is re-thrown.
+     * @param  object     $data The data to be set.
+     * @throws Throwable        If an error occurs during data preparation, it is re-thrown.
      * @since  1.0.0
      */
     public function setData($data): void
@@ -97,8 +97,8 @@ class Paypal extends BasePayment
      * including amount, shipping information, and payment preferences. It uses configuration
      * settings and ensures essential fields are set correctly.
      *
-     * @param  mixed $data The raw data to be processed.
-     * @return array       The structured data for sending to `Paypal Server`.
+     * @param  object $data The raw data to be processed.
+     * @return array        The structured data for sending to `Paypal Server`.
      * @since  1.0.0
      */
     public function prepareData($data)
@@ -540,6 +540,8 @@ class Paypal extends BasePayment
             $returnData->id              = $transactionInfo->custom_id;
             $returnData->payment_status  = $statusMap[$transactionInfo->status];
             $returnData->transaction_id  = $transactionInfo->id;
+            $returnData->fees            = $transactionInfo->seller_receivable_breakdown->paypal_fee->value ?? null;
+            $returnData->earnings        = $transactionInfo->seller_receivable_breakdown->net_amount->value ?? null;
         }
 
         $returnData->payment_payload = json_encode($payloadStream);
@@ -823,7 +825,7 @@ class Paypal extends BasePayment
     {
         return [
             'currency_code' => $data['currency']->code,
-            'value'         => (string) $data['amount'],
+            'value'         => (string) $data['total_amount'],
         ];
     }
 

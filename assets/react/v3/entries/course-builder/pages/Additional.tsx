@@ -186,7 +186,9 @@ const Additional = () => {
         <div css={styles.formSection}>
           <div css={styles.titleAndSub}>
             <div css={styles.title}>{__('Certificate', 'tutor')}</div>
-            <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+            <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+              <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+            </Show>
 
             <Certificate />
           </div>
@@ -198,7 +200,7 @@ const Additional = () => {
       <div css={styles.sidebar}>
         <div>
           <span css={styles.label}>
-            {__('Course prerequisites', 'tutor')}
+            {__('Course Prerequisites', 'tutor')}
             {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
           </span>
           <Show
