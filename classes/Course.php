@@ -2011,7 +2011,7 @@ class Course extends Tutor_Base {
 
 		$course = get_post( $post_ID );
 
-		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, 'paid' );
+		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
 		if ( 'wc' === $monetize_by ) {
 			$is_update = false;
@@ -2038,7 +2038,7 @@ class Course extends Tutor_Base {
 
 				// Set course regular & sale price.
 				update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
-				update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, $product_obj->get_sale_price() );
+				update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 			} else {
 				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
