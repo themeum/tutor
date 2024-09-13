@@ -1958,8 +1958,13 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.3.4
 	 *
+	 * @since 3.0.0
+	 *
+	 * Setting course regular & sale price to make compatible
+	 * with Tutor monetization
+	 *
 	 * @param integer $post_ID  course ID.
-	 * @param array   $post_data cretaed course post details.
+	 * @param array   $post_data created course post details.
 	 *
 	 * @return void
 	 */
@@ -2004,8 +2009,9 @@ class Course extends Tutor_Base {
 
 		$course = get_post( $post_ID );
 
-		if ( 'wc' === $monetize_by ) {
+		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, 'paid' );
 
+		if ( 'wc' === $monetize_by ) {
 			$is_update = false;
 			if ( $attached_product_id ) {
 				$wc_product = get_post_meta( $attached_product_id, '_product_version', true );
@@ -2021,14 +2027,20 @@ class Course extends Tutor_Base {
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 				}
 
-				$product_obj = wc_get_product( $attached_product_id );
+				
 				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
+				$product_obj = wc_get_product( $product_id );
 				if ( $product_obj->is_type( 'subscription' ) ) {
 					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
 				}
+
+				// Set course regular & sale price.
+				update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
+				update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, $product_obj->get_sale_price() );
 			} else {
 				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
+					$product_obj = wc_get_product( $attached_product_id );
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 					// Mark product for woocommerce.
 					update_post_meta( $product_id, '_virtual', 'yes' );
@@ -2038,6 +2050,10 @@ class Course extends Tutor_Base {
 					if ( $course_post_thumbnail ) {
 						set_post_thumbnail( $product_id, $course_post_thumbnail );
 					}
+
+					// Set course regular & sale price.
+					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
+					update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, $product_obj->get_sale_price() );
 				}
 			}
 		} elseif ( 'edd' === $monetize_by ) {
