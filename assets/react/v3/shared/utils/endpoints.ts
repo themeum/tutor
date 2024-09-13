@@ -19,12 +19,14 @@ const endpoints = {
   DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
   DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
   SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
+  TUTOR_YOUTUBE_VIDEO_DURATION: 'tutor_youtube_video_duration',
 
   GENERATE_AI_IMAGE: 'tutor_pro_generate_image',
   MAGIC_FILL_AI_IMAGE: 'tutor_pro_magic_fill_image',
   MAGIC_TEXT_GENERATION: 'tutor_pro_generate_text_content',
   MAGIC_AI_MODIFY_CONTENT: 'tutor_pro_modify_text_content',
   USE_AI_GENERATED_IMAGE: 'tutor_pro_use_magic_image',
+  OPEN_AI_SAVE_SETTINGS: 'tutor_pro_chatgpt_save_settings',
 
   GENERATE_COURSE_CONTENT: 'tutor_pro_generate_course_content',
   GENERATE_COURSE_TOPIC_CONTENT: 'tutor_pro_generate_course_topic_content',

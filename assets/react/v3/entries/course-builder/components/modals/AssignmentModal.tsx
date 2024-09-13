@@ -224,9 +224,6 @@ const AssignmentModal = ({
               <Controller
                 name="summary"
                 control={form.control}
-                rules={{
-                  required: __('Assignment summary is required', 'tutor'),
-                }}
                 render={(controllerProps) => (
                   <FormWPEditor
                     {...controllerProps}
@@ -325,6 +322,7 @@ const AssignmentModal = ({
                           return topics;
                         }, [] as CourseTopic[]) || []
                       }
+                      isSearchable
                       helpText={__('Select items that should be complete before this item', 'tutor')}
                     />
                   )}
@@ -444,10 +442,10 @@ export default AssignmentModal;
 
 const styles = {
   wrapper: css`
-    width: 1217px;
+    width: 1070px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 395px;
+    grid-template-columns: 1fr 338px;
     height: 100%;
     padding-inline: ${spacing[32]};
   `,
@@ -459,6 +457,7 @@ const styles = {
     gap: ${spacing[24]};
     position: sticky;
     top: 0;
+    z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};

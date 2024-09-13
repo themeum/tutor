@@ -75,6 +75,7 @@ const FormCoursePrerequisites = ({
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [filteredOption.length],
   });
 
   const handleDeleteSelection = (id: number) => {
