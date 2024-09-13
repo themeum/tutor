@@ -31,7 +31,7 @@ import SubscriptionPreview from '@CourseBuilderComponents/subscription/Subscript
 
 import config, { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
-import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
@@ -72,6 +72,7 @@ const CourseBasic = () => {
   const { showModal } = useModal();
 
   const [userSearchText, setUserSearchText] = useState('');
+  const [isWpEditorFullScreen, setIsWpEditorFullScreen] = useState(false);
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
@@ -271,7 +272,7 @@ const CourseBasic = () => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.mainForm}>
+      <div css={styles.mainForm({ isWpEditorFullScreen })}>
         <CanvasHead
           title={__('Course Basic', 'tutor')}
           backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
@@ -407,6 +408,9 @@ const CourseBasic = () => {
                     });
                   })()
                 }
+                onFullScreenChange={(isFullScreen) => {
+                  setIsWpEditorFullScreen(isFullScreen);
+                }}
               />
             )}
           />
@@ -708,9 +712,22 @@ const styles = {
     grid-template-columns: 1fr 338px;
     gap: ${spacing[32]};
   `,
-  mainForm: css`
+  mainForm: ({
+    isWpEditorFullScreen,
+  }: {
+    isWpEditorFullScreen: boolean;
+  }) => css`
     padding-block: ${spacing[24]};
     align-self: start;
+    top: 0;
+    position: sticky;
+
+    ${
+      isWpEditorFullScreen &&
+      css`
+        z-index: ${zIndex.header + 1};
+      `
+    }
   `,
 
   fieldsWrapper: css`

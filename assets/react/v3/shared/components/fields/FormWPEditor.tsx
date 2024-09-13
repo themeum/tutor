@@ -39,6 +39,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   isMagicAi?: boolean;
   autoFocus?: boolean;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
+  onFullScreenChange?: (isFullScreen: boolean) => void;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -66,6 +67,7 @@ const FormWPEditor = ({
   isMagicAi = false,
   autoFocus = false,
   onCustomEditorButtonClick,
+  onFullScreenChange,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -147,6 +149,7 @@ const FormWPEditor = ({
                 }}
                 isMinimal={isMinimal}
                 autoFocus={autoFocus}
+                onFullScreenChange={onFullScreenChange}
               />
             }
           >
@@ -193,6 +196,7 @@ const FormWPEditor = ({
                   }
                 }}
                 isMinimal={isMinimal}
+                onFullScreenChange={onFullScreenChange}
               />
             </Show>
           </Show>

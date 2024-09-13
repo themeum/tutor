@@ -11,6 +11,7 @@ interface WPEditorProps {
   onChange: (value: string) => void;
   isMinimal?: boolean;
   autoFocus?: boolean;
+  onFullScreenChange?: (isFullScreen: boolean) => void;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -20,7 +21,12 @@ if (!window.wp.editor.getDefaultSettings) {
   window.wp.editor.getDefaultSettings = () => ({});
 }
 
-function editorConfig(onChange: (value: string) => void, setIsFocused: (value: boolean) => void, isMinimal?: boolean) {
+function editorConfig(
+  onChange: (value: string) => void,
+  setIsFocused: (value: boolean) => void,
+  isMinimal?: boolean,
+  onFullScreenChange?: (isFullScreen: boolean) => void,
+) {
   return {
     tinymce: {
       wpautop: true,
@@ -159,6 +165,9 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
         });
         editor.on('focus', () => setIsFocused(true));
         editor.on('blur', () => setIsFocused(false));
+        editor.on('FullscreenStateChanged', (event: { state: boolean }) => {
+          onFullScreenChange?.(event.state);
+        });
       },
       wp_keep_scroll_position: false,
       wpeditimage_html5_captions: true,
@@ -173,7 +182,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
   };
 }
 
-const WPEditor = ({ value = '', onChange, isMinimal, autoFocus = false }: WPEditorProps) => {
+const WPEditor = ({ value = '', onChange, isMinimal, autoFocus = false, onFullScreenChange }: WPEditorProps) => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
   const [isFocused, setIsFocused] = useState(autoFocus);
@@ -210,7 +219,7 @@ const WPEditor = ({ value = '', onChange, isMinimal, autoFocus = false }: WPEdit
   useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       window.wp.editor.remove(editorId);
-      window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused, isMinimal));
+      window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused, isMinimal, onFullScreenChange));
 
       editorRef.current?.addEventListener('change', handleOnChange);
       editorRef.current?.addEventListener('input', handleOnChange);
