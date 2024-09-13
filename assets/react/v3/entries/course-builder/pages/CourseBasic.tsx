@@ -79,6 +79,7 @@ const CourseBasic = () => {
   const { tutor_currency } = tutorConfig;
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isOpenAiEnabled = tutorConfig.settings.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings.chatgpt_key_exist;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
@@ -276,70 +277,72 @@ const CourseBasic = () => {
           backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
           isExternalUrl
           rightButton={
-            <div>
-              <MagicButton
-                css={css`
+            <Show when={isOpenAiEnabled}>
+              <div>
+                <MagicButton
+                  css={css`
                   display: inline-flex;
                   align-items: center;
                   gap: ${spacing[4]};
                 `}
-                onClick={() => {
-                  if (!isTutorPro) {
-                    showModal({
-                      component: ProIdentifierModal,
-                      props: {
-                        title: (
-                          <>
-                            {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
-                            <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                            {__('feature', 'tutor')}
-                          </>
-                        ),
-                        featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
-                        image: emptyStateImage,
-                        image2x: emptyStatImage2x,
-                        features: [
-                          __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
-                          __(
-                            ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                            'tutor',
+                  onClick={() => {
+                    if (!isTutorPro) {
+                      showModal({
+                        component: ProIdentifierModal,
+                        props: {
+                          title: (
+                            <>
+                              {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                              <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                              {__('feature', 'tutor')}
+                            </>
                           ),
-                          __(
-                            'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
-                            'tutor',
+                          featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+                          image: emptyStateImage,
+                          image2x: emptyStatImage2x,
+                          features: [
+                            __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
+                            __(
+                              ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                              'tutor',
+                            ),
+                            __(
+                              'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
+                              'tutor',
+                            ),
+                            __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
+                          ],
+                          footer: (
+                            <Button
+                              onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                              icon={<SVGIcon name="crown" width={24} height={24} />}
+                            >
+                              {__('Get Tutor LMS Pro', 'tutor')}
+                            </Button>
                           ),
-                          __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
-                        ],
-                        footer: (
-                          <Button
-                            onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
-                            icon={<SVGIcon name="crown" width={24} height={24} />}
-                          >
-                            {__('Get Tutor LMS Pro', 'tutor')}
-                          </Button>
-                        ),
-                      },
-                    });
-                  } else if (!hasOpenAiAPIKey) {
-                    showModal({
-                      component: SetupOpenAiModal,
-                    });
-                  } else {
-                    showModal({
-                      component: AICourseBuilderModal,
-                      isMagicAi: true,
-                      props: {
-                        title: __('Create with AI', 'tutor'),
-                        icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-                      },
-                    });
-                  }
-                }}
-              >
-                <SVGIcon name="magicAi" width={24} height={24} />
-                {__('Generate with AI', 'tutor')}
-              </MagicButton>
-            </div>
+                        },
+                      });
+                    } else if (!hasOpenAiAPIKey) {
+                      showModal({
+                        component: SetupOpenAiModal,
+                      });
+                    } else {
+                      showModal({
+                        component: AICourseBuilderModal,
+                        isMagicAi: true,
+                        props: {
+                          title: __('Create with AI', 'tutor'),
+                          icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                        },
+                      });
+                    }
+                  }}
+                >
+                  <SVGIcon name="magicAi" width={24} height={24} />
+                  {__('Generate with AI', 'tutor')}
+                </MagicButton>
+              </div>
+            </Show>
           }
         />
 

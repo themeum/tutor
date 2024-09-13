@@ -271,6 +271,7 @@ const styles = {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings.chatgpt_key_exist;
+const isOpenAiEnabled = tutorConfig.settings.chatgpt_enable === 'on';
 
 const FormFieldWrapper = <T,>({
   field,
@@ -342,7 +343,7 @@ const FormFieldWrapper = <T,>({
             {label && (
               <label htmlFor={id} css={styles.label(isInlineLabel, replaceEntireLabel)}>
                 {label}
-                <Show when={generateWithAi}>
+                <Show when={generateWithAi && isOpenAiEnabled}>
                   <button
                     type="button"
                     onClick={() => {
