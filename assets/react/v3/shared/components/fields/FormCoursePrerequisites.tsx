@@ -318,6 +318,7 @@ const styles = {
         css`
           background-color: ${colorTokens.background.white};
           border-color: ${colorTokens.stroke.default};
+          cursor: default;
         `
       }
       
