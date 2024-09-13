@@ -61,7 +61,7 @@ class Arr implements ArrayAccess
 		return array_pop($this->items);
 	}
 
-	public function shift()
+	public function shift() 
 	{
 		return array_shift($this->items);
 	}
@@ -77,7 +77,7 @@ class Arr implements ArrayAccess
 		return $this->items[$length - 1];
 	}
 
-	public function front()
+	public function front() 
 	{
 		if ($this->count() === 0) {
 			return null;
@@ -86,7 +86,7 @@ class Arr implements ArrayAccess
 		return $this->items[0];
 	}
 
-	public function map(callable $callable): array
+	public function map(callable $callable) : array
 	{
 		$newArray = [];
 
@@ -167,12 +167,12 @@ class Arr implements ArrayAccess
 		return $this->has($key);
 	}
 
-	public function offsetGet( $key)
+	public function offsetGet( $key) : mixed
 	{
 		return $this->get($key);
 	}
 
-	public function offsetSet( $key, $value): void
+	public function offsetSet( $key,  $value): void
 	{
 		$this->set($key, $value);
 	}

@@ -151,6 +151,9 @@ class HooksHandler {
 				'payment_status'   => $new_payment_status,
 				'payment_payloads' => $res->payment_payload,
 				'transaction_id'   => $transaction_id,
+				'tax_amount'       => $res->tax_amount,
+				'earnings'         => $res->earnings,
+				'fees'             => $res->fees,
 				'updated_at_gmt'   => current_time( 'mysql', true ),
 			);
 
@@ -254,7 +257,7 @@ class HooksHandler {
 		$order      = $this->order_model->get_order_by_id( $order_id );
 		$student_id = $order->student->id;
 
-		$enrollment_status = OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : 'cancelled';
+		$enrollment_status = OrderModel::ORDER_COMPLETED === $order_status ? 'completed' : 'cancel';
 		if ( ! $cancel_enrollment ) {
 			$enrollment_status = 'completed';
 		}
