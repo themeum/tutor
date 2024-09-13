@@ -2,7 +2,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
-import coursePlaceholder from '@Images/common/course-placeholder.png';
+import profilePlaceholder from '@Images/profile-photo.png';
 import { typography } from '@Config/typography';
 
 interface StudentCardProps {
@@ -27,7 +27,7 @@ function StudentCard({
   return (
     <div css={styles.studentItem(hasSideBorders, !!onItemClick, isSelected)} onClick={onItemClick}>
       <div css={styles.studentThumb}>
-        <img src={avatar || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+        <img src={avatar || profilePlaceholder} css={styles.thumbnail} alt="avatar" />
       </div>
       <div css={styles.studentContent}>
         <div css={styles.studentTitle}>{name}</div>

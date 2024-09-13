@@ -14,7 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Ajax Class
@@ -22,6 +24,7 @@ use Tutor\Models\LessonModel;
  * @since 1.0.0
  */
 class Ajax {
+	use JsonResponse;
 
 	const LOGIN_ERRORS_TRANSIENT_KEY = 'tutor_login_errors';
 	/**
@@ -68,6 +71,8 @@ class Ajax {
 			 */
 			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
 			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
+
+			add_action( 'wp_ajax_tutor_youtube_video_duration', array( $this, 'ajax_youtube_video_duration' ) );
 		}
 	}
 
@@ -753,5 +758,46 @@ class Ajax {
 		}
 
 		wp_send_json_error( array( 'message' => __( 'Announcement delete failed', 'tutor' ) ) );
+	}
+
+	/**
+	 * Get youtube video duration.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_youtube_video_duration() {
+		tutor_utils()->check_nonce();
+
+		$video_id = Input::post( 'video_id' );
+		if ( empty( $video_id ) ) {
+			$this->json_response( __( 'Video ID is required', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		tutor_utils()->check_current_user_capability( 'edit_tutor_course' );
+
+		$api_key = tutor_utils()->get_option( 'lesson_video_duration_youtube_api_key', '' );
+		$url     = "https://www.googleapis.com/youtube/v3/videos?id=$video_id&part=contentDetails&key=$api_key";
+
+		$request = HttpHelper::get( $url );
+		if ( HttpHelper::STATUS_OK === $request->get_status_code() ) {
+			$response = $request->get_json();
+			if ( isset( $response->items[0]->contentDetails->duration ) ) {
+				$duration = $response->items[0]->contentDetails->duration;
+				$this->json_response(
+					__( 'Fetched duration successfully', 'tutor' ),
+					array(
+						'duration' => $duration,
+					)
+				);
+			}
+		}
+
+		$this->json_response(
+			__( 'Failed to fetch duration', 'tutor' ),
+			null,
+			HttpHelper::STATUS_BAD_REQUEST
+		);
 	}
 }
