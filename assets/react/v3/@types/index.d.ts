@@ -86,7 +86,6 @@ declare global {
         enable_course_marketplace: 'on' | 'off';
         course_permalink_base: string;
         supported_video_sources: string[] | string;
-        lesson_video_duration_youtube_api_key: string;
         enrollment_expiry_enabled: 'on' | 'off';
         enable_q_and_a_on_course: 'on' | 'off';
         instructor_can_delete_course: 'on' | 'off';
