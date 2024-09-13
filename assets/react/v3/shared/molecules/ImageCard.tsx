@@ -1,5 +1,5 @@
 import { borderRadius, colorPalate } from '@Config/styles';
-import productPlaceholder from '@Images/common/course-placeholder.png';
+import productPlaceholder from '@Images/course-placeholder.png';
 import { css } from '@emotion/react';
 
 interface ImageProps {

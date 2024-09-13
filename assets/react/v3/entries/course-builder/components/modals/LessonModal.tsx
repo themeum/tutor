@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
+import { useQueryClient } from '@tanstack/react-query';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
@@ -34,7 +35,6 @@ import {
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { maxLimitRule } from '@Utils/validation';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;

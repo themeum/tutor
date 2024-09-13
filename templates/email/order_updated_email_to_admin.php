@@ -1,6 +1,6 @@
 <?php
 /**
- * E-mail template for cancelled order
+ * E-mail template for refunded order
  *
  * @package TutorPro
  * @subpackage Templates\Email
@@ -30,9 +30,10 @@
 				<br>
 
 				<div class="tutor-email-buttons">
-					<a href="{dashboard_url}" class="tutor-email-button"><?php esc_html_e( 'Go to Dashboard', 'tutor-pro' ); ?></a>
+					<a href="{admin_order_url}" class="tutor-email-button"><?php esc_html_e( 'View Details', 'tutor-pro' ); ?></a>
 				</div>
 			</div>
+			<?php require TUTOR()->path . 'templates/email/email_footer.php'; ?>
 		</div>
 	</div>
 </body>

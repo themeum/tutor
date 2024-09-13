@@ -154,7 +154,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_requirements: courseDetails.course_requirements,
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
-    contentDripType: courseDetails.course_settings.content_drip_type ?? '',
+    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type : '',
     course_product_id:
       String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:
@@ -174,7 +174,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
-    enable_tutor_bp: courseDetails.course_settings.enable_tutor_bp === 1 ? true : false,
+    enable_tutor_bp:
+      isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1 ? true : false,
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
     editor_used: courseDetails.editor_used,
   };

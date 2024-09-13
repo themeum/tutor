@@ -153,7 +153,7 @@ class CheckoutController {
 
 		$current_user_id = get_current_user_id();
 
-		$request = Input::sanitize_array( $_POST );
+		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
 
@@ -195,7 +195,7 @@ class CheckoutController {
 		}
 
 		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
-		$coupon_code    = $request['coupon_code'];
+		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
 		$payment_method = $request['payment_method'];
 		$payment_type   = $request['payment_type'];
 		$order_type     = $request['order_type'];
@@ -204,7 +204,9 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
 
-		$price_details = $coupon_code ? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code ) : $coupon_model->apply_automatic_coupon_discount( $object_ids );
+		$price_details = $coupon_code
+						? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code, $order_type )
+						: $coupon_model->apply_automatic_coupon_discount( $object_ids, $order_type );
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
@@ -242,9 +244,10 @@ class CheckoutController {
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {
 					try {
-						$payment_data = $this->prepare_payment_data( $order_data );
+						$payment_data = self::prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method );
 					} catch ( \Throwable $th ) {
+						error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
 						wp_safe_redirect( home_url( '?tutor_order_placement=failed&order_id=' . $order_data['id'] ) );
 						exit();
 					}
@@ -283,7 +286,7 @@ class CheckoutController {
 	 *
 	 * @return mixed
 	 */
-	public function prepare_payment_data( array $order ) {
+	public static function prepare_payment_data( array $order ) {
 		$site_name     = get_bloginfo( 'name' );
 		$order_user_id = $order['user_id'];
 		$user_data     = get_userdata( $order_user_id );
@@ -291,6 +294,7 @@ class CheckoutController {
 		$items          = array();
 		$subtotal_price = $order['subtotal_price'];
 		$total_price    = $order['total_price'];
+		$order_type     = $order['order_type'];
 
 		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
@@ -326,47 +330,122 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		foreach ( $order['items'] as $item ) {
-			$item = (object) $item;
+			$item      = (object) $item;
+			$item_name = '';
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+				$plan_id   = $item->item_id;
+				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $plan_id );
+				$item_name = $plan_info->plan_name ?? '';
+			} else {
+				$item_name = get_the_title( $item->item_id );
+			}
 
 			$items[] = array(
-				'item_id'                           => $item->item_id,
-				'item_name'                         => get_the_title( $item->item_id ),
-				'regular_price'                     => floatval( $item->regular_price ),
-				'regular_price_in_smallest_unit'    => intval( floatval( $item->regular_price ) * 100 ),
-				'quantity'                          => 1,
-				'discounted_price'                  => floatval( $item->sale_price ),
-				'discounted_price_in_smallest_unit' => intval( floatval( $item->sale_price ) * 100 ),
+				'item_id'          => $item->item_id,
+				'item_name'        => $item_name,
+				'regular_price'    => floatval( $item->regular_price ),
+				'quantity'         => 1,
+				'discounted_price' => floatval( $item->sale_price ),
 			);
 		}
 
 		return (object) array(
-			'items'                                   => (object) $items,
-			'subtotal'                                => floatval( $subtotal_price ),
-			'subtotal_in_smallest_unit'               => intval( floatval( $subtotal_price ) * 100 ),
-			'total_price'                             => floatval( $total_price ),
-			'total_price_in_smallest_unit'            => intval( floatval( $total_price ) * 100 ),
-			'order_id'                                => $order['id'],
-			'store_name'                              => $site_name,
-			'order_description'                       => 'Tutor Order',
-			'tax'                                     => 0,
-			'tax_in_smallest_unit'                    => floatval( 0 * 100 ),
-			'currency'                                => (object) array(
+			'items'              => (object) $items,
+			'subtotal'           => floatval( $subtotal_price ),
+			'total_price'        => floatval( $total_price ),
+			'order_id'           => $order['id'],
+			'store_name'         => $site_name,
+			'order_description'  => 'Tutor Order',
+			'tax'                => 0,
+			'currency'           => (object) array(
 				'code'         => $currency_code,
 				'symbol'       => $currency_symbol,
 				'name'         => $currency_info['name'] ?? '',
 				'locale'       => $currency_info['locale'] ?? '',
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
-			'country'                                 => $country,
-			'shipping_charge'                         => 0,
-			'shipping_charge_in_smallest_unit'        => 0,
-			'coupon_discount'                         => 0,
-			'coupon_discount_amount_in_smallest_unit' => 0,
-			'shipping_address'                        => (object) $shipping_and_billing,
-			'billing_address'                         => (object) $shipping_and_billing,
-			'decimal_separator'                       => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
-			'thousand_separator'                      => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
-			'customer'                                => (object) $customer_info,
+			'country'            => $country,
+			'shipping_charge'    => 0,
+			'coupon_discount'    => 0,
+			'shipping_address'   => (object) $shipping_and_billing,
+			'billing_address'    => (object) $shipping_and_billing,
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
+			'customer'           => (object) $customer_info,
+		);
+	}
+
+	/**
+	 * Prepare payment data
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int   $order_id Order id.
+	 * @param float $amount Order amount.
+	 *
+	 * @throws \Exception Throw exception if order not found.
+	 *
+	 * @return mixed
+	 */
+	public static function prepare_recurring_payment_data( int $order_id ) {
+		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
+		if ( ! $order_data ) {
+			throw new \Exception( __( 'Order not found!', 'tutor' ) );
+		}
+
+		$amount = $order_data->total_price;
+
+		$order_user_id = $order_data->student->id;
+		$user_data     = get_userdata( $order_user_id );
+
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
+		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
+		$currency_info   = tutor_get_currencies_info_by_code( $currency_code );
+
+		$billing_info = ( new BillingModel() )->get_info( $order_user_id );
+
+		$country_info = tutor_get_country_info_by_name( $billing_info->billing_country );
+
+		$country = (object) array(
+			'name'         => $country_info['name'],
+			'numeric_code' => $country_info['numeric_code'],
+			'alpha_2'      => $country_info['alpha_2'],
+			'alpha_3'      => $country_info['alpha_3'],
+			'phone_code'   => $country_info['phone_code'],
+		);
+
+		$billing_name = $billing_info ? trim( $billing_info->billing_first_name . ' ' . $billing_info->billing_last_name ) : $user_data->display_name;
+
+		$shipping_and_billing = array(
+			'name'         => $billing_name,
+			'address1'     => $billing_info->billing_address ?? '',
+			'address2'     => $billing_info->billing_address ?? '',
+			'city'         => $billing_info->billing_city ?? '',
+			'state'        => $billing_info->billing_state ?? '',
+			'region'       => '',
+			'postal_code'  => $billing_info->billing_zip_code ?? '',
+			'country'      => $country,
+			'phone_number' => $billing_info->billing_phone ?? '',
+			'email'        => $billing_info->billing_email ?? '',
+		);
+
+		$customer_info = $shipping_and_billing;
+
+		return (object) array(
+			'type'             => 'recurring',
+			'previous_payload' => $order_data->payment_payloads,
+			'total_amount'     => floatval( $amount ),
+			'sub_total_amount' => floatval( $amount ),
+			'currency'         => (object) array(
+				'code'         => $currency_code,
+				'symbol'       => $currency_symbol,
+				'name'         => $currency_info['name'] ?? '',
+				'locale'       => $currency_info['locale'] ?? '',
+				'numeric_code' => $currency_info['numeric_code'] ?? '',
+			),
+			'order_id'         => $order_id,
+			'customer'         => (object) $customer_info,
+			'shipping_address' => (object) $shipping_and_billing,
 		);
 	}
 
@@ -384,14 +463,11 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function proceed_to_payment( $payment_data, $payment_method ) {
-		$gateways_with_class = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
+		$payment_gateways = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
-		$payment_gateway_class = null;
-		foreach ( $gateways_with_class as $gateway_ref ) {
-			if ( isset( $gateway_ref[ $payment_method ] ) ) {
-				$payment_gateway_class = $gateway_ref[ $payment_method ]['gateway_class'];
-			}
-		}
+		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
+								? $payment_gateways[ $payment_method ]['gateway_class']
+								: null;
 
 		if ( $payment_gateway_class ) {
 			try {
@@ -435,7 +511,7 @@ class CheckoutController {
 	 */
 	public function restrict_checkout_page() {
 		$page_id = self::get_page_id();
-		$plan_id = isset( $_GET['plan'] ) ? $_GET['plan'] : null;
+		$plan_id = Input::get( 'plan' );
 
 		if ( is_page( $page_id ) && ! $plan_id ) {
 			$cart_controller = new CartController();

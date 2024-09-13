@@ -464,6 +464,15 @@ window.tutor_esc_html = function (unsafeText) {
 	return safeHTML;
 }
 
+
+window.tutor_esc_attr = function(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
+}
+
 // enable custom selector when modal opens
 window.addEventListener('tutor_modal_shown', (e) => {
 	selectSearchField('.tutor-form-select');

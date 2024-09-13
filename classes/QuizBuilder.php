@@ -273,6 +273,7 @@ class QuizBuilder {
 			$id_str = QueryHelper::prepare_in_clause( $deleted_question_ids );
             //phpcs:ignore -- sanitized $id_str.
             $wpdb->query( "DELETE FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id IN (" . $id_str . ')' );
+			do_action( 'tutor_deleted_quiz_question_ids', $deleted_question_ids );
 		}
 
 		if ( count( $deleted_answer_ids ) ) {

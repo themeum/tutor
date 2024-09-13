@@ -6,6 +6,7 @@ import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
 import EmptyState from '@Molecules/EmptyState';
 import Tabs from '@Molecules/Tabs';
@@ -33,6 +34,7 @@ const certificateTabs: { label: string; value: CertificateTabValue }[] = [
 
 const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
+const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
 const Certificate = () => {
   const queryClient = useQueryClient();
@@ -46,6 +48,18 @@ const Certificate = () => {
   const [activeCertificateTab, setActiveCertificateTab] = useState<CertificateTabValue>('templates');
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>('landscape');
   const [selectedCertificate, setSelectedCertificate] = useState(currentCertificateKey);
+
+  const hasLandScapeCertificatesForActiveTab = certificatesData.some(
+    (certificate) =>
+      certificate.orientation === 'landscape' &&
+      (activeCertificateTab === 'templates' ? certificate.is_default : !certificate.is_default),
+  );
+
+  const hasPortraitCertificatesForActiveTab = certificatesData.some(
+    (certificate) =>
+      certificate.orientation === 'portrait' &&
+      (activeCertificateTab === 'templates' ? certificate.is_default : !certificate.is_default),
+  );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -71,6 +85,34 @@ const Certificate = () => {
 
   const handleTabChange = (tab: CertificateTabValue) => {
     setActiveCertificateTab(tab);
+
+    const hasLandScapeCertificatesForActiveTab = certificatesData.some(
+      (certificate) =>
+        certificate.orientation === 'landscape' &&
+        (tab === 'templates' ? certificate.is_default : !certificate.is_default),
+    );
+
+    const hasPortraitCertificatesForActiveTab = certificatesData.some(
+      (certificate) =>
+        certificate.orientation === 'portrait' &&
+        (tab === 'templates' ? certificate.is_default : !certificate.is_default),
+    );
+
+    setActiveOrientation((previousOrientation) => {
+      if (hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab) {
+        return previousOrientation;
+      }
+
+      if (hasLandScapeCertificatesForActiveTab) {
+        return 'landscape';
+      }
+
+      if (hasPortraitCertificatesForActiveTab) {
+        return 'portrait';
+      }
+
+      return 'landscape';
+    });
   };
 
   const handleOrientationChange = (orientation: 'landscape' | 'portrait') => {
@@ -84,62 +126,94 @@ const Certificate = () => {
 
   return (
     <Show
-      when={isTutorPro}
+      when={isTutorPro && isCertificateAddonEnabled}
       fallback={
         <EmptyState
           size="small"
           title={__('Your students deserve certificates!', 'tutor')}
-          description={__('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')}
+          description={
+            !isTutorPro
+              ? __('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')
+              : __('Enable the Certificate Addon to start creating certificates for your students.', 'tutor')
+          }
           emptyStateImage={emptyStateImage}
           emptyStateImage2x={emptyStateImage2x}
           imageAltText={__('Illustration of a certificate', 'tutor')}
           actions={
-            <Button
-              variant="primary"
-              size="small"
-              onClick={() => {
-                window.open(config.TUTOR_PRICING_PAGE, '_blank');
-              }}
-              icon={<SVGIcon name="crown" width={24} height={24} />}
+            <Show
+              when={!isTutorPro}
+              fallback={
+                <Button
+                  variant="primary"
+                  size="small"
+                  onClick={() => {
+                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+                  }}
+                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+                >
+                  {__('Enable Certificate Addon', 'tutor')}
+                </Button>
+              }
             >
-              {__('Get Tutor LMS Pro', 'tutor')}
-            </Button>
+              <Button
+                variant="primary"
+                size="small"
+                onClick={() => {
+                  window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                }}
+                icon={<SVGIcon name="crown" width={24} height={24} />}
+              >
+                {__('Get Tutor LMS Pro', 'tutor')}
+              </Button>
+            </Show>
           }
         />
       }
     >
-      <Show when={isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+      <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
           <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
           <div css={styles.orientation}>
-            <button
-              type="button"
-              css={[
-                styleUtils.resetButton,
-                styles.activeOrientation({
-                  isActive: activeOrientation === 'landscape',
-                }),
-              ]}
-              onClick={() => handleOrientationChange('landscape')}
-            >
-              <SVGIcon
-                name={activeOrientation === 'landscape' ? 'landscapeFilled' : 'landscape'}
-                width={32}
-                height={32}
-              />
-            </button>
-            <button
-              type="button"
-              css={[
-                styleUtils.resetButton,
-                styles.activeOrientation({
-                  isActive: activeOrientation === 'portrait',
-                }),
-              ]}
-              onClick={() => handleOrientationChange('portrait')}
-            >
-              <SVGIcon name={activeOrientation === 'portrait' ? 'portraitFilled' : 'portrait'} width={32} height={32} />
-            </button>
+            <Show when={hasLandScapeCertificatesForActiveTab}>
+              <Tooltip delay={200} content={__('Landscape', 'tutor')}>
+                <button
+                  type="button"
+                  css={[
+                    styleUtils.resetButton,
+                    styles.activeOrientation({
+                      isActive: activeOrientation === 'landscape',
+                    }),
+                  ]}
+                  onClick={() => handleOrientationChange('landscape')}
+                >
+                  <SVGIcon
+                    name={activeOrientation === 'landscape' ? 'landscapeFilled' : 'landscape'}
+                    width={32}
+                    height={32}
+                  />
+                </button>
+              </Tooltip>
+            </Show>
+            <Show when={hasPortraitCertificatesForActiveTab}>
+              <Tooltip delay={200} content={__('Portrait', 'tutor')}>
+                <button
+                  type="button"
+                  css={[
+                    styleUtils.resetButton,
+                    styles.activeOrientation({
+                      isActive: activeOrientation === 'portrait',
+                    }),
+                  ]}
+                  onClick={() => handleOrientationChange('portrait')}
+                >
+                  <SVGIcon
+                    name={activeOrientation === 'portrait' ? 'portraitFilled' : 'portrait'}
+                    width={32}
+                    height={32}
+                  />
+                </button>
+              </Tooltip>
+            </Show>
           </div>
         </div>
 

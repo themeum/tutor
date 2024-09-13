@@ -75,7 +75,6 @@ class Ecommerce {
 		new EmailController();
 		new PaymentHandler();
 
-
 	}
 
 	/**
@@ -115,7 +114,7 @@ class Ecommerce {
 	 * @return array
 	 */
 	public function add_monetization_option( $arr ) {
-		$arr[ self::MONETIZE_BY ] = __( 'Tutor', 'tutor' );
+		$arr[ self::MONETIZE_BY ] = __( 'Native', 'tutor' );
 
 		return $arr;
 	}
@@ -147,24 +146,22 @@ class Ecommerce {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return array
+	 * @param string $gateway gateway name.
+	 *
+	 * @return array|null
 	 */
-	public static function payment_gateways_with_ref() {
+	public static function payment_gateways_with_ref( $gateway = null ) {
 		$arr = array(
-			array(
-				'stripe' => array(
-					'gateway_class' => StripeGateway::class,
-					'config_class'  => StripeConfig::class,
-				),
+			'stripe' => array(
+				'gateway_class' => StripeGateway::class,
+				'config_class'  => StripeConfig::class,
 			),
-			array(
-				'paypal' => array(
-					'gateway_class' => PaypalGateway::class,
-					'config_class'  => PaypalConfig::class,
-				),
+			'paypal' => array(
+				'gateway_class' => PaypalGateway::class,
+				'config_class'  => PaypalConfig::class,
 			),
 		);
 
-		return $arr;
+		return is_null( $gateway ) ? $arr : $arr[ $gateway ] ?? null;
 	}
 }

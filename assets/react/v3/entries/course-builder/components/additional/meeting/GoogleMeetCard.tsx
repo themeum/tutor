@@ -96,7 +96,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
               size="small"
               type="button"
               onClick={() => {
-                window.open(meeting_data.meet_link, '_blank');
+                window.open(meeting_data.meet_link, '_blank', 'noopener');
               }}
             >
               {__('Start Meeting', 'tutor')}

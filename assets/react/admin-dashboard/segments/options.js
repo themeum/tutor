@@ -1,6 +1,7 @@
-import ajaxHandler from '../../../../../tutor-pro/assets/react/lib/ajax-handler';
+
 import { get_response_message } from '../../helper/response';
 import tutorFormData from '../../helper/tutor-formdata';
+import ajaxHandler from './filter';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -199,15 +200,18 @@ document.addEventListener('DOMContentLoaded', function () {
 						button.attr('disabled', true);
 					},
 					success: function (resp) {
-						const { data = {}, success, message = __('Settings Saved', 'tutor') } = resp || {};
+						const { data = {}, success, message = __('Settings Saved', 'tutor'), reload_required = false } = resp || {};
 
 						if (success) {
-							// Disableing save btn after saved successfully
+							// Disabling save btn after saved successfully
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
 							tutor_toast(__('Success!', 'tutor'), message, 'success');
 							window.dispatchEvent(new CustomEvent('tutor_option_saved', { detail: data }));
+							if ( reload_required ) {
+								window.location.reload( true );
+							}
 						} else {
 							tutor_toast(__('Warning!', 'tutor'), message, 'warning');
 						}

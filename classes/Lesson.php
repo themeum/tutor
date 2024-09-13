@@ -348,6 +348,10 @@ class Lesson extends Tutor_Base {
 		} else {
 			$lesson_data['ID'] = $lesson_id;
 
+			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			}
+
 			do_action( 'tutor/lesson_update/before', $lesson_id );
 			wp_update_post( $lesson_data );
 			do_action( 'tutor/lesson_update/after', $lesson_id );
@@ -382,9 +386,7 @@ class Lesson extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_delete_lesson() {
-		if ( ! tutor_utils()->is_nonce_verified() ) {
-			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
-		}
+		tutor_utils()->check_nonce();
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
@@ -396,9 +398,15 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
+		$content   = __( 'Lesson', 'tutor' );
+		$post_type = get_post_type( $lesson_id );
+		if ( tutor()->assignment_post_type === $post_type ) {
+			$content = __( 'Assignment', 'tutor' );
+		}
+
 		wp_delete_post( $lesson_id, true );
 
-		$this->json_response( __( 'Lesson deleted successfully', 'tutor' ) );
+		$this->json_response( sprintf( __( '% deleted successfully', 'tutor' ), $content ) );
 	}
 
 

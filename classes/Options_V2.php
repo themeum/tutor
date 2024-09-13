@@ -60,6 +60,7 @@ class Options_V2 {
 		}
 
 		// Saving option.
+		add_action( 'tutor_option_save_before', array( $this, 'validate_options' ) );
 		add_action( 'wp_ajax_tutor_option_save', array( $this, 'tutor_option_save' ) );
 		add_action( 'wp_ajax_tutor_option_default_save', array( $this, 'tutor_option_default_save' ) );
 		add_action( 'wp_ajax_tutor_option_search', array( $this, 'tutor_option_search' ) );
@@ -70,6 +71,7 @@ class Options_V2 {
 		add_action( 'wp_ajax_tutor_apply_settings', array( $this, 'tutor_apply_settings' ) );
 		add_action( 'wp_ajax_load_saved_data', array( $this, 'load_saved_data' ) );
 		add_action( 'wp_ajax_reset_settings_data', array( $this, 'reset_settings_data' ) );
+		add_action( 'tutor_option_monetize_by_changed', array( $this, 'handle_changed_monetization_option' ) );
 	}
 
 	/**
@@ -122,6 +124,20 @@ class Options_V2 {
 	}
 
 	/**
+	 * Get only list of options.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $only only options.
+	 *
+	 * @return array
+	 */
+	public static function get_only( $only = array() ) {
+		$settings = get_option( 'tutor_option', array() );
+		return array_intersect_key( $settings, array_flip( $only ) );
+	}
+
+	/**
 	 * Function to get all fields for search tutor_option_search
 	 *
 	 * @since 2.0.0
@@ -129,7 +145,7 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_option_search() {
-		 tutor_utils()->checking_nonce();
+		tutor_utils()->checking_nonce();
 
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
@@ -160,6 +176,7 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_export_settings() {
+		tutor_utils()->checking_nonce();
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
@@ -177,6 +194,8 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_export_single_settings() {
+
+		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
@@ -196,6 +215,8 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_apply_settings() {
+
+		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
@@ -218,6 +239,9 @@ class Options_V2 {
 	 * @return void send wp_json response
 	 */
 	public function tutor_delete_single_settings() {
+
+		tutor_utils()->checking_nonce();
+
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
@@ -387,6 +411,38 @@ class Options_V2 {
 		wp_send_json_success( $get_final_data );
 	}
 
+	/**
+	 * Validate options before save.
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param array $options option submitted to save.
+	 *
+	 * @return void
+	 */
+	public function validate_options( $options ) {
+		$success = true;
+		$message = '';
+
+		$enable_sharing        = $options['enable_revenue_sharing'] ?? 'off';
+		$admin_commission      = (int) $options['earning_admin_commission'] ?? 0;
+		$instructor_commission = (int) $options['earning_instructor_commission'] ?? 0;
+
+		if ( 'on' === $enable_sharing && ( $admin_commission + $instructor_commission ) > 100 ) {
+			$success = false;
+			$message = __( 'Total share percentage must be 100% or less' );
+		}
+
+		if ( ! $success ) {
+			wp_send_json(
+				array(
+					'success' => $success,
+					'message' => $message,
+				)
+			);
+		}
+
+	}
 
 	/**
 	 * Function tutor_option_save
@@ -401,9 +457,8 @@ class Options_V2 {
 		! current_user_can( 'manage_options' ) ? wp_send_json_error() : 0;
 
 		$data_before = get_option( 'tutor_option' );
-		do_action( 'tutor_option_save_before' );
-
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
+		do_action( 'tutor_option_save_before', $option );
 
 		$option = tutor_utils()->sanitize_recursively( $option );
 		$option = apply_filters( 'tutor_option_input', $option );
@@ -458,6 +513,23 @@ class Options_V2 {
 		);
 
 		wp_send_json( $data );
+	}
+
+	/**
+	 * Handle monetization option value change.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function handle_changed_monetization_option() {
+		add_filter(
+			'tutor_option_saved_data',
+			function( $res ) {
+				$res['reload_required'] = true;
+				return $res;
+			}
+		);
 	}
 
 	/**
@@ -627,6 +699,14 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor' ),
+							),
+							array(
+								'key'         => 'instructor_can_delete_course',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Allow Instructors to Trash Courses', 'tutor' ),
+								'label_title' => '',
+								'default'     => 'on',
+								'desc'        => __( 'Enable to allow instructors to trash courses. Disable to prevent them from trashing courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_become_instructor_btn',
@@ -1676,6 +1756,7 @@ class Options_V2 {
 	 * @since 2.0.0
 	 *
 	 * @param array $field field array.
+	 * @param array $blocks blocks array.
 	 *
 	 * @return void
 	 *

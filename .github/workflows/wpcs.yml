@@ -14,7 +14,7 @@ jobs:
         
         - name: Set target branch
           id: target-branch
-          run: echo "::set-output name=target_branch::v3"
+          run: echo "::set-output name=target_branch::dev"
 
         - name: Check Changed Files
           id: changed-files

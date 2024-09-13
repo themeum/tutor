@@ -138,7 +138,7 @@ class ValidationHelper {
 							}
 							break;
 						case 'date_format':
-							$format = $nested_rules[1];
+							$format = explode( ':', $rule, 2 )[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
 								$validation_pass             = false;
 								$validation_errors[ $key ][] = $key . __( ' invalid date format', 'tutor' );
@@ -284,11 +284,8 @@ class ValidationHelper {
 	 * string is valid according to the specified format.
 	 */
 	public static function is_valid_date( $date_string, $format ): bool {
-		$date_string    = gmdate( $format, strtotime( $date_string ) );
-		$date_object    = \DateTime::createFromFormat( $format, $date_string );
-		$formatted_date = is_object( $date_object ) ? $date_object->format( $format ) : null;
-
-		return $date_object && $formatted_date === $date_string ? true : false;
+		$date_object = \DateTime::createFromFormat( $format, $date_string );
+		return $date_object && $date_object->format( $format ) === $date_string;
 	}
 
 	/**

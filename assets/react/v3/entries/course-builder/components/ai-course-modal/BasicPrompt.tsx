@@ -4,17 +4,18 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { modal } from '@Config/constants';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { useGenerateCourseContentMutation } from '@CourseBuilderServices/magic-ai';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
+import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import { useContentGenerationContext } from './ContentGenerationContext';
 
 interface BasicPromptProps {
   onClose: () => void;
 }
+
 const BasicPrompt = ({ onClose }: BasicPromptProps) => {
   const form = useFormWithGlobalError<{ prompt: string }>({
     defaultValues: {
@@ -22,28 +23,22 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
     },
   });
 
-  const { setCurrentStep, updateContents, updateLoading } = useContentGenerationContext();
-  const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
+  const { setCurrentStep } = useContentGenerationContext();
+  const { startGeneration } = useGenerateCourseContent();
 
   return (
     <form
       css={styles.container}
       onSubmit={form.handleSubmit(async (values) => {
         setCurrentStep('generation');
-        updateLoading({ title: true, image: true, description: true, content: true, topic: true, quiz: true });
-        const response = await generateCourseTitleMutation.mutateAsync({ type: 'title', prompt: values.prompt });
-        updateLoading({ title: false });
-
-        if (response.data) {
-          updateContents({ title: response.data, prompt: values.prompt });
-        }
+        startGeneration(values.prompt);
       })}
     >
       <div css={styles.header}>
         <div css={styles.headerContent}>
           <div css={styles.iconWithTitle}>
             <SVGIcon name="magicAiColorize" width={24} height={24} />
-            <p css={styles.title}>{__('Create with AI', 'tutor')}</p>
+            <p css={styles.title}>{__('AI Studio', 'tutor')}</p>
           </div>
         </div>
         <div css={styles.actionsWrapper}>
@@ -68,7 +63,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
       <div css={styles.footer}>
         <MagicButton type="submit">
           <SVGIcon name="magicAi" width={24} height={24} />
-          {__('Create Now', 'tutor')}
+          {__('Generate now', 'tutor')}
         </MagicButton>
       </div>
     </form>

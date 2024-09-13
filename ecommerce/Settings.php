@@ -11,7 +11,6 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Input;
-use Tutor\PaymentGateways\Configs\StripeConfig;
 
 /**
  * Configure ecommerce settings
@@ -46,7 +45,7 @@ class Settings {
 			'slug'     => 'ecommerce_basic',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
-			'icon'     => 'tutor-icon-filter',
+			'icon'     => 'tutor-icon-gear',
 			'blocks'   => array(
 				array(
 					'label'      => false,
@@ -138,31 +137,31 @@ class Settings {
 			'slug'     => 'automate_payment_gateway',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
-			'icon'     => 'tutor-icon-filter',
+			'icon'     => 'tutor-icon-credit-card',
 			'blocks'   => array(),
 		);
-
-		$arr['ecommerce_tax'] = array(
-			'label'    => __( 'Tax', 'tutor' ),
-			'slug'     => 'ecommerce_tax',
-			'desc'     => __( 'Advanced Settings', 'tutor' ),
-			'template' => 'basic',
-			'icon'     => 'tutor-icon-filter',
-			'blocks'   => array(
-				array(
-					'label'      => __( 'Tax Configuration', 'tutor' ),
-					'slug'       => 'options',
-					'block_type' => 'uniform',
-					'fields'     => array(),
-				),
-			),
-		);
+		// @TODO.
+		// $arr['ecommerce_tax'] = array(
+		// 	'label'    => __( 'Tax', 'tutor' ),
+		// 	'slug'     => 'ecommerce_tax',
+		// 	'desc'     => __( 'Advanced Settings', 'tutor' ),
+		// 	'template' => 'basic',
+		// 	'icon'     => 'tutor-icon-receipt-percent',
+		// 	'blocks'   => array(
+		// 		array(
+		// 			'label'      => __( 'Tax Configuration', 'tutor' ),
+		// 			'slug'       => 'options',
+		// 			'block_type' => 'uniform',
+		// 			'fields'     => array(),
+		// 		),
+		// 	),
+		// );
 
 		$arr['ecommerce_checkout'] = array(
 			'label'    => __( 'Checkout', 'tutor' ),
 			'slug'     => 'ecommerce_checkout',
 			'template' => 'basic',
-			'icon'     => 'tutor-icon-filter',
+			'icon'     => 'tutor-icon-change',
 			'blocks'   => array(
 				array(
 					'label'      => __( 'Checkout Configuration', 'tutor' ),
@@ -170,36 +169,14 @@ class Settings {
 					'slug'       => 'checkout_configuration',
 					'block_type' => 'uniform',
 					'fields'     => array(
-						array(
-							'key'     => OptionKeys::BILLING_ADDRESS,
-							'type'    => 'select',
-							'label'   => __( 'Billing Address', 'tutor' ),
-							'default' => OptionKeys::get_billing_field_options()['optional'],
-							'options' => OptionKeys::get_billing_field_options(),
-						),
-						array(
-							'key'     => OptionKeys::BILLING_PHONE_NUMBER,
-							'type'    => 'select',
-							'label'   => __( 'Phone Number', 'tutor' ),
-							'default' => OptionKeys::get_billing_field_options()['optional'],
-							'options' => OptionKeys::get_billing_field_options(),
-							'desc'    => __( 'Choose the page for instructor registration.', 'tutor' ),
-						),
-						array(
-							'key'     => OptionKeys::BILLING_EMAIL,
-							'type'    => 'select',
-							'label'   => __( 'Email Address', 'tutor' ),
-							'default' => OptionKeys::get_billing_field_options()['optional'],
-							'options' => OptionKeys::get_billing_field_options(),
-							'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
-						),
-						array(
-							'key'     => OptionKeys::IS_TAX_APPLICABLE,
-							'type'    => 'toggle_switch',
-							'label'   => __( 'Apply Tax Rate', 'tutor' ),
-							'default' => 'off',
-							'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
-						),
+						// @TODO.
+						// array(
+						// 	'key'     => OptionKeys::IS_TAX_APPLICABLE,
+						// 	'type'    => 'toggle_switch',
+						// 	'label'   => __( 'Apply Tax Rate', 'tutor' ),
+						// 	'default' => 'off',
+						// 	'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
+						// ),
 						array(
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
 							'type'    => 'toggle_switch',

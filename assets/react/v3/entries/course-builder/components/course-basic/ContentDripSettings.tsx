@@ -1,15 +1,18 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { Controller, useFormContext } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import { tutorConfig } from '@Config/config';
+
+import config, { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { Controller, useFormContext } from 'react-hook-form';
 
 const ContentDripSettings = () => {
   const form = useFormContext<CourseFormData>();
@@ -45,8 +48,14 @@ const ContentDripSettings = () => {
         <p css={styles.dripNoProDescription}>
           {__('You can schedule your course content using  content drip options', 'tutor')}
         </p>
-        {/* @TODO: Redirect to tutor pro url */}
-        <Button icon={<SVGIcon name="crown" width={24} height={24} />}>{__('Get Tutor LMS Pro', 'tutor')}</Button>
+        <Button
+          icon={<SVGIcon name="crown" width={24} height={24} />}
+          onClick={() => {
+            window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+          }}
+        >
+          {__('Get Tutor LMS Pro', 'tutor')}
+        </Button>
       </div>
     );
   }
@@ -56,7 +65,7 @@ const ContentDripSettings = () => {
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="contentDrip" width={72} height={72} style={styles.dripIcon} />
         <h6 css={typography.body('medium')}>{__('Content Drip Addon is not enabled!', 'tutor')}</h6>
-        <p css={styles.dripNoProDescription}>{__('Please enable content drip addon to see options', 'tutor')}</p>
+        <p css={styles.dripNoProDescription}>{__('Please enable Content Drip addon to see options', 'tutor')}</p>
       </div>
     );
   }
@@ -67,7 +76,6 @@ const ContentDripSettings = () => {
         {__('You can schedule your course content using the above content drip options', 'tutor')}
       </p>
 
-      {/* @TODO: should be save on change */}
       <Controller
         name="contentDripType"
         control={form.control}

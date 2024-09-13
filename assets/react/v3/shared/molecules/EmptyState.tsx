@@ -3,13 +3,14 @@ import { css } from '@emotion/react';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import { isDefined } from '@Utils/types';
 
 type EmptyStateSize = 'small' | 'medium';
 
 interface EmptyStateProps {
-  emptyStateImage: string;
+  emptyStateImage?: string;
   emptyStateImage2x?: string;
-  imageAltText: string;
+  imageAltText?: string;
   title: string;
   size?: EmptyStateSize;
   description?: string;
@@ -28,8 +29,10 @@ const EmptyState = ({
   removeBorder = true,
 }: EmptyStateProps) => {
   return (
-    <div css={styles.bannerWrapper(size, removeBorder)}>
-      <img src={emptyStateImage} alt={imageAltText} srcSet={emptyStateImage2x ? `${emptyStateImage2x} 2x` : ''} />
+    <div css={styles.bannerWrapper(size, removeBorder, !!isDefined(emptyStateImage))}>
+      <Show when={emptyStateImage}>
+        <img src={emptyStateImage} alt={imageAltText} srcSet={emptyStateImage2x ? `${emptyStateImage2x} 2x` : ''} />
+      </Show>
       <div css={styles.messageWrapper(size)}>
         <h5 css={styles.title(size)}>{title}</h5>
         <Show when={description}>
@@ -46,27 +49,28 @@ const EmptyState = ({
 export default EmptyState;
 
 const styles = {
-  bannerWrapper: (size: EmptyStateSize, removeBorder: boolean) => css`
+  bannerWrapper: (size: EmptyStateSize, removeBorder: boolean, hasImage: boolean) => css`
     display: grid;
     place-items: center;
     justify-content: center;
     gap: ${spacing[36]};
-    padding: ${spacing[16]} ${spacing[20]};
+    padding: ${hasImage ? `${spacing[16]} ${spacing[20]}` : `${spacing[20]}`};
 
     ${
       !removeBorder &&
       css`
-      border: 1px solid ${colorTokens.stroke.divider};
-      border-radius: ${borderRadius.card};
-    `
+        border: 1px solid ${colorTokens.stroke.divider};
+        border-radius: ${borderRadius.card};
+        background-color: ${colorTokens.background.white};
+      `
     }
 
     ${
       size === 'small' &&
       css`
       gap: ${spacing[12]};
-      padding: ${spacing[12]};
-      padding-bottom: ${spacing[24]};
+      padding: ${hasImage ? spacing[12] : spacing[16]};
+      padding-bottom: ${hasImage ? spacing[24] : undefined};
     `
     }
 
@@ -81,8 +85,8 @@ const styles = {
       ${
         size === 'small' &&
         css`
-        max-width: 282px;
-      `
+          max-width: 282px;
+        `
       }
     }
   `,
@@ -97,8 +101,8 @@ const styles = {
     ${
       size === 'small' &&
       css`
-      gap: ${spacing[8]};
-    `
+        gap: ${spacing[8]};
+      `
     }
   `,
   title: (size: EmptyStateSize) => css`
@@ -108,9 +112,9 @@ const styles = {
     ${
       size === 'small' &&
       css`
-      ${typography.caption('medium')};
-      color: ${colorTokens.text.primary};
-    `
+        ${typography.caption('medium')};
+        color: ${colorTokens.text.primary};
+      `
     }
   `,
   description: (size: EmptyStateSize) => css`
@@ -120,9 +124,9 @@ const styles = {
     ${
       size === 'small' &&
       css`
-      ${typography.tiny()};
-      color: ${colorTokens.text.hints};
-    `
+        ${typography.tiny()};
+        color: ${colorTokens.text.hints};
+      `
     }
   `,
   actionWrapper: (size: EmptyStateSize) => css`
@@ -135,9 +139,9 @@ const styles = {
     ${
       size === 'small' &&
       css`
-      gap: ${spacing[8]};
-      margin-top: ${spacing[8]};
-    `
+        gap: ${spacing[8]};
+        margin-top: ${spacing[8]};
+      `
     }
   `,
 };

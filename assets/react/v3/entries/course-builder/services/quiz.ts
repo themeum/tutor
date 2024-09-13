@@ -211,7 +211,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
             ...answer,
             _data_status: calculateQuizDataStatus(answer),
             answer_view_format: answer.image_url ? 'text_image' : 'text',
-            is_correct: answer.is_correct === '1' ? '1' : '0',
           })),
           question_settings: {
             ...question.question_settings,
@@ -228,7 +227,6 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
             ...answer,
             _data_status: calculateQuizDataStatus(answer),
             answer_view_format: answer.image_url ? 'text_image' : 'text',
-            is_correct: answer.is_correct === '1' ? '1' : '0',
           })),
           question_settings: {
             ...question.question_settings,
@@ -577,4 +575,38 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
   }
 
   return 'no_change';
+};
+
+const deleteQuiz = (quizId: ID) => {
+  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
+    action: 'tutor_quiz_delete',
+    quiz_id: quizId,
+  });
+};
+
+export const useDeleteQuizMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteQuiz,
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
+        showToast({
+          message: __(response.message, 'tutor'),
+          type: 'success',
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['Topic'],
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
+  });
 };

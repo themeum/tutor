@@ -505,6 +505,8 @@ class Ajax {
 	 */
 	public function addon_enable_disable() {
 
+		tutor_utils()->checking_nonce();
+
 		if ( ! current_user_can( 'manage_options' ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
@@ -677,6 +679,12 @@ class Ajax {
 
 		if ( Input::has( 'announcement_id' ) ) {
 			$form_data['ID'] = Input::post( 'announcement_id' );
+		}
+
+		if ( ! empty( $form_data['ID'] ) ) {
+			if ( ! tutor_utils()->can_user_manage( 'announcement', $form_data['ID'] ) ) {
+				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+			}
 		}
 
 		// Validation message set.

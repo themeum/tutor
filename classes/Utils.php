@@ -1194,7 +1194,7 @@ class Utils {
 				$download = new \EDD_Download( $product_id );
 				$price    = \edd_price( $download->ID, false );
 			} elseif ( $this->is_monetize_by_tutor() ) {
-				$price = tutor_get_formatted_price_html( $course_id, false );
+				$price = \tutor_get_course_formatted_price_html( $course_id, false );
 			}
 		}
 
@@ -1286,7 +1286,7 @@ class Utils {
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
 		$get_enrolled_info = TutorCache::get( $cache_key );
-		if ( false === $get_enrolled_info ) {
+		if ( ! $get_enrolled_info ) {
 			$status_clause = '';
 			if ( $is_complete ) {
 				$status_clause = "AND post_status = 'completed' ";
@@ -2031,6 +2031,7 @@ class Utils {
 
 		$course_query = '';
 		if ( '' !== $course_id ) {
+			$course_id    = (int) $course_id;
 			$course_query = "AND posts.post_parent = {$course_id}";
 		}
 
@@ -2039,7 +2040,13 @@ class Utils {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
-		$order_query     = "ORDER BY posts.post_date {$order}";
+		$order_query     = '';
+		if ( '' !== $order ) {
+			$is_valid_sql = sanitize_sql_orderby( $order );
+			if ( $is_valid_sql ) {
+				$order_query = "ORDER BY posts.post_date {$order}";
+			}
+		}
 		$search_term_raw = $search_term;
 		$search_term     = '%' . $wpdb->esc_like( $search_term ) . '%';
 
@@ -2091,6 +2098,7 @@ class Utils {
 
 		$course_query = '';
 		if ( '' !== $course_id ) {
+			$course_id    = (int) $course_id;
 			$course_query = "AND posts.post_parent = {$course_id}";
 		}
 
@@ -3514,7 +3522,7 @@ class Utils {
 			$order_by = 'user.ID';
 		}
 
-		$order = sanitize_text_field( $order );
+		$order = sanitize_sql_orderby( $order );
 
 		if ( '' !== $date_filter ) {
 			$date_filter = \tutor_get_formated_date( 'Y-m-d', $date_filter );
@@ -5466,6 +5474,19 @@ class Utils {
 	}
 
 	/**
+	 * Generate cache busting URL
+	 *
+	 * @since 2.8.0
+	 *
+	 * @param string $url url.
+	 *
+	 * @return string
+	 */
+	public function get_nocache_url( $url ) {
+		return add_query_arg( 'nocache', time(), $url );
+	}
+
+	/**
 	 * Student registration form
 	 *
 	 * @since 1.0.0
@@ -6129,7 +6150,9 @@ class Utils {
 	 * @return int|string
 	 */
 	public function tutor_price( $price = 0 ) {
-		if ( function_exists( 'wc_price' ) ) {
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			return tutor_get_formatted_price( $price );
+		} elseif ( function_exists( 'wc_price' ) ) {
 			return wc_price( $price );
 		} elseif ( function_exists( 'edd_currency_filter' ) ) {
 			return edd_currency_filter( edd_format_amount( $price ) );
@@ -6764,7 +6787,7 @@ class Utils {
 	public function course_edit_link( $course_id = 0 ) {
 		$course_id = $this->get_post_id( $course_id );
 
-		$url = admin_url( "post.php?post={$course_id}&action=tutor" );
+		$url = admin_url( "admin.php?page=create-course&course_id={$course_id}" );
 		if ( tutor()->has_pro ) {
 			$url = $this->tutor_dashboard_url( 'create-course?course_id=' . $course_id );
 		}
@@ -9289,7 +9312,7 @@ class Utils {
 			'icon'  => 'tutor-icon-cart-bold',
 		);
 
-		$items = apply_filters( 'tutor_pro_after_order_history_menu', $items );
+		$items = apply_filters( 'tutor_after_order_history_menu', $items );
 
 		$items['question-answer'] = array(
 			'title' => __( 'Question & Answer', 'tutor' ),
@@ -9852,10 +9875,11 @@ class Utils {
 	 */
 	public function update_enrollments( string $status, array $enrollment_ids ): bool {
 		global $wpdb;
-		$enrollment_ids_in = implode( ',', $enrollment_ids );
+		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
 		$status            = 'complete' === $status ? 'completed' : $status;
 		$post_table        = $wpdb->posts;
-		$update            = $wpdb->query(
+		
+		$wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$post_table}
 				SET post_status = %s
@@ -9864,18 +9888,6 @@ class Utils {
 				$status
 			)
 		);
-
-		// Clear course progress if cancelled.
-		if ( $status == 'cancelled' || $status == 'cancel' ) {
-			foreach ( $enrollment_ids as $id ) {
-				$course_id  = get_post_field( 'post_parent', $id );
-				$student_id = get_post_field( 'post_author', $id );
-
-				if ( $course_id && $student_id ) {
-					$this->delete_course_progress( $course_id, $student_id );
-				}
-			}
-		}
 
 		// Run action hook.
 		foreach ( $enrollment_ids as $id ) {
@@ -10244,5 +10256,24 @@ class Utils {
 		} catch ( \Exception $e ) {
 			throw new \Exception( $e->getMessage() );
 		}
+	}
+
+	/**
+	 * Get readable next cron schedule time.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $cron_hook cron hook name.
+	 * @param array  $args arguments.
+	 *
+	 * @return string
+	 */
+	public function get_readable_next_schedule( $cron_hook, $args = array() ) {
+		$next_timestamp = wp_next_scheduled( $cron_hook, $args );
+		if ( false === $next_timestamp ) {
+			return null;
+		}
+
+		return sprintf( __( '%s left','tutor' ), human_time_diff( $next_timestamp ) );
 	}
 }

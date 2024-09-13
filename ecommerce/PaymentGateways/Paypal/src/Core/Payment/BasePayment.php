@@ -2,8 +2,8 @@
 
 namespace Ollyo\PaymentHub\Core\Payment;
 
-use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
+use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 
 abstract class BasePayment
 {
@@ -60,7 +60,7 @@ abstract class BasePayment
 	 *
 	 * @return mixed
 	 */
-	public function getData(): mixed
+	public function getData()
 	{
 		return $this->data;
 	}

@@ -220,6 +220,13 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_enroll_required_login_class', array( $this, 'add_enroll_required_login_class' ) );
 
 		/**
+		 * Remove wp trash button if instructor settings is disabled
+		 *
+		 * @since 2.7.3
+		 */
+		add_action( 'tutor_option_save_after', array( $this, 'disable_course_trash_instructor' ) );
+
+		/**
 		 * New course builder
 		 *
 		 * @since 3.0.0
@@ -244,6 +251,25 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
 		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
+	}
+
+	/**
+	 * Remove move to trash button on WordPress editor for instructor.
+	 *
+	 * @since 2.7.3
+	 *
+	 * @return void
+	 */
+	public function disable_course_trash_instructor() {
+		$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+		$role           = get_role( tutor()->instructor_role );
+		if ( ! $can_trash_post ) {
+			$role->remove_cap( 'delete_tutor_courses' );
+			$role->remove_cap( 'delete_tutor_course' );
+		} else {
+			$role->add_cap( 'delete_tutor_courses' );
+			$role->add_cap( 'delete_tutor_course' );
+		}
 	}
 
 	/**
@@ -1082,26 +1108,19 @@ class Course extends Tutor_Base {
 
 		$has_pro         = tutor()->has_pro;
 		$has_access_role = User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) );
-		$backend_create  = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
-		$backend_edit    = $backend_create && Input::has( 'course_id' );
+
+		$course_id       = Input::get( 'course_id', 0, Input::TYPE_INT );
+		$backend_builder = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
+		$backend_edit    = $backend_builder && $course_id;
 
 		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
-		$frontend_create     = $is_frontend_builder && false === Input::has( 'course_id' );
-		$frontend_edit       = $is_frontend_builder && Input::has( 'course_id' );
+		$frontend_edit       = $is_frontend_builder && $course_id;
 
-		// Create mode.
-		if ( $has_access_role && ( $backend_create || ( $has_pro && $frontend_create ) ) ) {
-			$this->load_course_builder_view();
-		}
-
-		// Edit mode.
 		if ( $has_access_role && ( $backend_edit || ( $has_pro && $frontend_edit ) ) ) {
-			$course_id        = Input::get( 'course_id', 0 );
-			$post_type        = get_post_type( $course_id );
-			$course_author    = (int) get_post_field( 'post_author', $course_id );
-			$is_course_author = get_current_user_id() === $course_author;
+			$post_type       = get_post_type( $course_id );
+			$can_edit_course = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 
-			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $is_course_author ) ) {
+			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
 				$this->load_course_builder_view();
 			}
 		}
@@ -1123,7 +1142,9 @@ class Course extends Tutor_Base {
 		wp_enqueue_editor();
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-vendors', tutor()->url . 'assets/js/tutor-vendors.min.js', array(), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element', 'tutor-vendors' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'wp-i18n', 'wp-element', 'tutor-vendors', 'tutor-shared' ), TUTOR_VERSION, true );
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
@@ -1132,23 +1153,26 @@ class Course extends Tutor_Base {
 			$default_data['current_user']->data->tutor_profile_photo_url = $tutor_user->tutor_profile_photo_url;
 		}
 
-		// If need more data.
-		$settings                            = get_option( 'tutor_option', array() );
-		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $settings['tutor_frontend_course_page_logo_id'] ?? 0 );
-
-		$remove_settings = array(
-			'chatgpt_api_key',
-			'recaptcha_v2_site_key',
-			'recaptcha_v3_site_key',
-			'twitter_app_key',
-			'twitter_app_key_secret',
-			'google_client_ID',
-			'facebook_app_ID',
+		/**
+		 * Localized only options to protect sensitive info like API keys.
+		 */
+		$required_options = array(
+			'monetize_by',
+			'enable_course_marketplace',
+			'course_permalink_base',
+			'supported_video_sources',
+			'enrollment_expiry_enabled',
+			'enable_q_and_a_on_course',
+			'instructor_can_delete_course',
+			'chatgpt_enable',
 		);
 
-		$new_data = array(
-			'settings' => array_diff_key( $settings, array_flip( $remove_settings ) ),
-		);
+		$full_settings                       = get_option( 'tutor_option', array() );
+		$settings                            = Options_V2::get_only( $required_options );
+		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
+		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+
+		$new_data = array( 'settings' => $settings );
 
 		$data = array_merge( $default_data, $new_data );
 
@@ -1870,7 +1894,26 @@ class Course extends Tutor_Base {
 			wp_send_json_error( array( 'message' => __( 'Only main instructor can delete this course', 'tutor' ) ) );
 		}
 
-		CourseModel::delete_course( $course_id );
+		// Check if user is only an instructor.
+		if ( ! current_user_can( 'administrator' ) ) {
+			// Check if instructor can trash course.
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' );
+
+			if ( ! $can_trash_post ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
+		$trash_course = wp_update_post(
+			array(
+				'ID'          => $course_id,
+				'post_status' => 'trash',
+			)
+		);
+
+		if ( $trash_course ) {
+			wp_send_json_success( __( 'Course has been trashed successfully ', 'tutor' ) );
+		}
 		wp_send_json_success();
 	}
 
@@ -2235,7 +2278,7 @@ class Course extends Tutor_Base {
 
 		return array_filter(
 			$items,
-			function( $item ) use ( $is_enrolled ) {
+			function ( $item ) use ( $is_enrolled ) {
 				if ( isset( $item['require_enrolment'] ) && $item['require_enrolment'] ) {
 					return $is_enrolled;
 				}
@@ -2260,6 +2303,7 @@ class Course extends Tutor_Base {
 		add_action( 'pre_get_posts', array( $this, 'filter_archive_meta_query' ), 1 );
 	}
 
+
 	/**
 	 * Tutor product meta query
 	 *
@@ -2283,8 +2327,38 @@ class Course extends Tutor_Base {
 	 * @return \WP_Query
 	 */
 	public function filter_woocommerce_product_query( $wp_query ) {
-		$wp_query->set( 'meta_query', array( $this->tutor_product_meta_query() ) );
+		$product_ids = $this->get_connected_wc_product_ids();
+		$wp_query->set( 'post__not_in', $product_ids );
 		return $wp_query;
+	}
+
+	/**
+	 * Get connected woocommerce product ids for course and course bundle
+	 *
+	 * @since 2.7.2
+	 *
+	 * @return array
+	 */
+	public function get_connected_wc_product_ids() {
+		global $wpdb;
+
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT DISTINCT pm.meta_value product_id
+				FROM {$wpdb->posts} p
+				INNER JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID
+				AND pm.meta_key = %s
+				WHERE post_type IN( 'courses','course-bundle' )",
+				'_tutor_course_product_id'
+			)
+		);
+
+		$ids = array();
+		if ( is_array( $results ) && count( $results ) ) {
+			$ids = array_column( $results, 'product_id' );
+		}
+
+		return $ids;
 	}
 
 	/**
@@ -2621,9 +2695,13 @@ class Course extends Tutor_Base {
 	 * @param int    $product_id product ID.
 	 * @param string $status product status.
 	 *
-	 * @return integer
+	 * @return integer Product id or return 0 if WC not exists
 	 */
 	public static function create_wc_product( $title, $reg_price, $sale_price, $product_id = 0, $status = 'publish' ) {
+		if ( ! tutor_utils()->has_wc() ) {
+			return 0;
+		}
+
 		$product_obj = new \WC_Product();
 		if ( $product_id ) {
 			$product_obj = wc_get_product( $product_id );
@@ -2646,7 +2724,7 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Load media scripts to support wp media lib on the course builder
+	 * Load media scripts
 	 *
 	 * @since 3.0.0
 	 *
@@ -2766,6 +2844,11 @@ class Course extends Tutor_Base {
 			if ( isset( $args['fields'] ) && isset( $args['fields']['user_email'] ) ) {
 				unset( $args['fields']['user_email'] );
 			}
+		}
+
+		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
+		if ( isset( $filter->role ) && is_array( $filter->role ) ) {
+			$args['role__in'] = array_map( 'sanitize_text_field', $filter->role );
 		}
 
 		return $args;

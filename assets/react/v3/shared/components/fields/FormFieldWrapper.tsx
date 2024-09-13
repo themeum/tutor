@@ -1,6 +1,7 @@
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -224,14 +225,17 @@ const styles = {
       ${typography.caption()};
     `
     }
-
-    & > button {
-      ${styleUtils.resetButton};
-      width: 32px;
-      height: 32px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+  `,
+  aiButton: css`
+    ${styleUtils.resetButton};
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    :disabled {
+      cursor: not-allowed;
     }
   `,
   inputWrapper: css`
@@ -272,6 +276,8 @@ const FormFieldWrapper = <T,>({
   replaceEntireLabel = false,
 }: FormFieldWrapperProps<T>) => {
   const id = nanoid();
+
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
 
   const inputCss = [
     styles.input({
@@ -319,9 +325,20 @@ const FormFieldWrapper = <T,>({
               <label htmlFor={id} css={styles.label(isInlineLabel, replaceEntireLabel)}>
                 {label}
                 <Show when={generateWithAi}>
-                  <button type="button" onClick={onClickAiButton}>
-                    <SVGIcon name="magicAiColorize" width={32} height={32} />
-                  </button>
+                  <Show
+                    when={!isTutorPro}
+                    fallback={
+                      <button type="button" onClick={onClickAiButton} css={styles.aiButton}>
+                        <SVGIcon name="magicAiColorize" width={32} height={32} />
+                      </button>
+                    }
+                  >
+                    <Tooltip delay={200} content={__('Pro Feature', 'tutor')}>
+                      <button type="button" onClick={onClickAiButton} disabled css={styles.aiButton}>
+                        <SVGIcon name="magicAiColorize" width={32} height={32} />
+                      </button>
+                    </Tooltip>
+                  </Show>
                 </Show>
               </label>
             )}

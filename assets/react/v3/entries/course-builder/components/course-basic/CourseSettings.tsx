@@ -4,16 +4,17 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tabs, { type TabItem } from '@Molecules/Tabs';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
-import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 
-import { tutorConfig } from '@Config/config';
+import FormCheckbox from '@Components/fields/FormCheckbox';
+import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import config, { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -46,16 +47,13 @@ const CourseSettings = () => {
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: !!isContentDripActive,
     },
-    ...(isAddonEnabled(Addons.BUDDYPRESS)
-      ? [
-          {
-            label: __('BuddyPress', 'tutor'),
-            value: 'buddyPress',
-            icon: <SVGIcon name="buddyPress" width={24} height={24} />,
-            activeBadge: !!isBuddyPressEnabled,
-          },
-        ]
-      : []),
+
+    {
+      label: __('BuddyPress', 'tutor'),
+      value: 'buddyPress',
+      icon: <SVGIcon name="buddyPress" width={24} height={24} />,
+      activeBadge: !!isBuddyPressEnabled,
+    },
   ];
 
   const difficultyLevelOptions = [
@@ -176,33 +174,67 @@ const CourseSettings = () => {
         {activeTab === 'content_drip' && <ContentDripSettings />}
 
         {activeTab === 'buddyPress' && (
-          <div css={styles.settingsOptions}>
-            <Controller
-              name="enable_tutor_bp"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
-              )}
-            />
+          <Show
+            when={tutorConfig.tutor_pro_url && isAddonEnabled(Addons.BUDDYPRESS)}
+            fallback={
+              <Show
+                when={!tutorConfig.tutor_pro_url}
+                fallback={
+                  <div css={styles.buddyPressNotEnabledWrapper}>
+                    <SVGIcon name="buddyPress" width={72} height={72} style={styles.addonIcon} />
+                    <h6 css={typography.body('medium')}>{__('Buddy Press Addon is not enabled!', 'tutor')}</h6>
+                    <p css={styles.buddyPressDescription}>
+                      {__('Please enable BuddyPress addon to see options', 'tutor')}
+                    </p>
+                  </div>
+                }
+              >
+                <div css={styles.buddyPressNotEnabledWrapper}>
+                  <SVGIcon name="crown" width={72} height={72} />
+                  <h6 css={typography.body('medium')}>{__('BuddyPress is a pro feature', 'tutor')}</h6>
+                  <p css={styles.buddyPressDescription}>
+                    {__('Discuss about course and share your knowledge with your friends through BuddyPress', 'tutor')}
+                  </p>
+                  <Button
+                    icon={<SVGIcon name="crown" width={24} height={24} />}
+                    onClick={() => {
+                      window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                    }}
+                  >
+                    {__('Get Tutor LMS Pro', 'tutor')}
+                  </Button>
+                </div>
+              </Show>
+            }
+          >
+            <div css={styles.settingsOptions}>
+              <Controller
+                name="enable_tutor_bp"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
+                )}
+              />
 
-            <Controller
-              name="bp_attached_group_ids"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormMultiSelectInput
-                  {...controllerProps}
-                  label={__('BuddyPress Groups', 'tutor')}
-                  helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
-                  placeholder={__('Search BuddyPress Groups', 'tutor')}
-                  options={(tutorConfig.bp_groups || []).map((group) => ({
-                    label: group.name,
-                    value: String(group.id),
-                  }))}
-                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                />
-              )}
-            />
-          </div>
+              <Controller
+                name="bp_attached_group_ids"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormMultiSelectInput
+                    {...controllerProps}
+                    label={__('BuddyPress Groups', 'tutor')}
+                    helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
+                    placeholder={__('Search BuddyPress Groups', 'tutor')}
+                    options={(tutorConfig.bp_groups || []).map((group) => ({
+                      label: group.name,
+                      value: String(group.id),
+                    }))}
+                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                  />
+                )}
+              />
+            </div>
+          </Show>
         )}
       </div>
     </div>
@@ -233,5 +265,25 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[32]};
     margin-top: ${spacing[12]};
+  `,
+  buddyPressNotEnabledWrapper: css`
+    min-height: 400px;
+    background: ${colorTokens.background.white};
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: ${spacing[4]};
+    padding: ${spacing[24]};
+    text-align: center;
+  `,
+  buddyPressDescription: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
+    max-width: 280px;
+    margin: 0 auto ${spacing[12]};
+  `,
+  addonIcon: css`
+    color: ${colorTokens.icon.brand};
   `,
 };
