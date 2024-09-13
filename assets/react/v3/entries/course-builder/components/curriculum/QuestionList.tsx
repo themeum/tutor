@@ -285,7 +285,7 @@ const QuestionList = ({
         </button>
       </div>
 
-      <div ref={questionListRef} css={styles.questionList}>
+      <div ref={questionListRef} css={styles.questionListWrapper}>
         <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
           <DndContext
             sensors={sensors}
@@ -300,19 +300,21 @@ const QuestionList = ({
               items={questions.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
-              <For each={questions}>
-                {(question, index) => (
-                  <Question
-                    key={question.question_id}
-                    question={question}
-                    index={index}
-                    onDuplicateQuestion={(data) => {
-                      handleDuplicateQuestion(data, index);
-                    }}
-                    onRemoveQuestion={() => handleDeleteQuestion(index, question)}
-                  />
-                )}
-              </For>
+              <div css={styles.questionList}>
+                <For each={questions}>
+                  {(question, index) => (
+                    <Question
+                      key={question.question_id}
+                      question={question}
+                      index={index}
+                      onDuplicateQuestion={(data) => {
+                        handleDuplicateQuestion(data, index);
+                      }}
+                      onRemoveQuestion={() => handleDeleteQuestion(index, question)}
+                    />
+                  )}
+                </For>
+              </div>
             </SortableContext>
 
             {createPortal(
@@ -416,9 +418,12 @@ const styles = {
       }
     }
   `,
-  questionList: css`
+  questionListWrapper: css`
     ${styleUtils.overflowYAuto};
     padding: ${spacing[8]} 0 ${spacing[8]} ${spacing[20]};
+  `,
+  questionList: css`
+    margin-right: ${spacing[20]};
   `,
   questionTypeOptionsTitle: css`
     ${typography.caption('medium')};

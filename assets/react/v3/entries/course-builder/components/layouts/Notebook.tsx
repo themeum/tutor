@@ -212,15 +212,29 @@ const Notebook = () => {
 
     if (!isCollapsed && isFloating) {
       const notebookData = jsonParse<NotebookData>(getFromLocalStorage(LocalStorageKeys.notebook) ?? '{}');
-      const { left, top, height, width } = notebookData.position || {
-        left: 'auto',
-        top: 'auto',
+      const { left = 'auto', top = 'auto', height, width } = notebookData.position || {};
+
+      const getPosition = (position: string, viewportSize: number, minSize: number) => {
+        if (position === 'auto') {
+          const centerPos = viewportSize / 2 - minSize;
+          return `${Math.max(centerPos, 0)}px`;
+        }
+        return position;
       };
 
-      wrapper.style.left = left === 'auto' ? `${window.innerWidth / 2 - notebook.MIN_NOTEBOOK_WIDTH}px` : left;
-      wrapper.style.top = top === 'auto' ? `${window.innerHeight / 2 - notebook.MIN_NOTEBOOK_HEIGHT}px` : top;
-      wrapper.style.height = isDefined(height) ? height : `${2 * notebook.MIN_NOTEBOOK_HEIGHT}px`;
-      wrapper.style.width = isDefined(width) ? width : `${2 * notebook.MIN_NOTEBOOK_WIDTH}px`;
+      const getSize = (size: string | undefined, viewportSize: number, minSize: number, position: string) => {
+        if (isDefined(size)) {
+          const sizeInPx = Number(size.split('px')[0]);
+          const positionInPx = Number(getPosition(position, viewportSize, minSize).split('px')[0]);
+          return viewportSize < sizeInPx + positionInPx ? `${viewportSize - 20}px` : size;
+        }
+        return `${Math.min(viewportSize - 10, 2 * minSize)}px`;
+      };
+
+      wrapper.style.left = getPosition(left, window.innerWidth, notebook.MIN_NOTEBOOK_WIDTH);
+      wrapper.style.top = getPosition(top, window.innerHeight, notebook.MIN_NOTEBOOK_HEIGHT);
+      wrapper.style.width = getSize(width, window.innerWidth, notebook.MIN_NOTEBOOK_WIDTH, left);
+      wrapper.style.height = getSize(height, window.innerHeight, notebook.MIN_NOTEBOOK_HEIGHT, top);
 
       return;
     }

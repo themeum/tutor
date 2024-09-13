@@ -90,6 +90,9 @@ declare global {
         enrollment_expiry_enabled: 'on' | 'off';
         enable_q_and_a_on_course: 'on' | 'off';
         instructor_can_delete_course: 'on' | 'off';
+        chatgpt_enable: 'on' | 'off';
+        course_builder_logo_url: string | false;
+        chatgpt_key_exist: boolean;
       };
       tutor_currency: {
         symbol: string;

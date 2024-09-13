@@ -227,6 +227,8 @@ export const colorTokens = {
     magicAi: '#484F66',
     ai: {
       purple: '#9D50FF',
+      gradient:
+        'linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%)',
     },
   },
   surface: {
