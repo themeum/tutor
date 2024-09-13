@@ -224,9 +224,6 @@ const AssignmentModal = ({
               <Controller
                 name="summary"
                 control={form.control}
-                rules={{
-                  required: __('Assignment summary is required', 'tutor'),
-                }}
                 render={(controllerProps) => (
                   <FormWPEditor
                     {...controllerProps}

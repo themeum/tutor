@@ -206,9 +206,6 @@ const LessonModal = ({
               <Controller
                 name="description"
                 control={form.control}
-                rules={{
-                  required: __('Description is required', 'tutor'),
-                }}
                 render={(controllerProps) => (
                   <FormWPEditor
                     {...controllerProps}
