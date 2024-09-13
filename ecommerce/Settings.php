@@ -83,7 +83,7 @@ class Settings {
 					'block_type' => 'uniform',
 					'fields'     => array(
 						array(
-							'key'            => OptionKeys::CURRENCY_SYMBOL,
+							'key'            => OptionKeys::CURRENCY_CODE,
 							'type'           => 'select',
 							'label'          => __( 'Currency Symbol', 'tutor' ),
 							'select_options' => true,
