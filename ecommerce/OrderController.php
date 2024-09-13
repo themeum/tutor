@@ -415,7 +415,7 @@ class OrderController {
 			);
 		}
 
-		do_action( 'tutor_order_payment_status_changed', $params['id'], '', $this->model::ORDER_CANCELLED, true );
+		do_action( 'tutor_order_payment_status_changed', $params['id'], '', $this->model::ORDER_CANCELLED );
 
 		$this->json_response( __( 'Order successfully canceled', 'tutor' ) );
 	}
@@ -524,7 +524,7 @@ class OrderController {
 
 			$this->model->update_order( $order_id, $update_data );
 
-			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status, $cancel_enrollment );
+			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status );
 
 			$this->json_response( __( 'Order refund successful', 'tutor' ) );
 		} else {
