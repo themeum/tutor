@@ -158,17 +158,19 @@ const FormQuestionTitle = ({
           }
         >
           <>
-            <Button
-              buttonCss={styles.actionButton}
-              variant="text"
-              size="small"
-              onClick={() => {
-                setIsEdit(false);
-              }}
-              disabled={field.value === previousValue}
-            >
-              <SVGIcon name="checkMark" height={24} width={24} />
-            </Button>
+            <Show when={field.value !== previousValue}>
+              <Button
+                buttonCss={styles.actionButton}
+                variant="text"
+                size="small"
+                onClick={() => {
+                  setIsEdit(false);
+                }}
+                disabled={field.value === previousValue}
+              >
+                <SVGIcon name="checkMark" height={24} width={24} />
+              </Button>
+            </Show>
             <Button
               buttonCss={styles.actionButton}
               variant="text"

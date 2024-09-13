@@ -31,7 +31,7 @@ import SubscriptionPreview from '@CourseBuilderComponents/subscription/Subscript
 
 import config, { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
-import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
