@@ -21,11 +21,12 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 
+import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
+  convertYouTubeDurationToSeconds,
   covertSecondsToHMS,
   getExternalVideoDuration,
   getVimeoVideoDuration,
-  getYouTubeVideoDuration,
 } from '@CourseBuilderUtils/utils';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
@@ -148,6 +149,7 @@ const FormVideoInput = ({
       videoUrl: '',
     },
   });
+  const getYouTubeVideoDurationMutation = useGetYouTubeVideoDuration();
 
   const videoSource = form.watch('videoSource') || '';
 
@@ -278,11 +280,17 @@ const FormVideoInput = ({
         }
       }
 
-      if (source === 'youtube' && tutorConfig.settings.lesson_video_duration_youtube_api_key) {
-        const duration = await getYouTubeVideoDuration(data.videoUrl);
+      if (source === 'youtube') {
+        const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        const match = data.videoUrl.match(regExp);
+        const videoId = match && match[7].length === 11 ? match[7] : '';
+        const response = await getYouTubeVideoDurationMutation.mutateAsync(videoId);
+
+        const duration = response.data.duration;
+        const seconds = convertYouTubeDurationToSeconds(duration);
 
         if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          onGetDuration(covertSecondsToHMS(Math.floor(seconds)));
         }
       }
     } catch (error) {
@@ -458,7 +466,37 @@ const FormVideoInput = ({
             <Controller
               control={form.control}
               name="videoUrl"
-              rules={{ required: __('This field is required', 'tutor') }}
+              rules={{
+                required: __('This field is required', 'tutor'),
+                validate: (value) => {
+                  const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
+                  if (!regex.test(value)) {
+                    return __('Invalid URL', 'tutor');
+                  }
+
+                  if (form.watch('videoSource') === 'youtube') {
+                    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+                    const match = value.match(regExp);
+                    if (!match || match[7].length !== 11) {
+                      return __('Invalid YouTube URL', 'tutor');
+                    }
+
+                    return true;
+                  }
+
+                  if (form.watch('videoSource') === 'vimeo') {
+                    const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+                    const match = value.match(regExp);
+
+                    if (!match || !match[5]) {
+                      return __('Invalid Vimeo URL', 'tutor');
+                    }
+                  }
+
+                  return true;
+                },
+              }}
               render={(controllerProps) => {
                 return <FormTextareaInput {...controllerProps} rows={2} placeholder={__('Enter video URL', 'tutor')} />;
               }}

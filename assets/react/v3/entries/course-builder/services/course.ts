@@ -771,3 +771,20 @@ export const useSaveOpenAiSettingsMutation = () => {
     },
   });
 };
+
+const getYouTubeVideoDuration = (videoId: string) => {
+  return wpAjaxInstance.post<
+    { videoId: string },
+    TutorMutationResponse<{
+      duration: string;
+    }>
+  >(endpoints.TUTOR_YOUTUBE_VIDEO_DURATION, {
+    video_id: videoId,
+  });
+};
+
+export const useGetYouTubeVideoDuration = () => {
+  return useMutation({
+    mutationFn: getYouTubeVideoDuration,
+  });
+};

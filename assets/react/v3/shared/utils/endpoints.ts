@@ -19,6 +19,7 @@ const endpoints = {
   DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
   DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
   SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
+  TUTOR_YOUTUBE_VIDEO_DURATION: 'tutor_youtube_video_duration',
 
   GENERATE_AI_IMAGE: 'tutor_pro_generate_image',
   MAGIC_FILL_AI_IMAGE: 'tutor_pro_magic_fill_image',
