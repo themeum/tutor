@@ -2693,10 +2693,14 @@ class Course extends Tutor_Base {
 	 * @param int    $product_id product ID.
 	 * @param string $status product status.
 	 *
-	 * @return integer
+	 * @return integer Product id or return 0 if WC not exists
 	 */
 	public static function create_wc_product( $title, $reg_price, $sale_price, $product_id = 0, $status = 'publish' ) {
-		$product_obj = class_exists( '\WC_Product' ) ? new \WC_Product() : null;
+		if ( ! tutor_utils()->has_wc() ) {
+			return 0;
+		}
+
+		$product_obj = new \WC_Product();
 		if ( $product_id ) {
 			$product_obj = wc_get_product( $product_id );
 		}
