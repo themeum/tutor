@@ -460,7 +460,7 @@ const FormVideoInput = ({
               name="videoUrl"
               rules={{ required: __('This field is required', 'tutor') }}
               render={(controllerProps) => {
-                return <FormTextareaInput {...controllerProps} rows={2} placeholder={__('https://')} />;
+                return <FormTextareaInput {...controllerProps} rows={2} placeholder={__('Enter video URL', 'tutor')} />;
               }}
             />
 
