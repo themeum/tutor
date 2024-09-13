@@ -406,8 +406,7 @@ class EmailController {
 
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type ) {
 				$plan = ( new PlanModel() )->get_plan( $order_data->items[0]->id );
-
-				$replacable['{course_name}'] = $plan->title;
+				$replacable['{course_name}'] = $plan->plan_name;
 			} else {
 				$replacable['{course_name}'] = count( $order_data->items ) > 1 ? _n( 'Course', 'Courses', count( $order_data->items ) ) : $order_data->items[0]->title;
 			}
