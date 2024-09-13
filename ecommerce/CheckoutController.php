@@ -296,7 +296,7 @@ class CheckoutController {
 		$total_price    = $order['total_price'];
 		$order_type     = $order['order_type'];
 
-		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
 		$currency_info   = tutor_get_currencies_info_by_code( $currency_code );
 
@@ -398,7 +398,7 @@ class CheckoutController {
 		$order_user_id = $order_data->student->id;
 		$user_data     = get_userdata( $order_user_id );
 
-		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
 		$currency_info   = tutor_get_currencies_info_by_code( $currency_code );
 

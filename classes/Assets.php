@@ -134,8 +134,8 @@ class Assets {
 		}
 
 		$tutor_currency = array(
-			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) ),
-			'currency'           => tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL ),
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) ),
+			'currency'           => tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ),
 			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' ),
 			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' ),
 			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),

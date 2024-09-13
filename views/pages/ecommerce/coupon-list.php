@@ -70,7 +70,7 @@ $filters = array(
 		$filters_template = tutor()->path . 'views/elements/filters.php';
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
-		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) );
+		$currency_symbol = Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) );
 	?>
 	<div class="tutor-admin-body">
 		<div class="tutor-mt-24">
