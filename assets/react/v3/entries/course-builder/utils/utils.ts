@@ -39,7 +39,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     enable_qna: data.enable_qna ? 'yes' : 'no',
     is_public_course: data.is_public_course ? 'yes' : 'no',
     course_level: data.course_level,
-    'course_settings[maximum_students]': data.maximum_students,
+    'course_settings[maximum_students]': data.maximum_students ?? 0,
     'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
     'course_settings[enable_content_drip]': data.contentDripType ? 1 : 0,
     'course_settings[content_drip_type]': data.contentDripType,
@@ -270,8 +270,10 @@ export const isAddonEnabled = (addon: Addon) => {
 };
 
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
-  const videoId = Number.parseInt(videoUrl.split('/').pop() || '', 10);
-  const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
+  const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+  const match = videoUrl.match(regExp);
+  const videoId = match ? match[5] : null;
+  const jsonUrl = `http${tutorConfig.is_ssl}://vimeo.com/api/v2/video/${videoId}.xml`;
 
   try {
     const response = await fetch(jsonUrl);
@@ -309,7 +311,7 @@ export const getExternalVideoDuration = async (videoUrl: string): Promise<number
   });
 };
 
-const convertYouTubeDurationToSeconds = (duration: string) => {
+export const convertYouTubeDurationToSeconds = (duration: string) => {
   const matches = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
 
   if (!matches) {
@@ -321,27 +323,6 @@ const convertYouTubeDurationToSeconds = (duration: string) => {
   const seconds = matches[3] ? Number(matches[3].replace('S', '')) : 0;
 
   return hours * 3600 + minutes * 60 + seconds;
-};
-
-export const getYouTubeVideoDuration = async (videoUrl: string): Promise<number | null> => {
-  const apiKey = tutorConfig.settings.lesson_video_duration_youtube_api_key;
-  const videoId = videoUrl.split('v=')[1];
-  const jsonUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&part=contentDetails&key=${apiKey}`;
-
-  try {
-    const response = await fetch(jsonUrl);
-    if (!response.ok) {
-      throw new Error('Failed to fetch the video data');
-    }
-
-    const data = await response.json();
-    const duration = data.items[0].contentDetails.duration;
-    const seconds = convertYouTubeDurationToSeconds(duration);
-    return seconds;
-  } catch (error) {
-    console.error('Error fetching video duration:', error);
-    return null;
-  }
 };
 
 export const covertSecondsToHMS = (seconds: number) => {
@@ -390,4 +371,27 @@ export const validateQuizQuestion = (
   }
 
   return true;
+};
+
+export const determinePostStatus = (
+  postStatus: 'trash' | 'future' | 'draft',
+  postVisibility: 'private' | 'password_protected',
+) => {
+  if (postStatus === 'trash') {
+    return 'trash';
+  }
+
+  if (postVisibility === 'private') {
+    return 'private';
+  }
+
+  if (postStatus === 'future') {
+    return 'future';
+  }
+
+  if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
+    return 'publish';
+  }
+
+  return postStatus;
 };

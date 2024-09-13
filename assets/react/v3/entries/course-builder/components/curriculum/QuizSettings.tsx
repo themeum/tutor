@@ -257,6 +257,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         return topics;
                       }, [] as CourseTopic[]) || []
                     }
+                    isSearchable
                     helpText={__('Select items that should be complete before this item', 'tutor')}
                   />
                 )}
