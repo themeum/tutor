@@ -22,9 +22,9 @@ import {
 } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import Logo from '@Images/logo.svg';
 import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
 import { convertCourseDataToPayload, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
+import Logo from '@Images/logo.svg';
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
@@ -67,7 +67,6 @@ const Header = () => {
 
     if (data.course_price_type === 'paid') {
       if (tutorConfig.settings.monetize_by === 'edd' && !data.course_product_id) {
-        console.log('here');
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
