@@ -22,7 +22,7 @@ import {
 } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import Logo from '@CourseBuilderPublic/images/logo.svg';
+import Logo from '@Images/logo.svg';
 import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
 import { convertCourseDataToPayload, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
 import DropdownButton from '@Molecules/DropdownButton';

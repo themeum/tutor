@@ -1,7 +1,7 @@
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import coursePlaceholder from '@Images/orders/course-placeholder.png';
+import coursePlaceholder from '@Images/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
 import { formatPrice } from '@Utils/currency';
 import { css } from '@emotion/react';

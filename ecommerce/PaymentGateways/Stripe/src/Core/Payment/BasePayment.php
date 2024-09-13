@@ -2,8 +2,8 @@
 
 namespace Ollyo\PaymentHub\Core\Payment;
 
-use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
+use Ollyo\PaymentHub\Contracts\Config\RepositoryContract;
 
 abstract class BasePayment
 {

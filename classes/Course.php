@@ -1142,7 +1142,9 @@ class Course extends Tutor_Base {
 		wp_enqueue_editor();
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-vendors', tutor()->url . 'assets/js/tutor-vendors.min.js', array(), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element', 'tutor-vendors' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'wp-i18n', 'wp-element', 'tutor-vendors', 'tutor-shared' ), TUTOR_VERSION, true );
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
@@ -2693,9 +2695,13 @@ class Course extends Tutor_Base {
 	 * @param int    $product_id product ID.
 	 * @param string $status product status.
 	 *
-	 * @return integer
+	 * @return integer Product id or return 0 if WC not exists
 	 */
 	public static function create_wc_product( $title, $reg_price, $sale_price, $product_id = 0, $status = 'publish' ) {
+		if ( ! tutor_utils()->has_wc() ) {
+			return 0;
+		}
+
 		$product_obj = new \WC_Product();
 		if ( $product_id ) {
 			$product_obj = wc_get_product( $product_id );
