@@ -106,12 +106,12 @@ export default function SubscriptionItem({
 
   const { transitions } = useAnimation({
     data: subscription.isExpanded,
+    animationDuration: 300,
     animationType: AnimationType.slideDown,
   });
 
   const subscriptionName = form.watch('plan_name');
   const paymentType = form.watch('payment_type');
-  const recurringInterval = form.watch('recurring_interval', 'month');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
   const isFeatured = form.watch('is_featured');
@@ -305,6 +305,7 @@ export default function SubscriptionItem({
                             { label: __('Month(s)', 'tutor'), value: 'month' },
                             { label: __('Year(s)', 'tutor'), value: 'year' },
                           ]}
+                          removeOptionsMinWidth
                         />
                       )}
                     />
