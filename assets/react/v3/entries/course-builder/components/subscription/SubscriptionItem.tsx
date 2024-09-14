@@ -38,7 +38,7 @@ import { requiredRule } from '@Utils/validation';
 
 import { OfferSalePrice } from './OfferSalePrice';
 
-const SET_FOCUS_AFTER = 100; // this is hack to fix layout shifting.
+const SET_FOCUS_AFTER = 100; // this is hack to fix layout shifting while animating.
 
 const courseId = getCourseId();
 const { tutor_currency } = tutorConfig;
