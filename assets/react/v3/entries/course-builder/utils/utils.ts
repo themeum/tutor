@@ -3,15 +3,25 @@ import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats } from '@Config/constants';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
-import type { ContentDripType, CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import type {
+  ContentDripType,
+  CourseDetailsResponse,
+  CourseFormData,
+  CoursePayload,
+} from '@CourseBuilderServices/course';
 import type { AssignmentPayload, ID, LessonPayload } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { convertToGMT } from '@Utils/util';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-export const convertCourseDataToPayload = (data: CourseFormData): any => {
+interface CourseFormDataWithEditState extends CourseFormData {
+  _tutor_prerequisites_main_edit: boolean;
+  _tutor_course_additional_data_edit: boolean;
+  _tutor_attachments_main_edit: boolean;
+}
+
+export const convertCourseDataToPayload = (data: CourseFormDataWithEditState): CoursePayload => {
   return {
     post_date: data.post_date,
     post_date_gmt: convertToGMT(new Date(data.post_date), DateFormats.yearMonthDayHourMinuteSecond),
@@ -30,10 +40,10 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
         'pricing[product_id]': data.course_product_id,
       }),
 
-    course_price: data.course_price ?? 0,
-    course_sale_price: data.course_sale_price ?? 0,
+    course_price: Number(data.course_price) ?? 0,
+    course_sale_price: Number(data.course_sale_price) ?? 0,
 
-    course_categories: data.course_categories,
+    course_categories: data.course_categories ?? [],
     course_tags: data.course_tags.map((item) => item.id),
     thumbnail_id: data.thumbnail?.id ?? null,
     enable_qna: data.enable_qna ? 'yes' : 'no',
@@ -58,12 +68,18 @@ export const convertCourseDataToPayload = (data: CourseFormData): any => {
     }),
 
     ...(isAddonEnabled(Addons.TUTOR_PREREQUISITES) && {
-      _tutor_prerequisites_main_edit: true,
+      ...(data._tutor_prerequisites_main_edit && {
+        _tutor_prerequisites_main_edit: true,
+      }),
       _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
     }),
     tutor_course_certificate_template: data.tutor_course_certificate_template,
-    _tutor_course_additional_data_edit: true,
-    _tutor_attachments_main_edit: true,
+    ...(data._tutor_course_additional_data_edit && {
+      _tutor_course_additional_data_edit: true,
+    }),
+    ...(data._tutor_attachments_main_edit && {
+      _tutor_attachments_main_edit: true,
+    }),
     ...(data.video.source && {
       'video[source]': data.video.source,
       'video[source_video_id]': data.video.source_video_id,
@@ -142,8 +158,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
         name: item.name,
       };
     }),
-    enable_qna: courseDetails.enable_qna === 'yes' ? true : false,
-    is_public_course: courseDetails.is_public_course === 'yes' ? true : false,
+    enable_qna: courseDetails.enable_qna === 'yes',
+    is_public_course: courseDetails.is_public_course === 'yes',
     course_level: courseDetails.course_level || 'intermediate',
     maximum_students: courseDetails.course_settings.maximum_students,
     enrollment_expiry: courseDetails.course_settings.enrollment_expiry,
@@ -153,7 +169,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_material_includes: courseDetails.course_material_includes,
     course_requirements: courseDetails.course_requirements,
     course_target_audience: courseDetails.course_target_audience,
-    isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1 ? true : false,
+    isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1,
     contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type : '',
     course_product_id:
       String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
@@ -174,8 +190,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_prerequisites: courseDetails.course_prerequisites ?? [],
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
-    enable_tutor_bp:
-      isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1 ? true : false,
+    enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
     editor_used: courseDetails.editor_used,
   };

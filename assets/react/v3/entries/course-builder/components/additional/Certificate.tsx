@@ -86,32 +86,23 @@ const Certificate = () => {
   const handleTabChange = (tab: CertificateTabValue) => {
     setActiveCertificateTab(tab);
 
-    const hasLandScapeCertificatesForActiveTab = certificatesData.some(
+    const hasLandScapeCertificatesForSelectedTab = certificatesData.some(
       (certificate) =>
         certificate.orientation === 'landscape' &&
         (tab === 'templates' ? certificate.is_default : !certificate.is_default),
     );
 
-    const hasPortraitCertificatesForActiveTab = certificatesData.some(
+    const hasPortraitCertificatesForSelectedTab = certificatesData.some(
       (certificate) =>
         certificate.orientation === 'portrait' &&
         (tab === 'templates' ? certificate.is_default : !certificate.is_default),
     );
 
     setActiveOrientation((previousOrientation) => {
-      if (hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab) {
+      if (hasLandScapeCertificatesForSelectedTab && hasPortraitCertificatesForSelectedTab) {
         return previousOrientation;
       }
-
-      if (hasLandScapeCertificatesForActiveTab) {
-        return 'landscape';
-      }
-
-      if (hasPortraitCertificatesForActiveTab) {
-        return 'portrait';
-      }
-
-      return 'landscape';
+      return hasLandScapeCertificatesForSelectedTab ? 'landscape' : 'portrait';
     });
   };
 
