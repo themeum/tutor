@@ -16,6 +16,7 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -29,7 +30,6 @@ import {
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import { tutorConfig } from '@Config/config';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
