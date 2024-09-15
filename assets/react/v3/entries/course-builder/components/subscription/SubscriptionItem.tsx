@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
-import { animated } from '@react-spring/web';
+import { animated, useSpring } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
 import { Controller } from 'react-hook-form';
@@ -27,13 +27,12 @@ import {
   useSaveCourseSubscriptionMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-
-import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 import { tutorConfig } from '@Config/config';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
 import { requiredRule } from '@Utils/validation';
 
 import { OfferSalePrice } from './OfferSalePrice';
@@ -114,17 +113,36 @@ export default function SubscriptionItem({
     animateLayoutChanges,
   });
 
-  const collapseAnimation = useCollapseExpandAnimation({
-    ref: subscriptionRef,
-    isOpen: subscription.isExpanded,
-    heightCalculator: 'client',
-  });
-
   const subscriptionName = form.watch('plan_name');
   const paymentType = form.watch('payment_type');
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const enableTrial = form.watch('enable_free_trial');
   const isFeatured = form.watch('is_featured');
+  const hasSale = form.watch('offer_sale_price');
+  const hasScheduledSale = !!form.watch('schedule_sale_price');
+
+  const [collapseAnimation, collapseAnimate] = useSpring(
+    {
+      height: subscription.isExpanded ? subscriptionRef.current?.scrollHeight : 0,
+      opacity: subscription.isExpanded ? 1 : 0,
+      overflow: 'hidden',
+      config: {
+        duration: 300,
+        easing: (t) => t * (2 - t),
+      },
+    },
+    [chargeEnrolmentFee, enableTrial, isFeatured, hasSale, hasScheduledSale, subscription.isExpanded],
+  );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isDefined(subscriptionRef.current)) {
+      collapseAnimate.start({
+        height: subscription.isExpanded ? subscriptionRef.current?.scrollHeight : 0,
+        opacity: subscription.isExpanded ? 1 : 0,
+      });
+    }
+  }, [chargeEnrolmentFee, enableTrial, isFeatured, hasSale, hasScheduledSale, subscription.isExpanded]);
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -481,6 +499,7 @@ export default function SubscriptionItem({
               size="small"
               onClick={() => {
                 toggleCollapse(subscription.id);
+                form.reset();
                 onDiscard();
               }}
             >
