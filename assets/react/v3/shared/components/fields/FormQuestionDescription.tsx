@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -36,26 +36,8 @@ const FormQuestionDescription = ({
   const [previousValue, setPreviousValue] = useState<string>(inputValue);
 
   return (
-    <div
-      css={styles.container({ isEdit })}
-      onClick={(e) => {
-        if (!isEdit) {
-          setIsEdit(true);
-        }
-      }}
-      onKeyDown={(event) => {
-        if ((event.key === 'Enter' || event.key === ' ') && !isEdit) {
-          setIsEdit(true);
-        }
-      }}
-    >
-      <Show
-        when={isEdit}
-        fallback={
-          <div css={styles.placeholder} dangerouslySetInnerHTML={{ __html: field.value || placeholder || '' }} />
-        }
-      >
-        {/* @TODO: need to work on wpEditor readonly mode */}
+    <div css={styles.editorWrapper({ isEdit })}>
+      <div css={styles.container({ isEdit })}>
         <FormWPEditor
           key={`${field.name + isEdit.toString()}`}
           field={field}
@@ -95,7 +77,22 @@ const FormQuestionDescription = ({
             </Button>
           </div>
         </Show>
-      </Show>
+        <Show when={!isEdit}>
+          <div
+            onClick={(e) => {
+              if (!isEdit) {
+                setIsEdit(true);
+              }
+            }}
+            onKeyDown={(event) => {
+              if ((event.key === 'Enter' || event.key === ' ') && !isEdit) {
+                setIsEdit(true);
+              }
+            }}
+            data-overlay
+          ></div>
+        </Show>
+      </div>
     </div>
   );
 };
@@ -103,11 +100,19 @@ const FormQuestionDescription = ({
 export default FormQuestionDescription;
 
 const styles = {
-  container: ({
-    isEdit,
-  }: {
-    isEdit: boolean;
-  }) => css`
+  editorWrapper: ({ isEdit }: { isEdit: boolean }) => css`
+    position: relative;
+    max-height: 400px;
+    overflow-y: scroll;
+
+    ${isEdit &&
+    css`
+      padding-inline: 0;
+      max-height: unset;
+      overflow: unset;
+    `}
+  `,
+  container: ({ isEdit }: { isEdit: boolean }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -118,11 +123,12 @@ const styles = {
     inset: 0;
     padding-inline: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]};
-    transition: background 0.15s ease-in-out;
+    transition: background-color 0.15s ease-in-out;
 
     [data-overlay] {
+      position: absolute;
+      inset: 0;
       opacity: 0;
-      transition: opacity 0.15s ease-in-out;
     }
 
     & label {
@@ -135,29 +141,20 @@ const styles = {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
 
-			[data-action-buttons] {
-				opacity: 1;
-			}
-
-      [data-overlay] {
+      [data-action-buttons] {
         opacity: 1;
       }
 
-      ${
-        isEdit &&
-        css`
-          background-color: transparent;
-        `
-      }
-      
-    };
-
-    ${
-      isEdit &&
+      ${isEdit &&
       css`
-        padding-inline: 0;
-      `
+        background-color: ${colorTokens.background.default};
+      `}
     }
+
+    ${isEdit &&
+    css`
+      padding-inline: 0;
+    `}
   `,
   placeholder: css`
     ${typography.caption()}
@@ -165,23 +162,17 @@ const styles = {
     height: 100%;
     inset: 0;
   `,
-  actionButtonWrapper: ({
-    isEdit,
-  }: {
-    isEdit: boolean;
-  }) => css`
+  actionButtonWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     display: flex;
-		justify-content: flex-end;
-		gap: ${spacing[8]};
+    justify-content: flex-end;
+    gap: ${spacing[8]};
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
 
-		${
-      isEdit &&
-      css`
-				opacity: 1;
-			`
-    }
+    ${isEdit &&
+    css`
+      opacity: 1;
+    `}
   `,
   overlay: css`
     position: absolute;

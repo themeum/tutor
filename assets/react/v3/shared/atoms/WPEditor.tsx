@@ -86,10 +86,16 @@ function editorConfig(
       branding: false,
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       setup: (editor: any) => {
-        if (readOnly) {
-          editor.setMode('readonly');
-          return;
-        }
+        editor.on('init', () => {
+          if (readOnly) {
+            setTimeout(() => {
+              editor.setMode('readonly');
+
+              const height = editor.contentDocument.querySelector('.mce-content-body').scrollHeight;
+              editor.iframeElement.style.height = `${height + 10}px`;
+            }, 200);
+          }
+        });
 
         if (!isMinimal) {
           editor.addButton('tutor_button', {
