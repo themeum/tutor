@@ -163,7 +163,7 @@ tutor_load_template(
 							</div>
 							<?php
 							if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
-								$content_id = \TUTOR_H5P\Utils::has_h5p_content_id( $post->post_content );
+								$content_id = \TutorPro\H5P\Utils::has_h5p_content_id( $post->post_content );
 								?>
 								<?php if ( $content_id > 0 ) : ?>
 									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper tutor-spotlight-h5p-lesson-content" data-h5p-content-id="<?php echo esc_attr( $content_id ); ?>" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-topic-id="<?php echo esc_attr( $post->post_parent ); ?>">

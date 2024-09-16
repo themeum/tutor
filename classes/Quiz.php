@@ -599,7 +599,7 @@ class Quiz {
 					foreach ( $question_ids as $question_id ) {
 						$question       = QuizModel::get_quiz_question_by_id( $question_id );
 						$question_type  = $question->question_type;
-						$attempt_result = \TUTOR_H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+						$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
 
 						if ( 'h5p' === $question_type ) {
 							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
@@ -811,7 +811,7 @@ class Quiz {
 					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
 						// Check if it is a h5p question.
 						if ( 'h5p' === $question_type ) {
-							$attempt_result = \TUTOR_H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+							$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
 							// Set the h5p question answer to tutor quiz attempt result.
 							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
 								$h5p_question_answer           = $attempt_result[0];
