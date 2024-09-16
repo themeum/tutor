@@ -51,7 +51,7 @@ const Header = () => {
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
-  const hasTrashAccess = tutorConfig.settings.instructor_can_delete_course === 'on' || isAdmin;
+  const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -66,14 +66,14 @@ const Header = () => {
     };
 
     if (data.course_pricing_category !== 'subscription' && data.course_price_type === 'paid') {
-      if (tutorConfig.settings.monetize_by === 'edd' && !data.course_product_id) {
+      if (tutorConfig.settings?.monetize_by === 'edd' && !data.course_product_id) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
       }
 
       if (
-        (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor') &&
+        (tutorConfig.settings?.monetize_by === 'wc' || tutorConfig.settings?.monetize_by === 'tutor') &&
         data.course_price === ''
       ) {
         navigateToBasicsWithError();
@@ -223,7 +223,7 @@ const Header = () => {
         }}
       >
         <Show
-          when={isTutorPro && tutorConfig.settings.course_builder_logo_url}
+          when={isTutorPro && tutorConfig.settings?.course_builder_logo_url}
           fallback={<Logo width={108} height={24} />}
         >
           {(logo) => <img src={logo} alt="Tutor LMS" />}

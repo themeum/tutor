@@ -65,10 +65,10 @@ type FormVideoInputProps = {
 } & FormControllerProps<CourseVideo | null>;
 
 const videoSources =
-  (tutorConfig.settings.supported_video_sources &&
-    (Array.isArray(tutorConfig.settings.supported_video_sources)
-      ? tutorConfig.settings.supported_video_sources
-      : [tutorConfig.settings.supported_video_sources])) ||
+  (tutorConfig.settings?.supported_video_sources &&
+    (Array.isArray(tutorConfig.settings?.supported_video_sources)
+      ? tutorConfig.settings?.supported_video_sources
+      : [tutorConfig.settings?.supported_video_sources])) ||
   [];
 
 const videoSourceLabels: Record<string, string> = {

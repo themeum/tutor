@@ -80,8 +80,8 @@ const CourseBasic = () => {
   const { tutor_currency } = tutorConfig;
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const isOpenAiEnabled = tutorConfig.settings.chatgpt_enable === 'on';
-  const hasOpenAiAPIKey = tutorConfig.settings.chatgpt_key_exist;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
+  const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
@@ -92,7 +92,7 @@ const CourseBasic = () => {
   const isInstructorVisible =
     isTutorPro &&
     isMultiInstructorEnabled &&
-    tutorConfig.settings.enable_course_marketplace === 'on' &&
+    tutorConfig.settings?.enable_course_marketplace === 'on' &&
     (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '') || isInstructor);
 
   const isAuthorEditable =
@@ -128,9 +128,9 @@ const CourseBasic = () => {
   ];
 
   const coursePriceOptions =
-    tutorConfig.settings.monetize_by === 'wc' ||
-    tutorConfig.settings.monetize_by === 'tutor' ||
-    tutorConfig.settings.monetize_by === 'edd'
+    tutorConfig.settings?.monetize_by === 'wc' ||
+    tutorConfig.settings?.monetize_by === 'tutor' ||
+    tutorConfig.settings?.monetize_by === 'edd'
       ? [
           {
             label: __('Free', 'tutor'),
@@ -174,12 +174,12 @@ const CourseBasic = () => {
     (instructor) => String(instructor.id) !== String(currentAuthor?.id),
   );
 
-  const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
+  const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings?.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
     courseProductId,
     String(courseId),
     coursePriceType,
-    tutorConfig.settings.monetize_by,
+    tutorConfig.settings?.monetize_by,
   );
 
   const wcProductOptions = (data: WcProduct[] | undefined) => {
@@ -212,7 +212,7 @@ const CourseBasic = () => {
       const { course_pricing } = courseDetails || {};
 
       if (
-        tutorConfig.settings.monetize_by === 'wc' &&
+        tutorConfig.settings?.monetize_by === 'wc' &&
         course_pricing?.product_id &&
         course_pricing.product_id !== '0' &&
         !wcProductOptions(wcProductsQuery.data).find(({ value }) => String(value) === String(course_pricing.product_id))
@@ -233,7 +233,7 @@ const CourseBasic = () => {
     const { course_pricing } = courseDetails || {};
 
     if (
-      tutorConfig.settings.monetize_by === 'edd' &&
+      tutorConfig.settings?.monetize_by === 'edd' &&
       course_pricing?.product_id &&
       course_pricing.product_id !== '0' &&
       !tutorConfig.edd_products.find(({ ID }) => String(ID) === String(course_pricing.product_id))
@@ -246,7 +246,7 @@ const CourseBasic = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (tutorConfig.settings.monetize_by !== 'wc') {
+    if (tutorConfig.settings?.monetize_by !== 'wc') {
       return;
     }
 
@@ -375,7 +375,7 @@ const CourseBasic = () => {
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
-                  baseURL={`${tutorConfig.home_url}/${tutorConfig.settings.course_permalink_base}`}
+                  baseURL={`${tutorConfig.home_url}/${tutorConfig.settings?.course_permalink_base}`}
                 />
               )}
             />
@@ -507,7 +507,7 @@ const CourseBasic = () => {
           )}
         />
 
-        <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings.monetize_by === 'tutor'}>
+        <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.monetize_by === 'tutor'}>
           <Controller
             name="course_pricing_category"
             control={form.control}
@@ -538,7 +538,7 @@ const CourseBasic = () => {
           />
         </Show>
 
-        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc'}>
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'wc'}>
           <Controller
             name="course_product_id"
             control={form.control}
@@ -559,7 +559,7 @@ const CourseBasic = () => {
           />
         </Show>
 
-        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'edd'}>
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'edd'}>
           <Controller
             name="course_product_id"
             control={form.control}
@@ -591,7 +591,7 @@ const CourseBasic = () => {
           when={
             courseCategory === 'regular' &&
             coursePriceType === 'paid' &&
-            (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc')
+            (tutorConfig.settings?.monetize_by === 'tutor' || tutorConfig.settings?.monetize_by === 'wc')
           }
         >
           <div css={styles.coursePriceWrapper}>

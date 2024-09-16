@@ -117,7 +117,7 @@ const CourseSettings = () => {
               )}
             />
 
-            <Show when={tutorConfig.settings.enrollment_expiry_enabled === 'on'}>
+            <Show when={tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
               <Controller
                 name="enrollment_expiry"
                 control={form.control}
@@ -153,7 +153,7 @@ const CourseSettings = () => {
                 )}
               />
 
-              <Show when={tutorConfig.settings.enable_q_and_a_on_course === 'on'}>
+              <Show when={tutorConfig.settings?.enable_q_and_a_on_course === 'on'}>
                 <Controller
                   name="enable_qna"
                   control={form.control}

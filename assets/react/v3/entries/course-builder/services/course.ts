@@ -551,7 +551,7 @@ const getWcProducts = (courseId?: string) => {
   });
 };
 
-export const useGetWcProductsQuery = (monetizeBy: 'tutor' | 'wc' | 'edd', courseId?: string) => {
+export const useGetWcProductsQuery = (monetizeBy: 'tutor' | 'wc' | 'edd' | undefined, courseId?: string) => {
   return useQuery({
     queryKey: ['WcProducts'],
     queryFn: () => getWcProducts(courseId).then((res) => res.data),
@@ -571,7 +571,7 @@ export const useWcProductDetailsQuery = (
   productId: string,
   courseId: string,
   coursePriceType: string,
-  monetizedBy: 'tutor' | 'wc' | 'edd',
+  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined,
 ) => {
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],

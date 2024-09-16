@@ -138,7 +138,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_pricing_category: (() => {
       if (
         isAddonEnabled(Addons.SUBSCRIPTION) &&
-        tutorConfig.settings.monetize_by === 'tutor' &&
+        tutorConfig.settings?.monetize_by === 'tutor' &&
         courseDetails.course_pricing.type === 'subscription'
       ) {
         return 'subscription';
