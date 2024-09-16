@@ -303,15 +303,21 @@ class EmailController {
 			$instructor_ids[] = get_post_field( 'post_author', $course_id );
 		}
 
-		if ( tutor_utils()->get_option( self::TO_STUDENTS . '.new_order' ) ) {
+		if ( tutor()->has_pro ) {
+			if ( tutor_utils()->get_option( self::TO_STUDENTS . '.new_order' ) ) {
+				$this->send_email_to( self::TO_STUDENTS, 'new_order', $student_ids, $order_data->id );
+			}
+
+			if ( tutor_utils()->get_option( self::TO_ADMIN . '.new_order' ) ) {
+				$this->send_email_to( self::TO_ADMIN, 'new_order', $admin_ids, $order_data->id );
+			}
+
+			if ( tutor_utils()->get_option( self::TO_TEACHERS . '.new_order' ) ) {
+				$this->send_email_to( self::TO_TEACHERS, 'new_order', $instructor_ids, $order_data->id );
+			}
+		} else {
 			$this->send_email_to( self::TO_STUDENTS, 'new_order', $student_ids, $order_data->id );
-		}
-
-		if ( tutor_utils()->get_option( self::TO_ADMIN . '.new_order' ) ) {
 			$this->send_email_to( self::TO_ADMIN, 'new_order', $admin_ids, $order_data->id );
-		}
-
-		if ( tutor_utils()->get_option( self::TO_TEACHERS . '.new_order' ) ) {
 			$this->send_email_to( self::TO_TEACHERS, 'new_order', $instructor_ids, $order_data->id );
 		}
 	}
@@ -405,7 +411,7 @@ class EmailController {
 			$replacable['{site_name}']            = $site_name;
 
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_data->order_type ) {
-				$plan = ( new PlanModel() )->get_plan( $order_data->items[0]->id );
+				$plan                        = ( new PlanModel() )->get_plan( $order_data->items[0]->id );
 				$replacable['{course_name}'] = $plan->plan_name;
 			} else {
 				$replacable['{course_name}'] = count( $order_data->items ) > 1 ? _n( 'Course', 'Courses', count( $order_data->items ) ) : $order_data->items[0]->title;
@@ -432,9 +438,7 @@ class EmailController {
 
 			$replacable['{email_message}'] = $this->get_replaced_text( $this->prepare_message( $option_data['message'] ), array_keys( $replacable ), array_values( $replacable ) );
 
-			if ( isset( $option_data['footer_text'] ) ) {
-				$replacable['{footer_text}'] = $this->get_replaced_text( $option_data['footer_text'], array_keys( $replacable ), array_values( $replacable ) );
-			}
+			$replacable['{footer_text}'] = $this->get_replaced_text( $option_data['footer_text'] ?? '', array_keys( $replacable ), array_values( $replacable ) );
 
 			$subject = $this->get_replaced_text( $option_data['subject'], array_keys( $replacable ), array_values( $replacable ) );
 
