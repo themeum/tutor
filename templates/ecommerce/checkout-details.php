@@ -10,13 +10,12 @@
 
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\OptionKeys;
-use Tutor\Helpers\SessionHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
 
 $user_id      = get_current_user_id();
-$plan_id      = Input::get( 'plan', 0 );
+$plan_id      = Input::get( 'plan', 0, Input::TYPE_INT );
 $plan_info    = new stdClass();
 $coupon_model = new CouponModel();
 
@@ -42,9 +41,16 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 			if ( isset( $plan_info->plan_name, $plan_info->regular_price ) ) :
 				$order_type       = OrderModel::TYPE_SUBSCRIPTION;
 				$automatic_coupon = $coupon_model->apply_automatic_coupon_discount( $plan_info->id, $order_type );
-				$regular_price    = $plan_info->regular_price;
-				$sale_price       = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
-				$enrollment_fee   = floatval( $plan_info->enrollment_fee );
+
+				if ( $plan_info->trial_value > 0 ) {
+					$regular_price = 0;
+					$sale_price    = 0;
+				} else {
+					$regular_price = $plan_info->regular_price;
+					$sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
+				}
+
+				$enrollment_fee = floatval( $plan_info->enrollment_fee );
 
 				if ( $automatic_coupon->is_applied ) {
 					foreach ( $automatic_coupon->items as $item ) {
