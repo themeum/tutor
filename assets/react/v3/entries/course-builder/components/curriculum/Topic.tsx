@@ -395,7 +395,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   }}
                   data-toggle-collapse
                 >
-                  <SVGIcon name={'chevronDown'} />
+                  <SVGIcon name={'chevronDown'} width={24} height={24} />
                 </button>
               </Show>
             </div>
@@ -817,7 +817,6 @@ const styles = {
     ${styleUtils.display.flex('column')};
 
     [data-toggle-collapse] {
-      align-self: center;
       transition: transform 0.3s ease-in-out;
       ${
         !isCollapsed &&
