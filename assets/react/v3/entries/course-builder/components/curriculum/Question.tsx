@@ -68,7 +68,11 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
     <div
       {...attributes}
       key={question.question_id}
-      css={styles.questionItem({ isActive: String(activeQuestionId) === String(question.question_id), isDragging })}
+      css={styles.questionItem({
+        isActive: String(activeQuestionId) === String(question.question_id),
+        isDragging,
+        isThreeDotsOpen: selectedQuestionId === question.question_id,
+      })}
       ref={(element) => {
         setNodeRef(element);
         // @ts-expect-error
@@ -163,9 +167,11 @@ const styles = {
   questionItem: ({
     isActive = false,
     isDragging = false,
+    isThreeDotsOpen = false,
   }: {
     isActive: boolean;
     isDragging: boolean;
+    isThreeDotsOpen: boolean;
   }) => css`
     padding: ${spacing[10]} ${spacing[8]};
     display: flex;
@@ -187,15 +193,25 @@ const styles = {
     ${
       isActive &&
       css`
-      border-color: ${colorTokens.stroke.brand};
-      background-color: ${colorTokens.background.active};
-      [data-icon-serial] {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        border-color: transparent;
-      }
-    `
+        border-color: ${colorTokens.stroke.brand};
+        background-color: ${colorTokens.background.active};
+        [data-icon-serial] {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+          border-color: transparent;
+        }
+      `
     }
+
+    ${
+      isThreeDotsOpen &&
+      css`
+        [data-three-dots] {
+          opacity: 1;
+        }
+      `
+    }
+
     :hover {
       background-color: ${colorTokens.background.white};
 

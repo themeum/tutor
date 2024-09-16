@@ -31,7 +31,7 @@ interface OpenAiApiForm {
   enable_open_ai: boolean;
 }
 
-const isOpenAiEnabled = tutorConfig.settings.chatgpt_enable === 'on';
+const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 const isCurrentUserAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
 const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {

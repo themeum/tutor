@@ -1,14 +1,12 @@
 import { css } from '@emotion/react';
-import { useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 import Button from '@Atoms/Button';
-
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
-
+import { __ } from '@wordpress/i18n';
 import FormWPEditor from './FormWPEditor';
 
 interface FormQuestionDescriptionProps extends FormControllerProps<string | null> {
@@ -24,45 +22,23 @@ interface FormQuestionDescriptionProps extends FormControllerProps<string | null
 
 const FormQuestionDescription = ({
   label,
-  maxLimit,
   field,
   fieldState,
   disabled,
-  readOnly,
   loading,
   placeholder,
   helpText,
   onChange,
 }: FormQuestionDescriptionProps) => {
   const inputValue = field.value ?? '';
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [previousValue, setPreviousValue] = useState<string>(inputValue);
 
-  let characterCount:
-    | {
-        maxLimit: number;
-        inputCharacter: number;
-      }
-    | undefined = undefined;
-
-  if (maxLimit) {
-    characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
-  }
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (isDefined(textareaRef.current)) {
-      textareaRef.current.focus();
-      setPreviousValue(inputValue);
-    }
-  }, [isEdit, textareaRef.current]);
-
   return (
     <div
       css={styles.container({ isEdit })}
-      onClick={() => {
+      onClick={(e) => {
         if (!isEdit) {
           setIsEdit(true);
         }
@@ -79,40 +55,46 @@ const FormQuestionDescription = ({
           <div css={styles.placeholder} dangerouslySetInnerHTML={{ __html: field.value || placeholder || '' }} />
         }
       >
+        {/* @TODO: need to work on wpEditor readonly mode */}
         <FormWPEditor
+          key={`${field.name + isEdit.toString()}`}
           field={field}
           fieldState={fieldState}
           label={label}
           disabled={disabled}
           helpText={helpText}
-          key={field.name}
           loading={loading}
-          readOnly={readOnly}
+          readOnly={!isEdit}
           onChange={onChange}
           placeholder={placeholder}
+          min_height={100}
+          max_height={400}
         />
-        <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => {
-              field.onChange(previousValue);
-              setIsEdit(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => {
-              setIsEdit(false);
-            }}
-            disabled={field.value === previousValue}
-          >
-            Ok
-          </Button>
-        </div>
+        <Show when={isEdit}>
+          <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                field.onChange(previousValue);
+                setIsEdit(false);
+              }}
+            >
+              {__('Cancel', 'tutor')}
+            </Button>
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={() => {
+                setIsEdit(false);
+                setPreviousValue(field.value || '');
+              }}
+              disabled={inputValue === previousValue}
+            >
+              {__('Ok', 'tutor')}
+            </Button>
+          </div>
+        </Show>
       </Show>
     </div>
   );
@@ -138,6 +120,11 @@ const styles = {
     border-radius: ${borderRadius[6]};
     transition: background 0.15s ease-in-out;
 
+    [data-overlay] {
+      opacity: 0;
+      transition: opacity 0.15s ease-in-out;
+    }
+
     & label {
       ${typography.caption()};
       margin-bottom: ${spacing[6]};
@@ -151,6 +138,10 @@ const styles = {
 			[data-action-buttons] {
 				opacity: 1;
 			}
+
+      [data-overlay] {
+        opacity: 1;
+      }
 
       ${
         isEdit &&
@@ -166,41 +157,6 @@ const styles = {
       css`
         padding-inline: 0;
       `
-    }
-  `,
-  inputContainer: (enableResize: boolean) => css`
-    position: relative;
-    display: flex;
-    cursor: text;
-
-    & textarea {
-      ${typography.caption()}
-      height: auto;
-      resize: none;
-
-      &.tutor-input-field {
-        padding: ${spacing[8]};
-      }
-
-      ${
-        enableResize &&
-        css`
-          resize: vertical;
-        `
-      }
-    }
-  `,
-  clearButton: css`
-    position: absolute;
-    right: ${spacing[2]};
-    top: ${spacing[2]};
-    width: 36px;
-    height: 36px;
-    border-radius: ${borderRadius[2]};
-    background: transparent;
-
-    button {
-      padding: ${spacing[10]};
     }
   `,
   placeholder: css`
@@ -226,6 +182,9 @@ const styles = {
 				opacity: 1;
 			`
     }
-
+  `,
+  overlay: css`
+    position: absolute;
+    inset: 0;
   `,
 };

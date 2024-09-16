@@ -290,6 +290,7 @@ export const styleUtils = {
 	`,
   overflowYAuto: css`
 		overflow-y: auto;
+		scrollbar-gutter: stable;
 
 		::-webkit-scrollbar {
 			background-color: ${colorTokens.primary[40]};
@@ -303,6 +304,7 @@ export const styleUtils = {
 	`,
   overflowXAuto: css`
 		overflow-x: auto;
+		scrollbar-gutter: stable;
 
 		::-webkit-scrollbar {
 			background-color: ${colorTokens.primary[40]};
