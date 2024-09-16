@@ -739,7 +739,7 @@ class CouponModel {
 				'is_applied'     => $should_apply_coupon,
 			);
 
-			$response['total_price'] += $discount_price > 0 ? $discount_price : $reg_price;
+			$response['total_price'] += $discount_price >= 0 ? $discount_price : $reg_price;
 		}
 
 		$response['deducted_price'] = $format_price ? tutor_get_formatted_price( $response['deducted_price'] ) : $response['deducted_price'];
@@ -822,7 +822,7 @@ class CouponModel {
 				'is_applied'     => $should_apply_coupon,
 			);
 
-			$response['total_price'] += $discount_price ? $discount_price : $reg_price;
+			$response['total_price'] += $discount_price >= 0 ? $discount_price : $reg_price;
 		}
 
 		return (object) $response;
@@ -847,7 +847,7 @@ class CouponModel {
 			$deducted_price = $regular_price - $discount_value;
 		}
 
-		return floatval( $deducted_price );
+		return floatval( max( 0, $deducted_price ) );
 	}
 
 	/**
