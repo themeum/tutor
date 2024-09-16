@@ -140,7 +140,7 @@ const styles = {
           css`
             padding: 0;
             padding-inline: ${spacing[6]};
-            margin: 0%;
+            margin: 0;
           `
         }
       `
