@@ -50,6 +50,7 @@ const FormSwitch = ({
             <Switch
               {...field}
               {...inputProps}
+              disabled={disabled}
               checked={field.value}
               labelCss={labelCss}
               labelPosition={labelPosition}

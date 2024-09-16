@@ -224,17 +224,30 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         </div>
 
         <div css={styles.actions} data-actions>
-          <Show when={type === 'tutor_quiz' && isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+          <Show when={type === 'tutor_quiz'}>
             <Tooltip content={__('Export Quiz', 'tutor')} delay={200}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                onClick={() => {
-                  exportQuizMutation.mutate(content.id);
-                }}
+              <Show
+                when={!isTutorPro}
+                fallback={
+                  <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      onClick={() => {
+                        exportQuizMutation.mutate(content.id);
+                      }}
+                    >
+                      <SVGIcon name="export" width={24} height={24} />
+                    </button>
+                  </Show>
+                }
               >
-                <SVGIcon name="export" width={24} height={24} />
-              </button>
+                <ProBadge size="tiny">
+                  <button type="button" css={styles.actionButton} disabled onClick={noop}>
+                    <SVGIcon name="export" width={24} height={24} />
+                  </button>
+                </ProBadge>
+              </Show>
             </Tooltip>
           </Show>
           <Tooltip content={__('Edit', 'tutor')} delay={200}>
