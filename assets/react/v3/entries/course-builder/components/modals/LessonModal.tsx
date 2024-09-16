@@ -35,6 +35,7 @@ import {
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { maxLimitRule } from '@Utils/validation';
+import ProBadge from '@Atoms/ProBadge';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -405,7 +406,7 @@ const LessonModal = ({
                     label={
                       <div css={styles.previewLabel}>
                         {__('Lesson Preview', 'tutor')}
-                        {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+                        {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
                       </div>
                     }
                     helpText={
@@ -488,6 +489,7 @@ const styles = {
   previewLabel: css`
     display: flex;
     align-items: center;
+    gap: ${spacing[4]};
   `,
   contentDripLabel: css`
     display: flex;

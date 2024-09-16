@@ -25,6 +25,7 @@ import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
+import ProBadge from '@Atoms/ProBadge';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 
@@ -52,7 +53,7 @@ const LiveClass = () => {
     <div css={styles.liveClass}>
       <span css={styles.label}>
         {__('Live Class', 'tutor')}
-        {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+        {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
       </span>
       <Show
         when={isTutorPro}

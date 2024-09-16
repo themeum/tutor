@@ -25,6 +25,7 @@ import {
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
 
+import ProBadge from '@Atoms/ProBadge';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
@@ -241,12 +242,23 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
-          <Show when={isTutorPro && !['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
+          <Show when={!['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-                <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
-                  <SVGIcon name="copyPaste" width={24} height={24} />
-                </button>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  }
+                >
+                  <ProBadge size="tiny">
+                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </ProBadge>
+                </Show>
               </Tooltip>
             </Show>
           </Show>
@@ -415,7 +427,7 @@ const styles = {
   actions: css`
     display: flex;
     opacity: 0;
-    align-items: center;
+    align-items: start;
     gap: ${spacing[8]};
     justify-content: end;
   `,
@@ -423,5 +435,10 @@ const styles = {
     ${styleUtils.resetButton};
     color: ${colorTokens.icon.default};
     display: flex;
+
+    :disabled {
+      color: ${colorTokens.icon.disable.background};
+      cursor: not-allowed;
+    }
   `,
 };

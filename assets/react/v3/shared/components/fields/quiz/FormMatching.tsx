@@ -16,6 +16,9 @@ import {
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
 
+import ProBadge from '@Atoms/ProBadge';
+import Tooltip from '@Atoms/Tooltip';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -24,12 +27,15 @@ import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { noop } from '@Utils/util';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
 }
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
@@ -131,40 +137,56 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
               <SVGIcon name="dragVertical" height={24} width={24} />
             </button>
 
-            <div css={styles.optionActions}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-edit-button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setIsEditing(true);
-                }}
-              >
-                <SVGIcon name="edit" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onDuplicateOption(inputValue);
-                }}
-              >
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onRemoveOption();
-                }}
-              >
-                <SVGIcon name="delete" width={24} height={24} />
-              </button>
+            <div css={styles.optionActions} data-visually-hidden>
+              <Tooltip content={__('Edit', 'tutor')} delay={200}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  data-edit-button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                >
+                  <SVGIcon name="edit" width={24} height={24} />
+                </button>
+              </Tooltip>
+              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onDuplicateOption(inputValue);
+                      }}
+                    >
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  }
+                >
+                  <ProBadge size="tiny">
+                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </ProBadge>
+                </Show>
+              </Tooltip>
+              <Tooltip content={__('Delete', 'tutor')} delay={200}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  data-visually-hidden
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onRemoveOption();
+                  }}
+                >
+                  <SVGIcon name="delete" width={24} height={24} />
+                </button>
+              </Tooltip>
             </div>
           </Show>
         </div>
@@ -479,6 +501,11 @@ const styles = {
     ${styleUtils.display.flex()}
     color: ${colorTokens.icon.default};
     cursor: pointer;
+
+    :disabled {
+      cursor: not-allowed;
+      color: ${colorTokens.icon.disable.background};
+    }
   `,
   optionBody: css`
     ${styleUtils.display.flex()}
