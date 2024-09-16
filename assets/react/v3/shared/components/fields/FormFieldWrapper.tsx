@@ -270,8 +270,8 @@ const styles = {
 };
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
-const hasOpenAiAPIKey = tutorConfig.settings.chatgpt_key_exist;
-const isOpenAiEnabled = tutorConfig.settings.chatgpt_enable === 'on';
+const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 
 const FormFieldWrapper = <T,>({
   field,

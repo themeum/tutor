@@ -51,11 +51,6 @@ module.exports = (env, options) => {
 		config.optimization = {
 			splitChunks: {
 				cacheGroups: {
-					vendors: {
-						test: /[\\/]node_modules[\\/]/,
-						name: 'tutor-vendors.min',
-						chunks: 'all',
-					},
 					shared: {
 						test: /[\\/]assets[\\/]react[\\/]v3[\\/]shared[\\/]/,
 						name: 'tutor-shared.min',

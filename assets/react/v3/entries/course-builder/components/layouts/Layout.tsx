@@ -25,6 +25,7 @@ const Layout = () => {
     if (courseDetailsQuery.data) {
       form.reset(convertCourseDataToFormData(courseDetailsQuery.data), {
         keepDirtyValues: true,
+        keepDirty: false,
       });
     }
   }, [courseDetailsQuery.data, form.reset]);
