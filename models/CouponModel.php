@@ -10,9 +10,9 @@
 
 namespace Tutor\Models;
 
+use stdClass;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
-use TUTOR\Input;
 
 /**
  * Coupon model class
@@ -701,6 +701,11 @@ class CouponModel {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
 				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
+
+				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+					$response['total_price'] += floatval( $plan->enrollment_fee ?? 0 );
+				}
 			}
 
 			$reg_price      = $course_price->regular_price;
@@ -775,6 +780,11 @@ class CouponModel {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
 				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
+
+				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+					$response['total_price'] += floatval( $plan->enrollment_fee ?? 0 );
+				}
 			}
 
 			$reg_price      = $course_price->regular_price;
@@ -879,6 +889,8 @@ class CouponModel {
 	 */
 	public function is_coupon_applicable( object $coupon, int $object_id ): bool {
 		$is_applicable = false;
+
+		$object_id = apply_filters( 'tutor_subscription_course_by_plan', $object_id );
 
 		$course_post_type = tutor()->course_post_type;
 		$bundle_post_type = 'course-bundle';
