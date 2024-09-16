@@ -394,9 +394,25 @@ const CourseBasic = () => {
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
                 loading={updateCourseMutation.isPending || (!!isCourseDetailsFetching && !controllerProps.field.value)}
-                onCustomEditorButtonClick={async () =>
+                onCustomEditorButtonClick={async () => {
+                  const isAdditionalFieldsDirty = [
+                    'course_benefits',
+                    'course_target_audience',
+                    'course_target_audience',
+                    'course_duration_minutes',
+                    'course_material_includes',
+                    'course_requirements',
+                  ].some((field) => form.formState.dirtyFields[field as keyof CourseFormData]);
+                  const isCoursePrerequisitesDirty = !!form.formState.dirtyFields.course_prerequisites;
+                  const isCourseAttachmentsDirty = !!form.formState.dirtyFields.course_attachments;
+
                   form.handleSubmit(async (data) => {
-                    const payload = convertCourseDataToPayload(data);
+                    const payload = convertCourseDataToPayload({
+                      ...data,
+                      _tutor_attachments_main_edit: isCourseAttachmentsDirty,
+                      _tutor_prerequisites_main_edit: isCoursePrerequisitesDirty,
+                      _tutor_course_additional_data_edit: isAdditionalFieldsDirty,
+                    });
 
                     await updateCourseMutation.mutateAsync({
                       course_id: courseId,
@@ -406,8 +422,8 @@ const CourseBasic = () => {
                         form.getValues('visibility') as 'private' | 'password_protected',
                       ),
                     });
-                  })()
-                }
+                  })();
+                }}
                 onFullScreenChange={(isFullScreen) => {
                   setIsWpEditorFullScreen(isFullScreen);
                 }}

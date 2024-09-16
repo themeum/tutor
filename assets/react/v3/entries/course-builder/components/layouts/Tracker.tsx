@@ -1,40 +1,23 @@
-import config from '@Config/config';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { type Step, useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import { type CourseFormData, useCreateCourseMutation } from '@CourseBuilderServices/course';
-import { convertCourseDataToPayload, getCourseId } from '@CourseBuilderUtils/utils';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-const courseId = getCourseId();
-
 const Tracker = () => {
   const { steps } = useCourseNavigator();
   const navigate = useNavigate();
-  const createCourseMutation = useCreateCourseMutation();
   const form = useFormContext<CourseFormData>();
 
   const postTitle = form.watch('post_title');
 
   const handleClick = async (step: Step) => {
-    if (!courseId) {
-      const payload = convertCourseDataToPayload(form.getValues());
-      const response = await createCourseMutation.mutateAsync({
-        ...payload,
-        post_status: 'draft',
-      });
-
-      if (response.data) {
-        window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}#/${step.id}`;
-      }
-    } else {
-      navigate(step.path);
-    }
+    navigate(step.path);
   };
 
   return (
