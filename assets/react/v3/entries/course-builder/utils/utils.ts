@@ -383,6 +383,39 @@ export const validateQuizQuestion = (
         type: 'correct_option',
       };
     }
+
+    if (currentQuestionType === 'matching') {
+      const isImageMatching = form.watch(
+        `questions.${activeQuestionIndex}.question_settings.is_image_matching` as 'questions.0.question_settings.is_image_matching',
+      );
+
+      const everyOptionHasTitle = answers.every((answer) => answer.answer_title);
+
+      if (!everyOptionHasTitle) {
+        return {
+          message: __('Please add titles to all options.', 'tutor'),
+          type: 'save_option',
+        };
+      }
+
+      if (isImageMatching) {
+        const everyOptionHasImage = answers.every((answer) => answer.image_url);
+        if (!everyOptionHasImage) {
+          return {
+            message: __('Please add images to all options.', 'tutor'),
+            type: 'save_option',
+          };
+        }
+      } else {
+        const everyOptionHasMatch = answers.every((answer) => answer.answer_two_gap_match);
+        if (!everyOptionHasMatch) {
+          return {
+            message: __('Please add matched text to all options.', 'tutor'),
+            type: 'save_option',
+          };
+        }
+      }
+    }
   }
 
   return true;
