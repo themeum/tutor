@@ -432,25 +432,35 @@ class Course extends Tutor_Base {
 			$type = $params['pricing']['type'] ?? '';
 
 			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID, self::PRICE_TYPE_SUBSCRIPTION ), true ) ) {
-								$errors['pricing'] = __( 'Invalid price type', 'tutor' );
+				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
 			}
 
 			if ( self::PRICE_TYPE_PAID === $type ) {
 				$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 				if ( 'wc' === $monetize_by ) {
 					$course_product_id = tutor_utils()->get_course_product_id( $course_id );
-					$product_id        = (int) isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : 0;
-					$product           = wc_get_product( $product_id );
+					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
-					if ( is_a( $product, 'WC_Product' ) ) {
-						if ( $course_product_id != $product_id ) {
-							$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
-							if ( $is_linked_with_course ) {
-								$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+					if ( $product_id ) {
+						$product = wc_get_product( $product_id );
+						if ( is_a( $product, 'WC_Product' ) ) {
+							if ( $course_product_id !== $product_id ) {
+								$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+								if ( $is_linked_with_course ) {
+									$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+								}
 							}
+						} else {
+							$errors['pricing'] = __( 'Invalid product', 'tutor' );
 						}
 					} else {
-						$errors['pricing'] = __( 'Invalid product', 'tutor' );
+						/**
+						 * If user does not select WC product
+						 * Then automatic WC product will be create name with course title.
+						 */
+						if ( ! isset( $params['course_price'] ) || ! floatval( $params['course_price'] ) ) {
+							$errors['pricing'] = __( 'Price is required', 'tutor' );
+						}
 					}
 				}
 			}
@@ -2028,7 +2038,6 @@ class Course extends Tutor_Base {
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 				}
 
-				
 				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
 				$product_obj = wc_get_product( $product_id );
 				if ( $product_obj->is_type( 'subscription' ) ) {
@@ -2039,9 +2048,10 @@ class Course extends Tutor_Base {
 				update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
 				update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 			} else {
+				// Create new WC product name with course title.
 				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
-					$product_obj = wc_get_product( $attached_product_id );
+					$product_obj = wc_get_product( $product_id );
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 					// Mark product for woocommerce.
 					update_post_meta( $product_id, '_virtual', 'yes' );
@@ -2054,7 +2064,7 @@ class Course extends Tutor_Base {
 
 					// Set course regular & sale price.
 					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
-					update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, $product_obj->get_sale_price() );
+					update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 				}
 			}
 		} elseif ( 'edd' === $monetize_by ) {
