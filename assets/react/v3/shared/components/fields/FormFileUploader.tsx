@@ -117,8 +117,6 @@ const FormFileUploader = ({
   wpMedia.on('select', () => {
     const selected = wpMedia.state().get('selection').toJSON();
 
-    console.log(selected);
-
     const existingFileIds = new Set(
       Array.isArray(fieldValue) ? fieldValue.map((file) => file.id) : fieldValue ? [fieldValue.id] : [],
     );
@@ -291,7 +289,6 @@ const styles = {
   }) => css`
     display: flex;
     flex-direction: column;
-    gap: ${spacing[8]};
     position: relative;
     
     ${
@@ -301,6 +298,7 @@ const styles = {
         padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
         border: 1px solid ${colorTokens.stroke.default};
         border-radius: ${borderRadius.card};
+        gap: ${spacing[8]};
       `
     }
   `,

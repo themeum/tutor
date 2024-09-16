@@ -222,7 +222,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 type="text"
                 ref={inputRef}
                 css={styles.optionInput}
-                placeholder={__('Write anything..', 'tutor')}
+                placeholder={!imageMatching ? __('Write anything..', 'tutor') : __('Image matched text..', 'tutor')}
                 value={inputValue.answer_title}
                 onClick={(event) => {
                   event.stopPropagation();

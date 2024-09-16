@@ -51,7 +51,7 @@ const Header = () => {
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
-  const hasTrashAccess = tutorConfig.settings.instructor_can_delete_course === 'on' || isAdmin;
+  const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -65,15 +65,15 @@ const Header = () => {
       navigate('/basics', { state: { isError: true } });
     };
 
-    if (data.course_price_type === 'paid') {
-      if (tutorConfig.settings.monetize_by === 'edd' && !data.course_product_id) {
+    if (data.course_pricing_category !== 'subscription' && data.course_price_type === 'paid') {
+      if (tutorConfig.settings?.monetize_by === 'edd' && !data.course_product_id) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
       }
 
       if (
-        (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor') &&
+        (tutorConfig.settings?.monetize_by === 'wc' || tutorConfig.settings?.monetize_by === 'tutor') &&
         data.course_price === ''
       ) {
         navigateToBasicsWithError();
@@ -82,7 +82,23 @@ const Header = () => {
       }
     }
 
-    const payload = convertCourseDataToPayload(data);
+    const isAdditionalFieldsDirty = [
+      'course_benefits',
+      'course_target_audience',
+      'course_target_audience',
+      'course_duration_minutes',
+      'course_material_includes',
+      'course_requirements',
+    ].some((field) => form.formState.dirtyFields[field as keyof CourseFormData]);
+    const isCoursePrerequisitesDirty = !!form.formState.dirtyFields.course_prerequisites;
+    const isCourseAttachmentsDirty = !!form.formState.dirtyFields.course_attachments;
+
+    const payload = convertCourseDataToPayload({
+      ...data,
+      _tutor_attachments_main_edit: isCourseAttachmentsDirty,
+      _tutor_prerequisites_main_edit: isCoursePrerequisitesDirty,
+      _tutor_course_additional_data_edit: isAdditionalFieldsDirty,
+    });
     setLocalPostStatus(postStatus);
 
     if (courseId) {
@@ -207,7 +223,7 @@ const Header = () => {
         }}
       >
         <Show
-          when={isTutorPro && tutorConfig.settings.course_builder_logo_url}
+          when={isTutorPro && tutorConfig.settings?.course_builder_logo_url}
           fallback={<Logo width={108} height={24} />}
         >
           {(logo) => <img src={logo} alt="Tutor LMS" />}

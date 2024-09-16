@@ -134,44 +134,51 @@ export const courseDefaultData: CourseFormData = {
 export interface CoursePayload {
   course_id?: number;
   post_date: string;
+  post_date_gmt: string;
   post_title: string;
   post_name: string;
-  post_content: string;
-  post_status: 'publish' | 'private' | 'draft' | 'future';
+  post_content?: string;
+  post_status: string;
   post_password: string;
   post_author: number | null;
-  thumbnail_id: number | null;
-  video?: CourseVideo;
-  course_price_type?: string;
-  course_price?: string;
-  course_sale_price?: string;
+  'pricing[type]': string;
+  'pricing[product_id]'?: string;
+  course_price: number;
+  course_sale_price: number;
   course_categories: number[];
   course_tags: number[];
-  course_instructors?: number[];
+  thumbnail_id: number | null;
   enable_qna: string;
   is_public_course: string;
-  course_level: CourseLevel;
-  course_settings: {
-    maximum_students?: number;
-    enable_content_drip?: boolean;
-    content_drip_type?: string;
-    enrollment_expiry?: number;
-    enable_tutor_bp?: boolean;
-  };
-  additional_content?: {
-    course_benefits?: string;
-    course_target_audience?: string;
-    course_duration?: {
-      hours: number;
-      minutes: number;
-    };
-    course_material_includes?: string;
-    course_requirements?: string;
-  };
+  course_level: string;
+  'course_settings[maximum_students]': number;
+  'course_settings[enrollment_expiry]': number;
+  'course_settings[enable_content_drip]': number;
+  'course_settings[content_drip_type]': string;
+  'course_settings[enable_tutor_bp]': number;
+  'additional_content[course_benefits]': string;
+  'additional_content[course_target_audience]': string;
+  'additional_content[course_duration][hours]': number;
+  'additional_content[course_duration][minutes]': number;
+  'additional_content[course_material_includes]': string;
+  'additional_content[course_requirements]': string;
   preview_link: string;
-  _tutor_course_prerequisites_ids: string[];
+  course_instructor_ids?: number[];
+  _tutor_prerequisites_main_edit?: boolean;
+  _tutor_course_prerequisites_ids?: number[];
   tutor_course_certificate_template: string;
-  tutor_attachments: Media[];
+  _tutor_course_additional_data_edit?: boolean;
+  _tutor_attachments_main_edit?: boolean;
+  'video[source]'?: string;
+  'video[source_video_id]'?: string;
+  'video[poster]'?: string;
+  'video[source_external_url]'?: string;
+  'video[source_shortcode]'?: string;
+  'video[source_youtube]'?: string;
+  'video[source_vimeo]'?: string;
+  'video[source_embedded]'?: string;
+  tutor_attachments: number[];
+  bp_attached_group_ids: string[];
 }
 
 interface CourseDetailsPayload {
@@ -544,7 +551,7 @@ const getWcProducts = (courseId?: string) => {
   });
 };
 
-export const useGetWcProductsQuery = (monetizeBy: 'tutor' | 'wc' | 'edd', courseId?: string) => {
+export const useGetWcProductsQuery = (monetizeBy: 'tutor' | 'wc' | 'edd' | undefined, courseId?: string) => {
   return useQuery({
     queryKey: ['WcProducts'],
     queryFn: () => getWcProducts(courseId).then((res) => res.data),
@@ -564,7 +571,7 @@ export const useWcProductDetailsQuery = (
   productId: string,
   courseId: string,
   coursePriceType: string,
-  monetizedBy: 'tutor' | 'wc' | 'edd',
+  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined,
 ) => {
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],

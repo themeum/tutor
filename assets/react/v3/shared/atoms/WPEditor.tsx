@@ -11,6 +11,10 @@ interface WPEditorProps {
   onChange: (value: string) => void;
   isMinimal?: boolean;
   autoFocus?: boolean;
+  onFullScreenChange?: (isFullScreen: boolean) => void;
+  readonly?: boolean;
+  min_height?: number;
+  max_height?: number;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -20,14 +24,23 @@ if (!window.wp.editor.getDefaultSettings) {
   window.wp.editor.getDefaultSettings = () => ({});
 }
 
-function editorConfig(onChange: (value: string) => void, setIsFocused: (value: boolean) => void, isMinimal?: boolean) {
+function editorConfig(
+  onChange: (value: string) => void,
+  setIsFocused: (value: boolean) => void,
+  isMinimal?: boolean,
+  onFullScreenChange?: (isFullScreen: boolean) => void,
+  readOnly?: boolean,
+  min_height?: number,
+  max_height?: number,
+) {
   return {
     tinymce: {
       wpautop: true,
       menubar: false,
-      branding: false,
-      height: 200,
-      browser_spellcheck: true,
+      autoresize_min_height: min_height || 200,
+      autoresize_max_height: max_height || 500,
+      wp_autoresize_on: true,
+      browser_spellcheck: !readOnly,
       convert_urls: false,
       end_container_on_empty_block: true,
       entities: '38,amp,60,lt,62,gt',
@@ -59,6 +72,7 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
       submit_patch: true,
       link_context_toolbar: false,
       theme: 'modern',
+      toolbar: !readOnly,
       toolbar1: isMinimal
         ? `bold,italic,underline,image${isTutorPro ? ',codesample' : ''}`
         : `formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,fullscreen,wp_adv,tutor_button${
@@ -67,8 +81,16 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
 
       toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
       content_css: '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css',
+      content_style: 'body { font-family: "SF Pro Display, sans-serif; font-size: 14px; }',
+      statusbar: !readOnly,
+      branding: false,
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       setup: (editor: any) => {
+        if (readOnly) {
+          editor.setMode('readonly');
+          return;
+        }
+
         if (!isMinimal) {
           editor.addButton('tutor_button', {
             text: __('Tutor ShortCode', 'tutor'),
@@ -157,23 +179,38 @@ function editorConfig(onChange: (value: string) => void, setIsFocused: (value: b
         editor.on('change keyup paste', () => {
           onChange(editor.getContent());
         });
-        editor.on('focus', () => setIsFocused(true));
+        editor.on('focus', () => {
+          setIsFocused(true);
+        });
         editor.on('blur', () => setIsFocused(false));
+        editor.on('FullscreenStateChanged', (event: { state: boolean }) => {
+          onFullScreenChange?.(event.state);
+        });
       },
       wp_keep_scroll_position: false,
       wpeditimage_html5_captions: true,
     },
-    mediaButtons: !isMinimal,
+    mediaButtons: !isMinimal && !readOnly,
     drag_drop_upload: true,
-    quicktags: isMinimal
-      ? false
-      : {
-          buttons: ['strong', 'em', 'block', 'del', 'ins', 'img', 'ul', 'ol', 'li', 'code', 'more', 'close'],
-        },
+    quicktags:
+      isMinimal || readOnly
+        ? false
+        : {
+            buttons: ['strong', 'em', 'block', 'del', 'ins', 'img', 'ul', 'ol', 'li', 'code', 'more', 'close'],
+          },
   };
 }
 
-const WPEditor = ({ value = '', onChange, isMinimal, autoFocus = false }: WPEditorProps) => {
+const WPEditor = ({
+  value = '',
+  onChange,
+  isMinimal,
+  autoFocus = false,
+  onFullScreenChange,
+  readonly = false,
+  min_height,
+  max_height,
+}: WPEditorProps) => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
   const [isFocused, setIsFocused] = useState(autoFocus);
@@ -210,7 +247,10 @@ const WPEditor = ({ value = '', onChange, isMinimal, autoFocus = false }: WPEdit
   useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       window.wp.editor.remove(editorId);
-      window.wp.editor.initialize(editorId, editorConfig(onChange, setIsFocused, isMinimal));
+      window.wp.editor.initialize(
+        editorId,
+        editorConfig(onChange, setIsFocused, isMinimal, onFullScreenChange, readonly, min_height, max_height),
+      );
 
       editorRef.current?.addEventListener('change', handleOnChange);
       editorRef.current?.addEventListener('input', handleOnChange);
@@ -222,7 +262,7 @@ const WPEditor = ({ value = '', onChange, isMinimal, autoFocus = false }: WPEdit
         editorRef.current?.removeEventListener('input', handleOnChange);
       };
     }
-  }, []);
+  }, [readonly]);
 
   return (
     <div
