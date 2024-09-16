@@ -448,7 +448,7 @@ class CourseModel {
 		}
 
 		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
-			\TutorPro\H5P\H5P::delete_h5p_lesson_statements_by_id( $post_id, 0 );
+			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( $post_id, 0 );
 		}
 
 		global $wpdb;

@@ -419,7 +419,7 @@ class Lesson extends Tutor_Base {
 		}
 
 		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
-			\TutorPro\H5P\H5P::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
+			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
 		}
 
 		wp_delete_post( $lesson_id, true );
