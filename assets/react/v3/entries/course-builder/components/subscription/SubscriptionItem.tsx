@@ -3,12 +3,13 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
@@ -28,13 +29,16 @@ import {
   useSaveCourseSubscriptionMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { noop } from '@Utils/util';
 import { requiredRule } from '@Utils/validation';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { OfferSalePrice } from './OfferSalePrice';
 
 const SET_FOCUS_AFTER = 100; // this is hack to fix layout shifting while animating.
@@ -54,10 +58,13 @@ export default function SubscriptionItem({
   onDiscard: () => void;
 }) {
   const subscriptionRef = useRef<HTMLDivElement>(null);
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
   const form = useFormWithGlobalError<SubscriptionFormData>({
     defaultValues: subscription,
     shouldFocusError: true,
   });
+
+  const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -96,8 +103,10 @@ export default function SubscriptionItem({
     try {
       const response = await deleteSubscriptionMutation.mutateAsync(Number(subscription.id));
 
-      if (response.data && subscription.isExpanded) {
-        toggleCollapse(subscription.id);
+      if (response.data) {
+        setIsDeletePopoverOpen(false);
+
+        subscription.isExpanded && toggleCollapse(subscription.id);
       }
     } catch (error) {
       // handle error
@@ -195,11 +204,13 @@ export default function SubscriptionItem({
           <Show when={subscription.id}>
             <Tooltip content={__('Duplicate plan', 'tutor')} delay={200}>
               <button type="button" onClick={handleDuplicateSubscription}>
-                <SVGIcon name="copyPaste" width={24} height={24} />
+                <Show when={!duplicateSubscriptionMutation.isPending} fallback={<LoadingSpinner size={24} />}>
+                  <SVGIcon name="copyPaste" width={24} height={24} />
+                </Show>
               </button>
             </Tooltip>
             <Tooltip content={__('Delete plan', 'tutor')} delay={200}>
-              <button type="button" onClick={handleDeleteSubscription}>
+              <button ref={deleteButtonRef} type="button" onClick={() => setIsDeletePopoverOpen(true)}>
                 <SVGIcon name="delete" width={24} height={24} />
               </button>
             </Tooltip>
@@ -511,6 +522,28 @@ export default function SubscriptionItem({
           </div>
         </div>
       </animated.div>
+      <ConfirmationPopover
+        isOpen={isDeletePopoverOpen}
+        triggerRef={deleteButtonRef}
+        closePopover={noop}
+        maxWidth="258px"
+        title={sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name)}
+        message={__('Are you sure you want to delete this plan? This cannot be undone.', 'tutor')}
+        animationType={AnimationType.slideUp}
+        arrow="auto"
+        hideArrow
+        isLoading={deleteSubscriptionMutation.isPending}
+        confirmButton={{
+          text: __('Delete', 'tutor'),
+          variant: 'text',
+          isDelete: true,
+        }}
+        cancelButton={{
+          text: __('Cancel', 'tutor'),
+          variant: 'text',
+        }}
+        onConfirmation={handleDeleteSubscription}
+      />
     </form>
   );
 }

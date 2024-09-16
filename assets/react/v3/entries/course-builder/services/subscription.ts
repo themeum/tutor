@@ -2,6 +2,7 @@ import { useToast } from '@Atoms/Toast';
 import { DateFormats } from '@Config/constants';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
+import type { ErrorResponse } from '@Utils/form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
 import { format, parseISO } from 'date-fns';
@@ -232,6 +233,12 @@ export const useSaveCourseSubscriptionMutation = (courseId: number) => {
         });
       }
     },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
   });
 };
 
@@ -265,6 +272,13 @@ export const useDeleteCourseSubscriptionMutation = (courseId: number) => {
           return data.filter((item) => item.id !== String(subscriptionId));
         });
       }
+    },
+
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
     },
   });
 };
@@ -300,6 +314,12 @@ export const useDuplicateCourseSubscriptionMutation = (courseId: number) => {
         });
       }
     },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
   });
 };
 
@@ -331,9 +351,9 @@ export const useSortCourseSubscriptionsMutation = (courseId: number) => {
         });
       }
     },
-    onError: (error) => {
+    onError: (error: ErrorResponse) => {
       showToast({
-        message: error.message,
+        message: error.response.data.message,
         type: 'danger',
       });
 
