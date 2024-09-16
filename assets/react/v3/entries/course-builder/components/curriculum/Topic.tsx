@@ -51,6 +51,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
+import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -87,6 +88,7 @@ interface TopicForm {
   summary: string;
 }
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasLiveAddons =
   isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION) || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 
@@ -341,7 +343,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   </button>
                 </Tooltip>
               </Show>
-              <Show when={topic.isSaved}>
+              <Show when={isTutorPro && topic.isSaved}>
                 <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
                   <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
                     <button
@@ -618,7 +620,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         variant="tertiary"
                         isOutlined
                         size="small"
-                        icon={<SVGIcon name="download" width={24} height={24} />}
+                        icon={<SVGIcon name="import" width={24} height={24} />}
                         disabled={!topic.isSaved}
                         onClick={() => {
                           fileInputRef?.current?.click();
@@ -664,7 +666,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         onClick={() => {
                           fileInputRef?.current?.click();
                         }}
-                        icon={<SVGIcon name="downloadColorize" width={24} height={24} isColorIcon />}
+                        icon={<SVGIcon name="importColorized" width={24} height={24} isColorIcon />}
                       />
                     </Show>
                   </ThreeDots>

@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
-import { useQueryClient } from '@tanstack/react-query';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
@@ -22,7 +22,7 @@ import ModalWrapper from '@Components/modals/ModalWrapper';
 import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { ContentDripType } from '@CourseBuilderServices/course';
@@ -206,9 +206,6 @@ const LessonModal = ({
               <Controller
                 name="description"
                 control={form.control}
-                rules={{
-                  required: __('Description is required', 'tutor'),
-                }}
                 render={(controllerProps) => (
                   <FormWPEditor
                     {...controllerProps}
@@ -374,9 +371,7 @@ const LessonModal = ({
                             topics.push(topic);
                           }
                           return topics;
-                        }, [] as CourseTopic[]) ||
-                        [] ||
-                        []
+                        }, [] as CourseTopic[]) || []
                       }
                       isSearchable
                       helpText={__('Select items that should be complete before this item', 'tutor')}
@@ -441,10 +436,10 @@ export default LessonModal;
 
 const styles = {
   wrapper: css`
-    width: 1217px;
+    width: 1070px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1fr 395px;
+    grid-template-columns: 1fr 338px;
     height: 100%;
     padding-inline: ${spacing[32]};
   `,
@@ -456,6 +451,7 @@ const styles = {
     gap: ${spacing[24]};
     position: sticky;
     top: 0;
+    z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};

@@ -163,7 +163,12 @@
 
 					// Matching.
 					if ( 'matching' === $question_type ) {
-						require 'matching.php';
+						$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
+						if ( $is_image_matching ) {
+							require 'image-matching.php';
+						} else {
+							require 'matching.php';
+						}
 					}
 
 					// Image Matching.

@@ -38,7 +38,7 @@ export type PromiseResolvePayload<A extends string = string> = { action: A; [key
 export type ModalProps = {
   closeModal: (param?: PromiseResolvePayload<'CLOSE'>) => void;
   icon?: React.ReactNode;
-  title?: string;
+  title?: string | React.ReactNode;
   subtitle?: string;
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;

@@ -133,6 +133,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         hideArrow
         data-three-dots
       >
+        {/* @TODO: need pro badge */}
         <ThreeDots.Option
           text={__('Duplicate', 'tutor')}
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
@@ -167,7 +168,6 @@ const styles = {
     isActive: boolean;
     isDragging: boolean;
   }) => css`
-    margin-right: ${spacing[20]};
     padding: ${spacing[10]} ${spacing[8]};
     display: flex;
     align-items: center;

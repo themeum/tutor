@@ -20,6 +20,7 @@ if ( ! is_admin() && ! current_user_can( 'tutor_instructor' ) && true === $enabl
 	exit;
 }
 
+//phpcs:ignore
 extract( $data ); // $user_id, $attempt_id, $attempt_data(nullable), $context(nullable)
 
 ! isset( $attempt_data ) ? $attempt_data = tutor_utils()->get_attempt( $attempt_id ) : 0;
@@ -196,13 +197,13 @@ if ( is_array( $attempt_info ) ) {
 	if ( isset( $attempt_info['time_limit'] ) ) {
 		$attempt_duration = tutor_utils()->second_to_formated_time( $attempt_info['time_limit']['time_limit_seconds'], $attempt_info['time_limit']['time_type'] );
 	}
-	if ( 'days' == $attempt_info['time_limit']['time_type'] ) {
+	if ( 'days' === $attempt_info['time_limit']['time_type'] ) {
 		$attempt_type = 'hours';
 	}
-	if ( 'hours' == $attempt_info['time_limit']['time_type'] ) {
+	if ( 'hours' === $attempt_info['time_limit']['time_type'] ) {
 		$attempt_type = 'minutes';
 	}
-	if ( 'minutes' == $attempt_info['time_limit']['time_type'] ) {
+	if ( 'minutes' === $attempt_info['time_limit']['time_type'] ) {
 		$attempt_type = 'minutes';
 	}
 
@@ -262,15 +263,15 @@ endif;
 							<div>
 								<?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
 							</div>
-						<?php elseif ( 'qeustion_count' == $key ) : ?>
+						<?php elseif ( 'qeustion_count' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_questions ); ?>
-						<?php elseif ( 'quiz_time' == $key ) : ?>
+						<?php elseif ( 'quiz_time' === $key ) : ?>
 							<?php echo esc_html( $attempt_duration ); ?>
-						<?php elseif ( 'attempt_time' == $key ) : ?>
+						<?php elseif ( 'attempt_time' === $key ) : ?>
 							<?php echo esc_html( $attempt_duration_taken ); ?>
-						<?php elseif ( 'total_marks' == $key ) : ?>
+						<?php elseif ( 'total_marks' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_marks ); ?>
-						<?php elseif ( 'pass_marks' == $key ) : ?>
+						<?php elseif ( 'pass_marks' === $key ) : ?>
 							<?php
 								$pass_marks = ( $total_marks * $passing_grade ) / 100;
 								echo esc_html( number_format_i18n( $pass_marks, 2 ) );
@@ -278,17 +279,17 @@ endif;
 								$pass_mark_percent = $passing_grade;
 								echo esc_html( ' (' . $pass_mark_percent . '%)' );
 							?>
-						<?php elseif ( 'correct_answer' == $key ) : ?>
+						<?php elseif ( 'correct_answer' === $key ) : ?>
 							<?php echo esc_html( $correct ); ?>
-						<?php elseif ( 'incorrect_answer' == $key ) : ?>
+						<?php elseif ( 'incorrect_answer' === $key ) : ?>
 							<?php echo esc_html( $incorrect ); ?>
-						<?php elseif ( 'earned_marks' == $key ) : ?>
+						<?php elseif ( 'earned_marks' === $key ) : ?>
 							<?php
 								echo esc_html( $attempt_data->earned_marks );
 								$earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format( ( $attempt_data->earned_marks * 100 ) / $attempt_data->total_marks ) ) : 0;
 								echo esc_html( ' (' . $earned_percentage . '%)' );
 							?>
-						<?php elseif ( 'result' == $key ) : ?>
+						<?php elseif ( 'result' === $key ) : ?>
 							<?php
 								$ans_array   = is_array( $answers ) ? $answers : array();
 								$has_pending = count(
@@ -338,7 +339,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 
 <?php
 if ( is_array( $answers ) && count( $answers ) ) {
-	echo 'course-single-previous-attempts' != $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
+	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
 		<div class="tutor-table-responsive tutor-mt-16">
 			<table class="tutor-table tutor-quiz-attempt-details tutor-mb-32 tutor-table-data-td-target">
@@ -355,7 +356,9 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
 					$answer_i++;
-					$question_type      = tutor_utils()->get_question_types( $answer->question_type );
+					$question_type          = tutor_utils()->get_question_types( $answer->question_type );
+					$question_settings = maybe_unserialize( $answer->question_settings );
+					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
 					$h5p_thumbnail_path = tutor()->url . 'assets/addons/h5p/thumbnail.png';
 					$answer_status      = 'wrong';
 
@@ -485,7 +488,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													}
 												}
 
-													// Matching.
+												// Matching.
 												elseif ( 'matching' === $answer->question_type ) {
 
 													$ordering_ids           = maybe_unserialize( $answer->given_answer );
@@ -498,9 +501,16 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
 														if ( tutor_utils()->count( $provided_answer_order ) ) {
 															foreach ( $provided_answer_order as $provided_answer_order ) {
+																if ( $is_image_matching ) {
+																	$original_saved_answer->answer_view_format   = 'text_image';
+																	$original_saved_answer->answer_title         = $provided_answer_order->answer_title;
+																	$original_saved_answer->answer_two_gap_match = '';
+																	$answers[]                                   = $original_saved_answer;
+																} else {
+																	$original_saved_answer->answer_two_gap_match = $provided_answer_order->answer_two_gap_match;
+																	$answers[]                                   = $original_saved_answer;
+																}
 															}
-															$original_saved_answer->answer_two_gap_match = $provided_answer_order->answer_two_gap_match;
-															$answers[]                                   = $original_saved_answer;
 														}
 													}
 
@@ -652,6 +662,16 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																$answer->question_id
 															)
 														);
+
+														if ( $is_image_matching ) {
+															array_map(
+																function( $ans ) {
+																	$ans->answer_view_format   = 'text_image';
+																	$ans->answer_two_gap_match = '';
+																},
+																$correct_answer
+															);
+														}
 
 														tutor_render_answer_list( $correct_answer );
 													}

@@ -8,7 +8,7 @@ import Table, { type Column } from '@Molecules/Table';
 import { css } from '@emotion/react';
 
 import { type Coupon, type CourseCategory, useAppliesToQuery } from '@CouponServices/coupon';
-import coursePlaceholder from '@Images/common/course-placeholder.png';
+import coursePlaceholder from '@Images/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';

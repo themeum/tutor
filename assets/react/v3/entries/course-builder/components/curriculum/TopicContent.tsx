@@ -5,8 +5,11 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Popover from '@Molecules/Popover';
 
 import { useModal } from '@Components/modals/Modal';
@@ -22,7 +25,7 @@ import {
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -33,7 +36,6 @@ import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { noop } from '@Utils/util';
@@ -105,6 +107,7 @@ const modalIcon: {
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
 const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
@@ -240,7 +243,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
                   exportQuizMutation.mutate(content.id);
                 }}
               >
-                <SVGIcon name="upload" width={24} height={24} />
+                <SVGIcon name="export" width={24} height={24} />
               </button>
             </Tooltip>
           </Show>
@@ -249,7 +252,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
-          <Show when={type !== 'tutor_zoom_meeting' && type !== 'tutor-google-meet'}>
+          <Show when={isTutorPro && !['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
                 <button type="button" css={styles.actionButton} onClick={handleDuplicate}>

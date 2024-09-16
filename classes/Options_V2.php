@@ -124,6 +124,20 @@ class Options_V2 {
 	}
 
 	/**
+	 * Get only list of options.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $only only options.
+	 *
+	 * @return array
+	 */
+	public static function get_only( $only = array() ) {
+		$settings = get_option( 'tutor_option', array() );
+		return array_intersect_key( $settings, array_flip( $only ) );
+	}
+
+	/**
 	 * Function to get all fields for search tutor_option_search
 	 *
 	 * @since 2.0.0

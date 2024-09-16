@@ -95,6 +95,10 @@ class PaymentHandler {
 	 * @return string
 	 */
 	public function load_order_status_template( $template ) {
+		$user_id = get_current_user_id();
+		delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+		delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
+
 		$placement_status = Input::get( 'tutor_order_placement' );
 		$order_id         = Input::get( 'order_id', 0, Input::TYPE_INT );
 

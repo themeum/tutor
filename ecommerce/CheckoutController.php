@@ -296,7 +296,7 @@ class CheckoutController {
 		$total_price    = $order['total_price'];
 		$order_type     = $order['order_type'];
 
-		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
 		$currency_info   = tutor_get_currencies_info_by_code( $currency_code );
 
@@ -341,44 +341,37 @@ class CheckoutController {
 			}
 
 			$items[] = array(
-				'item_id'                           => $item->item_id,
-				'item_name'                         => $item_name,
-				'regular_price'                     => floatval( $item->regular_price ),
-				'regular_price_in_smallest_unit'    => intval( floatval( $item->regular_price ) * 100 ),
-				'quantity'                          => 1,
-				'discounted_price'                  => floatval( $item->sale_price ),
-				'discounted_price_in_smallest_unit' => intval( floatval( $item->sale_price ) * 100 ),
+				'item_id'          => $item->item_id,
+				'item_name'        => $item_name,
+				'regular_price'    => floatval( $item->regular_price ),
+				'quantity'         => 1,
+				'discounted_price' => floatval( $item->sale_price ),
 			);
 		}
 
 		return (object) array(
-			'items'                                   => (object) $items,
-			'subtotal'                                => floatval( $subtotal_price ),
-			'subtotal_in_smallest_unit'               => intval( floatval( $subtotal_price ) * 100 ),
-			'total_price'                             => floatval( $total_price ),
-			'total_price_in_smallest_unit'            => intval( floatval( $total_price ) * 100 ),
-			'order_id'                                => $order['id'],
-			'store_name'                              => $site_name,
-			'order_description'                       => 'Tutor Order',
-			'tax'                                     => 0,
-			'tax_in_smallest_unit'                    => floatval( 0 * 100 ),
-			'currency'                                => (object) array(
+			'items'              => (object) $items,
+			'subtotal'           => floatval( $subtotal_price ),
+			'total_price'        => floatval( $total_price ),
+			'order_id'           => $order['id'],
+			'store_name'         => $site_name,
+			'order_description'  => 'Tutor Order',
+			'tax'                => 0,
+			'currency'           => (object) array(
 				'code'         => $currency_code,
 				'symbol'       => $currency_symbol,
 				'name'         => $currency_info['name'] ?? '',
 				'locale'       => $currency_info['locale'] ?? '',
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
-			'country'                                 => $country,
-			'shipping_charge'                         => 0,
-			'shipping_charge_in_smallest_unit'        => 0,
-			'coupon_discount'                         => 0,
-			'coupon_discount_amount_in_smallest_unit' => 0,
-			'shipping_address'                        => (object) $shipping_and_billing,
-			'billing_address'                         => (object) $shipping_and_billing,
-			'decimal_separator'                       => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
-			'thousand_separator'                      => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
-			'customer'                                => (object) $customer_info,
+			'country'            => $country,
+			'shipping_charge'    => 0,
+			'coupon_discount'    => 0,
+			'shipping_address'   => (object) $shipping_and_billing,
+			'billing_address'    => (object) $shipping_and_billing,
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
+			'customer'           => (object) $customer_info,
 		);
 	}
 
@@ -405,7 +398,7 @@ class CheckoutController {
 		$order_user_id = $order_data->student->id;
 		$user_data     = get_userdata( $order_user_id );
 
-		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
 		$currency_info   = tutor_get_currencies_info_by_code( $currency_code );
 
@@ -439,22 +432,20 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		return (object) array(
-			'type'                              => 'recurring',
-			'previous_payload'                  => $order_data->payment_payloads,
-			'total_amount'                      => floatval( $amount ),
-			'total_amount_in_smallest_unit'     => floatval( $amount ) * 100,
-			'sub_total_amount'                  => floatval( $amount ),
-			'sub_total_amount_in_smallest_unit' => floatval( $amount ) * 100,
-			'currency'                          => (object) array(
+			'type'             => 'recurring',
+			'previous_payload' => $order_data->payment_payloads,
+			'total_amount'     => floatval( $amount ),
+			'sub_total_amount' => floatval( $amount ),
+			'currency'         => (object) array(
 				'code'         => $currency_code,
 				'symbol'       => $currency_symbol,
 				'name'         => $currency_info['name'] ?? '',
 				'locale'       => $currency_info['locale'] ?? '',
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
-			'order_id'                          => $order_id,
-			'customer'                          => (object) $customer_info,
-			'shipping_address'                  => (object) $shipping_and_billing,
+			'order_id'         => $order_id,
+			'customer'         => (object) $customer_info,
+			'shipping_address' => (object) $shipping_and_billing,
 		);
 	}
 

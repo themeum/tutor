@@ -136,6 +136,7 @@ const FormTopicPrerequisites = ({
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [filteredOption.length],
   });
 
   const handleDeleteSelection = (id: ID) => {
@@ -288,6 +289,7 @@ const FormTopicPrerequisites = ({
                                   field.onChange(updatedValue);
                                   onChange(updatedValue);
                                   setIsOpen(false);
+                                  setSearchText('');
                                 }}
                               >
                                 <div

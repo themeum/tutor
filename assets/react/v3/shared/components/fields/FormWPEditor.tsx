@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
 
 import Button from '@Atoms/Button';
@@ -11,10 +11,9 @@ import WPEditor from '@Atoms/WPEditor';
 import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
 
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
 import type { Editor } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -39,6 +38,7 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   editorUsed?: Editor;
   isMagicAi?: boolean;
   autoFocus?: boolean;
+  onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -65,6 +65,7 @@ const FormWPEditor = ({
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
   isMagicAi = false,
   autoFocus = false,
+  onCustomEditorButtonClick,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -82,17 +83,14 @@ const FormWPEditor = ({
                     key={editor.name}
                     type="button"
                     css={styles.customEditorButton}
-                    onClick={() =>
-                      showModal({
-                        component: EditorModal,
-                        props: {
-                          editorUsed: editor,
-                          icon: <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />,
-                          title: sprintf(__('%s editor', 'tutor'), editor.name),
-                        },
-                        depthIndex: zIndex.highest,
-                      })
-                    }
+                    onClick={async () => {
+                      try {
+                        await onCustomEditorButtonClick?.(editor);
+                        window.location.href = editor.link;
+                      } catch (error) {
+                        console.error(error);
+                      }
+                    }}
                   >
                     <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
                   </button>
@@ -168,18 +166,16 @@ const FormWPEditor = ({
                           <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
                         )
                       }
-                      onClick={() =>
-                        editorUsed &&
-                        showModal({
-                          component: EditorModal,
-                          props: {
-                            title: sprintf(__('%s editor', 'tutor'), editorUsed.name),
-                            editorUsed: editorUsed,
-                            icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
-                          },
-                          depthIndex: zIndex.highest,
-                        })
-                      }
+                      onClick={async () => {
+                        if (editorUsed) {
+                          try {
+                            await onCustomEditorButtonClick?.(editorUsed);
+                            window.location.href = editorUsed.link;
+                          } catch (error) {
+                            console.error(error);
+                          }
+                        }
+                      }}
                     >
                       {editorUsed?.label}
                     </Button>
