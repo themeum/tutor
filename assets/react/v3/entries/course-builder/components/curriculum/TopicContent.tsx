@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
@@ -25,7 +26,6 @@ import {
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
 
-import ProBadge from '@Atoms/ProBadge';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';

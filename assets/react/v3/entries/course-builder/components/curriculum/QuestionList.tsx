@@ -17,11 +17,11 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import Popover from '@Molecules/Popover';
 
-import ProBadge from '@Atoms/ProBadge';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';

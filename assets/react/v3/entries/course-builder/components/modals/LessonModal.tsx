@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormDateInput from '@Components/fields/FormDateInput';
@@ -35,7 +36,6 @@ import {
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { maxLimitRule } from '@Utils/validation';
-import ProBadge from '@Atoms/ProBadge';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;

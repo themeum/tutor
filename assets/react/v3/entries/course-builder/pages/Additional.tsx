@@ -6,6 +6,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
@@ -31,7 +32,6 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 
-import ProBadge from '@Atoms/ProBadge';
 import Certificate from '../components/additional/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;

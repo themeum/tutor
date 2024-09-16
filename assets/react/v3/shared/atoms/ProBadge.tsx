@@ -1,8 +1,10 @@
+import { css } from '@emotion/react';
+import type React from 'react';
+
 import { colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { isDefined } from '@Utils/types';
-import { css } from '@emotion/react';
-import type React from 'react';
+
 import SVGIcon from './SVGIcon';
 
 type ProBadgeSize = 'tiny' | 'small' | 'regular' | 'large';

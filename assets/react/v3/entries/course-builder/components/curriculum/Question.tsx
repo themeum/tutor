@@ -5,13 +5,13 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
-import ProBadge from '@Atoms/ProBadge';
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';

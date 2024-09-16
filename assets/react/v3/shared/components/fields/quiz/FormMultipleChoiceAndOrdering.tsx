@@ -7,10 +7,10 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
-import SVGIcon from '@Atoms/SVGIcon';
-
 import ProBadge from '@Atoms/ProBadge';
+import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';

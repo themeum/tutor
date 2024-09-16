@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import EmptyState from '@Molecules/EmptyState';
@@ -25,7 +26,6 @@ import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import ProBadge from '@Atoms/ProBadge';
 import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
 import emptyStateImage from '@Images/empty-state-illustration.webp';
 

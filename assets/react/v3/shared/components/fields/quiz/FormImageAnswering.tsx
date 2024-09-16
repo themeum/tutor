@@ -6,16 +6,16 @@ import { useEffect, useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
-import SVGIcon from '@Atoms/SVGIcon';
-import { type QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
-
 import ProBadge from '@Atoms/ProBadge';
+import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { type QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
