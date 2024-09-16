@@ -86,17 +86,9 @@ function editorConfig(
       branding: false,
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       setup: (editor: any) => {
-        editor.on('init', () => {
-          const container = editor.getContainer();
-          console.log('here', container);
-
-          container.addEventListener('click', () => {
-            console.log('container clicked');
-          });
-        });
         if (readOnly) {
           editor.setMode('readonly');
-          // return;
+          return;
         }
 
         if (!isMinimal) {
