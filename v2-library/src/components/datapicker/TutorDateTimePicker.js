@@ -54,6 +54,7 @@ const TutorDateTimePicker = (data) => {
 				onClick={handleCalendarClose}
 				timeInputLabel="Time:"
 				dateFormat="dd/MM/yyyy h:mm aa"
+				minDate={data.disable_previous ? new Date() : false}
 				renderCustomHeader={({
 					date,
 					changeYear,

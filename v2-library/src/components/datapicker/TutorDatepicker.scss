@@ -147,10 +147,12 @@
 		box-sizing: border-box;
 		box-shadow: 0px 6px 20px rgba(28, 49, 104, 0.1);
 		border-radius: 6px;
-
 		min-width: 350px;
-
 		display: flex;
+
+		&__custom-wrapper {
+			width: 100%;
+		}
 
 		&__month-container {
 			float: unset;
