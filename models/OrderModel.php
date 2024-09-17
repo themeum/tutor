@@ -553,11 +553,50 @@ class OrderModel {
 	 *
 	 * @param int|array $order_id The ID of the order to delete.
 	 *
-	 * @return bool False on failure, or the number of rows affected if successful.
+	 * @return bool
 	 */
 	public function delete_order( $order_id ) {
-		$order_id = is_array( $order_id ) ? $order_id : array( intval( $order_id ) );
-		return QueryHelper::bulk_delete_by_ids( $this->table_name, $order_id ) ? true : false;
+		global $wpdb;
+		$order_ids = is_array( $order_id ) ? $order_id : array( intval( $order_id ) );
+
+		try {
+			$wpdb->query( 'START TRANSACTION' );
+
+			foreach ( $order_ids as $id ) {
+				// Delete enrollments if exist.
+				$enrollments = tutor_utils()->get_course_enrolled_ids_by_order_id( $id );
+				if ( $enrollments ) {
+					$enrollment_ids = array_column( $enrollments, 'enrolled_id' );
+					$ids_str        = QueryHelper::prepare_in_clause( $enrollment_ids );
+
+					$wpdb->query(
+						$wpdb->prepare(
+							"DELETE FROM {$wpdb->posts} WHERE post_type=%s AND ID IN ( $ids_str )", //phpcs:ignore
+							'tutor_enrolled'
+						)
+					);
+				}
+
+				// Delete earnings.
+				QueryHelper::delete(
+					$wpdb->prefix . 'tutor_earnings',
+					array(
+						'order_id'   => $id,
+						'process_by' => 'Tutor',
+					)
+				);
+
+				// Now delete order.
+				QueryHelper::delete( $this->table_name, array( 'id' => $id ) );
+			}
+
+			$wpdb->query( 'COMMIT' );
+			return true;
+
+		} catch ( \Throwable $th ) {
+			$wpdb->query( 'ROLLBACK' );
+			return false;
+		}
 	}
 
 	/**
