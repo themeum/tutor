@@ -86,10 +86,19 @@ function editorConfig(
       branding: false,
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       setup: (editor: any) => {
-        if (readOnly) {
-          editor.setMode('readonly');
-          return;
-        }
+        editor.on('init', () => {
+          if (readOnly) {
+            editor.setMode('readonly');
+              
+            const editorBody = editor.contentDocument.querySelector('.mce-content-body');
+            editorBody.style.backgroundColor = 'transparent';
+            
+            setTimeout(() => {
+              const height = editorBody.scrollHeight;
+              editor.iframeElement.style.height = `${height}px`;
+            }, 500);
+          }
+        });
 
         if (!isMinimal) {
           editor.addButton('tutor_button', {
@@ -350,6 +359,10 @@ const styles = {
     .mce-tinymce {
       box-shadow: none;
       background-color: transparent;
+    }
+
+    .mce-edit-area {
+      background-color: unset;
     }
 
     ${
