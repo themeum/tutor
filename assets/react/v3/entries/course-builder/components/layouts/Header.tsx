@@ -82,23 +82,7 @@ const Header = () => {
       }
     }
 
-    const isAdditionalFieldsDirty = [
-      'course_benefits',
-      'course_target_audience',
-      'course_target_audience',
-      'course_duration_minutes',
-      'course_material_includes',
-      'course_requirements',
-    ].some((field) => form.formState.dirtyFields[field as keyof CourseFormData]);
-    const isCoursePrerequisitesDirty = !!form.formState.dirtyFields.course_prerequisites;
-    const isCourseAttachmentsDirty = !!form.formState.dirtyFields.course_attachments;
-
-    const payload = convertCourseDataToPayload({
-      ...data,
-      _tutor_attachments_main_edit: isCourseAttachmentsDirty,
-      _tutor_prerequisites_main_edit: isCoursePrerequisitesDirty,
-      _tutor_course_additional_data_edit: isAdditionalFieldsDirty,
-    });
+    const payload = convertCourseDataToPayload(data);
     setLocalPostStatus(postStatus);
 
     if (courseId) {
