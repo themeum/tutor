@@ -147,7 +147,7 @@ const styles = {
 
       ${isEdit &&
       css`
-        background-color: ${colorTokens.background.default};
+        background-color: transparent;
       `}
     }
 

@@ -88,12 +88,15 @@ function editorConfig(
       setup: (editor: any) => {
         editor.on('init', () => {
           if (readOnly) {
+            editor.setMode('readonly');
+              
+            const editorBody = editor.contentDocument.querySelector('.mce-content-body');
+            editorBody.style.backgroundColor = 'transparent';
+            
             setTimeout(() => {
-              editor.setMode('readonly');
-
-              const height = editor.contentDocument.querySelector('.mce-content-body').scrollHeight;
-              editor.iframeElement.style.height = `${height + 10}px`;
-            }, 200);
+              const height = editorBody.scrollHeight;
+              editor.iframeElement.style.height = `${height}px`;
+            }, 500);
           }
         });
 
@@ -356,6 +359,10 @@ const styles = {
     .mce-tinymce {
       box-shadow: none;
       background-color: transparent;
+    }
+
+    .mce-edit-area {
+      background-color: unset;
     }
 
     ${
