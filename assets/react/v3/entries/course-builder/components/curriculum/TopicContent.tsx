@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
@@ -223,17 +224,30 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         </div>
 
         <div css={styles.actions} data-actions>
-          <Show when={type === 'tutor_quiz' && isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+          <Show when={type === 'tutor_quiz'}>
             <Tooltip content={__('Export Quiz', 'tutor')} delay={200}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                onClick={() => {
-                  exportQuizMutation.mutate(content.id);
-                }}
+              <Show
+                when={!isTutorPro}
+                fallback={
+                  <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      onClick={() => {
+                        exportQuizMutation.mutate(content.id);
+                      }}
+                    >
+                      <SVGIcon name="export" width={24} height={24} />
+                    </button>
+                  </Show>
+                }
               >
-                <SVGIcon name="export" width={24} height={24} />
-              </button>
+                <ProBadge size="tiny">
+                  <button type="button" css={styles.actionButton} disabled onClick={noop}>
+                    <SVGIcon name="export" width={24} height={24} />
+                  </button>
+                </ProBadge>
+              </Show>
             </Tooltip>
           </Show>
           <Tooltip content={__('Edit', 'tutor')} delay={200}>
@@ -241,12 +255,23 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
-          <Show when={isTutorPro && !['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
+          <Show when={!['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-                <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
-                  <SVGIcon name="copyPaste" width={24} height={24} />
-                </button>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  }
+                >
+                  <ProBadge size="tiny">
+                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </ProBadge>
+                </Show>
               </Tooltip>
             </Show>
           </Show>
@@ -415,7 +440,7 @@ const styles = {
   actions: css`
     display: flex;
     opacity: 0;
-    align-items: center;
+    align-items: start;
     gap: ${spacing[8]};
     justify-content: end;
   `,
@@ -423,5 +448,10 @@ const styles = {
     ${styleUtils.resetButton};
     color: ${colorTokens.icon.default};
     display: flex;
+
+    :disabled {
+      color: ${colorTokens.icon.disable.background};
+      cursor: not-allowed;
+    }
   `,
 };

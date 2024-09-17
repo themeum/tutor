@@ -4,6 +4,7 @@ import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import EmptyState from '@Molecules/EmptyState';
@@ -52,7 +53,7 @@ const LiveClass = () => {
     <div css={styles.liveClass}>
       <span css={styles.label}>
         {__('Live Class', 'tutor')}
-        {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+        {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
       </span>
       <Show
         when={isTutorPro}

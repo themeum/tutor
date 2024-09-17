@@ -25,6 +25,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import Tooltip from '@Atoms/Tooltip';
@@ -324,14 +325,13 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 </div>
               </Show>
             </div>
-            <div css={styles.actions}>
+            <div css={styles.actions} data-visually-hidden>
               <Show when={!isEdit}>
                 <Tooltip content={__('Edit', 'tutor')} delay={200}>
                   <button
                     type="button"
                     css={styles.actionButton}
                     disabled={!topic.isSaved}
-                    data-visually-hidden
                     onClick={() => {
                       setIsEdit(true);
                       if (topic.isCollapsed) {
@@ -343,18 +343,28 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   </button>
                 </Tooltip>
               </Show>
-              <Show when={isTutorPro && topic.isSaved}>
+              <Show when={topic.isSaved}>
                 <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
                   <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-                    <button
-                      type="button"
-                      css={styles.actionButton}
-                      disabled={!topic.isSaved}
-                      data-visually-hidden
-                      onClick={handleDuplicateTopic}
+                    <Show
+                      when={!isTutorPro}
+                      fallback={
+                        <button
+                          type="button"
+                          css={styles.actionButton}
+                          disabled={!topic.isSaved}
+                          onClick={handleDuplicateTopic}
+                        >
+                          <SVGIcon name="copyPaste" width={24} height={24} />
+                        </button>
+                      }
                     >
-                      <SVGIcon name="copyPaste" width={24} height={24} />
-                    </button>
+                      <ProBadge size="tiny">
+                        <button type="button" css={styles.actionButton} disabled onClick={noop}>
+                          <SVGIcon name="copyPaste" width={24} height={24} />
+                        </button>
+                      </ProBadge>
+                    </Show>
                   </Tooltip>
                 </Show>
               </Show>
@@ -385,7 +395,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   }}
                   data-toggle-collapse
                 >
-                  <SVGIcon name={'chevronDown'} />
+                  <SVGIcon name={'chevronDown'} width={24} height={24} />
                 </button>
               </Show>
             </div>
@@ -563,47 +573,83 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 >
                   {__('Quiz', 'tutor')}
                 </Button>
-                <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
-                  <Button
-                    variant="tertiary"
-                    isOutlined
-                    size="small"
-                    icon={<SVGIcon name="plus" width={24} height={24} />}
-                    disabled={!topic.isSaved}
-                    onClick={() => {
-                      showModal({
-                        component: AssignmentModal,
-                        props: {
-                          topicId: topic.id,
-                          contentDripType: courseDetailsForm.watch('contentDripType'),
-                          title: __('Assignment', 'tutor'),
-                          icon: <SVGIcon name="assignment" width={24} height={24} />,
-                          subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
-                        },
-                      });
-                    }}
-                  >
-                    {__('Assignment', 'tutor')}
-                  </Button>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
+                      <Button
+                        variant="tertiary"
+                        isOutlined
+                        size="small"
+                        icon={<SVGIcon name="plus" width={24} height={24} />}
+                        disabled={!topic.isSaved}
+                        onClick={() => {
+                          showModal({
+                            component: AssignmentModal,
+                            props: {
+                              topicId: topic.id,
+                              contentDripType: courseDetailsForm.watch('contentDripType'),
+                              title: __('Assignment', 'tutor'),
+                              icon: <SVGIcon name="assignment" width={24} height={24} />,
+                              subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
+                            },
+                          });
+                        }}
+                      >
+                        {__('Assignment', 'tutor')}
+                      </Button>
+                    </Show>
+                  }
+                >
+                  <ProBadge>
+                    <Button
+                      variant="tertiary"
+                      isOutlined
+                      size="small"
+                      icon={<SVGIcon name="plus" width={24} height={24} />}
+                      disabled
+                      onClick={noop}
+                    >
+                      {__('Assignment', 'tutor')}
+                    </Button>
+                  </ProBadge>
                 </Show>
               </div>
               <div css={styles.footerButtons}>
                 <Show
                   when={hasLiveAddons}
                   fallback={
-                    <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
-                      <Button
-                        variant="tertiary"
-                        isOutlined
-                        size="small"
-                        icon={<SVGIcon name="import" width={24} height={24} />}
-                        disabled={!topic.isSaved}
-                        onClick={() => {
-                          fileInputRef?.current?.click();
-                        }}
-                      >
-                        {__('Import Quiz', 'tutor')}
-                      </Button>
+                    <Show
+                      when={isTutorPro}
+                      fallback={
+                        <ProBadge>
+                          <Button
+                            variant="tertiary"
+                            isOutlined
+                            size="small"
+                            icon={<SVGIcon name="import" width={24} height={24} />}
+                            disabled
+                            onClick={noop}
+                          >
+                            {__('Import Quiz', 'tutor')}
+                          </Button>
+                        </ProBadge>
+                      }
+                    >
+                      <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+                        <Button
+                          variant="tertiary"
+                          isOutlined
+                          size="small"
+                          icon={<SVGIcon name="import" width={24} height={24} />}
+                          disabled={!topic.isSaved}
+                          onClick={() => {
+                            fileInputRef?.current?.click();
+                          }}
+                        >
+                          {__('Import Quiz', 'tutor')}
+                        </Button>
+                      </Show>
                     </Show>
                   }
                 >
@@ -652,8 +698,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
           </div>
         </animated.div>
       </div>
-
-      {/* This input is added for file input trigger point and it will be accessed by both 'ThreeDot' and 'Import Quiz' button */}
       <input
         css={styleUtils.display.none}
         type="file"
@@ -836,7 +880,7 @@ const styles = {
   `,
   actions: css`
     ${styleUtils.display.flex()};
-    align-items: center;
+    align-items: start;
     gap: ${spacing[8]};
     justify-content: end;
   `,
@@ -847,6 +891,7 @@ const styles = {
     cursor: pointer;
 
     :disabled {
+      color: ${colorTokens.icon.disable.background};
       cursor: not-allowed;
     }
   `,
