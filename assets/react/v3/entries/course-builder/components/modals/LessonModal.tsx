@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormDateInput from '@Components/fields/FormDateInput';
@@ -426,7 +427,7 @@ const LessonModal = ({
                     label={
                       <div css={styles.previewLabel}>
                         {__('Lesson Preview', 'tutor')}
-                        {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+                        {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
                       </div>
                     }
                     helpText={
@@ -509,6 +510,7 @@ const styles = {
   previewLabel: css`
     display: flex;
     align-items: center;
+    gap: ${spacing[4]};
   `,
   contentDripLabel: css`
     display: flex;

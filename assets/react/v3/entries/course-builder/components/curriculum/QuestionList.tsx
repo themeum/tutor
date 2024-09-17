@@ -17,19 +17,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import Popover from '@Molecules/Popover';
 
-import Question from '@CourseBuilderComponents/curriculum/Question';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-
-import Tooltip from '@Atoms/Tooltip';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
+import Question from '@CourseBuilderComponents/curriculum/Question';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -92,6 +91,8 @@ const questionTypeOptions: {
     isPro: true,
   },
 ];
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const QuestionList = ({
   isEditing,
@@ -340,7 +341,7 @@ const QuestionList = ({
         </Show>
         <Popover
           gap={4}
-          maxWidth={'240px'}
+          maxWidth={!isTutorPro ? '260px' : '240px'}
           arrow="top"
           triggerRef={addButtonRef}
           isOpen={isOpen}
@@ -352,7 +353,7 @@ const QuestionList = ({
             {questionTypeOptions.map((option) => (
               <Show
                 key={option.value}
-                when={option.isPro && !tutorConfig.tutor_pro_url}
+                when={option.isPro && !isTutorPro}
                 fallback={
                   <button
                     key={option.value}
@@ -367,22 +368,19 @@ const QuestionList = ({
                   </button>
                 }
               >
-                <Tooltip delay={200} content={__('Pro Feature', 'tutor')} placement="left">
-                  <button
-                    key={option.value}
-                    type="button"
-                    css={styles.questionTypeOption}
-                    disabled
-                    onClick={() => {
-                      handleAddQuestion(option.value as QuizQuestionType);
-                    }}
-                  >
-                    <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
-                    <span>{option.label}</span>
-
-                    {/* @TODO: Need to add lock or pro identifier */}
-                  </button>
-                </Tooltip>
+                <button
+                  key={option.value}
+                  type="button"
+                  css={styles.questionTypeOption}
+                  disabled
+                  onClick={() => {
+                    handleAddQuestion(option.value as QuizQuestionType);
+                  }}
+                >
+                  <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                  <span>{option.label}</span>
+                  <ProBadge size="small" content={__('Pro', 'tutor')} />
+                </button>
               </Show>
             ))}
           </div>
@@ -448,6 +446,11 @@ const styles = {
 
     :disabled {
       cursor: not-allowed;
+      color: ${colorTokens.text.primary};
+
+      [data-question-icon] {
+        filter: grayscale(100%);
+      }
     }
 
     :hover:enabled {

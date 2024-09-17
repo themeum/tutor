@@ -5,12 +5,14 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { ID } from '@CourseBuilderServices/curriculum';
@@ -36,6 +38,8 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   image_answering: 'quizImageAnswer',
   ordering: 'quizOrdering',
 };
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError } = useQuizModalContext();
@@ -129,17 +133,22 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         }}
         closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
-        maxWidth="150px"
+        maxWidth={isTutorPro ? '150px' : '160px'}
         isInverse
         arrowPosition="auto"
         size="small"
         hideArrow
         data-three-dots
       >
-        {/* @TODO: need pro badge */}
         <ThreeDots.Option
-          text={__('Duplicate', 'tutor')}
+          text={
+            <div css={styles.duplicate}>
+              {__('Duplicate', 'tutor')}
+              {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
+            </div>
+          }
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
+          disabled={!isTutorPro}
           onClick={(event) => {
             event.stopPropagation();
             onDuplicateQuestion(question);
@@ -277,5 +286,10 @@ const styles = {
     color: ${colorTokens.text.subdued};
     max-width: 170px;
     width: 100%;
+  `,
+  duplicate: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
   `,
 };
