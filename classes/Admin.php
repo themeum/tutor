@@ -31,6 +31,9 @@ class Admin {
 	 * @return void
 	 */
 	public function __construct() {
+
+		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
+
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		// Force activate menu for necessary.
 		add_filter( 'parent_file', array( $this, 'parent_menu_active' ) );
@@ -54,6 +57,27 @@ class Admin {
 		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
+	}
+
+	/**
+	 * Show unstable version notice.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function show_unstable_version_admin_notice() {
+		$version = tutor_utils()->extract_version_details( TUTOR_VERSION );
+		if ( ! $version->is_stable ) {
+			/* translators: %s: version name */
+			$message = sprintf( __( 'You\'re currently using Tutor LMS %s. To ensure stability, please do not use it on a live site.', 'tutor' ), '<strong>' . $version->version . '</strong>' );
+			?>
+			<div class="notice notice-warning">
+				<p><strong><?php esc_html_e( 'Warning!', 'tutor' ); ?></strong></p>
+				<p><?php echo wp_kses_post( $message ); ?></p>
+			</div>
+			<?php
+		}
 	}
 
 	/**
