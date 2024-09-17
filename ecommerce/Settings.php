@@ -593,9 +593,9 @@ class Settings {
 	public static function get_paypal_config_keys() {
 		return array(
 			'paypal_environment'    => 'environment',
-			'paypal_merchant_email' => 'text',
+			'paypal_merchant_email' => 'email',
 			'paypal_client_id'      => 'text',
-			'paypal_client_secret'  => 'text',
+			'paypal_client_secret'  => 'password',
 			'paypal_webhook_id'     => 'text',
 		);
 	}
@@ -610,9 +610,9 @@ class Settings {
 	public static function get_stripe_config_keys() {
 		return array(
 			'stripe_environment'           => 'environment',
-			'stripe_secret_key'            => 'text',
-			'stripe_public_key'            => 'text',
-			'stripe_webhook_signature_key' => 'text',
+			'stripe_secret_key'            => 'password',
+			'stripe_public_key'            => 'password',
+			'stripe_webhook_signature_key' => 'password',
 		);
 	}
 
