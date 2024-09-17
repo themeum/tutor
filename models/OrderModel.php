@@ -574,14 +574,7 @@ class OrderModel {
 
 				if ( $enrollments ) {
 					$enrollment_ids = array_column( $enrollments, 'meta_value' );
-					$ids_str        = QueryHelper::prepare_in_clause( $enrollment_ids );
-
-					$wpdb->query(
-						$wpdb->prepare(
-							"DELETE FROM {$wpdb->posts} WHERE post_type=%s AND ID IN ( $ids_str )", //phpcs:ignore
-							'tutor_enrolled'
-						)
-					);
+					QueryHelper::bulk_delete_by_ids( $wpdb->posts, $enrollment_ids );
 				}
 
 				// Delete earnings.
