@@ -564,9 +564,16 @@ class OrderModel {
 
 			foreach ( $order_ids as $id ) {
 				// Delete enrollments if exist.
-				$enrollments = tutor_utils()->get_course_enrolled_ids_by_order_id( $id );
+				$enrollments = $wpdb->get_results(
+					$wpdb->prepare(
+						"SELECT * FROM {$wpdb->postmeta} WHERE post_id=%d AND meta_key LIKE %s",
+						$id,
+						'_tutor_order_for_course_id_%'
+					)
+				);
+
 				if ( $enrollments ) {
-					$enrollment_ids = array_column( $enrollments, 'enrolled_id' );
+					$enrollment_ids = array_column( $enrollments, 'meta_value' );
 					$ids_str        = QueryHelper::prepare_in_clause( $enrollment_ids );
 
 					$wpdb->query(
