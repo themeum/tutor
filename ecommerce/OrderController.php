@@ -140,12 +140,6 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
-			/**
-			 * Handle ajax request for delete order
-			 *
-			 * @since 3.0.0
-			 */
-			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
 		}
 	}
 
@@ -936,35 +930,6 @@ class OrderController {
 
 		wp_update_post( $args );
 		wp_send_json_success();
-		exit;
-	}
-
-	/**
-	 * Handle ajax request for deleting order
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void JSON response
-	 */
-	public static function tutor_order_delete() {
-		tutor_utils()->checking_nonce();
-
-		$user_id  = get_current_user_id();
-		$order_id = Input::post( 'id', 0, Input::TYPE_INT );
-
-		// Check if user is privileged.
-		if ( ! tutor_utils()->has_user_role( array( 'administrator', 'editor' ) ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
-		$delete = CourseModel::delete_course( $order_id );
-
-		if ( $delete ) {
-			wp_send_json_success( __( 'Order has been deleted ', 'tutor' ) );
-		} else {
-			wp_send_json_error( __( 'Order delete failed ', 'tutor' ) );
-		}
-
 		exit;
 	}
 

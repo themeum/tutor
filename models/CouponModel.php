@@ -710,7 +710,7 @@ class CouponModel {
 
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
-			$discount_price = 0;
+			$discount_price = $reg_price;
 
 			if ( $sale_price ) {
 				$discount_price      = $sale_price;
@@ -789,7 +789,7 @@ class CouponModel {
 
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
-			$discount_price = 0;
+			$discount_price = $reg_price;
 
 			if ( $sale_price ) {
 				$discount_price = $sale_price;
