@@ -380,8 +380,7 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int   $order_id Order id.
-	 * @param float $amount Order amount.
+	 * @param int $order_id Order id.
 	 *
 	 * @throws \Exception Throw exception if order not found.
 	 *
@@ -472,10 +471,26 @@ class CheckoutController {
 
 		// Add enrollment fee with total price for subscription order.
 		if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-			$plan = apply_filters( 'tutor_checkout_plan_info', null, $payment_data->items[0]['item_id'] );
-			if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
-				$payment_data->items[0]['discounted_price'] += floatval( $plan->enrollment_fee ?? 0 );
+			$items = (array) $payment_data->items;
+			foreach ( $items as $item ) {
+				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
+				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+					$new_item = array(
+						'item_id'          => 0,
+						'item_name'        => 'Enrollment Fee',
+						'regular_price'    => floatval( $plan->enrollment_fee ?? 0 ),
+						'quantity'         => 1,
+						'discounted_price' => floatval( $plan->enrollment_fee ?? 0 ),
+					);
+
+					$items[] = $new_item;
+
+					$payment_data->total_price += floatval( $plan->enrollment_fee ?? 0 );
+					$payment_data->subtotal    += floatval( $plan->enrollment_fee ?? 0 );
+				}
 			}
+
+			$payment_data->items = (object) $items;
 		}
 
 		if ( $payment_gateway_class ) {
