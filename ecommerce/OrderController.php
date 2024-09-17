@@ -218,7 +218,7 @@ class OrderController {
 			$subtotal_price += floatval( $item['regular_price'] );
 			$total_price    += floatval( $item['sale_price'] );
 
-			// Add enrollment fee.
+			// Add enrollment fee with total & subtotal price.
 			if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
 				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
 				if ( $plan ) {

@@ -469,7 +469,7 @@ class CheckoutController {
 								? $payment_gateways[ $payment_method ]['gateway_class']
 								: null;
 
-		// Add enrollment fee with total price for subscription order.
+		// Add enrollment fee with as a line item.
 		if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
 			$items = (array) $payment_data->items;
 			foreach ( $items as $item ) {
@@ -484,9 +484,6 @@ class CheckoutController {
 					);
 
 					$items[] = $new_item;
-
-					$payment_data->total_price += floatval( $plan->enrollment_fee ?? 0 );
-					$payment_data->subtotal    += floatval( $plan->enrollment_fee ?? 0 );
 				}
 			}
 

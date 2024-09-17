@@ -749,6 +749,7 @@ class CouponModel {
 
 		$response['deducted_price'] = $format_price ? tutor_get_formatted_price( $response['deducted_price'] ) : $response['deducted_price'];
 		$response['total_price']    = $format_price ? tutor_get_formatted_price( $response['total_price'] ) : $response['total_price'];
+
 		return (object) $response;
 	}
 
