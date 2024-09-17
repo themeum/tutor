@@ -2040,7 +2040,7 @@ class Utils {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
-		$order_query     = '';
+		$order_query = '';
 		if ( '' !== $order ) {
 			$is_valid_sql = sanitize_sql_orderby( $order );
 			if ( $is_valid_sql ) {
