@@ -349,6 +349,9 @@ export const useSortCourseSubscriptionsMutation = (courseId: number) => {
 
           return data.sort((a, b) => sortedIds.indexOf(a.id) - sortedIds.indexOf(b.id));
         });
+        queryClient.invalidateQueries({
+          queryKey: ['SubscriptionsList', courseId],
+        });
       }
     },
     onError: (error: ErrorResponse) => {
