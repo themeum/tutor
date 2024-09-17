@@ -2040,7 +2040,7 @@ class Utils {
 			$date_query = "AND DATE(user.user_registered) = CAST('$date' AS DATE)";
 		}
 
-		$order_query     = '';
+		$order_query = '';
 		if ( '' !== $order ) {
 			$is_valid_sql = sanitize_sql_orderby( $order );
 			if ( $is_valid_sql ) {
@@ -9878,7 +9878,7 @@ class Utils {
 		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
 		$status            = 'complete' === $status ? 'completed' : $status;
 		$post_table        = $wpdb->posts;
-		
+
 		$wpdb->query(
 			$wpdb->prepare(
 				" UPDATE {$post_table}
@@ -10274,6 +10274,48 @@ class Utils {
 			return null;
 		}
 
-		return sprintf( __( '%s left','tutor' ), human_time_diff( $next_timestamp ) );
+		return sprintf( __( '%s left', 'tutor' ), human_time_diff( $next_timestamp ) );
+	}
+
+	/**
+	 * Extract version details.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $version version number.
+	 *
+	 * @return object {
+	 *     @property string $version version.
+	 *     @property bool $is_stable is stable or not.
+	 *     @property int $major marjor version part.
+	 *     @property int $minor minor version part.
+	 *     @property int $patch patch version part.
+	 *     @property string $status status of version, can be beta, RC, alpha or stable.
+	 * }
+	 */
+	public function extract_version_details( $version ) {
+		$info = array(
+			'version' => $version,
+		);
+
+		if ( strpos( $version, 'beta' ) !== false ) {
+			$info['status'] = 'beta';
+		} elseif ( strpos( $version, 'RC' ) !== false ) {
+			$info['status'] = 'RC';
+		} elseif ( strpos( $version, 'alpha' ) !== false ) {
+			$info['status'] = 'alpha';
+		} else {
+			$info['status'] = 'stable';
+		}
+
+		$info['is_stable'] = 'stable' === $info['status'];
+
+		if ( preg_match( '/^(\d+)\.(\d+)\.(\d+)/', $version, $matches ) ) {
+			$info['major'] = (int) $matches[1];
+			$info['minor'] = (int) $matches[2];
+			$info['patch'] = (int) $matches[3];
+		}
+
+		return (object) $info;
 	}
 }
