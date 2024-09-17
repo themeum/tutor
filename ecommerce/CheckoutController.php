@@ -469,6 +469,14 @@ class CheckoutController {
 								? $payment_gateways[ $payment_method ]['gateway_class']
 								: null;
 
+		// Add enrollment fee with total price for subscription order.
+		if ( OrderModel::TYPE_SINGLE_ORDER !== $payment_data['order_type'] ) {
+			$plan = apply_filters( 'tutor_checkout_plan_info', null, $payment_data['items'][ 0 ]['item_id'] );
+			if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+				$payment_data['items'][0]['discounted_price'] += floatval( $plan->enrollment_fee ?? 0 );
+			}
+		}
+
 		if ( $payment_gateway_class ) {
 			try {
 				add_filter(
