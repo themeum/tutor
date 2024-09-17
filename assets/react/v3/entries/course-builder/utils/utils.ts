@@ -38,7 +38,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     course_sale_price: Number(data.course_sale_price) ?? 0,
 
     course_categories: data.course_categories ?? [],
-    course_tags: data.course_tags.map((item) => item.id),
+    course_tags: data.course_tags.map((item) => item.id) ?? [],
     thumbnail_id: data.thumbnail?.id ?? null,
     enable_qna: data.enable_qna ? 'yes' : 'no',
     is_public_course: data.is_public_course ? 'yes' : 'no',

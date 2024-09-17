@@ -104,7 +104,6 @@ export default function SubscriptionItem({
 
       if (response.status_code === 200 || response.status_code === 201) {
         toggleCollapse(subscription.id);
-        form.reset();
       }
     } catch (error) {
       // handle error
