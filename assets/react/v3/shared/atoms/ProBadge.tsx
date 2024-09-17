@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import type React from 'react';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { isDefined } from '@Utils/types';
 
@@ -55,32 +55,32 @@ const badgeSizes = {
     height: spacing[10],
     gap: spacing[2],
     iconSize: 10,
-    fontSize: '8px',
-    lineHeight: '10px',
+    fontSize: '0.5rem',
+    lineHeight: '0.625rem',
   },
   small: {
     borderRadius: spacing[16],
     height: spacing[16],
     gap: spacing[4],
     iconSize: 16,
-    fontSize: '10px',
-    lineHeight: '16px',
+    fontSize: fontSize[10],
+    lineHeight: lineHeight[16],
   },
   regular: {
     borderRadius: '22px',
     height: '22px',
     gap: '5px',
     iconSize: 22,
-    fontSize: '14px',
-    lineHeight: '18px',
+    fontSize: fontSize[14],
+    lineHeight: lineHeight[18],
   },
   large: {
     borderRadius: '26px',
     height: '26px',
-    gap: '6px',
+    gap: spacing[6],
     iconSize: 26,
-    fontSize: '16px',
-    lineHeight: '26px',
+    fontSize: fontSize[16],
+    lineHeight: lineHeight[26],
   },
 };
 
