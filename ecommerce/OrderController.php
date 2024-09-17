@@ -212,13 +212,11 @@ class OrderController {
 
 		$coupon = $coupon_code ? $coupon_model->get_coupon( array( 'coupon_code' => $coupon_code ) ) : null;
 
-		$price_details = $coupon
-						? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code, $order_type )
-						: $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ), $order_type );
-
 		$subtotal_price = 0;
-		foreach ( $price_details->items as $item ) {
-			$subtotal_price += floatval( $item->discount_price ? $item->discount_price : $item->regular_price );
+		$total_price    = 0;
+		foreach ( $items as $item ) {
+			$subtotal_price += floatval( $item['regular_price'] );
+			$total_price    += floatval( $item['sale_price'] );
 		}
 
 		$order_data = array(
@@ -227,8 +225,8 @@ class OrderController {
 			'order_type'      => $order_type,
 			'coupon_code'     => $coupon_code,
 			'subtotal_price'  => $subtotal_price,
-			'total_price'     => $price_details->total_price,
-			'net_payment'     => $price_details->total_price,
+			'total_price'     => $total_price,
+			'net_payment'     => $total_price,
 			'user_id'         => $user_id,
 			'payment_status'  => $payment_status,
 			'order_status'    => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
