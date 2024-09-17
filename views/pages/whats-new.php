@@ -136,7 +136,7 @@ use TUTOR\WhatsNew;
 
 					<a class="tutor-whats-new-action-btn" 
 						target="_blank" 
-						href="https://tutorlms.com/pricing?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new"> 
+						href="https://tutorlms.com/free-vs-pro?utm_source=tutor_lms_wp_dashboard&utm_medium=update&utm_campaign=what_s_new#pricing-section"> 
 						Compare Free vs Pro
 					</a>
 				</div>
