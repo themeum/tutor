@@ -15,13 +15,7 @@ import { convertToGMT } from '@Utils/util';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
-interface CourseFormDataWithEditState extends CourseFormData {
-  _tutor_prerequisites_main_edit: boolean;
-  _tutor_course_additional_data_edit: boolean;
-  _tutor_attachments_main_edit: boolean;
-}
-
-export const convertCourseDataToPayload = (data: CourseFormDataWithEditState): CoursePayload => {
+export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
     post_date: data.post_date,
     post_date_gmt: convertToGMT(new Date(data.post_date), DateFormats.yearMonthDayHourMinuteSecond),
@@ -68,18 +62,13 @@ export const convertCourseDataToPayload = (data: CourseFormDataWithEditState): C
     }),
 
     ...(isAddonEnabled(Addons.TUTOR_PREREQUISITES) && {
-      ...(data._tutor_prerequisites_main_edit && {
-        _tutor_prerequisites_main_edit: true,
-      }),
+      _tutor_prerequisites_main_edit: true,
       _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
     }),
     tutor_course_certificate_template: data.tutor_course_certificate_template,
-    ...(data._tutor_course_additional_data_edit && {
-      _tutor_course_additional_data_edit: true,
-    }),
-    ...(data._tutor_attachments_main_edit && {
-      _tutor_attachments_main_edit: true,
-    }),
+
+    _tutor_course_additional_data_edit: true,
+    _tutor_attachments_main_edit: true,
     ...(data.video.source && {
       'video[source]': data.video.source,
       'video[source_video_id]': data.video.source_video_id,
