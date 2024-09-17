@@ -144,11 +144,6 @@ const styles = {
       [data-action-buttons] {
         opacity: 1;
       }
-
-      ${isEdit &&
-      css`
-        background-color: transparent;
-      `}
     }
 
     ${isEdit &&
