@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     checkoutCouponWrapper.querySelector('.tutor-discount-amount').innerHTML = `-${data.deducted_price}`;
                     checkoutCouponForm.classList.add('tutor-d-none');
                     checkoutHaveACoupon.classList.add('tutor-d-none');
-                    checkoutCouponInput.value = '';
+                    // checkoutCouponInput.value = '';
                     checkoutGrandTotal.innerHTML = data.total_price;
 
                     // Update course items
