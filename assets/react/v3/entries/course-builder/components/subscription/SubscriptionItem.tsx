@@ -250,7 +250,7 @@ export default function SubscriptionItem({
       ref={combinedRef}
     >
       <div css={styles.subscriptionHeader(isExpanded)}>
-        <div css={styles.grabber} {...listeners}>
+        <div css={styles.grabber({ isFormDirty })} {...(isFormDirty ? {} : listeners)}>
           <SVGIcon name="threeDotsVerticalDouble" width={24} height={24} />
           <button
             type="button"
@@ -262,7 +262,9 @@ export default function SubscriptionItem({
             {subscriptionName}
 
             <Show when={subscription.is_featured}>
-              <SVGIcon name="star" width={24} height={24} />
+              <Tooltip content={__('Featured', 'tutor')} delay={200}>
+                <SVGIcon name="star" width={24} height={24} />
+              </Tooltip>
             </Show>
           </button>
         </div>
@@ -631,7 +633,11 @@ export default function SubscriptionItem({
 }
 
 const styles = {
-  grabber: css`
+  grabber: ({
+    isFormDirty,
+  }: {
+    isFormDirty: boolean;
+  }) => css`
 		display: flex;
 		align-items: center;
 		gap: ${spacing[4]};
@@ -642,7 +648,7 @@ const styles = {
 
 		svg {
 			color: ${colorTokens.icon.default};
-			cursor: grab;
+			cursor: ${isFormDirty ? 'not-allowed' : 'grab'};
 			flex-shrink: 0;
 		}
 

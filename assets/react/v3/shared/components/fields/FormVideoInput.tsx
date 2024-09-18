@@ -507,6 +507,15 @@ const FormVideoInput = ({
                     }
                   }
 
+                  if (form.watch('videoSource') === 'shortcode') {
+                    const regExp = /^\[.*\]$/;
+                    const match = value.match(regExp);
+
+                    if (!match) {
+                      return __('Invalid Shortcode', 'tutor');
+                    }
+                  }
+
                   return true;
                 },
               }}
