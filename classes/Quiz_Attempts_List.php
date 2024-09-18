@@ -267,7 +267,7 @@ class Quiz_Attempts_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -279,6 +279,17 @@ class Quiz_Attempts_List {
 				return (int) trim( $id );
 			},
 			$bulk_ids
+		);
+
+		// prevent instructor to remove quiz attempt from admin.
+		$bulk_ids = array_filter(
+			$bulk_ids,
+			function ( $attempt_id ) {
+				$attempt   = tutor_utils()->get_attempt( $attempt_id );
+				$user_id   = get_current_user_id();
+				$course_id = $attempt && is_object( $attempt ) ? $attempt->course_id : 0;
+				return $course_id && tutor_utils()->can_user_edit_course( $user_id, $course_id );
+			}
 		);
 
 		switch ( $bulk_action ) {
