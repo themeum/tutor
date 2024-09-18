@@ -284,7 +284,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 2.7.5 - September 18, 2024
+= 2.7.6 - September 18, 2024
 
 New: Filter hook added to alter the redirect URL after course purchase
 Fix: Instructor not able to delete their announcement or student quiz attempts from Admin panel
