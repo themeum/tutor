@@ -287,8 +287,8 @@ class Quiz_Attempts_List {
 			function ( $attempt_id ) {
 				$attempt   = tutor_utils()->get_attempt( $attempt_id );
 				$user_id   = get_current_user_id();
-				$course_id = $attempt->course_id;
-				return tutor_utils()->can_user_edit_course( $user_id, $course_id );
+				$course_id = $attempt && is_object( $attempt ) ? $attempt->course_id : 0;
+				return $course_id && tutor_utils()->can_user_edit_course( $user_id, $course_id );
 			}
 		);
 
