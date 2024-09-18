@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 2.7.5
+Stable tag: 2.7.6
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -283,6 +283,11 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 
 == Changelog ==
+
+= 2.7.5 - September 18, 2024
+
+New: Filter hook added to alter the redirect URL after course purchase
+Fix: Instructor not able to delete their announcement or student quiz attempts from Admin panel
 
 = 2.7.5 - September 04, 2024
 
