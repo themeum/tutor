@@ -251,7 +251,7 @@ export default function SubscriptionItem({
     >
       <div css={styles.subscriptionHeader(isExpanded)}>
         <div css={styles.grabber({ isFormDirty })} {...(isFormDirty ? {} : listeners)}>
-          <SVGIcon name="threeDotsVerticalDouble" width={24} height={24} />
+          <SVGIcon data-grabber name="threeDotsVerticalDouble" width={24} height={24} />
           <button
             type="button"
             css={styles.title}
@@ -646,7 +646,7 @@ const styles = {
 		width: 100%;
 		min-height: 40px;
 
-		svg {
+		[data-grabber] {
 			color: ${colorTokens.icon.default};
 			cursor: ${isFormDirty ? 'not-allowed' : 'grab'};
 			flex-shrink: 0;
@@ -670,13 +670,13 @@ const styles = {
     align-items: center;
     color: ${colorTokens.text.hints};
     flex-grow: 1;
+    gap: ${spacing[8]};
 
     :disabled {
       cursor: default;
     }
 
     svg {
-      margin-left: ${spacing[8]};
       color: ${colorTokens.icon.brand};
     }
   `,
