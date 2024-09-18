@@ -690,21 +690,20 @@ document.addEventListener('DOMContentLoaded', function () {
 	 * Tutor option password type hide and show
 	 * 
 	 * @since 3.0.0
-	 * 
 	 */
-	document.querySelectorAll('.tutor-option-field-input .tutor-type-password').forEach(function (item) {
+	document.querySelectorAll('.tutor-option-field-input .tutor-type-password').forEach((item) => {
 		const input = item.querySelector('input');
 		const button = item.querySelector('button');
-		
-		button.addEventListener('click', function (e) {
-			const type = input.getAttribute('type');
-			if (type === 'password') {
-				input.setAttribute('type', 'text');
-				button.querySelector('i').setAttribute('class', 'tutor-icon-eye-bold');
-			} else {
-				input.setAttribute('type', 'password');
-				button.querySelector('i').setAttribute('class', 'tutor-icon-eye-slash-bold');
-			}
+		const icon = button?.querySelector('i');
+
+		if (!input || !button || !icon) {
+			return;
+		}
+
+		button.addEventListener('click', () => {
+			const isPassword = input.type === 'password';
+			input.type = isPassword ? 'text' : 'password';
+			icon.className = isPassword ? 'tutor-icon-eye-bold' : 'tutor-icon-eye-slash-bold';
 		});
 	});
 });
