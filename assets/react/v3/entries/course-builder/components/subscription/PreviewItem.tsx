@@ -43,7 +43,8 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
           </span>
         </Show>
 
-        <Show when={subscription.enable_free_trial}>
+        {/* @TODO: will be updated after confirmation */}
+        {/* <Show when={subscription.enable_free_trial}>
           <span>•</span>
           <span>
             {sprintf(
@@ -52,7 +53,7 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
               formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value)),
             )}
           </span>
-        </Show>
+        </Show> */}
 
         <Show when={subscription.payment_type !== 'onetime'}>
           <Show

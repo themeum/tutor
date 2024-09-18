@@ -165,7 +165,7 @@ const Certificate = () => {
         <div css={styles.tabs}>
           <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
           <div css={styles.orientation}>
-            <Show when={hasLandScapeCertificatesForActiveTab}>
+            <Show when={hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab}>
               <Tooltip delay={200} content={__('Landscape', 'tutor')}>
                 <button
                   type="button"
@@ -184,8 +184,6 @@ const Certificate = () => {
                   />
                 </button>
               </Tooltip>
-            </Show>
-            <Show when={hasPortraitCertificatesForActiveTab}>
               <Tooltip delay={200} content={__('Portrait', 'tutor')}>
                 <button
                   type="button"

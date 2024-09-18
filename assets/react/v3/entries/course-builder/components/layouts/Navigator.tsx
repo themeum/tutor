@@ -1,6 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { spacing } from '@Config/styles';
+import Show from '@Controls/Show';
 import routes from '@CourseBuilderConfig/routes';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
@@ -76,28 +77,32 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   };
   return (
     <div css={[styles.wrapper, styleModifier]}>
-      <Button
-        variant="tertiary"
-        iconPosition="right"
-        size="small"
-        onClick={handlePreviousClick}
-        buttonCss={css`
+      <Show when={currentIndex > 0}>
+        <Button
+          variant="tertiary"
+          iconPosition="right"
+          size="small"
+          onClick={handlePreviousClick}
+          buttonCss={css`
           padding: ${spacing[6]};
         `}
-        disabled={previousIndex < 0}
-      >
-        <SVGIcon name="chevronLeft" height={18} width={18} />
-      </Button>
-      <Button
-        variant="tertiary"
-        icon={<SVGIcon name="chevronRight" />}
-        iconPosition="right"
-        size="small"
-        onClick={handleNextClick}
-        disabled={!postTitle || nextIndex >= steps.length}
-      >
-        {__('Next', 'tutor')}
-      </Button>
+          disabled={previousIndex < 0}
+        >
+          <SVGIcon name="chevronLeft" height={18} width={18} />
+        </Button>
+      </Show>
+      <Show when={currentIndex < steps.length - 1 && postTitle}>
+        <Button
+          variant="tertiary"
+          icon={<SVGIcon name="chevronRight" />}
+          iconPosition="right"
+          size="small"
+          onClick={handleNextClick}
+          disabled={!postTitle || nextIndex >= steps.length}
+        >
+          {__('Next', 'tutor')}
+        </Button>
+      </Show>
     </div>
   );
 };

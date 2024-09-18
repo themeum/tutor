@@ -163,13 +163,18 @@ export default function SubscriptionItem({
     [setNodeRef],
   );
 
-  const subscriptionName = form.watch(`subscriptions.${index}.plan_name`);
-  const paymentType = form.watch(`subscriptions.${index}.payment_type`);
-  const chargeEnrolmentFee = form.watch(`subscriptions.${index}.charge_enrollment_fee`);
-  const enableTrial = form.watch(`subscriptions.${index}.enable_free_trial`);
-  const isFeatured = form.watch(`subscriptions.${index}.is_featured`);
-  const hasSale = form.watch(`subscriptions.${index}.offer_sale_price`);
-  const hasScheduledSale = !!form.watch(`subscriptions.${index}.schedule_sale_price`);
+  const subscriptionName = form.watch(`subscriptions.${index}.plan_name` as `subscriptions.0.plan_name`);
+  const paymentType = form.watch(`subscriptions.${index}.payment_type` as `subscriptions.0.payment_type`);
+  const chargeEnrolmentFee = form.watch(
+    `subscriptions.${index}.charge_enrollment_fee` as `subscriptions.0.charge_enrollment_fee`,
+  );
+  // @TODO: Will be added after confirmation
+  // const enableTrial = form.watch(`subscriptions.${index}.enable_free_trial` as `subscriptions.0.enable_free_trial`);
+  const isFeatured = form.watch(`subscriptions.${index}.is_featured` as `subscriptions.0.is_featured`);
+  const hasSale = form.watch(`subscriptions.${index}.offer_sale_price` as `subscriptions.0.offer_sale_price`);
+  const hasScheduledSale = !!form.watch(
+    `subscriptions.${index}.schedule_sale_price` as `subscriptions.0.schedule_sale_price`,
+  );
 
   const [collapseAnimation, collapseAnimate] = useSpring(
     {
@@ -183,7 +188,7 @@ export default function SubscriptionItem({
     },
     [
       chargeEnrolmentFee,
-      enableTrial,
+      // enableTrial,
       isFeatured,
       hasSale,
       hasScheduledSale,
@@ -203,7 +208,7 @@ export default function SubscriptionItem({
     }
   }, [
     chargeEnrolmentFee,
-    enableTrial,
+    // enableTrial,
     isFeatured,
     hasSale,
     hasScheduledSale,

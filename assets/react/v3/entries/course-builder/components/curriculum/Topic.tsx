@@ -537,6 +537,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   size="small"
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
+                  buttonCss={styles.footerButton}
                   onClick={() => {
                     showModal({
                       component: LessonModal,
@@ -558,6 +559,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   size="small"
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
+                  buttonCss={styles.footerButton}
                   onClick={() => {
                     showModal({
                       component: QuizModal,
@@ -583,6 +585,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         size="small"
                         icon={<SVGIcon name="plus" width={24} height={24} />}
                         disabled={!topic.isSaved}
+                        buttonCss={styles.footerButton}
                         onClick={() => {
                           showModal({
                             component: AssignmentModal,
@@ -643,6 +646,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                           size="small"
                           icon={<SVGIcon name="import" width={24} height={24} />}
                           disabled={!topic.isSaved}
+                          buttonCss={styles.footerButton}
                           onClick={() => {
                             fileInputRef?.current?.click();
                           }}
@@ -976,5 +980,11 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
+  `,
+  footerButton: css`
+    :hover {
+      background-color: ${colorTokens.background.white};
+      color: ${colorTokens.text.brand};
+    }
   `,
 };
