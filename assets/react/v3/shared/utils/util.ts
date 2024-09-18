@@ -321,3 +321,9 @@ export const convertToGMT = (date: Date, dateFormat = DateFormats.yearMonthDayHo
   // Format and return the GMT date
   return format(gmtDate, dateFormat);
 };
+
+export const convertGMTtoLocalDate = (date: string) => {
+  const localDate = new Date(date);
+  const offset = localDate.getTimezoneOffset();
+  return addMinutes(localDate, -offset);
+};

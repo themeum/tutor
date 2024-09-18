@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
+import Alert from '@Atoms/Alert';
 import Button from '@Atoms/Button';
 
 import FormInput from '@Components/fields/FormInput';
@@ -53,6 +54,7 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
 
     if (response.status_code === 200) {
       closeModal({ action: 'CONFIRM' });
+      window.location.reload();
     }
   };
 
@@ -93,12 +95,18 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
           }
         >
           <form css={styles.formWrapper} onSubmit={form.handleSubmit(handleSubmit)}>
-            <span css={styles.infoText}>
-              {__('Find your Secret API key in your ', 'tutor')}
-              {/* @TODO: need to confirm the URL */}
-              <a href={config.CHATGPT_PLATFORM_URL}>{__('Open AI User settings', 'tutor')}</a>
-              {__(' and paste it here to connect Open AI with your Tutor LMS website.', 'tutor')}
-            </span>
+            <div css={styles.infoText}>
+              <div>
+                {__('Find your Secret API key in your ', 'tutor')}
+                {/* @TODO: need to confirm the URL */}
+                <a href={config.CHATGPT_PLATFORM_URL}>{__('Open AI User settings', 'tutor')}</a>
+                {__(' and paste it here to connect Open AI with your Tutor LMS website.', 'tutor')}
+              </div>
+
+              <Alert type="info" icon="warning">
+                {__('This page will reload after submit. Please save course information.', 'tutor')}
+              </Alert>
+            </div>
 
             <Controller
               name="openAIApiKey"
@@ -175,6 +183,8 @@ const styles = {
   `,
   infoText: css`
     ${typography.small()};
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
     color: ${colorTokens.text.subdued};
 
     a {

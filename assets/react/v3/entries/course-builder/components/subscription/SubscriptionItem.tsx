@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -22,7 +22,6 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
-  type SubscriptionFormData,
   convertFormDataToSubscription,
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
@@ -62,6 +61,7 @@ export default function SubscriptionItem({
   onDiscard,
   isExpanded,
 }: SubscriptionItemProps) {
+  const wrapperRef = useRef<HTMLFormElement>(null);
   const subscriptionRef = useRef<HTMLDivElement>(null);
   const deleteButtonRef = useRef<HTMLButtonElement>(null);
   const form = useFormContext<{
@@ -71,11 +71,12 @@ export default function SubscriptionItem({
   const index = subscriptionItems.findIndex((item) => item.id === id);
   const subscription = form.watch(`subscriptions.${index}`);
   const isFormDirty = form.formState.isDirty;
-  const errorFields = form.formState.errors.subscriptions
+  const errorFieldsLength = form.formState.errors.subscriptions
     ? Object.keys(form.formState.errors.subscriptions[index] || {}).length
     : 0;
 
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -90,14 +91,28 @@ export default function SubscriptionItem({
     }
   }, [isExpanded]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLFormElement)) {
+        setIsActive(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, [isActive]);
+
   const saveSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
   const deleteSubscriptionMutation = useDeleteCourseSubscriptionMutation(courseId);
   const duplicateSubscriptionMutation = useDuplicateCourseSubscriptionMutation(courseId);
 
-  const handleSaveSubscription = async (values: SubscriptionFormData) => {
+  const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
     try {
       const payload = convertFormDataToSubscription({
         ...values,
+        id: values.isSaved ? values.id : '0',
         assign_id: String(courseId),
       });
       const response = await saveSubscriptionMutation.mutateAsync(payload);
@@ -106,7 +121,7 @@ export default function SubscriptionItem({
         toggleCollapse(subscription.id);
       }
     } catch (error) {
-      // handle error
+      form.reset();
     }
   };
 
@@ -124,14 +139,29 @@ export default function SubscriptionItem({
     }
   };
 
-  const handleDuplicateSubscription = () => {
-    duplicateSubscriptionMutation.mutate(Number(subscription.id));
+  const handleDuplicateSubscription = async () => {
+    const response = await duplicateSubscriptionMutation.mutateAsync(Number(subscription.id));
+
+    if (response.data) {
+      toggleCollapse(String(response.data));
+    }
   };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: subscription.id,
     animateLayoutChanges,
   });
+
+  const combinedRef = useCallback(
+    (node: HTMLFormElement) => {
+      if (node) {
+        setNodeRef(node);
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        (wrapperRef as any).current = node;
+      }
+    },
+    [setNodeRef],
+  );
 
   const subscriptionName = form.watch(`subscriptions.${index}.plan_name`);
   const paymentType = form.watch(`subscriptions.${index}.payment_type`);
@@ -151,7 +181,16 @@ export default function SubscriptionItem({
         easing: (t) => t * (2 - t),
       },
     },
-    [chargeEnrolmentFee, enableTrial, isFeatured, hasSale, hasScheduledSale, isFormDirty, isExpanded, errorFields],
+    [
+      chargeEnrolmentFee,
+      enableTrial,
+      isFeatured,
+      hasSale,
+      hasScheduledSale,
+      isFormDirty,
+      isExpanded,
+      errorFieldsLength,
+    ],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -162,7 +201,16 @@ export default function SubscriptionItem({
         opacity: isExpanded ? 1 : 0,
       });
     }
-  }, [chargeEnrolmentFee, enableTrial, isFeatured, hasSale, hasScheduledSale, isFormDirty, isExpanded, errorFields]);
+  }, [
+    chargeEnrolmentFee,
+    enableTrial,
+    isFeatured,
+    hasSale,
+    hasScheduledSale,
+    isFormDirty,
+    isExpanded,
+    errorFieldsLength,
+  ]);
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -185,12 +233,16 @@ export default function SubscriptionItem({
   return (
     <form
       {...attributes}
-      css={styles.subscription(bgLight)}
+      css={styles.subscription({
+        bgLight,
+        isActive: isActive,
+      })}
       onSubmit={form.handleSubmit((values) => {
         handleSaveSubscription(values.subscriptions[index]);
       })}
+      onClick={() => setIsActive(true)}
       style={style}
-      ref={setNodeRef}
+      ref={combinedRef}
     >
       <div css={styles.subscriptionHeader(isExpanded)}>
         <div css={styles.grabber} {...listeners}>
@@ -212,21 +264,21 @@ export default function SubscriptionItem({
 
         <div css={styles.actions(isExpanded)}>
           <Show when={!isExpanded}>
-            <Tooltip content={__('Edit plan', 'tutor')} delay={200}>
-              <button type="button" onClick={() => toggleCollapse(subscription.id)}>
+            <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <button type="button" onClick={() => !isFormDirty && toggleCollapse(subscription.id)}>
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
             </Tooltip>
           </Show>
           <Show when={subscription.isSaved}>
-            <Tooltip content={__('Duplicate plan', 'tutor')} delay={200}>
+            <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
               <button type="button" onClick={handleDuplicateSubscription}>
                 <Show when={!duplicateSubscriptionMutation.isPending} fallback={<LoadingSpinner size={24} />}>
                   <SVGIcon name="copyPaste" width={24} height={24} />
                 </Show>
               </button>
             </Tooltip>
-            <Tooltip content={__('Delete plan', 'tutor')} delay={200}>
+            <Tooltip content={__('Delete', 'tutor')} delay={200}>
               <button ref={deleteButtonRef} type="button" onClick={() => setIsDeletePopoverOpen(true)}>
                 <SVGIcon name="delete" width={24} height={24} />
               </button>
@@ -436,7 +488,8 @@ export default function SubscriptionItem({
                 )}
               />
             </Show>
-            <Controller
+            {/* @TODO: Will be added after confirmation */}
+            {/* <Controller
               control={form.control}
               name={`subscriptions.${index}.enable_free_trial`}
               render={(controllerProps) => (
@@ -487,7 +540,7 @@ export default function SubscriptionItem({
                   )}
                 />
               </div>
-            </Show>
+            </Show> */}
 
             <Controller
               control={form.control}
@@ -633,16 +686,30 @@ const styles = {
 		align-items: center;
 		gap: ${spacing[8]};
 	`,
-  subscription: (bgLight = false) => css`
+  subscription: ({
+    bgLight,
+    isActive,
+  }: {
+    bgLight?: boolean;
+    isActive: boolean;
+  }) => css`
 		width: 100%;
 		border: 1px solid ${colorTokens.stroke.default};
 		border-radius: ${borderRadius.card};
 		overflow: hidden;
+    transition: border-color 0.3s ease;
 
 		${
       bgLight &&
       css`
         background-color: ${colorTokens.background.white};
+      `
+    }
+
+    ${
+      isActive &&
+      css`
+        border-color: ${colorTokens.stroke.brand};
       `
     }
 	`,

@@ -341,7 +341,7 @@ const QuestionList = ({
         </Show>
         <Popover
           gap={4}
-          maxWidth={!isTutorPro ? '260px' : '240px'}
+          maxWidth={'240px'}
           arrow="top"
           triggerRef={addButtonRef}
           isOpen={isOpen}
@@ -441,7 +441,7 @@ const styles = {
     transition: background-color 0.3s ease-in-out;
     display: flex;
     align-items: center;
-    gap: ${spacing[10]};
+    gap: ${spacing[4]};
     border: 2px solid transparent;
 
     :disabled {

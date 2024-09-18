@@ -617,7 +617,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
               </div>
               <div css={styles.footerButtons}>
                 <Show
-                  when={hasLiveAddons}
+                  when={!isTutorPro || hasLiveAddons}
                   fallback={
                     <Show
                       when={isTutorPro}
@@ -659,32 +659,48 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                     closePopover={() => setIsThreeDotOpen(false)}
                     disabled={!topic.isSaved}
                     dotsOrientation="vertical"
-                    maxWidth="220px"
+                    maxWidth={isTutorPro ? '220px' : '240px'}
                     isInverse
                     arrowPosition="auto"
                     hideArrow
                   >
                     <ThreeDots.Option
                       text={
-                        <span ref={triggerGoogleMeetRef} css={styleUtils.resetButton}>
+                        <span ref={triggerGoogleMeetRef} css={styles.threeDotButton}>
                           {__('Meet live lesson', 'tutor')}
+                          <Show when={!isTutorPro}>
+                            <ProBadge size="small" content={__('Pro', 'tutor')} />
+                          </Show>
                         </span>
                       }
+                      disabled={!isTutorPro}
                       icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
                       onClick={() => setMeetingType('tutor-google-meet')}
                     />
                     <ThreeDots.Option
                       text={
-                        <span ref={triggerZoomRef} css={styleUtils.resetButton}>
+                        <span ref={triggerZoomRef} css={styles.threeDotButton}>
                           {__('Zoom live lesson', 'tutor')}
+                          <Show when={!isTutorPro}>
+                            <ProBadge size="small" content={__('Pro', 'tutor')} />
+                          </Show>
                         </span>
                       }
+                      disabled={!isTutorPro}
                       icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
                       onClick={() => setMeetingType('tutor_zoom_meeting')}
                     />
-                    <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+                    <Show when={!isTutorPro || isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
                       <ThreeDots.Option
-                        text={__('Import Quiz', 'tutor')}
+                        text={
+                          <span css={styles.threeDotButton}>
+                            {__('Import Quiz', 'tutor')}
+                            <Show when={!isTutorPro}>
+                              <ProBadge size="small" content={__('Pro', 'tutor')} />
+                            </Show>
+                          </span>
+                        }
+                        disabled={!isTutorPro}
                         onClick={() => {
                           fileInputRef?.current?.click();
                         }}
@@ -955,5 +971,10 @@ const styles = {
     ${styleUtils.resetButton};
     ${styleUtils.flexCenter()};
     cursor: ${isDragging ? 'grabbing' : 'grab'};
+  `,
+  threeDotButton: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
   `,
 };

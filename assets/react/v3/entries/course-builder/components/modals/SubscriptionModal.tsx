@@ -68,6 +68,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
   });
 
   const [expendedSubscription, setExpandedSubscription] = useState<string>('');
+  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   const isSubscriptionListLoading = !!useIsFetching({
     queryKey: ['SubscriptionsList', courseId],
@@ -76,8 +77,6 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
   const sortSubscriptionMutation = useSortCourseSubscriptionsMutation(courseId);
 
   const isFormDirty = form.formState.isDirty;
-
-  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -104,7 +103,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     form.reset({
       subscriptions: subscriptions,
     });
-  }, [courseSubscriptions]);
+  }, [courseSubscriptions, isSubscriptionListLoading]);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {

@@ -127,7 +127,7 @@ const FormInput = ({
         const ref = useRef<HTMLInputElement>(null);
         return (
           <>
-            <div css={styles.container(isClearable)}>
+            <div css={styles.container(isClearable || isPassword)}>
               <input
                 {...field}
                 {...inputProps}

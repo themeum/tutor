@@ -57,6 +57,7 @@ export function OfferSalePrice({ index }: { index: number }) {
             render={(props) => (
               <FormInputWithContent
                 {...props}
+                type="number"
                 label="Sale price"
                 content={tutor_currency?.symbol || '$'}
                 selectOnFocus
