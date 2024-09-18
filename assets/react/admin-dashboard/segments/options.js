@@ -209,8 +209,8 @@ document.addEventListener('DOMContentLoaded', function () {
 							}
 							tutor_toast(__('Success!', 'tutor'), message, 'success');
 							window.dispatchEvent(new CustomEvent('tutor_option_saved', { detail: data }));
-							if ( reload_required ) {
-								window.location.reload( true );
+							if (reload_required) {
+								window.location.reload(true);
 							}
 						} else {
 							tutor_toast(__('Warning!', 'tutor'), message, 'warning');
@@ -241,14 +241,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			const button = manualPaymentForm.querySelector('#tutor-manual-payment-button');
 			e.preventDefault();
 			const formData = new FormData(manualPaymentForm);
-			
+
 			button.classList.add('is-loading');
 			button.setAttribute('disabled', true);
 
 			try {
 				const post = await ajaxHandler(formData);
 				if (post.ok) {
-					const {success, data} = await post.json();
+					const { success, data } = await post.json();
 					if (success) {
 						tutor_toast(__('Success!', 'tutor'), data, 'success');
 						this.location.reload();
@@ -264,12 +264,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				button.classList.remove('is-loading');
 				button.removeAttribute('disabled');
 			}
-			
+
 		});
 	}
 
 	deleteManualPaymentBtns.forEach(btn => {
-		btn.addEventListener('click', async(e) => {
+		btn.addEventListener('click', async (e) => {
 			// Set target elem
 			let t = e.target;
 			if (t.tagName === 'I' || t.tagName === 'SPAN') {
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 
 			const paymentMethodId = t.dataset.paymentMethodId;
-			const formData = tutorFormData([{payment_method_id: paymentMethodId, action: 'tutor_delete_manual_payment_method'}]);
+			const formData = tutorFormData([{ payment_method_id: paymentMethodId, action: 'tutor_delete_manual_payment_method' }]);
 
 			t.classList.add('is-loading');
 			t.setAttribute('disabled', true);
@@ -285,9 +285,9 @@ document.addEventListener('DOMContentLoaded', function () {
 			try {
 				const post = await ajaxHandler(formData);
 				if (post.ok) {
-					const {success, data} = await post.json();
-					if (success) {						
-						e.target.closest('.tutor-option-single-item').remove(); 
+					const { success, data } = await post.json();
+					if (success) {
+						e.target.closest('.tutor-option-single-item').remove();
 						tutor_toast(__('Success!', 'tutor'), data, 'success');
 					} else {
 						tutor_toast(__('Failed!', 'tutor'), data, 'error');
@@ -302,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		})
 	})
 	editManualPaymentBtns.forEach(btn => {
-		btn.addEventListener('click', async(e) => {
+		btn.addEventListener('click', async (e) => {
 			// Set target elem
 			let t = e.target;
 			if (t.tagName === 'I' || t.tagName === 'SPAN') {
@@ -323,14 +323,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			const button = manualPaymentUpdateForm.querySelector('button[type=submit]');
 			e.preventDefault();
 			const formData = new FormData(manualPaymentUpdateForm);
-			
+
 			button.classList.add('is-loading');
 			button.setAttribute('disabled', true);
 
 			try {
 				const post = await ajaxHandler(formData);
 				if (post.ok) {
-					const {success, data} = await post.json();
+					const { success, data } = await post.json();
 					if (success) {
 						tutor_toast(__('Success!', 'tutor'), data, 'success');
 						this.location.reload();
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				button.classList.remove('is-loading');
 				button.removeAttribute('disabled');
 			}
-			
+
 		});
 	}
 
@@ -367,7 +367,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			try {
 				const post = await ajaxHandler(formData);
 				if (post.ok) {
-					const {success, data} = await post.json();
+					const { success, data } = await post.json();
 					if (success) {
 						tutor_toast(__('Success!', 'tutor'), data, 'success');
 					} else {
@@ -686,4 +686,24 @@ document.addEventListener('DOMContentLoaded', function () {
 		el.parent().find('.tutor-field-maxlength-info').text(text)
 	})
 
+	/**
+	 * Tutor option password type hide and show
+	 * 
+	 * @since 3.0.0
+	 */
+	document.querySelectorAll('.tutor-option-field-input .tutor-type-password').forEach((item) => {
+		const input = item.querySelector('input');
+		const button = item.querySelector('button');
+		const icon = button?.querySelector('i');
+
+		if (!input || !button || !icon) {
+			return;
+		}
+
+		button.addEventListener('click', () => {
+			const isPassword = input.type === 'password';
+			input.type = isPassword ? 'text' : 'password';
+			icon.className = isPassword ? 'tutor-icon-eye-bold' : 'tutor-icon-eye-slash-bold';
+		});
+	});
 });

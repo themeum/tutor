@@ -10,9 +10,9 @@
 
 namespace Tutor\Models;
 
+use stdClass;
 use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
-use TUTOR\Input;
 
 /**
  * Coupon model class
@@ -701,11 +701,16 @@ class CouponModel {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
 				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
+
+				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+					$response['total_price'] += floatval( $plan->enrollment_fee ?? 0 );
+				}
 			}
 
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
-			$discount_price = 0;
+			$discount_price = $reg_price;
 
 			if ( $sale_price ) {
 				$discount_price      = $sale_price;
@@ -739,11 +744,12 @@ class CouponModel {
 				'is_applied'     => $should_apply_coupon,
 			);
 
-			$response['total_price'] += $discount_price > 0 ? $discount_price : $reg_price;
+			$response['total_price'] += $discount_price >= 0 ? $discount_price : $reg_price;
 		}
 
 		$response['deducted_price'] = $format_price ? tutor_get_formatted_price( $response['deducted_price'] ) : $response['deducted_price'];
 		$response['total_price']    = $format_price ? tutor_get_formatted_price( $response['total_price'] ) : $response['total_price'];
+
 		return (object) $response;
 	}
 
@@ -775,11 +781,16 @@ class CouponModel {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
 				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
+
+				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+					$response['total_price'] += floatval( $plan->enrollment_fee ?? 0 );
+				}
 			}
 
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
-			$discount_price = 0;
+			$discount_price = $reg_price;
 
 			if ( $sale_price ) {
 				$discount_price = $sale_price;
@@ -822,7 +833,7 @@ class CouponModel {
 				'is_applied'     => $should_apply_coupon,
 			);
 
-			$response['total_price'] += $discount_price ? $discount_price : $reg_price;
+			$response['total_price'] += $discount_price >= 0 ? $discount_price : $reg_price;
 		}
 
 		return (object) $response;
@@ -847,7 +858,7 @@ class CouponModel {
 			$deducted_price = $regular_price - $discount_value;
 		}
 
-		return floatval( $deducted_price );
+		return floatval( max( 0, $deducted_price ) );
 	}
 
 	/**
@@ -879,6 +890,8 @@ class CouponModel {
 	 */
 	public function is_coupon_applicable( object $coupon, int $object_id ): bool {
 		$is_applicable = false;
+
+		$object_id = apply_filters( 'tutor_subscription_course_by_plan', $object_id );
 
 		$course_post_type = tutor()->course_post_type;
 		$bundle_post_type = 'course-bundle';

@@ -363,7 +363,7 @@ class Stripe extends BasePayment
 		
 		$lineItems = array_map(function ($item) use ($data) {
 
-			$price = $item['discounted_price'] > 0 ? $item['discounted_price'] : $item['regular_price'];
+			$price = $item['discounted_price'] >= 0 ? $item['discounted_price'] : $item['regular_price'];
 
 			return [
 				'price_data' => [
