@@ -108,10 +108,10 @@ const styles = {
     ${
       isEdit &&
       css`
-      padding-inline: 0;
-      max-height: unset;
-      overflow: unset;
-    `
+        padding-inline: 0;
+        max-height: unset;
+        overflow: unset;
+      `
     }
   `,
   container: ({ isEdit }: { isEdit: boolean }) => css`
@@ -151,8 +151,8 @@ const styles = {
     ${
       isEdit &&
       css`
-      padding-inline: 0;
-    `
+        padding-inline: 0;
+      `
     }
   `,
   placeholder: css`
@@ -171,8 +171,8 @@ const styles = {
     ${
       isEdit &&
       css`
-      opacity: 1;
-    `
+        opacity: 1;
+      `
     }
   `,
   overlay: css`

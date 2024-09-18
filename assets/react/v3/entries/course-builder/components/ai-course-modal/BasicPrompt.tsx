@@ -21,7 +21,6 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
     defaultValues: {
       prompt: '',
     },
-    shouldFocusError: true,
   });
 
   const { setCurrentStep } = useContentGenerationContext();
