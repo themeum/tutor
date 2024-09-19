@@ -298,6 +298,55 @@ const FormVideoInput = ({
     }
   };
 
+  const validateVideoUrl = (value: string) => {
+    const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
+    if (form.watch('videoSource') === 'shortcode') {
+      const regExp = /^\[.*\]$/;
+      const match = value.match(regExp);
+
+      if (!match) {
+        return __('Invalid Shortcode', 'tutor');
+      }
+
+      return true;
+    }
+
+    if (!regex.test(value)) {
+      return __('Invalid URL', 'tutor');
+    }
+
+    if (form.watch('videoSource') === 'youtube') {
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = value.match(regExp);
+      if (!match || match[7].length !== 11) {
+        return __('Invalid YouTube URL', 'tutor');
+      }
+
+      return true;
+    }
+
+    if (form.watch('videoSource') === 'vimeo') {
+      const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+      const match = value.match(regExp);
+
+      if (!match || !match[5]) {
+        return __('Invalid Vimeo URL', 'tutor');
+      }
+    }
+
+    if (form.watch('videoSource') === 'embedded') {
+      const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
+      const match = value.match(regExp);
+
+      if (!match || !match[1]) {
+        return __('Invalid Embedded URL', 'tutor');
+      }
+    }
+
+    return true;
+  };
+
   return (
     <>
       <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
@@ -472,55 +521,20 @@ const FormVideoInput = ({
               name="videoUrl"
               rules={{
                 required: __('This field is required', 'tutor'),
-                validate: (value) => {
-                  const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-
-                  if (!regex.test(value)) {
-                    return __('Invalid URL', 'tutor');
-                  }
-
-                  if (form.watch('videoSource') === 'youtube') {
-                    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-                    const match = value.match(regExp);
-                    if (!match || match[7].length !== 11) {
-                      return __('Invalid YouTube URL', 'tutor');
-                    }
-
-                    return true;
-                  }
-
-                  if (form.watch('videoSource') === 'vimeo') {
-                    const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-                    const match = value.match(regExp);
-
-                    if (!match || !match[5]) {
-                      return __('Invalid Vimeo URL', 'tutor');
-                    }
-                  }
-
-                  if (form.watch('videoSource') === 'embedded') {
-                    const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
-                    const match = value.match(regExp);
-
-                    if (!match || !match[1]) {
-                      return __('Invalid Embedded URL', 'tutor');
-                    }
-                  }
-
-                  if (form.watch('videoSource') === 'shortcode') {
-                    const regExp = /^\[.*\]$/;
-                    const match = value.match(regExp);
-
-                    if (!match) {
-                      return __('Invalid Shortcode', 'tutor');
-                    }
-                  }
-
-                  return true;
-                },
+                validate: validateVideoUrl,
               }}
               render={(controllerProps) => {
-                return <FormTextareaInput {...controllerProps} rows={2} placeholder={__('Enter video URL', 'tutor')} />;
+                return (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    rows={2}
+                    placeholder={
+                      form.watch('videoSource') === 'shortcode'
+                        ? __('Enter shortcode', 'tutor')
+                        : __('Enter URL', 'tutor')
+                    }
+                  />
+                );
               }}
             />
 
