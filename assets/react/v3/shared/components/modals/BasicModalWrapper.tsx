@@ -12,7 +12,7 @@ interface BasicModalWrapperProps {
   children: React.ReactNode;
   onClose: () => void;
   icon?: React.ReactNode;
-  title?: string;
+  title?: string | React.ReactNode;
   subtitle?: string;
   actions?: React.ReactNode;
   headerChildren?: React.ReactNode;

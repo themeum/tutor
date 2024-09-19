@@ -1,16 +1,20 @@
 import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
+import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { DateFormats } from '@Config/constants';
-import { colorTokens } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
+import { useDebounce } from '@Hooks/useDebounce';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import type { Column } from '@Molecules/Table';
 import Table from '@Molecules/Table';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
+import { Controller } from 'react-hook-form';
 
 interface H5PContentListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -18,11 +22,15 @@ interface H5PContentListModalProps extends ModalProps {
 }
 
 const H5PContentListModal = ({ title, closeModal, onAddContent }: H5PContentListModalProps) => {
-  const getH5PContentsQuery = useGetH5PQuizContentsQuery();
-
-  if (getH5PContentsQuery.isLoading) {
-    return <LoadingOverlay />;
-  }
+  const form = useFormWithGlobalError<{
+    search: string;
+  }>({
+    defaultValues: {
+      search: '',
+    },
+  });
+  const search = useDebounce(form.watch('search'), 300);
+  const getH5PContentsQuery = useGetH5PQuizContentsQuery(search);
 
   const columns: Column<H5PContent>[] = [
     {
@@ -73,8 +81,26 @@ const H5PContentListModal = ({ title, closeModal, onAddContent }: H5PContentList
   return (
     <BasicModalWrapper title={title} onClose={() => closeModal({ action: 'CLOSE' })}>
       <div css={styles.modalWrapper}>
+        <div css={styles.searchWrapper}>
+          <Controller
+            control={form.control}
+            name="search"
+            render={(controllerProps) => (
+              <FormInputWithContent
+                {...controllerProps}
+                label={__('Search', 'tutor')}
+                showVerticalBar={false}
+                content={<SVGIcon name="search" width={24} height={24} />}
+              />
+            )}
+          />
+        </div>
         <div css={styles.tableWrapper}>
-          <Table columns={columns} data={getH5PContentsQuery.data?.output || []} />
+          <Table
+            columns={columns}
+            data={getH5PContentsQuery.data?.output || []}
+            loading={getH5PContentsQuery.isLoading}
+          />
         </div>
       </div>
     </BasicModalWrapper>
@@ -86,6 +112,10 @@ export default H5PContentListModal;
 const styles = {
   modalWrapper: css`
     width: 720px;
+  `,
+  searchWrapper: css`
+    display: flex;
+    padding: 0 ${spacing[16]} ${spacing[16]} ${spacing[16]};
   `,
   tableWrapper: css`
     max-height: calc(100vh - 350px);

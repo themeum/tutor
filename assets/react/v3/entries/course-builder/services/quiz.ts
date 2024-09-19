@@ -597,14 +597,18 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
   return 'no_change';
 };
 
-const getH5PQuizContents = () => {
-  return wpAjaxInstance.get<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT).then((response) => response.data);
+const getH5PQuizContents = (search: string) => {
+  return wpAjaxInstance
+    .post<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT, {
+      search_filter: search,
+    })
+    .then((response) => response.data);
 };
 
-export const useGetH5PQuizContentsQuery = () => {
+export const useGetH5PQuizContentsQuery = (search: string) => {
   return useQuery({
-    queryKey: ['H5PQuizContents'],
-    queryFn: getH5PQuizContents,
+    queryKey: ['H5PQuizContents', search],
+    queryFn: () => getH5PQuizContents(search),
   });
 };
 

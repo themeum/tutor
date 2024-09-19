@@ -93,7 +93,7 @@ const QuizModal = ({
         passing_grade: 80,
         max_questions_for_answer: 10,
         quiz_auto_start: false,
-        question_layout_view: '',
+        question_layout_view: contentType === 'tutor_h5p_quiz' ? 'question_below_each_other' : '',
         questions_order: 'rand',
         hide_question_number_overview: false,
         short_answer_characters_limit: 200,

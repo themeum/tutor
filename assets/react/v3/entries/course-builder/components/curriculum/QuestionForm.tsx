@@ -99,6 +99,7 @@ const QuestionForm = () => {
               <FormQuestionTitle
                 {...controllerProps}
                 placeholder={__('Write your question here..', 'tutor')}
+                disabled={contentType === 'tutor_h5p_quiz'}
                 onChange={() => {
                   calculateQuizDataStatus(dataStatus, 'update') &&
                     form.setValue(
@@ -117,6 +118,7 @@ const QuestionForm = () => {
               <FormQuestionDescription
                 {...controllerProps}
                 placeholder={__('Description (optional)', 'tutor')}
+                disabled={contentType === 'tutor_h5p_quiz'}
                 onChange={() => {
                   calculateQuizDataStatus(dataStatus, 'update') &&
                     form.setValue(
@@ -129,8 +131,6 @@ const QuestionForm = () => {
           />
         </div>
       </div>
-
-      <div dangerouslySetInnerHTML={{ __html: getH5PContentByIdQuery.data?.output || '' }} />
 
       <Show when={validationError}>
         <div ref={alertRef} css={styles.alertWrapper}>

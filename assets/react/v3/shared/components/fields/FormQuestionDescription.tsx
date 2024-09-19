@@ -37,7 +37,7 @@ const FormQuestionDescription = ({
 
   return (
     <div css={styles.editorWrapper({ isEdit })}>
-      <div css={styles.container({ isEdit })}>
+      <div css={styles.container({ isEdit, isDisabled: disabled || false })}>
         <FormWPEditor
           key={`${field.name + isEdit.toString()}`}
           field={field}
@@ -80,7 +80,7 @@ const FormQuestionDescription = ({
         <Show when={!isEdit}>
           <div
             onClick={(e) => {
-              if (!isEdit) {
+              if (!isEdit && !disabled) {
                 setIsEdit(true);
               }
             }}
@@ -114,7 +114,7 @@ const styles = {
       `
     }
   `,
-  container: ({ isEdit }: { isEdit: boolean }) => css`
+  container: ({ isEdit, isDisabled }: { isEdit: boolean; isDisabled: boolean }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -139,13 +139,18 @@ const styles = {
       color: ${colorTokens.text.title};
     }
 
-    &:hover {
-      background-color: ${!isEdit && colorTokens.background.white};
-      color: ${colorTokens.text.subdued};
+    ${
+      !isDisabled &&
+      css`
+          &:hover {
+          background-color: ${!isEdit && colorTokens.background.white};
+          color: ${colorTokens.text.subdued};
 
-      [data-action-buttons] {
-        opacity: 1;
-      }
+          [data-action-buttons] {
+            opacity: 1;
+          }
+        }
+      `
     }
 
     ${
