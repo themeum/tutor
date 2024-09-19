@@ -30,7 +30,7 @@ interface QuizSettingsProps {
 }
 
 const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
-  const { quizId } = useQuizModalContext();
+  const { quizId, contentType } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const feedbackMode = form.watch('quiz_option.feedback_mode');
   const showPassRequired =
@@ -77,46 +77,48 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             />
           </div>
 
-          <Controller
-            name="quiz_option.hide_quiz_time_display"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormSwitch
-                {...controllerProps}
-                label={__('Display Quiz time', 'tutor')}
-                helpText={__('Hide quiz time', 'tutor')}
-              />
-            )}
-          />
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <Controller
+              name="quiz_option.hide_quiz_time_display"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Display Quiz time', 'tutor')}
+                  helpText={__('Hide quiz time', 'tutor')}
+                />
+              )}
+            />
 
-          <Controller
-            name="quiz_option.feedback_mode"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormSelectInput
-                {...controllerProps}
-                label={__('Feedback Mode', 'tutor')}
-                leftIcon={<SVGIcon name="eye" width={32} height={32} />}
-                options={[
-                  {
-                    label: __('Default', 'tutor'),
-                    value: 'default',
-                    description: __('Answers shown after quiz is finished', 'tutor'),
-                  },
-                  {
-                    label: __('Reveal Mode', 'tutor'),
-                    value: 'reveal',
-                    description: __('Show result after the attempt.', 'tutor'),
-                  },
-                  {
-                    label: __('Retry', 'tutor'),
-                    value: 'retry',
-                    description: __('Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor'),
-                  },
-                ]}
-              />
-            )}
-          />
+            <Controller
+              name="quiz_option.feedback_mode"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSelectInput
+                  {...controllerProps}
+                  label={__('Feedback Mode', 'tutor')}
+                  leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+                  options={[
+                    {
+                      label: __('Default', 'tutor'),
+                      value: 'default',
+                      description: __('Answers shown after quiz is finished', 'tutor'),
+                    },
+                    {
+                      label: __('Reveal Mode', 'tutor'),
+                      value: 'reveal',
+                      description: __('Show result after the attempt.', 'tutor'),
+                    },
+                    {
+                      label: __('Retry', 'tutor'),
+                      value: 'retry',
+                      description: __('Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor'),
+                    },
+                  ]}
+                />
+              )}
+            />
+          </Show>
 
           <Show when={feedbackMode === 'retry'}>
             <Controller
@@ -138,7 +140,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             />
           </Show>
 
-          <Show when={showPassRequired}>
+          <Show when={showPassRequired && contentType !== 'tutor_h5p_quiz'}>
             <Controller
               name="quiz_option.pass_is_required"
               control={form.control}
@@ -170,22 +172,24 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             )}
           />
 
-          <Controller
-            name="quiz_option.max_questions_for_answer"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Max Question Allowed to Answer', 'tutor')}
-                helpText={__(
-                  'This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount is greater than available question, then all questions will be available for a student to answer.',
-                  'tutor',
-                )}
-                selectOnFocus
-              />
-            )}
-          />
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <Controller
+              name="quiz_option.max_questions_for_answer"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInput
+                  {...controllerProps}
+                  type="number"
+                  label={__('Max Question Allowed to Answer', 'tutor')}
+                  helpText={__(
+                    'This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount is greater than available question, then all questions will be available for a student to answer.',
+                    'tutor',
+                  )}
+                  selectOnFocus
+                />
+              )}
+            />
+          </Show>
 
           <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
             <Show when={contentDripType === 'specific_days'}>
@@ -285,22 +289,24 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           />
 
           <div css={styles.questionLayoutAndOrder}>
-            <Controller
-              name="quiz_option.question_layout_view"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormSelectInput
-                  {...controllerProps}
-                  label={__('Question Layout', 'tutor')}
-                  placeholder={__('Select an option', 'tutor')}
-                  options={[
-                    { label: __('Single question', 'tutor'), value: 'single_question' },
-                    { label: __('Question Pagination', 'tutor'), value: 'question_pagination' },
-                    { label: __('Question below each other', 'tutor'), value: 'question_below_each_other' },
-                  ]}
-                />
-              )}
-            />
+            <Show when={contentType !== 'tutor_h5p_quiz'}>
+              <Controller
+                name="quiz_option.question_layout_view"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormSelectInput
+                    {...controllerProps}
+                    label={__('Question Layout', 'tutor')}
+                    placeholder={__('Select an option', 'tutor')}
+                    options={[
+                      { label: __('Single question', 'tutor'), value: 'single_question' },
+                      { label: __('Question Pagination', 'tutor'), value: 'question_pagination' },
+                      { label: __('Question below each other', 'tutor'), value: 'question_below_each_other' },
+                    ]}
+                  />
+                )}
+              />
+            </Show>
 
             <Controller
               name="quiz_option.questions_order"
@@ -321,50 +327,52 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             />
           </div>
 
-          <Controller
-            name="quiz_option.hide_question_number_overview"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormSwitch
-                {...controllerProps}
-                label={__('Question number visibility', 'tutor')}
-                helpText={__('Hide question number overview', 'tutor')}
-              />
-            )}
-          />
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <Controller
+              name="quiz_option.hide_question_number_overview"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Question number visibility', 'tutor')}
+                  helpText={__('Hide question number overview', 'tutor')}
+                />
+              )}
+            />
 
-          <Controller
-            name="quiz_option.short_answer_characters_limit"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                type="number"
-                label={__('Short Answer Characters Limit', 'tutor')}
-                helpText={__(
-                  'Student will place answer in short answer question type within this characters limit.',
-                  'tutor',
-                )}
-                selectOnFocus
-              />
-            )}
-          />
+            <Controller
+              name="quiz_option.short_answer_characters_limit"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInput
+                  {...controllerProps}
+                  type="number"
+                  label={__('Short Answer Characters Limit', 'tutor')}
+                  helpText={__(
+                    'Student will place answer in short answer question type within this characters limit.',
+                    'tutor',
+                  )}
+                  selectOnFocus
+                />
+              )}
+            />
 
-          <Controller
-            name="quiz_option.open_ended_answer_characters_limit"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                label={__('Open-Ended/Essay questions answer character limit', 'tutor')}
-                helpText={__(
-                  'Students will place the answer in the Open-Ended/Essay question type within this character limit.',
-                  'tutor',
-                )}
-                selectOnFocus
-              />
-            )}
-          />
+            <Controller
+              name="quiz_option.open_ended_answer_characters_limit"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInput
+                  {...controllerProps}
+                  label={__('Open-Ended/Essay questions answer character limit', 'tutor')}
+                  helpText={__(
+                    'Students will place the answer in the Open-Ended/Essay question type within this character limit.',
+                    'tutor',
+                  )}
+                  selectOnFocus
+                />
+              )}
+            />
+          </Show>
         </div>
       </Card>
     </div>

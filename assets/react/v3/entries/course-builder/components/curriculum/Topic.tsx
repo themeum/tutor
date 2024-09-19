@@ -537,7 +537,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   size="small"
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
-                  buttonCss={styles.footerButton}
+                  buttonCss={styles.contentButton}
                   onClick={() => {
                     showModal({
                       component: LessonModal,
@@ -559,7 +559,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   size="small"
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
-                  buttonCss={styles.footerButton}
+                  buttonCss={styles.contentButton}
                   onClick={() => {
                     showModal({
                       component: QuizModal,
@@ -585,6 +585,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         size="small"
                         icon={<SVGIcon name="plus" width={24} height={24} />}
                         disabled={!topic.isSaved}
+                        buttonCss={styles.contentButton}
                         onClick={() => {
                           showModal({
                             component: QuizModal,
@@ -627,7 +628,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         size="small"
                         icon={<SVGIcon name="plus" width={24} height={24} />}
                         disabled={!topic.isSaved}
-                        buttonCss={styles.footerButton}
+                        buttonCss={styles.contentButton}
                         onClick={() => {
                           showModal({
                             component: AssignmentModal,
@@ -688,7 +689,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                           size="small"
                           icon={<SVGIcon name="import" width={24} height={24} />}
                           disabled={!topic.isSaved}
-                          buttonCss={styles.footerButton}
+                          buttonCss={styles.contentButton}
                           onClick={() => {
                             fileInputRef?.current?.click();
                           }}
@@ -1023,7 +1024,7 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
   `,
-  footerButton: css`
+  contentButton: css`
     :hover {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.brand};
