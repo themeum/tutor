@@ -808,7 +808,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 						<div class="tutor-modal-content">
 							<div class="tutor-modal-header">
 								<div class="tutor-modal-title">
-								<?php esc_html_e( 'H5P Quiz Result', 'tutor' ); ?>
+								<?php esc_html_e( 'H5P Question Answer', 'tutor' ); ?>
 							</div>
 							<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
 								<span class="tutor-icon-times" area-hidden="true"></span>
