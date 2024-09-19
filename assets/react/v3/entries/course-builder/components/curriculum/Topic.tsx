@@ -573,29 +573,47 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 >
                   {__('Quiz', 'tutor')}
                 </Button>
-                <Show when={isAddonEnabled(Addons.H5P_Integration)}>
-                  <Button
-                    variant="tertiary"
-                    isOutlined
-                    size="small"
-                    icon={<SVGIcon name="plus" width={24} height={24} />}
-                    disabled={!topic.isSaved}
-                    onClick={() => {
-                      showModal({
-                        component: QuizModal,
-                        props: {
-                          topicId: topic.id,
-                          contentDripType: courseDetailsForm.watch('contentDripType'),
-                          title: __('Interactive Quiz', 'tutor'),
-                          icon: <SVGIcon name="quiz" width={24} height={24} />,
-                          subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
-                          contentType: 'tutor_h5p_quiz',
-                        },
-                      });
-                    }}
-                  >
-                    {__('Interactive Quiz', 'tutor')}
-                  </Button>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <Show when={isAddonEnabled(Addons.H5P_Integration)}>
+                      <Button
+                        variant="tertiary"
+                        isOutlined
+                        size="small"
+                        icon={<SVGIcon name="plus" width={24} height={24} />}
+                        disabled={!topic.isSaved}
+                        onClick={() => {
+                          showModal({
+                            component: QuizModal,
+                            props: {
+                              topicId: topic.id,
+                              contentDripType: courseDetailsForm.watch('contentDripType'),
+                              title: __('Interactive Quiz', 'tutor'),
+                              icon: <SVGIcon name="quiz" width={24} height={24} />,
+                              subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
+                              contentType: 'tutor_h5p_quiz',
+                            },
+                          });
+                        }}
+                      >
+                        {__('Interactive Quiz', 'tutor')}
+                      </Button>
+                    </Show>
+                  }
+                >
+                  <ProBadge>
+                    <Button
+                      variant="tertiary"
+                      isOutlined
+                      size="small"
+                      icon={<SVGIcon name="plus" width={24} height={24} />}
+                      disabled
+                      onClick={noop}
+                    >
+                      {__('Interactive Quiz', 'tutor')}
+                    </Button>
+                  </ProBadge>
                 </Show>
                 <Show
                   when={!isTutorPro}
