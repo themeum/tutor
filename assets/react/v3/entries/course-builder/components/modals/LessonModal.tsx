@@ -6,6 +6,7 @@ import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormDateInput from '@Components/fields/FormDateInput';
@@ -209,7 +210,28 @@ const LessonModal = ({
                 render={(controllerProps) => (
                   <FormWPEditor
                     {...controllerProps}
-                    label={__('Description', 'tutor')}
+                    label={
+                      <>
+                        {__('Description', 'tutor')}
+                        {lessonId && (
+                          <Button
+                            variant="text"
+                            size="small"
+                            onClick={() => {
+                              window.open(
+                                `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
+                                '_blank',
+                                'noopener',
+                              );
+                            }}
+                            icon={<SVGIcon name="edit" width={24} height={24} />}
+                            buttonCss={styles.wpEditorButton}
+                          >
+                            {__('WP Editor', 'tutor')}
+                          </Button>
+                        )}
+                      </>
+                    }
                     placeholder={__('Enter Lesson Description', 'tutor')}
                     helpText={__(
                       'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.',
@@ -405,7 +427,7 @@ const LessonModal = ({
                     label={
                       <div css={styles.previewLabel}>
                         {__('Lesson Preview', 'tutor')}
-                        {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+                        {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
                       </div>
                     }
                     helpText={
@@ -488,6 +510,7 @@ const styles = {
   previewLabel: css`
     display: flex;
     align-items: center;
+    gap: ${spacing[4]};
   `,
   contentDripLabel: css`
     display: flex;
@@ -506,5 +529,18 @@ const styles = {
     background: ${colorTokens.background.status.success};
     border-radius: ${borderRadius[4]};
     margin-top: ${spacing[12]};
+  `,
+  wpEditorButton: css`
+    margin-left: ${spacing[16]};
+    color: ${colorTokens.text.brand};
+
+    svg {
+      color: ${colorTokens.icon.brand};
+    }
+
+    &:hover {      
+      text-decoration: underline;
+      color: ${colorTokens.text.brand};
+    }
   `,
 };

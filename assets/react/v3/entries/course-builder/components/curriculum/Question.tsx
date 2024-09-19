@@ -5,12 +5,14 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { ID } from '@CourseBuilderServices/curriculum';
@@ -37,6 +39,8 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   ordering: 'quizOrdering',
   h5p: 'quizTrueFalse',
 };
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
   const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError } = useQuizModalContext();
@@ -69,7 +73,11 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
     <div
       {...attributes}
       key={question.question_id}
-      css={styles.questionItem({ isActive: String(activeQuestionId) === String(question.question_id), isDragging })}
+      css={styles.questionItem({
+        isActive: String(activeQuestionId) === String(question.question_id),
+        isDragging,
+        isThreeDotsOpen: selectedQuestionId === question.question_id,
+      })}
       ref={(element) => {
         setNodeRef(element);
         // @ts-expect-error
@@ -126,17 +134,22 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         }}
         closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
-        maxWidth="150px"
+        maxWidth={isTutorPro ? '150px' : '160px'}
         isInverse
         arrowPosition="auto"
         size="small"
         hideArrow
         data-three-dots
       >
-        {/* @TODO: need pro badge */}
         <ThreeDots.Option
-          text={__('Duplicate', 'tutor')}
+          text={
+            <div css={styles.duplicate}>
+              {__('Duplicate', 'tutor')}
+              {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
+            </div>
+          }
           icon={<SVGIcon name="duplicate" width={24} height={24} />}
+          disabled={!isTutorPro}
           onClick={(event) => {
             event.stopPropagation();
             onDuplicateQuestion(question);
@@ -164,9 +177,11 @@ const styles = {
   questionItem: ({
     isActive = false,
     isDragging = false,
+    isThreeDotsOpen = false,
   }: {
     isActive: boolean;
     isDragging: boolean;
+    isThreeDotsOpen: boolean;
   }) => css`
     padding: ${spacing[10]} ${spacing[8]};
     display: flex;
@@ -188,15 +203,25 @@ const styles = {
     ${
       isActive &&
       css`
-      border-color: ${colorTokens.stroke.brand};
-      background-color: ${colorTokens.background.active};
-      [data-icon-serial] {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        border-color: transparent;
-      }
-    `
+        border-color: ${colorTokens.stroke.brand};
+        background-color: ${colorTokens.background.active};
+        [data-icon-serial] {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+          border-color: transparent;
+        }
+      `
     }
+
+    ${
+      isThreeDotsOpen &&
+      css`
+        [data-three-dots] {
+          opacity: 1;
+        }
+      `
+    }
+
     :hover {
       background-color: ${colorTokens.background.white};
 
@@ -262,5 +287,10 @@ const styles = {
     color: ${colorTokens.text.subdued};
     max-width: 170px;
     width: 100%;
+  `,
+  duplicate: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
   `,
 };

@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
+import type React from 'react';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
@@ -23,7 +24,7 @@ import { makeFirstCharacterUpperCase } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
-  label?: string;
+  label?: string | React.ReactNode;
   disabled?: boolean;
   readOnly?: boolean;
   loading?: boolean;
@@ -39,6 +40,9 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   isMagicAi?: boolean;
   autoFocus?: boolean;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
+  onFullScreenChange?: (isFullScreen: boolean) => void;
+  min_height?: number;
+  max_height?: number;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -66,6 +70,9 @@ const FormWPEditor = ({
   isMagicAi = false,
   autoFocus = false,
   onCustomEditorButtonClick,
+  onFullScreenChange,
+  min_height,
+  max_height,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -128,6 +135,7 @@ const FormWPEditor = ({
             is_html: true,
           },
         });
+        onClickAiButton?.();
       }}
       replaceEntireLabel
     >
@@ -147,6 +155,10 @@ const FormWPEditor = ({
                 }}
                 isMinimal={isMinimal}
                 autoFocus={autoFocus}
+                onFullScreenChange={onFullScreenChange}
+                readonly={readOnly}
+                min_height={min_height}
+                max_height={max_height}
               />
             }
           >
@@ -193,6 +205,10 @@ const FormWPEditor = ({
                   }
                 }}
                 isMinimal={isMinimal}
+                onFullScreenChange={onFullScreenChange}
+                readonly={readOnly}
+                min_height={min_height}
+                max_height={max_height}
               />
             </Show>
           </Show>

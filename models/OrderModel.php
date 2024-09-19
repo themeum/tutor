@@ -544,6 +544,36 @@ class OrderModel {
 	}
 
 	/**
+	 * Get enrollment ids by order id.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id order id.
+	 *
+	 * @return array
+	 */
+	public function get_enrollment_ids( $order_id ) {
+		global $wpdb;
+		$enrollment_ids = array();
+
+		$enrollments = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$wpdb->postmeta} 
+				WHERE post_id=%d 
+				AND meta_key LIKE %s",
+				$order_id,
+				'_tutor_order_for_course_id_%'
+			)
+		);
+
+		if ( $enrollments ) {
+			$enrollment_ids = array_column( $enrollments, 'meta_value' );
+		}
+
+		return $enrollment_ids;
+	}
+
+	/**
 	 * Delete an order by order ID.
 	 *
 	 * This function deletes an order from the 'tutor_orders' table based on the given
@@ -553,11 +583,42 @@ class OrderModel {
 	 *
 	 * @param int|array $order_id The ID of the order to delete.
 	 *
-	 * @return bool False on failure, or the number of rows affected if successful.
+	 * @return bool
 	 */
 	public function delete_order( $order_id ) {
-		$order_id = is_array( $order_id ) ? $order_id : array( intval( $order_id ) );
-		return QueryHelper::bulk_delete_by_ids( $this->table_name, $order_id ) ? true : false;
+		global $wpdb;
+		$order_ids = is_array( $order_id ) ? $order_id : array( intval( $order_id ) );
+
+		try {
+			$wpdb->query( 'START TRANSACTION' );
+
+			foreach ( $order_ids as $id ) {
+				// Delete enrollments if exist.
+				$enrollment_ids = $this->get_enrollment_ids( $id );
+				if ( $enrollment_ids ) {
+					QueryHelper::bulk_delete_by_ids( $wpdb->posts, $enrollment_ids );
+				}
+
+				// Delete earnings.
+				QueryHelper::delete(
+					$wpdb->prefix . 'tutor_earnings',
+					array(
+						'order_id'   => $id,
+						'process_by' => 'Tutor',
+					)
+				);
+
+				// Now delete order.
+				QueryHelper::delete( $this->table_name, array( 'id' => $id ) );
+			}
+
+			$wpdb->query( 'COMMIT' );
+			return true;
+
+		} catch ( \Throwable $th ) {
+			$wpdb->query( 'ROLLBACK' );
+			return false;
+		}
 	}
 
 	/**

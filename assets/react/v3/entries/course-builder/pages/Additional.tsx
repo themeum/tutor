@@ -6,6 +6,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
@@ -201,7 +202,7 @@ const Additional = () => {
         <div>
           <span css={styles.label}>
             {__('Course Prerequisites', 'tutor')}
-            {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+            {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
           </span>
           <Show
             when={isTutorPro && isPrerequisiteAddonEnabled}
@@ -263,7 +264,7 @@ const Additional = () => {
         <div css={styles.uploadAttachment}>
           <span css={styles.label}>
             {__('Attachments', 'tutor')}
-            {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+            {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
           </span>
           <Show
             when={isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_ATTACHMENTS)}
