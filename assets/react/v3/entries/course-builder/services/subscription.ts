@@ -2,9 +2,11 @@ import { useToast } from '@Atoms/Toast';
 import { DateFormats } from '@Config/constants';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
+import type { ErrorResponse } from '@Utils/form';
+import { convertGMTtoLocalDate, convertToGMT } from '@Utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
-import { format, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 import type { TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
 
@@ -72,36 +74,6 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   schedule_sale_price: false,
 };
 
-const convertPlanLengthToDays = (recurring_interval: Omit<DurationUnit, 'hour'>, length: number): string => {
-  switch (recurring_interval) {
-    case 'day':
-      return String(length);
-    case 'week':
-      return String(length * 7);
-    case 'month':
-      return String(length * 30);
-    case 'year':
-      return String(length * 365);
-    default:
-      return '0';
-  }
-};
-
-const convertDaysToPlanLength = (days: number, recurring_interval: Omit<DurationUnit, 'hour'>): string => {
-  switch (recurring_interval) {
-    case 'day':
-      return String(days);
-    case 'week':
-      return String(days / 7);
-    case 'month':
-      return String(days / 30);
-    case 'year':
-      return String(days / 365);
-    default:
-      return '0';
-  }
-};
-
 export const convertSubscriptionToFormData = (subscription: Subscription): SubscriptionFormData => {
   return {
     id: subscription.id,
@@ -125,16 +97,16 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     schedule_sale_price: !!subscription.sale_price_from,
     do_not_provide_certificate: !Number(subscription.provide_certificate),
     sale_price_from_date: subscription.sale_price_from
-      ? format(parseISO(subscription.sale_price_from), DateFormats.yearMonthDay)
+      ? format(convertGMTtoLocalDate(subscription.sale_price_from), DateFormats.yearMonthDay)
       : '',
     sale_price_from_time: subscription.sale_price_from
-      ? format(parseISO(subscription.sale_price_from), DateFormats.hoursMinutes)
+      ? format(convertGMTtoLocalDate(subscription.sale_price_from), DateFormats.hoursMinutes)
       : '',
     sale_price_to_date: subscription.sale_price_to
-      ? format(parseISO(subscription.sale_price_to), DateFormats.yearMonthDay)
+      ? format(convertGMTtoLocalDate(subscription.sale_price_to), DateFormats.yearMonthDay)
       : '',
     sale_price_to_time: subscription.sale_price_to
-      ? format(parseISO(subscription.sale_price_to), DateFormats.hoursMinutes)
+      ? format(convertGMTtoLocalDate(subscription.sale_price_to), DateFormats.hoursMinutes)
       : '',
   };
 };
@@ -158,14 +130,8 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
     ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),
     sale_price: formData.offer_sale_price ? formData.sale_price : '0',
     ...(formData.schedule_sale_price && {
-      sale_price_from: format(
-        new Date(`${formData.sale_price_from_date} ${formData.sale_price_from_time}`),
-        DateFormats.yearMonthDayHourMinuteSecond,
-      ),
-      sale_price_to: format(
-        new Date(`${formData.sale_price_to_date} ${formData.sale_price_to_time}`),
-        DateFormats.yearMonthDayHourMinuteSecond,
-      ),
+      sale_price_from: convertToGMT(new Date(`${formData.sale_price_from_date} ${formData.sale_price_from_time}`)),
+      sale_price_to: convertToGMT(new Date(`${formData.sale_price_to_date} ${formData.sale_price_to_time}`)),
     }),
 
     provide_certificate: formData.do_not_provide_certificate ? '0' : '1',
@@ -232,6 +198,12 @@ export const useSaveCourseSubscriptionMutation = (courseId: number) => {
         });
       }
     },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
   });
 };
 
@@ -265,6 +237,13 @@ export const useDeleteCourseSubscriptionMutation = (courseId: number) => {
           return data.filter((item) => item.id !== String(subscriptionId));
         });
       }
+    },
+
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
     },
   });
 };
@@ -300,6 +279,12 @@ export const useDuplicateCourseSubscriptionMutation = (courseId: number) => {
         });
       }
     },
+    onError: (error: ErrorResponse) => {
+      showToast({
+        message: error.response.data.message,
+        type: 'danger',
+      });
+    },
   });
 };
 
@@ -329,11 +314,14 @@ export const useSortCourseSubscriptionsMutation = (courseId: number) => {
 
           return data.sort((a, b) => sortedIds.indexOf(a.id) - sortedIds.indexOf(b.id));
         });
+        queryClient.invalidateQueries({
+          queryKey: ['SubscriptionsList', courseId],
+        });
       }
     },
-    onError: (error) => {
+    onError: (error: ErrorResponse) => {
       showToast({
-        message: error.message,
+        message: error.response.data.message,
         type: 'danger',
       });
 

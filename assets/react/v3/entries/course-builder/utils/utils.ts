@@ -1,6 +1,6 @@
 import type { UserOption } from '@Components/fields/FormSelectUser';
 import { tutorConfig } from '@Config/config';
-import { Addons, DateFormats } from '@Config/constants';
+import { Addons } from '@Config/constants';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import type {
@@ -18,7 +18,7 @@ import type { UseFormReturn } from 'react-hook-form';
 export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
     post_date: data.post_date,
-    post_date_gmt: convertToGMT(new Date(data.post_date), DateFormats.yearMonthDayHourMinuteSecond),
+    post_date_gmt: convertToGMT(new Date(data.post_date)),
     post_title: data.post_title,
     post_name: data.post_name,
     ...(data.editor_used.name === 'classic' && {
@@ -38,7 +38,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     course_sale_price: Number(data.course_sale_price) ?? 0,
 
     course_categories: data.course_categories ?? [],
-    course_tags: data.course_tags.map((item) => item.id),
+    course_tags: data.course_tags.map((item) => item.id) ?? [],
     thumbnail_id: data.thumbnail?.id ?? null,
     enable_qna: data.enable_qna ? 'yes' : 'no',
     is_public_course: data.is_public_course ? 'yes' : 'no',

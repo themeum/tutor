@@ -3,12 +3,13 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useRef } from 'react';
-import { Controller } from 'react-hook-form';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
@@ -21,21 +22,32 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
-  type SubscriptionFormData,
   convertFormDataToSubscription,
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
   useSaveCourseSubscriptionMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { AnimationType } from '@Hooks/useAnimation';
 
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { noop } from '@Utils/util';
 import { requiredRule } from '@Utils/validation';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
+import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import { OfferSalePrice } from './OfferSalePrice';
+
+interface SubscriptionItemProps {
+  id: ID;
+  toggleCollapse: (id: string) => void;
+  bgLight?: boolean;
+  onDiscard: () => void;
+  isExpanded: boolean;
+}
 
 const SET_FOCUS_AFTER = 100; // this is hack to fix layout shifting while animating.
 
@@ -43,43 +55,64 @@ const courseId = getCourseId();
 const { tutor_currency } = tutorConfig;
 
 export default function SubscriptionItem({
-  subscription,
+  id,
   toggleCollapse,
   bgLight = false,
   onDiscard,
-}: {
-  subscription: SubscriptionFormData & { isExpanded: boolean };
-  toggleCollapse: (id: string) => void;
-  bgLight?: boolean;
-  onDiscard: () => void;
-}) {
+  isExpanded,
+}: SubscriptionItemProps) {
+  const wrapperRef = useRef<HTMLFormElement>(null);
   const subscriptionRef = useRef<HTMLDivElement>(null);
-  const form = useFormWithGlobalError<SubscriptionFormData>({
-    defaultValues: subscription,
-    shouldFocusError: true,
-  });
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
+  const form = useFormContext<{
+    subscriptions: SubscriptionFormDataWithSaved[];
+  }>();
+  const subscriptionItems = form.watch('subscriptions');
+  const index = subscriptionItems.findIndex((item) => item.id === id);
+  const subscription = form.watch(`subscriptions.${index}`);
+  const isFormDirty = form.formState.isDirty;
+  const errorFieldsLength = form.formState.errors.subscriptions
+    ? Object.keys(form.formState.errors.subscriptions[index] || {}).length
+    : 0;
+
+  const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
+  const [isActive, setIsActive] = useState(false);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (subscription.isExpanded) {
+    if (isExpanded) {
       const timeoutId = setTimeout(() => {
-        form.setFocus('plan_name');
+        form.setFocus(`subscriptions.${index}.plan_name` as `subscriptions.0.plan_name`);
       }, SET_FOCUS_AFTER);
 
       return () => {
         clearTimeout(timeoutId);
       };
     }
-  }, [subscription.isExpanded]);
+  }, [isExpanded]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLFormElement)) {
+        setIsActive(false);
+      }
+    };
+
+    document.addEventListener('click', handleOutsideClick);
+
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, [isActive]);
 
   const saveSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
   const deleteSubscriptionMutation = useDeleteCourseSubscriptionMutation(courseId);
   const duplicateSubscriptionMutation = useDuplicateCourseSubscriptionMutation(courseId);
 
-  const handleSaveSubscription = async (values: SubscriptionFormData) => {
+  const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
     try {
       const payload = convertFormDataToSubscription({
         ...values,
+        id: values.isSaved ? values.id : '0',
         assign_id: String(courseId),
       });
       const response = await saveSubscriptionMutation.mutateAsync(payload);
@@ -88,7 +121,7 @@ export default function SubscriptionItem({
         toggleCollapse(subscription.id);
       }
     } catch (error) {
-      // handle error
+      form.reset();
     }
   };
 
@@ -96,16 +129,22 @@ export default function SubscriptionItem({
     try {
       const response = await deleteSubscriptionMutation.mutateAsync(Number(subscription.id));
 
-      if (response.data && subscription.isExpanded) {
-        toggleCollapse(subscription.id);
+      if (response.data) {
+        setIsDeletePopoverOpen(false);
+
+        isExpanded && toggleCollapse(subscription.id);
       }
     } catch (error) {
       // handle error
     }
   };
 
-  const handleDuplicateSubscription = () => {
-    duplicateSubscriptionMutation.mutate(Number(subscription.id));
+  const handleDuplicateSubscription = async () => {
+    const response = await duplicateSubscriptionMutation.mutateAsync(Number(subscription.id));
+
+    if (response.data) {
+      toggleCollapse(String(response.data));
+    }
   };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -113,36 +152,70 @@ export default function SubscriptionItem({
     animateLayoutChanges,
   });
 
-  const subscriptionName = form.watch('plan_name');
-  const paymentType = form.watch('payment_type');
-  const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
-  const enableTrial = form.watch('enable_free_trial');
-  const isFeatured = form.watch('is_featured');
-  const hasSale = form.watch('offer_sale_price');
-  const hasScheduledSale = !!form.watch('schedule_sale_price');
+  const combinedRef = useCallback(
+    (node: HTMLFormElement) => {
+      if (node) {
+        setNodeRef(node);
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        (wrapperRef as any).current = node;
+      }
+    },
+    [setNodeRef],
+  );
+
+  const subscriptionName = form.watch(`subscriptions.${index}.plan_name` as `subscriptions.0.plan_name`);
+  const paymentType = form.watch(`subscriptions.${index}.payment_type` as `subscriptions.0.payment_type`);
+  const chargeEnrolmentFee = form.watch(
+    `subscriptions.${index}.charge_enrollment_fee` as `subscriptions.0.charge_enrollment_fee`,
+  );
+  // @TODO: Will be added after confirmation
+  // const enableTrial = form.watch(`subscriptions.${index}.enable_free_trial` as `subscriptions.0.enable_free_trial`);
+  const isFeatured = form.watch(`subscriptions.${index}.is_featured` as `subscriptions.0.is_featured`);
+  const hasSale = form.watch(`subscriptions.${index}.offer_sale_price` as `subscriptions.0.offer_sale_price`);
+  const hasScheduledSale = !!form.watch(
+    `subscriptions.${index}.schedule_sale_price` as `subscriptions.0.schedule_sale_price`,
+  );
 
   const [collapseAnimation, collapseAnimate] = useSpring(
     {
-      height: subscription.isExpanded ? subscriptionRef.current?.scrollHeight : 0,
-      opacity: subscription.isExpanded ? 1 : 0,
+      height: isExpanded ? subscriptionRef.current?.scrollHeight : 0,
+      opacity: isExpanded ? 1 : 0,
       overflow: 'hidden',
       config: {
         duration: 300,
         easing: (t) => t * (2 - t),
       },
     },
-    [chargeEnrolmentFee, enableTrial, isFeatured, hasSale, hasScheduledSale, subscription.isExpanded],
+    [
+      chargeEnrolmentFee,
+      // enableTrial,
+      isFeatured,
+      hasSale,
+      hasScheduledSale,
+      isFormDirty,
+      isExpanded,
+      errorFieldsLength,
+    ],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(subscriptionRef.current)) {
       collapseAnimate.start({
-        height: subscription.isExpanded ? subscriptionRef.current?.scrollHeight : 0,
-        opacity: subscription.isExpanded ? 1 : 0,
+        height: isExpanded ? subscriptionRef.current?.scrollHeight : 0,
+        opacity: isExpanded ? 1 : 0,
       });
     }
-  }, [chargeEnrolmentFee, enableTrial, isFeatured, hasSale, hasScheduledSale, subscription.isExpanded]);
+  }, [
+    chargeEnrolmentFee,
+    // enableTrial,
+    isFeatured,
+    hasSale,
+    hasScheduledSale,
+    isFormDirty,
+    isExpanded,
+    errorFieldsLength,
+  ]);
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -165,47 +238,71 @@ export default function SubscriptionItem({
   return (
     <form
       {...attributes}
-      css={styles.subscription(bgLight)}
-      onSubmit={form.handleSubmit((values) => {
-        handleSaveSubscription(values);
+      css={styles.subscription({
+        bgLight,
+        isActive: isActive,
       })}
+      onSubmit={form.handleSubmit((values) => {
+        handleSaveSubscription(values.subscriptions[index]);
+      })}
+      onClick={() => setIsActive(true)}
       style={style}
-      ref={setNodeRef}
+      ref={combinedRef}
     >
-      <div css={styles.subscriptionHeader(subscription.isExpanded)}>
-        <div css={styles.grabber} {...listeners}>
-          <SVGIcon name="threeDotsVerticalDouble" width={24} height={24} />
-          <span css={styles.title} title={subscriptionName}>
+      <div css={styles.subscriptionHeader(isExpanded)}>
+        <div css={styles.grabber({ isFormDirty })} {...(isFormDirty ? {} : listeners)}>
+          <SVGIcon data-grabber name="threeDotsVerticalDouble" width={24} height={24} />
+          <button
+            type="button"
+            css={styles.title}
+            disabled={isFormDirty}
+            title={subscriptionName}
+            onClick={() => !isFormDirty && toggleCollapse(subscription.id)}
+          >
             {subscriptionName}
 
             <Show when={subscription.is_featured}>
-              <SVGIcon name="star" width={24} height={24} />
+              <Tooltip content={__('Featured', 'tutor')} delay={200}>
+                <SVGIcon name="star" width={24} height={24} />
+              </Tooltip>
             </Show>
-          </span>
+          </button>
         </div>
 
-        <div css={styles.actions(subscription.isExpanded)}>
-          <Show when={!subscription.isExpanded}>
-            <Tooltip content={__('Edit plan', 'tutor')} delay={200}>
-              <button type="button" onClick={() => toggleCollapse(subscription.id)}>
+        <div css={styles.actions(isExpanded)} data-visually-hidden>
+          <Show when={!isExpanded}>
+            <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <button
+                type="button"
+                disabled={isFormDirty}
+                onClick={() => !isFormDirty && toggleCollapse(subscription.id)}
+              >
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
             </Tooltip>
           </Show>
-          <Show when={subscription.id}>
-            <Tooltip content={__('Duplicate plan', 'tutor')} delay={200}>
-              <button type="button" onClick={handleDuplicateSubscription}>
-                <SVGIcon name="copyPaste" width={24} height={24} />
+          <Show when={subscription.isSaved}>
+            <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+              <button type="button" disabled={isFormDirty} onClick={handleDuplicateSubscription}>
+                <Show when={!duplicateSubscriptionMutation.isPending} fallback={<LoadingSpinner size={24} />}>
+                  <SVGIcon name="copyPaste" width={24} height={24} />
+                </Show>
               </button>
             </Tooltip>
-            <Tooltip content={__('Delete plan', 'tutor')} delay={200}>
-              <button type="button" onClick={handleDeleteSubscription}>
+            <Tooltip content={__('Delete', 'tutor')} delay={200}>
+              <button
+                ref={deleteButtonRef}
+                type="button"
+                disabled={isFormDirty}
+                onClick={() => setIsDeletePopoverOpen(true)}
+              >
                 <SVGIcon name="delete" width={24} height={24} />
               </button>
             </Tooltip>
             <button
               type="button"
-              onClick={() => toggleCollapse(subscription.id)}
+              disabled={isFormDirty}
+              onClick={() => !isFormDirty && toggleCollapse(subscription.id)}
               data-collapse-button
               title={__('Collapse/expand plan', 'tutor')}
             >
@@ -218,13 +315,13 @@ export default function SubscriptionItem({
         style={{
           ...collapseAnimation,
         }}
-        css={styles.itemWrapper(subscription.isExpanded)}
+        css={styles.itemWrapper(isExpanded)}
       >
         <div ref={subscriptionRef} css={styleUtils.display.flex('column')}>
           <div css={styles.subscriptionContent}>
             <Controller
               control={form.control}
-              name="plan_name"
+              name={`subscriptions.${index}.plan_name`}
               rules={requiredRule()}
               render={(controllerProps) => (
                 <FormInput
@@ -237,7 +334,7 @@ export default function SubscriptionItem({
 
             <Controller
               control={form.control}
-              name="payment_type"
+              name={`subscriptions.${index}.payment_type`}
               render={(controllerProps) => (
                 <FormSelectInput
                   {...controllerProps}
@@ -254,7 +351,7 @@ export default function SubscriptionItem({
               fallback={
                 <Controller
                   control={form.control}
-                  name="regular_price"
+                  name={`subscriptions.${index}.regular_price`}
                   rules={{
                     ...requiredRule(),
                     validate: (value) => {
@@ -280,7 +377,7 @@ export default function SubscriptionItem({
               <div css={styles.inputGroup}>
                 <Controller
                   control={form.control}
-                  name="regular_price"
+                  name={`subscriptions.${index}.regular_price`}
                   rules={{
                     ...requiredRule(),
                     validate: (value) => {
@@ -303,7 +400,7 @@ export default function SubscriptionItem({
                 />
                 <Controller
                   control={form.control}
-                  name="recurring_value"
+                  name={`subscriptions.${index}.recurring_value`}
                   rules={{
                     ...requiredRule(),
                     validate: (value) => {
@@ -325,7 +422,7 @@ export default function SubscriptionItem({
 
                 <Controller
                   control={form.control}
-                  name="recurring_interval"
+                  name={`subscriptions.${index}.recurring_interval`}
                   render={(controllerProps) => (
                     <FormSelectInput
                       {...controllerProps}
@@ -343,7 +440,7 @@ export default function SubscriptionItem({
 
                 <Controller
                   control={form.control}
-                  name="recurring_limit"
+                  name={`subscriptions.${index}.recurring_limit`}
                   rules={{
                     ...requiredRule(),
                     validate: (value) => {
@@ -375,7 +472,7 @@ export default function SubscriptionItem({
 
             <Controller
               control={form.control}
-              name="charge_enrollment_fee"
+              name={`subscriptions.${index}.charge_enrollment_fee`}
               render={(controllerProps) => (
                 <FormCheckbox {...controllerProps} label={__('Charge enrolment fee', 'tutor')} />
               )}
@@ -384,7 +481,7 @@ export default function SubscriptionItem({
             <Show when={chargeEnrolmentFee}>
               <Controller
                 control={form.control}
-                name="enrollment_fee"
+                name={`subscriptions.${index}.enrollment_fee`}
                 rules={{
                   ...requiredRule(),
                   validate: (value) => {
@@ -407,9 +504,10 @@ export default function SubscriptionItem({
                 )}
               />
             </Show>
-            <Controller
+            {/* @TODO: Will be added after confirmation */}
+            {/* <Controller
               control={form.control}
-              name="enable_free_trial"
+              name={`subscriptions.${index}.enable_free_trial`}
               render={(controllerProps) => (
                 <FormCheckbox {...controllerProps} label={__('Enable a free trial', 'tutor')} />
               )}
@@ -419,7 +517,7 @@ export default function SubscriptionItem({
               <div css={styles.trialWrapper}>
                 <Controller
                   control={form.control}
-                  name="trial_value"
+                  name={`subscriptions.${index}.trial_value`}
                   rules={{
                     ...requiredRule(),
                     validate: (value) => {
@@ -441,7 +539,7 @@ export default function SubscriptionItem({
 
                 <Controller
                   control={form.control}
-                  name="trial_interval"
+                  name={`subscriptions.${index}.trial_interval`}
                   render={(controllerProps) => (
                     <FormSelectInput
                       {...controllerProps}
@@ -458,11 +556,11 @@ export default function SubscriptionItem({
                   )}
                 />
               </div>
-            </Show>
+            </Show> */}
 
             <Controller
               control={form.control}
-              name="do_not_provide_certificate"
+              name={`subscriptions.${index}.do_not_provide_certificate`}
               render={(controllerProps) => (
                 <FormCheckbox {...controllerProps} label={__('Do not provide certificate', 'tutor')} />
               )}
@@ -470,7 +568,7 @@ export default function SubscriptionItem({
 
             <Controller
               control={form.control}
-              name="is_featured"
+              name={`subscriptions.${index}.is_featured`}
               render={(controllerProps) => (
                 <FormCheckbox {...controllerProps} label={__('Feature this plan', 'tutor')} />
               )}
@@ -480,7 +578,7 @@ export default function SubscriptionItem({
               <Controller
                 control={form.control}
                 rules={requiredRule()}
-                name="featured_text"
+                name={`subscriptions.${index}.featured_text`}
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
@@ -491,32 +589,64 @@ export default function SubscriptionItem({
               />
             </Show>
 
-            <OfferSalePrice form={form} />
+            <OfferSalePrice index={index} />
           </div>
-          <div css={styles.subscriptionFooter}>
-            <Button
-              variant="text"
-              size="small"
-              onClick={() => {
-                toggleCollapse(subscription.id);
-                form.reset();
-                onDiscard();
-              }}
-            >
-              {subscription.id ? __('Cancel', 'tutor') : __('Discard', 'tutor')}
-            </Button>
-            <Button variant="secondary" size="small" type="submit" loading={saveSubscriptionMutation.isPending}>
-              {__('Save', 'tutor')}
-            </Button>
-          </div>
+          <Show when={isFormDirty}>
+            <div css={styles.subscriptionFooter}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  if (isFormDirty) {
+                    form.reset();
+                    return;
+                  }
+                  toggleCollapse(subscription.id);
+                  onDiscard();
+                }}
+              >
+                {subscription.id ? __('Discard', 'tutor') : __('Cancel', 'tutor')}
+              </Button>
+              <Button variant="secondary" size="small" type="submit" loading={saveSubscriptionMutation.isPending}>
+                {__('Save', 'tutor')}
+              </Button>
+            </div>
+          </Show>
         </div>
       </animated.div>
+      <ConfirmationPopover
+        isOpen={isDeletePopoverOpen}
+        triggerRef={deleteButtonRef}
+        closePopover={noop}
+        maxWidth="258px"
+        title={sprintf(__('Delete "%s"', 'tutor'), subscription.plan_name)}
+        message={__('Are you sure you want to delete this plan? This cannot be undone.', 'tutor')}
+        animationType={AnimationType.slideUp}
+        arrow="auto"
+        hideArrow
+        isLoading={deleteSubscriptionMutation.isPending}
+        confirmButton={{
+          text: __('Delete', 'tutor'),
+          variant: 'text',
+          isDelete: true,
+        }}
+        cancelButton={{
+          text: __('Cancel', 'tutor'),
+          variant: 'text',
+        }}
+        onConfirmation={handleDeleteSubscription}
+        onCancel={() => setIsDeletePopoverOpen(false)}
+      />
     </form>
   );
 }
 
 const styles = {
-  grabber: css`
+  grabber: ({
+    isFormDirty,
+  }: {
+    isFormDirty: boolean;
+  }) => css`
 		display: flex;
 		align-items: center;
 		gap: ${spacing[4]};
@@ -525,9 +655,9 @@ const styles = {
 		width: 100%;
 		min-height: 40px;
 
-		svg {
+		[data-grabber] {
 			color: ${colorTokens.icon.default};
-			cursor: grab;
+			cursor: ${isFormDirty ? 'not-allowed' : 'grab'};
 			flex-shrink: 0;
 		}
 
@@ -544,11 +674,18 @@ const styles = {
 		gap: ${spacing[8]};
 	`,
   title: css`
+    ${styleUtils.resetButton};
     display: flex;
     align-items: center;
+    color: ${colorTokens.text.hints};
+    flex-grow: 1;
+    gap: ${spacing[8]};
+
+    :disabled {
+      cursor: default;
+    }
 
     svg {
-      margin-left: ${spacing[8]};
       color: ${colorTokens.icon.brand};
     }
   `,
@@ -569,17 +706,42 @@ const styles = {
 		align-items: center;
 		gap: ${spacing[8]};
 	`,
-  subscription: (bgLight = false) => css`
+  subscription: ({
+    bgLight,
+    isActive,
+  }: {
+    bgLight?: boolean;
+    isActive: boolean;
+  }) => css`
 		width: 100%;
 		border: 1px solid ${colorTokens.stroke.default};
 		border-radius: ${borderRadius.card};
 		overflow: hidden;
+    transition: border-color 0.3s ease;
+
+    [data-visually-hidden] {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
 
 		${
       bgLight &&
       css`
         background-color: ${colorTokens.background.white};
       `
+    }
+
+    ${
+      isActive &&
+      css`
+        border-color: ${colorTokens.stroke.brand};
+      `
+    }
+
+    &:hover:not(:disabled) {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
 	`,
   itemWrapper: (isActive = false) => css`
@@ -632,6 +794,11 @@ const styles = {
 			justify-content: center;
 			transition: color 0.3s ease;
 
+      :disabled {
+        cursor: not-allowed;
+        color: ${colorTokens.icon.disable.background};
+      }
+
 			&[data-collapse-button] {
 				transition: transform 0.3s ease;
 
@@ -640,7 +807,7 @@ const styles = {
 					height: 20px;
 				}
 	
-				&:hover {
+				&:hover:not(:disabled) {
 					color: ${colorTokens.icon.hover};
 				}
 	

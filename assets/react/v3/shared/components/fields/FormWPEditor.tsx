@@ -137,7 +137,7 @@ const FormWPEditor = ({
         });
         onClickAiButton?.();
       }}
-      replaceEntireLabel
+      replaceEntireLabel={hasCustomEditorSupport}
     >
       {() => {
         return (

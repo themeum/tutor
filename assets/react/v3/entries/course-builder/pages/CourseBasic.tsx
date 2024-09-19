@@ -150,12 +150,12 @@ const CourseBasic = () => {
 
   const coursePricingCategoryOptions: Option<PricingCategory>[] = [
     {
-      label: __('Subscription', 'tutor'),
-      value: 'subscription',
-    },
-    {
       label: __('Regular', 'tutor'),
       value: 'regular',
+    },
+    {
+      label: __('Subscription', 'tutor'),
+      value: 'subscription',
     },
   ];
 

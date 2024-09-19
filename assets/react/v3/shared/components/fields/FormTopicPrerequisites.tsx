@@ -223,7 +223,7 @@ const FormTopicPrerequisites = ({
                         <span css={styles.title} title={content.post_title}>
                           {content.post_title}
                         </span>
-                        <Show when={content.post_type === 'tutor_quiz'}>
+                        <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
                           <span css={typography.tiny()}>
                             {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
                           </span>
@@ -309,7 +309,7 @@ const FormTopicPrerequisites = ({
                                   <span css={styles.title} title={content.post_title}>
                                     {content.post_title}
                                   </span>
-                                  <Show when={content.post_type === 'tutor_quiz'}>
+                                  <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
                                     <span css={typography.tiny()}>
                                       {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
                                     </span>
