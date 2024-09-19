@@ -317,7 +317,6 @@ export const convertToGMT = (date: Date, dateFormat = DateFormats.yearMonthDayHo
 
   // Convert the date to GMT by adding the offset
   const gmtDate = addMinutes(date, offsetInMinutes);
-  console.log(gmtDate);
 
   // Format and return the GMT date
   return format(gmtDate, dateFormat);
