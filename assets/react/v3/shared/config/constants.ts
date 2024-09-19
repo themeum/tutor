@@ -40,6 +40,7 @@ export enum DateFormats {
   monthDayYear = 'MMM dd, yyyy',
   hoursMinutes = 'hh:mm a',
   yearMonthDayHourMinuteSecond = 'yyyy-MM-dd hh:mm:ss',
+  yearMonthDayHourMinuteSecond24H = 'yyyy-MM-dd HH:mm:ss',
   monthDayYearHoursMinutes = 'MMM dd, yyyy, hh:mm a',
   localMonthDayYearHoursMinutes = 'PPp',
   activityDate = 'MMM dd, yyyy HH:mm aa',

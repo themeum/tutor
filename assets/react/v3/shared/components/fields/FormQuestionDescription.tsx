@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import Button from '@Atoms/Button';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -90,7 +90,7 @@ const FormQuestionDescription = ({
               }
             }}
             data-overlay
-          ></div>
+          />
         </Show>
       </div>
     </div>
@@ -105,12 +105,14 @@ const styles = {
     max-height: 400px;
     overflow-y: scroll;
 
-    ${isEdit &&
-    css`
-      padding-inline: 0;
-      max-height: unset;
-      overflow: unset;
-    `}
+    ${
+      isEdit &&
+      css`
+        padding-inline: 0;
+        max-height: unset;
+        overflow: unset;
+      `
+    }
   `,
   container: ({ isEdit }: { isEdit: boolean }) => css`
     position: relative;
@@ -138,7 +140,7 @@ const styles = {
     }
 
     &:hover {
-      background-color: ${colorTokens.background.white};
+      background-color: ${!isEdit && colorTokens.background.white};
       color: ${colorTokens.text.subdued};
 
       [data-action-buttons] {
@@ -146,10 +148,12 @@ const styles = {
       }
     }
 
-    ${isEdit &&
-    css`
-      padding-inline: 0;
-    `}
+    ${
+      isEdit &&
+      css`
+        padding-inline: 0;
+      `
+    }
   `,
   placeholder: css`
     ${typography.caption()}
@@ -164,10 +168,12 @@ const styles = {
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
 
-    ${isEdit &&
-    css`
-      opacity: 1;
-    `}
+    ${
+      isEdit &&
+      css`
+        opacity: 1;
+      `
+    }
   `,
   overlay: css`
     position: absolute;

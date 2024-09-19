@@ -175,7 +175,7 @@ const styles = {
       `
     }
 
-    :hover {
+    :hover:not(:disabled) {
       background-color: ${colorTokens.background.hover};
       color: ${colorTokens.text.title};
 
@@ -202,7 +202,7 @@ const styles = {
         color: ${colorTokens.icon.error};
       }
 
-      &:hover {
+      &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
         background-color: ${rgba(colorTokens.bg.error, 0.1)};
 

@@ -388,7 +388,11 @@ const FormVideoInput = ({
                           <SVGIcon name="cross" height={24} width={24} />
                         </button>
                       </div>
-                      <div css={styles.imagePreview}>
+                      <div
+                        css={styles.imagePreview({
+                          isHTMLVideo: fieldValue?.source === 'html5',
+                        })}
+                      >
                         <Show
                           when={fieldValue?.source === 'html5'}
                           fallback={
@@ -494,6 +498,24 @@ const FormVideoInput = ({
                     }
                   }
 
+                  if (form.watch('videoSource') === 'embedded') {
+                    const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
+                    const match = value.match(regExp);
+
+                    if (!match || !match[1]) {
+                      return __('Invalid Embedded URL', 'tutor');
+                    }
+                  }
+
+                  if (form.watch('videoSource') === 'shortcode') {
+                    const regExp = /^\[.*\]$/;
+                    const match = value.match(regExp);
+
+                    if (!match) {
+                      return __('Invalid Shortcode', 'tutor');
+                    }
+                  }
+
                   return true;
                 },
               }}
@@ -570,6 +592,10 @@ const styles = {
     padding: ${spacing[8]} ${spacing[12]};
     gap: ${spacing[8]};
 
+    p {
+      word-break: break-all;
+    }
+
     span {
       font-weight: ${fontWeight.semiBold};
       color: ${colorTokens.text.hints};
@@ -621,12 +647,17 @@ const styles = {
       color: ${colorTokens.icon.default};
     }
   `,
-  imagePreview: css`
+  imagePreview: ({
+    isHTMLVideo,
+  }: {
+    isHTMLVideo: boolean;
+  }) => css`
     width: 100%;
     max-height: 168px;
     position: relative;
     overflow: hidden;
     background-color: ${colorTokens.bg.white};
+    ${!isHTMLVideo && styleUtils.overflowYAuto};
 
     &:hover {
       [data-hover-buttons-wrapper] {

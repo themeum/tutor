@@ -61,7 +61,7 @@ const ScheduleOptions = () => {
     setShowForm(false);
     form.setValue(
       'post_date',
-      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond),
+      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond24H),
       {
         shouldDirty: true,
       },

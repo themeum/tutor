@@ -420,7 +420,7 @@ const styles = {
   label: css`
     ${styleUtils.display.inlineFlex()}
     align-items: center;
-    gap: ${spacing[2]};
+    gap: ${spacing[4]};
     ${typography.body('medium')}
     color: ${colorTokens.text.title};
     margin-bottom: ${spacing[8]};
