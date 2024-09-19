@@ -192,7 +192,7 @@ export interface H5PContent {
   updated_at: string;
 }
 
-interface H5PContentResponse {
+export interface H5PContentResponse {
   output: H5PContent[];
 }
 
@@ -605,10 +605,11 @@ const getH5PQuizContents = (search: string) => {
     .then((response) => response.data);
 };
 
-export const useGetH5PQuizContentsQuery = (search: string) => {
+export const useGetH5PQuizContentsQuery = (search: string, contentType: ContentType) => {
   return useQuery({
     queryKey: ['H5PQuizContents', search],
     queryFn: () => getH5PQuizContents(search),
+    enabled: contentType === 'tutor_h5p_quiz',
   });
 };
 

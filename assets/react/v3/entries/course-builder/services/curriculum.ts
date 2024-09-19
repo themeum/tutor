@@ -6,9 +6,10 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
-import { authApiInstance } from '@Utils/api';
+import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
+import type { H5PContentResponse } from './quiz';
 
 export type ID = string | number;
 
@@ -506,5 +507,21 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
     queryKey: ['GoogleMeet', meetingId],
     queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
+  });
+};
+
+const getH5PLessonContents = (search: string) => {
+  return wpAjaxInstance
+    .post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
+      search_filter: search,
+    })
+    .then((response) => response.data);
+};
+
+export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
+  return useQuery({
+    queryKey: ['H5PQuizContents', search],
+    queryFn: () => getH5PLessonContents(search),
+    enabled: contentType === 'lesson',
   });
 };

@@ -6,6 +6,7 @@ import type { ModalProps } from '@Components/modals/Modal';
 import { DateFormats } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { type ContentType, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
 import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
 import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -19,9 +20,10 @@ import { Controller } from 'react-hook-form';
 interface H5PContentListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   onAddContent: (content: H5PContent) => void;
+  contentType: ContentType;
 }
 
-const H5PContentListModal = ({ title, closeModal, onAddContent }: H5PContentListModalProps) => {
+const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H5PContentListModalProps) => {
   const form = useFormWithGlobalError<{
     search: string;
   }>({
@@ -30,7 +32,10 @@ const H5PContentListModal = ({ title, closeModal, onAddContent }: H5PContentList
     },
   });
   const search = useDebounce(form.watch('search'), 300);
-  const getH5PContentsQuery = useGetH5PQuizContentsQuery(search);
+  const getH5PQuizzesQuery = useGetH5PQuizContentsQuery(search, contentType);
+  const getH5PContentsQuery = useGetH5PLessonContentsQuery(search, contentType);
+
+  const content = contentType === 'tutor_h5p_quiz' ? getH5PQuizzesQuery.data : getH5PContentsQuery.data;
 
   const columns: Column<H5PContent>[] = [
     {
@@ -97,8 +102,8 @@ const H5PContentListModal = ({ title, closeModal, onAddContent }: H5PContentList
         <div css={styles.tableWrapper}>
           <Table
             columns={columns}
-            data={getH5PContentsQuery.data?.output || []}
-            loading={getH5PContentsQuery.isLoading}
+            data={content?.output || []}
+            loading={getH5PQuizzesQuery.isLoading || getH5PContentsQuery.isLoading}
           />
         </div>
       </div>

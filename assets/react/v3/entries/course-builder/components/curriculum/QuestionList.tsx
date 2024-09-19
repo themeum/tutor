@@ -28,8 +28,8 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
 import Question from '@CourseBuilderComponents/curriculum/Question';
+import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { H5PContent, QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
@@ -296,6 +296,7 @@ const QuestionList = ({
                   onAddContent: (content) => {
                     handleAddQuestion('h5p', content);
                   },
+                  contentType: 'tutor_h5p_quiz',
                 },
               });
             } else {

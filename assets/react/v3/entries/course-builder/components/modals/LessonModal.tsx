@@ -17,7 +17,7 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
-import type { ModalProps } from '@Components/modals/Modal';
+import { type ModalProps, useModal } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
@@ -36,6 +36,7 @@ import {
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { maxLimitRule } from '@Utils/validation';
+import H5PContentListModal from './H5PContentListModal';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -78,6 +79,7 @@ const LessonModal = ({
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
   const queryClient = useQueryClient();
+  const { showModal } = useModal();
 
   const { data: lessonDetails } = getLessonDetailsQuery;
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
@@ -204,42 +206,66 @@ const LessonModal = ({
                   />
                 )}
               />
-              <Controller
-                name="description"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormWPEditor
-                    {...controllerProps}
-                    label={
-                      <>
-                        {__('Description', 'tutor')}
-                        {lessonId && (
-                          <Button
-                            variant="text"
-                            size="small"
-                            onClick={() => {
-                              window.open(
-                                `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
-                                '_blank',
-                                'noopener',
-                              );
-                            }}
-                            icon={<SVGIcon name="edit" width={24} height={24} />}
-                            buttonCss={styles.wpEditorButton}
-                          >
-                            {__('WP Editor', 'tutor')}
-                          </Button>
-                        )}
-                      </>
-                    }
-                    placeholder={__('Enter Lesson Description', 'tutor')}
-                    helpText={__(
-                      'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.',
-                      'tutor',
-                    )}
-                  />
-                )}
-              />
+              <div css={styles.description}>
+                <Controller
+                  name="description"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormWPEditor
+                      {...controllerProps}
+                      label={
+                        <>
+                          {__('Description', 'tutor')}
+                          {lessonId && (
+                            <Button
+                              variant="text"
+                              size="small"
+                              onClick={() => {
+                                window.open(
+                                  `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
+                                  '_blank',
+                                  'noopener',
+                                );
+                              }}
+                              icon={<SVGIcon name="edit" width={24} height={24} />}
+                              buttonCss={styles.wpEditorButton}
+                            >
+                              {__('WP Editor', 'tutor')}
+                            </Button>
+                          )}
+                        </>
+                      }
+                      placeholder={__('Enter Lesson Description', 'tutor')}
+                      helpText={__(
+                        'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.',
+                        'tutor',
+                      )}
+                    />
+                  )}
+                />
+
+                <button
+                  css={styles.addLessonButton}
+                  type="button"
+                  onClick={() => {
+                    showModal({
+                      component: H5PContentListModal,
+                      props: {
+                        title: __('Add H5P Content', 'tutor'),
+                        onAddContent: (content) => {
+                          form.setValue(
+                            'description',
+                            `${form.getValues('description') || ''}[h5p id="${content.id}"]`,
+                          );
+                        },
+                        contentType: 'lesson',
+                      },
+                    });
+                  }}
+                >
+                  {__('Add H5P Content', 'tutor')}
+                </button>
+              </div>
             </div>
           </div>
 
@@ -474,6 +500,35 @@ const styles = {
     position: sticky;
     top: 0;
     z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
+  `,
+  description: css`
+    position: relative;
+  `,
+  addLessonButton: css`
+    position: absolute;
+    top: 36px;
+    left: 110px;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    cursor: pointer;
+    border: 1px solid #2271b1;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    color: #2271b1;
+    border-color: #2271b1;
+    background: #f6f7f7;
+
+    :hover {
+      background: #f0f0f1;
+      border-color: #0a4b78;
+      color: #0a4b78;
+    }
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};
