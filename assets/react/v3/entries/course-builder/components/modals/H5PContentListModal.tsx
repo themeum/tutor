@@ -88,7 +88,6 @@ const H5PContentListModal = ({ title, closeModal, onAddContent }: H5PContentList
             render={(controllerProps) => (
               <FormInputWithContent
                 {...controllerProps}
-                label={__('Search', 'tutor')}
                 showVerticalBar={false}
                 content={<SVGIcon name="search" width={24} height={24} />}
               />
@@ -112,10 +111,11 @@ export default H5PContentListModal;
 const styles = {
   modalWrapper: css`
     width: 720px;
+    padding-bottom: ${spacing[28]};
   `,
   searchWrapper: css`
     display: flex;
-    padding: 0 ${spacing[16]} ${spacing[16]} ${spacing[16]};
+    padding: ${spacing[20]};
   `,
   tableWrapper: css`
     max-height: calc(100vh - 350px);
@@ -135,9 +135,9 @@ const styles = {
     }
   `,
   tableLabel: css`
+    ${typography.body('medium')};
     text-align: left;
-    ${typography.caption('semiBold')};
-    color: ${colorTokens.text.subdued};
+    color: ${colorTokens.text.primary};
   `,
   title: css`
     text-align: left;
