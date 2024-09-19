@@ -985,6 +985,7 @@ const styles = {
     :hover {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.brand};
+      box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
     }
   `,
 };

@@ -269,24 +269,33 @@ export default function SubscriptionItem({
           </button>
         </div>
 
-        <div css={styles.actions(isExpanded)}>
+        <div css={styles.actions(isExpanded)} data-visually-hidden>
           <Show when={!isExpanded}>
             <Tooltip content={__('Edit', 'tutor')} delay={200}>
-              <button type="button" onClick={() => !isFormDirty && toggleCollapse(subscription.id)}>
+              <button
+                type="button"
+                disabled={isFormDirty}
+                onClick={() => !isFormDirty && toggleCollapse(subscription.id)}
+              >
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
             </Tooltip>
           </Show>
           <Show when={subscription.isSaved}>
             <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-              <button type="button" onClick={handleDuplicateSubscription}>
+              <button type="button" disabled={isFormDirty} onClick={handleDuplicateSubscription}>
                 <Show when={!duplicateSubscriptionMutation.isPending} fallback={<LoadingSpinner size={24} />}>
                   <SVGIcon name="copyPaste" width={24} height={24} />
                 </Show>
               </button>
             </Tooltip>
             <Tooltip content={__('Delete', 'tutor')} delay={200}>
-              <button ref={deleteButtonRef} type="button" onClick={() => setIsDeletePopoverOpen(true)}>
+              <button
+                ref={deleteButtonRef}
+                type="button"
+                disabled={isFormDirty}
+                onClick={() => setIsDeletePopoverOpen(true)}
+              >
                 <SVGIcon name="delete" width={24} height={24} />
               </button>
             </Tooltip>
@@ -710,6 +719,11 @@ const styles = {
 		overflow: hidden;
     transition: border-color 0.3s ease;
 
+    [data-visually-hidden] {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
 		${
       bgLight &&
       css`
@@ -722,6 +736,12 @@ const styles = {
       css`
         border-color: ${colorTokens.stroke.brand};
       `
+    }
+
+    &:hover:not(:disabled) {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
 	`,
   itemWrapper: (isActive = false) => css`
