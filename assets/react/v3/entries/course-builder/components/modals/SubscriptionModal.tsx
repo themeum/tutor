@@ -225,11 +225,8 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                   <Button
                     variant="secondary"
                     icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
+                    disabled={isFormDirty}
                     onClick={() => {
-                      // setItems((previous: (SubscriptionFormData & { isExpanded: boolean })[]) => {
-                      //   const newItems = previous.map((item) => ({ ...item, isExpanded: false }));
-                      //   return [...newItems, { ...defaultSubscriptionFormData, id: '', isExpanded: true }];
-                      // });
                       const newId = nanoid();
                       appendSubscription({ ...defaultSubscriptionFormData, id: newId, isSaved: false });
                       setExpandedSubscription(newId);
