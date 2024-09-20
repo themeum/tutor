@@ -35,6 +35,7 @@ import {
 } from '@CourseBuilderServices/curriculum';
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { noop } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 
@@ -244,27 +245,47 @@ const LessonModal = ({
                   )}
                 />
 
-                <button
-                  css={styles.addH5PContent({ hasLessonId: !!lessonId })}
-                  type="button"
-                  onClick={() => {
-                    showModal({
-                      component: H5PContentListModal,
-                      props: {
-                        title: __('Select H5P Content', 'tutor'),
-                        onAddContent: (content) => {
-                          form.setValue(
-                            'description',
-                            `${form.getValues('description') || ''}[h5p id="${content.id}"]`,
-                          );
-                        },
-                        contentType: 'lesson',
-                      },
-                    });
-                  }}
+                <Show
+                  when={isTutorPro && isAddonEnabled(Addons.H5P_Integration)}
+                  fallback={
+                    <Show when={!isTutorPro}>
+                      <div css={styles.addH5PContentWrapper({ hasLessonId: !!lessonId })}>
+                        <ProBadge>
+                          <button
+                            css={styles.addH5PContentButton({ hasLessonId: !!lessonId })}
+                            type="button"
+                            disabled
+                            onClick={noop}
+                          >
+                            {__('Add H5P Content', 'tutor')}
+                          </button>
+                        </ProBadge>
+                      </div>
+                    </Show>
+                  }
                 >
-                  {__('Add H5P Content', 'tutor')}
-                </button>
+                  <button
+                    css={styles.addH5PContentButton({ hasLessonId: !!lessonId })}
+                    type="button"
+                    onClick={() => {
+                      showModal({
+                        component: H5PContentListModal,
+                        props: {
+                          title: __('Select H5P Content', 'tutor'),
+                          onAddContent: (content) => {
+                            form.setValue(
+                              'description',
+                              `${form.getValues('description') || ''}[h5p id="${content.id}"]`,
+                            );
+                          },
+                          contentType: 'lesson',
+                        },
+                      });
+                    }}
+                  >
+                    {__('Add H5P Content', 'tutor')}
+                  </button>
+                </Show>
               </div>
             </div>
           </div>
@@ -504,7 +525,16 @@ const styles = {
   description: css`
     position: relative;
   `,
-  addH5PContent: ({ hasLessonId }: { hasLessonId: boolean }) => css`
+  addH5PContentWrapper: ({
+    hasLessonId,
+  }: {
+    hasLessonId: boolean;
+  }) => css`
+    position: absolute;
+    top: ${hasLessonId ? '36px' : '28px'};
+    left: 110px;
+  `,
+  addH5PContentButton: ({ hasLessonId }: { hasLessonId: boolean }) => css`
     position: absolute;
     top: ${hasLessonId ? '36px' : '28px'};
     left: 110px;
@@ -524,10 +554,18 @@ const styles = {
     border-color: #2271b1;
     background: #f6f7f7;
 
-    :hover {
+    :hover:not(:disabled) {
       background: #f0f0f1;
       border-color: #0a4b78;
       color: #0a4b78;
+    }
+
+    :disabled {
+      cursor: default;
+      position: relative;
+      top: auto;
+      left: auto;
+      opacity: 0.5;
     }
   `,
   rightPanel: css`
