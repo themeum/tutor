@@ -245,13 +245,13 @@ const LessonModal = ({
                 />
 
                 <button
-                  css={styles.addLessonButton}
+                  css={styles.addH5PContent({ hasLessonId: !!lessonId })}
                   type="button"
                   onClick={() => {
                     showModal({
                       component: H5PContentListModal,
                       props: {
-                        title: __('Add H5P Content', 'tutor'),
+                        title: __('Select H5P Content', 'tutor'),
                         onAddContent: (content) => {
                           form.setValue(
                             'description',
@@ -504,9 +504,9 @@ const styles = {
   description: css`
     position: relative;
   `,
-  addLessonButton: css`
+  addH5PContent: ({ hasLessonId }: { hasLessonId: boolean }) => css`
     position: absolute;
-    top: 36px;
+    top: ${hasLessonId ? '36px' : '28px'};
     left: 110px;
     display: inline-block;
     text-decoration: none;

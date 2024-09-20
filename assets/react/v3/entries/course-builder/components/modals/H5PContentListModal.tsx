@@ -12,9 +12,11 @@ import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import type { Column } from '@Molecules/Table';
 import Table from '@Molecules/Table';
+import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface H5PContentListModalProps extends ModalProps {
@@ -47,41 +49,50 @@ const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H
     {
       Header: <div css={styles.tableLabel}>{__('Content Type', 'tutor')}</div>,
       Cell: (item) => {
-        return <div>{item.content_type}</div>;
+        return <div css={typography.caption()}>{item.content_type}</div>;
       },
     },
     {
       Header: <div css={styles.tableLabel}>{__('Author', 'tutor')}</div>,
       Cell: (item) => {
-        return <div>{item.user_name}</div>;
+        return <div css={typography.caption()}>{item.user_name}</div>;
       },
     },
     {
       Header: <div css={styles.tableLabel}>{__('Created At', 'tutor')}</div>,
       Cell: (item) => {
-        return <div>{format(new Date(item.updated_at), DateFormats.yearMonthDayHourMinuteSecond)}</div>;
+        return (
+          <div css={typography.caption()}>
+            {format(new Date(item.updated_at), DateFormats.yearMonthDayHourMinuteSecond)}
+          </div>
+        );
       },
     },
     {
       Header: <div css={styles.tableLabel}>{__('Actions', 'tutor')}</div>,
       Cell: (item) => {
         return (
-          <div>
-            <Button
-              size="small"
-              variant="secondary"
-              onClick={() => {
-                closeModal({ action: 'CONFIRM' });
-                onAddContent(item);
-              }}
-            >
-              {__('Add Content', 'tutor')}
-            </Button>
-          </div>
+          <Button
+            size="small"
+            variant="secondary"
+            onClick={() => {
+              closeModal({ action: 'CONFIRM' });
+              onAddContent(item);
+            }}
+          >
+            {__('Add', 'tutor')}
+          </Button>
         );
       },
     },
   ];
+
+  useEffect(() => {
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, []);
 
   return (
     <BasicModalWrapper title={title} onClose={() => closeModal({ action: 'CLOSE' })}>
@@ -93,6 +104,7 @@ const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H
             render={(controllerProps) => (
               <FormInputWithContent
                 {...controllerProps}
+                placeholder={__('Search by title', 'tutor')}
                 showVerticalBar={false}
                 content={<SVGIcon name="search" width={24} height={24} />}
               />
@@ -115,7 +127,7 @@ export default H5PContentListModal;
 
 const styles = {
   modalWrapper: css`
-    width: 720px;
+    width: 920px;
     padding-bottom: ${spacing[28]};
   `,
   searchWrapper: css`
@@ -145,7 +157,10 @@ const styles = {
     color: ${colorTokens.text.primary};
   `,
   title: css`
+    ${styleUtils.text.ellipsis(2)}
+    width: 100%;
     text-align: left;
     ${typography.caption()};
+    max-width: 340px;
   `,
 };

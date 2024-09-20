@@ -285,7 +285,7 @@ const styles = {
   questionTitle: css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
-    max-width: 170px;
+    flex-grow: 1;
     width: 100%;
   `,
   duplicate: css`

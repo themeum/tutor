@@ -270,7 +270,7 @@ const QuizModal = ({
               </>
             }
           >
-            <div css={styles.wrapper({ activeTab })}>
+            <div css={styles.wrapper({ activeTab, isH5pQuiz: contentType === 'tutor_h5p_quiz' })}>
               <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
                 <Show when={activeTab === 'details'}>
                   <div css={styles.left}>
@@ -400,14 +400,15 @@ export default QuizModal;
 const styles = {
   wrapper: ({
     activeTab,
+    isH5pQuiz,
   }: {
     activeTab: QuizTabs;
+    isH5pQuiz: boolean;
   }) => css`
     width: 1218px;
     display: grid;
-    grid-template-columns: ${activeTab === 'details' ? '352px 1fr 280px' : '1fr'};
+    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr 224px' : '352px 1fr 280px') : '1fr'};
     height: 100%;
-
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
