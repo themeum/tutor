@@ -153,26 +153,28 @@ const QuestionForm = () => {
 
       {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching' | 'h5p'>]}
 
-      <div css={styles.questionAnswer}>
-        <Controller
-          control={form.control}
-          name={`questions.${activeQuestionIndex}.answer_explanation` as 'questions.0.answer_explanation'}
-          render={(controllerProps) => (
-            <FormAnswerExplanation
-              {...controllerProps}
-              label={__('Answer Explanation', 'tutor')}
-              placeholder={__('Write answer explanation...', 'tutor')}
-              onChange={() => {
-                calculateQuizDataStatus(dataStatus, 'update') &&
-                  form.setValue(
-                    `questions.${activeQuestionIndex}._data_status`,
-                    calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
-                  );
-              }}
-            />
-          )}
-        />
-      </div>
+      <Show when={activeQuestionType !== 'h5p'}>
+        <div css={styles.questionAnswer}>
+          <Controller
+            control={form.control}
+            name={`questions.${activeQuestionIndex}.answer_explanation` as 'questions.0.answer_explanation'}
+            render={(controllerProps) => (
+              <FormAnswerExplanation
+                {...controllerProps}
+                label={__('Answer Explanation', 'tutor')}
+                placeholder={__('Write answer explanation...', 'tutor')}
+                onChange={() => {
+                  calculateQuizDataStatus(dataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
+              />
+            )}
+          />
+        </div>
+      </Show>
     </div>
   );
 };
