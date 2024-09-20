@@ -199,10 +199,10 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 			<div class="tutor-fw-bold tutor-discount-amount"></div>
 		</div>
 		<?php endif; ?>
-		<div class="tutor-checkout-summary-item">
+		<!-- <div class="tutor-checkout-summary-item">
 			<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
             <div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
-		</div>
+		</div> -->
 	</div>
 
 	<div class="tutor-p-32">
