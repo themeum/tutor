@@ -184,7 +184,7 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 				<?php esc_html_e( 'Click here', 'tutor' ); ?>
 			</button>
 		</div>
-		<div class="tutor-checkout-coupon-form tutor-d-none">
+		<div class="tutor-apply-coupon-form tutor-d-none">
 			<input type="text" name="coupon_code" placeholder="<?php esc_html_e( 'Add coupon code', 'tutor' ); ?>">
 			<button type="button" class="tutor-btn tutor-btn-secondary" data-object-ids="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
 		</div>
