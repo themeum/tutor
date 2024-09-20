@@ -966,6 +966,10 @@ class Course extends Tutor_Base {
 							$quiz_option = get_post_meta( $post->ID, Quiz::META_QUIZ_OPTION, true );
 							if ( isset( $quiz_option['quiz_type'] ) && 'tutor_h5p_quiz' === $quiz_option['quiz_type'] ) {
 								$post->quiz_type = 'tutor_h5p_quiz';
+								// remove h5p quiz if tutor h5p addon is disabled.
+								if ( ! tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+									continue;
+								}
 							}
 							$questions            = tutor_utils()->get_questions_by_quiz( $post->ID );
 							$post->total_question = is_array( $questions ) ? count( $questions ) : 0;
