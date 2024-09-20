@@ -186,7 +186,12 @@ const Additional = () => {
 
         <div css={styles.formSection}>
           <div css={styles.titleAndSub}>
-            <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+            <div css={styles.title}>
+              {__('Certificate', 'tutor')}
+              <Show when={!isTutorPro}>
+                <ProBadge content={__('Pro', 'tutor')} />
+              </Show>
+            </div>
             <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
               <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
             </Show>
@@ -347,6 +352,9 @@ const styles = {
 	`,
   title: css`
 		${typography.body('medium')};
+    ${styleUtils.display.flex()}
+    align-items: center;
+    gap: ${spacing[4]};
 		color: ${colorTokens.text.primary};
 	`,
   subtitle: css`

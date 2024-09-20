@@ -225,7 +225,7 @@ const styles = {
   label: css`
     ${styleUtils.display.inlineFlex()}
     align-items: center;
-    gap: ${spacing[2]};
+    gap: ${spacing[4]};
     ${typography.body()}
     color: ${colorTokens.text.title};
   `,
