@@ -144,7 +144,7 @@ class Addons {
 			),
 			'h5p'                      => array(
 				'name'        => __( 'H5P Integration', 'tutor' ),
-				'description' => __( 'Create interactive content for your courses.', 'tutor' ),
+				'description' => __( 'Integrate H5P to add interactivity and engagement to your courses.', 'tutor' ),
 			),
 		);
 
