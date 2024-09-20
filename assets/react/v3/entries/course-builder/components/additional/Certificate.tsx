@@ -1,13 +1,11 @@
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-
-import EmptyState from '@Molecules/EmptyState';
-import Tabs from '@Molecules/Tabs';
 
 import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
@@ -24,10 +22,11 @@ import Button from '@Atoms/Button';
 import { typography } from '@Config/typography';
 import addonDisabled2x from '@Images/addon-disabled-2x.webp';
 import addonDisabled from '@Images/addon-disabled.webp';
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
 import certificate2x from '@Images/pro-placeholders/certificates-2x.webp';
 import certificate from '@Images/pro-placeholders/certificates.webp';
+
+import notFound2x from '@Images/not-found-2x.webp';
+import notFound from '@Images/not-found.webp';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
 
@@ -274,14 +273,27 @@ const Certificate = () => {
             when={filteredCertificatesData.length > 0}
             fallback={
               <Show when={activeCertificateTab === 'custom_certificates'}>
-                <EmptyState
-                  size="small"
-                  title={__('No templates found', 'tutor')}
-                  description={__('No custom certificates found. Create a new one.', 'tutor')}
-                  emptyStateImage={emptyStateImage}
-                  emptyStateImage2x={emptyStateImage2x}
-                  imageAltText={__('Illustration of a certificate', 'tutor')}
-                />
+                <div css={styles.emptyState}>
+                  <img
+                    css={styles.placeholderImage({
+                      notFound: true,
+                    })}
+                    src={notFound}
+                    srcSet={`${notFound} 1x, ${notFound2x} 2x`}
+                    alt={__('Not Found', 'tutor')}
+                  />
+
+                  <div css={styles.featureAndActionWrapper}>
+                    <h6
+                      css={css`
+                        ${typography.heading6('medium')}
+                        color: ${colorTokens.text.subdued};
+                      `}
+                    >
+                      {__('You didn’t create any certificate yet!', 'tutor')}
+                    </h6>
+                  </div>
+                </div>
               </Show>
             }
           >
@@ -349,10 +361,14 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
   `,
-  placeholderImage: css`
+  placeholderImage: ({
+    notFound,
+  }: {
+    notFound?: boolean;
+  }) => css`
     max-width: 100%;
     width: 100%;
-    height: 312px;
+    height: ${notFound ? '189px' : '312px;'};
     object-fit: cover;
     object-position: center;
     border-radius: ${borderRadius[6]};
