@@ -39,8 +39,9 @@ final class DateTimeHelper extends Carbon {
 		$timezone_string = User::get_user_timezone_string( $user );
 
 		$timezone = new \DateTimeZone( $timezone_string );
-		$date     = new \DateTime( $gmt_date, $timezone );
+		$datetime = new \DateTime( $gmt_date, new \DateTimeZone( 'UTC' ) );
+		$datetime->setTimezone( $timezone );
 
-		return date_i18n( $format, $date->getTimestamp() );
+		return wp_date( $format, $datetime->getTimestamp(), $datetime->getTimezone() );
 	}
 }
