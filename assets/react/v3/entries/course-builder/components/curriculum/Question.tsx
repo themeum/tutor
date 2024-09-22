@@ -17,6 +17,7 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import { AnimationType } from '@Hooks/useAnimation';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -101,6 +102,18 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
       }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
+          if (activeQuestionId === question.question_id) {
+            return;
+          }
+
+          const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+          if (validation !== true) {
+            setValidationError(validation);
+            return;
+          }
+
+          setValidationError(null);
           setActiveQuestionId(question.question_id);
         }
       }}
@@ -126,11 +139,17 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
           const validation = validateQuizQuestion(activeQuestionIndex, form);
           if (validation !== true) {
             event.stopPropagation();
+
+            if (activeQuestionId === question.question_id) {
+              setSelectedQuestionId(question.question_id);
+            }
+
             setValidationError(validation);
             return;
           }
           setSelectedQuestionId(question.question_id);
         }}
+        animationType={AnimationType.slideDown}
         closePopover={() => setSelectedQuestionId('')}
         dotsOrientation="vertical"
         maxWidth={isTutorPro ? '150px' : '160px'}
@@ -140,21 +159,23 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         hideArrow
         data-three-dots
       >
-        <ThreeDots.Option
-          text={
-            <div css={styles.duplicate}>
-              {__('Duplicate', 'tutor')}
-              {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
-            </div>
-          }
-          icon={<SVGIcon name="duplicate" width={24} height={24} />}
-          disabled={!isTutorPro}
-          onClick={(event) => {
-            event.stopPropagation();
-            onDuplicateQuestion(question);
-            setSelectedQuestionId('');
-          }}
-        />
+        {validateQuizQuestion(activeQuestionIndex, form) === true && (
+          <ThreeDots.Option
+            text={
+              <div css={styles.duplicate}>
+                {__('Duplicate', 'tutor')}
+                {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
+              </div>
+            }
+            icon={<SVGIcon name="duplicate" width={24} height={24} />}
+            disabled={!isTutorPro}
+            onClick={(event) => {
+              event.stopPropagation();
+              onDuplicateQuestion(question);
+              setSelectedQuestionId('');
+            }}
+          />
+        )}
         <ThreeDots.Option
           isTrash
           text={__('Delete', 'tutor')}
@@ -162,6 +183,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
           onClick={(event) => {
             event.stopPropagation();
             onRemoveQuestion();
+            setValidationError(null);
             setSelectedQuestionId('');
           }}
         />
