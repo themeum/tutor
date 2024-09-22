@@ -8,13 +8,19 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
+import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
+import config, { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
+
+import emptyStatImage2x from '@Images/empty-state-illustration-2x.webp';
+import emptyStateImage from '@Images/empty-state-illustration.webp';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -43,6 +49,9 @@ interface FormInputProps extends FormControllerProps<string | number | null> {
   allowNegative?: boolean;
 }
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+
 const FormInput = ({
   label,
   type = 'text',
@@ -69,6 +78,7 @@ const FormInput = ({
   generateWithAi = false,
   isMagicAi = false,
   allowNegative = false,
+  onClickAiButton,
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
   const { showModal } = useModal();
@@ -110,16 +120,60 @@ const FormInput = ({
       inputStyle={style}
       generateWithAi={generateWithAi}
       onClickAiButton={() => {
-        showModal({
-          component: AITextModal,
-          isMagicAi: true,
-          props: {
-            title: __('AI Studio', 'tutor'),
-            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-            field,
-            fieldState,
-          },
-        });
+        if (!isTutorPro) {
+          showModal({
+            component: ProIdentifierModal,
+            props: {
+              title: (
+                <>
+                  {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                  <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                  {__('feature', 'tutor')}
+                </>
+              ),
+              image: emptyStateImage,
+              image2x: emptyStatImage2x,
+              featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+              features: [
+                __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
+                __(
+                  'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                  'tutor',
+                ),
+                __(
+                  'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
+                  'tutor',
+                ),
+                __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
+              ],
+              footer: (
+                <Button
+                  onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                  icon={<SVGIcon name="crown" width={24} height={24} />}
+                >
+                  {__('Get Tutor LMS Pro', 'tutor')}
+                </Button>
+              ),
+            },
+          });
+        } else if (!hasOpenAiAPIKey) {
+          showModal({
+            component: SetupOpenAiModal,
+          });
+        } else {
+          showModal({
+            component: AITextModal,
+            isMagicAi: true,
+            props: {
+              title: __('AI Studio', 'tutor'),
+              icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+              field,
+              fieldState,
+              is_html: true,
+            },
+          });
+          onClickAiButton?.();
+        }
       }}
       isMagicAi={isMagicAi}
     >

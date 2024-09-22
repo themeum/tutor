@@ -404,6 +404,6 @@ const styles = {
   `,
   actionsButton: css`
     ${styleUtils.flexCenter()}
-    margin-top: ${spacing[24]};
+    margin-top: ${spacing[4]};
   `,
 };

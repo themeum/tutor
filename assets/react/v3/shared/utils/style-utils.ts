@@ -447,4 +447,10 @@ export const styleUtils = {
 			box-shadow: ${shadow.focus};
 		}
 	`,
+  aiGradientText: css`
+    background: ${colorTokens.text.ai.gradient};
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  `,
 };
