@@ -17,8 +17,9 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import notFound2x from '@Images/not-found-2x.webp';
+import notFound from '@Images/not-found.webp';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormTopicPrerequisitesProps = {
@@ -189,8 +190,8 @@ const FormTopicPrerequisites = ({
                 <Show when={!loading} fallback={<LoadingSection />}>
                   <EmptyState
                     size="small"
-                    emptyStateImage={emptyStateImage}
-                    emptyStateImage2x={emptyStateImage2x}
+                    emptyStateImage={notFound}
+                    emptyStateImage2x={notFound2x}
                     imageAltText={__('Illustration of a no course selected', 'tutor')}
                     title={__('No topic content selected', 'tutor')}
                     description={__('Select a topic content to add as a prerequisite', 'tutor')}

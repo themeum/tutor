@@ -1,28 +1,24 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import Tabs from '@Molecules/Tabs';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
+import Tabs from '@Molecules/Tabs';
 
-import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
+import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 
-import addonDisabled2x from '@Images/addon-disabled-2x.webp';
-import addonDisabled from '@Images/addon-disabled.webp';
 import notFound2x from '@Images/not-found-2x.webp';
 import notFound from '@Images/not-found.webp';
 
@@ -119,43 +115,7 @@ const Certificate = () => {
   };
 
   return (
-    <Show
-      when={isTutorPro && isCertificateAddonEnabled}
-      fallback={
-        <Show
-          when={!isTutorPro}
-          fallback={
-            <div css={styles.emptyState}>
-              <img
-                css={styles.placeholderImage}
-                src={addonDisabled}
-                srcSet={`${addonDisabled} 1x, ${addonDisabled2x} 2x`}
-                alt={__('Addon Disabled', 'tutor')}
-              />
-
-              <div css={styles.featureAndActionWrapper}>
-                <h6 css={typography.heading6('medium')}>
-                  {__('You can use this feature by enabling Certificate Addon', 'tutor')}
-                </h6>
-              </div>
-
-              <div css={styles.actionsButton}>
-                <Button
-                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                  onClick={() => {
-                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-                  }}
-                >
-                  {__('Enable Certificate Addons', 'tutor')}
-                </Button>
-              </div>
-            </div>
-          }
-        >
-          <CertificateEmptyState />
-        </Show>
-      }
-    >
+    <Show when={isTutorPro && isCertificateAddonEnabled} fallback={<CertificateEmptyState />}>
       <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
           <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />

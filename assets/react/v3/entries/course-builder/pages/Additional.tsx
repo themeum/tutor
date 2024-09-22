@@ -37,6 +37,7 @@ import addonDisabled from '@Images/addon-disabled.webp';
 import attachmentsPro2x from '@Images/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@Images/pro-placeholders/attachments.webp';
 
+import CoursePrerequisitesEmptyStater from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyStater';
 import Certificate from '../components/additional/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -214,46 +215,7 @@ const Additional = () => {
             {__('Course Prerequisites', 'tutor')}
             {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
           </span>
-          <Show
-            when={isTutorPro && isPrerequisiteAddonEnabled}
-            fallback={
-              <EmptyState
-                size="small"
-                removeBorder={false}
-                title={__('Add prerequisites to your course', 'tutor')}
-                description={__(
-                  'Add prerequisites to your course to ensure that students have the necessary knowledge before enrolling.',
-                  'tutor',
-                )}
-                actions={
-                  <Show
-                    when={!isTutorPro}
-                    fallback={
-                      <Button
-                        size="small"
-                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                        onClick={() => {
-                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-                        }}
-                      >
-                        {__('Enable Prerequisites Addon', 'tutor')}
-                      </Button>
-                    }
-                  >
-                    <Button
-                      size="small"
-                      icon={<SVGIcon name="crown" width={24} height={24} />}
-                      onClick={() => {
-                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-                      }}
-                    >
-                      {__('Get Tutor LMS Pro', 'tutor')}
-                    </Button>
-                  </Show>
-                }
-              />
-            }
-          >
+          <Show when={isTutorPro && isPrerequisiteAddonEnabled} fallback={<CoursePrerequisitesEmptyStater />}>
             <Controller
               name="course_prerequisites"
               control={form.control}
