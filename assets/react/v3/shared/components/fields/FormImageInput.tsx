@@ -13,8 +13,8 @@ import config, { tutorConfig } from '@Config/config';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 
-import emptyStatImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import generateImage2x from '@Images/pro-placeholders/generate-image-2x.webp';
+import generateImage from '@Images/pro-placeholders/generate-image.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -109,8 +109,8 @@ const FormImageInput = ({
                   {__('feature', 'tutor')}
                 </>
               ),
-              image: emptyStateImage,
-              image2x: emptyStatImage2x,
+              image: generateImage,
+              image2x: generateImage2x,
               featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
               features: [
                 __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
@@ -137,6 +137,10 @@ const FormImageInput = ({
         } else if (!hasOpenAiAPIKey) {
           showModal({
             component: SetupOpenAiModal,
+            props: {
+              image: generateImage,
+              image2x: generateImage2x,
+            },
           });
         } else {
           showModal({

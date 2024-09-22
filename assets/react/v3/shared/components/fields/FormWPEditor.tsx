@@ -24,10 +24,10 @@ import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { makeFirstCharacterUpperCase } from '@Utils/util';
 
-import FormFieldWrapper from './FormFieldWrapper';
+import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
+import generateText from '@Images/pro-placeholders/generate-text.webp';
 
-import emptyStatImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
   label?: string | React.ReactNode;
@@ -59,7 +59,6 @@ const customEditorIcons: { [key: string]: IconCollection } = {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
-const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 
 const FormWPEditor = ({
   label,
@@ -145,8 +144,8 @@ const FormWPEditor = ({
                   {__('feature', 'tutor')}
                 </>
               ),
-              image: emptyStateImage,
-              image2x: emptyStatImage2x,
+              image: generateText,
+              image2x: generateText2x,
               featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
               features: [
                 __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
@@ -173,6 +172,10 @@ const FormWPEditor = ({
         } else if (!hasOpenAiAPIKey) {
           showModal({
             component: SetupOpenAiModal,
+            props: {
+              image: generateText,
+              image2x: generateText2x,
+            },
           });
         } else {
           showModal({

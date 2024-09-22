@@ -19,8 +19,8 @@ import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { parseNumberOnly } from '@Utils/util';
 
-import emptyStatImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
+import generateText from '@Images/pro-placeholders/generate-text.webp';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -131,8 +131,8 @@ const FormInput = ({
                   {__('feature', 'tutor')}
                 </>
               ),
-              image: emptyStateImage,
-              image2x: emptyStatImage2x,
+              image: generateText,
+              image2x: generateText2x,
               featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
               features: [
                 __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
@@ -159,6 +159,10 @@ const FormInput = ({
         } else if (!hasOpenAiAPIKey) {
           showModal({
             component: SetupOpenAiModal,
+            props: {
+              image: generateText,
+              image2x: generateText2x,
+            },
           });
         } else {
           showModal({

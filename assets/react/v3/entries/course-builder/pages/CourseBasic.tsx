@@ -55,8 +55,8 @@ import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
 
-import emptyStatImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 
@@ -299,8 +299,8 @@ const CourseBasic = () => {
                             </>
                           ),
                           featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
-                          image: emptyStateImage,
-                          image2x: emptyStatImage2x,
+                          image: generateCourse,
+                          image2x: generateCourse2x,
                           features: [
                             __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
                             __(
@@ -326,6 +326,10 @@ const CourseBasic = () => {
                     } else if (!hasOpenAiAPIKey) {
                       showModal({
                         component: SetupOpenAiModal,
+                        props: {
+                          image: generateCourse,
+                          image2x: generateCourse2x,
+                        },
                       });
                     } else {
                       showModal({

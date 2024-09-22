@@ -25,6 +25,7 @@ import addonDisabled2x from '@Images/addon-disabled-2x.webp';
 import addonDisabled from '@Images/addon-disabled.webp';
 import notFound2x from '@Images/not-found-2x.webp';
 import notFound from '@Images/not-found.webp';
+
 import CertificateEmptyState from './CertificateEmptyState';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';

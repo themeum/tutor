@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Alert from '@Atoms/Alert';
-import EmptyState from '@Molecules/EmptyState';
 
 import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
 import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
@@ -19,8 +19,6 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-
 import Show from '@Controls/Show';
 import {
   type QuizDataStatus,
@@ -28,9 +26,10 @@ import {
   type QuizQuestionType,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
-import { useEffect, useRef } from 'react';
+import { styleUtils } from '@Utils/style-utils';
+
+import emptyStateImage2x from '@Images/quiz-empty-state-2x.webp';
+import emptyStateImage from '@Images/quiz-empty-state.webp';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId, validationError } = useQuizModalContext();
@@ -66,14 +65,19 @@ const QuestionForm = () => {
   if (!activeQuestionId && !form.formState.isLoading && questions.length === 0) {
     return (
       <div css={styles.emptyState}>
-        <EmptyState
-          emptyStateImage={emptyStateImage}
-          emptyStateImage2x={emptyStateImage2x}
-          title={__('Write the quiz name to start creating questions', 'tutor')}
-          description={__('You can add questions to the quiz once you have written the quiz name.', 'tutor')}
-          imageAltText={__('No Question Image', 'tutor')}
-          size="small"
+        <img
+          css={styles.emptyStateImage}
+          src={emptyStateImage}
+          srcSet={`${emptyStateImage} 1x, ${emptyStateImage2x} 2x`}
+          alt=""
         />
+
+        <p css={styles.emptyStateText}>
+          {__(
+            'Taking a quiz is like a mini workout for brain. Let’s create some engaging quizzes for your students!',
+            'tutor',
+          )}
+        </p>
       </div>
     );
   }
@@ -196,8 +200,20 @@ const styles = {
     padding-left: ${spacing[40]};
   `,
   emptyState: css`
+    ${styleUtils.flexCenter('column')};
     padding-left: ${spacing[40]}; 
     padding-right: ${spacing[48]};
+    gap: ${spacing[16]};
+  `,
+  emptyStateImage: css`
+    width: 220px;
+    height: auto;
+  `,
+  emptyStateText: css`
+    ${typography.small()};
+    color: ${colorTokens.text.subdued};
+    text-align: center;
+    max-width: 330px;
   `,
   alertWrapper: css`
     padding-left: ${spacing[40]};
