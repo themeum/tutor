@@ -23,12 +23,8 @@ const generateImage = (payload: ImagePayload) => {
 };
 
 export const useMagicImageGenerationMutation = () => {
-  const { showToast } = useToast();
   return useMutation({
     mutationFn: generateImage,
-    onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
-    },
   });
 };
 

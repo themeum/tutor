@@ -21,11 +21,13 @@ import photo from '@Images/ai-types/photo.png';
 import retro from '@Images/ai-types/retro.png';
 import sketch from '@Images/ai-types/sketch.png';
 
+import { useToast } from '@Atoms/Toast';
+import type { ErrorResponse } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { type OptionWithImage, isDefined } from '@Utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import {
   type MagicImageGenerationFormFields,
@@ -108,6 +110,7 @@ export const ImageGeneration = () => {
   });
   const { images, setImages } = useMagicImageGeneration();
   const magicImageGenerationMutation = useMagicImageGenerationMutation();
+  const { showToast } = useToast();
   const [showEmptyState, setShowEmptyState] = useState(true);
   const [imageLoading, setImageLoading] = useState([false, false, false, false]);
 
@@ -117,29 +120,54 @@ export const ImageGeneration = () => {
   const isDisabledButton = !styleValue || !promptValue;
   const hasGeneratedImage = images.some(isDefined);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (magicImageGenerationMutation.isError) {
+      showToast({
+        type: 'danger',
+        message: (magicImageGenerationMutation.error as ErrorResponse).response.data.message,
+      });
+    }
+  }, [magicImageGenerationMutation.isError]);
+
   return (
     <form
       css={magicAIStyles.wrapper}
       onSubmit={form.handleSubmit(async (values) => {
         setImageLoading([true, true, true, true]);
         setShowEmptyState(false);
-        await Promise.all(
-          Array.from({ length: 4 }).map((_, index) => {
-            return magicImageGenerationMutation.mutateAsync(values).then((response) => {
-              setImages((previous) => {
-                const copy = [...previous];
-                copy[index] = response.data.data?.[0]?.b64_json ?? null;
-                return copy;
-              });
+        try {
+          await Promise.all(
+            Array.from({ length: 4 }).map((_, index) => {
+              return magicImageGenerationMutation
+                .mutateAsync(values)
+                .then((response) => {
+                  setImages((previous) => {
+                    const copy = [...previous];
+                    copy[index] = response.data.data?.[0]?.b64_json ?? null;
+                    return copy;
+                  });
 
-              setImageLoading((previous) => {
-                const copy = [...previous];
-                copy[index] = false;
-                return copy;
-              });
-            });
-          }),
-        );
+                  setImageLoading((previous) => {
+                    const copy = [...previous];
+                    copy[index] = false;
+                    return copy;
+                  });
+                })
+                .catch((error) => {
+                  setImageLoading((previous) => {
+                    const copy = [...previous];
+                    copy[index] = false;
+                    return copy;
+                  });
+                  throw error;
+                });
+            }),
+          );
+        } catch (error) {
+          setImageLoading([false, false, false, false]);
+          setShowEmptyState(true);
+        }
       })}
     >
       <div css={magicAIStyles.left}>

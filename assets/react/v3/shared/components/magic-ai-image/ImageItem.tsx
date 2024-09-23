@@ -56,6 +56,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
           <div css={styles.useButton}>
             <MagicButton
               variant="primary"
+              disabled={storeAIGeneratedImageMutation.isPending}
               onClick={async () => {
                 if (!src) {
                   return;
@@ -67,6 +68,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
                   onCloseModal();
                 }
               }}
+              loading={storeAIGeneratedImageMutation.isPending}
             >
               <SVGIcon name="download" width={24} height={24} />
               {__('Use this', 'tutor')}

@@ -6,7 +6,7 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { useMagicFillImageMutation } from '@CourseBuilderServices/magic-ai';
+import { useMagicFillImageMutation, useStoreAIGeneratedImageMutation } from '@CourseBuilderServices/magic-ai';
 import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { downloadBase64Image, getCanvas, getImageData } from '@Utils/magic-ai';
@@ -34,6 +34,7 @@ const MagicFill = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { onDropdownMenuChange, currentImage, field, onCloseModal } = useMagicImageGeneration();
+  const storeAIGeneratedImageMutation = useStoreAIGeneratedImageMutation();
   const brushSize = useDebounce(form.watch('brush_size', 40));
   const [trackStack, setTrackStack] = useState<ImageData[]>([]);
   const [pointer, setPointer] = useState(1);
@@ -238,11 +239,16 @@ const MagicFill = () => {
             <MagicButton
               variant="primary_outline"
               disabled={magicFillImageMutation.isPending}
-              onClick={() => {
+              loading={storeAIGeneratedImageMutation.isPending}
+              onClick={async () => {
                 const { canvas } = getCanvas(canvasRef);
                 if (!canvas) return;
-                field.onChange({ url: getImageData(canvas) });
-                onCloseModal();
+                const response = await storeAIGeneratedImageMutation.mutateAsync({ image: getImageData(canvas) });
+
+                if (response.data) {
+                  field.onChange(response.data);
+                  onCloseModal();
+                }
               }}
             >
               {__('Use Image', 'tutor')}
