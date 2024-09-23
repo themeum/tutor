@@ -77,13 +77,12 @@ module.exports = (env, options) => {
 		{
 			dest_path: './assets/js',
 			src_files: {
+				'tutor.min': './assets/react/v2/common.js',
 				'tutor-front.min': './assets/react/front/tutor-front.js',
 				'tutor-admin.min': './assets/react/admin-dashboard/tutor-admin.js',
-				'tutor-course-builder.min': './assets/react/course-builder/index.js',
 				'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
-				'tutor.min': './assets/react/v2/common.js',
 				'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
-				'tutor-course-builder-v3.min': './assets/react/v3/entries/course-builder/index.tsx',
+				'tutor-course-builder.min': './assets/react/v3/entries/course-builder/index.tsx',
 				'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
 				'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
 				'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
