@@ -139,11 +139,23 @@ class CouponController extends BaseController {
 
 		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), true );
 
+		if ( $this->model::TYPE_AUTOMATIC === $data['coupon_type'] ) {
+			$data['coupon_code'] = time();
+		}
+
 		$validation = $this->validate( $data );
 		if ( ! $validation->success ) {
 			$this->json_response(
 				tutor_utils()->error_message( 'validation_error' ),
 				$validation->errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
+
+		if ( $this->model->get_coupon( array( 'coupon_code' => $data['coupon_code'] ) ) ) {
+			$this->json_response(
+				__( 'Coupon code already exists!', 'tutor' ),
+				null,
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
