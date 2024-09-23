@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('[tutor-option-title]').innerText;
 
 			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
-			if (false === validateEmail(emailField.value)) {
+			if (emailField.value && false === validateEmail(emailField.value)) {
 				emailField.style.borderColor = 'red';
 				emailField.focus();
 				tutor_toast('Warning', invalidMessage, 'error');
