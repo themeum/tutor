@@ -368,15 +368,7 @@ const QuestionList = ({
                   </button>
                 }
               >
-                <button
-                  key={option.value}
-                  type="button"
-                  css={styles.questionTypeOption}
-                  disabled
-                  onClick={() => {
-                    handleAddQuestion(option.value as QuizQuestionType);
-                  }}
-                >
+                <button key={option.value} type="button" css={styles.questionTypeOption} disabled onClick={noop}>
                   <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
                   <span>{option.label}</span>
                   <ProBadge size="small" content={__('Pro', 'tutor')} />

@@ -4,26 +4,25 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
-
-import EmptyState from '@Molecules/EmptyState';
 import Tabs from '@Molecules/Tabs';
 
+import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
 import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-
-import config, { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import notFound2x from '@Images/not-found-2x.webp';
+import notFound from '@Images/not-found.webp';
+
+import CertificateEmptyState from './CertificateEmptyState';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
 
@@ -116,51 +115,7 @@ const Certificate = () => {
   };
 
   return (
-    <Show
-      when={isTutorPro && isCertificateAddonEnabled}
-      fallback={
-        <EmptyState
-          size="small"
-          title={__('Your students deserve certificates!', 'tutor')}
-          description={
-            !isTutorPro
-              ? __('Unlock this feature by upgrading to Tutor LMS Pro.', 'tutor')
-              : __('Enable the Certificate Addon to start creating certificates for your students.', 'tutor')
-          }
-          emptyStateImage={emptyStateImage}
-          emptyStateImage2x={emptyStateImage2x}
-          imageAltText={__('Illustration of a certificate', 'tutor')}
-          actions={
-            <Show
-              when={!isTutorPro}
-              fallback={
-                <Button
-                  variant="primary"
-                  size="small"
-                  onClick={() => {
-                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-                  }}
-                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                >
-                  {__('Enable Certificate Addon', 'tutor')}
-                </Button>
-              }
-            >
-              <Button
-                variant="primary"
-                size="small"
-                onClick={() => {
-                  window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-                }}
-                icon={<SVGIcon name="crown" width={24} height={24} />}
-              >
-                {__('Get Tutor LMS Pro', 'tutor')}
-              </Button>
-            </Show>
-          }
-        />
-      }
-    >
+    <Show when={isTutorPro && isCertificateAddonEnabled} fallback={<CertificateEmptyState />}>
       <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
           <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
@@ -231,14 +186,27 @@ const Certificate = () => {
             when={filteredCertificatesData.length > 0}
             fallback={
               <Show when={activeCertificateTab === 'custom_certificates'}>
-                <EmptyState
-                  size="small"
-                  title={__('No templates found', 'tutor')}
-                  description={__('No custom certificates found. Create a new one.', 'tutor')}
-                  emptyStateImage={emptyStateImage}
-                  emptyStateImage2x={emptyStateImage2x}
-                  imageAltText={__('Illustration of a certificate', 'tutor')}
-                />
+                <div css={styles.emptyState}>
+                  <img
+                    css={styles.placeholderImage({
+                      notFound: true,
+                    })}
+                    src={notFound}
+                    srcSet={`${notFound} 1x, ${notFound2x} 2x`}
+                    alt={__('Not Found', 'tutor')}
+                  />
+
+                  <div css={styles.featureAndActionWrapper}>
+                    <h6
+                      css={css`
+                        ${typography.heading6('medium')}
+                        color: ${colorTokens.text.subdued};
+                      `}
+                    >
+                      {__('You didn’t create any certificate yet!', 'tutor')}
+                    </h6>
+                  </div>
+                </div>
               </Show>
             }
           >
@@ -300,5 +268,31 @@ const styles = {
     isActive: boolean;
   }) => css`
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
+  `,
+  emptyState: css`
+    padding-block: ${spacing[16]} ${spacing[12]};
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[20]};
+  `,
+  placeholderImage: ({
+    notFound,
+  }: {
+    notFound?: boolean;
+  }) => css`
+    max-width: 100%;
+    width: 100%;
+    height: ${notFound ? '189px' : '312px;'};
+    object-fit: cover;
+    object-position: center;
+    border-radius: ${borderRadius[6]};
+  `,
+  featureAndActionWrapper: css`
+    ${styleUtils.display.flex('column')}
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
+  actionsButton: css`
+    ${styleUtils.flexCenter()}
+    margin-top: ${spacing[4]};
   `,
 };

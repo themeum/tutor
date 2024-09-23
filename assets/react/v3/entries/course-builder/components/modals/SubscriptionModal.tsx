@@ -248,11 +248,14 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
 const styles = {
   wrapper: css`
 		width: 1218px;
+    height: 100%;
+    background-color: ${colorTokens.background.white};
 	`,
   container: css`
 		max-width: 640px;
 		width: 100%;
-		margin: ${spacing[40]} auto;
+		padding-top: ${spacing[40]};
+    margin-inline: auto;
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[32]};

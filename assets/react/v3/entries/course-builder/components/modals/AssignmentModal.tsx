@@ -380,7 +380,7 @@ const AssignmentModal = ({
               control={form.control}
               rules={{
                 validate: (value) => {
-                  if (value > form.getValues('total_mark')) {
+                  if (Number(value) > Number(form.getValues('total_mark'))) {
                     return __('Pass mark cannot be greater than total mark', 'tutor');
                   }
                   return true;

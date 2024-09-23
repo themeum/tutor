@@ -91,7 +91,7 @@ const styles = {
     text-wrap: pretty;
   `,
   image: css`
-    height: 232px;
+    height: 310px;
     width: 100%;
     object-fit: cover;
     object-position: center;

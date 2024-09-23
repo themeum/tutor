@@ -42,8 +42,8 @@ import { droppableMeasuringStrategy } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { moveTo, nanoid } from '@Utils/util';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import curriculumEmptyState2x from '@Images/curriculum-empty-state-2x.webp';
+import curriculumEmptyState from '@Images/curriculum-empty-state.webp';
 
 const courseId = getCourseId();
 
@@ -289,8 +289,8 @@ const Curriculum = () => {
               }
               fallback={
                 <EmptyState
-                  emptyStateImage={emptyStateImage}
-                  emptyStateImage2x={emptyStateImage2x}
+                  emptyStateImage={curriculumEmptyState}
+                  emptyStateImage2x={curriculumEmptyState2x}
                   imageAltText={__('Empty State Illustration', 'tutor')}
                   title={__('Create the course journey from here!', 'tutor')}
                   description={__('Start building your course by adding Topics, Lessons, and Quizzes.', 'tutor')}

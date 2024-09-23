@@ -20,11 +20,10 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
-
 interface SetupOpenAiModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  image?: string;
+  image2x?: string;
 }
 
 interface OpenAiApiForm {
@@ -35,7 +34,7 @@ interface OpenAiApiForm {
 const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 const isCurrentUserAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
 
-const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
+const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps) => {
   const form = useFormWithGlobalError<OpenAiApiForm>({
     defaultValues: {
       openAIApiKey: '',
@@ -80,9 +79,9 @@ const SetupOpenAiModal = ({ closeModal }: SetupOpenAiModalProps) => {
             <>
               <img
                 css={styles.image}
-                src={emptyStateImage}
-                srcSet={`${emptyStateImage2x} 2x`}
-                alt={__('Connect API KEY')}
+                src={image}
+                srcSet={image2x ? `${image} 1x, ${image2x} 2x` : `${image} 1x`}
+                alt={__('Connect API KEY', 'tutor')}
               />
 
               <div>
