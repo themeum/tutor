@@ -322,7 +322,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                       width={24}
                                       height={24}
                                       data-check-icon
-                                      data-error={step.hasError}
                                     />
                                     {step.completed_label}
                                   </Show>
@@ -341,7 +340,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                         width={24}
                                         height={24}
                                         data-check-icon
-                                        data-error={step.hasError}
                                       />
                                       {step.completed_label}
                                     </Show>
