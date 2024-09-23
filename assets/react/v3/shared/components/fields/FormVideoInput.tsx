@@ -298,7 +298,8 @@ const FormVideoInput = ({
     }
   };
 
-  const validateVideoUrl = (value: string) => {
+  const validateVideoUrl = (url: string) => {
+    const value = url.trim();
     const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
     if (form.watch('videoSource') === 'shortcode') {
