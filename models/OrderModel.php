@@ -559,15 +559,15 @@ class OrderModel {
 		$enrollments = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->postmeta} 
-				WHERE post_id=%d 
-				AND meta_key LIKE %s",
-				$order_id,
-				'_tutor_order_for_course_id_%'
+				WHERE meta_key=%s
+				AND meta_value LIKE %d",
+				'_tutor_enrolled_by_order_id',
+				$order_id
 			)
 		);
 
 		if ( $enrollments ) {
-			$enrollment_ids = array_column( $enrollments, 'meta_value' );
+			$enrollment_ids = array_column( $enrollments, 'post_id' );
 		}
 
 		return $enrollment_ids;
