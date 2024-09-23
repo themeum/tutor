@@ -1,8 +1,18 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { format } from 'date-fns';
+import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import Table from '@Molecules/Table';
+import type { Column } from '@Molecules/Table';
+
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
+
 import { DateFormats } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -10,14 +20,7 @@ import { type ContentType, useGetH5PLessonContentsQuery } from '@CourseBuilderSe
 import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
 import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import type { Column } from '@Molecules/Table';
-import Table from '@Molecules/Table';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
-import { useEffect } from 'react';
-import { Controller } from 'react-hook-form';
 
 interface H5PContentListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
