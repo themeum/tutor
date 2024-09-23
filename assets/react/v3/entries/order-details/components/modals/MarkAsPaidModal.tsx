@@ -33,8 +33,8 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
       <form
         css={styles.form}
-        onSubmit={form.handleSubmit((values) => {
-          markAsPaidMutation.mutate({ note: values.note, order_id });
+        onSubmit={form.handleSubmit(async (values) => {
+          await markAsPaidMutation.mutateAsync({ note: values.note, order_id });
           closeModal();
         })}
       >
