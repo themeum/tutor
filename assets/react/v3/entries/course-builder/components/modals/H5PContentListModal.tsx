@@ -41,6 +41,16 @@ const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H
 
   const columns: Column<H5PContent>[] = [
     {
+      Header: (
+        <div data-index css={styles.tableLabel}>
+          {__('#', 'tutor')}
+        </div>
+      ),
+      Cell: (item, index) => {
+        return <div css={typography.caption()}>{index + 1}</div>;
+      },
+    },
+    {
       Header: <div css={styles.tableLabel}>{__('Title', 'tutor')}</div>,
       Cell: (item) => {
         return <div css={styles.title}>{item.title}</div>;
@@ -139,15 +149,12 @@ const styles = {
     overflow: auto;
 
     tr {
-      &:hover {
-        &:hover {
-          [data-button] {
-            display: block;
-          }
-          [data-price] {
-            display: none;
-          }
-        }
+      td:first-of-type {
+        padding-left: ${spacing[20]};
+      }
+
+      td:last-of-type {
+        padding-right: ${spacing[20]};
       }
     }
   `,
@@ -155,6 +162,10 @@ const styles = {
     ${typography.body('medium')};
     text-align: left;
     color: ${colorTokens.text.primary};
+
+    &[data-index] {
+      padding-left: ${spacing[4]};
+    }
   `,
   title: css`
     ${styleUtils.text.ellipsis(2)}
