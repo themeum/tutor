@@ -348,7 +348,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function setup_course_categories_tags( $post_id, $params ) {
-		if ( ! empty( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
+		if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
 			$category_names = array();
 
 			foreach ( $params['course_categories'] as $category_id ) {
@@ -361,9 +361,11 @@ class Course extends Tutor_Base {
 
 			// Set category names on the post.
 			wp_set_object_terms( $post_id, $category_names, 'course-category' );
+		} else {
+			wp_set_object_terms( $post_id, array(), 'course-category' );
 		}
 
-		if ( ! empty( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
+		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
 			$tag_names = array();
 
 			foreach ( $params['course_tags'] as $tag_id ) {
@@ -376,6 +378,8 @@ class Course extends Tutor_Base {
 
 			// Set tag names on the post.
 			wp_set_object_terms( $post_id, $tag_names, 'course-tag' );
+		} else {
+			wp_set_object_terms( $post_id, array(), 'course-tag' );
 		}
 	}
 
