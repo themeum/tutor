@@ -719,7 +719,9 @@ class OrderController {
 		$payment_status = Input::get( 'payment-status', '' );
 		$search         = Input::get( 'search', '' );
 
-		$where = array();
+		$where = array(
+			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
+		);
 
 		if ( ! empty( $date ) ) {
 			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
