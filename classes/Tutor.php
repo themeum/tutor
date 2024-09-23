@@ -655,16 +655,6 @@ final class Tutor {
 		include tutor()->path . 'includes/tutor-template-hook.php';
 		include tutor()->path . 'includes/translate-text.php';
 		include tutor()->path . 'includes/country.php';
-
-		if ( ! function_exists( 'is_plugin_active' ) ) {
-			require_once ABSPATH . 'wp-admin/includes/plugin.php';
-		}
-
-		$is_droip_active  = \is_plugin_active( 'droip/droip.php' );
-		$tutor_droip_path = tutor()->path . 'tutor-droip/tutor-droip-elements.php';
-		if ( $is_droip_active && file_exists( $tutor_droip_path ) ) {
-			include tutor()->path . 'tutor-droip/tutor-droip-elements.php';
-		}
 	}
 
 	/**

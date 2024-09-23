@@ -15,8 +15,7 @@
     "js-watch": "webpack --watch --mode=development",
     "watch": "concurrently \"npm run css-watch\" \"npm run js-watch\"",
     "rm-lang": "rm ./languages/tutor.pot || echo \"No tutor pot yet\"",
-    "biome:check": "npx @biomejs/biome check --apply ./assets/react/v3",
-    "tutor-droip": "cd tutor-droip && npm run build && cp -r dist/* ../tutor-droip"
+    "biome:check": "npx @biomejs/biome check --apply ./assets/react/v3"
   },
   "keywords": [
     "lms",
