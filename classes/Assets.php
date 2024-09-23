@@ -392,12 +392,6 @@ class Assets {
 			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
 		}
 
-		// Load course builder resources.
-		$load_course_builder_scripts = apply_filters( 'tutor_load_course_builder_scripts', tutor_utils()->get_course_builder_screen() );
-		if ( $load_course_builder_scripts ) {
-			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
-			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
-		}
 		/**
 		 * Load tutor common scripts both backend and frontend
 		 *
@@ -439,8 +433,10 @@ class Assets {
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		wp_localize_script( 'tutor-frontend', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-admin', '_tutorobject', $localize_data );
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-script', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-order-details', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-tax-settings', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-coupon', '_tutorobject', $localize_data );
 
 		// Inline styles.
 		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
@@ -618,7 +614,9 @@ class Assets {
 	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**
