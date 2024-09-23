@@ -321,8 +321,18 @@ class OrderModel {
 		$student->billing_address = $this->get_tutor_customer_data( $order_data->user_id );
 		$student->image           = get_avatar_url( $order_data->user_id );
 
-		$order_data->student         = $student;
-		$order_data->items           = $this->get_order_items_by_id( $order_id );
+		$order_data->student = $student;
+
+		$order_data->items = $this->get_order_items_by_id( $order_id );
+		if ( self::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
+			foreach ( $order_data->items as $item ) {
+				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $item->id );
+				if ( $plan_info ) {
+					$item->title = $plan_info->plan_name;
+				}
+			}
+		}
+
 		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
 		$order_data->net_payment     = (float) $order_data->net_payment;
