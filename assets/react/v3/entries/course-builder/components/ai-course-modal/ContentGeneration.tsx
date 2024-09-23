@@ -1,8 +1,14 @@
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
+import { Controller } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
+
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -12,10 +18,7 @@ import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { getObjectKeys, getObjectValues } from '@Utils/util';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState, useTransition } from 'react';
-import { Controller } from 'react-hook-form';
+
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import ContentAccordion from './ContentAccordion';
 import { type Loading, useContentGenerationContext } from './ContentGenerationContext';
@@ -111,7 +114,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
   const promptValue = form.watch('prompt');
   const { showToast } = useToast();
-  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     setLoadingSteps((previous) => {
@@ -251,7 +253,8 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 const showButtons = index === loading.length - 1;
                 const content = contents[index];
                 const isLoadingItem = getObjectValues(loading[index]).some((item) => item);
-                const showErrors = getObjectValues(errors[index]).some((error) => error);
+                const hasErrors = getObjectValues(errors[index]).some((error) => error);
+                const itemErrors = errors[index];
 
                 return (
                   <div
@@ -266,7 +269,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                       <h6>
                         {isLoadingItem
                           ? __('Generating course contents', 'tutor')
-                          : showErrors
+                          : hasErrors
                             ? __('Error generating course contents', 'tutor')
                             : __('Generated course contents', 'tutor')}
                       </h6>
@@ -275,56 +278,36 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                         <Show
                           when={isLoadingItem}
                           fallback={
-                            <>
+                            <Show
+                              when={!hasErrors}
+                              fallback={
+                                <For each={getObjectKeys(itemErrors)}>
+                                  {(error, index) => (
+                                    <div css={styles.item} key={index}>
+                                      <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
+                                      {loadingSteps[error].error_label}
+                                    </div>
+                                  )}
+                                </For>
+                              }
+                            >
                               <div css={styles.item}>
-                                <SVGIcon
-                                  name={!loadingSteps.title.hasError ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={loadingSteps.title.hasError}
-                                />
-                                {!loadingSteps.title.hasError
-                                  ? sprintf(__('%d Topics', 'tutor'), content.counts?.topics)
-                                  : loadingSteps.title.error_label}
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Topics', 'tutor'), content.counts?.topics)}
                               </div>
                               <div css={styles.item}>
-                                <SVGIcon
-                                  name={!loadingSteps.image.hasError ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={loadingSteps.image.hasError}
-                                />
-                                {!loadingSteps.image.hasError
-                                  ? sprintf(__('%d Lessons in total', 'tutor'), content.counts?.lessons)
-                                  : loadingSteps.image.error_label}
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Lessons in total', 'tutor'), content.counts?.lessons)}
                               </div>
                               <div css={styles.item}>
-                                <SVGIcon
-                                  name={!loadingSteps.description.hasError ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={loadingSteps.description.hasError}
-                                />
-                                {!loadingSteps.description.hasError
-                                  ? sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)
-                                  : loadingSteps.description.error_label}
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)}
                               </div>
                               <div css={styles.item}>
-                                <SVGIcon
-                                  name={!loadingSteps.topic.hasError ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={loadingSteps.topic.hasError}
-                                />
-                                {!loadingSteps.topic.hasError
-                                  ? sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)
-                                  : loadingSteps.topic.error_label}
+                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                {sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)}
                               </div>
-                            </>
+                            </Show>
                           }
                         >
                           <For each={getObjectKeys(loadingSteps)}>
