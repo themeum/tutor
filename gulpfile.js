@@ -105,7 +105,7 @@ function i18n_makepot(callback, target_dir) {
 		}
 
 		// Make sure only js extension file to process
-		if (stat.isFile() && (path.extname(file_name) == '.js' || path.extname(file_name) == '.tsx') &&
+		if (stat.isFile() && (path.extname(file_name) == '.js' || path.extname(file_name) == '.ts' || path.extname(file_name) == '.tsx') &&
 			(full_path.indexOf('assets/react') > -1 || full_path.indexOf('v2-library/src') > -1)
 		) {
 			var codes = fs.readFileSync(full_path).toString();
