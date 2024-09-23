@@ -28,7 +28,8 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 
 ?>
 <div class="tutor-checkout-page">
-	<form method="post">
+	<form method="post" id="tutor-checkout-form">
+		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
 			<div class="tutor-col-md-6">
@@ -41,12 +42,7 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
 						</h5>
 
-						<form id="user_billing_form" style="max-width: 600px;">
-							<?php tutor_nonce_field(); ?>
-							<input type="hidden" value="tutor_save_billing_info" name="action" />
-
-							<?php require tutor()->path . 'templates/dashboard/settings/billing-form-fields.php'; ?>
-						</form>
+						<?php require tutor()->path . 'templates/dashboard/settings/billing-form-fields.php'; ?>
 
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
