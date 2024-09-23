@@ -24,7 +24,13 @@ function Topbar() {
   const { showModal } = useModal();
 
   function handleGoBack() {
-    window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_orders`;
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirect_url');
+    if (redirectUrl) {
+      window.location.href = decodeURIComponent(redirectUrl);
+    } else {
+      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_orders`;
+    }
   }
 
   return (
