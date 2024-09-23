@@ -111,7 +111,7 @@ export const ImageGeneration = () => {
   const { images, setImages } = useMagicImageGeneration();
   const magicImageGenerationMutation = useMagicImageGenerationMutation();
   const { showToast } = useToast();
-  const [showEmptyState, setShowEmptyState] = useState(true);
+  const [showEmptyState, setShowEmptyState] = useState(images.every((image) => image === null));
   const [imageLoading, setImageLoading] = useState([false, false, false, false]);
 
   const styleValue = form.watch('style');

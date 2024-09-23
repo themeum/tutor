@@ -232,7 +232,7 @@ const MagicFill = () => {
         </div>
         <div css={[magicAIStyles.rightFooter, css`margin-top: auto;`]}>
           <div css={styles.footerButtons}>
-            <MagicButton type="submit" disabled={magicFillImageMutation.isPending}>
+            <MagicButton type="submit" disabled={magicFillImageMutation.isPending || !!form.watch('prompt')}>
               <SVGIcon name="magicWand" width={24} height={24} />
               {__('Generative erase', 'tutor')}
             </MagicButton>
