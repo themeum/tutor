@@ -51,7 +51,13 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 							<input type="hidden" name="payment_method">
 							<?php
 							$payment_gateways = tutor_get_all_active_payment_gateways();
-							if ( is_array( $payment_gateways ) && count( $payment_gateways ) ) {
+							if ( empty( $payment_gateways['automate'] ) && empty( $payment_gateways['manual'] ) ) {
+								?>
+								<div class="tutor-alert tutor-warning">
+									<?php esc_html_e( 'No payment method has been configured. Please contact the site administrator.', 'tutor' ); ?>
+								</div>
+								<?php
+							} else {
 								foreach ( $payment_gateways['automate'] as $key => $gateway ) {
 									list( $label, $icon ) = array_values( $gateway );
 									?>
