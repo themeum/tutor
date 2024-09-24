@@ -37,11 +37,8 @@ final class DateTimeHelper extends Carbon {
 		$format         = is_null( $format ) ? $default_format : $format;
 
 		$timezone_string = User::get_user_timezone_string( $user );
+		$timezone        = new \DateTimeZone( $timezone_string );
 
-		$timezone = new \DateTimeZone( $timezone_string );
-		$datetime = new \DateTime( $gmt_date, new \DateTimeZone( 'UTC' ) );
-		$datetime->setTimezone( $timezone );
-
-		return wp_date( $format, $datetime->getTimestamp(), $datetime->getTimezone() );
+		return wp_date( $format, strtotime( $gmt_date ), $timezone );
 	}
 }
