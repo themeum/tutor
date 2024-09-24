@@ -9,7 +9,7 @@ window.selectSearchField = (selectElement) => {
 				element.style.display = 'none';
 				let selectElement, searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
 
-				element.insertAdjacentHTML('afterend', ddMarkup(element.options, isSearchable));
+				element.insertAdjacentHTML('afterend', ddMarkup(element.options, element.value, isSearchable));
 
 				selectElement = element.nextElementSibling;
 				searchInputWrap = selectElement.querySelector('.tutor-form-select-search');
@@ -22,7 +22,7 @@ window.selectSearchField = (selectElement) => {
 				selectElement.onclick = (e) => {
 					e.stopPropagation();
 					dd_hide_dom_click(document.querySelectorAll('.tutor-js-form-select'), selectElement);
-					
+
 					selectElement.classList.toggle('is-active');
 
 					if (searchInput) {
@@ -48,6 +48,8 @@ window.selectSearchField = (selectElement) => {
 							let selectFieldOptions = Array.from(element.options);
 							selectFieldOptions.forEach((option, i) => {
 								if (option.value === e.target.dataset.key) {
+									resultWrap.querySelector('.is-active')?.classList.remove('is-active');
+									item.classList.add('is-active');
 									selectElement.classList.remove('is-active');
 									selectLabel.innerText = e.target.innerText;
 									selectLabel.dataset.value = option.value;
@@ -145,11 +147,11 @@ window.selectSearchField = (selectElement) => {
 		}
 	}
 
-	function ddMarkup(options, isSearchable) {
+	function ddMarkup(options, value, isSearchable) {
 		let optionsList = '';
 		Array.from(options).forEach((item) => {
 			optionsList += `
-            <div class="tutor-form-select-option">
+            <div class="tutor-form-select-option ${value === item.value ? 'is-active' : ''}">
 				<span tutor-dropdown-item data-key="${tutor_esc_attr(item.value)}" class="tutor-nowrap-ellipsis" title="${tutor_esc_attr(item.text)}">${tutor_esc_html(item.text)}</span>
             </div>
             `;
