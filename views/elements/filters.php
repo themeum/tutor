@@ -97,7 +97,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Course', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-course" data-is-searchable="true">
+							<select class="tutor-form-select" id="tutor-backend-filter-course" data-searchable>
 								<?php if ( count( $courses ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Courses', 'tutor' ); ?>
@@ -118,7 +118,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Category', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-category" data-is-searchable="true">
+							<select class="tutor-form-select" id="tutor-backend-filter-category" data-searchable>
 								<?php if ( count( $categories ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Category', 'tutor' ); ?>
