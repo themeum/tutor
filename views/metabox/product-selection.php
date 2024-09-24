@@ -44,7 +44,7 @@ if ( ! $course_id ) {
 		</label>
 	</div>
 	<div class="tutor-col-12 tutor-col-md-7 tutor-col-lg-8">
-		<select name="_tutor_course_product_id" id="tutor-wc-product-select" data-product-id="<?php echo esc_attr( $product_id ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" class="tutor-form-select" required data-is-searchable="true">
+		<select name="_tutor_course_product_id" id="tutor-wc-product-select" data-product-id="<?php echo esc_attr( $product_id ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" class="tutor-form-select" required data-searchable>
 			<option value="-1"><?php esc_html_e( 'Select a Product' ); ?></option>
 			<?php foreach ( $products as $product ) : ?>
 				<option value="<?php echo esc_attr( $product->ID ); ?>" <?php selected( $product->ID, $product_id ); ?>

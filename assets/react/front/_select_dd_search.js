@@ -4,7 +4,7 @@ window.selectSearchField = (selectElement) => {
 	(() => {
 		tutorFormSelect.forEach((element) => {
 			if (element && !element.classList.contains('tutor-js-form-select') && !element.hasAttribute('noDropdown') && !element.classList.contains('no-tutor-dropdown')) {
-				const isSearchable = !!element.dataset.isSearchable;
+				const isSearchable = element.hasAttribute('data-searchable');
 				let initialSelectedItem = element.options[element.selectedIndex];
 				element.style.display = 'none';
 				let selectElement, searchInputWrap, searchInput, resultFilter, resultWrap, resultList, textToSearch, dropDown;
