@@ -59,6 +59,7 @@ class Settings {
 							'default' => '0',
 							'options' => $pages,
 							'desc'    => __( 'Select the page to be used as the cart page.', 'tutor' ),
+							'search'  => true,
 						),
 					),
 				),
@@ -74,6 +75,7 @@ class Settings {
 							'default' => '0',
 							'options' => $pages,
 							'desc'    => __( 'Select the page to be used as the checkout page.', 'tutor' ),
+							'search'  => true,
 						),
 					),
 				),
@@ -142,19 +144,19 @@ class Settings {
 		);
 		// @TODO.
 		// $arr['ecommerce_tax'] = array(
-		// 	'label'    => __( 'Tax', 'tutor' ),
-		// 	'slug'     => 'ecommerce_tax',
-		// 	'desc'     => __( 'Advanced Settings', 'tutor' ),
-		// 	'template' => 'basic',
-		// 	'icon'     => 'tutor-icon-receipt-percent',
-		// 	'blocks'   => array(
-		// 		array(
-		// 			'label'      => __( 'Tax Configuration', 'tutor' ),
-		// 			'slug'       => 'options',
-		// 			'block_type' => 'uniform',
-		// 			'fields'     => array(),
-		// 		),
-		// 	),
+		// 'label'    => __( 'Tax', 'tutor' ),
+		// 'slug'     => 'ecommerce_tax',
+		// 'desc'     => __( 'Advanced Settings', 'tutor' ),
+		// 'template' => 'basic',
+		// 'icon'     => 'tutor-icon-receipt-percent',
+		// 'blocks'   => array(
+		// array(
+		// 'label'      => __( 'Tax Configuration', 'tutor' ),
+		// 'slug'       => 'options',
+		// 'block_type' => 'uniform',
+		// 'fields'     => array(),
+		// ),
+		// ),
 		// );
 
 		$arr['ecommerce_checkout'] = array(
@@ -171,11 +173,11 @@ class Settings {
 					'fields'     => array(
 						// @TODO.
 						// array(
-						// 	'key'     => OptionKeys::IS_TAX_APPLICABLE,
-						// 	'type'    => 'toggle_switch',
-						// 	'label'   => __( 'Apply Tax Rate', 'tutor' ),
-						// 	'default' => 'off',
-						// 	'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
+						// 'key'     => OptionKeys::IS_TAX_APPLICABLE,
+						// 'type'    => 'toggle_switch',
+						// 'label'   => __( 'Apply Tax Rate', 'tutor' ),
+						// 'default' => 'off',
+						// 'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
 						// ),
 						array(
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
@@ -198,6 +200,7 @@ class Settings {
 							'default' => 0,
 							'options' => $pages,
 							'desc'    => __( 'Choose the page for instructor registration.', 'tutor' ),
+							'search'  => true,
 						),
 						array(
 							'key'     => OptionKeys::PRIVACY_POLICY,
@@ -206,6 +209,7 @@ class Settings {
 							'default' => 0,
 							'options' => $pages,
 							'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
+							'search'  => true,
 						),
 					),
 				),
