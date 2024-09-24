@@ -213,6 +213,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                               bgLight
                               onDiscard={noop}
                               isExpanded={expendedSubscription === id}
+                              isOverlay
                             />
                           );
                         }}

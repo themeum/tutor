@@ -45,7 +45,7 @@ interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
   content: { id: ID; title: string; total_question: number };
-  isDragging?: boolean;
+  isOverlay?: boolean;
   onDelete?: () => void;
   onCopy?: () => void;
 }
@@ -104,7 +104,7 @@ const animateLayoutChanges: AnimateLayoutChanges = (args) =>
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
-const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
+const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = false }: TopicContentProps) => {
   const courseDetails = useCourseDetails();
   const form = useFormContext<CourseFormData>();
   const [meetingType, setMeetingType] = useState<'tutor_zoom_meeting' | 'tutor-google-meet' | null>(null);
@@ -114,7 +114,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const deleteRef = useRef<HTMLButtonElement>(null);
 
   const icon = icons[type];
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: content.id,
     animateLayoutChanges,
   });
@@ -122,6 +122,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? 0.3 : undefined,
   };
   const { showModal } = useModal();
   const duplicateContentMutation = useDuplicateContentMutation();
@@ -197,11 +198,11 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
     <>
       <div
         {...attributes}
-        css={styles.wrapper({ isDragging, isActive: meetingType === type || isDeletePopoverOpen })}
+        css={styles.wrapper({ isDragging: isOverlay, isActive: meetingType === type || isDeletePopoverOpen })}
         ref={setNodeRef}
         style={style}
       >
-        <div css={styles.iconAndTitle({ isDragging })} {...listeners}>
+        <div css={styles.iconAndTitle({ isDragging: isOverlay })} {...listeners}>
           <div data-content-icon>
             <SVGIcon
               name={icon.name as IconCollection}

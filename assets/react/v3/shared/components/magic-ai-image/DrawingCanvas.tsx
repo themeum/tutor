@@ -101,11 +101,29 @@ export const DrawingCanvas = React.forwardRef<HTMLCanvasElement, CanvasProps>(
       const image = new Image();
       image.src = src;
       image.onload = () => {
-        context.clearRect(0, 0, width, height);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+
+        const imageAspectRatio = image.width / image.height;
+        const canvasAspectRatio = canvas.width / canvas.height;
+
+        let drawWidth: number;
+        let drawHeight: number;
+
+        if (canvasAspectRatio > imageAspectRatio) {
+          drawHeight = canvas.height;
+          drawWidth = canvas.height * imageAspectRatio;
+        } else {
+          drawWidth = canvas.width;
+          drawHeight = canvas.width / imageAspectRatio;
+        }
+
+        const xOffset = (canvas.width - drawWidth) / 2;
+        const yOffset = (canvas.height - drawHeight) / 2;
+
+        context.drawImage(image, xOffset, yOffset, drawWidth, drawHeight);
 
         if (trackStack.length === 0) {
-          context.drawImage(image, 0, 0, width, height);
-          setTrackStack([context.getImageData(0, 0, width, height)]);
+          setTrackStack([context.getImageData(0, 0, canvas.width, canvas.height)]);
         }
       };
 

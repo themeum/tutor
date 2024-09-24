@@ -1,8 +1,14 @@
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
+import { Controller } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
+
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -12,10 +18,7 @@ import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { getObjectKeys, getObjectValues } from '@Utils/util';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState, useTransition } from 'react';
-import { Controller } from 'react-hook-form';
+
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import ContentAccordion from './ContentAccordion';
 import { type Loading, useContentGenerationContext } from './ContentGenerationContext';
@@ -24,10 +27,15 @@ import DescriptionSkeleton from './loaders/DescriptionSkeleton';
 import ImageSkeleton from './loaders/ImageSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
+import notFound2x from '@Images/not-found-2x.webp';
+import notFound from '@Images/not-found.webp';
+
 interface LoadingStep {
   loading_label: string;
   completed_label: string;
+  error_label: string;
   completed: boolean;
+  hasError: boolean;
   index?: number;
 }
 
@@ -35,32 +43,44 @@ const defaultSteps: Record<keyof Loading, LoadingStep> = {
   title: {
     loading_label: __('Now generating course title...', 'tutor'),
     completed_label: __('Course title generated.', 'tutor'),
+    error_label: __('Error generating course title.', 'tutor'),
     completed: false,
+    hasError: false,
   },
   image: {
     loading_label: __('Now generating course banner image...', 'tutor'),
     completed_label: __('Course banner image generated.', 'tutor'),
+    error_label: __('Error generating course banner image.', 'tutor'),
     completed: false,
+    hasError: false,
   },
   description: {
     loading_label: __('Now generating course description...', 'tutor'),
     completed_label: __('Course description generated.', 'tutor'),
+    error_label: __('Error generating course description.', 'tutor'),
     completed: false,
+    hasError: false,
   },
   topic: {
     loading_label: __('Now generating topic names...', 'tutor'),
     completed_label: __('Course topics generated', 'tutor'),
+    error_label: __('Error generating topics', 'tutor'),
     completed: false,
+    hasError: false,
   },
   content: {
     loading_label: __('Now generating course contents...', 'tutor'),
     completed_label: __('Course contents generated', 'tutor'),
+    error_label: __('Error generating course contents.', 'tutor'),
     completed: false,
+    hasError: false,
   },
   quiz: {
     loading_label: __('Now generating quiz questions...', 'tutor'),
     completed_label: __('Quiz questions generated', 'tutor'),
+    error_label: __('Error generating quiz questions.', 'tutor'),
     completed: false,
+    hasError: false,
   },
 };
 
@@ -73,6 +93,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     pointer,
     currentContent,
     currentLoading,
+    currentErrors,
     updateLoading,
     updateContents,
     setPointer,
@@ -80,6 +101,9 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     removeContent,
     appendLoading,
     removeLoading,
+    appendErrors,
+    removeErrors,
+    errors,
   } = useContentGenerationContext();
   const params = new URLSearchParams(window.location.search);
   const courseId = Number(params.get('course_id'));
@@ -90,18 +114,27 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
   const promptValue = form.watch('prompt');
   const { showToast } = useToast();
-  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     setLoadingSteps((previous) => {
       const copy = { ...previous };
-      const keys = getObjectKeys(currentLoading);
+      const keys = getObjectKeys(copy);
+
       for (const key of keys) {
-        copy[key].completed = !currentLoading[key];
+        const step = copy[key];
+        const completed = !currentLoading[key];
+        const hasError = !!currentErrors[key];
+
+        copy[key] = {
+          ...step,
+          completed,
+          hasError,
+        };
       }
+
       return copy;
     });
-  }, [currentLoading]);
+  }, [currentLoading, currentErrors]);
 
   const isLoading = getObjectValues(currentLoading).some((item) => item);
 
@@ -109,37 +142,75 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     <div css={styles.container}>
       <div css={styles.wrapper}>
         <div css={styles.left}>
-          <div css={styles.title}>
-            <Show when={!currentLoading.title} fallback={<TitleSkeleton />}>
-              <SVGIcon name="book" width={40} height={40} />
-              <h5 title={currentContent.title}>{currentContent.title}</h5>
-            </Show>
-          </div>
+          <Show
+            when={Object.values(loadingSteps).every((step) => !step.hasError) || currentContent.title}
+            fallback={
+              <div
+                css={css`
+                  ${styleUtils.flexCenter('column')};
+                  height: 100%;
+                  color: ${colorTokens.icon.error};
+                  text-align: center;
+                  margin-inline: ${spacing[96]};
+                `}
+              >
+                <img
+                  css={css`
+                  height: 300px;
+                  width: 100%;
+                  object-fit: cover;
+                  margin-bottom: ${spacing[16]};
+                  object-position: center;
+                  border-radius: ${borderRadius[8]};
+                `}
+                  src={notFound}
+                  srcSet={`${notFound2x} 2x`}
+                  alt="Error"
+                />
 
-          <div css={styles.leftContentWrapper}>
-            <Show when={!currentLoading.image} fallback={<ImageSkeleton />}>
-              <div css={styles.imageWrapper}>
-                <img src={currentContent.featured_image} alt="course banner" />
+                <h5
+                  css={css`
+                    ${typography.heading5('medium')};
+                    color: ${colorTokens.text.error};
+                  `}
+                >
+                  {__('An error occurred while generating course content. Please try again.', 'tutor')}
+                </h5>
               </div>
-            </Show>
+            }
+          >
+            <div css={styles.title}>
+              <Show when={!currentLoading.title} fallback={<TitleSkeleton />}>
+                <SVGIcon name="book" width={32} height={32} />
+                <h5 title={currentContent.title}>{currentContent.title}</h5>
+              </Show>
+            </div>
 
-            <Show when={!currentLoading.description} fallback={<DescriptionSkeleton />}>
-              <div css={styles.section}>
-                <h5>{__('Course Info', 'tutor')}</h5>
-                <div css={styles.content}>
-                  <div dangerouslySetInnerHTML={{ __html: currentContent.description }} />
+            <div css={styles.leftContentWrapper}>
+              <Show when={!currentLoading.image} fallback={<ImageSkeleton />}>
+                <div css={styles.imageWrapper}>
+                  <img src={currentContent?.featured_image} alt="course banner" />
                 </div>
-              </div>
-            </Show>
-            <Show when={!currentLoading.topic} fallback={<ContentSkeleton />}>
-              <div css={styles.section}>
-                <h5>{__('Course Content', 'tutor')}</h5>
-                <div css={styles.content}>
-                  <ContentAccordion />
+              </Show>
+
+              <Show when={!currentLoading.description} fallback={<DescriptionSkeleton />}>
+                <div css={styles.section}>
+                  <h5>{__('Course Info', 'tutor')}</h5>
+                  <div css={styles.content}>
+                    <div dangerouslySetInnerHTML={{ __html: currentContent.description }} />
+                  </div>
                 </div>
-              </div>
-            </Show>
-          </div>
+              </Show>
+              <Show when={!currentLoading.topic} fallback={<ContentSkeleton />}>
+                <div css={styles.section}>
+                  <h5>{__('Course Content', 'tutor')}</h5>
+                  <div css={styles.content}>
+                    <ContentAccordion />
+                  </div>
+                </div>
+              </Show>
+            </div>
+          </Show>
         </div>
         <div css={styles.right}>
           <Show when={contents.length > 1}>
@@ -172,22 +243,44 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 const showButtons = index === loading.length - 1;
                 const content = contents[index];
                 const isLoadingItem = getObjectValues(loading[index]).some((item) => item);
+                const hasErrors = getObjectValues(errors[index]).every((error) => error);
+                const itemErrors = errors[index];
 
                 return (
-                  <div css={styles.box({ deactivated: isDeactivated })} key={index}>
+                  <div
+                    css={styles.box({
+                      deactivated: isDeactivated,
+                      hasError: getObjectValues(errors[index]).some((error) => error),
+                    })}
+                    key={index}
+                  >
                     <SVGIcon name="magicAiColorize" width={24} height={24} />
                     <div css={styles.boxContent}>
                       <h6>
                         {isLoadingItem
                           ? __('Generating course contents', 'tutor')
-                          : __('Generated course contents', 'tutor')}
+                          : hasErrors
+                            ? __('Error generating course contents', 'tutor')
+                            : __('Generated course contents', 'tutor')}
                       </h6>
                       <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
                       <div css={styles.items}>
                         <Show
                           when={isLoadingItem}
                           fallback={
-                            <>
+                            <Show
+                              when={!hasErrors}
+                              fallback={
+                                <For each={getObjectKeys(itemErrors)}>
+                                  {(error, index) => (
+                                    <div css={styles.item} key={index}>
+                                      <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
+                                      {loadingSteps[error].error_label}
+                                    </div>
+                                  )}
+                                </For>
+                              }
+                            >
                               <div css={styles.item}>
                                 <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
                                 {sprintf(__('%d Topics', 'tutor'), content.counts?.topics)}
@@ -204,7 +297,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                 <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
                                 {sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)}
                               </div>
-                            </>
+                            </Show>
                           }
                         >
                           <For each={getObjectKeys(loadingSteps)}>
@@ -214,7 +307,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                               return (
                                 <div css={styles.item} key={index}>
                                   <Show when={isDeactivated}>
-                                    <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                    <SVGIcon
+                                      name={step.hasError ? 'crossCircle' : 'checkFilledWhite'}
+                                      width={24}
+                                      height={24}
+                                      data-check-icon
+                                    />
                                     {step.completed_label}
                                   </Show>
                                   <Show when={!isDeactivated}>
@@ -227,7 +325,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                                         </>
                                       }
                                     >
-                                      <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                      <SVGIcon
+                                        name={step.hasError ? 'crossCircle' : 'checkFilledWhite'}
+                                        width={24}
+                                        height={24}
+                                        data-check-icon
+                                      />
                                       {step.completed_label}
                                     </Show>
                                   </Show>
@@ -239,13 +342,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                         <button
                           type="button"
                           css={css`
-														${styleUtils.resetButton};
-														position: absolute;
-														top: 0;
-														left: 0;
-														width: 100%;
-														height: 100%;
-													`}
+                              ${styleUtils.resetButton};
+                              position: absolute;
+                              top: 0;
+                              left: 0;
+                              width: 100%;
+                              height: 100%;
+                            `}
                           onClick={() => setPointer(index)}
                           disabled={isLoadingItem}
                         />
@@ -272,6 +375,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                             setPointer(loading.length);
                             appendLoading();
                             appendContent();
+                            appendErrors();
                             startGeneration(contents[index].prompt, loading.length);
                           }}
                         >
@@ -286,7 +390,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </For>
 
             <Show when={isCreateNewCourse}>
-              <div css={styles.box({ deactivated: true })}>
+              <div
+                css={styles.box({
+                  deactivated: true,
+                  hasError: false,
+                })}
+              >
                 <form
                   css={styles.regenerateForm}
                   onSubmit={form.handleSubmit((values) => {
@@ -294,6 +403,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     setPointer(loading.length);
                     appendLoading();
                     appendContent();
+                    appendErrors();
                     startGeneration(values.prompt, loading.length);
                     form.reset();
                   })}
@@ -337,7 +447,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </MagicButton>
             <MagicButton
               variant="primary"
-              disabled={isLoading || isCreateNewCourse}
+              disabled={isLoading || isCreateNewCourse || !contents[pointer].title}
               onClick={() => {
                 saveAIGeneratedCourseContentMutation.mutate({
                   course_id: courseId,
@@ -422,10 +532,10 @@ const styles = {
 		padding-inline: ${spacing[40]};
 		margin-top: ${spacing[8]};
 	`,
-  box: ({ deactivated }: { deactivated: boolean }) => css`
+  box: ({ deactivated, hasError }: { deactivated: boolean; hasError: boolean }) => css`
 		width: 100%;
 		border-radius: ${borderRadius[8]};
-		border: 1px solid ${colorTokens.bg.brand};
+		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
 		padding: ${spacing[16]} ${spacing[12]};
 		display: flex;
 		gap: ${spacing[12]};
@@ -448,12 +558,12 @@ const styles = {
 		${
       !deactivated &&
       css`
-			border-color: ${colorTokens.stroke.brand};
+			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
 			`
     }
 
 		&:hover {
-				border-color: ${colorTokens.stroke.brand};
+				border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
 		}
 	`,
   boxFooter: css`
@@ -506,6 +616,10 @@ const styles = {
 		flex-direction: column;
 		gap: ${spacing[4]};
 		position: relative;
+
+    [data-error] {
+      color: ${colorTokens.icon.error}
+    }
 	`,
   item: css`
 		display: flex;
@@ -517,6 +631,10 @@ const styles = {
 
 		svg {
 			color: ${colorTokens.stroke.success.fill70};
+
+      [data-error='true'] {
+        color: ${colorTokens.icon.error};
+      }
 		}
 	`,
   section: css`
@@ -580,6 +698,11 @@ const styles = {
 		min-height: 40px;	
 		padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};	
 		background-color: ${colorTokens.background.white};
+
+    svg {
+      flex-shrink: 0;
+      color: ${colorTokens.text.ai.purple};
+    }
 
 		& > h5 {
 			${typography.heading5('medium')};
