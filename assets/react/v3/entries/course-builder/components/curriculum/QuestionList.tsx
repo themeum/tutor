@@ -328,6 +328,7 @@ const QuestionList = ({
                         index={index}
                         onDuplicateQuestion={noop}
                         onRemoveQuestion={noop}
+                        isOverlay
                       />
                     );
                   }}

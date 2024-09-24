@@ -27,6 +27,7 @@ interface QuestionProps {
   index: number;
   onDuplicateQuestion: (question: QuizQuestion) => void;
   onRemoveQuestion: () => void;
+  isOverlay?: boolean;
 }
 
 const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>, IconCollection> = {
@@ -42,7 +43,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
+const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOverlay = false }: QuestionProps) => {
   const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
@@ -75,7 +76,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
       key={question.question_id}
       css={styles.questionItem({
         isActive: String(activeQuestionId) === String(question.question_id),
-        isDragging,
+        isDragging: isOverlay,
         isThreeDotsOpen: selectedQuestionId === question.question_id,
       })}
       ref={(element) => {
@@ -118,7 +119,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         }
       }}
     >
-      <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
+      <div css={styles.iconAndSerial({ isDragging: isOverlay })} data-icon-serial>
         <SVGIcon
           name={
             questionTypeIconMap[question.question_type as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]

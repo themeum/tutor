@@ -47,6 +47,7 @@ interface SubscriptionItemProps {
   bgLight?: boolean;
   onDiscard: () => void;
   isExpanded: boolean;
+  isOverlay?: boolean;
 }
 
 const SET_FOCUS_AFTER = 100; // this is hack to fix layout shifting while animating.
@@ -60,6 +61,7 @@ export default function SubscriptionItem({
   bgLight = false,
   onDiscard,
   isExpanded,
+  isOverlay = false,
 }: SubscriptionItemProps) {
   const wrapperRef = useRef<HTMLFormElement>(null);
   const subscriptionRef = useRef<HTMLDivElement>(null);
@@ -241,7 +243,7 @@ export default function SubscriptionItem({
       css={styles.subscription({
         bgLight,
         isActive: isActive,
-        isDragging,
+        isDragging: isOverlay,
       })}
       onSubmit={form.handleSubmit((values) => {
         handleSaveSubscription(values.subscriptions[index]);
