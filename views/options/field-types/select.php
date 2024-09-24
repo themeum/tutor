@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Select filed for settings.
  *
@@ -19,7 +18,7 @@ $is_searchable = isset( $field['searchable'] ) && $field['searchable'] ? true : 
 	<div class="tutor-option-field-input">
 		<select name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" class="tutor-form-select" <?php echo esc_attr( $is_searchable ? 'data-searchable' : '' ); ?>>
 			<?php
-			if ( ! isset( $field['options'] ) || $field['options'] !== false ) {
+			if ( ! isset( $field['select_options'] ) || false !== $field['select_options'] ) {
 				echo '<option value="-1">' . esc_html__( 'Select Option', 'tutor' ) . '</option>';
 			}
 			if ( ! empty( $field['options'] ) ) {
