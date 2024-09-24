@@ -646,6 +646,7 @@ class Options_V2 {
 								'default' => '0',
 								'options' => $pages,
 								'desc'    => __( 'This page will be used for student and instructor dashboard', 'tutor' ),
+								'search'  => true,
 							),
 						),
 					),
@@ -661,6 +662,7 @@ class Options_V2 {
 								'default' => '0',
 								'options' => $pages,
 								'desc'    => __( 'This page will be used as the Terms and Conditions page', 'tutor' ),
+								'search'  => true,
 							),
 						),
 					),
@@ -1625,6 +1627,7 @@ class Options_V2 {
 								'default' => $course_archive_page_id->ID ?? '0',
 								'options' => $pages,
 								'desc'    => __( 'This page will be used to list all the published courses.', 'tutor' ),
+								'search'  => true,
 							),
 							array(
 								'key'     => 'instructor_register_page',
@@ -1633,6 +1636,7 @@ class Options_V2 {
 								'default' => '0',
 								'options' => $pages,
 								'desc'    => __( 'Choose the page for instructor registration.', 'tutor' ),
+								'search'  => true,
 							),
 							array(
 								'key'     => 'student_register_page',
@@ -1641,6 +1645,7 @@ class Options_V2 {
 								'default' => '0',
 								'options' => $pages,
 								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
+								'search'  => true,
 							),
 							array(
 								'key'     => 'lesson_video_duration_youtube_api_key',

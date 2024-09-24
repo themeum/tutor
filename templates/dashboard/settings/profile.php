@@ -163,7 +163,7 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Timezone', 'tutor' ); ?>
 				</label>
-				<select name="timezone" class="tutor-form-select">
+				<select name="timezone" class="tutor-form-select" data-is-searchable="true">
 					<?php echo wp_timezone_choice( $timezone ); //phpcs:ignore ?>
 				</select>
 			</div>
