@@ -8,7 +8,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import {
   SortableContext,
   sortableKeyboardCoordinates,
@@ -462,7 +462,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
               <DndContext
                 sensors={sensors}
                 collisionDetection={closestCenter}
-                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                modifiers={[restrictToWindowEdges]}
                 onDragStart={(event) => {
                   setActiveSortId(event.active.id);
                 }}
@@ -519,7 +519,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                             total_question: content.total_question || 0,
                           }}
                           type={content.post_type}
-                          isDragging
+                          isOverlay
                         />
                       )}
                     </Show>

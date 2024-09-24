@@ -5,15 +5,20 @@ import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styl
 import { typography } from '@Config/typography';
 import { type VariantProps, createVariation } from '@Utils/create-variation';
 import { styleUtils } from '@Utils/style-utils';
+import LoadingSpinner from './LoadingSpinner';
 
 interface MagicButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   type?: 'button' | 'submit';
   disabled?: boolean;
   roundedFull?: boolean;
+  loading?: boolean;
 }
 
 const MagicButton = React.forwardRef<HTMLButtonElement, MagicButtonProps>(
-  ({ className, variant, size, children, type = 'button', disabled = false, roundedFull = true, ...props }, ref) => (
+  (
+    { className, variant, size, children, type = 'button', disabled = false, roundedFull = true, loading, ...props },
+    ref,
+  ) => (
     <button
       type={type}
       ref={ref}
@@ -22,7 +27,7 @@ const MagicButton = React.forwardRef<HTMLButtonElement, MagicButtonProps>(
       disabled={disabled}
       {...props}
     >
-      <span css={styles.buttonSpan}>{children}</span>
+      <span css={styles.buttonSpan}>{loading ? <LoadingSpinner size={24} /> : children}</span>
     </button>
   ),
 );

@@ -9,7 +9,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -286,12 +286,12 @@ const QuestionList = ({
         </button>
       </div>
 
-      <div ref={questionListRef} css={styles.questionListWrapper}>
+      <div ref={questionListRef} css={styles.questionList}>
         <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+            modifiers={[restrictToWindowEdges]}
             onDragStart={(event) => {
               setActiveSortId(event.active.id);
             }}
@@ -301,21 +301,19 @@ const QuestionList = ({
               items={questions.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
-              <div css={styles.questionList}>
-                <For each={questions}>
-                  {(question, index) => (
-                    <Question
-                      key={question.question_id}
-                      question={question}
-                      index={index}
-                      onDuplicateQuestion={(data) => {
-                        handleDuplicateQuestion(data, index);
-                      }}
-                      onRemoveQuestion={() => handleDeleteQuestion(index, question)}
-                    />
-                  )}
-                </For>
-              </div>
+              <For each={questions}>
+                {(question, index) => (
+                  <Question
+                    key={question.question_id}
+                    question={question}
+                    index={index}
+                    onDuplicateQuestion={(data) => {
+                      handleDuplicateQuestion(data, index);
+                    }}
+                    onRemoveQuestion={() => handleDeleteQuestion(index, question)}
+                  />
+                )}
+              </For>
             </SortableContext>
 
             {createPortal(
@@ -330,6 +328,7 @@ const QuestionList = ({
                         index={index}
                         onDuplicateQuestion={noop}
                         onRemoveQuestion={noop}
+                        isOverlay
                       />
                     );
                   }}
@@ -408,12 +407,9 @@ const styles = {
       }
     }
   `,
-  questionListWrapper: css`
-    ${styleUtils.overflowYAuto};
-    padding: ${spacing[8]} 0 ${spacing[8]} ${spacing[20]};
-  `,
   questionList: css`
-    margin-right: ${spacing[20]};
+    ${styleUtils.overflowYAuto};
+    padding: ${spacing[8]} 0 ${spacing[8]} 0;
   `,
   questionTypeOptionsTitle: css`
     ${typography.caption('medium')};
