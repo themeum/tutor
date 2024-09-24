@@ -286,7 +286,7 @@ const QuestionList = ({
         </button>
       </div>
 
-      <div ref={questionListRef} css={styles.questionListWrapper}>
+      <div ref={questionListRef} css={styles.questionList}>
         <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
           <DndContext
             sensors={sensors}
@@ -301,21 +301,19 @@ const QuestionList = ({
               items={questions.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
-              <div css={styles.questionList}>
-                <For each={questions}>
-                  {(question, index) => (
-                    <Question
-                      key={question.question_id}
-                      question={question}
-                      index={index}
-                      onDuplicateQuestion={(data) => {
-                        handleDuplicateQuestion(data, index);
-                      }}
-                      onRemoveQuestion={() => handleDeleteQuestion(index, question)}
-                    />
-                  )}
-                </For>
-              </div>
+              <For each={questions}>
+                {(question, index) => (
+                  <Question
+                    key={question.question_id}
+                    question={question}
+                    index={index}
+                    onDuplicateQuestion={(data) => {
+                      handleDuplicateQuestion(data, index);
+                    }}
+                    onRemoveQuestion={() => handleDeleteQuestion(index, question)}
+                  />
+                )}
+              </For>
             </SortableContext>
 
             {createPortal(
@@ -408,12 +406,9 @@ const styles = {
       }
     }
   `,
-  questionListWrapper: css`
-    ${styleUtils.overflowYAuto};
-    padding: ${spacing[8]} 0 ${spacing[8]} ${spacing[20]};
-  `,
   questionList: css`
-    margin-right: ${spacing[20]};
+    ${styleUtils.overflowYAuto};
+    padding: ${spacing[8]} 0 ${spacing[8]} 0;
   `,
   questionTypeOptionsTitle: css`
     ${typography.caption('medium')};

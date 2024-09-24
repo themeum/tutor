@@ -241,6 +241,7 @@ export default function SubscriptionItem({
       css={styles.subscription({
         bgLight,
         isActive: isActive,
+        isDragging,
       })}
       onSubmit={form.handleSubmit((values) => {
         handleSaveSubscription(values.subscriptions[index]);
@@ -709,9 +710,11 @@ const styles = {
   subscription: ({
     bgLight,
     isActive,
+    isDragging,
   }: {
     bgLight?: boolean;
     isActive: boolean;
+    isDragging: boolean;
   }) => css`
 		width: 100%;
 		border: 1px solid ${colorTokens.stroke.default};
@@ -735,6 +738,13 @@ const styles = {
       isActive &&
       css`
         border-color: ${colorTokens.stroke.brand};
+      `
+    }
+
+    ${
+      isDragging &&
+      css`
+        box-shadow: ${shadow.drag};
       `
     }
 

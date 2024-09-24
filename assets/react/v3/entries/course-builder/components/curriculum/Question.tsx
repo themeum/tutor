@@ -13,7 +13,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
@@ -132,7 +132,13 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
         </button>
         <span data-serial>{index + 1}</span>
       </div>
-      <span css={styles.questionTitle}>{question.question_title}</span>
+      <span
+        css={styles.questionTitle({
+          isActive: String(activeQuestionId) === String(question.question_id),
+        })}
+      >
+        {question.question_title}
+      </span>
       <ThreeDots
         isOpen={selectedQuestionId === question.question_id}
         onClick={(event) => {
@@ -204,18 +210,18 @@ const styles = {
     isDragging: boolean;
     isThreeDotsOpen: boolean;
   }) => css`
-    padding: ${spacing[10]} ${spacing[8]};
+    padding: ${spacing[10]} ${spacing[8]} ${spacing[10]}  ${spacing[28]};
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[12]};
-    border: 1px solid transparent;
-    border-radius: ${borderRadius.min};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
     cursor: pointer;
     transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
 
     [data-three-dots] {
       opacity: 0;
+      background: transparent;
       svg {
         color: ${colorTokens.icon.default};
       }
@@ -224,8 +230,8 @@ const styles = {
     ${
       isActive &&
       css`
-        border-color: ${colorTokens.stroke.brand};
-        background-color: ${colorTokens.background.active};
+        color: ${colorTokens.text.brand};
+        background-color: ${colorTokens.background.white};
         [data-icon-serial] {
           border-top-right-radius: 3px;
           border-bottom-right-radius: 3px;
@@ -244,7 +250,7 @@ const styles = {
     }
 
     :hover {
-      background-color: ${colorTokens.background.white};
+      background-color: ${colorTokens.background.hover};
 
       [data-question-icon] {
         display: none;
@@ -268,9 +274,13 @@ const styles = {
     ${
       isDragging &&
       css`
-      box-shadow: ${shadow.drag};
-      background-color: ${colorTokens.background.white};
-    `
+        box-shadow: ${shadow.drag};
+        background-color: ${colorTokens.background.white};
+
+        :hover {
+          background-color: ${colorTokens.background.white};
+        }
+      `
     }
   `,
   iconAndSerial: ({
@@ -303,11 +313,14 @@ const styles = {
       width: 100%;
     }
   `,
-  questionTitle: css`
-    ${typography.small()};
-    color: ${colorTokens.text.subdued};
-    max-width: 170px;
-    width: 100%;
+  questionTitle: ({
+    isActive = false,
+  }: {
+    isActive: boolean;
+  }) => css`
+    ${typography.small(isActive ? 'medium' : 'regular')};
+    color: ${isActive ? colorTokens.text.brand : colorTokens.text.subdued};
+    flex-grow: 1;
   `,
   duplicate: css`
     display: flex;
