@@ -168,8 +168,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                   alt="Error"
                 />
 
-                {/* <SVGIcon name="warning" width={72} height={72} /> */}
-
                 <h5
                   css={css`
                     ${typography.heading5('medium')};
