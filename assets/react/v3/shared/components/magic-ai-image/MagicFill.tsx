@@ -184,14 +184,13 @@ const MagicFill = () => {
           </div>
           <div css={styles.footerActions}>
             <div css={styles.footerActionsLeft}>
-              <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
+              {/* @TODO: will be updated later */}
+              {/* <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
                 <SVGIcon name="magicVariation" width={24} height={24} />
               </MagicButton>
               <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
                 <SVGIcon name="magicEraser" width={24} height={24} />
-              </MagicButton>
-            </div>
-            <div>
+              </MagicButton> */}
               <MagicButton
                 variant="secondary"
                 onClick={() => {
@@ -204,6 +203,20 @@ const MagicFill = () => {
                 <SVGIcon name="download" width={24} height={24} />
               </MagicButton>
             </div>
+            {/* @TODO: will be updated later */}
+            {/* <div>
+              <MagicButton
+                variant="secondary"
+                onClick={() => {
+                  const filename = `${nanoid()}.png`;
+                  const { canvas } = getCanvas(canvasRef);
+                  if (!canvas) return;
+                  downloadBase64Image(getImageData(canvas), filename);
+                }}
+              >
+                <SVGIcon name="download" width={24} height={24} />
+              </MagicButton>
+            </div> */}
           </div>
         </div>
       </div>

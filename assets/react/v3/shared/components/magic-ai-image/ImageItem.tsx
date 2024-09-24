@@ -21,16 +21,17 @@ const options: Option<DropdownState>[] = [
     value: 'magic-fill',
     icon: <SVGIcon name="magicWand" width={24} height={24} />,
   },
-  {
-    label: __('Object eraser', 'tutor'),
-    value: 'magic-erase',
-    icon: <SVGIcon name="eraser" width={24} height={24} />,
-  },
-  {
-    label: __('Variations', 'tutor'),
-    value: 'variations',
-    icon: <SVGIcon name="reload" width={24} height={24} />,
-  },
+  // @TODO: will be implemented in the future
+  // {
+  //   label: __('Object eraser', 'tutor'),
+  //   value: 'magic-erase',
+  //   icon: <SVGIcon name="eraser" width={24} height={24} />,
+  // },
+  // {
+  //   label: __('Variations', 'tutor'),
+  //   value: 'variations',
+  //   icon: <SVGIcon name="reload" width={24} height={24} />,
+  // },
   {
     label: __('Download', 'tutor'),
     value: 'download',
