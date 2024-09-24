@@ -183,7 +183,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           >
             <div css={styles.title}>
               <Show when={!currentLoading.title} fallback={<TitleSkeleton />}>
-                <SVGIcon name="book" width={40} height={40} />
+                <SVGIcon name="book" width={32} height={32} />
                 <h5 title={currentContent.title}>{currentContent.title}</h5>
               </Show>
             </div>
@@ -700,6 +700,10 @@ const styles = {
 		min-height: 40px;	
 		padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};	
 		background-color: ${colorTokens.background.white};
+
+    svg {
+      color: ${colorTokens.text.ai.purple};
+    }
 
 		& > h5 {
 			${typography.heading5('medium')};
