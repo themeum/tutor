@@ -118,19 +118,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   useEffect(() => {
     setLoadingSteps((previous) => {
       const copy = { ...previous };
-      const keys = getObjectKeys({
-        title: true,
-        image: true,
-        description: true,
-        topic: true,
-        content: true,
-        quiz: true,
-      });
+      const keys = getObjectKeys(copy);
 
       for (const key of keys) {
         const step = copy[key];
-        const completed = !loading[pointer][key];
-        const hasError = !!errors[pointer][key];
+        const completed = !currentLoading[key];
+        const hasError = !!currentErrors[key];
 
         copy[key] = {
           ...step,
@@ -141,8 +134,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
       return copy;
     });
-  }, [loading, errors, pointer]);
-  console.log(pointer, errors.length, loading.length);
+  }, [currentLoading, currentErrors]);
 
   const isLoading = getObjectValues(currentLoading).some((item) => item);
 
@@ -253,7 +245,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 const showButtons = index === loading.length - 1;
                 const content = contents[index];
                 const isLoadingItem = getObjectValues(loading[index]).some((item) => item);
-                const hasErrors = getObjectValues(errors[index]).some((error) => error);
+                const hasErrors = getObjectValues(errors[index]).every((error) => error);
                 const itemErrors = errors[index];
 
                 return (
