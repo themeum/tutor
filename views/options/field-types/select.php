@@ -16,7 +16,7 @@ $field_id  = sanitize_key( 'field_' . $field_key );
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
 	<div class="tutor-option-field-input">
-		<select name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" class="tutor-form-select">
+		<select name="tutor_option[<?php echo esc_attr( $field_key ); ?>]" class="tutor-form-select" data-is-searchable="<?php echo esc_attr( $field['search'] ); ?>">
 			<?php
 			if ( ! isset( $field['options'] ) || $field['options'] !== false ) {
 				echo '<option value="-1">' . esc_html__( 'Select Option', 'tutor' ) . '</option>';
