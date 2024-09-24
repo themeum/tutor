@@ -13,7 +13,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 import { tutorConfig } from '@Config/config';
-import { colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
@@ -58,6 +58,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : undefined,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
   };
 
   useEffect(() => {
@@ -120,6 +121,10 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
       }}
     >
       <div css={styles.iconAndSerial({ isDragging: isOverlay })} data-icon-serial>
+        <span data-serial>{index + 1}</span>
+        <button data-drag-icon {...listeners} type="button" css={styleUtils.resetButton}>
+          <SVGIcon data-drag-icon name="dragVertical" width={24} height={24} />
+        </button>
         <SVGIcon
           name={
             questionTypeIconMap[question.question_type as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]
@@ -128,10 +133,6 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
           height={24}
           data-question-icon
         />
-        <button {...listeners} type="button" css={styleUtils.resetButton}>
-          <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
-        </button>
-        <span data-serial>{index + 1}</span>
       </div>
       <span
         css={styles.questionTitle({
@@ -253,7 +254,7 @@ const styles = {
     :hover {
       background-color: ${colorTokens.background.hover};
 
-      [data-question-icon] {
+      [data-serial] {
         display: none;
       }
 
@@ -277,6 +278,7 @@ const styles = {
       css`
         box-shadow: ${shadow.drag};
         background-color: ${colorTokens.background.white};
+        border-radius: ${borderRadius.card};
 
         :hover {
           background-color: ${colorTokens.background.white};
@@ -289,14 +291,15 @@ const styles = {
   }: {
     isDragging: boolean;
   }) => css`
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    background-color: ${colorTokens.bg.white};
     border-radius: 3px 0 0 3px;
-    width: 56px;
+    width: 64px;
     padding: ${spacing[4]} ${spacing[8]} ${spacing[4]} ${spacing[4]};
-    border-right: 1px solid ${colorTokens.stroke.divider};
     flex-shrink: 0;
+    column-gap: ${spacing[12]};
+    place-items: center center;
 
     [data-drag-icon] {
       display: none;
@@ -304,14 +307,20 @@ const styles = {
       cursor: ${isDragging ? 'grabbing' : 'grab'};
     }
 
+    [data-question-icon] {
+      flex-shrink: 0;    
+    }
+
     svg {
       flex-shrink: 0;
     }
 
     [data-serial] {
+      width: 24px;
+      display: block;
       ${typography.caption('medium')}
-      text-align: right;
-      width: 100%;
+      text-align: center;
+      flex-grow: 1;
     }
   `,
   questionTitle: ({

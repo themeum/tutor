@@ -8,7 +8,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -117,7 +117,7 @@ const TrueFalse = () => {
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
-        modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+        modifiers={[restrictToWindowEdges]}
         onDragStart={(event) => {
           setActiveSortId(event.active.id);
         }}
