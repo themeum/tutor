@@ -702,6 +702,7 @@ const styles = {
 		background-color: ${colorTokens.background.white};
 
     svg {
+      flex-shrink: 0;
       color: ${colorTokens.text.ai.purple};
     }
 
