@@ -87,7 +87,7 @@ export default CertificateEmptyState;
 
 const styles = {
   emptyState: css`
-    padding-block: ${spacing[16]} ${spacing[12]};
+    padding-block: ${spacing[4]} ${spacing[12]};
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
   `,

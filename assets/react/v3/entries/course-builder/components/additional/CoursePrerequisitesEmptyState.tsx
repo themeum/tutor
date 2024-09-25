@@ -104,14 +104,14 @@ const styles = {
   featuresWithTitle: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
-    ${typography.caption('regular')};
+    ${typography.caption('medium')};
   `,
   features: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
   `,
   feature: css`
-    ${typography.caption()};
+    ${typography.small()};
     ${styleUtils.display.flex()}
     gap: ${spacing[12]};
     color: ${colorTokens.text.title};
