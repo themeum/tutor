@@ -116,7 +116,7 @@ const styles = {
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		height: ${modal.BASIC_MODAL_HEADER_HEIGHT}px;
+		height: ${!hasEntireHeader ? `${modal.BASIC_MODAL_HEADER_HEIGHT}px` : 'auto'};
 		background: ${colorTokens.background.white};
 		border-bottom: ${!hasEntireHeader ? `1px solid ${colorTokens.stroke.divider}` : 'none'};
 		padding-inline: ${spacing[16]};

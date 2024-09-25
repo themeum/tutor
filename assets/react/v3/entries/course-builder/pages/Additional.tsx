@@ -37,7 +37,7 @@ import addonDisabled from '@Images/addon-disabled.webp';
 import attachmentsPro2x from '@Images/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@Images/pro-placeholders/attachments.webp';
 
-import CoursePrerequisitesEmptyStater from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyStater';
+import CoursePrerequisitesEmptyStater from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import Certificate from '../components/additional/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
