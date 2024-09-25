@@ -37,7 +37,7 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   matching: 'quizImageMatching',
   image_answering: 'quizImageAnswer',
   ordering: 'quizOrdering',
-  h5p: 'quizTrueFalse',
+  h5p: 'quizH5p',
 };
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
