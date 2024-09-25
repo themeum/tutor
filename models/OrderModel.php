@@ -322,16 +322,7 @@ class OrderModel {
 		$student->image           = get_avatar_url( $order_data->user_id );
 
 		$order_data->student = $student;
-
-		$order_data->items = $this->get_order_items_by_id( $order_id );
-		if ( self::TYPE_SINGLE_ORDER !== $order_data->order_type ) {
-			foreach ( $order_data->items as $item ) {
-				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $item->id );
-				if ( $plan_info ) {
-					$item->title = $plan_info->plan_name;
-				}
-			}
-		}
+		$order_data->items   = $this->get_order_items_by_id( $order_id );
 
 		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
@@ -350,7 +341,7 @@ class OrderModel {
 		unset( $student->billing_address->id );
 		unset( $student->billing_address->user_id );
 
-		return $order_data;
+		return apply_filters( 'tutor_order_details', $order_data );
 	}
 
 	/**
@@ -607,6 +598,16 @@ class OrderModel {
 				$enrollment_ids = $this->get_enrollment_ids( $id );
 				if ( $enrollment_ids ) {
 					QueryHelper::bulk_delete_by_ids( $wpdb->posts, $enrollment_ids );
+
+					// Delete course progress.
+					foreach ( $enrollment_ids as $id ) {
+						$course_id  = get_post_field( 'post_parent', $id );
+						$student_id = get_post_field( 'post_author', $id );
+
+						if ( $course_id && $student_id ) {
+							tutor_utils()->delete_course_progress( $course_id, $student_id );
+						}
+					}
 				}
 
 				// Delete earnings.
