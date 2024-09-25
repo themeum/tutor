@@ -57,6 +57,14 @@ function Payment() {
       </BoxTitle>
       <div css={styles.content}>
         <Box bordered css={styleUtils.boxReset}>
+          {order.subscription_fees?.map((item) =>
+            <div css={styles.item({ action: 'regular' })}>
+              <div>{item.title}</div>
+              <div>-</div>
+              <div>{formatPrice(Number(item.value))}</div>
+            </div>
+          )}
+
           <div css={styles.item({ action: 'regular' })}>
             <div>{__('Subtotal', 'tutor')}</div>
             <div>
