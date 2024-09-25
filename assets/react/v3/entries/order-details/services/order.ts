@@ -21,8 +21,15 @@ interface OrderBundle extends OrderSummary {
   type: 'bundle';
   total_courses: number;
 }
+interface OrderCoursePlan extends OrderSummary {
+  type: 'course_plan';
+  plan_info: {
+    id: string;
+    plan_name: string;
+  };
+}
 
-export type OrderSummaryItem = Prettify<OrderCourse | OrderBundle>;
+export type OrderSummaryItem = Prettify<OrderCourse | OrderBundle | OrderCoursePlan>;
 
 export type DiscountType = 'flat' | 'percentage';
 export type PaymentStatus = 'paid' | 'unpaid' | 'failed' | 'partially-refunded' | 'refunded';
@@ -75,6 +82,11 @@ export interface Discount {
   discounted_value: number;
 }
 
+interface SubscriptionFees {
+  title: string;
+  value: string;
+}
+
 export interface Order {
   id: number;
   payment_status: PaymentStatus;
@@ -102,6 +114,7 @@ export interface Order {
   updated_by?: string;
   created_at_gmt: string;
   updated_at_gmt?: string;
+  subscription_fees?: SubscriptionFees[];
 }
 
 const getOrderDetails = (orderId: number) => {
