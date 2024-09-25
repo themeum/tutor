@@ -598,6 +598,15 @@ class OrderModel {
 				$enrollment_ids = $this->get_enrollment_ids( $id );
 				if ( $enrollment_ids ) {
 					QueryHelper::bulk_delete_by_ids( $wpdb->posts, $enrollment_ids );
+					// After enrollment delete, delete the course progress.
+					foreach ( $enrollment_ids as $id ) {
+						$course_id  = get_post_field( 'post_parent', $id );
+						$student_id = get_post_field( 'post_author', $id );
+
+						if ( $course_id && $student_id ) {
+							tutor_utils()->delete_course_progress( $course_id, $student_id );
+						}
+					}
 				}
 
 				// Delete earnings.
