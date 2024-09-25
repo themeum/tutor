@@ -10,13 +10,12 @@
 
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\OptionKeys;
-use Tutor\Helpers\SessionHelper;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
 
 $user_id      = get_current_user_id();
-$plan_id      = Input::get( 'plan', 0 );
+$plan_id      = Input::get( 'plan', 0, Input::TYPE_INT );
 $plan_info    = new stdClass();
 $coupon_model = new CouponModel();
 
