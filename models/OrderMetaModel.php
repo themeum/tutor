@@ -89,7 +89,7 @@ class OrderMetaModel {
 			return QueryHelper::update(
 				$self->table_name,
 				array(
-					'meta_value'     => maybe_serialize( $meta_value ),
+					'meta_value'     => $meta_value,
 					'updated_at_gmt' => $current_time,
 					'updated_by'     => $current_user_id,
 				),
