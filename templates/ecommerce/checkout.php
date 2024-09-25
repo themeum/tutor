@@ -25,9 +25,18 @@ $course_list     = $courses['results'];
 $subtotal        = 0;
 $tax_amount      = 0; // @TODO: Need to implement later.
 $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
+$plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
 ?>
 <div class="tutor-checkout-page">
+
+	<?php
+	$user_has_subscription = apply_filters( 'tutor_checkout_user_has_subscription', false, $plan_id );
+	if ( $user_has_subscription ) {
+		return;
+	}
+	?>
+
 	<form method="post" id="tutor-checkout-form">
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
