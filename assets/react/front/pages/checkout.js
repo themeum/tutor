@@ -135,6 +135,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            const submitButton = document.getElementById('tutor-checkout-pay-now-button');
+            submitButton.classList.add('is-loading');
+            submitButton.setAttribute('disabled', true);
+            
             this.submit();
         });
     }
