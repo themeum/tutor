@@ -407,7 +407,7 @@ const styles = {
   }) => css`
     width: 1218px;
     display: grid;
-    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr 224px' : '352px 1fr 280px') : '1fr'};
+    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '352px 1fr 280px') : '1fr'};
     height: 100%;
   `,
   left: css`
