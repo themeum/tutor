@@ -324,7 +324,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                           type="button"
                           css={styles.overlayButton}
                           onClick={() => setPointer(index)}
-                          disabled={isLoading}
+                          disabled={isLoading || pointer === index}
                         />
                       </div>
 
