@@ -197,7 +197,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             <div css={styles.navigator}>
               <Button
                 variant="text"
-                disabled={pointer === 0}
+                disabled={pointer === 0 || isLoading}
                 onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
               >
                 <SVGIcon name="chevronLeft" width={20} height={20} />
@@ -209,7 +209,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               </div>
               <Button
                 variant="text"
-                disabled={pointer >= contents.length - 1}
+                disabled={pointer >= contents.length - 1 || isLoading}
                 onClick={() => setPointer((previous) => Math.min(contents.length - 1, previous + 1))}
               >
                 <SVGIcon name="chevronRight" width={20} height={20} />
@@ -231,6 +231,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     css={styles.box({
                       deactivated: isDeactivated,
                       hasError: getObjectValues(errors[index]).some((error) => error),
+                      isActive: pointer === index && !isCreateNewCourse,
                     })}
                     key={index}
                   >
@@ -321,16 +322,9 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                         </Show>
                         <button
                           type="button"
-                          css={css`
-                              ${styleUtils.resetButton};
-                              position: absolute;
-                              top: 0;
-                              left: 0;
-                              width: 100%;
-                              height: 100%;
-                            `}
+                          css={styles.overlayButton}
                           onClick={() => setPointer(index)}
-                          disabled={isLoadingItem}
+                          disabled={isLoading}
                         />
                       </div>
 
@@ -374,6 +368,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 css={styles.box({
                   deactivated: true,
                   hasError: false,
+                  isActive: true,
                 })}
               >
                 <form
@@ -512,15 +507,14 @@ const styles = {
 		padding-inline: ${spacing[40]};
 		margin-top: ${spacing[8]};
 	`,
-  box: ({ deactivated, hasError }: { deactivated: boolean; hasError: boolean }) => css`
+  box: ({ deactivated, hasError, isActive }: { deactivated: boolean; hasError: boolean; isActive: boolean }) => css`
 		width: 100%;
 		border-radius: ${borderRadius[8]};
-		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
+		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.default};
 		padding: ${spacing[16]} ${spacing[12]};
 		display: flex;
 		gap: ${spacing[12]};
 		transition: border 0.3s ease;
-		cursor: pointer;
 		
 		svg {
 			flex-shrink: 0;
@@ -538,12 +532,20 @@ const styles = {
 		${
       !deactivated &&
       css`
-			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
+			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.default};
 			`
     }
 
-		&:hover {
-				border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
+    ${
+      isActive &&
+      css`
+        border-color: ${colorTokens.stroke.brand};
+      `
+    }
+
+		:hover {
+			border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
+      background-color: ${!isActive && colorTokens.background.hover};
 		}
 	`,
   boxFooter: css`
@@ -721,8 +723,20 @@ const styles = {
     object-position: center;
   `,
   errorMessage: css`
-  ${typography.heading5('medium')};
-  color: ${colorTokens.text.error};
-  margin-inline: ${spacing[96]};
-`,
+    ${typography.heading5('medium')};
+    color: ${colorTokens.text.error};
+    margin-inline: ${spacing[96]};
+  `,
+  overlayButton: css`
+    ${styleUtils.resetButton};
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    :disabled {
+      cursor: default;
+    }
+  `,
 };
