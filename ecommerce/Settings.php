@@ -88,7 +88,7 @@ class Settings {
 							'key'            => OptionKeys::CURRENCY_CODE,
 							'type'           => 'select',
 							'label'          => __( 'Currency Symbol', 'tutor' ),
-							'select_options' => true,
+							'select_options' => false,
 							'options'        => self::get_currency_options(),
 							'default'        => 'USD',
 							'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),
@@ -98,7 +98,7 @@ class Settings {
 							'key'            => OptionKeys::CURRENCY_POSITION,
 							'type'           => 'select',
 							'label'          => __( 'Currency Position', 'tutor' ),
-							'select_options' => true,
+							'select_options' => false,
 							'options'        => array(
 								'left'  => 'Left',
 								'right' => 'Right',
@@ -676,13 +676,14 @@ class Settings {
 		foreach ( $config_keys as $key => $type ) {
 			if ( 'environment' === $type ) {
 				$config_fields[] = array(
-					'key'         => $key,
-					'type'        => 'select',
-					'default'     => array_keys( self::get_payment_environments() )[0],
-					'options'     => self::get_payment_environments(),
-					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+					'key'            => $key,
+					'type'           => 'select',
+					'default'        => array_keys( self::get_payment_environments() )[0],
+					'options'        => self::get_payment_environments(),
+					'label'          => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'select_options' => false,
+					'desc'           => '',
+					'placeholder'    => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
 				);
 			} else {
 				$config_fields[] = array(
