@@ -72,13 +72,18 @@ const Header = () => {
         return;
       }
 
-      if (
-        (tutorConfig.settings?.monetize_by === 'wc' || tutorConfig.settings?.monetize_by === 'tutor') &&
-        (data.course_price === '' || Number(data.course_price) <= 0)
-      ) {
-        navigateToBasicsWithError();
-        triggerAndFocus('course_price');
-        return;
+      if (tutorConfig.settings?.monetize_by === 'wc' || tutorConfig.settings?.monetize_by === 'tutor') {
+        if (data.course_price === '' || Number(data.course_price) <= 0) {
+          navigateToBasicsWithError();
+          triggerAndFocus('course_price');
+          return;
+        }
+
+        if (data.course_sale_price && Number(data.course_sale_price) >= Number(data.course_price)) {
+          navigateToBasicsWithError();
+          triggerAndFocus('course_sale_price');
+          return;
+        }
       }
     }
 
