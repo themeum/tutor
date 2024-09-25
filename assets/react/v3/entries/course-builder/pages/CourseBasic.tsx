@@ -588,6 +588,13 @@ const CourseBasic = () => {
               control={form.control}
               rules={{
                 ...requiredRule(),
+                validate: (value) => {
+                  if (Number(value) <= 0) {
+                    return __('Price must be greater than 0', 'tutor');
+                  }
+
+                  return true;
+                },
               }}
               render={(controllerProps) => (
                 <FormInputWithContent
