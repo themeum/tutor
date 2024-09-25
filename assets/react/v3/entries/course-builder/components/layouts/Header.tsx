@@ -74,7 +74,7 @@ const Header = () => {
 
       if (
         (tutorConfig.settings?.monetize_by === 'wc' || tutorConfig.settings?.monetize_by === 'tutor') &&
-        data.course_price === ''
+        (data.course_price === '' || Number(data.course_price) <= 0)
       ) {
         navigateToBasicsWithError();
         triggerAndFocus('course_price');
