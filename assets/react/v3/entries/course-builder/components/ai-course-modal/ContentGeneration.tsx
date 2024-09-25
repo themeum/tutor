@@ -15,6 +15,7 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/magic-ai';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { getObjectKeys, getObjectValues } from '@Utils/util';
@@ -27,8 +28,8 @@ import DescriptionSkeleton from './loaders/DescriptionSkeleton';
 import ImageSkeleton from './loaders/ImageSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
-import notFound2x from '@Images/not-found-2x.webp';
-import notFound from '@Images/not-found.webp';
+import aiStudioError2x from '@Images/ai-studio-error-2x.webp';
+import aiStudioError from '@Images/ai-studio-error.webp';
 
 interface LoadingStep {
   loading_label: string;
@@ -84,6 +85,8 @@ const defaultSteps: Record<keyof Loading, LoadingStep> = {
   },
 };
 
+const courseId = getCourseId();
+
 const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const [loadingSteps, setLoadingSteps] = useState(defaultSteps);
   const [isCreateNewCourse, setIsCreateNewCourse] = useState(false);
@@ -105,9 +108,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     removeErrors,
     errors,
   } = useContentGenerationContext();
-  const params = new URLSearchParams(window.location.search);
-  const courseId = Number(params.get('course_id'));
-
   const { startGeneration } = useGenerateCourseContent();
   const saveAIGeneratedCourseContentMutation = useSaveAIGeneratedCourseContentMutation();
 
@@ -145,35 +145,15 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           <Show
             when={Object.values(loadingSteps).every((step) => !step.hasError) || currentContent.title}
             fallback={
-              <div
-                css={css`
-                  ${styleUtils.flexCenter('column')};
-                  height: 100%;
-                  color: ${colorTokens.icon.error};
-                  text-align: center;
-                  margin-inline: ${spacing[96]};
-                `}
-              >
+              <div css={styles.errorWrapper}>
                 <img
-                  css={css`
-                  height: 300px;
-                  width: 100%;
-                  object-fit: cover;
-                  margin-bottom: ${spacing[16]};
-                  object-position: center;
-                  border-radius: ${borderRadius[8]};
-                `}
-                  src={notFound}
-                  srcSet={`${notFound2x} 2x`}
-                  alt="Error"
+                  css={styles.errorImage}
+                  src={aiStudioError}
+                  srcSet={`${aiStudioError} 1x ${aiStudioError2x} 2x`}
+                  alt={__('Ai Studio Error', 'tutor')}
                 />
 
-                <h5
-                  css={css`
-                    ${typography.heading5('medium')};
-                    color: ${colorTokens.text.error};
-                  `}
-                >
+                <h5 css={styles.errorMessage}>
                   {__('An error occurred while generating course content. Please try again.', 'tutor')}
                 </h5>
               </div>
@@ -454,7 +434,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                   payload: JSON.stringify(currentContent),
                 });
                 onClose();
-                showToast({ type: 'success', message: 'Course content stored into a local file.' });
+                showToast({ type: 'success', message: __('Course content stored into a local file.', 'tutor') });
               }}
             >
               {__('Append the course', 'tutor')}
@@ -727,4 +707,22 @@ const styles = {
 			object-fit: cover;
 		}
 	`,
+  errorWrapper: css`
+    ${styleUtils.flexCenter('column')};
+    height: 100%;
+    color: ${colorTokens.icon.error};
+    text-align: center;
+    gap: ${spacing[16]};
+  `,
+  errorImage: css`
+    height: 300px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+  `,
+  errorMessage: css`
+  ${typography.heading5('medium')};
+  color: ${colorTokens.text.error};
+  margin-inline: ${spacing[96]};
+`,
 };
