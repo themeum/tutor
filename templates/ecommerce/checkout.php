@@ -31,7 +31,8 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 <div class="tutor-checkout-page">
 
 	<?php
-	$user_has_subscription = apply_filters( 'tutor_checkout_user_has_subscription', false, $plan_id );
+	$echo_before_return    = true;
+	$user_has_subscription = apply_filters( 'tutor_checkout_user_has_subscription', false, $plan_id, $echo_before_return );
 	if ( $user_has_subscription ) {
 		return;
 	}
@@ -78,7 +79,6 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 								}
 
 								// Show manual payment for only regular order.
-								$plan_id = Input::get( 'plan', 0, Input::TYPE_INT );
 								if ( ! $plan_id ) {
 									foreach ( $payment_gateways['manual'] as $gateway ) {
 										list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
