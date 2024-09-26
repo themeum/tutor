@@ -442,10 +442,10 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		$order_id          = Input::post( 'order_id' );
+		$order_id          = Input::post( 'order_id', 0, Input::TYPE_INT );
 		$amount            = (float) Input::post( 'amount' );
 		$reason            = Input::post( 'reason' );
-		$cancel_enrollment = Input::post( 'is_remove_enrolment' );
+		$cancel_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
 
 		$meta_value = array(
 			'amount'  => $amount,
@@ -453,7 +453,8 @@ class OrderController {
 			'message' => __( 'Order refunded by ', 'tutor' ) . get_userdata( get_current_user_id() )->display_name,
 		);
 
-		$order_data = $this->model->get_order_by_id( $order_id );
+		$order_data        = $this->model->get_order_by_id( $order_id );
+		$cancel_enrollment = apply_filters( 'tutor_cancel_enrollment_on_refund', $cancel_enrollment, $order_data );
 
 		if ( $amount > (float) $order_data->net_payment ) {
 			$this->json_response(
@@ -512,7 +513,7 @@ class OrderController {
 				$payment_status = $this->model::PAYMENT_PARTIALLY_REFUNDED;
 			}
 
-			if ( 'true' == $cancel_enrollment ) {
+			if ( $cancel_enrollment ) {
 				$order_status = $this->model::ORDER_CANCELLED;
 			}
 
