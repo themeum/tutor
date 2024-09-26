@@ -88,6 +88,12 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 											</button>
 										<?php
 									}
+								} elseif ( empty( $payment_gateways['automate'] ) ) {
+									?>
+									<div class="tutor-alert tutor-warning">
+										<?php esc_html_e( 'No payment method supporting subscriptions has been configured. Please contact the site administrator.', 'tutor' ); ?>
+									</div>
+									<?php
 								}
 							}
 							?>
