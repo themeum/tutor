@@ -148,7 +148,13 @@ const Matching = () => {
                       `questions.${activeQuestionIndex}.question_answers.${index}` as 'questions.0.question_answers.0'
                     }
                     render={(controllerProps) => (
-                      <FormMatching {...controllerProps} index={index} onDuplicateOption={noop} onRemoveOption={noop} />
+                      <FormMatching
+                        {...controllerProps}
+                        index={index}
+                        onDuplicateOption={noop}
+                        onRemoveOption={noop}
+                        isOverlay
+                      />
                     )}
                   />
                 );
