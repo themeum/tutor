@@ -588,6 +588,13 @@ const CourseBasic = () => {
               control={form.control}
               rules={{
                 ...requiredRule(),
+                validate: (value) => {
+                  if (Number(value) <= 0) {
+                    return __('Price must be greater than 0', 'tutor');
+                  }
+
+                  return true;
+                },
               }}
               render={(controllerProps) => (
                 <FormInputWithContent
@@ -605,10 +612,24 @@ const CourseBasic = () => {
             <Controller
               name="course_sale_price"
               control={form.control}
+              rules={{
+                validate: (value) => {
+                  if (!value) {
+                    return true;
+                  }
+
+                  const regularPrice = form.getValues('course_price');
+                  if (Number(value) >= Number(regularPrice)) {
+                    return __('Sale price must be less than regular price', 'tutor');
+                  }
+
+                  return true;
+                },
+              }}
               render={(controllerProps) => (
                 <FormInputWithContent
                   {...controllerProps}
-                  label={__('Discount Price', 'tutor')}
+                  label={__('Sale Price', 'tutor')}
                   content={tutor_currency?.symbol || '$'}
                   placeholder={__('0', 'tutor')}
                   type="number"

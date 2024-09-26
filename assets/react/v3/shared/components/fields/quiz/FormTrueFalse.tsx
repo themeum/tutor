@@ -121,6 +121,7 @@ const styles = {
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
     background-color: ${colorTokens.background.white};
+    text-transform: capitalize;
 
     [data-visually-hidden] {
       opacity: 0;

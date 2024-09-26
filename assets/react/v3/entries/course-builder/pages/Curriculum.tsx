@@ -361,7 +361,7 @@ const Curriculum = () => {
                   <DragOverlay>
                     <Show when={activeSortItem}>
                       {(item) => {
-                        return <Topic topic={item} />;
+                        return <Topic topic={item} isOverlay />;
                       }}
                     </Show>
                   </DragOverlay>,
