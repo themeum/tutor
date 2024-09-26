@@ -146,9 +146,9 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 												<?php echo esc_html( $course->post_title ); ?>
 											</a>
 										</h6>
-										<div class="tutor-checkout-coupon-badge <?php echo $has_automatic_coupon ? '' : 'tutor-d-none'; ?>">
+										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $has_automatic_coupon ? '' : 'tutor-d-none' ); ?>">
 											<i class="tutor-icon-tag" area-hidden="true"></i>
-											<span><?php echo $has_automatic_coupon ? esc_html( $automatic_coupon->coupon_title ) : ''; ?></span>
+											<span><?php echo esc_html( $has_automatic_coupon ? $automatic_coupon->coupon_title : '' ); ?></span>
 										</div>
 									</div>
 									<div class="tutor-text-right">
