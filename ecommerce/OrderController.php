@@ -447,6 +447,10 @@ class OrderController {
 		$reason            = Input::post( 'reason' );
 		$cancel_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
 
+		if ( $amount <= 0 ) {
+			$this->json_response( __( 'Invalid refund amount provided', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
 		$meta_value = array(
 			'amount'  => $amount,
 			'reason'  => $reason,
