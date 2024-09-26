@@ -583,7 +583,7 @@ class Paypal extends BasePayment
             return json_decode($response->getBody());
         }
 
-        //exit();
+        exit();
     }
 
     /**
@@ -593,14 +593,14 @@ class Paypal extends BasePayment
      * @return array        An array of formatted items.
      * @since  1.0.0
      */
-    private function getItems($data) : array
+    private function getItems(&$data) : array
     {
         $currency = $data->currency->code;
 
-        return array_map(function($item) use ($currency) {
-
-            $price = $item['discounted_price'] > 0 ? $item['discounted_price'] : $item['regular_price'];
-            
+        $items = array_map(function($item) use ($currency) {
+         
+            $price = is_null($item['discounted_price']) ? $item['regular_price'] : $item['discounted_price'];
+       
             return [
                 'name'          => $item['item_name'],
                 'quantity'      => (string) $item['quantity'],
@@ -611,6 +611,25 @@ class Paypal extends BasePayment
                 ]
             ];
         }, (array) $data->items);
+
+        $minChargeApplicable = static::isTotalAmountZero($data);
+
+        if ($minChargeApplicable) {
+            $items[] = [
+                'name'          => 'Minimum Charge',
+                'description'   => 'Minimum charge to process the payment',
+                'quantity'      => '1',
+                'unit_amount'   => [
+                    'currency_code' => $currency,
+                    'value'         => '0.01'
+                ]
+            ];
+
+            $data->total_price += 0.01;
+            $data->subtotal    += 0.01;
+        }
+        
+        return $items;
     }
 
 
@@ -846,5 +865,23 @@ class Paypal extends BasePayment
         $webhookUrl->setVar('encodedData', $encodedUrlData);
 
         return $webhookUrl->__toString();
+    }
+
+    /**
+     * Determines if the total amount is zero or not.
+     *
+     * @param  object $data Contains the order's necessary charges.
+     * @return bool         Returns true if the total amount equals zero, false otherwise.
+     * @since  1.0.0
+     */
+    private function isTotalAmountZero($data): bool
+    {
+        $subtotal       = $data->subtotal ?? 0;
+        $tax            = $data->tax ?? 0;
+        $shippingCharge = $data->shipping_charge ?? 0;
+        $couponDiscount = $data->coupon_discount ?? 0;
+        $totalAmount    = ($subtotal + $tax + $shippingCharge) - $couponDiscount;
+
+        return (string) $totalAmount === '0' ? true : false;
     }
 }
