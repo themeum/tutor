@@ -105,7 +105,7 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, setActiveQuestionId, setValidationError } = useQuizModalContext();
+  const { activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -215,17 +215,7 @@ const QuestionList = ({
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
     const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
 
-    if (!currentQuestion) {
-      return;
-    }
-
-    const validation = validateQuizQuestion(activeQuestionIndex, form);
-
-    if (validation !== true) {
-      showToast({
-        message: validation.message,
-        type: validation.type as 'danger',
-      });
+    if (!currentQuestion || validationError) {
       return;
     }
 
@@ -246,7 +236,11 @@ const QuestionList = ({
 
   const handleDeleteQuestion = (index: number, question: QuizQuestion) => {
     removeQuestion(index);
-    setActiveQuestionId('');
+
+    if (activeQuestionIndex === index) {
+      setActiveQuestionId('');
+      setValidationError(null);
+    }
 
     if (question._data_status !== 'new') {
       form.setValue('deleted_question_ids', [...form.getValues('deleted_question_ids'), question.question_id]);
