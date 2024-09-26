@@ -79,6 +79,12 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 											</button>
 										<?php
 									}
+								} elseif ( empty( $payment_gateways['automate'] ) ) {
+									?>
+									<div class="tutor-alert tutor-warning">
+										<?php esc_html_e( 'No payment method supporting subscriptions has been configured. Please contact the site administrator.', 'tutor' ); ?>
+									</div>
+									<?php
 								}
 							}
 							?>
