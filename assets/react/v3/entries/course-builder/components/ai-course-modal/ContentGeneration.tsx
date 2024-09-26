@@ -583,6 +583,7 @@ const styles = {
   rightFooter: css`
 		margin-top: auto;
 		padding-top: ${spacing[16]};
+    padding-right: ${spacing[20]};
 		display: flex;
 		align-items: center;
 		justify-content: center;
