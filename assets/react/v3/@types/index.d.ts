@@ -33,7 +33,7 @@ declare global {
       is_admin: string;
       is_admin_bar_showing: string;
       difficulty_levels: {
-        level: string;
+        label: string;
         value: string;
       }[];
       edd_products: {

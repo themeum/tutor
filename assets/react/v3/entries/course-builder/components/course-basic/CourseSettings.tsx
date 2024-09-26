@@ -58,8 +58,8 @@ const CourseSettings = () => {
       activeBadge: isBuddyPressEnabled,
     });
 
-  const difficultyLevelOptions: Option<string>[] = tutorConfig.difficulty_levels.map((level) => ({
-    label: level.level,
+  const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
+    label: level.label,
     value: level.value,
   }));
 
