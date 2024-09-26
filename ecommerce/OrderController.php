@@ -169,8 +169,8 @@ class OrderController {
 	 * @param string $payment_status Order payment status.
 	 * @param string $order_type Type single_order/subscription.
 	 * @param mixed  $coupon_code Optional, if not provided automatic coupon.
-	 * @param array  $args Optional, Args to set data such as fees, tax, etc.
-	 * Even to modify $order_data.
+	 * @param array  $args Optional, Args to set data such as fees, tax, etc. Even to modify $order_data.
+	 * @param bool   $return_id return id.
 	 *
 	 * @throws \Exception Throw exception if data not valid or
 	 * any other exception occur.
