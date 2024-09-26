@@ -235,6 +235,7 @@ export default function SubscriptionItem({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : undefined,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
   };
 
   return (

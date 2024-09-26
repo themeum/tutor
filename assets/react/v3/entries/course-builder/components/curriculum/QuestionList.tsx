@@ -287,7 +287,18 @@ const QuestionList = ({
       </div>
 
       <div ref={questionListRef} css={styles.questionList}>
-        <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
+        <Show
+          when={questions.length > 0}
+          fallback={
+            <div
+              css={css`
+                padding-left: ${spacing[28]};
+              `}
+            >
+              {__('No questions added yet.', 'tutor')}
+            </div>
+          }
+        >
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}

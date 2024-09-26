@@ -12,7 +12,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -33,6 +33,7 @@ interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQue
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
   onCheckCorrectAnswer: () => void;
+  isOverlay?: boolean;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -43,6 +44,7 @@ const FormMultipleChoiceAndOrdering = ({
   onRemoveOption,
   onCheckCorrectAnswer,
   index,
+  isOverlay = false,
 }: FormMultipleChoiceAndOrderingProps) => {
   const form = useFormContext<QuizForm>();
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
@@ -129,6 +131,7 @@ const FormMultipleChoiceAndOrdering = ({
         isSelected: !!Number(inputValue.is_correct),
         isEditing,
         isMultipleChoice: hasMultipleCorrectAnswer,
+        isOverlay,
       })}
       ref={setNodeRef}
       style={style}
@@ -143,17 +146,9 @@ const FormMultipleChoiceAndOrdering = ({
         >
           <Show
             when={hasMultipleCorrectAnswer}
-            fallback={
-              <SVGIcon
-                data-check-icon
-                name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
-                height={32}
-                width={32}
-              />
-            }
+            fallback={<SVGIcon name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'} height={32} width={32} />}
           >
             <SVGIcon
-              data-check-icon
               name={Number(inputValue.is_correct) ? 'checkSquareFilled' : 'checkSquare'}
               height={32}
               width={32}
@@ -165,6 +160,8 @@ const FormMultipleChoiceAndOrdering = ({
         css={styles.optionLabel({
           isSelected: !!Number(inputValue.is_correct),
           isEditing,
+          isDragging,
+          isOverlay,
         })}
         onClick={() => {
           setIsEditing(true);
@@ -220,7 +217,7 @@ const FormMultipleChoiceAndOrdering = ({
           </div>
 
           <Show when={!isEditing && inputValue.is_saved}>
-            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+            <button {...listeners} type="button" css={styles.optionDragButton({ isOverlay })} data-visually-hidden>
               <SVGIcon name="dragVertical" height={24} width={24} />
             </button>
 
@@ -412,18 +409,16 @@ const FormMultipleChoiceAndOrdering = ({
 export default FormMultipleChoiceAndOrdering;
 
 const styles = {
-  optionWrapper: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[12]};
-    `,
   option: ({
     isSelected,
     isEditing,
     isMultipleChoice,
+    isOverlay,
   }: {
     isSelected: boolean;
     isEditing: boolean;
     isMultipleChoice: boolean;
+    isOverlay: boolean;
   }) => css`
       ${styleUtils.display.flex()};
       ${typography.caption('medium')};
@@ -432,7 +427,7 @@ const styles = {
       gap: ${spacing[10]};
       align-items: center;
   
-      [data-check-icon] {
+      [data-check-button] {
         opacity: 0;
         pointer-events: none;
         color: ${colorTokens.icon.default};
@@ -445,12 +440,8 @@ const styles = {
       }
   
       &:hover {
-        [data-check-icon] {
-          opacity: ${isEditing ? 0 : 1};
-        }
-
         [data-check-button] {
-          visibility: ${isEditing ? 'hidden' : 'visible'};
+          opacity: ${isEditing || isOverlay ? 0 : 1};
         }
       }
   
@@ -458,7 +449,7 @@ const styles = {
       ${
         isSelected &&
         css`
-          [data-check-icon] {
+          [data-check-button] {
             opacity: 1;
             color: ${colorTokens.bg.success};
             ${
@@ -474,9 +465,13 @@ const styles = {
   optionLabel: ({
     isSelected,
     isEditing,
+    isDragging,
+    isOverlay,
   }: {
     isSelected: boolean;
     isEditing: boolean;
+    isDragging: boolean;
+    isOverlay: boolean;
   }) => css`
       display: flex;
       flex-direction: column;
@@ -495,7 +490,7 @@ const styles = {
       }
   
       &:hover {
-        box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+        outline: 1px solid ${colorTokens.stroke.hover};
 
         [data-visually-hidden] {
           opacity: 1;
@@ -518,7 +513,7 @@ const styles = {
           color: ${colorTokens.text.primary};
   
           &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
+            outline: 1px solid ${colorTokens.stroke.success.fill70};
           }
         `
       }
@@ -526,10 +521,24 @@ const styles = {
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+          outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
           &:hover {
-            box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+            outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
           }
+        `
+      }
+
+      ${
+        isDragging &&
+        css`
+          background-color: ${colorTokens.stroke.hover};
+        `
+      }
+
+      ${
+        isOverlay &&
+        css`
+          box-shadow: ${shadow.drag};
         `
       }
     `,
@@ -568,13 +577,24 @@ const styles = {
       `
     }
   `,
-  optionDragButton: css`
+  optionDragButton: ({
+    isOverlay,
+  }: {
+    isOverlay: boolean;
+  }) => css`
     ${styleUtils.resetButton}
     ${styleUtils.flexCenter()}
     transform: rotate(90deg);
     color: ${colorTokens.icon.default};
     cursor: grab;
     place-self: center center;
+
+    ${
+      isOverlay &&
+      css`
+        cursor: grabbing;
+      `
+    }
   `,
   optionActions: css`
     ${styleUtils.display.flex()}
