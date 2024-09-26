@@ -6,8 +6,6 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.0.0
- *
- * @fileIgnore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
  */
 
 namespace Tutor\Helpers;
@@ -120,6 +118,24 @@ final class DateTimeHelper {
 	}
 
 	/**
+	 * Check date time is past
+	 *
+	 * @return boolean
+	 */
+	public function is_past() {
+		return $this->datetime->getTimestamp() < time();
+	}
+
+	/**
+	 * Check date time is future
+	 *
+	 * @return boolean
+	 */
+	public function is_future() {
+		return $this->datetime->getTimestamp() > time();
+	}
+
+	/**
 	 * Format datetime ( WP i18 translation supported )
 	 *
 	 * @param string $format format for date. Default is mysql format.
@@ -155,7 +171,7 @@ final class DateTimeHelper {
 	 *
 	 * @return string
 	 */
-	public function toDateTimeString() {
+	public function to_date_time_string() {
 		return $this->format( self::FORMAT_DATE_TIME, false );
 	}
 
