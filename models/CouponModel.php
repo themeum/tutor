@@ -794,7 +794,6 @@ class CouponModel {
 
 			if ( $sale_price ) {
 				$discount_price      = $sale_price;
-				$should_apply_coupon = false;
 			} else {
 				$automatic_coupons = $this->get_coupons(
 					array( 'coupon_type' => self::TYPE_AUTOMATIC ),
