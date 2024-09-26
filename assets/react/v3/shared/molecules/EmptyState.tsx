@@ -78,7 +78,7 @@ const styles = {
       max-width: 640px;
       width: 100%;
       height: auto;
-      border-radius: ${borderRadius[10]};
+      border-radius: ${size === 'small' ? borderRadius[6] : borderRadius[10]};
       overflow: hidden;
       object-position: center;
       object-fit: cover;

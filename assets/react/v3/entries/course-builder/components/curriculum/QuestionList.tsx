@@ -9,7 +9,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -107,7 +107,7 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, setActiveQuestionId, setValidationError, contentType } = useQuizModalContext();
+  const { activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -218,17 +218,7 @@ const QuestionList = ({
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
     const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
 
-    if (!currentQuestion) {
-      return;
-    }
-
-    const validation = validateQuizQuestion(activeQuestionIndex, form);
-
-    if (validation !== true) {
-      showToast({
-        message: validation.message,
-        type: validation.type as 'danger',
-      });
+    if (!currentQuestion || validationError) {
       return;
     }
 
@@ -249,7 +239,11 @@ const QuestionList = ({
 
   const handleDeleteQuestion = (index: number, question: QuizQuestion) => {
     removeQuestion(index);
-    setActiveQuestionId('');
+
+    if (activeQuestionIndex === index) {
+      setActiveQuestionId('');
+      setValidationError(null);
+    }
 
     if (question._data_status !== 'new') {
       form.setValue('deleted_question_ids', [...form.getValues('deleted_question_ids'), question.question_id]);
@@ -308,12 +302,23 @@ const QuestionList = ({
         </button>
       </div>
 
-      <div ref={questionListRef} css={styles.questionListWrapper}>
-        <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
+      <div ref={questionListRef} css={styles.questionList}>
+        <Show
+          when={questions.length > 0}
+          fallback={
+            <div
+              css={css`
+                padding-left: ${spacing[28]};
+              `}
+            >
+              {__('No questions added yet.', 'tutor')}
+            </div>
+          }
+        >
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+            modifiers={[restrictToWindowEdges]}
             onDragStart={(event) => {
               setActiveSortId(event.active.id);
             }}
@@ -323,21 +328,19 @@ const QuestionList = ({
               items={questions.map((item) => ({ ...item, id: item.question_id }))}
               strategy={verticalListSortingStrategy}
             >
-              <div css={styles.questionList}>
-                <For each={questions}>
-                  {(question, index) => (
-                    <Question
-                      key={question.question_id}
-                      question={question}
-                      index={index}
-                      onDuplicateQuestion={(data) => {
-                        handleDuplicateQuestion(data, index);
-                      }}
-                      onRemoveQuestion={() => handleDeleteQuestion(index, question)}
-                    />
-                  )}
-                </For>
-              </div>
+              <For each={questions}>
+                {(question, index) => (
+                  <Question
+                    key={question.question_id}
+                    question={question}
+                    index={index}
+                    onDuplicateQuestion={(data) => {
+                      handleDuplicateQuestion(data, index);
+                    }}
+                    onRemoveQuestion={() => handleDeleteQuestion(index, question)}
+                  />
+                )}
+              </For>
             </SortableContext>
 
             {createPortal(
@@ -352,6 +355,7 @@ const QuestionList = ({
                         index={index}
                         onDuplicateQuestion={noop}
                         onRemoveQuestion={noop}
+                        isOverlay
                       />
                     );
                   }}
@@ -390,15 +394,7 @@ const QuestionList = ({
                   </button>
                 }
               >
-                <button
-                  key={option.value}
-                  type="button"
-                  css={styles.questionTypeOption}
-                  disabled
-                  onClick={() => {
-                    handleAddQuestion(option.value as QuizQuestionType);
-                  }}
-                >
+                <button key={option.value} type="button" css={styles.questionTypeOption} disabled onClick={noop}>
                   <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
                   <span>{option.label}</span>
                   <ProBadge size="small" content={__('Pro', 'tutor')} />
@@ -438,12 +434,9 @@ const styles = {
       }
     }
   `,
-  questionListWrapper: css`
-    ${styleUtils.overflowYAuto};
-    padding: ${spacing[8]} 0 ${spacing[8]} ${spacing[20]};
-  `,
   questionList: css`
-    margin-right: ${spacing[20]};
+    ${styleUtils.overflowYAuto};
+    padding: ${spacing[8]} 0 ${spacing[8]} 0;
   `,
   questionTypeOptionsTitle: css`
     ${typography.caption('medium')};

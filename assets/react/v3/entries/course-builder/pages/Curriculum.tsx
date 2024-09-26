@@ -9,7 +9,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -42,8 +42,8 @@ import { droppableMeasuringStrategy } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import { moveTo, nanoid } from '@Utils/util';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import curriculumEmptyState2x from '@Images/curriculum-empty-state-2x.webp';
+import curriculumEmptyState from '@Images/curriculum-empty-state.webp';
 
 const courseId = getCourseId();
 
@@ -289,8 +289,8 @@ const Curriculum = () => {
               }
               fallback={
                 <EmptyState
-                  emptyStateImage={emptyStateImage}
-                  emptyStateImage2x={emptyStateImage2x}
+                  emptyStateImage={curriculumEmptyState}
+                  emptyStateImage2x={curriculumEmptyState2x}
                   imageAltText={__('Empty State Illustration', 'tutor')}
                   title={__('Create the course journey from here!', 'tutor')}
                   description={__('Start building your course by adding Topics, Lessons, and Quizzes.', 'tutor')}
@@ -323,7 +323,7 @@ const Curriculum = () => {
                 sensors={sensors}
                 collisionDetection={closestCenter}
                 measuring={droppableMeasuringStrategy}
-                modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                modifiers={[restrictToWindowEdges]}
                 onDragStart={(event) => {
                   setActiveSortId(event.active.id);
                   setAllCollapsed(true);
@@ -361,7 +361,7 @@ const Curriculum = () => {
                   <DragOverlay>
                     <Show when={activeSortItem}>
                       {(item) => {
-                        return <Topic topic={item} />;
+                        return <Topic topic={item} isOverlay />;
                       }}
                     </Show>
                   </DragOverlay>,

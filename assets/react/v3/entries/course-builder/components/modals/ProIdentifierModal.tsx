@@ -75,30 +75,33 @@ export default ProIdentifierModal;
 
 const styles = {
   wrapper: css`
-    width: 560px;
+    width: 496px;
     padding: 0 ${spacing[24]} ${spacing[32]} ${spacing[24]};
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[20]};
+    gap: ${spacing[16]};
   `,
   message: css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
     padding-left: ${spacing[8]};
+    padding-top: ${spacing[24]};
+    padding-bottom: ${spacing[4]};
   `,
   title: css`
-    ${typography.heading4('medium')};
+    ${typography.heading6('medium')};
     color: ${colorTokens.text.primary};
+    max-width: 400px;
     text-wrap: pretty;
   `,
   image: css`
-    height: 232px;
+    height: 270px;
     width: 100%;
     object-fit: cover;
     object-position: center;
     border-radius: ${borderRadius[8]};
   `,
   featuresTiTle: css`
-    ${typography.heading6('medium')};
+    ${typography.body('medium')};
     color: ${colorTokens.text.primary};
     text-wrap: pretty;
   `,
@@ -110,7 +113,7 @@ const styles = {
   feature: css`
     ${styleUtils.display.flex()};
     gap: ${spacing[12]};
-    ${typography.caption()};
+    ${typography.small()};
     color: ${colorTokens.text.title};
     
     span {

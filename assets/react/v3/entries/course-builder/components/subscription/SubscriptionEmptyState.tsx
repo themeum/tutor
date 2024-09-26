@@ -1,11 +1,14 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+
+import emptyStateImage2x from '@Images/subscriptions-empty-state-2x.webp';
+import emptyStateImage from '@Images/subscriptions-empty-state.webp';
 
 export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubscription: () => void }) => {
   return (
@@ -49,7 +52,8 @@ const styles = {
     justify-content: center;
     max-width: 640px;
     width: 100%;
-    margin: ${spacing[40]} auto;
+    padding-top: ${spacing[40]};
+    margin-inline: auto;
   `,
   content: css`
     display: grid;

@@ -55,12 +55,6 @@ var scss_blueprints = {
 		mode: 'expanded',
 		destination: 'tutor-frontend-dashboard.min.css',
 	},
-
-	tutor_course_builder: {
-		src: 'assets/scss/course-builder/index.scss',
-		mode: 'expanded',
-		destination: 'tutor-course-builder.min.css',
-	},
 };
 
 var task_keys = Object.keys(scss_blueprints);
@@ -81,9 +75,17 @@ for (let task in scss_blueprints) {
 
 var added_texts = [];
 const regex = /__\(\s*(['"])((?:(?!(?<!\\)\1).)+)\1(?:,\s*(['"])((?:(?!(?<!\\)\3).)+)\3)?\s*\)/gi;
-const js_files = ['tutor', 'tutor-front', 'tutor-admin', 'tutor-course-builder', 'tutor-setup']
-	.map((f) => 'assets/js/' + f + '.js:1')
-	.join(', ');
+const js_files = [
+	'tutor',
+	'tutor-front',
+	'tutor-admin',
+	'tutor-setup',
+	'tutor-course-builder',
+	'tutor-order-details',
+	'tutor-tax-settings',
+	'tutor-coupon'
+].map((f) => 'assets/js/' + f + '.min.js:1').join(', ');
+
 function i18n_makepot(callback, target_dir) {
 	const parent_dir = target_dir || __dirname;
 	var translation_texts = '';
@@ -102,8 +104,9 @@ function i18n_makepot(callback, target_dir) {
 			return;
 		}
 
-		// Make sure only js extension file to process
-		if (stat.isFile() && (path.extname(file_name) == '.js' || path.extname(file_name) == '.tsx') &&
+		// Make sure only js and ts extension file to process
+		const extensions = ['.js', '.ts', '.tsx'];
+		if (stat.isFile() && (extensions.includes(path.extname(file_name))) &&
 			(full_path.indexOf('assets/react') > -1 || full_path.indexOf('v2-library/src') > -1)
 		) {
 			var codes = fs.readFileSync(full_path).toString();

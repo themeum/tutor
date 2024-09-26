@@ -10,7 +10,6 @@
 
 namespace TUTOR;
 
-use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
 
@@ -649,11 +648,11 @@ class Admin {
 	 *
 	 * @since 1.4.6
 	 *
-	 * @param object $admin_bar admin bar object.
+	 * @param \WP_Admin_Bar $admin_bar admin bar object.
 	 *
 	 * @return mixed
 	 */
-	public function add_toolbar_items( $admin_bar ) {
+	public function add_toolbar_items( \WP_Admin_Bar $admin_bar ) {
 		global $post;
 
 		$course_id        = Input::get( 'post', 0, Input::TYPE_INT );
@@ -662,6 +661,8 @@ class Admin {
 		if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
 			return $admin_bar;
 		}
+
+		$admin_bar->remove_node( 'new-courses' );
 
 		if (
 				( is_admin() && $post && $course_id && $post->post_type === $course_post_type ) ||

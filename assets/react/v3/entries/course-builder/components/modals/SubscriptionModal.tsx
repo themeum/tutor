@@ -29,7 +29,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
@@ -153,7 +153,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                   sensors={sensors}
                   collisionDetection={closestCenter}
                   measuring={droppableMeasuringStrategy}
-                  modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                  modifiers={[restrictToWindowEdges]}
                   onDragStart={(event) => {
                     setActiveSortId(event.active.id);
                   }}
@@ -213,6 +213,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                               bgLight
                               onDiscard={noop}
                               isExpanded={expendedSubscription === id}
+                              isOverlay
                             />
                           );
                         }}
@@ -248,11 +249,13 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
 const styles = {
   wrapper: css`
 		width: 1218px;
+    height: 100%;
 	`,
   container: css`
 		max-width: 640px;
 		width: 100%;
-		margin: ${spacing[40]} auto;
+		padding-top: ${spacing[40]};
+    margin-inline: auto;
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[32]};

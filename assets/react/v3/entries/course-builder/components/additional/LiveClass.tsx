@@ -26,8 +26,10 @@ import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import addonDisabled2x from '@Images/addon-disabled-2x.webp';
+import addonDisabled from '@Images/addon-disabled.webp';
+import liveClassPro2x from '@Images/pro-placeholders/live-class-2x.webp';
+import liveClassPro from '@Images/pro-placeholders/live-class.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -61,14 +63,10 @@ const LiveClass = () => {
           <EmptyState
             size="small"
             removeBorder={false}
-            emptyStateImage={emptyStateImage}
-            emptyStateImage2x={emptyStateImage2x}
-            imageAltText={__('No live class addons found', 'tutor')}
+            emptyStateImage={liveClassPro}
+            emptyStateImage2x={liveClassPro2x}
+            imageAltText={__('Tutor LMS PRO', 'tutor')}
             title={__('Make the learning more interactive and fun using Live class feature! ', 'tutor')}
-            description={__(
-              'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-              'tutor',
-            )}
             actions={
               <Button
                 size="small"
@@ -89,8 +87,8 @@ const LiveClass = () => {
             <EmptyState
               size="small"
               removeBorder={false}
-              emptyStateImage={emptyStateImage}
-              emptyStateImage2x={emptyStateImage2x}
+              emptyStateImage={addonDisabled}
+              emptyStateImage2x={addonDisabled2x}
               imageAltText={__('No live class addons found', 'tutor')}
               title={__('You can use this feature by activating Google Meet Or Zoom from addons', 'tutor')}
               description={__(
@@ -99,10 +97,12 @@ const LiveClass = () => {
               )}
               actions={
                 <Button
+                  size="small"
                   variant="secondary"
                   onClick={() => {
                     window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
                   }}
+                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
                 >
                   {__('Go to addons', 'tutor')}
                 </Button>
@@ -225,7 +225,7 @@ const styles = {
   label: css`
     ${styleUtils.display.inlineFlex()}
     align-items: center;
-    gap: ${spacing[2]};
+    gap: ${spacing[4]};
     ${typography.body()}
     color: ${colorTokens.text.title};
   `,

@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				submitButton.classList.remove('is-loading')
 				if (post.ok) {
 					const response = await post.json();
-					if (response.success) {
+					if (response.success || 200 === response?.status_code) {
 						location.reload();
 					} else {
 						let { message = __('Something went wrong, please try again ', 'tutor') } = response.data || {};

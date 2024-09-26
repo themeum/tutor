@@ -39,6 +39,15 @@ export interface Loading {
   content: boolean;
   quiz: boolean;
 }
+
+export interface Errors {
+  title: string;
+  description: string;
+  image: string;
+  topic: string;
+  content: string;
+  quiz: string;
+}
 interface ContextType {
   currentStep: CourseContentStep;
   setCurrentStep: React.Dispatch<React.SetStateAction<CourseContentStep>>;
@@ -50,9 +59,14 @@ interface ContextType {
   updateLoading: (value: Partial<Loading>, forcePointer?: number) => void;
   currentContent: CourseContent;
   currentLoading: Loading;
+  currentErrors: Errors;
+  errors: Errors[];
+  updateErrors: (value: Partial<Errors>, forcePointer?: number) => void;
   appendContent: () => void;
   removeContent: () => void;
   appendLoading: () => void;
+  appendErrors: () => void;
+  removeErrors: () => void;
   removeLoading: () => void;
 }
 
@@ -74,6 +88,15 @@ export const defaultLoading: Loading = {
   quiz: false,
 };
 
+export const defaultErrors: Errors = {
+  title: '',
+  description: '',
+  image: '',
+  topic: '',
+  content: '',
+  quiz: '',
+};
+
 const Context = React.createContext<ContextType>({
   currentStep: 'prompt',
   setCurrentStep: noop,
@@ -85,7 +108,10 @@ const Context = React.createContext<ContextType>({
   removeContent: noop,
   appendLoading: noop,
   removeLoading: noop,
+  appendErrors: noop,
+  removeErrors: noop,
   currentContent: {} as CourseContent,
+  currentErrors: {} as Errors,
   loading: [
     {
       title: false,
@@ -96,6 +122,17 @@ const Context = React.createContext<ContextType>({
       quiz: false,
     },
   ],
+  errors: [
+    {
+      title: '',
+      description: '',
+      image: '',
+      topic: '',
+      content: '',
+      quiz: '',
+    },
+  ],
+  updateErrors: noop,
   currentLoading: {} as Loading,
   updateLoading: noop,
 });
@@ -115,6 +152,16 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
       quiz: false,
     },
   ]);
+  const [errors, setErrors] = useState<Errors[]>([
+    {
+      title: '',
+      description: '',
+      image: '',
+      topic: '',
+      content: '',
+      quiz: '',
+    },
+  ]);
 
   const currentContent = useMemo(() => {
     return contents[pointer];
@@ -123,6 +170,10 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   const currentLoading = useMemo(() => {
     return loading[pointer];
   }, [pointer, loading]);
+
+  const currentErrors = useMemo(() => {
+    return errors[pointer];
+  }, [pointer, errors]);
 
   const updateContents = useCallback(
     (value: Partial<CourseContent>, forcePointer?: number) => {
@@ -172,6 +223,18 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
     [pointer],
   );
 
+  const updateErrors = useCallback(
+    (value: Partial<Errors>, forcePointer?: number) => {
+      const pointerValue = isDefined(forcePointer) ? forcePointer : pointer;
+      setErrors((previous) => {
+        const copy = [...previous];
+        copy[pointerValue] = { ...copy[pointerValue], ...value };
+        return copy;
+      });
+    },
+    [pointer],
+  );
+
   const appendContent = useCallback(() => {
     setContents((previous) => [...previous, defaultContent]);
   }, []);
@@ -188,21 +251,34 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
     setLoading((previous) => [...previous].slice(0, -1));
   }, []);
 
+  const appendErrors = useCallback(() => {
+    setErrors((previous) => [...previous, defaultErrors]);
+  }, []);
+
+  const removeErrors = useCallback(() => {
+    setErrors((previous) => [...previous].slice(0, -1));
+  }, []);
+
   const providerValue = {
     currentStep,
     setCurrentStep,
     contents,
-    currentContent,
+    loading,
+    errors,
     pointer,
     setPointer,
     updateContents,
-    loading,
-    currentLoading,
     updateLoading,
+    updateErrors,
+    currentContent,
+    currentLoading,
+    currentErrors,
     appendContent,
     removeContent,
     appendLoading,
     removeLoading,
+    appendErrors,
+    removeErrors,
   };
 
   return <Context.Provider value={providerValue}>{children}</Context.Provider>;

@@ -6,7 +6,7 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { useMagicFillImageMutation } from '@CourseBuilderServices/magic-ai';
+import { useMagicFillImageMutation, useStoreAIGeneratedImageMutation } from '@CourseBuilderServices/magic-ai';
 import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { downloadBase64Image, getCanvas, getImageData } from '@Utils/magic-ai';
@@ -34,6 +34,7 @@ const MagicFill = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { onDropdownMenuChange, currentImage, field, onCloseModal } = useMagicImageGeneration();
+  const storeAIGeneratedImageMutation = useStoreAIGeneratedImageMutation();
   const brushSize = useDebounce(form.watch('brush_size', 40));
   const [trackStack, setTrackStack] = useState<ImageData[]>([]);
   const [pointer, setPointer] = useState(1);
@@ -183,14 +184,13 @@ const MagicFill = () => {
           </div>
           <div css={styles.footerActions}>
             <div css={styles.footerActionsLeft}>
-              <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
+              {/* @TODO: will be updated later */}
+              {/* <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
                 <SVGIcon name="magicVariation" width={24} height={24} />
               </MagicButton>
               <MagicButton variant="secondary" onClick={() => alert('@TODO: will be implemented later.')}>
                 <SVGIcon name="magicEraser" width={24} height={24} />
-              </MagicButton>
-            </div>
-            <div>
+              </MagicButton> */}
               <MagicButton
                 variant="secondary"
                 onClick={() => {
@@ -203,6 +203,20 @@ const MagicFill = () => {
                 <SVGIcon name="download" width={24} height={24} />
               </MagicButton>
             </div>
+            {/* @TODO: will be updated later */}
+            {/* <div>
+              <MagicButton
+                variant="secondary"
+                onClick={() => {
+                  const filename = `${nanoid()}.png`;
+                  const { canvas } = getCanvas(canvasRef);
+                  if (!canvas) return;
+                  downloadBase64Image(getImageData(canvas), filename);
+                }}
+              >
+                <SVGIcon name="download" width={24} height={24} />
+              </MagicButton>
+            </div> */}
           </div>
         </div>
       </div>
@@ -231,18 +245,23 @@ const MagicFill = () => {
         </div>
         <div css={[magicAIStyles.rightFooter, css`margin-top: auto;`]}>
           <div css={styles.footerButtons}>
-            <MagicButton type="submit" disabled={magicFillImageMutation.isPending}>
+            <MagicButton type="submit" disabled={magicFillImageMutation.isPending || !form.watch('prompt')}>
               <SVGIcon name="magicWand" width={24} height={24} />
               {__('Generative erase', 'tutor')}
             </MagicButton>
             <MagicButton
               variant="primary_outline"
               disabled={magicFillImageMutation.isPending}
-              onClick={() => {
+              loading={storeAIGeneratedImageMutation.isPending}
+              onClick={async () => {
                 const { canvas } = getCanvas(canvasRef);
                 if (!canvas) return;
-                field.onChange({ url: getImageData(canvas) });
-                onCloseModal();
+                const response = await storeAIGeneratedImageMutation.mutateAsync({ image: getImageData(canvas) });
+
+                if (response.data) {
+                  field.onChange(response.data);
+                  onCloseModal();
+                }
               }}
             >
               {__('Use Image', 'tutor')}

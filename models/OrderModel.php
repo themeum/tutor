@@ -321,8 +321,9 @@ class OrderModel {
 		$student->billing_address = $this->get_tutor_customer_data( $order_data->user_id );
 		$student->image           = get_avatar_url( $order_data->user_id );
 
-		$order_data->student         = $student;
-		$order_data->items           = $this->get_order_items_by_id( $order_id );
+		$order_data->student = $student;
+		$order_data->items   = $this->get_order_items_by_id( $order_id );
+
 		$order_data->subtotal_price  = (float) $order_data->subtotal_price;
 		$order_data->total_price     = (float) $order_data->total_price;
 		$order_data->net_payment     = (float) $order_data->net_payment;
@@ -340,7 +341,7 @@ class OrderModel {
 		unset( $student->billing_address->id );
 		unset( $student->billing_address->user_id );
 
-		return $order_data;
+		return apply_filters( 'tutor_order_details', $order_data );
 	}
 
 	/**
@@ -559,15 +560,15 @@ class OrderModel {
 		$enrollments = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT * FROM {$wpdb->postmeta} 
-				WHERE post_id=%d 
-				AND meta_key LIKE %s",
-				$order_id,
-				'_tutor_order_for_course_id_%'
+				WHERE meta_key=%s
+				AND meta_value LIKE %d",
+				'_tutor_enrolled_by_order_id',
+				$order_id
 			)
 		);
 
 		if ( $enrollments ) {
-			$enrollment_ids = array_column( $enrollments, 'meta_value' );
+			$enrollment_ids = array_column( $enrollments, 'post_id' );
 		}
 
 		return $enrollment_ids;
@@ -597,6 +598,15 @@ class OrderModel {
 				$enrollment_ids = $this->get_enrollment_ids( $id );
 				if ( $enrollment_ids ) {
 					QueryHelper::bulk_delete_by_ids( $wpdb->posts, $enrollment_ids );
+					// After enrollment delete, delete the course progress.
+					foreach ( $enrollment_ids as $id ) {
+						$course_id  = get_post_field( 'post_parent', $id );
+						$student_id = get_post_field( 'post_author', $id );
+
+						if ( $course_id && $student_id ) {
+							tutor_utils()->delete_course_progress( $course_id, $student_id );
+						}
+					}
 				}
 
 				// Delete earnings.

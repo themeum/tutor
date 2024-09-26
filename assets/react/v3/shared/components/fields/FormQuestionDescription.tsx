@@ -37,21 +37,27 @@ const FormQuestionDescription = ({
 
   return (
     <div css={styles.editorWrapper({ isEdit })}>
-      <div css={styles.container({ isEdit, isDisabled: disabled || false })}>
-        <FormWPEditor
-          key={`${field.name + isEdit.toString()}`}
-          field={field}
-          fieldState={fieldState}
-          label={label}
-          disabled={disabled}
-          helpText={helpText}
-          loading={loading}
-          readOnly={!isEdit}
-          onChange={onChange}
-          placeholder={placeholder}
-          min_height={100}
-          max_height={400}
-        />
+      <div css={styles.container({ isEdit })}>
+        <Show
+          when={!inputValue && !isEdit}
+          fallback={
+            <FormWPEditor
+              field={field}
+              fieldState={fieldState}
+              label={label}
+              disabled={disabled}
+              helpText={helpText}
+              loading={loading}
+              readOnly={!isEdit}
+              onChange={onChange}
+              placeholder={placeholder}
+              min_height={100}
+              max_height={400}
+            />
+          }
+        >
+          <div css={styles.placeholder}>{placeholder}</div>
+        </Show>
         <Show when={isEdit}>
           <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
             <Button
