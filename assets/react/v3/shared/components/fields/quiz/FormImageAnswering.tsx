@@ -11,7 +11,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -26,11 +26,18 @@ interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption
   index: number;
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
+  isOverlay?: boolean;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }: FormImageAnsweringProps) => {
+const FormImageAnswering = ({
+  index,
+  onDuplicateOption,
+  onRemoveOption,
+  field,
+  isOverlay = false,
+}: FormImageAnsweringProps) => {
   const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
 
   const inputValue = field.value ?? {
@@ -103,7 +110,7 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
       style={style}
     >
       <div
-        css={styles.optionLabel({ isEditing })}
+        css={styles.optionLabel({ isEditing, isOverlay, isDragging })}
         onClick={() => {
           setIsEditing(true);
         }}
@@ -118,7 +125,14 @@ const FormImageAnswering = ({ index, onDuplicateOption, onRemoveOption, field }:
           <div css={styles.optionCounter({ isEditing })}>{String.fromCharCode(65 + index)}</div>
 
           <Show when={!isEditing && inputValue.is_saved}>
-            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+            <button
+              {...listeners}
+              type="button"
+              css={styles.optionDragButton({
+                isOverlay,
+              })}
+              data-visually-hidden
+            >
               <SVGIcon name="dragVertical" height={24} width={24} />
             </button>
 
@@ -368,8 +382,12 @@ const styles = {
     `,
   optionLabel: ({
     isEditing,
+    isOverlay,
+    isDragging,
   }: {
     isEditing: boolean;
+    isOverlay: boolean;
+    isDragging: boolean;
   }) => css`
       ${styleUtils.display.flex('column')}
       gap: ${spacing[20]};
@@ -379,18 +397,32 @@ const styles = {
       background-color: ${colorTokens.background.white};
   
       &:hover {
-        box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+        outline: 1px solid ${colorTokens.stroke.hover};
       }
 
       ${
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+          outline: 1px solid ${colorTokens.stroke.brand};
 
           &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+            outline: 1px solid ${colorTokens.stroke.brand};
           }
+        `
+      }
+
+      ${
+        isDragging &&
+        css`
+          background-color: ${colorTokens.stroke.hover};
+        `
+      }
+
+      ${
+        isOverlay &&
+        css`
+          box-shadow: ${shadow.drag};
         `
       }
     `,
@@ -420,13 +452,24 @@ const styles = {
       `
     }
   `,
-  optionDragButton: css`
+  optionDragButton: ({
+    isOverlay,
+  }: {
+    isOverlay: boolean;
+  }) => css`
     ${styleUtils.resetButton}
     ${styleUtils.flexCenter()}
     transform: rotate(90deg);
     color: ${colorTokens.icon.default};
     cursor: grab;
     place-self: center center;
+
+    ${
+      isOverlay &&
+      css`
+        cursor: grabbing;
+      `
+    }
   `,
   optionActions: css`
     ${styleUtils.display.flex()}

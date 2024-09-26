@@ -29,7 +29,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
@@ -153,7 +153,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                   sensors={sensors}
                   collisionDetection={closestCenter}
                   measuring={droppableMeasuringStrategy}
-                  modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+                  modifiers={[restrictToWindowEdges]}
                   onDragStart={(event) => {
                     setActiveSortId(event.active.id);
                   }}
@@ -250,7 +250,6 @@ const styles = {
   wrapper: css`
 		width: 1218px;
     height: 100%;
-    background-color: ${colorTokens.background.white};
 	`,
   container: css`
 		max-width: 640px;

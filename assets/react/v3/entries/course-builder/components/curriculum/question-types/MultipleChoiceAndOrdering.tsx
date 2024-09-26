@@ -222,6 +222,7 @@ const MultipleChoiceAndOrdering = () => {
                         onRemoveOption={noop}
                         onCheckCorrectAnswer={noop}
                         index={index}
+                        isOverlay
                       />
                     )}
                   />

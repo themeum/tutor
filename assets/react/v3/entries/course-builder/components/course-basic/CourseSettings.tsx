@@ -21,6 +21,7 @@ import Show from '@Controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import type { Option } from '@Utils/types';
 
 const courseId = getCourseId();
 
@@ -57,24 +58,10 @@ const CourseSettings = () => {
       activeBadge: isBuddyPressEnabled,
     });
 
-  const difficultyLevelOptions = [
-    {
-      label: __('All Levels', 'tutor'),
-      value: 'all_levels',
-    },
-    {
-      label: __('Beginner', 'tutor'),
-      value: 'beginner',
-    },
-    {
-      label: __('Intermediate', 'tutor'),
-      value: 'intermediate',
-    },
-    {
-      label: __('Expert', 'tutor'),
-      value: 'expert',
-    },
-  ];
+  const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
+    label: level.label,
+    value: level.value,
+  }));
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
