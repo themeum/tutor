@@ -12,7 +12,7 @@ interface BasicModalWrapperProps {
   children: React.ReactNode;
   onClose: () => void;
   icon?: React.ReactNode;
-  title?: string;
+  title?: string | React.ReactNode;
   subtitle?: string;
   actions?: React.ReactNode;
   headerChildren?: React.ReactNode;
@@ -41,18 +41,24 @@ const BasicModalWrapper = ({
 
   return (
     <div css={styles.container({ isFullScreen: fullScreen })}>
-      <div css={styles.header}>
-        <div css={styles.headerContent}>
-          <div css={styles.iconWithTitle}>
-            <Show when={icon}>{icon}</Show>
-            <Show when={title}>
-              <p css={styles.title}>{title}</p>
+      <div
+        css={styles.header({
+          hasEntireHeader: !!entireHeader,
+        })}
+      >
+        <Show when={!entireHeader} fallback={entireHeader}>
+          <div css={styles.headerContent}>
+            <div css={styles.iconWithTitle}>
+              <Show when={icon}>{icon}</Show>
+              <Show when={title}>
+                <p css={styles.title}>{title}</p>
+              </Show>
+            </div>
+            <Show when={subtitle}>
+              <span css={styles.subtitle}>{subtitle}</span>
             </Show>
           </div>
-          <Show when={subtitle}>
-            <span css={styles.subtitle}>{subtitle}</span>
-          </Show>
-        </div>
+        </Show>
         <div css={styles.actionsWrapper}>
           <Show
             when={actions}
@@ -101,14 +107,18 @@ const styles = {
 			width: 90%;
 		}
 	`,
-  header: css`
+  header: ({
+    hasEntireHeader,
+  }: {
+    hasEntireHeader?: boolean;
+  }) => css`
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
 		width: 100%;
-		height: ${modal.BASIC_MODAL_HEADER_HEIGHT}px;
+		height: ${!hasEntireHeader ? `${modal.BASIC_MODAL_HEADER_HEIGHT}px` : 'auto'};
 		background: ${colorTokens.background.white};
-		border-bottom: 1px solid ${colorTokens.stroke.divider};
+		border-bottom: ${!hasEntireHeader ? `1px solid ${colorTokens.stroke.divider}` : 'none'};
 		padding-inline: ${spacing[16]};
 	`,
   headerContent: css`

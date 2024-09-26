@@ -86,8 +86,13 @@ class Earnings extends Singleton {
 		if ( is_array( $items ) && count( $items ) ) {
 			foreach ( $items as $item ) {
 				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
+				$course_id   = $item->id;
 
-				$this->earning_data = $this->prepare_earning_data( $total_price, $item->id, $order_id, $order_details->order_status );
+				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
+					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
+				}
+
+				$this->earning_data = $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_details->order_status );
 			}
 		}
 	}

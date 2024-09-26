@@ -4,6 +4,7 @@ import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import { useModal } from '@Components/modals/Modal';
 import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 
@@ -170,23 +171,29 @@ interface PortalProps {
 }
 
 export const Portal = ({ isOpen, children, onClickOutside, animationType = AnimationType.slideDown }: PortalProps) => {
+  const { hasModalOnStack } = useModal();
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     }
 
-    return () => {
-      document.body.style.overflow = 'initial';
+    if (hasModalOnStack) {
+      return;
+    }
 
-      // @todo: need to clarify why this is required.
-      // setTimeout(() => {
-      //   const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
-      //   if (!hasPopoverOnStack) {
-      //     document.body.style.overflow = 'initial';
-      //   }
-      // }, ANIMATION_DURATION_WITH_THRESHOLD);
+    // timeout to check if there is any popover on the stack after the animation is done
+    const timeoutId = setTimeout(() => {
+      const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
+      if (!hasPopoverOnStack && !hasModalOnStack) {
+        document.body.style.overflow = 'initial';
+      }
+    }, ANIMATION_DURATION_WITH_THRESHOLD);
+
+    return () => {
+      clearTimeout(timeoutId);
     };
-  }, [isOpen]);
+  }, [isOpen, hasModalOnStack]);
 
   const { transitions } = useAnimation({
     data: isOpen,
@@ -201,7 +208,8 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
             <div
               css={styles.backdrop}
               onKeyUp={noop}
-              onClick={() => {
+              onClick={(event) => {
+                event.stopPropagation();
                 onClickOutside?.();
               }}
             />

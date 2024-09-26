@@ -1,7 +1,7 @@
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import coursePlaceholder from '@Images/orders/course-placeholder.png';
+import coursePlaceholder from '@Images/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
 import { formatPrice } from '@Utils/currency';
 import { css } from '@emotion/react';
@@ -19,6 +19,10 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
         <img src={item.image || coursePlaceholder} css={styles.image} alt="course item" />
         <div>
           <p css={styles.title}>{item.title}</p>
+
+		  {item.type === 'course_plan' && (
+			<div>{__('Plan:', 'tutor')} {item.plan_info.plan_name}</div>
+		  )}
 
           {item.type === 'bundle' && (
             <div css={styles.bundleCount}>

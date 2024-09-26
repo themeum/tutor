@@ -77,8 +77,8 @@ class Paypal extends BasePayment
      * ensuring that the data is first prepared before setting it.
      * If an error occurs during data preparation, it is re-thrown.
      *
-     * @param  mixed     $data The data to be set.
-     * @throws Throwable       If an error occurs during data preparation, it is re-thrown.
+     * @param  object     $data The data to be set.
+     * @throws Throwable        If an error occurs during data preparation, it is re-thrown.
      * @since  1.0.0
      */
     public function setData($data): void
@@ -97,8 +97,8 @@ class Paypal extends BasePayment
      * including amount, shipping information, and payment preferences. It uses configuration
      * settings and ensures essential fields are set correctly.
      *
-     * @param  mixed $data The raw data to be processed.
-     * @return array       The structured data for sending to `Paypal Server`.
+     * @param  object $data The raw data to be processed.
+     * @return array        The structured data for sending to `Paypal Server`.
      * @since  1.0.0
      */
     public function prepareData($data)
@@ -107,16 +107,15 @@ class Paypal extends BasePayment
             return [];
         }
 
-        $data          = Arr::make((array) $data);
-        $this->orderID = $data['order_id'];
-        $type          = $data['type'] ?? 'one-time';
+        $this->orderID = $data->order_id;
+        $type          = $data->type ?? 'one-time';
         $items         = $type === 'one-time' ? static::getItems($data) : null;
         $amount        = $type === 'one-time' ? $this->createAmountData($data) : $this->createAmountForRecurring($data);
 
         $returnData = [
             'purchase_units' => [
                 [
-                    'custom_id' => $data['order_id'],
+                    'custom_id' => $data->order_id,
                     'items'     => $items,
                     'amount'    => $amount,
                     'payee'     => ['email_address' => $this->config->get('merchant_email')]
@@ -130,13 +129,13 @@ class Paypal extends BasePayment
             
         } elseif ($type === 'recurring') {
             
-            $this->previousPayload  = json_decode($data['previous_payload']);
+            $this->previousPayload  = json_decode($data->previous_payload);
 
             $this->getPaymentSourceForRecurring($returnData);
         }
 
-        if ($data->has('shipping_address') && !empty($data['shipping_address'])) {
-            $returnData['purchase_units'][0]['shipping'] = $this->getShippingInfo($data['shipping_address']);
+        if (isset($data->shipping_address) && !empty($data->shipping_address)) {
+            $returnData['purchase_units'][0]['shipping'] = $this->getShippingInfo($data->shipping_address);
         }
         
         return $returnData;
@@ -176,34 +175,33 @@ class Paypal extends BasePayment
      * This method constructs and returns an array containing the currency code, total price, and item breakdown
      * for a payment request. It also includes optional fields for shipping, tax, and discount if they are present in the input data.
      *
-     * @param  Arr   $data The input data containing the currency, total price, subtotal, and optional fields.
-     * @return array       The formatted amount data including currency code, total price, and breakdown.
+     * @param  object   $data   The input data containing the currency, total price, subtotal, and optional fields.
+     * @return array            The formatted amount data including currency code, total price, and breakdown.
      * @since  1.0.0
      */
-    private function createAmountData(Arr $data)
+    private function createAmountData($data)
     {
         $returnData = [
-            'currency_code' => $data['currency']->code,
-            'value'         => (string) $data['total_price']
+            'currency_code' => $data->currency->code,
+            'value'         => (string) $data->total_price
         ];
 
-        Arr::make([
+        $extraCharges = [
             'shipping_charge' => 'shipping',
             'tax'             => 'tax_total',
             'coupon_discount' => 'discount',
             'subtotal'        => 'item_total'
-        ])->every(function($value, $key) use ($data, &$returnData) {
+        ];
+
+        array_walk($extraCharges, function($value, $key) use($data, &$returnData){
             
-                if ($data->has($key)) {
-                    
-                    $returnData['breakdown'][$value] = [
-                        'currency_code' => $data['currency']->code,
-                        'value'         => (string) $data[$key]
-                    ];
-                }
-            
-                return true;
-            });
+            if (isset($data->$key) && !empty($data->$key)) {
+                $returnData['breakdown'][$value] = [
+                    'currency_code' => $data->currency->code,
+                    'value'         => (string) $data->$key,
+                ];
+            }
+        });
 
         return $returnData;
     }
@@ -524,7 +522,7 @@ class Paypal extends BasePayment
         $paymentType = $payloadStream->payment_type ?? 'one-time';
         
         // Set Redirect Url if it is `one-time` payment.
-        if (!is_null($payloadStream->encodedData) && $paymentType === 'one-time') {
+        if ($paymentType === 'one-time' && !is_null($payloadStream->encodedData)) {
             
             $decodedData                = json_decode(base64_decode($payloadStream->encodedData));        
             $returnData->redirectUrl    = $errorMessage ? $decodedData->cancel_url : $decodedData->success_url;
@@ -540,6 +538,8 @@ class Paypal extends BasePayment
             $returnData->id              = $transactionInfo->custom_id;
             $returnData->payment_status  = $statusMap[$transactionInfo->status];
             $returnData->transaction_id  = $transactionInfo->id;
+            $returnData->fees            = $transactionInfo->seller_receivable_breakdown->paypal_fee->value ?? null;
+            $returnData->earnings        = $transactionInfo->seller_receivable_breakdown->net_amount->value ?? null;
         }
 
         $returnData->payment_payload = json_encode($payloadStream);
@@ -583,7 +583,7 @@ class Paypal extends BasePayment
             return json_decode($response->getBody());
         }
 
-        exit();
+        //exit();
     }
 
     /**
@@ -595,7 +595,7 @@ class Paypal extends BasePayment
      */
     private function getItems($data) : array
     {
-        $currency = $data['currency']->code;
+        $currency = $data->currency->code;
 
         return array_map(function($item) use ($currency) {
 
@@ -610,7 +610,7 @@ class Paypal extends BasePayment
                     'value'         => (string) $price
                 ]
             ];
-        }, (array) $data['items']);
+        }, (array) $data->items);
     }
 
 
@@ -627,12 +627,14 @@ class Paypal extends BasePayment
             $responseData = $this->createOrder();
 
             if ($responseData->status === 'COMPLETED') {
-               $responseData->payment_source->paypal->attributes = (object)[
-                    'vault'                 => (object)[
-                        'id' => $this->previousPayload->payment_source->paypal->attributes->vault->id
-                    ],
-                    'billing_agreement_id'  => $this->previousPayload->payment_source->paypal->billing_agreement_id                  
+                
+                $responseData->payment_source->paypal->attributes = (object) [
+                    'vault' => (object) [
+                        'id' => $this->previousPayload->payment_source->paypal->attributes->vault->id,
+                    ]                 
                 ];
+                
+                $responseData->payment_source->paypal->billing_agreement_id = $this->previousPayload->payment_source->paypal->billing_agreement_id;
 
                 $responseData->payment_type = 'recurring';
 
@@ -787,7 +789,7 @@ class Paypal extends BasePayment
                         'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
                     ],
                     'address' => [
-                         "address_line_1"   => $paymentSource->shipping->address->address_line_1,
+                        "address_line_1"   => $paymentSource->shipping->address->address_line_1,
                         "address_line_2"    => $paymentSource->shipping->address->address_line_2,
                         "admin_area_2"      => $paymentSource->shipping->address->admin_area_2,
                         "admin_area_1"      => $paymentSource->shipping->address->admin_area_1,
@@ -815,15 +817,15 @@ class Paypal extends BasePayment
     /**
      * Creates an amount array for recurring payments.
      *
-     * @param  Arr   $data  The data array containing currency and amount information.
-     * @return array        Returns an array with currency code and amount value.
+     * @param  object  $data    The data array containing currency and amount information.
+     * @return array            Returns an array with currency code and amount value.
      * @since  1.0.0
      */
-    private function createAmountForRecurring(Arr $data) : array
+    private function createAmountForRecurring($data) : array
     {
         return [
-            'currency_code' => $data['currency']->code,
-            'value'         => (string) $data['amount'],
+            'currency_code' => $data->currency->code,
+            'value'         => (string) $data->total_amount,
         ];
     }
 

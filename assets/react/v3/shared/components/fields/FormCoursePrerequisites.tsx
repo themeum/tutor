@@ -17,8 +17,9 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
-import emptyStateImage2x from '@Images/empty-state-illustration-2x.webp';
-import emptyStateImage from '@Images/empty-state-illustration.webp';
+import notFound2x from '@Images/not-found-2x.webp';
+import notFound from '@Images/not-found.webp';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormCoursePrerequisitesProps = {
@@ -75,6 +76,7 @@ const FormCoursePrerequisites = ({
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [filteredOption.length],
   });
 
   const handleDeleteSelection = (id: number) => {
@@ -127,8 +129,8 @@ const FormCoursePrerequisites = ({
                 <Show when={!loading} fallback={<LoadingSection />}>
                   <EmptyState
                     size="small"
-                    emptyStateImage={emptyStateImage}
-                    emptyStateImage2x={emptyStateImage2x}
+                    emptyStateImage={notFound}
+                    emptyStateImage2x={notFound2x}
                     imageAltText={__('Illustration of a no course selected', 'tutor')}
                     title={__('No course selected', 'tutor')}
                     description={__('Select a course to add as a prerequisite', 'tutor')}
@@ -317,6 +319,7 @@ const styles = {
         css`
           background-color: ${colorTokens.background.white};
           border-color: ${colorTokens.stroke.default};
+          cursor: default;
         `
       }
       

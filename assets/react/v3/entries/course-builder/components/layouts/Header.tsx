@@ -22,9 +22,9 @@ import {
 } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import Logo from '@CourseBuilderPublic/images/logo.svg';
 import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
-import { convertCourseDataToPayload, getCourseId } from '@CourseBuilderUtils/utils';
+import { convertCourseDataToPayload, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
+import Logo from '@Images/logo.svg';
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
@@ -49,8 +49,9 @@ const Header = () => {
   const postDate = useWatch({ name: 'post_date' });
   const isPostDateDirty = form.formState.dirtyFields.post_date;
 
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
-  const hasTrashAccess = tutorConfig.settings.instructor_can_delete_course === 'on' || isAdmin;
+  const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -64,51 +65,36 @@ const Header = () => {
       navigate('/basics', { state: { isError: true } });
     };
 
-    if (data.course_price_type === 'paid') {
-      if (tutorConfig.settings.monetize_by === 'edd' && !data.course_product_id) {
+    if (data.course_pricing_category !== 'subscription' && data.course_price_type === 'paid') {
+      if (tutorConfig.settings?.monetize_by === 'edd' && !data.course_product_id) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
       }
 
-      if (
-        (tutorConfig.settings.monetize_by === 'wc' || tutorConfig.settings.monetize_by === 'tutor') &&
-        !data.course_price
-      ) {
-        navigateToBasicsWithError();
-        triggerAndFocus('course_price');
-        return;
+      if (tutorConfig.settings?.monetize_by === 'wc' || tutorConfig.settings?.monetize_by === 'tutor') {
+        if (data.course_price === '' || Number(data.course_price) <= 0) {
+          navigateToBasicsWithError();
+          triggerAndFocus('course_price');
+          return;
+        }
+
+        if (data.course_sale_price && Number(data.course_sale_price) >= Number(data.course_price)) {
+          navigateToBasicsWithError();
+          triggerAndFocus('course_sale_price');
+          return;
+        }
       }
     }
 
     const payload = convertCourseDataToPayload(data);
     setLocalPostStatus(postStatus);
 
-    const determinePostStatus = () => {
-      if (postStatus === 'trash') {
-        return 'trash';
-      }
-
-      if (postVisibility === 'private') {
-        return 'private';
-      }
-
-      if (postStatus === 'future' && postVisibility !== 'private') {
-        return 'future';
-      }
-
-      if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
-        return 'publish';
-      }
-
-      return postStatus;
-    };
-
     if (courseId) {
       updateCourseMutation.mutate({
         course_id: Number(courseId),
         ...payload,
-        post_status: determinePostStatus(),
+        post_status: determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility),
       });
       return;
     }
@@ -225,8 +211,14 @@ const Header = () => {
           window.open(tutorConfig.tutor_frontend_dashboard_url, '_blank', 'noopener');
         }}
       >
-        <Logo width={108} height={24} />
+        <Show
+          when={isTutorPro && tutorConfig.settings?.course_builder_logo_url}
+          fallback={<Logo width={108} height={24} />}
+        >
+          {(logo) => <img src={logo} alt="Tutor LMS" />}
+        </Show>
       </button>
+
       <div css={styles.container}>
         <div css={styles.titleAndTacker}>
           <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
@@ -309,6 +301,13 @@ const styles = {
   `,
   logo: css`
     padding-left: ${spacing[32]};
+
+    img {
+      max-height: 24px;
+      width: auto;
+      object-fit: contain;
+      object-position: center;
+    }
   `,
   titleAndTacker: css`
     ${styleUtils.display.flex()};

@@ -7,7 +7,7 @@
     "node": ">=14.17.5"
   },
   "scripts": {
-    "build": "composer install --no-dev && webpack --env=build --mode=production && npm run tutor-droip && npm run gulp-build",
+    "build": "composer install --no-dev && webpack --env=build --mode=production && npm run gulp-build",
     "build-dev": "webpack --mode=development && npm run gulp-build-dev",
     "gulp-build": "npm run rm-lang && _GULP_ENV='build' gulp build",
     "gulp-build-dev": "npm run rm-lang && gulp build",
@@ -69,6 +69,7 @@
     "style-loader": "^3.3.4",
     "terser-webpack-plugin": "^5.3.10",
     "webpack": "^5.22.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^4.1.1"
   },

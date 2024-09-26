@@ -134,8 +134,8 @@ class Assets {
 		}
 
 		$tutor_currency = array(
-			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' ) ),
-			'currency'           => tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL ),
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) ),
+			'currency'           => tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ),
 			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' ),
 			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' ),
 			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
@@ -206,11 +206,13 @@ class Assets {
 
 		if ( tutor_utils()->is_monetize_by_tutor() ) {
 			if ( OrderController::PAGE_SLUG === $page && 'edit' === $action ) {
-				wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array(), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
 			}
 
 			if ( CouponController::PAGE_SLUG === $page && in_array( $action, $allowed_actions, true ) ) {
-				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array(), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
 			}
 
 			// @since 3.0.0 add tax react app on the settings page.
@@ -390,18 +392,12 @@ class Assets {
 			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
 		}
 
-		// Load course builder resources.
-		$load_course_builder_scripts = apply_filters( 'tutor_load_course_builder_scripts', tutor_utils()->get_course_builder_screen() );
-		if ( $load_course_builder_scripts ) {
-			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
-			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
-		}
 		/**
 		 * Load tutor common scripts both backend and frontend
 		 *
 		 * @since v2.0.0
 		 */
-		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 
 		/**
 		 * Enqueue datetime countdown scripts & styles
@@ -437,8 +433,10 @@ class Assets {
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		wp_localize_script( 'tutor-frontend', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-admin', '_tutorobject', $localize_data );
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-script', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-order-details', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-tax-settings', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-coupon', '_tutorobject', $localize_data );
 
 		// Inline styles.
 		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
@@ -616,7 +614,9 @@ class Assets {
 	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**

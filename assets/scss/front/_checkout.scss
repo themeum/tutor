@@ -7,23 +7,50 @@
 
     .tutor-checkout-billing {
         background-color: #F9FAFC;
-        padding: 80px 0px;
+        padding: 80px 15px;
         height: 100%;
+
+        @include breakpoint-max(desktop) {
+            padding: 40px 15px;
+        }
 
         .tutor-checkout-billing-inner {
             max-width: 445px;
             margin-left: auto;
-            margin-right: 80px;
+            margin-right: 65px;
+
+            @include breakpoint-max(desktop) {
+                margin: auto;
+            }
         }
     }
 
     .tutor-checkout-details {
-        border: 1px solid var(--tutor-border-color);
-        border-radius: 6px;
-        max-width: 480px;
-        margin-top: 120px;
-        margin-bottom: 80px;
-        margin-left: 64px;
+        font-size: 1rem;
+        padding: 120px 15px 80px 64px;
+
+        @include breakpoint-max(desktop) {
+            padding: 60px 15px 40px 15px;
+        }
+
+        .tutor-checkout-details-inner {
+            max-width: 480px;
+            border: 1px solid var(--tutor-border-color);
+            border-radius: 6px;
+
+            @include breakpoint-max(desktop) {
+                margin: 0 auto;
+            }
+        }
+    }
+    .tutor-checkout-detail-item {
+        padding: 32px;
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--tutor-border-color);
+        }
+        @include breakpoint-max(mobile) {
+            padding: 16px;
+        }
     }
     .tutor-checkout-courses {
         display: flex;
@@ -180,7 +207,7 @@
         white-space: pre-line;
     }
 
-    .tutor-checkout-coupon-form {
+    .tutor-apply-coupon-form {
         background-color: #ffffff;
         border: 1px solid var(--tutor-border-color);
         border-radius: 6px;

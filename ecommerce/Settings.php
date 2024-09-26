@@ -53,12 +53,13 @@ class Settings {
 					'slug'       => 'cart_page',
 					'fields'     => array(
 						array(
-							'key'     => CartController::PAGE_ID_OPTION_NAME,
-							'type'    => 'select',
-							'label'   => __( 'Cart Page', 'tutor' ),
-							'default' => '0',
-							'options' => $pages,
-							'desc'    => __( 'Select the page to be used as the cart page.', 'tutor' ),
+							'key'        => CartController::PAGE_ID_OPTION_NAME,
+							'type'       => 'select',
+							'label'      => __( 'Cart Page', 'tutor' ),
+							'default'    => '0',
+							'options'    => $pages,
+							'desc'       => __( 'Select the page to be used as the cart page.', 'tutor' ),
+							'searchable' => true,
 						),
 					),
 				),
@@ -68,12 +69,13 @@ class Settings {
 					'slug'       => 'checkout_page',
 					'fields'     => array(
 						array(
-							'key'     => CheckoutController::PAGE_ID_OPTION_NAME,
-							'type'    => 'select',
-							'label'   => __( 'Checkout Page', 'tutor' ),
-							'default' => '0',
-							'options' => $pages,
-							'desc'    => __( 'Select the page to be used as the checkout page.', 'tutor' ),
+							'key'        => CheckoutController::PAGE_ID_OPTION_NAME,
+							'type'       => 'select',
+							'label'      => __( 'Checkout Page', 'tutor' ),
+							'default'    => '0',
+							'options'    => $pages,
+							'desc'       => __( 'Select the page to be used as the checkout page.', 'tutor' ),
+							'searchable' => true,
 						),
 					),
 				),
@@ -83,19 +85,20 @@ class Settings {
 					'block_type' => 'uniform',
 					'fields'     => array(
 						array(
-							'key'            => OptionKeys::CURRENCY_SYMBOL,
+							'key'            => OptionKeys::CURRENCY_CODE,
 							'type'           => 'select',
 							'label'          => __( 'Currency Symbol', 'tutor' ),
-							'select_options' => true,
+							'select_options' => false,
 							'options'        => self::get_currency_options(),
 							'default'        => 'USD',
 							'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),
+							'searchable'     => true,
 						),
 						array(
 							'key'            => OptionKeys::CURRENCY_POSITION,
 							'type'           => 'select',
 							'label'          => __( 'Currency Position', 'tutor' ),
-							'select_options' => true,
+							'select_options' => false,
 							'options'        => array(
 								'left'  => 'Left',
 								'right' => 'Right',
@@ -142,19 +145,19 @@ class Settings {
 		);
 		// @TODO.
 		// $arr['ecommerce_tax'] = array(
-		// 	'label'    => __( 'Tax', 'tutor' ),
-		// 	'slug'     => 'ecommerce_tax',
-		// 	'desc'     => __( 'Advanced Settings', 'tutor' ),
-		// 	'template' => 'basic',
-		// 	'icon'     => 'tutor-icon-receipt-percent',
-		// 	'blocks'   => array(
-		// 		array(
-		// 			'label'      => __( 'Tax Configuration', 'tutor' ),
-		// 			'slug'       => 'options',
-		// 			'block_type' => 'uniform',
-		// 			'fields'     => array(),
-		// 		),
-		// 	),
+		// 'label'    => __( 'Tax', 'tutor' ),
+		// 'slug'     => 'ecommerce_tax',
+		// 'desc'     => __( 'Advanced Settings', 'tutor' ),
+		// 'template' => 'basic',
+		// 'icon'     => 'tutor-icon-receipt-percent',
+		// 'blocks'   => array(
+		// array(
+		// 'label'      => __( 'Tax Configuration', 'tutor' ),
+		// 'slug'       => 'options',
+		// 'block_type' => 'uniform',
+		// 'fields'     => array(),
+		// ),
+		// ),
 		// );
 
 		$arr['ecommerce_checkout'] = array(
@@ -171,11 +174,11 @@ class Settings {
 					'fields'     => array(
 						// @TODO.
 						// array(
-						// 	'key'     => OptionKeys::IS_TAX_APPLICABLE,
-						// 	'type'    => 'toggle_switch',
-						// 	'label'   => __( 'Apply Tax Rate', 'tutor' ),
-						// 	'default' => 'off',
-						// 	'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
+						// 'key'     => OptionKeys::IS_TAX_APPLICABLE,
+						// 'type'    => 'toggle_switch',
+						// 'label'   => __( 'Apply Tax Rate', 'tutor' ),
+						// 'default' => 'off',
+						// 'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
 						// ),
 						array(
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
@@ -192,20 +195,22 @@ class Settings {
 					'block_type' => 'uniform',
 					'fields'     => array(
 						array(
-							'key'     => OptionKeys::REFUND_POLICY,
-							'type'    => 'select',
-							'label'   => __( 'Refund Policy', 'tutor' ),
-							'default' => 0,
-							'options' => $pages,
-							'desc'    => __( 'Choose the page for instructor registration.', 'tutor' ),
+							'key'        => OptionKeys::REFUND_POLICY,
+							'type'       => 'select',
+							'label'      => __( 'Refund Policy', 'tutor' ),
+							'default'    => 0,
+							'options'    => $pages,
+							'desc'       => __( 'Choose the page for instructor registration.', 'tutor' ),
+							'searchable' => true,
 						),
 						array(
-							'key'     => OptionKeys::PRIVACY_POLICY,
-							'type'    => 'select',
-							'label'   => __( 'Privacy Policy', 'tutor' ),
-							'default' => 0,
-							'options' => $pages,
-							'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
+							'key'        => OptionKeys::PRIVACY_POLICY,
+							'type'       => 'select',
+							'label'      => __( 'Privacy Policy', 'tutor' ),
+							'default'    => 0,
+							'options'    => $pages,
+							'desc'       => __( 'Choose the page for student registration.', 'tutor' ),
+							'searchable' => true,
 						),
 					),
 				),
@@ -593,9 +598,9 @@ class Settings {
 	public static function get_paypal_config_keys() {
 		return array(
 			'paypal_environment'    => 'environment',
-			'paypal_merchant_email' => 'text',
+			'paypal_merchant_email' => 'email',
 			'paypal_client_id'      => 'text',
-			'paypal_client_secret'  => 'text',
+			'paypal_client_secret'  => 'password',
 			'paypal_webhook_id'     => 'text',
 		);
 	}
@@ -610,9 +615,9 @@ class Settings {
 	public static function get_stripe_config_keys() {
 		return array(
 			'stripe_environment'           => 'environment',
-			'stripe_secret_key'            => 'text',
-			'stripe_public_key'            => 'text',
-			'stripe_webhook_signature_key' => 'text',
+			'stripe_secret_key'            => 'password',
+			'stripe_public_key'            => 'password',
+			'stripe_webhook_signature_key' => 'password',
 		);
 	}
 
@@ -671,13 +676,14 @@ class Settings {
 		foreach ( $config_keys as $key => $type ) {
 			if ( 'environment' === $type ) {
 				$config_fields[] = array(
-					'key'         => $key,
-					'type'        => 'select',
-					'default'     => array_keys( self::get_payment_environments() )[0],
-					'options'     => self::get_payment_environments(),
-					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
-					'desc'        => '',
-					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+					'key'            => $key,
+					'type'           => 'select',
+					'default'        => array_keys( self::get_payment_environments() )[0],
+					'options'        => self::get_payment_environments(),
+					'label'          => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'select_options' => false,
+					'desc'           => '',
+					'placeholder'    => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
 				);
 			} else {
 				$config_fields[] = array(

@@ -10,7 +10,6 @@
 
 namespace TUTOR;
 
-use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
 
@@ -31,6 +30,9 @@ class Admin {
 	 * @return void
 	 */
 	public function __construct() {
+
+		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
+
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		// Force activate menu for necessary.
 		add_filter( 'parent_file', array( $this, 'parent_menu_active' ) );
@@ -54,6 +56,27 @@ class Admin {
 		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
+	}
+
+	/**
+	 * Show unstable version notice.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function show_unstable_version_admin_notice() {
+		$version = tutor_utils()->extract_version_details( TUTOR_VERSION );
+		if ( ! $version->is_stable ) {
+			/* translators: %s: version name */
+			$message = sprintf( __( 'You\'re currently using Tutor LMS %s. To ensure stability, please do not use it on a live site.', 'tutor' ), '<strong>' . $version->version . '</strong>' );
+			?>
+			<div class="notice notice-warning">
+				<p><strong><?php esc_html_e( 'Warning!', 'tutor' ); ?></strong></p>
+				<p><?php echo wp_kses_post( $message ); ?></p>
+			</div>
+			<?php
+		}
 	}
 
 	/**
@@ -625,11 +648,11 @@ class Admin {
 	 *
 	 * @since 1.4.6
 	 *
-	 * @param object $admin_bar admin bar object.
+	 * @param \WP_Admin_Bar $admin_bar admin bar object.
 	 *
 	 * @return mixed
 	 */
-	public function add_toolbar_items( $admin_bar ) {
+	public function add_toolbar_items( \WP_Admin_Bar $admin_bar ) {
 		global $post;
 
 		$course_id        = Input::get( 'post', 0, Input::TYPE_INT );
@@ -638,6 +661,8 @@ class Admin {
 		if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
 			return $admin_bar;
 		}
+
+		$admin_bar->remove_node( 'new-courses' );
 
 		if (
 				( is_admin() && $post && $course_id && $post->post_type === $course_post_type ) ||

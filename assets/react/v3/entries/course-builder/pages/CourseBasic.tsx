@@ -5,9 +5,9 @@ import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import Button from '@Atoms/Button';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
 
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
@@ -25,11 +25,13 @@ import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
-import { tutorConfig } from '@Config/config';
+import config, { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
-import { borderRadius, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
@@ -39,13 +41,22 @@ import {
   type PricingCategory,
   type WcProduct,
   useGetWcProductsQuery,
+  useUpdateCourseMutation,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import {
+  convertCourseDataToPayload,
+  determinePostStatus,
+  getCourseId,
+  isAddonEnabled,
+} from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
+
+import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 
@@ -55,18 +66,22 @@ const CourseBasic = () => {
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
+  const updateCourseMutation = useUpdateCourseMutation();
   const navigate = useNavigate();
   const { state } = useLocation();
   const { showModal } = useModal();
 
   const [userSearchText, setUserSearchText] = useState('');
+  const [isWpEditorFullScreen, setIsWpEditorFullScreen] = useState(false);
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const currentUser = tutorConfig.current_user;
   const { tutor_currency } = tutorConfig;
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
-  const isTutorProEnabled = !!tutorConfig.tutor_pro_url;
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
+  const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
@@ -75,9 +90,9 @@ const CourseBasic = () => {
   const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
-    isTutorProEnabled &&
+    isTutorPro &&
     isMultiInstructorEnabled &&
-    tutorConfig.settings.enable_course_marketplace === 'on' &&
+    tutorConfig.settings?.enable_course_marketplace === 'on' &&
     (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '') || isInstructor);
 
   const isAuthorEditable =
@@ -113,9 +128,9 @@ const CourseBasic = () => {
   ];
 
   const coursePriceOptions =
-    tutorConfig.settings.monetize_by === 'wc' ||
-    tutorConfig.settings.monetize_by === 'tutor' ||
-    tutorConfig.settings.monetize_by === 'edd'
+    tutorConfig.settings?.monetize_by === 'wc' ||
+    tutorConfig.settings?.monetize_by === 'tutor' ||
+    tutorConfig.settings?.monetize_by === 'edd'
       ? [
           {
             label: __('Free', 'tutor'),
@@ -135,12 +150,12 @@ const CourseBasic = () => {
 
   const coursePricingCategoryOptions: Option<PricingCategory>[] = [
     {
-      label: __('Subscription', 'tutor'),
-      value: 'subscription',
-    },
-    {
       label: __('Regular', 'tutor'),
       value: 'regular',
+    },
+    {
+      label: __('Subscription', 'tutor'),
+      value: 'subscription',
     },
   ];
 
@@ -159,12 +174,12 @@ const CourseBasic = () => {
     (instructor) => String(instructor.id) !== String(currentAuthor?.id),
   );
 
-  const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings.monetize_by, courseId ? String(courseId) : '');
+  const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings?.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
     courseProductId,
     String(courseId),
     coursePriceType,
-    tutorConfig.settings.monetize_by,
+    tutorConfig.settings?.monetize_by,
   );
 
   const wcProductOptions = (data: WcProduct[] | undefined) => {
@@ -197,7 +212,7 @@ const CourseBasic = () => {
       const { course_pricing } = courseDetails || {};
 
       if (
-        tutorConfig.settings.monetize_by === 'wc' &&
+        tutorConfig.settings?.monetize_by === 'wc' &&
         course_pricing?.product_id &&
         course_pricing.product_id !== '0' &&
         !wcProductOptions(wcProductsQuery.data).find(({ value }) => String(value) === String(course_pricing.product_id))
@@ -218,7 +233,7 @@ const CourseBasic = () => {
     const { course_pricing } = courseDetails || {};
 
     if (
-      tutorConfig.settings.monetize_by === 'edd' &&
+      tutorConfig.settings?.monetize_by === 'edd' &&
       course_pricing?.product_id &&
       course_pricing.product_id !== '0' &&
       !tutorConfig.edd_products.find(({ ID }) => String(ID) === String(course_pricing.product_id))
@@ -231,7 +246,7 @@ const CourseBasic = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (tutorConfig.settings.monetize_by !== 'wc') {
+    if (tutorConfig.settings?.monetize_by !== 'wc') {
       return;
     }
 
@@ -257,41 +272,14 @@ const CourseBasic = () => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.mainForm}>
+      <div css={styles.mainForm({ isWpEditorFullScreen })}>
         <CanvasHead
           title={__('Course Basic', 'tutor')}
           backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
           isExternalUrl
           rightButton={
-            <div>
-              <Show
-                when={isTutorProEnabled}
-                fallback={
-                  <Tooltip delay={200} content={__('Pro Feature', 'tutor')}>
-                    <MagicButton
-                      css={css`
-                display: inline-flex;
-                align-items: center;
-                gap: ${spacing[4]};
-              `}
-                      onClick={() => {
-                        showModal({
-                          component: AICourseBuilderModal,
-                          isMagicAi: true,
-                          props: {
-                            title: __('Create with AI', 'tutor'),
-                            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-                          },
-                        });
-                      }}
-                      disabled={!isTutorProEnabled}
-                    >
-                      <SVGIcon name="magicAi" width={24} height={24} />
-                      {__('Generate with AI', 'tutor')}
-                    </MagicButton>
-                  </Tooltip>
-                }
-              >
+            <Show when={isOpenAiEnabled}>
+              <div>
                 <MagicButton
                   css={css`
                   display: inline-flex;
@@ -299,22 +287,67 @@ const CourseBasic = () => {
                   gap: ${spacing[4]};
                 `}
                   onClick={() => {
-                    showModal({
-                      component: AICourseBuilderModal,
-                      isMagicAi: true,
-                      props: {
-                        title: __('Create with AI', 'tutor'),
-                        icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-                      },
-                    });
+                    if (!isTutorPro) {
+                      showModal({
+                        component: ProIdentifierModal,
+                        props: {
+                          title: (
+                            <>
+                              {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                              <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                              {__('feature', 'tutor')}
+                            </>
+                          ),
+                          featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+                          image: generateCourse,
+                          image2x: generateCourse2x,
+                          features: [
+                            __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
+                            __(
+                              ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                              'tutor',
+                            ),
+                            __(
+                              'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
+                              'tutor',
+                            ),
+                            __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
+                          ],
+                          footer: (
+                            <Button
+                              onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                              icon={<SVGIcon name="crown" width={24} height={24} />}
+                            >
+                              {__('Get Tutor LMS Pro', 'tutor')}
+                            </Button>
+                          ),
+                        },
+                      });
+                    } else if (!hasOpenAiAPIKey) {
+                      showModal({
+                        component: SetupOpenAiModal,
+                        props: {
+                          image: generateCourse,
+                          image2x: generateCourse2x,
+                        },
+                      });
+                    } else {
+                      showModal({
+                        component: AICourseBuilderModal,
+                        isMagicAi: true,
+                        props: {
+                          title: __('Create with AI', 'tutor'),
+                          icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                        },
+                      });
+                    }
                   }}
-                  disabled={!isTutorProEnabled}
                 >
                   <SVGIcon name="magicAi" width={24} height={24} />
                   {__('Generate with AI', 'tutor')}
                 </MagicButton>
-              </Show>
-            </div>
+              </div>
+            </Show>
           }
         />
 
@@ -346,7 +379,7 @@ const CourseBasic = () => {
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
-                  baseURL={`${tutorConfig.home_url}/${tutorConfig.settings.course_permalink_base}`}
+                  baseURL={`${tutorConfig.home_url}/${tutorConfig.settings?.course_permalink_base}`}
                 />
               )}
             />
@@ -364,7 +397,24 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
-                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                loading={updateCourseMutation.isPending || (!!isCourseDetailsFetching && !controllerProps.field.value)}
+                onCustomEditorButtonClick={async () => {
+                  form.handleSubmit(async (data) => {
+                    const payload = convertCourseDataToPayload(data);
+
+                    await updateCourseMutation.mutateAsync({
+                      course_id: courseId,
+                      ...payload,
+                      post_status: determinePostStatus(
+                        form.getValues('post_status') as 'trash' | 'future' | 'draft',
+                        form.getValues('visibility') as 'private' | 'password_protected',
+                      ),
+                    });
+                  })();
+                }}
+                onFullScreenChange={(isFullScreen) => {
+                  setIsWpEditorFullScreen(isFullScreen);
+                }}
               />
             )}
           />
@@ -445,7 +495,7 @@ const CourseBasic = () => {
           )}
         />
 
-        <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings.monetize_by === 'tutor'}>
+        <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.monetize_by === 'tutor'}>
           <Controller
             name="course_pricing_category"
             control={form.control}
@@ -476,13 +526,10 @@ const CourseBasic = () => {
           />
         </Show>
 
-        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'wc'}>
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'wc'}>
           <Controller
             name="course_product_id"
             control={form.control}
-            rules={{
-              ...requiredRule(),
-            }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
@@ -500,7 +547,7 @@ const CourseBasic = () => {
           />
         </Show>
 
-        <Show when={coursePriceType === 'paid' && tutorConfig.settings.monetize_by === 'edd'}>
+        <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'edd'}>
           <Controller
             name="course_product_id"
             control={form.control}
@@ -532,7 +579,7 @@ const CourseBasic = () => {
           when={
             courseCategory === 'regular' &&
             coursePriceType === 'paid' &&
-            (tutorConfig.settings.monetize_by === 'tutor' || tutorConfig.settings.monetize_by === 'wc')
+            (tutorConfig.settings?.monetize_by === 'tutor' || tutorConfig.settings?.monetize_by === 'wc')
           }
         >
           <div css={styles.coursePriceWrapper}>
@@ -541,6 +588,13 @@ const CourseBasic = () => {
               control={form.control}
               rules={{
                 ...requiredRule(),
+                validate: (value) => {
+                  if (Number(value) <= 0) {
+                    return __('Price must be greater than 0', 'tutor');
+                  }
+
+                  return true;
+                },
               }}
               render={(controllerProps) => (
                 <FormInputWithContent
@@ -558,10 +612,24 @@ const CourseBasic = () => {
             <Controller
               name="course_sale_price"
               control={form.control}
+              rules={{
+                validate: (value) => {
+                  if (!value) {
+                    return true;
+                  }
+
+                  const regularPrice = form.getValues('course_price');
+                  if (Number(value) >= Number(regularPrice)) {
+                    return __('Sale price must be less than regular price', 'tutor');
+                  }
+
+                  return true;
+                },
+              }}
               render={(controllerProps) => (
                 <FormInputWithContent
                   {...controllerProps}
-                  label={__('Discount Price', 'tutor')}
+                  label={__('Sale Price', 'tutor')}
                   content={tutor_currency?.symbol || '$'}
                   placeholder={__('0', 'tutor')}
                   type="number"
@@ -669,9 +737,22 @@ const styles = {
     grid-template-columns: 1fr 338px;
     gap: ${spacing[32]};
   `,
-  mainForm: css`
+  mainForm: ({
+    isWpEditorFullScreen,
+  }: {
+    isWpEditorFullScreen: boolean;
+  }) => css`
     padding-block: ${spacing[24]};
     align-self: start;
+    top: 0;
+    position: sticky;
+
+    ${
+      isWpEditorFullScreen &&
+      css`
+        z-index: ${zIndex.header + 1};
+      `
+    }
   `,
 
   fieldsWrapper: css`
@@ -690,7 +771,6 @@ const styles = {
     min-height: calc(100vh - ${headerHeight}px);
     padding-left: ${spacing[32]};
     padding-block: ${spacing[24]};
-
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
@@ -736,5 +816,11 @@ const styles = {
     ${styleUtils.flexCenter()};
     background-color: ${colorTokens.bg.gray20};
     border-radius: ${borderRadius.card};
+  `,
+  aiGradientText: css`
+    background: ${colorTokens.text.ai.gradient};
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   `,
 };

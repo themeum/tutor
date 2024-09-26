@@ -21,11 +21,12 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 
+import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
+  convertYouTubeDurationToSeconds,
   covertSecondsToHMS,
   getExternalVideoDuration,
   getVimeoVideoDuration,
-  getYouTubeVideoDuration,
 } from '@CourseBuilderUtils/utils';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
@@ -64,10 +65,10 @@ type FormVideoInputProps = {
 } & FormControllerProps<CourseVideo | null>;
 
 const videoSources =
-  (tutorConfig.settings.supported_video_sources &&
-    (Array.isArray(tutorConfig.settings.supported_video_sources)
-      ? tutorConfig.settings.supported_video_sources
-      : [tutorConfig.settings.supported_video_sources])) ||
+  (tutorConfig.settings?.supported_video_sources &&
+    (Array.isArray(tutorConfig.settings?.supported_video_sources)
+      ? tutorConfig.settings?.supported_video_sources
+      : [tutorConfig.settings?.supported_video_sources])) ||
   [];
 
 const videoSourceLabels: Record<string, string> = {
@@ -148,6 +149,7 @@ const FormVideoInput = ({
       videoUrl: '',
     },
   });
+  const getYouTubeVideoDurationMutation = useGetYouTubeVideoDuration();
 
   const videoSource = form.watch('videoSource') || '';
 
@@ -278,16 +280,72 @@ const FormVideoInput = ({
         }
       }
 
-      if (source === 'youtube' && tutorConfig.settings.lesson_video_duration_youtube_api_key) {
-        const duration = await getYouTubeVideoDuration(data.videoUrl);
+      if (source === 'youtube') {
+        const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+        const match = data.videoUrl.match(regExp);
+        const videoId = match && match[7].length === 11 ? match[7] : '';
+        const response = await getYouTubeVideoDurationMutation.mutateAsync(videoId);
+
+        const duration = response.data.duration;
+        const seconds = convertYouTubeDurationToSeconds(duration);
 
         if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          onGetDuration(covertSecondsToHMS(Math.floor(seconds)));
         }
       }
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const validateVideoUrl = (url: string) => {
+    const value = url.trim();
+    const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
+    if (form.watch('videoSource') === 'shortcode') {
+      const regExp = /^\[.*\]$/;
+      const match = value.match(regExp);
+
+      if (!match) {
+        return __('Invalid Shortcode', 'tutor');
+      }
+
+      return true;
+    }
+
+    if (!regex.test(value)) {
+      return __('Invalid URL', 'tutor');
+    }
+
+    if (form.watch('videoSource') === 'youtube') {
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = value.match(regExp);
+      if (!match || match[7].length !== 11) {
+        return __('Invalid YouTube URL', 'tutor');
+      }
+
+      return true;
+    }
+
+    if (form.watch('videoSource') === 'vimeo') {
+      const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+      const match = value.match(regExp);
+
+      if (!match || !match[5]) {
+        return __('Invalid Vimeo URL', 'tutor');
+      }
+    }
+
+    if (form.watch('videoSource') === 'embedded') {
+      const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
+      const match = value.match(regExp);
+
+      if (!match || !match[1]) {
+        return __('Invalid Embedded URL', 'tutor');
+      }
+    }
+
+    return true;
   };
 
   return (
@@ -380,7 +438,11 @@ const FormVideoInput = ({
                           <SVGIcon name="cross" height={24} width={24} />
                         </button>
                       </div>
-                      <div css={styles.imagePreview}>
+                      <div
+                        css={styles.imagePreview({
+                          isHTMLVideo: fieldValue?.source === 'html5',
+                        })}
+                      >
                         <Show
                           when={fieldValue?.source === 'html5'}
                           fallback={
@@ -458,9 +520,22 @@ const FormVideoInput = ({
             <Controller
               control={form.control}
               name="videoUrl"
-              rules={{ required: __('This field is required', 'tutor') }}
+              rules={{
+                required: __('This field is required', 'tutor'),
+                validate: validateVideoUrl,
+              }}
               render={(controllerProps) => {
-                return <FormTextareaInput {...controllerProps} rows={2} placeholder={__('https://')} />;
+                return (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    rows={2}
+                    placeholder={
+                      form.watch('videoSource') === 'shortcode'
+                        ? __('Enter shortcode', 'tutor')
+                        : __('Enter URL', 'tutor')
+                    }
+                  />
+                );
               }}
             />
 
@@ -495,7 +570,7 @@ const styles = {
   }) => css`
     width: 100%;
     height: 100%;
-    min-height: 196px;
+    min-height: 164px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -531,6 +606,10 @@ const styles = {
     ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[12]};
     gap: ${spacing[8]};
+
+    p {
+      word-break: break-all;
+    }
 
     span {
       font-weight: ${fontWeight.semiBold};
@@ -583,12 +662,17 @@ const styles = {
       color: ${colorTokens.icon.default};
     }
   `,
-  imagePreview: css`
+  imagePreview: ({
+    isHTMLVideo,
+  }: {
+    isHTMLVideo: boolean;
+  }) => css`
     width: 100%;
     max-height: 168px;
     position: relative;
     overflow: hidden;
     background-color: ${colorTokens.bg.white};
+    ${!isHTMLVideo && styleUtils.overflowYAuto};
 
     &:hover {
       [data-hover-buttons-wrapper] {
@@ -631,6 +715,7 @@ const styles = {
     ${styleUtils.resetButton};
     ${typography.small('medium')};
     color: ${colorTokens.text.brand};
+    margin-bottom: ${spacing[8]};
   `,
   removeButton: css`
     ${styleUtils.resetButton};

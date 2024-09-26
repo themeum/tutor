@@ -348,7 +348,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function setup_course_categories_tags( $post_id, $params ) {
-		if ( ! empty( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
+		if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
 			$category_names = array();
 
 			foreach ( $params['course_categories'] as $category_id ) {
@@ -361,9 +361,11 @@ class Course extends Tutor_Base {
 
 			// Set category names on the post.
 			wp_set_object_terms( $post_id, $category_names, 'course-category' );
+		} else {
+			wp_set_object_terms( $post_id, array(), 'course-category' );
 		}
 
-		if ( ! empty( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
+		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
 			$tag_names = array();
 
 			foreach ( $params['course_tags'] as $tag_id ) {
@@ -376,6 +378,8 @@ class Course extends Tutor_Base {
 
 			// Set tag names on the post.
 			wp_set_object_terms( $post_id, $tag_names, 'course-tag' );
+		} else {
+			wp_set_object_terms( $post_id, array(), 'course-tag' );
 		}
 	}
 
@@ -432,25 +436,35 @@ class Course extends Tutor_Base {
 			$type = $params['pricing']['type'] ?? '';
 
 			if ( '' === $type || ! in_array( $type, array( self::PRICE_TYPE_FREE, self::PRICE_TYPE_PAID, self::PRICE_TYPE_SUBSCRIPTION ), true ) ) {
-								$errors['pricing'] = __( 'Invalid price type', 'tutor' );
+				$errors['pricing'] = __( 'Invalid price type', 'tutor' );
 			}
 
 			if ( self::PRICE_TYPE_PAID === $type ) {
 				$monetize_by = tutor_utils()->get_option( 'monetize_by' );
 				if ( 'wc' === $monetize_by ) {
 					$course_product_id = tutor_utils()->get_course_product_id( $course_id );
-					$product_id        = (int) isset( $params['pricing']['product_id'] ) ? $params['pricing']['product_id'] : 0;
-					$product           = wc_get_product( $product_id );
+					$product_id        = isset( $params['pricing']['product_id'] ) ? (int) $params['pricing']['product_id'] : 0;
 
-					if ( is_a( $product, 'WC_Product' ) ) {
-						if ( $course_product_id != $product_id ) {
-							$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
-							if ( $is_linked_with_course ) {
-								$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+					if ( $product_id ) {
+						$product = wc_get_product( $product_id );
+						if ( is_a( $product, 'WC_Product' ) ) {
+							if ( $course_product_id !== $product_id ) {
+								$is_linked_with_course = tutor_utils()->product_belongs_with_course( $product_id );
+								if ( $is_linked_with_course ) {
+									$errors['pricing'] = __( 'Product already linked with course', 'tutor' );
+								}
 							}
+						} else {
+							$errors['pricing'] = __( 'Invalid product', 'tutor' );
 						}
 					} else {
-						$errors['pricing'] = __( 'Invalid product', 'tutor' );
+						/**
+						 * If user does not select WC product
+						 * Then automatic WC product will be create name with course title.
+						 */
+						if ( ! isset( $params['course_price'] ) || ! floatval( $params['course_price'] ) ) {
+							$errors['pricing'] = __( 'Price is required', 'tutor' );
+						}
 					}
 				}
 			}
@@ -1142,7 +1156,8 @@ class Course extends Tutor_Base {
 		wp_enqueue_editor();
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'tutor-course-builder-v3', tutor()->url . 'assets/js/tutor-course-builder-v3.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
@@ -1151,23 +1166,26 @@ class Course extends Tutor_Base {
 			$default_data['current_user']->data->tutor_profile_photo_url = $tutor_user->tutor_profile_photo_url;
 		}
 
-		// If need more data.
-		$settings                            = get_option( 'tutor_option', array() );
-		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $settings['tutor_frontend_course_page_logo_id'] ?? 0 );
-
-		$remove_settings = array(
-			'chatgpt_api_key',
-			'recaptcha_v2_site_key',
-			'recaptcha_v3_site_key',
-			'twitter_app_key',
-			'twitter_app_key_secret',
-			'google_client_ID',
-			'facebook_app_ID',
+		/**
+		 * Localized only options to protect sensitive info like API keys.
+		 */
+		$required_options = array(
+			'monetize_by',
+			'enable_course_marketplace',
+			'course_permalink_base',
+			'supported_video_sources',
+			'enrollment_expiry_enabled',
+			'enable_q_and_a_on_course',
+			'instructor_can_delete_course',
+			'chatgpt_enable',
 		);
 
-		$new_data = array(
-			'settings' => array_diff_key( $settings, array_flip( $remove_settings ) ),
-		);
+		$full_settings                       = get_option( 'tutor_option', array() );
+		$settings                            = Options_V2::get_only( $required_options );
+		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
+		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+
+		$new_data = array( 'settings' => $settings );
 
 		$data = array_merge( $default_data, $new_data );
 
@@ -1187,9 +1205,18 @@ class Course extends Tutor_Base {
 			$data['edd_products'] = tutor_utils()->get_edd_products();
 		}
 
-		$data['dashboard_url'] = $dashboard_url;
-		$data['timezones']     = tutor_global_timezone_lists();
-		$data['wp_rest_nonce'] = wp_create_nonce( 'wp_rest' );
+		$difficulty_levels = array();
+		foreach ( tutor_utils()->course_levels() as $value => $label ) {
+			$difficulty_levels[] = array(
+				'label' => $label,
+				'value' => $value,
+			);
+		}
+
+		$data['dashboard_url']     = $dashboard_url;
+		$data['timezones']         = tutor_global_timezone_lists();
+		$data['difficulty_levels'] = $difficulty_levels;
+		$data['wp_rest_nonce']     = wp_create_nonce( 'wp_rest' );
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
@@ -1201,7 +1228,8 @@ class Course extends Tutor_Base {
 			)
 		);
 
-		wp_localize_script( 'tutor-course-builder-v3', '_tutorobject', $data );
+		wp_localize_script( 'tutor-course-builder', '_tutorobject', $data );
+		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**
@@ -1955,8 +1983,13 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.3.4
 	 *
+	 * @since 3.0.0
+	 *
+	 * Setting course regular & sale price to make compatible
+	 * with Tutor monetization
+	 *
 	 * @param integer $post_ID  course ID.
-	 * @param array   $post_data cretaed course post details.
+	 * @param array   $post_data created course post details.
 	 *
 	 * @return void
 	 */
@@ -2001,8 +2034,9 @@ class Course extends Tutor_Base {
 
 		$course = get_post( $post_ID );
 
-		if ( 'wc' === $monetize_by ) {
+		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
+		if ( 'wc' === $monetize_by ) {
 			$is_update = false;
 			if ( $attached_product_id ) {
 				$wc_product = get_post_meta( $attached_product_id, '_product_version', true );
@@ -2018,14 +2052,20 @@ class Course extends Tutor_Base {
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 				}
 
-				$product_obj = wc_get_product( $attached_product_id );
 				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
+				$product_obj = wc_get_product( $product_id );
 				if ( $product_obj->is_type( 'subscription' ) ) {
 					update_post_meta( $attached_product_id, '_subscription_price', $course_price );
 				}
+
+				// Set course regular & sale price.
+				update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
+				update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 			} else {
+				// Create new WC product name with course title.
 				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
+					$product_obj = wc_get_product( $product_id );
 					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
 					// Mark product for woocommerce.
 					update_post_meta( $product_id, '_virtual', 'yes' );
@@ -2035,6 +2075,10 @@ class Course extends Tutor_Base {
 					if ( $course_post_thumbnail ) {
 						set_post_thumbnail( $product_id, $course_post_thumbnail );
 					}
+
+					// Set course regular & sale price.
+					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
+					update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 				}
 			}
 		} elseif ( 'edd' === $monetize_by ) {
@@ -2690,9 +2734,13 @@ class Course extends Tutor_Base {
 	 * @param int    $product_id product ID.
 	 * @param string $status product status.
 	 *
-	 * @return integer
+	 * @return integer Product id or return 0 if WC not exists
 	 */
 	public static function create_wc_product( $title, $reg_price, $sale_price, $product_id = 0, $status = 'publish' ) {
+		if ( ! tutor_utils()->has_wc() ) {
+			return 0;
+		}
+
 		$product_obj = new \WC_Product();
 		if ( $product_id ) {
 			$product_obj = wc_get_product( $product_id );

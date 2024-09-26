@@ -9,7 +9,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToVerticalAxis, restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -17,19 +17,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import Popover from '@Molecules/Popover';
 
-import Question from '@CourseBuilderComponents/curriculum/Question';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-
-import Tooltip from '@Atoms/Tooltip';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
+import Question from '@CourseBuilderComponents/curriculum/Question';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -93,6 +92,8 @@ const questionTypeOptions: {
   },
 ];
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 const QuestionList = ({
   isEditing,
 }: {
@@ -104,7 +105,7 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, setActiveQuestionId, setValidationError } = useQuizModalContext();
+  const { activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -214,17 +215,7 @@ const QuestionList = ({
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
     const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
 
-    if (!currentQuestion) {
-      return;
-    }
-
-    const validation = validateQuizQuestion(activeQuestionIndex, form);
-
-    if (validation !== true) {
-      showToast({
-        message: validation.message,
-        type: validation.type as 'danger',
-      });
+    if (!currentQuestion || validationError) {
       return;
     }
 
@@ -245,7 +236,11 @@ const QuestionList = ({
 
   const handleDeleteQuestion = (index: number, question: QuizQuestion) => {
     removeQuestion(index);
-    setActiveQuestionId('');
+
+    if (activeQuestionIndex === index) {
+      setActiveQuestionId('');
+      setValidationError(null);
+    }
 
     if (question._data_status !== 'new') {
       form.setValue('deleted_question_ids', [...form.getValues('deleted_question_ids'), question.question_id]);
@@ -286,11 +281,22 @@ const QuestionList = ({
       </div>
 
       <div ref={questionListRef} css={styles.questionList}>
-        <Show when={questions.length > 0} fallback={<div>{__('No questions added yet.', 'tutor')}</div>}>
+        <Show
+          when={questions.length > 0}
+          fallback={
+            <div
+              css={css`
+                padding-left: ${spacing[28]};
+              `}
+            >
+              {__('No questions added yet.', 'tutor')}
+            </div>
+          }
+        >
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
+            modifiers={[restrictToWindowEdges]}
             onDragStart={(event) => {
               setActiveSortId(event.active.id);
             }}
@@ -327,6 +333,7 @@ const QuestionList = ({
                         index={index}
                         onDuplicateQuestion={noop}
                         onRemoveQuestion={noop}
+                        isOverlay
                       />
                     );
                   }}
@@ -350,7 +357,7 @@ const QuestionList = ({
             {questionTypeOptions.map((option) => (
               <Show
                 key={option.value}
-                when={option.isPro && !tutorConfig.tutor_pro_url}
+                when={option.isPro && !isTutorPro}
                 fallback={
                   <button
                     key={option.value}
@@ -365,22 +372,11 @@ const QuestionList = ({
                   </button>
                 }
               >
-                <Tooltip delay={200} content={__('Pro Feature', 'tutor')} placement="left">
-                  <button
-                    key={option.value}
-                    type="button"
-                    css={styles.questionTypeOption}
-                    disabled
-                    onClick={() => {
-                      handleAddQuestion(option.value as QuizQuestionType);
-                    }}
-                  >
-                    <SVGIcon name={option.icon as IconCollection} width={24} height={24} />
-                    <span>{option.label}</span>
-
-                    {/* @TODO: Need to add lock or pro identifier */}
-                  </button>
-                </Tooltip>
+                <button key={option.value} type="button" css={styles.questionTypeOption} disabled onClick={noop}>
+                  <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
+                  <span>{option.label}</span>
+                  <ProBadge size="small" content={__('Pro', 'tutor')} />
+                </button>
               </Show>
             ))}
           </div>
@@ -418,7 +414,7 @@ const styles = {
   `,
   questionList: css`
     ${styleUtils.overflowYAuto};
-    padding: ${spacing[8]} 0 ${spacing[8]} ${spacing[20]};
+    padding: ${spacing[8]} 0 ${spacing[8]} 0;
   `,
   questionTypeOptionsTitle: css`
     ${typography.caption('medium')};
@@ -438,11 +434,16 @@ const styles = {
     transition: background-color 0.3s ease-in-out;
     display: flex;
     align-items: center;
-    gap: ${spacing[10]};
+    gap: ${spacing[4]};
     border: 2px solid transparent;
 
     :disabled {
       cursor: not-allowed;
+      color: ${colorTokens.text.primary};
+
+      [data-question-icon] {
+        filter: grayscale(100%);
+      }
     }
 
     :hover:enabled {

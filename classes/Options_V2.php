@@ -124,6 +124,20 @@ class Options_V2 {
 	}
 
 	/**
+	 * Get only list of options.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $only only options.
+	 *
+	 * @return array
+	 */
+	public static function get_only( $only = array() ) {
+		$settings = get_option( 'tutor_option', array() );
+		return array_intersect_key( $settings, array_flip( $only ) );
+	}
+
+	/**
 	 * Function to get all fields for search tutor_option_search
 	 *
 	 * @since 2.0.0
@@ -626,12 +640,13 @@ class Options_V2 {
 						'slug'       => 'general-page',
 						'fields'     => array(
 							array(
-								'key'     => 'tutor_dashboard_page_id',
-								'type'    => 'select',
-								'label'   => __( 'Dashboard Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'This page will be used for student and instructor dashboard', 'tutor' ),
+								'key'        => 'tutor_dashboard_page_id',
+								'type'       => 'select',
+								'label'      => __( 'Dashboard Page', 'tutor' ),
+								'default'    => '0',
+								'options'    => $pages,
+								'desc'       => __( 'This page will be used for student and instructor dashboard', 'tutor' ),
+								'searchable' => true,
 							),
 						),
 					),
@@ -641,12 +656,13 @@ class Options_V2 {
 						'slug'       => 'general-page',
 						'fields'     => array(
 							array(
-								'key'     => 'tutor_toc_page_id',
-								'type'    => 'select',
-								'label'   => __( 'Terms and Conditions Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'This page will be used as the Terms and Conditions page', 'tutor' ),
+								'key'        => 'tutor_toc_page_id',
+								'type'       => 'select',
+								'label'      => __( 'Terms and Conditions Page', 'tutor' ),
+								'default'    => '0',
+								'options'    => $pages,
+								'desc'       => __( 'This page will be used as the Terms and Conditions page', 'tutor' ),
+								'searchable' => true,
 							),
 						),
 					),
@@ -1605,28 +1621,31 @@ class Options_V2 {
 								'desc'    => __( 'Enable to hide course products on shop page.', 'tutor' ),
 							),
 							array(
-								'key'     => 'course_archive_page',
-								'type'    => 'select',
-								'label'   => __( 'Course Archive Page', 'tutor' ),
-								'default' => $course_archive_page_id->ID ?? '0',
-								'options' => $pages,
-								'desc'    => __( 'This page will be used to list all the published courses.', 'tutor' ),
+								'key'        => 'course_archive_page',
+								'type'       => 'select',
+								'label'      => __( 'Course Archive Page', 'tutor' ),
+								'default'    => $course_archive_page_id->ID ?? '0',
+								'options'    => $pages,
+								'desc'       => __( 'This page will be used to list all the published courses.', 'tutor' ),
+								'searchable' => true,
 							),
 							array(
-								'key'     => 'instructor_register_page',
-								'type'    => 'select',
-								'label'   => __( 'Instructor Registration Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'Choose the page for instructor registration.', 'tutor' ),
+								'key'        => 'instructor_register_page',
+								'type'       => 'select',
+								'label'      => __( 'Instructor Registration Page', 'tutor' ),
+								'default'    => '0',
+								'options'    => $pages,
+								'desc'       => __( 'Choose the page for instructor registration.', 'tutor' ),
+								'searchable' => true,
 							),
 							array(
-								'key'     => 'student_register_page',
-								'type'    => 'select',
-								'label'   => __( 'Student Registration Page', 'tutor' ),
-								'default' => '0',
-								'options' => $pages,
-								'desc'    => __( 'Choose the page for student registration.', 'tutor' ),
+								'key'        => 'student_register_page',
+								'type'       => 'select',
+								'label'      => __( 'Student Registration Page', 'tutor' ),
+								'default'    => '0',
+								'options'    => $pages,
+								'desc'       => __( 'Choose the page for student registration.', 'tutor' ),
+								'searchable' => true,
 							),
 							array(
 								'key'     => 'lesson_video_duration_youtube_api_key',

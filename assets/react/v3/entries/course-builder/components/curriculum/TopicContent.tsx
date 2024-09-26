@@ -5,8 +5,12 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Popover from '@Molecules/Popover';
 
 import { useModal } from '@Components/modals/Modal';
@@ -22,7 +26,7 @@ import {
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -33,7 +37,6 @@ import type { CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { noop } from '@Utils/util';
@@ -42,7 +45,7 @@ interface TopicContentProps {
   type: ContentType;
   topic: CourseTopicWithCollapse;
   content: { id: ID; title: string; total_question: number };
-  isDragging?: boolean;
+  isOverlay?: boolean;
   onDelete?: () => void;
   onCopy?: () => void;
 }
@@ -98,9 +101,10 @@ const modalIcon: {
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
-const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDelete }: TopicContentProps) => {
+const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = false }: TopicContentProps) => {
   const courseDetails = useCourseDetails();
   const form = useFormContext<CourseFormData>();
   const [meetingType, setMeetingType] = useState<'tutor_zoom_meeting' | 'tutor-google-meet' | null>(null);
@@ -110,7 +114,7 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const deleteRef = useRef<HTMLButtonElement>(null);
 
   const icon = icons[type];
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: content.id,
     animateLayoutChanges,
   });
@@ -118,6 +122,8 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
+    opacity: isDragging ? 0.3 : undefined,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
   };
   const { showModal } = useModal();
   const duplicateContentMutation = useDuplicateContentMutation();
@@ -193,11 +199,11 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
     <>
       <div
         {...attributes}
-        css={styles.wrapper({ isDragging, isActive: meetingType === type || isDeletePopoverOpen })}
+        css={styles.wrapper({ isDragging: isOverlay, isActive: meetingType === type || isDeletePopoverOpen })}
         ref={setNodeRef}
         style={style}
       >
-        <div css={styles.iconAndTitle({ isDragging })} {...listeners}>
+        <div css={styles.iconAndTitle({ isDragging: isOverlay })} {...listeners}>
           <div data-content-icon>
             <SVGIcon
               name={icon.name as IconCollection}
@@ -220,17 +226,30 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
         </div>
 
         <div css={styles.actions} data-actions>
-          <Show when={type === 'tutor_quiz' && isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+          <Show when={type === 'tutor_quiz'}>
             <Tooltip content={__('Export Quiz', 'tutor')} delay={200}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                onClick={() => {
-                  exportQuizMutation.mutate(content.id);
-                }}
+              <Show
+                when={!isTutorPro}
+                fallback={
+                  <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      onClick={() => {
+                        exportQuizMutation.mutate(content.id);
+                      }}
+                    >
+                      <SVGIcon name="export" width={24} height={24} />
+                    </button>
+                  </Show>
+                }
               >
-                <SVGIcon name="upload" width={24} height={24} />
-              </button>
+                <ProBadge size="tiny">
+                  <button type="button" css={styles.actionButton} disabled onClick={noop}>
+                    <SVGIcon name="export" width={24} height={24} />
+                  </button>
+                </ProBadge>
+              </Show>
             </Tooltip>
           </Show>
           <Tooltip content={__('Edit', 'tutor')} delay={200}>
@@ -238,12 +257,23 @@ const TopicContent = ({ type, topic, content, isDragging = false, onCopy, onDele
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
-          <Show when={type !== 'tutor_zoom_meeting' && type !== 'tutor-google-meet'}>
+          <Show when={!['tutor_zoom_meeting', 'tutor_zoom_meeting'].includes(type)}>
             <Show when={!duplicateContentMutation.isPending} fallback={<LoadingSpinner size={24} />}>
               <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
-                <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
-                  <SVGIcon name="copyPaste" width={24} height={24} />
-                </button>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  }
+                >
+                  <ProBadge size="tiny">
+                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </ProBadge>
+                </Show>
               </Tooltip>
             </Show>
           </Show>
@@ -412,7 +442,7 @@ const styles = {
   actions: css`
     display: flex;
     opacity: 0;
-    align-items: center;
+    align-items: start;
     gap: ${spacing[8]};
     justify-content: end;
   `,
@@ -420,5 +450,10 @@ const styles = {
     ${styleUtils.resetButton};
     color: ${colorTokens.icon.default};
     display: flex;
+
+    :disabled {
+      color: ${colorTokens.icon.disable.background};
+      cursor: not-allowed;
+    }
   `,
 };

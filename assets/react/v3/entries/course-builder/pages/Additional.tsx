@@ -6,6 +6,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
@@ -31,6 +32,12 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 
+import addonDisabled2x from '@Images/addon-disabled-2x.webp';
+import addonDisabled from '@Images/addon-disabled.webp';
+import attachmentsPro2x from '@Images/pro-placeholders/attachments-2x.webp';
+import attachmentsPro from '@Images/pro-placeholders/attachments.webp';
+
+import CoursePrerequisitesEmptyStater from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import Certificate from '../components/additional/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -185,7 +192,12 @@ const Additional = () => {
 
         <div css={styles.formSection}>
           <div css={styles.titleAndSub}>
-            <div css={styles.title}>{__('Certificate', 'tutor')}</div>
+            <div css={styles.title}>
+              {__('Certificate', 'tutor')}
+              <Show when={!isTutorPro}>
+                <ProBadge content={__('Pro', 'tutor')} />
+              </Show>
+            </div>
             <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
               <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
             </Show>
@@ -201,48 +213,9 @@ const Additional = () => {
         <div>
           <span css={styles.label}>
             {__('Course Prerequisites', 'tutor')}
-            {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+            {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
           </span>
-          <Show
-            when={isTutorPro && isPrerequisiteAddonEnabled}
-            fallback={
-              <EmptyState
-                size="small"
-                removeBorder={false}
-                title={__('Add prerequisites to your course', 'tutor')}
-                description={__(
-                  'Add prerequisites to your course to ensure that students have the necessary knowledge before enrolling.',
-                  'tutor',
-                )}
-                actions={
-                  <Show
-                    when={!isTutorPro}
-                    fallback={
-                      <Button
-                        size="small"
-                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                        onClick={() => {
-                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-                        }}
-                      >
-                        {__('Enable Prerequisites Addon', 'tutor')}
-                      </Button>
-                    }
-                  >
-                    <Button
-                      size="small"
-                      icon={<SVGIcon name="crown" width={24} height={24} />}
-                      onClick={() => {
-                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-                      }}
-                    >
-                      {__('Get Tutor LMS Pro', 'tutor')}
-                    </Button>
-                  </Show>
-                }
-              />
-            }
-          >
+          <Show when={isTutorPro && isPrerequisiteAddonEnabled} fallback={<CoursePrerequisitesEmptyStater />}>
             <Controller
               name="course_prerequisites"
               control={form.control}
@@ -263,7 +236,7 @@ const Additional = () => {
         <div css={styles.uploadAttachment}>
           <span css={styles.label}>
             {__('Attachments', 'tutor')}
-            {!isTutorPro && <SVGIcon name="crown" width={24} height={24} />}
+            {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
           </span>
           <Show
             when={isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_ATTACHMENTS)}
@@ -271,36 +244,34 @@ const Additional = () => {
               <EmptyState
                 size="small"
                 removeBorder={false}
-                title={__('Add attachments to provide additional resources to your students.', 'tutor')}
-                description={__(
-                  `Provide additional resources to support your students' learning. Attachments can include PDFs, Word documents, or other helpful file types.`,
-                  'tutor',
-                )}
+                emptyStateImage={!isTutorPro ? attachmentsPro : addonDisabled}
+                emptyStateImage2x={!isTutorPro ? attachmentsPro2x : addonDisabled2x}
+                title={
+                  !isTutorPro
+                    ? __('Boost learning impact by adding relevant attachments to your topics', 'tutor')
+                    : __('Add attachments to provide additional resources to your students.', 'tutor')
+                }
+                description={
+                  isTutorPro
+                    ? __(
+                        `Provide additional resources to support your students' learning. Attachments can include PDFs, Word documents, or other helpful file types.`,
+                        'tutor',
+                      )
+                    : ''
+                }
                 actions={
-                  <Show
-                    when={!isTutorPro}
-                    fallback={
-                      <Button
-                        size="small"
-                        icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                        onClick={() => {
-                          window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-                        }}
-                      >
-                        {__('Enable Course Attachments Addon', 'tutor')}
-                      </Button>
-                    }
-                  >
+                  isTutorPro && (
                     <Button
                       size="small"
-                      icon={<SVGIcon name="crown" width={24} height={24} />}
+                      variant="secondary"
+                      icon={<SVGIcon name="linkExternal" width={24} height={24} />}
                       onClick={() => {
-                        window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
+                        window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
                       }}
                     >
-                      {__('Get Tutor LMS Pro', 'tutor')}
+                      {__('Enable Course Attachments Addon', 'tutor')}
                     </Button>
-                  </Show>
+                  )
                 }
               />
             }
@@ -346,6 +317,9 @@ const styles = {
 	`,
   title: css`
 		${typography.body('medium')};
+    ${styleUtils.display.flex()}
+    align-items: center;
+    gap: ${spacing[4]};
 		color: ${colorTokens.text.primary};
 	`,
   subtitle: css`
@@ -419,7 +393,7 @@ const styles = {
   label: css`
     ${styleUtils.display.inlineFlex()}
     align-items: center;
-    gap: ${spacing[2]};
+    gap: ${spacing[4]};
     ${typography.body('medium')}
     color: ${colorTokens.text.title};
     margin-bottom: ${spacing[8]};

@@ -4,6 +4,7 @@ import type { ChatFormat, ChatLanguage, ChatTone } from '@Config/magic-ai';
 import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
+import type { ErrorResponse } from '@Utils/form';
 import type { Prettify, WPResponse } from '@Utils/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
@@ -22,12 +23,8 @@ const generateImage = (payload: ImagePayload) => {
 };
 
 export const useMagicImageGenerationMutation = () => {
-  const { showToast } = useToast();
   return useMutation({
     mutationFn: generateImage,
-    onError(error: Error) {
-      showToast({ type: 'danger', message: error.message });
-    },
   });
 };
 
@@ -45,8 +42,8 @@ export const useMagicFillImageMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: magicFillImage,
-    onError(error: Error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -68,8 +65,8 @@ export const useMagicTextGenerationMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: generateText,
-    onError(error: Error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -104,8 +101,8 @@ export const useModifyContentMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: modifyContent,
-    onError(error: Error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -125,8 +122,8 @@ export const useStoreAIGeneratedImageMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: storeImage,
-    onError(error: Error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -154,8 +151,8 @@ export const useGenerateCourseContentMutation = (type: ContentType) => {
   return useMutation({
     mutationKey: ['GenerateCourseContent', type],
     mutationFn: generateCourseContent,
-    onError(error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -176,8 +173,8 @@ export const useGenerateCourseTopicNamesMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: generateCourseTopicNames,
-    onError(error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -199,8 +196,8 @@ export const useGenerateCourseTopicContentMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: generateCourseTopicContent,
-    onError(error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -222,8 +219,8 @@ export const useSaveAIGeneratedCourseContentMutation = () => {
     onSuccess() {
       queryClient.invalidateQueries({ queryKey: ['CourseDetails'] });
     },
-    onError(error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };
@@ -252,8 +249,8 @@ export const useGenerateQuizQuestionsMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: generateQuizQuestions,
-    onError(error) {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
     },
   });
 };

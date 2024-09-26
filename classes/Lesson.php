@@ -37,7 +37,6 @@ class Lesson extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->lesson_post_type, array( $this, 'save_lesson_meta' ) );
 
 		add_action( 'wp_ajax_tutor_lesson_details', array( $this, 'ajax_lesson_details' ) );
@@ -104,55 +103,6 @@ class Lesson extends Tutor_Base {
 		tutor_load_template( 'single.lesson.comment' );
 		$html = ob_get_clean();
 		wp_send_json_success( array( 'html' => $html ) );
-	}
-
-	/**
-	 * Registering metabox
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function register_meta_box() {
-		$lesson_post_type = $this->lesson_post_type;
-
-		tutor_meta_box_wrapper( 'tutor-course-select', __( 'Select Course', 'tutor' ), array( $this, 'lesson_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-
-		tutor_meta_box_wrapper( 'tutor-lesson-videos', __( 'Lesson Video', 'tutor' ), array( $this, 'lesson_video_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-
-		tutor_meta_box_wrapper( 'tutor-lesson-attachments', __( 'Attachments', 'tutor' ), array( $this, 'lesson_attachments_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-	}
-
-	/**
-	 * Lesson metabox
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function lesson_metabox() {
-		include tutor()->path . 'views/metabox/lesson-metabox.php';
-	}
-
-	/**
-	 * Video metabox
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function lesson_video_metabox() {
-		include tutor()->path . 'views/metabox/video-metabox.php';
-	}
-
-	/**
-	 * Attachment metabox
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function lesson_attachments_metabox() {
-		include tutor()->path . 'views/metabox/lesson-attachments-metabox.php';
 	}
 
 	/**
@@ -304,9 +254,8 @@ class Lesson extends Tutor_Base {
 		$post_content     = $is_html_active ? $raw_html_content : $description;
 
 		$rules = array(
-			'topic_id'    => 'required|numeric',
-			'description' => 'required',
-			'lesson_id'   => 'if_input|numeric',
+			'topic_id'  => 'required|numeric',
+			'lesson_id' => 'if_input|numeric',
 		);
 
 		//phpcs:ignore WordPress.Security.NonceVerification.Missing

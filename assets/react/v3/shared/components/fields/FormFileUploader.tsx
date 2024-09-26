@@ -20,6 +20,7 @@ export type WpMediaDetails = {
   id: number;
   url: string;
   title: string;
+  filename: string;
   date?: string;
   filesizeHumanReadable?: string;
   filesizeInBytes?: number;
@@ -140,7 +141,7 @@ const FormFileUploader = ({
         name: file.title,
         size: file.filesizeHumanReadable,
         size_bytes: file.filesizeInBytes,
-        ext: file.subtype,
+        ext: file.filename.split('.').pop(),
       };
 
       if (!selectMultiple) {
@@ -288,7 +289,6 @@ const styles = {
   }) => css`
     display: flex;
     flex-direction: column;
-    gap: ${spacing[8]};
     position: relative;
     
     ${
@@ -298,6 +298,7 @@ const styles = {
         padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
         border: 1px solid ${colorTokens.stroke.default};
         border-radius: ${borderRadius.card};
+        gap: ${spacing[8]};
       `
     }
   `,
@@ -330,6 +331,7 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
+    overflow: hidden;
   `,
   attachmentCardBody: css`
     ${styleUtils.display.flex('column')};

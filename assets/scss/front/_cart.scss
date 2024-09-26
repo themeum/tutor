@@ -1,4 +1,10 @@
 .tutor-cart-page {
+    padding: 80px 0px;
+    
+    @include breakpoint-max(mobile) {
+        padding: 40px 0px;
+    }
+
     .tutor-cart-course-list {
         display: flex;
         flex-direction: column;
@@ -12,7 +18,12 @@
         display: flex;
         align-items: stretch;
         gap: 24px;
-        padding: 30px;
+        padding: 32px;
+
+        @include breakpoint-max(mobile) {
+            flex-direction: column;
+            padding: 16px;
+        }
 
         &:not(:last-child) {
             border-bottom: 1px solid var(--tutor-border-color);
@@ -23,6 +34,11 @@
             height: 90px;
             border-radius: 8px;
             overflow: hidden;
+
+            @include breakpoint-max(mobile) {
+                width: 100%;
+                height: auto;
+            }
 
             img {
                 width: 100%;
@@ -93,11 +109,22 @@
             justify-content: space-between;
             align-items: end;
 
+            @include breakpoint-max(mobile) {
+                flex-direction: row;
+                margin-left: 0;
+                align-items: start;
+            }
+
             .tutor-cart-course-price {
                 display: flex;
                 flex-direction: column;
                 align-items: end;
                 color: var(--tutor-body-color);
+
+                @include breakpoint-max(mobile) {
+                    flex-direction: row;
+                    gap: 8px;
+                }
             }
 
             .tutor-cart-discount-price {
@@ -129,10 +156,18 @@
             gap: 16px;
             padding: 32px;
             border-bottom: 1px solid var(--tutor-border-color);
+
+            @include breakpoint-max(mobile) {
+                padding: 16px;
+            }
         }
 
         .tutor-cart-summery-bottom {
             padding: 32px;
+
+            @include breakpoint-max(mobile) {
+                padding: 16px;
+            }
         }
 
         .tutor-cart-summery-item {

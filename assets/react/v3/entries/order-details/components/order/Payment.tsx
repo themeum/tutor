@@ -57,6 +57,14 @@ function Payment() {
       </BoxTitle>
       <div css={styles.content}>
         <Box bordered css={styleUtils.boxReset}>
+          {order.subscription_fees?.map((item) =>
+            <div css={styles.item({ action: 'regular' })}>
+              <div>{item.title}</div>
+              <div>-</div>
+              <div>{formatPrice(Number(item.value))}</div>
+            </div>
+          )}
+
           <div css={styles.item({ action: 'regular' })}>
             <div>{__('Subtotal', 'tutor')}</div>
             <div>
@@ -70,28 +78,30 @@ function Payment() {
               when={order.discount_amount}
               fallback={
                 <>
-                  <button
-                    type="button"
-                    css={styles.discountButton}
-                    onClick={() =>
-                      showModal({
-                        component: DiscountModal,
-                        props: {
-                          title: __('Add discount', 'tutor'),
-                          discount: {
-                            amount: 0,
-                            discounted_value: 0,
-                            reason: '',
-                            type: 'percentage',
+                  <Show when={order.payment_status === 'unpaid'} fallback={__('Discount', 'tutor')}>
+                    <button
+                      type="button"
+                      css={styles.discountButton}
+                      onClick={() =>
+                        showModal({
+                          component: DiscountModal,
+                          props: {
+                            title: __('Add discount', 'tutor'),
+                            discount: {
+                              amount: 0,
+                              discounted_value: 0,
+                              reason: '',
+                              type: 'percentage',
+                            },
+                            total_price: order.subtotal_price,
+                            order_id: order.id,
                           },
-                          total_price: order.subtotal_price,
-                          order_id: order.id,
-                        },
-                      })
-                    }
-                  >
-                    {__('Add discount', 'tutor')}
-                  </button>
+                        })
+                      }
+                    >
+                      {__('Add discount', 'tutor')}
+                    </button>
+                  </Show>
                   <div>-</div>
                   <div>-{formatPrice(0)}</div>
                 </>
@@ -99,28 +109,30 @@ function Payment() {
             >
               <div css={styles.discountTitleWrapper}>
                 <span>{__('Discount', 'tutor')}</span>
-                <button
-                  type="button"
-                  css={styles.editDiscountButton}
-                  onClick={() => {
-                    showModal({
-                      component: DiscountModal,
-                      props: {
-                        title: __('Add discount', 'tutor'),
-                        discount: {
-                          amount: order.discount_amount ?? 0,
-                          discounted_value: 0,
-                          reason: order.discount_reason ?? '',
-                          type: order.discount_type ?? 'percentage',
+                <Show when={order.payment_status === 'unpaid'}>
+                  <button
+                    type="button"
+                    css={styles.editDiscountButton}
+                    onClick={() => {
+                      showModal({
+                        component: DiscountModal,
+                        props: {
+                          title: __('Add discount', 'tutor'),
+                          discount: {
+                            amount: order.discount_amount ?? 0,
+                            discounted_value: 0,
+                            reason: order.discount_reason ?? '',
+                            type: order.discount_type ?? 'percentage',
+                          },
+                          total_price: order.subtotal_price,
+                          order_id: order.id,
                         },
-                        total_price: order.subtotal_price,
-                        order_id: order.id,
-                      },
-                    });
-                  }}
-                >
-                  <SVGIcon name="edit" width={20} height={20} />
-                </button>
+                      });
+                    }}
+                  >
+                    <SVGIcon name="edit" width={20} height={20} />
+                  </button>
+                </Show>
               </div>
               <div>
                 {order.discount_reason ?? '-'}

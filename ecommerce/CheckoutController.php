@@ -245,7 +245,7 @@ class CheckoutController {
 				if ( 'automate' === $payment_type ) {
 					try {
 						$payment_data = self::prepare_payment_data( $order_data );
-						$this->proceed_to_payment( $payment_data, $payment_method );
+						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
 					} catch ( \Throwable $th ) {
 						error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
 						wp_safe_redirect( home_url( '?tutor_order_placement=failed&order_id=' . $order_data['id'] ) );
@@ -296,7 +296,7 @@ class CheckoutController {
 		$total_price    = $order['total_price'];
 		$order_type     = $order['order_type'];
 
-		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
 		$currency_info   = tutor_get_currencies_info_by_code( $currency_code );
 
@@ -341,44 +341,37 @@ class CheckoutController {
 			}
 
 			$items[] = array(
-				'item_id'                           => $item->item_id,
-				'item_name'                         => $item_name,
-				'regular_price'                     => floatval( $item->regular_price ),
-				'regular_price_in_smallest_unit'    => intval( floatval( $item->regular_price ) * 100 ),
-				'quantity'                          => 1,
-				'discounted_price'                  => floatval( $item->sale_price ),
-				'discounted_price_in_smallest_unit' => intval( floatval( $item->sale_price ) * 100 ),
+				'item_id'          => $item->item_id,
+				'item_name'        => $item_name,
+				'regular_price'    => floatval( $item->regular_price ),
+				'quantity'         => 1,
+				'discounted_price' => floatval( $item->sale_price ),
 			);
 		}
 
 		return (object) array(
-			'items'                                   => (object) $items,
-			'subtotal'                                => floatval( $subtotal_price ),
-			'subtotal_in_smallest_unit'               => intval( floatval( $subtotal_price ) * 100 ),
-			'total_price'                             => floatval( $total_price ),
-			'total_price_in_smallest_unit'            => intval( floatval( $total_price ) * 100 ),
-			'order_id'                                => $order['id'],
-			'store_name'                              => $site_name,
-			'order_description'                       => 'Tutor Order',
-			'tax'                                     => 0,
-			'tax_in_smallest_unit'                    => floatval( 0 * 100 ),
-			'currency'                                => (object) array(
+			'items'              => (object) $items,
+			'subtotal'           => floatval( $subtotal_price ),
+			'total_price'        => floatval( $total_price ),
+			'order_id'           => $order['id'],
+			'store_name'         => $site_name,
+			'order_description'  => 'Tutor Order',
+			'tax'                => 0,
+			'currency'           => (object) array(
 				'code'         => $currency_code,
 				'symbol'       => $currency_symbol,
 				'name'         => $currency_info['name'] ?? '',
 				'locale'       => $currency_info['locale'] ?? '',
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
-			'country'                                 => $country,
-			'shipping_charge'                         => 0,
-			'shipping_charge_in_smallest_unit'        => 0,
-			'coupon_discount'                         => 0,
-			'coupon_discount_amount_in_smallest_unit' => 0,
-			'shipping_address'                        => (object) $shipping_and_billing,
-			'billing_address'                         => (object) $shipping_and_billing,
-			'decimal_separator'                       => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
-			'thousand_separator'                      => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
-			'customer'                                => (object) $customer_info,
+			'country'            => $country,
+			'shipping_charge'    => 0,
+			'coupon_discount'    => 0,
+			'shipping_address'   => (object) $shipping_and_billing,
+			'billing_address'    => (object) $shipping_and_billing,
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, '.' ),
+			'customer'           => (object) $customer_info,
 		);
 	}
 
@@ -387,8 +380,7 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int   $order_id Order id.
-	 * @param float $amount Order amount.
+	 * @param int $order_id Order id.
 	 *
 	 * @throws \Exception Throw exception if order not found.
 	 *
@@ -405,7 +397,7 @@ class CheckoutController {
 		$order_user_id = $order_data->student->id;
 		$user_data     = get_userdata( $order_user_id );
 
-		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_SYMBOL, 'USD' );
+		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
 		$currency_symbol = tutor_get_currency_symbol_by_code( $currency_code );
 		$currency_info   = tutor_get_currencies_info_by_code( $currency_code );
 
@@ -439,22 +431,20 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		return (object) array(
-			'type'                              => 'recurring',
-			'previous_payload'                  => $order_data->payment_payloads,
-			'total_amount'                      => floatval( $amount ),
-			'total_amount_in_smallest_unit'     => floatval( $amount ) * 100,
-			'sub_total_amount'                  => floatval( $amount ),
-			'sub_total_amount_in_smallest_unit' => floatval( $amount ) * 100,
-			'currency'                          => (object) array(
+			'type'             => 'recurring',
+			'previous_payload' => $order_data->payment_payloads,
+			'total_amount'     => floatval( $amount ),
+			'sub_total_amount' => floatval( $amount ),
+			'currency'         => (object) array(
 				'code'         => $currency_code,
 				'symbol'       => $currency_symbol,
 				'name'         => $currency_info['name'] ?? '',
 				'locale'       => $currency_info['locale'] ?? '',
 				'numeric_code' => $currency_info['numeric_code'] ?? '',
 			),
-			'order_id'                          => $order_id,
-			'customer'                          => (object) $customer_info,
-			'shipping_address'                  => (object) $shipping_and_billing,
+			'order_id'         => $order_id,
+			'customer'         => (object) $customer_info,
+			'shipping_address' => (object) $shipping_and_billing,
 		);
 	}
 
@@ -465,18 +455,40 @@ class CheckoutController {
 	 *
 	 * @param mixed  $payment_data Payment data for making order.
 	 * @param string $payment_method Payment method name.
+	 * @param string $order_type Order type.
 	 *
 	 * @throws \Throwable Throw throwable if error occur.
 	 * @throws \Exception Throw exception if payment gateway is invalid.
 	 *
 	 * @return void
 	 */
-	public function proceed_to_payment( $payment_data, $payment_method ) {
+	public function proceed_to_payment( $payment_data, $payment_method, $order_type ) {
 		$payment_gateways = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
 		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
 								? $payment_gateways[ $payment_method ]['gateway_class']
 								: null;
+
+		// Add enrollment fee with as a line item.
+		if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
+			$items = (array) $payment_data->items;
+			foreach ( $items as $item ) {
+				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
+				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+					$new_item = array(
+						'item_id'          => 0,
+						'item_name'        => 'Enrollment Fee',
+						'regular_price'    => floatval( $plan->enrollment_fee ?? 0 ),
+						'quantity'         => 1,
+						'discounted_price' => floatval( $plan->enrollment_fee ?? 0 ),
+					);
+
+					$items[] = $new_item;
+				}
+			}
+
+			$payment_data->items = (object) $items;
+		}
 
 		if ( $payment_gateway_class ) {
 			try {

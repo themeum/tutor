@@ -19,6 +19,7 @@ interface ThreeDotsOptionProps {
   isTrash?: boolean;
   css?: SerializedStyles;
   size?: 'small' | 'medium';
+  disabled?: boolean;
 }
 
 export const ThreeDotsOption = ({
@@ -29,6 +30,7 @@ export const ThreeDotsOption = ({
   isTrash = false,
   size = 'medium',
   css,
+  disabled,
 }: ThreeDotsOptionProps) => {
   return (
     <button
@@ -42,6 +44,7 @@ export const ThreeDotsOption = ({
           onClosePopover();
         }
       }}
+      disabled={disabled}
     >
       {icon && icon}
       <span>{text}</span>
@@ -172,7 +175,7 @@ const styles = {
       `
     }
 
-    :hover {
+    :hover:not(:disabled) {
       background-color: ${colorTokens.background.hover};
       color: ${colorTokens.text.title};
 
@@ -180,6 +183,15 @@ const styles = {
         color: ${colorTokens.icon.hover};
         filter: grayscale(0%);
       }
+    }
+
+    :disabled {
+      cursor: not-allowed;
+      color: ${colorTokens.text.disable};
+
+      svg {
+        color: ${colorTokens.icon.disable.background};
+      } 
     }
 
     ${
@@ -190,7 +202,7 @@ const styles = {
         color: ${colorTokens.icon.error};
       }
 
-      &:hover {
+      &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
         background-color: ${rgba(colorTokens.bg.error, 0.1)};
 

@@ -1,10 +1,9 @@
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tabs, { type TabItem } from '@Molecules/Tabs';
 
@@ -14,7 +13,7 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -22,6 +21,7 @@ import Show from '@Controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import type { Option } from '@Utils/types';
 
 const courseId = getCourseId();
 
@@ -34,6 +34,7 @@ const CourseSettings = () => {
 
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
+  const priceCategory = form.watch('course_pricing_category');
 
   const tabList: TabItem<string>[] = [
     {
@@ -47,33 +48,27 @@ const CourseSettings = () => {
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: !!isContentDripActive,
     },
+  ];
 
-    {
+  isAddonEnabled(Addons.BUDDYPRESS) &&
+    tabList.push({
       label: __('BuddyPress', 'tutor'),
       value: 'buddyPress',
       icon: <SVGIcon name="buddyPress" width={24} height={24} />,
-      activeBadge: !!isBuddyPressEnabled,
-    },
-  ];
+      activeBadge: isBuddyPressEnabled,
+    });
 
-  const difficultyLevelOptions = [
-    {
-      label: __('All Levels', 'tutor'),
-      value: 'all_levels',
-    },
-    {
-      label: __('Beginner', 'tutor'),
-      value: 'beginner',
-    },
-    {
-      label: __('Intermediate', 'tutor'),
-      value: 'intermediate',
-    },
-    {
-      label: __('Expert', 'tutor'),
-      value: 'expert',
-    },
-  ];
+  const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
+    label: level.label,
+    value: level.value,
+  }));
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (priceCategory === 'subscription') {
+      form.setValue('enrollment_expiry', 0);
+    }
+  }, [priceCategory]);
 
   return (
     <div>
@@ -117,7 +112,7 @@ const CourseSettings = () => {
               )}
             />
 
-            <Show when={tutorConfig.settings.enrollment_expiry_enabled === 'on'}>
+            <Show when={tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
               <Controller
                 name="enrollment_expiry"
                 control={form.control}
@@ -129,6 +124,7 @@ const CourseSettings = () => {
                       "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
                       'tutor',
                     )}
+                    disabled={priceCategory === 'subscription'}
                     placeholder="0"
                     type="number"
                     isClearable
@@ -153,7 +149,7 @@ const CourseSettings = () => {
                 )}
               />
 
-              <Show when={tutorConfig.settings.enable_q_and_a_on_course === 'on'}>
+              <Show when={tutorConfig.settings?.enable_q_and_a_on_course === 'on'}>
                 <Controller
                   name="enable_qna"
                   control={form.control}
@@ -174,67 +170,33 @@ const CourseSettings = () => {
         {activeTab === 'content_drip' && <ContentDripSettings />}
 
         {activeTab === 'buddyPress' && (
-          <Show
-            when={tutorConfig.tutor_pro_url && isAddonEnabled(Addons.BUDDYPRESS)}
-            fallback={
-              <Show
-                when={!tutorConfig.tutor_pro_url}
-                fallback={
-                  <div css={styles.buddyPressNotEnabledWrapper}>
-                    <SVGIcon name="buddyPress" width={72} height={72} style={styles.addonIcon} />
-                    <h6 css={typography.body('medium')}>{__('Buddy Press Addon is not enabled!', 'tutor')}</h6>
-                    <p css={styles.buddyPressDescription}>
-                      {__('Please enable BuddyPress addon to see options', 'tutor')}
-                    </p>
-                  </div>
-                }
-              >
-                <div css={styles.buddyPressNotEnabledWrapper}>
-                  <SVGIcon name="crown" width={72} height={72} />
-                  <h6 css={typography.body('medium')}>{__('BuddyPress is a pro feature', 'tutor')}</h6>
-                  <p css={styles.buddyPressDescription}>
-                    {__('Discuss about course and share your knowledge with your friends through BuddyPress', 'tutor')}
-                  </p>
-                  <Button
-                    icon={<SVGIcon name="crown" width={24} height={24} />}
-                    onClick={() => {
-                      window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
-                    }}
-                  >
-                    {__('Get Tutor LMS Pro', 'tutor')}
-                  </Button>
-                </div>
-              </Show>
-            }
-          >
-            <div css={styles.settingsOptions}>
-              <Controller
-                name="enable_tutor_bp"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
-                )}
-              />
+          <div css={styles.settingsOptions}>
+            <Controller
+              name="enable_tutor_bp"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
+              )}
+            />
 
-              <Controller
-                name="bp_attached_group_ids"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormMultiSelectInput
-                    {...controllerProps}
-                    label={__('BuddyPress Groups', 'tutor')}
-                    helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
-                    placeholder={__('Search BuddyPress Groups', 'tutor')}
-                    options={(tutorConfig.bp_groups || []).map((group) => ({
-                      label: group.name,
-                      value: String(group.id),
-                    }))}
-                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                  />
-                )}
-              />
-            </div>
-          </Show>
+            <Controller
+              name="bp_attached_group_ids"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormMultiSelectInput
+                  {...controllerProps}
+                  label={__('BuddyPress Groups', 'tutor')}
+                  helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
+                  placeholder={__('Search BuddyPress Groups', 'tutor')}
+                  options={(tutorConfig.bp_groups || []).map((group) => ({
+                    label: group.name,
+                    value: String(group.id),
+                  }))}
+                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                />
+              )}
+            />
+          </div>
         )}
       </div>
     </div>

@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
@@ -15,10 +15,11 @@ import { nanoid } from '@Utils/util';
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   onCheckCorrectAnswer: () => void;
+  isOverlay?: boolean;
 }
 
-const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProps) => {
-  const { activeQuestionId, quizId } = useQuizModalContext();
+const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }: FormTrueFalseProps) => {
+  const { activeQuestionId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
     answer_id: nanoid(),
@@ -42,7 +43,7 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProp
   return (
     <div
       {...attributes}
-      css={styles.option({ isSelected: !!Number(field.value.is_correct) })}
+      css={styles.option({ isSelected: !!Number(field.value.is_correct), isOverlay })}
       ref={setNodeRef}
       style={style}
     >
@@ -54,10 +55,17 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer }: FormTrueFalseProp
           width={32}
         />
       </button>
-      <div css={styles.optionLabel({ isSelected: !!Number(field.value.is_correct) })}>
+      <div css={styles.optionLabel({ isSelected: !!Number(field.value.is_correct), isDragging, isOverlay })}>
         <span>{inputValue.answer_title}</span>
 
-        <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+        <button
+          {...listeners}
+          type="button"
+          css={styles.optionDragButton({
+            isOverlay,
+          })}
+          data-visually-hidden
+        >
           <SVGIcon name="dragVertical" height={24} width={24} />
         </button>
       </div>
@@ -74,8 +82,10 @@ const styles = {
   `,
   option: ({
     isSelected,
+    isOverlay,
   }: {
     isSelected: boolean;
+    isOverlay: boolean;
   }) => css`
     ${styleUtils.display.flex()};
     ${typography.caption('medium')};
@@ -94,7 +104,7 @@ const styles = {
 
     &:hover {
       [data-check-icon] {
-        opacity: 1;
+        opacity: ${isOverlay ? 0 : 1};
       }
     }
 
@@ -111,8 +121,12 @@ const styles = {
   `,
   optionLabel: ({
     isSelected,
+    isDragging,
+    isOverlay,
   }: {
     isSelected: boolean;
+    isDragging: boolean;
+    isOverlay: boolean;
   }) => css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -121,13 +135,14 @@ const styles = {
     border-radius: ${borderRadius.card};
     padding: ${spacing[12]} ${spacing[16]};
     background-color: ${colorTokens.background.white};
+    text-transform: capitalize;
 
     [data-visually-hidden] {
       opacity: 0;
     }
 
     &:hover {
-      box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+      outline: 1px solid ${colorTokens.stroke.hover};
 
       [data-visually-hidden] {
         opacity: 1;
@@ -141,17 +156,42 @@ const styles = {
         color: ${colorTokens.text.primary};
 
         &:hover {
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
+          outline: 1px solid ${colorTokens.stroke.success.fill70};
         }
       `
     }
+
+    ${
+      isDragging &&
+      css`
+        background-color: ${colorTokens.stroke.hover};
+      `
+    }
+
+    ${
+      isOverlay &&
+      css`
+        box-shadow: ${shadow.drag};
+      `
+    }
   `,
-  optionDragButton: css`
+  optionDragButton: ({
+    isOverlay,
+  }: {
+    isOverlay: boolean;
+  }) => css`
     ${styleUtils.resetButton}
     ${styleUtils.flexCenter()}
     transform: rotate(90deg);
     color: ${colorTokens.icon.default};
     cursor: grab;
     place-self: center center;
+
+    ${
+      isOverlay &&
+      css`
+        cursor: grabbing;
+      `
+    }
   `,
 };

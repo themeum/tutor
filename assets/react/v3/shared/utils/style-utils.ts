@@ -303,6 +303,7 @@ export const styleUtils = {
 	`,
   overflowXAuto: css`
 		overflow-x: auto;
+		scrollbar-gutter: stable;
 
 		::-webkit-scrollbar {
 			background-color: ${colorTokens.primary[40]};
@@ -445,4 +446,10 @@ export const styleUtils = {
 			box-shadow: ${shadow.focus};
 		}
 	`,
+  aiGradientText: css`
+    background: ${colorTokens.text.ai.gradient};
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  `,
 };

@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
+import type React from 'react';
 
 import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
@@ -10,21 +11,26 @@ import WPEditor from '@Atoms/WPEditor';
 
 import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
+import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
+import config, { tutorConfig } from '@Config/config';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import EditorModal from '@CourseBuilderComponents/modals/EditorModal';
 import type { Editor } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { makeFirstCharacterUpperCase } from '@Utils/util';
 
+import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
+import generateText from '@Images/pro-placeholders/generate-text.webp';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
-  label?: string;
+  label?: string | React.ReactNode;
   disabled?: boolean;
   readOnly?: boolean;
   loading?: boolean;
@@ -39,6 +45,10 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   editorUsed?: Editor;
   isMagicAi?: boolean;
   autoFocus?: boolean;
+  onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
+  onFullScreenChange?: (isFullScreen: boolean) => void;
+  min_height?: number;
+  max_height?: number;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -46,6 +56,9 @@ const customEditorIcons: { [key: string]: IconCollection } = {
   elementor: 'elementorColorized',
   gutenberg: 'gutenbergColorized',
 };
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
 
 const FormWPEditor = ({
   label,
@@ -65,6 +78,10 @@ const FormWPEditor = ({
   editorUsed = { name: 'classic', label: 'Classic Editor', link: '' },
   isMagicAi = false,
   autoFocus = false,
+  onCustomEditorButtonClick,
+  onFullScreenChange,
+  min_height,
+  max_height,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
@@ -82,17 +99,14 @@ const FormWPEditor = ({
                     key={editor.name}
                     type="button"
                     css={styles.customEditorButton}
-                    onClick={() =>
-                      showModal({
-                        component: EditorModal,
-                        props: {
-                          editorUsed: editor,
-                          icon: <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />,
-                          title: sprintf(__('%s editor', 'tutor'), editor.name),
-                        },
-                        depthIndex: zIndex.highest,
-                      })
-                    }
+                    onClick={async () => {
+                      try {
+                        await onCustomEditorButtonClick?.(editor);
+                        window.location.href = editor.link;
+                      } catch (error) {
+                        console.error(error);
+                      }
+                    }}
                   >
                     <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
                   </button>
@@ -119,19 +133,66 @@ const FormWPEditor = ({
       generateWithAi={generateWithAi}
       isMagicAi={isMagicAi}
       onClickAiButton={() => {
-        showModal({
-          component: AITextModal,
-          isMagicAi: true,
-          props: {
-            title: __('AI Studio', 'tutor'),
-            icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-            field,
-            fieldState,
-            is_html: true,
-          },
-        });
+        if (!isTutorPro) {
+          showModal({
+            component: ProIdentifierModal,
+            props: {
+              title: (
+                <>
+                  {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                  <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                  {__('feature', 'tutor')}
+                </>
+              ),
+              image: generateText,
+              image2x: generateText2x,
+              featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+              features: [
+                __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
+                __(
+                  'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                  'tutor',
+                ),
+                __(
+                  'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
+                  'tutor',
+                ),
+                __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
+              ],
+              footer: (
+                <Button
+                  onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                  icon={<SVGIcon name="crown" width={24} height={24} />}
+                >
+                  {__('Get Tutor LMS Pro', 'tutor')}
+                </Button>
+              ),
+            },
+          });
+        } else if (!hasOpenAiAPIKey) {
+          showModal({
+            component: SetupOpenAiModal,
+            props: {
+              image: generateText,
+              image2x: generateText2x,
+            },
+          });
+        } else {
+          showModal({
+            component: AITextModal,
+            isMagicAi: true,
+            props: {
+              title: __('AI Studio', 'tutor'),
+              icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+              field,
+              fieldState,
+              is_html: true,
+            },
+          });
+          onClickAiButton?.();
+        }
       }}
-      replaceEntireLabel
+      replaceEntireLabel={hasCustomEditorSupport}
     >
       {() => {
         return (
@@ -149,6 +210,10 @@ const FormWPEditor = ({
                 }}
                 isMinimal={isMinimal}
                 autoFocus={autoFocus}
+                onFullScreenChange={onFullScreenChange}
+                readonly={readOnly}
+                min_height={min_height}
+                max_height={max_height}
               />
             }
           >
@@ -168,18 +233,16 @@ const FormWPEditor = ({
                           <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
                         )
                       }
-                      onClick={() =>
-                        editorUsed &&
-                        showModal({
-                          component: EditorModal,
-                          props: {
-                            title: sprintf(__('%s editor', 'tutor'), editorUsed.name),
-                            editorUsed: editorUsed,
-                            icon: <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />,
-                          },
-                          depthIndex: zIndex.highest,
-                        })
-                      }
+                      onClick={async () => {
+                        if (editorUsed) {
+                          try {
+                            await onCustomEditorButtonClick?.(editorUsed);
+                            window.location.href = editorUsed.link;
+                          } catch (error) {
+                            console.error(error);
+                          }
+                        }
+                      }}
                     >
                       {editorUsed?.label}
                     </Button>
@@ -197,6 +260,10 @@ const FormWPEditor = ({
                   }
                 }}
                 isMinimal={isMinimal}
+                onFullScreenChange={onFullScreenChange}
+                readonly={readOnly}
+                min_height={min_height}
+                max_height={max_height}
               />
             </Show>
           </Show>

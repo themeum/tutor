@@ -8,6 +8,7 @@ const config = {
   WP_AJAX_BASE_URL: tutorConfig.ajaxurl,
   TUTOR_PRICING_PAGE: 'https://tutorlms.com/pricing/',
   TUTOR_ADDONS_PAGE: `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor-addons`,
+  CHATGPT_PLATFORM_URL: 'https://platform.openai.com/account/api-keys',
 };
 
 export default config;

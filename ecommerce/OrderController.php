@@ -140,12 +140,6 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
-			/**
-			 * Handle ajax request for delete order
-			 *
-			 * @since 3.0.0
-			 */
-			add_action( 'wp_ajax_tutor_order_delete', array( $this, 'tutor_order_delete' ) );
 		}
 	}
 
@@ -218,13 +212,20 @@ class OrderController {
 
 		$coupon = $coupon_code ? $coupon_model->get_coupon( array( 'coupon_code' => $coupon_code ) ) : null;
 
-		$price_details = $coupon
-						? $coupon_model->apply_coupon_discount( array_column( $items, 'item_id' ), $coupon_code, $order_type )
-						: $coupon_model->apply_automatic_coupon_discount( array_column( $items, 'item_id' ), $order_type );
-
 		$subtotal_price = 0;
-		foreach ( $price_details->items as $item ) {
-			$subtotal_price += floatval( $item->discount_price ? $item->discount_price : $item->regular_price );
+		$total_price    = 0;
+		foreach ( $items as $item ) {
+			$subtotal_price += floatval( $item['regular_price'] );
+			$total_price    += floatval( $item['sale_price'] );
+
+			// Add enrollment fee with total & subtotal price.
+			if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
+				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
+				if ( $plan ) {
+					$subtotal_price += floatval( $plan->enrollment_fee ?? 0 );
+					$total_price    += floatval( $plan->enrollment_fee ?? 0 );
+				}
+			}
 		}
 
 		$order_data = array(
@@ -233,8 +234,8 @@ class OrderController {
 			'order_type'      => $order_type,
 			'coupon_code'     => $coupon_code,
 			'subtotal_price'  => $subtotal_price,
-			'total_price'     => $price_details->total_price,
-			'net_payment'     => $price_details->total_price,
+			'total_price'     => $total_price,
+			'net_payment'     => $total_price,
 			'user_id'         => $user_id,
 			'payment_status'  => $payment_status,
 			'order_status'    => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
@@ -415,7 +416,7 @@ class OrderController {
 			);
 		}
 
-		do_action( 'tutor_order_payment_status_changed', $params['id'], '', $this->model::ORDER_CANCELLED, true );
+		do_action( 'tutor_order_payment_status_changed', $params['id'], '', $this->model::ORDER_CANCELLED );
 
 		$this->json_response( __( 'Order successfully canceled', 'tutor' ) );
 	}
@@ -441,10 +442,14 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		$order_id          = Input::post( 'order_id' );
+		$order_id          = Input::post( 'order_id', 0, Input::TYPE_INT );
 		$amount            = (float) Input::post( 'amount' );
 		$reason            = Input::post( 'reason' );
-		$cancel_enrollment = Input::post( 'is_remove_enrolment' );
+		$cancel_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+
+		if ( $amount <= 0 ) {
+			$this->json_response( __( 'Invalid refund amount provided', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		$meta_value = array(
 			'amount'  => $amount,
@@ -452,7 +457,8 @@ class OrderController {
 			'message' => __( 'Order refunded by ', 'tutor' ) . get_userdata( get_current_user_id() )->display_name,
 		);
 
-		$order_data = $this->model->get_order_by_id( $order_id );
+		$order_data        = $this->model->get_order_by_id( $order_id );
+		$cancel_enrollment = apply_filters( 'tutor_cancel_enrollment_on_refund', $cancel_enrollment, $order_data );
 
 		if ( $amount > (float) $order_data->net_payment ) {
 			$this->json_response(
@@ -511,7 +517,7 @@ class OrderController {
 				$payment_status = $this->model::PAYMENT_PARTIALLY_REFUNDED;
 			}
 
-			if ( 'true' == $cancel_enrollment ) {
+			if ( $cancel_enrollment ) {
 				$order_status = $this->model::ORDER_CANCELLED;
 			}
 
@@ -524,7 +530,7 @@ class OrderController {
 
 			$this->model->update_order( $order_id, $update_data );
 
-			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status, $cancel_enrollment );
+			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status );
 
 			$this->json_response( __( 'Order refund successful', 'tutor' ) );
 		} else {
@@ -718,7 +724,9 @@ class OrderController {
 		$payment_status = Input::get( 'payment-status', '' );
 		$search         = Input::get( 'search', '' );
 
-		$where = array();
+		$where = array(
+			'order_type' => OrderModel::TYPE_SINGLE_ORDER,
+		);
 
 		if ( ! empty( $date ) ) {
 			$where['created_at_gmt'] = tutor_get_formated_date( 'Y-m-d', $date );
@@ -936,35 +944,6 @@ class OrderController {
 
 		wp_update_post( $args );
 		wp_send_json_success();
-		exit;
-	}
-
-	/**
-	 * Handle ajax request for deleting order
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void JSON response
-	 */
-	public static function tutor_order_delete() {
-		tutor_utils()->checking_nonce();
-
-		$user_id  = get_current_user_id();
-		$order_id = Input::post( 'id', 0, Input::TYPE_INT );
-
-		// Check if user is privileged.
-		if ( ! tutor_utils()->has_user_role( array( 'administrator', 'editor' ) ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
-		$delete = CourseModel::delete_course( $order_id );
-
-		if ( $delete ) {
-			wp_send_json_success( __( 'Order has been deleted ', 'tutor' ) );
-		} else {
-			wp_send_json_error( __( 'Order delete failed ', 'tutor' ) );
-		}
-
 		exit;
 	}
 

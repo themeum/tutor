@@ -29,7 +29,7 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 		<div class="tutor-container">
 			<?php if ( is_array( $course_list ) && count( $course_list ) ) : ?>
 			<div class="tutor-row tutor-g-4">
-				<div class="tutor-col-md-8">
+				<div class="tutor-col-lg-8">
 					<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16">
 						<?php
 						// translators: %d: Number of courses in the cart.
@@ -96,7 +96,7 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 						<?php endforeach; ?>
 					</div>
 				</div>
-				<div class="tutor-col-md-4">
+				<div class="tutor-col-lg-4">
 					<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16"><div><?php esc_html_e( 'Summary:', 'tutor' ); ?></div></h3>
 					<div class="tutor-cart-summery">
 						<div class="tutor-cart-summery-top">
@@ -124,7 +124,7 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 			<?php else : ?>
 				<div class="tutor-cart-empty-state">
 					<img src="<?php echo esc_url( tutor()->url ); ?>assets/images/empty-cart.svg" alt="<?php esc_html_e( 'Empty shopping cart', 'tutor' ); ?>" />
-					<p><?php esc_html_e( 'No courses in the card', 'tutor' ); ?></p>
+					<p><?php esc_html_e( 'No courses in the cart', 'tutor' ); ?></p>
 					<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-btn tutor-btn-lg tutor-btn-primary"><?php esc_html_e( 'Continue Browsing', 'tutor' ); ?></a>
 				</div>
 			<?php endif; ?>

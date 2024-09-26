@@ -1,5 +1,6 @@
 const path = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 
 module.exports = (env, options) => {
@@ -38,6 +39,8 @@ module.exports = (env, options) => {
 		},
 		plugins: [new webpack.ProvidePlugin({ React: 'react' })],
 		externals: {
+			react: 'React',
+			'react-dom': 'ReactDOM',
 			'@wordpress/i18n': 'wp.i18n',
 		},
 		devtool: 'source-map',
@@ -46,6 +49,15 @@ module.exports = (env, options) => {
 	if ('production' === mode) {
 		config.devtool = false;
 		config.optimization = {
+			splitChunks: {
+				cacheGroups: {
+					shared: {
+						test: /[\\/]assets[\\/]react[\\/]v3[\\/]shared[\\/]/,
+						name: 'tutor-shared.min',
+						chunks: 'all',
+					},
+				},
+			},
 			minimize: true,
 			minimizer: [
 				new TerserPlugin({
@@ -55,6 +67,7 @@ module.exports = (env, options) => {
 						ecma: 6,
 						mangle: true,
 					},
+					extractComments: false,
 				}),
 			],
 		};
@@ -64,13 +77,12 @@ module.exports = (env, options) => {
 		{
 			dest_path: './assets/js',
 			src_files: {
+				'tutor.min': './assets/react/v2/common.js',
 				'tutor-front.min': './assets/react/front/tutor-front.js',
 				'tutor-admin.min': './assets/react/admin-dashboard/tutor-admin.js',
-				'tutor-course-builder.min': './assets/react/course-builder/index.js',
 				'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
-				'tutor.min': './assets/react/v2/common.js',
 				'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
-				'tutor-course-builder-v3.min': './assets/react/v3/entries/course-builder/index.tsx',
+				'tutor-course-builder.min': './assets/react/v3/entries/course-builder/index.tsx',
 				'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
 				'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
 				'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
@@ -114,7 +126,7 @@ module.exports = (env, options) => {
 						'@Hooks': path.resolve(__dirname, './assets/react/v3/shared/hooks/'),
 						'@Services': path.resolve(__dirname, './assets/react/v3/shared/services/'),
 						'@Utils': path.resolve(__dirname, './assets/react/v3/shared/utils/'),
-						'@Images': path.resolve(__dirname, './assets/images/'),
+						'@Images': path.resolve(__dirname, './assets/react/v3/public/images'),
 						'@Controls': path.resolve(__dirname, './assets/react/v3/shared/controls/'),
 						'@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
 						'@CourseBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/course-builder/services/'),
@@ -122,7 +134,6 @@ module.exports = (env, options) => {
 						'@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
 						'@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
 						'@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
-						'@CourseBuilderPublic': path.resolve(__dirname, './assets/react/v3/entries/course-builder/public/'),
 						'@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
 						'@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
 						'@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),

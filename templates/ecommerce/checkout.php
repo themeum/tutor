@@ -25,10 +25,21 @@ $course_list     = $courses['results'];
 $subtotal        = 0;
 $tax_amount      = 0; // @TODO: Need to implement later.
 $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
+$plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
 ?>
 <div class="tutor-checkout-page">
-	<form method="post">
+
+	<?php
+	$echo_before_return    = true;
+	$user_has_subscription = apply_filters( 'tutor_checkout_user_has_subscription', false, $plan_id, $echo_before_return );
+	if ( $user_has_subscription ) {
+		return;
+	}
+	?>
+
+	<form method="post" id="tutor-checkout-form">
+		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
 			<div class="tutor-col-md-6">
@@ -41,12 +52,7 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
 						</h5>
 
-						<form id="user_billing_form" style="max-width: 600px;">
-							<?php tutor_nonce_field(); ?>
-							<input type="hidden" value="tutor_save_billing_info" name="action" />
-
-							<?php require tutor()->path . 'templates/dashboard/settings/billing-form-fields.php'; ?>
-						</form>
+						<?php require tutor()->path . 'templates/dashboard/settings/billing-form-fields.php'; ?>
 
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
@@ -55,7 +61,13 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 							<input type="hidden" name="payment_method">
 							<?php
 							$payment_gateways = tutor_get_all_active_payment_gateways();
-							if ( is_array( $payment_gateways ) && count( $payment_gateways ) ) {
+							if ( empty( $payment_gateways['automate'] ) && empty( $payment_gateways['manual'] ) ) {
+								?>
+								<div class="tutor-alert tutor-warning">
+									<?php esc_html_e( 'No payment method has been configured. Please contact the site administrator.', 'tutor' ); ?>
+								</div>
+								<?php
+							} else {
 								foreach ( $payment_gateways['automate'] as $key => $gateway ) {
 									list( $label, $icon ) = array_values( $gateway );
 									?>
@@ -67,7 +79,6 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 								}
 
 								// Show manual payment for only regular order.
-								$plan_id = Input::get( 'plan', 0, Input::TYPE_INT );
 								if ( ! $plan_id ) {
 									foreach ( $payment_gateways['manual'] as $gateway ) {
 										list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
@@ -77,6 +88,12 @@ $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID'
 											</button>
 										<?php
 									}
+								} elseif ( empty( $payment_gateways['automate'] ) ) {
+									?>
+									<div class="tutor-alert tutor-warning">
+										<?php esc_html_e( 'No payment method supporting subscriptions has been configured. Please contact the site administrator.', 'tutor' ); ?>
+									</div>
+									<?php
 								}
 							}
 							?>

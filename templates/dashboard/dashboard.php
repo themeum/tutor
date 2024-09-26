@@ -133,7 +133,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 }
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php esc_html_e( 'Dashboard', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-text-capitalize tutor-mb-24 tutor-dashboard-title"><?php esc_html_e( 'Dashboard', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner">
 	<?php
 	$user_id           = get_current_user_id();
@@ -252,7 +252,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 
 <?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
 	<div class="tutor-frontend-dashboard-course-progress">
-		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24">
+		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-text-capitalize tutor-mb-24">
 			<?php esc_html_e( 'In Progress Courses', 'tutor' ); ?>
 		</div>
 		<?php

@@ -61,7 +61,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
         />
       </div>
       <div css={styles.footer}>
-        <MagicButton type="submit">
+        <MagicButton type="submit" disabled={form.watch('prompt') === ''}>
           <SVGIcon name="magicAi" width={24} height={24} />
           {__('Generate now', 'tutor')}
         </MagicButton>

@@ -520,7 +520,7 @@ const styles = {
       }
 
 				svg {
-					color: ${colorTokens.icon.hints};
+					color: ${colorTokens.icon.default};
 				}
 
 				&:hover,

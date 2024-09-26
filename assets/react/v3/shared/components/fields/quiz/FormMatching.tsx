@@ -7,31 +7,37 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
+import { tutorConfig } from '@Config/config';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   type QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { noop } from '@Utils/util';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
+  isOverlay?: boolean;
 }
 
-const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormMatchingProps) => {
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
+const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverlay = false }: FormMatchingProps) => {
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
@@ -110,7 +116,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
   return (
     <div {...attributes} css={styles.option({ isEditing })} ref={setNodeRef} style={style}>
       <div
-        css={styles.optionLabel({ isEditing })}
+        css={styles.optionLabel({ isEditing, isDragging, isOverlay })}
         onClick={() => {
           setIsEditing(true);
         }}
@@ -127,44 +133,67 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
           </div>
 
           <Show when={!isEditing && inputValue.is_saved}>
-            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+            <button
+              {...listeners}
+              type="button"
+              css={styles.optionDragButton({
+                isOverlay,
+              })}
+              data-visually-hidden
+            >
               <SVGIcon name="dragVertical" height={24} width={24} />
             </button>
 
-            <div css={styles.optionActions}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-edit-button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setIsEditing(true);
-                }}
-              >
-                <SVGIcon name="edit" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onDuplicateOption(inputValue);
-                }}
-              >
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onRemoveOption();
-                }}
-              >
-                <SVGIcon name="delete" width={24} height={24} />
-              </button>
+            <div css={styles.optionActions} data-visually-hidden>
+              <Tooltip content={__('Edit', 'tutor')} delay={200}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  data-edit-button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                >
+                  <SVGIcon name="edit" width={24} height={24} />
+                </button>
+              </Tooltip>
+              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onDuplicateOption(inputValue);
+                      }}
+                    >
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  }
+                >
+                  <ProBadge size="tiny">
+                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </ProBadge>
+                </Show>
+              </Tooltip>
+              <Tooltip content={__('Delete', 'tutor')} delay={200}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  data-visually-hidden
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onRemoveOption();
+                  }}
+                >
+                  <SVGIcon name="delete" width={24} height={24} />
+                </button>
+              </Tooltip>
             </div>
           </Show>
         </div>
@@ -222,7 +251,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field }: FormM
                 type="text"
                 ref={inputRef}
                 css={styles.optionInput}
-                placeholder={__('Write anything..', 'tutor')}
+                placeholder={!imageMatching ? __('Write anything..', 'tutor') : __('Image matched text..', 'tutor')}
                 value={inputValue.answer_title}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -405,8 +434,12 @@ const styles = {
     `,
   optionLabel: ({
     isEditing,
+    isDragging,
+    isOverlay,
   }: {
     isEditing: boolean;
+    isDragging: boolean;
+    isOverlay: boolean;
   }) => css`
       display: flex;
       flex-direction: column;
@@ -417,18 +450,32 @@ const styles = {
       background-color: ${colorTokens.background.white};
   
       &:hover {
-        box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+        outline: 1px solid ${colorTokens.stroke.hover};
       }
 
       ${
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+          outline: 1px solid ${colorTokens.stroke.brand};
 
           &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+            outline: 1px solid ${colorTokens.stroke.brand};
           }
+        `
+      }
+
+      ${
+        isDragging &&
+        css`
+          background-color: ${colorTokens.stroke.hover};
+        `
+      }
+
+      ${
+        isOverlay &&
+        css`
+          box-shadow: ${shadow.drag};
         `
       }
     `,
@@ -461,13 +508,25 @@ const styles = {
       `
     }
   `,
-  optionDragButton: css`
+  optionDragButton: ({
+    isOverlay,
+  }: {
+    isOverlay: boolean;
+  }) => css`
     ${styleUtils.resetButton}
     ${styleUtils.flexCenter()}
     transform: rotate(90deg);
     color: ${colorTokens.icon.default};
     cursor: grab;
     place-self: center center;
+
+    ${
+      isOverlay &&
+      css`
+        cursor: grabbing;
+      `
+    }
+    
   `,
   optionActions: css`
     ${styleUtils.display.flex()}
@@ -479,6 +538,11 @@ const styles = {
     ${styleUtils.display.flex()}
     color: ${colorTokens.icon.default};
     cursor: pointer;
+
+    :disabled {
+      cursor: not-allowed;
+      color: ${colorTokens.icon.disable.background};
+    }
   `,
   optionBody: css`
     ${styleUtils.display.flex()}

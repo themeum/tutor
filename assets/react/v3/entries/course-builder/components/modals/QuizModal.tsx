@@ -398,9 +398,9 @@ const styles = {
   }: {
     activeTab: QuizTabs;
   }) => css`
-    width: 1217px;
+    width: 1218px;
     display: grid;
-    grid-template-columns: ${activeTab === 'details' ? '352px 1fr 352px' : '1fr'};
+    grid-template-columns: ${activeTab === 'details' ? '352px 1fr 280px' : '1fr'};
     height: 100%;
 
   `,

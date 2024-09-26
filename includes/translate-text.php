@@ -77,7 +77,7 @@ function tutor_get_translate_text() {
 			'text'  => __( 'Processing', 'tutor' ),
 		),
 		'cancelled'  => array(
-			'badge' => 'default',
+			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
 		),
 		'canceled'   => array(

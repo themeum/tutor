@@ -1,6 +1,11 @@
+import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import type { ReactNode } from 'react';
+
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
+
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -9,9 +14,6 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import type { ReactNode } from 'react';
 
 interface InputOptions {
   variant: unknown;
@@ -54,6 +56,126 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   isMagicAi?: boolean;
   replaceEntireLabel?: boolean;
 }
+
+const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
+
+const FormFieldWrapper = <T,>({
+  field,
+  fieldState,
+  children,
+  disabled = false,
+  readOnly = false,
+  label,
+  isInlineLabel = false,
+  variant,
+  loading,
+  placeholder,
+  helpText,
+  isHidden = false,
+  removeBorder = false,
+  characterCount,
+  isSecondary = false,
+  inputStyle,
+  onClickAiButton,
+  isMagicAi = false,
+  generateWithAi = false,
+  replaceEntireLabel = false,
+}: FormFieldWrapperProps<T>) => {
+  const id = nanoid();
+
+  const inputCss = [
+    styles.input({
+      variant,
+      hasFieldError: !!fieldState.error,
+      removeBorder,
+      readOnly,
+      hasHelpText: !!helpText,
+      isSecondary,
+      isMagicAi,
+    }),
+  ];
+
+  if (isDefined(inputStyle)) {
+    inputCss.push(inputStyle);
+  }
+
+  const inputContent = (
+    <div css={styles.inputWrapper}>
+      {children({
+        id,
+        name: field.name,
+        css: inputCss,
+        'aria-invalid': fieldState.error ? 'true' : 'false',
+        disabled: disabled,
+        readOnly: readOnly,
+        placeholder,
+        className: 'tutor-input-field',
+      })}
+
+      {loading && (
+        <div css={styles.loader}>
+          <LoadingSpinner size={20} color={colorTokens.icon.default} />
+        </div>
+      )}
+    </div>
+  );
+
+  return (
+    <div css={styles.container({ disabled, isHidden })}>
+      <div css={styles.inputContainer(isInlineLabel)}>
+        {(label || helpText) && (
+          <div css={styles.labelContainer}>
+            {label && (
+              <label htmlFor={id} css={styles.label(isInlineLabel, replaceEntireLabel)}>
+                {label}
+                <Show when={generateWithAi && isOpenAiEnabled}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClickAiButton?.();
+                    }}
+                    css={styles.aiButton}
+                  >
+                    <SVGIcon name="magicAiColorize" width={32} height={32} />
+                  </button>
+                </Show>
+              </label>
+            )}
+
+            {helpText && !replaceEntireLabel && (
+              <Tooltip content={helpText} placement="top" allowHTML>
+                <SVGIcon name="info" width={20} height={20} />
+              </Tooltip>
+            )}
+          </div>
+        )}
+
+        {characterCount ? (
+          <Tooltip
+            placement="right"
+            hideOnClick={false}
+            content={
+              characterCount.maxLimit - characterCount.inputCharacter >= 0
+                ? characterCount.maxLimit - characterCount.inputCharacter
+                : __('Limit exceeded', 'tutor')
+            }
+          >
+            {inputContent}
+          </Tooltip>
+        ) : (
+          inputContent
+        )}
+      </div>
+      {fieldState.error?.message && (
+        <p css={styles.errorLabel(!!fieldState.error)}>
+          <SVGIcon style={styles.alertIcon} name="info" width={20} height={20} /> {fieldState.error.message}
+        </p>
+      )}
+    </div>
+  );
+};
+
+export default FormFieldWrapper;
 
 const styles = {
   container: ({ disabled, isHidden }: { disabled: boolean; isHidden: boolean }) => css`
@@ -252,128 +374,3 @@ const styles = {
     flex-shrink: 0;
   `,
 };
-
-const FormFieldWrapper = <T,>({
-  field,
-  fieldState,
-  children,
-  disabled = false,
-  readOnly = false,
-  label,
-  isInlineLabel = false,
-  variant,
-  loading,
-  placeholder,
-  helpText,
-  isHidden = false,
-  removeBorder = false,
-  characterCount,
-  isSecondary = false,
-  inputStyle,
-  onClickAiButton,
-  isMagicAi = false,
-  generateWithAi = false,
-  replaceEntireLabel = false,
-}: FormFieldWrapperProps<T>) => {
-  const id = nanoid();
-
-  const isTutorPro = !!tutorConfig.tutor_pro_url;
-
-  const inputCss = [
-    styles.input({
-      variant,
-      hasFieldError: !!fieldState.error,
-      removeBorder,
-      readOnly,
-      hasHelpText: !!helpText,
-      isSecondary,
-      isMagicAi,
-    }),
-  ];
-
-  if (isDefined(inputStyle)) {
-    inputCss.push(inputStyle);
-  }
-
-  const inputContent = (
-    <div css={styles.inputWrapper}>
-      {children({
-        id,
-        name: field.name,
-        css: inputCss,
-        'aria-invalid': fieldState.error ? 'true' : 'false',
-        disabled: disabled,
-        readOnly: readOnly,
-        placeholder,
-        className: 'tutor-input-field',
-      })}
-
-      {loading && (
-        <div css={styles.loader}>
-          <LoadingSpinner size={20} color={colorTokens.icon.default} />
-        </div>
-      )}
-    </div>
-  );
-
-  return (
-    <div css={styles.container({ disabled, isHidden })}>
-      <div css={styles.inputContainer(isInlineLabel)}>
-        {(label || helpText) && (
-          <div css={styles.labelContainer}>
-            {label && (
-              <label htmlFor={id} css={styles.label(isInlineLabel, replaceEntireLabel)}>
-                {label}
-                <Show when={generateWithAi}>
-                  <Show
-                    when={!isTutorPro}
-                    fallback={
-                      <button type="button" onClick={onClickAiButton} css={styles.aiButton}>
-                        <SVGIcon name="magicAiColorize" width={32} height={32} />
-                      </button>
-                    }
-                  >
-                    <Tooltip delay={200} content={__('Pro Feature', 'tutor')}>
-                      <button type="button" onClick={onClickAiButton} disabled css={styles.aiButton}>
-                        <SVGIcon name="magicAiColorize" width={32} height={32} />
-                      </button>
-                    </Tooltip>
-                  </Show>
-                </Show>
-              </label>
-            )}
-
-            {helpText && !replaceEntireLabel && (
-              <Tooltip content={helpText} placement="top" allowHTML>
-                <SVGIcon name="info" width={20} height={20} />
-              </Tooltip>
-            )}
-          </div>
-        )}
-
-        {characterCount ? (
-          <Tooltip
-            placement="right"
-            hideOnClick={false}
-            content={
-              characterCount.maxLimit - characterCount.inputCharacter >= 0
-                ? characterCount.maxLimit - characterCount.inputCharacter
-                : __('Limit exceeded', 'tutor')
-            }
-          >
-            {inputContent}
-          </Tooltip>
-        ) : (
-          inputContent
-        )}
-      </div>
-      {fieldState.error?.message && (
-        <p css={styles.errorLabel(!!fieldState.error)}>
-          <SVGIcon style={styles.alertIcon} name="info" width={20} height={20} /> {fieldState.error.message}
-        </p>
-      )}
-    </div>
-  );
-};
-
-export default FormFieldWrapper;

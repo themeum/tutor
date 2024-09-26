@@ -25,7 +25,7 @@ $date_filter  = Input::get( 'date', '' );
 		<label class="tutor-form-label tutor-d-block tutor-mb-12">
 			<?php esc_html_e( 'Courses', 'tutor' ); ?>
 		</label>
-		<select class="tutor-form-select tutor-form-control tutor-form-control-sm tutor-announcement-course-sorting">
+		<select class="tutor-form-select tutor-form-control tutor-form-control-sm tutor-announcement-course-sorting" data-searchable>
 
 			<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
 

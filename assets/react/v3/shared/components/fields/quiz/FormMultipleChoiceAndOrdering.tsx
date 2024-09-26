@@ -7,9 +7,12 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { tutorConfig } from '@Config/config';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -23,14 +26,17 @@ import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
-import { nanoid } from '@Utils/util';
+import { nanoid, noop } from '@Utils/util';
 
 interface FormMultipleChoiceAndOrderingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
   onDuplicateOption: (option: QuizQuestionOption) => void;
   onRemoveOption: () => void;
   onCheckCorrectAnswer: () => void;
+  isOverlay?: boolean;
 }
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const FormMultipleChoiceAndOrdering = ({
   field,
@@ -38,6 +44,7 @@ const FormMultipleChoiceAndOrdering = ({
   onRemoveOption,
   onCheckCorrectAnswer,
   index,
+  isOverlay = false,
 }: FormMultipleChoiceAndOrderingProps) => {
   const form = useFormContext<QuizForm>();
   const { activeQuestionId, activeQuestionIndex, validationError, setValidationError } = useQuizModalContext();
@@ -124,6 +131,7 @@ const FormMultipleChoiceAndOrdering = ({
         isSelected: !!Number(inputValue.is_correct),
         isEditing,
         isMultipleChoice: hasMultipleCorrectAnswer,
+        isOverlay,
       })}
       ref={setNodeRef}
       style={style}
@@ -138,17 +146,9 @@ const FormMultipleChoiceAndOrdering = ({
         >
           <Show
             when={hasMultipleCorrectAnswer}
-            fallback={
-              <SVGIcon
-                data-check-icon
-                name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'}
-                height={32}
-                width={32}
-              />
-            }
+            fallback={<SVGIcon name={Number(inputValue.is_correct) ? 'checkFilled' : 'check'} height={32} width={32} />}
           >
             <SVGIcon
-              data-check-icon
               name={Number(inputValue.is_correct) ? 'checkSquareFilled' : 'checkSquare'}
               height={32}
               width={32}
@@ -160,6 +160,8 @@ const FormMultipleChoiceAndOrdering = ({
         css={styles.optionLabel({
           isSelected: !!Number(inputValue.is_correct),
           isEditing,
+          isDragging,
+          isOverlay,
         })}
         onClick={() => {
           setIsEditing(true);
@@ -215,44 +217,59 @@ const FormMultipleChoiceAndOrdering = ({
           </div>
 
           <Show when={!isEditing && inputValue.is_saved}>
-            <button {...listeners} type="button" css={styles.optionDragButton} data-visually-hidden>
+            <button {...listeners} type="button" css={styles.optionDragButton({ isOverlay })} data-visually-hidden>
               <SVGIcon name="dragVertical" height={24} width={24} />
             </button>
 
-            <div css={styles.optionActions}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-edit-button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setIsEditing(true);
-                }}
-              >
-                <SVGIcon name="edit" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onDuplicateOption(inputValue);
-                }}
-              >
-                <SVGIcon name="copyPaste" width={24} height={24} />
-              </button>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-visually-hidden
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onRemoveOption();
-                }}
-              >
-                <SVGIcon name="delete" width={24} height={24} />
-              </button>
+            <div css={styles.optionActions} data-visually-hidden>
+              <Tooltip content={__('Edit', 'tutor')} delay={200}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  data-edit-button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                >
+                  <SVGIcon name="edit" width={24} height={24} />
+                </button>
+              </Tooltip>
+              <Tooltip content={__('Duplicate', 'tutor')} delay={200}>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
+                    <button
+                      type="button"
+                      css={styles.actionButton}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onDuplicateOption(inputValue);
+                      }}
+                    >
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  }
+                >
+                  <ProBadge size="tiny">
+                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                      <SVGIcon name="copyPaste" width={24} height={24} />
+                    </button>
+                  </ProBadge>
+                </Show>
+              </Tooltip>
+              <Tooltip content={__('Delete', 'tutor')} delay={200}>
+                <button
+                  type="button"
+                  css={styles.actionButton}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onRemoveOption();
+                  }}
+                >
+                  <SVGIcon name="delete" width={24} height={24} />
+                </button>
+              </Tooltip>
             </div>
           </Show>
         </div>
@@ -392,18 +409,16 @@ const FormMultipleChoiceAndOrdering = ({
 export default FormMultipleChoiceAndOrdering;
 
 const styles = {
-  optionWrapper: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[12]};
-    `,
   option: ({
     isSelected,
     isEditing,
     isMultipleChoice,
+    isOverlay,
   }: {
     isSelected: boolean;
     isEditing: boolean;
     isMultipleChoice: boolean;
+    isOverlay: boolean;
   }) => css`
       ${styleUtils.display.flex()};
       ${typography.caption('medium')};
@@ -412,7 +427,7 @@ const styles = {
       gap: ${spacing[10]};
       align-items: center;
   
-      [data-check-icon] {
+      [data-check-button] {
         opacity: 0;
         pointer-events: none;
         color: ${colorTokens.icon.default};
@@ -425,12 +440,8 @@ const styles = {
       }
   
       &:hover {
-        [data-check-icon] {
-          opacity: ${isEditing ? 0 : 1};
-        }
-
         [data-check-button] {
-          visibility: ${isEditing ? 'hidden' : 'visible'};
+          opacity: ${isEditing || isOverlay ? 0 : 1};
         }
       }
   
@@ -438,7 +449,7 @@ const styles = {
       ${
         isSelected &&
         css`
-          [data-check-icon] {
+          [data-check-button] {
             opacity: 1;
             color: ${colorTokens.bg.success};
             ${
@@ -454,9 +465,13 @@ const styles = {
   optionLabel: ({
     isSelected,
     isEditing,
+    isDragging,
+    isOverlay,
   }: {
     isSelected: boolean;
     isEditing: boolean;
+    isDragging: boolean;
+    isOverlay: boolean;
   }) => css`
       display: flex;
       flex-direction: column;
@@ -475,7 +490,7 @@ const styles = {
       }
   
       &:hover {
-        box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+        outline: 1px solid ${colorTokens.stroke.hover};
 
         [data-visually-hidden] {
           opacity: 1;
@@ -498,7 +513,7 @@ const styles = {
           color: ${colorTokens.text.primary};
   
           &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
+            outline: 1px solid ${colorTokens.stroke.success.fill70};
           }
         `
       }
@@ -506,10 +521,24 @@ const styles = {
         isEditing &&
         css`
           background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+          outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
           &:hover {
-            box-shadow: 0 0 0 1px ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+            outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
           }
+        `
+      }
+
+      ${
+        isDragging &&
+        css`
+          background-color: ${colorTokens.stroke.hover};
+        `
+      }
+
+      ${
+        isOverlay &&
+        css`
+          box-shadow: ${shadow.drag};
         `
       }
     `,
@@ -548,13 +577,24 @@ const styles = {
       `
     }
   `,
-  optionDragButton: css`
+  optionDragButton: ({
+    isOverlay,
+  }: {
+    isOverlay: boolean;
+  }) => css`
     ${styleUtils.resetButton}
     ${styleUtils.flexCenter()}
     transform: rotate(90deg);
     color: ${colorTokens.icon.default};
     cursor: grab;
     place-self: center center;
+
+    ${
+      isOverlay &&
+      css`
+        cursor: grabbing;
+      `
+    }
   `,
   optionActions: css`
     ${styleUtils.display.flex()}
@@ -565,6 +605,11 @@ const styles = {
     ${styleUtils.resetButton};
     color: ${colorTokens.icon.default};
     ${styleUtils.display.flex()}
+
+    :disabled {
+      cursor: not-allowed;
+      color: ${colorTokens.icon.disable.background};
+    }
   `,
   optionBody: css`
     ${styleUtils.display.flex()}

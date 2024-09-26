@@ -5,16 +5,18 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import ThreeDots from '@Molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import type { ID } from '@CourseBuilderServices/curriculum';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import { AnimationType } from '@Hooks/useAnimation';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -24,6 +26,7 @@ interface QuestionProps {
   index: number;
   onDuplicateQuestion: (question: QuizQuestion) => void;
   onRemoveQuestion: () => void;
+  isOverlay?: boolean;
 }
 
 const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>, IconCollection> = {
@@ -37,10 +40,13 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
   ordering: 'quizOrdering',
 };
 
-const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError } = useQuizModalContext();
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
+const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOverlay = false }: QuestionProps) => {
+  const { activeQuestionIndex, activeQuestionId, validationError, setActiveQuestionId, setValidationError } =
+    useQuizModalContext();
   const form = useFormContext<QuizForm>();
-  const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
+  const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -52,6 +58,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : undefined,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
   };
 
   useEffect(() => {
@@ -68,7 +75,11 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
     <div
       {...attributes}
       key={question.question_id}
-      css={styles.questionItem({ isActive: String(activeQuestionId) === String(question.question_id), isDragging })}
+      css={styles.questionItem({
+        isActive: String(activeQuestionId) === String(question.question_id),
+        isDragging: isOverlay,
+        isThreeDotsOpen: isThreeDotOpen,
+      })}
       ref={(element) => {
         setNodeRef(element);
         // @ts-expect-error
@@ -93,11 +104,27 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
       }}
       onKeyDown={(event) => {
         if (event.key === 'Enter' || event.key === ' ') {
+          if (activeQuestionId === question.question_id) {
+            return;
+          }
+
+          const validation = validateQuizQuestion(activeQuestionIndex, form);
+
+          if (validation !== true) {
+            setValidationError(validation);
+            return;
+          }
+
+          setValidationError(null);
           setActiveQuestionId(question.question_id);
         }
       }}
     >
-      <div css={styles.iconAndSerial({ isDragging })} data-icon-serial>
+      <div css={styles.iconAndSerial({ isDragging: isOverlay })} data-icon-serial>
+        <span data-serial>{index + 1}</span>
+        <button data-drag-icon {...listeners} type="button" css={styleUtils.resetButton}>
+          <SVGIcon data-drag-icon name="dragVertical" width={24} height={24} />
+        </button>
         <SVGIcon
           name={
             questionTypeIconMap[question.question_type as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]
@@ -106,41 +133,51 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
           height={24}
           data-question-icon
         />
-        <button {...listeners} type="button" css={styleUtils.resetButton}>
-          <SVGIcon name="dragVertical" data-drag-icon width={24} height={24} />
-        </button>
-        <span data-serial>{index + 1}</span>
       </div>
-      <span css={styles.questionTitle}>{question.question_title}</span>
+      <span
+        css={styles.questionTitle({
+          isActive: String(activeQuestionId) === String(question.question_id),
+        })}
+      >
+        {question.question_title}
+      </span>
       <ThreeDots
-        isOpen={selectedQuestionId === question.question_id}
+        isOpen={isThreeDotOpen}
         onClick={(event) => {
+          event.stopPropagation();
           const validation = validateQuizQuestion(activeQuestionIndex, form);
+          setIsThreeDotOpen(true);
           if (validation !== true) {
-            event.stopPropagation();
             setValidationError(validation);
-            return;
           }
-          setSelectedQuestionId(question.question_id);
         }}
-        closePopover={() => setSelectedQuestionId('')}
+        animationType={AnimationType.slideDown}
+        closePopover={() => setIsThreeDotOpen(false)}
         dotsOrientation="vertical"
-        maxWidth="150px"
+        maxWidth={isTutorPro ? '150px' : '160px'}
         isInverse
         arrowPosition="auto"
         size="small"
         hideArrow
         data-three-dots
       >
-        <ThreeDots.Option
-          text={__('Duplicate', 'tutor')}
-          icon={<SVGIcon name="duplicate" width={24} height={24} />}
-          onClick={(event) => {
-            event.stopPropagation();
-            onDuplicateQuestion(question);
-            setSelectedQuestionId('');
-          }}
-        />
+        {!validationError && (
+          <ThreeDots.Option
+            text={
+              <div css={styles.duplicate}>
+                {__('Duplicate', 'tutor')}
+                {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
+              </div>
+            }
+            icon={<SVGIcon name="duplicate" width={24} height={24} />}
+            disabled={!isTutorPro}
+            onClick={(event) => {
+              event.stopPropagation();
+              onDuplicateQuestion(question);
+              setIsThreeDotOpen(false);
+            }}
+          />
+        )}
         <ThreeDots.Option
           isTrash
           text={__('Delete', 'tutor')}
@@ -148,7 +185,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion }: Qu
           onClick={(event) => {
             event.stopPropagation();
             onRemoveQuestion();
-            setSelectedQuestionId('');
+            setIsThreeDotOpen(false);
           }}
         />
       </ThreeDots>
@@ -162,23 +199,24 @@ const styles = {
   questionItem: ({
     isActive = false,
     isDragging = false,
+    isThreeDotsOpen = false,
   }: {
     isActive: boolean;
     isDragging: boolean;
+    isThreeDotsOpen: boolean;
   }) => css`
-    margin-right: ${spacing[20]};
-    padding: ${spacing[10]} ${spacing[8]};
+    padding: ${spacing[10]} ${spacing[8]} ${spacing[10]}  ${spacing[28]};
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[12]};
-    border: 1px solid transparent;
-    border-radius: ${borderRadius.min};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
     cursor: pointer;
     transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
 
     [data-three-dots] {
       opacity: 0;
+      background: transparent;
       svg {
         color: ${colorTokens.icon.default};
       }
@@ -187,19 +225,29 @@ const styles = {
     ${
       isActive &&
       css`
-      border-color: ${colorTokens.stroke.brand};
-      background-color: ${colorTokens.background.active};
-      [data-icon-serial] {
-        border-top-right-radius: 3px;
-        border-bottom-right-radius: 3px;
-        border-color: transparent;
-      }
-    `
+        color: ${colorTokens.text.brand};
+        background-color: ${colorTokens.background.white};
+        [data-icon-serial] {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+          border-color: transparent;
+        }
+      `
     }
-    :hover {
-      background-color: ${colorTokens.background.white};
 
-      [data-question-icon] {
+    ${
+      isThreeDotsOpen &&
+      css`
+        [data-three-dots] {
+          opacity: 1;
+        }
+      `
+    }
+
+    :hover {
+      background-color: ${colorTokens.background.hover};
+
+      [data-serial] {
         display: none;
       }
 
@@ -221,9 +269,14 @@ const styles = {
     ${
       isDragging &&
       css`
-      box-shadow: ${shadow.drag};
-      background-color: ${colorTokens.background.white};
-    `
+        box-shadow: ${shadow.drag};
+        background-color: ${colorTokens.background.white};
+        border-radius: ${borderRadius.card};
+
+        :hover {
+          background-color: ${colorTokens.background.white};
+        }
+      `
     }
   `,
   iconAndSerial: ({
@@ -231,14 +284,15 @@ const styles = {
   }: {
     isDragging: boolean;
   }) => css`
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    background-color: ${colorTokens.bg.white};
     border-radius: 3px 0 0 3px;
-    width: 56px;
+    width: 64px;
     padding: ${spacing[4]} ${spacing[8]} ${spacing[4]} ${spacing[4]};
-    border-right: 1px solid ${colorTokens.stroke.divider};
     flex-shrink: 0;
+    column-gap: ${spacing[12]};
+    place-items: center center;
 
     [data-drag-icon] {
       display: none;
@@ -246,20 +300,34 @@ const styles = {
       cursor: ${isDragging ? 'grabbing' : 'grab'};
     }
 
+    [data-question-icon] {
+      flex-shrink: 0;    
+    }
+
     svg {
       flex-shrink: 0;
     }
 
     [data-serial] {
+      width: 24px;
+      display: block;
       ${typography.caption('medium')}
-      text-align: right;
-      width: 100%;
+      text-align: center;
+      flex-grow: 1;
     }
   `,
-  questionTitle: css`
-    ${typography.small()};
-    color: ${colorTokens.text.subdued};
-    max-width: 170px;
-    width: 100%;
+  questionTitle: ({
+    isActive = false,
+  }: {
+    isActive: boolean;
+  }) => css`
+    ${typography.small(isActive ? 'medium' : 'regular')};
+    color: ${isActive ? colorTokens.text.brand : colorTokens.text.subdued};
+    flex-grow: 1;
+  `,
+  duplicate: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
   `,
 };
