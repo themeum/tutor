@@ -24,6 +24,9 @@ final class DateTimeHelper {
 	 * Format constants
 	 */
 	const FORMAT_MYSQL     = 'Y-m-d H:i:s';
+	const FORMAT_DATE_TIME = 'Y-m-d H:i:s';
+	const FORMAT_DATE      = 'Y-m-d';
+	const FORMAT_TIME      = 'H:i:s';
 	const FORMAT_TIMESTAMP = 'U';
 
 	/**
@@ -87,15 +90,6 @@ final class DateTimeHelper {
 	}
 
 	/**
-	 * Get timestamp.
-	 *
-	 * @return int
-	 */
-	public function get_timestamp() {
-		return $this->datetime->getTimestamp();
-	}
-
-	/**
 	 * Add
 	 *
 	 * @param int    $number number of interval.
@@ -127,15 +121,58 @@ final class DateTimeHelper {
 	 * Format datetime ( WP i18 translation supported )
 	 *
 	 * @param string $format format for date. Default is mysql format.
+	 * @param bool   $i18_translation i18 translation support.
 	 *
 	 * @return string
 	 */
-	public function format( $format = null ) {
-		return wp_date(
-			$format ? $format : self::FORMAT_MYSQL,
-			$this->get_timestamp(),
-			$this->datetime->getTimezone()
-		);
+	public function format( $format = null, $i18_translation = true ) {
+		if ( $i18_translation ) {
+			$result = wp_date(
+				$format ? $format : self::FORMAT_MYSQL,
+				$this->to_timestamp(),
+				$this->datetime->getTimezone()
+			);
+		} else {
+			$result = $this->datetime->format( $format ? $format : self::FORMAT_MYSQL );
+		}
+
+		return $result;
+	}
+
+	/**
+	 * Convert to timestamp.
+	 *
+	 * @return int
+	 */
+	public function to_timestamp() {
+		return $this->datetime->getTimestamp();
+	}
+
+	/**
+	 * Covert to date time string.
+	 *
+	 * @return string
+	 */
+	public function to_date_time_string() {
+		return $this->format( self::FORMAT_DATE_TIME, false );
+	}
+
+	/**
+	 * Covert to date string.
+	 *
+	 * @return string
+	 */
+	public function to_date_string() {
+		return $this->format( self::FORMAT_DATE, false );
+	}
+
+	/**
+	 * Covert to date string.
+	 *
+	 * @return string
+	 */
+	public function to_time_string() {
+		return $this->format( self::FORMAT_TIME, false );
 	}
 
 	/**
