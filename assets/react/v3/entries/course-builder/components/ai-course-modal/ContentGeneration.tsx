@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -110,6 +110,8 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   } = useContentGenerationContext();
   const { startGeneration } = useGenerateCourseContent();
   const saveAIGeneratedCourseContentMutation = useSaveAIGeneratedCourseContentMutation();
+  const formRef = useRef<HTMLFormElement>(null);
+  const boxRef = useRef<HTMLDivElement>(null);
 
   const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
   const promptValue = form.watch('prompt');
@@ -134,7 +136,16 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
       return copy;
     });
+    boxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [currentLoading, currentErrors]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isCreateNewCourse) {
+      formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      form.setFocus('prompt');
+    }
+  }, [isCreateNewCourse]);
 
   const isLoading = getObjectValues(currentLoading).some((item) => item);
 
@@ -220,7 +231,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             <For each={loading}>
               {(_, index) => {
                 const isDeactivated = pointer !== index;
-                const showButtons = index === loading.length - 1;
+                const showButtons = pointer === index && !isCreateNewCourse;
                 const content = contents[index];
                 const isLoadingItem = getObjectValues(loading[index]).some((item) => item);
                 const hasErrors = getObjectValues(errors[index]).every((error) => error);
@@ -228,6 +239,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
                 return (
                   <div
+                    ref={index === pointer && !isCreateNewCourse ? boxRef : undefined}
                     css={styles.box({
                       deactivated: isDeactivated,
                       hasError: getObjectValues(errors[index]).some((error) => error),
@@ -372,6 +384,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 })}
               >
                 <form
+                  ref={formRef}
                   css={styles.regenerateForm}
                   onSubmit={form.handleSubmit((values) => {
                     setIsCreateNewCourse(false);
@@ -564,6 +577,8 @@ const styles = {
 		gap: ${spacing[16]};
 		overflow-y: auto;
 		height: 100%;
+    padding-right: ${spacing[20]};
+    ${styleUtils.overflowYAuto};
 	`,
   rightFooter: css`
 		margin-top: auto;
@@ -662,7 +677,7 @@ const styles = {
 		height: 100%;
 		background-color: ${colorTokens.background.white};
 		border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
-		padding: ${spacing[24]} ${spacing[20]};
+		padding: ${spacing[24]} ${spacing[0]} ${spacing[24]} ${spacing[20]};
     display: flex;
     flex-direction: column;
     justify-content: space-between;

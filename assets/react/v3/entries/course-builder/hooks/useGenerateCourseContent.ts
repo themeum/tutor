@@ -21,6 +21,15 @@ export const useGenerateCourseContent = () => {
   const startGeneration = async (prompt: string, pointer?: number) => {
     const start = Date.now();
 
+    if (prompt.length) {
+      updateContents(
+        {
+          prompt: prompt,
+        },
+        pointer,
+      );
+    }
+
     try {
       updateLoading({ title: true, image: true, description: true, content: true, topic: true, quiz: true }, pointer);
       const response = await generateCourseTitleMutation.mutateAsync({ type: 'title', prompt });
