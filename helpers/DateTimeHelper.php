@@ -136,6 +136,24 @@ final class DateTimeHelper {
 	}
 
 	/**
+	 * Get timezone
+	 *
+	 * @return DateTimeZone
+	 */
+	public function get_timezone() {
+		return $this->datetime->getTimezone();
+	}
+
+	/**
+	 * Get timezone string
+	 *
+	 * @return string
+	 */
+	public function get_timezone_string() {
+		return $this->datetime->getTimezone()->getName();
+	}
+
+	/**
 	 * Format datetime ( WP i18 translation supported )
 	 *
 	 * @param string $format format for date. Default is mysql format.
