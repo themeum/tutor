@@ -32,6 +32,10 @@ declare global {
       wp_rest_nonce: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      difficulty_levels: {
+        level: string;
+        value: string;
+      }[];
       edd_products: {
         ID: string;
         post_title: string;
