@@ -6,6 +6,8 @@
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
  * @since 3.0.0
+ *
+ * @fileIgnore WordPress.NamingConventions.ValidFunctionName.MethodNameInvalid
  */
 
 namespace Tutor\Helpers;
@@ -153,7 +155,7 @@ final class DateTimeHelper {
 	 *
 	 * @return string
 	 */
-	public function to_date_time_string() {
+	public function toDateTimeString() {
 		return $this->format( self::FORMAT_DATE_TIME, false );
 	}
 
