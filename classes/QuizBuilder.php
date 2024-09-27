@@ -375,7 +375,7 @@ class QuizBuilder {
 	 * @return void json response.
 	 */
 	public function ajax_quiz_builder_save() {
-		tutor_utils()->checking_nonce();
+		tutor_utils()->check_nonce();
 
 		$payload    = $_POST['payload'] ?? array(); //phpcs:ignore
 		if ( is_string( $payload ) ) {
