@@ -66,13 +66,18 @@ final class DateTimeHelper {
 	/**
 	 * Create time from date time string or timestamp.
 	 *
-	 * @param string|int $datetime datetime string or timestamp.
+	 * @param string|int          $datetime datetime string or timestamp.
+	 * @param string|DateTimeZone $timezone timezone string or object.
 	 *
 	 * @return self
 	 */
-	public static function create( $datetime ) {
+	public static function create( $datetime, $timezone = null ) {
 		$instance           = self::instance();
-		$instance->datetime = new DateTime( $datetime );
+		$instance->datetime = new DateTime(
+			$datetime,
+			$timezone instanceof DateTimeZone ? $timezone : ( $timezone ? new DateTimeZone( $timezone ) : null )
+		);
+
 		return $instance;
 	}
 
@@ -173,6 +178,27 @@ final class DateTimeHelper {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Get readable time difference.
+	 *
+	 * @return string
+	 */
+	public function get_readable_diff() {
+		$now = new DateTime( 'now', $this->datetime->getTimezone() );
+		// Calculate the time difference in seconds.
+		$interval = $now->getTimestamp() - $this->datetime->getTimestamp();
+
+		// Use WordPress's human_time_diff for minutes and beyond.
+		$time_diff = human_time_diff( $this->datetime->getTimestamp(), $now->getTimestamp() );
+
+		// Handle past or future tense.
+		return ( $interval > 0 )
+				/* translators: %s: time difference */
+				? sprintf( __( '%s ago', 'tutor' ), $time_diff )
+				/* translators: %s: time difference */
+				: sprintf( __( '%s from now', 'tutor' ), $time_diff );
 	}
 
 	/**
