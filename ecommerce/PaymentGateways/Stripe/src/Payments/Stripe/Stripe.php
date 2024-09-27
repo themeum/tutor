@@ -118,17 +118,17 @@ class Stripe extends BasePayment
 		$couponId = !empty($coupon->id) ? $coupon->id : null;
 
 		$returnData = [
-			'line_items' 					=> static::getLineItems($data),
+			'line_items' 					=> $this->getLineItems($data),
 			'mode' 							=> 'payment',
 			'success_url' 					=> $this->config->get('success_url'),
 			'cancel_url' 					=> $this->config->get('cancel_url'),
-				'payment_intent_data' => [
-					'metadata'	=> [
-						'order_id' 	=> $data->order_id,
-						'coupon_id' => $couponId, 		
-						'type'		=> 'one-time'
-					],
+			'payment_intent_data' => [
+				'metadata'	=> [
+					'order_id' 	=> $data->order_id,
+					'coupon_id' => $couponId, 		
+					'type'		=> 'one-time'
 				],
+			],
 			'shipping_options' 				=> $this->getShippingOptions($data),
 		];
 
@@ -363,7 +363,7 @@ class Stripe extends BasePayment
 		
 		$lineItems = array_map(function ($item) use ($data) {
 
-			$price = $item['discounted_price'] >= 0 ? $item['discounted_price'] : $item['regular_price'];
+			$price = is_null($item['discounted_price']) ? $item['regular_price'] : $item['discounted_price'];
 
 			return [
 				'price_data' => [
@@ -387,6 +387,21 @@ class Stripe extends BasePayment
 				'quantity' 	=> 1,
 			];
 		}
+
+		$minimumCharge = Helper::calculateMinimumChargeDifference($data);
+
+		if($minimumCharge > 0)
+		{
+			$lineItems[] = [
+				'price_data' => [
+					'product_data' => ['name' => 'Minimum Charge', 'description' => 'Minimum charge to process the payment'],
+					'unit_amount' => System::getMinorAmountBasedOnCurrency($minimumCharge, $data->currency->code),
+					'currency' => strtolower($data->currency->code),
+				],
+				'quantity' => 1,
+			];
+		}
+		
 		return $lineItems;
 	}
 
@@ -399,7 +414,12 @@ class Stripe extends BasePayment
 	 */
 	protected function prepareDataForRecurring($data) : array
 	{
-		$previousPayload 	= json_decode($data->previous_payload)->data->object;
+		$previousPayload = json_decode($data->previous_payload)->data->object;
+
+		if ((string)$data->total_amount === '0') {
+			$data->total_amount = static::getMinimumChargeAmount($previousPayload,$data->currency->code);
+		}
+		
 		$tax		     	= static::getTaxAmountForRecurring($data);
 		$totalAmount 		= System::getMinorAmountBasedOnCurrency($data->total_amount, $data->currency->code);
 		$finalTotalAmount 	= !is_null($tax) ? $totalAmount + $tax : $totalAmount;
@@ -414,7 +434,7 @@ class Stripe extends BasePayment
 			'payment_method' 		=> $previousPayload->payment_method,
 			'receipt_email' 		=> $data->customer->email,
 			'shipping' 				=> static::getShippingInfoForRecurring($data->shipping_address),
-			'payment_method_types' 	=> $previousPayload->payment_method_types,
+			'payment_method_types' 	=> $previousPayload->payment_method_types
 		];
 	}
 
@@ -688,5 +708,46 @@ class Stripe extends BasePayment
 		}
 
 		return ['fees' => $processingFee, 'earnings' => $earnings];
+	}
+
+
+	/**
+	 * Retrieves the minimum charge amount for the specified currency.
+	 *
+	 * @param  object $previousPayload  	The payload from a previous transaction containing currency details.
+	 * @param  string $currencyCode     	The current currency code for which the minimum charge amount is requested.
+	 *
+	 * @return float 						The minimum charge amount, either in the original or converted currency.
+	 *
+	 * @throws InvalidDataException 		If the currency is invalid or a minimum charge can't be determined.
+	 * @since  1.0.0
+	 */
+	private function getMinimumChargeAmount($previousPayload, $currencyCode)
+	{
+		$currency 					= strtoupper($currencyCode);
+		$previousPayloadCurrency  	= strtoupper($previousPayload->currency);
+
+		if (isset(Helper::$minimumCharges[$currency])) {
+			return Helper::$minimumCharges[$currency];
+		}
+
+		if (isset(Helper::$minimumCharges[$previousPayloadCurrency])) {
+			return Helper::$minimumCharges[$previousPayloadCurrency];
+		}
+			
+		$chargeDetails = $this->client->charges->retrieve($previousPayload->latest_charge);
+
+		if ($chargeDetails->balance_transaction) {
+			$balanceTransaction = $this->client->balanceTransactions->retrieve($chargeDetails->balance_transaction);
+
+			$settlementCurrency = strtoupper($balanceTransaction->currency);
+			
+			if (isset(Helper::$minimumCharges[$settlementCurrency])) {
+				$minimumAmount = Helper::$minimumCharges[$settlementCurrency];
+				return Helper::convertAmountByCurrency($minimumAmount, $currency, $balanceTransaction);
+			}
+		}
+		
+		throw new InvalidDataException("Invalid Currency");		
 	}
 }

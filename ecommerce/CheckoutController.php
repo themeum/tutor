@@ -345,7 +345,7 @@ class CheckoutController {
 				'item_name'        => $item_name,
 				'regular_price'    => floatval( $item->regular_price ),
 				'quantity'         => 1,
-				'discounted_price' => floatval( $item->sale_price ),
+				'discounted_price' => is_null( $item->sale_price ) || '' === $item->sale_price ? null : floatval( $item->sale_price ),
 			);
 		}
 
