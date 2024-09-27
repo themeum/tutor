@@ -136,7 +136,7 @@ function Payment() {
               </div>
               <div>
                 {order.discount_reason ?? '-'}
-                <strong> ({`${order.discount_amount}${order.discount_type === 'percentage' ? '%' : ''}`})</strong>
+                <strong> ({`${order.discount_type === 'percentage' ? `${order.discount_amount}%` : formatPrice(order.discount_amount)}`})</strong>
               </div>
               <div>
                 -

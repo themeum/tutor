@@ -4,6 +4,7 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
+import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -68,7 +69,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
                 <FormInputWithContent
                   {...props}
                   label={__('Refund amount', 'tutor')}
-                  content={'$'}
+                  content={tutorConfig.tutor_currency.symbol ?? '$'}
                   type="number"
                   selectOnFocus
                 />
