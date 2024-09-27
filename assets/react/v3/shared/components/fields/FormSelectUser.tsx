@@ -143,7 +143,9 @@ const FormSelectUser = ({
                   </div>
 
                   <Show when={!loading}>
-                    <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon({ isOpen })} />
+                    <div css={styles.toggleIcon({ isOpen })}>
+                      <SVGIcon name="chevronDown" width={20} height={20} />
+                    </div>
                   </Show>
                 </button>
               )}
@@ -365,6 +367,7 @@ const styles = {
   `,
   instructorItem: ({ isDefaultItem = false }) => css`
     ${styleUtils.resetButton};
+    position: relative;
     width: 100%;
     display: flex;
     align-items: center;
@@ -475,25 +478,20 @@ const styles = {
     max-width: calc(100% - 32px);
     max-height: calc(100% - 32px);
   `,
-  caretButton: css`
-    ${styleUtils.resetButton};
+  toggleIcon: ({ isOpen = false }: { isOpen: boolean }) => css`
     position: absolute;
     top: 0;
     bottom: 0;
     right: ${spacing[8]};
-    margin: auto 0;
-    display: flex;
-    align-items: center;
-  `,
-  toggleIcon: ({ isOpen = false }: { isOpen: boolean }) => css`
+    ${styleUtils.flexCenter()};
     color: ${colorTokens.icon.default};
     transition: transform 0.3s ease-in-out;
 
     ${
       isOpen &&
       css`
-      transform: rotate(180deg);
-    `
+        transform: rotate(180deg);
+      `
     }
   `,
   noUserFound: css`
