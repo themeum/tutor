@@ -9,6 +9,11 @@
  * @since 3.0.0
  */
 
+use Tutor\Ecommerce\Settings;
+
+$webhook_fields = Settings::get_webhook_fields();
+
+
 $field_key     = $field['key'];
 $default       = isset( $field['default'] ) ? $field['default'] : false;
 $value         = $this->get( $field_key, $default );
@@ -20,7 +25,6 @@ $max_length    = isset( $field['maxlength'] ) ? (int) $field['maxlength'] : 0;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
-
 	<div class="tutor-option-field-input">
 		<div class="tutor-type-password">
 			<input type="password" 
@@ -33,5 +37,16 @@ $max_length    = isset( $field['maxlength'] ) ? (int) $field['maxlength'] : 0;
 					value="<?php echo esc_attr( isset( $value ) ? $value : '' ); ?>" />
 			<button type="button"><i class="tutor-icon-eye-slash-bold"></i></button>
 		</div>
+
 	</div>
 </div>
+<?php if ( in_array( $field_key, $webhook_fields ) ) : ?>
+	<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
+		<strong>Webhook URL:</strong> 
+		<?php
+		$method = explode( '_', $field_key )[0];
+
+		echo esc_url( site_url( 'wp-json/tutor/v1/ecommerce-webhook?payment_method=' . $method ) );
+		?>
+	</div>
+<?php endif; ?>

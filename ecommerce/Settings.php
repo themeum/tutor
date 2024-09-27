@@ -601,7 +601,7 @@ class Settings {
 			'paypal_merchant_email' => 'email',
 			'paypal_client_id'      => 'text',
 			'paypal_client_secret'  => 'password',
-			'paypal_webhook_id'     => 'text',
+			'paypal_webhook_id'     => 'password',
 		);
 	}
 
@@ -739,6 +739,22 @@ class Settings {
 		} else {
 			return '$';
 		}
+	}
+
+	/**
+	 * Get webhook fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_webhook_fields(): array {
+		$arr = array(
+			'stripe_webhook_signature_key',
+			'paypal_webhook_id',
+		);
+
+		return apply_filters( 'tutor_ecommerce_webhook_fields', $arr );
 	}
 
 }
