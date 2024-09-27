@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -130,10 +131,10 @@ class OrderActivitiesModel {
 				} else {
 					$values->message = $activity->meta_value;
 				}
-				$values->id   = (int) $activity->id;
-				$values->date = $activity->created_at_gmt;
-				$values->type = $activity->meta_key;
-				$response[]   = $values;
+				$values->id                  = (int) $activity->id;
+				$values->created_at_readable = DateTimeHelper::get_gmt_to_user_timezone_date( $activity->created_at_gmt );
+				$values->type                = $activity->meta_key;
+				$response[]                  = $values;
 			}
 		} catch ( \Throwable $th ) {
 			// Log error message with file info.
