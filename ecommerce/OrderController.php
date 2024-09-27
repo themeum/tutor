@@ -216,7 +216,7 @@ class OrderController {
 		$total_price    = 0;
 		foreach ( $items as $item ) {
 			$subtotal_price += floatval( $item['regular_price'] );
-			$total_price    += floatval( $item['sale_price'] );
+			$total_price    += floatval( is_null( $item['sale_price'] ) || '' === $item['sale_price'] ? $item['regular_price'] : $item['sale_price'] );
 
 			// Add enrollment fee with total & subtotal price.
 			if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
