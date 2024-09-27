@@ -75,7 +75,7 @@ function Topbar() {
                       {sprintf(
                         __('Created by %s at %s', 'tutor'),
                         coupon.coupon_created_by,
-                        format(new Date(coupon.created_at_gmt), DateFormats.activityDate),
+                        coupon.created_at_readable,
                       )}
                     </p>
                   )
@@ -86,7 +86,7 @@ function Topbar() {
                     {sprintf(
                       __('Updated by %s at %s', 'tutor'),
                       coupon.coupon_update_by,
-                      format(new Date(coupon.updated_at_gmt), DateFormats.activityDate),
+                      coupon.updated_at_readable
                     )}
                   </p>
                 )}

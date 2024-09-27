@@ -3,7 +3,6 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Container from '@Components/Container';
 import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -14,7 +13,6 @@ import { useOrderContext } from '@OrderContexts/order-context';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { format } from 'date-fns';
 
 export const TOPBAR_HEIGHT = 96;
 
@@ -52,7 +50,7 @@ function Topbar() {
                 </Show>
               </div>
               <Show
-                when={order.updated_at_gmt}
+                when={order.updated_at_readable}
                 fallback={
                   <p css={styles.updateMessage}>
                     {sprintf(
@@ -63,12 +61,12 @@ function Topbar() {
                   </p>
                 }
               >
-                {() => (
+                {(date) => (
                   <p css={styles.updateMessage}>
                     {sprintf(
                       __('Updated by %s at %s', 'tutor'),
                       order.updated_by,
-                      order.updated_at_readable
+                      date
                     )}
                   </p>
                 )}
