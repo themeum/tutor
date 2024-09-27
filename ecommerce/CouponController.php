@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use TUTOR\Backend_Page_Trait;
 use TUTOR\BaseController;
 use TUTOR\Course;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -572,6 +573,11 @@ class CouponController extends BaseController {
 		// Set created & updated by.
 		$coupon_data->coupon_created_by = tutor_utils()->display_name( $coupon_data->created_by );
 		$coupon_data->coupon_update_by  = tutor_utils()->display_name( $coupon_data->updated_by );
+
+		$coupon_data->start_date_readable  = empty( $coupon_data->start_date_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $coupon_data->start_date_gmt );
+		$coupon_data->expire_date_readable = empty( $coupon_data->expire_date_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $coupon_data->expire_date_gmt );
+		$coupon_data->created_at_readable  = DateTimeHelper::get_gmt_to_user_timezone_date( $coupon_data->created_at_gmt );
+		$coupon_data->updated_at_readable  = empty( $coupon_data->updated_at_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $coupon_data->updated_at_gmt );
 
 		$this->json_response(
 			__( 'Coupon retrieved successfully', 'tutor' ),
