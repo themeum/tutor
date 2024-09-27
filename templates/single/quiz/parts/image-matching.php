@@ -46,17 +46,17 @@
 		</div>
 		<?php } ?>
 	</div>
-	<div class="quiz-image-matching-ans tutor-d-flex tutor-align-start">
+	<div class="quiz-image-matching-ans">
 		<?php
 		if ( is_array( $answers ) && count( $answers ) ) {
 			foreach ( $answers as $answer ) {
 				?>
 		<div class="quiz-image-box">
-			<div class="quiz-image tutor-d-flex tutor-mb-16">
+			<div class="quiz-image tutor-mb-16">
 				<img src="<?php echo esc_url( wp_get_attachment_image_url( $answer->image_id, 'full' ) ); ?>" />
 			</div>
-			<div class="tutor-quiz-dotted-box tutor-dropzone tutor-d-flex tutor-align-center">
-				<span class="tutor-dragging-text-conent tutor-fs-6 tutor-color-black">
+			<div class="tutor-quiz-dotted-box tutor-dropzone">
+				<span class="tutor-dragging-text-conent">
 				<?php esc_html_e( 'Drag your answer', 'tutor' ); ?>
 				</span>
 			</div>
