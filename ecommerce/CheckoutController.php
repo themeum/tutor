@@ -204,9 +204,9 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
 
-		$price_details = $coupon_code
-						? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code, $order_type )
-						: $coupon_model->apply_automatic_coupon_discount( $object_ids, $order_type );
+		// $price_details = $coupon_code
+		// 				? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code, $order_type )
+		// 				: $coupon_model->apply_automatic_coupon_discount( $object_ids, $order_type );
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
@@ -226,13 +226,31 @@ class CheckoutController {
 
 		$items = array();
 
-		foreach ( $price_details->items as $item ) {
-			$items[] = array(
-				'user_id'       => $current_user_id,
-				'item_id'       => $item->item_id,
-				'regular_price' => $item->regular_price,
-				'sale_price'    => $item->discount_price,
-			);
+		foreach ( $object_ids as $object_id ) {
+			$item_raw_price = tutor_utils()->get_raw_course_price( $object_id );
+			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
+				$item_raw_price = apply_filters( 'tutor_subscription_plan_price', $item_raw_price, $object_id );
+			}
+
+			if ( $item_raw_price->sale_price ) {
+				$items[] = array(
+					'user_id'       => $current_user_id,
+					'item_id'       => $object_id,
+					'regular_price' => $item_raw_price->regular_price,
+					'sale_price'    => $item_raw_price->sale_price,
+				);
+			} else {
+				$price_details = $coupon_code
+				? $coupon_model->apply_coupon_discount( $object_id, $coupon_code, $order_type )
+				: $coupon_model->apply_automatic_coupon_discount( $object_id, $order_type );
+
+				$items[] = array(
+					'user_id'       => $current_user_id,
+					'item_id'       => $object_id,
+					'regular_price' => $item_raw_price->regular_price,
+					'sale_price'    => $price_details->items[0]->discount_price,
+				);
+			}
 		}
 
 		$args = array(
