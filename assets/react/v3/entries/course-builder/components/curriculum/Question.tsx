@@ -15,7 +15,6 @@ import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderSer
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import type { ID } from '@CourseBuilderServices/curriculum';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { animateLayoutChanges } from '@Utils/dndkit';
@@ -44,9 +43,10 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOverlay = false }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError, setActiveQuestionId, setValidationError } =
+    useQuizModalContext();
   const form = useFormContext<QuizForm>();
-  const [selectedQuestionId, setSelectedQuestionId] = useState<ID>('');
+  const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -78,7 +78,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
       css={styles.questionItem({
         isActive: String(activeQuestionId) === String(question.question_id),
         isDragging: isOverlay,
-        isThreeDotsOpen: selectedQuestionId === question.question_id,
+        isThreeDotsOpen: isThreeDotOpen,
       })}
       ref={(element) => {
         setNodeRef(element);
@@ -142,23 +142,17 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         {question.question_title}
       </span>
       <ThreeDots
-        isOpen={selectedQuestionId === question.question_id}
+        isOpen={isThreeDotOpen}
         onClick={(event) => {
+          event.stopPropagation();
           const validation = validateQuizQuestion(activeQuestionIndex, form);
+          setIsThreeDotOpen(true);
           if (validation !== true) {
-            event.stopPropagation();
-
-            if (activeQuestionId === question.question_id) {
-              setSelectedQuestionId(question.question_id);
-            }
-
             setValidationError(validation);
-            return;
           }
-          setSelectedQuestionId(question.question_id);
         }}
         animationType={AnimationType.slideDown}
-        closePopover={() => setSelectedQuestionId('')}
+        closePopover={() => setIsThreeDotOpen(false)}
         dotsOrientation="vertical"
         maxWidth={isTutorPro ? '150px' : '160px'}
         isInverse
@@ -167,7 +161,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         hideArrow
         data-three-dots
       >
-        {validateQuizQuestion(activeQuestionIndex, form) === true && (
+        {!validationError && (
           <ThreeDots.Option
             text={
               <div css={styles.duplicate}>
@@ -180,7 +174,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
             onClick={(event) => {
               event.stopPropagation();
               onDuplicateQuestion(question);
-              setSelectedQuestionId('');
+              setIsThreeDotOpen(false);
             }}
           />
         )}
@@ -191,8 +185,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
           onClick={(event) => {
             event.stopPropagation();
             onRemoveQuestion();
-            setValidationError(null);
-            setSelectedQuestionId('');
+            setIsThreeDotOpen(false);
           }}
         />
       </ThreeDots>

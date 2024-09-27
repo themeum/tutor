@@ -149,6 +149,7 @@ const ImageAnswering = () => {
                         onDuplicateOption={noop}
                         onRemoveOption={noop}
                         index={index}
+                        isOverlay
                       />
                     )}
                   />

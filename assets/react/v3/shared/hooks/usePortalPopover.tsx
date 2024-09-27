@@ -208,7 +208,8 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
             <div
               css={styles.backdrop}
               onKeyUp={noop}
-              onClick={() => {
+              onClick={(event) => {
+                event.stopPropagation();
                 onClickOutside?.();
               }}
             />

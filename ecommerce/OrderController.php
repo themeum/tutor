@@ -134,12 +134,6 @@ class OrderController {
 			 * @since 3.0.0
 			 */
 			add_action( 'wp_ajax_tutor_order_bulk_action', array( $this, 'bulk_action_handler' ) );
-			/**
-			 * Handle ajax request for updating order status
-			 *
-			 * @since 3.0.0
-			 */
-			add_action( 'wp_ajax_tutor_change_order_status', array( $this, 'tutor_change_order_status' ) );
 		}
 	}
 
@@ -175,8 +169,8 @@ class OrderController {
 	 * @param string $payment_status Order payment status.
 	 * @param string $order_type Type single_order/subscription.
 	 * @param mixed  $coupon_code Optional, if not provided automatic coupon.
-	 * @param array  $args Optional, Args to set data such as fees, tax, etc.
-	 * Even to modify $order_data.
+	 * @param array  $args Optional, Args to set data such as fees, tax, etc. Even to modify $order_data.
+	 * @param bool   $return_id return id.
 	 *
 	 * @throws \Exception Throw exception if data not valid or
 	 * any other exception occur.
@@ -442,10 +436,14 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		$order_id          = Input::post( 'order_id' );
+		$order_id          = Input::post( 'order_id', 0, Input::TYPE_INT );
 		$amount            = (float) Input::post( 'amount' );
 		$reason            = Input::post( 'reason' );
-		$cancel_enrollment = Input::post( 'is_remove_enrolment' );
+		$cancel_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+
+		if ( $amount <= 0 ) {
+			$this->json_response( __( 'Invalid refund amount provided', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		$meta_value = array(
 			'amount'  => $amount,
@@ -453,7 +451,8 @@ class OrderController {
 			'message' => __( 'Order refunded by ', 'tutor' ) . get_userdata( get_current_user_id() )->display_name,
 		);
 
-		$order_data = $this->model->get_order_by_id( $order_id );
+		$order_data        = $this->model->get_order_by_id( $order_id );
+		$cancel_enrollment = apply_filters( 'tutor_cancel_enrollment_on_refund', $cancel_enrollment, $order_data );
 
 		if ( $amount > (float) $order_data->net_payment ) {
 			$this->json_response(
@@ -512,7 +511,7 @@ class OrderController {
 				$payment_status = $this->model::PAYMENT_PARTIALLY_REFUNDED;
 			}
 
-			if ( 'true' == $cancel_enrollment ) {
+			if ( $cancel_enrollment ) {
 				$order_status = $this->model::ORDER_CANCELLED;
 			}
 
@@ -617,7 +616,7 @@ class OrderController {
 			$this->json_response( tutor_utils()->error_message( HttpHelper::STATUS_UNAUTHORIZED ), null, HttpHelper::STATUS_UNAUTHORIZED );
 		}
 
-		$request = Input::sanitize_array( $_POST );
+		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --already sanitized.
 
 		// Validate request.
 		$validation = $this->validate( $request );
@@ -793,9 +792,9 @@ class OrderController {
 
 		$date_filter = sanitize_text_field( $date );
 
-		$year  = date( 'Y', strtotime( $date_filter ) );
-		$month = date( 'm', strtotime( $date_filter ) );
-		$day   = date( 'd', strtotime( $date_filter ) );
+		$year  = gmdate( 'Y', strtotime( $date_filter ) );
+		$month = gmdate( 'm', strtotime( $date_filter ) );
+		$day   = gmdate( 'd', strtotime( $date_filter ) );
 
 		// Add date query.
 		if ( '' !== $date_filter ) {
@@ -838,7 +837,7 @@ class OrderController {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
-		$request     = Input::sanitize_array( $_POST );
+		$request     = Input::sanitize_array( $_POST ); //phpcs:ignore  -- already sanitized.
 		$bulk_action = $request['bulk-action'];
 
 		$bulk_ids = isset( $request['bulk-ids'] ) ? array_map( 'intval', explode( ',', $request['bulk-ids'] ) ) : array();
@@ -902,44 +901,6 @@ class OrderController {
 		} else {
 			wp_send_json_error( __( 'Failed to update order.', 'tutor' ) );
 		}
-	}
-
-	/**
-	 * Handle ajax request for updating order status
-	 *
-	 * @return void
-	 * @since 3.0.0
-	 */
-	public static function tutor_change_order_status() {
-		tutor_utils()->checking_nonce();
-
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
-		$status = Input::post( 'status' );
-		$id     = Input::post( 'id' );
-		$order  = get_post( $id );
-
-		if ( OrderModel::POST_TYPE !== $order->post_type ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
-		$args = array(
-			'ID'          => $id,
-			'post_status' => $status,
-		);
-
-		if ( OrderModel::STATUS_FUTURE === $order->post_status && OrderModel::STATUS_PUBLISH === $status ) {
-			$args['post_status']   = OrderModel::STATUS_PUBLISH;
-			$args['post_date']     = current_time( 'mysql' );
-			$args['post_date_gmt'] = current_time( 'mysql', 1 );
-		}
-
-		wp_update_post( $args );
-		wp_send_json_success();
-		exit;
 	}
 
 	/**
