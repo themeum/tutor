@@ -58,17 +58,17 @@ function Topbar() {
                     {sprintf(
                       __('Created by %s at %s', 'tutor'),
                       order.created_by,
-                      format(new Date(order.created_at_gmt), DateFormats.activityDate)
+                      order.created_at_readable
                     )}
                   </p>
                 }
               >
-                {(date) => (
+                {() => (
                   <p css={styles.updateMessage}>
                     {sprintf(
                       __('Updated by %s at %s', 'tutor'),
                       order.updated_by,
-                      format(new Date(date), DateFormats.activityDate)
+                      order.updated_at_readable
                     )}
                   </p>
                 )}
