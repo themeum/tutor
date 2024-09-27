@@ -18,6 +18,7 @@ interface RefundModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   available_amount: number;
   order_id: number;
+  order_type: string;
 }
 
 interface FormField {
@@ -26,12 +27,12 @@ interface FormField {
   reason: string;
 }
 
-function RefundModal({ title, closeModal, actions, available_amount, order_id }: RefundModalProps) {
+function RefundModal({ title, closeModal, actions, available_amount, order_id, order_type }: RefundModalProps) {
   const refundOrderMutation = useRefundOrderMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       amount: 0,
-      is_remove_enrolment: false,
+      is_remove_enrolment: order_type !== 'single_order' ? true : false,
       reason: '',
     },
   });
@@ -54,6 +55,9 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
               rules={{
                 ...requiredRule(),
                 validate: (value) => {
+                  if (value == 0) {
+                    return __('Refund amount must be greater than zero.', 'tutor');
+                  }
                   if (value > available_amount) {
                     return __('You are exceeded the available amount', 'tutor');
                   }
@@ -91,11 +95,13 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id }:
             )}
           />
 
-          <Controller
-            control={form.control}
-            name="is_remove_enrolment"
-            render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrolment', 'tutor')} />}
-          />
+          {order_type === 'single_order' && (
+            <Controller
+              control={form.control}
+              name="is_remove_enrolment"
+              render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrolment', 'tutor')} />}
+            />
+          )}
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
@@ -114,35 +120,35 @@ export default RefundModal;
 
 const styles = {
   inlineFields: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+  `,
   availableMessage: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-		margin-top: ${spacing[12]};
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+    margin-top: ${spacing[12]};
 
-		strong {
-			color: ${colorTokens.text.title};
-		}
-	`,
+    strong {
+      color: ${colorTokens.text.title};
+    }
+  `,
 
   form: css`
-		width: 480px;
-	`,
+    width: 480px;
+  `,
   formContent: css`
-		padding: ${spacing[20]} ${spacing[16]};
+    padding: ${spacing[20]} ${spacing[16]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
-	`,
+  `,
   footer: css`
-		box-shadow: 0px 1px 0px 0px #E4E5E7 inset;
-		height: 56px;
-		display: flex;
-		align-items: center;
-		justify-content: end;
-		gap: ${spacing[16]};
-		padding-inline: ${spacing[16]};
-	`,
+    box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: ${spacing[16]};
+    padding-inline: ${spacing[16]};
+  `,
 };

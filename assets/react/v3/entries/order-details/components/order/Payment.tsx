@@ -160,7 +160,7 @@ function Payment() {
             )}
           </Show>
 
-          <Show when={order.fees}>
+          {/* <Show when={order.fees}>
             {(fees) => (
               <div css={styles.item({ action: 'regular' })}>
                 <div>{__('Fees', 'tutor')}</div>
@@ -168,7 +168,7 @@ function Payment() {
                 <div>{formatPrice(fees)}</div>
               </div>
             )}
-          </Show>
+          </Show> */}
 
           <div css={styles.item({ action: 'bold' })}>
             <div>{__('Total Paid', 'tutor')}</div>
@@ -211,6 +211,7 @@ function Payment() {
                     title: __('Refund', 'tutor'),
                     available_amount: order.refunds?.length ? order.net_payment : order.total_price,
                     order_id: order.id,
+                    order_type: order.order_type,
                   },
                 });
               }
