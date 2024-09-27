@@ -4,10 +4,12 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
+import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { type Discount, useOrderDiscountMutation } from '@OrderServices/order';
+import { formatPrice } from '@Utils/currency';
 import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -45,7 +47,8 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
   });
   const type = form.watch('type');
   const value = form.watch('amount');
-  const content = type === 'flat' ? '$' : '%';
+  const currencySymbol = tutorConfig.tutor_currency.symbol ?? '$';
+  const content = type === 'flat' ? currencySymbol : '%';
   const priceAfterDiscount = useMemo(() => {
     const discountedPrice =
       type === 'percentage' ? total_price - calculatePercentage(total_price, value) : total_price - value;
@@ -78,8 +81,6 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
                   label={__('Discount Type', 'tutor')}
                   options={discountTypeOptions}
                   placeholder={__('Select discount type', 'tutor')}
-                  isSearchable
-                  isClearable
                 />
               )}
             />
@@ -111,7 +112,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
           </div>
 
           <p css={styles.priceMessage}>
-            {__('Price after the discount: ', 'tutor')} <strong>${priceAfterDiscount}</strong>
+            {__('Price after the discount: ', 'tutor')} <strong>{formatPrice(Number(priceAfterDiscount))}</strong>
           </p>
 
           <div css={styles.reason}>
@@ -146,34 +147,34 @@ export default DiscountModal;
 
 const styles = {
   inlineFields: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+  `,
   priceMessage: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-		margin-top: ${spacing[12]};
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+    margin-top: ${spacing[12]};
 
-		strong {
-			color: ${colorTokens.text.title};
-		}
-	`,
+    strong {
+      color: ${colorTokens.text.title};
+    }
+  `,
   reason: css`
-		margin-top: ${spacing[12]};
-	`,
+    margin-top: ${spacing[12]};
+  `,
   form: css`
-		width: 480px;
-	`,
+    width: 480px;
+  `,
   formContent: css`
-		padding: ${spacing[20]} ${spacing[16]};
-	`,
+    padding: ${spacing[20]} ${spacing[16]};
+  `,
   footer: css`
-		box-shadow: 0px 1px 0px 0px #E4E5E7 inset;
-		height: 56px;
-		display: flex;
-		align-items: center;
-		justify-content: end;
-		gap: ${spacing[16]};
-		padding-inline: ${spacing[16]};
-	`,
+    box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: ${spacing[16]};
+    padding-inline: ${spacing[16]};
+  `,
 };
