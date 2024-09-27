@@ -344,7 +344,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                         <Show when={showButtons}>
                           <MagicButton
                             variant="primary_outline"
-                            disabled={isLoadingItem}
+                            disabled={isLoading}
                             onClick={() => {
                               setIsCreateNewCourse(true);
                             }}
@@ -356,7 +356,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
                         <MagicButton
                           variant="outline"
-                          disabled={isLoadingItem}
+                          disabled={isLoading}
                           onClick={() => {
                             setPointer(loading.length);
                             appendLoading();
