@@ -5,8 +5,10 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import type { QuizContent } from '@CourseBuilderServices/magic-ai';
+import { AnimatedDiv } from '@Hooks/useAnimation';
 import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
+import { useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useState } from 'react';
 import { type Topic, useContentGenerationContext } from './ContentGenerationContext';
@@ -33,10 +35,24 @@ const AccordionItem = ({
 }: { isActive: boolean; setIsActive: () => void; data: AccordionItemData }) => {
   const { currentLoading } = useContentGenerationContext();
   const isLoading = currentLoading.content && data.contents.length === 0;
+
+  const collapseAnimation = useSpring({
+    maxHeight: data.is_active ? 300 : 0,
+    opacity: data.is_active ? 1 : 0,
+    config: {
+      duration: 300,
+      easing: (t) => t * (2 - t),
+    },
+  });
+
   return (
     <div onClick={setIsActive} onKeyDown={noop} css={css`cursor: pointer;`}>
       <div css={styles.title}>
-        <div css={styles.titleAndIcon}>
+        <div
+          css={styles.titleAndIcon({
+            isActive: data.is_active,
+          })}
+        >
           <SVGIcon name="chevronDown" width={24} height={24} />
           <p>{data.title}</p>
         </div>
@@ -44,25 +60,27 @@ const AccordionItem = ({
           {data.contents.length} {__('Contents', 'tutor')}
         </p>
       </div>
-      <div css={styles.content(data.is_active)}>
-        <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
-          <For each={data.contents}>
-            {(item, idx) => {
-              return (
-                <div css={styles.contentItem} key={idx}>
-                  {item.type === 'quiz' && !currentLoading.content && currentLoading.quiz && !item?.questions ? (
-                    <GradientLoadingSpinner />
-                  ) : (
-                    icons[item.type]
-                  )}
+      <AnimatedDiv style={collapseAnimation}>
+        <div css={styles.content(data.is_active)}>
+          <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
+            <For each={data.contents}>
+              {(item, idx) => {
+                return (
+                  <div css={styles.contentItem} key={idx}>
+                    {item.type === 'quiz' && !currentLoading.content && currentLoading.quiz && !item?.questions ? (
+                      <GradientLoadingSpinner />
+                    ) : (
+                      icons[item.type]
+                    )}
 
-                  <span>{item.title}</span>
-                </div>
-              );
-            }}
-          </For>
-        </Show>
-      </div>
+                    <span>{item.title}</span>
+                  </div>
+                );
+              }}
+            </For>
+          </Show>
+        </div>
+      </AnimatedDiv>
     </div>
   );
 };
@@ -73,7 +91,7 @@ const ContentAccordion = () => {
 
   useEffect(() => {
     if (currentContent.topics) {
-      setItems(currentContent.topics.map((item) => ({ ...item }) as AccordionItemData));
+      setItems(currentContent.topics.map((item) => ({ ...item, is_active: true }) as AccordionItemData));
     }
   }, [currentContent.topics]);
 
@@ -88,9 +106,12 @@ const ContentAccordion = () => {
               isActive={index === 0}
               setIsActive={() => {
                 setItems((previous) => {
-                  const copy = [...previous].map((item) => ({ ...item, is_active: false }));
-                  copy[index].is_active = true;
-                  return copy;
+                  return previous.map((item, idx) => {
+                    if (idx === index) {
+                      return { ...item, is_active: !item.is_active };
+                    }
+                    return { ...item };
+                  });
                 });
               }}
             />
@@ -114,19 +135,13 @@ const styles = {
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[8]};
-		height: 0;
-		opacity: 0;
-
-		transition: height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 
 		${
       isActive &&
       css`
-			height: auto;
-			opacity: 1;
-			margin-top: ${spacing[16]};
-		`
-    },
+        margin-top: ${spacing[16]};
+      `
+    };
 		
 	`,
   contentItem: css`
@@ -144,10 +159,27 @@ const styles = {
 			color: ${colorTokens.design.warning};
 		}
 	`,
-  titleAndIcon: css`
+  titleAndIcon: ({
+    isActive,
+  }: {
+    isActive: boolean;
+  }) => css`
 		display: flex;
 		align-items: center;
 		gap: ${spacing[8]};
+    
+    svg {
+      transition: transform 0.3s ease-in-out;
+    }
+
+    ${
+      isActive &&
+      css`
+        svg {
+          transform: rotate(180deg);
+        }
+      `
+    };
 	`,
   title: css`
 		display: flex;
