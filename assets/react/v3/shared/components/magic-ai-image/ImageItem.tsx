@@ -51,7 +51,11 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
 
   return (
     <>
-      <div css={styles.image}>
+      <div
+        css={styles.image({
+          isActive: storeAIGeneratedImageMutation.isPending,
+        })}
+      >
         <img src={src} alt={__('Generated Image', 'tutor')} />
         <div data-actions>
           <div css={styles.useButton}>
@@ -184,7 +188,11 @@ const styles = {
 		`
     }
 	`,
-  image: css`
+  image: ({
+    isActive,
+  }: {
+    isActive: boolean;
+  }) => css`
 		width: 100%;
     height: 100%;
 		overflow: hidden;
@@ -207,6 +215,17 @@ const styles = {
 			height: 100%;
 			object-fit: cover;
 		}
+
+    ${
+      isActive &&
+      css`
+        outline-color: ${colorTokens.stroke.brand};
+
+        [data-actions] {
+          opacity: 1;
+        }
+      `
+    }
 
 		&:hover, &:focus-within {
 			outline-color: ${colorTokens.stroke.brand};

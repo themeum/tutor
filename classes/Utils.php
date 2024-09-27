@@ -10246,6 +10246,9 @@ class Utils {
 			);
 
 			$media_id = wp_insert_attachment( $attachment, $uploaded['file'] );
+			$attach_data = wp_generate_attachment_metadata( $media_id, $uploaded['file'] );
+			wp_update_attachment_metadata( $media_id, $attach_data );
+
 
 			return (object) array(
 				'id'    => $media_id,
