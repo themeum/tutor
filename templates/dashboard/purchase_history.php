@@ -12,6 +12,7 @@
 defined( 'ABSPATH' ) || exit;
 
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
 
@@ -144,7 +145,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									?>
 								</td>
 								<td>
-									<?php echo esc_html( tutor_i18n_get_formated_date( $order->created_at_gmt ) ); ?>
+									<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
 								</td>
 								<td>
 									<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
@@ -153,7 +154,6 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) ); ?>
 								</td>
 								<td>
-									
 								</td>
 								</tr>
 							<?php endforeach; ?>
