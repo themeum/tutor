@@ -204,10 +204,6 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
 
-		// $price_details = $coupon_code
-		// 				? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code, $order_type )
-		// 				: $coupon_model->apply_automatic_coupon_discount( $object_ids, $order_type );
-
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
 			$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $current_user_id ) );
@@ -234,10 +230,10 @@ class CheckoutController {
 
 			if ( $item_raw_price->sale_price ) {
 				$items[] = array(
-					'user_id'       => $current_user_id,
-					'item_id'       => $object_id,
-					'regular_price' => $item_raw_price->regular_price,
-					'sale_price'    => $item_raw_price->sale_price,
+					'item_id'        => $object_id,
+					'regular_price'  => $item_raw_price->regular_price,
+					'sale_price'     => $item_raw_price->sale_price,
+					'discount_price' => null,
 				);
 			} else {
 				$price_details = $coupon_code
@@ -245,10 +241,10 @@ class CheckoutController {
 				: $coupon_model->apply_automatic_coupon_discount( $object_id, $order_type );
 
 				$items[] = array(
-					'user_id'       => $current_user_id,
-					'item_id'       => $object_id,
-					'regular_price' => $item_raw_price->regular_price,
-					'sale_price'    => $price_details->items[0]->discount_price,
+					'item_id'        => $object_id,
+					'regular_price'  => $item_raw_price->regular_price,
+					'sale_price'     => null,
+					'discount_price' => $price_details->items[0]->discount_price,
 				);
 			}
 		}

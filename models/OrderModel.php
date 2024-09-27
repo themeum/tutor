@@ -95,7 +95,6 @@ class OrderModel {
 	 */
 	private $order_items_fillable_fields = array(
 		'order_id',
-		'user_id',
 		'item_id',
 		'regular_price',
 		'sale_price',
