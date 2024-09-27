@@ -523,7 +523,7 @@ const styles = {
   box: ({ deactivated, hasError, isActive }: { deactivated: boolean; hasError: boolean; isActive: boolean }) => css`
 		width: 100%;
 		border-radius: ${borderRadius[8]};
-		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.default};
+		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
 		padding: ${spacing[16]} ${spacing[12]};
 		display: flex;
 		gap: ${spacing[12]};
@@ -545,7 +545,7 @@ const styles = {
 		${
       !deactivated &&
       css`
-			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.default};
+			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
 			`
     }
 
