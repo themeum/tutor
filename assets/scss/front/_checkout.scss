@@ -7,7 +7,7 @@
 
     .tutor-checkout-billing {
         background-color: #F9FAFC;
-        padding: 80px 15px;
+        padding: 80px 15px 80px 64px;
         height: 100%;
 
         @include breakpoint-max(desktop) {
@@ -15,26 +15,21 @@
         }
 
         .tutor-checkout-billing-inner {
-            max-width: 445px;
-            margin-left: auto;
-            margin-right: 65px;
-
-            @include breakpoint-max(desktop) {
-                margin: auto;
-            }
+            max-width: 500px;
         }
     }
 
     .tutor-checkout-details {
         font-size: 1rem;
-        padding: 120px 15px 80px 64px;
+        padding: 80px 64px 80px 15px;
+        max-width: 560px;
+        margin-left: auto;
 
         @include breakpoint-max(desktop) {
             padding: 60px 15px 40px 15px;
         }
 
         .tutor-checkout-details-inner {
-            max-width: 480px;
             border: 1px solid var(--tutor-border-color);
             border-radius: 6px;
 
