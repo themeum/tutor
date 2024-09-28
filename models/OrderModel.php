@@ -1150,4 +1150,74 @@ class OrderModel {
 
 		return $status;
 	}
+
+	/**
+	 * Calculate item price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $items Order items, multi or single dimensional arr.
+	 *
+	 * @return object {subtotal => 10, total => 10}
+	 */
+	public static function calculate_order_price( array $items ) {
+		$item_subtotal = 0;
+		$item_total    = 0;
+
+		if ( isset( $items[0] ) ) {
+			foreach ( $items as $item ) {
+				$regular_price  = floatval( $item['regular_price'] );
+				$sale_price     = is_null( $item['sale_price'] ) || '' === $item['sale_price'] ? null : floatval( $item['sale_price'] );
+				$discount_price = is_null( $item['discount_price'] ) || '' === $item['discount_price'] ? null : floatval( $item['discount_price'] );
+	
+				// Subtotal is the original price (regular price).
+				$subtotal = $regular_price;
+				$total    = $regular_price;
+				
+				// Determine the total based on sale price and discount.
+				if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
+					$subtotal = $sale_price;
+					$total    = $sale_price;
+				} else {
+					// If there's a discount, apply it to the total price.
+					if ( ! is_null( $discount_price ) && $discount_price >= 0 ) {
+						$total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
+					}
+				}
+				
+	
+				$item_subtotal += $subtotal;
+				$item_total    += $total;
+			}
+		} else {
+			// for single dimensional array.
+			$regular_price  = floatval( $items['regular_price'] );
+			$sale_price     = is_null( $items['sale_price'] ) || '' === $items['sale_price'] ? null : floatval( $items['sale_price'] );
+			$discount_price = is_null( $items['discount_price'] ) || '' === $items['discount_price'] ? null : floatval( $items['discount_price'] );
+
+			// Subtotal is the original price (regular price).
+			$subtotal = $regular_price;
+			$total    = $regular_price;
+			
+			// Determine the total based on sale price and discount.
+			if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
+				$subtotal = $sale_price;
+				$total    = $sale_price;
+			} else {
+				// If there's a discount, apply it to the total price.
+				if ( ! is_null( $discount_price ) && $discount_price >= 0 ) {
+					$total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
+				}
+			}
+			
+
+			$item_subtotal = $subtotal;
+			$item_total    = $total;
+		}
+		
+		return (object) [
+			'subtotal' => number_format( $item_subtotal, 2 ),
+			'total'    => number_format( $item_total, 2 )
+		];
+	}
 }

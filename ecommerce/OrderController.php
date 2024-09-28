@@ -1049,4 +1049,5 @@ class OrderController {
 
 		return ValidationHelper::validate( $validation_rules, $data );
 	}
+	
 }
