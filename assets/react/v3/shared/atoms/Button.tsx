@@ -621,7 +621,7 @@ const styles = {
 		left: 50%;
 		transform: translateX(-50%) translateY(-50%);
 		& svg {
-			animation: ${spin} 1.5s linear infinite;
+			animation: ${spin} 1s linear infinite;
 		}
 	`,
 };
