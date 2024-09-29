@@ -1163,8 +1163,8 @@ class OrderModel {
 	 * @return object {subtotal => 10, total => 10}
 	 */
 	public static function calculate_order_price( array $items ) {
-		$item_subtotal = 0;
-		$item_total    = 0;
+		$subtotal = 0;
+		$total    = 0;
 
 		if ( isset( $items[0] ) ) {
 			foreach ( $items as $item ) {
@@ -1173,23 +1173,23 @@ class OrderModel {
 				$discount_price = is_null( $item['discount_price'] ) || '' === $item['discount_price'] ? null : tutor_get_locale_price( $item['discount_price'] );
 	
 				// Subtotal is the original price (regular price).
-				$subtotal = $regular_price;
-				$total    = $regular_price;
+				$item_subtotal = $regular_price;
+				$item_total    = $regular_price;
 				
 				// Determine the total based on sale price and discount.
 				if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
-					$subtotal = $sale_price;
-					$total    = $sale_price;
+					$item_subtotal = $sale_price;
+					$item_total    = $sale_price;
 				} else {
 					// If there's a discount, apply it to the total price.
 					if ( ! is_null( $discount_price ) && $discount_price >= 0 ) {
-						$total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
+						$item_total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
 					}
 				}
 				
 	
-				$item_subtotal += $subtotal;
-				$item_total    += $total;
+				$subtotal += $item_subtotal;
+				$total    += $item_total;
 			}
 		} else {
 			// for single dimensional array.
@@ -1198,28 +1198,27 @@ class OrderModel {
 			$discount_price = is_null( $items['discount_price'] ) || '' === $items['discount_price'] ? null : tutor_get_locale_price( $items['discount_price'] );
 
 			// Subtotal is the original price (regular price).
-			$subtotal = $regular_price;
-			$total    = $regular_price;
+			$item_subtotal = $regular_price;
+			$item_total    = $regular_price;
 			
 			// Determine the total based on sale price and discount.
 			if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
-				$subtotal = $sale_price;
-				$total    = $sale_price;
+				$item_subtotal = $sale_price;
+				$item_total    = $sale_price;
 			} else {
 				// If there's a discount, apply it to the total price.
 				if ( ! is_null( $discount_price ) && $discount_price >= 0 ) {
-					$total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
+					$item_total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
 				}
 			}
 			
-
-			$item_subtotal = $subtotal;
-			$item_total    = $total;
+			$subtotal = $item_subtotal;
+			$total    = $item_total;
 		}
 		
 		return (object) [
-			'subtotal' => tutor_get_locale_price( $item_subtotal ),
-			'total'    => tutor_get_locale_price( $item_total )
+			'subtotal' => tutor_get_locale_price( $subtotal ),
+			'total'    => tutor_get_locale_price( $total )
 		];
 	}
 

@@ -1545,7 +1545,7 @@ if ( ! function_exists( 'tutor_get_locale_price' ) ) {
 	 */
 	function tutor_get_locale_price( $price ) {
 		// TODO: implement price formation.
-		return number_format( $price, 2 );
+		return $price ? number_format( $price, 2 ) : $price;
 	}
 }
 
