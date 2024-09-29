@@ -73,16 +73,7 @@
 		width: 100%;
 		max-width: 980px;
 		margin: 0 auto;
-
-		.tutor-table-quiz-attempts.tutor-table, .my-quiz-attempts.tutor-table {
-			tr {
-				td {
-					@include breakpoint-max(mobile) {
-						white-space: nowrap;
-					}
-				}
-			}
-		}
+		
 		.quiz-meta-info {
 			display: flex;
 			justify-content: space-between;
