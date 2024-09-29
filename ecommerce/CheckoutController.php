@@ -234,18 +234,23 @@ class CheckoutController {
 					'regular_price'  => tutor_get_locale_price( $item_raw_price->regular_price ),
 					'sale_price'     => $item_raw_price->sale_price ? tutor_get_locale_price( $item_raw_price->sale_price ) : null,
 					'discount_price' => null,
+					'coupon_code'    => null,
 				);
 			} else {
-				$price_details = $coupon_code
+				$coupon_price = $coupon_code
 				? $coupon_model->apply_coupon_discount( $object_id, $coupon_code, $order_type )
 				: $coupon_model->apply_automatic_coupon_discount( $object_id, $order_type );
+
+				$discount_price =! is_null ( $coupon_price->items[0]->discount_price ) && $coupon_price->items[0]->discount_price >= 0 ? tutor_get_locale_price( $coupon_price->items[0]->discount_price ) : null;
 
 				$items[] = array(
 					'item_id'        => $object_id,
 					'regular_price'  => tutor_get_locale_price( $item_raw_price->regular_price ),
 					'sale_price'     => null,
-					'discount_price' => tutor_get_locale_price( $price_details->items[0]->discount_price ),
+					'discount_price' => $discount_price,
+					'coupon_code'    => ! is_null( $discount_price ) ? ( $coupon_code ? $coupon_code : 'automatic' ) : null,
 				);
+
 			}
 		}
 

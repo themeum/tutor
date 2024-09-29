@@ -195,19 +195,19 @@ class OrderController {
 			throw new \Exception( __( 'Invalid payment status', 'tutor' ) );
 		}
 
-		$coupon_model = new CouponModel();
-
-		$coupon = $coupon_code ? $coupon_model->get_coupon( array( 'coupon_code' => $coupon_code ) ) : null;
-
 		$subtotal_price = 0;
 		$total_price    = 0;
 
 		// Add enrollment fee with total & subtotal price.
 		if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
-			$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
+			$plan = apply_filters( 'tutor_checkout_plan_info', null, $items[0]['item_id'] );
 			if ( $plan ) {
-				$subtotal_price += floatval( $plan->enrollment_fee ?? 0 );
-				$total_price    += floatval( $plan->enrollment_fee ?? 0 );
+				$subtotal_price = $this->model::calculate_order_price( $items )->subtotal;
+				$total_price    = $this->model::calculate_order_price( $items )->total;
+
+				if ( $plan->enrollment_fee ) {
+					$total_price += $plan->enrollment_fee;
+				}
 			}
 		} else {
 			$item_price     = $this->model::calculate_order_price( $items ); 
@@ -226,10 +226,6 @@ class OrderController {
 			'user_id'         => $user_id,
 			'payment_status'  => $payment_status,
 			'order_status'    => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
-			'coupon_code'     => $coupon_code,
-			'discount_type'   => $coupon->discount_type ?? '',
-			'discount_amount' => $coupon->discount_amount ?? '',
-			'discount_reason' => $coupon->discount_reason ?? '',
 			'created_at_gmt'  => current_time( 'mysql', true ),
 			'created_by'      => get_current_user_id(),
 			'updated_at_gmt'  => current_time( 'mysql', true ),
