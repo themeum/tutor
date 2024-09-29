@@ -51,6 +51,7 @@
 
 	.tutor-start-quiz-wrapper {
 		max-width: 560px;
+		margin: 0 auto;
 		border: 1px solid #c0c3cb;
 		border-radius: 10px;
 		@include breakpoint-min(desktop-lg){
@@ -70,7 +71,7 @@
 
 	.tutor-quiz-wrap {
 		width: 100%;
-		max-width: 920px;
+		max-width: 980px;
 		margin: 0 auto;
 
 		.tutor-table-quiz-attempts.tutor-table, .my-quiz-attempts.tutor-table {
