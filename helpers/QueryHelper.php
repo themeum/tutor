@@ -184,7 +184,7 @@ class QueryHelper {
 			// Prepare column keys & values.
 			foreach ( $keys as $v ) {
 				$column_keys   .= sanitize_key( $v ) . ',';
-				$sanitize_value = sanitize_text_field( $value[ $v ] );
+				$sanitize_value = is_null( $value[ $v ] ) ? $value[ $v ] : sanitize_text_field( $value[ $v ] );
 				$column_values .= is_numeric( $sanitize_value ) ? $sanitize_value . ',' : "'$sanitize_value'" . ',';
 			}
 			// Trim trailing comma.
