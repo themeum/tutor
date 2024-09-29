@@ -1152,7 +1152,7 @@ class OrderModel {
 	}
 
 	/**
-	 * Calculate item price
+	 * Calculate order price
 	 *
 	 * @since 3.0.0
 	 *
@@ -1220,4 +1220,35 @@ class OrderModel {
 			'total'    => number_format( $item_total, 2 )
 		];
 	}
+
+	/**
+	 * Get sellable price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $regular_price Regular price.
+	 * @param mixed $sale_price Sale price
+	 * @param mixed $discount_price Discount price.
+	 *
+	 * @return float item sellable price
+	 */
+	public static function get_item_sellable_price( $regular_price, $sale_price = null, $discount_price = null ) {
+		
+		$sale_price     = str_replace( ',', '', $sale_price );
+		$discount_price = str_replace( ',', '', $discount_price );
+
+		// Ensure prices are numeric and properly formatted.
+		$sellable_price = (
+			is_numeric( $sale_price ) && $sale_price > 0 
+			? $sale_price
+			: (
+				is_numeric( $discount_price ) && $discount_price >= 0 
+				? $discount_price 
+				: $regular_price
+			)
+		);
+	
+		return number_format( $sellable_price );
+	}
+	
 }
