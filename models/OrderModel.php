@@ -98,6 +98,8 @@ class OrderModel {
 		'item_id',
 		'regular_price',
 		'sale_price',
+		'discount_price',
+		'coupon_code',
 	);
 
 	/**

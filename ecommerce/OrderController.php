@@ -190,13 +190,6 @@ class OrderController {
 			$items = array( $items );
 		}
 
-		foreach ( $items as $item ) {
-			$has_diff_items_fields = array_diff_key( $item, array_flip( $allowed_item_fields ) );
-			if ( $has_diff_items_fields ) {
-				throw new \Exception( __( 'Invalid order item data provided', 'tutor' ) );
-			}
-		}
-
 		// Validate payment status.
 		if ( ! in_array( $payment_status, array_keys( $this->model->get_payment_status() ) ) ) {
 			throw new \Exception( __( 'Invalid payment status', 'tutor' ) );
