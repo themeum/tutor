@@ -197,6 +197,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					dropZone.appendChild(newInput);
 					const copyContent = copiedDragElement.querySelector('.tutor-dragging-text-conent').textContent;
 					dropZone.querySelector('.tutor-dragging-text-conent').textContent = copyContent;
+					dropZone.querySelector('.tutor-dragging-text-conent').classList.add('tutor-color-black');
 					this.classList.remove('tutor-dragging');
 				}
 			}
@@ -251,6 +252,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		this.appendChild(newInput);
 		const copyContent = copyElement.querySelector('.tutor-dragging-text-conent').textContent;
 		this.querySelector('.tutor-dragging-text-conent').textContent = copyContent;
+		this.querySelector('.tutor-dragging-text-conent').classList.add('tutor-color-black');
 		this.classList.remove('tutor-drop-over');
 	}
 
