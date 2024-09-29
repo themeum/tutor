@@ -231,8 +231,8 @@ class CheckoutController {
 			if ( $item_raw_price->sale_price ) {
 				$items[] = array(
 					'item_id'        => $object_id,
-					'regular_price'  => $item_raw_price->regular_price,
-					'sale_price'     => $item_raw_price->sale_price,
+					'regular_price'  => tutor_get_locale_price( $item_raw_price->regular_price ),
+					'sale_price'     => $item_raw_price->sale_price ? tutor_get_locale_price( $item_raw_price->sale_price ) : null,
 					'discount_price' => null,
 				);
 			} else {
@@ -242,9 +242,9 @@ class CheckoutController {
 
 				$items[] = array(
 					'item_id'        => $object_id,
-					'regular_price'  => $item_raw_price->regular_price,
+					'regular_price'  => tutor_get_locale_price( $item_raw_price->regular_price ),
 					'sale_price'     => null,
-					'discount_price' => $price_details->items[0]->discount_price,
+					'discount_price' => tutor_get_locale_price( $price_details->items[0]->discount_price ),
 				);
 			}
 		}

@@ -1168,9 +1168,9 @@ class OrderModel {
 
 		if ( isset( $items[0] ) ) {
 			foreach ( $items as $item ) {
-				$regular_price  = floatval( $item['regular_price'] );
-				$sale_price     = is_null( $item['sale_price'] ) || '' === $item['sale_price'] ? null : floatval( $item['sale_price'] );
-				$discount_price = is_null( $item['discount_price'] ) || '' === $item['discount_price'] ? null : floatval( $item['discount_price'] );
+				$regular_price  = tutor_get_locale_price( $item['regular_price'] );
+				$sale_price     = is_null( $item['sale_price'] ) || '' === $item['sale_price'] ? null : tutor_get_locale_price( $item['sale_price'] );
+				$discount_price = is_null( $item['discount_price'] ) || '' === $item['discount_price'] ? null : tutor_get_locale_price( $item['discount_price'] );
 	
 				// Subtotal is the original price (regular price).
 				$subtotal = $regular_price;
@@ -1193,9 +1193,9 @@ class OrderModel {
 			}
 		} else {
 			// for single dimensional array.
-			$regular_price  = floatval( $items['regular_price'] );
-			$sale_price     = is_null( $items['sale_price'] ) || '' === $items['sale_price'] ? null : floatval( $items['sale_price'] );
-			$discount_price = is_null( $items['discount_price'] ) || '' === $items['discount_price'] ? null : floatval( $items['discount_price'] );
+			$regular_price  = tutor_get_locale_price( $items['regular_price'] );
+			$sale_price     = is_null( $items['sale_price'] ) || '' === $items['sale_price'] ? null : tutor_get_locale_price( $items['sale_price'] );
+			$discount_price = is_null( $items['discount_price'] ) || '' === $items['discount_price'] ? null : tutor_get_locale_price( $items['discount_price'] );
 
 			// Subtotal is the original price (regular price).
 			$subtotal = $regular_price;
@@ -1218,8 +1218,8 @@ class OrderModel {
 		}
 		
 		return (object) [
-			'subtotal' => number_format( $item_subtotal, 2 ),
-			'total'    => number_format( $item_total, 2 )
+			'subtotal' => tutor_get_locale_price( $item_subtotal ),
+			'total'    => tutor_get_locale_price( $item_total )
 		];
 	}
 
@@ -1250,7 +1250,7 @@ class OrderModel {
 			)
 		);
 	
-		return number_format( $sellable_price );
+		return tutor_get_locale_price( $sellable_price );
 	}
 	
 }
