@@ -208,18 +208,18 @@ class OrderController {
 
 		$subtotal_price = 0;
 		$total_price    = 0;
-		foreach ( $items as $item ) {
-			$subtotal_price += floatval( $item['regular_price'] );
-			$total_price    += floatval( is_null( $item['sale_price'] ) || '' === $item['sale_price'] ? $item['regular_price'] : $item['sale_price'] );
 
-			// Add enrollment fee with total & subtotal price.
-			if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
-				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
-				if ( $plan ) {
-					$subtotal_price += floatval( $plan->enrollment_fee ?? 0 );
-					$total_price    += floatval( $plan->enrollment_fee ?? 0 );
-				}
+		// Add enrollment fee with total & subtotal price.
+		if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
+			$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
+			if ( $plan ) {
+				$subtotal_price += floatval( $plan->enrollment_fee ?? 0 );
+				$total_price    += floatval( $plan->enrollment_fee ?? 0 );
 			}
+		} else {
+			$item_price     = $this->model::calculate_order_price( $items ); 
+			$subtotal_price = $item_price->subtotal;
+			$total_price    = $item_price->total;
 		}
 
 		$order_data = array(
