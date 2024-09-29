@@ -153,13 +153,13 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 		</div>
 
 		<div class="tutor-row">
-			<div class="tutor-col-6 tutor-mb-32">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php echo esc_attr( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 			</div>
-			<div class="tutor-col-6 tutor-mb-32">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Timezone', 'tutor' ); ?>
 				</label>
