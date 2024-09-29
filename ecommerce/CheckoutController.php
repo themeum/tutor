@@ -357,9 +357,9 @@ class CheckoutController {
 			$items[] = array(
 				'item_id'          => $item->item_id,
 				'item_name'        => $item_name,
-				'regular_price'    => floatval( $item->regular_price ),
+				'regular_price'    => tutor_get_locale_price( $item->sale_price > 0 ? $item->sale_price : $item->regular_price ),
 				'quantity'         => 1,
-				'discounted_price' => is_null( $item->sale_price ) || '' === $item->sale_price ? null : floatval( $item->sale_price ),
+				'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
 			);
 		}
 
