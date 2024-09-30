@@ -511,7 +511,7 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'             => 'Paypal',
+				'label'             => 'PayPal',
 				'is_active'         => self::is_active( 'paypal' ),
 				'icon'              => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
 				'support_recurring' => true,

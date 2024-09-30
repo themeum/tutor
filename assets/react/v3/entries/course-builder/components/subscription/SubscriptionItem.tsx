@@ -574,7 +574,7 @@ export default function SubscriptionItem({
               control={form.control}
               name={`subscriptions.${index}.is_featured`}
               render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Feature this plan', 'tutor')} />
+                <FormCheckbox {...controllerProps} label={__('Mark as featured', 'tutor')} />
               )}
             />
 
