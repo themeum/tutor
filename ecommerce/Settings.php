@@ -516,12 +516,6 @@ class Settings {
 				'icon'              => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
 				'support_recurring' => true,
 			),
-			'stripe' => array(
-				'label'             => 'Stripe',
-				'is_active'         => self::is_active( 'stripe' ),
-				'icon'              => esc_url_raw( tutor()->url . 'assets/images/stripe.svg' ),
-				'support_recurring' => true,
-			),
 		);
 
 		return apply_filters( 'tutor_default_automate_payment_gateways', $gateways );
