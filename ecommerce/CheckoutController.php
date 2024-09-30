@@ -241,7 +241,7 @@ class CheckoutController {
 				? $coupon_model->apply_coupon_discount( $object_id, $coupon_code, $order_type )
 				: $coupon_model->apply_automatic_coupon_discount( $object_id, $order_type );
 
-				$discount_price =! is_null ( $coupon_price->items[0]->discount_price ) && $coupon_price->items[0]->discount_price >= 0 ? tutor_get_locale_price( $coupon_price->items[0]->discount_price ) : null;
+				$discount_price = ! is_null( $coupon_price->items[0]->discount_price ) && $coupon_price->items[0]->discount_price >= 0 ? tutor_get_locale_price( $coupon_price->items[0]->discount_price ) : null;
 
 				$items[] = array(
 					'item_id'        => $object_id,
