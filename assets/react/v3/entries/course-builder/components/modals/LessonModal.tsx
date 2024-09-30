@@ -282,7 +282,9 @@ const LessonModal = ({
                             const description = form.getValues('description');
                             const h5pContents = contents.map(convertToH5PShortCode);
 
-                            form.setValue('description', `${description}\n${h5pContents.join('\n')}`);
+                            form.setValue('description', `${description}\n${h5pContents.join('\n')}`, {
+                              shouldDirty: true,
+                            });
                           },
                           contentType: 'lesson',
                           addedContentIds: (() => {
