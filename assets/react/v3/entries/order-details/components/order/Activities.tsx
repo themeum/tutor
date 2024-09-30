@@ -66,7 +66,7 @@ function Activities() {
                   <div css={styles.activityItem} key={activity.id}>
                     <span css={styles.dot} />
                     <div css={styles.innerContent}>
-                      <span>{format(new Date(activity.date), DateFormats.activityDate)}</span>
+                      <span>{activity.created_at_readable}</span>
                       <span>{activity.message}</span>
                       <Show when={activity.cancel_reason}>
                         <Alert type="info">

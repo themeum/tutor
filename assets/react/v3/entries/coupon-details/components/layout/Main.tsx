@@ -61,7 +61,9 @@ function Main() {
         }),
         coupon_uses: couponData.coupon_usage,
         created_at_gmt: couponData.created_at_gmt,
+        created_at_readable: couponData.created_at_readable,
         updated_at_gmt: couponData.updated_at_gmt,
+        updated_at_readable: couponData.updated_at_readable,
         coupon_created_by: couponData.coupon_created_by,
         coupon_update_by: couponData.coupon_update_by,
       });
