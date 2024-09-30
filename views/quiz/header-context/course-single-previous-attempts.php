@@ -27,7 +27,7 @@ $passing_grade = tutor_utils()->get_quiz_option( get_the_ID(), 'passing_grade', 
 	<?php echo esc_html( $quiz_title ); ?>
 </div>
 
-<div class="tutor-d-flex tutor-justify-between tutor-py-20 tutor-my-20 tutor-border-top tutor-border-bottom">
+<div class="tutor-quiz-result-summary">
 	<div class="tutor-d-flex tutor-gap-1">
 		<?php esc_html_e( 'Questions', 'tutor' ); ?>: 
 		<span class="tutor-color-black">

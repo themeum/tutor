@@ -63,7 +63,7 @@ $choice_type             = $multiple_answer_allowed ? 'checkbox' : 'radio';
 					?>
 
 					<?php if ( 'image' !== $answer->answer_view_format && 'text_image' !== $answer->answer_view_format ) : ?>
-						<div class="tutor-col-6 tutor-col-lg-6 tutor-mb-16 tutor-quiz-answer-single">
+						<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-16 tutor-quiz-answer-single">
 							<label for="<?php echo esc_attr( $answer->answer_id ); ?>" class="tutor-quiz-question-item">
 								<div class="tutor-card tutor-px-16 tutor-py-12">
 									<div class="tutor-d-flex tutor-align-center">
@@ -81,7 +81,7 @@ $choice_type             = $multiple_answer_allowed ? 'checkbox' : 'radio';
 							</label>
 						</div>
 					<?php else : ?>
-						<div class="tutor-col-6 tutor-col-lg-6 tutor-mb-16 tutor-quiz-answer-single">
+						<div class="tutor-col-12 tutor-col-sm-6 tutor-col-lg-6 tutor-mb-16 tutor-quiz-answer-single">
 							<label for="<?php echo esc_attr( $answer->answer_id ); ?>" class="tutor-quiz-question-item tutor-quiz-question-item-has-media">
 								<input 	type="<?php echo esc_attr( $choice_type ); ?>" 
 										class="tutor-form-check-input" id="<?php echo esc_attr( $answer->answer_id ); ?>" 

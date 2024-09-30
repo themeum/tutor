@@ -182,7 +182,7 @@
 					}
 					?>
 
-					<div class="answer-help-block"></div>
+					<div class="answer-help-block tutor-mt-24"></div>
 					
 					<?php if ( 'question_below_each_other' !== $question_layout_view ) : ?>
 						<div class="tutor-quiz-btn-group tutor-mt-60 tutor-d-flex">
@@ -198,7 +198,7 @@
 							<button disabled="disabled" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn tutor-quiz-next-btn-all <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
 								<?php $next_question ? esc_html_e( 'Submit &amp; Next', 'tutor' ) : esc_html_e( 'Submit Quiz', 'tutor' ); ?>
 							</button>
-							<?php if ( ! isset( $question_settings['answer_required'] ) ) : ?>
+							<?php if ( ! isset( $question_settings['answer_required'] ) || "0" === $question_settings['answer_required'] ) : ?>
 								<span class="tutor-ml-32 tutor-btn tutor-btn-ghost tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> tutor-ml-auto">
 									<?php esc_html_e( 'Skip Question', 'tutor' ); ?>
 								</span>
