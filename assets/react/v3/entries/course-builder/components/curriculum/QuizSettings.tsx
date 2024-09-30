@@ -54,7 +54,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   {...controllerProps}
                   type="number"
                   label={__('Time limit', 'tutor')}
-                  helpText={__('Time limit for this quiz. 0 means no time limit.', 'tutor')}
+                  helpText={__('Set a time limit for this quiz. A value of “0” indicates no time limit', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -81,10 +81,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             name="quiz_option.hide_quiz_time_display"
             control={form.control}
             render={(controllerProps) => (
-              <FormSwitch
-                {...controllerProps}
-                label={__('Hide quiz time', 'tutor')}
-              />
+              <FormSwitch {...controllerProps} label={__('Show the time limit during the quiz', 'tutor')} />
             )}
           />
 
@@ -105,12 +102,12 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   {
                     label: __('Reveal Mode', 'tutor'),
                     value: 'reveal',
-                    description: __('Show result after the attempt.', 'tutor'),
+                    description: __('Show the answer after attempting the quiz.', 'tutor'),
                   },
                   {
                     label: __('Retry', 'tutor'),
                     value: 'retry',
-                    description: __('Reattempt quiz any number of times. Define Attempts Allowed below.', 'tutor'),
+                    description: __('Allows students to retake the quiz after their first attempt.', 'tutor'),
                   },
                 ]}
               />
@@ -128,7 +125,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   type="number"
                   label={__('Attempts Allowed', 'tutor')}
                   helpText={__(
-                    'Restriction on the number of attempts a student is allowed to take for this quiz. 0 for no limit',
+                    'Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts',
                     'tutor',
                   )}
                   selectOnFocus
@@ -161,7 +158,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <FormInputWithContent
                 {...controllerProps}
                 label={__('Passing Grade', 'tutor')}
-                helpText={__('Set the passing percentage for this quiz', 'tutor')}
+                helpText={__('Set the minimum score percentage required to pass this quiz', 'tutor')}
                 content="%"
                 contentPosition="right"
                 contentCss={styleUtils.inputCurrencyStyle}
@@ -178,7 +175,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 type="number"
                 label={__('Max Question Allowed to Answer', 'tutor')}
                 helpText={__(
-                  'This amount of question will be available for students to answer, and question will comes randomly from all available questions belongs with a quiz, if this amount is greater than available question, then all questions will be available for a student to answer.',
+                  'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
                   'tutor',
                 )}
                 selectOnFocus
@@ -201,7 +198,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         {__('Available after days', 'tutor')}
                       </div>
                     }
-                    helpText={__('This lesson will be available after the given number of days.', 'tutor')}
+                    helpText={__('This lesson will be available after the given number of days', 'tutor')}
                     placeholder="0"
                     selectOnFocus
                   />
@@ -224,7 +221,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     }
                     placeholder={__('Select Unlock Date', 'tutor')}
                     helpText={__(
-                      'This lesson will be available from the given date. Leave empty to make it available immediately.',
+                      'This lesson will be available from the given date. Leave empty to make it available immediately',
                       'tutor',
                     )}
                   />
@@ -275,10 +272,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <FormSwitch
                 {...controllerProps}
                 label={__('Quiz Auto Start', 'tutor')}
-                helpText={__(
-                  'If you enable this option, the quiz will start automatically after the page is loaded.',
-                  'tutor',
-                )}
+                helpText={__('When enabled, the quiz begins immediately as soon as the page loads', 'tutor')}
               />
             )}
           />
@@ -339,7 +333,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <FormInput
                 {...controllerProps}
                 type="number"
-                label={__('Short Answer Characters Limit', 'tutor')}
+                label={__('Set a character limit for Short Answers', 'tutor')}
                 helpText={__(
                   'Student will place answer in short answer question type within this characters limit.',
                   'tutor',
@@ -356,10 +350,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               <FormInput
                 {...controllerProps}
                 label={__('Open-Ended/Essay questions answer character limit', 'tutor')}
-                helpText={__(
-                  'Students will place the answer in the Open-Ended/Essay question type within this character limit.',
-                  'tutor',
-                )}
+                helpText={__('Set a character limit for open-ended/essay answers', 'tutor')}
                 selectOnFocus
               />
             )}

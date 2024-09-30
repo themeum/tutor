@@ -19,7 +19,7 @@ const ContentDripSettings = () => {
 
   const contentDropOptions = [
     {
-      label: __('Schedule course contents by date', 'tutor'),
+      label: __('Schedule course content by date', 'tutor'),
       value: 'unlock_by_date',
     },
     {
@@ -64,8 +64,20 @@ const ContentDripSettings = () => {
     return (
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="contentDrip" width={72} height={72} style={styles.dripIcon} />
-        <h6 css={typography.body('medium')}>{__('Content Drip Addon is not enabled!', 'tutor')}</h6>
-        <p css={styles.dripNoProDescription}>{__('Please enable Content Drip addon to see options', 'tutor')}</p>
+        <h6 css={typography.body('medium')}>{__('Activate the “Content Drip” addon to use this feature', 'tutor')}</h6>
+        <p css={styles.dripNoProDescription}>
+          {__('Control when students can access lessons and quizzes using the Content Drip feature.', 'tutor')}
+        </p>
+
+        <Button
+          variant="secondary"
+          icon={<SVGIcon name="linkExternal" width={24} height={24} />}
+          onClick={() => {
+            window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+          }}
+        >
+          {__('Enable Content Drip Addon', 'tutor')}
+        </Button>
       </div>
     );
   }
@@ -73,7 +85,7 @@ const ContentDripSettings = () => {
     <div css={styles.dripWrapper}>
       <h6 css={styles.dripTitle}>{__('Content Drip Type', 'tutor')}</h6>
       <p css={styles.dripSubTitle}>
-        {__('You can schedule your course content using the above content drip options', 'tutor')}
+        {__('You can schedule your course content using the following Content Drip option', 'tutor')}
       </p>
 
       <Controller
@@ -123,7 +135,7 @@ const styles = {
   dripNoProDescription: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
-    max-width: 280px;
+    max-width: 320px;
     margin: 0 auto ${spacing[12]};
   `,
   dripIcon: css`

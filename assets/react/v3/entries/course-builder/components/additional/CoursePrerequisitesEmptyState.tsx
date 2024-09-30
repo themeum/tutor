@@ -17,7 +17,7 @@ import prerequisites from '@Images/pro-placeholders/prerequisites.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const CoursePrerequisitesEmptyStater = () => {
+const CoursePrerequisitesEmptyState = () => {
   return (
     <div css={styles.emptyState}>
       <img
@@ -34,23 +34,20 @@ const CoursePrerequisitesEmptyStater = () => {
           <div css={isTutorPro && styleUtils.text.align.center}>
             {!isTutorPro
               ? __('Level up course structure with Tutor LMS course prerequisites', 'tutor')
-              : __('You can use this feature by activating Prerequisites addons', 'tutor')}
+              : __('Activate the “Prerequisites” addon to use this feature.', 'tutor')}
           </div>
           <Show when={!isTutorPro}>
             <div css={styles.features}>
               <div css={styles.feature}>
                 <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
                 <span>
-                  {__(
-                    'Easily set course prerequisites to a course as stepping stones to create a structured learning path',
-                    'tutor',
-                  )}
+                  {__('Easily set prerequisites to structure your courses and guide student progress.', 'tutor')}
                 </span>
               </div>
               <div css={styles.feature}>
                 <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
                 <span>
-                  {__('Offer customized learning experiences by setting multiple prerequisites for a course', 'tutor')}
+                  {__('Offer customized learning journeys by setting multiple prerequisites for any course.', 'tutor')}
                 </span>
               </div>
             </div>
@@ -76,7 +73,7 @@ const CoursePrerequisitesEmptyStater = () => {
   );
 };
 
-export default CoursePrerequisitesEmptyStater;
+export default CoursePrerequisitesEmptyState;
 
 const styles = {
   emptyState: css`

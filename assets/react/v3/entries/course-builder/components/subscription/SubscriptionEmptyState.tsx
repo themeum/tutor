@@ -22,10 +22,10 @@ export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubsc
       </div>
 
       <div css={styles.content}>
-        <h5>{__('Create subscription to boost your sell', 'tutor')}</h5>
+        <h5>{__('Boost Revenue with Subscriptions', 'tutor')}</h5>
         <p>
           {__(
-            'When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries',
+            'Offer flexible subscription plans to maximize your earnings and provide students with affordable access to your courses.',
             'tutor',
           )}
         </p>

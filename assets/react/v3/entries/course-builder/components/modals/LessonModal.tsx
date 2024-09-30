@@ -434,7 +434,10 @@ const LessonModal = ({
                     }
                     helpText={
                       isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)
-                        ? __('If checked, any users/guest can view this lesson without enroll course', 'tutor')
+                        ? __(
+                            'If checked, any user/guest can view this lesson without enrolling in the course.',
+                            'tutor',
+                          )
                         : ''
                     }
                   />
@@ -443,7 +446,7 @@ const LessonModal = ({
               <Show when={form.watch('lesson_preview')}>
                 <div css={styles.previewInfo}>
                   {__(
-                    'Course preview is on, from now on any users/guest can view this lesson without enrolling the course.',
+                    'This lesson is now available for preview. Users and guests can view it without enrolling in the course.',
                     'tutor',
                   )}
                 </div>

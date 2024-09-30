@@ -54,7 +54,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
           render={(props) => (
             <FormTextareaInput
               {...props}
-              placeholder={__('Type your desired course topic. e.g. Learning piano, Cooking 101...', 'tutor')}
+              placeholder={__('Enter a brief overview of your course topics and structure', 'tutor')}
               isMagicAi
             />
           )}

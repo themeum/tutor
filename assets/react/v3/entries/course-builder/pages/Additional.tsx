@@ -15,6 +15,7 @@ import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
+import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import {
@@ -37,7 +38,6 @@ import addonDisabled from '@Images/addon-disabled.webp';
 import attachmentsPro2x from '@Images/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@Images/pro-placeholders/attachments.webp';
 
-import CoursePrerequisitesEmptyStater from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import Certificate from '../components/additional/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -81,9 +81,9 @@ const Additional = () => {
         <CanvasHead title={__('Additional', 'tutor')} backUrl="/curriculum" />
         <div css={styles.formSection}>
           <div css={styles.titleAndSub}>
-            <div css={styles.title}>{__('Information', 'tutor')}</div>
+            <div css={styles.title}>{__('Overview', 'tutor')}</div>
             <div css={styles.subtitle}>
-              {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
+              {__('Provide essential course information to attract and inform potential students', 'tutor')}
             </div>
           </div>
           <div css={styles.fieldsWrapper}>
@@ -94,7 +94,7 @@ const Additional = () => {
                 <FormTextareaInput
                   {...controllerProps}
                   label={__('What Will I Learn?', 'tutor')}
-                  placeholder={__('Write here the course benefits (One Per Line)', 'tutor')}
+                  placeholder={__('Define the key takeaways from this course (list one benefit per line)', 'tutor')}
                   rows={2}
                   enableResize
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
@@ -215,7 +215,7 @@ const Additional = () => {
             {__('Course Prerequisites', 'tutor')}
             {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
           </span>
-          <Show when={isTutorPro && isPrerequisiteAddonEnabled} fallback={<CoursePrerequisitesEmptyStater />}>
+          <Show when={isTutorPro && isPrerequisiteAddonEnabled} fallback={<CoursePrerequisitesEmptyState />}>
             <Controller
               name="course_prerequisites"
               control={form.control}
@@ -248,13 +248,13 @@ const Additional = () => {
                 emptyStateImage2x={!isTutorPro ? attachmentsPro2x : addonDisabled2x}
                 title={
                   !isTutorPro
-                    ? __('Boost learning impact by adding relevant attachments to your topics', 'tutor')
-                    : __('Add attachments to provide additional resources to your students.', 'tutor')
+                    ? __('Provide additional resources like downloadable files and reference materials.', 'tutor')
+                    : __('Activate the “Course Attachments” addon to use this feature.', 'tutor')
                 }
                 description={
                   isTutorPro
                     ? __(
-                        `Provide additional resources to support your students' learning. Attachments can include PDFs, Word documents, or other helpful file types.`,
+                        `Provide additional resources to support your student's learning. Attachments can include documents, audio or video files.`,
                         'tutor',
                       )
                     : ''
