@@ -136,6 +136,28 @@ class Upgrader {
 		$table_name = $wpdb->prefix . 'tutor_orders';
 		if ( ! QueryHelper::table_exists( $table_name ) ) {
 			Tutor::tutor_activate();
+		} else {
+			if ( version_compare( TUTOR_VERSION, '3.0.0-beta2', '>=' ) ) {
+				$order_items_table = $wpdb->prefix . 'tutor_order_items';
+
+				// Check if 'discount_price' column exists in 'tutor_order_items'.
+				$column_exists = $wpdb->get_results(
+					$wpdb->prepare(
+						"SHOW COLUMNS FROM {$order_items_table} LIKE %s",
+						'discount_price'
+					)
+				);
+
+				if ( empty( $column_exists ) ) {
+					// If 'discount_price' does not exist, alter the table to add 'discount_price' and 'coupon_code', and update 'sale_price'.
+					$wpdb->query(
+						"ALTER TABLE {$order_items_table}
+							ADD COLUMN discount_price VARCHAR(13) DEFAULT NULL,
+							ADD COLUMN coupon_code VARCHAR(255) DEFAULT NULL,
+							MODIFY COLUMN sale_price VARCHAR(13) NULL"
+					);
+				}
+			}
 		}
 
 		CartController::create_cart_page();

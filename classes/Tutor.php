@@ -939,8 +939,8 @@ final class Tutor {
 			item_id BIGINT(20) UNSIGNED NOT NULL, -- course id/plan id
 			regular_price DECIMAL(13, 2) NOT NULL, -- course regular price
 			sale_price VARCHAR(13) DEFAULT NULL, -- course sale price
-			discount_price VARCHAR(13) DEFAULT NULL, -- course sale price
-			coupon_code VARCHAR(255) DEFAULT NULL, -- course sale price
+			discount_price VARCHAR(13) DEFAULT NULL, -- course discount price
+			coupon_code VARCHAR(255) DEFAULT NULL, -- coupon code
 			PRIMARY KEY (id),
 			KEY order_id (order_id),
 			KEY item_id (item_id),
