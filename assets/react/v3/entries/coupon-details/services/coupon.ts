@@ -6,7 +6,7 @@ import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { ErrorResponse } from '@Utils/form';
 import { PaginatedParams, PaginatedResult } from '@Utils/types';
-import { transformParams } from '@Utils/util';
+import { convertToGMT } from '@Utils/util';
 import { format } from 'date-fns';
 
 export type CouponType = 'code' | 'automatic';
@@ -177,14 +177,14 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
 		...(data.purchase_requirement_value && {
 			purchase_requirement_value: data.purchase_requirement_value
 		}),
-		start_date_gmt: format(
+		start_date_gmt: convertToGMT(
 			new Date(`${data.start_date} ${data.start_time}`), 
-			DateFormats.yearMonthDayHourMinuteSecond
+			DateFormats.yearMonthDayHourMinuteSecond24H
 		),
 		...(data.is_end_enabled && data.end_date && {
-			expire_date_gmt: format(
+			expire_date_gmt: convertToGMT(
 				new Date(`${data.end_date} ${data.end_time}`), 
-				DateFormats.yearMonthDayHourMinuteSecond
+				DateFormats.yearMonthDayHourMinuteSecond24H
 			),
 		})
 	}

@@ -8,13 +8,11 @@
  * @since 3.0.0
  */
 
-use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
 
-$user_id      = get_current_user_id();
 $plan_id      = Input::get( 'plan', 0, Input::TYPE_INT );
 $plan_info    = new stdClass();
 $coupon_model = new CouponModel();
@@ -31,6 +29,9 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 ?>
 
 <div class="tutor-checkout-details">
+	<h4 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-24">
+		<?php echo esc_html_e( 'Checkout', 'tutor' ); ?>
+	</h4>
 	<div class="tutor-checkout-details-inner">
 		<div class="tutor-checkout-detail-item">
 			<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
@@ -206,59 +207,13 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 		</div>
 
 		<div class="tutor-checkout-detail-item">
-			<div class="tutor-checkout-summary-item tutor-mb-40">
+			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold tutor-checkout-grand-total"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
 			</div>
 
-			<?php if ( null !== $tutor_toc_page_link ) : ?>
-				<div class="tutor-mb-16">
-					<div class="tutor-form-check">
-						<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
-						<label for="tutor_checkout_agree_to_terms">
-							<?php esc_html_e( 'I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
-						</label>
-					</div>
-				</div>
-			<?php endif; ?>
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
 			<input type="hidden" name="order_type" value="<?php echo esc_attr( $order_type ); ?>">
-			<input type="hidden" name="payment_type" value="">
-			<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
-				<?php esc_html_e( 'Pay Now', 'tutor' ); ?>
-			</button>
 		</div>
-
-		<!-- handle errors -->
-		<?php
-		$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
-		$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
-
-		delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
-		delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
-		if ( $pay_now_errors || $pay_now_alert_msg ) :
-			?>
-		<div class="tutor-px-32 tutor-mb-32 tutor-break-word">
-			<?php
-			if ( ! empty( $pay_now_alert_msg ) ) :
-				list( $alert, $message ) = array_values( $pay_now_alert_msg );
-				?>
-				<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?>">
-					<div class="tutor-color-success"><?php echo esc_html( $message ); ?></div>
-				</div>
-			<?php endif; ?>
-
-			<?php if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) : ?>
-			<div class="tutor-alert tutor-danger">
-				<ul class="tutor-mb-0">
-					<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
-						<li class="tutor-color-danger"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $pay_now_err ) ) ); ?></li>
-					<?php endforeach; ?>
-				</ul>
-			</div>
-			<?php endif; ?>
-		</div>
-		<?php endif; ?>
-		<!-- handle errors end -->
 	</div>
 </div>

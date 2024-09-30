@@ -104,10 +104,10 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 								<div><?php esc_html_e( 'Subtotal:', 'tutor' ); ?></div>
 								<div><?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?></div>
 							</div>
-							<div class="tutor-cart-summery-item">
+							<!-- <div class="tutor-cart-summery-item">
 								<div><?php esc_html_e( 'Tax:', 'tutor' ); ?></div>
 								<div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
-							</div>
+							</div> -->
 						</div>
 						<div class="tutor-cart-summery-bottom">
 							<div class="tutor-cart-summery-item tutor-fw-medium tutor-mb-40">

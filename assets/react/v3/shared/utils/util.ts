@@ -312,13 +312,8 @@ export function objectToQueryParams(obj: Record<string, string>) {
 }
 
 export const convertToGMT = (date: Date, dateFormat = DateFormats.yearMonthDayHourMinuteSecond24H) => {
-  // Calculate the GMT offset in minutes
   const offsetInMinutes = date.getTimezoneOffset();
-
-  // Convert the date to GMT by adding the offset
   const gmtDate = addMinutes(date, offsetInMinutes);
-
-  // Format and return the GMT date
   return format(gmtDate, dateFormat);
 };
 
