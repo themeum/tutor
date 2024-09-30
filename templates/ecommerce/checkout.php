@@ -12,8 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CartController;
 use TUTOR\Input;
+
+$user_id      = get_current_user_id();
 
 $tutor_toc_page_link = tutor_utils()->get_toc_page_link();
 
@@ -43,11 +46,16 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
 			<div class="tutor-col-md-6">
+				<?php
+				$file = __DIR__ . '/checkout-details.php';
+				if ( file_exists( $file ) ) {
+					include $file;
+				}
+				?>
+			</div>
+			<div class="tutor-col-md-6">
 				<div class="tutor-checkout-billing">
 					<div class="tutor-checkout-billing-inner">
-						<h4 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-48">
-							<?php echo esc_html_e( 'Checkout', 'tutor' ); ?>
-						</h4>
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
 							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
 						</h5>
@@ -59,6 +67,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						</h5>
 						<div class="tutor-checkout-payment-options">
 							<input type="hidden" name="payment_method">
+							<input type="hidden" name="payment_type">
 							<?php
 							$payment_gateways = tutor_get_all_active_payment_gateways();
 							if ( empty( $payment_gateways['automate'] ) && empty( $payment_gateways['manual'] ) ) {
@@ -88,21 +97,66 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 											</button>
 										<?php
 									}
+								} elseif ( empty( $payment_gateways['automate'] ) ) {
+									?>
+									<div class="tutor-alert tutor-warning">
+										<?php esc_html_e( 'No payment method supporting subscriptions has been configured. Please contact the site administrator.', 'tutor' ); ?>
+									</div>
+									<?php
 								}
 							}
 							?>
 						</div>
 						<div class="tutor-payment-instructions tutor-d-none"></div>
+
+						<?php if ( null !== $tutor_toc_page_link ) : ?>
+							<div class="tutor-mb-16 tutor-mt-40">
+								<div class="tutor-form-check">
+									<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
+									<label for="tutor_checkout_agree_to_terms">
+										<?php esc_html_e( 'I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+									</label>
+								</div>
+							</div>
+						<?php endif; ?>
+
+						<!-- handle errors -->
+						<?php
+						$pay_now_errors    = get_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
+						$pay_now_alert_msg = get_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+
+						delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+						delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
+						if ( $pay_now_errors || $pay_now_alert_msg ) :
+							?>
+						<div class="tutor-mb-32 tutor-break-word">
+							<?php
+							if ( ! empty( $pay_now_alert_msg ) ) :
+								list( $alert, $message ) = array_values( $pay_now_alert_msg );
+								?>
+								<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?>">
+									<div class="tutor-color-success"><?php echo esc_html( $message ); ?></div>
+								</div>
+							<?php endif; ?>
+
+							<?php if ( is_array( $pay_now_errors ) && count( $pay_now_errors ) ) : ?>
+							<div class="tutor-alert tutor-danger">
+								<ul class="tutor-mb-0">
+									<?php foreach ( $pay_now_errors as $pay_now_err ) : ?>
+										<li class="tutor-color-danger"><?php echo esc_html( ucfirst( str_replace( '_', ' ', $pay_now_err ) ) ); ?></li>
+									<?php endforeach; ?>
+								</ul>
+							</div>
+							<?php endif; ?>
+						</div>
+						<?php endif; ?>
+						<!-- handle errors end -->
+
+						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
+							<?php esc_html_e( 'Pay Now', 'tutor' ); ?>
+						</button>
 					</div>
 				</div>
-			</div>
-			<div class="tutor-col-md-6">
-				<?php
-				$file = __DIR__ . '/checkout-details.php';
-				if ( file_exists( $file ) ) {
-					include $file;
-				}
-				?>
 			</div>
 		</div>
 	</form>

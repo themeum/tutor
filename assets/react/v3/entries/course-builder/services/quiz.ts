@@ -16,6 +16,7 @@ import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
+import { normalizeLineEndings } from '@Utils/util';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ContentType, ID } from './curriculum';
 
@@ -216,6 +217,8 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       _data_status: 'no_change',
       is_saved: true,
     }));
+    question.question_description = normalizeLineEndings(question.question_description) || '';
+    question.answer_explanation = normalizeLineEndings(question.answer_explanation) || '';
 
     switch (question.question_type) {
       case 'single_choice': {

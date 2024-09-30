@@ -1213,9 +1213,18 @@ class Course extends Tutor_Base {
 			$data['edd_products'] = tutor_utils()->get_edd_products();
 		}
 
-		$data['dashboard_url'] = $dashboard_url;
-		$data['timezones']     = tutor_global_timezone_lists();
-		$data['wp_rest_nonce'] = wp_create_nonce( 'wp_rest' );
+		$difficulty_levels = array();
+		foreach ( tutor_utils()->course_levels() as $value => $label ) {
+			$difficulty_levels[] = array(
+				'label' => $label,
+				'value' => $value,
+			);
+		}
+
+		$data['dashboard_url']     = $dashboard_url;
+		$data['timezones']         = tutor_global_timezone_lists();
+		$data['difficulty_levels'] = $difficulty_levels;
+		$data['wp_rest_nonce']     = wp_create_nonce( 'wp_rest' );
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 

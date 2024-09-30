@@ -7,23 +7,45 @@
 
     .tutor-checkout-billing {
         background-color: #F9FAFC;
-        padding: 80px 0px;
+        padding: 80px 15px 80px 64px;
         height: 100%;
 
+        @include breakpoint-max(desktop) {
+            padding: 40px 15px;
+        }
+
         .tutor-checkout-billing-inner {
-            max-width: 445px;
-            margin-left: auto;
-            margin-right: 80px;
+            max-width: 500px;
         }
     }
 
     .tutor-checkout-details {
-        border: 1px solid var(--tutor-border-color);
-        border-radius: 6px;
-        max-width: 480px;
-        margin-top: 120px;
-        margin-bottom: 80px;
-        margin-left: 64px;
+        font-size: 1rem;
+        padding: 80px 64px 80px 15px;
+        max-width: 560px;
+        margin-left: auto;
+
+        @include breakpoint-max(desktop) {
+            padding: 60px 15px 40px 15px;
+        }
+
+        .tutor-checkout-details-inner {
+            border: 1px solid var(--tutor-border-color);
+            border-radius: 6px;
+
+            @include breakpoint-max(desktop) {
+                margin: 0 auto;
+            }
+        }
+    }
+    .tutor-checkout-detail-item {
+        padding: 32px;
+        &:not(:last-child) {
+            border-bottom: 1px solid var(--tutor-border-color);
+        }
+        @include breakpoint-max(mobile) {
+            padding: 16px;
+        }
     }
     .tutor-checkout-courses {
         display: flex;

@@ -35,6 +35,7 @@ import {
 } from '@CourseBuilderServices/curriculum';
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { normalizeLineEndings } from '@Utils/util';
 import { noop } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
 import H5PContentListModal from './H5PContentListModal';
@@ -108,15 +109,14 @@ const LessonModal = ({
     mode: 'onChange',
   });
 
-  // Need to do RND about WPEditor
-  // const isFormDirty = false; /*form.formState.isDirty;*/
+  const isFormDirty = form.formState.isDirty;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (lessonDetails) {
       form.reset({
         title: lessonDetails.post_title || '',
-        description: lessonDetails.post_content || '',
+        description: normalizeLineEndings(lessonDetails.post_content) || '',
         thumbnail: {
           id: lessonDetails.thumbnail_id ? Number(lessonDetails.thumbnail_id) : 0,
           title: '',
@@ -159,29 +159,31 @@ const LessonModal = ({
   return (
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      icon={icon}
-      title={title}
+      icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
+      title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
       subtitle={subtitle}
       actions={
-        <>
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => {
-              closeModal({ action: 'CLOSE' });
-            }}
-          >
-            {__('Cancel', 'tutor')}
-          </Button>
-          <Button
-            loading={saveLessonMutation.isPending}
-            variant="primary"
-            size="small"
-            onClick={form.handleSubmit(onSubmit)}
-          >
-            {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
-          </Button>
-        </>
+        isFormDirty && (
+          <>
+            <Button
+              variant="text"
+              size="small"
+              onClick={() => {
+                lessonId ? form.reset() : closeModal({ action: 'CLOSE' });
+              }}
+            >
+              {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+            </Button>
+            <Button
+              loading={saveLessonMutation.isPending}
+              variant="primary"
+              size="small"
+              onClick={form.handleSubmit(onSubmit)}
+            >
+              {lessonId ? __('Update', 'tutor') : __('Save', 'tutor')}
+            </Button>
+          </>
+        )
       }
     >
       <div css={styles.wrapper}>

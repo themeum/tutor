@@ -203,8 +203,8 @@ const QuizModal = ({
         {(activeQuestionIndex, setValidationError) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
-            icon={icon}
-            title={title}
+            icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
+            title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
             subtitle={subtitle}
             headerChildren={
               <Tabs
@@ -223,51 +223,53 @@ const QuizModal = ({
               />
             }
             actions={
-              <>
-                <Button
-                  variant="text"
-                  size="small"
-                  onClick={() => {
-                    if (isFormDirty) {
-                      setIsConfirmationOpen(true);
-                      return;
-                    }
-
-                    closeModal();
-                  }}
-                  ref={cancelRef}
-                >
-                  {__('Cancel', 'tutor')}
-                </Button>
-                <Show
-                  when={activeTab === 'settings' || quizId}
-                  fallback={
-                    <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
-                      {__('Next', 'tutor')}
-                    </Button>
-                  }
-                >
+              isFormDirty && (
+                <>
                   <Button
-                    loading={saveQuizMutation.isPending}
-                    variant="primary"
+                    variant="text"
                     size="small"
-                    onClick={async () => {
-                      if (activeQuestionIndex < 0) {
-                        await form.handleSubmit((data) =>
-                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                        )();
+                    onClick={() => {
+                      if (isFormDirty) {
+                        setIsConfirmationOpen(true);
                         return;
                       }
 
-                      await form.handleSubmit((data) =>
-                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                      )();
+                      closeModal();
                     }}
+                    ref={cancelRef}
                   >
-                    {__('Save', 'tutor')}
+                    {quizId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
                   </Button>
-                </Show>
-              </>
+                  <Show
+                    when={activeTab === 'settings' || quizId}
+                    fallback={
+                      <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                        {__('Next', 'tutor')}
+                      </Button>
+                    }
+                  >
+                    <Button
+                      loading={saveQuizMutation.isPending}
+                      variant="primary"
+                      size="small"
+                      onClick={async () => {
+                        if (activeQuestionIndex < 0) {
+                          await form.handleSubmit((data) =>
+                            onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                          )();
+                          return;
+                        }
+
+                        await form.handleSubmit((data) =>
+                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                        )();
+                      }}
+                    >
+                      {__('Save', 'tutor')}
+                    </Button>
+                  </Show>
+                </>
+              )
             }
           >
             <div css={styles.wrapper({ activeTab, isH5pQuiz: contentType === 'tutor_h5p_quiz' })}>
@@ -373,7 +375,7 @@ const QuizModal = ({
               message={__('There is unsaved changes.', 'tutor')}
               animationType={AnimationType.slideUp}
               arrow="top"
-              positionModifier={{ top: -50, left: 0 }}
+              positionModifier={{ top: -50, left: quizId ? 88 : activeTab === 'settings' ? 30 : 26 }}
               hideArrow
               confirmButton={{
                 text: __('Yes', 'tutor'),
@@ -385,7 +387,7 @@ const QuizModal = ({
               }}
               onConfirmation={() => {
                 form.reset();
-                closeModal();
+                !quizId && closeModal();
               }}
             />
           </ModalWrapper>

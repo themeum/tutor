@@ -1,5 +1,5 @@
 import ajaxHandler from '../../admin-dashboard/segments/filter';
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	$('.tutor-sortable-list').sortable();
 });
 
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		sidebarTabContent.style.height = `calc(100vh - ${sidebarTabContentBoundingTop}px)`;
 	}
 
-	const sidebarTabeHandler = function(sideBarTabs) {
+	const sidebarTabeHandler = function (sideBarTabs) {
 		const tabWrapper = document.querySelector('.tutor-desktop-sidebar-area');
 
 		if (null !== tabWrapper && tabWrapper.children.length < 2) {
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				}
 			});
 		});
-		const clearActiveClass = function(tabConent) {
+		const clearActiveClass = function (tabConent) {
 			for (let i = 0; i < sideBarTabs.length; i++) {
 				sideBarTabs[i].classList.remove('active');
 			}
@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		quizBox.addEventListener('dragend', dragEnd);
 	});
 	tutorDraggables.forEach((quizBox) => {
-		['touchstart', 'touchmove', 'touchend'].forEach(function(e) {
+		['touchstart', 'touchmove', 'touchend'].forEach(function (e) {
 			quizBox.addEventListener(e, touchHandler);
 		});
 	});
@@ -130,24 +130,47 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		quizImageBox.addEventListener('drop', dragDrop);
 	});
 
+	let isScrolling = false;
+	let scrollDirection = 0;
+
 	function touchHandler(e) {
 		e.preventDefault();
 		const { type } = e;
 
 		if (type === 'touchstart') {
 			this.classList.add('tutor-dragging');
+			startScrollLoop();
 		} else if (type === 'touchmove') {
+			const element = e.target.closest('.tutor-dragging');
 			let copiedDragElement = document.querySelector('.tutor-drag-copy');
-			if (e.target.classList.contains('tutor-dragging')) {
-				const mainElementBoundingRect = e.target.getBoundingClientRect();
+			if (element) {
+				const mainElementBoundingRect = element.getBoundingClientRect();
+				const clientY = e.touches[0].clientY;
+				const clientX = e.touches[0].clientX;
+
+				const scrollThreshold = 50;
+				const maxScrollSpeed = 30;
+
+				const viewportHeight = window.innerHeight;
+				const distanceFromBottom = viewportHeight - clientY;
+				const distanceFromTop = clientY;
+
+				scrollDirection = 0;
+				
+				if (distanceFromBottom < scrollThreshold) {
+					scrollDirection = calculateScrollSpeed(scrollThreshold, distanceFromBottom, maxScrollSpeed);
+				} else if (distanceFromTop < scrollThreshold) {
+					scrollDirection = - calculateScrollSpeed(scrollThreshold, distanceFromTop, maxScrollSpeed)
+				}
+
 				if (!copiedDragElement) {
-					copiedDragElement = e.target.cloneNode(true);
+					copiedDragElement = element.cloneNode(true);
 					copiedDragElement.classList.add('tutor-drag-copy');
-					e.target.parentNode.appendChild(copiedDragElement);
+					element.parentNode.appendChild(copiedDragElement);
 				}
 				copiedDragElement.style.position = 'fixed';
-				copiedDragElement.style.left = e.touches[0].clientX - copiedDragElement.clientWidth / 2 + 'px';
-				copiedDragElement.style.top = e.touches[0].clientY - copiedDragElement.clientHeight / 2 + 'px';
+				copiedDragElement.style.left = clientX - copiedDragElement.clientWidth / 2 + 'px';
+				copiedDragElement.style.top = clientY - copiedDragElement.clientHeight / 2 + 'px';
 				copiedDragElement.style.zIndex = '9999';
 				copiedDragElement.style.opacity = '0.5';
 				copiedDragElement.style.width = mainElementBoundingRect.width + 'px';
@@ -174,10 +197,32 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					dropZone.appendChild(newInput);
 					const copyContent = copiedDragElement.querySelector('.tutor-dragging-text-conent').textContent;
 					dropZone.querySelector('.tutor-dragging-text-conent').textContent = copyContent;
+					dropZone.querySelector('.tutor-dragging-text-conent').classList.add('tutor-color-black');
 					this.classList.remove('tutor-dragging');
 				}
 			}
+			stopScrollLoop();
 		}
+	}
+	function startScrollLoop() {
+		if (!isScrolling) {
+			isScrolling = true;
+			scrollPage();
+		}
+	}
+	function stopScrollLoop() {
+		isScrolling = false;
+	}
+	function scrollPage() {
+		if (isScrolling) {
+			if (scrollDirection !== 0) {
+				window.scrollBy(0, scrollDirection);
+			}
+			requestAnimationFrame(scrollPage);
+		}
+	}
+	function calculateScrollSpeed(threshold, distance, maxSpeed) {
+		return (threshold - distance) / threshold * maxSpeed;
 	}
 	function dragStart() {
 		this.classList.add('tutor-dragging');
@@ -189,7 +234,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		this.classList.add('tutor-drop-over');
 		event.preventDefault();
 	}
-	function dragEnter() {}
+	function dragEnter() { }
 	function dragLeave() {
 		this.classList.remove('tutor-drop-over');
 	}
@@ -207,6 +252,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		this.appendChild(newInput);
 		const copyContent = copyElement.querySelector('.tutor-dragging-text-conent').textContent;
 		this.querySelector('.tutor-dragging-text-conent').textContent = copyContent;
+		this.querySelector('.tutor-dragging-text-conent').classList.add('tutor-color-black');
 		this.classList.remove('tutor-drop-over');
 	}
 

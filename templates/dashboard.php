@@ -66,7 +66,6 @@ $footer_links = array(
 
 do_action( 'tutor_dashboard/before/wrap' );
 ?>
-
 <div class="tutor-wrap tutor-wrap-parent tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-80">
 	<div class="tutor-container">
 		<div class="tutor-row tutor-d-flex tutor-justify-between tutor-frontend-dashboard-header">
@@ -262,7 +261,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							include_once $from_other_location;
 						}
 
-						do_action( 'tutor_load_dashboard_template_before', $dashboard_page_name );
+						do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
 					} else {
 						tutor_load_template( 'dashboard.dashboard' );
 					}

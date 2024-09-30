@@ -344,7 +344,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                         <Show when={showButtons}>
                           <MagicButton
                             variant="primary_outline"
-                            disabled={isLoadingItem}
+                            disabled={isLoading}
                             onClick={() => {
                               setIsCreateNewCourse(true);
                             }}
@@ -356,7 +356,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
                         <MagicButton
                           variant="outline"
-                          disabled={isLoadingItem}
+                          disabled={isLoading}
                           onClick={() => {
                             setPointer(loading.length);
                             appendLoading();
@@ -523,7 +523,7 @@ const styles = {
   box: ({ deactivated, hasError, isActive }: { deactivated: boolean; hasError: boolean; isActive: boolean }) => css`
 		width: 100%;
 		border-radius: ${borderRadius[8]};
-		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.default};
+		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
 		padding: ${spacing[16]} ${spacing[12]};
 		display: flex;
 		gap: ${spacing[12]};
@@ -545,7 +545,7 @@ const styles = {
 		${
       !deactivated &&
       css`
-			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.default};
+			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
 			`
     }
 
@@ -583,6 +583,7 @@ const styles = {
   rightFooter: css`
 		margin-top: auto;
 		padding-top: ${spacing[16]};
+    padding-right: ${spacing[20]};
 		display: flex;
 		align-items: center;
 		justify-content: center;

@@ -710,10 +710,10 @@ class CouponModel {
 
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
-			$discount_price = $reg_price;
+			$discount_price = null;
 
 			if ( $sale_price ) {
-				$discount_price      = $sale_price;
+				$reg_price           = $sale_price;
 				$should_apply_coupon = false;
 			} else {
 				$coupon = $this->get_coupon( array( 'coupon_code' => $coupon_code ) );
@@ -740,7 +740,7 @@ class CouponModel {
 			$response['items'][] = (object) array(
 				'item_id'        => $item_id,
 				'regular_price'  => $format_price ? tutor_get_formatted_price( $reg_price ) : $reg_price,
-				'discount_price' => $format_price ? tutor_get_formatted_price( $discount_price ) : $discount_price,
+				'discount_price' => ! is_null( $discount_price ) && $format_price ? tutor_get_formatted_price( $discount_price ) : $discount_price,
 				'is_applied'     => $should_apply_coupon,
 			);
 
@@ -790,10 +790,11 @@ class CouponModel {
 
 			$reg_price      = $course_price->regular_price;
 			$sale_price     = $course_price->sale_price;
-			$discount_price = $reg_price;
+			$discount_price = null;
 
 			if ( $sale_price ) {
-				$discount_price = $sale_price;
+				$reg_price           = $sale_price;
+				$should_apply_coupon = false;
 			} else {
 				$automatic_coupons = $this->get_coupons(
 					array( 'coupon_type' => self::TYPE_AUTOMATIC ),
@@ -833,7 +834,7 @@ class CouponModel {
 				'is_applied'     => $should_apply_coupon,
 			);
 
-			$response['total_price'] += $discount_price >= 0 ? $discount_price : $reg_price;
+			$response['total_price'] += ! is_null( $discount_price ) ? $discount_price : $reg_price;
 		}
 
 		return (object) $response;

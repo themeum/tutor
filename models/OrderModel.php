@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use Exception;
 use Tutor\Ecommerce\OrderActivitiesController;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -331,8 +332,10 @@ class OrderModel {
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
 
-		$order_data->created_by = get_userdata( $order_data->created_by )->display_name;
-		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name;
+		$order_data->created_at_readable = DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->created_at_gmt );
+		$order_data->updated_at_readable = empty( $order_data->updated_at_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->updated_at_gmt );
+		$order_data->created_by          = get_userdata( $order_data->created_by )->display_name;
+		$order_data->updated_by          = get_userdata( $order_data->updated_by )->display_name;
 
 		$order_activities_model = new OrderActivitiesModel();
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );

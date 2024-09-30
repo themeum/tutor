@@ -71,7 +71,7 @@ export interface Activity {
   order_id: number;
   type: ActivityType;
   message: string;
-  date: string;
+  created_at_readable: string;
   cancel_reason?: string;
 }
 
@@ -93,6 +93,7 @@ export interface Order {
   payment_method: string;
   payment_payloads: string | null;
   order_status: OrderStatus;
+  order_type: string;
   student: Student;
   items: OrderSummaryItem[];
   subtotal_price: number;
@@ -113,7 +114,9 @@ export interface Order {
   created_by: string;
   updated_by?: string;
   created_at_gmt: string;
+  created_at_readable: string;
   updated_at_gmt?: string;
+  updated_at_readable?: string;
   subscription_fees?: SubscriptionFees[];
 }
 

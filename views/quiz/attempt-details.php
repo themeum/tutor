@@ -214,7 +214,7 @@ if ( is_array( $attempt_info ) ) {
 ?>
 
 <?php echo is_admin() ? '<div class="tutor-admin-body">' : ''; ?>
-<div class="tutor-table-responsive tutor-mb-32">
+<div class="tutor-table-responsive tutor-table-mobile tutor-mb-32">
 	<table class="tutor-table tutor-quiz-attempt-details">
 		<thead>
 			<tr>
@@ -227,13 +227,7 @@ if ( is_array( $attempt_info ) ) {
 		<tbody>
 			<tr>
 				<?php foreach ( $table_1_columns as $key => $column ) : ?>
-					<td style="
-					<?php
-					if ( 'date' === $key ) :
-						esc_html_e( 'min-width:180px' );
-endif;
-					?>
-					">
+					<td data-title="<?php echo esc_attr( $column ); ?>">
 						<?php if ( 'user' == $key ) : ?>
 							<div class="tutor-d-flex tutor-align-center">
 								<?php
@@ -257,12 +251,7 @@ endif;
 							</div>
 
 						<?php elseif ( 'date' == $key ) : ?>
-							<div>
-								<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
-							</div>
-							<div>
-								<?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
-							</div>
+							<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
 						<?php elseif ( 'qeustion_count' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_questions ); ?>
 						<?php elseif ( 'quiz_time' === $key ) : ?>
@@ -341,7 +330,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 if ( is_array( $answers ) && count( $answers ) ) {
 	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
-		<div class="tutor-table-responsive tutor-mt-16">
+		<div class="tutor-table-responsive tutor-table-mobile tutor-mt-16">
 			<table class="tutor-table tutor-quiz-attempt-details tutor-mb-32 tutor-table-data-td-target">
 				<thead>
 					<tr>
@@ -379,7 +368,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 									switch ( $key ) {
 										case 'no':
 											?>
-												<td class="no">
+												<td class="no" data-title="<?php echo esc_attr( $column ); ?>">
 													<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo esc_html( $answer_i ); ?>
 													</span>
@@ -389,7 +378,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 										case 'type':
 											?>
-												<td class="type">
+												<td class="type" data-title="<?php echo esc_attr( $column ); ?>">
 												<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
 													<div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
 													<?php
@@ -422,7 +411,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 										case 'questions':
 											?>
-												<td class="questions">
+												<td class="questions" data-title="<?php echo esc_attr( $column ); ?>">
 													<span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-center">
 													<?php echo esc_html( stripslashes( $answer->question_title ) ); ?>
 													</span>
@@ -432,7 +421,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 										case 'given_answer':
 											?>
-												<td class="given-answer">
+												<td class="given-answer" data-title="<?php echo esc_attr( $column ); ?>">
+												<div>
 												<?php
 													// Single choice.
 												if ( 'single_choice' === $answer->question_type ) {
@@ -554,13 +544,15 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													tutor_render_answer_list( $answers );
 												}
 												?>
+												</div>
 												</td>
 												<?php
 											break;
 
 										case 'correct_answer':
 											?>
-												<td class="correct-answer">
+												<td class="correct-answer" data-title="<?php echo esc_attr( $column ); ?>">
+												<div>
 												<?php
 												if ( ( $answer->question_type != 'open_ended' && $answer->question_type != 'short_answer' ) ) {
 
@@ -721,13 +713,14 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													}
 												}
 												?>
+												</div>
 												</td>
 												<?php
 											break;
 
 										case 'result':
 											?>
-												<td class="result">
+												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
 												<?php
 												if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) && 'h5p' === $answer->question_type ) {
 													$attempt_results = \TutorPro\H5P\Utils::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
@@ -776,7 +769,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 										case 'manual_review':
 											?>
-												<td class="tutor-text-center tutor-nowrap-ellipsis">
+												<td class="tutor-text-center tutor-nowrap-ellipsis" data-title="<?php echo esc_attr( $column ); ?>">
+													<div class="tutor-manual-review-wrapper">
 													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-mark-as="correct" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-color-success">
 														<i class="tutor-icon-mark"></i>
 													</a>
@@ -784,6 +778,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-mark-as="incorrect" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as In correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-color-danger">
 														<i class="tutor-icon-times"></i>
 													</a>
+													</div>
 												</td>
 												<?php
 									}

@@ -24,8 +24,8 @@ if ( ! empty( $back_url ) ) : ?>
 </div>
 
 <div class="tutor-mb-32 tutor-fs-7 tutor-color-secondary">
-	<div class="tutor-d-flex">
-		<div class="tutor-mr-16 tutor-color-secondary">
+	<div class="tutor-d-flex tutor-flex-column tutor-flex-sm-row tutor-gap-1 tutor-gap-sm-2">
+		<div class="tutor-color-secondary">
 			<?php esc_html_e( 'Quiz Time', 'tutor' ); ?>: <span class="tutor-fw-medium"><?php echo esc_html( $quiz_time ); ?></span>
 		</div>
 		<div class="tutor-color-secondary">

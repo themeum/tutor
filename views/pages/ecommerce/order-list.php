@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use Tutor\Ecommerce\OrderController;
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 
 /**
@@ -146,7 +147,7 @@ $available_status = array(
 
 									<td>
 										<span class="tutor-fw-normal tutor-fs-7">
-											<?php echo esc_attr( tutor_i18n_get_formated_date( $order->created_at_gmt ) ); ?>
+											<?php echo esc_attr( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
 										</span>
 									</td>
 

@@ -1,4 +1,10 @@
 .tutor-cart-page {
+    padding: 80px 0px;
+    
+    @include breakpoint-max(mobile) {
+        padding: 40px 0px;
+    }
+
     .tutor-cart-course-list {
         display: flex;
         flex-direction: column;
