@@ -314,6 +314,9 @@ class OrderModel {
 		}
 
 		$user_info = get_userdata( $order_data->user_id );
+		if ( ! is_a( $user_info, 'WP_User' ) ) {
+			return;
+		}
 
 		$student                  = new \stdClass();
 		$student->id              = (int) $user_info->ID;
@@ -335,6 +338,7 @@ class OrderModel {
 
 		$order_data->created_at_readable = DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->created_at_gmt );
 		$order_data->updated_at_readable = empty( $order_data->updated_at_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->updated_at_gmt );
+		
 		$order_data->created_by          = get_userdata( $order_data->created_by )->display_name;
 		$order_data->updated_by          = get_userdata( $order_data->updated_by )->display_name;
 

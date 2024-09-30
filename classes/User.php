@@ -321,6 +321,10 @@ class User {
 			$user = get_user_by( 'id', tutor_utils()->get_user_id( $user ) );
 		}
 
+		if ( ! is_a( $user, 'WP_User' ) ) {
+			return wp_timezone_string();
+		}
+
 		$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
 		if ( self::is_admin() || empty( $timezone ) ) {
 			$timezone = wp_timezone_string();
