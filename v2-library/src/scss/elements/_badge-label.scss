@@ -16,6 +16,7 @@ $variations: (
 	padding-inline: 8px;
 	border: 1px solid transparent;
 	border-radius: 50px;
+	width: fit-content;
 
 	@each $suffix, $bg, $color, $border in $variations {
 		&.label-#{$suffix} {

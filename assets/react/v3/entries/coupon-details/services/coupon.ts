@@ -6,7 +6,7 @@ import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { ErrorResponse } from '@Utils/form';
 import { PaginatedParams, PaginatedResult } from '@Utils/types';
-import { transformParams } from '@Utils/util';
+import { convertToGMT } from '@Utils/util';
 import { format } from 'date-fns';
 
 export type CouponType = 'code' | 'automatic';
@@ -63,7 +63,9 @@ export interface Coupon {
 	end_date: string;
 	end_time: string;
 	created_at_gmt: string;
+	created_at_readable: string;
 	updated_at_gmt: string;
+	updated_at_readable: string;
 	coupon_created_by: string;
 	coupon_update_by: string;
 }
@@ -102,9 +104,13 @@ export interface GetCouponResponse {
 	purchase_requirement_value?: string;
 	coupon_usage: number;
 	start_date_gmt: string;
+	start_date_readable: string;
 	expire_date_gmt: string | null;
+	expire_date_readable: string | null;
 	created_at_gmt: string;
+	created_at_readable: string;
 	updated_at_gmt: string;
+	updated_at_readable: string;
 	coupon_created_by: string;
 	coupon_update_by: string;
 }
@@ -132,7 +138,9 @@ export const couponInitialValue: Coupon = {
 	end_date: '',
 	end_time: '',
 	created_at_gmt: '',
+	created_at_readable: '',
 	updated_at_gmt: '',
+	updated_at_readable: '',
 	coupon_created_by: '',
 	coupon_update_by: '',
 };
@@ -177,14 +185,14 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
 		...(data.purchase_requirement_value && {
 			purchase_requirement_value: data.purchase_requirement_value
 		}),
-		start_date_gmt: format(
+		start_date_gmt: convertToGMT(
 			new Date(`${data.start_date} ${data.start_time}`), 
-			DateFormats.yearMonthDayHourMinuteSecond
+			DateFormats.yearMonthDayHourMinuteSecond24H
 		),
 		...(data.is_end_enabled && data.end_date && {
-			expire_date_gmt: format(
+			expire_date_gmt: convertToGMT(
 				new Date(`${data.end_date} ${data.end_time}`), 
-				DateFormats.yearMonthDayHourMinuteSecond
+				DateFormats.yearMonthDayHourMinuteSecond24H
 			),
 		})
 	}

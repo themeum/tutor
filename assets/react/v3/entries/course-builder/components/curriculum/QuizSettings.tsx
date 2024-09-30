@@ -83,8 +83,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             render={(controllerProps) => (
               <FormSwitch
                 {...controllerProps}
-                label={__('Display Quiz time', 'tutor')}
-                helpText={__('Hide quiz time', 'tutor')}
+                label={__('Hide quiz time', 'tutor')}
               />
             )}
           />

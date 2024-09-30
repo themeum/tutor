@@ -25,7 +25,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 ?>
 
 <?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) : ?>
-	<div class="tutor-table-responsive tutor-my-24">
+	<div class="tutor-table-responsive tutor-table-mobile tutor-my-24">
 		<table class="tutor-table tutor-table-quiz-attempts">
 			<thead>
 				<tr>
@@ -97,7 +97,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								continue;
 							}
 							?>
-							<td>
+							<td data-title="<?php echo esc_attr( $column ); ?>">
 								<?php if ( 'checkbox' == $key ) : ?>
 									<div class="tutor-d-flex">
 										<input id="tutor-admin-list-<?php echo esc_attr( $attempt->attempt_id ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $attempt->attempt_id ); ?>" />

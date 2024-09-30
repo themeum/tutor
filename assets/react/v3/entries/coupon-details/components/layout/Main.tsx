@@ -21,6 +21,7 @@ import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
+import { convertGMTtoLocalDate } from '@Utils/util';
 
 function Main() {
   const params = new URLSearchParams(window.location.search);
@@ -51,16 +52,18 @@ function Main() {
         per_user_usage_limit: couponData.per_user_usage_limit,
         purchase_requirement: couponData.purchase_requirement,
         purchase_requirement_value: couponData.purchase_requirement_value,
-        start_date: format(new Date(couponData.start_date_gmt), DateFormats.yearMonthDay),
-        start_time: format(new Date(couponData.start_date_gmt), DateFormats.hoursMinutes),
+        start_date: format(convertGMTtoLocalDate(couponData.start_date_gmt), DateFormats.yearMonthDay),
+        start_time: format(convertGMTtoLocalDate(couponData.start_date_gmt), DateFormats.hoursMinutes),
         ...(couponData.expire_date_gmt && {
           is_end_enabled: !!couponData.expire_date_gmt,
-          end_date: format(new Date(couponData.expire_date_gmt), DateFormats.yearMonthDay),
-          end_time: format(new Date(couponData.expire_date_gmt), DateFormats.hoursMinutes),
+          end_date: format(convertGMTtoLocalDate(couponData.expire_date_gmt), DateFormats.yearMonthDay),
+          end_time: format(convertGMTtoLocalDate(couponData.expire_date_gmt), DateFormats.hoursMinutes),
         }),
         coupon_uses: couponData.coupon_usage,
         created_at_gmt: couponData.created_at_gmt,
+        created_at_readable: couponData.created_at_readable,
         updated_at_gmt: couponData.updated_at_gmt,
+        updated_at_readable: couponData.updated_at_readable,
         coupon_created_by: couponData.coupon_created_by,
         coupon_update_by: couponData.coupon_update_by,
       });
