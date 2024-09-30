@@ -107,7 +107,7 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } = useQuizModalContext();
+  const { contentType, activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } = useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
