@@ -9,11 +9,6 @@
  * @since 3.0.0
  */
 
-use Tutor\Ecommerce\Settings;
-
-$webhook_fields = Settings::get_webhook_fields();
-
-
 $field_key     = $field['key'];
 $default       = isset( $field['default'] ) ? $field['default'] : false;
 $value         = $this->get( $field_key, $default );
@@ -40,20 +35,3 @@ $max_length    = isset( $field['maxlength'] ) ? (int) $field['maxlength'] : 0;
 
 	</div>
 </div>
-<?php if ( in_array( $field_key, $webhook_fields ) ) : ?>
-	<div class="tutor-fs-7 tutor-mt-8">
-		<div class="tutor-fs-6 tutor-fw-medium">
-			<?php esc_html_e( 'Webhook URL', 'tutor' ); ?>
-		</div> 
-		<?php
-		$method = explode( '_', $field_key )[0];
-		$url    = site_url( 'wp-json/tutor/v1/ecommerce-webhook?payment_method=' . $method );
-		?>
-		<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-gap-1">
-			<span class="tutor-color-muted">
-				<?php echo esc_url( $url ); ?>
-			</span>
-			<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-copy-text" data-text="<?php echo esc_url( $url ); ?>"><span class="tutor-icon-copy tutor-mr-8"></span><span><?php esc_html_e( 'Copy', 'tutor' ); ?></span></a>
-		</div>
-	</div>
-<?php endif; ?>
