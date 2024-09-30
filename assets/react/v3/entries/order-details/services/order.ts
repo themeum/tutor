@@ -11,6 +11,8 @@ interface OrderSummary {
   image: string;
   regular_price: number;
   sale_price?: number;
+  discount_price: string;
+  coupon_code: string;
 }
 
 interface OrderCourse extends OrderSummary {
@@ -18,7 +20,7 @@ interface OrderCourse extends OrderSummary {
 }
 
 interface OrderBundle extends OrderSummary {
-  type: 'bundle';
+  type: 'course-bundle';
   total_courses: number;
 }
 interface OrderCoursePlan extends OrderSummary {

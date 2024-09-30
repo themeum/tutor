@@ -200,7 +200,7 @@ class Settings {
 							'label'      => __( 'Refund Policy', 'tutor' ),
 							'default'    => 0,
 							'options'    => $pages,
-							'desc'       => __( 'Choose the page for instructor registration.', 'tutor' ),
+							'desc'       => __( 'Choose the page for refund policy.', 'tutor' ),
 							'searchable' => true,
 						),
 						array(
@@ -209,7 +209,7 @@ class Settings {
 							'label'      => __( 'Privacy Policy', 'tutor' ),
 							'default'    => 0,
 							'options'    => $pages,
-							'desc'       => __( 'Choose the page for student registration.', 'tutor' ),
+							'desc'       => __( 'Choose the page for privacy policy.', 'tutor' ),
 							'searchable' => true,
 						),
 					),
@@ -511,7 +511,7 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'             => 'Paypal',
+				'label'             => 'PayPal',
 				'is_active'         => self::is_active( 'paypal' ),
 				'icon'              => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
 				'support_recurring' => true,
@@ -596,6 +596,7 @@ class Settings {
 			'paypal_client_id'      => 'text',
 			'paypal_client_secret'  => 'password',
 			'paypal_webhook_id'     => 'password',
+			'paypal_webhook_url'    => 'webhook_url',
 		);
 	}
 
@@ -612,6 +613,7 @@ class Settings {
 			'stripe_secret_key'            => 'password',
 			'stripe_public_key'            => 'password',
 			'stripe_webhook_signature_key' => 'password',
+			'stripe_webhook_url'           => 'webhook_url',
 		);
 	}
 

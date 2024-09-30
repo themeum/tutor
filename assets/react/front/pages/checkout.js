@@ -137,6 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const submitButton = document.getElementById('tutor-checkout-pay-now-button');
             submitButton.classList.add('is-loading');
+            submitButton.textContent = __('Processing', 'tutor');
             submitButton.setAttribute('disabled', true);
             
             this.submit();
