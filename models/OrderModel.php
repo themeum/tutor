@@ -96,10 +96,11 @@ class OrderModel {
 	 */
 	private $order_items_fillable_fields = array(
 		'order_id',
-		'user_id',
 		'item_id',
 		'regular_price',
 		'sale_price',
+		'discount_price',
+		'coupon_code',
 	);
 
 	/**
@@ -1154,4 +1155,99 @@ class OrderModel {
 
 		return $status;
 	}
+
+	/**
+	 * Calculate order price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $items Order items, multi or single dimensional arr.
+	 *
+	 * @return object {subtotal => 10, total => 10}
+	 */
+	public static function calculate_order_price( array $items ) {
+		$subtotal = 0;
+		$total    = 0;
+
+		if ( isset( $items[0] ) ) {
+			foreach ( $items as $item ) {
+				$regular_price  = tutor_get_locale_price( $item['regular_price'] );
+				$sale_price     = is_null( $item['sale_price'] ) || '' === $item['sale_price'] ? null : tutor_get_locale_price( $item['sale_price'] );
+				$discount_price = is_null( $item['discount_price'] ) || '' === $item['discount_price'] ? null : tutor_get_locale_price( $item['discount_price'] );
+
+				// Subtotal is the original price (regular price).
+				$item_subtotal = $regular_price;
+				$item_total    = $regular_price;
+
+				// Determine the total based on sale price and discount.
+				if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
+					$item_subtotal = $sale_price;
+					$item_total    = $sale_price;
+				} else {
+					// If there's a discount, apply it to the total price.
+					if ( ! is_null( $discount_price ) && $discount_price >= 0 ) {
+						$item_total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
+					}
+				}
+
+				$subtotal += $item_subtotal;
+				$total    += $item_total;
+			}
+		} else {
+			// for single dimensional array.
+			$regular_price  = tutor_get_locale_price( $items['regular_price'] );
+			$sale_price     = is_null( $items['sale_price'] ) || '' === $items['sale_price'] ? null : tutor_get_locale_price( $items['sale_price'] );
+			$discount_price = is_null( $items['discount_price'] ) || '' === $items['discount_price'] ? null : tutor_get_locale_price( $items['discount_price'] );
+
+			// Subtotal is the original price (regular price).
+			$item_subtotal = $regular_price;
+			$item_total    = $regular_price;
+
+			// Determine the total based on sale price and discount.
+			if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
+				$item_subtotal = $sale_price;
+				$item_total    = $sale_price;
+			} else {
+				// If there's a discount, apply it to the total price.
+				if ( ! is_null( $discount_price ) && $discount_price >= 0 ) {
+					$item_total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
+				}
+			}
+
+			$subtotal = $item_subtotal;
+			$total    = $item_total;
+		}
+
+		return (object) array(
+			'subtotal' => tutor_get_locale_price( $subtotal ),
+			'total'    => tutor_get_locale_price( $total ),
+		);
+	}
+
+	/**
+	 * Get sellable price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $regular_price Regular price.
+	 * @param mixed $sale_price Sale price.
+	 * @param mixed $discount_price Discount price.
+	 *
+	 * @return float item sellable price
+	 */
+	public static function get_item_sellable_price( $regular_price, $sale_price = null, $discount_price = null ) {
+		// Ensure prices are numeric and properly formatted.
+		$sellable_price = (
+			! is_null( $sale_price ) && $sale_price > 0
+			? $sale_price
+			: (
+				! is_null( $discount_price ) && $discount_price >= 0
+				? $discount_price
+				: $regular_price
+			)
+		);
+
+		return tutor_get_locale_price( $sellable_price );
+	}
+
 }

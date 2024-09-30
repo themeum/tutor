@@ -744,7 +744,7 @@ class CouponModel {
 				'is_applied'     => $should_apply_coupon,
 			);
 
-			$response['total_price'] += $discount_price >= 0 ? $discount_price : $reg_price;
+			$response['total_price'] += ! is_null( $discount_price ) && $discount_price >= 0 ? $discount_price : $reg_price;
 		}
 
 		$response['deducted_price'] = $format_price ? tutor_get_formatted_price( $response['deducted_price'] ) : $response['deducted_price'];
@@ -829,13 +829,15 @@ class CouponModel {
 
 			$response['items'][] = (object) array(
 				'item_id'        => $item_id,
-				'regular_price'  => $reg_price,
-				'discount_price' => $discount_price,
+				'regular_price'  => tutor_get_locale_price( $reg_price ),
+				'discount_price' => tutor_get_locale_price( $discount_price ),
 				'is_applied'     => $should_apply_coupon,
 			);
 
-			$response['total_price'] += ! is_null( $discount_price ) ? $discount_price : $reg_price;
+			$response['total_price'] += ! is_null( $discount_price ) && $discount_price >= 0 ? $discount_price : $reg_price;
 		}
+
+		$response['total_price'] = tutor_get_locale_price( $response['total_price'] );
 
 		return (object) $response;
 	}
@@ -859,7 +861,7 @@ class CouponModel {
 			$deducted_price = $regular_price - $discount_value;
 		}
 
-		return floatval( max( 0, $deducted_price ) );
+		return tutor_get_locale_price( max( 0, $deducted_price ) );
 	}
 
 	/**

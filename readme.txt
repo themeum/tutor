@@ -284,6 +284,10 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
+= 3.0.0-beta2 - September 30, 2024
+
+Coming soon...
+
 = 3.0.0-beta1 - September 10, 2024
 
 New: Brand new course and quiz builder with a fresh, intuitive interface for a smoother course creation experience.

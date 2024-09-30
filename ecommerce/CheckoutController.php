@@ -204,10 +204,6 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
 
-		$price_details = $coupon_code
-						? $coupon_model->apply_coupon_discount( $object_ids, $coupon_code, $order_type )
-						: $coupon_model->apply_automatic_coupon_discount( $object_ids, $order_type );
-
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
 			$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $current_user_id ) );
@@ -226,13 +222,36 @@ class CheckoutController {
 
 		$items = array();
 
-		foreach ( $price_details->items as $item ) {
-			$items[] = array(
-				'user_id'       => $current_user_id,
-				'item_id'       => $item->item_id,
-				'regular_price' => $item->regular_price,
-				'sale_price'    => $item->discount_price,
-			);
+		foreach ( $object_ids as $object_id ) {
+			$item_raw_price = tutor_utils()->get_raw_course_price( $object_id );
+			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
+				$item_raw_price = apply_filters( 'tutor_subscription_plan_price', $item_raw_price, $object_id );
+			}
+
+			if ( $item_raw_price->sale_price ) {
+				$items[] = array(
+					'item_id'        => $object_id,
+					'regular_price'  => tutor_get_locale_price( $item_raw_price->regular_price ),
+					'sale_price'     => $item_raw_price->sale_price ? tutor_get_locale_price( $item_raw_price->sale_price ) : null,
+					'discount_price' => null,
+					'coupon_code'    => null,
+				);
+			} else {
+				$coupon_price = $coupon_code
+				? $coupon_model->apply_coupon_discount( $object_id, $coupon_code, $order_type )
+				: $coupon_model->apply_automatic_coupon_discount( $object_id, $order_type );
+
+				$discount_price =! is_null ( $coupon_price->items[0]->discount_price ) && $coupon_price->items[0]->discount_price >= 0 ? tutor_get_locale_price( $coupon_price->items[0]->discount_price ) : null;
+
+				$items[] = array(
+					'item_id'        => $object_id,
+					'regular_price'  => tutor_get_locale_price( $item_raw_price->regular_price ),
+					'sale_price'     => null,
+					'discount_price' => $discount_price,
+					'coupon_code'    => ! is_null( $discount_price ) ? ( $coupon_code ? $coupon_code : 'automatic' ) : null,
+				);
+
+			}
 		}
 
 		$args = array(
@@ -343,9 +362,9 @@ class CheckoutController {
 			$items[] = array(
 				'item_id'          => $item->item_id,
 				'item_name'        => $item_name,
-				'regular_price'    => floatval( $item->regular_price ),
+				'regular_price'    => tutor_get_locale_price( $item->sale_price > 0 ? $item->sale_price : $item->regular_price ),
 				'quantity'         => 1,
-				'discounted_price' => is_null( $item->sale_price ) || '' === $item->sale_price ? null : floatval( $item->sale_price ),
+				'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
 			);
 		}
 
