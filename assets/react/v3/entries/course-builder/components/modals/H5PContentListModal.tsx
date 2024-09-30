@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { format } from 'date-fns';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -13,10 +13,12 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 
+import Checkbox from '@Atoms/CheckBox';
 import { DateFormats } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { type ContentType, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
+import Show from '@Controls/Show';
+import { type ContentType, type ID, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
 import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
 import { useDebounce } from '@Hooks/useDebounce';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -24,11 +26,18 @@ import { styleUtils } from '@Utils/style-utils';
 
 interface H5PContentListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  onAddContent: (content: H5PContent) => void;
+  onAddContent: (contents: H5PContent[]) => void;
   contentType: ContentType;
+  addedContentIds: ID[];
 }
 
-const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H5PContentListModalProps) => {
+const H5PContentListModal = ({
+  title,
+  closeModal,
+  onAddContent,
+  contentType,
+  addedContentIds = [],
+}: H5PContentListModalProps) => {
   const form = useFormWithGlobalError<{
     search: string;
   }>({
@@ -39,18 +48,59 @@ const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H
   const search = useDebounce(form.watch('search'), 300);
   const getH5PQuizzesQuery = useGetH5PQuizContentsQuery(search, contentType);
   const getH5PContentsQuery = useGetH5PLessonContentsQuery(search, contentType);
+  const [selectedContents, setSelectedContents] = useState<H5PContent[]>([]);
 
   const content = contentType === 'tutor_h5p_quiz' ? getH5PQuizzesQuery.data : getH5PContentsQuery.data;
+  const filteredContent = content?.output.filter((item) => !addedContentIds.includes(String(item.id)));
 
   const columns: Column<H5PContent>[] = [
     {
       Header: (
         <div data-index css={styles.tableLabel}>
-          {__('#', 'tutor')}
+          {filteredContent?.length ? (
+            <Checkbox
+              onChange={(isChecked) => {
+                if (isChecked) {
+                  setSelectedContents(
+                    filteredContent?.filter((item) => !addedContentIds.includes(String(item.id))) || [],
+                  );
+                } else {
+                  setSelectedContents([]);
+                }
+              }}
+              checked={
+                selectedContents.length ===
+                (filteredContent?.filter((item) => !addedContentIds.includes(String(item.id))) || []).length
+              }
+              isIndeterminate={
+                selectedContents.length > 0 &&
+                selectedContents.length <
+                  (filteredContent?.filter((item) => !addedContentIds.includes(String(item.id))) || []).length
+              }
+            />
+          ) : (
+            '#'
+          )}
         </div>
       ),
       Cell: (item, index) => {
-        return <div css={typography.caption()}>{index + 1}</div>;
+        return (
+          <div css={typography.caption()}>
+            <Checkbox
+              onChange={(isChecked) => {
+                if (isChecked) {
+                  setSelectedContents([...selectedContents, item]);
+                } else {
+                  setSelectedContents(selectedContents.filter((content) => content.id !== item.id));
+                }
+              }}
+              checked={
+                selectedContents.map((content) => content.id).includes(item.id) &&
+                !addedContentIds.includes(String(item.id))
+              }
+            />
+          </div>
+        );
       },
     },
     {
@@ -66,35 +116,12 @@ const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H
       },
     },
     {
-      Header: <div css={styles.tableLabel}>{__('Author', 'tutor')}</div>,
-      Cell: (item) => {
-        return <div css={typography.caption()}>{item.user_name}</div>;
-      },
-    },
-    {
       Header: <div css={styles.tableLabel}>{__('Created At', 'tutor')}</div>,
       Cell: (item) => {
         return (
           <div css={typography.caption()}>
             {format(new Date(item.updated_at), DateFormats.yearMonthDayHourMinuteSecond)}
           </div>
-        );
-      },
-    },
-    {
-      Header: <div css={styles.tableLabel}>{__('Actions', 'tutor')}</div>,
-      Cell: (item) => {
-        return (
-          <Button
-            size="small"
-            variant="secondary"
-            onClick={() => {
-              closeModal({ action: 'CONFIRM' });
-              onAddContent(item);
-            }}
-          >
-            {__('Add', 'tutor')}
-          </Button>
         );
       },
     },
@@ -127,10 +154,29 @@ const H5PContentListModal = ({ title, closeModal, onAddContent, contentType }: H
         <div css={styles.tableWrapper}>
           <Table
             columns={columns}
-            data={content?.output || []}
+            data={filteredContent || []}
             loading={getH5PQuizzesQuery.isLoading || getH5PContentsQuery.isLoading}
           />
         </div>
+
+        <Show when={filteredContent?.length}>
+          <div css={styles.footer}>
+            <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
+              {__('Cancel', 'tutor')}
+            </Button>
+            <Button
+              type="submit"
+              size="small"
+              variant="primary"
+              onClick={() => {
+                onAddContent(selectedContents);
+                closeModal({ action: 'CONFIRM' });
+              }}
+            >
+              {__('Add', 'tutor')}
+            </Button>
+          </div>
+        </Show>
       </div>
     </BasicModalWrapper>
   );
@@ -141,7 +187,6 @@ export default H5PContentListModal;
 const styles = {
   modalWrapper: css`
     width: 920px;
-    padding-bottom: ${spacing[28]};
   `,
   searchWrapper: css`
     display: flex;
@@ -175,6 +220,16 @@ const styles = {
     width: 100%;
     text-align: left;
     ${typography.caption()};
-    max-width: 340px;
+    min-width: 340px;
+    max-width: 400px;
+  `,
+  footer: css`
+    box-shadow: ${shadow.dividerTop};
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: ${spacing[16]};
+    padding-inline: ${spacing[16]};
   `,
 };

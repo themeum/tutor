@@ -107,7 +107,8 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { contentType, activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } = useQuizModalContext();
+  const { contentType, activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } =
+    useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -215,6 +216,12 @@ const QuestionList = ({
     setIsOpen(false);
   };
 
+  const handleH5PBulkQuestion = (contents: H5PContent[]) => {
+    for (const content of contents) {
+      handleAddQuestion('h5p', content);
+    }
+  };
+
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
     const currentQuestion = form.watch(`questions.${index}` as 'questions.0');
 
@@ -287,10 +294,11 @@ const QuestionList = ({
                 component: H5PContentListModal,
                 props: {
                   title: __('Select H5P Content', 'tutor'),
-                  onAddContent: (content) => {
-                    handleAddQuestion('h5p', content);
+                  onAddContent: (contents) => {
+                    handleH5PBulkQuestion(contents);
                   },
                   contentType: 'tutor_h5p_quiz',
+                  addedContentIds: questions.map((question) => question.question_description),
                 },
               });
             } else {

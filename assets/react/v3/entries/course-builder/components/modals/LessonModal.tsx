@@ -33,6 +33,7 @@ import {
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
+import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { normalizeLineEndings } from '@Utils/util';
@@ -274,13 +275,24 @@ const LessonModal = ({
                         component: H5PContentListModal,
                         props: {
                           title: __('Select H5P Content', 'tutor'),
-                          onAddContent: (content) => {
-                            form.setValue(
-                              'description',
-                              `${form.getValues('description') || ''}[h5p id="${content.id}"]`,
-                            );
+                          onAddContent: (contents) => {
+                            const convertToH5PShortCode = (content: H5PContent) => {
+                              return `[h5p id="${content.id}"]`;
+                            };
+                            const description = form.getValues('description');
+                            const h5pContents = contents.map(convertToH5PShortCode);
+
+                            form.setValue('description', `${description}\n${h5pContents.join('\n')}`);
                           },
                           contentType: 'lesson',
+                          addedContentIds: (() => {
+                            const description = form.getValues('description');
+                            const h5pShortCodes = description.match(/\[h5p id="(\d+)"\]/g) || [];
+                            return h5pShortCodes.map((shortcode) => {
+                              const id = shortcode.match(/\[h5p id="(\d+)"\]/)?.[1] || '';
+                              return String(id);
+                            });
+                          })(),
                         },
                       });
                     }}

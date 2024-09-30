@@ -25,7 +25,6 @@ import {
   type QuizForm,
   type QuizQuestionType,
   calculateQuizDataStatus,
-  useGetH5PQuizContentByIdQuery,
 } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 
@@ -41,11 +40,6 @@ const QuestionForm = () => {
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
   const questions = form.watch('questions') || [];
   const dataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
-
-  const getH5PContentByIdQuery = useGetH5PQuizContentByIdQuery(
-    questions[activeQuestionIndex]?.question_description,
-    contentType,
-  );
 
   const questionTypeForm = {
     true_false: <TrueFalse key={activeQuestionId} />,
