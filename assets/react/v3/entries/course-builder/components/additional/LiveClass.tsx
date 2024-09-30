@@ -177,7 +177,7 @@ const LiveClass = () => {
                   onClick={() => setShowMeetingForm('google_meet')}
                   ref={googleMeetButtonRef}
                 >
-                  {__('Create Google Meet Link', 'tutor')}
+                  {__('Create a Google Meet Link', 'tutor')}
                 </Button>
               </div>
             </div>
