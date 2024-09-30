@@ -619,7 +619,7 @@ class CourseModel {
 			'offset'         => 0,
 			'post_status'    => 'publish',
 			'meta_query'     => array(
-				'paid_clause'  => array(
+				'paid_clause' => array(
 					'key'   => Course::COURSE_PRICE_TYPE_META,
 					'value' => array( 'paid', 'subscription' ),
 				),
@@ -847,5 +847,27 @@ class CourseModel {
 		}
 
 		return ! empty( $final_data ) ? $final_data : array();
+	}
+
+	/**
+	 * Get course instructor IDs.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return array
+	 */
+	public static function get_course_instructor_ids( $course_id ) {
+		global $wpdb;
+		$instructor_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT user_id FROM $wpdb->usermeta WHERE meta_key=%s AND meta_value=%s",
+				'_tutor_instructor_course_id',
+				$course_id
+			)
+		);
+
+		return $instructor_ids;
 	}
 }
