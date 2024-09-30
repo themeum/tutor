@@ -21,13 +21,13 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
         <div>
           <p css={styles.title}>{item.title}</p>
 
-          {item.type === 'course_plan' && (
-            <div>
-              {__('Plan:', 'tutor')} {item.plan_info.plan_name}
-            </div>
-          )}
-
           <div css={styles.badgeWrapper}>
+            {item.type === 'course_plan' && (
+              <div>
+                {__('Plan:', 'tutor')} {item.plan_info.plan_name}
+              </div>
+            )}
+            
             {item.type === 'course-bundle' && (
               <div css={styles.bundleCount}>
                 {item.total_courses} {__('Courses', 'tutor')}
