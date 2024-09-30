@@ -315,7 +315,7 @@ class OrderModel {
 
 		$user_info = get_userdata( $order_data->user_id );
 		if ( ! is_a( $user_info, 'WP_User' ) ) {
-			return;
+			return false;
 		}
 
 		$student                  = new \stdClass();
