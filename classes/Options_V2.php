@@ -931,7 +931,7 @@ class Options_V2 {
 								'key'            => 'monetize_by',
 								'type'           => 'select',
 								'label'          => __( 'Select eCommerce Engine', 'tutor' ),
-								'select_options' => true,
+								'select_options' => false,
 								'options'        => apply_filters(
 									'tutor_monetization_options',
 									array(
