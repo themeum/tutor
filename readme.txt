@@ -286,7 +286,17 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 = 3.0.0-beta2 - September 30, 2024
 
-Coming soon...
+Update: Added Legacy Mode support for course and lesson descriptions.
+Update: Enhanced subscription creation process and resolved issues with subscription expiration and renewal dates. (Pro)
+Fix: Automatic WooCommerce product creation for courses, and resolved issues with applying coupon codes for subscription-based courses. (Pro)
+Fix: Addressed course bundle behavior, preventing access without completing payment. (Pro)
+Fix: Spotlight mode issues in quizzes have been resolved.
+Fix: Enhanced course bundle compatibility with Tutor’s native payment. (Pro)
+Fix: Fixed subscription trash and delete functionality. (Pro)
+Fix: Fatal errors related to course bundles and subscription pages have been resolved. (Pro)
+Fix: Corrected warnings and inaccurate order status count for subscriptions. (Pro)
+Fix: Addressed issues with lesson prerequisites and full-screen mode.
+Fix: AI Studio functionality is enhanced with image generation fixes. (Pro)
 
 = 3.0.0-beta1 - September 10, 2024
 

@@ -183,7 +183,7 @@ class Settings {
 						array(
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
 							'type'    => 'toggle_switch',
-							'label'   => __( 'Apply Coupon Code', 'tutor' ),
+							'label'   => __( 'Enable Coupon Code', 'tutor' ),
 							'default' => 'off',
 							'desc'    => __( 'Enable this option to allow users to apply a coupon code while checkout.', 'tutor' ),
 						),
