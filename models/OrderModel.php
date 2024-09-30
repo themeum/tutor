@@ -1171,11 +1171,11 @@ class OrderModel {
 				$regular_price  = tutor_get_locale_price( $item['regular_price'] );
 				$sale_price     = is_null( $item['sale_price'] ) || '' === $item['sale_price'] ? null : tutor_get_locale_price( $item['sale_price'] );
 				$discount_price = is_null( $item['discount_price'] ) || '' === $item['discount_price'] ? null : tutor_get_locale_price( $item['discount_price'] );
-	
+
 				// Subtotal is the original price (regular price).
 				$item_subtotal = $regular_price;
 				$item_total    = $regular_price;
-				
+
 				// Determine the total based on sale price and discount.
 				if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
 					$item_subtotal = $sale_price;
@@ -1186,8 +1186,7 @@ class OrderModel {
 						$item_total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
 					}
 				}
-				
-	
+
 				$subtotal += $item_subtotal;
 				$total    += $item_total;
 			}
@@ -1200,7 +1199,7 @@ class OrderModel {
 			// Subtotal is the original price (regular price).
 			$item_subtotal = $regular_price;
 			$item_total    = $regular_price;
-			
+
 			// Determine the total based on sale price and discount.
 			if ( ! is_null( $sale_price ) && $sale_price < $regular_price ) {
 				$item_subtotal = $sale_price;
@@ -1211,15 +1210,15 @@ class OrderModel {
 					$item_total = max( 0, $discount_price ); // Ensure total doesn't go below 0.
 				}
 			}
-			
+
 			$subtotal = $item_subtotal;
 			$total    = $item_total;
 		}
-		
-		return (object) [
+
+		return (object) array(
 			'subtotal' => tutor_get_locale_price( $subtotal ),
-			'total'    => tutor_get_locale_price( $total )
-		];
+			'total'    => tutor_get_locale_price( $total ),
+		);
 	}
 
 	/**
@@ -1228,28 +1227,24 @@ class OrderModel {
 	 * @since 3.0.0
 	 *
 	 * @param mixed $regular_price Regular price.
-	 * @param mixed $sale_price Sale price
+	 * @param mixed $sale_price Sale price.
 	 * @param mixed $discount_price Discount price.
 	 *
 	 * @return float item sellable price
 	 */
 	public static function get_item_sellable_price( $regular_price, $sale_price = null, $discount_price = null ) {
-		
-		$sale_price     = str_replace( ',', '', $sale_price );
-		$discount_price = str_replace( ',', '', $discount_price );
-
 		// Ensure prices are numeric and properly formatted.
 		$sellable_price = (
-			is_numeric( $sale_price ) && $sale_price > 0 
+			! is_null( $sale_price ) && $sale_price > 0
 			? $sale_price
 			: (
-				is_numeric( $discount_price ) && $discount_price >= 0 
-				? $discount_price 
+				! is_null( $discount_price ) && $discount_price >= 0
+				? $discount_price
 				: $regular_price
 			)
 		);
-	
+
 		return tutor_get_locale_price( $sellable_price );
 	}
-	
+
 }
