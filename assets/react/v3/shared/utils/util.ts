@@ -329,5 +329,5 @@ export const convertGMTtoLocalDate = (date: string) => {
 };
 
 export const normalizeLineEndings = (text: string) => {
-  return (text || '').replace(/\r\n|\r/g, '\n');
+  return (text || '').replace(/\r\n/g, '\n');
 };
