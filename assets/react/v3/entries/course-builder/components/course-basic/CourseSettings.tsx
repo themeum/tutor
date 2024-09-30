@@ -228,24 +228,4 @@ const styles = {
     gap: ${spacing[32]};
     margin-top: ${spacing[12]};
   `,
-  buddyPressNotEnabledWrapper: css`
-    min-height: 400px;
-    background: ${colorTokens.background.white};
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: ${spacing[4]};
-    padding: ${spacing[24]};
-    text-align: center;
-  `,
-  buddyPressDescription: css`
-    ${typography.caption()};
-    color: ${colorTokens.text.subdued};
-    max-width: 280px;
-    margin: 0 auto ${spacing[12]};
-  `,
-  addonIcon: css`
-    color: ${colorTokens.icon.brand};
-  `,
 };

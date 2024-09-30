@@ -54,7 +54,7 @@ const LiveClass = () => {
   return (
     <div css={styles.liveClass}>
       <span css={styles.label}>
-        {__('Live Class', 'tutor')}
+        {__('Schedule Live Class', 'tutor')}
         {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
       </span>
       <Show
@@ -66,7 +66,7 @@ const LiveClass = () => {
             emptyStateImage={liveClassPro}
             emptyStateImage2x={liveClassPro2x}
             imageAltText={__('Tutor LMS PRO', 'tutor')}
-            title={__('Make the learning more interactive and fun using Live class feature! ', 'tutor')}
+            title={__('Bring your courses to life and engage students with interactive live classes.', 'tutor')}
             actions={
               <Button
                 size="small"
@@ -90,11 +90,8 @@ const LiveClass = () => {
               emptyStateImage={addonDisabled}
               emptyStateImage2x={addonDisabled2x}
               imageAltText={__('No live class addons found', 'tutor')}
-              title={__('You can use this feature by activating Google Meet Or Zoom from addons', 'tutor')}
-              description={__(
-                'when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-                'tutor',
-              )}
+              title={__('Activate the Google Meet or Zoom addon to use this feature.', 'tutor')}
+              description={__('Engage students in real-time with live classes using Google Meet or Zoom.', 'tutor')}
               actions={
                 <Button
                   size="small"
@@ -180,7 +177,7 @@ const LiveClass = () => {
                   onClick={() => setShowMeetingForm('google_meet')}
                   ref={googleMeetButtonRef}
                 >
-                  {__('Create a Google Meet', 'tutor')}
+                  {__('Create a Google Meet Link', 'tutor')}
                 </Button>
               </div>
             </div>

@@ -126,14 +126,13 @@ const FormInput = ({
             props: {
               title: (
                 <>
-                  {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                  {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
                   <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                  {__('feature', 'tutor')}
                 </>
               ),
               image: generateText,
               image2x: generateText2x,
-              featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+              featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
               features: [
                 __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
                 __(
@@ -174,6 +173,8 @@ const FormInput = ({
               field,
               fieldState,
               is_html: true,
+              fieldLabel: __('Create a Compelling Title', 'tutor'),
+              fieldPlaceholder: __('Describe the main focus of your course in a few words', 'tutor'),
             },
           });
           onClickAiButton?.();

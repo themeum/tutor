@@ -49,7 +49,7 @@ const defaultSteps: Record<keyof Loading, LoadingStep> = {
     hasError: false,
   },
   image: {
-    loading_label: __('Now generating course banner image...', 'tutor'),
+    loading_label: __('Now generating course featured image...', 'tutor'),
     completed_label: __('Course banner image generated.', 'tutor'),
     error_label: __('Error generating course banner image.', 'tutor'),
     completed: false,

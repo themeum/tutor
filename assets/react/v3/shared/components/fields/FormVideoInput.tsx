@@ -473,12 +473,12 @@ const FormVideoInput = ({
                             }
                             uploadHandler={() => handleUpload('poster')}
                             clearHandler={() => handleClear('poster')}
-                            buttonText={__('Upload Poster', 'tutor')}
-                            infoText={__('Upload a poster for the video', 'tutor')}
+                            buttonText={__('Upload Thumbnail', 'tutor')}
+                            infoText={__('Upload a thumbnail image for your video', 'tutor')}
                             emptyImageCss={styles.thumbImage}
                             previewImageCss={styles.thumbImage}
                             overlayCss={styles.thumbImage}
-                            replaceButtonText={__('Replace Poster', 'tutor')}
+                            replaceButtonText={__('Replace Thumbnail', 'tutor')}
                           />
                         </Show>
                       </div>

@@ -58,7 +58,7 @@ class Settings {
 							'label'      => __( 'Cart Page', 'tutor' ),
 							'default'    => '0',
 							'options'    => $pages,
-							'desc'       => __( 'Select the page to be used as the cart page.', 'tutor' ),
+							'desc'       => __( 'Select the page you wish to set as the cart page.', 'tutor' ),
 							'searchable' => true,
 						),
 					),
