@@ -862,7 +862,7 @@ class CourseModel {
 		global $wpdb;
 		$instructor_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT user_id FROM $wpdb->usermeta WHERE meta_key=%s AND meta_value=%s",
+				"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key=%s AND meta_value=%s",
 				'_tutor_instructor_course_id',
 				$course_id
 			)
