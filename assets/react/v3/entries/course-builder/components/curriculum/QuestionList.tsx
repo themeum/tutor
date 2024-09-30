@@ -414,6 +414,7 @@ const styles = {
   `,
   questionList: css`
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
     padding: ${spacing[8]} 0 ${spacing[8]} 0;
   `,
   questionTypeOptionsTitle: css`

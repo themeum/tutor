@@ -322,3 +322,7 @@ export const convertGMTtoLocalDate = (date: string) => {
   const offset = localDate.getTimezoneOffset();
   return addMinutes(localDate, -offset);
 };
+
+export const normalizeLineEndings = (text: string) => {
+  return (text || '').replace(/\r\n/g, '\n');
+};
