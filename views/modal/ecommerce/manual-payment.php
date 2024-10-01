@@ -43,7 +43,7 @@
 							</label>
 							<div class="tutor-mb-16">
 								<textarea name="additional_details" class="tutor-form-control tutor-mb-12" rows="4"></textarea>
-								<div class="tutor-color-muted"><?php esc_html_e( 'Displays to customers when they’re choosing a payment method.', 'tutor' ); ?></div>
+								<div class="tutor-color-muted"><?php esc_html_e( 'Briefly describe this payment option. (e.g., Bank Transfer, Cash on Delivery).', 'tutor' ); ?></div>
 							</div>
 						</div>
 						<div class="tutor-col">
@@ -52,7 +52,7 @@
 							</label>
 							<div>
 								<textarea name="payment_instructions" class="tutor-form-control tutor-mb-12" rows="5"></textarea>
-								<div class="tutor-color-muted"><?php esc_html_e( 'Displays to customers when they’re choosing a payment method.', 'tutor' ); ?></div>
+								<div class="tutor-color-muted"><?php esc_html_e( 'Provide clear, step-by-step instructions on how to complete the payment.', 'tutor' ); ?></div>
 							</div>
 						</div>
 					</div>
@@ -106,7 +106,7 @@
 							</label>
 							<div class="tutor-mb-16">
 								<textarea name="additional_details" class="tutor-form-control tutor-mb-12" rows="4"></textarea>
-								<div class="tutor-color-muted"><?php esc_html_e( 'Displays to customers when they’re choosing a payment method.', 'tutor' ); ?></div>
+								<div class="tutor-color-muted"><?php esc_html_e( 'Briefly describe this payment option. (e.g., Bank Transfer, Cash on Delivery).', 'tutor' ); ?></div>
 							</div>
 						</div>
 						<div class="tutor-col">
@@ -115,7 +115,7 @@
 							</label>
 							<div>
 								<textarea name="payment_instructions" class="tutor-form-control tutor-mb-12" rows="5"></textarea>
-								<div class="tutor-color-muted"><?php esc_html_e( 'Displays to customers when they’re choosing a payment method.', 'tutor' ); ?></div>
+								<div class="tutor-color-muted"><?php esc_html_e( 'Provide clear, step-by-step instructions on how to complete the payment.', 'tutor' ); ?></div>
 							</div>
 						</div>
 					</div>

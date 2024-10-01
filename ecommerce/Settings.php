@@ -183,7 +183,7 @@ class Settings {
 						array(
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
 							'type'    => 'toggle_switch',
-							'label'   => __( 'Apply Coupon Code', 'tutor' ),
+							'label'   => __( 'Enable Coupon Code', 'tutor' ),
 							'default' => 'off',
 							'desc'    => __( 'Enable this option to allow users to apply a coupon code while checkout.', 'tutor' ),
 						),
@@ -511,15 +511,9 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'             => 'Paypal',
+				'label'             => 'PayPal',
 				'is_active'         => self::is_active( 'paypal' ),
 				'icon'              => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
-				'support_recurring' => true,
-			),
-			'stripe' => array(
-				'label'             => 'Stripe',
-				'is_active'         => self::is_active( 'stripe' ),
-				'icon'              => esc_url_raw( tutor()->url . 'assets/images/stripe.svg' ),
 				'support_recurring' => true,
 			),
 		);

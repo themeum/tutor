@@ -68,20 +68,23 @@ function editorConfig(
       remove_script_host: 0,
       plugins:
         'charmap,colorpicker,hr,lists,image,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview',
-      skin: 'lightgray',
+      skin: 'light',
+      skin_url: '/wp-content/plugins/tutor/assets/lib/tinymce/light',
       submit_patch: true,
       link_context_toolbar: false,
       theme: 'modern',
       toolbar: !readOnly,
       toolbar1: isMinimal
-        ? `bold,italic,underline,image${isTutorPro ? ',codesample' : ''}`
-        : `formatselect,bold,italic,bullist,numlist,blockquote,alignleft,aligncenter,alignright,link,unlink,wp_more,fullscreen,wp_adv,tutor_button${
-            isTutorPro ? ',codesample' : ''
-          }`,
+        ? `bold italic underline | image | ${isTutorPro ? 'codesample' : ''}`
+        : `formatselect | bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | wp_more ${
+            isTutorPro ? ' codesample' : ''
+          } | wp_adv`,
 
-      toolbar2: 'strikethrough,hr,forecolor,pastetext,removeformat,charmap,outdent,indent,undo,redo,wp_help',
-      content_css: '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css',
-      content_style: 'body { font-family: "SF Pro Display, sans-serif; font-size: 14px; }',
+      toolbar2:
+        'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown',
+      content_css:
+        '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css, /wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css',
+
       statusbar: !readOnly,
       branding: false,
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -89,10 +92,10 @@ function editorConfig(
         editor.on('init', () => {
           if (readOnly) {
             editor.setMode('readonly');
-              
+
             const editorBody = editor.contentDocument.querySelector('.mce-content-body');
             editorBody.style.backgroundColor = 'transparent';
-            
+
             setTimeout(() => {
               const height = editorBody.scrollHeight;
               editor.iframeElement.style.height = `${height}px`;
@@ -302,11 +305,9 @@ const styles = {
     }
 
     .wp-editor-container {
-      border-color: ${colorTokens.stroke.default};
       border-top-left-radius: ${borderRadius[6]};
       border-bottom-left-radius: ${borderRadius[6]};
       border-bottom-right-radius: ${borderRadius[6]};
-      background-color: ${colorTokens.background.white};
 
       ${
         isFocused &&
@@ -323,20 +324,11 @@ const styles = {
     .wp-switch-editor {
       border-top-left-radius: ${borderRadius[4]};
       border-top-right-radius: ${borderRadius[4]};
-      border-color: ${colorTokens.stroke.default};
-      background-color: ${colorTokens.background.default};
-    }
-
-    .html-active .switch-html,
-    .tmce-active .switch-tmce {
-      border-bottom-color: ${colorTokens.background.default};
     }
 
     .mce-toolbar-grp,
     .quicktags-toolbar {
       border-top-left-radius: ${borderRadius[6]};
-      background-color: ${colorTokens.background.default};
-      border-color: ${colorTokens.stroke.default};
 
       ${
         isMinimal &&
@@ -351,7 +343,6 @@ const styles = {
     }
 
     .mce-statusbar {
-      border-color: ${colorTokens.stroke.default};
       border-bottom-left-radius: ${borderRadius[6]};
       border-bottom-right-radius: ${borderRadius[6]};
     }
@@ -388,10 +379,6 @@ const styles = {
       resize: none;
       border: none;
       outline: none;
-    }
-
-    .mce-active {
-      background: #555c66 !important;
     }
   `,
 };
