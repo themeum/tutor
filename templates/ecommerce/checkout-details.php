@@ -115,7 +115,7 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 
 							if ( $automatic_coupon->is_applied ) {
 								foreach ( $automatic_coupon->items as $item ) {
-									if ( $item->item_id === $course->ID ) {
+									if ( $item->item_id === $course->ID && $item->is_applied ) {
 										$has_automatic_coupon = $item->is_applied;
 										$regular_price        = $item->regular_price;
 										$sale_price           = $item->discount_price;
