@@ -83,7 +83,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
         passing_grade: 80,
         max_questions_for_answer: 10,
         quiz_auto_start: false,
-        question_layout_view: '',
+        question_layout_view: 'single_question',
         questions_order: 'rand',
         hide_question_number_overview: false,
         short_answer_characters_limit: 200,

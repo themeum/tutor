@@ -143,6 +143,7 @@ const styles = {
     ${typography.caption()}
     color: ${colorTokens.text.subdued};
     ${styleUtils.text.ellipsis(1)}
+    word-break: break-all;
     max-width: fit-content;
   `,
   editWrapper: css`
