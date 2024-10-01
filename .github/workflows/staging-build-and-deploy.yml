@@ -3,7 +3,7 @@ name: Staging Build and Deploy
 on:
   push:
     branches:
-      - dev
+      - ecommerce-backend
 jobs:
   build:
     runs-on: ubuntu-latest
