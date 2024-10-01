@@ -130,7 +130,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 		quizImageBox.addEventListener('drop', dragDrop);
 	});
 
-	let isScrolling = false;
+	let scrollInterval = null;
 	let scrollDirection = 0;
 
 	function touchHandler(e) {
@@ -139,7 +139,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 		if (type === 'touchstart') {
 			this.classList.add('tutor-dragging');
-			startScrollLoop();
+			startScroll();
 		} else if (type === 'touchmove') {
 			const element = e.target.closest('.tutor-dragging');
 			let copiedDragElement = document.querySelector('.tutor-drag-copy');
@@ -148,8 +148,8 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				const clientY = e.touches[0].clientY;
 				const clientX = e.touches[0].clientX;
 
-				const scrollThreshold = 50;
-				const maxScrollSpeed = 30;
+				const scrollThreshold = 100;
+				const maxScrollSpeed = 40;
 
 				const viewportHeight = window.innerHeight;
 				const distanceFromBottom = viewportHeight - clientY;
@@ -201,28 +201,23 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					this.classList.remove('tutor-dragging');
 				}
 			}
-			stopScrollLoop();
+			stopScroll();
 		}
 	}
-	function startScrollLoop() {
-		if (!isScrolling) {
-			isScrolling = true;
-			scrollPage();
-		}
+	function stopScroll() {
+		clearInterval(scrollInterval);
+		scrollInterval = null;
 	}
-	function stopScrollLoop() {
-		isScrolling = false;
-	}
-	function scrollPage() {
-		if (isScrolling) {
-			if (scrollDirection !== 0) {
+	function startScroll() {
+		if (!scrollInterval) {
+			scrollInterval = setInterval(() => {
 				window.scrollBy(0, scrollDirection);
-			}
-			requestAnimationFrame(scrollPage);
+			}, 60);
 		}
 	}
 	function calculateScrollSpeed(threshold, distance, maxSpeed) {
-		return (threshold - distance) / threshold * maxSpeed;
+		const speed = (threshold - distance) / threshold * maxSpeed;
+		return Math.max(speed, 0);
 	}
 	function dragStart() {
 		this.classList.add('tutor-dragging');
