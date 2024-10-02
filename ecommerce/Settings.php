@@ -68,7 +68,7 @@ class Settings {
 			),
 			'ecommerce_block_currency' => array(
 				'label'      => __( 'Currency', 'tutor' ),
-				'slug'       => 'currency',
+				'slug'       => 'ecommerce_currency',
 				'block_type' => 'uniform',
 				'fields'     => array(
 					array(
@@ -454,7 +454,7 @@ class Settings {
 					'label_title'   => '',
 					'default'       => 'off',
 					/* translators: %s: gateway name */
-					'desc'          => sprintf( __( 'Enable %s payment', 'tutor-pro' ), $gateway['label'] ),
+					'desc'          => sprintf( __( 'Enable %s payment', 'tutor' ), $gateway['label'] ),
 					'toggle_fields' => implode( ',', array_keys( self::$config_keys_method() ) ),
 				),
 			);
@@ -685,18 +685,18 @@ class Settings {
 					'type'           => 'select',
 					'default'        => array_keys( self::get_payment_environments() )[0],
 					'options'        => self::get_payment_environments(),
-					'label'          => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label'          => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor' ),
 					'select_options' => false,
 					'desc'           => '',
-					'placeholder'    => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+					'placeholder'    => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor' ),
 				);
 			} else {
 				$config_fields[] = array(
 					'key'         => $key,
 					'type'        => $type,
-					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor' ),
 					'desc'        => '',
-					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor' ),
 				);
 			}
 		}
