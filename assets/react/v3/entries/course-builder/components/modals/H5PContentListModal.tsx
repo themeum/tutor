@@ -172,6 +172,7 @@ const H5PContentListModal = ({
                 onAddContent(selectedContents);
                 closeModal({ action: 'CONFIRM' });
               }}
+              disabled={!selectedContents.length}
             >
               {__('Add', 'tutor')}
             </Button>
