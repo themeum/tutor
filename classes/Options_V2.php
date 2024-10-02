@@ -955,7 +955,7 @@ class Options_V2 {
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-badge-discount',
 				'blocks'   => array(
-					'block_options'  => array(
+					'block_options'         => array(
 						'label'      => __( 'Options', 'tutor' ),
 						'slug'       => 'options',
 						'block_type' => 'uniform',
@@ -982,6 +982,22 @@ class Options_V2 {
 								'default'     => 'off',
 								'desc'        => __( 'If enabled, in the case of Courses, WooCommerce Orders will get the "Completed" status .', 'tutor' ),
 							),
+							array(
+								'key'         => 'statement_show_per_page',
+								'type'        => 'number',
+								'number_type' => 'integer',
+								'label'       => __( 'Show Statement Per Page', 'tutor' ),
+								'default'     => '20',
+
+								'desc'        => __( 'Define the number of statements to show.', 'tutor' ),
+							),
+						),
+					),
+					'block_revenue_sharing' => array(
+						'label'      => __( 'Revenue Sharing', 'tutor' ),
+						'slug'       => 'revenue_sharing',
+						'block_type' => 'uniform',
+						'fields'     => array(
 							array(
 								'key'           => 'enable_revenue_sharing',
 								'type'          => 'toggle_switch',
@@ -1013,18 +1029,9 @@ class Options_V2 {
 								),
 								'desc'        => __( 'Set how the sales revenue will be shared among admins and instructors.', 'tutor' ),
 							),
-							array(
-								'key'         => 'statement_show_per_page',
-								'type'        => 'number',
-								'number_type' => 'integer',
-								'label'       => __( 'Show Statement Per Page', 'tutor' ),
-								'default'     => '20',
-
-								'desc'        => __( 'Define the number of statements to show.', 'tutor' ),
-							),
 						),
 					),
-					'block_fees'     => array(
+					'block_fees'            => array(
 						'label'      => __( 'Fees', 'tutor' ),
 						'slug'       => 'fees',
 						'block_type' => 'uniform',
@@ -1070,7 +1077,7 @@ class Options_V2 {
 							),
 						),
 					),
-					'block_withdraw' => array(
+					'block_withdraw'        => array(
 						'label'      => __( 'Withdraw', 'tutor' ),
 						'slug'       => 'withdraw',
 						'block_type' => 'uniform',
@@ -1685,8 +1692,11 @@ class Options_V2 {
 								'type'    => 'text',
 								'label'   => __( 'YouTube API Key', 'tutor' ),
 								'default' => '',
-								'desc'    => __( 'To host live videos on your platform using YouTube, enter your YouTube API key.
-								Text inside the box: Insert API key here.', 'tutor' ),
+								'desc'    => __(
+									'To host live videos on your platform using YouTube, enter your YouTube API key.
+								Text inside the box: Insert API key here.',
+									'tutor'
+								),
 							),
 						),
 					),
