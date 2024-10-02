@@ -194,7 +194,7 @@
 					// H5P.
 					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
 						if ( 'h5p' === $question_type ) {
-							require TUTOR_H5P()->path . 'views/h5p-question-answer.php';
+							require \TutorPro\H5P\Utils::addon_config()->path . 'views/h5p-question-answer.php';
 						}
 					}
 					?>
