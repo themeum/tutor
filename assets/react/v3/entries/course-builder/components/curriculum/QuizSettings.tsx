@@ -191,7 +191,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
             />
           </Show>
 
-          <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
+          <Show when={isAddonEnabled(Addons.CONTENT_DRIP) && contentType !== 'tutor_h5p_quiz'}>
             <Show when={contentDripType === 'specific_days'}>
               <Controller
                 name="quiz_option.content_drip_settings.after_xdays_of_enroll"
