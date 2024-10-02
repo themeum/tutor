@@ -27,7 +27,6 @@ class Settings {
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
 		add_action( 'wp_ajax_tutor_delete_manual_payment_method', __CLASS__ . '::ajax_delete_manual_payment_method' );
-
 	}
 
 	/**
@@ -143,22 +142,23 @@ class Settings {
 			'icon'     => 'tutor-icon-credit-card',
 			'blocks'   => array(),
 		);
+
 		// @TODO.
-		// $arr['ecommerce_tax'] = array(
-		// 'label'    => __( 'Tax', 'tutor' ),
-		// 'slug'     => 'ecommerce_tax',
-		// 'desc'     => __( 'Advanced Settings', 'tutor' ),
-		// 'template' => 'basic',
-		// 'icon'     => 'tutor-icon-receipt-percent',
-		// 'blocks'   => array(
-		// array(
-		// 'label'      => __( 'Tax Configuration', 'tutor' ),
-		// 'slug'       => 'options',
-		// 'block_type' => 'uniform',
-		// 'fields'     => array(),
-		// ),
-		// ),
-		// );
+		$arr['ecommerce_tax'] = array(
+			'label'    => __( 'Tax', 'tutor' ),
+			'slug'     => 'ecommerce_tax',
+			'desc'     => __( 'Advanced Settings', 'tutor' ),
+			'template' => 'basic',
+			'icon'     => 'tutor-icon-receipt-percent',
+			'blocks'   => array(
+				array(
+					'label'      => __( 'Tax Configuration', 'tutor' ),
+					'slug'       => 'options',
+					'block_type' => 'uniform',
+					'fields'     => array(),
+				),
+			),
+		);
 
 		$arr['ecommerce_checkout'] = array(
 			'label'    => __( 'Checkout', 'tutor' ),
@@ -399,7 +399,7 @@ class Settings {
 		if ( is_array( $payment_methods ) && count( $payment_methods ) ) {
 			$payment_methods = array_filter(
 				$payment_methods,
-				function( $method ) use ( $method_id ) {
+				function ( $method ) use ( $method_id ) {
 					return $method['payment_method_id'] !== $method_id;
 				}
 			);
@@ -752,5 +752,4 @@ class Settings {
 
 		return apply_filters( 'tutor_ecommerce_webhook_fields', $arr );
 	}
-
 }

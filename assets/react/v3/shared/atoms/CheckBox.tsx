@@ -2,12 +2,12 @@ import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles'
 import { typography } from '@Config/typography';
 import { nanoid } from '@Utils/util';
 import { css, type SerializedStyles } from '@emotion/react';
-import React, { type ChangeEvent, type FocusEventHandler } from 'react';
+import React, { ReactNode, type ChangeEvent, type FocusEventHandler } from 'react';
 
 interface CheckboxProps {
 	id?: string;
 	checked?: boolean;
-	label?: string;
+	label?: string|ReactNode;
 	value?: string;
 	name?: string;
 	disabled?: boolean;
