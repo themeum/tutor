@@ -61,7 +61,7 @@ const getInstructorList = (courseId: string) => {
     .then((response) => response.data);
 };
 
-export const useInstructorListQuery = (courseId: string) => {
+export const useInstructorListQuery = (courseId: string, isAddonEnabled: boolean) => {
   return useQuery({
     queryKey: ['InstructorList', courseId],
     queryFn: () =>
@@ -73,5 +73,6 @@ export const useInstructorListQuery = (courseId: string) => {
           avatar_url: item.avatar_url,
         }));
       }),
+    enabled: isAddonEnabled,
   });
 };
