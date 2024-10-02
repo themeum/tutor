@@ -138,6 +138,25 @@ class Options_V2 {
 	}
 
 	/**
+	 * Prepare settings search item.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $section section item.
+	 * @param array $block block item.
+	 * @param array $field field item.
+	 *
+	 * @return array prepared searchable field item.
+	 */
+	private function prepare_search_item( $section, $block, $field ) {
+		$field['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
+		$field['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
+		$field['block_label']   = isset( $block['label'] ) ? $block['label'] : '';
+
+		return $field;
+	}
+
+	/**
 	 * Function to get all fields for search tutor_option_search
 	 *
 	 * @since 2.0.0
@@ -150,14 +169,28 @@ class Options_V2 {
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
-				foreach ( tutils()->sanitize_recursively( $sections ) as $section ) {
+				foreach ( tutor_utils()->sanitize_recursively( $sections ) as $section ) {
 					foreach ( $section['blocks'] as $blocks ) {
 						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
 							foreach ( $blocks['fields'] as $fields ) {
-								$fields['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
-								$fields['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
-								$fields['block_label']   = isset( $blocks['label'] ) ? $blocks['label'] : '';
-								$data_array['fields'][]  = $fields;
+								$data_array['fields'][] = $this->prepare_search_item( $section, $blocks, $fields );
+							}
+						}
+					}
+
+					/**
+					 * Submenu item search.
+					 *
+					 * @since 3.0.0
+					 */
+					if ( isset( $section['submenu'] ) && is_array( $section['submenu'] ) ) {
+						foreach ( tutor_utils()->sanitize_recursively( $section['submenu'] ) as $submenu_section ) {
+							foreach ( $submenu_section['blocks'] as $block ) {
+								if ( isset( $block['fields'] ) && ! empty( $block['fields'] ) ) {
+									foreach ( $block['fields'] as $fields ) {
+										$data_array['fields'][] = $this->prepare_search_item( $submenu_section, $block, $fields );
+									}
+								}
 							}
 						}
 					}
@@ -918,11 +951,11 @@ class Options_V2 {
 			'monetization' => array(
 				'label'    => __( 'Monetization', 'tutor' ),
 				'slug'     => 'monetization',
-				'desc'     => __( 'Monitization Settings', 'tutor' ),
+				'desc'     => __( 'Monetization Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-badge-discount',
 				'blocks'   => array(
-					'block_options' => array(
+					'block_options'  => array(
 						'label'      => __( 'Options', 'tutor' ),
 						'slug'       => 'options',
 						'block_type' => 'uniform',
@@ -991,7 +1024,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'block_fees'     => array(
 						'label'      => __( 'Fees', 'tutor' ),
 						'slug'       => 'fees',
 						'block_type' => 'uniform',
@@ -1037,7 +1070,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'block_withdraw' => array(
 						'label'      => __( 'Withdraw', 'tutor' ),
 						'slug'       => 'withdraw',
 						'block_type' => 'uniform',
@@ -1653,7 +1686,7 @@ class Options_V2 {
 								'label'   => __( 'YouTube API Key', 'tutor' ),
 								'default' => '',
 								'desc'    => __( 'To host live videos on your platform using YouTube, enter your YouTube API key.
-Text inside the box: Insert API key here.', 'tutor' ),
+								Text inside the box: Insert API key here.', 'tutor' ),
 							),
 						),
 					),
