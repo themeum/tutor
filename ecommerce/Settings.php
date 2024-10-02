@@ -679,24 +679,28 @@ class Settings {
 		$config_fields = array();
 
 		foreach ( $config_keys as $key => $type ) {
+			$key_label = ucfirst( str_replace( '_', ' ', $key ) );
+			/* translators: %s: key label */
+			$placeholder = sprintf( __( 'Enter your %s here', 'tutor' ), $key_label );
+
 			if ( 'environment' === $type ) {
 				$config_fields[] = array(
 					'key'            => $key,
 					'type'           => 'select',
 					'default'        => array_keys( self::get_payment_environments() )[0],
 					'options'        => self::get_payment_environments(),
-					'label'          => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor' ),
+					'label'          => $key_label,
 					'select_options' => false,
 					'desc'           => '',
-					'placeholder'    => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor' ),
+					'placeholder'    => $placeholder,
 				);
 			} else {
 				$config_fields[] = array(
 					'key'         => $key,
 					'type'        => $type,
-					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor' ),
+					'label'       => $key_label,
 					'desc'        => '',
-					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor' ),
+					'placeholder' => $placeholder,
 				);
 			}
 		}
