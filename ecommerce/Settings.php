@@ -119,17 +119,9 @@ class Settings {
 
 		);
 
-		$monetization_blocks = array();
-		foreach ( $fields['monetization']['blocks'] as $key => $block ) {
-			$monetization_blocks[ $key ] = $block;
-			if ( 'block_options' === $key ) {
-				foreach ( $basic_settings_blocks as $key => $block_item ) {
-					$monetization_blocks[ $key ] = $block_item;
-				}
-			}
+		foreach ( $basic_settings_blocks as $key => $block_item ) {
+			$fields['monetization']['blocks'][ $key ] = $block_item;
 		}
-
-		$fields['monetization']['blocks'] = $monetization_blocks;
 
 		$arr = apply_filters( 'tutor_before_ecommerce_payment_settings', array() );
 
