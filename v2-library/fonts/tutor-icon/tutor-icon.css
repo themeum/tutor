@@ -80,6 +80,9 @@
 .tutor-icon-subscription:before {
   content: "\f915";
 }
+.tutor-icon-mark-light:before {
+  content: "\f916";
+}
 
 /* tutor old fonts */
   
