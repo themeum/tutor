@@ -565,7 +565,7 @@ const styles = {
     margin: 0;
     padding: 0 10px;
     cursor: pointer;
-    border: 1px solid ${colorTokens.stroke.brand};
+    border: 1px solid #3e64de;
     border-radius: 3px;
     white-space: nowrap;
     box-sizing: border-box;
