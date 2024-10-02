@@ -565,18 +565,16 @@ const styles = {
     margin: 0;
     padding: 0 10px;
     cursor: pointer;
-    border: 1px solid #2271b1;
+    border: 1px solid ${colorTokens.stroke.brand};
     border-radius: 3px;
     white-space: nowrap;
     box-sizing: border-box;
-    color: #2271b1;
-    border-color: #2271b1;
-    background: #f6f7f7;
+    color: #3e64de;
+    border-color: #3e64de;
+    background: transparent;
 
     :hover:not(:disabled) {
-      background: #f0f0f1;
-      border-color: #0a4b78;
-      color: #0a4b78;
+      background: ${colorTokens.background.white};
     }
 
     :disabled {
