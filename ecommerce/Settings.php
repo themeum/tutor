@@ -452,7 +452,6 @@ class Settings {
 					'label'         => $gateway['label'],
 					'label_title'   => '',
 					'default'       => 'off',
-					'desc'          => sprintf( __( 'Enable %s payment', 'tutor-pro' ), $gateway['label'] ),
 					'toggle_fields' => implode( ',', array_keys( self::$config_keys_method() ) ),
 				),
 			);
@@ -597,23 +596,6 @@ class Settings {
 			'paypal_client_secret'  => 'password',
 			'paypal_webhook_id'     => 'password',
 			'paypal_webhook_url'    => 'webhook_url',
-		);
-	}
-
-	/**
-	 * Get stripe config keys
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_stripe_config_keys() {
-		return array(
-			'stripe_environment'           => 'environment',
-			'stripe_secret_key'            => 'password',
-			'stripe_public_key'            => 'password',
-			'stripe_webhook_signature_key' => 'password',
-			'stripe_webhook_url'           => 'webhook_url',
 		);
 	}
 
