@@ -616,16 +616,46 @@ document.addEventListener('DOMContentLoaded', function () {
 
 	const invoice_field = document.querySelector("[name='tutor_option[tutor_woocommerce_invoice]']");
 	const invoice_field_wrapper = document.getElementById('field_tutor_woocommerce_invoice');
+	const ecommerce_pages = document.querySelector('.ecommerce_pages');
+	const ecommerce_currency = document.querySelector('.ecommerce_currency');
+	const revenue_sharing_checkbox = document.querySelector('[data-toggle-fields="sharing_percentage"]')
+	const revenue_sharing_field = document.querySelector("[name='tutor_option[enable_revenue_sharing]']");
+	const revenue_sharing_section = document.querySelector('.revenue_sharing');
+	const fees_section = document.querySelector('.fees');
+	const withdraw_section = document.querySelector('.withdraw');
 
 	if (invoice_field) {
 		showHideOption(invoice_field_wrapper, monetization_field.value, 'wc')
 	}
 
 	if (monetization_field) {
-		showHideOption(order_autocomplete_wrapper, monetization_field.value, 'wc');
+		const monetized_by = monetization_field?.value;
+		/**
+		 * Show/Hide on saved value.
+		 */
+		showHideOption(order_autocomplete_wrapper, monetized_by, 'wc');
+		showHideOption(ecommerce_pages, monetized_by, 'tutor');
+		showHideOption(ecommerce_currency, monetized_by, 'tutor');
+
+		/**
+		 * Show/Hide on-change value change.
+		 */
 		monetization_field.onchange = (e) => {
 			showHideOption(order_autocomplete_wrapper, e.target.value, 'wc');
 			showHideOption(invoice_field_wrapper, e.target.value, 'wc');
+
+			showHideOption(ecommerce_pages, e.target.value, 'tutor');
+			showHideOption(ecommerce_currency, e.target.value, 'tutor');
+		}
+	}
+
+	if (revenue_sharing_field) {
+		showHideOption(fees_section, revenue_sharing_field.value, 'on');
+		showHideOption(withdraw_section, revenue_sharing_field.value, 'on');
+
+		revenue_sharing_checkbox.onchange = (e) => {
+			showHideOption(fees_section, e.target.checked, true);
+			showHideOption(withdraw_section, e.target.checked, true);
 		}
 	}
 
