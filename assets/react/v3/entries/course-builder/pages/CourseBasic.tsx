@@ -293,25 +293,24 @@ const CourseBasic = () => {
                         props: {
                           title: (
                             <>
-                              {__('Upgrade to Tutor Pro to enjoy the Tutor LMS ', 'tutor')}
+                              {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
                               <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                              {__('feature', 'tutor')}
                             </>
                           ),
-                          featuresTitle: __('Don’t miss out on this game-changing feature! Here’s why:', 'tutor'),
+                          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
                           image: generateCourse,
                           image2x: generateCourse2x,
                           features: [
-                            __('Whip up a course outline in mere seconds—no sweat, no stress.', 'tutor'),
+                            __('Generate a complete course outline in seconds!', 'tutor'),
                             __(
                               ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
                               'tutor',
                             ),
                             __(
-                              'Want to jazz up your course? Generate images, tweak backgrounds, or even ditch unwanted objects with ease.',
+                              'Generate images, customize backgrounds, and even remove unwanted objects with ease.',
                               'tutor',
                             ),
-                            __('Say goodbye to pricey grammar checkers—copy editing is now a breeze!', 'tutor'),
+                            __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
                           ],
                           footer: (
                             <Button
@@ -488,7 +487,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={__('Supported file formats .mp4', 'tutor')}
+              infoText={__('Supported file format: .mp4', 'tutor')}
               supportedFormats={['mp4']}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />

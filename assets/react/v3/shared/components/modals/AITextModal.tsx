@@ -36,6 +36,8 @@ interface AITextModalProps<T extends FieldValues> extends ModalProps {
   field: ControllerRenderProps<T, Path<T>>;
   fieldState: ControllerFieldState;
   is_html?: boolean;
+  fieldLabel?: string;
+  fieldPlaceholder?: string;
 }
 
 export interface GenerateTextFieldProps {
@@ -53,6 +55,8 @@ const AITextModal = <T extends FieldValues>({
   field,
   fieldState,
   is_html = false,
+  fieldLabel = '',
+  fieldPlaceholder = '',
 }: AITextModalProps<T>) => {
   const form = useFormWithGlobalError<GenerateTextFieldProps>({
     defaultValues: {
@@ -152,8 +156,11 @@ const AITextModal = <T extends FieldValues>({
               render={(props) => (
                 <FormTextareaInput
                   {...props}
-                  label={__('Describe your text', 'tutor')}
-                  placeholder={__('Write 5 words to describe...', 'tutor')}
+                  label={fieldLabel || __('Craft Your Course Description', 'tutor')}
+                  placeholder={
+                    fieldPlaceholder ||
+                    __('Provide a brief overview of your course topic, target audience, and key takeaways', 'tutor')
+                  }
                   rows={4}
                   isMagicAi
                 />

@@ -190,8 +190,8 @@ export const ImageGeneration = () => {
               render={(props) => (
                 <FormTextareaInput
                   {...props}
-                  label={__('Describe your image', 'tutor')}
-                  placeholder={__('Write 5 words to describe...', 'tutor')}
+                  label={__('Visualize Your Course', 'tutor')}
+                  placeholder={__('Describe the image you want for your course thumbnail', 'tutor')}
                   rows={4}
                   isMagicAi
                   disabled={magicImageGenerationMutation.isPending}

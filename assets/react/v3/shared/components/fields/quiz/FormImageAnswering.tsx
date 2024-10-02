@@ -233,7 +233,7 @@ const FormImageAnswering = ({
                   ref={inputRef}
                   type="text"
                   css={styles.optionInput}
-                  placeholder={__('Answer input value...', 'tutor')}
+                  placeholder={__('Input answer here', 'tutor')}
                   value={inputValue.answer_title}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -270,8 +270,9 @@ const FormImageAnswering = ({
                 <div css={styles.inputHints}>
                   <SVGIcon name="info" height={20} width={20} />
                   <p>
-                    {__('The answers that students enter should match with this text. Write in ', 'tutor')}
+                    {__('Students need to type their answers exactly as you write them here. Use ', 'tutor')}
                     <span css={{ fontWeight: fontWeight.semiBold }}>{__('small caps', 'tutor')}</span>
+                    {__(' when writing the answer.', 'tutor')}
                   </p>
                 </div>
               </div>

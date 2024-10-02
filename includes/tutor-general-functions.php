@@ -1531,6 +1531,24 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_get_locale_price' ) ) {
+	/**
+	 * Get price as per locale format
+	 *
+	 * For locale settings currency code will be used
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $price Raw price.
+	 *
+	 * @return mixed raw price.
+	 */
+	function tutor_get_locale_price( $price ) {
+		// TODO: implement price formation.
+		return $price;
+	}
+}
+
 if ( ! function_exists( 'tutor_is_json' ) ) {
 	/**
 	 * Check a string is valid JSON.

@@ -58,7 +58,7 @@ class Settings {
 							'label'      => __( 'Cart Page', 'tutor' ),
 							'default'    => '0',
 							'options'    => $pages,
-							'desc'       => __( 'Select the page to be used as the cart page.', 'tutor' ),
+							'desc'       => __( 'Select the page you wish to set as the cart page.', 'tutor' ),
 							'searchable' => true,
 						),
 					),
@@ -183,9 +183,9 @@ class Settings {
 						array(
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
 							'type'    => 'toggle_switch',
-							'label'   => __( 'Apply Coupon Code', 'tutor' ),
+							'label'   => __( 'Enable Coupon Code', 'tutor' ),
 							'default' => 'off',
-							'desc'    => __( 'Enable this to accept payments via Stripe.', 'tutor' ),
+							'desc'    => __( 'Enable this option to allow users to apply a coupon code while checkout.', 'tutor' ),
 						),
 					),
 				),
@@ -200,7 +200,7 @@ class Settings {
 							'label'      => __( 'Refund Policy', 'tutor' ),
 							'default'    => 0,
 							'options'    => $pages,
-							'desc'       => __( 'Choose the page for instructor registration.', 'tutor' ),
+							'desc'       => __( 'Choose the page for refund policy.', 'tutor' ),
 							'searchable' => true,
 						),
 						array(
@@ -209,7 +209,7 @@ class Settings {
 							'label'      => __( 'Privacy Policy', 'tutor' ),
 							'default'    => 0,
 							'options'    => $pages,
-							'desc'       => __( 'Choose the page for student registration.', 'tutor' ),
+							'desc'       => __( 'Choose the page for privacy policy.', 'tutor' ),
 							'searchable' => true,
 						),
 					),
@@ -511,15 +511,9 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'             => 'Paypal',
+				'label'             => 'PayPal',
 				'is_active'         => self::is_active( 'paypal' ),
 				'icon'              => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
-				'support_recurring' => true,
-			),
-			'stripe' => array(
-				'label'             => 'Stripe',
-				'is_active'         => self::is_active( 'stripe' ),
-				'icon'              => esc_url_raw( tutor()->url . 'assets/images/stripe.svg' ),
 				'support_recurring' => true,
 			),
 		);
@@ -601,7 +595,8 @@ class Settings {
 			'paypal_merchant_email' => 'email',
 			'paypal_client_id'      => 'text',
 			'paypal_client_secret'  => 'password',
-			'paypal_webhook_id'     => 'text',
+			'paypal_webhook_id'     => 'password',
+			'paypal_webhook_url'    => 'webhook_url',
 		);
 	}
 
@@ -618,6 +613,7 @@ class Settings {
 			'stripe_secret_key'            => 'password',
 			'stripe_public_key'            => 'password',
 			'stripe_webhook_signature_key' => 'password',
+			'stripe_webhook_url'           => 'webhook_url',
 		);
 	}
 
@@ -739,6 +735,22 @@ class Settings {
 		} else {
 			return '$';
 		}
+	}
+
+	/**
+	 * Get webhook fields
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_webhook_fields(): array {
+		$arr = array(
+			'stripe_webhook_signature_key',
+			'paypal_webhook_id',
+		);
+
+		return apply_filters( 'tutor_ecommerce_webhook_fields', $arr );
 	}
 
 }

@@ -84,6 +84,11 @@ const FormTextareaInput = ({
             field,
             fieldState,
             is_html: true,
+            fieldLabel: __('Craft Your Course Description', 'tutor'),
+            fieldPlaceholder: __(
+              'Provide a brief overview of your course topic, target audience, and key takeaways',
+              'tutor',
+            ),
           },
         });
       }}

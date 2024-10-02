@@ -20,7 +20,6 @@ $max_length    = isset( $field['maxlength'] ) ? (int) $field['maxlength'] : 0;
 ?>
 <div class="tutor-option-field-row" id="<?php echo esc_attr( $field_id ); ?>">
 	<?php require tutor()->path . 'views/options/template/common/field_heading.php'; ?>
-
 	<div class="tutor-option-field-input">
 		<div class="tutor-type-password">
 			<input type="password" 
@@ -33,5 +32,6 @@ $max_length    = isset( $field['maxlength'] ) ? (int) $field['maxlength'] : 0;
 					value="<?php echo esc_attr( isset( $value ) ? $value : '' ); ?>" />
 			<button type="button"><i class="tutor-icon-eye-slash-bold"></i></button>
 		</div>
+
 	</div>
 </div>

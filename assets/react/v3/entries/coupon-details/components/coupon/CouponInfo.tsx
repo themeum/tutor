@@ -52,7 +52,7 @@ function CouponInfo() {
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Coupon Info', 'tutor')}</BoxTitle>
         <BoxSubtitle>
-          {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
+          {__('Boost your sales and attract new learners by offering discounts on your courses with coupons.', 'tutor')}
         </BoxSubtitle>
       </div>
       <Controller

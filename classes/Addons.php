@@ -52,19 +52,19 @@ class Addons {
 			),
 			'content-drip'             => array(
 				'name'        => __( 'Content Drip', 'tutor' ),
-				'description' => 'Unlock lessons by schedule or when the student meets specific condition.',
+				'description' => 'Unlock lessons by schedule or when students meet a specific condition.',
 			),
 			'tutor-multi-instructors'  => array(
 				'name'        => __( 'Tutor Multi Instructors', 'tutor' ),
-				'description' => 'Start a course with multiple instructors by Tutor Multi Instructors',
+				'description' => 'Collaborate and add multiple instructors to a course.',
 			),
 			'tutor-assignments'        => array(
 				'name'        => __( 'Tutor Assignments', 'tutor' ),
-				'description' => 'Tutor assignments is a great way to assign tasks to students.',
+				'description' => 'Assess student learning with assignments.',
 			),
 			'tutor-course-preview'     => array(
 				'name'        => __( 'Tutor Course Preview', 'tutor' ),
-				'description' => 'Unlock some lessons for students before enrollment.',
+				'description' => 'Offer free previews of specific lessons before enrollment.',
 			),
 			'tutor-course-attachments' => array(
 				'name'        => __( 'Tutor Course Attachments', 'tutor' ),
@@ -72,27 +72,27 @@ class Addons {
 			),
 			'google-meet'              => array(
 				'name'        => __( 'Tutor Google Meet Integration', 'tutor' ),
-				'description' => __( 'Connect Tutor LMS with Google Meet to host live online classes. Students can attend live classes right from the lesson page.', 'tutor' ),
+				'description' => __( 'Host live classes with Google Meet, directly from your lesson page.', 'tutor' ),
 			),
 			'tutor-report'             => array(
 				'name'        => __( 'Tutor Report', 'tutor' ),
-				'description' => 'Check your course performance through Tutor Report stats.',
+				'description' => __('Check your course performance through Tutor Report stats.', 'tutor'),
 			),
 			'tutor-email'              => array(
 				'name'        => __( 'Email', 'tutor' ),
-				'description' => 'Send email on various tutor events',
+				'description' => __('Send automated and customized emails for various Tutor events.', 'tutor'),
 			),
 			'calendar'                 => array(
 				'name'        => 'Calendar',
-				'description' => 'Allow students to see everything in a calendar view in the front dashboard.',
+				'description' => __('Enable to let students view all your course events in one place.', 'tutor'),
 			),
 			'tutor-notifications'      => array(
 				'name'        => 'Notifications',
-				'description' => 'Get On Site and Push Notifications on specified tutor events.',
+				'description' => __('Keep students and instructors notified of course events on their dashboard.', 'tutor'),
 			),
 			'google-classroom'         => array(
 				'name'        => __( 'Google Classroom Integration', 'tutor' ),
-				'description' => __( 'Helps connect Google Classrooms with Tutor LMS courses, allowing you to use features like Classroom streams and files directly from the Tutor LMS course.', 'tutor' ),
+				'description' => __( 'Enable to integrate Tutor LMS with Google Classroom.', 'tutor' ),
 			),
 			'tutor-zoom'               => array(
 				'name'        => __( 'Tutor Zoom Integration', 'tutor' ),
@@ -104,35 +104,35 @@ class Addons {
 			),
 			'enrollments'              => array(
 				'name'        => __( 'Enrollment', 'tutor' ),
-				'description' => 'Take advanced control on enrollment. Enroll the student manually.',
+				'description' => __('Enable to manually enroll students in your courses.', 'tutor'),
 			),
 			'tutor-certificate'        => array(
 				'name'        => __( 'Tutor Certificate', 'tutor' ),
-				'description' => 'Students will be able to download a certificate after course completion.',
+				'description' => __('Enable to award certificates upon course completion.', 'tutor'),
 			),
 			'gradebook'                => array(
 				'name'        => __( 'Gradebook', 'tutor' ),
-				'description' => 'Shows student progress from assignment and quiz',
+				'description' => __('Track student progress with a centralized gradebook.', 'tutor'),
 			),
 			'tutor-prerequisites'      => array(
 				'name'        => __( 'Tutor Prerequisites', 'tutor' ),
-				'description' => 'Specific course you must complete before you can enroll new course by Tutor Prerequisites',
+				'description' => __('Set course prerequisites to guide learning paths effectively.', 'tutor'),
 			),
 			'buddypress'               => array(
 				'name'        => __( 'BuddyPress', 'tutor' ),
-				'description' => 'Discuss about course and share your knowledge with your friends through BuddyPress',
+				'description' => __('Boost engagement with social features through BuddyPress for Tutor LMS.', 'tutor'),
 			),
 			'wc-subscriptions'         => array(
 				'name'        => __( 'WooCommerce Subscriptions', 'tutor' ),
-				'description' => 'Capture Residual Revenue with Recurring Payments.',
+				'description' => __('Capture Residual Revenue with Recurring Payments.', 'tutor'),
 			),
 			'pmpro'                    => array(
 				'name'        => __( 'Paid Memberships Pro', 'tutor' ),
-				'description' => 'Maximize revenue by selling membership access to all of your courses.',
+				'description' => __('Maximize revenue by selling membership access to all of your courses.', 'tutor'),
 			),
 			'restrict-content-pro'     => array(
 				'name'        => __( 'Restrict Content Pro', 'tutor' ),
-				'description' => 'Unlock Course depending on Restrict Content Pro Plugin Permission.',
+				'description' => __('Enable to manage content access through Restrict Content Pro. ', 'tutor'),
 			),
 			'tutor-weglot'             => array(
 				'name'        => 'Weglot',

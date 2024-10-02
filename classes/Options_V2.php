@@ -697,7 +697,7 @@ class Options_V2 {
 							array(
 								'key'         => 'instructor_can_publish_course',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Allow Instructors To Publish Courses', 'tutor' ),
+								'label'       => __( 'Allow Instructors to Publish Courses', 'tutor' ),
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'Enable instructors to publish the course directly. If disabled, admins will be able to review course content before publishing.', 'tutor' ),
@@ -708,7 +708,7 @@ class Options_V2 {
 								'label'       => __( 'Allow Instructors to Trash Courses', 'tutor' ),
 								'label_title' => '',
 								'default'     => 'on',
-								'desc'        => __( 'Enable to allow instructors to trash courses. Disable to prevent them from trashing courses.', 'tutor' ),
+								'desc'        => __( 'Enable this setting to allow instructors to delete courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'enable_become_instructor_btn',
@@ -760,7 +760,7 @@ class Options_V2 {
 							array(
 								'key'         => 'wc_automatic_order_complete_redirect_to_courses',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Auto redirect to courses', 'tutor' ),
+								'label'       => __( 'Auto Redirect to Courses', 'tutor' ),
 								'default'     => 'off',
 								'label_title' => '',
 								'desc'        => __( 'When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor' ),
@@ -768,7 +768,7 @@ class Options_V2 {
 							array(
 								'key'         => 'enable_spotlight_mode',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Spotlight mode', 'tutor' ),
+								'label'       => __( 'Spotlight Mode', 'tutor' ),
 								'default'     => 'off',
 								'label_title' => '',
 								'desc'        => __( 'This will hide the header and the footer and enable spotlight (full screen) mode when students view lessons.', 'tutor' ),
@@ -776,7 +776,7 @@ class Options_V2 {
 							array(
 								'key'         => 'auto_course_complete_on_all_lesson_completion',
 								'type'        => 'toggle_switch',
-								'label'       => __( 'Auto Complete Course on all Lesson Completion', 'tutor' ),
+								'label'       => __( 'Auto Complete Course on All Lesson Completion', 'tutor' ),
 								'default'     => 'off',
 								'label_title' => '',
 								'desc'        => __( 'If enabled, an Enrolled Course will be automatically completed if all its Lessons, Quizzes, and Assignments are already completed by the Student', 'tutor' ),
@@ -863,7 +863,7 @@ class Options_V2 {
 							array(
 								'key'     => 'quiz_answer_display_time',
 								'type'    => 'number',
-								'label'   => __( 'Correct Answer Display Time (when Reveal Mode is enabled)', 'tutor' ),
+								'label'   => __( 'Correct Answer Display Time (When Reveal Mode is enabled)', 'tutor' ),
 								'default' => '2',
 								'desc'    => __( 'Put the answer display time in seconds', 'tutor' ),
 							),
@@ -871,7 +871,7 @@ class Options_V2 {
 								'key'         => 'quiz_attempts_allowed',
 								'type'        => 'number',
 								'number_type' => 'integer',
-								'label'       => __( 'Default Quiz Attempt limit (when Retry Mode is enabled)', 'tutor' ),
+								'label'       => __( 'Default Quiz Attempt limit (When Retry Mode is enabled)', 'tutor' ),
 								'default'     => '10',
 								'desc'        => __( 'The highest number of attempts allowed for students to participate a quiz. 0 means unlimited. This will work as the default Quiz Attempt limit in case of Quiz Retry Mode.', 'tutor' ),
 							),
@@ -931,7 +931,7 @@ class Options_V2 {
 								'key'            => 'monetize_by',
 								'type'           => 'select',
 								'label'          => __( 'Select eCommerce Engine', 'tutor' ),
-								'select_options' => true,
+								'select_options' => false,
 								'options'        => apply_filters(
 									'tutor_monetization_options',
 									array(
@@ -939,7 +939,7 @@ class Options_V2 {
 									)
 								),
 								'default'        => 'free',
-								'desc'           => __( 'Select a monetization option to generate revenue by selling courses. Supports: WooCommerce, Easy Digital Downloads, Paid Memberships Pro', 'tutor' ),
+								'desc'           => __( 'Select a monetization option to generate revenue by selling courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'tutor_woocommerce_order_auto_complete',
@@ -1650,9 +1650,10 @@ class Options_V2 {
 							array(
 								'key'     => 'lesson_video_duration_youtube_api_key',
 								'type'    => 'text',
-								'label'   => __( 'Youtube API Key', 'tutor' ),
+								'label'   => __( 'YouTube API Key', 'tutor' ),
 								'default' => '',
-								'desc'    => __( 'Insert the YouTube API key to host live videos using YouTube.', 'tutor' ),
+								'desc'    => __( 'To host live videos on your platform using YouTube, enter your YouTube API key.
+Text inside the box: Insert API key here.', 'tutor' ),
 							),
 						),
 					),
@@ -1719,7 +1720,7 @@ class Options_V2 {
 								'label'       => __( 'Maintenance Mode', 'tutor' ),
 								'label_title' => '',
 								'default'     => 'off',
-								'desc'        => __( 'Enabling the maintenance mode allows you to display a custom message on the frontend. During this time, visitors can not access the site content. But the wp-admin dashboard will remain accessible.', 'tutor' ),
+								'desc'        => __( 'Enabling maintenance mode will display a custom message on the frontend. During maintenance mode, visitors cannot access site content, but the wp-admin dashboard remains accessible.', 'tutor' ),
 							),
 						),
 					),

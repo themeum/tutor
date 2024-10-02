@@ -16,9 +16,10 @@ use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CartController;
 use TUTOR\Input;
 
-$user_id      = get_current_user_id();
+$user_id = get_current_user_id();
 
-$tutor_toc_page_link = tutor_utils()->get_toc_page_link();
+$tutor_toc_page_link     = tutor_utils()->get_toc_page_link();
+$tutor_privacy_page_link = null; // @TODO: Need to implement later.
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
@@ -110,11 +111,18 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						<div class="tutor-payment-instructions tutor-d-none"></div>
 
 						<?php if ( null !== $tutor_toc_page_link ) : ?>
-							<div class="tutor-mb-16 tutor-mt-40">
-								<div class="tutor-form-check">
+							<div class="tutor-mt-40">
+								<div class="tutor-form-check tutor-d-flex">
 									<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
 									<label for="tutor_checkout_agree_to_terms">
-										<?php esc_html_e( 'I agree with the website\'s', 'tutor' ); ?> <a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Terms and Conditions', 'tutor' ); ?></a>
+										<span class="tutor-color-subdued tutor-fw-normal">
+											<?php esc_html_e( 'I agree with the website\'s', 'tutor' ); ?> 
+											<a target="_blank" href="<?php echo esc_url( $tutor_toc_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Terms of Use', 'tutor' ); ?></a> 
+											<?php if ( null !== $tutor_privacy_page_link ) : ?>
+												<?php esc_html_e( 'and', 'tutor' ); ?> 
+												<a target="_blank" href="<?php echo esc_url( $tutor_privacy_page_link ); ?>" class="tutor-color-primary"><?php esc_html_e( 'Privacy Policy', 'tutor' ); ?></a>
+											<?php endif; ?>
+										</span>
 									</label>
 								</div>
 							</div>
@@ -152,7 +160,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						<?php endif; ?>
 						<!-- handle errors end -->
 
-						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
+						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center tutor-mt-16">
 							<?php esc_html_e( 'Pay Now', 'tutor' ); ?>
 						</button>
 					</div>

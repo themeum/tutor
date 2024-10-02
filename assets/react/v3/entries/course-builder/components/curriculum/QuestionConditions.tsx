@@ -91,7 +91,7 @@ const QuestionConditions = () => {
       </div>
 
       <div css={styles.conditions}>
-        <p>{__('Conditions', 'tutor')}</p>
+        <p>{__('Conditions:', 'tutor')}</p>
 
         <div css={styles.conditionControls}>
           <Show when={activeQuestionType === 'multiple_choice'}>

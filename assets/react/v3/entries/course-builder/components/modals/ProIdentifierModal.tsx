@@ -25,7 +25,7 @@ interface ProIdentifierModalProps
 
 const ProIdentifierModal = ({
   title,
-  message = __('This feature isn’t available on your current plan', 'tutor'),
+  message = __('Upgrade your plan to access the AI feature', 'tutor'),
   image,
   featuresTitle,
   features = [],
@@ -90,7 +90,6 @@ const styles = {
   title: css`
     ${typography.heading6('medium')};
     color: ${colorTokens.text.primary};
-    max-width: 400px;
     text-wrap: pretty;
   `,
   image: css`

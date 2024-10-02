@@ -191,9 +191,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                 <Show when={hasError}>
                   <div css={styles.errorMessage}>
                     <SVGIcon name="info" height={20} width={20} />
-                    <p>
-                      {__('Number of answer variables should match the number of {dash}es in the question.', 'tutor')}
-                    </p>
+                    <p>{__('Match the number of answers to the number of blanks {dash} in your question.', 'tutor')}</p>
                   </div>
                 </Show>
                 <div css={styles.inputHints}>

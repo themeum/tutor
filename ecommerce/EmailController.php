@@ -447,7 +447,9 @@ class EmailController {
 			$email_tpl = apply_filters( 'tutor_email_tpl_' . $recipient_type, ob_get_clean() );
 			$message   = html_entity_decode( $this->get_message( $email_tpl, array_keys( $replacable ), array_values( $replacable ) ) );
 
-			$this->send( $user_data->user_email, $subject, $message, $header );
+			$enable_queue = tutor()->has_pro && tutor_utils()->get_option( 'tutor_email_disable_wpcron' );
+
+			$this->send( $user_data->user_email, $subject, $message, $header, array(), $enable_queue );
 		}
 	}
 

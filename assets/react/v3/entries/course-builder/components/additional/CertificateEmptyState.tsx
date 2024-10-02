@@ -29,20 +29,20 @@ const CertificateEmptyState = () => {
 
       <div css={styles.featureAndActionWrapper}>
         <Show when={!isTutorPro}>
-          <h5 css={styles.title}>{__('Your students deserve certificates!', 'tutor')}</h5>
+          <h5 css={styles.title}>{__('Award Students with Custom Certificates', 'tutor')}</h5>
         </Show>
         <div css={styles.featuresWithTitle}>
           <Show
             when={!isTutorPro}
             fallback={
               <h6 css={typography.heading6('medium')}>
-                {__('You can use this feature by enabling Certificate Addon', 'tutor')}
+                {__('Activate the “Certificate” addon to use this feature.', 'tutor')}
               </h6>
             }
           >
             <div>
               {__(
-                `Elevate your students' achievements with a custom certificate! Use our certificate builder to  Inspire them with a touch of credibility and recognition tailored just for them.`,
+                'Celebrate success with personalized certificates. Recognize student achievements with unique designs that inspire and motivate students.',
                 'tutor',
               )}
             </div>
