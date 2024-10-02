@@ -44,8 +44,14 @@ const questionTypeIconMap: Record<Exclude<QuizQuestionType, 'single_choice' | 'i
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOverlay = false }: QuestionProps) => {
-  const { activeQuestionIndex, activeQuestionId, validationError, setActiveQuestionId, setValidationError } =
-    useQuizModalContext();
+  const {
+    activeQuestionIndex,
+    activeQuestionId,
+    validationError,
+    setActiveQuestionId,
+    setValidationError,
+    contentType,
+  } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
   const [isThreeDotOpen, setIsThreeDotOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -162,7 +168,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         hideArrow
         data-three-dots
       >
-        {!validationError && (
+        {!validationError && contentType !== 'tutor_h5p_quiz' && (
           <ThreeDots.Option
             text={
               <div css={styles.duplicate}>
