@@ -216,7 +216,7 @@ const FormWPEditor = ({
             <Show
               when={editorUsed.name === 'classic' && !loading}
               fallback={
-                <div css={styles.editorOverlay}>
+                <div css={styles.editorOverlay(!loading)}>
                   {loading ? (
                     <LoadingOverlay />
                   ) : (
@@ -294,10 +294,10 @@ const styles = {
     display: flex;
     align-items: center;
   `,
-  editorOverlay: css`
+  editorOverlay: (isLoading: boolean) => css`
     height: 360px;
     ${styleUtils.flexCenter()};
-    background-color: ${rgba(colorTokens.background.modal, 0.6)};
+    background-color: ${isLoading ? rgba(colorTokens.background.modal, 0.6) : 'transparent'};
     border-radius: ${borderRadius.card};
   `,
   editWithButton: css`
