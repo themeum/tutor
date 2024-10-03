@@ -429,7 +429,6 @@ const styles = {
   
       [data-check-button] {
         opacity: 0;
-        pointer-events: none;
         color: ${colorTokens.icon.default};
         ${
           !isMultipleChoice &&
