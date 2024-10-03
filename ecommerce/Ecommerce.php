@@ -152,10 +152,6 @@ class Ecommerce {
 	 */
 	public static function payment_gateways_with_ref( $gateway = null ) {
 		$arr = array(
-			'stripe' => array(
-				'gateway_class' => StripeGateway::class,
-				'config_class'  => StripeConfig::class,
-			),
 			'paypal' => array(
 				'gateway_class' => PaypalGateway::class,
 				'config_class'  => PaypalConfig::class,

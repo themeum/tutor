@@ -208,9 +208,10 @@ class Settings {
 			),
 		);
 
+		$arr = apply_filters( 'tutor_after_ecommerce_settings', $arr );
 		$fields['monetization']['submenu'] = $arr;
 
-		return apply_filters( 'tutor_after_ecommerce_settings', $fields );
+		return $fields;
 	}
 
 	/**
@@ -414,7 +415,7 @@ class Settings {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $settings Tutor settings.
+	 * @param array $settings Ecommerce payment settings.
 	 *
 	 * @return array
 	 */
@@ -426,7 +427,7 @@ class Settings {
 			'fields'     => array(),
 		);
 
-		array_push( $settings['monetization']['submenu']['ecommerce_payment']['blocks'], $payment_gateway );
+		array_push( $settings['ecommerce_payment']['blocks'], $payment_gateway );
 
 		foreach ( self::get_default_automate_payment_gateways() as $key => $gateway ) {
 
@@ -446,7 +447,6 @@ class Settings {
 					'label_title'   => '',
 					'default'       => 'off',
 					/* translators: %s: gateway name */
-					'desc'          => sprintf( __( 'Enable %s payment', 'tutor' ), $gateway['label'] ),
 					'toggle_fields' => implode( ',', array_keys( self::$config_keys_method() ) ),
 				),
 			);
@@ -457,7 +457,7 @@ class Settings {
 			$new_gateway['fields'] = $fields;
 
 			// Append new gateways inside ecommerce payment.
-			$settings['monetization']['submenu']['ecommerce_payment']['blocks'][] = $new_gateway;
+			$settings['ecommerce_payment']['blocks'][] = $new_gateway;
 		}
 
 		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
@@ -467,7 +467,7 @@ class Settings {
 			'action'     => 'add_more_automate_payment_gateway',
 		);
 
-		array_push( $settings['monetization']['submenu']['ecommerce_payment']['blocks'], $add_more_gateway );
+		array_push( $settings['ecommerce_payment']['blocks'], $add_more_gateway );
 
 		// Manual Payments.
 		$manual_gateways = array(
@@ -477,12 +477,12 @@ class Settings {
 			'fields'     => array(),
 		);
 
-		array_push( $settings['monetization']['submenu']['ecommerce_payment']['blocks'], $manual_gateways );
+		array_push( $settings['ecommerce_payment']['blocks'], $manual_gateways );
 
 		$manual_gateways = self::get_manual_payment_setting_fields();
 
 		foreach ( $manual_gateways as $gateway ) {
-			array_push( $settings['monetization']['submenu']['ecommerce_payment']['blocks'], $gateway );
+			array_push( $settings['ecommerce_payment']['blocks'], $gateway );
 		}
 
 		$add_btn = array(
@@ -490,7 +490,7 @@ class Settings {
 			'action'     => 'add_manual_payment_btn',
 		);
 
-		array_push( $settings['monetization']['submenu']['ecommerce_payment']['blocks'], $add_btn );
+		array_push( $settings['ecommerce_payment']['blocks'], $add_btn );
 
 		return $settings;
 	}
@@ -592,23 +592,6 @@ class Settings {
 			'paypal_client_secret'  => 'password',
 			'paypal_webhook_id'     => 'password',
 			'paypal_webhook_url'    => 'webhook_url',
-		);
-	}
-
-	/**
-	 * Get stripe config keys
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_stripe_config_keys() {
-		return array(
-			'stripe_environment'           => 'environment',
-			'stripe_secret_key'            => 'password',
-			'stripe_public_key'            => 'password',
-			'stripe_webhook_signature_key' => 'password',
-			'stripe_webhook_url'           => 'webhook_url',
 		);
 	}
 
