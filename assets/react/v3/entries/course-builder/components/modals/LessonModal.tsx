@@ -581,7 +581,7 @@ const styles = {
     }
 
     :disabled {
-      cursor: default;
+      cursor: not-allowed;
       position: relative;
       top: auto;
       left: auto;
