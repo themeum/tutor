@@ -162,7 +162,7 @@ tutor_load_template(
 								<?php esc_html_e( 'About Lesson', 'tutor' ); ?>
 							</div>
 							<?php
-							if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+							if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 								$content_id = \TutorPro\H5P\Utils::get_h5p_shortcodes( $post->post_content );
 								?>
 								<?php if ( $content_id > 0 ) : ?>

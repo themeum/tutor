@@ -735,7 +735,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											?>
 												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
 												<?php
-												if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) && 'h5p' === $answer->question_type ) {
+												if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() && 'h5p' === $answer->question_type ) {
 													$attempt_results     = \TutorPro\H5P\Utils::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
 													$has_attempt_results = is_array( $attempt_results ) && count( $attempt_results );
 													$has_response        = true;
@@ -812,7 +812,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 			</table>
 		</div>
 		<?php
-		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 			?>
 			<div class="tutor-modal tutor-modal-scrollable<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?> h5p-quiz-result-modal">
 				<div class="tutor-modal-overlay"></div>

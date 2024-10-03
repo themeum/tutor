@@ -134,7 +134,7 @@
 						}
 					}
 
-					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 						if ( 'h5p' === $question->question_type ) {
 							$h5p_short_code = '[h5p id=' . $question->question_description . ']';
 							echo do_shortcode( $h5p_short_code );
@@ -192,7 +192,7 @@
 					}
 
 					// H5P.
-					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 						if ( 'h5p' === $question_type ) {
 							require \TutorPro\H5P\Utils::addon_config()->path . 'views/h5p-question-answer.php';
 						}

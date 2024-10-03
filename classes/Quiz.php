@@ -594,7 +594,7 @@ class Quiz {
 				//phpcs:enable
 
 				// Check if h5p addon is enabled.
-				if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+				if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 					// Update the total marks to include the marks from h5p questions.
 					foreach ( $question_ids as $question_id ) {
 						$question       = QuizModel::get_quiz_question_by_id( $question_id );
@@ -808,7 +808,7 @@ class Quiz {
 						$review_required            = true;
 					}
 					// Check if h5p addon is enabled.
-					if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 						// Check if it is a h5p question.
 						if ( 'h5p' === $question_type ) {
 							$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );

@@ -367,7 +367,7 @@ class Lesson extends Tutor_Base {
 			$content = __( 'Assignment', 'tutor' );
 		}
 
-		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
 		}
 

@@ -447,7 +447,7 @@ class CourseModel {
 			return false;
 		}
 
-		if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( $post_id, 0 );
 		}
 
@@ -473,7 +473,7 @@ class CourseModel {
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
 
-						if ( tutor_utils()->get_option( '_tutor_h5p_enabled' ) ) {
+						if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
 							\TutorPro\H5P\Utils::delete_h5p_quiz_statements_by_id( $content_id );
 						}
 
