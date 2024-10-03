@@ -256,7 +256,9 @@ const LessonModal = ({
                       <div css={styles.addH5PContentWrapper({ hasLessonId: !!lessonId })}>
                         <ProBadge>
                           <button
-                            css={styles.addH5PContentButton({ hasLessonId: !!lessonId })}
+                            css={styles.addH5PContentButton({
+                              isWpEditorEnabled: !!lessonId && isClassicEditorEnabled,
+                            })}
                             type="button"
                             disabled
                             onClick={noop}
@@ -269,7 +271,7 @@ const LessonModal = ({
                   }
                 >
                   <button
-                    css={styles.addH5PContentButton({ hasLessonId: !!lessonId })}
+                    css={styles.addH5PContentButton({ isWpEditorEnabled: !!lessonId && isClassicEditorEnabled })}
                     type="button"
                     onClick={() => {
                       showModal({
@@ -554,7 +556,7 @@ const styles = {
     top: ${hasLessonId ? '36px' : '28px'};
     left: 110px;
   `,
-  addH5PContentButton: ({ hasLessonId }: { hasLessonId: boolean }) => css`
+  addH5PContentButton: ({ isWpEditorEnabled: hasLessonId }: { isWpEditorEnabled: boolean }) => css`
     position: absolute;
     top: ${hasLessonId ? '36px' : '28px'};
     left: 110px;
