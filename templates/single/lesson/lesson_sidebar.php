@@ -114,11 +114,11 @@ if ( $topics->have_posts() ) {
 					if ( 'tutor_quiz' === $post->post_type ) {
 						$quiz = $post;
 						$quiz_option = get_post_meta( $post->ID, Quiz::META_QUIZ_OPTION, true );
-						// check if h5p quiz and if the h5p addon is enabled
+						// Check if h5p quiz and if the h5p addon is enabled.
 						$is_h5p_quiz = isset( $quiz_option['quiz_type'] ) && 'tutor_h5p_quiz' === $quiz_option['quiz_type'];
 						?>
-						<?php if( $is_h5p_quiz ): ?>
-						<?php if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ): ?>
+						<?php if ( $is_h5p_quiz ) : ?>
+						<?php if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) : ?>
 						<div class="tutor-course-topic-item tutor-course-topic-item-quiz<?php echo ( get_the_ID() == $current_post->ID ) ? ' is-active' : ''; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 							<a href="<?php echo $show_permalink ? esc_url( get_permalink( $quiz->ID ) ) : '#'; ?>" data-quiz-id="<?php echo esc_attr( $quiz->ID ); ?>">
 								<div class="tutor-d-flex tutor-mr-32">

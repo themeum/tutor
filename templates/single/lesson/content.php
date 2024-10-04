@@ -175,8 +175,8 @@ tutor_load_template(
 										<?php the_content(); ?>
 									</div>
 								<?php endif; ?>
-								<?
-							} else{
+								<?php
+							} else {
 								?>
 								<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
 									<?php the_content(); ?>
