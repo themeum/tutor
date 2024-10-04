@@ -51,12 +51,12 @@ class Addons {
 	 * @since 3.0.0
 	 *
 	 * @param string $basename basename of addon.
-	 * @param bool $status status 0,1.
+	 * @param bool   $status status 0,1.
 	 * @return void
 	 */
 	public static function update_addon_status( $basename, $status ) {
 		$config = self::get_addons_config();
-		if ( isset( $config[ $basename ]  ) ) {
+		if ( isset( $config[ $basename ] ) ) {
 			$config[ $basename ]['is_enable'] = $status;
 			update_option( self::OPTION_KEY, $config );
 		}
