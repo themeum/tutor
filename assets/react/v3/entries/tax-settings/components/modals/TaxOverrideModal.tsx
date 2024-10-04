@@ -1,15 +1,17 @@
-import { ModalProps } from '@/v3/shared/components/modals/Modal';
+import { type ModalProps, useModal } from '@/v3/shared/components/modals/Modal';
+import Show from '@/v3/shared/controls/Show';
 import Button from '@Atoms/Button';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { colorPalate, shadow, spacing } from '@Config/styles';
-import { css } from '@emotion/react';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { europeanUnionData, getCountryByCode, getStateByCode, isEuropeanUnion } from '@Utils/countries';
 import { requiredRule } from '@Utils/validation';
+import { css } from '@emotion/react';
 import { useEffect } from 'react';
-import { Controller, UseFormReturn } from 'react-hook-form';
-import { OverrideOn, TaxSettings } from '../../services/tax';
+import { Controller, type UseFormReturn } from 'react-hook-form';
+import { type CountryOverrideType, OverrideOn, type TaxSettings } from '../../services/tax';
+import TaxModalWrapper from './TaxModalWrapper';
 
 interface TaxOverrideModalProps extends ModalProps {
   form: UseFormReturn<TaxSettings>;
@@ -44,26 +46,26 @@ const TaxOverrideModal = ({ form, closeModal, title, overrideType = OverrideOn.s
 
   const isEU = isEuropeanUnion(activeCountryCode ?? '');
   const isSingleCountry = activeCountryRate.isSameRate || (!isEU && !activeCountryRate.states.length);
-  let selectionType: CountryOverrideType = isSingleCountry ? 'region' : 'state';
+  const selectionType: CountryOverrideType = isSingleCountry ? 'region' : 'state';
 
   let locationOptions = activeCountryRate.states
     .filter((state) => {
       if (overrideOn === OverrideOn.products) {
         return !state.overrideValues?.some(
           (overrideValue) =>
-            overrideValue.location == `${state.id}` &&
+            overrideValue.location === `${state.id}` &&
             overrideValue.overrideOn === overrideOn &&
-            overrideValue.category == selectedCategory,
-        );
-      } else {
-        return !state.overrideValues?.some(
-          (overrideValue) => overrideValue.location == `${state.id}` && overrideValue.overrideOn === overrideOn,
+            overrideValue.category === selectedCategory,
         );
       }
+
+      return !state.overrideValues?.some(
+        (overrideValue) => overrideValue.location === `${state.id}` && overrideValue.overrideOn === overrideOn,
+      );
     })
     .map((state) => ({
       label: isEU
-        ? europeanUnionData.states.find((euState) => euState.numeric_code == state.id)?.name ?? ''
+        ? europeanUnionData.states.find((euState) => euState.numeric_code === state.id)?.name ?? ''
         : getStateByCode(activeCountryCode ?? '', Number(state.id))?.name ?? '',
       value: state.id,
     }));
@@ -73,12 +75,12 @@ const TaxOverrideModal = ({ form, closeModal, title, overrideType = OverrideOn.s
       overrideOn === OverrideOn.products
         ? activeCountryRate.overrideValues?.some(
             (overrideValue) =>
-              overrideValue.location == activeCountryCode &&
+              overrideValue.location === activeCountryCode &&
               overrideValue.overrideOn === overrideOn &&
-              overrideValue.category == selectedCategory,
+              overrideValue.category === selectedCategory,
           )
         : activeCountryRate.overrideValues?.some(
-            (overrideValue) => overrideValue.location == activeCountryCode && overrideValue.overrideOn === overrideOn,
+            (overrideValue) => overrideValue.location === activeCountryCode && overrideValue.overrideOn === overrideOn,
           );
 
     if (alreadySelected) {
@@ -99,12 +101,17 @@ const TaxOverrideModal = ({ form, closeModal, title, overrideType = OverrideOn.s
     };
   }
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     taxOverrideForm.setValue('overrideOn', overrideType);
   }, [overrideType]);
 
   return (
-    <ModalWrapper onClose={handleModalClose({ action: 'CLOSE' })} title={title} modalStyle={styles.modalWrapperStyle}>
+    <TaxModalWrapper
+      onClose={handleModalClose({ action: 'CLOSE' })}
+      title={title}
+      modalStyle={styles.modalWrapperStyle}
+    >
       <form
         onSubmit={taxOverrideForm.handleSubmit(async (values) => {
           const updatedValues = { ...values, type: selectionType };
@@ -188,7 +195,7 @@ const TaxOverrideModal = ({ form, closeModal, title, overrideType = OverrideOn.s
           </Button>
         </div>
       </form>
-    </ModalWrapper>
+    </TaxModalWrapper>
   );
 };
 

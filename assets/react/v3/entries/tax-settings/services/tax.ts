@@ -1,4 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { wpAjaxInstance } from "@/v3/shared/utils/api";
+import endpoints from "@/v3/shared/utils/endpoints";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export enum EUTaxRegistrationTypes {
   oneStop = 'one-stop',
@@ -118,5 +120,17 @@ export const useTaxSettingsQuery = () => {
 	return useQuery({
 		queryKey: ['TaxSettings'],
 		queryFn: getTaxSettings
+	});
+}
+
+
+
+const saveTaxSettings = () => {
+	return wpAjaxInstance.post(endpoints.SAVE_TAX_SETTINGS);
+}
+
+export const useSaveTaxSettingsMutation = () => {
+	return useMutation({
+		mutationFn: saveTaxSettings
 	});
 }

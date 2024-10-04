@@ -9,6 +9,7 @@
  */
 
 use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\Supports\Shop;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
@@ -102,7 +103,9 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 				</div>
 				<?php else : ?>
 					<?php
-					if ( is_array( $course_list ) && count( $course_list ) ) :
+					$course_list = $checkout_manager->get_items();
+
+					if ( ! empty( $course_list ) ) :
 						$course_ids       = array_column( $course_list, 'ID' );
 						$automatic_coupon = ( new CouponModel() )->apply_automatic_coupon_discount( $course_ids );
 						?>
@@ -146,19 +149,20 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 												<?php echo esc_html( $course->post_title ); ?>
 											</a>
 										</h6>
-										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $has_automatic_coupon ? '' : 'tutor-d-none' ); ?>">
+										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $checkout_manager->is_coupon_applied() ? '' : 'tutor-d-none' ); ?>">
 											<i class="tutor-icon-tag" area-hidden="true"></i>
-											<span><?php echo esc_html( $has_automatic_coupon ? $automatic_coupon->coupon_title : '' ); ?></span>
+											<!-- <span><?php // echo esc_html( $has_automatic_coupon ? $automatic_coupon->coupon_title : '' ); ?></span> -->
+											<span><?php echo esc_html( $checkout_manager->get_coupon_code() . ' (' . Shop::as_negative( $course->final_price->discount_value_with_currency ) . ')' ); ?></span>
 										</div>
 									</div>
 									<div class="tutor-text-right">
 										<div class="tutor-fw-bold">
-											<?php echo tutor_get_formatted_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
+											<?php echo $checkout_manager->is_coupon_applied() ? $course->final_price->discounted_price_with_currency : $course->final_price->item_price_with_currency; ?>
 										</div>
-										<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
-										<div class="tutor-checkout-discount-price">
-											<?php echo tutor_get_formatted_price( $regular_price ); //phpcs:ignore?>
-										</div>
+										<?php if ( $checkout_manager->is_coupon_applied() ) : ?>
+											<div class="tutor-checkout-discount-price">
+												<?php echo $course->final_price->item_price_with_currency; //phpcs:ignore?>
+											</div>
 										<?php endif; ?>
 									</div>
 								</div>
@@ -175,7 +179,8 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Subtotal', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold">
-					<?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?>
+					<?php // echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore ?>
+					<?php echo $checkout_manager->is_coupon_applied() ? $summary->discounted_subtotal_with_currency : $summary->subtotal_with_currency; ?>
 				</div>
 			</div>
 			<?php if ( $is_coupon_applicable && ( ! isset( $automatic_coupon ) || ! $automatic_coupon->is_applied ) ) : ?>
@@ -200,16 +205,42 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 				<div class="tutor-fw-bold tutor-discount-amount"></div>
 			</div>
 			<?php endif; ?>
-			<!-- <div class="tutor-checkout-summary-item">
-				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
-				<div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
-			</div> -->
+			<div class="tutor-checkout-summary-item">
+				<button type="button" class="tutor-show-tax-rates">
+					<span><?php esc_html_e( 'Tax', 'tutor' ); ?></span>
+				</button>
+				<div><?php echo $summary->taxable_amount_with_currency; //phpcs:ignore?></div>
+			</div>
+
+			<div class="tutor-tax-breakdown-modal tutor-d-none">
+				<div class="tutor-tax-breakdown-modal__backdrop"></div>
+				<div class="tutor-tax-breakdown-modal__content">
+				<div class="tutor-tax-breakdown-modal__header">
+					<h6><?php esc_html_e( 'Tax rates', 'tutor' ); ?></h6>
+					<button type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6.686 7.6a.65.65 0 0 1 0-.911.629.629 0 0 1 .898 0L12 11.165l4.416-4.476a.629.629 0 0 1 .898 0 .65.65 0 0 1 0 .91l-4.416 4.477 4.266 4.325a.65.65 0 0 1 0 .91.63.63 0 0 1-.898 0L12 12.986l-4.266 4.325a.629.629 0 0 1-.898 0 .65.65 0 0 1 0-.91l4.266-4.325-4.416-4.477Z" fill="currentColor"/></svg></button>
+				</div>
+
+					<?php foreach ( $course_list as $course ) : ?>
+						<div class="tutor-tax-breakdown-modal__item">
+							<span><?php echo esc_html( $course->post_title ); ?></span>
+							<span><?php echo $course->tax_rate . '%'; ?></span>
+							<span><?php echo $course->taxable_amount_with_currency; ?></span>
+						</div>
+						<?php endforeach; ?>
+
+						<div class="tutor-tax-breakdown-modal__item">
+							<span><strong><?php echo esc_html_e( 'Total tax', 'tutor' ); ?></strong></span>
+							<span></span>
+							<span><?php echo $summary->taxable_amount_with_currency; ?></span>
+						</div>
+					</div>
+				</div>
 		</div>
 
 		<div class="tutor-checkout-detail-item">
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
-				<div class="tutor-fw-bold tutor-checkout-grand-total"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
+				<div class="tutor-fw-bold tutor-checkout-grand-total"><?php echo $summary->total_with_currency; //phpcs:ignore?></div>
 			</div>
 
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
@@ -217,3 +248,19 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 		</div>
 	</div>
 </div>
+
+<script>
+	window.addEventListener('DOMContentLoaded', () => {
+		const modal = document.querySelector('.tutor-tax-breakdown-modal');
+		const closeButton = modal.querySelector('.tutor-tax-breakdown-modal__header > button');
+		const showModalButton = document.querySelector('.tutor-show-tax-rates');
+
+		showModalButton.addEventListener('click', () => {
+			modal.classList.remove('tutor-d-none');
+		});
+
+		closeButton.addEventListener('click', () => {
+			modal.classList.add('tutor-d-none');
+		})
+	})
+</script>

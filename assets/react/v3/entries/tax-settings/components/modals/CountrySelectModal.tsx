@@ -138,7 +138,7 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
                             onClick={() => {
                               regionStateForm.setValue(
                                 'activeCountry',
-                                activeCountry.toString() === country.value ? '' : country.value,
+                                activeCountry === country.value ? '' : country.value,
                               );
                             }}
                           >
@@ -173,7 +173,7 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
                     }}
                   />
 
-                  <Show when={activeCountry.toString() === country.value.toString() && states.length}>
+                  <Show when={activeCountry === country.value && states.length}>
                     <For each={states}>
                       {(state) => {
                         return (

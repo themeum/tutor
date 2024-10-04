@@ -1,228 +1,305 @@
 .tutor-checkout-page {
-    input[type=text], input[type=email], select {
-        line-height: 36px;
-        padding: 0px 10px;
-        text-indent: 0;
-    }
+	input[type="text"],
+	input[type="email"],
+	select {
+		line-height: 36px;
+		padding: 0px 10px;
+		text-indent: 0;
+	}
 
-    .tutor-checkout-billing {
-        background-color: #F9FAFC;
-        padding: 80px 15px 80px 64px;
-        height: 100%;
+	.tutor-checkout-billing {
+		background-color: #f9fafc;
+		padding: 80px 15px 80px 64px;
+		height: 100%;
 
-        @include breakpoint-max(desktop) {
-            padding: 40px 15px;
-        }
+		@include breakpoint-max(desktop) {
+			padding: 40px 15px;
+		}
 
-        .tutor-checkout-billing-inner {
-            max-width: 500px;
-        }
-    }
+		.tutor-checkout-billing-inner {
+			max-width: 500px;
+		}
+	}
 
-    .tutor-checkout-details {
-        font-size: 1rem;
-        padding: 80px 64px 80px 15px;
-        max-width: 560px;
-        margin-left: auto;
+	.tutor-checkout-details {
+		font-size: 1rem;
+		padding: 80px 64px 80px 15px;
+		max-width: 560px;
+		margin-left: auto;
 
-        @include breakpoint-max(desktop) {
-            padding: 60px 15px 40px 15px;
-        }
+		@include breakpoint-max(desktop) {
+			padding: 60px 15px 40px 15px;
+		}
 
-        .tutor-checkout-details-inner {
-            border: 1px solid var(--tutor-border-color);
-            border-radius: 6px;
+		.tutor-checkout-details-inner {
+			border: 1px solid var(--tutor-border-color);
+			border-radius: 6px;
 
-            @include breakpoint-max(desktop) {
-                margin: 0 auto;
-            }
-        }
-    }
-    .tutor-checkout-detail-item {
-        padding: 32px;
-        &:not(:last-child) {
-            border-bottom: 1px solid var(--tutor-border-color);
-        }
-        @include breakpoint-max(mobile) {
-            padding: 16px;
-        }
-    }
-    .tutor-checkout-courses {
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-    }
-    .tutor-checkout-course-item {
-        color: var(--tutor-body-color);
-    }
-    .tutor-checkout-course-content {
-        display: flex;
-        align-items: start;
-        justify-content: space-between;
-        gap: 56px;
-    }
-    .tutor-checkout-enrollment-fee {
-        display: flex;
-        align-items: start;
-        justify-content: space-between;
-        font-size: 14px;
-    }
-    .tutor-checkout-course-bundle-badge {
-        display: inline-block;
-        font-size: 11px;
-        line-height: 16px;
-        background-color: #7A078D;
-        color: #ffffff;
-        border-radius: 13px;
-        padding: 0px 6px;
-    }
-    .tutor-checkout-course-title {
-        font-weight: 500;
-        font-size: 16px;
-        line-height: 26px;
-        margin-bottom: 8px;
-        
-        a {
-            color: var(--tutor-body-color);
-            text-decoration: none;
-            
-            &:hover {
-                opacity: 1;
-            }
-        }
-    }
-    .tutor-checkout-coupon-badge {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        width: fit-content;
-        background-color: #F1F1F1;
-        color: #41454F;
-        font-size: 11px;
-        line-height: 16px;
-        border-radius: 4px;
-        padding: 3px 6px;
+			@include breakpoint-max(desktop) {
+				margin: 0 auto;
+			}
+		}
+	}
+	.tutor-checkout-detail-item {
+		padding: 32px;
+		&:not(:last-child) {
+			border-bottom: 1px solid var(--tutor-border-color);
+		}
+		@include breakpoint-max(mobile) {
+			padding: 16px;
+		}
+	}
+	.tutor-checkout-courses {
+		display: flex;
+		flex-direction: column;
+		gap: 24px;
+	}
+	.tutor-checkout-course-item {
+		color: var(--tutor-body-color);
+	}
+	.tutor-checkout-course-content {
+		display: flex;
+		align-items: start;
+		justify-content: space-between;
+		gap: 56px;
+	}
+	.tutor-checkout-enrollment-fee {
+		display: flex;
+		align-items: start;
+		justify-content: space-between;
+		font-size: 14px;
+	}
+	.tutor-checkout-course-bundle-badge {
+		display: inline-block;
+		font-size: 11px;
+		line-height: 16px;
+		background-color: #7a078d;
+		color: #ffffff;
+		border-radius: 13px;
+		padding: 0px 6px;
+	}
+	.tutor-checkout-course-title {
+		font-weight: 500;
+		font-size: 16px;
+		line-height: 26px;
+		margin-bottom: 8px;
 
-        &.tutor-has-delete-button {
-            font-size: 13px;
-            line-height: 18px;
-            padding: 10px 8px;
-        }
+		a {
+			color: var(--tutor-body-color);
+			text-decoration: none;
 
-        button {
-            display: flex;
-            background-color: transparent;
-            color: var(--tutor-color-hints);
-            border: none;
-            outline: none;
-            padding: 0;
-            cursor: pointer;
-        }
-    }
-    .tutor-checkout-discount-price {
-        font-size: 13px;
-        color: #767C8E;
-        text-decoration: line-through;
-    }
-    .tutor-checkout-summary {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-    }
-    .tutor-checkout-summary-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        color: var(--tutor-body-color);
-    }
-    .tutor-checkout-separator {
-        line-height: 18px;
-        margin-top: 16px;
-        margin-bottom: 16px;
-        font-size: 13px;
-        color: var(--tutor-body-color);
-        text-align: center;
-        position: relative;
+			&:hover {
+				opacity: 1;
+			}
+		}
+	}
+	.tutor-checkout-coupon-badge {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+		width: fit-content;
+		background-color: #f1f1f1;
+		color: #41454f;
+		font-size: 11px;
+		line-height: 16px;
+		border-radius: 4px;
+		padding: 3px 6px;
 
-        span {
-            position: relative;
-            z-index: 1;
-            background-color: #F9FAFC;
-            padding: 0 4px;
-        }
+		&.tutor-has-delete-button {
+			font-size: 13px;
+			line-height: 18px;
+			padding: 10px 8px;
+		}
 
-        &::before {
-            content: "";
-            height: 1px;
-            width: 100%;
-            background-color: var(--tutor-border-color);
-            position: absolute;
-            top: 8px;
-            left: 0;
-        }
-    }
+		button {
+			display: flex;
+			background-color: transparent;
+			color: var(--tutor-color-hints);
+			border: none;
+			outline: none;
+			padding: 0;
+			cursor: pointer;
+		}
+	}
+	.tutor-checkout-discount-price {
+		font-size: 13px;
+		color: #767c8e;
+		text-decoration: line-through;
+	}
+	.tutor-checkout-summary {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+	}
+	.tutor-checkout-summary-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		color: var(--tutor-body-color);
+	}
+	.tutor-checkout-separator {
+		line-height: 18px;
+		margin-top: 16px;
+		margin-bottom: 16px;
+		font-size: 13px;
+		color: var(--tutor-body-color);
+		text-align: center;
+		position: relative;
 
-    .tutor-checkout-payment-options {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
+		span {
+			position: relative;
+			z-index: 1;
+			background-color: #f9fafc;
+			padding: 0 4px;
+		}
 
-        button {
-            font-size: 15px;
-            line-height: 24px;
-            font-weight: 500;
-            background-color: #ffffff;
-            border: 1px solid var(--tutor-border-color);
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 2px;
-            cursor: pointer;
-            padding: 8px 16px;
-            min-width: 128px;
+		&::before {
+			content: "";
+			height: 1px;
+			width: 100%;
+			background-color: var(--tutor-border-color);
+			position: absolute;
+			top: 8px;
+			left: 0;
+		}
+	}
 
-            &:hover {
-                background-color: #F5F6FA;
-            }
+	.tutor-checkout-payment-options {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 8px;
 
-            &.active {
-                background-color: #F0F1F5;
-                border-color: var(--tutor-color-primary);
-            }
-        }
-    }
+		button {
+			font-size: 15px;
+			line-height: 24px;
+			font-weight: 500;
+			background-color: #ffffff;
+			border: 1px solid var(--tutor-border-color);
+			border-radius: 6px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 2px;
+			cursor: pointer;
+			padding: 8px 16px;
+			min-width: 128px;
 
-    .tutor-payment-instructions {
-        background-color: #ffffff;
-        border-radius: 6px;
-        padding: 16px;
-        margin-top: 16px;
-        white-space: pre-line;
-    }
+			&:hover {
+				background-color: #f5f6fa;
+			}
 
-    .tutor-apply-coupon-form {
-        background-color: #ffffff;
-        border: 1px solid var(--tutor-border-color);
-        border-radius: 6px;
-        padding: 4px;
-        display: flex;
+			&.active {
+				background-color: #f0f1f5;
+				border-color: var(--tutor-color-primary);
+			}
+		}
+	}
 
-        input {
-            width: 100%;
-            border: none;
-            background-color: transparent;
-            outline: none;
-            box-shadow: none;
-        }
+	.tutor-payment-instructions {
+		background-color: #ffffff;
+		border-radius: 6px;
+		padding: 16px;
+		margin-top: 16px;
+		white-space: pre-line;
+	}
 
-        button {
-            border: none;
-            font-weight: 500;
-            padding: 4px 16px;
-            font-size: 13px;
-            line-height: 24px;
-        }
-    }
+	.tutor-apply-coupon-form {
+		background-color: #ffffff;
+		border: 1px solid var(--tutor-border-color);
+		border-radius: 6px;
+		padding: 4px;
+		display: flex;
+
+		input {
+			width: 100%;
+			border: none;
+			background-color: transparent;
+			outline: none;
+			box-shadow: none;
+		}
+
+		button {
+			border: none;
+			font-weight: 500;
+			padding: 4px 16px;
+			font-size: 13px;
+			line-height: 24px;
+		}
+	}
+
+	.tutor-show-tax-rates {
+		color: var(--tutor-color-primary);
+		background: none;
+		border: 0;
+		outline: 0;
+		cursor: pointer;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	.tutor-tax-breakdown-modal {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 99999;
+
+		&__backdrop {
+			position: absolute;
+			inset: 0;
+			z-index: 1;
+			background: rgba(22, 22, 22, 0.7);
+		}
+		&__content {
+			z-index: 2;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			background-color: #ffffff;
+			border-radius: 6px;
+			padding: 24px;
+			box-shadow: 0px 8px 24px 0px rgba(17, 18, 19, 0.12);
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+		}
+
+		&__header {
+			display: flex;
+			justify-content: space-between;
+
+			button {
+				background: none;
+				border: 0;
+				outline: 0;
+				color: #9197a8;
+				cursor: pointer;
+				width: 32px;
+				height: 32px;
+			}
+
+			h6 {
+				font-size: 1rem;
+			}
+		}
+
+		&__item {
+			display: grid;
+			grid-template-columns: 2fr 1fr 1fr;
+
+			& > span {
+				font-size: 0.875rem;
+			}
+
+			& > span:not(:first-of-type) {
+				text-align: right;
+				font-weight: 600;
+			}
+		}
+	}
 }

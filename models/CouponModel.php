@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use stdClass;
 use TUTOR\Course;
+use Tutor\Ecommerce\Supports\Arr;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -508,13 +509,53 @@ class CouponModel {
 			return false;
 		}
 
+		return $this->process_coupon_data( $coupon_data );
+	}
+
+	public function get_coupon_by_code( $coupon_code ) {
+		$coupon_data = QueryHelper::get_row(
+			$this->table_name,
+			array( 'coupon_code' => $coupon_code ),
+			'id'
+		);
+
+		if ( ! $coupon_data ) {
+			return false;
+		}
+
+		return $this->process_coupon_data( $coupon_data );
+	}
+
+	/**
+	 * Get the list of the all automatic coupons.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public function get_automatic_coupons() {
+		$coupons = $this->get_coupons(
+			array( 'coupon_type' => self::TYPE_AUTOMATIC ),
+			'',
+			1000,
+			0
+		);
+
+		if ( empty( $coupons['results'] ) ) {
+			return array();
+		}
+
+		return $coupons['results'];
+	}
+
+	private function process_coupon_data( $coupon_data ) {
 		$coupon_data->id                  = (int) $coupon_data->id;
 		$coupon_data->usage_limit_status  = ! empty( $coupon_data->total_usage_limit ) ? true : false;
 		$coupon_data->total_usage_limit   = (int) $coupon_data->total_usage_limit;
 		$coupon_data->is_one_use_per_user = ! empty( $coupon_data->per_user_usage_limit ) ? true : false;
 		$coupon_data->discount_amount     = (float) $coupon_data->discount_amount;
-		$coupon_data->created_by          = get_userdata( $coupon_data->created_by )->display_name;
-		$coupon_data->updated_by          = get_userdata( $coupon_data->updated_by )->display_name;
+		$coupon_data->created_by          = get_userdata( $coupon_data->created_by )->display_name ?? '';
+		$coupon_data->updated_by          = get_userdata( $coupon_data->updated_by )->display_name ?? '';
 		$coupon_data->courses             = array();
 		$coupon_data->categories          = array();
 
@@ -528,6 +569,8 @@ class CouponModel {
 
 		return $coupon_data;
 	}
+
+
 
 	/**
 	 * Retrieve courses associated with a given coupon code.
@@ -1122,5 +1165,4 @@ class CouponModel {
 	public function is_specific_applies_to( string $applies_to ) {
 		return in_array( $applies_to, array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY ) );
 	}
-
 }

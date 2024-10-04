@@ -47,6 +47,7 @@ const styles = {
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
+		height: 90vh;
 
     ${Breakpoint.smallTablet} {
       width: 90%;
@@ -88,8 +89,7 @@ const styles = {
   content: css`
     overflow: hidden;
     overflow-y: auto;
-    max-height: 90vh;
-		height: 100%;
+    height: 100%;
   `,
   stickyFooter: css`
     box-shadow: ${shadow.dividerTop};

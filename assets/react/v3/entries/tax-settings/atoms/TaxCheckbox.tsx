@@ -34,14 +34,14 @@ const TaxCheckbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Ch
   } = props;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    onChange?.(!isIndeterminate ? event.target.checked : true, event);
+    // biome-ignore lint/complexity/useOptionalChain: <explanation>
+    onChange && onChange(!isIndeterminate ? event.target.checked : true, event);
   };
 
   return (
-    <label htmlFor={id} css={[styles.container, labelCss]}>
+    <label css={[styles.container, labelCss]}>
       <input
         ref={ref}
-        id={id}
         name={name}
         type="checkbox"
         value={value}
@@ -50,7 +50,7 @@ const TaxCheckbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Ch
         aria-invalid={props['aria-invalid']}
         onChange={handleChange}
         onBlur={onBlur}
-        css={[inputCss, styles.checkbox({ hasLabel: !!label, isIndeterminate, disabled })]}
+        css={[styles.checkbox({ hasLabel: !!label, isIndeterminate, disabled }), inputCss]}
       />
       <span />
       {label}
@@ -64,6 +64,7 @@ const styles = {
     align-items: center;
     cursor: pointer;
     user-select: none;
+		position: relative;
   `,
   checkbox: ({
     hasLabel,
@@ -92,6 +93,7 @@ const styles = {
       `
       }
     }
+
     & + span::before {
       content: '';
       background-color: ${colorPalate.basic.white};

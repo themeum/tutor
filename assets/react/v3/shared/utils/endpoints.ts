@@ -35,6 +35,9 @@ const endpoints = {
 
   // Quiz
   SAVE_QUIZ: 'tutor_quiz_builder_save',
+
+	// TAX SETTINGS
+	SAVE_TAX_SETTINGS: 'tutor_save_tax_settings'
 };
 
 export default endpoints;
