@@ -972,7 +972,7 @@ class Course extends Tutor_Base {
 								$post->quiz_type = 'tutor_h5p_quiz';
 								// remove h5p quiz if tutor h5p addon is disabled.
 								$is_h5p_enabled = tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled();
-								if ( ! $is_h5p_enabled  ) {
+								if ( ! $is_h5p_enabled ) {
 									continue;
 								}
 							}

@@ -114,7 +114,6 @@ if ( $topics->have_posts() ) {
 					if ( 'tutor_quiz' === $post->post_type ) {
 						$quiz = $post;
 						$quiz_option = get_post_meta( $post->ID, Quiz::META_QUIZ_OPTION, true );
-						
 						// check if h5p quiz and if the h5p addon is enabled
 						$is_h5p_quiz = isset( $quiz_option['quiz_type'] ) && 'tutor_h5p_quiz' === $quiz_option['quiz_type'];
 						?>

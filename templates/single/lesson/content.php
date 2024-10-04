@@ -167,7 +167,7 @@ tutor_load_template(
 								?>
 								<?php if ( count( $shortcodes ) ) : ?>
 									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper tutor-spotlight-h5p-lesson-content" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-topic-id="<?php echo esc_attr( $post->post_parent ); ?>">
-										<input type="hidden" id="complete_lesson_enabled" value="<?php echo tutor_utils()->get_option('disable_complete_lesson_button') ?>" />
+										<input type="hidden" id="complete_lesson_enabled" value="<?php echo esc_attr( tutor_utils()->get_option( 'disable_complete_lesson_button' ) ); ?>" />
 										<?php the_content(); ?>
 									</div>
 								<?php else : ?>
