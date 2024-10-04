@@ -74,7 +74,7 @@ function Topbar() {
             </div>
           </div>
 
-          <Show when={order.order_status !== 'cancelled'}>
+          <Show when={order.order_type === 'single_order' && order.order_status !== 'cancelled'}>
             <Button
               variant="tertiary"
               onClick={() => {
