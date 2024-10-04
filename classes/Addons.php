@@ -28,8 +28,8 @@ class Addons {
 	 * @return void
 	 */
 	public function __construct() {
-		add_filter( 'tutor_pro_addons_lists_for_display', array( $this, 'tutor_addons_lists_to_show' ) );
-		add_action( 'wp_ajax_tutor_get_all_addons', array( $this, 'tutor_get_all_addons' ) );
+		add_filter( 'tutor_pro_addons_lists_for_display', array( $this, 'addons_lists_to_show' ) );
+		add_action( 'wp_ajax_tutor_get_all_addons', array( $this, 'get_all_addons' ) );
 		add_action( 'wp_ajax_addon_enable_disable', array( $this, 'addon_enable_disable' ) );
 	}
 
@@ -63,12 +63,12 @@ class Addons {
 	}
 
 	/**
-	 * Get all notifications
+	 * Get all addons data.
 	 *
 	 * @since 1.0.0
 	 * @return void
 	 */
-	public function tutor_get_all_addons() {
+	public function get_all_addons() {
 
 		// Check and verify the request.
 		tutor_utils()->checking_nonce();
@@ -88,7 +88,7 @@ class Addons {
 	}
 
 	/**
-	 * Prepare addons data
+	 * Prepare addons data.
 	 *
 	 * @since 1.0.0
 	 * @return array
@@ -169,7 +169,7 @@ class Addons {
 		return $prepared_addons;
 	}
 
-/**
+	/**
 	 * Method for enable / disable addons
 	 *
 	 * @since 1.0.0
@@ -229,7 +229,7 @@ class Addons {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	public function tutor_addons_lists_to_show() {
+	public function addons_lists_to_show() {
 		$addons = array(
 			'course-bundle'            => array(
 				'name'        => __( 'Course Bundle', 'tutor' ),
@@ -269,19 +269,19 @@ class Addons {
 			),
 			'tutor-report'             => array(
 				'name'        => __( 'Tutor Report', 'tutor' ),
-				'description' => __('Check your course performance through Tutor Report stats.', 'tutor'),
+				'description' => __( 'Check your course performance through Tutor Report stats.', 'tutor' ),
 			),
 			'tutor-email'              => array(
 				'name'        => __( 'Email', 'tutor' ),
-				'description' => __('Send automated and customized emails for various Tutor events.', 'tutor'),
+				'description' => __( 'Send automated and customized emails for various Tutor events.', 'tutor' ),
 			),
 			'calendar'                 => array(
 				'name'        => 'Calendar',
-				'description' => __('Enable to let students view all your course events in one place.', 'tutor'),
+				'description' => __( 'Enable to let students view all your course events in one place.', 'tutor' ),
 			),
 			'tutor-notifications'      => array(
 				'name'        => 'Notifications',
-				'description' => __('Keep students and instructors notified of course events on their dashboard.', 'tutor'),
+				'description' => __( 'Keep students and instructors notified of course events on their dashboard.', 'tutor' ),
 			),
 			'google-classroom'         => array(
 				'name'        => __( 'Google Classroom Integration', 'tutor' ),
@@ -297,35 +297,35 @@ class Addons {
 			),
 			'enrollments'              => array(
 				'name'        => __( 'Enrollment', 'tutor' ),
-				'description' => __('Enable to manually enroll students in your courses.', 'tutor'),
+				'description' => __( 'Enable to manually enroll students in your courses.', 'tutor' ),
 			),
 			'tutor-certificate'        => array(
 				'name'        => __( 'Tutor Certificate', 'tutor' ),
-				'description' => __('Enable to award certificates upon course completion.', 'tutor'),
+				'description' => __( 'Enable to award certificates upon course completion.', 'tutor' ),
 			),
 			'gradebook'                => array(
 				'name'        => __( 'Gradebook', 'tutor' ),
-				'description' => __('Track student progress with a centralized gradebook.', 'tutor'),
+				'description' => __( 'Track student progress with a centralized gradebook.', 'tutor' ),
 			),
 			'tutor-prerequisites'      => array(
 				'name'        => __( 'Tutor Prerequisites', 'tutor' ),
-				'description' => __('Set course prerequisites to guide learning paths effectively.', 'tutor'),
+				'description' => __( 'Set course prerequisites to guide learning paths effectively.', 'tutor' ),
 			),
 			'buddypress'               => array(
 				'name'        => __( 'BuddyPress', 'tutor' ),
-				'description' => __('Boost engagement with social features through BuddyPress for Tutor LMS.', 'tutor'),
+				'description' => __( 'Boost engagement with social features through BuddyPress for Tutor LMS.', 'tutor' ),
 			),
 			'wc-subscriptions'         => array(
 				'name'        => __( 'WooCommerce Subscriptions', 'tutor' ),
-				'description' => __('Capture Residual Revenue with Recurring Payments.', 'tutor'),
+				'description' => __( 'Capture Residual Revenue with Recurring Payments.', 'tutor' ),
 			),
 			'pmpro'                    => array(
 				'name'        => __( 'Paid Memberships Pro', 'tutor' ),
-				'description' => __('Maximize revenue by selling membership access to all of your courses.', 'tutor'),
+				'description' => __( 'Maximize revenue by selling membership access to all of your courses.', 'tutor' ),
 			),
 			'restrict-content-pro'     => array(
 				'name'        => __( 'Restrict Content Pro', 'tutor' ),
-				'description' => __('Enable to manage content access through Restrict Content Pro. ', 'tutor'),
+				'description' => __( 'Enable to manage content access through Restrict Content Pro. ', 'tutor' ),
 			),
 			'tutor-weglot'             => array(
 				'name'        => 'Weglot',
