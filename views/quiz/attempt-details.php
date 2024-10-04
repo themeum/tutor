@@ -348,7 +348,6 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					$question_type          = tutor_utils()->get_question_types( $answer->question_type );
 					$question_settings = maybe_unserialize( $answer->question_settings );
 					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
-					$h5p_thumbnail_path = \TutorPro\H5P\Utils::addon_config()->url . 'assets/images/H5P_Logo.svg';
 					$answer_status      = 'wrong';
 
 					// If already correct, then show it.
