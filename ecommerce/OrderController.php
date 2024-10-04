@@ -210,26 +210,26 @@ class OrderController {
 				}
 			}
 		} else {
-			$item_price     = $this->model::calculate_order_price( $items ); 
+			$item_price     = $this->model::calculate_order_price( $items );
 			$subtotal_price = $item_price->subtotal;
 			$total_price    = $item_price->total;
 		}
 
 		$order_data = array(
-			'items'           => $items,
-			'payment_status'  => $payment_status,
-			'order_type'      => $order_type,
-			'coupon_code'     => $coupon_code,
-			'subtotal_price'  => $subtotal_price,
-			'total_price'     => $total_price,
-			'net_payment'     => $total_price,
-			'user_id'         => $user_id,
-			'payment_status'  => $payment_status,
-			'order_status'    => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
-			'created_at_gmt'  => current_time( 'mysql', true ),
-			'created_by'      => get_current_user_id(),
-			'updated_at_gmt'  => current_time( 'mysql', true ),
-			'updated_by'      => get_current_user_id(),
+			'items'          => $items,
+			'payment_status' => $payment_status,
+			'order_type'     => $order_type,
+			'coupon_code'    => $coupon_code,
+			'subtotal_price' => $subtotal_price,
+			'total_price'    => $total_price,
+			'net_payment'    => $total_price,
+			'user_id'        => $user_id,
+			'payment_status' => $payment_status,
+			'order_status'   => $this->model::PAYMENT_PAID === $payment_status ? $this->model::ORDER_COMPLETED : $this->model::ORDER_INCOMPLETE,
+			'created_at_gmt' => current_time( 'mysql', true ),
+			'created_by'     => get_current_user_id(),
+			'updated_at_gmt' => current_time( 'mysql', true ),
+			'updated_by'     => get_current_user_id(),
 		);
 
 		// Update data with arguments.
@@ -327,26 +327,17 @@ class OrderController {
 			);
 		}
 
-		do_action( 'tutor_before_order_mark_as_paid', $params['order_id'] );
+		$order_id = (int) $params['order_id'];
 
-		$data = array(
-			'payment_status' => $this->model::PAYMENT_PAID,
-			'order_status'   => $this->model::ORDER_COMPLETED,
-			'note'           => $params['note'],
-		);
+		$updated = $this->model->mark_as_paid( $order_id, $params['note'] );
 
-		$response = $this->model->update_order( $params['order_id'], $data );
-
-		if ( ! $response ) {
+		if ( ! $updated ) {
 			$this->json_response(
 				__( 'Failed to update order payment status', 'tutor' ),
 				null,
 				HttpHelper::STATUS_INTERNAL_SERVER_ERROR
 			);
 		}
-
-		$order_id = $params['order_id'];
-		do_action( 'tutor_order_payment_status_changed', $order_id, $this->model::PAYMENT_UNPAID, $this->model::PAYMENT_PAID );
 
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
@@ -1038,5 +1029,5 @@ class OrderController {
 
 		return ValidationHelper::validate( $validation_rules, $data );
 	}
-	
+
 }
