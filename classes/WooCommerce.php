@@ -441,7 +441,7 @@ class WooCommerce extends Tutor_Base {
 	 * @return mixed
 	 */
 	public function add_options( $attr ) {
-		$attr['monetization']['blocks']['block_options']['fields'][] = array(
+		$attr['monetization']['blocks']['block_woocommerce']['fields'][] = array(
 			'key'         => 'enable_guest_course_cart',
 			'type'        => 'toggle_switch',
 			'label'       => __( 'Enable Guest Mode', 'tutor' ),

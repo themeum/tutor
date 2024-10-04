@@ -376,6 +376,16 @@
 		}
 	}
 
+	/**
+	* Set ecommerce currency input box width
+	* @since 3.0.0
+	*/
+	&.ecommerce_currency{
+		.tutor-option-field-input input[type=text]{
+			max-width: 90px;
+		}
+	}
+
 } // end of .tutor-option-single-item
 
 .item-wrapper > .tutor-option-field-row {
