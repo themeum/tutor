@@ -33,6 +33,13 @@ class Addons {
 		add_action( 'wp_ajax_addon_enable_disable', array( $this, 'addon_enable_disable' ) );
 	}
 
+	/**
+	 * Obtain addons config list.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
 	public static function get_addons_config() {
 		$list = get_option( self::OPTION_KEY, array() );
 		return $list;
@@ -41,8 +48,12 @@ class Addons {
 	/**
 	 * Status update of tutor addon.
 	 *
+	 * @since 3.0.0
+	 *
 	 * @param string $basename basename of addon.
+	 *
 	 * @param bool $status status 0,1.
+	 *
 	 * @return void
 	 */
 	public static function update_addon_status( $basename, $status ) {
