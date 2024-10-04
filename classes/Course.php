@@ -252,7 +252,7 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
 
-		add_filter( 'template_include', array( $this, 'handle_password_protected' ), PHP_INT_MAX );
+		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 	}
 
 	/**
@@ -269,6 +269,7 @@ class Course extends Tutor_Base {
 			$current_post_type = get_post_type( get_the_ID() );
 			$post_types        = array( tutor()->course_post_type, tutor()->bundle_post_type );
 			if ( in_array( $current_post_type, $post_types, true ) && post_password_required() ) {
+				remove_all_filters( 'template_include' );
 				return tutor()->path . '/templates/single/password-protected.php';
 			}
 		}
