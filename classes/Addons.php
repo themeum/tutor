@@ -38,7 +38,7 @@ class Addons {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return void
+	 * @return array
 	 */
 	public static function get_addons_config() {
 		$list = get_option( self::OPTION_KEY, array() );
@@ -51,9 +51,7 @@ class Addons {
 	 * @since 3.0.0
 	 *
 	 * @param string $basename basename of addon.
-	 *
 	 * @param bool $status status 0,1.
-	 *
 	 * @return void
 	 */
 	public static function update_addon_status( $basename, $status ) {
