@@ -67,11 +67,6 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 											<?php
 											foreach ( $section['submenu'] as $key => $menu_item ) :
 												$active_class = $active_tab === $key ? ' is-active' : '';
-												// If not monetized by native, then ecommerce submenu will be hidden.
-												if ( Ecommerce::MONETIZE_BY !== $monetize_by && 'ecommerce' === explode( '_', $key )[0] ) {
-													continue;
-												}
-
 												?>
 												<li class="tutor-nav-item">
 													<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">

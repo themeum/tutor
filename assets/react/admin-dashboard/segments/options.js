@@ -655,6 +655,8 @@ document.addEventListener('DOMContentLoaded', function () {
 	 * @since 2.0.7
 	 */
 	function showHideOption(element, conditionFn) {
+		if (!element) return;
+
 		if (conditionFn()) {
 			element.classList.remove("tutor-d-none");
 		} else {
@@ -700,6 +702,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
 		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
+		
+		// Select native ecommerce nav items
+		const payment_nav_item = document.querySelector("[data-tab=ecommerce_payment]")?.parentElement;
+		const checkout_nav_item = document.querySelector("[data-tab=ecommerce_checkout]")?.parentElement;		
 
 		showHideOption(woocommerce_block, () => monetized_by === 'wc');
 		showHideOption(currency_block, () => monetized_by === 'tutor');
@@ -709,6 +715,10 @@ document.addEventListener('DOMContentLoaded', function () {
 		showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(monetized_by));
 		showHideOption(fees_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
 		showHideOption(withdraw_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
+
+		// Hide and show native ecommerce nav items
+		showHideOption(payment_nav_item, () => monetized_by === 'tutor');
+		showHideOption(checkout_nav_item, () => monetized_by === 'tutor');
 
 		// Handle monetization fields on change.
 		monetization_field.onchange = (e) => {
@@ -721,6 +731,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(value));
 			showHideOption(fees_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
 			showHideOption(withdraw_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
+
+			// Hide and show native ecommerce nav items
+			showHideOption(payment_nav_item, () => value === 'tutor');
+			showHideOption(checkout_nav_item, () => value === 'tutor');
 		}
 	}
 
