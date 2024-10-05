@@ -328,6 +328,8 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 
 <?php
 if ( is_array( $answers ) && count( $answers ) ) {
+	// Filter out not needed columns based on question type.
+	$table_2_columns = apply_filters( 'tutor_filter_attempt_answer_column', $table_2_columns, $answers );
 	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
 		<div class="tutor-table-responsive tutor-table-mobile tutor-mt-16">
