@@ -81,3 +81,7 @@ div.mce-toolbar-grp>div{
 .mce-toolbar:last-of-type {
   border-top: 1px solid #CDCFD5;
 }
+
+.mce-toolbar .mce-first:has([aria-haspopup]) {
+  padding-left: 6px;
+}

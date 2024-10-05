@@ -284,6 +284,10 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
+= 3.0.0-beta3 - September 07, 2024
+
+Coming soon...
+
 = 3.0.0-beta2 - September 30, 2024
 
 Update: Added Legacy Mode support for course and lesson descriptions.
