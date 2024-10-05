@@ -90,18 +90,20 @@ class Settings {
 						'desc'           => __( 'Set the position of the currency symbol.', 'tutor' ),
 					),
 					array(
-						'key'     => OptionKeys::THOUSAND_SEPARATOR,
-						'type'    => 'text',
-						'label'   => __( 'Thousand Separator', 'tutor' ),
-						'default' => ',',
-						'desc'    => __( 'Specify the thousand separator.', 'tutor' ),
+						'key'           => OptionKeys::THOUSAND_SEPARATOR,
+						'type'          => 'text',
+						'label'         => __( 'Thousand Separator', 'tutor' ),
+						'field_classes' => 'tutor-w-90',
+						'default'       => ',',
+						'desc'          => __( 'Specify the thousand separator.', 'tutor' ),
 					),
 					array(
-						'key'     => OptionKeys::DECIMAL_SEPARATOR,
-						'type'    => 'text',
-						'label'   => __( 'Decimal Separator', 'tutor' ),
-						'default' => '.',
-						'desc'    => __( 'Specify the decimal separator.', 'tutor' ),
+						'key'           => OptionKeys::DECIMAL_SEPARATOR,
+						'type'          => 'text',
+						'label'         => __( 'Decimal Separator', 'tutor' ),
+						'field_classes' => 'tutor-w-90',
+						'default'       => '.',
+						'desc'          => __( 'Specify the decimal separator.', 'tutor' ),
 					),
 					array(
 						'key'     => OptionKeys::NUMBER_OF_DECIMALS,
@@ -115,7 +117,7 @@ class Settings {
 		);
 
 		foreach ( $pages_fields as $page_field ) {
-			$fields['monetization']['blocks']['block_options'][ 'fields' ][] = $page_field;
+			$fields['monetization']['blocks']['block_options']['fields'][] = $page_field;
 		}
 
 		$prepared_blocks = array();
@@ -190,7 +192,7 @@ class Settings {
 			),
 		);
 
-		$arr = apply_filters( 'tutor_after_ecommerce_settings', $arr );
+		$arr                               = apply_filters( 'tutor_after_ecommerce_settings', $arr );
 		$fields['monetization']['submenu'] = $arr;
 
 		return $fields;
