@@ -41,7 +41,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		<form class="tutor-option-form" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-row tutor-gx-lg-0">
-				<div class="tutor-col-auto tutor-col-lg-3">
+				<div class="tutor-col-12 tutor-col-sm-2 tutor-col-lg-3">
 					<div class="tutor-pt-16 tutor-pb-40 tutor-border-right tutor-position-sticky" style="top: 97px;">
 						<div class="tutor-pr-20">
 							<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" tutor-option-tabs>
@@ -53,7 +53,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 									<li class="tutor-nav-item">
 										<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
 											<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
-											<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
+											<span class="tutor-ml-12 tutor-d-sm-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $section['label'] ); ?></span>
 										</a>
 										<?php
 										/**
@@ -76,7 +76,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 												<li class="tutor-nav-item">
 													<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" data-page="<?php echo esc_attr( $get_page ); ?>" data-tab="<?php echo esc_attr( $key ); ?>">
 														<span class="<?php echo esc_attr( $menu_item['icon'] ); ?> tutor-mr-12 tutor-d-lg-none" area-hidden="true"></span>
-														<span class="tutor-d-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $menu_item['label'] ); ?></span>
+														<span class="tutor-d-sm-none tutor-d-lg-block" tutor-option-label><?php echo esc_html( $menu_item['label'] ); ?></span>
 													</a>
 												</li>
 												<?php endforeach; ?>
@@ -91,8 +91,8 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 					</div>
 				</div>
 
-				<div class="tutor-col-10 tutor-col-lg-9">
-					<div class="tutor-option-tab-pages tutor-py-24 tutor-pl-40">
+				<div class="tutor-col-12 tutor-col-sm-10 tutor-col-lg-9">
+					<div class="tutor-option-tab-pages tutor-py-24 tutor-pl-lg-40">
 						<?php
 						// Tutor monetization fields will loaded regardless of
 						// which monetization is enabled to keep settings data alive.
