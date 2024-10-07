@@ -14,10 +14,8 @@ use TUTOR\Course;
 use Tutor\Ecommerce\PaymentHandler;
 use TUTOR\Input;
 use Tutor\PaymentGateways\Configs\PaypalConfig;
-use Tutor\PaymentGateways\Configs\StripeConfig;
 use Tutor\PaymentGateways\GatewayFactory;
 use Tutor\PaymentGateways\PaypalGateway;
-use Tutor\PaymentGateways\StripeGateway;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -74,7 +72,6 @@ class Ecommerce {
 		new HooksHandler();
 		new EmailController();
 		new PaymentHandler();
-		new SettingsController();
 	}
 
 	/**

@@ -491,10 +491,6 @@ class Options_V2 {
 		$data_before = get_option( 'tutor_option' );
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
 
-		if ( ! empty( $option['ecommerce_tax'] ) ) {
-			$option['ecommerce_tax'] = wp_unslash( $option['ecommerce_tax'] );
-		}
-
 		do_action( 'tutor_option_save_before', $option );
 
 		$option = tutor_utils()->sanitize_recursively( $option );
