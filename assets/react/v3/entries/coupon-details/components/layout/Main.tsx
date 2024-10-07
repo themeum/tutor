@@ -46,12 +46,15 @@ function Main() {
         bundles: couponData.applies_to === 'specific_bundles' ? (couponData.applies_to_items as Course[]) : [],
         categories:
           couponData.applies_to === 'specific_category' ? (couponData.applies_to_items as CourseCategory[]) : [],
-        usage_limit_status: !!couponData.total_usage_limit,
+        usage_limit_status: couponData.total_usage_limit !== '0',
         total_usage_limit: couponData.total_usage_limit,
-        per_user_limit_status: !!couponData.per_user_usage_limit,
+        per_user_limit_status: couponData.per_user_usage_limit !== '0',
         per_user_usage_limit: couponData.per_user_usage_limit,
         purchase_requirement: couponData.purchase_requirement,
-        purchase_requirement_value: couponData.purchase_requirement_value,
+        purchase_requirement_value:
+          couponData.purchase_requirement === 'minimum_quantity'
+            ? Math.floor(Number(couponData.purchase_requirement_value))
+            : couponData.purchase_requirement_value,
         start_date: format(convertGMTtoLocalDate(couponData.start_date_gmt), DateFormats.yearMonthDay),
         start_time: format(convertGMTtoLocalDate(couponData.start_date_gmt), DateFormats.hoursMinutes),
         ...(couponData.expire_date_gmt && {
@@ -97,21 +100,21 @@ export default Main;
 
 const styles = {
   wrapper: css`
-		background-color: ${colorTokens.background.default};
-	`,
+    background-color: ${colorTokens.background.default};
+  `,
 
   content: css`
-		min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
-		width: 100%;
-		display: grid;
-		grid-template-columns: 1fr 342px;
-		gap: ${spacing[36]};
-		margin-top: ${spacing[32]};
-	`,
+    min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 342px;
+    gap: ${spacing[36]};
+    margin-top: ${spacing[32]};
+  `,
   left: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+  `,
   right: css``,
 };
