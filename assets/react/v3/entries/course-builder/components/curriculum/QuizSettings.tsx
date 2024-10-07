@@ -45,37 +45,39 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
     <div css={styles.settings}>
       <Card title={__('Basic Settings', 'tutor')} collapsedAnimationDependencies={[feedbackMode, prerequisites.length]}>
         <div css={styles.formWrapper}>
-          <div css={styles.timeWrapper}>
-            <Controller
-              name="quiz_option.time_limit.time_value"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  type="number"
-                  label={__('Time limit', 'tutor')}
-                  helpText={__('Set a time limit for this quiz. A value of “0” indicates no time limit', 'tutor')}
-                  selectOnFocus
-                />
-              )}
-            />
-            <Controller
-              name="quiz_option.time_limit.time_type"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormSelectInput
-                  {...controllerProps}
-                  options={[
-                    { label: __('Seconds', 'tutor'), value: 'seconds' },
-                    { label: __('Minutes', 'tutor'), value: 'minutes' },
-                    { label: __('Hours', 'tutor'), value: 'hours' },
-                    { label: __('Days', 'tutor'), value: 'days' },
-                    { label: __('Weeks', 'tutor'), value: 'weeks' },
-                  ]}
-                />
-              )}
-            />
-          </div>
+          <Show when={contentType !== 'tutor_h5p_quiz'}>
+            <div css={styles.timeWrapper}>
+              <Controller
+                name="quiz_option.time_limit.time_value"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    type="number"
+                    label={__('Time limit', 'tutor')}
+                    helpText={__('Set a time limit for this quiz. A value of “0” indicates no time limit', 'tutor')}
+                    selectOnFocus
+                  />
+                )}
+              />
+              <Controller
+                name="quiz_option.time_limit.time_type"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormSelectInput
+                    {...controllerProps}
+                    options={[
+                      { label: __('Seconds', 'tutor'), value: 'seconds' },
+                      { label: __('Minutes', 'tutor'), value: 'minutes' },
+                      { label: __('Hours', 'tutor'), value: 'hours' },
+                      { label: __('Days', 'tutor'), value: 'days' },
+                      { label: __('Weeks', 'tutor'), value: 'weeks' },
+                    ]}
+                  />
+                )}
+              />
+            </div>
+          </Show>
 
           <Show when={contentType !== 'tutor_h5p_quiz'}>
             <Controller
