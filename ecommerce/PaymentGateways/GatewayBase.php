@@ -68,10 +68,10 @@ abstract class GatewayBase {
 		if ( file_exists( $autoload_file ) ) {
 			require_once $autoload_file;
 		} else {
-			if ( defined( 'TUTOR_PAYMENTS_HUB_PATH' ) ) {
-				$tutor_payments_hub_autoload = TUTOR_PAYMENTS_HUB_PATH . "src/Payments/{$this->get_root_dir_name()}/vendor/autoload.php";
-				if ( file_exists( $tutor_payments_hub_autoload ) ) {
-					require_once $tutor_payments_hub_autoload;
+			if ( defined( 'TUTOR_STRIPE_PATH' ) ) {
+				$tutor_stripe_autoload = TUTOR_STRIPE_PATH . "src/Payments/{$this->get_root_dir_name()}/vendor/autoload.php";
+				if ( file_exists( $tutor_stripe_autoload ) ) {
+					require_once $tutor_stripe_autoload;
 				}
 			}
 		}
