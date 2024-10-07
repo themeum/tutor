@@ -1444,10 +1444,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			foreach ( Settings::get_default_automate_payment_gateways() as $k => $gateway ) {
 				list( $label, $is_active, $icon ) = array_values( $gateway );
 				if ( $is_active ) {
-					$active_gateways['automate'][ $k ] = array(
-						'label' => $label,
-						'icon'  => $icon,
-					);
+					$active_gateways['automate'][ $k ] = array( 'label' => $label, 'icon' => $icon );
 				}
 			}
 
