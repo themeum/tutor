@@ -7,7 +7,6 @@ import endpoints from '@Utils/endpoints';
 import { ErrorResponse } from '@Utils/form';
 import { PaginatedParams, PaginatedResult } from '@Utils/types';
 import { convertToGMT } from '@Utils/util';
-import { format } from 'date-fns';
 
 export type CouponType = 'code' | 'automatic';
 
@@ -56,7 +55,7 @@ export interface Coupon {
 	per_user_usage_limit: string | null;
 	coupon_uses?: number;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
-	purchase_requirement_value: string;
+	purchase_requirement_value: string | number;
 	start_date: string;
 	start_time: string;
 	is_end_enabled: boolean;
@@ -80,10 +79,10 @@ export interface CouponPayload {
 	discount_amount: string;
 	applies_to: CouponAppliesTo;
 	applies_to_items: number[];
-	total_usage_limit?: string;
-	per_user_usage_limit?: string;
+	total_usage_limit: string;
+	per_user_usage_limit: string;
 	purchase_requirement: 'no_minimum' | 'minimum_purchase' | 'minimum_quantity';
-	purchase_requirement_value?: string;
+	purchase_requirement_value?: string | number;
 	start_date_gmt: string;
 	expire_date_gmt?: string;
 }
@@ -173,12 +172,8 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
 		discount_amount: data.discount_amount,
 		applies_to: data.applies_to,
 		applies_to_items: getAppliesToItemIds(data),
-		...(data.total_usage_limit && {
-			total_usage_limit: data.total_usage_limit
-		}),
-		...(data.per_user_usage_limit && {
-			per_user_usage_limit: data.per_user_usage_limit
-		}),
+		total_usage_limit: data.usage_limit_status ? data.total_usage_limit ?? "0" : "0",
+		per_user_usage_limit: data.per_user_limit_status ? data.per_user_usage_limit ?? "0" : "0",
 		...(data.purchase_requirement && {
 			purchase_requirement: data.purchase_requirement
 		}),
