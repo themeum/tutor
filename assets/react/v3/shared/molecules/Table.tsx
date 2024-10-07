@@ -96,7 +96,6 @@ const Table = <TableItem,>({
         ]}
       >
         {columns.map((column, columnIndex) => {
-          console.log({ width: column.width });
           return (
             <td key={columnIndex} css={[styles.td, { width: column.width }]}>
               {content(column)}

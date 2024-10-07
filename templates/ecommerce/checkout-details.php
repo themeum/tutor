@@ -8,10 +8,7 @@
  * @since 3.0.0
  */
 
-use Tutor\Ecommerce\CartController;
-use Tutor\Ecommerce\Manager\Checkout;
 use Tutor\Ecommerce\OptionKeys;
-use Tutor\Ecommerce\Supports\Shop;
 use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
@@ -25,19 +22,10 @@ $plan_info = apply_filters( 'tutor_checkout_plan_info', $plan_info, $plan_id );
 /**
  * Course/Bundle ids to apply coupon
  */
-$object_ids           = array();
-$cart_controller      = new CartController();
-$order_type           = OrderModel::TYPE_SINGLE_ORDER;
-$get_cart             = $cart_controller->get_cart_items();
-$courses              = $get_cart['courses'];
-$total_count          = $courses['total_count'];
-$course_list          = $courses['results'];
-$is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICABLE );
-$coupon_code          = $coupon_code ?? null;
-$country_code         = $country_code ?? null;
-$checkout_manager     = Checkout::create_with( $course_list, $coupon_code, $get_cart['cart']->user_id, $country_code );
-$summary              = $checkout_manager->get_calculated_data();
+$object_ids = array();
+$order_type = OrderModel::TYPE_SINGLE_ORDER;
 
+$is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICABLE );
 ?>
 
 <div class="tutor-checkout-details">
@@ -114,9 +102,7 @@ $summary              = $checkout_manager->get_calculated_data();
 				</div>
 				<?php else : ?>
 					<?php
-					$course_list = $checkout_manager->get_items();
-
-					if ( ! empty( $course_list ) ) :
+					if ( is_array( $course_list ) && count( $course_list ) ) :
 						$course_ids       = array_column( $course_list, 'ID' );
 						$automatic_coupon = ( new CouponModel() )->apply_automatic_coupon_discount( $course_ids );
 						?>
@@ -160,19 +146,19 @@ $summary              = $checkout_manager->get_calculated_data();
 												<?php echo esc_html( $course->post_title ); ?>
 											</a>
 										</h6>
-										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $checkout_manager->is_coupon_applied() ? '' : 'tutor-d-none' ); ?>">
+										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $has_automatic_coupon ? '' : 'tutor-d-none' ); ?>">
 											<i class="tutor-icon-tag" area-hidden="true"></i>
-											<span><?php echo esc_html( $checkout_manager->get_coupon_code() . ' (' . Shop::as_negative( $course->final_price->discount_value_with_currency ) . ')' ); ?></span>
+											<span><?php echo esc_html( $has_automatic_coupon ? $automatic_coupon->coupon_title : '' ); ?></span>
 										</div>
 									</div>
 									<div class="tutor-text-right">
 										<div class="tutor-fw-bold">
-											<?php echo $checkout_manager->is_coupon_applied() ? $course->final_price->discounted_price_with_currency : $course->final_price->item_price_with_currency; ?>
+											<?php echo tutor_get_formatted_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
 										</div>
-										<?php if ( $checkout_manager->is_coupon_applied() ) : ?>
-											<div class="tutor-checkout-discount-price">
-												<?php echo $course->final_price->item_price_with_currency; //phpcs:ignore?>
-											</div>
+										<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
+										<div class="tutor-checkout-discount-price">
+											<?php echo tutor_get_formatted_price( $regular_price ); //phpcs:ignore?>
+										</div>
 										<?php endif; ?>
 									</div>
 								</div>
@@ -189,11 +175,10 @@ $summary              = $checkout_manager->get_calculated_data();
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Subtotal', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold">
-					<?php // echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore ?>
-					<?php echo $checkout_manager->is_coupon_applied() ? $summary->discounted_subtotal_with_currency : $summary->subtotal_with_currency; ?>
+					<?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?>
 				</div>
 			</div>
-			<?php if ( ! $checkout_manager->is_coupon_applied() ) : ?>
+			<?php if ( $is_coupon_applicable && ( ! isset( $automatic_coupon ) || ! $automatic_coupon->is_applied ) ) : ?>
 			<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 				<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
 				<button type="button" id="tutor-toggle-coupon-form" class="tutor-btn tutor-btn-link">
@@ -202,33 +187,29 @@ $summary              = $checkout_manager->get_calculated_data();
 			</div>
 			<div class="tutor-apply-coupon-form tutor-d-none">
 				<input type="text" name="coupon_code" placeholder="<?php esc_html_e( 'Add coupon code', 'tutor' ); ?>">
-				<button type="button" class="tutor-btn tutor-btn-secondary" tutor-apply-coupon data-object-ids="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
+				<button type="button" class="tutor-btn tutor-btn-secondary" data-object-ids="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>"><?php esc_html_e( 'Apply', 'tutor' ); ?></button>
 			</div>
-			<?php endif; ?>
-			<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper tutor-justify-start tutor-gap-1 <?php echo $checkout_manager->is_coupon_applied() ? '' : 'tutor-d-none'; ?>">
-				<div class="tutor-fw-medium"><?php esc_html_e( 'Coupon', 'tutor' ); ?></div>
+			<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper tutor-d-none">
 				<div class="tutor-checkout-coupon-badge tutor-has-delete-button">
 					<i class="tutor-icon-tag" area-hidden="true"></i>
-					<span>
-						<?php echo $checkout_manager->get_coupon_code(); ?>
-						(<?php echo Shop::as_negative( $summary->coupon_discount_with_currency ); ?>)
-					</span>
-					<button type="button" id="tutor-checkout-remove-coupon" tutor-remove-coupon>
+					<span></span>
+					<button type="button" id="tutor-checkout-remove-coupon">
 						<i class="tutor-icon-times" area-hidden="true"></i>
 					</button>
 				</div>
 				<div class="tutor-fw-bold tutor-discount-amount"></div>
 			</div>
-			<div class="tutor-checkout-summary-item">
-				<span><?php esc_html_e( 'Tax', 'tutor' ); ?></span>
-				<div id="tutor-checkout-tax-amount"><?php echo $summary->taxable_amount_with_currency; //phpcs:ignore?></div>
-			</div>
+			<?php endif; ?>
+			<!-- <div class="tutor-checkout-summary-item">
+				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
+				<div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
+			</div> -->
 		</div>
 
 		<div class="tutor-checkout-detail-item">
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
-				<div class="tutor-fw-bold tutor-checkout-grand-total" tutor-grand-total><?php echo $summary->total_with_currency; //phpcs:ignore?></div>
+				<div class="tutor-fw-bold tutor-checkout-grand-total"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
 			</div>
 
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
@@ -236,9 +217,3 @@ $summary              = $checkout_manager->get_calculated_data();
 		</div>
 	</div>
 </div>
-
-<script>
-	window.addEventListener('DOMContentLoaded', () => {
-	//
-	})
-</script>

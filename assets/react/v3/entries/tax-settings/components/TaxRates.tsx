@@ -35,8 +35,6 @@ export default function TaxRates() {
   const activeCountrySelectedStates = rates[activeCountryIndex]?.states ?? [];
   const activeCountryAllStates = getCountryByCode(activeCountry ?? '')?.states ?? [];
 
-  console.log({ activeCountry });
-
   let tableData: ColumnDataType[] = activeCountry
     ? rates
         .find((rate) => String(rate.country) === String(activeCountry))

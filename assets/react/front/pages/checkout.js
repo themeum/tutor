@@ -5,30 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
     const checkoutPageWrapper = document.querySelector(".tutor-checkout-page");
 
-		async function getCheckoutData(couponCode, countryCode) {
-			const url = new URL(window.location.href);
-			const plan = url.searchParams.get('plan');
-
-			const formData = new FormData();
-			formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-			formData.set('action', 'tutor_update_checkout_data');
-			formData.set('coupon_code', couponCode);
-
-			if (countryCode) {
-				formData.set('country_code', countryCode);
-			}
-
-			if (plan) {
-					formData.set('plan', plan);
-			}
-
-			const response = await ajaxHandler(formData);
-			const data = await response.json();
-
-			const checkoutDetails = document.querySelector('[tutor-checkout-details]');
-			checkoutDetails.innerHTML = data.data.html;
-		}
-
     if (checkoutPageWrapper) {
         const checkoutCourses = document.querySelector('.tutor-checkout-courses');
         const checkoutGrandTotal = document.querySelector('.tutor-checkout-grand-total');
@@ -43,19 +19,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const toggleCouponFormButton = document.querySelector("#tutor-toggle-coupon-form");
         const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
         const checkoutHaveACoupon = document.querySelector(".tutor-have-a-coupon");
-        const applyCouponInput = document.querySelector("input[name=coupon_code]");
+        const applyCouponInput = applyCouponForm?.querySelector("input");
         const applyCouponButton = applyCouponForm?.querySelector("button");
 
         const checkoutCouponWrapper = document.querySelector(".tutor-checkout-coupon-wrapper");
         const checkoutCouponRemove = document.querySelector("#tutor-checkout-remove-coupon");
 
-				const countryInput = document.querySelector('[tutor-billing-country]');
-
         // Handle payment method click 
-				// biome-ignore lint/complexity/noForEach: <explanation>
         paymentOptionButtons.forEach((button) => {
-					button.addEventListener('click', (e) => {
-							// biome-ignore lint/complexity/noForEach: <explanation>
+            button.addEventListener('click', (e) => {
                 paymentOptionButtons.forEach(btn => btn.classList.remove('active'));
                 button.classList.add('active');
                 const paymentMethod = button.dataset.paymentMethod;
@@ -73,123 +45,82 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Handle toggle coupon form button click
-        window.addEventListener('click', (event) => {
-					const button = event.target.closest('#tutor-toggle-coupon-form');
-
-					if (!button) {
-						return;
-					}
-
-					const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
-					if (applyCouponForm.classList.contains('tutor-d-none')) {
-							applyCouponForm.classList.remove('tutor-d-none');
-							applyCouponInput.focus();
-					} else {
-							applyCouponForm.classList.add('tutor-d-none');
-					}
+        toggleCouponFormButton?.addEventListener('click', () => {
+            if (applyCouponForm.classList.contains('tutor-d-none')) {
+                applyCouponForm.classList.remove('tutor-d-none');
+                applyCouponInput.focus();
+            } else {
+                applyCouponForm.classList.add('tutor-d-none');
+            }
         });
 
         // Handle apply coupon button click
-        window.addEventListener('click', async (e) => {
-					const applyButton = e.target.closest('[tutor-apply-coupon]');
+        applyCouponButton?.addEventListener('click', async (e) => {
+            const url = new URL(window.location.href);
+            const plan = url.searchParams.get('plan');
+            const couponCode = applyCouponInput.value;
 
-					if (!applyButton) {
-						return;
-					}
+            if (couponCode.length === 0) {
+                tutor_toast(__('Failed', 'tutor'), __('Please add a coupon code.'), 'error');
+                return;
+            }
 
-					const applyCouponInput = document.querySelector("input[name=coupon_code]");
+            const formData = new FormData();
+            formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
+            formData.set('action', 'tutor_apply_coupon');
+            formData.set('coupon_code', couponCode);
+            formData.set('object_ids', applyCouponButton.dataset.objectIds);
+            if (plan) {
+                formData.set('plan', plan);
+            }
 
-					const url = new URL(window.location.href);
-					const plan = url.searchParams.get('plan');
-					const couponCode = applyCouponInput.value;
-					const countryCode = countryInput.value;
+            try {
+                applyCouponButton.setAttribute('disabled', 'disabled');
+                applyCouponButton.classList.add('is-loading');
 
-					getCheckoutData(couponCode, countryCode);
+                const post = await ajaxHandler(formData);
+                const { status_code, data, message = defaultErrorMessage } = await post.json();
 
-					// if (couponCode.length === 0) {
-					// 		tutor_toast(__('Failed', 'tutor'), __('Please add a coupon code.'), 'error');
-					// 		return;
-					// }
+                if (status_code === 200) {
+                    tutor_toast(__('Success', 'tutor'), message, 'success');
+                    checkoutCouponWrapper.classList.remove('tutor-d-none');
+                    checkoutCouponWrapper.querySelector('.tutor-checkout-coupon-badge span').innerHTML = couponCode;
+                    checkoutCouponWrapper.querySelector('.tutor-discount-amount').innerHTML = `-${data.deducted_price}`;
+                    applyCouponForm.classList.add('tutor-d-none');
+                    checkoutHaveACoupon.classList.add('tutor-d-none');
+                    checkoutGrandTotal.innerHTML = data.total_price;
 
-					// const formData = new FormData();
-					// formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
-					// // formData.set('action', 'tutor_apply_coupon');
-					// formData.set('action', 'tutor_update_checkout_data');
-					// formData.set('coupon_code', couponCode);
-
-					// if (countryCode) {
-					// 	formData.set('country_code', countryCode);
-					// }
-
-					// formData.set('object_ids', applyCouponButton.dataset.objectIds);
-					// if (plan) {
-					// 		formData.set('plan', plan);
-					// }
-
-					// const response = await ajaxHandler(formData);
-					// const data = await response.json();
-
-					// const checkoutDetails = document.querySelector('[tutor-checkout-details]');
-					// checkoutDetails.innerHTML = data.data.html;
-
-            // try {
-            //     applyCouponButton.setAttribute('disabled', 'disabled');
-            //     applyCouponButton.classList.add('is-loading');
-
-            //     const post = await ajaxHandler(formData);
-            //     const { status_code, data, message = defaultErrorMessage } = await post.json();
-
-            //     if (status_code === 200) {
-            //         tutor_toast(__('Success', 'tutor'), message, 'success');
-            //         checkoutCouponWrapper.classList.remove('tutor-d-none');
-            //         checkoutCouponWrapper.querySelector('.tutor-checkout-coupon-badge span').innerHTML = couponCode;
-            //         checkoutCouponWrapper.querySelector('.tutor-discount-amount').innerHTML = `-${data.deducted_price}`;
-            //         applyCouponForm.classList.add('tutor-d-none');
-            //         checkoutHaveACoupon.classList.add('tutor-d-none');
-            //         checkoutGrandTotal.innerHTML = data.total_price;
-
-            //         // Update course items
-            //         // biome-ignore lint/complexity/noForEach: <explanation>
-            //         data.items?.forEach((item) => {
-						// 					const courseItem = document.querySelector(`[data-course-id="${item.item_id}"]`);
-						// 					if (item.is_applied && courseItem) {
-						// 							courseItem.querySelector('.tutor-text-right').innerHTML = `
-						// 									<div class="tutor-fw-bold">${item.discount_price}</div>
-						// 									<div class="tutor-checkout-discount-price">${item.regular_price}</div>
-						// 							`
-						// 							courseItem.querySelector('.tutor-checkout-coupon-badge').classList.remove('tutor-d-none');
-						// 							courseItem.querySelector('.tutor-checkout-coupon-badge > span').innerHTML = couponCode;
-						// 					}
-            //         });
-            //     } else {
-            //         tutor_toast(__('Failed', 'tutor'), message, 'error');
-            //     }
-            // } catch (error) {
-            //     tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-            // } finally {
-            //     applyCouponButton.removeAttribute('disabled');
-            //     applyCouponButton.classList.remove('is-loading');
-            // }
+                    // Update course items
+                    data.items?.forEach((item) => {
+                        const courseItem = document.querySelector(`[data-course-id="${item.item_id}"]`);
+                        if (item.is_applied && courseItem) {
+                            courseItem.querySelector('.tutor-text-right').innerHTML = `
+                                <div class="tutor-fw-bold">${item.discount_price}</div>
+                                <div class="tutor-checkout-discount-price">${item.regular_price}</div>
+                            `
+                            courseItem.querySelector('.tutor-checkout-coupon-badge').classList.remove('tutor-d-none');
+                            courseItem.querySelector('.tutor-checkout-coupon-badge > span').innerHTML = couponCode;
+                        }
+                    });
+                } else {
+                    tutor_toast(__('Failed', 'tutor'), message, 'error');
+                }
+            } catch (error) {
+                tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+            } finally {
+                applyCouponButton.removeAttribute('disabled');
+                applyCouponButton.classList.remove('is-loading');
+            }
         });
 
         // Handle coupon remove button click
-        window.addEventListener('click', (e) => {
-						if (!e.target.closest('#tutor-checkout-remove-coupon')) {
-							return;
-						}
-
-						const couponCode = '';
-						const countryCode = countryInput.value;
-
-						getCheckoutData(couponCode, countryCode);
+        checkoutCouponRemove?.addEventListener('click', (e) => {
+            applyCouponInput.value = '';
+            checkoutCourses.innerHTML = checkoutPrevCourses;
+            checkoutGrandTotal.innerHTML = checkoutPrevGrandTotal;
+            checkoutCouponWrapper.classList.add('tutor-d-none');
+            checkoutHaveACoupon.classList.remove('tutor-d-none');
         });
-
-				document.querySelector('[tutor-billing-country]').addEventListener('change', (event) => {
-					const couponCode = applyCouponInput.value;
-					const countryCode = event.target.value;
-
-					getCheckoutData(couponCode, countryCode);
-				});
 
 
         // Validate checkout form.

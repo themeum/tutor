@@ -40,7 +40,11 @@ const TaxSettingsPage = () => {
   const activeCountry = form.watch('active_country');
   const formData = form.watch();
 
-  console.log({ taxSettingsQuery });
+  useEffect(() => {
+    if (form.formState.isDirty) {
+      document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+    }
+  }, [form.formState.isDirty]);
 
   useEffect(() => {
     if (taxSettingsQuery.data) {

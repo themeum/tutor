@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Ecommerce\Supports\Shop;
 use TUTOR\Input;
 use Tutor\Traits\JsonResponse;
 
@@ -742,11 +743,7 @@ class Settings {
 	 * @return void
 	 */
 	public function get_tax_settings() {
-		$tax_settings = tutor_utils()->get_option( 'ecommerce_tax' );
-
-		if ( ! empty( $tax_settings ) && is_string( $tax_settings ) ) {
-			$tax_settings = json_decode( $tax_settings );
-		}
+		$tax_settings = Shop::get_tax_settings();
 
 		if ( ! empty( $tax_settings->active_country ) ) {
 			$tax_settings->active_country = null;

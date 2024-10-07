@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CartController;
-use Tutor\Ecommerce\Manager\Checkout;
 use TUTOR\Input;
 
 $user_id = get_current_user_id();
@@ -32,11 +31,9 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
 $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
-// $user = get_userdata( $get_cart['cart']->user_id );
-
-
 ?>
 <div class="tutor-checkout-page">
+
 	<?php
 	$echo_before_return    = true;
 	$user_has_subscription = apply_filters( 'tutor_checkout_user_has_subscription', false, $plan_id, $echo_before_return );
@@ -49,7 +46,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
-			<div class="tutor-col-md-6" tutor-checkout-details>
+			<div class="tutor-col-md-6">
 				<?php
 				$file = __DIR__ . '/checkout-details.php';
 				if ( file_exists( $file ) ) {

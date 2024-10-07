@@ -23,6 +23,16 @@ final class Shop {
 		return '−&thinsp;' . $price;
 	}
 
+	public static function get_tax_settings() {
+		$tax_settings = tutor_utils()->get_option( 'ecommerce_tax' );
+
+		if ( ! empty( $tax_settings ) && is_string( $tax_settings ) ) {
+			$tax_settings = json_decode( $tax_settings );
+		}
+
+		return $tax_settings;
+	}
+
 	/**
 	 * add the object properties with currency format.
 	 * will search a key by the provided keys array and if exists and the value is numeric then
@@ -90,7 +100,7 @@ final class Shop {
 	}
 
 	public static function is_tax_enabled() {
-		$tax_settings = settings::get_tax_settings();
+		$tax_settings = self::get_tax_settings();
 
 		// if the tax is included to the product price then we do not need to calculate the tax
 		return 0 === (int) $tax_settings->is_tax_included_in_price;
@@ -107,7 +117,7 @@ final class Shop {
 	 *              tax is not included in the price. otherwise, returns false.
 	 */
 	public static function is_price_displayed_with_tax() {
-		$tax_settings        = settings::get_tax_settings();
+		$tax_settings        = self::get_tax_settings();
 		$show_price_with_tax = (bool) $tax_settings->show_price_with_tax;
 
 		// return true if tax is not included in price but should be shown
