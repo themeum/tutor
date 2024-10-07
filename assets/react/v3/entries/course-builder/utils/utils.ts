@@ -346,9 +346,14 @@ export const validateQuizQuestion = (
     }
   | true => {
   if (activeQuestionIndex !== -1) {
+    const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
+
+    if (currentQuestionType === 'h5p') {
+      return true;
+    }
+
     const answers =
       form.watch(`questions.${activeQuestionIndex}.question_answers` as 'questions.0.question_answers') || [];
-    const currentQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`);
     const isAllSaved = answers.every((answer) => answer.is_saved);
     const hasCorrectAnswer = answers.some((answer) => answer.is_correct === '1');
 

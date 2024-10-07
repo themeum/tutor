@@ -177,6 +177,16 @@ class Lesson extends Tutor_Base {
 			);
 		}
 
+		if ( 0 !== $lesson_id ) {
+			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
+				$this->json_response(
+					tutor_utils()->error_message(),
+					null,
+					HttpHelper::STATUS_FORBIDDEN
+				);
+			}
+		}
+
 		$post = get_post( $lesson_id, ARRAY_A );
 
 		if ( $post ) {
@@ -298,7 +308,11 @@ class Lesson extends Tutor_Base {
 			$lesson_data['ID'] = $lesson_id;
 
 			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+				$this->json_response(
+					tutor_utils()->error_message(),
+					null,
+					HttpHelper::STATUS_FORBIDDEN
+				);
 			}
 
 			do_action( 'tutor/lesson_update/before', $lesson_id );
@@ -351,6 +365,10 @@ class Lesson extends Tutor_Base {
 		$post_type = get_post_type( $lesson_id );
 		if ( tutor()->assignment_post_type === $post_type ) {
 			$content = __( 'Assignment', 'tutor' );
+		}
+
+		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
+			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
 		}
 
 		wp_delete_post( $lesson_id, true );

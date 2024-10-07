@@ -17,7 +17,7 @@ import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
-import type { ModalProps } from '@Components/modals/Modal';
+import { type ModalProps, useModal } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
@@ -33,10 +33,13 @@ import {
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
+import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { normalizeLineEndings } from '@Utils/util';
+import { noop } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
+import H5PContentListModal from './H5PContentListModal';
 
 interface LessonModalProps extends ModalProps {
   lessonId?: ID;
@@ -80,6 +83,7 @@ const LessonModal = ({
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
   const queryClient = useQueryClient();
+  const { showModal } = useModal();
 
   const { data: lessonDetails } = getLessonDetailsQuery;
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
@@ -207,42 +211,101 @@ const LessonModal = ({
                   />
                 )}
               />
-              <Controller
-                name="description"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormWPEditor
-                    {...controllerProps}
-                    label={
-                      <>
-                        {__('Description', 'tutor')}
-                        {lessonId && isClassicEditorEnabled && (
-                          <Button
-                            variant="text"
-                            size="small"
-                            onClick={() => {
-                              window.open(
-                                `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
-                                '_blank',
-                                'noopener',
-                              );
-                            }}
-                            icon={<SVGIcon name="edit" width={24} height={24} />}
-                            buttonCss={styles.wpEditorButton}
+              <div css={styles.description}>
+                <Controller
+                  name="description"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormWPEditor
+                      {...controllerProps}
+                      label={
+                        <>
+                          {__('Description', 'tutor')}
+                          {lessonId && isClassicEditorEnabled && (
+                            <Button
+                              variant="text"
+                              size="small"
+                              onClick={() => {
+                                window.open(
+                                  `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
+                                  '_blank',
+                                  'noopener',
+                                );
+                              }}
+                              icon={<SVGIcon name="edit" width={24} height={24} />}
+                              buttonCss={styles.wpEditorButton}
+                            >
+                              {__('WP Editor', 'tutor')}
+                            </Button>
+                          )}
+                        </>
+                      }
+                      placeholder={__('Enter Lesson Description', 'tutor')}
+                      helpText={__(
+                        'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.',
+                        'tutor',
+                      )}
+                    />
+                  )}
+                />
+
+                <Show
+                  when={isTutorPro && isAddonEnabled(Addons.H5P_Integration)}
+                  fallback={
+                    <Show when={!isTutorPro}>
+                      <div css={styles.addH5PContentWrapper({ hasLessonId: !!lessonId })}>
+                        <ProBadge>
+                          <button
+                            css={styles.addH5PContentButton({
+                              isWpEditorEnabled: !!lessonId && isClassicEditorEnabled,
+                            })}
+                            type="button"
+                            disabled
+                            onClick={noop}
                           >
-                            {__('WP Editor', 'tutor')}
-                          </Button>
-                        )}
-                      </>
-                    }
-                    placeholder={__('Enter Lesson Description', 'tutor')}
-                    helpText={__(
-                      'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.',
-                      'tutor',
-                    )}
-                  />
-                )}
-              />
+                            {__('Add H5P Content', 'tutor')}
+                          </button>
+                        </ProBadge>
+                      </div>
+                    </Show>
+                  }
+                >
+                  <button
+                    css={styles.addH5PContentButton({ isWpEditorEnabled: !!lessonId && isClassicEditorEnabled })}
+                    type="button"
+                    onClick={() => {
+                      showModal({
+                        component: H5PContentListModal,
+                        props: {
+                          title: __('Select H5P Content', 'tutor'),
+                          onAddContent: (contents) => {
+                            const convertToH5PShortCode = (content: H5PContent) => {
+                              return `[h5p id="${content.id}"]`;
+                            };
+                            const description = form.getValues('description');
+                            const h5pContents = contents.map(convertToH5PShortCode);
+
+                            form.setValue('description', `${description}\n${h5pContents.join('\n')}`, {
+                              shouldDirty: true,
+                            });
+                          },
+                          contentType: 'lesson',
+                          addedContentIds: (() => {
+                            const description = form.getValues('description');
+                            const h5pShortCodes = description.match(/\[h5p id="(\d+)"\]/g) || [];
+                            return h5pShortCodes.map((shortcode) => {
+                              const id = shortcode.match(/\[h5p id="(\d+)"\]/)?.[1] || '';
+                              return String(id);
+                            });
+                          })(),
+                        },
+                      });
+                    }}
+                  >
+                    {__('Add H5P Content', 'tutor')}
+                  </button>
+                </Show>
+              </div>
             </div>
           </div>
 
@@ -480,6 +543,50 @@ const styles = {
     position: sticky;
     top: 0;
     z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
+  `,
+  description: css`
+    position: relative;
+  `,
+  addH5PContentWrapper: ({
+    hasLessonId,
+  }: {
+    hasLessonId: boolean;
+  }) => css`
+    position: absolute;
+    top: ${hasLessonId ? '36px' : '28px'};
+    left: 110px;
+  `,
+  addH5PContentButton: ({ isWpEditorEnabled: hasLessonId }: { isWpEditorEnabled: boolean }) => css`
+    position: absolute;
+    top: ${hasLessonId ? '36px' : '28px'};
+    left: 110px;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 13px;
+    line-height: 2.15384615;
+    min-height: 30px;
+    margin: 0;
+    padding: 0 10px;
+    cursor: pointer;
+    border: 1px solid #3e64de;
+    border-radius: 3px;
+    white-space: nowrap;
+    box-sizing: border-box;
+    color: #3e64de;
+    border-color: #3e64de;
+    background: transparent;
+
+    :hover:not(:disabled) {
+      background: ${colorTokens.background.white};
+    }
+
+    :disabled {
+      cursor: not-allowed;
+      position: relative;
+      top: auto;
+      left: auto;
+      opacity: 0.5;
+    }
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};

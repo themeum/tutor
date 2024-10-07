@@ -9,9 +9,8 @@ const AddonCard = ({ addon, addonId }) => {
 	return (
 		<div className="tutor-col-lg-6 tutor-col-xl-4 tutor-col-xxl-3 tutor-mb-32">
 			<div
-				className={`tutor-card tutor-card-md tutor-addon-card ${
-					addon.plugins_required.length > 0 ? 'not-subscribed' : ''
-				} tutor-addon-card-${addonId + 1}`}
+				className={`tutor-card tutor-card-md tutor-addon-card ${addon.plugins_required.length > 0 ? 'not-subscribed' : ''
+					} tutor-addon-card-${addonId + 1}`}
 				style={{ transitionDelay: `${100 * addonId}ms` }}
 			>
 				<div className="tutor-card-body">
@@ -34,12 +33,12 @@ const AddonCard = ({ addon, addonId }) => {
 							<span>
 								{addon.plugins_required?.length > 0 ?
 									__('Required Plugin(s)', 'tutor')
-								: addon.ext_required?.length > 0 ?
-									__('Required for Push Notification', 'tutor')
-								: addon.required_settings === true ?
-									addon.required_title ? addon.required_title : ''
-								:
-									__('No extra plugin required', 'tutor')
+									: addon.ext_required?.length > 0 ?
+										__('Required for Push Notification', 'tutor')
+										: addon.required_settings === true ?
+											addon.required_title ? addon.required_title : ''
+											:
+											__('No extra plugin required', 'tutor')
 								}
 							</span>
 							{addon.ext_required?.length > 0 ?
@@ -54,30 +53,33 @@ const AddonCard = ({ addon, addonId }) => {
 										})}
 									</span>
 								</div>
-								
-							: addon.depend_plugins && addon.plugins_required.length ?
-								<div className="tooltip-wrap tooltip-icon">
-									<span className="tooltip-txt tooltip-top">
-										{
-											addon.plugins_required.map((plugin, index) => {
-												return (
-													<div key={index}>
-														<span>{plugin}</span>
-													</div>
-												);
-											})
-										}
-									</span>
-								</div>
-							: addon.required_settings === true && addon.required_message ?
-								<div className="tooltip-wrap tooltip-icon">
-									<span className="tooltip-txt tooltip-top">
-										<div>
-											<span>{addon.required_message ? addon.required_message : ''}</span>
+
+								: addon.depend_plugins && addon.plugins_required.length ?
+									<div className="tooltip-wrap tooltip-icon">
+										<span className="tooltip-txt tooltip-top">
+											{
+												addon.plugins_required.map((plugin, index) => {
+													return (
+														<div key={index}>
+															<span>
+																{plugin}
+																{index !== addon.plugins_required.length - 1 && ','}
+															</span>
+														</div>
+													);
+												})
+											}
+										</span>
+									</div>
+									: addon.required_settings === true && addon.required_message ?
+										<div className="tooltip-wrap tooltip-icon">
+											<span className="tooltip-txt tooltip-top">
+												<div>
+													<span>{addon.required_message ? addon.required_message : ''}</span>
+												</div>
+											</span>
 										</div>
-									</span>
-								</div>	
-							: ''
+										: ''
 							}
 						</div>
 					</div>
@@ -96,7 +98,7 @@ const AddonCard = ({ addon, addonId }) => {
 									<span className="tutor-form-toggle-control" area-hidden="true"></span>
 								</label>
 							</div>
-						:''
+							: ''
 					}
 				</div>
 			</div>

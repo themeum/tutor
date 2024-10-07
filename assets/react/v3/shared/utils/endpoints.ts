@@ -37,7 +37,10 @@ const endpoints = {
   SAVE_QUIZ: 'tutor_quiz_builder_save',
 
 	// TAX SETTINGS
-	GET_TAX_SETTINGS: 'tutor_get_tax_settings'
+	GET_TAX_SETTINGS: 'tutor_get_tax_settings',
+  GET_H5P_QUIZ_CONTENT: 'tutor_h5p_list_quiz_contents',
+  GET_H5P_LESSON_CONTENT: 'tutor_h5p_list_lesson_contents',
+  GET_H5P_QUIZ_CONTENT_BY_ID: 'tutor_h5p_quiz_content_by_id',
 };
 
 export default endpoints;
