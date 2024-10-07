@@ -26,6 +26,7 @@ import {
   type QuizQuestionType,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import { usePrevious } from '@Hooks/usePrevious';
 import { styleUtils } from '@Utils/style-utils';
 
 import emptyStateImage2x from '@Images/quiz-empty-state-2x.webp';
@@ -33,6 +34,7 @@ import emptyStateImage from '@Images/quiz-empty-state.webp';
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, contentType } = useQuizModalContext();
+  const previousActiveQuestionId = usePrevious(activeQuestionId);
   const form = useFormContext<QuizForm>();
 
   const alertRef = useRef<HTMLDivElement>(null);
@@ -83,7 +85,7 @@ const QuestionForm = () => {
   }
 
   return (
-    <div key={activeQuestionId} css={styles.questionForm}>
+    <div key={activeQuestionIndex} css={styles.questionForm(activeQuestionId === previousActiveQuestionId)}>
       <div css={styles.questionWithIndex}>
         <div css={styles.questionIndex}>{activeQuestionIndex + 1}.</div>
         <div css={styles.questionTitleAndDesc}>
@@ -180,11 +182,11 @@ const QuestionForm = () => {
 export default QuestionForm;
 
 const styles = {
-  questionForm: css`
+  questionForm: (isSameQuestion: boolean) => css`
     ${styleUtils.display.flex('column')};
     padding-right: ${spacing[48]};
     gap: ${spacing[16]};
-    animation: fadeIn 0.25s ease-in-out;
+    animation:  ${isSameQuestion ? undefined : 'fadeIn 0.25s ease-in-out'};
 
     @keyframes fadeIn {
       from {
