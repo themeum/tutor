@@ -91,7 +91,7 @@ const QuizModal = ({
         feedback_mode: 'retry',
         attempts_allowed: 10,
         passing_grade: 80,
-        max_questions_for_answer: 10,
+        max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
         quiz_auto_start: false,
         question_layout_view: contentType === 'tutor_h5p_quiz' ? 'question_below_each_other' : 'single_question',
         questions_order: 'rand',
