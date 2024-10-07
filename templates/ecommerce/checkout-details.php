@@ -151,7 +151,6 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 										</h6>
 										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $checkout_manager->is_coupon_applied() ? '' : 'tutor-d-none' ); ?>">
 											<i class="tutor-icon-tag" area-hidden="true"></i>
-											<!-- <span><?php // echo esc_html( $has_automatic_coupon ? $automatic_coupon->coupon_title : '' ); ?></span> -->
 											<span><?php echo esc_html( $checkout_manager->get_coupon_code() . ' (' . Shop::as_negative( $course->final_price->discount_value_with_currency ) . ')' ); ?></span>
 										</div>
 									</div>

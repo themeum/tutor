@@ -34,6 +34,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
 $checkout_manager = Checkout::create_with( $course_list, 'SPECIAL', $get_cart['cart']->user_id, '040' );
 $summary          = $checkout_manager->get_calculated_data();
+
 ?>
 <div class="tutor-checkout-page">
 
