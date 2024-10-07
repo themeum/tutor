@@ -248,7 +248,10 @@ export const formatBytes = (bytes: number, decimals = 2) => {
 };
 
 export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
-  return value.replace(allowNegative ? /[^0-9.-]/g : /[^0-9]/g, '');
+  return value
+    .replace(allowNegative ? /[^0-9.-]/g : /[^0-9.]/g, '')
+    .replace(/(?!^)-/g, '')
+    .replace(/(\..*)\./g, '$1');
 };
 
 export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: number) => {

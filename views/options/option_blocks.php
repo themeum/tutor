@@ -40,8 +40,8 @@ $block_slug = $blocks['slug'] ?? '';
 		<div class="item-wrapper">
 			<div class="tutor-option-field-row">
 				<div class="tutor-option-field-label">
-					<?php isset( $blocks['label'] ) ? printf( '<div class="tutor-fs-6 tutor-fw-medium tutor-mb-8" tutor-option-name>%s</div>', esc_attr( $blocks['label'] ) ) : null; ?>
-					<?php isset( $blocks['desc'] ) ? printf( '<div class="tutor-fs-7 tutor-color-muted">%s</div>', wp_kses_post( $blocks['desc'] ) ) : null; ?>
+					<?php isset( $blocks['label'] ) ? printf( '<div class="tutor-fs-6 tutor-fw-medium" tutor-option-name>%s</div>', esc_attr( $blocks['label'] ) ) : null; ?>
+					<?php isset( $blocks['desc'] ) ? printf( '<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">%s</div>', wp_kses_post( $blocks['desc'] ) ) : null; ?>
 				</div>
 
 				<div class="tutor-option-field-input tutor-d-flex tutor-gap-1">
