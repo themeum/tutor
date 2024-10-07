@@ -251,6 +251,30 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
 		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
+
+		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
+	}
+
+	/**
+	 * Handle password protected course/bundle.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $template template path.
+	 *
+	 * @return string template path.
+	 */
+	public function handle_password_protected( $template ) {
+		if ( is_single() ) {
+			$current_post_type = get_post_type( get_the_ID() );
+			$post_types        = array( tutor()->course_post_type, tutor()->bundle_post_type );
+			if ( in_array( $current_post_type, $post_types, true ) && post_password_required() ) {
+				remove_all_filters( 'template_include' );
+				return tutor()->path . '/templates/single/password-protected.php';
+			}
+		}
+
+		return $template;
 	}
 
 	/**

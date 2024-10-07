@@ -563,23 +563,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/**
-	 * Show/Hide setting option
-	 * @param object element			Dom object
-	 * @param string value 				change value
-	 * @param string required_value		Required value for match the conditon for show, else it will hide
-	 * @return void
-	 * 
-	 * @since 2.0.7
-	 */
-	function showHideOption(element, value, required_value) {
-		if (element.style === undefined) return;
-
-		value === (required_value !== undefined ? required_value : 'on')
-			? element.style.display = 'grid'
-			: element.style.display = 'none'
-	}
-
-	/**
 	 * Input value change detector (Normal/Hidden input)
 	 * 
 	 * @param object	element 
@@ -600,63 +583,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		observer.observe(element, {
 			attributes: true
 		});
-	}
-
-	/**
-	 * Woocommerce order auto complete
-	 *
-	 * @since 2.0.5
-	 * 
-	 * Invoice generate options added
-	 *
-	 * @since 2.1.4
-	 */
-	const monetization_field = document.querySelector("[name='tutor_option[monetize_by]']");
-	const order_autocomplete_wrapper = document.getElementById('field_tutor_woocommerce_order_auto_complete');
-
-	const invoice_field = document.querySelector("[name='tutor_option[tutor_woocommerce_invoice]']");
-	const invoice_field_wrapper = document.getElementById('field_tutor_woocommerce_invoice');
-	const ecommerce_pages = document.querySelector('.ecommerce_pages');
-	const ecommerce_currency = document.querySelector('.ecommerce_currency');
-	const revenue_sharing_checkbox = document.querySelector('[data-toggle-fields="sharing_percentage"]')
-	const revenue_sharing_field = document.querySelector("[name='tutor_option[enable_revenue_sharing]']");
-	const revenue_sharing_section = document.querySelector('.revenue_sharing');
-	const fees_section = document.querySelector('.fees');
-	const withdraw_section = document.querySelector('.withdraw');
-
-	if (invoice_field) {
-		showHideOption(invoice_field_wrapper, monetization_field.value, 'wc')
-	}
-
-	if (monetization_field) {
-		const monetized_by = monetization_field?.value;
-		/**
-		 * Show/Hide on saved value.
-		 */
-		showHideOption(order_autocomplete_wrapper, monetized_by, 'wc');
-		showHideOption(ecommerce_pages, monetized_by, 'tutor');
-		showHideOption(ecommerce_currency, monetized_by, 'tutor');
-
-		/**
-		 * Show/Hide on-change value change.
-		 */
-		monetization_field.onchange = (e) => {
-			showHideOption(order_autocomplete_wrapper, e.target.value, 'wc');
-			showHideOption(invoice_field_wrapper, e.target.value, 'wc');
-
-			showHideOption(ecommerce_pages, e.target.value, 'tutor');
-			showHideOption(ecommerce_currency, e.target.value, 'tutor');
-		}
-	}
-
-	if (revenue_sharing_field) {
-		showHideOption(fees_section, revenue_sharing_field.value, 'on');
-		showHideOption(withdraw_section, revenue_sharing_field.value, 'on');
-
-		revenue_sharing_checkbox.onchange = (e) => {
-			showHideOption(fees_section, e.target.checked, true);
-			showHideOption(withdraw_section, e.target.checked, true);
-		}
 	}
 
 	/**
@@ -691,6 +617,126 @@ document.addEventListener('DOMContentLoaded', function () {
 	btnToggles.change(function () {
 		showHideToggleChildren($(this))
 	})
+
+	/**
+	 * On toggle switch change - show, hide setting's blocks
+	 * @since 3.0.0
+	 */
+	function showHideToggleBlock(el) {
+		let isChecked = el.is(':checked')
+		let fields = el.data('toggle-blocks').split(',')
+		if (Array.isArray(fields) === false || fields.length === 0) return
+
+		fields = fields.map(s => s.trim());
+		fields.forEach((f) => {
+			if (isChecked) {
+				$(`.tutor-option-single-item.${f}`).removeClass('tutor-d-none');
+			} else {
+				$(`.tutor-option-single-item.${f}`).addClass('tutor-d-none');
+			}
+		});
+	}
+
+	const btnToggleBlocks = $('input[type="checkbox"][data-toggle-blocks]');
+	btnToggleBlocks.each(function () {
+		showHideToggleBlock($(this));
+	});
+
+	btnToggleBlocks.change(function () {
+		showHideToggleBlock($(this));
+	});
+
+	/**
+	 * Show/Hide setting option
+	 * @param object element			Dom object
+	 * @param conditionFn function	Condition function
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	function showHideOption(element, conditionFn) {
+		if (!element) return;
+
+		if (conditionFn()) {
+			element.classList.remove("tutor-d-none");
+		} else {
+			element.classList.add("tutor-d-none");
+		}
+
+		// Remove border if only one item left.
+		const blockWrapper = element.closest(".item-wrapper");
+		if (blockWrapper) {
+			const displayItems = blockWrapper.querySelectorAll(".tutor-option-field-row:not(.tutor-d-none)");
+			if (displayItems.length && displayItems.length === 1) {
+				displayItems[0].classList.add("tutor-option-no-bottom-border");
+			} else {
+				displayItems[0].classList.remove("tutor-option-no-bottom-border");
+			}
+		}
+	}
+
+	/**
+	 * Woocommerce order auto complete
+	 *
+	 * @since 2.0.5
+	 * 
+	 * Invoice generate options added
+	 *
+	 * @since 2.1.4
+	 * 
+	 * Monetization options refactored
+	 *
+	 * @since 3.0.0
+	 */
+	const monetization_field = document.querySelector("[name='tutor_option[monetize_by]']");
+	if (monetization_field) {
+		const monetized_by = monetization_field?.value;
+		const revenue_sharing_checkbox = document.querySelector("[data-toggle-fields=sharing_percentage]");
+		const revenue_sharing_engines = ['tutor', 'wc', 'edd'];
+
+		const woocommerce_block = document.querySelector(".tutor-option-single-item.woocommerce");
+		const currency_block = document.querySelector(".tutor-option-single-item.ecommerce_currency");
+		const revenue_sharing_block = document.querySelector(".tutor-option-single-item.revenue_sharing");
+		const fees_block = document.querySelector(".tutor-option-single-item.fees");
+		const withdraw_block = document.querySelector(".tutor-option-single-item.withdraw");
+
+		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
+		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
+		
+		// Select native ecommerce nav items
+		const payment_nav_item = document.querySelector("[data-tab=ecommerce_payment]")?.parentElement;
+		const checkout_nav_item = document.querySelector("[data-tab=ecommerce_checkout]")?.parentElement;		
+
+		showHideOption(woocommerce_block, () => monetized_by === 'wc');
+		showHideOption(currency_block, () => monetized_by === 'tutor');
+		showHideOption(cart_page_field, () => monetized_by === 'tutor');
+		showHideOption(checkout_page_field, () => monetized_by === 'tutor');
+
+		showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(monetized_by));
+		showHideOption(fees_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
+		showHideOption(withdraw_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
+
+		// Hide and show native ecommerce nav items
+		showHideOption(payment_nav_item, () => monetized_by === 'tutor');
+		showHideOption(checkout_nav_item, () => monetized_by === 'tutor');
+
+		// Handle monetization fields on change.
+		monetization_field.onchange = (e) => {
+			const value = e.target.value;
+			showHideOption(woocommerce_block, () => value === 'wc');
+			showHideOption(currency_block, () => value === 'tutor');
+			showHideOption(cart_page_field, () => value === 'tutor');
+			showHideOption(checkout_page_field, () => value === 'tutor');
+
+			showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(value));
+			showHideOption(fees_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
+			showHideOption(withdraw_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
+
+			// Hide and show native ecommerce nav items
+			showHideOption(payment_nav_item, () => value === 'tutor');
+			showHideOption(checkout_nav_item, () => value === 'tutor');
+		}
+	}
 
 	/**
 	 * Maxlength counter for Textarea and Text field.

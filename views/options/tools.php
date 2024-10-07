@@ -19,7 +19,7 @@
 
 	<div class="tutor-admin-container">
 		<div class="tutor-row tutor-gx-lg-0 tutor-my-24">
-			<div class="tutor-col-auto tutor-col-lg-2">
+			<div class="tutor-col-12 tutor-col-sm-auto tutor-col-lg-2">
 				<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" data-page="<?php echo esc_attr( wp_unslash( $_GET['page'] ) ); ?>">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
@@ -30,7 +30,7 @@
 							<li class="tutor-nav-item">
 								<a class="tutor-nav-link<?php echo esc_attr( $active_class ); ?>" href="<?php echo esc_url( $page_url ); ?>">
 									<span class="<?php echo esc_attr( $section['icon'] ); ?>" area-hidden="true"></span>
-									<span class="tutor-ml-12 tutor-d-none tutor-d-lg-block"><?php echo esc_html( $section['label'] ); ?></span>
+									<span class="tutor-ml-12 tutor-d-sm-none tutor-d-lg-block"><?php echo esc_html( $section['label'] ); ?></span>
 								</a>
 							</li>
 						<?php
@@ -39,11 +39,11 @@
 				</ul>
 			</div>
 
-			<div class="tutor-col-1 tutor-text-center tutor-d-none tutor-d-lg-block">
+			<div class="tutor-col-lg-1 tutor-text-center tutor-d-none tutor-d-lg-block">
 				<div class="tutor-vr tutor-mx-32 tutor-d-inline-block"></div>
 			</div>
 
-			<div class="tutor-col-10 tutor-col-lg-9">
+			<div class="tutor-col-12 tutor-col-sm-10 tutor-col-lg-9">
 				<div class="tutor-option-tab-pages">
 					<?php
 					foreach ( $tools_fields as $key => $section ) {
