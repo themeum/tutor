@@ -943,12 +943,27 @@ if ( ! function_exists( 'get_tutor_all_withdrawal_methods' ) ) {
 
 
 if ( ! function_exists( 'tutor_log' ) ) {
+	/**
+	 * Logging data.
+	 *
+	 * @since 1.0.0
+	 * @since 3.0.0 exception logging support added.
+	 *
+	 * @return void
+	 */
 	function tutor_log() {
 		$arg_list = func_get_args();
 
 		foreach ( $arg_list as $data ) {
 			ob_start();
-			var_dump( $data );
+
+			if ( $data instanceof Exception ) {
+				var_dump( $data->getMessage() );
+				var_dump( $data->getTraceAsString() );
+			} else {
+				var_dump( $data );
+			}
+
 			error_log( ob_get_clean() );
 		}
 	}
@@ -1429,7 +1444,10 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			foreach ( Settings::get_default_automate_payment_gateways() as $k => $gateway ) {
 				list( $label, $is_active, $icon ) = array_values( $gateway );
 				if ( $is_active ) {
-					$active_gateways['automate'][ $k ] = array( 'label' => $label, 'icon' => $icon );
+					$active_gateways['automate'][ $k ] = array(
+						'label' => $label,
+						'icon'  => $icon,
+					);
 				}
 			}
 
@@ -1462,7 +1480,6 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			return get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
 		}
 	}
-
 }
 
 if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
