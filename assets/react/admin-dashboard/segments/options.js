@@ -706,6 +706,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		// Select native ecommerce nav items
 		const payment_nav_item = document.querySelector("[data-tab=ecommerce_payment]")?.parentElement;
 		const checkout_nav_item = document.querySelector("[data-tab=ecommerce_checkout]")?.parentElement;		
+		const subscription_nav_item = document.querySelector("[data-tab=ecommerce_subscription]")?.parentElement;		
 
 		showHideOption(woocommerce_block, () => monetized_by === 'wc');
 		showHideOption(currency_block, () => monetized_by === 'tutor');
@@ -719,6 +720,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		// Hide and show native ecommerce nav items
 		showHideOption(payment_nav_item, () => monetized_by === 'tutor');
 		showHideOption(checkout_nav_item, () => monetized_by === 'tutor');
+		showHideOption(subscription_nav_item, () => monetized_by === 'tutor');
 
 		// Handle monetization fields on change.
 		monetization_field.onchange = (e) => {
@@ -735,6 +737,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			// Hide and show native ecommerce nav items
 			showHideOption(payment_nav_item, () => value === 'tutor');
 			showHideOption(checkout_nav_item, () => value === 'tutor');
+			showHideOption(subscription_nav_item, () => value === 'tutor');
 		}
 	}
 
