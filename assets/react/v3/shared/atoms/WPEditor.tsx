@@ -76,7 +76,7 @@ function editorConfig(
       toolbar: !readOnly,
       toolbar1: isMinimal
         ? `bold italic underline | image | ${isTutorPro ? 'codesample' : ''}`
-        : `formatselect | bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | wp_more ${
+        : `formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | wp_more ${
             isTutorPro ? ' codesample' : ''
           } | wp_adv`,
 

@@ -161,7 +161,7 @@ const CourseBasic = () => {
 
   const userList = useUserListQuery(userSearchText);
 
-  const instructorListQuery = useInstructorListQuery(String(courseId) ?? '');
+  const instructorListQuery = useInstructorListQuery(String(courseId) ?? '', isMultiInstructorEnabled);
 
   const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
     id: instructor.id,

@@ -138,6 +138,25 @@ class Options_V2 {
 	}
 
 	/**
+	 * Prepare settings search item.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $section section item.
+	 * @param array $block block item.
+	 * @param array $field field item.
+	 *
+	 * @return array prepared searchable field item.
+	 */
+	private function prepare_search_item( $section, $block, $field ) {
+		$field['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
+		$field['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
+		$field['block_label']   = isset( $block['label'] ) ? $block['label'] : '';
+
+		return $field;
+	}
+
+	/**
 	 * Function to get all fields for search tutor_option_search
 	 *
 	 * @since 2.0.0
@@ -150,14 +169,28 @@ class Options_V2 {
 		$data_array = array();
 		foreach ( $this->get_setting_fields() as $sections ) {
 			if ( is_array( $sections ) && ! empty( $sections ) ) {
-				foreach ( tutils()->sanitize_recursively( $sections ) as $section ) {
+				foreach ( tutor_utils()->sanitize_recursively( $sections ) as $section ) {
 					foreach ( $section['blocks'] as $blocks ) {
 						if ( isset( $blocks['fields'] ) && ! empty( $blocks['fields'] ) ) {
 							foreach ( $blocks['fields'] as $fields ) {
-								$fields['section_label'] = isset( $section['label'] ) ? $section['label'] : '';
-								$fields['section_slug']  = isset( $section['slug'] ) ? $section['slug'] : '';
-								$fields['block_label']   = isset( $blocks['label'] ) ? $blocks['label'] : '';
-								$data_array['fields'][]  = $fields;
+								$data_array['fields'][] = $this->prepare_search_item( $section, $blocks, $fields );
+							}
+						}
+					}
+
+					/**
+					 * Submenu item search.
+					 *
+					 * @since 3.0.0
+					 */
+					if ( isset( $section['submenu'] ) && is_array( $section['submenu'] ) ) {
+						foreach ( tutor_utils()->sanitize_recursively( $section['submenu'] ) as $submenu_section ) {
+							foreach ( $submenu_section['blocks'] as $block ) {
+								if ( isset( $block['fields'] ) && ! empty( $block['fields'] ) ) {
+									foreach ( $block['fields'] as $fields ) {
+										$data_array['fields'][] = $this->prepare_search_item( $submenu_section, $block, $fields );
+									}
+								}
 							}
 						}
 					}
@@ -664,6 +697,15 @@ class Options_V2 {
 								'desc'       => __( 'This page will be used as the Terms and Conditions page', 'tutor' ),
 								'searchable' => true,
 							),
+							array(
+								'key'        => OptionKeys::PRIVACY_POLICY,
+								'type'       => 'select',
+								'label'      => __( 'Privacy Policy', 'tutor' ),
+								'default'    => 0,
+								'options'    => $pages,
+								'desc'       => __( 'Choose the page for privacy policy.', 'tutor' ),
+								'searchable' => true,
+							),
 						),
 					),
 					array(
@@ -918,11 +960,11 @@ class Options_V2 {
 			'monetization' => array(
 				'label'    => __( 'Monetization', 'tutor' ),
 				'slug'     => 'monetization',
-				'desc'     => __( 'Monitization Settings', 'tutor' ),
+				'desc'     => __( 'Monetization Settings', 'tutor' ),
 				'template' => 'basic',
 				'icon'     => 'tutor-icon-badge-discount',
 				'blocks'   => array(
-					'block_options' => array(
+					'block_options'         => array(
 						'label'      => __( 'Options', 'tutor' ),
 						'slug'       => 'options',
 						'block_type' => 'uniform',
@@ -941,6 +983,13 @@ class Options_V2 {
 								'default'        => 'free',
 								'desc'           => __( 'Select a monetization option to generate revenue by selling courses.', 'tutor' ),
 							),
+						),
+					),
+					'block_woocommerce'     => array(
+						'label'      => __( 'Woocommerce', 'tutor' ),
+						'slug'       => 'woocommerce',
+						'block_type' => 'uniform',
+						'fields'     => array(
 							array(
 								'key'         => 'tutor_woocommerce_order_auto_complete',
 								'type'        => 'toggle_switch',
@@ -949,6 +998,13 @@ class Options_V2 {
 								'default'     => 'off',
 								'desc'        => __( 'If enabled, in the case of Courses, WooCommerce Orders will get the "Completed" status .', 'tutor' ),
 							),
+						),
+					),
+					'block_revenue_sharing' => array(
+						'label'      => __( 'Revenue Sharing', 'tutor' ),
+						'slug'       => 'revenue_sharing',
+						'block_type' => 'uniform',
+						'fields'     => array(
 							array(
 								'key'           => 'enable_revenue_sharing',
 								'type'          => 'toggle_switch',
@@ -957,6 +1013,7 @@ class Options_V2 {
 								'default'       => 'off',
 								'desc'          => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
 								'toggle_fields' => 'sharing_percentage',
+								'toggle_blocks' => 'fees,withdraw',
 							),
 							array(
 								'key'         => 'sharing_percentage',
@@ -980,18 +1037,9 @@ class Options_V2 {
 								),
 								'desc'        => __( 'Set how the sales revenue will be shared among admins and instructors.', 'tutor' ),
 							),
-							array(
-								'key'         => 'statement_show_per_page',
-								'type'        => 'number',
-								'number_type' => 'integer',
-								'label'       => __( 'Show Statement Per Page', 'tutor' ),
-								'default'     => '20',
-
-								'desc'        => __( 'Define the number of statements to show.', 'tutor' ),
-							),
 						),
 					),
-					array(
+					'block_fees'            => array(
 						'label'      => __( 'Fees', 'tutor' ),
 						'slug'       => 'fees',
 						'block_type' => 'uniform',
@@ -1022,9 +1070,10 @@ class Options_V2 {
 								'desc'         => __( 'Select the fee type and add fee amount/percentage', 'tutor' ),
 								'group_fields' => array(
 									'fees_type'   => array(
-										'type'    => 'select',
-										'default' => 'fixed',
-										'options' => array(
+										'type'           => 'select',
+										'default'        => 'fixed',
+										'select_options' => false,
+										'options'        => array(
 											'percent' => __( 'Percent', 'tutor' ),
 											'fixed'   => __( 'Fixed', 'tutor' ),
 										),
@@ -1037,7 +1086,7 @@ class Options_V2 {
 							),
 						),
 					),
-					array(
+					'block_withdraw'        => array(
 						'label'      => __( 'Withdraw', 'tutor' ),
 						'slug'       => 'withdraw',
 						'block_type' => 'uniform',
@@ -1652,8 +1701,11 @@ class Options_V2 {
 								'type'    => 'text',
 								'label'   => __( 'YouTube API Key', 'tutor' ),
 								'default' => '',
-								'desc'    => __( 'To host live videos on your platform using YouTube, enter your YouTube API key.
-Text inside the box: Insert API key here.', 'tutor' ),
+								'desc'    => __(
+									'To host live videos on your platform using YouTube, enter your YouTube API key.
+								Text inside the box: Insert API key here.',
+									'tutor'
+								),
 							),
 						),
 					),

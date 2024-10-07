@@ -76,6 +76,7 @@ const LessonModal = ({
   contentDripType,
 }: LessonModalProps) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isClassicEditorEnabled = tutorConfig.enable_lesson_classic_editor === '1';
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
   const queryClient = useQueryClient();
@@ -215,7 +216,7 @@ const LessonModal = ({
                     label={
                       <>
                         {__('Description', 'tutor')}
-                        {lessonId && (
+                        {lessonId && isClassicEditorEnabled && (
                           <Button
                             variant="text"
                             size="small"

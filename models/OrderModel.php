@@ -338,9 +338,9 @@ class OrderModel {
 
 		$order_data->created_at_readable = DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->created_at_gmt );
 		$order_data->updated_at_readable = empty( $order_data->updated_at_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->updated_at_gmt );
-		
-		$order_data->created_by          = get_userdata( $order_data->created_by )->display_name;
-		$order_data->updated_by          = get_userdata( $order_data->updated_by )->display_name;
+
+		$order_data->created_by = get_userdata( $order_data->created_by )->display_name;
+		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name;
 
 		$order_activities_model = new OrderActivitiesModel();
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );
@@ -351,6 +351,41 @@ class OrderModel {
 
 		return apply_filters( 'tutor_order_details', $order_data );
 	}
+
+	/**
+	 * Mark order Unpaid to Paid.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $order_id order id.
+	 * @param string $note note.
+	 * @param bool   $trigger_hooks trigger hooks or not.
+	 *
+	 * @return bool
+	 */
+	public function mark_as_paid( $order_id, $note = '', $trigger_hooks = true ) {
+		if ( $trigger_hooks ) {
+			do_action( 'tutor_before_order_mark_as_paid', $order_id );
+		}
+
+		$data = array(
+			'payment_status' => self::PAYMENT_PAID,
+			'order_status'   => self::ORDER_COMPLETED,
+			'note'           => $note,
+		);
+
+		$response = $this->update_order( $order_id, $data );
+		if ( ! $response ) {
+			return false;
+		}
+
+		if ( $trigger_hooks ) {
+			do_action( 'tutor_order_payment_status_changed', $order_id, self::PAYMENT_UNPAID, self::PAYMENT_PAID );
+		}
+
+		return true;
+	}
+
 
 	/**
 	 * Retrieve order items by order ID.

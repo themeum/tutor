@@ -39,103 +39,102 @@ class Settings {
 	public static function add_ecommerce_settings( $fields ) {
 		$pages = tutor_utils()->get_pages();
 
-		$arr['ecommerce_basic'] = array(
-			'label'    => __( 'Basic', 'tutor' ),
-			'slug'     => 'ecommerce_basic',
-			'desc'     => __( 'Advanced Settings', 'tutor' ),
-			'template' => 'basic',
-			'icon'     => 'tutor-icon-gear',
-			'blocks'   => array(
-				array(
-					'label'      => false,
-					'block_type' => 'uniform',
-					'slug'       => 'cart_page',
-					'fields'     => array(
-						array(
-							'key'        => CartController::PAGE_ID_OPTION_NAME,
-							'type'       => 'select',
-							'label'      => __( 'Cart Page', 'tutor' ),
-							'default'    => '0',
-							'options'    => $pages,
-							'desc'       => __( 'Select the page you wish to set as the cart page.', 'tutor' ),
-							'searchable' => true,
-						),
-					),
-				),
-				array(
-					'label'      => false,
-					'block_type' => 'uniform',
-					'slug'       => 'checkout_page',
-					'fields'     => array(
-						array(
-							'key'        => CheckoutController::PAGE_ID_OPTION_NAME,
-							'type'       => 'select',
-							'label'      => __( 'Checkout Page', 'tutor' ),
-							'default'    => '0',
-							'options'    => $pages,
-							'desc'       => __( 'Select the page to be used as the checkout page.', 'tutor' ),
-							'searchable' => true,
-						),
-					),
-				),
-				array(
-					'label'      => __( 'Currency', 'tutor' ),
-					'slug'       => 'currency',
-					'block_type' => 'uniform',
-					'fields'     => array(
-						array(
-							'key'            => OptionKeys::CURRENCY_CODE,
-							'type'           => 'select',
-							'label'          => __( 'Currency Symbol', 'tutor' ),
-							'select_options' => false,
-							'options'        => self::get_currency_options(),
-							'default'        => 'USD',
-							'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),
-							'searchable'     => true,
-						),
-						array(
-							'key'            => OptionKeys::CURRENCY_POSITION,
-							'type'           => 'select',
-							'label'          => __( 'Currency Position', 'tutor' ),
-							'select_options' => false,
-							'options'        => array(
-								'left'  => 'Left',
-								'right' => 'Right',
-							),
-							'default'        => 'left',
-							'desc'           => __( 'Set the position of the currency symbol.', 'tutor' ),
-						),
-						array(
-							'key'     => OptionKeys::THOUSAND_SEPARATOR,
-							'type'    => 'text',
-							'label'   => __( 'Thousand Separator', 'tutor' ),
-							'default' => ',',
-							'desc'    => __( 'Specify the thousand separator.', 'tutor' ),
-						),
-						array(
-							'key'     => OptionKeys::DECIMAL_SEPARATOR,
-							'type'    => 'text',
-							'label'   => __( 'Decimal Separator', 'tutor' ),
-							'default' => '.',
-							'desc'    => __( 'Specify the decimal separator.', 'tutor' ),
-						),
-						array(
-							'key'     => OptionKeys::NUMBER_OF_DECIMALS,
-							'type'    => 'number',
-							'label'   => __( 'Number of Decimals', 'tutor' ),
-							'default' => '2',
-							'desc'    => __( 'Set the number of decimal places.', 'tutor' ),
-						),
-					),
-				),
-
+		$pages_fields = array(
+			array(
+				'key'        => CartController::PAGE_ID_OPTION_NAME,
+				'type'       => 'select',
+				'label'      => __( 'Cart Page', 'tutor' ),
+				'default'    => '0',
+				'options'    => $pages,
+				'desc'       => __( 'Select the page you wish to set as the cart page.', 'tutor' ),
+				'searchable' => true,
+			),
+			array(
+				'key'        => CheckoutController::PAGE_ID_OPTION_NAME,
+				'type'       => 'select',
+				'label'      => __( 'Checkout Page', 'tutor' ),
+				'default'    => '0',
+				'options'    => $pages,
+				'desc'       => __( 'Select the page to be used as the checkout page.', 'tutor' ),
+				'searchable' => true,
 			),
 		);
 
-		$arr = apply_filters( 'tutor_after_ecommerce_basic_settings', $arr );
+		$basic_settings_blocks = array(
+			'ecommerce_block_currency' => array(
+				'label'      => __( 'Currency', 'tutor' ),
+				'slug'       => 'ecommerce_currency',
+				'block_type' => 'uniform',
+				'fields'     => array(
+					array(
+						'key'            => OptionKeys::CURRENCY_CODE,
+						'type'           => 'select',
+						'label'          => __( 'Currency Symbol', 'tutor' ),
+						'select_options' => false,
+						'options'        => self::get_currency_options(),
+						'default'        => 'USD',
+						'desc'           => __( 'Choose the currency for transactions.', 'tutor' ),
+						'searchable'     => true,
+					),
+					array(
+						'key'            => OptionKeys::CURRENCY_POSITION,
+						'type'           => 'select',
+						'label'          => __( 'Currency Position', 'tutor' ),
+						'select_options' => false,
+						'options'        => array(
+							'left'  => 'Left',
+							'right' => 'Right',
+						),
+						'default'        => 'left',
+						'desc'           => __( 'Set the position of the currency symbol.', 'tutor' ),
+					),
+					array(
+						'key'           => OptionKeys::THOUSAND_SEPARATOR,
+						'type'          => 'text',
+						'label'         => __( 'Thousand Separator', 'tutor' ),
+						'field_classes' => 'tutor-w-90',
+						'default'       => ',',
+						'desc'          => __( 'Specify the thousand separator.', 'tutor' ),
+					),
+					array(
+						'key'           => OptionKeys::DECIMAL_SEPARATOR,
+						'type'          => 'text',
+						'label'         => __( 'Decimal Separator', 'tutor' ),
+						'field_classes' => 'tutor-w-90',
+						'default'       => '.',
+						'desc'          => __( 'Specify the decimal separator.', 'tutor' ),
+					),
+					array(
+						'key'     => OptionKeys::NUMBER_OF_DECIMALS,
+						'type'    => 'number',
+						'label'   => __( 'Number of Decimals', 'tutor' ),
+						'default' => '2',
+						'desc'    => __( 'Set the number of decimal places.', 'tutor' ),
+					),
+				),
+			),
+		);
+
+		foreach ( $pages_fields as $page_field ) {
+			$fields['monetization']['blocks']['block_options']['fields'][] = $page_field;
+		}
+
+		$prepared_blocks = array();
+		foreach ( $fields['monetization']['blocks'] as $key => $block ) {
+			$prepared_blocks[ $key ] = $block;
+			if ( 'block_options' === $key ) {
+				foreach ( $basic_settings_blocks as $key => $block ) {
+					$prepared_blocks[ $key ] = $block;
+				}
+			}
+		}
+
+		$fields['monetization']['blocks'] = $prepared_blocks;
+
+		$arr = apply_filters( 'tutor_before_ecommerce_payment_settings', array() );
 
 		$arr['ecommerce_payment'] = array(
-			'label'    => __( 'Payment', 'tutor' ),
+			'label'    => __( 'Payment Methods', 'tutor' ),
 			'slug'     => 'automate_payment_gateway',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
@@ -189,35 +188,13 @@ class Settings {
 						),
 					),
 				),
-				array(
-					'label'      => __( 'Legal Information', 'tutor' ),
-					'slug'       => 'legal_information',
-					'block_type' => 'uniform',
-					'fields'     => array(
-						array(
-							'key'        => OptionKeys::REFUND_POLICY,
-							'type'       => 'select',
-							'label'      => __( 'Refund Policy', 'tutor' ),
-							'default'    => 0,
-							'options'    => $pages,
-							'desc'       => __( 'Choose the page for refund policy.', 'tutor' ),
-							'searchable' => true,
-						),
-						array(
-							'key'        => OptionKeys::PRIVACY_POLICY,
-							'type'       => 'select',
-							'label'      => __( 'Privacy Policy', 'tutor' ),
-							'default'    => 0,
-							'options'    => $pages,
-							'desc'       => __( 'Choose the page for privacy policy.', 'tutor' ),
-							'searchable' => true,
-						),
-					),
-				),
 			),
 		);
 
-		return apply_filters( 'tutor_after_ecommerce_settings', $fields + $arr );
+		$arr                               = apply_filters( 'tutor_after_ecommerce_settings', $arr );
+		$fields['monetization']['submenu'] = $arr;
+
+		return $fields;
 	}
 
 	/**
@@ -256,7 +233,7 @@ class Settings {
 		}
 
 		$request = Input::sanitize_array(
-			$_POST,
+			$_POST, //phpcs:ignore -- already sanitized.
 			array(
 				'additional_details'   => 'sanitize_textarea_field',
 				'payment_instructions' => 'sanitize_textarea_field',
@@ -421,7 +398,7 @@ class Settings {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $settings Tutor settings.
+	 * @param array $settings Ecommerce payment settings.
 	 *
 	 * @return array
 	 */
@@ -452,7 +429,7 @@ class Settings {
 					'label'         => $gateway['label'],
 					'label_title'   => '',
 					'default'       => 'off',
-					'desc'          => sprintf( __( 'Enable %s payment', 'tutor-pro' ), $gateway['label'] ),
+					/* translators: %s: gateway name */
 					'toggle_fields' => implode( ',', array_keys( self::$config_keys_method() ) ),
 				),
 			);
@@ -565,6 +542,7 @@ class Settings {
 					'fields'            => array(),
 					'payment_method_id' => $method_id,
 					'default'           => $is_enable,
+					/* translators: %s: payment method name */
 					'desc'              => sprintf( __( 'Enable %s payment method', 'tutor' ), $method_name ),
 					'data-attrs'        => array(
 						'is-enable'            => $is_enable,
@@ -597,23 +575,6 @@ class Settings {
 			'paypal_client_secret'  => 'password',
 			'paypal_webhook_id'     => 'password',
 			'paypal_webhook_url'    => 'webhook_url',
-		);
-	}
-
-	/**
-	 * Get stripe config keys
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return array
-	 */
-	public static function get_stripe_config_keys() {
-		return array(
-			'stripe_environment'           => 'environment',
-			'stripe_secret_key'            => 'password',
-			'stripe_public_key'            => 'password',
-			'stripe_webhook_signature_key' => 'password',
-			'stripe_webhook_url'           => 'webhook_url',
 		);
 	}
 
@@ -670,24 +631,28 @@ class Settings {
 		$config_fields = array();
 
 		foreach ( $config_keys as $key => $type ) {
+			$key_label = ucfirst( str_replace( '_', ' ', $key ) );
+			/* translators: %s: key label */
+			$placeholder = sprintf( __( 'Enter your %s here', 'tutor' ), $key_label );
+
 			if ( 'environment' === $type ) {
 				$config_fields[] = array(
 					'key'            => $key,
 					'type'           => 'select',
 					'default'        => array_keys( self::get_payment_environments() )[0],
 					'options'        => self::get_payment_environments(),
-					'label'          => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label'          => $key_label,
 					'select_options' => false,
 					'desc'           => '',
-					'placeholder'    => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+					'placeholder'    => $placeholder,
 				);
 			} else {
 				$config_fields[] = array(
 					'key'         => $key,
 					'type'        => $type,
-					'label'       => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label'       => $key_label,
 					'desc'        => '',
-					'placeholder' => __( 'Enter your ' . ucfirst( str_replace( '_', ' ', $key ) ) . ' here', 'tutor-pro' ),
+					'placeholder' => $placeholder,
 				);
 			}
 		}
