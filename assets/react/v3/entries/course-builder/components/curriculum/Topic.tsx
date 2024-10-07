@@ -594,7 +594,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                               topicId: topic.id,
                               contentDripType: courseDetailsForm.watch('contentDripType'),
                               title: __('Interactive Quiz', 'tutor'),
-                              icon: <SVGIcon name="quiz" width={24} height={24} />,
+                              icon: <SVGIcon name="interactiveQuiz" width={24} height={24} />,
                               subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                               contentType: 'tutor_h5p_quiz',
                             },

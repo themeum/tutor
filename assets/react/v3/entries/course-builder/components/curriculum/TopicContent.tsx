@@ -72,7 +72,7 @@ const icons = {
     color: '',
   },
   tutor_h5p_quiz: {
-    name: 'quiz',
+    name: 'interactiveQuiz',
     color: colorTokens.design.warning,
   },
 } as const;
@@ -102,7 +102,7 @@ const modalIcon: {
   lesson: 'lesson',
   tutor_quiz: 'quiz',
   tutor_assignments: 'assignment',
-  tutor_h5p_quiz: 'quiz',
+  tutor_h5p_quiz: 'interactiveQuiz',
 } as const;
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
@@ -172,7 +172,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const handleDelete = () => {
     if (['lesson', 'tutor_assignments'].includes(type)) {
       deleteContentMutation.mutateAsync(content.id);
-    } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type) ) {
+    } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type)) {
       deleteQuizMutation.mutateAsync(content.id);
     } else if (type === 'tutor-google-meet') {
       deleteGoogleMeetMutation.mutateAsync(content.id);
