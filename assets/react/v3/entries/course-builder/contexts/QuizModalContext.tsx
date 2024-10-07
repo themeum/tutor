@@ -2,7 +2,7 @@ import type React from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import type { ID } from '@CourseBuilderServices/curriculum';
+import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
 import type { QuizForm, QuizQuestion } from '@CourseBuilderServices/quiz';
 
 interface QuizModalContextProps {
@@ -10,6 +10,7 @@ interface QuizModalContextProps {
   activeQuestionId: ID;
   setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
   quizId: ID;
+  contentType: ContentType;
   validationError: {
     message: string;
     type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
@@ -35,6 +36,7 @@ export const useQuizModalContext = () => {
 export const QuizModalContextProvider = ({
   children,
   quizId,
+  contentType,
   validationError: propsValidationError,
 }: {
   children:
@@ -49,6 +51,7 @@ export const QuizModalContextProvider = ({
         >,
       ) => React.ReactNode);
   quizId: ID;
+  contentType: ContentType;
   validationError?: {
     message: string;
     type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
@@ -99,6 +102,7 @@ export const QuizModalContextProvider = ({
         quizId,
         validationError,
         setValidationError,
+        contentType,
       }}
     >
       {typeof children === 'function' ? children(activeQuestionIndex, setValidationError) : children}

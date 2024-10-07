@@ -538,7 +538,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   size="small"
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
-                  buttonCss={styles.footerButton}
+                  buttonCss={styles.contentButton}
                   onClick={() => {
                     showModal({
                       component: LessonModal,
@@ -560,7 +560,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                   size="small"
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled={!topic.isSaved}
-                  buttonCss={styles.footerButton}
+                  buttonCss={styles.contentButton}
                   onClick={() => {
                     showModal({
                       component: QuizModal,
@@ -579,6 +579,49 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 <Show
                   when={!isTutorPro}
                   fallback={
+                    <Show when={isAddonEnabled(Addons.H5P_Integration)}>
+                      <Button
+                        variant="tertiary"
+                        isOutlined
+                        size="small"
+                        icon={<SVGIcon name="plus" width={24} height={24} />}
+                        disabled={!topic.isSaved}
+                        buttonCss={styles.contentButton}
+                        onClick={() => {
+                          showModal({
+                            component: QuizModal,
+                            props: {
+                              topicId: topic.id,
+                              contentDripType: courseDetailsForm.watch('contentDripType'),
+                              title: __('Interactive Quiz', 'tutor'),
+                              icon: <SVGIcon name="interactiveQuiz" width={24} height={24} />,
+                              subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
+                              contentType: 'tutor_h5p_quiz',
+                            },
+                          });
+                        }}
+                      >
+                        {__('Interactive Quiz', 'tutor')}
+                      </Button>
+                    </Show>
+                  }
+                >
+                  <ProBadge>
+                    <Button
+                      variant="tertiary"
+                      isOutlined
+                      size="small"
+                      icon={<SVGIcon name="plus" width={24} height={24} />}
+                      disabled
+                      onClick={noop}
+                    >
+                      {__('Interactive Quiz', 'tutor')}
+                    </Button>
+                  </ProBadge>
+                </Show>
+                <Show
+                  when={!isTutorPro}
+                  fallback={
                     <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
                       <Button
                         variant="tertiary"
@@ -586,7 +629,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                         size="small"
                         icon={<SVGIcon name="plus" width={24} height={24} />}
                         disabled={!topic.isSaved}
-                        buttonCss={styles.footerButton}
+                        buttonCss={styles.contentButton}
                         onClick={() => {
                           showModal({
                             component: AssignmentModal,
@@ -647,7 +690,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                           size="small"
                           icon={<SVGIcon name="import" width={24} height={24} />}
                           disabled={!topic.isSaved}
-                          buttonCss={styles.footerButton}
+                          buttonCss={styles.contentButton}
                           onClick={() => {
                             fileInputRef?.current?.click();
                           }}
@@ -982,7 +1025,7 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
   `,
-  footerButton: css`
+  contentButton: css`
     :hover {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.brand};

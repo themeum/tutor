@@ -52,6 +52,10 @@ const questionTypes = {
     label: __('Ordering', 'tutor'),
     icon: 'quizOrdering',
   },
+  h5p: {
+    label: __('H5P', 'tutor'),
+    icon: 'quizTrueFalse',
+  },
 };
 
 const QuestionConditions = () => {

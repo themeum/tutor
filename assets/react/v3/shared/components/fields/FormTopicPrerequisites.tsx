@@ -58,6 +58,10 @@ const icons = {
     name: 'googleMeetColorize',
     color: '',
   },
+  tutor_h5p_quiz: {
+    name: 'quiz',
+    color: colorTokens.icon.warning,
+  },
 } as const;
 
 const FormTopicPrerequisites = ({

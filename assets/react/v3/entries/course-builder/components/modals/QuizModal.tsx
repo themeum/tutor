@@ -36,7 +36,7 @@ import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -47,6 +47,7 @@ interface QuizModalProps extends ModalProps {
   topicId: ID;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   contentDripType: ContentDripType;
+  contentType?: ContentType;
 }
 
 export type QuizTimeLimit = 'seconds' | 'minutes' | 'hours' | 'days' | 'weeks';
@@ -58,7 +59,16 @@ type QuizTabs = 'details' | 'settings';
 
 const courseId = getCourseId();
 
-const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, contentDripType }: QuizModalProps) => {
+const QuizModal = ({
+  closeModal,
+  icon,
+  title,
+  subtitle,
+  quizId,
+  topicId,
+  contentDripType,
+  contentType,
+}: QuizModalProps) => {
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
@@ -81,9 +91,9 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
         feedback_mode: 'retry',
         attempts_allowed: 10,
         passing_grade: 80,
-        max_questions_for_answer: 10,
+        max_questions_for_answer: contentType === 'tutor_h5p_quiz' ? 0 : 10,
         quiz_auto_start: false,
-        question_layout_view: 'single_question',
+        question_layout_view: contentType === 'tutor_h5p_quiz' ? 'question_below_each_other' : 'single_question',
         questions_order: 'rand',
         hide_question_number_overview: false,
         short_answer_characters_limit: 200,
@@ -189,7 +199,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
 
   return (
     <FormProvider {...form}>
-      <QuizModalContextProvider quizId={quizId || ''}>
+      <QuizModalContextProvider quizId={quizId || ''} contentType={contentType || 'tutor_quiz'}>
         {(activeQuestionIndex, setValidationError) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
@@ -262,7 +272,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
               )
             }
           >
-            <div css={styles.wrapper({ activeTab })}>
+            <div css={styles.wrapper({ activeTab, isH5pQuiz: contentType === 'tutor_h5p_quiz' })}>
               <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
                 <Show when={activeTab === 'details'}>
                   <div css={styles.left}>
@@ -348,7 +358,7 @@ const QuizModal = ({ closeModal, icon, title, subtitle, quizId, topicId, content
                     <QuizSettings contentDripType={contentDripType} />
                   </Show>
                 </div>
-                <Show when={activeTab === 'details'}>
+                <Show when={activeTab === 'details' && contentType !== 'tutor_h5p_quiz'}>
                   <div css={styles.right}>
                     <QuestionConditions />
                   </div>
@@ -392,14 +402,15 @@ export default QuizModal;
 const styles = {
   wrapper: ({
     activeTab,
+    isH5pQuiz,
   }: {
     activeTab: QuizTabs;
+    isH5pQuiz: boolean;
   }) => css`
     width: 1218px;
     display: grid;
-    grid-template-columns: ${activeTab === 'details' ? '352px 1fr 280px' : '1fr'};
+    grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '352px 1fr 280px') : '1fr'};
     height: 100%;
-
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};

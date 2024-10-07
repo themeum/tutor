@@ -17,7 +17,7 @@ import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/questio
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
@@ -33,7 +33,7 @@ import emptyStateImage2x from '@Images/quiz-empty-state-2x.webp';
 import emptyStateImage from '@Images/quiz-empty-state.webp';
 
 const QuestionForm = () => {
-  const { activeQuestionIndex, activeQuestionId, validationError } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError, contentType } = useQuizModalContext();
   const previousActiveQuestionId = usePrevious(activeQuestionId);
   const form = useFormContext<QuizForm>();
 
@@ -99,6 +99,7 @@ const QuestionForm = () => {
               <FormQuestionTitle
                 {...controllerProps}
                 placeholder={__('Write your question here..', 'tutor')}
+                disabled={contentType === 'tutor_h5p_quiz'}
                 onChange={() => {
                   calculateQuizDataStatus(dataStatus, 'update') &&
                     form.setValue(
@@ -110,23 +111,35 @@ const QuestionForm = () => {
             )}
           />
 
-          <Controller
-            control={form.control}
-            name={`questions.${activeQuestionIndex}.question_description` as 'questions.0.question_description'}
-            render={(controllerProps) => (
-              <FormQuestionDescription
-                {...controllerProps}
-                placeholder={__('Description (optional)', 'tutor')}
-                onChange={() => {
-                  calculateQuizDataStatus(dataStatus, 'update') &&
-                    form.setValue(
-                      `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
-                    );
-                }}
-              />
-            )}
-          />
+          <Show
+            when={contentType !== 'tutor_h5p_quiz'}
+            fallback={
+              <div>
+                <div css={styles.h5pShortCode}>
+                  {`[h5p id: "${form.watch(`questions.${activeQuestionIndex}.question_description`)}"]`}
+                </div>
+              </div>
+            }
+          >
+            <Controller
+              control={form.control}
+              name={`questions.${activeQuestionIndex}.question_description` as 'questions.0.question_description'}
+              render={(controllerProps) => (
+                <FormQuestionDescription
+                  {...controllerProps}
+                  placeholder={__('Description (optional)', 'tutor')}
+                  disabled={contentType === 'tutor_h5p_quiz'}
+                  onChange={() => {
+                    calculateQuizDataStatus(dataStatus, 'update') &&
+                      form.setValue(
+                        `questions.${activeQuestionIndex}._data_status`,
+                        calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                      );
+                  }}
+                />
+              )}
+            />
+          </Show>
         </div>
       </div>
 
@@ -138,28 +151,30 @@ const QuestionForm = () => {
         </div>
       </Show>
 
-      {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching'>]}
+      {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching' | 'h5p'>]}
 
-      <div css={styles.questionAnswer}>
-        <Controller
-          control={form.control}
-          name={`questions.${activeQuestionIndex}.answer_explanation` as 'questions.0.answer_explanation'}
-          render={(controllerProps) => (
-            <FormAnswerExplanation
-              {...controllerProps}
-              label={__('Answer Explanation', 'tutor')}
-              placeholder={__('Write answer explanation...', 'tutor')}
-              onChange={() => {
-                calculateQuizDataStatus(dataStatus, 'update') &&
-                  form.setValue(
-                    `questions.${activeQuestionIndex}._data_status`,
-                    calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
-                  );
-              }}
-            />
-          )}
-        />
-      </div>
+      <Show when={activeQuestionType !== 'h5p'}>
+        <div css={styles.questionAnswer}>
+          <Controller
+            control={form.control}
+            name={`questions.${activeQuestionIndex}.answer_explanation` as 'questions.0.answer_explanation'}
+            render={(controllerProps) => (
+              <FormAnswerExplanation
+                {...controllerProps}
+                label={__('Answer Explanation', 'tutor')}
+                placeholder={__('Write answer explanation...', 'tutor')}
+                onChange={() => {
+                  calculateQuizDataStatus(dataStatus, 'update') &&
+                    form.setValue(
+                      `questions.${activeQuestionIndex}._data_status`,
+                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                    );
+                }}
+              />
+            )}
+          />
+        </div>
+      </Show>
     </div>
   );
 };
@@ -197,6 +212,16 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[8]};
     width: 100%;
+  `,
+  h5pShortCode: css`
+    margin-left: ${spacing[8]};
+    padding: ${spacing[4]} ${spacing[8]};
+    ${typography.caption()};
+    color: ${colorTokens.text.white};
+    background-color: #2575BE;
+    border-radius: ${borderRadius.card};
+    width: fit-content;
+    font-family: 'Fire Code', monospace;
   `,
   questionAnswer: css`
     padding-left: ${spacing[40]};

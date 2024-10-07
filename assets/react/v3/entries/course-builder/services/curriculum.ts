@@ -6,13 +6,21 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
-import { authApiInstance } from '@Utils/api';
+import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
+import type { H5PContentResponse } from './quiz';
 
 export type ID = string | number;
 
-export type ContentType = 'tutor-google-meet' | 'tutor_zoom_meeting' | 'lesson' | 'tutor_quiz' | 'tutor_assignments';
+export type ContentType =
+  | 'tutor-google-meet'
+  | 'tutor_zoom_meeting'
+  | 'lesson'
+  | 'tutor_quiz'
+  | 'tutor_assignments'
+  | 'tutor_h5p_quiz';
+
 export interface Content {
   ID: ID;
   post_title: string;
@@ -20,6 +28,7 @@ export interface Content {
   post_name: string | null;
   post_type: ContentType;
   total_question?: number;
+  quiz_type?: 'tutor_h5p_quiz';
 }
 
 export interface Lesson extends Content {
@@ -161,7 +170,16 @@ const getCourseTopic = (courseId: ID) => {
 export const useCourseTopicQuery = (courseId: ID) => {
   return useQuery({
     queryKey: ['Topic', courseId],
-    queryFn: () => getCourseTopic(courseId).then((res) => res.data),
+    queryFn: () =>
+      getCourseTopic(courseId).then((res) => {
+        return res.data.map((topic) => ({
+          ...topic,
+          contents: topic.contents.map((content) => ({
+            ...content,
+            post_type: content.quiz_type ? 'tutor_h5p_quiz' : content.post_type,
+          })),
+        }));
+      }),
     enabled: !!courseId,
   });
 };
@@ -489,5 +507,21 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
     queryKey: ['GoogleMeet', meetingId],
     queryFn: () => getGoogleMeetDetails(meetingId, topicId).then((res) => res.data),
     enabled: !!meetingId && !!topicId,
+  });
+};
+
+const getH5PLessonContents = (search: string) => {
+  return wpAjaxInstance
+    .post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
+      search_filter: search,
+    })
+    .then((response) => response.data);
+};
+
+export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
+  return useQuery({
+    queryKey: ['H5PQuizContents', search],
+    queryFn: () => getH5PLessonContents(search),
+    enabled: contentType === 'lesson',
   });
 };

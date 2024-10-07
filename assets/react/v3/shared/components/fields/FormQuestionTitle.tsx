@@ -78,11 +78,11 @@ const FormQuestionTitle = ({
   }, [isEdit, inputRef.current]);
 
   return (
-    <div data-container css={styles.container({ isEdit })}>
+    <div data-container css={styles.container({ isEdit, isDisabled: disabled || false })}>
       <Show when={!isEdit}>
         <div
           css={styles.placeholder}
-          onClick={() => setIsEdit(true)}
+          onClick={() => !disabled && setIsEdit(true)}
           role="button"
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
@@ -194,8 +194,10 @@ export default FormQuestionTitle;
 const styles = {
   container: ({
     isEdit,
+    isDisabled,
   }: {
     isEdit: boolean;
+    isDisabled: boolean;
   }) => css`
     position: relative;
     display: grid;
@@ -212,17 +214,22 @@ const styles = {
 		transition: box-shadow 0.15s ease-in-out;
     border: 1px solid transparent;
 
-    &:hover {
-      background-color: ${colorTokens.background.white};
-      color: ${colorTokens.text.subdued};
+    ${
+      !isDisabled &&
+      css`
+        &:hover {
+        background-color: ${colorTokens.background.white};
+        color: ${colorTokens.text.subdued};
 
-			[data-action-buttons] {
-				opacity: 1;
-			}
-    };
+        [data-action-buttons] {
+          opacity: ${!isDisabled ? 1 : 0};
+        }
+      };
 
-		&:focus-within {
-      ${isEdit && styleUtils.inputFocus}
+      &:focus-within {
+        ${isEdit && styleUtils.inputFocus}
+      }
+    `
     }
 
     ${

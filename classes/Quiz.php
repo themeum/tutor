@@ -593,6 +593,23 @@ class Quiz {
 				$total_question_marks = $wpdb->get_var( $query );
 				//phpcs:enable
 
+				// Check if h5p addon is enabled.
+				if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
+					// Update the total marks to include the marks from h5p questions.
+					foreach ( $question_ids as $question_id ) {
+						$question       = QuizModel::get_quiz_question_by_id( $question_id );
+						$question_type  = $question->question_type;
+						$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+
+						if ( 'h5p' === $question_type ) {
+							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
+								$h5p_attempt_answer    = $attempt_result[0];
+								$total_question_marks += $h5p_attempt_answer->max_score;
+							}
+						}
+					}
+				}
+
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
 					$wpdb->prefix . 'tutor_quiz_attempts',
@@ -789,6 +806,21 @@ class Quiz {
 					if ( in_array( $question_type, array( 'open_ended', 'short_answer', 'image_answering' ) ) ) {
 						$answers_data['is_correct'] = null;
 						$review_required            = true;
+					}
+					// Check if h5p addon is enabled.
+					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
+						// Check if it is a h5p question.
+						if ( 'h5p' === $question_type ) {
+							$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
+							// Set the h5p question answer to tutor quiz attempt result.
+							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
+								$h5p_question_answer           = $attempt_result[0];
+								$answers_data['question_mark'] = $h5p_question_answer->max_score;
+								$answers_data['achieved_mark'] = $h5p_question_answer->raw_score;
+								$answers_data['is_correct']    = $h5p_question_answer->max_score === $h5p_question_answer->raw_score;
+								$total_marks                  += $h5p_question_answer->raw_score;
+							}
+						}
 					}
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
@@ -1032,9 +1064,13 @@ class Quiz {
 			);
 		}
 
-		if ( 0 !== $topic_id && 0 !== $ex_quiz_id ) {
-			if ( ! tutor_utils()->can_user_manage( 'quiz', $ex_quiz_id ) ) {
-				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+		if ( 0 !== $topic_id && 0 !== $quiz_id ) {
+			if ( ! tutor_utils()->can_user_manage( 'quiz', $quiz_id ) ) {
+				$this->json_response(
+					tutor_utils()->error_message(),
+					null,
+					HttpHelper::STATUS_FORBIDDEN
+				);
 			}
 		}
 
@@ -1922,6 +1958,7 @@ class Quiz {
 		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
 			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
 		}
+
 		// get question info.
 		$belong_question = $wpdb->get_row(
 			$wpdb->prepare(
@@ -1954,6 +1991,10 @@ class Quiz {
 		}
 
 		$is_correct = Input::post( 'is_correct', 0, Input::TYPE_INT );
+
+		if ( ! tutor_utils()->can_user_manage( 'quiz_answer', $answer_id ) ) {
+			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		}
 
 		$answer = $wpdb->get_row(
 			$wpdb->prepare(
