@@ -951,7 +951,7 @@ class Options_V2 {
 								'label'       => __( 'Preferred Video Source', 'tutor' ),
 								'label_title' => __( 'Preferred Video Source', 'tutor' ),
 								'options'     => tutor_utils()->get_video_sources( true ),
-								'desc'        => __( 'Choose video sources you\'d like to support.', 'tutor' ),
+								'desc'        => __( 'Select the video hosting platform(s) you want to enable.', 'tutor' ),
 							),
 						),
 					),

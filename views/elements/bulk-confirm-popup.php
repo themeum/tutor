@@ -33,7 +33,7 @@
 								<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 							</button>
 							<button id="tutor-confirm-bulk-action" class="tutor-btn tutor-btn-primary tutor-ml-16" data-tutor-modal-submit>
-								<?php esc_html_e( "Yes, I'am Sure", 'tutor' ); ?>
+								<?php esc_html_e( "Yes, I’m sure", 'tutor' ); ?>
 							</button>
 						</div>
 					</form>
