@@ -104,8 +104,8 @@ class Coupon {
 	 *
 	 * @return array
 	 */
-	public function check_if_coupon_is_applicable( array $items ) {
-		if ( ! $this->is_valid_coupon() ) {
+	public function check_if_applicable( array $items ) {
+		if ( ! $this->is_valid() ) {
 			return $items;
 		}
 
@@ -117,18 +117,27 @@ class Coupon {
 			'discount_amount' => $coupon_data->discount_amount,
 		);
 
-		// If the overall coupon usage limit exceeds or user coupon limit exceeds them return early.
-		if ( $this->is_overall_coupon_usage_limit_exceeded( $coupon_data ) || $this->is_user_coupon_usage_limit_exceeded( $coupon_data ) ) {
-			return $items;
-		}
-
-		return $this->apply_coupon_to_cart_items( $items, $coupon_data, $applied_coupon );
+		return $this->apply_to_cart_items( $items, $coupon_data, $applied_coupon );
 	}
 
-	public function is_valid_coupon() {
+	/**
+	 * Check if the provided coupon is valid or not.
+	 * For checking the validity we are checking the existence of the coupon code,
+	 * Check if the coupon code is expired or not,
+	 * Check if the overall and specific user's usage limit exceeded or not.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_valid() {
 		$coupon_data = $this->get_coupon();
 
-		return ! empty( $this->code ) && ! empty( $coupon_data ) && ! $this->is_coupon_expired();
+		return ! empty( $this->code ) &&
+			! empty( $coupon_data ) &&
+			! $this->is_coupon_expired() &&
+			! $this->is_overall_coupon_usage_limit_exceeded( $coupon_data ) &&
+			! $this->is_user_coupon_usage_limit_exceeded( $coupon_data );
 	}
 
 	public function update_cart_items_price_after_applying_coupon( $items, $location = null ) {
@@ -365,7 +374,7 @@ class Coupon {
 	 *
 	 * @return array
 	 */
-	private function apply_coupon_to_cart_items( array $items, $coupon_data, $applied_coupon ) {
+	private function apply_to_cart_items( array $items, $coupon_data, $applied_coupon ) {
 		switch ( $coupon_data->applies_to ) {
 			case CouponModel::APPLIES_TO_ALL_COURSES:
 				return $this->apply_coupon_to_all_courses( $items, $applied_coupon );

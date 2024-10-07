@@ -1,13 +1,13 @@
 import { useModal } from '@Components/modals/Modal';
-import { spacing } from '@Config/styles';
-import { css } from '@emotion/react';
+import { spacing, zIndex } from '@Config/styles';
 import ThreeDots from '@Molecules/ThreeDots';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { TaxSettings } from '../services/tax';
+import type { TaxSettings } from '../services/tax';
+import type { ColumnDataType } from './TaxRates';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
-import { ColumnDataType } from './TaxRates';
 
 interface MoreOptionsProps {
   data: ColumnDataType;
@@ -32,7 +32,7 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
           text={__('Edit', 'tutor')}
           onClick={() => {
             if (typeof data.locationId === 'string') {
-              form.setValue('activeCountry', data.locationId);
+              form.setValue('active_country', data.locationId);
             }
           }}
         />
@@ -45,13 +45,14 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
               props: {
                 title: __('Delete Tax Rate', 'tutor'),
               },
+              depthIndex: zIndex.highest,
             });
-            if (action == 'CONFIRM') {
-              const activeCountry = form.getValues('activeCountry');
+            if (action === 'CONFIRM') {
+              const activeCountry = form.getValues('active_country');
               const rates = form.getValues('rates').filter((rate) => rate.country !== data.locationId);
               form.setValue('rates', rates, { shouldDirty: true });
-              if (activeCountry == data.locationId) {
-                form.setValue('activeCountry', null);
+              if (String(activeCountry) === String(data.locationId)) {
+                form.setValue('active_country', null);
               }
             }
           }}

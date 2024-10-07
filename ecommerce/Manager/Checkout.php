@@ -137,11 +137,11 @@ class Checkout {
 		$automatic_coupons = $coupon_model->get_automatic_coupons();
 
 		if ( ! empty( $automatic_coupons ) ) {
-			foreach ( $automatic_coupons as $coupon ) {
-				$coupon_manager = Coupon::make_with( $coupon->coupon_code, $this->customer_id );
-				$items          = $this->swap_item_and_discounted_price(
-					$coupon_manager->update_cart_items_price_after_applying_coupon(
-						$coupon_manager->check_if_coupon_is_applicable( $items )
+			foreach ( $automatic_coupons as $automatic_coupon ) {
+				$coupon = Coupon::make_with( $automatic_coupon->coupon_code, $this->customer_id );
+				$items  = $this->swap_item_and_discounted_price(
+					$coupon->update_cart_items_price_after_applying_coupon(
+						$coupon->check_if_applicable( $items )
 					)
 				);
 			}
@@ -152,6 +152,9 @@ class Checkout {
 	/**
 	 * Swap the item price and the discounted price into the `final_price` object.
 	 * This is required for applying multiple coupons.
+	 *
+	 * @todo need to rethink the applying multiple automatic discount.
+	 * For now we are applying the all the automatic coupons.
 	 *
 	 * @param array $items
 	 *
@@ -180,10 +183,10 @@ class Checkout {
 		$this->items = $this->make_ready_cart_items( $this->items );
 
 		if ( Shop::is_coupon_enabled() ) {
-			$this->items    = $this->apply_automatic_coupon_discounts( $this->items );
-			$coupon_manager = Coupon::make_with( $this->coupon_code, $this->customer_id );
-			$this->items    = $coupon_manager->update_cart_items_price_after_applying_coupon(
-				$coupon_manager->check_if_coupon_is_applicable( $this->items )
+			$this->items = $this->apply_automatic_coupon_discounts( $this->items );
+			$coupon      = Coupon::make_with( $this->coupon_code, $this->customer_id );
+			$this->items = $coupon->update_cart_items_price_after_applying_coupon(
+				$coupon->check_if_applicable( $this->items )
 			);
 		}
 
@@ -314,7 +317,7 @@ class Checkout {
 
 		$coupon = Coupon::make_with( $this->coupon_code, $this->customer_id );
 
-		return $coupon->is_valid_coupon();
+		return $coupon->is_valid();
 	}
 
 	/**

@@ -6,12 +6,12 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 import Card, { CardHeader } from '../molecules/Card';
-import { TaxCollectionProcess, TaxSettings } from '../services/tax';
+import { TaxCollectionProcess, type TaxSettings } from '../services/tax';
 
 function TaxSettingGlobal() {
   const form = useFormContext<TaxSettings>();
   const { watch } = form;
-  const isTaxIncludedInPrice = watch('isTaxIncludedInPrice');
+  const isTaxIncludedInPrice = watch('is_tax_included_in_price');
 
   const taxCollectionProcessOptions = [
     {
@@ -36,7 +36,7 @@ function TaxSettingGlobal() {
             <div>
               <Controller
                 control={form.control}
-                name="isTaxIncludedInPrice"
+                name="is_tax_included_in_price"
                 render={(controllerProps) => {
                   return (
                     <FormRadioGroup
@@ -53,7 +53,7 @@ function TaxSettingGlobal() {
               <Show when={isTaxIncludedInPrice === TaxCollectionProcess.taxIsNotIncluded}>
                 <Controller
                   control={form.control}
-                  name="showPriceWithTax"
+                  name="show_price_with_tax"
                   render={(controllerProps) => {
                     return (
                       <div>
@@ -63,7 +63,10 @@ function TaxSettingGlobal() {
                           labelCss={styles.checkboxLabel}
                         />
                         <span css={styles.checkboxSubText}>
-                          {__('Show prices with tax included, so customers see the final amount they’ll pay upfront', 'tutor')}
+                          {__(
+                            'Show prices with tax included, so customers see the final amount they’ll pay upfront',
+                            'tutor',
+                          )}
                         </span>
                       </div>
                     );

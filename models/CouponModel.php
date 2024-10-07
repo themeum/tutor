@@ -535,7 +535,10 @@ class CouponModel {
 	 */
 	public function get_automatic_coupons() {
 		$coupons = $this->get_coupons(
-			array( 'coupon_type' => self::TYPE_AUTOMATIC ),
+			array(
+				'coupon_type'   => self::TYPE_AUTOMATIC,
+				'coupon_status' => self::STATUS_ACTIVE,
+			),
 			'',
 			1000,
 			0

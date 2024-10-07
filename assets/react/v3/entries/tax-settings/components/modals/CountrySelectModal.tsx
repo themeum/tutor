@@ -53,20 +53,20 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
     return () => {
       if (action === 'CONFIRM') {
         const formattedCountries = Object.entries(selectedCountries).map(([country, states]) => {
-          const formCountry = form.getValues('rates').find((rate) => rate.country === country);
+          const formCountry = form.getValues('rates').find((rate) => String(rate.country) === String(country));
 
           return {
             country,
-            isSameRate: false,
+            is_same_rate: false,
             rate: 0,
             ...formCountry,
             states:
               formCountry?.country !== euCountryCode
                 ? states?.map((state) => {
                     const formStates = formCountry?.states ?? [];
-                    const formState = formStates.find((formState) => formState.id === state);
+                    const formState = formStates.find((formState) => String(formState.id) === String(state));
 
-                    return { id: state, rate: 0, applyOnShipping: false, ...formState };
+                    return { id: state, rate: 0, apply_on_shipping: false, ...formState };
                   })
                 : formCountry.states,
           };
@@ -85,9 +85,9 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
       return {
         ...acc,
         [rate.country]:
-          rate.country === euCountryCode
+          String(rate.country) === String(euCountryCode)
             ? []
-            : rate.isSameRate
+            : rate.is_same_rate
               ? getCountryByCode(rate.country)?.states?.map((state) => state.id)
               : rate.states.map((state) => state.id),
       };
@@ -133,12 +133,16 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
                           <Button
                             buttonCss={styles.dropdownButton}
                             variant={'text'}
-                            icon={<SVGIcon name={activeCountry === country.value ? 'chevronUp' : 'chevronDown'} />}
+                            icon={
+                              <SVGIcon
+                                name={String(activeCountry) === String(country.value) ? 'chevronUp' : 'chevronDown'}
+                              />
+                            }
                             iconPosition="right"
                             onClick={() => {
                               regionStateForm.setValue(
                                 'activeCountry',
-                                activeCountry === country.value ? '' : country.value,
+                                String(activeCountry) === String(country.value) ? '' : country.value,
                               );
                             }}
                           >
@@ -173,7 +177,7 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
                     }}
                   />
 
-                  <Show when={activeCountry === country.value && states.length}>
+                  <Show when={String(activeCountry) === String(country.value) && states.length}>
                     <For each={states}>
                       {(state) => {
                         return (

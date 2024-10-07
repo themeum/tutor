@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Ecommerce\Manager\Checkout;
 use Tutor\Helpers\SessionHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -85,7 +86,28 @@ class CheckoutController {
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
+			add_action( 'wp_ajax_tutor_update_checkout_data', array( $this, 'update_checkout_data' ) );
 		}
+	}
+
+	public function update_checkout_data() {
+		$country_code = Input::post( 'country_code', null, Input::TYPE_STRING );
+		$coupon_code  = Input::post( 'coupon_code', null, Input::TYPE_STRING );
+
+		ob_start();
+		tutor_load_template(
+			'ecommerce.checkout-details',
+			array(
+				'country_code' => $country_code,
+				'coupon_code'  => $coupon_code,
+			)
+		);
+		$html = ob_get_clean();
+
+		$this->json_response(
+			__( 'Done', 'tutor' ),
+			array( 'html' => $html ),
+		);
 	}
 
 	/**
@@ -513,7 +535,7 @@ class CheckoutController {
 			try {
 				add_filter(
 					'tutor_ecommerce_webhook_url',
-					function( $url ) use ( $payment_method ) {
+					function ( $url ) use ( $payment_method ) {
 						$url = add_query_arg( array( 'payment_method' => $payment_method ), $url );
 						return $url;
 					}

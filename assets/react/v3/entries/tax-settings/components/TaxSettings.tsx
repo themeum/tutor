@@ -6,12 +6,14 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import taxBanner from '@Images/tax-banner.png';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import Card from '../molecules/Card';
+import EmptyState from '../molecules/EmptyState';
 import { type TaxSettings, useTaxSettingsQuery } from '../services/tax';
 import TaxRates from './TaxRates';
 import { useCountrySelectModal } from './modals/CountrySelectModal';
@@ -20,11 +22,11 @@ const TaxSettingsPage = () => {
   const form = useFormWithGlobalError<TaxSettings>({
     defaultValues: {
       rates: [],
-      applyTaxOn: 'product',
-      activeCountry: null,
-      showPriceWithTax: false,
-      chargeTaxOnShipping: false,
-      isTaxIncludedInPrice: 0,
+      apply_tax_on: 'product',
+      active_country: null,
+      show_price_with_tax: false,
+      charge_tax_on_shipping: false,
+      is_tax_included_in_price: 0,
     },
   });
   const { reset } = form;
@@ -33,21 +35,24 @@ const TaxSettingsPage = () => {
 
   const { openCountrySelectModal } = useCountrySelectModal();
 
-  const ratesValue = taxSettingsQuery.data?.rates?.length ? taxSettingsQuery.data?.rates : form.getValues('rates');
+  const ratesValue = taxSettingsQuery.data?.rates?.length ? taxSettingsQuery.data.rates : form.getValues('rates');
 
-  const activeCountry = form.watch('activeCountry');
+  const activeCountry = form.watch('active_country');
+  const formData = form.watch();
+
+  console.log({ taxSettingsQuery });
 
   useEffect(() => {
     if (taxSettingsQuery.data) {
       const taxData = taxSettingsQuery.data;
 
       taxData.rates = taxData.rates.map((rate) => {
-        if (rate.isSameRate && !rate.states.length) {
+        if (rate.is_same_rate && !rate.states.length) {
           rate.states =
             getCountryByCode(rate.country)?.states?.map((state) => ({
               id: state.id,
               rate: 0,
-              applyOnShipping: false,
+              apply_on_shipping: false,
             })) || [];
         }
         return rate;
@@ -61,10 +66,6 @@ const TaxSettingsPage = () => {
     return <LoadingOverlay />;
   }
 
-  if (!taxSettingsQuery.data) {
-    return <div>{__('Something went wrong', 'tutor')}</div>;
-  }
-
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
       <Show when={activeCountry} fallback={<h6 css={typography.heading6('medium')}>{__('Tax settings', 'tutor')}</h6>}>
@@ -72,7 +73,7 @@ const TaxSettingsPage = () => {
           return (
             <Button
               onClick={() => {
-                form.setValue('activeCountry', null);
+                form.setValue('active_country', null);
               }}
               buttonCss={styles.backButton}
               variant="text"
@@ -89,20 +90,20 @@ const TaxSettingsPage = () => {
         fallback={
           <Card>
             <div css={styleUtils.cardInnerSection}>
-              {/* <EmptyState
-                emptyStateImage={TaxBanner}
-                imageAltText={t('COM_EASYSTORE_APP_TAX_SETTINGS_EMPTY_STATE_IMAGE_ALT')}
-                title={t('COM_EASYSTORE_APP_TAX_SETTINGS_EMPTY_STATE_TITLE')}
-                content={<Trans transKey="COM_EASYSTORE_APP_TAX_SETTINGS_EMPTY_STATE_CONTENT" />}
-                buttonText={t('COM_EASYSTORE_APP_TAX_SETTINGS_EMPTY_STATE_BUTTON_TEXT')}
+              <EmptyState
+                emptyStateImage={taxBanner}
+                imageAltText={__('Tax Banner', 'tutor')}
+                title={__('Apply Tax During Checkout', 'tutor')}
+                content={__('Start configuring the tax settings to set up and manage the tax rates.', 'tutor')}
+                buttonText={__('Add taxable country', 'tutor')}
                 action={() => {
                   openCountrySelectModal({
                     form,
-                    title: t('COM_EASYSTORE_APP_TAX_SETTINGS_ADD_TAX_REGION'),
+                    title: __('Add tax region', 'tutor'),
                   });
                 }}
                 orientation="vertical"
-              /> */}
+              />
             </div>
           </Card>
         }
@@ -110,42 +111,9 @@ const TaxSettingsPage = () => {
         <FormProvider {...form}>
           <TaxRates />
         </FormProvider>
-        <div css={styles.saveButtonContainer}>
-          <Button
-            onClick={async () => {
-              try {
-                form.setValue('activeCountry', null);
-                // const updatedTaxData = {
-                //   ...form.getValues(),
-                //   rates: form.getValues('rates').map((rate) => {
-                //     let copyRate = { ...rate };
-
-                //     if (copyRate.isSameRate) {
-                //       copyRate.states = [];
-                //     } else {
-                //       if (copyRate.overrideValues && copyRate.states.length) {
-                //         delete copyRate.overrideValues;
-                //       }
-                //     }
-                //     return copyRate;
-                //   }),
-                // };
-
-                // @TODO: need to make the save functionalities
-                // await taxSettingsQuery.mutateAsync({
-                //   property: 'tax',
-                //   data: JSON.stringify(updatedTaxData),
-                // });
-              } catch (error) {
-                console.error(error);
-              }
-            }}
-            loading={taxSettingsQuery.isLoading}
-          >
-            {__('Save changes', 'tutor')}
-          </Button>
-        </div>
       </Show>
+
+      <input type="hidden" name="tutor_option[ecommerce_tax]" value={JSON.stringify(formData)} />
     </div>
   );
 };

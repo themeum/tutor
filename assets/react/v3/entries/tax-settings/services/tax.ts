@@ -1,6 +1,6 @@
 import { wpAjaxInstance } from "@/v3/shared/utils/api";
 import endpoints from "@/v3/shared/utils/endpoints";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export enum EUTaxRegistrationTypes {
   oneStop = 'one-stop',
@@ -25,17 +25,17 @@ export interface OverrideValue {
 export interface TaxRateState {
   id: number | string;
   rate: number;
-  applyOnShipping: boolean;
-  overrideValues?: OverrideValue[];
+  apply_on_shipping: boolean;
+  override_values?: OverrideValue[];
 }
 
 export interface TaxRate {
   country: string;
   states: TaxRateState[];
-  isSameRate: boolean;
+  is_same_rate: boolean;
   rate: number | null;
   vat_registration_type?: EUTaxRegistrationTypes;
-  overrideValues?: OverrideValue[];
+  override_values?: OverrideValue[];
 }
 
 export enum TaxCollectionProcess {
@@ -45,75 +45,17 @@ export enum TaxCollectionProcess {
 
 export interface TaxSettings {
   rates: TaxRate[];
-  applyTaxOn: 'product' | 'checkout';
-  activeCountry?: string | null;
-  isTaxIncludedInPrice: 0 | 1;
-  showPriceWithTax: boolean;
-  chargeTaxOnShipping: boolean;
+  apply_tax_on: 'product' | 'checkout';
+  active_country?: string | null;
+  is_tax_included_in_price: 0 | 1;
+  show_price_with_tax: boolean;
+  charge_tax_on_shipping: boolean;
 }
 
-const mockSettings: TaxSettings = {
-	rates: [
-		{
-			country: "248",
-			isSameRate: false,
-			rate: 20,
-			states: []
-		},
-		{
-			country: "050",
-			isSameRate: true,
-			rate: 15,
-			states: [],
-			overrideValues: [
-				{
-					overrideOn: OverrideOn.products,
-					rate: 25,
-					location: "050",
-					category: 8,
-					type: "region"
-				}
-			]
-		},
-		{
-			country: "000",
-			isSameRate: false,
-			rate: 0,
-			states: [
-				{
-					id: "040",
-					rate: 20,
-					applyOnShipping: false,
-					overrideValues: [
-						{
-							overrideOn: OverrideOn.products,
-							rate: 20,
-							location: "040",
-							category: 5,
-							type: "state"
-						},
-						{
-							overrideOn: OverrideOn.products,
-							rate: 23,
-							location: "040",
-							category: 8,
-							type: "state"
-						}
-					]
-				}
-			],
-			vat_registration_type: EUTaxRegistrationTypes.microBusiness
-		}
-	],
-	applyTaxOn: "product",
-	isTaxIncludedInPrice: 0,
-	showPriceWithTax: true,
-	chargeTaxOnShipping: true,
-	activeCountry: null
-};
 
 const getTaxSettings = () => {
-	return Promise.resolve<TaxSettings>(mockSettings);
+	// return Promise.resolve<TaxSettings>(null);
+	return wpAjaxInstance.get<TaxSettings>(endpoints.GET_TAX_SETTINGS).then(response => response.data);
 }
 
 export const useTaxSettingsQuery = () => {
@@ -123,14 +65,3 @@ export const useTaxSettingsQuery = () => {
 	});
 }
 
-
-
-const saveTaxSettings = () => {
-	return wpAjaxInstance.post(endpoints.SAVE_TAX_SETTINGS);
-}
-
-export const useSaveTaxSettingsMutation = () => {
-	return useMutation({
-		mutationFn: saveTaxSettings
-	});
-}

@@ -474,7 +474,6 @@ class Options_V2 {
 				)
 			);
 		}
-
 	}
 
 	/**
@@ -491,6 +490,11 @@ class Options_V2 {
 
 		$data_before = get_option( 'tutor_option' );
 		$option = (array) tutor_utils()->array_get( 'tutor_option', $_POST, array() ); //phpcs:ignore
+
+		if ( ! empty( $option['ecommerce_tax'] ) ) {
+			$option['ecommerce_tax'] = wp_unslash( $option['ecommerce_tax'] );
+		}
+
 		do_action( 'tutor_option_save_before', $option );
 
 		$option = tutor_utils()->sanitize_recursively( $option );
@@ -558,7 +562,7 @@ class Options_V2 {
 	public function handle_changed_monetization_option() {
 		add_filter(
 			'tutor_option_saved_data',
-			function( $res ) {
+			function ( $res ) {
 				$res['reload_required'] = true;
 				return $res;
 			}
@@ -586,10 +590,8 @@ class Options_V2 {
 					foreach ( $blocks['fields'] as $field ) {
 						if ( isset( $tutor_default_option[ $field['key'] ] ) ) {
 							$attr_default[ $field['key'] ] = $tutor_saved_option[ $field['key'] ];
-						} else {
-							if ( null !== $field['key'] ) {
+						} elseif ( null !== $field['key'] ) {
 								$attr_default[ $field['key'] ] = $field['default'];
-							}
 						}
 					}
 				}

@@ -5,13 +5,13 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { colorPalate, fontSize, fontWeight, spacing } from '@Config/styles';
-import { css } from '@emotion/react';
-import Table, { Column } from '@Molecules/Table';
+import Table, { type Column } from '@Molecules/Table';
 import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 import Card, { CardHeader } from '../molecules/Card';
-import { EUTaxRegistrationTypes, TaxSettings } from '../services/tax';
+import { EUTaxRegistrationTypes, type TaxSettings } from '../services/tax';
 import { useCountryTaxRateModal } from './modals/CountryTaxRateModal';
 
 interface ColumnDataType {
@@ -24,7 +24,7 @@ function EuropeanUnionTax() {
   const { openCountryTaxRateModal } = useCountryTaxRateModal();
   const form = useFormContext<TaxSettings>();
   const rates = form.watch('rates');
-  const euIndex = rates.findIndex((rate) => rate.country.toString() === euCountryCode.toString());
+  const euIndex = rates.findIndex((rate) => String(rate.country) === String(euCountryCode));
   const euRate = rates[euIndex];
 
   const isMicroBusiness = euRate?.vat_registration_type === EUTaxRegistrationTypes.microBusiness;
@@ -38,7 +38,7 @@ function EuropeanUnionTax() {
     return {
       countryId: euState.id,
       rate: euState.rate,
-      emoji: europeanUnionData.states.find((state) => state.numeric_code == euState.id)?.emoji,
+      emoji: europeanUnionData.states.find((state) => String(state.numeric_code) === String(euState.id))?.emoji,
     };
   });
 
@@ -46,7 +46,9 @@ function EuropeanUnionTax() {
     {
       Header: __('Region', 'tutor'),
       Cell: (item) => {
-        const name = europeanUnionData.states.find((state) => state.numeric_code == item.countryId)?.name;
+        const name = europeanUnionData.states.find(
+          (state) => String(state.numeric_code) === String(item.countryId),
+        )?.name;
 
         return (
           <div css={styles.nameWrapper}>
@@ -59,7 +61,7 @@ function EuropeanUnionTax() {
     {
       Header: __('Tax rate', 'tutor'),
       Cell: (item) => {
-        const euStateIndex = euRate?.states?.findIndex((euState) => euState.id == item.countryId);
+        const euStateIndex = euRate?.states?.findIndex((euState) => String(euState.id) === String(item.countryId));
 
         return (
           <>
@@ -76,11 +78,11 @@ function EuropeanUnionTax() {
                   }}
                 />
                 <Button
-                  variant='text'
+                  variant="text"
                   icon={<SVGIcon name="delete" style={styles.deleteIcon} />}
                   onClick={() => {
                     const updatedRates = rates.map((rate) => {
-                      if (rate.country == euCountryCode) {
+                      if (String(rate.country) === String(euCountryCode)) {
                         rate.states = rate.states.filter((state) => state.id !== item.countryId);
                       }
                       return rate;
@@ -133,7 +135,7 @@ function EuropeanUnionTax() {
             fallback={
               <div>
                 <Button
-                  variant='tertiary'
+                  variant="tertiary"
                   onClick={() => {
                     openCountryTaxRateModal({
                       form,
@@ -155,7 +157,7 @@ function EuropeanUnionTax() {
                 (isOneStopBusiness && europeanUnionData.states.length !== euRate.states.length) ||
                 (isMicroBusiness && !euRate.states.length) ? (
                   <Button
-                    variant='tertiary'
+                    variant="tertiary"
                     onClick={() => {
                       openCountryTaxRateModal({
                         form,

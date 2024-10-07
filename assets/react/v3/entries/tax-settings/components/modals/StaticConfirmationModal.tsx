@@ -1,5 +1,5 @@
+import BasicModalWrapper from '@/v3/shared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@/v3/shared/components/modals/Modal';
-import ModalWrapper from '@/v3/shared/components/modals/ModalWrapper';
 import Button, { type ButtonVariant } from '@Atoms/Button';
 import { shadow, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
@@ -22,7 +22,7 @@ const StaticConfirmationModal = ({
   confirmButtonVariant,
 }: StaticConfirmationModalProps) => {
   return (
-    <ModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <div css={styles.contentWrapper}>
         <p css={styles.content}>{description ?? __('Once you perform this action this can’t be undone.', 'tutor')}</p>
         <div css={styles.footerWrapper}>
@@ -40,7 +40,7 @@ const StaticConfirmationModal = ({
           </Button>
         </div>
       </div>
-    </ModalWrapper>
+    </BasicModalWrapper>
   );
 };
 

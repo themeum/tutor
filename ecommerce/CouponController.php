@@ -13,6 +13,7 @@ namespace Tutor\Ecommerce;
 use TUTOR\Backend_Page_Trait;
 use TUTOR\BaseController;
 use TUTOR\Course;
+use Tutor\Ecommerce\Manager\Coupon;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
@@ -703,6 +704,8 @@ class CouponController extends BaseController {
 		$object_ids  = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 		$coupon_code = Input::post( 'coupon_code' );
 		$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
+		$user        = wp_get_current_user();
+		$user_id     = $user->ID ?? null;
 
 		$order_type = OrderModel::TYPE_SINGLE_ORDER;
 		if ( $plan ) {
@@ -717,10 +720,25 @@ class CouponController extends BaseController {
 			);
 		}
 
+		$coupon = Coupon::make_with( $coupon_code, $user_id );
+
+		if ( ! $coupon->is_valid() ) {
+			return $this->json_response(
+				__( 'Coupon code is not applicable!', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		echo '<xmp>';
+		var_dump( $coupon->is_valid() );
+		echo '</xmp>';
+		die();
+
 		try {
 			$discount_price = $coupon_code
-								? $this->model->apply_coupon_discount( $object_ids, $coupon_code, $order_type, true )
-								: $this->model->apply_automatic_coupon_discount( $object_ids, $order_type );
+				? $this->model->apply_coupon_discount( $object_ids, $coupon_code, $order_type, true )
+				: $this->model->apply_automatic_coupon_discount( $object_ids, $order_type );
 
 			if ( $discount_price->is_applied ) {
 				$this->json_response(

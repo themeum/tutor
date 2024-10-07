@@ -32,12 +32,11 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
 $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
-$checkout_manager = Checkout::create_with( $course_list, 'SPECIAL', $get_cart['cart']->user_id, '040' );
-$summary          = $checkout_manager->get_calculated_data();
+// $user = get_userdata( $get_cart['cart']->user_id );
+
 
 ?>
 <div class="tutor-checkout-page">
-
 	<?php
 	$echo_before_return    = true;
 	$user_has_subscription = apply_filters( 'tutor_checkout_user_has_subscription', false, $plan_id, $echo_before_return );
@@ -50,7 +49,7 @@ $summary          = $checkout_manager->get_calculated_data();
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
-			<div class="tutor-col-md-6">
+			<div class="tutor-col-md-6" tutor-checkout-details>
 				<?php
 				$file = __DIR__ . '/checkout-details.php';
 				if ( file_exists( $file ) ) {

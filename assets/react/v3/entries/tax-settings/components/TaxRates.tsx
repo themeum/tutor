@@ -30,8 +30,8 @@ export default function TaxRates() {
   const { openCountrySelectModal } = useCountrySelectModal();
   const { openCountryTaxRateModal } = useCountryTaxRateModal();
   const rates = form.watch('rates');
-  const activeCountry = form.watch('activeCountry');
-  const activeCountryIndex = rates.findIndex((rate) => rate.country === activeCountry);
+  const activeCountry = form.watch('active_country');
+  const activeCountryIndex = rates.findIndex((rate) => String(rate.country) === String(activeCountry));
   const activeCountrySelectedStates = rates[activeCountryIndex]?.states ?? [];
   const activeCountryAllStates = getCountryByCode(activeCountry ?? '')?.states ?? [];
 
@@ -39,7 +39,7 @@ export default function TaxRates() {
 
   let tableData: ColumnDataType[] = activeCountry
     ? rates
-        .find((rate) => rate.country === activeCountry)
+        .find((rate) => String(rate.country) === String(activeCountry))
         ?.states?.map((state) => ({
           locationId: getStateByCode(activeCountry, Number(state.id))?.id ?? '',
           rate: state?.rate,
@@ -52,7 +52,7 @@ export default function TaxRates() {
 
   const isEU = isEuropeanUnion(activeCountry ?? '');
 
-  const isSingleCountry = activeCountry && (!tableData.length || rates[activeCountryIndex].isSameRate);
+  const isSingleCountry = activeCountry && (!tableData.length || rates[activeCountryIndex].is_same_rate);
 
   if (isSingleCountry) {
     tableData = [{ locationId: activeCountry, rate: rates[activeCountryIndex].rate }];
@@ -65,12 +65,12 @@ export default function TaxRates() {
       activeCountry &&
       activeCountryAllStates?.length &&
       !activeCountrySelectedStates.length &&
-      !rates[activeCountryIndex].isSameRate
+      !rates[activeCountryIndex].is_same_rate
     ) {
-      form.setValue(`rates.${activeCountryIndex}.isSameRate`, true);
+      form.setValue(`rates.${activeCountryIndex}.is_same_rate`, true);
       form.setValue(
         `rates.${activeCountryIndex}.states`,
-        activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, applyOnShipping: false })),
+        activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, apply_on_shipping: false })),
       );
     }
   }, [isSingleCountry]);
@@ -95,7 +95,7 @@ export default function TaxRates() {
                 type="button"
                 css={styles.regionTitle}
                 onClick={() => {
-                  form.setValue('activeCountry', `${item.locationId}`);
+                  form.setValue('active_country', `${item.locationId}`);
                 }}
               >
                 {name}
@@ -110,7 +110,7 @@ export default function TaxRates() {
     {
       Header: __('Tax rate', 'tutor'),
       Cell: (item) => {
-        const countryObj = rates.find((rate) => rate.country === item.locationId);
+        const countryObj = rates.find((rate) => String(rate.country) === String(item.locationId));
         const states = countryObj?.states || [];
         const stateRates = states.map((state) => state.rate);
 
@@ -148,7 +148,7 @@ export default function TaxRates() {
                       onClick={() => {
                         const filteredRates = rates.filter((rate) => rate.country !== activeCountry);
                         form.setValue('rates', filteredRates);
-                        form.setValue('activeCountry', null);
+                        form.setValue('active_country', null);
                       }}
                     />
                   </div>
@@ -157,7 +157,9 @@ export default function TaxRates() {
             );
           }
 
-          const stateIndex = rates[activeCountryIndex].states.findIndex((state) => state.id === item.locationId);
+          const stateIndex = rates[activeCountryIndex].states.findIndex(
+            (state) => String(state.id) === String(item.locationId),
+          );
           if (stateIndex > -1) {
             return (
               <>
@@ -180,7 +182,7 @@ export default function TaxRates() {
                       icon={<SVGIcon name="delete" style={styles.deleteIcon} />}
                       onClick={() => {
                         const updatedRates = rates.map((rate) => {
-                          if (rate.country === activeCountry) {
+                          if (String(rate.country) === String(activeCountry)) {
                             rate.states = rate.states.filter((state) => state.id !== item.locationId);
                           }
                           return rate;
@@ -198,7 +200,9 @@ export default function TaxRates() {
 
         return (
           <div>
-            {countryObj?.states.length && !countryObj.isSameRate ? displayStateFulCountryRate() : displayCountryRate()}
+            {countryObj?.states.length && !countryObj.is_same_rate
+              ? displayStateFulCountryRate()
+              : displayCountryRate()}
           </div>
         );
       },
@@ -249,10 +253,10 @@ export default function TaxRates() {
           <Show when={activeCountry && activeCountryAllStates?.length}>
             <Checkbox
               label={__('Apply single tax rate for entire country', 'tutor')}
-              checked={rates[activeCountryIndex]?.isSameRate ?? false}
+              checked={rates[activeCountryIndex]?.is_same_rate ?? false}
               onChange={(isChecked) => {
                 const currentCountry = rates[activeCountryIndex];
-                currentCountry.isSameRate = isChecked;
+                currentCountry.is_same_rate = isChecked;
                 form.setValue('rates', rates);
               }}
             />

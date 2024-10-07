@@ -2,7 +2,7 @@ import { type ModalProps, useModal } from '@/v3/shared/components/modals/Modal';
 import Button from '@Atoms/Button';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import { colorPalate, shadow, spacing } from '@Config/styles';
+import { colorPalate, shadow, spacing, zIndex } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { europeanUnionData, getStatesByCountryAsOptions, isEuropeanUnion } from '@Utils/countries';
 import { requiredRule } from '@Utils/validation';
@@ -29,8 +29,8 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
       taxRate: 0,
     },
   });
-  const activeCountryCode = form.watch('activeCountry');
-  const activeCountryRate = form.getValues('rates').find((rate) => rate.country === activeCountryCode);
+  const activeCountryCode = form.watch('active_country');
+  const activeCountryRate = form.getValues('rates').find((rate) => String(rate.country) === String(activeCountryCode));
   const isEU = isEuropeanUnion(activeCountryCode ?? '');
 
   function handleModalClose({ action }: { action: 'CLOSE' | 'CONFIRM' }) {
@@ -50,7 +50,7 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
           const selectedOption = values.selectedOption;
 
           const updatedRates = form.getValues('rates').map((rate) =>
-            rate.country === activeCountryCode && selectedOption
+            String(rate.country) === String(activeCountryCode) && selectedOption
               ? {
                   ...rate,
                   states: [
@@ -58,7 +58,7 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
                     {
                       id: taxRateForm.getValues('selectedOption'),
                       rate: taxRateForm.getValues('taxRate'),
-                      applyOnShipping: false,
+                      apply_on_shipping: false,
                     },
                   ],
                 }
@@ -123,7 +123,7 @@ export const useCountryTaxRateModal = () => {
   const { showModal } = useModal();
 
   const openCountryTaxRateModal = (props: Omit<CountryTaxRateModalProps, 'closeModal'>) => {
-    return showModal({ component: CountryTaxRateModal, props });
+    return showModal({ component: CountryTaxRateModal, props, depthIndex: zIndex.highest });
   };
 
   return { openCountryTaxRateModal };

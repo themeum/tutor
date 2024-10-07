@@ -74,7 +74,7 @@ class Ecommerce {
 		new HooksHandler();
 		new EmailController();
 		new PaymentHandler();
-
+		new SettingsController();
 	}
 
 	/**
