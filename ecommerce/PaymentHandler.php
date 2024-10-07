@@ -102,6 +102,23 @@ class PaymentHandler {
 		if ( $placement_status && $order_id ) {
 			delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
 			delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
+
+			// Modify the page title.
+			add_filter(
+				'document_title_parts',
+				function( $title ) use ( $placement_status ) {
+					$site_title = get_bloginfo( 'name' );
+
+					if ( 'success' === $placement_status ) {
+						$title['title'] = __( 'Order Placement Success', 'tutor' ) . ' - ' . $site_title;
+					} else {
+						$title['title'] = __( 'Order Placement Failed', 'tutor' ) . ' - ' . $site_title;
+					}
+
+					return $title;
+				}
+			);
+
 			if ( 'success' === $placement_status ) {
 				do_action( 'tutor_order_placement_success', $order_id );
 				tutor_load_template(

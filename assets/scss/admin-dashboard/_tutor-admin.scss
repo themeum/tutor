@@ -5,7 +5,10 @@
 .tutor-admin {
 	&-wrap {
 		margin-left: -20px;
-		// background-color: #E9EAED;
+		
+		@include breakpoint-max(782) {
+			margin-left: -10px;
+		}
 
 		// reset
 		* {
@@ -39,11 +42,10 @@
 
 	&-container {
 		max-width: 1160px;
-		min-width: 760px;
 		margin-left: auto;
 		margin-right: auto;
-		padding-left: 30px;
-		padding-right: 30px;
+		padding-left: 20px;
+		padding-right: 20px;
 
 		&-sm {
 			max-width: 760px;
