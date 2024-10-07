@@ -26,9 +26,9 @@ import {
   type QuizQuestionType,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import { usePrevious } from '@Hooks/usePrevious';
 import { styleUtils } from '@Utils/style-utils';
 
-import { usePrevious } from '@Hooks/usePrevious';
 import emptyStateImage2x from '@Images/quiz-empty-state-2x.webp';
 import emptyStateImage from '@Images/quiz-empty-state.webp';
 
