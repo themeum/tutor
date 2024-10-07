@@ -146,6 +146,10 @@ table.course-single-gradebooks .datetime {
 }
 
 .tutor-password-protected-course{
+    .tutor-modal-overlay {
+        backdrop-filter: blur(10px);
+    }
+
     .tutor-course-thumbnail {
         margin-bottom: 60px;
 
