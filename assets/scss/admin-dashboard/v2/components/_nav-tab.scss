@@ -30,8 +30,24 @@
 			}
 		}
 
-		.tutor-option-submenu-nav{
-			margin-left: 28px;
+		.tutor-option-submenu-nav {
+			margin-left: 36px;
+
+			.tutor-nav-link {
+				padding: 8px 12px;
+				
+				@include breakpoint-max(desktop) {
+					padding: 8px 20px;
+				}
+			}
+
+			@include breakpoint-max(desktop) {
+				margin-left: 0px;
+			}
+
+			@include breakpoint-max(mobile) {
+				margin-left: 20px;
+			}
 		}
 	}
 	&.tutor-is-sticky {

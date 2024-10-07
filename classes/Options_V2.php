@@ -697,6 +697,15 @@ class Options_V2 {
 								'desc'       => __( 'This page will be used as the Terms and Conditions page', 'tutor' ),
 								'searchable' => true,
 							),
+							array(
+								'key'        => OptionKeys::PRIVACY_POLICY,
+								'type'       => 'select',
+								'label'      => __( 'Privacy Policy', 'tutor' ),
+								'default'    => 0,
+								'options'    => $pages,
+								'desc'       => __( 'Choose the page for privacy policy.', 'tutor' ),
+								'searchable' => true,
+							),
 						),
 					),
 					array(
@@ -974,6 +983,13 @@ class Options_V2 {
 								'default'        => 'free',
 								'desc'           => __( 'Select a monetization option to generate revenue by selling courses.', 'tutor' ),
 							),
+						),
+					),
+					'block_woocommerce'     => array(
+						'label'      => __( 'Woocommerce', 'tutor' ),
+						'slug'       => 'woocommerce',
+						'block_type' => 'uniform',
+						'fields'     => array(
 							array(
 								'key'         => 'tutor_woocommerce_order_auto_complete',
 								'type'        => 'toggle_switch',
@@ -981,15 +997,6 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'off',
 								'desc'        => __( 'If enabled, in the case of Courses, WooCommerce Orders will get the "Completed" status .', 'tutor' ),
-							),
-							array(
-								'key'         => 'statement_show_per_page',
-								'type'        => 'number',
-								'number_type' => 'integer',
-								'label'       => __( 'Show Statement Per Page', 'tutor' ),
-								'default'     => '20',
-
-								'desc'        => __( 'Define the number of statements to show.', 'tutor' ),
 							),
 						),
 					),
@@ -1006,6 +1013,7 @@ class Options_V2 {
 								'default'       => 'off',
 								'desc'          => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
 								'toggle_fields' => 'sharing_percentage',
+								'toggle_blocks' => 'fees,withdraw',
 							),
 							array(
 								'key'         => 'sharing_percentage',
@@ -1062,9 +1070,10 @@ class Options_V2 {
 								'desc'         => __( 'Select the fee type and add fee amount/percentage', 'tutor' ),
 								'group_fields' => array(
 									'fees_type'   => array(
-										'type'    => 'select',
-										'default' => 'fixed',
-										'options' => array(
+										'type'           => 'select',
+										'default'        => 'fixed',
+										'select_options' => false,
+										'options'        => array(
 											'percent' => __( 'Percent', 'tutor' ),
 											'fixed'   => __( 'Fixed', 'tutor' ),
 										),

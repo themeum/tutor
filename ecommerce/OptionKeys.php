@@ -36,7 +36,6 @@ class OptionKeys {
 	const BILLING_EMAIL        = 'billing_email';
 
 	// Ecommerce Policies.
-	const REFUND_POLICY  = 'ecommerce_refund_policy';
 	const PRIVACY_POLICY = 'ecommerce_privacy_policy';
 
 	// Manual payment settings.
