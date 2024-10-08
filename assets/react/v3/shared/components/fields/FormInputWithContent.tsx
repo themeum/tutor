@@ -26,6 +26,7 @@ interface FormInputWithContentProps extends FormControllerProps<string | number 
   contentCss?: SerializedStyles;
   removeBorder?: boolean;
   selectOnFocus?: boolean;
+  removeMinWidth?: boolean;
 }
 
 const FormInputWithContent = ({
@@ -49,6 +50,7 @@ const FormInputWithContent = ({
   contentCss,
   removeBorder = false,
   selectOnFocus = false,
+  removeMinWidth = false,
 }: FormInputWithContentProps) => {
   const ref = useRef<HTMLInputElement>(null);
   return (
@@ -90,7 +92,7 @@ const FormInputWithContent = ({
                 }
               }}
               onKeyDown={(event) => onKeyDown?.(event.key)}
-              css={[inputCss, styles.input(contentPosition, showVerticalBar, size)]}
+              css={[inputCss, styles.input(contentPosition, showVerticalBar, size, removeMinWidth)]}
               autoComplete="off"
               ref={(element) => {
                 field.ref(element);
@@ -150,7 +152,7 @@ const styles = {
       }
     }
   `,
-  input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
+  input: (contentPosition: string, showVerticalBar: boolean, size: string, removeMinWidth: boolean) => css`
     /** Increasing the css specificity */
     &[data-input] {
       ${typography.body()};
@@ -158,7 +160,7 @@ const styles = {
       box-shadow: none;
       background-color: transparent;
       padding-${contentPosition}: 0;
-			min-width: 60px;
+			min-width: ${removeMinWidth ? 'auto' : '60px'};
   
       ${
         showVerticalBar &&
