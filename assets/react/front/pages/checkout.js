@@ -1,7 +1,7 @@
 import ajaxHandler from "../../admin-dashboard/segments/filter";
 const { __ } = wp.i18n;
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', () => {
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
     const checkoutPageWrapper = document.querySelector(".tutor-checkout-page");
 

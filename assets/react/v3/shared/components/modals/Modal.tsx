@@ -23,7 +23,7 @@ const styles = {
     }
   `,
   container: css`
-    z-index: ${zIndex.modal};
+    z-index: ${zIndex.highest};
     position: fixed;
     display: flex;
     justify-content: center;
@@ -38,7 +38,7 @@ export type PromiseResolvePayload<A extends string = string> = { action: A; [key
 export type ModalProps = {
   closeModal: (param?: PromiseResolvePayload<'CLOSE'>) => void;
   icon?: React.ReactNode;
-  title?: string | React.ReactNode;
+  title?: string;
   subtitle?: string;
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;

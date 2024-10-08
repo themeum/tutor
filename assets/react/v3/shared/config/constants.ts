@@ -74,4 +74,5 @@ export enum Addons {
   RESTRICT_CONTENT_PRO = 'Restrict Content Pro',
   WEGLOT = 'Weglot',
   WPML_MULTILINGUAL_CMS = 'WPML Multilingual CMS',
+  H5P_Integration = 'H5P Integration',
 }

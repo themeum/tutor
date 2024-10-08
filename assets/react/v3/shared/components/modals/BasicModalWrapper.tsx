@@ -4,7 +4,7 @@ import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
+import { type SerializedStyles, css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';
 
@@ -18,6 +18,7 @@ interface BasicModalWrapperProps {
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
   fullScreen?: boolean;
+  modalStyle?: SerializedStyles;
 }
 
 const BasicModalWrapper = ({
@@ -30,6 +31,7 @@ const BasicModalWrapper = ({
   entireHeader,
   actions,
   fullScreen,
+  modalStyle,
 }: BasicModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -40,7 +42,7 @@ const BasicModalWrapper = ({
   }, []);
 
   return (
-    <div css={styles.container({ isFullScreen: fullScreen })}>
+    <div css={[styles.container({ isFullScreen: fullScreen }), modalStyle]}>
       <div
         css={styles.header({
           hasEntireHeader: !!entireHeader,
@@ -180,6 +182,7 @@ const styles = {
   }) => css`
 		background-color: ${colorTokens.background.white};
 		overflow-y: auto;
+		max-height: 90vh;
 
 		${
       isFullScreen &&

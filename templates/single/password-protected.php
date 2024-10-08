@@ -23,7 +23,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 		<div class="tutor-modal-window" style="max-width: 834px;">
 			<div class="tutor-modal-content tutor-bg-white tutor-p-40">
 				<div class="tutor-row">
-					<div class="tutor-col-7">
+					<div class="tutor-col-md-7">
 						<div class="tutor-d-flex tutor-flex-column">
 							<div class="tutor-fs-3 tutor-mb-12">
 								<i class="tutor-icon-lock-line"></i>
@@ -32,7 +32,7 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 							<h3 class="tutor-fw-medium tutor-fs-5 tutor-color-black"><?php the_title(); ?></h3>
 						</div>
 					</div>
-					<div class="tutor-col-5">
+					<div class="tutor-col-md-5">
 						<form action="<?php echo esc_url( site_url( 'wp-login.php?action=postpass', 'login_post' ) ); ?>" method="post" class="tutor-mt-56">
 							<div class="tutor-mb-12">
 								<label class="tutor-form-label tutor-color-secondary">

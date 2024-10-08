@@ -284,9 +284,16 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 3.0.0-beta3 - September 07, 2024
+= 3.0.0-beta3 - October 07, 2024
 
-Coming soon...
+New: H5P integration added
+New: Advanced tax management
+New: Password-protected course modal added
+New: Certificate control on subscription plans
+New: Stripe payment gateway added
+Fix: Courses cannot be removed from coupons
+Fix: Quiz active question not resetting after discarding changes
+Fix: Instructors unable to create AI-generated courses
 
 = 3.0.0-beta2 - September 30, 2024
 

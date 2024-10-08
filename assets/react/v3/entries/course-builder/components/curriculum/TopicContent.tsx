@@ -71,6 +71,10 @@ const icons = {
     name: 'googleMeetColorize',
     color: '',
   },
+  tutor_h5p_quiz: {
+    name: 'interactiveQuiz',
+    color: colorTokens.design.warning,
+  },
 } as const;
 
 const modalComponent: {
@@ -80,6 +84,7 @@ const modalComponent: {
   lesson: LessonModal,
   tutor_quiz: QuizModal,
   tutor_assignments: AssignmentModal,
+  tutor_h5p_quiz: QuizModal,
 } as const;
 
 const modalTitle: {
@@ -88,6 +93,7 @@ const modalTitle: {
   lesson: __('Lesson', 'tutor'),
   tutor_quiz: __('Quiz', 'tutor'),
   tutor_assignments: __('Assignment', 'tutor'),
+  tutor_h5p_quiz: __('Interactive Quiz', 'tutor'),
 } as const;
 
 const modalIcon: {
@@ -96,6 +102,7 @@ const modalIcon: {
   lesson: 'lesson',
   tutor_quiz: 'quiz',
   tutor_assignments: 'assignment',
+  tutor_h5p_quiz: 'interactiveQuiz',
 } as const;
 
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
@@ -147,6 +154,9 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           title: modalTitle[isContentType],
           subtitle: `${__('Topic')}: ${topic.title}`,
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
+          ...(type === 'tutor_h5p_quiz' && {
+            contentType: 'tutor_h5p_quiz',
+          }),
         },
       });
     }
@@ -162,7 +172,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const handleDelete = () => {
     if (['lesson', 'tutor_assignments'].includes(type)) {
       deleteContentMutation.mutateAsync(content.id);
-    } else if (type === 'tutor_quiz') {
+    } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type)) {
       deleteQuizMutation.mutateAsync(content.id);
     } else if (type === 'tutor-google-meet') {
       deleteGoogleMeetMutation.mutateAsync(content.id);
@@ -185,6 +195,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       lesson: 'lesson',
       tutor_assignments: 'assignment',
       tutor_quiz: 'quiz',
+      tutor_h5p_quiz: 'quiz',
     } as const;
 
     duplicateContentMutation.mutateAsync({
@@ -219,7 +230,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           </div>
           <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
-            <Show when={type === 'tutor_quiz' && !!content.total_question}>
+            <Show when={(type === 'tutor_quiz' || type === 'tutor_h5p_quiz') && !!content.total_question}>
               <span data-question-count>({content.total_question} Questions)</span>
             </Show>
           </p>

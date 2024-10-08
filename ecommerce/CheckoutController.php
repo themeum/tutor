@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Ecommerce\Manager\Checkout;
 use Tutor\Helpers\SessionHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -513,7 +514,7 @@ class CheckoutController {
 			try {
 				add_filter(
 					'tutor_ecommerce_webhook_url',
-					function( $url ) use ( $payment_method ) {
+					function ( $url ) use ( $payment_method ) {
 						$url = add_query_arg( array( 'payment_method' => $payment_method ), $url );
 						return $url;
 					}

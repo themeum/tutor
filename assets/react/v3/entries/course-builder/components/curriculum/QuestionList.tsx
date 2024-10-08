@@ -22,14 +22,16 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import Popover from '@Molecules/Popover';
 
+import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import Question from '@CourseBuilderComponents/curriculum/Question';
+import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import type { H5PContent, QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
@@ -105,7 +107,8 @@ const QuestionList = ({
   const addButtonRef = useRef<HTMLButtonElement>(null);
 
   const form = useFormContext<QuizForm>();
-  const { activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } = useQuizModalContext();
+  const { contentType, activeQuestionIndex, validationError, setActiveQuestionId, setValidationError } =
+    useQuizModalContext();
   const {
     remove: removeQuestion,
     append: appendQuestion,
@@ -118,6 +121,7 @@ const QuestionList = ({
   });
 
   const { showToast } = useToast();
+  const { showModal } = useModal();
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -137,7 +141,7 @@ const QuestionList = ({
 
   const questions = form.watch('questions') || [];
 
-  const handleAddQuestion = (questionType: QuizQuestionType) => {
+  const handleAddQuestion = (questionType: QuizQuestionType, content?: H5PContent) => {
     const validation = validateQuizQuestion(activeQuestionIndex, form);
     if (validation !== true) {
       setValidationError(validation);
@@ -149,8 +153,8 @@ const QuestionList = ({
     appendQuestion({
       _data_status: 'new',
       question_id: questionId,
-      question_title: `Question ${questionFields.length + 1}`,
-      question_description: '',
+      question_title: questionType === 'h5p' ? content?.title : `Question ${questionFields.length + 1}`,
+      question_description: questionType === 'h5p' ? content?.id : '',
       question_type: questionType,
       question_answers:
         questionType === 'true_false'
@@ -201,7 +205,7 @@ const QuestionList = ({
       question_order: questionFields.length + 1,
       question_settings: {
         answer_required: false,
-        question_mark: 1,
+        question_mark: contentType === 'tutor_h5p_quiz' ? 0 : 1,
         question_type: questionType,
         randomize_options: false,
         show_question_mark: false,
@@ -210,6 +214,12 @@ const QuestionList = ({
     setValidationError(null);
     setActiveQuestionId(questionId);
     setIsOpen(false);
+  };
+
+  const handleH5PBulkQuestion = (contents: H5PContent[]) => {
+    for (const content of contents) {
+      handleAddQuestion('h5p', content);
+    }
   };
 
   const handleDuplicateQuestion = (data: QuizQuestion, index: number) => {
@@ -275,7 +285,27 @@ const QuestionList = ({
     <div>
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
-        <button ref={addButtonRef} type="button" onClick={() => setIsOpen(true)}>
+        <button
+          ref={addButtonRef}
+          type="button"
+          onClick={() => {
+            if (contentType === 'tutor_h5p_quiz') {
+              showModal({
+                component: H5PContentListModal,
+                props: {
+                  title: __('Select H5P Content', 'tutor'),
+                  onAddContent: (contents) => {
+                    handleH5PBulkQuestion(contents);
+                  },
+                  contentType: 'tutor_h5p_quiz',
+                  addedContentIds: questions.map((question) => question.question_description),
+                },
+              });
+            } else {
+              setIsOpen(true);
+            }
+          }}
+        >
           <SVGIcon name="plusSquareBrand" width={32} height={32} />
         </button>
       </div>
