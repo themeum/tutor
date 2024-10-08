@@ -612,8 +612,6 @@ class Paypal extends BasePayment
         if ($return) {
             return json_decode($response->getBody());
         }
-
-        exit();
     }
 
     /**
