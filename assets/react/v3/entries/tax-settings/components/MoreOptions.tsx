@@ -1,3 +1,4 @@
+import { POPOVER_ANIMATION_DURATION_WITH_THRESHOLD } from '@/v3/shared/config/constants';
 import { useModal } from '@Components/modals/Modal';
 import { spacing, zIndex } from '@Config/styles';
 import ThreeDots from '@Molecules/ThreeDots';
@@ -34,7 +35,7 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
             if (typeof data.locationId === 'string') {
               setTimeout(() => {
                 return form.setValue('active_country', String(data.locationId));
-              }, 210);
+              }, POPOVER_ANIMATION_DURATION_WITH_THRESHOLD + 5);
             }
           }}
           onClosePopover={() => setIsOpen(false)}
