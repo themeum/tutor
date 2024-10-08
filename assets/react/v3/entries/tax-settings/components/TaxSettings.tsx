@@ -93,7 +93,7 @@ const TaxSettingsPage = () => {
         when={ratesValue.length}
         fallback={
           <Card>
-            <div css={styleUtils.cardInnerSection}>
+            <div css={[styleUtils.cardInnerSection, styles.emptyStateWrapper]}>
               <EmptyState
                 emptyStateImage={taxBanner}
                 imageAltText={__('Tax Banner', 'tutor')}
@@ -151,5 +151,8 @@ const styles = {
       text-decoration: none;
       color: ${colorTokens.text.title};
     }
+  `,
+  emptyStateWrapper: css`
+    margin-bottom: ${spacing[24]};
   `,
 };
