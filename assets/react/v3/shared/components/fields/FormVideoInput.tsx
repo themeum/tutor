@@ -681,8 +681,7 @@ const styles = {
     }
   `,
   thumbImage: css`
-    border-top-right-radius: 0;
-    border-top-left-radius: 0;
+    border-radius: 0;
     border: none;
   `,
   duration: css`
