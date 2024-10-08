@@ -149,6 +149,9 @@ const styles = {
 		place-self: center end;
 		display: inline-flex;
 		gap: ${spacing[16]};
+    position: absolute;
+    right: ${spacing[16]};
+    top: ${spacing[16]};
 	`,
   closeButton: css`
 		${styleUtils.resetButton};

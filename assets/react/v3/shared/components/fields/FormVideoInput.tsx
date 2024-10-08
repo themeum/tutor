@@ -356,7 +356,7 @@ const FormVideoInput = ({
             <Show
               when={!loading}
               fallback={
-                <div css={styles.emptyMedia({ hasVideoSource: videoSources.length > 0 })}>
+                <div css={styles.emptyMedia({ hasVideoSource: true })}>
                   <LoadingOverlay />
                 </div>
               }
@@ -367,7 +367,7 @@ const FormVideoInput = ({
                   <div
                     ref={triggerRef}
                     css={styles.emptyMedia({
-                      hasVideoSource: videoSources.length > 0,
+                      hasVideoSource: true,
                     })}
                   >
                     <Show when={videoSources.includes('html5')}>
@@ -512,7 +512,9 @@ const FormVideoInput = ({
                   <FormSelectInput
                     {...controllerProps}
                     options={videoSourceOptions}
+                    disabled={videoSourceOptions.length <= 1}
                     placeholder={__('Select source', 'tutor')}
+                    hideCaret={videoSourceOptions.length <= 1}
                   />
                 );
               }}
@@ -564,7 +566,7 @@ export default FormVideoInput;
 
 const styles = {
   emptyMedia: ({
-    hasVideoSource,
+    hasVideoSource = false,
   }: {
     hasVideoSource: boolean;
   }) => css`

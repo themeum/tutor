@@ -364,7 +364,7 @@ const CourseBasic = () => {
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
-                  generateWithAi
+                  generateWithAi={!isTutorPro || isOpenAiEnabled}
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 />
               )}
@@ -391,7 +391,7 @@ const CourseBasic = () => {
                 {...controllerProps}
                 label={__('Description', 'tutor')}
                 isMagicAi
-                generateWithAi
+                generateWithAi={!isTutorPro || isOpenAiEnabled}
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
@@ -472,7 +472,7 @@ const CourseBasic = () => {
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
               infoText={__('Standard Size: 800x450 pixels', 'tutor')}
-              generateWithAi
+              generateWithAi={!isTutorPro || isOpenAiEnabled}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}
