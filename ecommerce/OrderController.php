@@ -205,7 +205,7 @@ class OrderController {
 				$subtotal_price = $this->model::calculate_order_price( $items )->subtotal;
 				$total_price    = $this->model::calculate_order_price( $items )->total;
 
-				if ( $plan->enrollment_fee ) {
+				if ( $this->model::TYPE_SUBSCRIPTION === $order_type && $plan->enrollment_fee ) {
 					$total_price += $plan->enrollment_fee;
 				}
 			}
