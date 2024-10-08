@@ -112,8 +112,7 @@ class Ecommerce {
 	 */
 	public function add_monetization_option( $arr ) {
 		$arr[ self::MONETIZE_BY ] = __( 'Native', 'tutor' );
-
-		return $arr;
+		return array_reverse( $arr );
 	}
 
 	/**
