@@ -112,8 +112,7 @@ class Ecommerce {
 	 */
 	public function add_monetization_option( $arr ) {
 		$arr[ self::MONETIZE_BY ] = __( 'Native', 'tutor' );
-
-		return $arr;
+		return array_reverse( $arr );
 	}
 
 	/**
@@ -154,6 +153,8 @@ class Ecommerce {
 				'config_class'  => PaypalConfig::class,
 			),
 		);
+
+		$arr = apply_filters( 'tutor_payment_gateways_with_class', $arr );
 
 		return is_null( $gateway ) ? $arr : $arr[ $gateway ] ?? null;
 	}

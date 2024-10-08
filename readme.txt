@@ -284,7 +284,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 3.0.0-beta3 - October 07, 2024
+= 3.0.0-beta3 - October 08, 2024
 
 New: H5P integration added
 New: Advanced tax management
