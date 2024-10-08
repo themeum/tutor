@@ -11,12 +11,14 @@ import {
 import { css } from '@emotion/react';
 
 export const createGlobalCss = () => css`
-	#wpcontent {
-		padding-left: 0;
-	}
+	body:not(.tutor-screen-backend-settings) {
+		#wpcontent {
+			padding-left: 0;
+		}
 
-	#wpbody {
-		background-color: ${colorTokens.background.default};
+		#wpbody {
+			background-color: ${colorTokens.background.default};
+		}
 	}
 
 	*,
