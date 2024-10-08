@@ -571,8 +571,7 @@ const styles = {
     hasVideoSource: boolean;
   }) => css`
     width: 100%;
-    height: 100%;
-    min-height: 164px;
+    height: 164px;
     display: flex;
     flex-direction: column;
     align-items: center;
