@@ -72,7 +72,7 @@ const TaxSettingsPage = () => {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <Show when={activeCountry} fallback={<h6 css={typography.heading6('medium')}>{__('Tax settings', 'tutor')}</h6>}>
+      <Show when={activeCountry} fallback={<h6 css={typography.heading6('medium')}>{__('Tax', 'tutor')}</h6>}>
         {(countryCode) => {
           return (
             <Button
@@ -153,6 +153,11 @@ const styles = {
     }
   `,
   emptyStateWrapper: css`
+    margin-top: ${spacing[24]};
     margin-bottom: ${spacing[24]};
+    
+    img {
+      margin-bottom: ${spacing[24]};
+    }
   `,
 };

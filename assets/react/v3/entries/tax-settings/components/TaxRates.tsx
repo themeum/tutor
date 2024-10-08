@@ -75,7 +75,7 @@ export default function TaxRates() {
 
   const columns: Column<ColumnDataType>[] = [
     {
-      Header: isSingleCountry ? __('Region', 'tutor') : __('States', 'tutor'),
+      Header: isSingleCountry ? __('Region', 'tutor') : __('Countries', 'tutor'),
       Cell: (item) => {
         let name = activeCountry
           ? getStateByCode(activeCountry, Number(item.locationId))?.name ?? ''
