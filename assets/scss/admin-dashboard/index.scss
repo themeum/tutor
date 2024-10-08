@@ -10,3 +10,6 @@
 @import '../modules/certificate-list.scss';
 @import '../modules/quiz-icons.scss';
 
+.paypal_payment_gateway, .supported_payment_gateway, .stripe_payment_gateway, .manual_payment_gateway {
+    margin-bottom: 8px;
+}

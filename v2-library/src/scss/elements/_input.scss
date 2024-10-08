@@ -418,3 +418,21 @@ select.tutor-form-control,
 		}
 	}
 }
+
+.tutor-control-button {
+    height: 24px;
+    width: 24px;
+    font-size: 16px;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+	color: #9197A8;
+
+	&.active {
+		color: var(--tutor-color-primary);
+	}
+    
+    input {
+        display: none;
+    }
+}

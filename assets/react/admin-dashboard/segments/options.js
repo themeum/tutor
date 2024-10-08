@@ -707,6 +707,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const payment_nav_item = document.querySelector("[data-tab=ecommerce_payment]")?.parentElement;
 		const checkout_nav_item = document.querySelector("[data-tab=ecommerce_checkout]")?.parentElement;		
 		const subscription_nav_item = document.querySelector("[data-tab=ecommerce_subscription]")?.parentElement;		
+		const tax_nav_item = document.querySelector("[data-tab=ecommerce_tax]")?.parentElement;		
 
 		showHideOption(woocommerce_block, () => monetized_by === 'wc');
 		showHideOption(currency_block, () => monetized_by === 'tutor');
@@ -721,6 +722,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		showHideOption(payment_nav_item, () => monetized_by === 'tutor');
 		showHideOption(checkout_nav_item, () => monetized_by === 'tutor');
 		showHideOption(subscription_nav_item, () => monetized_by === 'tutor');
+		showHideOption(tax_nav_item, () => monetized_by === 'tutor');
 
 		// Handle monetization fields on change.
 		monetization_field.onchange = (e) => {
@@ -738,6 +740,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(payment_nav_item, () => value === 'tutor');
 			showHideOption(checkout_nav_item, () => value === 'tutor');
 			showHideOption(subscription_nav_item, () => value === 'tutor');
+			showHideOption(tax_nav_item, () => value === 'tutor');
 		}
 	}
 
