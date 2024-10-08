@@ -22,6 +22,9 @@ trait PaymentUrlsTrait {
 	 */
 	public function getWebhookUrl(): string {
 		$url = home_url( 'wp-json/tutor/v1/ecommerce-webhook' );
+		if ( tutor_is_local_env() ) {
+			$url = 'https://7be4-119-148-4-217.ngrok-free.app/wp-json/tutor/v1/ecommerce-webhook';
+		}
 		return apply_filters( 'tutor_ecommerce_webhook_url', $url );
 	}
 

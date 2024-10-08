@@ -148,7 +148,7 @@ class Paypal extends BasePayment
 
         } elseif ($type === 'recurring') {
 
-            $this->previousPayload = json_decode($data->previous_payload);
+            $this->previousPayload = json_decode(stripslashes($data->previous_payload));
             $this->getPaymentSourceForRecurring($returnData);
         }
 
@@ -348,7 +348,7 @@ class Paypal extends BasePayment
                 }  
                     
                 // Payment Refund From Merchant Account
-                if (static::checkWebhookVariables($payload->server)) {
+                if ($paymentData->event_type === 'PAYMENT.CAPTURE.REFUNDED' && static::checkWebhookVariables($payload->server)) {
                     $isVerified = static::verifySignature($payload->server, $paymentData);
 
                     if ($isVerified) {
@@ -572,7 +572,7 @@ class Paypal extends BasePayment
             $returnData->earnings       = $transactionInfo->seller_receivable_breakdown->net_amount->value ?? null;
         }
 
-        $returnData->payment_payload    = json_encode($payloadStream);
+        $returnData->payment_payload    = addslashes(json_encode($payloadStream));
         $returnData->payment_method     = $this->config->get('name');
 
         return $returnData;
@@ -612,8 +612,6 @@ class Paypal extends BasePayment
         if ($return) {
             return json_decode($response->getBody());
         }
-
-        exit();
     }
 
     /**
@@ -632,7 +630,7 @@ class Paypal extends BasePayment
          
             $price = is_null($item['discounted_price']) ? $item['regular_price'] : $item['discounted_price'];
 
-            $data->subtotal += $price;
+            $data->subtotal += $price * (int) $item['quantity'];
        
             return [
                 'name'          => $item['item_name'],
@@ -829,12 +827,12 @@ class Paypal extends BasePayment
                         'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
                     ],
                     'address' => [
-                        "address_line_1"    => $paymentSource->shipping->address->address_line_1,
-                        "address_line_2"    => $paymentSource->shipping->address->address_line_2,
-                        "admin_area_2"      => $paymentSource->shipping->address->admin_area_2,
-                        "admin_area_1"      => $paymentSource->shipping->address->admin_area_1,
-                        "postal_code"       => $paymentSource->shipping->address->postal_code,
-                        'country_code'      => $paymentSource->shipping->address->country_code,
+                        "address_line_1"    => $paymentSource->shipping->address->address_line_1 ?? '',
+                        "address_line_2"    => $paymentSource->shipping->address->address_line_2 ?? '',
+                        "admin_area_1"      => empty( $paymentSource->shipping->address->admin_area_1 ) ? '' : $paymentSource->shipping->address->admin_area_1,
+                        "admin_area_2"      => empty( $paymentSource->shipping->address->admin_area_2) ? '' : $paymentSource->shipping->address->admin_area_2,
+                        "postal_code"       => $paymentSource->shipping->address->postal_code ?? '',
+                        'country_code'      => $paymentSource->shipping->address->country_code ?? '',
                     ],
                 ],
             ];
