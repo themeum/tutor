@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 interface TaxModalWrapperProps {
   children: React.ReactNode;
   onClose: () => void;
-  title?: string;
+  title?: string | React.ReactNode;
   modalStyle?: SerializedStyles;
   stickyFooter?: React.ReactNode;
 }
@@ -24,15 +24,17 @@ const TaxModalWrapper = ({ children, onClose, title, modalStyle, stickyFooter }:
   }, []);
 
   return (
-    <div css={[styles.container, modalStyle]}>
-      <div css={styles.header}>
-        {title && <h6 css={typography.heading6('medium')}>{title}</h6>}
-        <button type="button" css={styles.closeButton} onClick={onClose}>
-          <SVGIcon name="times" />
-        </button>
+    <div css={styles.wrapper}>
+      <div css={[styles.container, modalStyle]}>
+        <div css={styles.header}>
+          {title && <h6 css={typography.heading6('medium')}>{title}</h6>}
+          <button type="button" css={styles.closeButton} onClick={onClose}>
+            <SVGIcon name="times" />
+          </button>
+        </div>
+        <div css={styles.content}>{children}</div>
+        {stickyFooter && <div css={styles.stickyFooter}>{stickyFooter}</div>}
       </div>
-      <div css={styles.content}>{children}</div>
-      {stickyFooter && <div css={styles.stickyFooter}>{stickyFooter}</div>}
     </div>
   );
 };
@@ -40,6 +42,11 @@ const TaxModalWrapper = ({ children, onClose, title, modalStyle, stickyFooter }:
 export default TaxModalWrapper;
 
 const styles = {
+  wrapper: css`
+    ${styleUtils.flexCenter()};
+    width: 100%;
+    height: 100%;
+  `,
   container: css`
     background: ${colorPalate.basic.white};
     margin: ${spacing[24]};
