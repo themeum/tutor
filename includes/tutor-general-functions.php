@@ -1576,3 +1576,16 @@ if ( ! function_exists( 'tutor_is_json' ) ) {
 		return json_last_error() === JSON_ERROR_NONE;
 	}
 }
+
+if ( ! function_exists( 'tutor_is_local_env' ) ) {
+	/**
+	 * Check if the current environment is local.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return bool True if the current environment is local, false otherwise.
+	 */
+	function tutor_is_local_env() {
+		return ( strpos( site_url(), '.local' ) !== false || strpos( site_url(), 'localhost' ) !== false );
+	}
+}
