@@ -1,12 +1,5 @@
 import { createRoot } from 'react-dom/client';
-
-const App = () => {
-  return (
-    <>
-      <h3>Hello</h3>
-    </>
-  );
-};
+import App from './components/App';
 
 const root = createRoot(document.getElementById('ecommerce_tax') as HTMLElement);
 root.render(<App />);

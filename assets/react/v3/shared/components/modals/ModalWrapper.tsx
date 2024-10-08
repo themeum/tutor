@@ -1,6 +1,6 @@
 import SVGIcon from '@Atoms/SVGIcon';
 import { modal } from '@Config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
@@ -97,6 +97,7 @@ const styles = {
     border-radius: ${borderRadius[10]};
     overflow: hidden;
     bottom: 0;
+		z-index: ${zIndex.modal};
 
     ${Breakpoint.smallTablet} {
       width: 90%;

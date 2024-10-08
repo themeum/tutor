@@ -10,12 +10,16 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Ecommerce\Supports\Shop;
 use TUTOR\Input;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Configure ecommerce settings
  */
 class Settings {
+
+	use JsonResponse;
 
 	/**
 	 * Register hooks
@@ -27,7 +31,18 @@ class Settings {
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
 		add_action( 'wp_ajax_tutor_delete_manual_payment_method', __CLASS__ . '::ajax_delete_manual_payment_method' );
+		add_action( 'wp_ajax_tutor_get_tax_settings', array( $this, 'get_tax_settings' ) );
 
+		add_filter( 'tutor_option_input', array( $this, 'format_ecommerce_tax_data' ) );
+	}
+
+
+	public function format_ecommerce_tax_data( $option ) {
+		if ( ! empty( $option['ecommerce_tax'] ) ) {
+			$option['ecommerce_tax'] = wp_unslash( $option['ecommerce_tax'] );
+		}
+
+		return $option;
 	}
 
 	/**
@@ -144,21 +159,21 @@ class Settings {
 		);
 
 		// @TODO.
-		// $arr['ecommerce_tax'] = array(
-		// 'label'    => __( 'Tax', 'tutor' ),
-		// 'slug'     => 'ecommerce_tax',
-		// 'desc'     => __( 'Advanced Settings', 'tutor' ),
-		// 'template' => 'basic',
-		// 'icon'     => 'tutor-icon-receipt-percent',
-		// 'blocks'   => array(
-		// array(
-		// 'label'      => __( 'Tax Configuration', 'tutor' ),
-		// 'slug'       => 'options',
-		// 'block_type' => 'uniform',
-		// 'fields'     => array(),
-		// ),
-		// ),
-		// );
+		$arr['ecommerce_tax'] = array(
+			'label'    => __( 'Tax', 'tutor' ),
+			'slug'     => 'ecommerce_tax',
+			'desc'     => __( 'Advanced Settings', 'tutor' ),
+			'template' => 'basic',
+			'icon'     => 'tutor-icon-receipt-percent',
+			'blocks'   => array(
+				array(
+					'label'      => __( 'Tax Configuration', 'tutor' ),
+					'slug'       => 'options',
+					'block_type' => 'uniform',
+					'fields'     => array(),
+				),
+			),
+		);
 
 		$arr['ecommerce_checkout'] = array(
 			'label'    => __( 'Checkout', 'tutor' ),
@@ -377,7 +392,7 @@ class Settings {
 		if ( is_array( $payment_methods ) && count( $payment_methods ) ) {
 			$payment_methods = array_filter(
 				$payment_methods,
-				function( $method ) use ( $method_id ) {
+				function ( $method ) use ( $method_id ) {
 					return $method['payment_method_id'] !== $method_id;
 				}
 			);
@@ -719,4 +734,21 @@ class Settings {
 		return apply_filters( 'tutor_ecommerce_webhook_fields', $arr );
 	}
 
+
+	/**
+	 * Get the tax settings from the tutor options.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function get_tax_settings() {
+		$tax_settings = Shop::get_tax_settings();
+
+		if ( ! empty( $tax_settings->active_country ) ) {
+			$tax_settings->active_country = null;
+		}
+
+		$this->json_response( __( 'Success', 'tutor' ), $tax_settings );
+	}
 }

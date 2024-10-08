@@ -1,12 +1,12 @@
 import {
-  borderRadius,
-  colorPalate,
-  colorTokens,
-  containerMaxWidth,
-  fontFamily,
-  fontSize,
-  shadow,
-  spacing,
+	borderRadius,
+	colorPalate,
+	colorTokens,
+	containerMaxWidth,
+	fontFamily,
+	fontSize,
+	shadow,
+	spacing,
 } from '@Config/styles';
 import { css } from '@emotion/react';
 
@@ -209,6 +209,12 @@ export const createGlobalCss = () => css`
 	:is(h1, h2, h3, h4, h5, h6, p) {
 		padding: 0;
 		margin: 0;
+	}
+
+	table {
+		th {
+			text-align: -webkit-match-parent;
+		}
 	}
 `;
 
