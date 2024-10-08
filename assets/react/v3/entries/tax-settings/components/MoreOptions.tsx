@@ -32,9 +32,12 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
           text={__('Edit', 'tutor')}
           onClick={() => {
             if (typeof data.locationId === 'string') {
-              form.setValue('active_country', data.locationId);
+              setTimeout(() => {
+                return form.setValue('active_country', String(data.locationId));
+              }, 210);
             }
           }}
+          onClosePopover={() => setIsOpen(false)}
         />
         <ThreeDots.Option
           text={__('Delete', 'tutor')}
@@ -56,6 +59,7 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
               }
             }
           }}
+          onClosePopover={() => setIsOpen(false)}
         />
       </ThreeDots>
     </div>
