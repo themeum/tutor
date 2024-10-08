@@ -21,11 +21,11 @@ $field_id  = esc_attr( 'field_' . $field_key );
 	$url    = site_url( 'wp-json/tutor/v1/ecommerce-webhook?payment_method=' . $method );
 	?>
 	<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-gap-1">
-		<span class="tutor-color-muted">
+		<span class="tutor-color-success">
 			<?php echo esc_url( $url ); ?>
 		</span>
 		<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-copy-text" data-text="<?php echo esc_url( $url ); ?>">
-			<span class="tutor-icon-copy tutor-mr-8"></span>
+			<span class="tutor-icon-copy-text tutor-mr-8"></span>
 			<span><?php esc_html_e( 'Copy', 'tutor' ); ?></span>
 		</a>
 	</div>
