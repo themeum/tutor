@@ -1,4 +1,3 @@
-import { POPOVER_ANIMATION_DURATION_WITH_THRESHOLD } from '@/v3/shared/config/constants';
 import { useModal } from '@Components/modals/Modal';
 import { spacing, zIndex } from '@Config/styles';
 import ThreeDots from '@Molecules/ThreeDots';
@@ -33,9 +32,7 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
           text={__('Edit', 'tutor')}
           onClick={() => {
             if (typeof data.locationId === 'string') {
-              setTimeout(() => {
-                return form.setValue('active_country', String(data.locationId));
-              }, POPOVER_ANIMATION_DURATION_WITH_THRESHOLD + 5);
+              form.setValue('active_country', data.locationId);
             }
           }}
           onClosePopover={() => setIsOpen(false)}

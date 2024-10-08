@@ -4,7 +4,6 @@ export const ITEMS_PER_PAGE = 10;
 export const TAG_ITEMS_PER_PAGE = 48;
 export const MAX_MULTISELECT_CHIPS = 7;
 export const MAX_NUMBER_OF_VARIANT_OPTIONS = 3;
-export const POPOVER_ANIMATION_DURATION_WITH_THRESHOLD = 200;
 export const ALIAS_PRODUCT_ROUTE_PREFIX = '/product';
 export const ALIAS_CATEGORY_ROUTE_PREFIX = '/category';
 export const ALIAS_TAG_ROUTE_PREFIX = '/tag';

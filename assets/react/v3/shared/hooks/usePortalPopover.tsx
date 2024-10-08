@@ -6,8 +6,9 @@ import { createPortal } from 'react-dom';
 
 import { useModal } from '@Components/modals/Modal';
 import { noop } from '@Utils/util';
-import { POPOVER_ANIMATION_DURATION_WITH_THRESHOLD } from '../config/constants';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
+
+const ANIMATION_DURATION_WITH_THRESHOLD = 200;
 
 enum ArrowPosition {
   left = 'left',
@@ -187,9 +188,10 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
       if (!hasPopoverOnStack && !hasModalOnStack) {
         document.body.style.overflow = 'initial';
       }
-    }, POPOVER_ANIMATION_DURATION_WITH_THRESHOLD);
+    }, ANIMATION_DURATION_WITH_THRESHOLD);
 
     return () => {
+      document.body.style.overflow = 'initial';
       clearTimeout(timeoutId);
     };
   }, [isOpen, hasModalOnStack]);
