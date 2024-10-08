@@ -27,7 +27,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 
 <div class="tutor-row">
 	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'First Name', 'tutor' ); ?>
 			</label>
@@ -36,7 +36,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Last Name', 'tutor' ); ?>
 			</label>
@@ -45,7 +45,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Email Address', 'tutor' ); ?>
 			</label>
@@ -54,7 +54,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Country', 'tutor' ); ?>
 			</label>
@@ -73,7 +73,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'State', 'tutor' ); ?>
 			</label>
@@ -82,7 +82,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'City', 'tutor' ); ?>
 			</label>
@@ -91,7 +91,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Postcode / ZIP', 'tutor' ); ?>
 			</label>
@@ -100,7 +100,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Phone', 'tutor' ); ?>
 			</label>
@@ -109,7 +109,7 @@ $billing_city       = $billing_info->billing_city ?? '';
 	</div>
 
 	<div class="tutor-col-12">
-		<div class="tutor-mb-32">
+		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Address', 'tutor' ); ?>
 			</label>

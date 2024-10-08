@@ -21,6 +21,7 @@
 		// "types": ["@emotion/react/types/css-prop", "node"],
 		"typeRoots": ["./node_modules/@types/", "./assets/react/@types"],
 		"paths": {
+			"@/*": ["assets/react/*"],
 			"@Atoms/*": ["assets/react/v3/shared/atoms/*"],
 			"@Molecules/*": ["assets/react/v3/shared/molecules/*"],
 			"@Components/*": ["assets/react/v3/shared/components/*"],

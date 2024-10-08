@@ -204,8 +204,6 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                     <DragOverlay>
                       <Show when={activeSortId}>
                         {(id) => {
-                          console.log('here', id);
-
                           return (
                             <SubscriptionItem
                               id={id}

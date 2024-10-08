@@ -158,6 +158,7 @@ const styles = {
       box-shadow: none;
       background-color: transparent;
       padding-${contentPosition}: 0;
+			min-width: 60px;
   
       ${
         showVerticalBar &&
