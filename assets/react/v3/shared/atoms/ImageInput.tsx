@@ -117,6 +117,7 @@ const styles = {
     border: 1px dashed ${colorTokens.stroke.border};
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.bg.white};
+    overflow: hidden;
     cursor: pointer;
 
     svg {
@@ -165,7 +166,6 @@ const styles = {
     position: absolute;
     inset: 0;
     background-color: ${rgba(colorTokens.color.black.main, 0.6)};
-    border-radius: ${borderRadius[8]};
 
     button:first-of-type {
       box-shadow: ${shadow.button};
