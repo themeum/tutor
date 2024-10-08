@@ -75,6 +75,23 @@ $disabled-color: #e9e9ea !default;
 	}
 
 	&-secondary {
+		background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
+		color: var(--tutor-color-primary);
+
+		&:hover,
+		&:focus,
+		&:active {
+			color: #ffffff;
+			background-color: var(--tutor-color-primary-hover);
+		}
+
+		&[disabled],
+		&.disabled {
+			background-color: #e9e9ea;
+		}
+	}
+
+	&-outline-secondary {
 		border-color: rgba(var(--tutor-color-primary-rgb), 0.1);
 		background-color: rgba(var(--tutor-color-primary-rgb), 0.1);
 		color: var(--tutor-color-primary);
