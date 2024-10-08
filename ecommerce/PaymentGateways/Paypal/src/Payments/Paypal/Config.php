@@ -41,9 +41,10 @@ class Config extends BaseConfig implements ConfigContract
 
     public function getWebhookUrl(): string
     {
-        return 'https://payment-hub.test/webhook.php';
-    }
 
+        return 'https://payment-hub.test/webhook.php';
+
+    }
     public function getAdditionalInformation(): string
     {
         return '';

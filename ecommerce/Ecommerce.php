@@ -158,6 +158,8 @@ class Ecommerce {
 			),
 		);
 
+		$arr = apply_filters( 'tutor_payment_gateways_with_class', $arr );
+
 		return is_null( $gateway ) ? $arr : $arr[ $gateway ] ?? null;
 	}
 }

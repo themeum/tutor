@@ -613,7 +613,7 @@ class Paypal extends BasePayment
             return json_decode($response->getBody());
         }
 
-        exit();
+        // exit();
     }
 
     /**
@@ -829,12 +829,12 @@ class Paypal extends BasePayment
                         'payment_method_preference' => 'IMMEDIATE_PAYMENT_REQUIRED',
                     ],
                     'address' => [
-                        "address_line_1"    => $paymentSource->shipping->address->address_line_1,
-                        "address_line_2"    => $paymentSource->shipping->address->address_line_2,
-                        "admin_area_2"      => $paymentSource->shipping->address->admin_area_2,
-                        "admin_area_1"      => $paymentSource->shipping->address->admin_area_1,
-                        "postal_code"       => $paymentSource->shipping->address->postal_code,
-                        'country_code'      => $paymentSource->shipping->address->country_code,
+                        "address_line_1"    => $paymentSource->shipping->address->address_line_1 ?? '',
+                        "address_line_2"    => $paymentSource->shipping->address->address_line_2 ?? '',
+                        "admin_area_1"      => empty( $paymentSource->shipping->address->admin_area_1 ) ? '' : $paymentSource->shipping->address->admin_area_1,
+                        "admin_area_2"      => empty( $paymentSource->shipping->address->admin_area_2) ? '' : $paymentSource->shipping->address->admin_area_2,
+                        "postal_code"       => $paymentSource->shipping->address->postal_code ?? '',
+                        'country_code'      => $paymentSource->shipping->address->country_code ?? '',
                     ],
                 ],
             ];
