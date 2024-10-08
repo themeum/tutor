@@ -47,6 +47,7 @@ $grid-row-columns:            6 !default;
 $gutter: 1rem !default;
 $gutters: (
   0: 0,
+  '4px': $gutter * .25, // 1 was used for 8px previously. So, 4px will be used for 4px from v3.0.0
   1: $gutter * .5,
   2: $gutter,
   3: $gutter * 1.5,

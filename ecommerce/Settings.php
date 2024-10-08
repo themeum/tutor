@@ -267,9 +267,10 @@ class Settings {
 	 */
 	public static function add_manual_payment_btn( $slug ) {
 		?>
-		<div class="tutor-add-payment-method-container">
-			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
-				<?php esc_html_e( '+ Add manual payment', 'tutor' ); ?>
+		<div class="tutor-add-payment-method-container tutor-mt-16">
+			<button type="button" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-gap-4px" target="_blank" data-tutor-modal-target="tutor-add-manual-payment-modal">
+				<i class="tutor-icon-plus"></i>
+				<?php esc_html_e( 'Add manual payment', 'tutor' ); ?>
 			</button>
 		</div>
 		<?php
@@ -483,13 +484,16 @@ class Settings {
 			// Set enable field.
 			$fields = array(
 				array(
-					'key'           => "is_enable_{$key}_payment",
-					'type'          => 'toggle_switch',
-					'label'         => $gateway['label'],
-					'label_title'   => '',
-					'default'       => 'off',
+					'key'                => "is_enable_{$key}_payment",
+					'type'               => 'toggle_switch',
+					'label'              => $gateway['label'],
+					'label_title'        => '',
+					'label_icon'         => tutor()->url . 'assets/images/paypal.svg',
+					'label_tag'          => __( 'Supports Subscription', 'tutor' ),
+					'default'            => 'off',
 					/* translators: %s: gateway name */
-					'toggle_fields' => implode( ',', array_keys( self::$config_keys_method() ) ),
+					'toggle_fields'      => implode( ',', array_keys( self::$config_keys_method() ) ),
+					'has_control_button' => true,
 				),
 			);
 
@@ -597,6 +601,7 @@ class Settings {
 				$block = array(
 					'label'             => $method_name,
 					'slug'              => "manual_payment_gateway_{$method_id}",
+					'class'             => 'manual_payment_gateway',
 					'block_type'        => 'manual_payment',
 					'fields'            => array(),
 					'payment_method_id' => $method_id,
