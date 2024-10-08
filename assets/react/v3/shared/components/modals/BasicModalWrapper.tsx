@@ -61,7 +61,11 @@ const BasicModalWrapper = ({
             </Show>
           </div>
         </Show>
-        <div css={styles.actionsWrapper}>
+        <div
+          css={styles.actionsWrapper({
+            hasEntireHeader: !!entireHeader,
+          })}
+        >
           <Show
             when={actions}
             fallback={
@@ -145,13 +149,19 @@ const styles = {
 		${typography.caption()};
 		color: ${colorTokens.text.hints};
 	`,
-  actionsWrapper: css`
+  actionsWrapper: ({ hasEntireHeader }: { hasEntireHeader: boolean }) => css`
 		place-self: center end;
 		display: inline-flex;
 		gap: ${spacing[16]};
-    position: absolute;
-    right: ${spacing[16]};
-    top: ${spacing[16]};
+    
+    ${
+      hasEntireHeader &&
+      css`
+        position: absolute;
+        right: ${spacing[16]};
+        top: ${spacing[16]};
+      `
+    }
 	`,
   closeButton: css`
 		${styleUtils.resetButton};
