@@ -62,8 +62,7 @@ class PaymentHandler {
 			'stream' => file_get_contents( 'php://input' ),
 		);
 
-		$payment_method = Input::get( 'payment_method' );
-
+		$payment_method   = Input::get( 'payment_method', 'paypal' );
 		$payment_gateways = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
 		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
