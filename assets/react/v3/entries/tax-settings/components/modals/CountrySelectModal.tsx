@@ -241,6 +241,8 @@ const styles = {
   `,
   selectorWrapper: css`
     margin-top: ${spacing[16]};
+    max-height: calc(100vh - 320px);
+    overflow-y: auto;
   `,
   checkBoxWrapper: css`
     padding-block: ${spacing[8]};

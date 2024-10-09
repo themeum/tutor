@@ -191,6 +191,7 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
     }, ANIMATION_DURATION_WITH_THRESHOLD);
 
     return () => {
+      document.body.style.overflow = 'initial';
       clearTimeout(timeoutId);
     };
   }, [isOpen, hasModalOnStack]);

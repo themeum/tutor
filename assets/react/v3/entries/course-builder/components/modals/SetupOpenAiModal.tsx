@@ -170,7 +170,7 @@ const styles = {
       !isCurrentUserAdmin &&
       css`
         padding: ${spacing[24]};
-        padding-top: 0;
+        padding-top: ${spacing[6]};
       `
     }
     
@@ -199,7 +199,7 @@ const styles = {
     padding: ${spacing[16]};
   `,
   image: css`
-    height: 232px;
+    height:310px;
     width: 100%;
     object-fit: cover;
     object-position: center;

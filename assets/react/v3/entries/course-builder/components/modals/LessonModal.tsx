@@ -482,40 +482,38 @@ const LessonModal = ({
               )}
             />
 
-            <div css={styles.lessonPreview}>
-              <Controller
-                name="lesson_preview"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormSwitch
-                    {...controllerProps}
-                    disabled={!isTutorPro || !isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)}
-                    label={
-                      <div css={styles.previewLabel}>
-                        {__('Lesson Preview', 'tutor')}
-                        {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
-                      </div>
-                    }
-                    helpText={
-                      isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)
-                        ? __(
-                            'If checked, any user/guest can view this lesson without enrolling in the course.',
-                            'tutor',
-                          )
-                        : ''
-                    }
-                  />
-                )}
-              />
-              <Show when={form.watch('lesson_preview')}>
-                <div css={styles.previewInfo}>
-                  {__(
-                    'This lesson is now available for preview. Users and guests can view it without enrolling in the course.',
-                    'tutor',
+            <Show when={!isTutorPro || isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)}>
+              <div css={styles.lessonPreview}>
+                <Controller
+                  name="lesson_preview"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormSwitch
+                      {...controllerProps}
+                      disabled={!isTutorPro}
+                      label={
+                        <div css={styles.previewLabel}>
+                          {__('Lesson Preview', 'tutor')}
+                          {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
+                        </div>
+                      }
+                      helpText={__(
+                        'If checked, any user/guest can view this lesson without enrolling in the course.',
+                        'tutor',
+                      )}
+                    />
                   )}
-                </div>
-              </Show>
-            </div>
+                />
+                <Show when={form.watch('lesson_preview')}>
+                  <div css={styles.previewInfo}>
+                    {__(
+                      'This lesson is now available for preview. Users and guests can view it without enrolling in the course.',
+                      'tutor',
+                    )}
+                  </div>
+                </Show>
+              </div>
+            </Show>
           </div>
         </Show>
       </div>

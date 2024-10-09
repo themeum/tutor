@@ -216,6 +216,7 @@ const styles = {
     overflow: hidden;
   `,
   settingsOptions: css`
+    min-height: 400px;
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};

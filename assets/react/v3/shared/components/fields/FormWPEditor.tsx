@@ -85,9 +85,70 @@ const FormWPEditor = ({
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
 
+  const handleAiButtonClick = () => {
+    if (!isTutorPro) {
+      showModal({
+        component: ProIdentifierModal,
+        props: {
+          title: (
+            <>
+              {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
+              <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+            </>
+          ),
+          image: generateText,
+          image2x: generateText2x,
+          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
+          features: [
+            __('Generate a complete course outline in seconds!', 'tutor'),
+            __('Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.', 'tutor'),
+            __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
+            __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
+          ],
+          footer: (
+            <Button
+              onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+              icon={<SVGIcon name="crown" width={24} height={24} />}
+            >
+              {__('Get Tutor LMS Pro', 'tutor')}
+            </Button>
+          ),
+        },
+      });
+    } else if (!hasOpenAiAPIKey) {
+      showModal({
+        component: SetupOpenAiModal,
+        props: {
+          image: generateText,
+          image2x: generateText2x,
+        },
+      });
+    } else {
+      showModal({
+        component: AITextModal,
+        isMagicAi: true,
+        props: {
+          title: __('AI Studio', 'tutor'),
+          icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+          field,
+          fieldState,
+          is_html: true,
+        },
+      });
+      onClickAiButton?.();
+    }
+  };
+
   const editorLabel = hasCustomEditorSupport ? (
     <div css={styles.editorLabel}>
-      <span>{label}</span>
+      <span css={styles.labelWithAi}>
+        {label}
+        <Show when={generateWithAi}>
+          <button type="button" css={styles.aiButton} onClick={handleAiButtonClick}>
+            <SVGIcon name="magicAiColorize" width={32} height={32} />
+          </button>
+        </Show>
+      </span>
       <Show when={editors.length && editorUsed.name === 'classic'}>
         <div css={styles.editorsButtonWrapper}>
           <span>{__('Edit with', 'tutor')}</span>
@@ -130,64 +191,8 @@ const FormWPEditor = ({
       readOnly={readOnly}
       placeholder={placeholder}
       helpText={helpText}
-      generateWithAi={generateWithAi}
       isMagicAi={isMagicAi}
-      onClickAiButton={() => {
-        if (!isTutorPro) {
-          showModal({
-            component: ProIdentifierModal,
-            props: {
-              title: (
-                <>
-                  {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-                  <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                </>
-              ),
-              image: generateText,
-              image2x: generateText2x,
-              featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
-              features: [
-                __('Generate a complete course outline in seconds!', 'tutor'),
-                __(
-                  'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                  'tutor',
-                ),
-                __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
-                __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
-              ],
-              footer: (
-                <Button
-                  onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
-                  icon={<SVGIcon name="crown" width={24} height={24} />}
-                >
-                  {__('Get Tutor LMS Pro', 'tutor')}
-                </Button>
-              ),
-            },
-          });
-        } else if (!hasOpenAiAPIKey) {
-          showModal({
-            component: SetupOpenAiModal,
-            props: {
-              image: generateText,
-              image2x: generateText2x,
-            },
-          });
-        } else {
-          showModal({
-            component: AITextModal,
-            isMagicAi: true,
-            props: {
-              title: __('AI Studio', 'tutor'),
-              icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-              field,
-              fieldState,
-              is_html: true,
-            },
-          });
-          onClickAiButton?.();
-        }
-      }}
+      onClickAiButton={handleAiButtonClick}
       replaceEntireLabel={hasCustomEditorSupport}
     >
       {() => {
@@ -277,6 +282,17 @@ const styles = {
     width: 100%;
     align-items: center;
     justify-content: space-between;
+  `,
+  aiButton: css`
+    ${styleUtils.resetButton};
+    ${styleUtils.flexCenter()};
+    width: 32px;
+    height: 32px;
+  `,
+  labelWithAi: css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
   `,
   editorsButtonWrapper: css`
     display: flex;

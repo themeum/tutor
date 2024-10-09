@@ -22,6 +22,9 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window" style="max-width: 834px;">
 			<div class="tutor-modal-content tutor-bg-white tutor-p-40">
+				<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-iconic-btn tutor-modal-close-o">
+					<span class="tutor-icon-times" area-hidden="true"></span>
+				</a>
 				<div class="tutor-row">
 					<div class="tutor-col-md-7">
 						<div class="tutor-d-flex tutor-flex-column">

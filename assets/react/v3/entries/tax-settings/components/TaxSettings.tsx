@@ -72,7 +72,7 @@ const TaxSettingsPage = () => {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <Show when={activeCountry} fallback={<h6 css={typography.heading6('medium')}>{__('Tax settings', 'tutor')}</h6>}>
+      <Show when={activeCountry} fallback={<h6 css={typography.heading6('medium')}>{__('Tax', 'tutor')}</h6>}>
         {(countryCode) => {
           return (
             <Button
@@ -93,7 +93,7 @@ const TaxSettingsPage = () => {
         when={ratesValue.length}
         fallback={
           <Card>
-            <div css={styleUtils.cardInnerSection}>
+            <div css={[styleUtils.cardInnerSection, styles.emptyStateWrapper]}>
               <EmptyState
                 emptyStateImage={taxBanner}
                 imageAltText={__('Tax Banner', 'tutor')}
@@ -150,6 +150,14 @@ const styles = {
     &:hover {
       text-decoration: none;
       color: ${colorTokens.text.title};
+    }
+  `,
+  emptyStateWrapper: css`
+    margin-top: ${spacing[24]};
+    margin-bottom: ${spacing[24]};
+    
+    img {
+      margin-bottom: ${spacing[24]};
     }
   `,
 };
