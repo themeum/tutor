@@ -354,7 +354,6 @@ const LessonModal = ({
                       contentPosition="right"
                       placeholder="0"
                       showVerticalBar={false}
-                      removeMinWidth
                     />
                   )}
                 />
@@ -369,7 +368,6 @@ const LessonModal = ({
                       contentPosition="right"
                       placeholder="0"
                       showVerticalBar={false}
-                      removeMinWidth
                     />
                   )}
                 />
@@ -384,7 +382,6 @@ const LessonModal = ({
                       contentPosition="right"
                       placeholder="0"
                       showVerticalBar={false}
-                      removeMinWidth
                     />
                   )}
                 />
