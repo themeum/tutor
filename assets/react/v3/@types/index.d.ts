@@ -96,6 +96,7 @@ declare global {
         chatgpt_enable: 'on' | 'off';
         course_builder_logo_url: string | false;
         chatgpt_key_exist: boolean;
+        hide_admin_bar_for_users: 'on' | 'off';
       };
       tutor_currency: {
         symbol: string;
