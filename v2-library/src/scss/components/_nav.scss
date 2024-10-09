@@ -66,7 +66,7 @@
     }
 
     &:not(.tutor-nav-pills):not(.tutor-nav-tabs) {
-        border-bottom: 1px solid #CDCFD5;
+        border-bottom: 1px solid var(--tutor-border-color);
         .tutor-nav-link {
             border-bottom: 2px solid transparent;
             margin-bottom: -1px;
