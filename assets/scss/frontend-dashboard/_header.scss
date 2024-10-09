@@ -7,7 +7,7 @@
         width: calc(100% - 30px);
         left: 15px;
         height: 1px;
-        background: #CDCFD5;
+        background: var(--tutor-border-color);
         bottom: 0;
     }
     .tutor-dashboard-header {

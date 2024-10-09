@@ -357,6 +357,10 @@ const styles = {
   editableWrapper: css`
     display: none;
 		width: 100%;
+
+    input {
+      min-width: 60px;
+    }
   `,
   rowStyle: css`
     &:hover {

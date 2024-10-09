@@ -11,11 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkoutPrevCourses = checkoutCourses.innerHTML;
         const checkoutPrevGrandTotal = checkoutGrandTotal.innerHTML;
 
-        const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
-        const paymentOptionInput = paymentOptionsWrapper.querySelector("input[name=payment_method]");
-        const paymentTypeInput = document.querySelector("input[name=payment_type]");
-        const paymentOptionButtons = paymentOptionsWrapper.querySelectorAll("button");
-
         const toggleCouponFormButton = document.querySelector("#tutor-toggle-coupon-form");
         const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
         const checkoutHaveACoupon = document.querySelector(".tutor-have-a-coupon");
@@ -26,15 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const checkoutCouponRemove = document.querySelector("#tutor-checkout-remove-coupon");
 
         // Handle payment method click 
-        paymentOptionButtons.forEach((button) => {
-            button.addEventListener('click', (e) => {
-                paymentOptionButtons.forEach(btn => btn.classList.remove('active'));
-                button.classList.add('active');
-                const paymentMethod = button.dataset.paymentMethod;
-                paymentOptionInput.value = paymentMethod;
-                paymentTypeInput.value = button.dataset.paymentType;
+        const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
+        const paymentTypeInput = document.querySelector("input[name=payment_type]");
+        const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
 
-                const paymentInstructions = button.dataset.paymentInstruction;
+        paymentOptions.forEach((option) => {
+            option.addEventListener('click', (e) => {
+                paymentOptions.forEach(item => item.classList.remove('active'));
+                option.classList.add('active');
+                paymentTypeInput.value = option.dataset.paymentType;
+
+                const paymentInstructions = option.dataset.paymentInstruction;
                 if (paymentInstructions) {
                     document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
                     document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
@@ -127,13 +124,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const tutorCheckoutForm = document.getElementById('tutor-checkout-form');
         tutorCheckoutForm.addEventListener('submit', function (e) {
             e.preventDefault();
-
-            const formData = new FormData(e.target);
-            const paymentMethod = formData.get('payment_method');
-            if (!paymentMethod) {
-                tutor_toast(__('Error', 'tutor'), __('Please select a payment method.', 'tutor'), 'error');
-                return;
-            }
 
             const submitButton = document.getElementById('tutor-checkout-pay-now-button');
             submitButton.classList.add('is-loading');

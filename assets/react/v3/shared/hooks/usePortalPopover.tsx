@@ -170,29 +170,25 @@ interface PortalProps {
   animationType?: AnimationType;
 }
 
+let portalCount = 0;
+
 export const Portal = ({ isOpen, children, onClickOutside, animationType = AnimationType.slideDown }: PortalProps) => {
   const { hasModalOnStack } = useModal();
 
   useEffect(() => {
     if (isOpen) {
+      portalCount++;
       document.body.style.overflow = 'hidden';
     }
 
-    if (hasModalOnStack) {
-      return;
-    }
+    return () => {
+      if (isOpen) {
+        portalCount--;
+      }
 
-    // timeout to check if there is any popover on the stack after the animation is done
-    const timeoutId = setTimeout(() => {
-      const hasPopoverOnStack = document.querySelectorAll('.tutor-portal-popover').length > 0;
-      if (!hasPopoverOnStack && !hasModalOnStack) {
+      if (!hasModalOnStack && portalCount === 0) {
         document.body.style.overflow = 'initial';
       }
-    }, ANIMATION_DURATION_WITH_THRESHOLD);
-
-    return () => {
-      document.body.style.overflow = 'initial';
-      clearTimeout(timeoutId);
     };
   }, [isOpen, hasModalOnStack]);
 
