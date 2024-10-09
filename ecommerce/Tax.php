@@ -106,68 +106,66 @@ class Tax {
 	}
 
 	/**
-	 * Get tax rate.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $country country.
-	 * @param string $state state.
-	 * @param object $item item.
-	 *
-	 * @return number
-	 */
-	public static function get_tax_rate( $country, $state = null, $item = null ) {
-		$zero_tax           = 0.0;
-		$tax_rate           = 0.0;
-		$is_product_taxable = isset( $item->is_product_taxable ) ? (bool) $item->is_product_taxable : true;
-
-		if ( empty( $country ) || ! $is_product_taxable ) {
-			return $zero_tax;
-		}
-
-		$country_rate_data = self::get_country_rate( $country );
-
-		if ( empty( $country_rate_data ) ) {
-			return $zero_tax;
-		}
-
-		// Find the tax rate from country and state.
-
-		return $tax_rate;
-	}
-
-
-	/**
 	 * Get country rate.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @param string $country   the country code for which the tax rate needs to be found.
+	 * @param string $state state name.
 	 *
-	 * @return object|null      the tax rate data for the country, or null if not found.
+	 * @return float tax rate value.
 	 */
-	public static function get_country_rate( $country ) {
-		$country_info = self::get_country_info( $country );
-		if ( ! $country_info ) {
-			return null;
+	public static function get_country_state_tax_rate( $country, $state = null ) {
+		$zero_tax = 0.0;
+
+		if ( empty( $country ) ) {
+			return $zero_tax;
 		}
 
-		$country_code = $country_info['numeric_code'] ?? '';
-		$rate_data    = null;
+		$country_info = self::get_country_info( $country );
+		if ( ! $country_info ) {
+			return $zero_tax;
+		}
+
+		$country_code      = $country_info['numeric_code'] ?? '';
+		$country_rate_data = null;
 
 		$tax_settings = self::get_settings();
-		if ( empty( $tax_settings->tax_rates ) ) {
-			return null;
+		if ( empty( $tax_settings->rates ) ) {
+			return $zero_tax;
 		}
 
 		foreach ( $tax_settings->rates as $rate ) {
 			if ( $rate->country === $country_code ) {
-				$rate_data = $rate;
+				$country_rate_data = $rate;
 				break;
 			}
 		}
 
-		return $rate_data;
+		if ( empty( $country_rate_data ) ) {
+			return $zero_tax;
+		}
+
+		if ( $country_rate_data->is_same_rate ) {
+			return floatval( $country_rate_data->rate );
+		} else {
+			// Get state rate.
+			$state_info = self::get_state_info( $country_info['states'], $state );
+			if ( empty( $state_info ) ) {
+				return $zero_tax;
+			}
+
+			$state_rate = null;
+			foreach ( $country_rate_data->states as $item ) {
+				if ( $item->id === $state_info['id'] ) {
+					$state_rate = floatval( $item->rate );
+					break;
+				}
+			}
+
+			return $state_rate;
+		}
+
 	}
 
 	/**
@@ -184,6 +182,24 @@ class Tax {
 		foreach ( $countries as $country ) {
 			if ( strtolower( $country['name'] ) === strtolower( $name ) ) {
 				return $country;
+			}
+		}
+	}
+
+	/**
+	 * Get state info of a country.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array  $states list of states of a country.
+	 * @param string $state_name name of state.
+	 *
+	 * @return array|null
+	 */
+	public static function get_state_info( $states, $state_name ) {
+		foreach ( $states as $state ) {
+			if ( strtolower( $state['name'] ) === strtolower( $state_name ) ) {
+				return $state;
 			}
 		}
 	}
