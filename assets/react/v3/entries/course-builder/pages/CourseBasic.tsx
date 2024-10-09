@@ -395,7 +395,6 @@ const CourseBasic = () => {
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
-                loading={updateCourseMutation.isPending || (!!isCourseDetailsFetching && !controllerProps.field.value)}
                 onCustomEditorButtonClick={async () => {
                   form.handleSubmit(async (data) => {
                     const payload = convertCourseDataToPayload(data);

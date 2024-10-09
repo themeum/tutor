@@ -30,6 +30,7 @@ const styles = {
     box-shadow: ${shadow.drag};
     ${typography.body()};
     color: ${colorTokens.text.hints};
+    cursor: grabbing;
 
     svg {
       color: ${colorTokens.color.black[40]};

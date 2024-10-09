@@ -144,7 +144,7 @@ const FormWPEditor = ({
       <span css={styles.labelWithAi}>
         {label}
         <Show when={generateWithAi}>
-          <button type="button" css={styleUtils.resetButton} onClick={handleAiButtonClick}>
+          <button type="button" css={styles.aiButton} onClick={handleAiButtonClick}>
             <SVGIcon name="magicAiColorize" width={32} height={32} />
           </button>
         </Show>
@@ -282,6 +282,12 @@ const styles = {
     width: 100%;
     align-items: center;
     justify-content: space-between;
+  `,
+  aiButton: css`
+    ${styleUtils.resetButton};
+    ${styleUtils.flexCenter()};
+    width: 32px;
+    height: 32px;
   `,
   labelWithAi: css`
     display: flex;
