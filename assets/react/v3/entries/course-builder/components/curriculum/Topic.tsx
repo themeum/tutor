@@ -297,7 +297,12 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 }
               }}
             >
-              <button {...listeners} css={styles.grabButton({ isDragging: isDragging })} type="button">
+              <button
+                {...(topic.isSaved ? listeners : {})}
+                css={styles.grabButton({ isDragging: isDragging })}
+                type="button"
+                disabled={!topic.isSaved}
+              >
                 <SVGIcon name="dragVertical" width={24} height={24} />
               </button>
 
@@ -497,9 +502,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                               id: content.ID,
                               title: content.post_title,
                               total_question: content.total_question || 0,
-                            }}
-                            onDelete={() => {
-                              setContent((previousContent) => previousContent.filter((item) => item.ID !== content.ID));
                             }}
                           />
                         );
@@ -774,7 +776,8 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         triggerRef={deleteRef}
-        closePopover={() => setIsDeletePopoverOpen(false)}
+        isLoading={deleteTopicMutation.isPending}
+        closePopover={noop}
         maxWidth="258px"
         title={sprintf(__('Delete topic "%s"', 'tutor'), topic.title)}
         message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
@@ -795,6 +798,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
           setIsDeletePopoverOpen(false);
           onDelete?.();
         }}
+        onCancel={() => setIsDeletePopoverOpen(false)}
       />
 
       <Popover
@@ -1019,6 +1023,10 @@ const styles = {
     ${styleUtils.resetButton};
     ${styleUtils.flexCenter()};
     cursor: ${isDragging ? 'grabbing' : 'grab'};
+
+    :disabled {
+      cursor: not-allowed;
+    }
   `,
   threeDotButton: css`
     display: flex;
@@ -1026,7 +1034,7 @@ const styles = {
     gap: ${spacing[4]};
   `,
   contentButton: css`
-    :hover {
+    :hover:not(:disabled) {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.brand};
       box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
