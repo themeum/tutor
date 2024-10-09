@@ -1,4 +1,5 @@
 import { type ModalProps, useModal } from '@/v3/shared/components/modals/Modal';
+import { styleUtils } from '@/v3/shared/utils/style-utils';
 import Button from '@Atoms/Button';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
@@ -102,7 +103,15 @@ const CountryTaxRateModal = ({ form, closeModal, title }: CountryTaxRateModalPro
             name="taxRate"
             rules={requiredRule()}
             render={(controllerProps) => {
-              return <FormInputWithContent {...controllerProps} content="%" contentPosition="right" />;
+              return (
+                <FormInputWithContent
+                  {...controllerProps}
+                  type="number"
+                  content="%"
+                  contentCss={styleUtils.inputCurrencyStyle}
+                  contentPosition="right"
+                />
+              );
             }}
           />
         </div>

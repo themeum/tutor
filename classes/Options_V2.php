@@ -1700,10 +1700,10 @@ class Options_V2 {
 								'label'   => __( 'YouTube API Key', 'tutor' ),
 								'default' => '',
 								'desc'    => __(
-									'To host live videos on your platform using YouTube, enter your YouTube API key.
-								Text inside the box: Insert API key here.',
+									'To host live videos on your platform using YouTube, enter your YouTube API key.',
 									'tutor'
 								),
+								'placeholder' => __( 'Insert API key here', 'tutor' ),
 							),
 						),
 					),
