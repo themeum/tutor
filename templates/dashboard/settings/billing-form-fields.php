@@ -23,6 +23,9 @@ $billing_address    = $billing_info->billing_address ?? '';
 $billing_country    = $billing_info->billing_country ?? '';
 $billing_state      = $billing_info->billing_state ?? '';
 $billing_city       = $billing_info->billing_city ?? '';
+
+$country_info = tutor_get_country_info_by_name( $billing_country );
+$states       = $country_info && isset( $country_info['states'] ) ? $country_info['states'] : null;
 ?>
 
 <div class="tutor-row">
@@ -52,7 +55,6 @@ $billing_city       = $billing_info->billing_city ?? '';
 			<input class="tutor-form-control" type="email" name="billing_email" value="<?php echo esc_attr( $billing_email ); ?>" required>
 		</div>
 	</div>
-
 	<div class="tutor-col-12">
 		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
@@ -77,7 +79,21 @@ $billing_city       = $billing_info->billing_city ?? '';
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'State', 'tutor' ); ?>
 			</label>
-			<input class="tutor-form-control" type="text" name="billing_state" value="<?php echo esc_attr( $billing_state ); ?>" required>
+			<select name="billing_state" class="tutor-form-control">
+				<?php if ( $billing_country && empty( $states ) ) : ?>
+				<option value=""><?php esc_html_e( 'N/A', 'tutor' ); ?></option>
+				<?php endif; ?>
+				<?php if ( $billing_country && ( $states ) ) : ?>
+				<option value=""><?php esc_html_e( 'Select State', 'tutor' ); ?></option>
+				<?php endif; ?>
+				<?php
+				foreach ( $states as $state ) :
+					?>
+					<option value="<?php echo esc_attr( $state['name'] ); ?>" <?php selected( $billing_state, $state['name'] ); ?>>
+						<?php echo esc_html( $state['name'] ); ?>
+					</option>
+				<?php endforeach; ?>
+			</select>
 		</div>
 	</div>
 
