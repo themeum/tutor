@@ -1436,19 +1436,19 @@
 		"states": [
 			{
 				"id": 796,
-				"name": "Bagerhat District"
+				"name": "Bagerhat"
 			},
 			{
 				"id": 752,
-				"name": "Bandarban District"
+				"name": "Bandarban"
 			},
 			{
 				"id": 784,
-				"name": "Barguna District"
+				"name": "Barguna"
 			},
 			{
 				"id": 818,
-				"name": "Barisal District"
+				"name": "Barisal"
 			},
 			{
 				"id": 807,
@@ -1456,139 +1456,139 @@
 			},
 			{
 				"id": 756,
-				"name": "Bhola District"
+				"name": "Bhola"
 			},
 			{
 				"id": 797,
-				"name": "Bogra District"
+				"name": "Bogra"
 			},
 			{
 				"id": 810,
-				"name": "Brahmanbaria District"
+				"name": "Brahmanbaria"
 			},
 			{
 				"id": 768,
-				"name": "Chandpur District"
+				"name": "Chandpur"
 			},
 			{
 				"id": 761,
-				"name": "Chapai Nawabganj District"
+				"name": "Chapai Nawabganj"
 			},
 			{
 				"id": 785,
-				"name": "Chittagong District"
+				"name": "Chittagong"
 			},
 			{
 				"id": 788,
-				"name": "Chuadanga District"
+				"name": "Chuadanga"
 			},
 			{
 				"id": 763,
-				"name": "Comilla District"
+				"name": "Comilla"
 			},
 			{
 				"id": 751,
-				"name": "Cox's Bazar District"
+				"name": "Cox's Bazar"
 			},
 			{
 				"id": 771,
-				"name": "Dhaka District"
+				"name": "Dhaka"
 			},
 			{
 				"id": 783,
-				"name": "Dinajpur District"
+				"name": "Dinajpur"
 			},
 			{
 				"id": 762,
-				"name": "Faridpur District"
+				"name": "Faridpur"
 			},
 			{
 				"id": 816,
-				"name": "Feni District"
+				"name": "Feni"
 			},
 			{
 				"id": 795,
-				"name": "Gaibandha District"
+				"name": "Gaibandha"
 			},
 			{
 				"id": 798,
-				"name": "Gazipur District"
+				"name": "Gazipur"
 			},
 			{
 				"id": 792,
-				"name": "Gopalganj District"
+				"name": "Gopalganj"
 			},
 			{
 				"id": 805,
-				"name": "Habiganj District"
+				"name": "Habiganj"
 			},
 			{
 				"id": 808,
-				"name": "Jamalpur District"
+				"name": "Jamalpur"
 			},
 			{
 				"id": 757,
-				"name": "Jessore District"
+				"name": "Jessore"
 			},
 			{
 				"id": 778,
-				"name": "Jhalokati District"
+				"name": "Jhalokati"
 			},
 			{
 				"id": 789,
-				"name": "Jhenaidah District"
+				"name": "Jhenaidah"
 			},
 			{
 				"id": 806,
-				"name": "Joypurhat District"
+				"name": "Joypurhat"
 			},
 			{
 				"id": 786,
-				"name": "Khagrachari District"
+				"name": "Khagrachari"
 			},
 			{
 				"id": 811,
-				"name": "Khulna District"
+				"name": "Khulna"
 			},
 			{
 				"id": 779,
-				"name": "Kishoreganj District"
+				"name": "Kishoreganj"
 			},
 			{
 				"id": 793,
-				"name": "Kurigram District"
+				"name": "Kurigram"
 			},
 			{
 				"id": 774,
-				"name": "Kushtia District"
+				"name": "Kushtia"
 			},
 			{
 				"id": 819,
-				"name": "Lakshmipur District"
+				"name": "Lakshmipur"
 			},
 			{
 				"id": 780,
-				"name": "Lalmonirhat District"
+				"name": "Lalmonirhat"
 			},
 			{
 				"id": 817,
-				"name": "Madaripur District"
+				"name": "Madaripur"
 			},
 			{
 				"id": 776,
-				"name": "Meherpur District"
+				"name": "Meherpur"
 			},
 			{
 				"id": 794,
-				"name": "Moulvibazar District"
+				"name": "Moulvibazar"
 			},
 			{
 				"id": 790,
-				"name": "Munshiganj District"
+				"name": "Munshiganj"
 			},
 			{
 				"id": 766,
-				"name": "Mymensingh District"
+				"name": "Mymensingh"
 			},
 			{
 				"id": 758,
@@ -1596,95 +1596,95 @@
 			},
 			{
 				"id": 814,
-				"name": "Naogaon District"
+				"name": "Naogaon"
 			},
 			{
 				"id": 769,
-				"name": "Narail District"
+				"name": "Narail"
 			},
 			{
 				"id": 770,
-				"name": "Narayanganj District"
+				"name": "Narayanganj"
 			},
 			{
 				"id": 787,
-				"name": "Natore District"
+				"name": "Natore"
 			},
 			{
 				"id": 764,
-				"name": "Netrokona District"
+				"name": "Netrokona"
 			},
 			{
 				"id": 772,
-				"name": "Nilphamari District"
+				"name": "Nilphamari"
 			},
 			{
 				"id": 815,
-				"name": "Noakhali District"
+				"name": "Noakhali"
 			},
 			{
 				"id": 754,
-				"name": "Pabna District"
+				"name": "Pabna"
 			},
 			{
 				"id": 800,
-				"name": "Panchagarh District"
+				"name": "Panchagarh"
 			},
 			{
 				"id": 777,
-				"name": "Patuakhali District"
+				"name": "Patuakhali"
 			},
 			{
 				"id": 791,
-				"name": "Pirojpur District"
+				"name": "Pirojpur"
 			},
 			{
 				"id": 773,
-				"name": "Rajbari District"
+				"name": "Rajbari"
 			},
 			{
 				"id": 813,
-				"name": "Rajshahi District"
+				"name": "Rajshahi"
 			},
 			{
 				"id": 809,
-				"name": "Rangamati Hill District"
+				"name": "Rangamati Hill"
 			},
 			{
 				"id": 759,
-				"name": "Rangpur District"
+				"name": "Rangpur"
 			},
 			{
 				"id": 799,
-				"name": "Satkhira District"
+				"name": "Satkhira"
 			},
 			{
 				"id": 801,
-				"name": "Shariatpur District"
+				"name": "Shariatpur"
 			},
 			{
 				"id": 755,
-				"name": "Sherpur District"
+				"name": "Sherpur"
 			},
 			{
 				"id": 781,
-				"name": "Sirajganj District"
+				"name": "Sirajganj"
 			},
 			{
 				"id": 812,
-				"name": "Sunamganj District"
+				"name": "Sunamganj"
 			},
 			{
 				"id": 767,
-				"name": "Sylhet District"
+				"name": "Sylhet"
 			},
 			{
 				"id": 782,
-				"name": "Tangail District"
+				"name": "Tangail"
 			},
 			{
 				"id": 804,
-				"name": "Thakurgaon District"
+				"name": "Thakurgaon"
 			}
 		]
 	},
