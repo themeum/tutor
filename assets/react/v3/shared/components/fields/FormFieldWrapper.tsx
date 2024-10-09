@@ -128,7 +128,7 @@ const FormFieldWrapper = <T,>({
             {label && (
               <label htmlFor={id} css={styles.label(isInlineLabel, replaceEntireLabel)}>
                 {label}
-                <Show when={generateWithAi && isOpenAiEnabled}>
+                <Show when={generateWithAi}>
                   <button
                     type="button"
                     onClick={() => {

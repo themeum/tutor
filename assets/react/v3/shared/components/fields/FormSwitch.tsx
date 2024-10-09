@@ -38,7 +38,6 @@ const FormSwitch = ({
       label={label}
       field={field}
       fieldState={fieldState}
-      disabled={disabled}
       loading={loading}
       helpText={helpText}
       isHidden={isHidden}

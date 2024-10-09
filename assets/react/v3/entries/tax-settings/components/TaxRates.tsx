@@ -4,7 +4,7 @@ import Button from '@Atoms/Button';
 import Checkbox from '@Atoms/CheckBox';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import { colorPalate, fontSize, fontWeight, spacing } from '@Config/styles';
+import { colorPalate, colorTokens, fontSize, fontWeight, spacing } from '@Config/styles';
 import Table, { type Column } from '@Molecules/Table';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -137,12 +137,21 @@ export default function TaxRates() {
                       control={form.control}
                       name={`rates.${activeCountryIndex}.rate` as 'rates.0.rate'}
                       render={(controllerProps) => {
-                        return <FormInputWithContent {...controllerProps} content={'%'} contentPosition="right" />;
+                        return (
+                          <FormInputWithContent
+                            {...controllerProps}
+                            type="number"
+                            content={'%'}
+                            contentCss={styleUtils.inputCurrencyStyle}
+                            contentPosition="right"
+                          />
+                        );
                       }}
                     />
                     <Button
                       variant="text"
-                      icon={<SVGIcon name="delete" style={styles.deleteIcon} />}
+                      buttonCss={styles.deleteIcon}
+                      icon={<SVGIcon height={24} width={24} name="delete" />}
                       onClick={() => {
                         const filteredRates = rates.filter((rate) => rate.country !== activeCountry);
                         form.setValue('rates', filteredRates);
@@ -171,13 +180,22 @@ export default function TaxRates() {
                       control={form.control}
                       name={`rates.${activeCountryIndex}.states.${stateIndex}.rate`}
                       render={(controllerProps) => {
-                        return <FormInputWithContent {...controllerProps} content={'%'} contentPosition="right" />;
+                        return (
+                          <FormInputWithContent
+                            {...controllerProps}
+                            type="number"
+                            content={'%'}
+                            contentCss={styleUtils.inputCurrencyStyle}
+                            contentPosition="right"
+                          />
+                        );
                       }}
                     />
 
                     <Button
                       variant="text"
-                      icon={<SVGIcon name="delete" style={styles.deleteIcon} />}
+                      buttonCss={styles.deleteIcon}
+                      icon={<SVGIcon height={24} width={24} name="delete" />}
                       onClick={() => {
                         const updatedRates = rates.map((rate) => {
                           if (String(rate.country) === String(activeCountry)) {
@@ -325,7 +343,16 @@ const styles = {
     }
   `,
   deleteIcon: css`
-    color: ${colorPalate.icon.default};
+    svg {
+      color: ${colorTokens.icon.hints};
+      transition: color 0.3s ease-in-out;
+    }
+
+    &:hover {
+      svg {
+        color: ${colorTokens.icon.error};
+      }
+    }
   `,
   editableWrapper: css`
     display: none;

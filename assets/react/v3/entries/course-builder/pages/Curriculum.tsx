@@ -44,6 +44,7 @@ import { moveTo, nanoid } from '@Utils/util';
 
 import curriculumEmptyState2x from '@Images/curriculum-empty-state-2x.webp';
 import curriculumEmptyState from '@Images/curriculum-empty-state.webp';
+import TopicDragOverlay from '../components/curriculum/TopicDragOverlay';
 
 const courseId = getCourseId();
 
@@ -326,7 +327,6 @@ const Curriculum = () => {
                 modifiers={[restrictToWindowEdges]}
                 onDragStart={(event) => {
                   setActiveSortId(event.active.id);
-                  setAllCollapsed(true);
                 }}
                 onDragEnd={(event) => handleDragEnd(event)}
               >
@@ -340,7 +340,10 @@ const Curriculum = () => {
                         return (
                           <Topic
                             key={topic.id}
-                            topic={topic}
+                            topic={{
+                              ...topic,
+                              isCollapsed: activeSortId ? true : topic.isCollapsed,
+                            }}
                             onDelete={() => handleTopicDelete(index, topic.id)}
                             onCollapse={(topicId) => handleTopicCollapse(topicId)}
                             onCopy={(topicId) => {
@@ -361,7 +364,7 @@ const Curriculum = () => {
                   <DragOverlay>
                     <Show when={activeSortItem}>
                       {(item) => {
-                        return <Topic topic={item} isOverlay />;
+                        return <TopicDragOverlay topicTitle={item.title} />;
                       }}
                     </Show>
                   </DragOverlay>,
