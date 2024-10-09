@@ -377,7 +377,7 @@ select.tutor-form-control,
 			display: inline-block;
 			width: 40px;
 			height: 24px;
-			background-color: var(--tutor-border-color);
+			background-color: $color-light-gray;
 			border-radius: 12px;
 			vertical-align: top;
 			cursor: pointer;
@@ -393,6 +393,7 @@ select.tutor-form-control,
 				left: 4px;
 				border-radius: 50%;
 				transition: 100ms;
+				box-shadow: 0px 2px 4px 0px #0000002A;
 			}
 		}
 		&:checked ~ .tutor-form-toggle-control {

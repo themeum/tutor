@@ -1,7 +1,7 @@
 import Show from '@/v3/shared/controls/Show';
 import { getCountryByCode } from '@/v3/shared/utils/countries';
 import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -67,7 +67,7 @@ const TaxSettingsPage = () => {
   }, [reset, taxSettingsQuery.data]);
 
   if (taxSettingsQuery.isLoading) {
-    return <LoadingOverlay />;
+    return <LoadingSection />;
   }
 
   return (

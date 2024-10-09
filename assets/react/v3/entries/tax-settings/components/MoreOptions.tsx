@@ -8,6 +8,7 @@ import { useFormContext } from 'react-hook-form';
 import type { TaxSettings } from '../services/tax';
 import type { ColumnDataType } from './TaxRates';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
+import { AnimationType } from '@/v3/shared/hooks/useAnimation';
 
 interface MoreOptionsProps {
   data: ColumnDataType;
@@ -21,7 +22,8 @@ export const MoreOptions = ({ data }: MoreOptionsProps) => {
   return (
     <div css={styles.tableMoreOptions}>
       <ThreeDots
-        arrowPosition="left"
+        arrowPosition="top"
+        animationType={AnimationType.slideDown}
         isOpen={isOpen}
         onClick={() => {
           setIsOpen(true);

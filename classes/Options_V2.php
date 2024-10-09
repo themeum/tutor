@@ -1558,6 +1558,11 @@ class Options_V2 {
 												'preset_name' => 'gray',
 												'value' => '#E3E5EB',
 											),
+											array(
+												'slug'  => 'tutor_border_color',
+												'preset_name' => 'border',
+												'value' => '#CDCFD5',
+											),
 										),
 									),
 								),
