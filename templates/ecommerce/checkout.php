@@ -67,7 +67,6 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
 						</h5>
 						<div class="tutor-checkout-payment-options">
-							<input type="hidden" name="payment_method">
 							<input type="hidden" name="payment_type">
 							<?php
 							$payment_gateways = tutor_get_all_active_payment_gateways();
@@ -81,10 +80,13 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 								foreach ( $payment_gateways['automate'] as $key => $gateway ) {
 									list( $label, $icon ) = array_values( $gateway );
 									?>
-										<button type="button" data-payment-method="<?php echo esc_attr( $key ); ?>" data-payment-type="automate">
-											<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
-											<?php echo esc_html( $label ); ?>
-										</button>
+										<label class="tutor-checkout-payment-item" data-payment-type="automate">
+											<input type="radio" name="payment_method" value="<?php echo esc_attr( $key ); ?>" class="tutor-form-check-input" required>
+											<div class="tutor-payment-item-content">
+												<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
+												<?php echo esc_html( $label ); ?>
+											</div>
+										</label>
 									<?php
 								}
 
@@ -93,9 +95,12 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 									foreach ( $payment_gateways['manual'] as $gateway ) {
 										list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
 										?>
-											<button type="button" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
+										<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
+											<input type="radio" value="<?php echo esc_attr( $label ); ?>" name="payment_method" class="tutor-form-check-input" required>
+											<div class="tutor-payment-item-content">
 												<?php echo esc_html( $label ); ?>
-											</button>
+											</div>
+										</label>
 										<?php
 									}
 								} elseif ( empty( $payment_gateways['automate'] ) ) {
