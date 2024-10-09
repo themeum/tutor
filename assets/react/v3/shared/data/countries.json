@@ -1,16 +1,5 @@
 [
 	{
-		"name": "European Union",
-		"numeric_code": "000",
-		"alpha_2": "EU",
-		"alpha_3": "EUR",
-		"currency": "EUR",
-		"currency_name": "Euro",
-		"currency_symbol": "\u20ac",
-		"emoji": "\ud83c\uddea\ud83c\uddfa",
-		"states": []
-	},
-	{
 		"name": "Afghanistan",
 		"numeric_code": "004",
 		"alpha_2": "AF",
