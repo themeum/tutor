@@ -1055,63 +1055,21 @@ class OrderModel {
 	}
 
 	/**
-	 * Recalculates the order prices including discounts, taxes, and refunds.
-	 *
-	 * This method retrieves the order data and item prices, applies any given discounts or those already
-	 * associated with the order, calculates the tax amount, and adjusts for any refunds to determine
-	 * the final net price.
+	 * Calculate discount amount.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param float $subtotal_price Order subtotal_price.
-	 * @param float $tax_amount Order tax amount.
-	 * @param float $discount_amount Optional. The type of discount to apply.
-	 * @param float $refund_amount Optional. The value of the discount to apply.
-	 *
-	 * @return object An object containing the recalculated prices:
-	 *                  - sub_total (float): The sum of order item prices.
-	 *                  - discount_amount (float): The total discount applied.
-	 *                  - tax_amount (float): The tax amount.
-	 *                  - total_price (float): The total price after applying discount and tax.
-	 *                  - net_price (float): The final price after accounting for refunds.
-	 */
-	public function recalculate_order_prices( float $subtotal_price, float $tax_amount = 0, float $discount_amount = 0, float $refund_amount = 0 ) {
-
-		// calculate total (sub_total - discount + tax).
-		$total = ( $subtotal_price - $discount_amount ) + $tax_amount;
-
-		// update net_price (total - refund_amount).
-		$net_price = $total - $refund_amount;
-
-		$response                  = new \stdClass();
-		$response->subtotal_price  = $subtotal_price;
-		$response->discount_amount = $discount_amount;
-		$response->tax_amount      = $tax_amount;
-		$response->total_price     = $total;
-		$response->net_price       = $net_price;
-
-		return $response;
-	}
-
-	/**
-	 * Calculates the discounted price based on the discount type and amount.
-	 *
-	 * This method calculates the discounted price of a given subtotal based on the provided
-	 * discount type (either 'percent' or a fixed amount) and the discount amount.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $discount_type The type of discount ('percent' or 'fixed').
+	 * @param string $discount_type The type of discount ('percent' or 'flat').
 	 * @param float  $discount_amount The amount of discount to apply.
 	 * @param float  $sub_total The subtotal amount before applying the discount.
 	 *
-	 * @return float The discounted price after applying the discount.
+	 * @return float discount amount.
 	 */
 	public function calculate_discount_amount( $discount_type, $discount_amount, $sub_total ) {
 		if ( 'percentage' === $discount_type ) {
 			$discounted_price = (float) $sub_total * ( ( (float) $discount_amount / 100 ) );
 		} else {
-			$discounted_price = (float) $sub_total - (float) $discount_amount;
+			$discounted_price = (float) $discount_amount;
 		}
 		return $discounted_price;
 	}

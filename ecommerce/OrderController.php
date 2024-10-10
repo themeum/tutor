@@ -626,18 +626,33 @@ class OrderController {
 		$request = (object) $request;
 
 		try {
-			$order = $this->model->get_order_by_id( $request->order_id );
+			$order    = $this->model->get_order_by_id( $request->order_id );
+			$subtotal = $order->subtotal_price;
 
-			$discount_amount = $this->model->calculate_discount_amount( $request->discount_type, $request->discount_amount, $order->subtotal_price );
+			$discount_amount = $this->model->calculate_discount_amount( $request->discount_type, $request->discount_amount, $subtotal );
 
-			$order_prices = $this->model->recalculate_order_prices( floatval( $order->subtotal_price ), floatval( $order->tax_amount ), floatval( $discount_amount ) );
+			$deducted_amount = $discount_amount;
+			if ( ! empty( $order->coupon_code ) && $order->coupon_amount > 0 ) {
+				$deducted_amount += $order->coupon_amount;
+			}
+
+			$total_price = $subtotal - $deducted_amount;
+
+			$tax_rate   = Tax::get_user_tax_rate( $order->user_id );
+			$tax_amount = Tax::calculate_tax( $total_price, $tax_rate );
+			if ( ! Tax::is_tax_included_in_price() ) {
+				$total_price += $tax_amount;
+			}
 
 			$order_data = array(
 				'discount_amount' => $request->discount_amount,
 				'discount_reason' => $request->discount_reason,
 				'discount_type'   => $request->discount_type,
-				'subtotal_price'  => $order_prices->subtotal_price,
-				'total_price'     => $order_prices->total_price,
+				'subtotal_price'  => $subtotal,
+				'tax_rate'        => $tax_rate,
+				'tax_amount'      => $tax_amount,
+				'net_payment'     => $total_price,
+				'total_price'     => $total_price,
 			);
 
 			$update = $this->model->update_order( $request->order_id, $order_data );
