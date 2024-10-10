@@ -320,57 +320,83 @@ const Curriculum = () => {
                 />
               }
             >
-              <DndContext
-                sensors={sensors}
-                collisionDetection={closestCenter}
-                measuring={droppableMeasuringStrategy}
-                modifiers={[restrictToWindowEdges]}
-                onDragStart={(event) => {
-                  setActiveSortId(event.active.id);
-                }}
-                onDragEnd={(event) => handleDragEnd(event)}
-              >
-                <SortableContext
-                  items={content.map((item) => ({ ...item, id: item.id }))}
-                  strategy={verticalListSortingStrategy}
+              <div css={styles.topicWrapper}>
+                <DndContext
+                  sensors={sensors}
+                  collisionDetection={closestCenter}
+                  measuring={droppableMeasuringStrategy}
+                  modifiers={[restrictToWindowEdges]}
+                  onDragStart={(event) => {
+                    setActiveSortId(event.active.id);
+                  }}
+                  onDragEnd={(event) => handleDragEnd(event)}
                 >
-                  <div css={styles.topicWrapper}>
+                  <SortableContext
+                    items={content.map((item) => ({ ...item, id: item.id }))}
+                    strategy={verticalListSortingStrategy}
+                  >
                     <For each={content}>
                       {(topic, index) => {
                         return (
-                          <Topic
-                            key={topic.id}
-                            topic={{
-                              ...topic,
-                              isCollapsed: activeSortId ? true : topic.isCollapsed,
-                            }}
-                            onDelete={() => handleTopicDelete(index, topic.id)}
-                            onCollapse={(topicId) => handleTopicCollapse(topicId)}
-                            onCopy={(topicId) => {
-                              currentExpandedTopics.current = [topicId];
-                            }}
-                            onEdit={(topicId) => {
-                              currentExpandedTopics.current = [topicId];
-                            }}
-                            onSort={(activeIndex, overIndex) => handleTopicSort(index, topic, activeIndex, overIndex)}
-                          />
+                          topic.isSaved && (
+                            <Topic
+                              key={topic.id}
+                              topic={{
+                                ...topic,
+                                isCollapsed: activeSortId ? true : topic.isCollapsed,
+                              }}
+                              onDelete={() => handleTopicDelete(index, topic.id)}
+                              onCollapse={(topicId) => handleTopicCollapse(topicId)}
+                              onCopy={(topicId) => {
+                                currentExpandedTopics.current = [topicId];
+                              }}
+                              onEdit={(topicId) => {
+                                currentExpandedTopics.current = [topicId];
+                              }}
+                              onSort={(activeIndex, overIndex) => handleTopicSort(index, topic, activeIndex, overIndex)}
+                            />
+                          )
                         );
                       }}
                     </For>
-                  </div>
-                </SortableContext>
+                  </SortableContext>
 
-                {createPortal(
-                  <DragOverlay>
-                    <Show when={activeSortItem}>
-                      {(item) => {
-                        return <TopicDragOverlay topicTitle={item.title} />;
-                      }}
-                    </Show>
-                  </DragOverlay>,
-                  document.body,
-                )}
-              </DndContext>
+                  {createPortal(
+                    <DragOverlay>
+                      <Show when={activeSortItem}>
+                        {(item) => {
+                          return <TopicDragOverlay topicTitle={item.title} />;
+                        }}
+                      </Show>
+                    </DragOverlay>,
+                    document.body,
+                  )}
+                </DndContext>
+
+                <For each={content}>
+                  {(topic, index) => {
+                    return (
+                      !topic.isSaved && (
+                        <Topic
+                          key={topic.id}
+                          topic={{
+                            ...topic,
+                            isCollapsed: false,
+                          }}
+                          onDelete={() => handleTopicDelete(index, topic.id)}
+                          onCollapse={(topicId) => handleTopicCollapse(topicId)}
+                          onCopy={(topicId) => {
+                            currentExpandedTopics.current = [topicId];
+                          }}
+                          onEdit={(topicId) => {
+                            currentExpandedTopics.current = [topicId];
+                          }}
+                        />
+                      )
+                    );
+                  }}
+                </For>
+              </div>
             </Show>
           </div>
           <Show when={content.length > 0}>

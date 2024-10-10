@@ -267,7 +267,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
   return (
     <>
       <div
-        {...attributes}
+        {...(topic.isSaved ? attributes : {})}
         css={styles.wrapper({ isActive: isActive || isEdit, isOverlay })}
         onClick={() => setIsActive(true)}
         onKeyDown={noop}
