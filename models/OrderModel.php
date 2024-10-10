@@ -333,6 +333,7 @@ class OrderModel {
 		$order_data->total_price     = (float) $order_data->total_price;
 		$order_data->net_payment     = (float) $order_data->net_payment;
 		$order_data->discount_amount = (float) $order_data->discount_amount;
+		$order_data->coupon_amount   = (float) $order_data->coupon_amount;
 		$order_data->tax_rate        = (float) $order_data->tax_rate;
 		$order_data->tax_amount      = (float) $order_data->tax_amount;
 
