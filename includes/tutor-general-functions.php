@@ -1577,15 +1577,15 @@ if ( ! function_exists( 'tutor_is_json' ) ) {
 	}
 }
 
-if ( ! function_exists( 'tutor_is_local_env' ) ) {
+if ( ! function_exists( 'tutor_is_dev_mode' ) ) {
 	/**
-	 * Check if the current environment is local.
+	 * Check tutor is in development mode or not.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @return bool True if the current environment is local, false otherwise.
 	 */
-	function tutor_is_local_env() {
-		return ( strpos( site_url(), '.local' ) !== false || strpos( site_url(), 'localhost' ) !== false );
+	function tutor_is_dev_mode() {
+		return defined( 'TUTOR_DEV_MODE' ) && TUTOR_DEV_MODE;
 	}
 }
