@@ -627,5 +627,3 @@ class Lesson extends Tutor_Base {
 	}
 
 }
-
-
