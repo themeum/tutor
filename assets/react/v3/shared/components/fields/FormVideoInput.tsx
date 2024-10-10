@@ -145,7 +145,7 @@ const FormVideoInput = ({
   const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
-      videoSource: '',
+      videoSource: videoSourceOptions[0]?.value || '',
       videoUrl: '',
     },
   });
