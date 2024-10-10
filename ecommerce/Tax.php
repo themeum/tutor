@@ -106,6 +106,41 @@ class Tax {
 	}
 
 	/**
+	 * Calculate tax.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param float $amount  amount.
+	 * @param float $rate    tax rate.
+	 *
+	 * @return float
+	 */
+	public static function calculate_tax( $amount, $rate ) {
+		try {
+			$tax = $amount * ( $rate / 100 );
+		} catch ( \Throwable $th ) {
+			$tax = 0.0;
+		}
+
+		return round( $tax, 2 );
+	}
+
+	/**
+	 * Get text rate for a user according to billing country and state.
+	 *
+	 * @param integer $user_id user id.
+	 *
+	 * @return float tax rate.
+	 */
+	public static function get_user_tax_rate( $user_id = 0 ) {
+		$billing_info    = ( new BillingController( false ) )->get_billing_info( $user_id );
+		$billing_country = $billing_info->billing_country ?? '';
+		$billing_state   = $billing_info->billing_state ?? '';
+
+		return self::get_country_state_tax_rate( $billing_country, $billing_state );
+	}
+
+	/**
 	 * Get country rate.
 	 *
 	 * @since 3.0.0
@@ -146,7 +181,7 @@ class Tax {
 			return $zero_tax;
 		}
 
-		if ( $country_rate_data->is_same_rate ) {
+		if ( $country_rate_data->is_same_rate || 0 === count( $country_rate_data->states ) ) {
 			return floatval( $country_rate_data->rate );
 		} else {
 			// Get state rate.
