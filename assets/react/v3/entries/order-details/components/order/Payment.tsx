@@ -73,6 +73,16 @@ function Payment() {
             <div>{formatPrice(order.subtotal_price)}</div>
           </div>
 
+          <Show when={order.coupon_amount}>
+            {(couponAmount) => (
+              <div css={styles.item({ action: 'regular' })}>
+                <div>{__('Coupon', 'tutor')}</div>
+                <div>-</div>
+                <div>-{formatPrice(couponAmount)}</div>
+              </div>
+            )}
+          </Show>
+
           <div css={styles.item({ action: 'regular' })}>
             <Show
               when={order.discount_amount}

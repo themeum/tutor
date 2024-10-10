@@ -113,6 +113,7 @@ export interface Order {
   transaction_id?: string | null;
   activities?: Activity[];
   coupon_code?: string | null;
+  coupon_amount?: number|null;
   created_by: string;
   updated_by?: string;
   created_at_gmt: string;
