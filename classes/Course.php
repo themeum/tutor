@@ -1211,7 +1211,7 @@ class Course extends Tutor_Base {
 			'enable_q_and_a_on_course',
 			'instructor_can_delete_course',
 			'chatgpt_enable',
-			'hide_admin_bar_for_users'
+			'hide_admin_bar_for_users',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
