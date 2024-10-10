@@ -43,7 +43,6 @@ const Header = () => {
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
-  const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
@@ -271,18 +270,11 @@ const Header = () => {
             type="button"
             css={styles.closeButton}
             onClick={() => {
-              if (isAdmin) {
-                window.location.href = tutorConfig.dashboard_url;
-                return;
-              }
+              const isFormWpAdmin = window.location.href.includes('wp-admin');
 
-              if (isInstructor) {
-                window.location.href =
-                  tutorConfig.settings?.hide_admin_bar_for_users === 'on'
-                    ? tutorConfig.tutor_frontend_dashboard_url
-                    : tutorConfig.dashboard_url;
-                return;
-              }
+              window.location.href = isFormWpAdmin
+                ? tutorConfig.backend_course_list_url
+                : tutorConfig.frontend_course_list_url;
             }}
           >
             <SVGIcon name="cross" width={32} height={32} />
