@@ -394,6 +394,18 @@ class CheckoutController {
 			);
 		}
 
+		if ( $order['tax_amount'] ) {
+			/* translators: %s: tax rate */
+			$tax_item = sprintf( __( 'Tax (%s)', 'tutor' ), $order['tax_rate'] . '%' );
+			$items[]  = array(
+				'item_id'          => 'tax',
+				'item_name'        => $tax_item,
+				'regular_price'    => $order['tax_amount'],
+				'quantity'         => 1,
+				'discounted_price' => null,
+			);
+		}
+
 		return (object) array(
 			'items'              => (object) $items,
 			'subtotal'           => floatval( $subtotal_price ),
@@ -519,7 +531,7 @@ class CheckoutController {
 			$items = (array) $payment_data->items;
 			foreach ( $items as $item ) {
 				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
-				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
+				if ( $plan && property_exists( $plan, 'enrollment_fee' ) && $plan->enrollment_fee > 0 ) {
 					$new_item = array(
 						'item_id'          => 0,
 						'item_name'        => 'Enrollment Fee',
