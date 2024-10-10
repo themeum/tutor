@@ -220,6 +220,7 @@ class OrderController {
 			'payment_status' => $payment_status,
 			'order_type'     => $order_type,
 			'coupon_code'    => $coupon_code,
+			'coupon_amount'  => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
 			'subtotal_price' => $subtotal_price,
 			'total_price'    => $total_price,
 			'net_payment'    => $total_price,
@@ -231,6 +232,20 @@ class OrderController {
 			'updated_at_gmt' => current_time( 'mysql', true ),
 			'updated_by'     => get_current_user_id(),
 		);
+
+		/**
+		 * Tax calculation for order.
+		 */
+		$tax_rate = Tax::get_user_tax_rate( $user_id );
+		if ( $tax_rate ) {
+			$order_data['tax_rate']   = $tax_rate;
+			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+			if ( ! Tax::is_tax_included_in_price() ) {
+				$total_price              += $order_data['tax_amount'];
+				$order_data['total_price'] = $total_price;
+				$order_data['net_payment'] = $total_price;
+			}
+		}
 
 		// Update data with arguments.
 		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );

@@ -10,8 +10,6 @@
 
 namespace Tutor\Ecommerce;
 
-use Tutor\Ecommerce\Manager\Checkout;
-use Tutor\Helpers\SessionHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -86,6 +84,7 @@ class CheckoutController {
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
+			add_action( 'wp_ajax_tutor_get_checkout_html', array( $this, 'ajax_get_checkout_html' ) );
 		}
 	}
 
@@ -131,6 +130,26 @@ class CheckoutController {
 			$page_id = wp_insert_post( $args );
 			tutor_utils()->update_option( self::PAGE_ID_OPTION_NAME, $page_id );
 		}
+	}
+
+	/**
+	 * Get checkout HTML
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_get_checkout_html() {
+		tutor_utils()->check_nonce();
+
+		ob_start();
+		tutor_load_template( 'ecommerce/checkout-details' );
+		$content = ob_get_clean();
+
+		$this->json_response(
+			__( 'Success', 'tutor' ),
+			$content
+		);
 	}
 
 	/**
@@ -197,6 +216,7 @@ class CheckoutController {
 
 		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
 		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
+		$coupon_amount  = null;
 		$payment_method = $request['payment_method'];
 		$payment_type   = $request['payment_type'];
 		$order_type     = $request['order_type'];
@@ -242,6 +262,10 @@ class CheckoutController {
 				? $coupon_model->apply_coupon_discount( $object_id, $coupon_code, $order_type )
 				: $coupon_model->apply_automatic_coupon_discount( $object_id, $order_type );
 
+				if ( is_object( $coupon_price ) && $coupon_price->is_applied ) {
+					$coupon_amount = $coupon_price->deducted_price;
+				}
+
 				$discount_price = ! is_null( $coupon_price->items[0]->discount_price ) && $coupon_price->items[0]->discount_price >= 0 ? tutor_get_locale_price( $coupon_price->items[0]->discount_price ) : null;
 
 				$items[] = array(
@@ -257,6 +281,7 @@ class CheckoutController {
 
 		$args = array(
 			'payment_method' => $payment_method,
+			'coupon_amount'  => $coupon_amount,
 		);
 
 		if ( empty( $errors ) ) {
