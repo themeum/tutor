@@ -141,6 +141,32 @@ class Tax {
 	}
 
 	/**
+	 * Check site admin configured tax or not.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_tax_configured() {
+		$tax_settings = self::get_settings();
+
+		return ( is_object( $tax_settings )
+				&& isset( $tax_settings->rates )
+				&& count( $tax_settings->rates ) );
+	}
+
+	/**
+	 * Check tax is included in price or not.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_tax_included_in_price() {
+		return (bool) self::get_setting( 'is_tax_included_in_price' );
+	}
+
+	/**
 	 * Get country rate.
 	 *
 	 * @since 3.0.0
