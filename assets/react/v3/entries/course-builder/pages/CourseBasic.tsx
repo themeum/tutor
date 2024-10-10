@@ -275,7 +275,6 @@ const CourseBasic = () => {
       <div css={styles.mainForm({ isWpEditorFullScreen })}>
         <CanvasHead
           title={__('Course Basic', 'tutor')}
-          backUrl={`${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`}
           isExternalUrl
           rightButton={
             <Show when={isOpenAiEnabled}>

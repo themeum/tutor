@@ -169,16 +169,18 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
     }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (['lesson', 'tutor_assignments'].includes(type)) {
-      deleteContentMutation.mutateAsync(content.id);
+      await deleteContentMutation.mutateAsync(content.id);
     } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type)) {
-      deleteQuizMutation.mutateAsync(content.id);
+      await deleteQuizMutation.mutateAsync(content.id);
     } else if (type === 'tutor-google-meet') {
-      deleteGoogleMeetMutation.mutateAsync(content.id);
+      await deleteGoogleMeetMutation.mutateAsync(content.id);
     } else if (type === 'tutor_zoom_meeting') {
-      deleteZoomMeetingMutation.mutateAsync(content.id);
+      await deleteZoomMeetingMutation.mutateAsync(content.id);
     }
+
+    setIsDeletePopoverOpen(false);
     onDelete?.();
   };
 
@@ -210,7 +212,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
     <>
       <div
         {...attributes}
-        css={styles.wrapper({ isDragging: isOverlay, isActive: meetingType === type || isDeletePopoverOpen })}
+        css={styles.wrapper({
+          isDragging: isOverlay,
+          isActive: meetingType === type || isDeletePopoverOpen || duplicateContentMutation.isPending,
+        })}
         ref={setNodeRef}
         style={style}
       >
@@ -323,8 +328,11 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       </Popover>
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
+        isLoading={
+          deleteContentMutation.isPending || deleteQuizMutation.isPending || deleteGoogleMeetMutation.isPending
+        }
         triggerRef={deleteRef}
-        closePopover={() => setIsDeletePopoverOpen(false)}
+        closePopover={noop}
         maxWidth="258px"
         title={sprintf(__('Delete "%s"', 'tutor'), content.title)}
         message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
@@ -341,6 +349,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           variant: 'text',
         }}
         onConfirmation={handleDelete}
+        onCancel={() => setIsDeletePopoverOpen(false)}
       />
     </>
   );

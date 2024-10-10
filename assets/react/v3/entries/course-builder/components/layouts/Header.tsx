@@ -10,16 +10,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
 import { TutorRoles } from '@Config/constants';
-import {
-  borderRadius,
-  colorPalate,
-  colorTokens,
-  containerMaxWidth,
-  headerHeight,
-  shadow,
-  spacing,
-  zIndex,
-} from '@Config/styles';
+import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
@@ -29,6 +20,7 @@ import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
+import Tooltip from '@/v3/shared/atoms/Tooltip';
 import Tracker from './Tracker';
 
 const courseId = getCourseId();
@@ -271,7 +263,24 @@ const Header = () => {
           </DropdownButton>
         </div>
       </div>
-      <div />
+
+      <div css={styles.closeButtonWrapper}>
+        <Tooltip delay={200} content={__('Exit', 'tutor')} placement="left">
+          <button
+            type="button"
+            css={styles.closeButton}
+            onClick={() => {
+              const isFormWpAdmin = window.location.href.includes('wp-admin');
+
+              window.location.href = isFormWpAdmin
+                ? tutorConfig.backend_course_list_url
+                : tutorConfig.frontend_course_list_url;
+            }}
+          >
+            <SVGIcon name="cross" width={32} height={32} />
+          </button>
+        </Tooltip>
+      </div>
     </div>
   );
 };
@@ -329,13 +338,25 @@ const styles = {
     align-items: center;
     gap: ${spacing[12]};
   `,
+  closeButtonWrapper: css`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-right: ${spacing[16]};
+  `,
   closeButton: css`
     ${styleUtils.resetButton};
+    ${styleUtils.flexCenter()};
     cursor: pointer;
-    display: flex;
-    color: ${colorPalate.icon.default};
+    color: ${colorTokens.icon.default};
     margin-left: ${spacing[4]};
     border-radius: ${borderRadius[4]};
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background-color: ${colorTokens.background.status.errorFail};
+      color: ${colorTokens.icon.error};
+    }
 
     &:focus {
       box-shadow: ${shadow.focus};

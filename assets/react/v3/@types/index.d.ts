@@ -28,6 +28,8 @@ declare global {
       placeholder_img_src: string;
       enable_lesson_classic_editor: string;
       tutor_frontend_dashboard_url: string;
+      backend_course_list_url: string;
+      frontend_course_list_url: string;
       wp_date_format: string;
       wp_rest_nonce: string;
       is_admin: string;
@@ -96,6 +98,7 @@ declare global {
         chatgpt_enable: 'on' | 'off';
         course_builder_logo_url: string | false;
         chatgpt_key_exist: boolean;
+        hide_admin_bar_for_users: 'on' | 'off';
       };
       tutor_currency: {
         symbol: string;
