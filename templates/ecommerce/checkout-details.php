@@ -15,7 +15,7 @@ use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
 
-$plan_id      = Input::get( 'plan', 0, Input::TYPE_INT );
+$plan_id      = (int) Input::sanitize_request_data( 'plan' );
 $plan_info    = new stdClass();
 $coupon_model = new CouponModel();
 
@@ -82,8 +82,9 @@ if ( ! empty( $country ) ) {
 						}
 					}
 
-					$subtotal  = $sale_price ? $sale_price : $regular_price;
-					$subtotal += $enrollment_fee;
+					$subtotal    = $sale_price ? $sale_price : $regular_price;
+					$subtotal   += $enrollment_fee;
+					$grand_total = $applied_coupon->is_applied ? $subtotal - $applied_coupon->deducted_price : $subtotal;
 
 					array_push( $object_ids, $plan_info->id );
 					?>
