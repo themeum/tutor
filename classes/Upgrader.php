@@ -161,7 +161,6 @@ class Upgrader {
 			$new_column  = 'coupon_amount';
 			if ( ! QueryHelper::column_exist( $order_table, $new_column ) ) {
 				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $new_column DECIMAL(13, 2) DEFAULT NULL AFTER coupon_code" );//phpcs:ignore
-				tutor_log( 'coupon_amount added' );
 			}
 		}
 
