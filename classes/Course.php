@@ -1249,7 +1249,7 @@ class Course extends Tutor_Base {
 
 		$data['dashboard_url']             = $dashboard_url;
 		$data['backend_course_list_url']   = get_admin_url( null, '?page=tutor' );
-		$data['frontend_course_list_url']  = tutor_utils()->tutor_dashboard_url('my-courses');
+		$data['frontend_course_list_url']  = tutor_utils()->tutor_dashboard_url( 'my-courses' );
 		$data['timezones']                 = tutor_global_timezone_lists();
 		$data['difficulty_levels']         = $difficulty_levels;
 		$data['wp_rest_nonce']             = wp_create_nonce( 'wp_rest' );
