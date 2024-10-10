@@ -372,7 +372,6 @@ class Lesson extends Tutor_Base {
 		}
 
 		wp_delete_post( $lesson_id, true );
-		
 		/* translators: %s refers to the name of the content being deleted */
 		$this->json_response( sprintf( __( '%s deleted successfully', 'tutor' ), $content ) );
 	}
