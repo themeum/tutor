@@ -43,7 +43,7 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
         </div>
       </div>
       <div css={styles.right}>
-        <Show when={item.sale_price} fallback={<span>{formatPrice(item.regular_price)}</span>}>
+        <Show when={item.sale_price || item.discount_price} fallback={<span>{formatPrice(item.regular_price)}</span>}>
           {(discountedPrice) => (
             <>
               <del>{formatPrice(item.regular_price)}</del>

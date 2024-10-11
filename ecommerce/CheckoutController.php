@@ -217,6 +217,7 @@ class CheckoutController {
 		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
 		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
 		$coupon_amount  = null;
+		$sale_discount  = 0;
 		$payment_method = $request['payment_method'];
 		$payment_type   = $request['payment_type'];
 		$order_type     = $request['order_type'];
@@ -275,13 +276,17 @@ class CheckoutController {
 					'discount_price' => $discount_price,
 					'coupon_code'    => ! is_null( $discount_price ) ? ( $coupon_code ? $coupon_code : 'automatic' ) : null,
 				);
+			}
 
+			foreach ( $items as $item ) {
+				$sale_discount += $item['sale_price'] > 0 ? ( $item['regular_price'] - $item['sale_price'] ) : 0;
 			}
 		}
 
 		$args = array(
 			'payment_method' => $payment_method,
 			'coupon_amount'  => $coupon_amount,
+			'sale_discount'  => $sale_discount,
 		);
 
 		if ( empty( $errors ) ) {

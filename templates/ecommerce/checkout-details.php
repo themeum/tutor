@@ -27,6 +27,7 @@ $courses         = $get_cart['courses'];
 $total_count     = $courses['total_count'];
 $course_list     = $courses['results'];
 $subtotal        = 0;
+$sale_discount   = 0;
 $grand_total     = 0;
 
 /**
@@ -152,8 +153,9 @@ if ( ! empty( $country ) ) {
 								}
 							}
 
-							$subtotal    += $regular_price;
-							$grand_total += $sale_price ? $sale_price : $regular_price;
+							$sale_discount += ( $sale_price && ! $has_automatic_coupon ) ? ( $regular_price - $sale_price ) : 0;
+							$subtotal      += $regular_price;
+							$grand_total   += $sale_price ? $sale_price : $regular_price;
 
 							array_push( $object_ids, $course->ID );
 							?>
@@ -209,6 +211,16 @@ if ( ! empty( $country ) ) {
 					<?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?>
 				</div>
 			</div>
+
+			<?php if ( $sale_discount > 0 ) : ?>
+			<div class="tutor-checkout-summary-item">
+				<div class="tutor-fw-medium"><?php esc_html_e( 'Sale discount', 'tutor' ); ?></div>
+				<div class="tutor-fw-bold">
+					- <?php echo tutor_get_formatted_price( $sale_discount ); //phpcs:ignore?>
+				</div>
+			</div>
+			<?php endif ?>
+
 			<?php if ( ! $applied_coupon->is_applied ) : ?>
 			<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 				<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>

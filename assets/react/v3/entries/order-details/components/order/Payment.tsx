@@ -186,6 +186,12 @@ function Payment() {
             <div>{formatPrice(order.total_price)}</div>
           </div>
 
+          <div css={styles.item({ action: 'regular' })}>
+            <div>{__('Payment method', 'tutor')}</div>
+            <div></div>
+            <div>{order.payment_method}</div>
+          </div>
+
           <Show when={order.refunds?.length}>
             <div css={styles.separator} />
             <Show when={order.refunds}>
