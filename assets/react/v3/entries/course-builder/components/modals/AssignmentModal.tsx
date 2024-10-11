@@ -141,9 +141,9 @@ const AssignmentModal = ({
           upload_files_limit: assignmentDetails.assignment_option.upload_files_limit || 1,
           upload_file_size_limit: assignmentDetails.assignment_option.upload_file_size_limit || 2,
           content_drip_settings: {
-            unlock_date: assignmentDetails.content_drip_settings.unlock_date || '',
-            after_xdays_of_enroll: assignmentDetails.content_drip_settings.after_xdays_of_enroll || '',
-            prerequisites: assignmentDetails.content_drip_settings.prerequisites || [],
+            unlock_date: assignmentDetails?.content_drip_settings?.unlock_date || '',
+            after_xdays_of_enroll: assignmentDetails?.content_drip_settings?.after_xdays_of_enroll || '',
+            prerequisites: assignmentDetails?.content_drip_settings?.prerequisites || [],
           },
         },
         {
@@ -176,6 +176,7 @@ const AssignmentModal = ({
       icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
       title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
       subtitle={subtitle}
+      maxWidth={1070}
       actions={
         isFormDirty && (
           <>

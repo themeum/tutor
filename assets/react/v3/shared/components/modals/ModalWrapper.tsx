@@ -17,6 +17,7 @@ interface ModalWrapperProps {
   actions?: React.ReactNode;
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
+  maxWidth?: number;
 }
 
 const ModalWrapper = ({
@@ -28,6 +29,7 @@ const ModalWrapper = ({
   headerChildren,
   entireHeader,
   actions,
+  maxWidth = 1218,
 }: ModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -38,7 +40,11 @@ const ModalWrapper = ({
   }, []);
 
   return (
-    <div css={styles.container}>
+    <div
+      css={styles.container({
+        maxWidth,
+      })}
+    >
       <div css={styles.header}>
         <Show
           when={entireHeader}
@@ -86,13 +92,17 @@ const ModalWrapper = ({
 export default ModalWrapper;
 
 const styles = {
-  container: css`
+  container: ({
+    maxWidth,
+  }: {
+    maxWidth?: number;
+  }) => css`
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
     margin-top: ${modal.MARGIN_TOP}px;
     height: 100%;
-    max-width: 1218px;
+    max-width: ${maxWidth}px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
