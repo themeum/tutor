@@ -133,9 +133,9 @@ const LessonModal = ({
           second: lessonDetails.video.runtime?.seconds || 0,
         },
         content_drip_settings: {
-          unlock_date: lessonDetails.content_drip_settings?.unlock_date || '',
-          after_xdays_of_enroll: lessonDetails.content_drip_settings?.after_xdays_of_enroll || '',
-          prerequisites: lessonDetails.content_drip_settings?.prerequisites || [],
+          unlock_date: lessonDetails?.content_drip_settings?.unlock_date || '',
+          after_xdays_of_enroll: lessonDetails?.content_drip_settings?.after_xdays_of_enroll || '',
+          prerequisites: lessonDetails?.content_drip_settings?.prerequisites || [],
         },
       });
     }
@@ -164,6 +164,7 @@ const LessonModal = ({
       icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
       title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
       subtitle={subtitle}
+      maxWidth={1070}
       actions={
         isFormDirty && (
           <>

@@ -8,6 +8,8 @@ import './pages/cart';
 import './pages/checkout';
 import './_select_dd_search';
 import sprintf from '../helper/sprintf';
+import './pages/billing';
+
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
  * It's a legacy file.

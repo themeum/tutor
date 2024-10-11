@@ -142,7 +142,6 @@ const styles = {
   title: css`
 		${typography.body('medium')};
 		color: ${colorTokens.text.title};
-    text-transform: capitalize;
 	`,
   subtitle: css`
 		${styleUtils.text.ellipsis(1)}
