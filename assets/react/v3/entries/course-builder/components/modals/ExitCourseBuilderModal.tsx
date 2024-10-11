@@ -36,6 +36,7 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
             {__('Continue Editing', 'tutor')}
           </Button>
           <Button
+            variant="danger"
             size="small"
             onClick={() => {
               const isFormWpAdmin = window.location.href.includes('wp-admin');
