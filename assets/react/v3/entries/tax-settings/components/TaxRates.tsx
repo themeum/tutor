@@ -68,7 +68,7 @@ export default function TaxRates() {
       form.setValue(`rates.${activeCountryIndex}.is_same_rate`, true);
       form.setValue(
         `rates.${activeCountryIndex}.states`,
-        activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, apply_on_shipping: false })),
+        activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, apply_on_shipping: false }))
       );
     }
   }, [isSingleCountry]);
@@ -137,9 +137,18 @@ export default function TaxRates() {
                       control={form.control}
                       name={`rates.${activeCountryIndex}.rate` as 'rates.0.rate'}
                       render={(controllerProps) => {
+                        const handleChange = (value: string | number) => {
+                          if (Number(value) <= 100) {
+                            controllerProps.field.onChange(value);
+                          } else {
+                            controllerProps.field.onChange('');
+                          }
+                        };
+
                         return (
                           <FormInputWithContent
                             {...controllerProps}
+                            onChange={handleChange}
                             type="number"
                             content={'%'}
                             contentCss={styleUtils.inputCurrencyStyle}
@@ -165,7 +174,7 @@ export default function TaxRates() {
           }
 
           const stateIndex = rates[activeCountryIndex].states.findIndex(
-            (state) => String(state.id) === String(item.locationId),
+            (state) => String(state.id) === String(item.locationId)
           );
           if (stateIndex > -1) {
             return (
@@ -356,7 +365,7 @@ const styles = {
   `,
   editableWrapper: css`
     display: none;
-		width: 100%;
+    width: 100%;
 
     input {
       min-width: 60px;
