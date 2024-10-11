@@ -238,6 +238,7 @@ class OrderController {
 			$order_data['discount_type']   = 'flat';
 			$order_data['discount_amount'] = floatval( $args['sale_discount'] );
 			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
+			unset( $args['sale_discount'] );
 		}
 
 		/**
@@ -245,8 +246,10 @@ class OrderController {
 		 */
 		$tax_rate = Tax::get_user_tax_rate( $user_id );
 		if ( $tax_rate ) {
+			$order_data['tax_type']   = Tax::is_tax_included_in_price() ? 'inclusive' : 'exclusive';
 			$order_data['tax_rate']   = $tax_rate;
 			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+
 			if ( ! Tax::is_tax_included_in_price() ) {
 				$total_price              += $order_data['tax_amount'];
 				$order_data['total_price'] = $total_price;
