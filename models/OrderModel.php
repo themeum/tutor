@@ -1188,7 +1188,8 @@ class OrderModel {
 					}
 				}
 
-				$subtotal += $item_subtotal;
+				// $subtotal += $item_subtotal;
+				$subtotal += $regular_price;
 				$total    += $item_total;
 			}
 		} else {
@@ -1212,7 +1213,8 @@ class OrderModel {
 				}
 			}
 
-			$subtotal = $item_subtotal;
+			// $subtotal = $item_subtotal;
+			$subtotal = $regular_price;
 			$total    = $item_total;
 		}
 
