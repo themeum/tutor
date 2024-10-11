@@ -158,9 +158,18 @@ class Upgrader {
 		// New field added coupon_amount in orders table.
 		if ( version_compare( TUTOR_VERSION, '3.0.0-beta3', '=' ) ) {
 			$order_table = $wpdb->prefix . 'tutor_orders';
-			$new_column  = 'coupon_amount';
-			if ( ! QueryHelper::column_exist( $order_table, $new_column ) ) {
-				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $new_column DECIMAL(13, 2) DEFAULT NULL AFTER coupon_code" );//phpcs:ignore
+
+			$coupon_amount = 'coupon_amount';
+			if ( ! QueryHelper::column_exist( $order_table, $coupon_amount ) ) {
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $coupon_amount DECIMAL(13, 2) DEFAULT NULL AFTER coupon_code" );//phpcs:ignore
+			}
+
+			/**
+			 * Tax Type: inclusive, exclusive
+			 */
+			$tax_type = 'tax_type';
+			if ( ! QueryHelper::column_exist( $order_table, $tax_type ) ) {
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER discount_reason" );//phpcs:ignore
 			}
 		}
 
