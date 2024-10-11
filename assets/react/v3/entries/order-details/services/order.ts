@@ -102,6 +102,7 @@ export interface Order {
   discount_amount: number;
   discount_reason: string;
   discount_type: DiscountType;
+  tax_type?: string|null;
   tax_rate?: number;
   tax_amount?: number;
   total_price: number;

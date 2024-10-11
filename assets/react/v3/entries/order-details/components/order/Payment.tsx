@@ -160,14 +160,12 @@ function Payment() {
               </div>
             </Show>
           </div>
-          <Show when={order.tax_amount}>
-            {(taxAmount) => (
-              <div css={styles.item({ action: 'regular' })}>
-                <div>{__('Estimated tax', 'tutor')}</div>
-                <div>{order.tax_rate}%</div>
-                <div>{formatPrice(taxAmount)}</div>
-              </div>
-            )}
+          <Show when={order.tax_amount && order.tax_type==='exclusive'}>
+            <div css={styles.item({ action: 'regular' })}>
+              <div>{__('Estimated tax', 'tutor')}</div>
+              <div>{order.tax_rate}%</div>
+              <div>{order.tax_amount ? formatPrice(order.tax_amount) : ''}</div>
+            </div>
           </Show>
 
           {/* <Show when={order.fees}>
@@ -182,14 +180,12 @@ function Payment() {
 
           <div css={styles.item({ action: 'bold' })}>
             <div>{__('Total Paid', 'tutor')}</div>
-            <div />
+            <div css={styles.includeTax}>
+              <Show when={order.tax_type === 'inclusive'}>
+                {sprintf(__('Incl tax %s', 'tutor' ), order.tax_amount ? formatPrice( order.tax_amount ) : 0)}
+              </Show>
+            </div>
             <div>{formatPrice(order.total_price)}</div>
-          </div>
-
-          <div css={styles.item({ action: 'regular' })}>
-            <div>{__('Payment method', 'tutor')}</div>
-            <div></div>
-            <div>{order.payment_method}</div>
           </div>
 
           <Show when={order.refunds?.length}>
@@ -327,5 +323,9 @@ const styles = {
     ${styleUtils.resetButton};
     ${typography.small('medium')};
     color: ${colorTokens.brand.blue};
+  `,
+  includeTax: css`
+      ${typography.caption()};
+      color: ${colorTokens.text.subdued};
   `,
 };
