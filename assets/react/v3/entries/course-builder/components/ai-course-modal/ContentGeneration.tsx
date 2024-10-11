@@ -275,20 +275,52 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                               }
                             >
                               <div css={styles.item}>
-                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                {sprintf(__('%d Topics', 'tutor'), content.counts?.topics)}
+                                <SVGIcon
+                                  name={content?.counts?.topics ? 'checkFilledWhite' : 'crossCircle'}
+                                  width={24}
+                                  height={24}
+                                  data-check-icon
+                                  data-error={content?.counts?.topics === 0}
+                                />
+                                {content?.counts?.topics
+                                  ? sprintf(__('%d Topics in total', 'tutor'), content.counts?.topics)
+                                  : loadingSteps.topic.error_label}
                               </div>
                               <div css={styles.item}>
-                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                {sprintf(__('%d Lessons in total', 'tutor'), content.counts?.lessons)}
+                                <SVGIcon
+                                  name={content?.counts?.lessons ? 'checkFilledWhite' : 'crossCircle'}
+                                  width={24}
+                                  height={24}
+                                  data-check-icon
+                                  data-error={content?.counts?.lessons === 0}
+                                />
+                                {content?.counts?.lessons
+                                  ? sprintf(__('%d Lessons', 'tutor'), content.counts?.lessons)
+                                  : __('Error generating lessons.', 'tutor')}
                               </div>
                               <div css={styles.item}>
-                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                {sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)}
+                                <SVGIcon
+                                  name={content?.counts?.quizzes ? 'checkFilledWhite' : 'crossCircle'}
+                                  width={24}
+                                  height={24}
+                                  data-check-icon
+                                  data-error={content?.counts?.quizzes === 0}
+                                />
+                                {content?.counts?.quizzes
+                                  ? sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)
+                                  : __('Error generating quizzes.', 'tutor')}
                               </div>
                               <div css={styles.item}>
-                                <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
-                                {sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)}
+                                <SVGIcon
+                                  name={content?.counts?.assignments ? 'checkFilledWhite' : 'crossCircle'}
+                                  width={24}
+                                  height={24}
+                                  data-check-icon
+                                  data-error={content?.counts?.assignments === 0}
+                                />
+                                {content?.counts?.assignments
+                                  ? sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)
+                                  : __('Error generating assignments.', 'tutor')}
                               </div>
                             </Show>
                           }
@@ -350,7 +382,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                             }}
                           >
                             <SVGIcon name="magicWand" width={24} height={24} />
-                            {__('Create a new course', 'tutor')}
+                            {__('Generate a new course', 'tutor')}
                           </MagicButton>
                         </Show>
 

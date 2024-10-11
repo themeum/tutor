@@ -73,7 +73,7 @@ const icons = {
   },
   tutor_h5p_quiz: {
     name: 'interactiveQuiz',
-    color: colorTokens.design.warning,
+    color: '#C984FE',
   },
 } as const;
 
