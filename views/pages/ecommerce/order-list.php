@@ -84,7 +84,7 @@ $available_status = array(
 								</div>
 							</th>
 							<th class="tutor-table-rows-sorting">
-								<?php esc_html_e( 'Order ID', 'tutor' ); ?>
+								<?php esc_html_e( 'ID', 'tutor' ); ?>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
 							<th>
@@ -95,10 +95,13 @@ $available_status = array(
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
 							<th>
+								<?php esc_html_e( 'Method', 'tutor' ); ?>
+							</th>
+							<th>
 								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
 							</th>
 							<th>
-								<?php esc_html_e( 'Order Status', 'tutor' ); ?>
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</th>
 							<th class="tutor-table-rows-sorting">
 								<?php esc_html_e( 'Total', 'tutor' ); ?>
@@ -128,7 +131,7 @@ $available_status = array(
 											<?php echo esc_html( '#' . $order->id ); ?>
 										</div>
 									</td>
-									
+
 									<td>
 										<div class="tutor-d-flex tutor-align-center">
 											<?php
@@ -149,6 +152,12 @@ $available_status = array(
 										<span class="tutor-fw-normal tutor-fs-7">
 											<?php echo esc_attr( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
 										</span>
+									</td>
+
+									<td>
+										<div class="tutor-fs-7">
+											<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
+										</div>
 									</td>
 
 									<td>
