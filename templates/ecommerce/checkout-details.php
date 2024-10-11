@@ -83,9 +83,12 @@ if ( ! empty( $country ) ) {
 						}
 					}
 
-					$subtotal    = $sale_price ? $sale_price : $regular_price;
-					$subtotal   += $enrollment_fee;
-					$grand_total = $applied_coupon->is_applied ? $subtotal - $applied_coupon->deducted_price : $subtotal;
+					$sale_discount += $sale_price ? $regular_price - $sale_price : 0;
+					$subtotal       = $regular_price;
+					$subtotal      += $enrollment_fee;
+
+					$coupon_price = $applied_coupon->is_applied ? $applied_coupon->deducted_price : 0;
+					$grand_total  = $subtotal - ( $sale_discount + $coupon_price );
 
 					array_push( $object_ids, $plan_info->id );
 					?>
@@ -116,7 +119,7 @@ if ( ! empty( $country ) ) {
 					</div>
 					<?php if ( $enrollment_fee > 0 ) : ?>
 						<div class="tutor-checkout-enrollment-fee">
-							<div>
+							<div class="tutor-checkout-course-title">
 								<?php echo esc_html_e( 'Enrollment Fee', 'tutor' ); ?>
 							</div>
 							<div class="tutor-text-right">
