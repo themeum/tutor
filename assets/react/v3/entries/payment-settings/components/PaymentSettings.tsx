@@ -1,18 +1,12 @@
 import Show from '@/v3/shared/controls/Show';
-import { getCountryByCode } from '@/v3/shared/utils/countries';
-import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
-import Card from '../molecules/Card';
-import EmptyState from '../molecules/EmptyState';
 import { type PaymentSettings, usePaymentSettingsQuery } from '../services/payment';
 import PaymentMethods from './PaymentMethods';
 

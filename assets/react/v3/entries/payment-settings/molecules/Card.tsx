@@ -22,6 +22,8 @@ interface CardProps {
   subscription?: boolean;
   collapsed?: boolean;
   noSeparator?: boolean;
+  dataAttribute?: string;
+  style?: React.CSSProperties;
 }
 
 const Card = ({
@@ -33,9 +35,15 @@ const Card = ({
   subscription = false,
   collapsed = false,
   noSeparator = false,
+  style = {},
+  dataAttribute,
 }: CardProps) => {
   const [isCollapsed, setIsCollapsed] = useState<boolean>(collapsed);
   const cardRef = useRef<HTMLDivElement>(null);
+
+  const additionalAttributes = {
+    ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
+  };
 
   const [collapseAnimation, collapseAnimate] = useSpring(
     {
@@ -47,9 +55,10 @@ const Card = ({
         easing: (t) => t * (2 - t),
       },
     },
-    [isCollapsed]
+    [isCollapsed],
   );
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(cardRef.current)) {
       collapseAnimate.start({
@@ -60,7 +69,7 @@ const Card = ({
   }, [isCollapsed]);
 
   return (
-    <div css={styles.wrapper(hasBorder)}>
+    <div css={styles.wrapper(hasBorder)} {...additionalAttributes} style={style}>
       <div css={styles.headerWrapper(isCollapsed || noSeparator)}>
         <h5 css={styles.title}>
           {titleIcon && (
@@ -101,11 +110,13 @@ const styles = {
     background-color: ${colorPalate.basic.white};
     box-shadow: ${shadow.card};
 
-    ${hasBorder &&
-    css`
-      box-shadow: none;
-      border: 1px solid ${colorTokens.stroke.divider};
-    `}
+    ${
+      hasBorder &&
+      css`
+        box-shadow: none;
+        border: 1px solid ${colorTokens.stroke.divider};
+      `
+    }
   `,
   headerWrapper: (collapsed: boolean) => css`
     display: flex;
@@ -114,10 +125,12 @@ const styles = {
     gap: ${spacing[8]};
     padding: ${spacing[24]};
 
-    ${!collapsed &&
-    css`
-      border-bottom: 1px solid ${colorTokens.stroke.divider};
-    `}
+    ${
+      !collapsed &&
+      css`
+        border-bottom: 1px solid ${colorTokens.stroke.divider};
+      `
+    }
   `,
   title: css`
     ${typography.body('medium')};
@@ -140,10 +153,12 @@ const styles = {
     color: ${colorTokens.icon.brand};
     transition: color 0.3s ease-in-out;
 
-    ${isCollapsed &&
-    css`
-      color: ${colorTokens.icon.default};
-    `}
+    ${
+      isCollapsed &&
+      css`
+        color: ${colorTokens.icon.default};
+      `
+    }
   `,
   actions: css`
     display: flex;
