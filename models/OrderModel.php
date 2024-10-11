@@ -637,15 +637,15 @@ class OrderModel {
 		try {
 			$wpdb->query( 'START TRANSACTION' );
 
-			foreach ( $order_ids as $id ) {
+			foreach ( $order_ids as $order_id ) {
 				// Delete enrollments if exist.
-				$enrollment_ids = $this->get_enrollment_ids( $id );
+				$enrollment_ids = $this->get_enrollment_ids( $order_id );
 				if ( $enrollment_ids ) {
 					QueryHelper::bulk_delete_by_ids( $wpdb->posts, $enrollment_ids );
 					// After enrollment delete, delete the course progress.
-					foreach ( $enrollment_ids as $id ) {
-						$course_id  = get_post_field( 'post_parent', $id );
-						$student_id = get_post_field( 'post_author', $id );
+					foreach ( $enrollment_ids as $enrollment_id ) {
+						$course_id  = get_post_field( 'post_parent', $enrollment_id );
+						$student_id = get_post_field( 'post_author', $enrollment_id );
 
 						if ( $course_id && $student_id ) {
 							tutor_utils()->delete_course_progress( $course_id, $student_id );
@@ -657,13 +657,13 @@ class OrderModel {
 				QueryHelper::delete(
 					$wpdb->prefix . 'tutor_earnings',
 					array(
-						'order_id'   => $id,
+						'order_id'   => $order_id,
 						'process_by' => 'Tutor',
 					)
 				);
 
 				// Now delete order.
-				QueryHelper::delete( $this->table_name, array( 'id' => $id ) );
+				QueryHelper::delete( $this->table_name, array( 'id' => $order_id ) );
 			}
 
 			$wpdb->query( 'COMMIT' );

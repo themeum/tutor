@@ -914,8 +914,10 @@ class OrderController {
 		}
 
 		if ( $response ) {
-			foreach ( $bulk_ids as $id ) {
-				do_action( 'tutor_order_payment_status_changed', $id, '', $bulk_action );
+			if ( 'delete' !== $bulk_action ) {
+				foreach ( $bulk_ids as $id ) {
+					do_action( 'tutor_order_payment_status_changed', $id, '', $bulk_action );
+				}
 			}
 			wp_send_json_success( __( 'Order updated successfully.', 'tutor' ) );
 		} else {
