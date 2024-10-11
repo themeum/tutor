@@ -202,13 +202,14 @@ class OrderController {
 		if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
 			$plan = apply_filters( 'tutor_checkout_plan_info', null, $items[0]['item_id'] );
 			if ( $plan ) {
-				$subtotal_price = $this->model::calculate_order_price( $items )->subtotal;
+				$item_price     = $this->model::calculate_order_price( $items );
+				$subtotal_price = $item_price->subtotal;
+				$total_price    = $item_price->total;
 
 				if ( $this->model::TYPE_SUBSCRIPTION === $order_type && $plan->enrollment_fee ) {
 					$subtotal_price += $plan->enrollment_fee;
+					$total_price    += $plan->enrollment_fee;
 				}
-
-				$total_price = $subtotal_price;
 			}
 		} else {
 			$item_price     = $this->model::calculate_order_price( $items );

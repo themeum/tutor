@@ -182,7 +182,7 @@ function Payment() {
             <div>{__('Total Paid', 'tutor')}</div>
             <div css={styles.includeTax}>
               <Show when={order.tax_type === 'inclusive'}>
-                {sprintf(__('Incl tax %s', 'tutor' ), order.tax_amount ? formatPrice( order.tax_amount ) : 0)}
+                {sprintf(__('Incl. tax %s', 'tutor' ), order.tax_amount ? formatPrice( order.tax_amount ) : 0)}
               </Show>
             </div>
             <div>{formatPrice(order.total_price)}</div>

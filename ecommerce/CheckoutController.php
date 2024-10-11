@@ -344,6 +344,7 @@ class CheckoutController {
 		$items          = array();
 		$subtotal_price = $order['subtotal_price'];
 		$total_price    = $order['total_price'];
+		$grand_total    = $total_price;
 		$order_type     = $order['order_type'];
 
 		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
@@ -389,6 +390,14 @@ class CheckoutController {
 				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $plan_id );
 				$item_name = $plan_info->plan_name ?? '';
 
+				$items[] = array(
+					'item_id'          => $item->item_id,
+					'item_name'        => $item_name,
+					'regular_price'    => $item->sale_price > 0 ? $item->sale_price : $item->regular_price,
+					'quantity'         => 1,
+					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : $item->discount_price,
+				);
+
 				if ( $plan_info && property_exists( $plan_info, 'enrollment_fee' ) && $plan_info->enrollment_fee > 0 ) {
 					$enrollment_item = array(
 						'item_id'          => 0,
@@ -397,25 +406,24 @@ class CheckoutController {
 						'quantity'         => 1,
 						'discounted_price' => null,
 					);
+
+					$items[] = $enrollment_item;
 				}
 			} else {
-				$item_name = get_the_title( $item->item_id );
+				// Single order item.
+				$items[] = array(
+					'item_id'          => $item->item_id,
+					'item_name'        => get_the_title( $item->item_id ),
+					'regular_price'    => tutor_get_locale_price( $item->sale_price > 0 ? $item->sale_price : $item->regular_price ),
+					'quantity'         => 1,
+					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
+				);
 			}
-
-			$items[] = array(
-				'item_id'          => $item->item_id,
-				'item_name'        => $item_name,
-				'regular_price'    => tutor_get_locale_price( $item->sale_price > 0 ? $item->sale_price : $item->regular_price ),
-				'quantity'         => 1,
-				'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
-			);
 		}
 
-		if ( ! empty( $enrollment_item ) ) {
-			$items[] = $enrollment_item;
-		}
+		if ( $order['tax_amount'] && ! Tax::is_tax_included_in_price() ) {
+			$grand_total += $order['tax_amount'];
 
-		if ( $order['tax_amount'] ) {
 			/* translators: %s: tax rate */
 			$tax_item = sprintf( __( 'Tax (%s)', 'tutor' ), $order['tax_rate'] . '%' );
 			$items[]  = array(

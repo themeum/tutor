@@ -217,7 +217,7 @@ if ( ! empty( $country ) ) {
 
 			<?php if ( $sale_discount > 0 ) : ?>
 			<div class="tutor-checkout-summary-item">
-				<div class="tutor-fw-medium"><?php esc_html_e( 'Sale discount', 'tutor' ); ?></div>
+				<div><?php esc_html_e( 'Sale discount', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold">
 					- <?php echo tutor_get_formatted_price( $sale_discount ); //phpcs:ignore?>
 				</div>
@@ -260,7 +260,7 @@ if ( ! empty( $country ) ) {
 				?>
 			<div class="tutor-checkout-summary-item">
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
-				<div class="tutor-checkout-tax-amount"><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
+				<div class="tutor-fw-bold"><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
 			</div>
 			<?php endif; ?>
 		</div>
