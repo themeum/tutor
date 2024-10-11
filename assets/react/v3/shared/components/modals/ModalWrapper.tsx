@@ -45,7 +45,11 @@ const ModalWrapper = ({
         maxWidth,
       })}
     >
-      <div css={styles.header}>
+      <div
+        css={styles.header({
+          hasHeaderChildren: !!headerChildren,
+        })}
+      >
         <Show
           when={entireHeader}
           fallback={
@@ -113,9 +117,13 @@ const styles = {
       width: 90%;
     }
   `,
-  header: css`
+  header: ({
+    hasHeaderChildren,
+  }: {
+    hasHeaderChildren: boolean;
+  }) => css`
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: ${hasHeaderChildren ? '1fr auto 1fr' : '1fr auto auto'};
     align-items: center;
     width: 100%;
     height: ${modal.HEADER_HEIGHT}px;
