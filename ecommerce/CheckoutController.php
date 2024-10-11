@@ -375,12 +375,24 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		foreach ( $order['items'] as $item ) {
-			$item      = (object) $item;
-			$item_name = '';
+			$item            = (object) $item;
+			$item_name       = '';
+			$enrollment_item = null;
+
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
 				$plan_id   = $item->item_id;
 				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $plan_id );
 				$item_name = $plan_info->plan_name ?? '';
+
+				if ( $plan_info && property_exists( $plan_info, 'enrollment_fee' ) && $plan_info->enrollment_fee > 0 ) {
+					$enrollment_item = array(
+						'item_id'          => 0,
+						'item_name'        => 'Enrollment Fee',
+						'regular_price'    => floatval( $plan_info->enrollment_fee ),
+						'quantity'         => 1,
+						'discounted_price' => null,
+					);
+				}
 			} else {
 				$item_name = get_the_title( $item->item_id );
 			}
@@ -392,6 +404,10 @@ class CheckoutController {
 				'quantity'         => 1,
 				'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
 			);
+		}
+
+		if ( ! empty( $enrollment_item ) ) {
+			$items[] = $enrollment_item;
 		}
 
 		if ( $order['tax_amount'] ) {
@@ -525,27 +541,6 @@ class CheckoutController {
 		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
 								? $payment_gateways[ $payment_method ]['gateway_class']
 								: null;
-
-		// Add enrollment fee with as a line item.
-		if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-			$items = (array) $payment_data->items;
-			foreach ( $items as $item ) {
-				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
-				if ( $plan && property_exists( $plan, 'enrollment_fee' ) && $plan->enrollment_fee > 0 ) {
-					$new_item = array(
-						'item_id'          => 0,
-						'item_name'        => 'Enrollment Fee',
-						'regular_price'    => floatval( $plan->enrollment_fee ?? 0 ),
-						'quantity'         => 1,
-						'discounted_price' => floatval( $plan->enrollment_fee ?? 0 ),
-					);
-
-					$items[] = $new_item;
-				}
-			}
-
-			$payment_data->items = (object) $items;
-		}
 
 		if ( $payment_gateway_class ) {
 			try {
