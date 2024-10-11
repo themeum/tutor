@@ -246,7 +246,7 @@ class OrderController {
 		 */
 		$tax_rate = Tax::get_user_tax_rate( $user_id );
 		if ( $tax_rate ) {
-			$order_data['tax_type']   = Tax::is_tax_included_in_price() ? 'inclusive' : 'exclusive';
+			$order_data['tax_type']   = Tax::get_tax_type();
 			$order_data['tax_rate']   = $tax_rate;
 			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
 

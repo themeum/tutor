@@ -21,6 +21,12 @@ class Tax {
 	use JsonResponse;
 
 	/**
+	 * Tax type const.
+	 */
+	const TYPE_INCLUSIVE = 'inclusive';
+	const TYPE_EXCLUSIVE = 'exclusive';
+
+	/**
 	 * Register hooks and dependencies.
 	 *
 	 * @since 3.0.0
@@ -169,6 +175,17 @@ class Tax {
 	 */
 	public static function is_tax_included_in_price() {
 		return (bool) self::get_setting( 'is_tax_included_in_price' );
+	}
+
+	/**
+	 * Get tax type.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public static function get_tax_type() {
+		return self::is_tax_included_in_price() ? self::TYPE_INCLUSIVE : self::TYPE_EXCLUSIVE;
 	}
 
 	/**
