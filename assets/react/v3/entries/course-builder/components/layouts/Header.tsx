@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
+import { useModal } from '@/v3/shared/components/modals/Modal';
 import config, { tutorConfig } from '@Config/config';
 import { TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
@@ -20,7 +22,7 @@ import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
-import Tooltip from '@/v3/shared/atoms/Tooltip';
+import ExitCourseBuilderModal from '../modals/ExitCourseBuilderModal';
 import Tracker from './Tracker';
 
 const courseId = getCourseId();
@@ -31,6 +33,7 @@ const Header = () => {
   const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private' | 'trash'>(
     form.watch('post_status'),
   );
+  const { showModal } = useModal();
 
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
@@ -39,7 +42,9 @@ const Header = () => {
   const postStatus = useWatch({ name: 'post_status' });
   const postVisibility = useWatch({ name: 'visibility' });
   const postDate = useWatch({ name: 'post_date' });
+
   const isPostDateDirty = form.formState.dirtyFields.post_date;
+  const isFormDirty = form.formState.isDirty;
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
@@ -270,11 +275,17 @@ const Header = () => {
             type="button"
             css={styles.closeButton}
             onClick={() => {
-              const isFormWpAdmin = window.location.href.includes('wp-admin');
+              if (isFormDirty) {
+                showModal({
+                  component: ExitCourseBuilderModal,
+                });
+              } else {
+                const isFormWpAdmin = window.location.href.includes('wp-admin');
 
-              window.location.href = isFormWpAdmin
-                ? tutorConfig.backend_course_list_url
-                : tutorConfig.frontend_course_list_url;
+                window.location.href = isFormWpAdmin
+                  ? tutorConfig.backend_course_list_url
+                  : tutorConfig.frontend_course_list_url;
+              }
             }}
           >
             <SVGIcon name="cross" width={32} height={32} />
