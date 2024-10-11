@@ -7,7 +7,9 @@ import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
+import { useModal } from '@/v3/shared/components/modals/Modal';
 import config, { tutorConfig } from '@Config/config';
 import { TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
@@ -20,8 +22,6 @@ import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
-import Tooltip from '@/v3/shared/atoms/Tooltip';
-import { useModal } from '@/v3/shared/components/modals/Modal';
 import ExitCourseBuilderModal from '../modals/ExitCourseBuilderModal';
 import Tracker from './Tracker';
 

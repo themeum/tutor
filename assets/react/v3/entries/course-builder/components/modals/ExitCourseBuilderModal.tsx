@@ -1,12 +1,13 @@
-import Button from '@Atoms/Button';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import Button from '@Atoms/Button';
+import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
+
+import { typography } from '@/v3/shared/config/typography';
 import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
-import { typography } from '@/v3/shared/config/typography';
 
 interface ExitCourseBuilderModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
