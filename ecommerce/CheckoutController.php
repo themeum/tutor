@@ -284,9 +284,9 @@ class CheckoutController {
 		}
 
 		$args = array(
-			'payment_method' => $payment_method,
-			'coupon_amount'  => $coupon_amount,
-			'sale_discount'  => $sale_discount,
+			'payment_method'  => $payment_method,
+			'coupon_amount'   => $coupon_amount,
+			'discount_amount' => $sale_discount,
 		);
 
 		if ( empty( $errors ) ) {
