@@ -40,6 +40,7 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 
 $coupon_code            = Input::sanitize_request_data( 'coupon_code', null );
 $has_manual_coupon_code = ! empty( $coupon_code );
+$show_coupon_box        = true;
 
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
 $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
@@ -90,6 +91,8 @@ if ( ! empty( $country ) ) {
 					$coupon_price = $applied_coupon->is_applied ? $applied_coupon->deducted_price : 0;
 					$grand_total  = $subtotal - ( $sale_discount + $coupon_price );
 
+					$show_coupon_box = $sale_price ? false : true;
+
 					array_push( $object_ids, $plan_info->id );
 					?>
 				<div class="tutor-checkout-course-item">
@@ -139,6 +142,11 @@ if ( ! empty( $country ) ) {
 										: $coupon_model->apply_coupon_discount( $course_ids, $coupon_code, $order_type );
 						?>
 						<?php
+						if ( 1 === count( $course_list ) ) {
+							$course_price    = tutor_utils()->get_raw_course_price( $course_list[0]->ID );
+							$show_coupon_box = $course_price->sale_price ? false : true;
+						}
+
 						foreach ( $course_list as $key => $course ) :
 							$has_automatic_coupon = false;
 							$course_price         = tutor_utils()->get_raw_course_price( $course->ID );
@@ -224,7 +232,7 @@ if ( ! empty( $country ) ) {
 			</div>
 			<?php endif ?>
 
-			<?php if ( ! $applied_coupon->is_applied ) : ?>
+			<?php if ( $show_coupon_box && ! $applied_coupon->is_applied ) : ?>
 			<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 				<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
 				<button type="button" id="tutor-toggle-coupon-button" class="tutor-btn tutor-btn-link">
