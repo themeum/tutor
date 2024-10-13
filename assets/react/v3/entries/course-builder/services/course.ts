@@ -520,7 +520,12 @@ export const useUpdateCourseMutation = () => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      let errorMessage = error.response.data.message;
+      if (error.response.data.status_code === 422 && error.response.data.data) {
+        errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
+      }
+
+      showToast({ type: 'danger', message: errorMessage ?? __('Something went wrong', 'tutor') });
     },
   });
 };
@@ -571,7 +576,7 @@ export const useWcProductDetailsQuery = (
   productId: string,
   courseId: string,
   coursePriceType: string,
-  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined,
+  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined
 ) => {
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],
@@ -586,7 +591,7 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
     {
       action: 'tutor_course_list',
       exclude: excludedCourseIds,
-    },
+    }
   );
 };
 
@@ -750,10 +755,7 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
   });
 };
 
-const saveOpenAiSettingsKey = (payload: {
-  chatgpt_api_key: string;
-  chatgpt_enable: 1 | 0;
-}) => {
+const saveOpenAiSettingsKey = (payload: { chatgpt_api_key: string; chatgpt_enable: 1 | 0 }) => {
   return wpAjaxInstance.post<
     {
       chatgpt_api_key: string;

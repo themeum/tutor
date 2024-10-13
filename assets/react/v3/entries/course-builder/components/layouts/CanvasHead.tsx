@@ -1,3 +1,4 @@
+import Show from '@/v3/shared/controls/Show';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, spacing } from '@Config/styles';
@@ -31,9 +32,11 @@ const CanvasHead = ({ title, backUrl, rightButton, isExternalUrl }: CanvasHeadPr
   return (
     <div css={styles.wrapper}>
       <div css={styles.left}>
-        <Button variant="text" buttonCss={styles.button} onClick={handleBackClick}>
-          <SVGIcon name="back" width={32} height={32} />
-        </Button>
+        <Show when={backUrl}>
+          <Button variant="text" buttonCss={styles.button} onClick={handleBackClick}>
+            <SVGIcon name="back" width={32} height={32} />
+          </Button>
+        </Show>
         <h6 css={styles.title}>{title}</h6>
       </div>
       {rightButton}

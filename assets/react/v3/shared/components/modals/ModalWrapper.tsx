@@ -17,6 +17,7 @@ interface ModalWrapperProps {
   actions?: React.ReactNode;
   headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
+  maxWidth?: number;
 }
 
 const ModalWrapper = ({
@@ -28,6 +29,7 @@ const ModalWrapper = ({
   headerChildren,
   entireHeader,
   actions,
+  maxWidth = 1218,
 }: ModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -38,8 +40,16 @@ const ModalWrapper = ({
   }, []);
 
   return (
-    <div css={styles.container}>
-      <div css={styles.header}>
+    <div
+      css={styles.container({
+        maxWidth,
+      })}
+    >
+      <div
+        css={styles.header({
+          hasHeaderChildren: !!headerChildren,
+        })}
+      >
         <Show
           when={entireHeader}
           fallback={
@@ -86,13 +96,17 @@ const ModalWrapper = ({
 export default ModalWrapper;
 
 const styles = {
-  container: css`
+  container: ({
+    maxWidth,
+  }: {
+    maxWidth?: number;
+  }) => css`
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
     margin-top: ${modal.MARGIN_TOP}px;
     height: 100%;
-    max-width: 1218px;
+    max-width: ${maxWidth}px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
@@ -103,9 +117,13 @@ const styles = {
       width: 90%;
     }
   `,
-  header: css`
+  header: ({
+    hasHeaderChildren,
+  }: {
+    hasHeaderChildren: boolean;
+  }) => css`
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: ${hasHeaderChildren ? '1fr auto 1fr' : '1fr auto auto'};
     align-items: center;
     width: 100%;
     height: ${modal.HEADER_HEIGHT}px;
