@@ -587,8 +587,19 @@ class Settings {
 	 *
 	 * @return boolean
 	 */
-	public static function is_active( $gateway ) {
-		return tutor_utils()->get_option( "is_enable_{$gateway}_payment", false );
+	public static function is_active( string $gateway ) : bool {
+		$payments = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
+		$payments = json_decode( stripslashes( $payments ) );
+
+		if ( $payments ) {
+			foreach ( $payments->payment_methods as $method ) {
+				if ( $method->name === $gateway ) {
+					return (bool) $method->is_active;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	/**
