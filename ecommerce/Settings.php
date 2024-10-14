@@ -33,6 +33,7 @@ class Settings {
 		add_action( 'wp_ajax_tutor_get_tax_settings', array( $this, 'ajax_get_tax_settings' ) );
 
 		add_filter( 'tutor_option_input', array( $this, 'format_ecommerce_tax_data' ) );
+		add_filter( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
 	}
 
 
@@ -798,5 +799,20 @@ class Settings {
 		}
 
 		$this->json_response( __( 'Success', 'tutor' ), $tax_settings );
+	}
+
+	/**
+	 * Ajax handler to get payment settings
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json
+	 */
+	public function ajax_get_tutor_payment_settings() {
+		tutor_utils()->checking_nonce();
+		tutor_utils()->check_current_user_capability();
+
+		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
+		$this->json_response( __( 'Success', 'tutor' ), $settings );
 	}
 }
