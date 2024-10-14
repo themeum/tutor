@@ -82,7 +82,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
                   label={__('Discount Type', 'tutor')}
                   options={discountTypeOptions}
                   placeholder={__('Select discount type', 'tutor')}
-                  onChange={ _ =>{ form.setFocus('amount') }}
+                  onChange={ ()=>{ form.setFocus('amount') }}
                 />
               )}
             />
