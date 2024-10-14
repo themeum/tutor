@@ -1,4 +1,4 @@
-import countriesData from '@/v3/shared/data/countries.json';
+import countriesData from '@Assets/json/countries.json';
 
 import { Option } from './types';
 

@@ -520,7 +520,7 @@ const getH5PLessonContents = (search: string) => {
 
 export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
   return useQuery({
-    queryKey: ['H5PQuizContents', search],
+    queryKey: ['H5PLessonContents', search],
     queryFn: () => getH5PLessonContents(search),
     enabled: contentType === 'lesson',
   });

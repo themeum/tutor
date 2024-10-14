@@ -77,54 +77,21 @@ const CourseSettings = () => {
       <div css={styles.courseSettings}>
         <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
 
-        {activeTab === 'general' && (
-          <div css={styles.settingsOptions}>
-            <Controller
-              name="maximum_students"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormInput
-                  {...controllerProps}
-                  label={__('Maximum Student', 'tutor')}
-                  helpText={__('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor')}
-                  placeholder="0"
-                  type="number"
-                  isClearable
-                  selectOnFocus
-                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                />
-              )}
-            />
-
-            <Controller
-              name="course_level"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormSelectInput
-                  {...controllerProps}
-                  label={__('Difficulty Level', 'tutor')}
-                  placeholder={__('Select Difficulty Level', 'tutor')}
-                  helpText={__('Course difficulty level', 'tutor')}
-                  options={difficultyLevelOptions}
-                  isClearable={false}
-                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                />
-              )}
-            />
-
-            <Show when={tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
+        <div
+          css={{
+            borderLeft: `1px solid ${colorTokens.stroke.divider}`,
+          }}
+        >
+          {activeTab === 'general' && (
+            <div css={styles.settingsOptions}>
               <Controller
-                name="enrollment_expiry"
+                name="maximum_students"
                 control={form.control}
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
-                    label={__('Enrollment Expiration', 'tutor')}
-                    helpText={__(
-                      "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                      'tutor',
-                    )}
-                    disabled={priceCategory === 'subscription'}
+                    label={__('Maximum Student', 'tutor')}
+                    helpText={__('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor')}
                     placeholder="0"
                     type="number"
                     isClearable
@@ -133,71 +100,110 @@ const CourseSettings = () => {
                   />
                 )}
               />
-            </Show>
 
-            <div css={styles.courseAndQna}>
               <Controller
-                name="is_public_course"
+                name="course_level"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormSwitch
+                  <FormSelectInput
                     {...controllerProps}
-                    label={__('Public Course', 'tutor')}
-                    helpText={__('Make This Course Public. No Enrollment Required.', 'tutor')}
+                    label={__('Difficulty Level', 'tutor')}
+                    placeholder={__('Select Difficulty Level', 'tutor')}
+                    helpText={__('Course difficulty level', 'tutor')}
+                    options={difficultyLevelOptions}
+                    isClearable={false}
                     loading={!!isCourseDetailsLoading && !controllerProps.field.value}
                   />
                 )}
               />
 
-              <Show when={tutorConfig.settings?.enable_q_and_a_on_course === 'on'}>
+              <Show when={tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
                 <Controller
-                  name="enable_qna"
+                  name="enrollment_expiry"
                   control={form.control}
                   render={(controllerProps) => (
-                    <FormSwitch
+                    <FormInput
                       {...controllerProps}
-                      label={__('Q&A', 'tutor')}
-                      helpText={__('Enable Q&A section for your course', 'tutor')}
+                      label={__('Enrollment Expiration', 'tutor')}
+                      helpText={__(
+                        "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
+                        'tutor',
+                      )}
+                      disabled={priceCategory === 'subscription'}
+                      placeholder="0"
+                      type="number"
+                      isClearable
+                      selectOnFocus
                       loading={!!isCourseDetailsLoading && !controllerProps.field.value}
                     />
                   )}
                 />
               </Show>
-            </div>
-          </div>
-        )}
 
-        {activeTab === 'content_drip' && <ContentDripSettings />}
-
-        {activeTab === 'buddyPress' && (
-          <div css={styles.settingsOptions}>
-            <Controller
-              name="enable_tutor_bp"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
-              )}
-            />
-
-            <Controller
-              name="bp_attached_group_ids"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormMultiSelectInput
-                  {...controllerProps}
-                  label={__('BuddyPress Groups', 'tutor')}
-                  helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
-                  placeholder={__('Search BuddyPress Groups', 'tutor')}
-                  options={(tutorConfig.bp_groups || []).map((group) => ({
-                    label: group.name,
-                    value: String(group.id),
-                  }))}
-                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+              <div css={styles.courseAndQna}>
+                <Controller
+                  name="is_public_course"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormSwitch
+                      {...controllerProps}
+                      label={__('Public Course', 'tutor')}
+                      helpText={__('Make This Course Public. No Enrollment Required.', 'tutor')}
+                      loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                    />
+                  )}
                 />
-              )}
-            />
-          </div>
-        )}
+
+                <Show when={tutorConfig.settings?.enable_q_and_a_on_course === 'on'}>
+                  <Controller
+                    name="enable_qna"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormSwitch
+                        {...controllerProps}
+                        label={__('Q&A', 'tutor')}
+                        helpText={__('Enable Q&A section for your course', 'tutor')}
+                        loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                      />
+                    )}
+                  />
+                </Show>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'content_drip' && <ContentDripSettings />}
+
+          {activeTab === 'buddyPress' && (
+            <div css={styles.settingsOptions}>
+              <Controller
+                name="enable_tutor_bp"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Enable BuddyPress group activity feeds', 'tutor')} />
+                )}
+              />
+
+              <Controller
+                name="bp_attached_group_ids"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormMultiSelectInput
+                    {...controllerProps}
+                    label={__('BuddyPress Groups', 'tutor')}
+                    helpText={__('Assign this course to BuddyPress Groups', 'tutor')}
+                    placeholder={__('Search BuddyPress Groups', 'tutor')}
+                    options={(tutorConfig.bp_groups || []).map((group) => ({
+                      label: group.name,
+                      value: String(group.id),
+                    }))}
+                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                  />
+                )}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

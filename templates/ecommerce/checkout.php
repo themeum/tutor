@@ -27,7 +27,6 @@ $courses         = $get_cart['courses'];
 $total_count     = $courses['total_count'];
 $course_list     = $courses['results'];
 $subtotal        = 0;
-$tax_amount      = 0; // @TODO: Need to implement later.
 $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
 $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
@@ -46,7 +45,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
-			<div class="tutor-col-md-6">
+			<div class="tutor-col-md-6" tutor-checkout-details>
 				<?php
 				$file = __DIR__ . '/checkout-details.php';
 				if ( file_exists( $file ) ) {
@@ -66,7 +65,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
 						</h5>
-						<div class="tutor-checkout-payment-options">
+						<div class="tutor-checkout-payment-options tutor-mb-40">
 							<input type="hidden" name="payment_type">
 							<?php
 							$payment_gateways = tutor_get_all_active_payment_gateways();
@@ -116,7 +115,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						<div class="tutor-payment-instructions tutor-d-none"></div>
 
 						<?php if ( null !== $tutor_toc_page_link ) : ?>
-							<div class="tutor-mt-40">
+							<div class="tutor-mb-16">
 								<div class="tutor-form-check tutor-d-flex">
 									<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
 									<label for="tutor_checkout_agree_to_terms">
@@ -142,7 +141,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
 						if ( $pay_now_errors || $pay_now_alert_msg ) :
 							?>
-						<div class="tutor-mb-32 tutor-break-word">
+						<div class="tutor-break-word">
 							<?php
 							if ( ! empty( $pay_now_alert_msg ) ) :
 								list( $alert, $message ) = array_values( $pay_now_alert_msg );
@@ -165,7 +164,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						<?php endif; ?>
 						<!-- handle errors end -->
 
-						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center tutor-mt-16">
+						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
 							<?php esc_html_e( 'Pay Now', 'tutor' ); ?>
 						</button>
 					</div>

@@ -121,6 +121,7 @@ module.exports = (env, options) => {
 					},
 					alias: {
 						'@': path.resolve(__dirname, './assets/react/'),
+						'@Assets': path.resolve(__dirname, './assets/'),
 						'@Atoms': path.resolve(__dirname, './assets/react/v3/shared/atoms/'),
 						'@Molecules': path.resolve(__dirname, './assets/react/v3/shared/molecules/'),
 						'@Components': path.resolve(__dirname, './assets/react/v3/shared/components/'),

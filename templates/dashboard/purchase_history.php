@@ -102,7 +102,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					<th width="10%">
 						<?php esc_html_e( 'Order ID', 'tutor' ); ?>
 					</th>
-					<th width="40%">
+					<th width="30%">
 						<?php esc_html_e( 'Course Name', 'tutor' ); ?>
 					</th>
 					<th>
@@ -110,6 +110,9 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					</th>
 					<th>
 						<?php esc_html_e( 'Price', 'tutor' ); ?>
+					</th>
+					<th>
+						<?php esc_html_e( 'Method', 'tutor' ); ?>
 					</th>
 					<th>
 						<?php esc_html_e( 'Status', 'tutor' ); ?>
@@ -126,9 +129,12 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								?>
 								<tr>
 								<td>
-									#<?php echo esc_html( $order->id ); ?>
+									<div class="tutor-fs-7">
+										#<?php echo esc_html( $order->id ); ?>
+									</div>
 								</td>
 								<td>
+									<div class="tutor-fs-7">
 									<?php
 									$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 									foreach ( $items as $item ) {
@@ -143,12 +149,22 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										<?php
 									}
 									?>
+									</div>
 								</td>
 								<td>
+									<div class="tutor-fs-7">
 									<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
+									</div>
 								</td>
 								<td>
-									<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
+									<div class="tutor-fs-7">
+										<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
+									</div>
+								</td>
+								<td>
+									<div class="tutor-fs-7">
+										<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
+									</div>
 								</td>
 								<td>
 								<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) ); ?>
@@ -235,7 +251,6 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								<td>
 									<span class="tutor-badge-label label-<?php echo esc_attr( $badge_class ); ?> tutor-m-4"><?php echo esc_html( $order_status_text ); ?></span>
 								</td>
-								
 								<td>
 									<?php
 										$pay_now_url = '';

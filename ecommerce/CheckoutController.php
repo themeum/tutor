@@ -10,8 +10,6 @@
 
 namespace Tutor\Ecommerce;
 
-use Tutor\Ecommerce\Manager\Checkout;
-use Tutor\Helpers\SessionHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -86,6 +84,7 @@ class CheckoutController {
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
+			add_action( 'wp_ajax_tutor_get_checkout_html', array( $this, 'ajax_get_checkout_html' ) );
 		}
 	}
 
@@ -131,6 +130,26 @@ class CheckoutController {
 			$page_id = wp_insert_post( $args );
 			tutor_utils()->update_option( self::PAGE_ID_OPTION_NAME, $page_id );
 		}
+	}
+
+	/**
+	 * Get checkout HTML
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_get_checkout_html() {
+		tutor_utils()->check_nonce();
+
+		ob_start();
+		tutor_load_template( 'ecommerce/checkout-details' );
+		$content = ob_get_clean();
+
+		$this->json_response(
+			__( 'Success', 'tutor' ),
+			$content
+		);
 	}
 
 	/**
@@ -197,6 +216,8 @@ class CheckoutController {
 
 		$object_ids     = array_filter( explode( ',', $request['object_ids'] ), 'is_numeric' );
 		$coupon_code    = isset( $request['coupon_code'] ) ? $request['coupon_code'] : '';
+		$coupon_amount  = null;
+		$sale_discount  = 0;
 		$payment_method = $request['payment_method'];
 		$payment_type   = $request['payment_type'];
 		$order_type     = $request['order_type'];
@@ -242,6 +263,10 @@ class CheckoutController {
 				? $coupon_model->apply_coupon_discount( $object_id, $coupon_code, $order_type )
 				: $coupon_model->apply_automatic_coupon_discount( $object_id, $order_type );
 
+				if ( is_object( $coupon_price ) && $coupon_price->is_applied ) {
+					$coupon_amount = $coupon_price->deducted_price;
+				}
+
 				$discount_price = ! is_null( $coupon_price->items[0]->discount_price ) && $coupon_price->items[0]->discount_price >= 0 ? tutor_get_locale_price( $coupon_price->items[0]->discount_price ) : null;
 
 				$items[] = array(
@@ -251,12 +276,17 @@ class CheckoutController {
 					'discount_price' => $discount_price,
 					'coupon_code'    => ! is_null( $discount_price ) ? ( $coupon_code ? $coupon_code : 'automatic' ) : null,
 				);
+			}
 
+			foreach ( $items as $item ) {
+				$sale_discount += $item['sale_price'] > 0 ? ( $item['regular_price'] - $item['sale_price'] ) : 0;
 			}
 		}
 
 		$args = array(
-			'payment_method' => $payment_method,
+			'payment_method'  => $payment_method,
+			'coupon_amount'   => $coupon_amount,
+			'discount_amount' => $sale_discount,
 		);
 
 		if ( empty( $errors ) ) {
@@ -314,6 +344,7 @@ class CheckoutController {
 		$items          = array();
 		$subtotal_price = $order['subtotal_price'];
 		$total_price    = $order['total_price'];
+		$grand_total    = $total_price;
 		$order_type     = $order['order_type'];
 
 		$currency_code   = tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' );
@@ -350,22 +381,57 @@ class CheckoutController {
 		$customer_info = $shipping_and_billing;
 
 		foreach ( $order['items'] as $item ) {
-			$item      = (object) $item;
-			$item_name = '';
+			$item            = (object) $item;
+			$item_name       = '';
+			$enrollment_item = null;
+
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
 				$plan_id   = $item->item_id;
 				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $plan_id );
 				$item_name = $plan_info->plan_name ?? '';
-			} else {
-				$item_name = get_the_title( $item->item_id );
-			}
 
-			$items[] = array(
-				'item_id'          => $item->item_id,
-				'item_name'        => $item_name,
-				'regular_price'    => tutor_get_locale_price( $item->sale_price > 0 ? $item->sale_price : $item->regular_price ),
+				$items[] = array(
+					'item_id'          => $item->item_id,
+					'item_name'        => $item_name,
+					'regular_price'    => $item->sale_price > 0 ? $item->sale_price : $item->regular_price,
+					'quantity'         => 1,
+					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : $item->discount_price,
+				);
+
+				if ( $plan_info && property_exists( $plan_info, 'enrollment_fee' ) && $plan_info->enrollment_fee > 0 ) {
+					$enrollment_item = array(
+						'item_id'          => 0,
+						'item_name'        => 'Enrollment Fee',
+						'regular_price'    => floatval( $plan_info->enrollment_fee ),
+						'quantity'         => 1,
+						'discounted_price' => null,
+					);
+
+					$items[] = $enrollment_item;
+				}
+			} else {
+				// Single order item.
+				$items[] = array(
+					'item_id'          => $item->item_id,
+					'item_name'        => get_the_title( $item->item_id ),
+					'regular_price'    => tutor_get_locale_price( $item->sale_price > 0 ? $item->sale_price : $item->regular_price ),
+					'quantity'         => 1,
+					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
+				);
+			}
+		}
+
+		if ( $order['tax_amount'] && ! Tax::is_tax_included_in_price() ) {
+			$grand_total += $order['tax_amount'];
+
+			/* translators: %s: tax rate */
+			$tax_item = sprintf( __( 'Tax (%s)', 'tutor' ), $order['tax_rate'] . '%' );
+			$items[]  = array(
+				'item_id'          => 'tax',
+				'item_name'        => $tax_item,
+				'regular_price'    => $order['tax_amount'],
 				'quantity'         => 1,
-				'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
+				'discounted_price' => null,
 			);
 		}
 
@@ -488,27 +554,6 @@ class CheckoutController {
 		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
 								? $payment_gateways[ $payment_method ]['gateway_class']
 								: null;
-
-		// Add enrollment fee with as a line item.
-		if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-			$items = (array) $payment_data->items;
-			foreach ( $items as $item ) {
-				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item['item_id'] );
-				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
-					$new_item = array(
-						'item_id'          => 0,
-						'item_name'        => 'Enrollment Fee',
-						'regular_price'    => floatval( $plan->enrollment_fee ?? 0 ),
-						'quantity'         => 1,
-						'discounted_price' => floatval( $plan->enrollment_fee ?? 0 ),
-					);
-
-					$items[] = $new_item;
-				}
-			}
-
-			$payment_data->items = (object) $items;
-		}
 
 		if ( $payment_gateway_class ) {
 			try {
