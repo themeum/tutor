@@ -1453,18 +1453,22 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 			$manual_gateways = tutor_get_manual_payment_gateways();
 			if ( is_array( $manual_gateways ) && count( $manual_gateways ) ) {
-				foreach ( $manual_gateways as $gateway ) {
-					if ( isset( $gateway['is_enable'] ) && 'on' === $gateway['is_enable'] ) {
-						$active_gateways['manual'][] = array(
-							'label'                => $gateway['payment_method_name'],
-							'additional_details'   => $gateway['additional_details'],
-							'payment_instructions' => $gateway['payment_instructions'],
+				foreach ( $manual_gateways as $key => $gateway ) {
+					if ( '1' == $gateway->is_active ) {
+						$active_gateways['manual'][ $key ] = array(
+							'label' => $gateway->label,
 						);
+
+						foreach ( $gateway->fields as $field ) {
+							$active_gateways['manual'][ $key ][ $field->name ] = $field->value;
+						}
 					}
 				}
 			}
 
-			return apply_filters( 'tutor_active_payment_gateways', $active_gateways );
+			$active_gateways = apply_filters( 'tutor_active_payment_gateways', $active_gateways );
+
+			return $active_gateways;
 		}
 	}
 
@@ -1477,7 +1481,20 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * @return array
 		 */
 		function tutor_get_manual_payment_gateways() {
-			return get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+			$payments = tutor_utils()->get_option( 'payment_settings' );
+			$payments = json_decode( stripslashes( $payments ) );
+
+			$manual_methods = array();
+
+			if ( $payments ) {
+				foreach ( $payments->payment_methods as $method ) {
+					if ( $method->is_manual ) {
+						$manual_methods[] = $method;
+					}
+				}
+			}
+
+			return apply_filters( 'tutor_manual_payment_methods', $manual_methods );
 		}
 	}
 }
