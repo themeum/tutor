@@ -197,7 +197,19 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 						<i class="tutor-icon-times" area-hidden="true"></i>
 					</button>
 				</div>
+<<<<<<< Updated upstream
 				<div class="tutor-fw-bold tutor-discount-amount"></div>
+=======
+				<div class="tutor-fw-bold tutor-discount-amount">-<?php echo esc_html( tutor_get_formatted_price( $applied_coupon->deducted_price ) ); ?></div>
+			</div>
+
+			<?php
+			if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price ) :
+				?>
+			<div class="tutor-checkout-summary-item">
+				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
+				<div class="tutor-fw-bold"><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
+>>>>>>> Stashed changes
 			</div>
 			<?php endif; ?>
 			<!-- <div class="tutor-checkout-summary-item">
@@ -209,7 +221,29 @@ $is_coupon_applicable = tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICA
 		<div class="tutor-checkout-detail-item">
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
+<<<<<<< Updated upstream
 				<div class="tutor-fw-bold tutor-checkout-grand-total"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
+=======
+				<div class="tutor-fw-bold tutor-checkout-grand-total">
+					<?php
+						$grand_total = $grand_total + ( $is_tax_included_in_price ? 0 : $tax_amount );
+						echo tutor_get_formatted_price( $grand_total ); //phpcs:ignore
+					?>
+				</div>
+			</div>
+			<div class="tutor-checkout-summary-item">
+				<div></div>
+			<?php
+			if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) :
+				?>
+					<div class="tutor-fs-7 tutor-color-muted">
+						<?php
+						/* translators: %s: tax amount */
+						echo esc_html( sprintf( __( '(Incl. Tax %s)', 'tutor' ), tutor_get_formatted_price( $tax_amount ) ) );
+						?>
+					</div>
+					<?php endif ?>
+>>>>>>> Stashed changes
 			</div>
 
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
