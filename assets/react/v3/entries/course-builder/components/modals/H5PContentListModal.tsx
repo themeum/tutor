@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -135,7 +135,10 @@ const H5PContentListModal = ({
   }, []);
 
   return (
-    <BasicModalWrapper title={title} onClose={() => closeModal({ action: 'CLOSE' })}>
+    <BasicModalWrapper
+      title={selectedContents.length > 0 ? sprintf(__('%s  selected', 'tutor'), selectedContents.length) : title}
+      onClose={() => closeModal({ action: 'CLOSE' })}
+    >
       <div css={styles.modalWrapper}>
         <div css={styles.searchWrapper}>
           <Controller
@@ -161,28 +164,21 @@ const H5PContentListModal = ({
 
         <Show when={filteredContent?.length}>
           <div css={styles.footer}>
-            <Show when={selectedContents.length} fallback={<div />}>
-              <div css={[typography.caption(), { color: colorTokens.text.subdued }]}>
-                {__('Selected', 'tutor')}: {selectedContents.length}
-              </div>
-            </Show>
-            <div>
-              <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-                {__('Cancel', 'tutor')}
-              </Button>
-              <Button
-                type="submit"
-                size="small"
-                variant="primary"
-                onClick={() => {
-                  onAddContent(selectedContents);
-                  closeModal({ action: 'CONFIRM' });
-                }}
-                disabled={!selectedContents.length}
-              >
-                {__('Add', 'tutor')}
-              </Button>
-            </div>
+            <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
+              {__('Cancel', 'tutor')}
+            </Button>
+            <Button
+              type="submit"
+              size="small"
+              variant="primary"
+              onClick={() => {
+                onAddContent(selectedContents);
+                closeModal({ action: 'CONFIRM' });
+              }}
+              disabled={!selectedContents.length}
+            >
+              {__('Add', 'tutor')}
+            </Button>
           </div>
         </Show>
       </div>
@@ -236,7 +232,7 @@ const styles = {
     height: 56px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: end;
     gap: ${spacing[16]};
     padding-inline: ${spacing[16]};
   `,
