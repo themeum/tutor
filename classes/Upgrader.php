@@ -142,7 +142,7 @@ class Upgrader {
 		}
 
 		// Beta upgrade.
-		if ( version_compare( TUTOR_VERSION, '3.0.0-beta2', '=' ) ) {
+		if ( version_compare( TUTOR_VERSION, '3.0.0-beta2', '>=' ) ) {
 			$order_items_table = $wpdb->prefix . 'tutor_order_items';
 			if ( ! QueryHelper::column_exist( $order_items_table, 'discount_price' ) ) {
 				// If 'discount_price' does not exist, alter the table to add 'discount_price' and 'coupon_code', and update 'sale_price'.
@@ -156,7 +156,7 @@ class Upgrader {
 		}
 
 		// New field added coupon_amount in orders table.
-		if ( version_compare( TUTOR_VERSION, '3.0.0-beta4', '=' ) ) {
+		if ( version_compare( TUTOR_VERSION, '3.0.0-beta4', '>=' ) ) {
 			$order_table = $wpdb->prefix . 'tutor_orders';
 
 			$coupon_amount = 'coupon_amount';
