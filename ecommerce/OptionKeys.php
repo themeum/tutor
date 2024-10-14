@@ -40,6 +40,7 @@ class OptionKeys {
 
 	// Manual payment settings.
 	const MANUAL_PAYMENT_KEY = 'tutor_manual_payments';
+	const PAYMENT_SETTINGS   = 'payment_settings';
 
 
 	/**

@@ -241,9 +241,10 @@ class CouponController extends BaseController {
 		try {
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
-				$this->model->delete_applies_to( $data['coupon_code'] );
+				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
+				$this->model->delete_applies_to( $coupon_data->coupon_code );
 				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
-					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $data['coupon_code'] );
+					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code );
 				}
 
 				$this->json_response( __( 'Coupon updated successfully!', 'tutor' ) );
