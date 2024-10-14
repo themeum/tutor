@@ -9,7 +9,7 @@ import {
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
+import { restrictToParentElement, restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -17,8 +17,6 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFormContext } from 'react-hook-form';
 
-import Button from '@/v3/shared/atoms/Button';
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
 import { colorTokens, spacing } from '@/v3/shared/config/styles';
 import { typography } from '@/v3/shared/config/typography';
 import For from '@/v3/shared/controls/For';
@@ -40,7 +38,7 @@ const PaymentMethods = () => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
   const activeSortItem = useMemo(() => {
@@ -61,8 +59,7 @@ const PaymentMethods = () => {
     const overIndex = paymentMethods.findIndex((method) => method.name === over.id);
 
     const newPaymentMethods = moveTo(paymentMethods, activeIndex, overIndex);
-    console.log(activeIndex, overIndex, newPaymentMethods);
-    form.setValue('payment_methods', newPaymentMethods);
+    form.setValue('payment_methods', newPaymentMethods, { shouldDirty: true });
 
     setActiveSortId(null);
   };
@@ -74,7 +71,7 @@ const PaymentMethods = () => {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
-          modifiers={[restrictToWindowEdges]}
+          modifiers={[restrictToVerticalAxis, restrictToParentElement]}
           onDragStart={(event) => {
             setActiveSortId(event.active.id);
           }}
@@ -102,17 +99,9 @@ const PaymentMethods = () => {
                 }}
               </Show>
             </DragOverlay>,
-            document.body,
+            document.body
           )}
         </DndContext>
-      </div>
-      <div css={styles.buttonWrapper}>
-        <Button variant="primary" isOutlined size="large" icon={<SVGIcon name="plus" width={24} height={24} />}>
-          {__('Add payment method', 'tutor')}
-        </Button>
-        <Button variant="primary" isOutlined size="large" icon={<SVGIcon name="plus" width={24} height={24} />}>
-          {__('Add manual payment', 'tutor')}
-        </Button>
       </div>
     </div>
   );
@@ -134,9 +123,5 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
-  `,
-  buttonWrapper: css`
-    display: flex;
-    gap: ${spacing[16]};
   `,
 };

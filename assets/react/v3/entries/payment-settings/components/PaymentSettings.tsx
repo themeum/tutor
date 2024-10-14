@@ -1,6 +1,6 @@
-import Show from '@/v3/shared/controls/Show';
+import Show from '@Controls/Show';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
@@ -9,8 +9,13 @@ import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { type PaymentSettings, usePaymentSettingsQuery } from '../services/payment';
 import PaymentMethods from './PaymentMethods';
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+import ManualPaymentModalModal from './modals/ManualPaymentModal';
+import { useModal } from '@Components/modals/Modal';
 
 const TaxSettingsPage = () => {
+  const { showModal } = useModal();
   const form = useFormWithGlobalError<PaymentSettings>({
     defaultValues: {},
   });
@@ -45,7 +50,32 @@ const TaxSettingsPage = () => {
       <h6 css={typography.heading5('medium')}>{__('Payment Methods', 'tutor')}</h6>
       <Show when={ratesValue.length} fallback={<div>No payment selected</div>}>
         <FormProvider {...form}>
-          <PaymentMethods />
+          <div css={styles.paymentButtonWrapper}>
+            <PaymentMethods />
+            <div css={styles.buttonWrapper}>
+              <Button variant="primary" isOutlined size="large" icon={<SVGIcon name="plus" width={24} height={24} />}>
+                {__('Add payment method', 'tutor')}
+              </Button>
+              <Button
+                variant="primary"
+                isOutlined
+                size="large"
+                icon={<SVGIcon name="plus" width={24} height={24} />}
+                onClick={() => {
+                  showModal({
+                    component: ManualPaymentModalModal,
+                    props: {
+                      title: __('Set up manual payment method', 'tutor'),
+                      paymentForm: form,
+                    },
+                    depthIndex: zIndex.highest,
+                  });
+                }}
+              >
+                {__('Add manual payment', 'tutor')}
+              </Button>
+            </div>
+          </div>
         </FormProvider>
       </Show>
 
@@ -66,24 +96,6 @@ const styles = {
     display: flex;
     justify-content: flex-end;
   `,
-  backButton: css`
-    ${typography.heading5('medium')};
-    text-decoration: none;
-    color: ${colorTokens.text.title};
-    width: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-
-    svg {
-      color: ${colorTokens.text.title};
-    }
-
-    &:hover {
-      text-decoration: none;
-      color: ${colorTokens.text.title};
-    }
-  `,
   emptyStateWrapper: css`
     margin-top: ${spacing[24]};
     margin-bottom: ${spacing[24]};
@@ -91,5 +103,14 @@ const styles = {
     img {
       margin-bottom: ${spacing[24]};
     }
+  `,
+  paymentButtonWrapper: css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+  `,
+  buttonWrapper: css`
+    display: flex;
+    gap: ${spacing[16]};
   `,
 };
