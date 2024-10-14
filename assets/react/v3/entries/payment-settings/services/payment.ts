@@ -1,5 +1,6 @@
-import { wpAjaxInstance } from '@/v3/shared/utils/api';
-import endpoints from '@/v3/shared/utils/endpoints';
+import { tutorConfig } from '@/v3/shared/config/config';
+import { wpAjaxInstance } from '@Utils/api';
+import endpoints from '@Utils/endpoints';
 import { useQuery } from '@tanstack/react-query';
 
 export interface PaymentField {
@@ -26,13 +27,13 @@ export interface PaymentSettings {
   payment_methods: PaymentMethod[];
 }
 
-const dummyPaymentSettings: PaymentSettings = {
+export const initialPaymentSettings: PaymentSettings = {
   payment_methods: [
     {
       name: 'paypal',
       label: 'Paypal',
       is_active: true,
-      icon: 'http://localhost:10003/wp-content/plugins/tutor/assets/images/paypal.svg',
+      icon: `${tutorConfig.tutor_url}assets/images/paypal.svg`,
       support_recurring: true,
       update_available: true,
       is_manual: false,
@@ -81,7 +82,7 @@ const dummyPaymentSettings: PaymentSettings = {
           name: 'webhook_url',
           label: 'Webhook URL',
           type: 'webhook_url',
-          value: 'http://localhost:10003/wp-json/tutor/v1/ecommerce-webhook?payment_method=paypal',
+          value: `${tutorConfig.home_url}/wp-json/tutor/v1/ecommerce-webhook?payment_method=paypal`,
         },
       ],
     },
@@ -89,8 +90,7 @@ const dummyPaymentSettings: PaymentSettings = {
 };
 
 const getPaymentSettings = () => {
-  return Promise.resolve<PaymentSettings>(dummyPaymentSettings);
-  // return wpAjaxInstance.get<PaymentSettings>(endpoints.GET_PAYMENT_SETTINGS).then(response => response.data);
+  return wpAjaxInstance.get<PaymentSettings>(endpoints.GET_PAYMENT_SETTINGS).then((response) => response.data);
 };
 
 export const usePaymentSettingsQuery = () => {
@@ -106,35 +106,11 @@ export interface PaymentGateway {
   icon: string;
   is_installed: boolean;
   support_recurring: boolean;
+  can_install: boolean;
 }
 
-const dummyPaymentGateways: PaymentGateway[] = [
-  {
-    name: 'paypal',
-    label: 'Paypal',
-    icon: 'http://localhost:10003/wp-content/plugins/tutor/assets/images/paypal.svg',
-    is_installed: true,
-    support_recurring: true,
-  },
-  {
-    name: 'stripe',
-    label: 'Stripe',
-    icon: 'http://localhost:10003/wp-content/plugins/tutor-pro/assets/images/payment-gateways/stripe.svg',
-    is_installed: false,
-    support_recurring: true,
-  },
-  {
-    name: 'razorpay',
-    label: 'Razorpay',
-    icon: 'http://localhost:10003/wp-content/plugins/tutor-pro/assets/images/payment-gateways/razorpay.svg',
-    is_installed: false,
-    support_recurring: false,
-  },
-];
-
 const getPaymentGateways = () => {
-  return Promise.resolve<PaymentGateway[]>(dummyPaymentGateways);
-  // return wpAjaxInstance.get<PaymentSettings>(endpoints.GET_PAYMENT_GATEWAYS).then(response => response.data);
+  return wpAjaxInstance.get<PaymentGateway[]>(endpoints.GET_PAYMENT_GATEWAYS).then((response) => response.data);
 };
 
 export const usePaymentGatewaysQuery = () => {

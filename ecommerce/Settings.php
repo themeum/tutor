@@ -33,6 +33,7 @@ class Settings {
 		add_action( 'wp_ajax_tutor_get_tax_settings', array( $this, 'ajax_get_tax_settings' ) );
 
 		add_filter( 'tutor_option_input', array( $this, 'format_ecommerce_tax_data' ) );
+		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
 		add_filter( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
 	}
 
@@ -47,6 +48,21 @@ class Settings {
 	public function format_ecommerce_tax_data( $option ) {
 		if ( ! empty( $option['ecommerce_tax'] ) ) {
 			$option['ecommerce_tax'] = wp_unslash( $option['ecommerce_tax'] );
+		}
+
+		return $option;
+	}
+
+	/**
+	 * Format payment settings data.
+	 *
+	 * @param array $option option.
+	 *
+	 * @return array
+	 */
+	public function format_payment_settings_data( $option ) {
+		if ( ! empty( $option['payment_settings'] ) ) {
+			$option['payment_settings'] = wp_unslash( $option['payment_settings'] );
 		}
 
 		return $option;
@@ -813,6 +829,6 @@ class Settings {
 		tutor_utils()->check_current_user_capability();
 
 		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
-		$this->json_response( __( 'Success', 'tutor' ), $settings );
+		$this->json_response( __( 'Success', 'tutor' ), json_decode( $settings ) );
 	}
 }

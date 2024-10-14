@@ -7,19 +7,22 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
-import { type PaymentSettings, usePaymentSettingsQuery } from '../services/payment';
+import { initialPaymentSettings, type PaymentSettings, usePaymentSettingsQuery } from '../services/payment';
 import PaymentMethods from './PaymentMethods';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import ManualPaymentModal from './modals/ManualPaymentModal';
 import { useModal } from '@Components/modals/Modal';
 import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
+import ProBadge from '@/v3/shared/atoms/ProBadge';
+import { tutorConfig } from '@/v3/shared/config/config';
 
 const TaxSettingsPage = () => {
   const { showModal } = useModal();
   const form = useFormWithGlobalError<PaymentSettings>({
-    defaultValues: {},
+    defaultValues: initialPaymentSettings,
   });
+
   const { reset } = form;
 
   const paymentSettingsQuery = usePaymentSettingsQuery();
@@ -49,51 +52,72 @@ const TaxSettingsPage = () => {
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
       <h6 css={typography.heading5('medium')}>{__('Payment Methods', 'tutor')}</h6>
-      <Show when={ratesValue.length} fallback={<div>No payment selected</div>}>
-        <FormProvider {...form}>
-          <div css={styles.paymentButtonWrapper}>
+      <FormProvider {...form}>
+        <div css={styles.paymentButtonWrapper}>
+          <Show
+            when={ratesValue.length}
+            fallback={<div css={styles.noPaymentMethod}>{__('No payment method has been configured.', 'tutor')}</div>}
+          >
             <PaymentMethods />
-            <div css={styles.buttonWrapper}>
-              <Button
-                variant="primary"
-                isOutlined
-                size="large"
-                icon={<SVGIcon name="plus" width={24} height={24} />}
-                onClick={() => {
-                  showModal({
-                    component: PaymentGatewaysModal,
-                    props: {
-                      title: __('Payment gateways', 'tutor'),
-                      form: form,
-                    },
-                    depthIndex: zIndex.highest,
-                  });
-                }}
-              >
-                {__('Connect more gateway', 'tutor')}
-              </Button>
-              <Button
-                variant="primary"
-                isOutlined
-                size="large"
-                icon={<SVGIcon name="plus" width={24} height={24} />}
-                onClick={() => {
-                  showModal({
-                    component: ManualPaymentModal,
-                    props: {
-                      title: __('Set up manual payment method', 'tutor'),
-                      paymentForm: form,
-                    },
-                    depthIndex: zIndex.highest,
-                  });
-                }}
-              >
-                {__('Add manual payment', 'tutor')}
-              </Button>
-            </div>
+          </Show>
+          <div css={styles.buttonWrapper}>
+            <Show
+              when={!tutorConfig.tutor_pro_url}
+              fallback={
+                <Button
+                  variant="primary"
+                  isOutlined
+                  size="large"
+                  icon={<SVGIcon name="plus" width={24} height={24} />}
+                  onClick={() => {
+                    showModal({
+                      component: PaymentGatewaysModal,
+                      props: {
+                        title: __('Payment gateways', 'tutor'),
+                        form: form,
+                      },
+                      depthIndex: zIndex.highest,
+                    });
+                  }}
+                >
+                  {__('Connect more gateway', 'tutor')}
+                </Button>
+              }
+            >
+              <ProBadge>
+                <Button
+                  variant="tertiary"
+                  isOutlined
+                  size="large"
+                  icon={<SVGIcon name="plus" width={24} height={24} />}
+                  disabled
+                >
+                  {__('Connect more gateway', 'tutor')}
+                </Button>
+              </ProBadge>
+            </Show>
+
+            <Button
+              variant="primary"
+              isOutlined
+              size="large"
+              icon={<SVGIcon name="plus" width={24} height={24} />}
+              onClick={() => {
+                showModal({
+                  component: ManualPaymentModal,
+                  props: {
+                    title: __('Set up manual payment method', 'tutor'),
+                    paymentForm: form,
+                  },
+                  depthIndex: zIndex.highest,
+                });
+              }}
+            >
+              {__('Add manual payment', 'tutor')}
+            </Button>
           </div>
-        </FormProvider>
-      </Show>
+        </div>
+      </FormProvider>
 
       <input type="hidden" name="tutor_option[payment_settings]" value={JSON.stringify(formData)} />
     </div>
@@ -128,5 +152,9 @@ const styles = {
   buttonWrapper: css`
     display: flex;
     gap: ${spacing[16]};
+  `,
+  noPaymentMethod: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
   `,
 };

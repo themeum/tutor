@@ -1,6 +1,7 @@
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
+import For from '@Controls/For';
 import { typography } from '@Config/typography';
 import { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import { colorTokens, shadow, spacing } from '@Config/styles';
@@ -8,6 +9,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { PaymentSettings, usePaymentGatewaysQuery } from '../../services/payment';
 import PaymentGatewayItem from '../PaymentGatewayItem';
+import Show from '@/v3/shared/controls/Show';
 
 interface PaymentGatewaysModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -17,17 +19,18 @@ interface PaymentGatewaysModalProps extends ModalProps {
 const PaymentGatewaysModal = ({ closeModal, title, form }: PaymentGatewaysModalProps) => {
   const paymentGatewaysQuery = usePaymentGatewaysQuery();
 
-  if (paymentGatewaysQuery.isLoading) {
-    return <LoadingSection />;
-  }
-
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <div css={styles.contentWrapper}>
         <div css={styles.modalBody}>
-          {paymentGatewaysQuery.data?.map((gateway) => (
-            <PaymentGatewayItem data={gateway} />
-          ))}
+          <Show when={!paymentGatewaysQuery.isLoading} fallback={<LoadingSection />}>
+            <Show
+              when={paymentGatewaysQuery.data?.length}
+              fallback={<div css={styles.noData}>{__('No data found!', 'tutor')}</div>}
+            >
+              <For each={paymentGatewaysQuery.data ?? []}>{(gateway) => <PaymentGatewayItem data={gateway} />}</For>
+            </Show>
+          </Show>
         </div>
       </div>
     </BasicModalWrapper>
@@ -63,5 +66,10 @@ const styles = {
     gap: ${spacing[8]};
     padding: ${spacing[16]};
     box-shadow: ${shadow.dividerTop};
+  `,
+  noData: css`
+    ${typography.caption()};
+    text-align: center;
+    color: ${colorTokens.text.hints};
   `,
 };

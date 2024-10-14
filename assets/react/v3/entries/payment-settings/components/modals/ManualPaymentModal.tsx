@@ -11,6 +11,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
 import { PaymentMethod, PaymentSettings } from '../../services/payment';
+import { useEffect } from 'react';
 
 interface ManualPaymentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -22,7 +23,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     defaultValues: {
       name: '',
       label: '',
-      is_active: false,
+      is_active: true,
       icon: '',
       support_recurring: false,
       update_available: false,
@@ -52,6 +53,10 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     },
   });
 
+  useEffect(() => {
+    form.setFocus('fields.0.value');
+  }, []);
+
   const onSubmit = (data: PaymentMethod) => {
     paymentForm.setValue('payment_methods', [...paymentForm.getValues('payment_methods'), data]);
     closeModal({ action: 'CONFIRM' });
@@ -59,7 +64,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
-      <div css={styles.contentWrapper}>
+      <form onSubmit={form.handleSubmit(onSubmit)} css={styles.contentWrapper}>
         <div css={styles.formBody}>
           {form.getValues().fields.map((field, index) =>
             field.name === 'method_name' ? (
@@ -95,20 +100,11 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
           <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => {
-              form.trigger().then((valid) => {
-                if (valid) {
-                  form.handleSubmit(onSubmit)();
-                }
-              });
-            }}
-          >
+          <Button type="submit" variant="primary">
             {__('Activate', 'tutor')}
           </Button>
         </div>
-      </div>
+      </form>
     </BasicModalWrapper>
   );
 };

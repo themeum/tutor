@@ -4,21 +4,22 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Button from '@/v3/shared/atoms/Button';
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
-import FormInput from '@/v3/shared/components/fields/FormInput';
-import FormSelectInput from '@/v3/shared/components/fields/FormSelectInput';
-import FormSwitch from '@/v3/shared/components/fields/FormSwitch';
-import FormTextareaInput from '@/v3/shared/components/fields/FormTextareaInput';
-import { borderRadius, colorTokens, shadow, spacing } from '@/v3/shared/config/styles';
-import For from '@/v3/shared/controls/For';
-import { styleUtils } from '@/v3/shared/utils/style-utils';
-
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+import FormInput from '@Components/fields/FormInput';
+import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormSwitch from '@Components/fields/FormSwitch';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { useModal } from '@Components/modals/Modal';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import For from '@Controls/For';
+import { styleUtils } from '@Utils/style-utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import type { PaymentMethod, PaymentSettings } from '../services/payment';
+import StaticConfirmationModal from './modals/StaticConfirmationModal';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -27,6 +28,7 @@ interface PaymentItemProps {
 }
 
 const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps) => {
+  const { showModal } = useModal();
   const form = useFormContext<PaymentSettings>();
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -121,7 +123,19 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               )}
             </For>
           </div>
-          <Button variant="danger" buttonCss={styles.removeButton}>
+          <Button
+            variant="danger"
+            buttonCss={styles.removeButton}
+            onClick={() => {
+              showModal({
+                component: StaticConfirmationModal,
+                props: {
+                  title: __('Payment gateways', 'tutor'),
+                },
+                depthIndex: zIndex.highest,
+              });
+            }}
+          >
             {__('Remove', 'tutor')}
           </Button>
         </div>

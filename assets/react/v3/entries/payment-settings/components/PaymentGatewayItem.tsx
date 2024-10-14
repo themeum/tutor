@@ -34,7 +34,7 @@ const PaymentGatewayItem = ({ data }: PaymentGatewayItemProps) => {
             {__('Installed', 'tutor')}
           </span>
         ) : (
-          <Button variant="secondary" size="small" onClick={handleInstallClick}>
+          <Button variant="secondary" size="small" disabled={!data.can_install} onClick={handleInstallClick}>
             {__('Install', 'tutor')}
           </Button>
         )}
