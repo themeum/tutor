@@ -237,7 +237,7 @@ class OrderController {
 
 		if ( isset( $args['discount_amount'] ) && $args['discount_amount'] > 0 ) {
 			$order_data['discount_type']   = 'flat';
-			$order_data['discount_amount'] = floatval( $args['sale_discount'] );
+			$order_data['discount_amount'] = floatval( $args['discount_amount'] );
 			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
 		}
 
