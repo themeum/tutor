@@ -14,7 +14,7 @@ export interface PaymentField {
 export interface PaymentMethod {
   name: string;
   label: string;
-  isActive: boolean;
+  is_active: boolean;
   icon: string;
   support_recurring: boolean;
   update_available: boolean;
@@ -31,7 +31,7 @@ const dummyPaymentSettings: PaymentSettings = {
     {
       name: 'paypal',
       label: 'Paypal',
-      isActive: true,
+      is_active: true,
       icon: 'http://localhost:10003/wp-content/plugins/tutor/assets/images/paypal.svg',
       support_recurring: true,
       update_available: true,
@@ -82,111 +82,6 @@ const dummyPaymentSettings: PaymentSettings = {
           label: 'Webhook URL',
           type: 'webhook_url',
           value: 'http://localhost:10003/wp-json/tutor/v1/ecommerce-webhook?payment_method=paypal',
-        },
-      ],
-    },
-    {
-      name: 'stripe',
-      label: 'Stripe',
-      isActive: false,
-      icon: 'http://localhost:10003/wp-content/plugins/tutor-pro/assets/images/payment-gateways/stripe.svg',
-      support_recurring: false,
-      update_available: false,
-      is_manual: false,
-      fields: [
-        {
-          name: 'environment',
-          label: 'Stripe Environment',
-          type: 'select',
-          options: [
-            {
-              label: 'Test',
-              value: 'test',
-            },
-            {
-              label: 'Live',
-              value: 'live',
-            },
-          ],
-          value: 'test',
-        },
-        {
-          name: 'stripe_secrete_key',
-          label: 'Stripe secret key',
-          type: 'key',
-          value: '',
-        },
-        {
-          name: 'stripe_public_key',
-          label: 'Stripe public key',
-          type: 'key',
-          value: '',
-        },
-        {
-          name: 'stripe_webhook_signature_key',
-          label: 'Stripe webhook signature key',
-          type: 'key',
-          value: '',
-        },
-        {
-          name: 'webhook_url',
-          label: 'Webhook URL',
-          type: 'webhook_url',
-          value: '',
-        },
-      ],
-    },
-    {
-      name: 'razorpay',
-      label: 'Razorpay',
-      isActive: false,
-      icon: '',
-      support_recurring: false,
-      update_available: false,
-      is_manual: false,
-      fields: [
-        {
-          name: 'razorpay_key_id',
-          label: 'Razorpay key ID',
-          type: 'key',
-          value: '',
-        },
-        {
-          name: 'razorpay_key_secret',
-          label: 'Razorpay key secret',
-          type: 'key',
-          value: '',
-        },
-        {
-          name: 'razorpay_webhook_secret',
-          label: 'Razorpay webhook secret',
-          type: 'key',
-          value: '',
-        },
-      ],
-    },
-    {
-      name: 'bank_transfer',
-      label: 'Bank Transfer',
-      isActive: false,
-      icon: '',
-      support_recurring: false,
-      update_available: false,
-      is_manual: true,
-      fields: [
-        {
-          name: 'additional_details',
-          label: 'Additional details',
-          type: 'textarea',
-          hint: 'Displays to customers when they’re choosing a payment method.',
-          value: '',
-        },
-        {
-          name: 'payment_instructions',
-          label: 'Payment instructions',
-          type: 'textarea',
-          hint: 'Displays to customers after they place an order with this payment method.',
-          value: '',
         },
       ],
     },

@@ -66,7 +66,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
         subscription={data.support_recurring}
         actionTray={
           <Controller
-            name={`payment_methods.${paymentIndex}.isActive`}
+            name={`payment_methods.${paymentIndex}.is_active`}
             control={form.control}
             render={(controllerProps) => <FormSwitch {...controllerProps} />}
           />

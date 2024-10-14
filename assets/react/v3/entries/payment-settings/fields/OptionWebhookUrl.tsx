@@ -1,12 +1,11 @@
-import Button from '@/v3/shared/atoms/Button';
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
-import { useToast } from '@/v3/shared/atoms/Toast';
-import FormFieldWrapper from '@/v3/shared/components/fields/FormFieldWrapper';
-import Show from '@/v3/shared/controls/Show';
-import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+import { useToast } from '@Atoms/Toast';
+import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
+import Show from '@Controls/Show';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
