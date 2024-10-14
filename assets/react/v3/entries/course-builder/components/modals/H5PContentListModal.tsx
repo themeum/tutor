@@ -161,21 +161,28 @@ const H5PContentListModal = ({
 
         <Show when={filteredContent?.length}>
           <div css={styles.footer}>
-            <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-              {__('Cancel', 'tutor')}
-            </Button>
-            <Button
-              type="submit"
-              size="small"
-              variant="primary"
-              onClick={() => {
-                onAddContent(selectedContents);
-                closeModal({ action: 'CONFIRM' });
-              }}
-              disabled={!selectedContents.length}
-            >
-              {__('Add', 'tutor')}
-            </Button>
+            <Show when={selectedContents.length} fallback={<div />}>
+              <div css={[typography.caption(), { color: colorTokens.text.subdued }]}>
+                {__('Selected', 'tutor')}: {selectedContents.length}
+              </div>
+            </Show>
+            <div>
+              <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
+                {__('Cancel', 'tutor')}
+              </Button>
+              <Button
+                type="submit"
+                size="small"
+                variant="primary"
+                onClick={() => {
+                  onAddContent(selectedContents);
+                  closeModal({ action: 'CONFIRM' });
+                }}
+                disabled={!selectedContents.length}
+              >
+                {__('Add', 'tutor')}
+              </Button>
+            </div>
           </div>
         </Show>
       </div>
@@ -229,7 +236,7 @@ const styles = {
     height: 56px;
     display: flex;
     align-items: center;
-    justify-content: end;
+    justify-content: space-between;
     gap: ${spacing[16]};
     padding-inline: ${spacing[16]};
   `,
