@@ -551,10 +551,10 @@ class Settings {
 	public static function get_default_automate_payment_gateways() {
 		$gateways = array(
 			'paypal' => array(
-				'label'             => 'PayPal',
-				'is_active'         => self::is_active( 'paypal' ),
-				'icon'              => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
-				'support_recurring' => true,
+				'label'                => 'PayPal',
+				'is_active'            => self::is_active( 'paypal' ),
+				'icon'                 => esc_url_raw( tutor()->url . 'assets/images/paypal.svg' ),
+				'support_subscription' => true,
 			),
 		);
 
