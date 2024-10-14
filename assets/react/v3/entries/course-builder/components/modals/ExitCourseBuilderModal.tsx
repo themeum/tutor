@@ -21,7 +21,7 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
     >
       <div css={styles.wrapper}>
         <p css={styles.message}>
-          {__('You are about to exit the course creation without saving any changes.', 'tutor')}
+          {__('You’re about to leave the course creation process without saving your changes.', 'tutor')}
         </p>
         <div css={styles.formFooter}>
           <Button
@@ -33,7 +33,7 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
             variant="text"
             size="small"
           >
-            {__('Continue Editing', 'tutor')}
+            {__('Continue editing', 'tutor')}
           </Button>
           <Button
             variant="danger"
@@ -46,7 +46,7 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
                 : tutorConfig.frontend_course_list_url;
             }}
           >
-            {__('Yes, Exit without saving', 'tutor')}
+            {__('Yes, exit without saving', 'tutor')}
           </Button>
         </div>
       </div>
