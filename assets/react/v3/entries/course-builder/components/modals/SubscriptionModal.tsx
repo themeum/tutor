@@ -1,3 +1,4 @@
+import { isDefined } from '@/v3/shared/utils/types';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import type { ModalProps } from '@Components/modals/Modal';
@@ -11,8 +12,10 @@ import SubscriptionItem from '@CourseBuilderComponents/subscription/Subscription
 import {
   type Subscription,
   type SubscriptionFormData,
+  convertFormDataToSubscription,
   convertSubscriptionToFormData,
   defaultSubscriptionFormData,
+  useSaveCourseSubscriptionMutation,
   useSortCourseSubscriptionsMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -67,7 +70,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     keyName: '_id',
   });
 
-  const [expendedSubscription, setExpandedSubscription] = useState<string>('');
+  const [expendedSubscriptionId, setExpandedSubscriptionId] = useState<string>('');
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   const isSubscriptionListLoading = !!useIsFetching({
@@ -75,8 +78,15 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
   });
   const courseSubscriptions = queryClient.getQueryData(['SubscriptionsList', courseId]) as Subscription[];
   const sortSubscriptionMutation = useSortCourseSubscriptionsMutation(courseId);
+  const saveSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
 
   const isFormDirty = form.formState.isDirty;
+
+  const activeSubscription = form.getValues().subscriptions.find((item) => item.id === expendedSubscriptionId);
+
+  const dirtySubscriptionIndex =
+    subscriptionFields.findIndex((item) => !item.isSaved) ||
+    form.formState.dirtyFields.subscriptions?.findIndex((item) => isDefined(item));
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -105,6 +115,23 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     });
   }, [courseSubscriptions, isSubscriptionListLoading]);
 
+  const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
+    try {
+      const payload = convertFormDataToSubscription({
+        ...values,
+        id: values.isSaved ? values.id : '0',
+        assign_id: String(courseId),
+      });
+      const response = await saveSubscriptionMutation.mutateAsync(payload);
+
+      if (response.status_code === 200 || response.status_code === 201) {
+        setExpandedSubscriptionId((previous) => (previous === payload.id ? '' : payload.id || ''));
+      }
+    } catch (error) {
+      form.reset();
+    }
+  };
+
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -120,15 +147,35 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     <FormProvider {...form}>
       <ModalWrapper
         onClose={() => closeModal({ action: 'CLOSE' })}
-        icon={icon}
-        title={title}
-        subtitle={subtitle}
+        icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
+        title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
+        subtitle={isFormDirty ? title?.toString() : subtitle}
         actions={
-          <>
-            <Button disabled={isFormDirty} size="small" onClick={() => closeModal()}>
-              {__('Done', 'tutor')}
-            </Button>
-          </>
+          isFormDirty && (
+            <>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  activeSubscription ? form.reset() : closeModal({ action: 'CLOSE' });
+                }}
+              >
+                {activeSubscription ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+              </Button>
+              <Button
+                loading={saveSubscriptionMutation.isPending}
+                variant="primary"
+                size="small"
+                onClick={() => {
+                  if (dirtySubscriptionIndex && activeSubscription) {
+                    handleSaveSubscription(activeSubscription);
+                  }
+                }}
+              >
+                {activeSubscription?.isSaved ? __('Update', 'tutor') : __('Save', 'tutor')}
+              </Button>
+            </>
+          )
         }
       >
         <div css={styles.wrapper}>
@@ -139,7 +186,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                 onCreateSubscription={() => {
                   const newId = nanoid();
                   appendSubscription({ ...defaultSubscriptionFormData, id: newId, isSaved: false });
-                  setExpandedSubscription(newId);
+                  setExpandedSubscriptionId(newId);
                 }}
               />
             }
@@ -185,7 +232,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                             key={subscription.id}
                             id={subscription.id}
                             toggleCollapse={(id) => {
-                              setExpandedSubscription((previous) => (previous === id ? '' : id));
+                              setExpandedSubscriptionId((previous) => (previous === id ? '' : id));
                             }}
                             onDiscard={
                               !subscription.id
@@ -194,7 +241,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                                   }
                                 : noop
                             }
-                            isExpanded={expendedSubscription === subscription.id}
+                            isExpanded={expendedSubscriptionId === subscription.id}
                           />
                         );
                       }}
@@ -210,7 +257,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                               toggleCollapse={noop}
                               bgLight
                               onDiscard={noop}
-                              isExpanded={expendedSubscription === id}
+                              isExpanded={expendedSubscriptionId === id}
                               isOverlay
                             />
                           );
@@ -228,9 +275,8 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                     onClick={() => {
                       const newId = nanoid();
                       appendSubscription({ ...defaultSubscriptionFormData, id: newId, isSaved: false });
-                      setExpandedSubscription(newId);
+                      setExpandedSubscriptionId(newId);
                     }}
-                    loading={isSubscriptionListLoading}
                   >
                     {__('Add Subscription', 'tutor')}
                   </Button>

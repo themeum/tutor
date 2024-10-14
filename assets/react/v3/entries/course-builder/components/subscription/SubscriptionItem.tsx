@@ -1,3 +1,6 @@
+import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
@@ -5,11 +8,6 @@ import { animated, useSpring } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
@@ -22,10 +20,8 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
-  convertFormDataToSubscription,
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
-  useSaveCourseSubscriptionMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -106,26 +102,8 @@ export default function SubscriptionItem({
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [isActive]);
 
-  const saveSubscriptionMutation = useSaveCourseSubscriptionMutation(courseId);
   const deleteSubscriptionMutation = useDeleteCourseSubscriptionMutation(courseId);
   const duplicateSubscriptionMutation = useDuplicateCourseSubscriptionMutation(courseId);
-
-  const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
-    try {
-      const payload = convertFormDataToSubscription({
-        ...values,
-        id: values.isSaved ? values.id : '0',
-        assign_id: String(courseId),
-      });
-      const response = await saveSubscriptionMutation.mutateAsync(payload);
-
-      if (response.status_code === 200 || response.status_code === 201) {
-        toggleCollapse(subscription.id);
-      }
-    } catch (error) {
-      form.reset();
-    }
-  };
 
   const handleDeleteSubscription = async () => {
     try {
@@ -245,9 +223,6 @@ export default function SubscriptionItem({
         bgLight,
         isActive: isActive,
         isDragging: isOverlay,
-      })}
-      onSubmit={form.handleSubmit((values) => {
-        handleSaveSubscription(values.subscriptions[index]);
       })}
       onClick={() => setIsActive(true)}
       style={style}
@@ -595,27 +570,6 @@ export default function SubscriptionItem({
 
             <OfferSalePrice index={index} />
           </div>
-          <Show when={isFormDirty}>
-            <div css={styles.subscriptionFooter}>
-              <Button
-                variant="text"
-                size="small"
-                onClick={() => {
-                  if (isFormDirty) {
-                    form.reset();
-                    return;
-                  }
-                  toggleCollapse(subscription.id);
-                  onDiscard();
-                }}
-              >
-                {subscription.id ? __('Discard', 'tutor') : __('Cancel', 'tutor')}
-              </Button>
-              <Button variant="secondary" size="small" type="submit" loading={saveSubscriptionMutation.isPending}>
-                {__('Save', 'tutor')}
-              </Button>
-            </div>
-          </Show>
         </div>
       </animated.div>
       <ConfirmationPopover
@@ -783,14 +737,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
-	`,
-  subscriptionFooter: css`
-		background-color: ${colorTokens.background.white};
-		padding: ${spacing[12]} ${spacing[16]};
-		display: flex;
-		gap: ${spacing[8]};
-		justify-content: end;
-    box-shadow: ${shadow.footer};
 	`,
   actions: (isEdit: boolean) => css`
 		display: flex;
