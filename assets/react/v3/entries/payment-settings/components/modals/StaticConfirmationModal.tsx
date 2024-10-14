@@ -48,7 +48,7 @@ export default StaticConfirmationModal;
 
 const styles = {
   contentWrapper: css`
-    width: 620px;
+    width: 460px;
   `,
   content: css`
     padding: ${spacing[20]};

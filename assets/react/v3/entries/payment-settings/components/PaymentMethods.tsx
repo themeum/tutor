@@ -66,7 +66,7 @@ const PaymentMethods = () => {
 
   return (
     <div css={styles.wrapper}>
-      <div css={styles.title}>{__('Payment Methods', 'tutor')}</div>
+      <div css={styles.title}>{__('Supported payment methods', 'tutor')}</div>
       <div css={styles.methodWrapper}>
         <DndContext
           sensors={sensors}

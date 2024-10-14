@@ -1,7 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -20,6 +20,7 @@ import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import type { PaymentMethod, PaymentSettings } from '../services/payment';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
+import Show from '@/v3/shared/controls/Show';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -123,21 +124,36 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               )}
             </For>
           </div>
-          <Button
-            variant="danger"
-            buttonCss={styles.removeButton}
-            onClick={() => {
-              showModal({
-                component: StaticConfirmationModal,
-                props: {
-                  title: __('Payment gateways', 'tutor'),
-                },
-                depthIndex: zIndex.highest,
-              });
-            }}
-          >
-            {__('Remove', 'tutor')}
-          </Button>
+          <Show when={data.name !== 'paypal'}>
+            <Button
+              variant="danger"
+              buttonCss={styles.removeButton}
+              onClick={async () => {
+                const { action } = await showModal({
+                  component: StaticConfirmationModal,
+                  props: {
+                    title: sprintf(__('Remove %s', 'tutor'), data.label),
+                    description: __('Are you sure you want to remove this payment method?', 'tutor'),
+                  },
+                  depthIndex: zIndex.highest,
+                });
+
+                if (action === 'CONFIRM') {
+                  if (data.is_manual) {
+                    form.setValue(
+                      'payment_methods',
+                      form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
+                      {
+                        shouldDirty: true,
+                      }
+                    );
+                  }
+                }
+              }}
+            >
+              {__('Remove', 'tutor')}
+            </Button>
+          </Show>
         </div>
       </Card>
     </div>

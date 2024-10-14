@@ -32,7 +32,7 @@ export const initialPaymentSettings: PaymentSettings = {
     {
       name: 'paypal',
       label: 'Paypal',
-      is_active: true,
+      is_active: false,
       icon: `${tutorConfig.tutor_url}assets/images/paypal.svg`,
       support_recurring: true,
       update_available: true,
