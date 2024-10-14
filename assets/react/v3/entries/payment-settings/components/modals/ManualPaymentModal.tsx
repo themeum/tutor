@@ -29,17 +29,23 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
       is_manual: true,
       fields: [
         {
+          name: 'method_name',
+          label: __('Payment Method Name', 'tutor'),
+          type: 'text',
+          value: '',
+        },
+        {
           name: 'additional_details',
           label: __('Additional details', 'tutor'),
           type: 'textarea',
-          hint: __('Displays to customers when they’re choosing a payment method.', 'tutor'),
+          hint: __('Briefly describe this payment option. (e.g., Bank Transfer, Cash on Delivery).', 'tutor'),
           value: '',
         },
         {
           name: 'payment_instructions',
           label: __('Payment instructions', 'tutor'),
           type: 'textarea',
-          hint: __('Displays to customers after they place an order with this payment method.', 'tutor'),
+          hint: __('Provide clear, step-by-step instructions on how to complete the payment.', 'tutor'),
           value: '',
         },
       ],
@@ -55,32 +61,35 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <div css={styles.contentWrapper}>
         <div css={styles.formBody}>
-          <Controller
-            name="label"
-            control={form.control}
-            rules={requiredRule()}
-            render={(controllerProps) => (
-              <FormInput
-                {...controllerProps}
-                label={__('Custom payment method name', 'tutor')}
-                onChange={(value) => {
-                  const name = String(value).toLowerCase().replace(/\s+/g, '-');
-                  form.setValue('name', name);
-                }}
-              />
-            )}
-          />
-
-          {form.getValues().fields.map((field, index) => (
-            <div css={styles.inputWrapper}>
+          {form.getValues().fields.map((field, index) =>
+            field.name === 'method_name' ? (
               <Controller
                 name={`fields.${index}.value`}
                 control={form.control}
-                render={(controllerProps) => <FormTextareaInput {...controllerProps} label={field.label} rows={3} />}
+                rules={requiredRule()}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Custom payment method name', 'tutor')}
+                    onChange={(value) => {
+                      const name = String(value).toLowerCase().replace(/\s+/g, '-');
+                      form.setValue('name', name);
+                      form.setValue('label', String(value));
+                    }}
+                  />
+                )}
               />
-              <div css={styles.inputHint}>{field.hint}</div>
-            </div>
-          ))}
+            ) : (
+              <div css={styles.inputWrapper}>
+                <Controller
+                  name={`fields.${index}.value`}
+                  control={form.control}
+                  render={(controllerProps) => <FormTextareaInput {...controllerProps} label={field.label} rows={3} />}
+                />
+                <div css={styles.inputHint}>{field.hint}</div>
+              </div>
+            )
+          )}
         </div>
         <div css={styles.footerWrapper}>
           <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
