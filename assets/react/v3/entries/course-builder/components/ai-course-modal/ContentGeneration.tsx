@@ -193,12 +193,14 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 </div>
               </Show>
               <Show when={!currentLoading.topic} fallback={<ContentSkeleton />}>
-                <div css={styles.section}>
-                  <h5>{__('Course Content', 'tutor')}</h5>
-                  <div css={styles.content}>
-                    <ContentAccordion />
+                <Show when={currentContent.topics?.length}>
+                  <div css={styles.section}>
+                    <h5>{__('Course Content', 'tutor')}</h5>
+                    <div css={styles.content}>
+                      <ContentAccordion />
+                    </div>
                   </div>
-                </div>
+                </Show>
               </Show>
             </div>
           </Show>
