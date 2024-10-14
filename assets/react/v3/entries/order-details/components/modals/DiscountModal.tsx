@@ -44,6 +44,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
   const orderDiscountMutation = useOrderDiscountMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: discount,
+    mode: 'onChange',
   });
   const type = form.watch('type');
   const value = form.watch('amount');
@@ -81,6 +82,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
                   label={__('Discount Type', 'tutor')}
                   options={discountTypeOptions}
                   placeholder={__('Select discount type', 'tutor')}
+                  onChange={ ()=>{ form.setFocus('amount') }}
                 />
               )}
             />

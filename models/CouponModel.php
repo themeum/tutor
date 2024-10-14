@@ -10,9 +10,8 @@
 
 namespace Tutor\Models;
 
-use stdClass;
 use TUTOR\Course;
-use Tutor\Ecommerce\Supports\Arr;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -733,10 +732,13 @@ class CouponModel {
 	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
 	 */
 	public function apply_coupon_discount( $item_ids, $coupon_code, $order_type = OrderModel::TYPE_SINGLE_ORDER, $format_price = false ) {
-
 		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
 
 		$response                   = array();
+		$response['coupon_title']   = $coupon_code;
+		$response['coupon_type']    = 'manual';
+		$response['subtotal_price'] = 0;
+		$response['tax_amount']     = 0;
 		$response['total_price']    = 0;
 		$response['deducted_price'] = 0;
 		$response['is_applied']     = false;
@@ -783,6 +785,8 @@ class CouponModel {
 				}
 			}
 
+			$response['subtotal_price'] += is_null( $discount_price ) ? $reg_price : $discount_price;
+
 			$response['items'][] = (object) array(
 				'item_id'        => $item_id,
 				'regular_price'  => $format_price ? tutor_get_formatted_price( $reg_price ) : $reg_price,
@@ -793,6 +797,14 @@ class CouponModel {
 			$response['total_price'] += ! is_null( $discount_price ) && $discount_price >= 0 ? $discount_price : $reg_price;
 		}
 
+		$tax_rate   = Tax::get_user_tax_rate();
+		$tax_amount = Tax::calculate_tax( $response['total_price'], $tax_rate );
+		if ( ! Tax::is_tax_included_in_price() ) {
+			$response['total_price'] += $tax_amount;
+		}
+
+		$response['tax_amount']     = $format_price ? tutor_get_formatted_price( $tax_amount ) : $tax_amount;
+		$response['subtotal_price'] = $format_price ? tutor_get_formatted_price( $response['subtotal_price'] ) : $response['subtotal_price'];
 		$response['deducted_price'] = $format_price ? tutor_get_formatted_price( $response['deducted_price'] ) : $response['deducted_price'];
 		$response['total_price']    = $format_price ? tutor_get_formatted_price( $response['total_price'] ) : $response['total_price'];
 
@@ -816,10 +828,14 @@ class CouponModel {
 	public function apply_automatic_coupon_discount( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER ) {
 		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
 
-		$response                 = array();
-		$response['total_price']  = 0;
-		$response['coupon_title'] = '';
-		$response['is_applied']   = false;
+		$response                   = array();
+		$response['total_price']    = 0;
+		$response['coupon_title']   = '';
+		$response['coupon_type']    = 'automatic';
+		$response['subtotal_price'] = 0;
+		$response['tax_amount']     = 0;
+		$response['is_applied']     = false;
+		$response['deducted_price'] = 0;
 
 		$should_apply_coupon = false;
 
@@ -862,6 +878,7 @@ class CouponModel {
 									$discount_price           = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
 									$response['coupon_title'] = $coupon->coupon_title;
 
+									$response['deducted_price'] += $reg_price - $discount_price;
 									// Set a flag to determine if coupon applied.
 									if ( ! $response['is_applied'] ) {
 										$response['is_applied'] = true;
@@ -873,6 +890,8 @@ class CouponModel {
 				}
 			}
 
+			$response['subtotal_price'] += is_null( $discount_price ) ? $reg_price : $discount_price;
+
 			$response['items'][] = (object) array(
 				'item_id'        => $item_id,
 				'regular_price'  => tutor_get_locale_price( $reg_price ),
@@ -882,6 +901,15 @@ class CouponModel {
 
 			$response['total_price'] += ! is_null( $discount_price ) && $discount_price >= 0 ? $discount_price : $reg_price;
 		}
+
+		$tax_rate   = Tax::get_user_tax_rate();
+		$tax_amount = Tax::calculate_tax( $response['total_price'], $tax_rate );
+		if ( ! Tax::is_tax_included_in_price() ) {
+			$response['total_price'] += $tax_amount;
+		}
+
+		$response['tax_amount']     = tutor_get_formatted_price( $tax_amount );
+		$response['subtotal_price'] = tutor_get_formatted_price( $response['subtotal_price'] );
 
 		$response['total_price'] = tutor_get_locale_price( $response['total_price'] );
 

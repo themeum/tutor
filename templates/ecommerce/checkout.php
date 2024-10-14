@@ -27,7 +27,6 @@ $courses         = $get_cart['courses'];
 $total_count     = $courses['total_count'];
 $course_list     = $courses['results'];
 $subtotal        = 0;
-$tax_amount      = 0; // @TODO: Need to implement later.
 $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
 $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
@@ -46,7 +45,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
 		<div class="tutor-row tutor-g-0">
-			<div class="tutor-col-md-6">
+			<div class="tutor-col-md-6" tutor-checkout-details>
 				<?php
 				$file = __DIR__ . '/checkout-details.php';
 				if ( file_exists( $file ) ) {

@@ -202,11 +202,13 @@ class OrderController {
 		if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
 			$plan = apply_filters( 'tutor_checkout_plan_info', null, $items[0]['item_id'] );
 			if ( $plan ) {
-				$subtotal_price = $this->model::calculate_order_price( $items )->subtotal;
-				$total_price    = $this->model::calculate_order_price( $items )->total;
+				$item_price     = $this->model::calculate_order_price( $items );
+				$subtotal_price = $item_price->subtotal;
+				$total_price    = $item_price->total;
 
 				if ( $this->model::TYPE_SUBSCRIPTION === $order_type && $plan->enrollment_fee ) {
-					$total_price += $plan->enrollment_fee;
+					$subtotal_price += $plan->enrollment_fee;
+					$total_price    += $plan->enrollment_fee;
 				}
 			}
 		} else {
@@ -220,6 +222,7 @@ class OrderController {
 			'payment_status' => $payment_status,
 			'order_type'     => $order_type,
 			'coupon_code'    => $coupon_code,
+			'coupon_amount'  => isset( $args['coupon_amount'] ) ? $args['coupon_amount'] : null,
 			'subtotal_price' => $subtotal_price,
 			'total_price'    => $total_price,
 			'net_payment'    => $total_price,
@@ -231,6 +234,28 @@ class OrderController {
 			'updated_at_gmt' => current_time( 'mysql', true ),
 			'updated_by'     => get_current_user_id(),
 		);
+
+		if ( isset( $args['discount_amount'] ) && $args['discount_amount'] > 0 ) {
+			$order_data['discount_type']   = 'flat';
+			$order_data['discount_amount'] = floatval( $args['sale_discount'] );
+			$order_data['discount_reason'] = __( 'Sale discount', 'tutor' );
+		}
+
+		/**
+		 * Tax calculation for order.
+		 */
+		$tax_rate = Tax::get_user_tax_rate( $user_id );
+		if ( $tax_rate ) {
+			$order_data['tax_type']   = Tax::get_tax_type();
+			$order_data['tax_rate']   = $tax_rate;
+			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+
+			if ( ! Tax::is_tax_included_in_price() ) {
+				$total_price              += $order_data['tax_amount'];
+				$order_data['total_price'] = $total_price;
+				$order_data['net_payment'] = $total_price;
+			}
+		}
 
 		// Update data with arguments.
 		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
@@ -611,18 +636,33 @@ class OrderController {
 		$request = (object) $request;
 
 		try {
-			$order = $this->model->get_order_by_id( $request->order_id );
+			$order    = $this->model->get_order_by_id( $request->order_id );
+			$subtotal = $order->subtotal_price;
 
-			$discount_amount = $this->model->calculate_discount_amount( $request->discount_type, $request->discount_amount, $order->subtotal_price );
+			$discount_amount = $this->model->calculate_discount_amount( $request->discount_type, $request->discount_amount, $subtotal );
 
-			$order_prices = $this->model->recalculate_order_prices( floatval( $order->subtotal_price ), floatval( $order->tax_amount ), floatval( $discount_amount ) );
+			$deducted_amount = $discount_amount;
+			if ( ! empty( $order->coupon_code ) && $order->coupon_amount > 0 ) {
+				$deducted_amount += $order->coupon_amount;
+			}
+
+			$total_price = $subtotal - $deducted_amount;
+
+			$tax_rate   = Tax::get_user_tax_rate( $order->user_id );
+			$tax_amount = Tax::calculate_tax( $total_price, $tax_rate );
+			if ( ! Tax::is_tax_included_in_price() ) {
+				$total_price += $tax_amount;
+			}
 
 			$order_data = array(
 				'discount_amount' => $request->discount_amount,
 				'discount_reason' => $request->discount_reason,
 				'discount_type'   => $request->discount_type,
-				'subtotal_price'  => $order_prices->subtotal_price,
-				'total_price'     => $order_prices->total_price,
+				'subtotal_price'  => $subtotal,
+				'tax_rate'        => $tax_rate,
+				'tax_amount'      => $tax_amount,
+				'net_payment'     => $total_price,
+				'total_price'     => $total_price,
 			);
 
 			$update = $this->model->update_order( $request->order_id, $order_data );
@@ -874,8 +914,10 @@ class OrderController {
 		}
 
 		if ( $response ) {
-			foreach ( $bulk_ids as $id ) {
-				do_action( 'tutor_order_payment_status_changed', $id, '', $bulk_action );
+			if ( 'delete' !== $bulk_action ) {
+				foreach ( $bulk_ids as $id ) {
+					do_action( 'tutor_order_payment_status_changed', $id, '', $bulk_action );
+				}
 			}
 			wp_send_json_success( __( 'Order updated successfully.', 'tutor' ) );
 		} else {
