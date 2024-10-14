@@ -12,12 +12,12 @@ import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
 import { PaymentMethod, PaymentSettings } from '../../services/payment';
 
-interface ManualPaymentModalModalProps extends ModalProps {
+interface ManualPaymentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   paymentForm: FormWithGlobalErrorType<PaymentSettings>;
 }
 
-const ManualPaymentModalModal = ({ closeModal, title, paymentForm }: ManualPaymentModalModalProps) => {
+const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentModalProps) => {
   const form = useFormWithGlobalError<PaymentMethod>({
     defaultValues: {
       name: '',
@@ -104,7 +104,7 @@ const ManualPaymentModalModal = ({ closeModal, title, paymentForm }: ManualPayme
   );
 };
 
-export default ManualPaymentModalModal;
+export default ManualPaymentModal;
 
 const styles = {
   contentWrapper: css`

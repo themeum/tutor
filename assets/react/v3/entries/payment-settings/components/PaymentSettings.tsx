@@ -11,8 +11,9 @@ import { type PaymentSettings, usePaymentSettingsQuery } from '../services/payme
 import PaymentMethods from './PaymentMethods';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import ManualPaymentModalModal from './modals/ManualPaymentModal';
+import ManualPaymentModal from './modals/ManualPaymentModal';
 import { useModal } from '@Components/modals/Modal';
+import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
 
 const TaxSettingsPage = () => {
   const { showModal } = useModal();
@@ -53,8 +54,23 @@ const TaxSettingsPage = () => {
           <div css={styles.paymentButtonWrapper}>
             <PaymentMethods />
             <div css={styles.buttonWrapper}>
-              <Button variant="primary" isOutlined size="large" icon={<SVGIcon name="plus" width={24} height={24} />}>
-                {__('Add payment method', 'tutor')}
+              <Button
+                variant="primary"
+                isOutlined
+                size="large"
+                icon={<SVGIcon name="plus" width={24} height={24} />}
+                onClick={() => {
+                  showModal({
+                    component: PaymentGatewaysModal,
+                    props: {
+                      title: __('Payment gateways', 'tutor'),
+                      form: form,
+                    },
+                    depthIndex: zIndex.highest,
+                  });
+                }}
+              >
+                {__('Connect more gateway', 'tutor')}
               </Button>
               <Button
                 variant="primary"
@@ -63,7 +79,7 @@ const TaxSettingsPage = () => {
                 icon={<SVGIcon name="plus" width={24} height={24} />}
                 onClick={() => {
                   showModal({
-                    component: ManualPaymentModalModal,
+                    component: ManualPaymentModal,
                     props: {
                       title: __('Set up manual payment method', 'tutor'),
                       paymentForm: form,
