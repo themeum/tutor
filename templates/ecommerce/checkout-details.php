@@ -260,6 +260,7 @@ if ( ! empty( $country ) ) {
 					</button>
 					<?php endif; ?>
 				</div>
+				<div class="tutor-fw-bold tutor-discount-amount"></div>
 				<div class="tutor-fw-bold tutor-discount-amount">-<?php echo esc_html( tutor_get_formatted_price( $applied_coupon->deducted_price ) ); ?></div>
 			</div>
 
@@ -276,6 +277,7 @@ if ( ! empty( $country ) ) {
 		<div class="tutor-checkout-detail-item">
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
+				<div class="tutor-fw-bold tutor-checkout-grand-total"><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
 				<div class="tutor-fw-bold tutor-checkout-grand-total">
 					<?php
 						$grand_total = $grand_total + ( $is_tax_included_in_price ? 0 : $tax_amount );
