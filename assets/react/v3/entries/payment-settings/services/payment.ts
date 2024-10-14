@@ -99,3 +99,47 @@ export const usePaymentSettingsQuery = () => {
     queryFn: getPaymentSettings,
   });
 };
+
+export interface PaymentGateway {
+  name: string;
+  label: string;
+  icon: string;
+  is_installed: boolean;
+  support_recurring: boolean;
+}
+
+const dummyPaymentGateways: PaymentGateway[] = [
+  {
+    name: 'paypal',
+    label: 'Paypal',
+    icon: 'http://localhost:10003/wp-content/plugins/tutor/assets/images/paypal.svg',
+    is_installed: true,
+    support_recurring: true,
+  },
+  {
+    name: 'stripe',
+    label: 'Stripe',
+    icon: 'http://localhost:10003/wp-content/plugins/tutor-pro/assets/images/payment-gateways/stripe.svg',
+    is_installed: false,
+    support_recurring: true,
+  },
+  {
+    name: 'razorpay',
+    label: 'Razorpay',
+    icon: 'http://localhost:10003/wp-content/plugins/tutor-pro/assets/images/payment-gateways/razorpay.svg',
+    is_installed: false,
+    support_recurring: false,
+  },
+];
+
+const getPaymentGateways = () => {
+  return Promise.resolve<PaymentGateway[]>(dummyPaymentGateways);
+  // return wpAjaxInstance.get<PaymentSettings>(endpoints.GET_PAYMENT_GATEWAYS).then(response => response.data);
+};
+
+export const usePaymentGatewaysQuery = () => {
+  return useQuery({
+    queryKey: ['PaymentGateways'],
+    queryFn: getPaymentGateways,
+  });
+};

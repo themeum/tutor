@@ -55,7 +55,7 @@ const Card = ({
         easing: (t) => t * (2 - t),
       },
     },
-    [isCollapsed],
+    [isCollapsed]
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -72,11 +72,13 @@ const Card = ({
     <div css={styles.wrapper(hasBorder)} {...additionalAttributes} style={style}>
       <div css={styles.headerWrapper(isCollapsed || noSeparator)}>
         <h5 css={styles.title}>
-          {titleIcon && (
-            <span css={styles.titleIcon}>
+          <span css={styles.titleIcon}>
+            {titleIcon ? (
               <img src={titleIcon} alt={__('Icon', 'tutor')} />
-            </span>
-          )}
+            ) : (
+              <SVGIcon name="handCoin" width={24} height={24} />
+            )}
+          </span>
           {title}
           <Show when={subscription}>
             <Badge variant="success">{__('Supports Subscriptions', 'tutor')}</Badge>
@@ -110,13 +112,11 @@ const styles = {
     background-color: ${colorPalate.basic.white};
     box-shadow: ${shadow.card};
 
-    ${
-      hasBorder &&
-      css`
-        box-shadow: none;
-        border: 1px solid ${colorTokens.stroke.divider};
-      `
-    }
+    ${hasBorder &&
+    css`
+      box-shadow: none;
+      border: 1px solid ${colorTokens.stroke.divider};
+    `}
   `,
   headerWrapper: (collapsed: boolean) => css`
     display: flex;
@@ -125,12 +125,10 @@ const styles = {
     gap: ${spacing[8]};
     padding: ${spacing[24]};
 
-    ${
-      !collapsed &&
-      css`
-        border-bottom: 1px solid ${colorTokens.stroke.divider};
-      `
-    }
+    ${!collapsed &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
   `,
   title: css`
     ${typography.body('medium')};
@@ -138,13 +136,18 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
-  `,
-  titleIcon: css`
-    display: flex;
+
     img {
       width: 24px;
       height: 24px;
     }
+
+    svg {
+      color: ${colorTokens.icon.default};
+    }
+  `,
+  titleIcon: css`
+    display: flex;
   `,
   collapseButton: ({ isCollapsed }: { isCollapsed: boolean }) => css`
     ${styleUtils.resetButton};
@@ -153,12 +156,10 @@ const styles = {
     color: ${colorTokens.icon.brand};
     transition: color 0.3s ease-in-out;
 
-    ${
-      isCollapsed &&
-      css`
-        color: ${colorTokens.icon.default};
-      `
-    }
+    ${isCollapsed &&
+    css`
+      color: ${colorTokens.icon.default};
+    `}
   `,
   actions: css`
     display: flex;

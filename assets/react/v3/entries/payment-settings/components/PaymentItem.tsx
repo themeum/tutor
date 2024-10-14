@@ -61,7 +61,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
       </button>
 
       <Card
-        title={data.label}
+        title={data.is_manual ? form.getValues(`payment_methods.${paymentIndex}.fields.0.value`) : data.label}
         titleIcon={data.icon}
         subscription={data.support_recurring}
         actionTray={
@@ -108,7 +108,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                         );
 
                       case 'textarea':
-                        return <FormTextareaInput {...controllerProps} label={field.label} />;
+                        return <FormTextareaInput {...controllerProps} label={field.label} rows={4} />;
 
                       case 'webhook_url':
                         return <OptionWebhookUrl {...controllerProps} label={field.label} />;
@@ -133,11 +133,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 export default PaymentItem;
 
 const styles = {
-  wrapper: ({
-    isOverlay,
-  }: {
-    isOverlay: boolean;
-  }) => css`
+  wrapper: ({ isOverlay }: { isOverlay: boolean }) => css`
     position: relative;
 
     &:hover {
@@ -146,14 +142,12 @@ const styles = {
       }
     }
 
-    ${
-      isOverlay &&
-      css`
+    ${isOverlay &&
+    css`
       [data-card] {
         box-shadow: ${shadow.drag} !important;
       }
-    `
-    }
+    `}
   `,
   paymentWrapper: css`
     display: flex;
@@ -177,11 +171,7 @@ const styles = {
       min-width: 350px;
     }
   `,
-  dragButton: ({
-    isOverlay,
-  }: {
-    isOverlay: boolean;
-  }) => css`
+  dragButton: ({ isOverlay }: { isOverlay: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
     top: ${spacing[24]};
