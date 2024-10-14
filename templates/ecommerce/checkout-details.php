@@ -74,22 +74,21 @@ if ( ! empty( $country ) ) {
 					$sale_price     = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
 					$enrollment_fee = floatval( $plan_info->enrollment_fee );
 
+					$plan_coupon_applied = false;
+
 					if ( $applied_coupon->is_applied ) {
 						foreach ( $applied_coupon->items as $item ) {
 							if ( $item->item_id === $plan_info->course_id ) {
-								$regular_price = $item->regular_price;
-								$sale_price    = $item->discount_price;
+								$regular_price       = $item->regular_price;
+								$sale_price          = $item->discount_price;
+								$plan_coupon_applied = $item->is_applied;
 								break;
 							}
 						}
 					}
 
-					$sale_discount += $sale_price ? $regular_price - $sale_price : 0;
-					$subtotal       = $regular_price;
-					$subtotal      += $enrollment_fee;
-
-					$coupon_price = $applied_coupon->is_applied ? $applied_coupon->deducted_price : 0;
-					$grand_total  = $subtotal - ( $sale_discount + $coupon_price );
+					$subtotal    = $applied_coupon->subtotal_price;
+					$grand_total = $applied_coupon->total_price;
 
 					$show_coupon_box = $sale_price ? false : true;
 
@@ -101,7 +100,7 @@ if ( ! empty( $country ) ) {
 							<h6 class="tutor-checkout-course-title">
 								<?php echo esc_html( $plan_info->plan_name ); ?>
 							</h6>
-							<?php if ( $applied_coupon->is_applied ) : ?>
+							<?php if ( $plan_coupon_applied ) : ?>
 							<div class="tutor-checkout-coupon-badge">
 								<i class="tutor-icon-tag" area-hidden="true"></i>
 								<span><?php echo esc_html( $applied_coupon->coupon_title ); ?></span>
@@ -153,12 +152,15 @@ if ( ! empty( $country ) ) {
 							$regular_price        = $course_price->regular_price;
 							$sale_price           = $course_price->sale_price;
 
+							$coupon_discount_amount = 0;
+
 							if ( $applied_coupon->is_applied ) {
 								foreach ( $applied_coupon->items as $item ) {
 									if ( $item->item_id === $course->ID && $item->is_applied ) {
-										$has_automatic_coupon = $item->is_applied;
-										$regular_price        = $item->regular_price;
-										$sale_price           = $item->discount_price;
+										$has_automatic_coupon   = $item->is_applied;
+										$regular_price          = $item->regular_price;
+										$sale_price             = $item->discount_price;
+										$coupon_discount_amount = $item->discount_amount;
 										break;
 									}
 								}
@@ -223,11 +225,11 @@ if ( ! empty( $country ) ) {
 				</div>
 			</div>
 
-			<?php if ( $sale_discount > 0 ) : ?>
+			<?php if ( $applied_coupon->sale_discount > 0 ) : ?>
 			<div class="tutor-checkout-summary-item">
 				<div><?php esc_html_e( 'Sale discount', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold">
-					- <?php echo tutor_get_formatted_price( $sale_discount ); //phpcs:ignore?>
+					- <?php echo tutor_get_formatted_price( $applied_coupon->sale_discount ); //phpcs:ignore?>
 				</div>
 			</div>
 			<?php endif ?>
@@ -249,7 +251,7 @@ if ( ! empty( $country ) ) {
 			</div>
 			<?php endif; ?>
 
-			<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper <?php echo esc_attr( $applied_coupon->deducted_price ? '' : 'tutor-d-none' ); ?>">
+			<div class="tutor-checkout-summary-item tutor-checkout-coupon-wrapper <?php echo esc_attr( $applied_coupon->is_applied ? '' : 'tutor-d-none' ); ?>">
 				<div class="tutor-checkout-coupon-badge tutor-has-delete-button">
 					<i class="tutor-icon-tag" area-hidden="true"></i>
 					<span><?php echo esc_html( $applied_coupon->coupon_title ); ?></span>
@@ -260,7 +262,7 @@ if ( ! empty( $country ) ) {
 					</button>
 					<?php endif; ?>
 				</div>
-				<div class="tutor-fw-bold tutor-discount-amount">-<?php echo esc_html( tutor_get_formatted_price( $applied_coupon->deducted_price ) ); ?></div>
+				<div class="tutor-fw-bold tutor-discount-amount">-<?php echo esc_html( tutor_get_formatted_price( $applied_coupon->coupon_discount ) ); ?></div>
 			</div>
 
 			<?php
@@ -268,7 +270,7 @@ if ( ! empty( $country ) ) {
 				?>
 			<div class="tutor-checkout-summary-item">
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
-				<div class="tutor-fw-bold"><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
+				<div class="tutor-fw-bold"><?php echo tutor_get_formatted_price( $applied_coupon->tax_amount ); //phpcs:ignore?></div>
 			</div>
 			<?php endif; ?>
 		</div>
@@ -277,10 +279,7 @@ if ( ! empty( $country ) ) {
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold tutor-checkout-grand-total">
-					<?php
-						$grand_total = $grand_total + ( $is_tax_included_in_price ? 0 : $tax_amount );
-						echo tutor_get_formatted_price( $grand_total ); //phpcs:ignore
-					?>
+					<?php echo tutor_get_formatted_price( $applied_coupon->total_price ); //phpcs:ignore ?>
 				</div>
 			</div>
 			<div class="tutor-checkout-summary-item">
@@ -291,7 +290,7 @@ if ( ! empty( $country ) ) {
 					<div class="tutor-fs-7 tutor-color-muted">
 						<?php
 						/* translators: %s: tax amount */
-						echo esc_html( sprintf( __( '(Incl. Tax %s)', 'tutor' ), tutor_get_formatted_price( $tax_amount ) ) );
+						echo esc_html( sprintf( __( '(Incl. Tax %s)', 'tutor' ), tutor_get_formatted_price( $applied_coupon->tax_amount ) ) );
 						?>
 					</div>
 					<?php endif ?>
