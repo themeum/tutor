@@ -119,7 +119,7 @@ const styles = {
 
     ${size === 'large' &&
     css`
-      padding: ${spacing[12]} ${spacing[40]};
+      padding: ${spacing[12]} ${spacing[24]};
     `}
 
     ${size === 'small' &&
