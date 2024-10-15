@@ -27,6 +27,7 @@ const FormImageRadioGroup = <T,>({ field, fieldState, label, options = [], disab
                 onClick={() => {
                   field.onChange(option.value);
                 }}
+                disabled={disabled}
               >
                 <img src={option.image} alt={option.label} width={64} height={64} />
                 <p>{option.label}</p>

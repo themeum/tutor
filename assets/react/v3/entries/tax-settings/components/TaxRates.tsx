@@ -68,7 +68,7 @@ export default function TaxRates() {
       form.setValue(`rates.${activeCountryIndex}.is_same_rate`, true);
       form.setValue(
         `rates.${activeCountryIndex}.states`,
-        activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, apply_on_shipping: false }))
+        activeCountryAllStates.map((state) => ({ id: state.id, rate: 0, apply_on_shipping: false })),
       );
     }
   }, [isSingleCountry]);
@@ -138,8 +138,17 @@ export default function TaxRates() {
                       name={`rates.${activeCountryIndex}.rate` as 'rates.0.rate'}
                       render={(controllerProps) => {
                         const handleChange = (value: string | number) => {
-                          if (Number(value) <= 100) {
-                            controllerProps.field.onChange(value);
+                          let stringValue = String(value);
+
+                          if (stringValue.includes('.')) {
+                            const [integer, decimal] = stringValue.split('.');
+                            stringValue = `${Number.parseInt(integer, 10)}.${decimal}`;
+                          } else {
+                            stringValue = `${Number.parseInt(stringValue, 10)}`;
+                          }
+
+                          if (Number(stringValue) <= 100 || stringValue === '') {
+                            controllerProps.field.onChange(stringValue);
                           } else {
                             controllerProps.field.onChange('');
                           }
@@ -174,7 +183,7 @@ export default function TaxRates() {
           }
 
           const stateIndex = rates[activeCountryIndex].states.findIndex(
-            (state) => String(state.id) === String(item.locationId)
+            (state) => String(state.id) === String(item.locationId),
           );
           if (stateIndex > -1) {
             return (
@@ -189,10 +198,27 @@ export default function TaxRates() {
                       control={form.control}
                       name={`rates.${activeCountryIndex}.states.${stateIndex}.rate`}
                       render={(controllerProps) => {
+                        const handleChange = (value: string | number) => {
+                          let stringValue = String(value);
+
+                          if (stringValue.includes('.')) {
+                            const [integer, decimal] = stringValue.split('.');
+                            stringValue = `${Number.parseInt(integer, 10)}.${decimal}`;
+                          } else {
+                            stringValue = `${Number.parseInt(stringValue, 10)}`;
+                          }
+
+                          if (Number(stringValue) <= 100 || stringValue === '') {
+                            controllerProps.field.onChange(stringValue);
+                          } else {
+                            controllerProps.field.onChange('');
+                          }
+                        };
                         return (
                           <FormInputWithContent
                             {...controllerProps}
                             type="number"
+                            onChange={handleChange}
                             content={'%'}
                             contentCss={styleUtils.inputCurrencyStyle}
                             contentPosition="right"

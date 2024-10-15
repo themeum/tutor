@@ -72,7 +72,7 @@ const TaxSettingsPage = () => {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <Show when={activeCountry} fallback={<h6 css={typography.heading6('medium')}>{__('Tax', 'tutor')}</h6>}>
+      <Show when={activeCountry} fallback={<h6 css={styles.title}>{__('Tax', 'tutor')}</h6>}>
         {(countryCode) => {
           return (
             <Button
@@ -130,6 +130,10 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[24]};
   `,
+  title: css`
+    ${typography.heading5('medium')};
+    line-height: 1.6;
+  `,
   saveButtonContainer: css`
     display: flex;
     justify-content: flex-end;
@@ -138,14 +142,14 @@ const styles = {
     ${typography.heading5('medium')};
     text-decoration: none;
     color: ${colorTokens.text.title};
-		width: 100%;
+    width: 100%;
     display: flex;
     align-items: center;
     justify-content: start;
 
-		svg {
-			color: ${colorTokens.text.title};
-		}
+    svg {
+      color: ${colorTokens.text.title};
+    }
 
     &:hover {
       text-decoration: none;
@@ -155,7 +159,7 @@ const styles = {
   emptyStateWrapper: css`
     margin-top: ${spacing[24]};
     margin-bottom: ${spacing[24]};
-    
+
     img {
       margin-bottom: ${spacing[24]};
     }

@@ -8,42 +8,56 @@ type labelPositionType = 'left' | 'right';
 
 const styles = {
   switchStyles: css`
-    appearance: none;
-    border: 0;
-    width: 40px;
-    height: 24px;
-    background: ${colorTokens.color.black[10]};
-    border-radius: 12px;
-    position: relative;
-    display: inline-block;
-    vertical-align: middle;
-    cursor: pointer;
-    transition: background-color 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+    /** Increasing the css specificity */
+    &[data-input] {
+      all: unset;
+      appearance: none;
+      border: 0;
+      width: 40px;
+      height: 24px;
+      background: ${colorTokens.color.black[10]};
+      border-radius: 12px;
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      cursor: pointer;
+      transition: background-color 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
 
-    &:after {
-      content: '';
-      position: absolute;
-      top: 3px;
-      left: ${spacing[4]};
-      width: 18px;
-      height: 18px;
-      background: ${colorTokens.background.white};
-      border-radius: ${borderRadius.circle};
-      box-shadow: ${shadow.switch};
-      transition: left 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
-    }
-
-    &:checked {
-      background: ${colorTokens.primary.main};
-      &:after {
-        left: 18px;
+      &::before {
+        display: none !important;
       }
-    }
 
-    &:disabled {
-      pointer-events: none;
-      filter: none;
-      opacity: 0.5;
+      &:focus {
+        border: none;
+        outline: none;
+        box-shadow: none;
+      }
+
+      &:after {
+        content: '';
+        position: absolute;
+        top: 3px;
+        left: ${spacing[4]};
+        width: 18px;
+        height: 18px;
+        background: ${colorTokens.background.white};
+        border-radius: ${borderRadius.circle};
+        box-shadow: ${shadow.switch};
+        transition: left 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+      }
+
+      &:checked {
+        background: ${colorTokens.primary.main};
+        &:after {
+          left: 18px;
+        }
+      }
+
+      &:disabled {
+        pointer-events: none;
+        filter: none;
+        opacity: 0.5;
+      }
     }
   `,
 
@@ -98,6 +112,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>((props: SwitchPro
         disabled={disabled}
         css={styles.switchStyles}
         onChange={handleChange}
+        data-input
       />
     </div>
   );
