@@ -264,7 +264,7 @@ if ( ! empty( $country ) ) {
 			</div>
 
 			<?php
-			if ( Tax::is_tax_configured() && ! $is_tax_included_in_price ) :
+			if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price ) :
 				?>
 			<div class="tutor-checkout-summary-item">
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
@@ -286,7 +286,7 @@ if ( ! empty( $country ) ) {
 			<div class="tutor-checkout-summary-item">
 				<div></div>
 			<?php
-			if ( Tax::is_tax_configured() && $is_tax_included_in_price ) :
+			if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) :
 				?>
 					<div class="tutor-fs-7 tutor-color-muted">
 						<?php

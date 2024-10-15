@@ -122,6 +122,10 @@ class Tax {
 	 * @return float
 	 */
 	public static function calculate_tax( $amount, $rate ) {
+		if ( 0 === $rate ) {
+			return $rate;
+		}
+
 		if ( self::is_tax_included_in_price() ) {
 			// Tax = (Tax Rate X Price) / (1 + Tax Rate).
 			$tax = $amount - ( $rate * $amount ) / ( 1 + $rate );

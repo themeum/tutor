@@ -38,7 +38,7 @@ class OptionKeys {
 	// Ecommerce Policies.
 	const PRIVACY_POLICY = 'ecommerce_privacy_policy';
 
-	// Manual payment settings.
+	// Payment settings.
 	const MANUAL_PAYMENT_KEY = 'tutor_manual_payments';
 	const PAYMENT_SETTINGS   = 'payment_settings';
 

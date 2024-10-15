@@ -254,6 +254,9 @@ export const colorTokens = {
       fill30: '#F5FBF7',
       fill40: '#E5F5EB',
     },
+    warning: {
+      fill40: '#FDF4E3',
+    },
     status: {
       success: '#e5f5eb',
       warning: '#fdf4e3',

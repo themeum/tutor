@@ -289,6 +289,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 Update: Implemented tax calculation on the checkout page.
 Update: Added clear discount breakdown in order details.
 Update: Displayed payment gateway names on frontend and backend order pages.
+Update: Checkout page payment method list design updated.
 Fix: Resolved issue preventing permanent order deletion.
 Fix: Addressed course/bundle assignment issue when updating automatic coupons.
 Fix: Fixed PHP fatal error related to course intro video source.
