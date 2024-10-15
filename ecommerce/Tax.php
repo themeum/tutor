@@ -137,7 +137,8 @@ class Tax {
 			}
 		}
 
-		return round( $tax, 2 );
+		// Tax amount should not negative value.
+		return max( 0, round( $tax, 2 ) );
 	}
 
 	/**
