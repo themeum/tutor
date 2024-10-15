@@ -4,18 +4,32 @@ import Show from '@Controls/Show';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
-import { PaymentGateway } from '../services/payment';
+import { PaymentGateway, PaymentSettings, useInstallPaymentMutation } from '../services/payment';
 import { __ } from '@wordpress/i18n';
 import Badge from '../atoms/Badge';
+import { useFormContext } from 'react-hook-form';
+import { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 
 interface PaymentGatewayItemProps {
   data: PaymentGateway;
+  onInstallSuccess: () => void;
+  form: FormWithGlobalErrorType<PaymentSettings>;
 }
 
-const PaymentGatewayItem = ({ data }: PaymentGatewayItemProps) => {
-  const handleInstallClick = () => {
-    // @TODO
-    console.log('Install clicked');
+const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItemProps) => {
+  const installPaymentMutation = useInstallPaymentMutation();
+
+  const handleInstallClick = async () => {
+    const response = await installPaymentMutation.mutateAsync({
+      slug: data.name,
+    });
+
+    if (response.status_code === 200 && response.data) {
+      onInstallSuccess();
+      form.setValue('payment_methods', [...form.getValues('payment_methods'), response.data], {
+        shouldDirty: true,
+      });
+    }
   };
 
   return (
@@ -23,7 +37,7 @@ const PaymentGatewayItem = ({ data }: PaymentGatewayItemProps) => {
       <div css={styles.title}>
         <img src={data.icon} alt={data.label} />
         <span>{data.label}</span>
-        <Show when={data.support_recurring}>
+        <Show when={data.support_subscription}>
           <Badge variant="success">{__('Supports Subscriptions', 'tutor')}</Badge>
         </Show>
       </div>
@@ -34,7 +48,13 @@ const PaymentGatewayItem = ({ data }: PaymentGatewayItemProps) => {
             {__('Installed', 'tutor')}
           </span>
         ) : (
-          <Button variant="secondary" size="small" disabled={!data.can_install} onClick={handleInstallClick}>
+          <Button
+            variant="secondary"
+            size="small"
+            disabled={!data.can_install}
+            onClick={handleInstallClick}
+            loading={installPaymentMutation.isPending}
+          >
             {__('Install', 'tutor')}
           </Button>
         )}

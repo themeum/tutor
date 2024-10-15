@@ -25,7 +25,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
       label: '',
       is_active: true,
       icon: '',
-      support_recurring: false,
+      support_subscription: false,
       update_available: false,
       is_manual: true,
       fields: [

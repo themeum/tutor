@@ -123,7 +123,8 @@ const styles = {
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[8]};
-    padding: ${spacing[24]};
+    padding: ${spacing[20]} ${spacing[24]};
+    min-height: 72px;
 
     ${!collapsed &&
     css`

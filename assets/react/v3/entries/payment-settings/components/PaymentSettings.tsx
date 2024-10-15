@@ -51,7 +51,7 @@ const TaxSettingsPage = () => {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <h6 css={typography.heading5('medium')}>{__('Payment Methods', 'tutor')}</h6>
+      <h6 css={styles.title}>{__('Payment Methods', 'tutor')}</h6>
       <FormProvider {...form}>
         <div css={styles.paymentButtonWrapper}>
           <Show
@@ -98,7 +98,7 @@ const TaxSettingsPage = () => {
             </Show>
 
             <Button
-              variant="primary"
+              variant="text"
               isOutlined
               size="large"
               icon={<SVGIcon name="plus" width={24} height={24} />}
@@ -113,7 +113,7 @@ const TaxSettingsPage = () => {
                 });
               }}
             >
-              {__('Add manual payment', 'tutor')}
+              {__('Add manual method', 'tutor')}
             </Button>
           </div>
         </div>
@@ -131,6 +131,10 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
+  `,
+  title: css`
+    ${typography.heading5('medium')};
+    line-height: 1.6;
   `,
   saveButtonContainer: css`
     display: flex;

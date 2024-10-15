@@ -1,7 +1,10 @@
+import { useToast } from '@/v3/shared/atoms/Toast';
 import { tutorConfig } from '@/v3/shared/config/config';
+import { ErrorResponse } from '@/v3/shared/utils/form';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
 
 export interface PaymentField {
   name: string;
@@ -17,7 +20,7 @@ export interface PaymentMethod {
   label: string;
   is_active: boolean;
   icon: string;
-  support_recurring: boolean;
+  support_subscription: boolean;
   update_available: boolean;
   is_manual: boolean;
   fields: PaymentField[];
@@ -31,24 +34,24 @@ export const initialPaymentSettings: PaymentSettings = {
   payment_methods: [
     {
       name: 'paypal',
-      label: 'Paypal',
+      label: __('Paypal', 'tutor'),
       is_active: false,
       icon: `${tutorConfig.tutor_url}assets/images/paypal.svg`,
-      support_recurring: true,
+      support_subscription: true,
       update_available: true,
       is_manual: false,
       fields: [
         {
           name: 'environment',
-          label: 'PyPal Environment',
+          label: __('PyPal Environment', 'tutor'),
           type: 'select',
           options: [
             {
-              label: 'Test',
+              label: __('Test', 'tutor'),
               value: 'test',
             },
             {
-              label: 'Live',
+              label: __('Live', 'tutor'),
               value: 'live',
             },
           ],
@@ -56,31 +59,31 @@ export const initialPaymentSettings: PaymentSettings = {
         },
         {
           name: 'merchant_email',
-          label: 'Merchant Email',
+          label: __('Merchant Email', 'tutor'),
           type: 'text',
           value: '',
         },
         {
           name: 'client_id',
-          label: 'Client ID',
+          label: __('Client ID', 'tutor'),
           type: 'text',
           value: '',
         },
         {
           name: 'secret_id',
-          label: 'Secret ID',
+          label: __('Secret ID', 'tutor'),
           type: 'key',
           value: '',
         },
         {
           name: 'webhook_id',
-          label: 'Webhook ID',
+          label: __('Webhook ID', 'tutor'),
           type: 'key',
           value: '',
         },
         {
           name: 'webhook_url',
-          label: 'Webhook URL',
+          label: __('Webhook URL', 'tutor'),
           type: 'webhook_url',
           value: `${tutorConfig.home_url}/wp-json/tutor/v1/ecommerce-webhook?payment_method=paypal`,
         },
@@ -105,7 +108,7 @@ export interface PaymentGateway {
   label: string;
   icon: string;
   is_installed: boolean;
-  support_recurring: boolean;
+  support_subscription: boolean;
   can_install: boolean;
 }
 
@@ -117,5 +120,55 @@ export const usePaymentGatewaysQuery = () => {
   return useQuery({
     queryKey: ['PaymentGateways'],
     queryFn: getPaymentGateways,
+  });
+};
+
+interface PaymentResponse {
+  status_code: number;
+  message: string;
+  data: PaymentMethod | null;
+}
+
+interface PaymentPayload {
+  slug: string;
+}
+
+const installPayment = (payload: PaymentPayload) => {
+  return wpAjaxInstance.post<PaymentPayload, PaymentResponse>(endpoints.INSTALL_PAYMENT_GATEWAY, {
+    ...payload,
+  });
+};
+
+export const useInstallPaymentMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: installPayment,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: response.message });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
+  });
+};
+
+const removePayment = (payload: PaymentPayload) => {
+  return wpAjaxInstance.post<PaymentPayload, PaymentResponse>(endpoints.REMOVE_PAYMENT_GATEWAY, {
+    ...payload,
+  });
+};
+
+export const useRemovePaymentMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: removePayment,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: response.message });
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: error.response.data.message });
+    },
   });
 };

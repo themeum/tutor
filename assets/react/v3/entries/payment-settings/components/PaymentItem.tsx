@@ -11,16 +11,17 @@ import FormSelectInput from '@Components/fields/FormSelectInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import { styleUtils } from '@Utils/style-utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
-import type { PaymentMethod, PaymentSettings } from '../services/payment';
+import { useRemovePaymentMutation, type PaymentMethod, type PaymentSettings } from '../services/payment';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
 import Show from '@/v3/shared/controls/Show';
+import Badge from '../atoms/Badge';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -31,6 +32,8 @@ interface PaymentItemProps {
 const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps) => {
   const { showModal } = useModal();
   const form = useFormContext<PaymentSettings>();
+
+  const removePaymentMutation = useRemovePaymentMutation();
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: data.name,
@@ -66,13 +69,23 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
       <Card
         title={data.is_manual ? form.getValues(`payment_methods.${paymentIndex}.fields.0.value`) : data.label}
         titleIcon={data.icon}
-        subscription={data.support_recurring}
+        subscription={data.support_subscription}
         actionTray={
-          <Controller
-            name={`payment_methods.${paymentIndex}.is_active`}
-            control={form.control}
-            render={(controllerProps) => <FormSwitch {...controllerProps} />}
-          />
+          <div css={styles.cardActions}>
+            <Show when={data.update_available}>
+              <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
+                {__('Update available', 'tutor')}
+              </Badge>
+              <Button variant="text" size="small" icon={<SVGIcon name="update" width={24} height={24} />}>
+                {__('Update now', 'tutor')}
+              </Button>
+            </Show>
+            <Controller
+              name={`payment_methods.${paymentIndex}.is_active`}
+              control={form.control}
+              render={(controllerProps) => <FormSwitch {...controllerProps} />}
+            />
+          </div>
         }
         style={style}
         hasBorder
@@ -147,6 +160,20 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                         shouldDirty: true,
                       }
                     );
+                  } else {
+                    const response = await removePaymentMutation.mutateAsync({
+                      slug: data.name,
+                    });
+
+                    if (response.status_code === 200) {
+                      form.setValue(
+                        'payment_methods',
+                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
+                        {
+                          shouldDirty: true,
+                        }
+                      );
+                    }
                   }
                 }
               }}
@@ -178,6 +205,29 @@ const styles = {
         box-shadow: ${shadow.drag} !important;
       }
     `}
+  `,
+  cardActions: css`
+    display: flex;
+    align-items: center;
+
+    & > div {
+      width: auto;
+    }
+
+    button {
+      margin-right: ${spacing[24]};
+      line-height: ${lineHeight[16]};
+      color: ${colorTokens.brand.blue};
+      font-weight: ${fontWeight.medium};
+
+      svg {
+        color: ${colorTokens.icon.brand};
+      }
+    }
+
+    &:hover button {
+      color: ${colorTokens.brand.blue};
+    }
   `,
   paymentWrapper: css`
     display: flex;

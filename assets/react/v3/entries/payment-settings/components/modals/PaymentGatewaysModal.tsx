@@ -28,7 +28,11 @@ const PaymentGatewaysModal = ({ closeModal, title, form }: PaymentGatewaysModalP
               when={paymentGatewaysQuery.data?.length}
               fallback={<div css={styles.noData}>{__('No data found!', 'tutor')}</div>}
             >
-              <For each={paymentGatewaysQuery.data ?? []}>{(gateway) => <PaymentGatewayItem data={gateway} />}</For>
+              <For each={paymentGatewaysQuery.data ?? []}>
+                {(gateway) => (
+                  <PaymentGatewayItem data={gateway} onInstallSuccess={() => closeModal({ action: 'CONFIRM' })} form={form} />
+                )}
+              </For>
             </Show>
           </Show>
         </div>

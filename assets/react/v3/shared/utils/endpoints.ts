@@ -45,6 +45,8 @@ const endpoints = {
   // PAYMENT SETTINGS
   GET_PAYMENT_SETTINGS: 'tutor_payment_settings',
   GET_PAYMENT_GATEWAYS: 'tutor_payment_gateways',
+  INSTALL_PAYMENT_GATEWAY: 'tutor_install_payment_gateway',
+  REMOVE_PAYMENT_GATEWAY: 'tutor_remove_payment_gateway',
 };
 
 export default endpoints;
