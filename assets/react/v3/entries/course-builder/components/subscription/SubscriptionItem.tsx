@@ -1,6 +1,3 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
@@ -8,6 +5,10 @@ import { animated, useSpring } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+
+import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInput from '@Components/fields/FormInput';
