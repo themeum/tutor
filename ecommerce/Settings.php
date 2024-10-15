@@ -34,7 +34,7 @@ class Settings {
 
 		add_filter( 'tutor_option_input', array( $this, 'format_ecommerce_tax_data' ) );
 		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
-		add_filter( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
+		add_action( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
 	}
 
 
