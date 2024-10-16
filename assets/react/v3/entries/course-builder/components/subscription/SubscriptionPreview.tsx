@@ -12,7 +12,6 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
 import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@CourseBuilderServices/subscription';
-import { styleUtils } from '@Utils/style-utils';
 
 import { PreviewItem } from './PreviewItem';
 
@@ -34,23 +33,6 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
     <div css={styles.outer}>
       <div css={styles.header}>
         <p>{__('Subscription Plans List', 'tutor')}</p>
-        <Show when={subscriptions.length > 0}>
-          <button
-            type="button"
-            css={styles.editButton}
-            onClick={() => {
-              showModal({
-                component: SubscriptionModal,
-                props: {
-                  title: __('Manage Subscription Plans', 'tutor'),
-                  icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
-                },
-              });
-            }}
-          >
-            <SVGIcon name="edit" width={24} height={24} />
-          </button>
-        </Show>
       </div>
       <Show
         when={subscriptions.length > 0}
@@ -107,14 +89,6 @@ const styles = {
 		justify-content: space-between;
 		${typography.body()};
 		color: ${colorTokens.text.title};
-	`,
-  editButton: css`
-		${styleUtils.resetButton};
-		color: ${colorTokens.icon.default};
-		transition: color 0.3s ease;
-		&:hover {
-			color: ${colorTokens.icon.hover};
-		}
 	`,
   emptyState: css`
 		width: 100%;

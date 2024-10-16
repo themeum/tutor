@@ -84,6 +84,8 @@ export default function SubscriptionItem({
         form.setFocus(`subscriptions.${index}.plan_name` as `subscriptions.0.plan_name`);
       }, SET_FOCUS_AFTER);
 
+      wrapperRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
       return () => {
         clearTimeout(timeoutId);
       };

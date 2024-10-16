@@ -1,10 +1,13 @@
+import { useModal } from '@/v3/shared/components/modals/Modal';
+import { styleUtils } from '@/v3/shared/utils/style-utils';
 import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { DurationUnit, SubscriptionFormData } from '@CourseBuilderServices/subscription';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import SubscriptionModal from '../modals/SubscriptionModal';
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {
@@ -24,27 +27,30 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
 }
 
 export function PreviewItem({ subscription }: { subscription: SubscriptionFormData }) {
-  return (
-    <div css={styles.item}>
-      <p css={styles.title}>
-        {subscription.plan_name}
-        <Show when={subscription.is_featured}>
-          <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
-        </Show>
-      </p>
-      <div css={styles.information}>
-        <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
-          <span>
-            {sprintf(
-              __('Renew every %s %s', 'tutor'),
-              subscription.recurring_value.toString().padStart(2, '0'),
-              formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
-            )}
-          </span>
-        </Show>
+  const { showModal } = useModal();
 
-        {/* @TODO: will be updated after confirmation */}
-        {/* <Show when={subscription.enable_free_trial}>
+  return (
+    <div css={styles.wrapper}>
+      <div css={styles.item}>
+        <p css={styles.title}>
+          {subscription.plan_name}
+          <Show when={subscription.is_featured}>
+            <SVGIcon style={styles.featuredIcon} name="star" height={20} width={20} />
+          </Show>
+        </p>
+        <div css={styles.information}>
+          <Show when={subscription.payment_type === 'recurring'} fallback={<span>{__('Lifetime', 'tutor')}</span>}>
+            <span>
+              {sprintf(
+                __('Renew every %s %s', 'tutor'),
+                subscription.recurring_value.toString().padStart(2, '0'),
+                formatRepeatUnit(subscription.recurring_interval, Number(subscription.recurring_value)),
+              )}
+            </span>
+          </Show>
+
+          {/* @TODO: will be updated after confirmation */}
+          {/* <Show when={subscription.enable_free_trial}>
           <span>•</span>
           <span>
             {sprintf(
@@ -55,40 +61,76 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
           </span>
         </Show> */}
 
-        <Show when={subscription.payment_type !== 'onetime'}>
-          <Show
-            when={subscription.recurring_limit === 'Until cancelled'}
-            fallback={
-              <>
-                <span>•</span>
-                <span>
-                  {subscription.recurring_limit.toString().padStart(2, '0')} {__('Times', 'tutor')}
-                </span>
-              </>
-            }
-          >
-            <span>•</span>
-            <span>{__('Until Cancellation', 'tutor')}</span>
+          <Show when={subscription.payment_type !== 'onetime'}>
+            <Show
+              when={subscription.recurring_limit === 'Until cancelled'}
+              fallback={
+                <>
+                  <span>•</span>
+                  <span>
+                    {subscription.recurring_limit.toString().padStart(2, '0')} {__('Times', 'tutor')}
+                  </span>
+                </>
+              }
+            >
+              <span>•</span>
+              <span>{__('Until Cancellation', 'tutor')}</span>
+            </Show>
           </Show>
-        </Show>
+        </div>
       </div>
+      <button
+        type="button"
+        css={styles.editButton}
+        onClick={() => {
+          showModal({
+            component: SubscriptionModal,
+            props: {
+              title: __('Manage Subscription Plans', 'tutor'),
+              icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
+              expandedSubscriptionId: subscription.id,
+            },
+          });
+        }}
+        data-edit-button
+      >
+        <SVGIcon name="edit" width={24} height={24} />
+      </button>
     </div>
   );
 }
 
 const styles = {
+  wrapper: css`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: ${colorTokens.background.white};
+    padding: ${spacing[8]} ${spacing[12]};
+
+    [data-edit-button] {
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    &:hover {
+      background-color: ${colorTokens.background.hover};
+
+      [data-edit-button] {
+        opacity: 1;
+      }
+    }
+
+    &:not(:last-of-type) {
+      border-bottom: 1px solid ${colorTokens.stroke.default};
+    }
+  `,
   item: css`
-		background-color: ${colorTokens.background.white};
-		padding: ${spacing[8]} ${spacing[12]};
 		min-height: 48px;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
 		gap: ${spacing[4]};
-
-    &:not(:last-of-type) {
-      border-bottom: 1px solid ${colorTokens.stroke.default};
-    }
 	`,
   title: css`
 		${typography.caption('medium')};
@@ -106,5 +148,19 @@ const styles = {
 	`,
   featuredIcon: css`
     color: ${colorTokens.icon.brand};
+  `,
+  editButton: css`
+    ${styleUtils.resetButton};
+    ${styleUtils.flexCenter()};
+    width: 24px;
+    height: 24px;
+    border-radius: ${borderRadius[4]};
+    color: ${colorTokens.icon.default};
+    transition: color 0.3s ease, background 0.3s ease;
+    
+    &:hover {
+      background: ${colorTokens.action.secondary.default};
+      color: ${colorTokens.icon.brand};
+    }
   `,
 };

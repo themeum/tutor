@@ -43,13 +43,20 @@ import { FormProvider, useFieldArray } from 'react-hook-form';
 
 interface SubscriptionModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  expandedSubscriptionId?: string;
 }
 
 export type SubscriptionFormDataWithSaved = SubscriptionFormData & { isSaved: boolean };
 
 const courseId = getCourseId();
 
-export default function SubscriptionModal({ title, subtitle, icon, closeModal }: SubscriptionModalProps) {
+export default function SubscriptionModal({
+  title,
+  subtitle,
+  icon,
+  closeModal,
+  expandedSubscriptionId,
+}: SubscriptionModalProps) {
   const queryClient = useQueryClient();
   const form = useFormWithGlobalError<{
     subscriptions: SubscriptionFormDataWithSaved[];
@@ -70,7 +77,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     keyName: '_id',
   });
 
-  const [expendedSubscriptionId, setExpandedSubscriptionId] = useState<string>('');
+  const [expendedSubscriptionId, setExpandedSubscriptionId] = useState<string>(expandedSubscriptionId || '');
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   const isSubscriptionListLoading = !!useIsFetching({
