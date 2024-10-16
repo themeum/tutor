@@ -1565,6 +1565,22 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_print_formatted_price' ) ) {
+	/**
+	 * A clone copy of `tutor_get_formatted_price` helper
+	 * To print formated price with output scaping.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $price price.
+	 *
+	 * @return void
+	 */
+	function tutor_print_formatted_price( $price ) {
+		echo esc_html( tutor_get_formatted_price( $price ) );
+	}
+}
+
 if ( ! function_exists( 'tutor_get_locale_price' ) ) {
 	/**
 	 * Get price as per locale format
