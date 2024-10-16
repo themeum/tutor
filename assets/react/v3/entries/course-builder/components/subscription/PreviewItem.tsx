@@ -94,7 +94,7 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
         }}
         data-edit-button
       >
-        <SVGIcon name="edit" width={24} height={24} />
+        <SVGIcon name="pen" width={19} height={19} />
       </button>
     </div>
   );
