@@ -784,24 +784,6 @@ class Settings {
 		return apply_filters( 'tutor_ecommerce_webhook_fields', $arr );
 	}
 
-
-	/**
-	 * Get the tax settings from the tutor options.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public function ajax_get_tax_settings() {
-		$tax_settings = self::get_tax_settings();
-
-		if ( ! empty( $tax_settings->active_country ) ) {
-			$tax_settings->active_country = null;
-		}
-
-		$this->json_response( __( 'Success', 'tutor' ), $tax_settings );
-	}
-
 	/**
 	 * Ajax handler to get payment settings
 	 *
