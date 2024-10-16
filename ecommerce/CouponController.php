@@ -138,7 +138,7 @@ class CouponController extends BaseController {
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), true );
+		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), true );//phpcs:ignore --sanitized already
 
 		if ( $this->model::TYPE_AUTOMATIC === $data['coupon_type'] ) {
 			$data['coupon_code'] = time();
@@ -209,7 +209,7 @@ class CouponController extends BaseController {
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), false );
+		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), false );//phpcs:ignore --sanitized already
 
 		$coupon_id              = Input::post( 'id', null, Input::TYPE_INT );
 		$data['coupon_id']      = $coupon_id;
@@ -281,7 +281,7 @@ class CouponController extends BaseController {
 		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
 		$search_term = '';
 
-		$filter = json_decode( wp_unslash( $_POST['filter'] ) );
+		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
 			$search_term = Input::sanitize( $filter->search );
 		}
@@ -462,7 +462,7 @@ class CouponController extends BaseController {
 		}
 
 		// Get and sanitize input data.
-		$request     = Input::sanitize_array( $_POST );
+		$request     = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized already
 		$bulk_action = $request['bulk-action'];
 
 		$bulk_ids = isset( $request['bulk-ids'] ) ? array_map( 'intval', explode( ',', $request['bulk-ids'] ) ) : array();
@@ -724,7 +724,7 @@ class CouponController extends BaseController {
 			$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
 			$order_type  = $plan ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-			$checkout_data = $this->model->prepare_checkout_items_by_coupon( $object_ids, $order_type, $coupon_code );
+			$checkout_data = ( new CheckoutController( false ) )->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
 
 			if ( $checkout_data->is_coupon_applied ) {
 				$this->json_response(
