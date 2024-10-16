@@ -769,7 +769,7 @@ const styles = {
     padding-block: ${spacing[24]};
     display: flex;
     flex-direction: column;
-    gap: ${spacing[24]};
+    gap: ${spacing[16]};
   `,
   priceRadioGroup: css`
     display: flex;

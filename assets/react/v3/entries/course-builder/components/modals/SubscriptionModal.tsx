@@ -44,6 +44,7 @@ import { FormProvider, useFieldArray } from 'react-hook-form';
 interface SubscriptionModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   expandedSubscriptionId?: string;
+  createEmptySubscriptionOnMount?: boolean;
 }
 
 export type SubscriptionFormDataWithSaved = SubscriptionFormData & { isSaved: boolean };
@@ -56,6 +57,7 @@ export default function SubscriptionModal({
   icon,
   closeModal,
   expandedSubscriptionId,
+  createEmptySubscriptionOnMount,
 }: SubscriptionModalProps) {
   const queryClient = useQueryClient();
   const form = useFormWithGlobalError<{
@@ -64,7 +66,7 @@ export default function SubscriptionModal({
     defaultValues: {
       subscriptions: [],
     },
-    mode: 'all',
+    mode: 'onChange',
   });
 
   const {
@@ -126,22 +128,28 @@ export default function SubscriptionModal({
   const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
     try {
       form.trigger();
-      const subscriptionErrors = form.formState.errors.subscriptions || [];
+      const timeoutId = setTimeout(async () => {
+        const subscriptionErrors = form.formState.errors.subscriptions || [];
 
-      if (subscriptionErrors.length) {
-        return;
-      }
+        if (subscriptionErrors.length) {
+          return;
+        }
 
-      const payload = convertFormDataToSubscription({
-        ...values,
-        id: values.isSaved ? values.id : '0',
-        assign_id: String(courseId),
-      });
-      const response = await saveSubscriptionMutation.mutateAsync(payload);
+        const payload = convertFormDataToSubscription({
+          ...values,
+          id: values.isSaved ? values.id : '0',
+          assign_id: String(courseId),
+        });
+        const response = await saveSubscriptionMutation.mutateAsync(payload);
 
-      if (response.status_code === 200 || response.status_code === 201) {
-        setExpandedSubscriptionId((previous) => (previous === payload.id ? '' : payload.id || ''));
-      }
+        if (response.status_code === 200 || response.status_code === 201) {
+          setExpandedSubscriptionId((previous) => (previous === payload.id ? '' : payload.id || ''));
+        }
+      }, 0);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
     } catch (error) {
       form.reset();
     }
@@ -157,6 +165,15 @@ export default function SubscriptionModal({
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (createEmptySubscriptionOnMount) {
+      const newId = nanoid();
+      appendSubscription({ ...defaultSubscriptionFormData, id: newId, isSaved: false });
+      setExpandedSubscriptionId(newId);
+    }
+  }, []);
 
   return (
     <FormProvider {...form}>
@@ -175,14 +192,14 @@ export default function SubscriptionModal({
                   activeSubscription ? form.reset() : closeModal({ action: 'CLOSE' });
                 }}
               >
-                {activeSubscription ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+                {activeSubscription?.isSaved ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
               </Button>
               <Button
                 loading={saveSubscriptionMutation.isPending}
                 variant="primary"
                 size="small"
                 onClick={() => {
-                  if (dirtySubscriptionIndex && activeSubscription) {
+                  if (dirtySubscriptionIndex !== -1 && activeSubscription) {
                     handleSaveSubscription(activeSubscription);
                   }
                 }}
