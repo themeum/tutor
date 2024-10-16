@@ -36,6 +36,17 @@ class Settings {
 	}
 
 	/**
+	 * Check coupon usage enabled in site checkout.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_coupon_usage_enabled() {
+		return (bool) tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICABLE, false );
+	}
+
+	/**
 	 * Add ecommerce settings
 	 *
 	 * @param array $fields Tutor setting fields.
