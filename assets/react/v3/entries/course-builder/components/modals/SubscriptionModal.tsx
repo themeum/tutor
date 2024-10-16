@@ -64,6 +64,7 @@ export default function SubscriptionModal({
     defaultValues: {
       subscriptions: [],
     },
+    mode: 'all',
   });
 
   const {
@@ -124,6 +125,13 @@ export default function SubscriptionModal({
 
   const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
     try {
+      form.trigger();
+      const subscriptionErrors = form.formState.errors.subscriptions || [];
+
+      if (subscriptionErrors.length) {
+        return;
+      }
+
       const payload = convertFormDataToSubscription({
         ...values,
         id: values.isSaved ? values.id : '0',
@@ -248,7 +256,7 @@ export default function SubscriptionModal({
                                   }
                                 : noop
                             }
-                            isExpanded={expendedSubscriptionId === subscription.id}
+                            isExpanded={activeSortId ? false : expendedSubscriptionId === subscription.id}
                           />
                         );
                       }}
@@ -264,7 +272,7 @@ export default function SubscriptionModal({
                               toggleCollapse={noop}
                               bgLight
                               onDiscard={noop}
-                              isExpanded={expendedSubscriptionId === id}
+                              isExpanded={false}
                               isOverlay
                             />
                           );
@@ -305,7 +313,7 @@ const styles = {
   container: css`
 		max-width: 640px;
 		width: 100%;
-		padding-top: ${spacing[40]};
+		padding-block: ${spacing[40]};
     margin-inline: auto;
 		display: flex;
 		flex-direction: column;

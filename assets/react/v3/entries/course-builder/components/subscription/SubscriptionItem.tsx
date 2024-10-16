@@ -135,7 +135,7 @@ export default function SubscriptionItem({
   };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: subscription.id,
+    id: subscription.id || '',
     animateLayoutChanges,
   });
 
@@ -230,6 +230,7 @@ export default function SubscriptionItem({
         bgLight,
         isActive: isActive,
         isDragging: isOverlay,
+        isDeletePopoverOpen,
       })}
       onClick={() => setIsActive(true)}
       style={style}
@@ -675,10 +676,12 @@ const styles = {
     bgLight,
     isActive,
     isDragging,
+    isDeletePopoverOpen,
   }: {
     bgLight?: boolean;
     isActive: boolean;
     isDragging: boolean;
+    isDeletePopoverOpen?: boolean;
   }) => css`
 		width: 100%;
 		border: 1px solid ${colorTokens.stroke.default};
@@ -687,7 +690,7 @@ const styles = {
     transition: border-color 0.3s ease;
 
     [data-visually-hidden] {
-      opacity: 0;
+      opacity: ${isDeletePopoverOpen ? 1 : 0};
       transition: opacity 0.3s ease;
     }
 
