@@ -25,7 +25,7 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', __CLASS__ . '::add_ecommerce_settings' );
-		add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::add_payment_gateway_settings' );
+		// add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::add_payment_gateway_settings' );
 
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
@@ -209,16 +209,34 @@ class Settings {
 
 		$arr = apply_filters( 'tutor_before_ecommerce_payment_settings', array() );
 
+		/**
+		 * Ecommerce payment settings will be generated from react app.
+		 */
 		$arr['ecommerce_payment'] = array(
 			'label'    => __( 'Payment Methods', 'tutor' ),
 			'slug'     => 'automate_payment_gateway',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
 			'icon'     => 'tutor-icon-credit-card',
-			'blocks'   => array(),
+			'blocks'   => array(
+				array(
+					'label'      => '',
+					'slug'       => 'options',
+					'block_type' => 'uniform',
+					'fields'     => array(
+						array(
+							'key'   => 'payment_settings',
+							'type'  => 'text',
+							'label' => __( 'Payment Settings', 'tutor' ),
+						),
+					),
+				),
+			),
 		);
 
-		// @TODO.
+		/**
+		 * Ecommerce payment settings will be generated from react app.
+		 */
 		$arr['ecommerce_tax'] = array(
 			'label'    => __( 'Tax', 'tutor' ),
 			'slug'     => 'ecommerce_tax',
@@ -227,10 +245,16 @@ class Settings {
 			'icon'     => 'tutor-icon-receipt-percent',
 			'blocks'   => array(
 				array(
-					'label'      => __( 'Tax Configuration', 'tutor' ),
+					'label'      => '',
 					'slug'       => 'options',
 					'block_type' => 'uniform',
-					'fields'     => array(),
+					'fields'     => array(
+						array(
+							'key'   => 'ecommerce_tax',
+							'type'  => 'text',
+							'label' => __( 'Tax Settings', 'tutor' ),
+						),
+					),
 				),
 			),
 		);
@@ -247,14 +271,6 @@ class Settings {
 					'slug'       => 'checkout_configuration',
 					'block_type' => 'uniform',
 					'fields'     => array(
-						// @TODO.
-						// array(
-						// 'key'     => OptionKeys::IS_TAX_APPLICABLE,
-						// 'type'    => 'toggle_switch',
-						// 'label'   => __( 'Apply Tax Rate', 'tutor' ),
-						// 'default' => 'off',
-						// 'desc'    => __( 'Enable this to accept payments via PayPal.', 'tutor' ),
-						// ),
 						array(
 							'key'     => OptionKeys::IS_COUPON_APPLICABLE,
 							'type'    => 'toggle_switch',
