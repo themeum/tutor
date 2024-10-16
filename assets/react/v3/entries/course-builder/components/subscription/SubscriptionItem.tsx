@@ -712,6 +712,10 @@ const styles = {
       isDragging &&
       css`
         box-shadow: ${shadow.drag};
+
+        [data-grabber] {
+          cursor: grabbing;
+        }
       `
     }
 
