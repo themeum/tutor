@@ -30,79 +30,9 @@ class Settings {
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
 		add_action( 'wp_ajax_tutor_delete_manual_payment_method', __CLASS__ . '::ajax_delete_manual_payment_method' );
-		add_action( 'wp_ajax_tutor_get_tax_settings', array( $this, 'ajax_get_tax_settings' ) );
 
-		add_filter( 'tutor_option_input', array( $this, 'format_ecommerce_tax_data' ) );
 		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
 		add_action( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
-	}
-
-
-	/**
-	 * Format ecommerce tax setting data.
-	 *
-	 * @param array $option option.
-	 *
-	 * @return array
-	 */
-	public function format_ecommerce_tax_data( $option ) {
-		if ( ! empty( $option['ecommerce_tax'] ) ) {
-			$option['ecommerce_tax'] = wp_unslash( $option['ecommerce_tax'] );
-		}
-
-		return $option;
-	}
-
-	/**
-	 * Format payment settings data.
-	 *
-	 * @param array $option option.
-	 *
-	 * @return array
-	 */
-	public function format_payment_settings_data( $option ) {
-		if ( ! empty( $option['payment_settings'] ) ) {
-			$option['payment_settings'] = wp_unslash( $option['payment_settings'] );
-		}
-
-		return $option;
-	}
-
-	/**
-	 * Get tax settings.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return object
-	 */
-	public static function get_tax_settings() {
-		$tax_settings = tutor_utils()->get_option( 'ecommerce_tax' );
-
-		if ( ! empty( $tax_settings ) && is_string( $tax_settings ) ) {
-			$tax_settings = json_decode( $tax_settings );
-		}
-
-		return $tax_settings;
-	}
-
-	/**
-	 * Get tax settings key data.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $key key.
-	 * @param mixed  $default default value.
-	 *
-	 * @return mixed
-	 */
-	public static function get_tax_setting( $key, $default = false ) {
-		$tax_settings = self::get_tax_settings();
-
-		if ( ! empty( $tax_settings->$key ) ) {
-			return $tax_settings->$key;
-		}
-
-		return $default;
 	}
 
 	/**
