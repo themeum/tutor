@@ -223,6 +223,7 @@ class Settings {
 					'label'      => '',
 					'slug'       => 'options',
 					'block_type' => 'uniform',
+					'class'      => 'tutor-d-none',
 					'fields'     => array(
 						array(
 							'key'   => 'payment_settings',
@@ -248,6 +249,7 @@ class Settings {
 					'label'      => '',
 					'slug'       => 'options',
 					'block_type' => 'uniform',
+					'class'      => 'tutor-d-none',
 					'fields'     => array(
 						array(
 							'key'   => 'ecommerce_tax',
