@@ -43,8 +43,8 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
       <form
         css={styles.form}
-        onSubmit={form.handleSubmit((values) => {
-          refundOrderMutation.mutate({ ...values, order_id });
+        onSubmit={form.handleSubmit(async (values) => {
+          await refundOrderMutation.mutateAsync({ ...values, order_id });
           closeModal();
         })}
       >
@@ -108,7 +108,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
-          <Button type="submit" size="small" variant="WP">
+          <Button type="submit" size="small" variant="primary" loading={refundOrderMutation.isPending}>
             {__('Refund', 'tutor')} {!!amount && formatPrice(amount)}
           </Button>
         </div>
