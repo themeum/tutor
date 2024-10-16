@@ -1245,7 +1245,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 					$conditional_buttons->show_continue_learning_btn = true;
 				}
 
-				if ( $course_progress === 0 ) {
+				if ( 0 === $course_progress ) {
 					$conditional_buttons->show_start_learning_btn = true;
 				}
 
@@ -1521,10 +1521,10 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 		?>
 			<div>
 				<?php if ( $sale_price ) : ?>
-					<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
-					<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
+					<span><?php tutor_print_formatted_price( $sale_price ); ?></span>
+					<del><?php tutor_print_formatted_price( $regular_price ); ?></del>
 				<?php else : ?>
-					<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
+					<span><?php tutor_print_formatted_price( $regular_price ); ?></span>
 				<?php endif; ?>
 			</div>
 		<?php
