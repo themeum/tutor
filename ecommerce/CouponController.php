@@ -700,15 +700,16 @@ class CouponController extends BaseController {
 	public function ajax_apply_coupon() {
 		tutor_utils()->check_nonce();
 
-		$object_ids  = Input::post( 'object_ids' ); // Course/bundle ids.
-		$object_ids  = array_filter( explode( ',', $object_ids ), 'is_numeric' );
-		$coupon_code = Input::post( 'coupon_code' );
-		$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
-
-		$order_type = OrderModel::TYPE_SINGLE_ORDER;
-		if ( $plan ) {
-			$order_type = OrderModel::TYPE_SUBSCRIPTION;
+		if ( ! Settings::is_coupon_usage_enabled() ) {
+			$this->json_response(
+				__( 'Coupon usage is disabled', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
+
+		$object_ids = Input::post( 'object_ids' ); // Course/bundle ids.
+		$object_ids = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 
 		if ( empty( $object_ids ) ) {
 			$this->json_response(
@@ -719,14 +720,16 @@ class CouponController extends BaseController {
 		}
 
 		try {
-			$discount_price = $coupon_code
-								? $this->model->apply_coupon_discount( $object_ids, $coupon_code, $order_type, true )
-								: $this->model->apply_automatic_coupon_discount( $object_ids, $order_type );
+			$coupon_code = Input::post( 'coupon_code' );
+			$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
+			$order_type  = $plan ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-			if ( $discount_price->is_applied ) {
+			$checkout_data = $this->model->prepare_checkout_items_by_coupon( $object_ids, $order_type, $coupon_code );
+
+			if ( $checkout_data->is_coupon_applied ) {
 				$this->json_response(
 					__( 'Coupon applied successfully', 'tutor' ),
-					$discount_price
+					$checkout_data
 				);
 			} else {
 				$this->json_response(
