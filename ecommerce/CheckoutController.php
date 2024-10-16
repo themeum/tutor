@@ -166,6 +166,8 @@ class CheckoutController {
 	/**
 	 * Prepare items
 	 *
+	 * @since 3.0.0
+	 *
 	 * @param array       $item_ids items.
 	 * @param string      $order_type order type.
 	 * @param object|null $coupon coupon.
@@ -218,6 +220,8 @@ class CheckoutController {
 	/**
 	 * Calculate discount.
 	 *
+	 * @since 3.0.0
+	 *
 	 * @param array  $items item array.
 	 * @param string $discount_type discount type. like percentage or fixed.
 	 * @param float  $discount_value value of discount.
@@ -245,7 +249,7 @@ class CheckoutController {
 			} else {
 				if ( 'percentage' === $discount_type ) {
 					// Apply percentage discount.
-					$discount       = $item['regular_price'] * $discount_value / 100;
+					$discount       = $item['regular_price'] * ( $discount_value / 100 );
 					$discount_price = $item['regular_price'] - $discount;
 
 					$item['discount_amount'] = round( $discount, 2 );
@@ -369,9 +373,7 @@ class CheckoutController {
 
 	/**
 	 * Pay now ajax handler
-	 *
-	 * Create pending order, prepare payment data & proceed
-	 * to payment gateway
+	 * Create pending order, prepare payment data & proceed to payment gateway
 	 *
 	 * @since 3.0.0
 	 *
@@ -435,6 +437,8 @@ class CheckoutController {
 		if ( empty( $object_ids ) ) {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
+
+		// TODO: add a check on selected gateway is configured or not.
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
