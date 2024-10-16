@@ -47,6 +47,23 @@ class Settings {
 	}
 
 	/**
+	 * Format payment settings data.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $option option.
+	 *
+	 * @return array
+	 */
+	public function format_payment_settings_data( $option ) {
+		if ( ! empty( $option['payment_settings'] ) ) {
+			$option['payment_settings'] = wp_unslash( $option['payment_settings'] );
+		}
+
+		return $option;
+	}
+
+	/**
 	 * Add ecommerce settings
 	 *
 	 * @param array $fields Tutor setting fields.
