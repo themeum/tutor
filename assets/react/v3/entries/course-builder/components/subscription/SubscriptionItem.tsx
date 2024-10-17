@@ -532,21 +532,6 @@ export default function SubscriptionItem({
               )}
             />
 
-            <Show when={isFeatured}>
-              <Controller
-                control={form.control}
-                rules={requiredRule()}
-                name={`subscriptions.${index}.featured_text`}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    label={__('Feature text', 'tutor')}
-                    placeholder={__('Enter feature text', 'tutor')}
-                  />
-                )}
-              />
-            </Show>
-
             <OfferSalePrice index={index} />
           </div>
         </div>

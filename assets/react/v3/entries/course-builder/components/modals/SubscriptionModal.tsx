@@ -95,8 +95,9 @@ export default function SubscriptionModal({
   const activeSubscription = form.getValues().subscriptions.find((item) => item.id === expendedSubscriptionId);
 
   const dirtySubscriptionIndex =
-    subscriptionFields.findIndex((item) => !item.isSaved) ||
-    form.formState.dirtyFields.subscriptions?.findIndex((item) => isDefined(item));
+    subscriptionFields.findIndex((item) => !item.isSaved) !== -1
+      ? subscriptionFields.findIndex((item) => !item.isSaved)
+      : form.formState.dirtyFields.subscriptions?.findIndex((item) => isDefined(item));
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
