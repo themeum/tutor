@@ -7,7 +7,6 @@ import { css } from '@emotion/react';
 import { PaymentGateway, PaymentSettings, useInstallPaymentMutation } from '../services/payment';
 import { __ } from '@wordpress/i18n';
 import Badge from '../atoms/Badge';
-import { useFormContext } from 'react-hook-form';
 import { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 
 interface PaymentGatewayItemProps {
@@ -24,9 +23,14 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
       slug: data.name,
     });
 
-    if (response.status_code === 200 && response.data) {
+    if (response.status_code === 200) {
       onInstallSuccess();
-      form.setValue('payment_methods', [...form.getValues('payment_methods'), response.data], {
+
+      // Set is installed to true
+      data.is_installed = true;
+
+      // Append fields to settings
+      form.setValue('payment_methods', [...form.getValues('payment_methods'), data], {
         shouldDirty: true,
       });
     }
@@ -51,7 +55,7 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
           <Button
             variant="secondary"
             size="small"
-            disabled={!data.can_install}
+            disabled={!data.is_installable}
             onClick={handleInstallClick}
             loading={installPaymentMutation.isPending}
           >

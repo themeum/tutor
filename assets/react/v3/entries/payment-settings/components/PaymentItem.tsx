@@ -20,7 +20,7 @@ import { animateLayoutChanges } from '@Utils/dndkit';
 
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
-import { useRemovePaymentMutation, type PaymentMethod, type PaymentSettings } from '../services/payment';
+import { getWebhookUrl, useRemovePaymentMutation, type PaymentMethod, type PaymentSettings } from '../services/payment';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
 import Badge from '../atoms/Badge';
 import { isObject } from '@/v3/shared/utils/types';
@@ -127,7 +127,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           />
                         );
 
-                      case 'key':
+                      case 'secret_key':
                         return (
                           <FormInput
                             {...controllerProps}
@@ -144,7 +144,13 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                         );
 
                       case 'webhook_url':
-                        return <OptionWebhookUrl {...controllerProps} label={field.label} />;
+                        return (
+                          <OptionWebhookUrl
+                            {...controllerProps}
+                            field={{ ...controllerProps.field, value: getWebhookUrl(data.name) }}
+                            label={field.label}
+                          />
+                        );
 
                       case 'image':
                         return (
