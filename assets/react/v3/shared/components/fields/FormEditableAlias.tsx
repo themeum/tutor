@@ -42,7 +42,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
             <div css={styles.linkWrapper}>
               {!isEditing ? (
                 <>
-                  <a href={fieldValue} target="_blank" css={styles.link} rel="noreferrer">
+                  <a href={fieldValue} target="_blank" css={styles.link} title={fieldValue} rel="noreferrer">
                     {fieldValue}
                   </a>
                   <button css={styles.iconWrapper} type="button" onClick={() => setIsEditing((prev) => !prev)}>
@@ -71,7 +71,14 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       buttonCss={styles.saveBtn}
                       onClick={() => {
                         setIsEditing(false);
-                        field.onChange(editValue);
+                        field.onChange(
+                          editValue
+                            .replace(baseURL, '')
+                            .replace(/[^a-zA-Z0-9-]/g, '-')
+                            .replace(/-+/g, '-')
+                            .replace(/^-|-$/g, '')
+                            .toLowerCase(),
+                        );
                       }}
                     >
                       {__('Save', 'tutor')}
@@ -122,6 +129,7 @@ const styles = {
     text-decoration: none;
     ${styleUtils.text.ellipsis(1)}
     max-width: fit-content;
+    word-break: break-all;
   `,
   iconWrapper: css`
     ${styleUtils.resetButton}

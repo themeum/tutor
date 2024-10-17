@@ -84,6 +84,9 @@ const CourseBasic = () => {
   );
 
   const currentAuthor = form.watch('post_author');
+  const postTitle = form.watch('post_title');
+  const postStatus = form.watch('post_status');
+  const isPostNameDirty = form.formState.dirtyFields.post_name;
 
   const isInstructorVisible =
     isTutorPro &&
@@ -361,6 +364,17 @@ const CourseBasic = () => {
                   selectOnFocus
                   generateWithAi={!isTutorPro || isOpenAiEnabled}
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  onChange={(value) => {
+                    if (postStatus === 'draft' && !isPostNameDirty) {
+                      const convertTitleToSlug = String(value)
+                        .toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/^-+|-+$/g, '');
+                      form.setValue('post_name', convertTitleToSlug, {
+                        shouldValidate: true,
+                      });
+                    }
+                  }}
                 />
               )}
             />
@@ -392,7 +406,7 @@ const CourseBasic = () => {
                 editors={courseDetails?.editors}
                 onCustomEditorButtonClick={async () => {
                   form.handleSubmit(async (data) => {
-                    const payload = convertCourseDataToPayload(data, form);
+                    const payload = convertCourseDataToPayload(data);
 
                     await updateCourseMutation.mutateAsync({
                       course_id: courseId,

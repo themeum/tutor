@@ -18,7 +18,6 @@ import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import type { UseFormReturn } from 'react-hook-form';
 import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
@@ -467,17 +466,12 @@ interface GoogleMeetMeetingDeletePayload {
   'event-id': string;
 }
 
-export const convertCourseDataToPayload = (
-  data: CourseFormData,
-  form: UseFormReturn<CourseFormData>,
-): CoursePayload => {
-  const isPostNameDirty = form.formState.dirtyFields.post_name;
-
+export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
     post_date: data.post_date,
     post_date_gmt: convertToGMT(new Date(data.post_date)),
     post_title: data.post_title,
-    post_name: data.post_status === 'draft' && !isPostNameDirty ? data.post_title.split(' ').join('-') : data.post_name,
+    post_name: data.post_name,
     ...(data.editor_used.name === 'classic' && {
       post_content: data.post_content,
     }),

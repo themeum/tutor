@@ -89,7 +89,7 @@ const Header = () => {
       }
     }
 
-    const payload = convertCourseDataToPayload(data, form);
+    const payload = convertCourseDataToPayload(data);
     setLocalPostStatus(postStatus);
 
     if (courseId) {
