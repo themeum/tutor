@@ -1,10 +1,11 @@
 import { createContext, ReactNode, useContext } from 'react';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import { PaymentGateway, usePaymentGatewaysQuery } from '../services/payment';
-import { tutorConfig } from '@/v3/shared/config/config';
+import { tutorConfig } from '@Config/config';
 
 interface PaymentContextType {
   payment_gateways: PaymentGateway[];
+  errorMessage?: string;
 }
 
 const PaymentContext = createContext<PaymentContextType>({
@@ -25,7 +26,12 @@ export const PaymentProvider = ({ children }: { children: ReactNode }) => {
   }
 
   return (
-    <PaymentContext.Provider value={{ payment_gateways: paymentGatewaysQuery.data ?? [] }}>
+    <PaymentContext.Provider
+      value={{
+        payment_gateways: paymentGatewaysQuery.data ?? [],
+        errorMessage: paymentGatewaysQuery.error?.response?.data?.message,
+      }}
+    >
       {children}
     </PaymentContext.Provider>
   );

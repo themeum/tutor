@@ -9,6 +9,8 @@ import { __ } from '@wordpress/i18n';
 import { PaymentSettings } from '../../services/payment';
 import PaymentGatewayItem from '../PaymentGatewayItem';
 import { usePaymentContext } from '../../contexts/payment-context';
+import Show from '@Controls/Show';
+import Alert from '@Atoms/Alert';
 
 interface PaymentGatewaysModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -16,21 +18,23 @@ interface PaymentGatewaysModalProps extends ModalProps {
 }
 
 const PaymentGatewaysModal = ({ closeModal, title, form }: PaymentGatewaysModalProps) => {
-  const { payment_gateways } = usePaymentContext();
+  const { payment_gateways, errorMessage } = usePaymentContext();
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <div css={styles.contentWrapper}>
         <div css={styles.modalBody}>
-          <For each={payment_gateways}>
-            {(gateway) => (
-              <PaymentGatewayItem
-                data={gateway}
-                onInstallSuccess={() => closeModal({ action: 'CONFIRM' })}
-                form={form}
-              />
-            )}
-          </For>
+          <Show when={!errorMessage} fallback={<Alert>{errorMessage}</Alert>}>
+            <For each={payment_gateways}>
+              {(gateway) => (
+                <PaymentGatewayItem
+                  data={gateway}
+                  onInstallSuccess={() => closeModal({ action: 'CONFIRM' })}
+                  form={form}
+                />
+              )}
+            </For>
+          </Show>
         </div>
       </div>
     </BasicModalWrapper>

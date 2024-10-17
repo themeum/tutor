@@ -1,12 +1,10 @@
 import { useToast } from '@Atoms/Toast';
-import { Media } from '@Components/fields/FormImageInput';
 import { tutorConfig } from '@Config/config';
-import { ErrorResponse } from '@Utils/form';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { Option } from '@/v3/shared/utils/types';
+import { Option } from '@Utils/types';
 
 export interface PaymentField {
   name: string;
@@ -141,12 +139,21 @@ export interface PaymentGateway {
   fields: PaymentField[];
 }
 
+interface ErrorResponse {
+  response: {
+    data: {
+      status_code: number;
+      message: string;
+    };
+  };
+}
+
 const getPaymentGateways = () => {
   return wpAjaxInstance.get<PaymentGateway[]>(endpoints.GET_PAYMENT_GATEWAYS).then((response) => response.data);
 };
 
 export const usePaymentGatewaysQuery = () => {
-  return useQuery({
+  return useQuery<PaymentGateway[], ErrorResponse>({
     queryKey: ['PaymentGateways'],
     queryFn: getPaymentGateways,
   });

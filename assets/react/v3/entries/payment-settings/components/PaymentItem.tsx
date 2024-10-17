@@ -23,7 +23,7 @@ import Card from '../molecules/Card';
 import { getWebhookUrl, useRemovePaymentMutation, type PaymentMethod, type PaymentSettings } from '../services/payment';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
 import Badge from '../atoms/Badge';
-import { isObject } from '@/v3/shared/utils/types';
+import { isObject } from '@Utils/types';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -175,6 +175,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
             <Button
               variant="danger"
               buttonCss={styles.removeButton}
+              loading={removePaymentMutation.isPending}
               onClick={async () => {
                 const { action } = await showModal({
                   component: StaticConfirmationModal,

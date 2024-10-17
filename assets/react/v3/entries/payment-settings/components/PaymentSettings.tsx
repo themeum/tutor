@@ -19,8 +19,8 @@ import SVGIcon from '@Atoms/SVGIcon';
 import ManualPaymentModal from './modals/ManualPaymentModal';
 import { useModal } from '@Components/modals/Modal';
 import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
-import ProBadge from '@/v3/shared/atoms/ProBadge';
-import { tutorConfig } from '@/v3/shared/config/config';
+import ProBadge from '@Atoms/ProBadge';
+import { tutorConfig } from '@Config/config';
 import { usePaymentContext } from '../contexts/payment-context';
 
 const TaxSettingsPage = () => {
