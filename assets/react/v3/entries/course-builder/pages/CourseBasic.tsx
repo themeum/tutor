@@ -45,7 +45,7 @@ import {
   useUpdateCourseMutation,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
-import { determinePostStatus, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { convertToSlug, determinePostStatus, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
@@ -366,11 +366,7 @@ const CourseBasic = () => {
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   onChange={(value) => {
                     if (postStatus === 'draft' && !isPostNameDirty) {
-                      const convertTitleToSlug = String(value)
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, '-')
-                        .replace(/^-+|-+$/g, '');
-                      form.setValue('post_name', convertTitleToSlug, {
+                      form.setValue('post_name', convertToSlug(String(value)), {
                         shouldValidate: true,
                       });
                     }

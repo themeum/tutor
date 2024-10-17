@@ -1,13 +1,16 @@
+import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
+import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
 import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
 
-import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormEditableAliasProps extends FormControllerProps<string> {
@@ -71,14 +74,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       buttonCss={styles.saveBtn}
                       onClick={() => {
                         setIsEditing(false);
-                        field.onChange(
-                          editValue
-                            .replace(baseURL, '')
-                            .replace(/[^a-zA-Z0-9-]/g, '-')
-                            .replace(/-+/g, '-')
-                            .replace(/^-|-$/g, '')
-                            .toLowerCase(),
-                        );
+                        field.onChange(convertToSlug(editValue.replace(baseURL, '')));
                       }}
                     >
                       {__('Save', 'tutor')}
