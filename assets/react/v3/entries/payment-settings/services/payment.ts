@@ -1,18 +1,20 @@
-import { useToast } from '@/v3/shared/atoms/Toast';
-import { tutorConfig } from '@/v3/shared/config/config';
-import { ErrorResponse } from '@/v3/shared/utils/form';
+import { useToast } from '@Atoms/Toast';
+import { Media } from '@Components/fields/FormImageInput';
+import { tutorConfig } from '@Config/config';
+import { ErrorResponse } from '@Utils/form';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
+import { Option } from '@/v3/shared/utils/types';
 
 export interface PaymentField {
   name: string;
   label: string;
-  type: 'select' | 'text' | 'key' | 'textarea' | 'webhook_url';
-  options?: { label: string; value: string }[];
+  type: 'select' | 'text' | 'key' | 'textarea' | 'image' | 'webhook_url';
+  options?: Option<string>[] | Record<string, string>;
   hint?: string;
-  value: string;
+  value: any;
 }
 
 export interface PaymentMethod {
