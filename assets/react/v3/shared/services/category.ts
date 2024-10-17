@@ -1,3 +1,4 @@
+import { convertToErrorMessage } from '@/v3/entries/course-builder/utils/utils';
 import { useToast } from '@Atoms/Toast';
 import { wpAuthApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
@@ -54,7 +55,7 @@ export const useCreateCategoryMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       // @TODO: Need to add proper type definition for wp rest api errors
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };

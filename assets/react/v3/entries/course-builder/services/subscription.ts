@@ -7,6 +7,7 @@ import { convertGMTtoLocalDate, convertToGMT } from '@Utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
 import { format } from 'date-fns';
+import { convertToErrorMessage } from '../utils/utils';
 import type { TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
 
@@ -194,10 +195,7 @@ export const useSaveCourseSubscriptionMutation = (courseId: number) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -235,10 +233,7 @@ export const useDeleteCourseSubscriptionMutation = (courseId: number) => {
     },
 
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -275,10 +270,7 @@ export const useDuplicateCourseSubscriptionMutation = (courseId: number) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -315,10 +307,7 @@ export const useSortCourseSubscriptionsMutation = (courseId: number) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
 
       queryClient.invalidateQueries({
         queryKey: ['SubscriptionsList', courseId],

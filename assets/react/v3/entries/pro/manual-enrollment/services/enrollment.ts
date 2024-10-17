@@ -1,9 +1,10 @@
+import { convertToErrorMessage } from '@/v3/entries/course-builder/utils/utils';
 import { useToast } from '@Atoms/Toast';
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
-import { ErrorResponse } from '@Utils/form';
-import { PaginatedParams, PaginatedResult } from '@Utils/types';
+import type { ErrorResponse } from '@Utils/form';
+import type { PaginatedParams, PaginatedResult } from '@Utils/types';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 export interface Student {
   ID: string;
@@ -87,7 +88,7 @@ export const useCreateEnrollmentMutation = () => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
