@@ -40,16 +40,12 @@ import {
   type CourseFormData,
   type PricingCategory,
   type WcProduct,
+  convertCourseDataToPayload,
   useGetWcProductsQuery,
   useUpdateCourseMutation,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
-import {
-  convertCourseDataToPayload,
-  determinePostStatus,
-  getCourseId,
-  isAddonEnabled,
-} from '@CourseBuilderUtils/utils';
+import { determinePostStatus, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
@@ -396,7 +392,7 @@ const CourseBasic = () => {
                 editors={courseDetails?.editors}
                 onCustomEditorButtonClick={async () => {
                   form.handleSubmit(async (data) => {
-                    const payload = convertCourseDataToPayload(data);
+                    const payload = convertCourseDataToPayload(data, form);
 
                     await updateCourseMutation.mutateAsync({
                       course_id: courseId,

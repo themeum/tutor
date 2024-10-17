@@ -1,8 +1,13 @@
 import { colorTokens, containerMaxWidth, headerHeight } from '@Config/styles';
 import Header from '@CourseBuilderComponents/layouts/Header';
 import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
-import { type CourseFormData, courseDefaultData, useCourseDetailsQuery } from '@CourseBuilderServices/course';
-import { convertCourseDataToFormData, getCourseId } from '@CourseBuilderUtils/utils';
+import {
+  type CourseFormData,
+  convertCourseDataToFormData,
+  courseDefaultData,
+  useCourseDetailsQuery,
+} from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { useEffect } from 'react';

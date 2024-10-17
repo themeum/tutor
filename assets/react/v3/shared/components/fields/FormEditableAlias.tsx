@@ -51,7 +51,9 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                 </>
               ) : (
                 <>
-                  <span css={styles.prefix}>{prefix}</span>
+                  <span css={styles.prefix} title={prefix}>
+                    {prefix}
+                  </span>
                   <div css={styles.editWrapper}>
                     <input
                       {...inputProps}
