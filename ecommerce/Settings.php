@@ -25,8 +25,6 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', __CLASS__ . '::add_ecommerce_settings' );
-		// add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::add_payment_gateway_settings' );
-
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
 		add_action( 'wp_ajax_tutor_delete_manual_payment_method', __CLASS__ . '::ajax_delete_manual_payment_method' );
@@ -187,6 +185,7 @@ class Settings {
 							'key'   => 'payment_settings',
 							'type'  => 'text',
 							'label' => __( 'Payment Settings', 'tutor' ),
+							'desc'  => '',
 						),
 					),
 				),
@@ -194,7 +193,7 @@ class Settings {
 		);
 
 		/**
-		 * Ecommerce payment settings will be generated from react app.
+		 * Tax settings will be generated from react app.
 		 */
 		$arr['ecommerce_tax'] = array(
 			'label'    => __( 'Tax', 'tutor' ),
@@ -213,6 +212,7 @@ class Settings {
 							'key'   => 'ecommerce_tax',
 							'type'  => 'text',
 							'label' => __( 'Tax Settings', 'tutor' ),
+							'desc'  => '',
 						),
 					),
 				),
@@ -442,96 +442,6 @@ class Settings {
 			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
 			return false;
 		}
-	}
-
-	/**
-	 * Add payment gateway settings
-	 *
-	 * Using filter hook this method will add payment gateway settings
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $settings Ecommerce payment settings.
-	 *
-	 * @return array
-	 */
-	public static function add_payment_gateway_settings( $settings ): array {
-		$payment_gateway = array(
-			'label'      => __( 'Supported payment methods', 'tutor' ),
-			'slug'       => 'supported_payment_gateway',
-			'block_type' => 'uniform',
-			'fields'     => array(),
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $payment_gateway );
-
-		foreach ( self::get_default_automate_payment_gateways() as $key => $gateway ) {
-
-			$new_gateway = array(
-				'slug'       => "{$key}_payment_gateway",
-				'block_type' => 'uniform',
-			);
-
-			$config_keys_method = 'get_' . $key . '_config_keys';
-
-			// Set enable field.
-			$fields = array(
-				array(
-					'key'                => "is_enable_{$key}_payment",
-					'type'               => 'toggle_switch',
-					'label'              => $gateway['label'],
-					'label_title'        => '',
-					'label_icon'         => tutor()->url . 'assets/images/paypal.svg',
-					'label_tag'          => __( 'Supports Subscription', 'tutor' ),
-					'default'            => 'off',
-					/* translators: %s: gateway name */
-					'toggle_fields'      => implode( ',', array_keys( self::$config_keys_method() ) ),
-					'has_control_button' => true,
-				),
-			);
-
-			// Set config fields.
-			$fields = array_merge( $fields, self::get_config_fields( $key ) );
-
-			$new_gateway['fields'] = $fields;
-
-			// Append new gateways inside ecommerce payment.
-			$settings['ecommerce_payment']['blocks'][] = $new_gateway;
-		}
-
-		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
-
-		$add_more_gateway = array(
-			'block_type' => 'action_placeholder',
-			'action'     => 'add_more_automate_payment_gateway',
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $add_more_gateway );
-
-		// Manual Payments.
-		$manual_gateways = array(
-			'label'      => __( 'Manual payment methods ', 'tutor' ),
-			'slug'       => 'manual_payment_gateway',
-			'block_type' => 'uniform',
-			'fields'     => array(),
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $manual_gateways );
-
-		$manual_gateways = self::get_manual_payment_setting_fields();
-
-		foreach ( $manual_gateways as $gateway ) {
-			array_push( $settings['ecommerce_payment']['blocks'], $gateway );
-		}
-
-		$add_btn = array(
-			'block_type' => 'action_placeholder',
-			'action'     => 'add_manual_payment_btn',
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $add_btn );
-
-		return $settings;
 	}
 
 	/**
