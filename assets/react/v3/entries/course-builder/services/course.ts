@@ -327,6 +327,7 @@ export interface CourseDetailsResponse {
     product_name: string;
     sale_price: string;
     type: PricingType;
+    selling_option: CourseSellingOption;
   };
   course_instructors: InstructorListResponse[];
   preview_link: string;
