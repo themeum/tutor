@@ -469,7 +469,9 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </MagicButton>
             <MagicButton
               variant="primary"
-              disabled={isLoading || isCreateNewCourse || !contents[pointer].title}
+              disabled={
+                isLoading || isCreateNewCourse || !contents[pointer].title || contents[pointer].counts?.topics === 0
+              }
               onClick={() => {
                 saveAIGeneratedCourseContentMutation.mutate({
                   course_id: courseId,

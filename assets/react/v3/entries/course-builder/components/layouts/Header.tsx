@@ -67,7 +67,7 @@ const Header = () => {
       navigate('/basics', { state: { isError: true } });
     };
 
-    if (data.course_pricing_category !== 'subscription' && data.course_price_type === 'paid') {
+    if (data.course_price_type === 'paid') {
       if (tutorConfig.settings?.monetize_by === 'edd' && !data.course_product_id) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');

@@ -43,13 +43,22 @@ import { FormProvider, useFieldArray } from 'react-hook-form';
 
 interface SubscriptionModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  expandedSubscriptionId?: string;
+  createEmptySubscriptionOnMount?: boolean;
 }
 
 export type SubscriptionFormDataWithSaved = SubscriptionFormData & { isSaved: boolean };
 
 const courseId = getCourseId();
 
-export default function SubscriptionModal({ title, subtitle, icon, closeModal }: SubscriptionModalProps) {
+export default function SubscriptionModal({
+  title,
+  subtitle,
+  icon,
+  closeModal,
+  expandedSubscriptionId,
+  createEmptySubscriptionOnMount,
+}: SubscriptionModalProps) {
   const queryClient = useQueryClient();
   const form = useFormWithGlobalError<{
     subscriptions: SubscriptionFormDataWithSaved[];
@@ -57,6 +66,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     defaultValues: {
       subscriptions: [],
     },
+    mode: 'onChange',
   });
 
   const {
@@ -70,7 +80,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     keyName: '_id',
   });
 
-  const [expendedSubscriptionId, setExpandedSubscriptionId] = useState<string>('');
+  const [expendedSubscriptionId, setExpandedSubscriptionId] = useState<string>(expandedSubscriptionId || '');
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
 
   const isSubscriptionListLoading = !!useIsFetching({
@@ -85,8 +95,9 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
   const activeSubscription = form.getValues().subscriptions.find((item) => item.id === expendedSubscriptionId);
 
   const dirtySubscriptionIndex =
-    subscriptionFields.findIndex((item) => !item.isSaved) ||
-    form.formState.dirtyFields.subscriptions?.findIndex((item) => isDefined(item));
+    subscriptionFields.findIndex((item) => !item.isSaved) !== -1
+      ? subscriptionFields.findIndex((item) => !item.isSaved)
+      : form.formState.dirtyFields.subscriptions?.findIndex((item) => isDefined(item));
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -117,16 +128,29 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
 
   const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
     try {
-      const payload = convertFormDataToSubscription({
-        ...values,
-        id: values.isSaved ? values.id : '0',
-        assign_id: String(courseId),
-      });
-      const response = await saveSubscriptionMutation.mutateAsync(payload);
+      form.trigger();
+      const timeoutId = setTimeout(async () => {
+        const subscriptionErrors = form.formState.errors.subscriptions || [];
 
-      if (response.status_code === 200 || response.status_code === 201) {
-        setExpandedSubscriptionId((previous) => (previous === payload.id ? '' : payload.id || ''));
-      }
+        if (subscriptionErrors.length) {
+          return;
+        }
+
+        const payload = convertFormDataToSubscription({
+          ...values,
+          id: values.isSaved ? values.id : '0',
+          assign_id: String(courseId),
+        });
+        const response = await saveSubscriptionMutation.mutateAsync(payload);
+
+        if (response.status_code === 200 || response.status_code === 201) {
+          setExpandedSubscriptionId((previous) => (previous === payload.id ? '' : payload.id || ''));
+        }
+      }, 0);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
     } catch (error) {
       form.reset();
     }
@@ -142,6 +166,15 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (createEmptySubscriptionOnMount) {
+      const newId = nanoid();
+      appendSubscription({ ...defaultSubscriptionFormData, id: newId, isSaved: false });
+      setExpandedSubscriptionId(newId);
+    }
+  }, []);
 
   return (
     <FormProvider {...form}>
@@ -160,14 +193,14 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                   activeSubscription ? form.reset() : closeModal({ action: 'CLOSE' });
                 }}
               >
-                {activeSubscription ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+                {activeSubscription?.isSaved ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
               </Button>
               <Button
                 loading={saveSubscriptionMutation.isPending}
                 variant="primary"
                 size="small"
                 onClick={() => {
-                  if (dirtySubscriptionIndex && activeSubscription) {
+                  if (dirtySubscriptionIndex !== -1 && activeSubscription) {
                     handleSaveSubscription(activeSubscription);
                   }
                 }}
@@ -241,7 +274,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                                   }
                                 : noop
                             }
-                            isExpanded={expendedSubscriptionId === subscription.id}
+                            isExpanded={activeSortId ? false : expendedSubscriptionId === subscription.id}
                           />
                         );
                       }}
@@ -257,7 +290,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                               toggleCollapse={noop}
                               bgLight
                               onDiscard={noop}
-                              isExpanded={expendedSubscriptionId === id}
+                              isExpanded={false}
                               isOverlay
                             />
                           );
@@ -298,7 +331,7 @@ const styles = {
   container: css`
 		max-width: 640px;
 		width: 100%;
-		padding-top: ${spacing[40]};
+		padding-block: ${spacing[40]};
     margin-inline: auto;
 		display: flex;
 		flex-direction: column;

@@ -109,7 +109,6 @@ const CourseBasic = () => {
     control: form.control,
     name: 'course_product_id',
   });
-  const courseCategory = useWatch({ control: form.control, name: 'course_pricing_category' });
 
   const visibilityStatusOptions = [
     {
@@ -497,7 +496,7 @@ const CourseBasic = () => {
           )}
         />
 
-        <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.monetize_by === 'tutor'}>
+        {/* <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.monetize_by === 'tutor'}>
           <Controller
             name="course_pricing_category"
             control={form.control}
@@ -511,22 +510,19 @@ const CourseBasic = () => {
               />
             )}
           />
-        </Show>
-
-        <Show when={courseCategory === 'regular'} fallback={<SubscriptionPreview courseId={courseId} />}>
-          <Controller
-            name="course_price_type"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormRadioGroup
-                {...controllerProps}
-                label={__('Price Type', 'tutor')}
-                options={coursePriceOptions}
-                wrapperCss={styles.priceRadioGroup}
-              />
-            )}
-          />
-        </Show>
+        </Show> */}
+        <Controller
+          name="course_price_type"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormRadioGroup
+              {...controllerProps}
+              label={__('Price Type', 'tutor')}
+              options={coursePriceOptions}
+              wrapperCss={styles.priceRadioGroup}
+            />
+          )}
+        />
 
         <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'wc'}>
           <Controller
@@ -579,7 +575,6 @@ const CourseBasic = () => {
 
         <Show
           when={
-            courseCategory === 'regular' &&
             coursePriceType === 'paid' &&
             (tutorConfig.settings?.monetize_by === 'tutor' || tutorConfig.settings?.monetize_by === 'wc')
           }
@@ -642,6 +637,46 @@ const CourseBasic = () => {
               )}
             />
           </div>
+        </Show>
+
+        <Show
+          when={
+            isAddonEnabled(Addons.SUBSCRIPTION) &&
+            tutorConfig.settings?.monetize_by === 'tutor' &&
+            coursePriceType === 'paid'
+          }
+        >
+          <SubscriptionPreview courseId={courseId} />
+
+          <Controller
+            name="course_selling_option"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormRadioGroup
+                {...controllerProps}
+                wrapperCss={css`
+                  > div:not(:last-child) {
+                    margin-bottom: ${spacing[10]};
+                  }
+                `}
+                label={__('Selling option', 'tutor')}
+                options={[
+                  {
+                    label: __('By subscription only', 'tutor'),
+                    value: 'subscription',
+                  },
+                  {
+                    label: __('By subscription & one-time purchase', 'tutor'),
+                    value: 'both',
+                  },
+                  {
+                    label: __('By one-time purchase only', 'tutor'),
+                    value: 'one_time',
+                  },
+                ]}
+              />
+            )}
+          />
         </Show>
 
         <Controller

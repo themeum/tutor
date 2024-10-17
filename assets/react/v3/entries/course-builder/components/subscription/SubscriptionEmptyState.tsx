@@ -52,7 +52,7 @@ const styles = {
     justify-content: center;
     max-width: 640px;
     width: 100%;
-    padding-top: ${spacing[40]};
+    padding-block: ${spacing[40]};
     margin-inline: auto;
   `,
   content: css`

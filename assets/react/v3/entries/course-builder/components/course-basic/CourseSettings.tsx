@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
@@ -34,7 +34,6 @@ const CourseSettings = () => {
 
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
-  const priceCategory = form.watch('course_pricing_category');
 
   const tabList: TabItem<string>[] = [
     {
@@ -62,13 +61,6 @@ const CourseSettings = () => {
     label: level.label,
     value: level.value,
   }));
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (priceCategory === 'subscription') {
-      form.setValue('enrollment_expiry', 0);
-    }
-  }, [priceCategory]);
 
   return (
     <div>
@@ -129,7 +121,6 @@ const CourseSettings = () => {
                         "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
                         'tutor',
                       )}
-                      disabled={priceCategory === 'subscription'}
                       placeholder="0"
                       type="number"
                       isClearable

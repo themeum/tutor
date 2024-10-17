@@ -84,6 +84,12 @@ export default function SubscriptionItem({
         form.setFocus(`subscriptions.${index}.plan_name` as `subscriptions.0.plan_name`);
       }, SET_FOCUS_AFTER);
 
+      if (index > 0) {
+        wrapperRef.current?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
       return () => {
         clearTimeout(timeoutId);
       };
@@ -129,7 +135,7 @@ export default function SubscriptionItem({
   };
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
-    id: subscription.id,
+    id: subscription.id || '',
     animateLayoutChanges,
   });
 
@@ -145,7 +151,6 @@ export default function SubscriptionItem({
   );
 
   const subscriptionName = form.watch(`subscriptions.${index}.plan_name` as `subscriptions.0.plan_name`);
-  const paymentType = form.watch(`subscriptions.${index}.payment_type` as `subscriptions.0.payment_type`);
   const chargeEnrolmentFee = form.watch(
     `subscriptions.${index}.charge_enrollment_fee` as `subscriptions.0.charge_enrollment_fee`,
   );
@@ -224,6 +229,7 @@ export default function SubscriptionItem({
         bgLight,
         isActive: isActive,
         isDragging: isOverlay,
+        isDeletePopoverOpen,
       })}
       onClick={() => setIsActive(true)}
       style={style}
@@ -312,7 +318,7 @@ export default function SubscriptionItem({
               )}
             />
 
-            <Controller
+            {/* <Controller
               control={form.control}
               name={`subscriptions.${index}.payment_type`}
               render={(controllerProps) => (
@@ -325,130 +331,102 @@ export default function SubscriptionItem({
                   ]}
                 />
               )}
-            />
-            <Show
-              when={paymentType === 'recurring'}
-              fallback={
-                <Controller
-                  control={form.control}
-                  name={`subscriptions.${index}.regular_price`}
-                  rules={{
-                    ...requiredRule(),
-                    validate: (value) => {
-                      if (Number(value) <= 0) {
-                        return __('Price must be greater than 0', 'tutor');
-                      }
-                    },
-                  }}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      label={__('Price', 'tutor')}
-                      content={tutor_currency?.symbol || '$'}
-                      placeholder={__('Plan price', 'tutor')}
-                      selectOnFocus
-                      contentCss={styleUtils.inputCurrencyStyle}
-                      type="number"
-                    />
-                  )}
-                />
-              }
-            >
-              <div css={styles.inputGroup}>
-                <Controller
-                  control={form.control}
-                  name={`subscriptions.${index}.regular_price`}
-                  rules={{
-                    ...requiredRule(),
-                    validate: (value) => {
-                      if (Number(value) <= 0) {
-                        return __('Price must be greater than 0', 'tutor');
-                      }
-                    },
-                  }}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      label={__('Price', 'tutor')}
-                      content={tutor_currency?.symbol || '$'}
-                      placeholder={__('Plan price', 'tutor')}
-                      selectOnFocus
-                      contentCss={styleUtils.inputCurrencyStyle}
-                      type="number"
-                    />
-                  )}
-                />
-                <Controller
-                  control={form.control}
-                  name={`subscriptions.${index}.recurring_value`}
-                  rules={{
-                    ...requiredRule(),
-                    validate: (value) => {
-                      if (Number(value) < 1) {
-                        return __('This value must be equal to or greater than 1', 'tutor');
-                      }
-                    },
-                  }}
-                  render={(controllerProps) => (
-                    <FormInput
-                      {...controllerProps}
-                      label={__('Repeat every', 'tutor')}
-                      placeholder={__('Repeat every', 'tutor')}
-                      selectOnFocus
-                      type="number"
-                    />
-                  )}
-                />
+            /> */}
 
-                <Controller
-                  control={form.control}
-                  name={`subscriptions.${index}.recurring_interval`}
-                  render={(controllerProps) => (
-                    <FormSelectInput
-                      {...controllerProps}
-                      label={<div>&nbsp;</div>}
-                      options={[
-                        { label: __('Day(s)', 'tutor'), value: 'day' },
-                        { label: __('Week(s)', 'tutor'), value: 'week' },
-                        { label: __('Month(s)', 'tutor'), value: 'month' },
-                        { label: __('Year(s)', 'tutor'), value: 'year' },
-                      ]}
-                      removeOptionsMinWidth
-                    />
-                  )}
-                />
+            <div css={styles.inputGroup}>
+              <Controller
+                control={form.control}
+                name={`subscriptions.${index}.regular_price`}
+                rules={{
+                  ...requiredRule(),
+                  validate: (value) => {
+                    if (Number(value) <= 0) {
+                      return __('Price must be greater than 0', 'tutor');
+                    }
+                  },
+                }}
+                render={(controllerProps) => (
+                  <FormInputWithContent
+                    {...controllerProps}
+                    label={__('Price', 'tutor')}
+                    content={tutor_currency?.symbol || '$'}
+                    placeholder={__('Plan price', 'tutor')}
+                    selectOnFocus
+                    contentCss={styleUtils.inputCurrencyStyle}
+                    type="number"
+                  />
+                )}
+              />
+              <Controller
+                control={form.control}
+                name={`subscriptions.${index}.recurring_value`}
+                rules={{
+                  ...requiredRule(),
+                  validate: (value) => {
+                    if (Number(value) < 1) {
+                      return __('This value must be equal to or greater than 1', 'tutor');
+                    }
+                  },
+                }}
+                render={(controllerProps) => (
+                  <FormInput
+                    {...controllerProps}
+                    label={__('Repeat every', 'tutor')}
+                    placeholder={__('Repeat every', 'tutor')}
+                    selectOnFocus
+                    type="number"
+                  />
+                )}
+              />
 
-                <Controller
-                  control={form.control}
-                  name={`subscriptions.${index}.recurring_limit`}
-                  rules={{
-                    ...requiredRule(),
-                    validate: (value) => {
-                      if (value === 'Until cancelled') {
-                        return true;
-                      }
+              <Controller
+                control={form.control}
+                name={`subscriptions.${index}.recurring_interval`}
+                render={(controllerProps) => (
+                  <FormSelectInput
+                    {...controllerProps}
+                    label={<div>&nbsp;</div>}
+                    options={[
+                      { label: __('Day(s)', 'tutor'), value: 'day' },
+                      { label: __('Week(s)', 'tutor'), value: 'week' },
+                      { label: __('Month(s)', 'tutor'), value: 'month' },
+                      { label: __('Year(s)', 'tutor'), value: 'year' },
+                    ]}
+                    removeOptionsMinWidth
+                  />
+                )}
+              />
 
-                      if (Number(value) <= 0) {
-                        return __('Renew plan must be greater than 0', 'tutor');
-                      }
+              <Controller
+                control={form.control}
+                name={`subscriptions.${index}.recurring_limit`}
+                rules={{
+                  ...requiredRule(),
+                  validate: (value) => {
+                    if (value === 'Until cancelled') {
                       return true;
-                    },
-                  }}
-                  render={(controllerProps) => (
-                    <FormInputWithPresets
-                      {...controllerProps}
-                      label={__('Renew Plan', 'tutor')}
-                      placeholder={__('Select or type times to renewing the plan', 'tutor')}
-                      content={controllerProps.field.value !== 'Until cancelled' && __('Times', 'tutor')}
-                      contentPosition="right"
-                      type="number"
-                      presetOptions={lifetimeOptions}
-                      selectOnFocus
-                    />
-                  )}
-                />
-              </div>
-            </Show>
+                    }
+
+                    if (Number(value) <= 0) {
+                      return __('Renew plan must be greater than 0', 'tutor');
+                    }
+                    return true;
+                  },
+                }}
+                render={(controllerProps) => (
+                  <FormInputWithPresets
+                    {...controllerProps}
+                    label={__('Renew Plan', 'tutor')}
+                    placeholder={__('Select or type times to renewing the plan', 'tutor')}
+                    content={controllerProps.field.value !== 'Until cancelled' && __('Times', 'tutor')}
+                    contentPosition="right"
+                    type="number"
+                    presetOptions={lifetimeOptions}
+                    selectOnFocus
+                  />
+                )}
+              />
+            </div>
 
             <Controller
               control={form.control}
@@ -554,21 +532,6 @@ export default function SubscriptionItem({
               )}
             />
 
-            <Show when={isFeatured}>
-              <Controller
-                control={form.control}
-                rules={requiredRule()}
-                name={`subscriptions.${index}.featured_text`}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    label={__('Feature text', 'tutor')}
-                    placeholder={__('Enter feature text', 'tutor')}
-                  />
-                )}
-              />
-            </Show>
-
             <OfferSalePrice index={index} />
           </div>
         </div>
@@ -669,10 +632,12 @@ const styles = {
     bgLight,
     isActive,
     isDragging,
+    isDeletePopoverOpen,
   }: {
     bgLight?: boolean;
     isActive: boolean;
     isDragging: boolean;
+    isDeletePopoverOpen?: boolean;
   }) => css`
 		width: 100%;
 		border: 1px solid ${colorTokens.stroke.default};
@@ -681,7 +646,7 @@ const styles = {
     transition: border-color 0.3s ease;
 
     [data-visually-hidden] {
-      opacity: 0;
+      opacity: ${isDeletePopoverOpen ? 1 : 0};
       transition: opacity 0.3s ease;
     }
 
@@ -703,6 +668,10 @@ const styles = {
       isDragging &&
       css`
         box-shadow: ${shadow.drag};
+
+        [data-grabber] {
+          cursor: grabbing;
+        }
       `
     }
 

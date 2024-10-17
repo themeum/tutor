@@ -3,8 +3,6 @@ import type { UseFormReturn } from 'react-hook-form';
 
 import { tutorConfig } from '@Config/config';
 import type { Addons } from '@Config/constants';
-import type {} from '@CourseBuilderServices/course';
-import type {} from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 
 export const getCourseId = () => {

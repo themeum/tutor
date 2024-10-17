@@ -32,6 +32,7 @@ export type ContentDripType =
   | '';
 export type PricingCategory = 'subscription' | 'regular';
 export type PricingType = 'free' | 'paid' | 'subscription';
+export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
 
 export interface CourseFormData {
   post_date: string;
@@ -44,10 +45,10 @@ export interface CourseFormData {
   post_author: User | null;
   thumbnail: Media | null;
   video: CourseVideo;
-  course_pricing_category: PricingCategory;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
+  course_selling_option: CourseSellingOption;
   course_categories: number[];
   course_tags: Tag[];
   course_instructors: UserOption[];
@@ -101,10 +102,10 @@ export const courseDefaultData: CourseFormData = {
     source_vimeo: '',
     source_embedded: '',
   },
-  course_pricing_category: 'regular',
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
+  course_selling_option: 'subscription',
   course_categories: [],
   course_tags: [],
   course_instructors: [],
@@ -150,6 +151,7 @@ export interface CoursePayload {
   'pricing[product_id]'?: string;
   course_price: number;
   course_sale_price: number;
+  course_selling_option: CourseSellingOption;
   course_categories: number[];
   course_tags: number[];
   thumbnail_id: number | null;
@@ -330,6 +332,7 @@ export interface CourseDetailsResponse {
     product_name: string;
     sale_price: string;
     type: PricingType;
+    selling_option: CourseSellingOption;
   };
   course_instructors: InstructorListResponse[];
   preview_link: string;
@@ -478,15 +481,15 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     post_status: data.post_status,
     post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_author: data.post_author?.id ?? null,
-    'pricing[type]': data.course_pricing_category === 'subscription' ? 'subscription' : data.course_price_type,
-    ...(data.course_pricing_category !== 'subscription' &&
-      data.course_price_type === 'paid' &&
+    'pricing[type]': data.course_price_type,
+    ...(data.course_price_type === 'paid' &&
       data.course_product_id && {
         'pricing[product_id]': data.course_product_id,
       }),
 
     course_price: Number(data.course_price) ?? 0,
     course_sale_price: Number(data.course_sale_price) ?? 0,
+    course_selling_option: data.course_selling_option,
 
     course_categories: data.course_categories ?? [],
     course_tags: data.course_tags.map((item) => item.id) ?? [],
@@ -575,22 +578,13 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_pricing_category: (() => {
-      if (
-        isAddonEnabled(Addons.SUBSCRIPTION) &&
-        tutorConfig.settings?.monetize_by === 'tutor' &&
-        courseDetails.course_pricing.type === 'subscription'
-      ) {
-        return 'subscription';
-      }
-      return 'regular';
-    })(),
     course_price_type:
       courseDetails.course_pricing.type === 'subscription' || !courseDetails.course_pricing.type
         ? 'free'
         : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
+    course_selling_option: courseDetails.course_pricing.selling_option || 'subscription',
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
     course_tags: courseDetails.course_tags.map((item) => {
       return {
