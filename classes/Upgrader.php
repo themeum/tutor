@@ -142,18 +142,9 @@ class Upgrader {
 		}
 
 		// Beta upgrade.
-		if ( version_compare( TUTOR_VERSION, '3.0.0-beta2', '=' ) ) {
+		if ( version_compare( TUTOR_VERSION, '3.0.0-beta2', '>=' ) ) {
 			$order_items_table = $wpdb->prefix . 'tutor_order_items';
-
-			// Check if 'discount_price' column exists in 'tutor_order_items'.
-			$column_exists = $wpdb->get_results(
-				$wpdb->prepare(
-					"SHOW COLUMNS FROM {$order_items_table} LIKE %s",
-					'discount_price'
-				)
-			);
-
-			if ( empty( $column_exists ) ) {
+			if ( ! QueryHelper::column_exist( $order_items_table, 'discount_price' ) ) {
 				// If 'discount_price' does not exist, alter the table to add 'discount_price' and 'coupon_code', and update 'sale_price'.
 				$wpdb->query(
 					"ALTER TABLE {$order_items_table}
@@ -161,6 +152,24 @@ class Upgrader {
 						ADD COLUMN coupon_code VARCHAR(255) DEFAULT NULL,
 						MODIFY COLUMN sale_price VARCHAR(13) NULL"
 				);
+			}
+		}
+
+		// New field added coupon_amount in orders table.
+		if ( version_compare( TUTOR_VERSION, '3.0.0-beta4', '>=' ) ) {
+			$order_table = $wpdb->prefix . 'tutor_orders';
+
+			$coupon_amount = 'coupon_amount';
+			if ( ! QueryHelper::column_exist( $order_table, $coupon_amount ) ) {
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $coupon_amount DECIMAL(13, 2) DEFAULT NULL AFTER coupon_code" );//phpcs:ignore
+			}
+
+			/**
+			 * Tax Type: inclusive, exclusive
+			 */
+			$tax_type = 'tax_type';
+			if ( ! QueryHelper::column_exist( $order_table, $tax_type ) ) {
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER discount_reason" );//phpcs:ignore
 			}
 		}
 

@@ -53,6 +53,8 @@ const FormTagsInput = ({
     dependencies: [tagListQuery.data?.length],
   });
 
+  const tags = tagListQuery.data ?? [];
+
   const handleCheckboxChange = (checked: boolean, tag: Tag) => {
     if (checked) {
       field.onChange([...fieldValue, tag]);
@@ -133,20 +135,18 @@ const FormTagsInput = ({
                   )}
 
                   <Show
-                    when={tagListQuery.data}
+                    when={tags.length > 0}
                     fallback={<div css={styles.notTag}>{__('No tag created yet.', 'tutor')}</div>}
                   >
-                    {(tags) =>
-                      tags.map((tag) => (
-                        <li key={String(tag.id)} css={styles.optionItem}>
-                          <Checkbox
-                            label={tag.name}
-                            checked={!!fieldValue.find((item) => item.id === tag.id)}
-                            onChange={(checked) => handleCheckboxChange(checked, tag)}
-                          />
-                        </li>
-                      ))
-                    }
+                    {tags.map((tag) => (
+                      <li key={String(tag.id)} css={styles.optionItem}>
+                        <Checkbox
+                          label={tag.name}
+                          checked={!!fieldValue.find((item) => item.id === tag.id)}
+                          onChange={(checked) => handleCheckboxChange(checked, tag)}
+                        />
+                      </li>
+                    ))}
                   </Show>
                 </ul>
               </div>

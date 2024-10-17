@@ -1245,7 +1245,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 					$conditional_buttons->show_continue_learning_btn = true;
 				}
 
-				if ( $course_progress === 0 ) {
+				if ( 0 === $course_progress ) {
 					$conditional_buttons->show_start_learning_btn = true;
 				}
 
@@ -1444,24 +1444,31 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			foreach ( Settings::get_default_automate_payment_gateways() as $k => $gateway ) {
 				list( $label, $is_active, $icon ) = array_values( $gateway );
 				if ( $is_active ) {
-					$active_gateways['automate'][ $k ] = array( 'label' => $label, 'icon' => $icon );
+					$active_gateways['automate'][ $k ] = array(
+						'label' => $label,
+						'icon'  => $icon,
+					);
 				}
 			}
 
 			$manual_gateways = tutor_get_manual_payment_gateways();
 			if ( is_array( $manual_gateways ) && count( $manual_gateways ) ) {
-				foreach ( $manual_gateways as $gateway ) {
-					if ( isset( $gateway['is_enable'] ) && 'on' === $gateway['is_enable'] ) {
-						$active_gateways['manual'][] = array(
-							'label'                => $gateway['payment_method_name'],
-							'additional_details'   => $gateway['additional_details'],
-							'payment_instructions' => $gateway['payment_instructions'],
+				foreach ( $manual_gateways as $key => $gateway ) {
+					if ( '1' == $gateway->is_active ) {
+						$active_gateways['manual'][ $key ] = array(
+							'label' => $gateway->label,
 						);
+
+						foreach ( $gateway->fields as $field ) {
+							$active_gateways['manual'][ $key ][ $field->name ] = $field->value;
+						}
 					}
 				}
 			}
 
-			return apply_filters( 'tutor_active_payment_gateways', $active_gateways );
+			$active_gateways = apply_filters( 'tutor_active_payment_gateways', $active_gateways );
+
+			return $active_gateways;
 		}
 	}
 
@@ -1474,7 +1481,20 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * @return array
 		 */
 		function tutor_get_manual_payment_gateways() {
-			return get_option( OptionKeys::MANUAL_PAYMENT_KEY, array() );
+			$payments = tutor_utils()->get_option( 'payment_settings' );
+			$payments = json_decode( stripslashes( $payments ) );
+
+			$manual_methods = array();
+
+			if ( $payments ) {
+				foreach ( $payments->payment_methods as $method ) {
+					if ( $method->is_manual ) {
+						$manual_methods[] = $method;
+					}
+				}
+			}
+
+			return apply_filters( 'tutor_manual_payment_methods', $manual_methods );
 		}
 	}
 }
@@ -1501,10 +1521,10 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 		?>
 			<div>
 				<?php if ( $sale_price ) : ?>
-					<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
-					<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
+					<span><?php tutor_print_formatted_price( $sale_price ); ?></span>
+					<del><?php tutor_print_formatted_price( $regular_price ); ?></del>
 				<?php else : ?>
-					<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
+					<span><?php tutor_print_formatted_price( $regular_price ); ?></span>
 				<?php endif; ?>
 			</div>
 		<?php
@@ -1545,6 +1565,22 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_print_formatted_price' ) ) {
+	/**
+	 * A clone copy of `tutor_get_formatted_price` helper
+	 * To print formated price with output scaping.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $price price.
+	 *
+	 * @return void
+	 */
+	function tutor_print_formatted_price( $price ) {
+		echo esc_html( tutor_get_formatted_price( $price ) );
+	}
+}
+
 if ( ! function_exists( 'tutor_get_locale_price' ) ) {
 	/**
 	 * Get price as per locale format
@@ -1577,15 +1613,15 @@ if ( ! function_exists( 'tutor_is_json' ) ) {
 	}
 }
 
-if ( ! function_exists( 'tutor_is_local_env' ) ) {
+if ( ! function_exists( 'tutor_is_dev_mode' ) ) {
 	/**
-	 * Check if the current environment is local.
+	 * Check tutor is in development mode or not.
 	 *
 	 * @since 3.0.0
 	 *
 	 * @return bool True if the current environment is local, false otherwise.
 	 */
-	function tutor_is_local_env() {
-		return ( strpos( site_url(), '.local' ) !== false || strpos( site_url(), 'localhost' ) !== false );
+	function tutor_is_dev_mode() {
+		return defined( 'TUTOR_DEV_MODE' ) && TUTOR_DEV_MODE;
 	}
 }

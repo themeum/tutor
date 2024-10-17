@@ -72,6 +72,7 @@ class Ecommerce {
 		new HooksHandler();
 		new EmailController();
 		new PaymentHandler();
+		new Tax();
 	}
 
 	/**
@@ -157,5 +158,25 @@ class Ecommerce {
 		$arr = apply_filters( 'tutor_payment_gateways_with_class', $arr );
 
 		return is_null( $gateway ) ? $arr : $arr[ $gateway ] ?? null;
+	}
+
+	/**
+	 * Check if a payment gateway configured
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param string $gateway_slug Payment gateway name.
+	 *
+	 * @return bool
+	 */
+	public static function is_payment_gateway_configured( $gateway_slug ) {
+		$gateway_ref = self::payment_gateways_with_ref( $gateway_slug );
+		if ( $gateway_ref ) {
+			$gateway_obj  = self::get_payment_gateway_object( $gateway_ref['gateway_class'] );
+			$config_class = $gateway_obj->get_config_class();
+			return ( new $config_class() )->is_configured();
+		}
+
+		return false;
 	}
 }

@@ -254,6 +254,9 @@ export const colorTokens = {
       fill30: '#F5FBF7',
       fill40: '#E5F5EB',
     },
+    warning: {
+      fill40: '#FDF4E3',
+    },
     status: {
       success: '#e5f5eb',
       warning: '#fdf4e3',
@@ -592,7 +595,7 @@ export const zIndex = {
   footer: 10,
   modal: 25,
   notebook: 30,
-  highest: 9999999,
+  highest: 99999,
 } as const;
 
 export const SmallMobileBreakpoint = 480;

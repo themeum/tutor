@@ -554,6 +554,22 @@ class QueryHelper {
 	}
 
 	/**
+	 * Check column exist in a table
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $table table name.
+	 * @param string $column column name.
+	 *
+	 * @return bool
+	 */
+	public static function column_exist( $table, $column ) {
+		global $wpdb;
+		$sql = "SHOW COLUMNS FROM {$table} LIKE '{$column}'";
+		return $wpdb->get_var( $sql ) === $column;
+	}
+
+	/**
 	 * Get data by joining multiple tables with specified join relations.
 	 *
 	 * Argument should be SQL escaped.

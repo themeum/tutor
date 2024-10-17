@@ -136,7 +136,7 @@ $filters = array(
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( $coupon->coupon_code ); ?>
+											<?php echo esc_html( 'automatic' === $coupon->coupon_type ? __( 'Automatic', 'tutor' ) : $coupon->coupon_code ); ?>
 										</div>
 									</td>
 

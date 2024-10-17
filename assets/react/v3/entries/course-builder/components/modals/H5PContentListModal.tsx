@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -135,7 +135,10 @@ const H5PContentListModal = ({
   }, []);
 
   return (
-    <BasicModalWrapper title={title} onClose={() => closeModal({ action: 'CLOSE' })}>
+    <BasicModalWrapper
+      title={selectedContents.length > 0 ? sprintf(__('%s  selected', 'tutor'), selectedContents.length) : title}
+      onClose={() => closeModal({ action: 'CLOSE' })}
+    >
       <div css={styles.modalWrapper}>
         <div css={styles.searchWrapper}>
           <Controller

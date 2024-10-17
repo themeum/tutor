@@ -124,6 +124,7 @@ const styles = {
   }) => css`
     display: grid;
     grid-template-columns: ${hasHeaderChildren ? '1fr auto 1fr' : '1fr auto auto'};
+    gap: ${spacing[8]};
     align-items: center;
     width: 100%;
     height: ${modal.HEADER_HEIGHT}px;
