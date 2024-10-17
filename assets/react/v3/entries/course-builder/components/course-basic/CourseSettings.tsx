@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { useIsFetching, useQueryClient } from '@tanstack/react-query';
+import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
@@ -22,26 +22,18 @@ import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDr
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Option } from '@Utils/types';
-import type { Subscription } from '../../services/subscription';
 
 const courseId = getCourseId();
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
-  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('general');
   const isCourseDetailsLoading = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
 
-  const isSubscriptionListLoading = !!useIsFetching({
-    queryKey: ['SubscriptionsList', courseId],
-  });
-  const courseSubscriptions = (queryClient.getQueryData(['SubscriptionsList', courseId]) || []) as Subscription[];
-
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
-  const sellingOption = form.watch('course_selling_option');
 
   const tabList: TabItem<string>[] = [
     {
@@ -69,13 +61,6 @@ const CourseSettings = () => {
     label: level.label,
     value: level.value,
   }));
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (courseSubscriptions.length > 0 && !isSubscriptionListLoading && sellingOption === 'subscription') {
-      form.setValue('enrollment_expiry', 0);
-    }
-  }, [courseSubscriptions.length, isSubscriptionListLoading]);
 
   return (
     <div>
@@ -136,7 +121,6 @@ const CourseSettings = () => {
                         "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
                         'tutor',
                       )}
-                      disabled={courseSubscriptions.length > 0 && sellingOption === 'subscription'}
                       placeholder="0"
                       type="number"
                       isClearable
