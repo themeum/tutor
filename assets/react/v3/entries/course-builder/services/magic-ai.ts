@@ -7,6 +7,7 @@ import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { Prettify, WPResponse } from '@Utils/types';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { convertToErrorMessage } from '../utils/utils';
 
 interface ImagePayload {
   prompt: string;
@@ -43,7 +44,7 @@ export const useMagicFillImageMutation = () => {
   return useMutation({
     mutationFn: magicFillImage,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -66,7 +67,7 @@ export const useMagicTextGenerationMutation = () => {
   return useMutation({
     mutationFn: generateText,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -102,7 +103,7 @@ export const useModifyContentMutation = () => {
   return useMutation({
     mutationFn: modifyContent,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -123,7 +124,7 @@ export const useStoreAIGeneratedImageMutation = () => {
   return useMutation({
     mutationFn: storeImage,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -152,7 +153,7 @@ export const useGenerateCourseContentMutation = (type: ContentType) => {
     mutationKey: ['GenerateCourseContent', type],
     mutationFn: generateCourseContent,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -174,7 +175,7 @@ export const useGenerateCourseTopicNamesMutation = () => {
   return useMutation({
     mutationFn: generateCourseTopicNames,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -197,7 +198,7 @@ export const useGenerateCourseTopicContentMutation = () => {
   return useMutation({
     mutationFn: generateCourseTopicContent,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -220,7 +221,7 @@ export const useSaveAIGeneratedCourseContentMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['CourseDetails'] });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -250,7 +251,7 @@ export const useGenerateQuizQuestionsMutation = () => {
   return useMutation({
     mutationFn: generateQuizQuestions,
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };

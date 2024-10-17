@@ -4,16 +4,21 @@ import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
-
 import type { UserOption } from '@Components/fields/FormSelectUser';
+import type { CourseVideo } from '@Components/fields/FormVideoInput';
+import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
+import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
+
+import { Addons } from '@/v3/shared/config/constants';
+import { convertToGMT } from '@/v3/shared/utils/util';
 import { tutorConfig } from '@Config/config';
+import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import type { ID } from './curriculum';
+import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -27,6 +32,7 @@ export type ContentDripType =
   | '';
 export type PricingCategory = 'subscription' | 'regular';
 export type PricingType = 'free' | 'paid' | 'subscription';
+export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
 
 export interface CourseFormData {
   post_date: string;
@@ -39,10 +45,10 @@ export interface CourseFormData {
   post_author: User | null;
   thumbnail: Media | null;
   video: CourseVideo;
-  course_pricing_category: PricingCategory;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
+  course_selling_option: CourseSellingOption;
   course_categories: number[];
   course_tags: Tag[];
   course_instructors: UserOption[];
@@ -96,10 +102,10 @@ export const courseDefaultData: CourseFormData = {
     source_vimeo: '',
     source_embedded: '',
   },
-  course_pricing_category: 'regular',
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
+  course_selling_option: 'subscription',
   course_categories: [],
   course_tags: [],
   course_instructors: [],
@@ -145,6 +151,7 @@ export interface CoursePayload {
   'pricing[product_id]'?: string;
   course_price: number;
   course_sale_price: number;
+  course_selling_option: CourseSellingOption;
   course_categories: number[];
   course_tags: number[];
   thumbnail_id: number | null;
@@ -325,6 +332,7 @@ export interface CourseDetailsResponse {
     product_name: string;
     sale_price: string;
     type: PricingType;
+    selling_option: CourseSellingOption;
   };
   course_instructors: InstructorListResponse[];
   preview_link: string;
@@ -461,6 +469,243 @@ interface GoogleMeetMeetingDeletePayload {
   'event-id': string;
 }
 
+export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
+  return {
+    post_date: data.post_date,
+    post_date_gmt: convertToGMT(new Date(data.post_date)),
+    post_title: data.post_title,
+    post_name: data.post_name,
+    ...(data.editor_used.name === 'classic' && {
+      post_content: data.post_content,
+    }),
+    post_status: data.post_status,
+    post_password: data.visibility === 'password_protected' ? data.post_password : '',
+    post_author: data.post_author?.id ?? null,
+    'pricing[type]': data.course_price_type,
+    ...(data.course_price_type === 'paid' &&
+      data.course_product_id && {
+        'pricing[product_id]': data.course_product_id,
+      }),
+
+    course_price: Number(data.course_price) ?? 0,
+    course_sale_price: Number(data.course_sale_price) ?? 0,
+    course_selling_option: data.course_selling_option,
+
+    course_categories: data.course_categories ?? [],
+    course_tags: data.course_tags.map((item) => item.id) ?? [],
+    thumbnail_id: data.thumbnail?.id ?? null,
+    enable_qna: data.enable_qna ? 'yes' : 'no',
+    is_public_course: data.is_public_course ? 'yes' : 'no',
+    course_level: data.course_level,
+    'course_settings[maximum_students]': data.maximum_students ?? 0,
+    'course_settings[enrollment_expiry]': data.enrollment_expiry ?? '',
+    'course_settings[enable_content_drip]': data.contentDripType ? 1 : 0,
+    'course_settings[content_drip_type]': data.contentDripType,
+    'course_settings[enable_tutor_bp]': data.enable_tutor_bp ? 1 : 0,
+
+    'additional_content[course_benefits]': data.course_benefits ?? '',
+    'additional_content[course_target_audience]': data.course_target_audience ?? '',
+    'additional_content[course_duration][hours]': data.course_duration_hours ?? 0,
+    'additional_content[course_duration][minutes]': data.course_duration_minutes ?? 0,
+    'additional_content[course_material_includes]': data.course_material_includes ?? '',
+    'additional_content[course_requirements]': data.course_requirements ?? '',
+    preview_link: data.preview_link,
+
+    ...(isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS) && {
+      course_instructor_ids: [...data.course_instructors.map((item) => item.id), Number(data.post_author?.id)],
+    }),
+
+    ...(isAddonEnabled(Addons.TUTOR_PREREQUISITES) && {
+      _tutor_prerequisites_main_edit: true,
+      _tutor_course_prerequisites_ids: data.course_prerequisites?.map((item) => item.id) ?? [],
+    }),
+    tutor_course_certificate_template: data.tutor_course_certificate_template,
+
+    _tutor_course_additional_data_edit: true,
+    _tutor_attachments_main_edit: true,
+    ...(data.video.source && {
+      'video[source]': data.video.source,
+      'video[source_video_id]': data.video.source_video_id,
+      'video[poster]': data.video.poster,
+      'video[source_external_url]': data.video.source_external_url,
+      'video[source_shortcode]': data.video.source_shortcode,
+      'video[source_youtube]': data.video.source_youtube,
+      'video[source_vimeo]': data.video.source_vimeo,
+      'video[source_embedded]': data.video.source_embedded,
+    }),
+    tutor_attachments: (data.course_attachments || []).map((item) => item.id) ?? [],
+    bp_attached_group_ids: data.bp_attached_group_ids,
+  };
+};
+
+export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
+  return {
+    post_date: courseDetails.post_date,
+    post_title: courseDetails.post_title,
+    post_name: courseDetails.post_name,
+    post_content: courseDetails.post_content,
+    post_status: courseDetails.post_status,
+    visibility: (() => {
+      if (courseDetails.post_password.length) {
+        return 'password_protected';
+      }
+      if (courseDetails.post_status === 'private') {
+        return 'private';
+      }
+      return 'publish';
+    })(),
+    post_password: courseDetails.post_password,
+    post_author: {
+      id: Number(courseDetails.post_author.ID),
+      name: courseDetails.post_author.display_name,
+      email: courseDetails.post_author.user_email,
+      avatar_url: courseDetails.post_author.tutor_profile_photo_url,
+    },
+    thumbnail: {
+      id: courseDetails.thumbnail_id ? Number(courseDetails.thumbnail_id) : 0,
+      title: '',
+      url: courseDetails.thumbnail,
+    },
+    video: {
+      source: courseDetails.video.source ?? '',
+      source_video_id: courseDetails.video.source_video_id ?? '',
+      poster: courseDetails.video.poster ?? '',
+      poster_url: courseDetails.video.poster_url ?? '',
+      source_external_url: courseDetails.video.source_external_url ?? '',
+      source_shortcode: courseDetails.video.source_shortcode ?? '',
+      source_youtube: courseDetails.video.source_youtube ?? '',
+      source_vimeo: courseDetails.video.source_vimeo ?? '',
+      source_embedded: courseDetails.video.source_embedded ?? '',
+    },
+    course_product_name: courseDetails.course_pricing.product_name,
+    course_price_type:
+      courseDetails.course_pricing.type === 'subscription' || !courseDetails.course_pricing.type
+        ? 'free'
+        : courseDetails.course_pricing.type,
+    course_price: courseDetails.course_pricing.price,
+    course_sale_price: courseDetails.course_pricing.sale_price,
+    course_selling_option: courseDetails.course_pricing.selling_option || 'subscription',
+    course_categories: courseDetails.course_categories.map((item) => item.term_id),
+    course_tags: courseDetails.course_tags.map((item) => {
+      return {
+        id: item.term_id,
+        name: item.name,
+      };
+    }),
+    enable_qna: courseDetails.enable_qna === 'yes',
+    is_public_course: courseDetails.is_public_course === 'yes',
+    course_level: courseDetails.course_level || 'intermediate',
+    maximum_students: courseDetails.course_settings.maximum_students,
+    enrollment_expiry: courseDetails.course_settings.enrollment_expiry,
+    course_benefits: courseDetails.course_benefits,
+    course_duration_hours: courseDetails.course_duration.hours,
+    course_duration_minutes: courseDetails.course_duration.minutes,
+    course_material_includes: courseDetails.course_material_includes,
+    course_requirements: courseDetails.course_requirements,
+    course_target_audience: courseDetails.course_target_audience,
+    isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1,
+    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type : '',
+    course_product_id:
+      String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
+    course_instructors:
+      courseDetails.course_instructors?.reduce((instructors, item) => {
+        if (String(item.id) !== String(courseDetails.post_author.ID)) {
+          instructors.push({
+            id: item.id,
+            name: item.display_name,
+            email: item.user_email,
+            avatar_url: item.avatar_url,
+            isRemoveAble: false,
+          });
+        }
+        return instructors;
+      }, [] as UserOption[]) ?? [],
+    preview_link: courseDetails.preview_link ?? '',
+    course_prerequisites: courseDetails.course_prerequisites ?? [],
+    tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
+    course_attachments: courseDetails.course_attachments ?? [],
+    enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
+    bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
+    editor_used: courseDetails.editor_used,
+  };
+};
+
+export const convertLessonDataToPayload = (
+  data: LessonForm,
+  lessonId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType,
+): LessonPayload => {
+  return {
+    ...(lessonId && { lesson_id: lessonId }),
+    topic_id: topicId,
+    title: data.title,
+    description: data.description,
+    thumbnail_id: data.thumbnail?.id ?? null,
+
+    'video[source]': data.video?.source || '-1',
+    'video[source_video_id]': data.video?.source_video_id || '',
+    'video[poster]': data.video?.poster || '',
+    'video[source_external_url]': data.video?.source_external_url || '',
+    'video[source_shortcode]': data.video?.source_shortcode || '',
+    'video[source_youtube]': data.video?.source_youtube || '',
+    'video[source_vimeo]': data.video?.source_vimeo || '',
+    'video[source_embedded]': data.video?.source_embedded || '',
+
+    'video[runtime][hours]': data.duration.hour || 0,
+    'video[runtime][minutes]': data.duration.minute || 0,
+    'video[runtime][seconds]': data.duration.second || 0,
+    ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
+    tutor_attachments: (data.tutor_attachments || []).map((attachment) => attachment.id),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+      }),
+  };
+};
+
+export const convertAssignmentDataToPayload = (
+  data: AssignmentForm,
+  assignmentId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType,
+): AssignmentPayload => {
+  return {
+    ...(assignmentId && { assignment_id: assignmentId }),
+    topic_id: topicId,
+    title: data.title,
+    summary: data.summary,
+    attachments: (data.attachments || []).map((attachment) => attachment.id),
+    'assignment_option[time_duration][time]': data.time_duration.time,
+    'assignment_option[time_duration][value]': data.time_duration.value,
+    'assignment_option[total_mark]': data.total_mark,
+    'assignment_option[pass_mark]': data.pass_mark,
+    'assignment_option[upload_files_limit]': data.upload_files_limit,
+    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
+
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+      }),
+  };
+};
+
 const createCourse = (payload: CoursePayload) => {
   return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.CREATED_COURSE, payload);
 };
@@ -488,7 +733,7 @@ export const useCreateCourseMutation = () => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -520,12 +765,7 @@ export const useUpdateCourseMutation = () => {
       }
     },
     onError: (error: ErrorResponse) => {
-      let errorMessage = error.response.data.message;
-      if (error.response.data.status_code === 422 && error.response.data.data) {
-        errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
-      }
-
-      showToast({ type: 'danger', message: errorMessage ?? __('Something went wrong', 'tutor') });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -576,7 +816,7 @@ export const useWcProductDetailsQuery = (
   productId: string,
   courseId: string,
   coursePriceType: string,
-  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined
+  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined,
 ) => {
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],
@@ -591,7 +831,7 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
     {
       action: 'tutor_course_list',
       exclude: excludedCourseIds,
-    }
+    },
   );
 };
 
@@ -638,7 +878,7 @@ export const useSaveZoomMeetingMutation = () => {
       });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -670,7 +910,7 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -719,7 +959,7 @@ export const useSaveGoogleMeetMutation = () => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -750,7 +990,7 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
       });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -776,7 +1016,7 @@ export const useSaveOpenAiSettingsMutation = () => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };

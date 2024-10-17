@@ -138,7 +138,7 @@ class CouponController extends BaseController {
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), true );
+		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), true );//phpcs:ignore --sanitized already
 
 		if ( $this->model::TYPE_AUTOMATIC === $data['coupon_type'] ) {
 			$data['coupon_code'] = time();
@@ -209,7 +209,7 @@ class CouponController extends BaseController {
 		tutor_utils()->check_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), false );
+		$data = $this->get_allowed_fields( Input::sanitize_array( $_POST ), false );//phpcs:ignore --sanitized already
 
 		$coupon_id              = Input::post( 'id', null, Input::TYPE_INT );
 		$data['coupon_id']      = $coupon_id;
@@ -281,7 +281,7 @@ class CouponController extends BaseController {
 		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
 		$search_term = '';
 
-		$filter = json_decode( wp_unslash( $_POST['filter'] ) );
+		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
 		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
 			$search_term = Input::sanitize( $filter->search );
 		}
@@ -462,7 +462,7 @@ class CouponController extends BaseController {
 		}
 
 		// Get and sanitize input data.
-		$request     = Input::sanitize_array( $_POST );
+		$request     = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized already
 		$bulk_action = $request['bulk-action'];
 
 		$bulk_ids = isset( $request['bulk-ids'] ) ? array_map( 'intval', explode( ',', $request['bulk-ids'] ) ) : array();
@@ -700,15 +700,16 @@ class CouponController extends BaseController {
 	public function ajax_apply_coupon() {
 		tutor_utils()->check_nonce();
 
-		$object_ids  = Input::post( 'object_ids' ); // Course/bundle ids.
-		$object_ids  = array_filter( explode( ',', $object_ids ), 'is_numeric' );
-		$coupon_code = Input::post( 'coupon_code' );
-		$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
-
-		$order_type = OrderModel::TYPE_SINGLE_ORDER;
-		if ( $plan ) {
-			$order_type = OrderModel::TYPE_SUBSCRIPTION;
+		if ( ! Settings::is_coupon_usage_enabled() ) {
+			$this->json_response(
+				__( 'Coupon usage is disabled', 'tutor' ),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
 		}
+
+		$object_ids = Input::post( 'object_ids' ); // Course/bundle ids.
+		$object_ids = array_filter( explode( ',', $object_ids ), 'is_numeric' );
 
 		if ( empty( $object_ids ) ) {
 			$this->json_response(
@@ -719,14 +720,16 @@ class CouponController extends BaseController {
 		}
 
 		try {
-			$discount_price = $coupon_code
-								? $this->model->apply_coupon_discount( $object_ids, $coupon_code, $order_type, true )
-								: $this->model->apply_automatic_coupon_discount( $object_ids, $order_type );
+			$coupon_code = Input::post( 'coupon_code' );
+			$plan        = Input::post( 'plan', 0, Input::TYPE_INT );
+			$order_type  = $plan ? OrderModel::TYPE_SUBSCRIPTION : OrderModel::TYPE_SINGLE_ORDER;
 
-			if ( $discount_price->is_applied ) {
+			$checkout_data = ( new CheckoutController( false ) )->prepare_checkout_items( $object_ids, $order_type, $coupon_code );
+
+			if ( $checkout_data->is_coupon_applied ) {
 				$this->json_response(
 					__( 'Coupon applied successfully', 'tutor' ),
-					$discount_price
+					$checkout_data
 				);
 			} else {
 				$this->json_response(

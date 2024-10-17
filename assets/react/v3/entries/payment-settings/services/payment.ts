@@ -5,6 +5,7 @@ import endpoints from '@Utils/endpoints';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { Option } from '@Utils/types';
+import { convertToErrorMessage } from '../../course-builder/utils/utils';
 
 export interface PaymentField {
   name: string;
@@ -12,6 +13,7 @@ export interface PaymentField {
   type: 'select' | 'text' | 'secret_key' | 'textarea' | 'image' | 'webhook_url';
   options?: Option<string>[] | Record<string, string>;
   hint?: string;
+  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   value: any;
 }
 
@@ -213,7 +215,7 @@ export const useInstallPaymentMutation = () => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -233,7 +235,7 @@ export const useRemovePaymentMutation = () => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };

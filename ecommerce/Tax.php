@@ -65,6 +65,9 @@ class Tax {
 	 * @return void
 	 */
 	public function ajax_get_tax_settings() {
+		tutor_utils()->checking_nonce();
+		tutor_utils()->check_current_user_capability();
+
 		$tax_settings = self::get_settings();
 
 		if ( ! empty( $tax_settings->active_country ) ) {
@@ -137,7 +140,8 @@ class Tax {
 			}
 		}
 
-		return round( $tax, 2 );
+		// Tax amount should not negative value.
+		return max( 0, round( $tax, 2 ) );
 	}
 
 	/**

@@ -25,36 +25,29 @@ class Settings {
 	 */
 	public function __construct() {
 		add_filter( 'tutor/options/extend/attr', __CLASS__ . '::add_ecommerce_settings' );
-		// add_filter( 'tutor_after_ecommerce_settings', __CLASS__ . '::add_payment_gateway_settings' );
-
 		add_action( 'add_manual_payment_btn', __CLASS__ . '::add_manual_payment_btn' );
 		add_action( 'wp_ajax_tutor_add_manual_payment_method', __CLASS__ . '::ajax_add_manual_payment_method' );
 		add_action( 'wp_ajax_tutor_delete_manual_payment_method', __CLASS__ . '::ajax_delete_manual_payment_method' );
-		add_action( 'wp_ajax_tutor_get_tax_settings', array( $this, 'ajax_get_tax_settings' ) );
 
-		add_filter( 'tutor_option_input', array( $this, 'format_ecommerce_tax_data' ) );
 		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
 		add_action( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
 	}
 
-
 	/**
-	 * Format ecommerce tax setting data.
+	 * Check coupon usage enabled in site checkout.
 	 *
-	 * @param array $option option.
+	 * @since 3.0.0
 	 *
-	 * @return array
+	 * @return boolean
 	 */
-	public function format_ecommerce_tax_data( $option ) {
-		if ( ! empty( $option['ecommerce_tax'] ) ) {
-			$option['ecommerce_tax'] = wp_unslash( $option['ecommerce_tax'] );
-		}
-
-		return $option;
+	public static function is_coupon_usage_enabled() {
+		return (bool) tutor_utils()->get_option( OptionKeys::IS_COUPON_APPLICABLE, false );
 	}
 
 	/**
 	 * Format payment settings data.
+	 *
+	 * @since 3.0.0
 	 *
 	 * @param array $option option.
 	 *
@@ -66,43 +59,6 @@ class Settings {
 		}
 
 		return $option;
-	}
-
-	/**
-	 * Get tax settings.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return object
-	 */
-	public static function get_tax_settings() {
-		$tax_settings = tutor_utils()->get_option( 'ecommerce_tax' );
-
-		if ( ! empty( $tax_settings ) && is_string( $tax_settings ) ) {
-			$tax_settings = json_decode( $tax_settings );
-		}
-
-		return $tax_settings;
-	}
-
-	/**
-	 * Get tax settings key data.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param string $key key.
-	 * @param mixed  $default default value.
-	 *
-	 * @return mixed
-	 */
-	public static function get_tax_setting( $key, $default = false ) {
-		$tax_settings = self::get_tax_settings();
-
-		if ( ! empty( $tax_settings->$key ) ) {
-			return $tax_settings->$key;
-		}
-
-		return $default;
 	}
 
 	/**
@@ -229,6 +185,7 @@ class Settings {
 							'key'   => 'payment_settings',
 							'type'  => 'text',
 							'label' => __( 'Payment Settings', 'tutor' ),
+							'desc'  => '',
 						),
 					),
 				),
@@ -236,7 +193,7 @@ class Settings {
 		);
 
 		/**
-		 * Ecommerce payment settings will be generated from react app.
+		 * Tax settings will be generated from react app.
 		 */
 		$arr['ecommerce_tax'] = array(
 			'label'    => __( 'Tax', 'tutor' ),
@@ -255,6 +212,7 @@ class Settings {
 							'key'   => 'ecommerce_tax',
 							'type'  => 'text',
 							'label' => __( 'Tax Settings', 'tutor' ),
+							'desc'  => '',
 						),
 					),
 				),
@@ -484,96 +442,6 @@ class Settings {
 			error_log( $th->getMessage() . ' File: ' . $th->getFile(), ' Line: ' . $th->getLine() );
 			return false;
 		}
-	}
-
-	/**
-	 * Add payment gateway settings
-	 *
-	 * Using filter hook this method will add payment gateway settings
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param array $settings Ecommerce payment settings.
-	 *
-	 * @return array
-	 */
-	public static function add_payment_gateway_settings( $settings ): array {
-		$payment_gateway = array(
-			'label'      => __( 'Supported payment methods', 'tutor' ),
-			'slug'       => 'supported_payment_gateway',
-			'block_type' => 'uniform',
-			'fields'     => array(),
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $payment_gateway );
-
-		foreach ( self::get_default_automate_payment_gateways() as $key => $gateway ) {
-
-			$new_gateway = array(
-				'slug'       => "{$key}_payment_gateway",
-				'block_type' => 'uniform',
-			);
-
-			$config_keys_method = 'get_' . $key . '_config_keys';
-
-			// Set enable field.
-			$fields = array(
-				array(
-					'key'                => "is_enable_{$key}_payment",
-					'type'               => 'toggle_switch',
-					'label'              => $gateway['label'],
-					'label_title'        => '',
-					'label_icon'         => tutor()->url . 'assets/images/paypal.svg',
-					'label_tag'          => __( 'Supports Subscription', 'tutor' ),
-					'default'            => 'off',
-					/* translators: %s: gateway name */
-					'toggle_fields'      => implode( ',', array_keys( self::$config_keys_method() ) ),
-					'has_control_button' => true,
-				),
-			);
-
-			// Set config fields.
-			$fields = array_merge( $fields, self::get_config_fields( $key ) );
-
-			$new_gateway['fields'] = $fields;
-
-			// Append new gateways inside ecommerce payment.
-			$settings['ecommerce_payment']['blocks'][] = $new_gateway;
-		}
-
-		$settings = apply_filters( 'tutor_ecommerce_payment_settings', $settings );
-
-		$add_more_gateway = array(
-			'block_type' => 'action_placeholder',
-			'action'     => 'add_more_automate_payment_gateway',
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $add_more_gateway );
-
-		// Manual Payments.
-		$manual_gateways = array(
-			'label'      => __( 'Manual payment methods ', 'tutor' ),
-			'slug'       => 'manual_payment_gateway',
-			'block_type' => 'uniform',
-			'fields'     => array(),
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $manual_gateways );
-
-		$manual_gateways = self::get_manual_payment_setting_fields();
-
-		foreach ( $manual_gateways as $gateway ) {
-			array_push( $settings['ecommerce_payment']['blocks'], $gateway );
-		}
-
-		$add_btn = array(
-			'block_type' => 'action_placeholder',
-			'action'     => 'add_manual_payment_btn',
-		);
-
-		array_push( $settings['ecommerce_payment']['blocks'], $add_btn );
-
-		return $settings;
 	}
 
 	/**
@@ -828,22 +696,44 @@ class Settings {
 		return apply_filters( 'tutor_ecommerce_webhook_fields', $arr );
 	}
 
-
 	/**
-	 * Get the tax settings from the tutor options.
+	 * Get payment settings
 	 *
 	 * @since 3.0.0
 	 *
-	 * @return void
+	 * @return object
 	 */
-	public function ajax_get_tax_settings() {
-		$tax_settings = self::get_tax_settings();
+	public static function get_payment_settings() {
+		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
+		$settings = json_decode( stripslashes( $settings ), true );
 
-		if ( ! empty( $tax_settings->active_country ) ) {
-			$tax_settings->active_country = null;
+		return $settings;
+	}
+
+	/**
+	 * Get specific payment gateway settings.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $gateway_name gateway name.
+	 *
+	 * @return array
+	 */
+	public static function get_payment_gateway_config( $gateway_name ) {
+		$settings = self::get_payment_settings();
+
+		if ( empty( $gateway_name ) || ! isset( $settings['payment_methods'] ) || ! is_array( $settings['payment_methods'] ) ) {
+			return array();
 		}
 
-		$this->json_response( __( 'Success', 'tutor' ), $tax_settings );
+		$data = array_filter(
+			$settings['payment_methods'],
+			function ( $method ) use ( $gateway_name ) {
+				return $method['name'] === $gateway_name;
+			}
+		);
+
+		return isset( $data[0] ) ? $data[0] : array();
 	}
 
 	/**
@@ -857,7 +747,7 @@ class Settings {
 		tutor_utils()->checking_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
-		$this->json_response( __( 'Success', 'tutor' ), json_decode( $settings ) );
+		$settings = self::get_payment_settings();
+		$this->json_response( __( 'Success', 'tutor' ), $settings );
 	}
 }
