@@ -193,7 +193,7 @@ export const convertToSlug = (value: string) => {
 
 export const convertToErrorMessage = (error: ErrorResponse) => {
   let errorMessage = error.response.data.message;
-  if (error.response.data.status_code === 422 && error.response.data.data) {
+  if (error.response.data.status_code === 422 && error.response.data.data && Array.isArray(error.response.data.data)) {
     errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
   }
   return errorMessage || __('Something went wrong', 'tutor');
