@@ -23,6 +23,7 @@ import Card from '../molecules/Card';
 import { useRemovePaymentMutation, type PaymentMethod, type PaymentSettings } from '../services/payment';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
 import Badge from '../atoms/Badge';
+import { isObject } from '@/v3/shared/utils/types';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -46,6 +47,15 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     transition,
     opacity: isDragging ? 0.3 : undefined,
     background: isDragging ? colorTokens.stroke.hover : undefined,
+  };
+
+  const convertToOptions = (options: Record<string, string>) => {
+    return Object.keys(options).map((item) => {
+      return {
+        label: options[item],
+        value: item,
+      };
+    });
   };
 
   return (
@@ -108,7 +118,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           <FormSelectInput
                             {...controllerProps}
                             label={field.label}
-                            options={field.options ?? []}
+                            options={
+                              isObject(field.options)
+                                ? convertToOptions(field.options as Record<string, string>)
+                                : field.options ?? []
+                            }
                             isInlineLabel
                           />
                         );
@@ -125,7 +139,9 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                         );
 
                       case 'textarea':
-                        return <FormTextareaInput {...controllerProps} label={field.label} rows={6} helpText={field.hint} />;
+                        return (
+                          <FormTextareaInput {...controllerProps} label={field.label} rows={6} helpText={field.hint} />
+                        );
 
                       case 'webhook_url':
                         return <OptionWebhookUrl {...controllerProps} label={field.label} />;

@@ -6,12 +6,13 @@ import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
+import { Option } from '@/v3/shared/utils/types';
 
 export interface PaymentField {
   name: string;
   label: string;
   type: 'select' | 'text' | 'key' | 'textarea' | 'image' | 'webhook_url';
-  options?: { label: string; value: string }[];
+  options?: Option<string>[] | Record<string, string>;
   hint?: string;
   value: any;
 }
