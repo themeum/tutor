@@ -641,9 +641,7 @@ const CourseBasic = () => {
           }
         >
           <SubscriptionPreview courseId={courseId} />
-        </Show>
 
-        <Show when={coursePriceType === 'paid'}>
           <Controller
             name="course_selling_option"
             control={form.control}
