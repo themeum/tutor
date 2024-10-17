@@ -23,14 +23,14 @@ import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import { type ContentDripType, convertAssignmentDataToPayload } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   type ID,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
 } from '@CourseBuilderServices/curriculum';
-import { convertAssignmentDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { normalizeLineEndings } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';

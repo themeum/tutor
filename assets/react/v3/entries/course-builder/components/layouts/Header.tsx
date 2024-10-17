@@ -15,8 +15,13 @@ import { TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type CourseFormData, useCreateCourseMutation, useUpdateCourseMutation } from '@CourseBuilderServices/course';
-import { convertCourseDataToPayload, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
+import {
+  type CourseFormData,
+  convertCourseDataToPayload,
+  useCreateCourseMutation,
+  useUpdateCourseMutation,
+} from '@CourseBuilderServices/course';
+import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
 import Logo from '@Images/logo.svg';
 import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';

@@ -51,7 +51,7 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
           <Button
             variant="secondary"
             size="small"
-            disabled={!data.can_install}
+            disabled={!data.is_installable}
             onClick={handleInstallClick}
             loading={installPaymentMutation.isPending}
           >
