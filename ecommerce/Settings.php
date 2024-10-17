@@ -697,6 +697,46 @@ class Settings {
 	}
 
 	/**
+	 * Get payment settings
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return object
+	 */
+	public static function get_payment_settings() {
+		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
+		$settings = json_decode( stripslashes( $settings ), true );
+
+		return $settings;
+	}
+
+	/**
+	 * Get specific payment gateway settings.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $gateway_name gateway name.
+	 *
+	 * @return array
+	 */
+	public static function get_payment_gateway_config( $gateway_name ) {
+		$settings = self::get_payment_settings();
+
+		if ( empty( $gateway_name ) || ! isset( $settings['payment_methods'] ) || ! is_array( $settings['payment_methods'] ) ) {
+			return array();
+		}
+
+		$data = array_filter(
+			$settings['payment_methods'],
+			function ( $method ) use ( $gateway_name ) {
+				return $method['name'] === $gateway_name;
+			}
+		);
+
+		return isset( $data[0] ) ? $data[0] : array();
+	}
+
+	/**
 	 * Ajax handler to get payment settings
 	 *
 	 * @since 3.0.0
@@ -707,7 +747,7 @@ class Settings {
 		tutor_utils()->checking_nonce();
 		tutor_utils()->check_current_user_capability();
 
-		$settings = tutor_utils()->get_option( OptionKeys::PAYMENT_SETTINGS );
-		$this->json_response( __( 'Success', 'tutor' ), json_decode( $settings ) );
+		$settings = self::get_payment_settings();
+		$this->json_response( __( 'Success', 'tutor' ), $settings );
 	}
 }
