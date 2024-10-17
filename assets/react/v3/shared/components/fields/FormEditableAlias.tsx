@@ -1,13 +1,16 @@
+import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+
+import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
 import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { useEffect, useState } from 'react';
 
-import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormEditableAliasProps extends FormControllerProps<string> {
@@ -42,7 +45,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
             <div css={styles.linkWrapper}>
               {!isEditing ? (
                 <>
-                  <a href={fieldValue} target="_blank" css={styles.link} rel="noreferrer">
+                  <a href={fieldValue} target="_blank" css={styles.link} title={fieldValue} rel="noreferrer">
                     {fieldValue}
                   </a>
                   <button css={styles.iconWrapper} type="button" onClick={() => setIsEditing((prev) => !prev)}>
@@ -51,7 +54,9 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                 </>
               ) : (
                 <>
-                  <span css={styles.prefix}>{prefix}</span>
+                  <span css={styles.prefix} title={prefix}>
+                    {prefix}
+                  </span>
                   <div css={styles.editWrapper}>
                     <input
                       {...inputProps}
@@ -69,7 +74,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       buttonCss={styles.saveBtn}
                       onClick={() => {
                         setIsEditing(false);
-                        field.onChange(editValue);
+                        field.onChange(convertToSlug(editValue.replace(baseURL, '')));
                       }}
                     >
                       {__('Save', 'tutor')}
@@ -120,6 +125,7 @@ const styles = {
     text-decoration: none;
     ${styleUtils.text.ellipsis(1)}
     max-width: fit-content;
+    word-break: break-all;
   `,
   iconWrapper: css`
     ${styleUtils.resetButton}

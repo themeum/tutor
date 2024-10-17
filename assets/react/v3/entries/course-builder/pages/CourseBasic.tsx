@@ -40,16 +40,12 @@ import {
   type CourseFormData,
   type PricingCategory,
   type WcProduct,
+  convertCourseDataToPayload,
   useGetWcProductsQuery,
   useUpdateCourseMutation,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
-import {
-  convertCourseDataToPayload,
-  determinePostStatus,
-  getCourseId,
-  isAddonEnabled,
-} from '@CourseBuilderUtils/utils';
+import { convertToSlug, determinePostStatus, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { type Option, isDefined } from '@Utils/types';
@@ -88,6 +84,9 @@ const CourseBasic = () => {
   );
 
   const currentAuthor = form.watch('post_author');
+  const postTitle = form.watch('post_title');
+  const postStatus = form.watch('post_status');
+  const isPostNameDirty = form.formState.dirtyFields.post_name;
 
   const isInstructorVisible =
     isTutorPro &&
@@ -365,6 +364,13 @@ const CourseBasic = () => {
                   selectOnFocus
                   generateWithAi={!isTutorPro || isOpenAiEnabled}
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  onChange={(value) => {
+                    if (postStatus === 'draft' && !isPostNameDirty) {
+                      form.setValue('post_name', convertToSlug(String(value)), {
+                        shouldValidate: true,
+                      });
+                    }
+                  }}
                 />
               )}
             />

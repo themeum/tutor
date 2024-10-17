@@ -26,7 +26,7 @@ import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import { type ContentDripType, convertLessonDataToPayload } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   type ID,
@@ -34,7 +34,7 @@ import {
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
 import type { H5PContent } from '@CourseBuilderServices/quiz';
-import { convertLessonDataToPayload, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { normalizeLineEndings } from '@Utils/util';
 import { noop } from '@Utils/util';
