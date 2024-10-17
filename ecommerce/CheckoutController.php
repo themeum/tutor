@@ -382,6 +382,7 @@ class CheckoutController {
 	public function pay_now() {
 		tutor_utils()->check_nonce();
 
+		return;
 		$errors     = array();
 		$order_data = null;
 
