@@ -595,7 +595,7 @@ export const zIndex = {
   footer: 10,
   modal: 25,
   notebook: 30,
-  highest: 9999999,
+  highest: 99999,
 } as const;
 
 export const SmallMobileBreakpoint = 480;

@@ -1,6 +1,8 @@
+import { useEffect } from 'react';
 import Button from '@Atoms/Button';
 import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import FormImageInput from '@Components/fields/FormImageInput';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import { typography } from '@Config/typography';
@@ -11,7 +13,6 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
 import { PaymentMethod, PaymentSettings } from '../../services/payment';
-import { useEffect } from 'react';
 
 interface ManualPaymentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -33,6 +34,12 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
           name: 'method_name',
           label: __('Payment Method Name', 'tutor'),
           type: 'text',
+          value: '',
+        },
+        {
+          name: 'icon',
+          label: __('Icon', 'tutor'),
+          type: 'image',
           value: '',
         },
         {
@@ -66,35 +73,57 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <form onSubmit={form.handleSubmit(onSubmit)} css={styles.contentWrapper}>
         <div css={styles.formBody}>
-          {form.getValues().fields.map((field, index) =>
-            field.name === 'method_name' ? (
-              <Controller
-                name={`fields.${index}.value`}
-                control={form.control}
-                rules={requiredRule()}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    label={__('Custom payment method name', 'tutor')}
-                    onChange={(value) => {
-                      const name = String(value).toLowerCase().replace(/\s+/g, '-');
-                      form.setValue('name', name);
-                      form.setValue('label', String(value));
-                    }}
-                  />
-                )}
-              />
-            ) : (
-              <div css={styles.inputWrapper}>
+          {form.getValues().fields.map((field, index) => {
+            if (field.name === 'method_name') {
+              return (
                 <Controller
                   name={`fields.${index}.value`}
                   control={form.control}
-                  render={(controllerProps) => <FormTextareaInput {...controllerProps} label={field.label} rows={3} />}
+                  rules={requiredRule()}
+                  render={(controllerProps) => (
+                    <FormInput
+                      {...controllerProps}
+                      label={__('Custom payment method name', 'tutor')}
+                      onChange={(value) => {
+                        const name = String(value).toLowerCase().replace(/\s+/g, '-');
+                        form.setValue('name', name);
+                        form.setValue('label', String(value));
+                      }}
+                    />
+                  )}
                 />
-                <div css={styles.inputHint}>{field.hint}</div>
-              </div>
-            )
-          )}
+              );
+            } else if (field.type === 'image') {
+              return (
+                <Controller
+                  name={`fields.${index}.value`}
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormImageInput
+                      {...controllerProps}
+                      label={field.label}
+                      onChange={(value) => {
+                        form.setValue('icon', value?.url ?? '');
+                      }}
+                    />
+                  )}
+                />
+              );
+            } else {
+              return (
+                <div css={styles.inputWrapper}>
+                  <Controller
+                    name={`fields.${index}.value`}
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormTextareaInput {...controllerProps} label={field.label} rows={4} />
+                    )}
+                  />
+                  <div css={styles.inputHint}>{field.hint}</div>
+                </div>
+              );
+            }
+          })}
         </div>
         <div css={styles.footerWrapper}>
           <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
@@ -119,7 +148,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
-    max-height: calc(100vh - 122px);
+    max-height: calc(100vh - 160px);
     overflow-y: auto;
     padding: ${spacing[20]};
   `,
