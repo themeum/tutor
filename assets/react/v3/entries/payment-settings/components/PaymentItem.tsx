@@ -8,11 +8,13 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormImageInput from '@Components/fields/FormImageInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
+import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
 
@@ -20,8 +22,8 @@ import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import { useRemovePaymentMutation, type PaymentMethod, type PaymentSettings } from '../services/payment';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
-import Show from '@/v3/shared/controls/Show';
 import Badge from '../atoms/Badge';
+import { isObject } from '@/v3/shared/utils/types';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -45,6 +47,15 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     transition,
     opacity: isDragging ? 0.3 : undefined,
     background: isDragging ? colorTokens.stroke.hover : undefined,
+  };
+
+  const convertToOptions = (options: Record<string, string>) => {
+    return Object.keys(options).map((item) => {
+      return {
+        label: options[item],
+        value: item,
+      };
+    });
   };
 
   return (
@@ -107,7 +118,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           <FormSelectInput
                             {...controllerProps}
                             label={field.label}
-                            options={field.options ?? []}
+                            options={
+                              isObject(field.options)
+                                ? convertToOptions(field.options as Record<string, string>)
+                                : field.options ?? []
+                            }
                             isInlineLabel
                           />
                         );
@@ -124,10 +139,23 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                         );
 
                       case 'textarea':
-                        return <FormTextareaInput {...controllerProps} label={field.label} rows={4} />;
+                        return (
+                          <FormTextareaInput {...controllerProps} label={field.label} rows={6} helpText={field.hint} />
+                        );
 
                       case 'webhook_url':
                         return <OptionWebhookUrl {...controllerProps} label={field.label} />;
+
+                      case 'image':
+                        return (
+                          <FormImageInput
+                            {...controllerProps}
+                            label={field.label}
+                            onChange={(value) => {
+                              form.setValue(`payment_methods.${paymentIndex}.icon`, value?.url ?? '');
+                            }}
+                          />
+                        );
 
                       default:
                         return <FormInput {...controllerProps} label={field.label} isInlineLabel />;
