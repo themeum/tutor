@@ -22,6 +22,7 @@ export interface PaymentMethod {
   icon: string;
   support_subscription: boolean;
   update_available: boolean;
+  is_installable?: boolean;
   is_manual?: boolean;
   fields: PaymentField[];
 }
@@ -97,23 +98,50 @@ export const initialPaymentSettings: PaymentSettings = {
 };
 
 export const convertPaymentMethods = (methods: PaymentMethod[], gateways: PaymentGateway[]) => {
+  let isModified = false;
+  let updatedMethods = [...methods];
+
   if (gateways.length === 0) {
-    return methods;
+    const filteredMethods = updatedMethods.filter((method) => !Object.hasOwn(method, 'is_installable'));
+    if (filteredMethods.length !== updatedMethods.length) {
+      isModified = true;
+    }
+    return { methods: filteredMethods, isModified };
   }
 
   gateways.forEach((gateway) => {
-    // Append settings if payment plugin installed but settings fields are not available.
-    if (gateway.is_installed && !methods.find((method) => method.name === gateway.name)) {
-      methods.push(gateway);
+    const existingMethod = updatedMethods.find((method) => method.name === gateway.name);
+
+    // Append new method if gateway is installed but not found in methods
+    if (gateway.is_installed && !existingMethod) {
+      updatedMethods.push(gateway);
+      isModified = true;
     }
 
-    // Remove settings if payment plugin is not available.
-    if (!gateway.is_installed && methods.find((method) => method.name === gateway.name)) {
-      methods = methods.filter((method) => method.name !== gateway.name);
+    // Remove method if gateway is not installed but found in methods
+    if (!gateway.is_installed && existingMethod) {
+      updatedMethods = updatedMethods.filter((method) => method.name !== gateway.name);
+      isModified = true;
+    }
+
+    // Update existing method if gateway is installed and update is available
+    if (gateway.is_installed && gateway.update_available && existingMethod && !existingMethod.update_available) {
+      updatedMethods = updatedMethods.map((method) =>
+        method.name === gateway.name ? { ...method, update_available: true } : method
+      );
+      isModified = true;
+    }
+
+    // Update existing method if gateway is installed and update is not available
+    if (gateway.is_installed && !gateway.update_available && existingMethod && existingMethod.update_available) {
+      updatedMethods = updatedMethods.map((method) =>
+        method.name === gateway.name ? { ...method, update_available: false } : method
+      );
+      isModified = true;
     }
   });
 
-  return methods;
+  return { methods: updatedMethods, isModified };
 };
 
 const getPaymentSettings = () => {
@@ -167,6 +195,7 @@ interface PaymentResponse {
 
 interface PaymentPayload {
   slug: string;
+  action_type?: string;
 }
 
 const installPayment = (payload: PaymentPayload) => {

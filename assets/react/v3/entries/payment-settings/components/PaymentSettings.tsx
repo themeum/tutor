@@ -43,10 +43,23 @@ const TaxSettingsPage = () => {
 
   useEffect(() => {
     if (paymentSettingsQuery.data) {
+      const { methods, isModified } = convertPaymentMethods(
+        paymentSettingsQuery.data.payment_methods,
+        payment_gateways
+      );
+
       reset({
         ...paymentSettingsQuery.data,
-        payment_methods: convertPaymentMethods(paymentSettingsQuery.data.payment_methods, payment_gateways),
+        payment_methods: methods,
       });
+
+      // Programmatically click the save button
+      if (isModified) {
+        setTimeout(() => {
+          document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+          document.getElementById('save_tutor_option')?.click();
+        }, 100);
+      }
     }
   }, [reset, paymentSettingsQuery.data]);
 
