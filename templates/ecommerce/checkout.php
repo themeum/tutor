@@ -112,7 +112,8 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 							}
 							?>
 						</div>
-						<div class="tutor-payment-instructions tutor-d-none"></div>
+
+						<div class="tutor-payment-instructions tutor-mb-20 tutor-d-none"></div>
 
 						<?php if ( null !== $tutor_toc_page_link ) : ?>
 							<div class="tutor-mb-16">

@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use TUTOR\Course;
+use Tutor\Ecommerce\Settings;
 use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
 
@@ -716,204 +717,31 @@ class CouponModel {
 	}
 
 	/**
-	 * Apply coupon discount
+	 * Get coupon details for checkout.
 	 *
-	 * All type of coupons has been considered while applying coupon.
+	 * @param string $coupon_code coupon code.
 	 *
-	 * @since 3.0.0
-	 *
-	 * @param int|array $item_ids Required, course ids or plan id.
-	 * @param mixed     $coupon_code Required, coupon code.
-	 * @param string    $order_type Optional, order type.
-	 * @param bool      $format_price Optional, should format price.
-	 *
-	 * @return object Detail of discount on object format.
-	 *
-	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
+	 * @return object
 	 */
-	public function apply_coupon_discount( $item_ids, $coupon_code, $order_type = OrderModel::TYPE_SINGLE_ORDER, $format_price = false ) {
-		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
-
-		$response                   = array();
-		$response['coupon_title']   = $coupon_code;
-		$response['coupon_type']    = 'manual';
-		$response['subtotal_price'] = 0;
-		$response['tax_amount']     = 0;
-		$response['total_price']    = 0;
-		$response['deducted_price'] = 0;
-		$response['is_applied']     = false;
-
-		$should_apply_coupon = false;
-
-		foreach ( $item_ids as $item_id ) {
-			$course_price = tutor_utils()->get_raw_course_price( $item_id );
-			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
-
-				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
-				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
-					$response['total_price'] += floatval( $plan->enrollment_fee ?? 0 );
-				}
-			}
-
-			$reg_price      = $course_price->regular_price;
-			$sale_price     = $course_price->sale_price;
-			$discount_price = null;
-
-			if ( $sale_price ) {
-				$reg_price           = $sale_price;
-				$should_apply_coupon = false;
-			} else {
-				$coupon = $this->get_coupon( array( 'coupon_code' => $coupon_code ) );
-				if ( $coupon ) {
-					$is_valid = $this->is_coupon_valid( $coupon );
-					if ( $is_valid ) {
-						$is_meet_min_requirement = $this->is_coupon_requirement_meet( $item_ids, $coupon );
-						if ( $is_meet_min_requirement ) {
-							$should_apply_coupon = $this->is_coupon_applicable( $coupon, $item_id );
-						}
-					}
-
-					// Apply discount if pass all checks.
-					if ( $should_apply_coupon ) {
-						$discount_price              = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
-						$response['deducted_price'] += $reg_price - $discount_price;
-						if ( ! $response['is_applied'] ) {
-							$response['is_applied'] = true;
-						}
-					}
-				}
-			}
-
-			$response['subtotal_price'] += is_null( $discount_price ) ? $reg_price : $discount_price;
-
-			$response['items'][] = (object) array(
-				'item_id'        => $item_id,
-				'regular_price'  => $format_price ? tutor_get_formatted_price( $reg_price ) : $reg_price,
-				'discount_price' => ! is_null( $discount_price ) && $format_price ? tutor_get_formatted_price( $discount_price ) : $discount_price,
-				'is_applied'     => $should_apply_coupon,
+	public function get_coupon_details_for_checkout( $coupon_code = '' ) {
+		$coupon = null;
+		if ( empty( $coupon_code ) ) {
+			$coupon = $this->get_coupon(
+				array(
+					'coupon_type'   => self::TYPE_AUTOMATIC,
+					'coupon_status' => self::STATUS_ACTIVE,
+				)
 			);
-
-			$response['total_price'] += ! is_null( $discount_price ) && $discount_price >= 0 ? $discount_price : $reg_price;
-		}
-
-		$tax_rate   = Tax::get_user_tax_rate();
-		$tax_amount = Tax::calculate_tax( $response['total_price'], $tax_rate );
-		if ( ! Tax::is_tax_included_in_price() ) {
-			$response['total_price'] += $tax_amount;
-		}
-
-		$response['tax_amount']     = $format_price ? tutor_get_formatted_price( $tax_amount ) : $tax_amount;
-		$response['subtotal_price'] = $format_price ? tutor_get_formatted_price( $response['subtotal_price'] ) : $response['subtotal_price'];
-		$response['deducted_price'] = $format_price ? tutor_get_formatted_price( $response['deducted_price'] ) : $response['deducted_price'];
-		$response['total_price']    = $format_price ? tutor_get_formatted_price( $response['total_price'] ) : $response['total_price'];
-
-		return (object) $response;
-	}
-
-	/**
-	 * Apply automatic coupon discount
-	 *
-	 * All type of coupons has been considered while applying coupon.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int|array $item_ids Required, course ids or plan id.
-	 * @param string    $order_type order type.
-	 *
-	 * @return object Detail of discount on object format.
-	 *
-	 * For ex: { total_price: 60, items: [{item_id, regular_price, discount_price}]}
-	 */
-	public function apply_automatic_coupon_discount( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER ) {
-		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
-
-		$response                   = array();
-		$response['total_price']    = 0;
-		$response['coupon_title']   = '';
-		$response['coupon_type']    = 'automatic';
-		$response['subtotal_price'] = 0;
-		$response['tax_amount']     = 0;
-		$response['is_applied']     = false;
-		$response['deducted_price'] = 0;
-
-		$should_apply_coupon = false;
-
-		foreach ( $item_ids as $item_id ) {
-			$course_price = tutor_utils()->get_raw_course_price( $item_id );
-			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-				$course_price = apply_filters( 'tutor_subscription_plan_price', $course_price, $item_id );
-
-				$plan = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
-				if ( $plan && property_exists( $plan, 'enrollment_fee' ) ) {
-					$response['total_price'] += floatval( $plan->enrollment_fee ?? 0 );
-				}
-			}
-
-			$reg_price      = $course_price->regular_price;
-			$sale_price     = $course_price->sale_price;
-			$discount_price = null;
-
-			if ( $sale_price ) {
-				$reg_price           = $sale_price;
-				$should_apply_coupon = false;
-			} else {
-				$automatic_coupons = $this->get_coupons(
-					array( 'coupon_type' => self::TYPE_AUTOMATIC ),
-					'',
-					1000,
-					0
-				)['results'];
-
-				if ( is_array( $automatic_coupons ) && count( $automatic_coupons ) ) {
-					foreach ( $automatic_coupons as $coupon ) {
-						$is_valid = $this->is_coupon_valid( $coupon );
-						if ( $is_valid ) {
-							$is_meet_min_requirement = $this->is_coupon_requirement_meet( $item_ids, $coupon );
-							if ( $is_meet_min_requirement ) {
-								$should_apply_coupon = $this->is_coupon_applicable( $coupon, $item_id );
-
-								// Apply discount if pass all checks.
-								if ( $should_apply_coupon ) {
-									$discount_price           = $this->deduct_coupon_discount( $reg_price, $coupon->discount_type, $coupon->discount_amount );
-									$response['coupon_title'] = $coupon->coupon_title;
-
-									$response['deducted_price'] += $reg_price - $discount_price;
-									// Set a flag to determine if coupon applied.
-									if ( ! $response['is_applied'] ) {
-										$response['is_applied'] = true;
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-
-			$response['subtotal_price'] += is_null( $discount_price ) ? $reg_price : $discount_price;
-
-			$response['items'][] = (object) array(
-				'item_id'        => $item_id,
-				'regular_price'  => tutor_get_locale_price( $reg_price ),
-				'discount_price' => tutor_get_locale_price( $discount_price ),
-				'is_applied'     => $should_apply_coupon,
+		} else {
+			$coupon = $this->get_coupon(
+				array(
+					'coupon_code'   => $coupon_code,
+					'coupon_status' => self::STATUS_ACTIVE,
+				)
 			);
-
-			$response['total_price'] += ! is_null( $discount_price ) && $discount_price >= 0 ? $discount_price : $reg_price;
 		}
 
-		$tax_rate   = Tax::get_user_tax_rate();
-		$tax_amount = Tax::calculate_tax( $response['total_price'], $tax_rate );
-		if ( ! Tax::is_tax_included_in_price() ) {
-			$response['total_price'] += $tax_amount;
-		}
-
-		$response['tax_amount']     = tutor_get_formatted_price( $tax_amount );
-		$response['subtotal_price'] = tutor_get_formatted_price( $response['subtotal_price'] );
-
-		$response['total_price'] = tutor_get_locale_price( $response['total_price'] );
-
-		return (object) $response;
+		return $coupon;
 	}
 
 	/**

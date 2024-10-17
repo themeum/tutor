@@ -1245,7 +1245,7 @@ if ( ! function_exists( 'tutor_entry_box_buttons' ) ) {
 					$conditional_buttons->show_continue_learning_btn = true;
 				}
 
-				if ( $course_progress === 0 ) {
+				if ( 0 === $course_progress ) {
 					$conditional_buttons->show_start_learning_btn = true;
 				}
 
@@ -1521,10 +1521,10 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 		?>
 			<div>
 				<?php if ( $sale_price ) : ?>
-					<span><?php echo tutor_get_formatted_price( $sale_price ); ?></span>
-					<del><?php echo tutor_get_formatted_price( $regular_price ); ?></del>
+					<span><?php tutor_print_formatted_price( $sale_price ); ?></span>
+					<del><?php tutor_print_formatted_price( $regular_price ); ?></del>
 				<?php else : ?>
-					<span><?php echo tutor_get_formatted_price( $regular_price ); ?></span>
+					<span><?php tutor_print_formatted_price( $regular_price ); ?></span>
 				<?php endif; ?>
 			</div>
 		<?php
@@ -1562,6 +1562,22 @@ if ( ! function_exists( 'tutor_get_formatted_price' ) ) {
 		$price = 'left' === $currency_position ? $currency_symbol . $price : $price . $currency_symbol;
 
 		return $price;
+	}
+}
+
+if ( ! function_exists( 'tutor_print_formatted_price' ) ) {
+	/**
+	 * A clone copy of `tutor_get_formatted_price` helper
+	 * To print formated price with output scaping.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $price price.
+	 *
+	 * @return void
+	 */
+	function tutor_print_formatted_price( $price ) {
+		echo esc_html( tutor_get_formatted_price( $price ) );
 	}
 }
 
