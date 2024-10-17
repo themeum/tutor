@@ -12,7 +12,7 @@ import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import { Addons } from '@/v3/shared/config/constants';
 import { convertToGMT } from '@/v3/shared/utils/util';
 import { tutorConfig } from '@Config/config';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
@@ -733,7 +733,7 @@ export const useCreateCourseMutation = () => {
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -765,12 +765,7 @@ export const useUpdateCourseMutation = () => {
       }
     },
     onError: (error: ErrorResponse) => {
-      let errorMessage = error.response.data.message;
-      if (error.response.data.status_code === 422 && error.response.data.data) {
-        errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
-      }
-
-      showToast({ type: 'danger', message: errorMessage ?? __('Something went wrong', 'tutor') });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -883,7 +878,7 @@ export const useSaveZoomMeetingMutation = () => {
       });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -915,7 +910,7 @@ export const useDeleteZoomMeetingMutation = (courseId: string) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -964,7 +959,7 @@ export const useSaveGoogleMeetMutation = () => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -995,7 +990,7 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
       });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -1021,7 +1016,7 @@ export const useSaveOpenAiSettingsMutation = () => {
       showToast({ type: 'success', message: __(response.message, 'tutor') });
     },
     onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: error.response.data.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
