@@ -1,4 +1,4 @@
-import Show from '@/v3/shared/controls/Show';
+import Show from '@Controls/Show';
 import Button from '@Atoms/Button';
 import { colorPalate, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';

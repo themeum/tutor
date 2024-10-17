@@ -20,10 +20,16 @@ import { animateLayoutChanges } from '@Utils/dndkit';
 
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
-import { useRemovePaymentMutation, type PaymentMethod, type PaymentSettings } from '../services/payment';
+import {
+  getWebhookUrl,
+  useInstallPaymentMutation,
+  useRemovePaymentMutation,
+  type PaymentMethod,
+  type PaymentSettings,
+} from '../services/payment';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
 import Badge from '../atoms/Badge';
-import { isObject } from '@/v3/shared/utils/types';
+import { isObject } from '@Utils/types';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -35,6 +41,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
   const { showModal } = useModal();
   const form = useFormContext<PaymentSettings>();
 
+  const installPaymentMutation = useInstallPaymentMutation();
   const removePaymentMutation = useRemovePaymentMutation();
 
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -87,7 +94,22 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
                 {__('Update available', 'tutor')}
               </Badge>
-              <Button variant="text" size="small" icon={<SVGIcon name="update" width={24} height={24} />}>
+              <Button
+                variant="text"
+                size="small"
+                icon={<SVGIcon name="update" width={24} height={24} />}
+                onClick={async () => {
+                  const response = await installPaymentMutation.mutateAsync({
+                    slug: data.name,
+                    action_type: 'upgrade',
+                  });
+
+                  if (response.status_code === 200) {
+                    form.setValue(`payment_methods.${paymentIndex}.update_available`, false, { shouldDirty: true });
+                  }
+                }}
+                loading={installPaymentMutation.isPending}
+              >
                 {__('Update now', 'tutor')}
               </Button>
             </Show>
@@ -127,7 +149,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                           />
                         );
 
-                      case 'key':
+                      case 'secret_key':
                         return (
                           <FormInput
                             {...controllerProps}
@@ -144,7 +166,13 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                         );
 
                       case 'webhook_url':
-                        return <OptionWebhookUrl {...controllerProps} label={field.label} />;
+                        return (
+                          <OptionWebhookUrl
+                            {...controllerProps}
+                            field={{ ...controllerProps.field, value: getWebhookUrl(data.name) }}
+                            label={field.label}
+                          />
+                        );
 
                       case 'image':
                         return (
@@ -169,6 +197,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
             <Button
               variant="danger"
               buttonCss={styles.removeButton}
+              loading={removePaymentMutation.isPending}
               onClick={async () => {
                 const { action } = await showModal({
                   component: StaticConfirmationModal,

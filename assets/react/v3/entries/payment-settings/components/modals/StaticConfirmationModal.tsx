@@ -1,5 +1,5 @@
-import BasicModalWrapper from '@/v3/shared/components/modals/BasicModalWrapper';
-import type { ModalProps } from '@/v3/shared/components/modals/Modal';
+import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
+import type { ModalProps } from '@Components/modals/Modal';
 import Button, { type ButtonVariant } from '@Atoms/Button';
 import { shadow, spacing } from '@Config/styles';
 import { css } from '@emotion/react';

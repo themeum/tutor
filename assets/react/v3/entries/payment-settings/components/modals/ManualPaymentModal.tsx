@@ -116,7 +116,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                     name={`fields.${index}.value`}
                     control={form.control}
                     render={(controllerProps) => (
-                      <FormTextareaInput {...controllerProps} label={field.label} rows={4} />
+                      <FormTextareaInput {...controllerProps} label={field.label} rows={5} />
                     )}
                   />
                   <div css={styles.inputHint}>{field.hint}</div>

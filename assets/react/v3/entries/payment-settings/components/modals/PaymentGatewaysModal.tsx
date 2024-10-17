@@ -1,4 +1,3 @@
-import { LoadingSection } from '@Atoms/LoadingSpinner';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import For from '@Controls/For';
@@ -7,9 +6,11 @@ import { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
 import { colorTokens, shadow, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { PaymentSettings, usePaymentGatewaysQuery } from '../../services/payment';
+import { PaymentSettings } from '../../services/payment';
 import PaymentGatewayItem from '../PaymentGatewayItem';
-import Show from '@/v3/shared/controls/Show';
+import { usePaymentContext } from '../../contexts/payment-context';
+import Show from '@Controls/Show';
+import Alert from '@Atoms/Alert';
 
 interface PaymentGatewaysModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -17,23 +18,22 @@ interface PaymentGatewaysModalProps extends ModalProps {
 }
 
 const PaymentGatewaysModal = ({ closeModal, title, form }: PaymentGatewaysModalProps) => {
-  const paymentGatewaysQuery = usePaymentGatewaysQuery();
+  const { payment_gateways, errorMessage } = usePaymentContext();
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <div css={styles.contentWrapper}>
         <div css={styles.modalBody}>
-          <Show when={!paymentGatewaysQuery.isLoading} fallback={<LoadingSection />}>
-            <Show
-              when={paymentGatewaysQuery.data?.length}
-              fallback={<div css={styles.noData}>{__('No data found!', 'tutor')}</div>}
-            >
-              <For each={paymentGatewaysQuery.data ?? []}>
-                {(gateway) => (
-                  <PaymentGatewayItem data={gateway} onInstallSuccess={() => closeModal({ action: 'CONFIRM' })} form={form} />
-                )}
-              </For>
-            </Show>
+          <Show when={!errorMessage} fallback={<Alert>{errorMessage}</Alert>}>
+            <For each={payment_gateways}>
+              {(gateway) => (
+                <PaymentGatewayItem
+                  data={gateway}
+                  onInstallSuccess={() => closeModal({ action: 'CONFIRM' })}
+                  form={form}
+                />
+              )}
+            </For>
           </Show>
         </div>
       </div>
