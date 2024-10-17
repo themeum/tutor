@@ -27,6 +27,7 @@ export type ContentDripType =
   | '';
 export type PricingCategory = 'subscription' | 'regular';
 export type PricingType = 'free' | 'paid' | 'subscription';
+export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
 
 export interface CourseFormData {
   post_date: string;
@@ -39,10 +40,10 @@ export interface CourseFormData {
   post_author: User | null;
   thumbnail: Media | null;
   video: CourseVideo;
-  course_pricing_category: PricingCategory;
   course_price_type: string;
   course_price: string;
   course_sale_price: string;
+  course_selling_option: CourseSellingOption;
   course_categories: number[];
   course_tags: Tag[];
   course_instructors: UserOption[];
@@ -96,10 +97,10 @@ export const courseDefaultData: CourseFormData = {
     source_vimeo: '',
     source_embedded: '',
   },
-  course_pricing_category: 'regular',
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
+  course_selling_option: 'subscription',
   course_categories: [],
   course_tags: [],
   course_instructors: [],
@@ -145,6 +146,7 @@ export interface CoursePayload {
   'pricing[product_id]'?: string;
   course_price: number;
   course_sale_price: number;
+  course_selling_option: CourseSellingOption;
   course_categories: number[];
   course_tags: number[];
   thumbnail_id: number | null;
@@ -576,7 +578,7 @@ export const useWcProductDetailsQuery = (
   productId: string,
   courseId: string,
   coursePriceType: string,
-  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined
+  monetizedBy: 'tutor' | 'wc' | 'edd' | undefined,
 ) => {
   return useQuery({
     queryKey: ['WcProductDetails', productId, courseId],
@@ -591,7 +593,7 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
     {
       action: 'tutor_course_list',
       exclude: excludedCourseIds,
-    }
+    },
   );
 };
 

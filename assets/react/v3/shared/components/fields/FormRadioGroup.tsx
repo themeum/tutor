@@ -21,6 +21,7 @@ interface FormRadioGroupProps extends FormControllerProps<string | number> {
   wrapperCss?: SerializedStyles;
   onSelect?: (value: OptionWithDisabled) => void;
   onSelectRender?: (value: OptionWithDisabled) => ReactNode;
+  gap?: number;
 }
 
 const FormRadioGroup = ({
