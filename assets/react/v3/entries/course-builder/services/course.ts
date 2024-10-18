@@ -584,7 +584,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
         : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
-    course_selling_option: courseDetails.course_selling_option ?? 'subscription',
+    course_selling_option: courseDetails.course_selling_option ?? 'both',
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
     course_tags: courseDetails.course_tags.map((item) => {
       return {
