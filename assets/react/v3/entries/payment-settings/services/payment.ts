@@ -41,7 +41,7 @@ export const initialPaymentSettings: PaymentSettings = {
   payment_methods: [
     {
       name: 'paypal',
-      label: __('Paypal', 'tutor'),
+      label: __('PayPal', 'tutor'),
       is_active: false,
       icon: `${tutorConfig.tutor_url}assets/images/paypal.svg`,
       support_subscription: true,
@@ -50,7 +50,7 @@ export const initialPaymentSettings: PaymentSettings = {
       fields: [
         {
           name: 'environment',
-          label: __('PyPal Environment', 'tutor'),
+          label: __('PayPal Environment', 'tutor'),
           type: 'select',
           options: [
             {
