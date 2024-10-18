@@ -25,10 +25,11 @@ import { usePaymentContext } from '../contexts/payment-context';
 
 const TaxSettingsPage = () => {
   const { payment_gateways } = usePaymentContext();
+  const { methods } = convertPaymentMethods(initialPaymentSettings.payment_methods, payment_gateways);
   const { showModal } = useModal();
 
   const form = useFormWithGlobalError<PaymentSettings>({
-    defaultValues: initialPaymentSettings,
+    defaultValues: { ...initialPaymentSettings, payment_methods: methods },
   });
   const { reset } = form;
   const formData = form.watch();
