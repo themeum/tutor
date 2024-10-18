@@ -53,6 +53,8 @@ class Course extends Tutor_Base {
 
 	/**
 	 * Selling option constants
+	 *
+	 * @since 3.0.0
 	 */
 	const SELLING_OPTION_ONE_TIME     = 'one_time';
 	const SELLING_OPTION_SUBSCRIPTION = 'subscription';
@@ -340,6 +342,8 @@ class Course extends Tutor_Base {
 
 	/**
 	 * Get course selling option
+	 *
+	 * @since 3.0.0
 	 *
 	 * @param int $course_id course id.
 	 *
