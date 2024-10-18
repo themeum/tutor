@@ -5,10 +5,10 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import type { QuizContent } from '@CourseBuilderServices/magic-ai';
-import { AnimatedDiv } from '@Hooks/useAnimation';
 import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { useSpring } from '@react-spring/web';
+import { animated } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useState } from 'react';
 import { type Topic, useContentGenerationContext } from './ContentGenerationContext';
@@ -64,10 +64,17 @@ const AccordionItem = ({
           {data.contents.length} {__('Contents', 'tutor')}
         </p>
       </div>
-      <Show when={data.contents.length > 0}>
-        <AnimatedDiv style={collapseAnimation}>
+      <Show
+        when={data.contents.length > 0 && !isLoading}
+        fallback={
+          <div css={css`margin-top: ${spacing[16]};`}>
+            <TopicContentSkeleton />
+          </div>
+        }
+      >
+        <animated.div style={collapseAnimation}>
           <div css={styles.content(data.is_active)}>
-            <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
+            <Show when={!isLoading}>
               <For each={data.contents}>
                 {(item, idx) => {
                   return (
@@ -85,7 +92,7 @@ const AccordionItem = ({
               </For>
             </Show>
           </div>
-        </AnimatedDiv>
+        </animated.div>
       </Show>
     </div>
   );

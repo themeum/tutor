@@ -246,10 +246,10 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     <div css={styles.boxContent}>
                       <h6>
                         {isLoadingItem
-                          ? __('Generating course contents', 'tutor')
+                          ? __('Generating course content', 'tutor')
                           : hasErrors
-                            ? __('Error generating course contents', 'tutor')
-                            : __('Generated course contents', 'tutor')}
+                            ? __('Error generating course content', 'tutor')
+                            : __('Generated course content', 'tutor')}
                       </h6>
                       <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
                       <div css={styles.items}>
@@ -410,7 +410,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               }
             >
               <Alert icon="warning" type="danger">
-                {__('Failed to generate course contents. Try another prompt.', 'tutor')}
+                {__('Failed to generate course content. Try again.', 'tutor')}
               </Alert>
             </Show>
 
@@ -469,7 +469,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <div css={styles.rightFooter}>
-            <MagicButton variant="primary_outline" onClick={onClose} disabled={isLoading}>
+            <MagicButton variant="primary_outline" onClick={onClose}>
               {__('Cancel', 'tutor')}
             </MagicButton>
             <MagicButton
