@@ -21,7 +21,7 @@ import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Controller,
   type ControllerFieldState,
@@ -135,6 +135,11 @@ const AITextModal = <T extends FieldValues>({
       insertText(response.data);
     }
   }
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    form.setFocus('prompt');
+  }, []);
 
   return (
     <BasicModalWrapper onClose={closeModal} title={title} icon={icon}>
