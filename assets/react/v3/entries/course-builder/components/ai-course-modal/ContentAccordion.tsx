@@ -1,24 +1,21 @@
-import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import type { QuizContent } from '@CourseBuilderServices/magic-ai';
-import { noop } from '@Utils/util';
 import { css } from '@emotion/react';
 import { useSpring } from '@react-spring/web';
 import { animated } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useState } from 'react';
+
+import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import { colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import { noop } from '@Utils/util';
+
 import { type Topic, useContentGenerationContext } from './ContentGenerationContext';
 import TopicContentSkeleton from './loaders/TopicContentSkeleton';
 
-interface AccordionContent {
-  type: 'lesson' | 'assignment' | 'quiz';
-  title: string;
-  questions?: QuizContent[];
-}
 interface AccordionItemData extends Topic {
   is_active: boolean;
 }
