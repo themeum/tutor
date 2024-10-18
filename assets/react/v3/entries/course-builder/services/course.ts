@@ -30,8 +30,7 @@ export type ContentDripType =
   | 'unlock_sequentially'
   | 'after_finishing_prerequisites'
   | '';
-export type PricingCategory = 'subscription' | 'regular';
-export type PricingType = 'free' | 'paid' | 'subscription';
+export type PricingType = 'free' | 'paid';
 export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
 
 export interface CourseFormData {
@@ -578,10 +577,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_price_type:
-      courseDetails.course_pricing.type === 'subscription' || !courseDetails.course_pricing.type
-        ? 'free'
-        : courseDetails.course_pricing.type,
+    course_price_type: !courseDetails.course_pricing.type ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
     course_selling_option: courseDetails.course_selling_option ?? 'both',
