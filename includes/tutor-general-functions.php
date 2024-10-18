@@ -1502,6 +1502,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 	/**
 	 * Get course formatted price
+	 * Only for monetized by tutor.
 	 *
 	 * @since 3.0.0
 	 *
@@ -1511,22 +1512,24 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 	 * @return string|void
 	 */
 	function tutor_get_course_formatted_price_html( $course_id, $echo = true ) {
-		$regular_price = get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
-		$sale_price    = get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+		$price_data = tutor_utils()->get_raw_course_price( $course_id );
 
-		if ( ! $regular_price ) {
+		if ( ! $price_data->regular_price ) {
 			return;
 		}
 		ob_start();
 		?>
-			<div>
-				<?php if ( $sale_price ) : ?>
-					<span><?php tutor_print_formatted_price( $sale_price ); ?></span>
-					<del><?php tutor_print_formatted_price( $regular_price ); ?></del>
+			<div class="list-item-price tutor-item-price">
+				<?php if ( $price_data->sale_price ) : ?>
+					<span><?php tutor_print_formatted_price( $price_data->display_price ); ?></span>
+					<del><?php tutor_print_formatted_price( $price_data->regular_price ); ?></del>
 				<?php else : ?>
-					<span><?php tutor_print_formatted_price( $regular_price ); ?></span>
+					<span><?php tutor_print_formatted_price( $price_data->display_price ); ?></span>
 				<?php endif; ?>
 			</div>
+			<?php if ( $price_data->show_price_with_tax ) : ?>
+			<div class="tutor-course-price-tax tutor-color-muted"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
+			<?php endif; ?>
 		<?php
 		$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
 		if ( $echo ) {
