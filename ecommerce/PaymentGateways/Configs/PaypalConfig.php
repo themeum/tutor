@@ -89,24 +89,6 @@ class PaypalConfig extends Config implements ConfigContract {
 		$this->webhook_id     = $this->get_field_value( $config, 'webhook_id' );
 	}
 
-	/**
-	 * Helper function to retrieve field values from config.
-	 *
-	 * @param array  $config Paypal config array.
-	 * @param string $field_name Field name to get value.
-	 *
-	 * @return mixed
-	 */
-	private function get_field_value( array $config, string $field_name ) {
-		$value = '';
-		foreach ( $config['fields'] as $field ) {
-			if ( $field['name'] === $field_name ) {
-				$value = $field['value'] ?? '';
-			}
-		}
-		return $value;
-	}
-
 	public function getMode(): string {
 		return 'test';
 	}
