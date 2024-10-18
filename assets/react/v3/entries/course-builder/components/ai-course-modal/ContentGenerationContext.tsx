@@ -20,7 +20,6 @@ export interface CourseContent {
   prompt: string;
   title: string;
   description: string;
-  featured_image: string;
   topics: Topic[];
   counts?: {
     topics: number;
@@ -33,7 +32,6 @@ export interface CourseContent {
 
 export interface Loading {
   title: boolean;
-  image: boolean;
   description: boolean;
   topic: boolean;
   content: boolean;
@@ -43,7 +41,6 @@ export interface Loading {
 export interface Errors {
   title: string;
   description: string;
-  image: string;
   topic: string;
   content: string;
   quiz: string;
@@ -74,7 +71,6 @@ export const defaultContent: CourseContent = {
   prompt: '',
   title: '',
   description: '',
-  featured_image: '',
   topics: [],
   time: 0,
 };
@@ -82,7 +78,6 @@ export const defaultContent: CourseContent = {
 export const defaultLoading: Loading = {
   title: false,
   description: false,
-  image: false,
   topic: false,
   content: false,
   quiz: false,
@@ -91,7 +86,6 @@ export const defaultLoading: Loading = {
 export const defaultErrors: Errors = {
   title: '',
   description: '',
-  image: '',
   topic: '',
   content: '',
   quiz: '',
@@ -115,7 +109,6 @@ const Context = React.createContext<ContextType>({
   loading: [
     {
       title: false,
-      image: false,
       description: false,
       content: false,
       topic: false,
@@ -126,7 +119,6 @@ const Context = React.createContext<ContextType>({
     {
       title: '',
       description: '',
-      image: '',
       topic: '',
       content: '',
       quiz: '',
@@ -145,7 +137,6 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   const [loading, setLoading] = useState<Loading[]>([
     {
       title: false,
-      image: false,
       description: false,
       content: false,
       topic: false,
@@ -156,7 +147,6 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
     {
       title: '',
       description: '',
-      image: '',
       topic: '',
       content: '',
       quiz: '',

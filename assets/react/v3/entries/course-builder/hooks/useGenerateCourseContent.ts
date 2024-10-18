@@ -12,7 +12,6 @@ import {
 export const useGenerateCourseContent = () => {
   const { updateContents, updateLoading, updateErrors } = useContentGenerationContext();
   const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
-  const generateCourseImageMutation = useGenerateCourseContentMutation('image');
   const generateCourseDescriptionMutation = useGenerateCourseContentMutation('description');
   const generateCourseTopicsMutation = useGenerateCourseTopicNamesMutation();
   const generateCourseTopicContentMutation = useGenerateCourseTopicContentMutation();
@@ -31,7 +30,7 @@ export const useGenerateCourseContent = () => {
     }
 
     try {
-      updateLoading({ title: true, image: true, description: true, content: true, topic: true, quiz: true }, pointer);
+      updateLoading({ title: true, description: true, content: true, topic: true, quiz: true }, pointer);
       const response = await generateCourseTitleMutation.mutateAsync({ type: 'title', prompt });
       updateLoading({ title: false }, pointer);
 
@@ -41,15 +40,6 @@ export const useGenerateCourseContent = () => {
 
       const courseTitle = response.data;
       updateContents({ title: courseTitle, prompt }, pointer);
-
-      try {
-        const imageResponse = await generateCourseImageMutation.mutateAsync({ type: 'image', title: courseTitle });
-        updateLoading({ image: false }, pointer);
-        updateContents({ featured_image: imageResponse.data }, pointer);
-      } catch (error) {
-        updateLoading({ image: false }, pointer);
-        updateErrors({ image: error as string }, pointer);
-      }
 
       try {
         const descriptionResponse = await generateCourseDescriptionMutation.mutateAsync({
@@ -132,14 +122,10 @@ export const useGenerateCourseContent = () => {
         updateErrors({ topic: error as string }, pointer);
       }
     } catch (error) {
-      updateLoading(
-        { title: false, image: false, content: false, description: false, quiz: false, topic: false },
-        pointer,
-      );
+      updateLoading({ title: false, content: false, description: false, quiz: false, topic: false }, pointer);
       updateErrors(
         {
           title: error as string,
-          image: error as string,
           content: error as string,
           description: error as string,
           quiz: error as string,

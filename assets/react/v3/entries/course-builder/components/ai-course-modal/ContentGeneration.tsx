@@ -25,7 +25,6 @@ import ContentAccordion from './ContentAccordion';
 import { type Loading, useContentGenerationContext } from './ContentGenerationContext';
 import ContentSkeleton from './loaders/ContentSkeleton';
 import DescriptionSkeleton from './loaders/DescriptionSkeleton';
-import ImageSkeleton from './loaders/ImageSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
 import Alert from '@/v3/shared/atoms/Alert';
@@ -46,13 +45,6 @@ const defaultSteps: Record<keyof Loading, LoadingStep> = {
     loading_label: __('Now generating course title...', 'tutor'),
     completed_label: __('Course title generated.', 'tutor'),
     error_label: __('Error generating course title.', 'tutor'),
-    completed: false,
-    hasError: false,
-  },
-  image: {
-    loading_label: __('Now generating course featured image...', 'tutor'),
-    completed_label: __('Course banner image generated.', 'tutor'),
-    error_label: __('Error generating course banner image.', 'tutor'),
     completed: false,
     hasError: false,
   },
@@ -185,12 +177,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             <div css={styles.leftContentWrapper}>
-              <Show when={!currentLoading.image} fallback={<ImageSkeleton />}>
-                <div css={styles.imageWrapper}>
-                  <img src={currentContent?.featured_image} alt="course banner" />
-                </div>
-              </Show>
-
               <Show when={!currentLoading.description} fallback={<DescriptionSkeleton />}>
                 <div css={styles.section}>
                   <h5>{__('Course Info', 'tutor')}</h5>
