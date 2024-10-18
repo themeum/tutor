@@ -395,7 +395,8 @@ final class Tutor {
 	/**
 	 * Course List
 	 *
-	 * @var $course_list
+	 * @var Course_List
+	 *
 	 * @since 2.0.0
 	 */
 	public $course_list;

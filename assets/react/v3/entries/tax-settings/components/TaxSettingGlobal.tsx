@@ -50,29 +50,27 @@ function TaxSettingGlobal() {
               />
             </div>
             <div css={styles.checkboxWrapper}>
-              <Show when={isTaxIncludedInPrice === TaxCollectionProcess.taxIsNotIncluded}>
-                <Controller
-                  control={form.control}
-                  name="show_price_with_tax"
-                  render={(controllerProps) => {
-                    return (
-                      <div>
-                        <FormCheckbox
-                          {...controllerProps}
-                          label={__('Display prices inclusive tax', 'tutor')}
-                          labelCss={styles.checkboxLabel}
-                        />
-                        <span css={styles.checkboxSubText}>
-                          {__(
-                            'Show prices with tax included, so customers see the final amount they’ll pay upfront',
-                            'tutor',
-                          )}
-                        </span>
-                      </div>
-                    );
-                  }}
-                />
-              </Show>
+              <Controller
+                control={form.control}
+                name="show_price_with_tax"
+                render={(controllerProps) => {
+                  return (
+                    <div>
+                      <FormCheckbox
+                        {...controllerProps}
+                        label={__('Display prices inclusive tax', 'tutor')}
+                        labelCss={styles.checkboxLabel}
+                      />
+                      <span css={styles.checkboxSubText}>
+                        {__(
+                          'Show prices with tax included, so customers see the final amount they’ll pay upfront',
+                          'tutor',
+                        )}
+                      </span>
+                    </div>
+                  );
+                }}
+              />
             </div>
           </div>
         </Card>
