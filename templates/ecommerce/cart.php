@@ -102,6 +102,7 @@ $subtotal        = 0;
 				$tax_rate                 = Tax::get_user_tax_rate();
 				$tax_amount               = Tax::calculate_tax( $subtotal, $tax_rate );
 				$grand_total              = $subtotal;
+				$show_tax_incl_text       = Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price;
 
 				if ( ! $is_tax_included_in_price ) {
 					$grand_total += $tax_amount;
@@ -123,20 +124,20 @@ $subtotal        = 0;
 							<?php endif; ?>
 						</div>
 						<div class="tutor-cart-summery-bottom">
-							<div class="tutor-cart-summery-item tutor-fw-medium tutor-mb-40">
+							<div class="tutor-cart-summery-item tutor-fw-medium <?php echo esc_attr( $show_tax_incl_text ? '' : 'tutor-mb-40' ); ?>">
 								<div><?php esc_html_e( 'Grand total', 'tutor' ); ?></div>
 								<div><?php tutor_print_formatted_price( $grand_total ); ?></div>
-								<?php
-								if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) :
-									?>
-									<div class="tutor-fs-7 tutor-color-muted">
-									<?php
-									/* translators: %s: tax amount */
-									echo esc_html( sprintf( __( '(Incl. Tax %s)', 'tutor' ), tutor_get_formatted_price( $tax_amount ) ) );
-									?>
-									</div>
-									<?php endif ?>
 							</div>
+							<?php
+							if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) :
+								?>
+									<div class="tutor-text-right tutor-fs-7 tutor-color-muted tutor-mb-40">
+								<?php
+								/* translators: %s: tax amount */
+								echo esc_html( sprintf( __( '(Incl. Tax %s)', 'tutor' ), tutor_get_formatted_price( $tax_amount ) ) );
+								?>
+									</div>
+								<?php endif ?>
 
 							<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>">
 								<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
