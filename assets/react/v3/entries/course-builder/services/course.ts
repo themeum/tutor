@@ -30,8 +30,7 @@ export type ContentDripType =
   | 'unlock_sequentially'
   | 'after_finishing_prerequisites'
   | '';
-export type PricingCategory = 'subscription' | 'regular';
-export type PricingType = 'free' | 'paid' | 'subscription';
+export type PricingType = 'free' | 'paid';
 export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
 
 export interface CourseFormData {
@@ -332,8 +331,8 @@ export interface CourseDetailsResponse {
     product_name: string;
     sale_price: string;
     type: PricingType;
-    selling_option: CourseSellingOption;
   };
+  course_selling_option: CourseSellingOption;
   course_instructors: InstructorListResponse[];
   preview_link: string;
   course_prerequisites: PrerequisiteCourses[];
@@ -578,13 +577,10 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       source_embedded: courseDetails.video.source_embedded ?? '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
-    course_price_type:
-      courseDetails.course_pricing.type === 'subscription' || !courseDetails.course_pricing.type
-        ? 'free'
-        : courseDetails.course_pricing.type,
+    course_price_type: !courseDetails.course_pricing.type ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
-    course_selling_option: courseDetails.course_pricing.selling_option || 'subscription',
+    course_selling_option: courseDetails.course_selling_option ?? 'both',
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
     course_tags: courseDetails.course_tags.map((item) => {
       return {
