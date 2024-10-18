@@ -9,6 +9,7 @@ import { ModalProvider } from '@Components/modals/Modal';
 
 import { createGlobalCss } from '@Utils/style-utils';
 import PaymentSettings from './PaymentSettings';
+import { PaymentProvider } from '../contexts/payment-context';
 
 function App() {
   const [queryClient] = useState(
@@ -25,17 +26,19 @@ function App() {
             networkMode: 'always',
           },
         },
-      }),
+      })
   );
 
   return (
     <RTLProvider>
       <QueryClientProvider client={queryClient}>
         <ToastProvider position="bottom-right">
-          <ModalProvider>
-            <Global styles={createGlobalCss()} />
-            <PaymentSettings />
-          </ModalProvider>
+          <PaymentProvider>
+            <ModalProvider>
+              <Global styles={createGlobalCss()} />
+              <PaymentSettings />
+            </ModalProvider>
+          </PaymentProvider>
         </ToastProvider>
       </QueryClientProvider>
     </RTLProvider>
