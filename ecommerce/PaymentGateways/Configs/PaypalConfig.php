@@ -80,13 +80,12 @@ class PaypalConfig extends Config implements ConfigContract {
 	public function __construct() {
 		parent::__construct();
 
-		$config = Settings::get_payment_gateway_config( 'paypal' );
+		$settings = Settings::get_payment_gateway_settings( 'paypal' );
 
-		$this->environment    = $this->get_field_value( $config, 'environment' );
-		$this->merchant_email = $this->get_field_value( $config, 'merchant_email' );
-		$this->client_id      = $this->get_field_value( $config, 'client_id' );
-		$this->client_secret  = $this->get_field_value( $config, 'secret_id' );
-		$this->webhook_id     = $this->get_field_value( $config, 'webhook_id' );
+		$config_keys = array_keys( $this->get_config_keys() );
+		foreach ( $config_keys as $key ) {
+			$this->$key = $this->get_field_value( $settings, $key );
+		}
 	}
 
 	public function getMode(): string {
@@ -159,5 +158,22 @@ class PaypalConfig extends Config implements ConfigContract {
 	public function is_configured() {
 		// Return true if all the settings are filled.
 		return $this->merchant_email && $this->client_id && $this->client_secret;
+	}
+
+	/**
+	 * Get config keys
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	private function get_config_keys() {
+		return array(
+			'environment',
+			'merchant_email',
+			'client_id',
+			'secret_id',
+			'webhook_id',
+		);
 	}
 }

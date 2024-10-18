@@ -75,6 +75,7 @@ trait PaymentUrlsTrait {
 		foreach ( $config['fields'] as $field ) {
 			if ( $field['name'] === $field_name ) {
 				$value = $field['value'] ?? '';
+				break;
 			}
 		}
 		return $value;

@@ -358,18 +358,20 @@ class Settings {
 	 *
 	 * @return array
 	 */
-	public static function get_payment_gateway_config( $gateway_name ) {
+	public static function get_payment_gateway_settings( $gateway_name ) {
 		$settings = self::get_payment_settings();
 
 		if ( empty( $gateway_name ) || ! isset( $settings['payment_methods'] ) || ! is_array( $settings['payment_methods'] ) ) {
 			return array();
 		}
 
-		$data = array_filter(
-			$settings['payment_methods'],
-			function ( $method ) use ( $gateway_name ) {
-				return $method['name'] === $gateway_name;
-			}
+		$data = array_values(
+			array_filter(
+				$settings['payment_methods'],
+				function ( $method ) use ( $gateway_name ) {
+					return $method['name'] === $gateway_name;
+				}
+			)
 		);
 
 		return isset( $data[0] ) ? $data[0] : array();
