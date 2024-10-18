@@ -46,9 +46,18 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 3.0.0
 	 */
-	const COURSE_PRICE_TYPE_META = '_tutor_course_price_type';
-	const COURSE_PRICE_META      = 'tutor_course_price';
-	const COURSE_SALE_PRICE_META = 'tutor_course_sale_price';
+	const COURSE_PRICE_TYPE_META     = '_tutor_course_price_type';
+	const COURSE_PRICE_META          = 'tutor_course_price';
+	const COURSE_SALE_PRICE_META     = 'tutor_course_sale_price';
+	const COURSE_SELLING_OPTION_META = 'tutor_course_selling_option';
+
+	/**
+	 * Selling option constants
+	 */
+	const SELLING_OPTION_ONE_TIME     = 'one_time';
+	const SELLING_OPTION_SUBSCRIPTION = 'subscription';
+	const SELLING_OPTION_BOTH         = 'both';
+
 
 	/**
 	 * Additional course meta info
@@ -312,6 +321,32 @@ class Course extends Tutor_Base {
 		}
 
 		return in_array( $source_type, $supported_types, true );
+	}
+
+	/**
+	 * Get course selling options.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_selling_options() {
+		return array(
+			self::SELLING_OPTION_ONE_TIME,
+			self::SELLING_OPTION_SUBSCRIPTION,
+			self::SELLING_OPTION_BOTH,
+		);
+	}
+
+	/**
+	 * Get course selling option
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return string
+	 */
+	public static function get_selling_option( $course_id ) {
+		return get_post_meta( $course_id, self::COURSE_SELLING_OPTION_META, true );
 	}
 
 	/**
@@ -1252,12 +1287,12 @@ class Course extends Tutor_Base {
 			);
 		}
 
-		$data['dashboard_url']             = $dashboard_url;
-		$data['backend_course_list_url']   = get_admin_url( null, '?page=tutor' );
-		$data['frontend_course_list_url']  = tutor_utils()->tutor_dashboard_url( 'my-courses' );
-		$data['timezones']                 = tutor_global_timezone_lists();
-		$data['difficulty_levels']         = $difficulty_levels;
-		$data['wp_rest_nonce']             = wp_create_nonce( 'wp_rest' );
+		$data['dashboard_url']            = $dashboard_url;
+		$data['backend_course_list_url']  = get_admin_url( null, '?page=tutor' );
+		$data['frontend_course_list_url'] = tutor_utils()->tutor_dashboard_url( 'my-courses' );
+		$data['timezones']                = tutor_global_timezone_lists();
+		$data['difficulty_levels']        = $difficulty_levels;
+		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
