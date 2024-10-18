@@ -1488,7 +1488,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 
 			if ( $payments ) {
 				foreach ( $payments->payment_methods as $method ) {
-					if ( isset( $method->is_manual ) && $method->is_manual == '1' ) {
+					if ( isset( $method->is_manual ) && '1' === $method->is_manual ) {
 						$manual_methods[] = $method;
 					}
 				}
