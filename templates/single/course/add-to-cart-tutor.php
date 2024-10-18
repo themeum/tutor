@@ -10,6 +10,7 @@
  */
 
 use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\Tax;
 use Tutor\Models\CartModel;
 
 $course_id                = get_the_ID();
@@ -20,44 +21,43 @@ $required_loggedin_class  = 'tutor-native-add-to-cart';
 if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
+
 $is_course_in_user_cart = CartModel::is_course_in_user_cart( $user_id, $course_id );
 $cart_page_url          = CartController::get_page_url();
-if ( $is_course_in_user_cart ) {
-	?>
-	<a href="<?php echo esc_url( $cart_page_url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-btn-block">
-	<?php esc_html_e( 'View Cart', 'tutor' ); ?>
-	</a>
-	<?php
-} else {
-	$course_price  = tutor_utils()->get_raw_course_price( $course_id );
-	$regular_price = $course_price->regular_price;
-	$sale_price    = $course_price->sale_price;
-	$tax_display   = false; // @TODO
-	?>
+
+$course_price  = tutor_utils()->get_raw_course_price( $course_id );
+$regular_price = $course_price->regular_price;
+$sale_price    = $course_price->sale_price;
+
+$display_price       = $sale_price ? $sale_price : $regular_price;
+$show_price_with_tax = Tax::show_price_with_tax();
+$user_logged_in      = is_user_logged_in();
+
+$tax_amount = 0;
+if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_included_in_price() ) {
+	$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
+	$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
+	$display_price += $tax_amount;
+}
+
+?>
 	<div>
 		<div class="tutor-course-sidebar-card-pricing tutor-d-flex tutor-align-end tutor-justify-between">
 			<?php ob_start(); ?>
 				<div>
 					<span class="tutor-fs-4 tutor-fw-bold tutor-color-black">
-                    <?php echo tutor_get_formatted_price( $sale_price ? $sale_price : $regular_price ); //phpcs:ignore?>
+					<?php tutor_print_formatted_price( $display_price ); ?>
 					</span>
 				<?php if ( $regular_price && $sale_price && $sale_price !== $regular_price ) : ?>
 						<del class="tutor-fs-7 tutor-color-muted tutor-ml-8">
-                        <?php echo tutor_get_formatted_price( $regular_price ); //phpcs:ignore?>
+						<?php tutor_print_formatted_price( $regular_price ); ?>
 						</del>
 					<?php endif; ?>
 				</div>
 		</div>
-		<div class="tutor-color-muted">
-		<?php
-		if ( 'incl' === $tax_display ) {
-			echo wp_kses(
-				$product->get_price_suffix(),
-				array( 'small' => array( 'class' => true ) )
-			);
-		}
-		?>
-		</div>
+		<?php if ( $user_logged_in && $show_price_with_tax ) : ?>
+			<div class="tutor-course-price-tax tutor-color-muted">Incl. tax</div>
+		<?php endif; ?>
 		<?php
 		/**
 		 * Added to show info about price.
@@ -68,9 +68,14 @@ if ( $is_course_in_user_cart ) {
 		?>
         <?php echo apply_filters( 'tutor_after_course_details_tutor_add_to_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
 	</div>
+	<?php if ( $is_course_in_user_cart ) { ?>
+		<a href="<?php echo esc_url( $cart_page_url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-mt-24 tutor-btn-lg tutor-btn-block">
+			<?php esc_html_e( 'View Cart', 'tutor' ); ?>
+		</a>
+	<?php } else { ?>
 	<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
 		<span class="tutor-icon-cart-line tutor-mr-8"></span>
 		<span><?php esc_html_e( 'Add to cart', 'tutor' ); ?></span>
 	</button>
-	<?php
-}
+		<?php
+	}
