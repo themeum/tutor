@@ -28,6 +28,7 @@ import DescriptionSkeleton from './loaders/DescriptionSkeleton';
 import ImageSkeleton from './loaders/ImageSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
+import Alert from '@/v3/shared/atoms/Alert';
 import aiStudioError2x from '@Images/ai-studio-error-2x.webp';
 import aiStudioError from '@Images/ai-studio-error.webp';
 
@@ -148,6 +149,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   }, [isCreateNewCourse]);
 
   const isLoading = getObjectValues(currentLoading).some((item) => item);
+  const isAppendingCourseNotAllowed =
+    isLoading ||
+    isCreateNewCourse ||
+    !currentContent.title ||
+    !currentContent.topics?.length ||
+    !currentContent.topics?.every((topic) => topic.contents?.length);
 
   return (
     <div css={styles.container}>
@@ -409,6 +416,18 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               }}
             </For>
 
+            <Show
+              when={
+                !isLoading &&
+                !isCreateNewCourse &&
+                !(currentContent?.topics.every((topic) => topic.contents.length) && currentContent.topics.length)
+              }
+            >
+              <Alert icon="warning" type="danger">
+                {__('Failed to generate course contents. Try another prompt.', 'tutor')}
+              </Alert>
+            </Show>
+
             <Show when={isCreateNewCourse}>
               <div
                 css={styles.box({
@@ -469,9 +488,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </MagicButton>
             <MagicButton
               variant="primary"
-              disabled={
-                isLoading || isCreateNewCourse || !contents[pointer].title || contents[pointer].counts?.topics === 0
-              }
+              disabled={isAppendingCourseNotAllowed}
               onClick={() => {
                 saveAIGeneratedCourseContentMutation.mutate({
                   course_id: courseId,
@@ -651,7 +668,7 @@ const styles = {
 		gap: ${spacing[4]};
 		position: relative;
 
-    [data-error] {
+    [data-error='true'] {
       color: ${colorTokens.icon.error}
     }
 	`,

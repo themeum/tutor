@@ -8,6 +8,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import { useContentGenerationContext } from './ContentGenerationContext';
@@ -25,6 +26,11 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
 
   const { setCurrentStep } = useContentGenerationContext();
   const { startGeneration } = useGenerateCourseContent();
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    form.setFocus('prompt');
+  }, []);
 
   return (
     <form

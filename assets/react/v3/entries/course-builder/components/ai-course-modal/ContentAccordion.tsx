@@ -46,7 +46,11 @@ const AccordionItem = ({
   });
 
   return (
-    <div onClick={setIsActive} onKeyDown={noop} css={css`cursor: pointer;`}>
+    <div
+      onClick={data.contents.length ? setIsActive : noop}
+      onKeyDown={noop}
+      css={css`cursor: ${data.contents.length ? 'pointer' : 'default'};`}
+    >
       <div css={styles.title}>
         <div
           css={styles.titleAndIcon({
@@ -60,27 +64,29 @@ const AccordionItem = ({
           {data.contents.length} {__('Contents', 'tutor')}
         </p>
       </div>
-      <AnimatedDiv style={collapseAnimation}>
-        <div css={styles.content(data.is_active)}>
-          <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
-            <For each={data.contents}>
-              {(item, idx) => {
-                return (
-                  <div css={styles.contentItem} key={idx}>
-                    {item.type === 'quiz' && !currentLoading.content && currentLoading.quiz && !item?.questions ? (
-                      <GradientLoadingSpinner />
-                    ) : (
-                      icons[item.type]
-                    )}
+      <Show when={data.contents.length > 0}>
+        <AnimatedDiv style={collapseAnimation}>
+          <div css={styles.content(data.is_active)}>
+            <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
+              <For each={data.contents}>
+                {(item, idx) => {
+                  return (
+                    <div css={styles.contentItem} key={idx}>
+                      {item.type === 'quiz' && !currentLoading.content && currentLoading.quiz && !item?.questions ? (
+                        <GradientLoadingSpinner />
+                      ) : (
+                        icons[item.type]
+                      )}
 
-                    <span>{item.title}</span>
-                  </div>
-                );
-              }}
-            </For>
-          </Show>
-        </div>
-      </AnimatedDiv>
+                      <span>{item.title}</span>
+                    </div>
+                  );
+                }}
+              </For>
+            </Show>
+          </div>
+        </AnimatedDiv>
+      </Show>
     </div>
   );
 };
