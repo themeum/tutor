@@ -7,31 +7,34 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
-import { initialPaymentSettings, type PaymentSettings, usePaymentSettingsQuery } from '../services/payment';
+import {
+  convertPaymentMethods,
+  initialPaymentSettings,
+  type PaymentSettings,
+  usePaymentSettingsQuery,
+} from '../services/payment';
 import PaymentMethods from './PaymentMethods';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import ManualPaymentModal from './modals/ManualPaymentModal';
 import { useModal } from '@Components/modals/Modal';
 import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
-import ProBadge from '@/v3/shared/atoms/ProBadge';
-import { tutorConfig } from '@/v3/shared/config/config';
+import ProBadge from '@Atoms/ProBadge';
+import { tutorConfig } from '@Config/config';
+import { usePaymentContext } from '../contexts/payment-context';
 
 const TaxSettingsPage = () => {
+  const { payment_gateways } = usePaymentContext();
+  const { methods } = convertPaymentMethods(initialPaymentSettings.payment_methods, payment_gateways);
   const { showModal } = useModal();
-  const form = useFormWithGlobalError<PaymentSettings>({
-    defaultValues: initialPaymentSettings,
-  });
 
+  const form = useFormWithGlobalError<PaymentSettings>({
+    defaultValues: { ...initialPaymentSettings, payment_methods: methods },
+  });
   const { reset } = form;
+  const formData = form.watch();
 
   const paymentSettingsQuery = usePaymentSettingsQuery();
-
-  const ratesValue = paymentSettingsQuery.data?.payment_methods?.length
-    ? paymentSettingsQuery.data.payment_methods
-    : form.getValues('payment_methods');
-
-  const formData = form.watch();
 
   useEffect(() => {
     if (form.formState.isDirty) {
@@ -41,7 +44,23 @@ const TaxSettingsPage = () => {
 
   useEffect(() => {
     if (paymentSettingsQuery.data) {
-      reset(paymentSettingsQuery.data);
+      const { methods, isModified } = convertPaymentMethods(
+        paymentSettingsQuery.data.payment_methods,
+        payment_gateways
+      );
+
+      reset({
+        ...paymentSettingsQuery.data,
+        payment_methods: methods,
+      });
+
+      // Programmatically click the save button
+      if (isModified) {
+        setTimeout(() => {
+          document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+          document.getElementById('save_tutor_option')?.click();
+        }, 100);
+      }
     }
   }, [reset, paymentSettingsQuery.data]);
 
@@ -54,12 +73,7 @@ const TaxSettingsPage = () => {
       <h6 css={styles.title}>{__('Payment Methods', 'tutor')}</h6>
       <FormProvider {...form}>
         <div css={styles.paymentButtonWrapper}>
-          <Show
-            when={ratesValue.length}
-            fallback={<div css={styles.noPaymentMethod}>{__('No payment method has been configured.', 'tutor')}</div>}
-          >
-            <PaymentMethods />
-          </Show>
+          <PaymentMethods />
           <div css={styles.buttonWrapper}>
             <Show
               when={!tutorConfig.tutor_pro_url}

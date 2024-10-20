@@ -9,6 +9,7 @@ import type { GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuil
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
+import { convertToErrorMessage } from '../utils/utils';
 import type { H5PContentResponse } from './quiz';
 
 export type ID = string | number;
@@ -209,10 +210,7 @@ export const useSaveTopicMutation = () => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -245,10 +243,7 @@ export const useDeleteTopicMutation = (courseId: ID) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
 
       queryClient.invalidateQueries({
         queryKey: ['Topic'],
@@ -302,10 +297,7 @@ export const useSaveLessonMutation = (courseId: ID) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -336,10 +328,7 @@ export const useDeleteContentMutation = () => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -362,10 +351,7 @@ export const useUpdateCourseContentOrderMutation = () => {
   return useMutation({
     mutationFn: updateCourseContentOrder,
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -415,10 +401,7 @@ export const useSaveAssignmentMutation = (courseId: ID) => {
       }
     },
     onError: (error: ErrorResponse) => {
-      showToast({
-        message: error.response.data.message,
-        type: 'danger',
-      });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
