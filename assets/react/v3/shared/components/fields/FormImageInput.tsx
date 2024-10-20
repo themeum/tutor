@@ -37,6 +37,7 @@ export type Media = {
 
 type FormImageInputProps = {
   label?: string;
+  size?: 'large' | 'regular' | 'small';
   onChange?: (media: Media | null) => void;
   helpText?: string;
   buttonText?: string;
@@ -53,6 +54,7 @@ const FormImageInput = ({
   field,
   fieldState,
   label,
+  size,
   helpText,
   buttonText = __('Upload Media', 'tutor'),
   infoText,
@@ -115,7 +117,7 @@ const FormImageInput = ({
                 __('Generate a complete course outline in seconds!', 'tutor'),
                 __(
                   'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                  'tutor',
+                  'tutor'
                 ),
                 __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
                 __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
@@ -158,6 +160,7 @@ const FormImageInput = ({
         return (
           <div>
             <ImageInput
+              size={size}
               value={fieldValue}
               uploadHandler={uploadHandler}
               clearHandler={clearHandler}
