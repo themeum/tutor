@@ -474,21 +474,16 @@ const styles = {
         padding: ${spacing[4]} ${spacing[8]};
       `}
 
-				svg {
-        color: ${colorTokens.icon.default};
+			svg {
+        color: ${colorTokens.icon.hints};
+        transition: color 150ms ease-in-out;
       }
 
       &:hover,
       &:focus {
-        color: ${colorTokens.text.title};
+        color: ${colorTokens.text.brand};
         svg {
           color: ${colorTokens.icon.brand};
-        }
-      }
-
-      &:active {
-        svg {
-          color: ${colorTokens.icon.hints};
         }
       }
 
