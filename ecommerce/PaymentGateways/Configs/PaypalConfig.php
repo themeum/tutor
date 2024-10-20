@@ -157,7 +157,7 @@ class PaypalConfig extends Config implements ConfigContract {
 	 */
 	public function is_configured() {
 		// Return true if all the settings are filled.
-		return $this->merchant_email && $this->client_id && $this->client_secret;
+		return $this->merchant_email && $this->client_id && $this->secret_id;
 	}
 
 	/**

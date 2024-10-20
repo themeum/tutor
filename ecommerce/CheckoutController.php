@@ -483,7 +483,10 @@ class CheckoutController {
 						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
 					} catch ( \Throwable $th ) {
 						error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
-						wp_safe_redirect( home_url( '?tutor_order_placement=failed&order_id=' . $order_data['id'] ) );
+						$order_id  = $order_data['id'];
+						$error_msg = $th->getMessage();
+
+						wp_safe_redirect( home_url( "?tutor_order_placement=failed&order_id=$order_id&error_message=$error_msg" ) );
 						exit();
 					}
 				} else {
@@ -741,6 +744,15 @@ class CheckoutController {
 								: null;
 
 		if ( $payment_gateway_class ) {
+
+			$gateway_instance = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
+			$config_class     = $gateway_instance->get_config_class();
+
+			$is_gateway_configured = ( new $config_class() )->is_configured();
+			if ( ! $is_gateway_configured ) {
+				throw new \Exception( sprintf( __( '%s payment method is not configured properly. Please concat with site Administrator!', 'tutor' ), ucfirst( $payment_method ) ) );
+			}
+
 			try {
 				add_filter(
 					'tutor_ecommerce_webhook_url',
@@ -764,8 +776,6 @@ class CheckoutController {
 						return $args;
 					}
 				);
-
-				$gateway_instance = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
 				$gateway_instance->setup_payment_and_redirect( $payment_data );
 			} catch ( \Throwable $th ) {
 				throw $th;
