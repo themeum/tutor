@@ -53,12 +53,12 @@ class PaypalConfig extends Config implements ConfigContract {
 	private $client_id;
 
 	/**
-	 * PayPal client secret key.
+	 * PayPal client secret id.
 	 *
 	 * @var string
 	 * @since 3.0.0
 	 */
-	private $client_secret;
+	private $secret_id;
 
 	/**
 	 * PayPal webhook ID key.
@@ -82,7 +82,7 @@ class PaypalConfig extends Config implements ConfigContract {
 
 		$settings = Settings::get_payment_gateway_settings( 'paypal' );
 
-		$config_keys = array_keys( $this->get_config_keys() );
+		$config_keys = $this->get_config_keys();
 		foreach ( $config_keys as $key ) {
 			$this->$key = $this->get_field_value( $settings, $key );
 		}
@@ -93,7 +93,7 @@ class PaypalConfig extends Config implements ConfigContract {
 	}
 
 	public function getClientSecret(): string {
-		return $this->client_secret;
+		return $this->secret_id;
 	}
 
 	public function getWebhookID(): string {
