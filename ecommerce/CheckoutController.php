@@ -382,7 +382,6 @@ class CheckoutController {
 	public function pay_now() {
 		tutor_utils()->check_nonce();
 
-		return;
 		$errors     = array();
 		$order_data = null;
 
@@ -607,7 +606,7 @@ class CheckoutController {
 			}
 		}
 
-		if ( $order['tax_amount'] && ! Tax::is_tax_included_in_price() ) {
+		if ( isset( $order['tax_amount'] ) && ! Tax::is_tax_included_in_price() ) {
 			$grand_total += $order['tax_amount'];
 
 			/* translators: %s: tax rate */
