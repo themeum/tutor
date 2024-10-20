@@ -39,6 +39,7 @@ const TaxSettingsPage = () => {
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+      form.reset(form.getValues(), { keepValues: true });
     }
   }, [form.formState.isDirty]);
 
