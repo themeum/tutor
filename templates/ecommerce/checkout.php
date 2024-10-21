@@ -148,7 +148,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 								list( $alert, $message ) = array_values( $pay_now_alert_msg );
 								?>
 								<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?>">
-									<div class="tutor-color-success"><?php echo esc_html( $message ); ?></div>
+									<div class="tutor-color-<?php echo esc_attr( $alert ); ?>"><?php echo esc_html( $message ); ?></div>
 								</div>
 							<?php endif; ?>
 
