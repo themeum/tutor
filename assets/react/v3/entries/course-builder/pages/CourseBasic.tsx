@@ -38,7 +38,6 @@ import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilde
 import {
   type CourseDetailsResponse,
   type CourseFormData,
-  type PricingCategory,
   type WcProduct,
   convertCourseDataToPayload,
   useGetWcProductsQuery,
@@ -48,7 +47,7 @@ import {
 import { convertToSlug, determinePostStatus, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
-import { type Option, isDefined } from '@Utils/types';
+import { isDefined } from '@Utils/types';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
 
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
@@ -145,17 +144,6 @@ const CourseBasic = () => {
             value: 'free',
           },
         ];
-
-  const coursePricingCategoryOptions: Option<PricingCategory>[] = [
-    {
-      label: __('Regular', 'tutor'),
-      value: 'regular',
-    },
-    {
-      label: __('Subscription', 'tutor'),
-      value: 'subscription',
-    },
-  ];
 
   const userList = useUserListQuery(userSearchText);
 
