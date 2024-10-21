@@ -220,7 +220,7 @@ const LessonModal = ({
                     <FormWPEditor
                       {...controllerProps}
                       label={
-                        <>
+                        <div css={styles.descriptionLabel}>
                           {__('Description', 'tutor')}
                           {lessonId && isClassicEditorEnabled && (
                             <Button
@@ -239,7 +239,7 @@ const LessonModal = ({
                               {__('WP Editor', 'tutor')}
                             </Button>
                           )}
-                        </>
+                        </div>
                       }
                       placeholder={__('Enter Lesson Description', 'tutor')}
                       helpText={__(
@@ -256,14 +256,7 @@ const LessonModal = ({
                     <Show when={!isTutorPro}>
                       <div css={styles.addH5PContentWrapper({ hasLessonId: !!lessonId })}>
                         <ProBadge>
-                          <button
-                            css={styles.addH5PContentButton({
-                              isWpEditorEnabled: !!lessonId && isClassicEditorEnabled,
-                            })}
-                            type="button"
-                            disabled
-                            onClick={noop}
-                          >
+                          <button css={styles.addH5PContentButton} type="button" disabled onClick={noop}>
                             {__('Add H5P Content', 'tutor')}
                           </button>
                         </ProBadge>
@@ -272,7 +265,7 @@ const LessonModal = ({
                   }
                 >
                   <button
-                    css={styles.addH5PContentButton({ isWpEditorEnabled: !!lessonId && isClassicEditorEnabled })}
+                    css={styles.addH5PContentButton}
                     type="button"
                     onClick={() => {
                       showModal({
@@ -546,6 +539,12 @@ const styles = {
   description: css`
     position: relative;
   `,
+  descriptionLabel: css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 32px;
+  `,
   addH5PContentWrapper: ({
     hasLessonId,
   }: {
@@ -555,9 +554,9 @@ const styles = {
     top: ${hasLessonId ? '36px' : '28px'};
     left: 110px;
   `,
-  addH5PContentButton: ({ isWpEditorEnabled: hasLessonId }: { isWpEditorEnabled: boolean }) => css`
+  addH5PContentButton: css`
     position: absolute;
-    top: ${hasLessonId ? '36px' : '28px'};
+    top: 36px;
     left: 110px;
     display: inline-block;
     text-decoration: none;
