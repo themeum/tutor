@@ -769,7 +769,7 @@ const styles = {
   }) => css`
     padding-block: ${spacing[24]};
     align-self: start;
-    top: 0;
+    top: ${headerHeight}px;
     position: sticky;
 
     ${
