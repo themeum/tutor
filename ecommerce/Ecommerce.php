@@ -172,11 +172,29 @@ class Ecommerce {
 	public static function is_payment_gateway_configured( $gateway_slug ) {
 		$gateway_ref = self::payment_gateways_with_ref( $gateway_slug );
 		if ( $gateway_ref ) {
-			$gateway_obj  = self::get_payment_gateway_object( $gateway_ref['gateway_class'] );
-			$config_class = $gateway_obj->get_config_class();
-			return ( new $config_class() )->is_configured();
+			try {
+				$gateway_obj  = self::get_payment_gateway_object( $gateway_ref['gateway_class'] );
+				$config_class = $gateway_obj->get_config_class();
+				return ( new $config_class() )->is_configured();
+			} catch ( \Throwable $th ) {
+				return false;
+			}
 		}
 
 		return false;
+	}
+
+	/**
+	 * Get error message for unfinished payment method
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $payment_method payment method name.
+	 *
+	 * @return string error message for incomplete payment method setup.
+	 */
+	public static function get_incomplete_payment_setup_error_message( $payment_method ) {
+		/* translators: %s: payment gateway */
+		return sprintf( __( '%s payment method is not configured properly. Please contact with site administrator!', 'tutor' ), ucfirst( $payment_method ) );
 	}
 }
