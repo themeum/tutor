@@ -4,6 +4,7 @@ namespace Tutor\PaymentGateways\Configs;
 
 use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
 use Ollyo\PaymentHub\Payments\Paypal\Config;
+use Tutor\Ecommerce\Settings;
 
 /**
  * PaypalConfig class.
@@ -28,17 +29,44 @@ class PaypalConfig extends Config implements ConfigContract {
 	const API_URL_LIVE = 'https://api-m.paypal.com';
 
 	/**
-	 * Constants for configuration keys.
-	 *
-	 * @since 3.0.0
+	 * PayPal environment key.
 	 *
 	 * @var string
+	 * @since 3.0.0
 	 */
-	const ENV_KEY            = 'paypal_environment';
-	const MERCHANT_EMAIL_KEY = 'paypal_merchant_email';
-	const CLIENT_ID_KEY      = 'paypal_client_id';
-	const CLIENT_SECRET_KEY  = 'paypal_client_secret';
-	const WEBHOOK_ID_KEY     = 'paypal_webhook_id';
+	private $environment;
+
+	/**
+	 * PayPal merchant email key.
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	private $merchant_email;
+
+	/**
+	 * PayPal client ID key.
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	private $client_id;
+
+	/**
+	 * PayPal client secret id.
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	private $secret_id;
+
+	/**
+	 * PayPal webhook ID key.
+	 *
+	 * @var string
+	 * @since 3.0.0
+	 */
+	private $webhook_id;
 
 	/**
 	 * The name of the payment gateway.
@@ -50,7 +78,14 @@ class PaypalConfig extends Config implements ConfigContract {
 	protected $name = 'paypal';
 
 	public function __construct() {
-		 parent::__construct();
+		parent::__construct();
+
+		$settings = Settings::get_payment_gateway_settings( $this->name );
+
+		$config_keys = $this->get_config_keys();
+		foreach ( $config_keys as $key ) {
+			$this->$key = $this->get_field_value( $settings, $key );
+		}
 	}
 
 	public function getMode(): string {
@@ -58,11 +93,11 @@ class PaypalConfig extends Config implements ConfigContract {
 	}
 
 	public function getClientSecret(): string {
-		return tutor_utils()->get_option( self::CLIENT_SECRET_KEY );
+		return $this->secret_id;
 	}
 
 	public function getWebhookID(): string {
-		return tutor_utils()->get_option( self::WEBHOOK_ID_KEY );
+		return $this->webhook_id;
 	}
 
 	public function getAdditionalInformation(): string {
@@ -78,15 +113,15 @@ class PaypalConfig extends Config implements ConfigContract {
 	}
 
 	public function getClientID() : string {
-		return tutor_utils()->get_option( self::CLIENT_ID_KEY );
+		return $this->client_id;
 	}
 
 	public function getMerchantEmail() : string {
-		return tutor_utils()->get_option( self::MERCHANT_EMAIL_KEY );
+		return $this->merchant_email;
 	}
 
 	public function getApiURL() {
-		return $this->getMode() === 'test' ? static::API_URL_TEST : static::API_URL_LIVE;
+		return $this->environment === 'test' ? static::API_URL_TEST : static::API_URL_LIVE;
 	}
 
 	/**
@@ -111,5 +146,34 @@ class PaypalConfig extends Config implements ConfigContract {
 		);
 
 		$this->updateConfig( $config );
+	}
+
+	/**
+	 * Determine whether payment gateway configured properly
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_configured() {
+		// Return true if all the settings are filled.
+		return $this->merchant_email && $this->client_id && $this->secret_id;
+	}
+
+	/**
+	 * Get config keys
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	private function get_config_keys() {
+		return array(
+			'environment',
+			'merchant_email',
+			'client_id',
+			'secret_id',
+			'webhook_id',
+		);
 	}
 }

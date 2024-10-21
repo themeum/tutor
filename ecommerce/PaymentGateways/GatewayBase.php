@@ -63,17 +63,10 @@ abstract class GatewayBase {
 	 * @return void
 	 */
 	public function __construct() {
-		$autoload_file = tutor()->path . 'ecommerce/PaymentGateways/' . $this->get_root_dir_name() . '/vendor/autoload.php';
-
+		// Getting autoload file from concrete gateway class.
+		$autoload_file = $this::get_autoload_file();
 		if ( file_exists( $autoload_file ) ) {
 			require_once $autoload_file;
-		} else {
-			if ( defined( 'TUTOR_STRIPE_PATH' ) ) {
-				$tutor_stripe_autoload = TUTOR_STRIPE_PATH . "src/Payments/{$this->get_root_dir_name()}/vendor/autoload.php";
-				if ( file_exists( $tutor_stripe_autoload ) ) {
-					require_once $tutor_stripe_autoload;
-				}
-			}
 		}
 
 		$this->payment = ( new PaymentHub( $this->get_payment_class(), $this->get_config_class() ) )->make();

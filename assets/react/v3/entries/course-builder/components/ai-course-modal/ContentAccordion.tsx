@@ -1,24 +1,21 @@
+import { css } from '@emotion/react';
+import { useSpring } from '@react-spring/web';
+import { animated } from '@react-spring/web';
+import { __ } from '@wordpress/i18n';
+import { type ReactNode, useEffect, useState } from 'react';
+
 import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
+
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import type { QuizContent } from '@CourseBuilderServices/magic-ai';
-import { AnimatedDiv } from '@Hooks/useAnimation';
 import { noop } from '@Utils/util';
-import { css } from '@emotion/react';
-import { useSpring } from '@react-spring/web';
-import { __ } from '@wordpress/i18n';
-import { type ReactNode, useEffect, useState } from 'react';
+
 import { type Topic, useContentGenerationContext } from './ContentGenerationContext';
 import TopicContentSkeleton from './loaders/TopicContentSkeleton';
 
-interface AccordionContent {
-  type: 'lesson' | 'assignment' | 'quiz';
-  title: string;
-  questions?: QuizContent[];
-}
 interface AccordionItemData extends Topic {
   is_active: boolean;
 }
@@ -46,7 +43,11 @@ const AccordionItem = ({
   });
 
   return (
-    <div onClick={setIsActive} onKeyDown={noop} css={css`cursor: pointer;`}>
+    <div
+      onClick={data.contents.length ? setIsActive : noop}
+      onKeyDown={noop}
+      css={css`cursor: ${data.contents.length ? 'pointer' : 'default'};`}
+    >
       <div css={styles.title}>
         <div
           css={styles.titleAndIcon({
@@ -60,27 +61,36 @@ const AccordionItem = ({
           {data.contents.length} {__('Contents', 'tutor')}
         </p>
       </div>
-      <AnimatedDiv style={collapseAnimation}>
-        <div css={styles.content(data.is_active)}>
-          <Show when={!isLoading} fallback={<TopicContentSkeleton />}>
-            <For each={data.contents}>
-              {(item, idx) => {
-                return (
-                  <div css={styles.contentItem} key={idx}>
-                    {item.type === 'quiz' && !currentLoading.content && currentLoading.quiz && !item?.questions ? (
-                      <GradientLoadingSpinner />
-                    ) : (
-                      icons[item.type]
-                    )}
+      <Show
+        when={data.contents.length > 0 && !isLoading}
+        fallback={
+          <div css={css`margin-top: ${spacing[16]};`}>
+            <TopicContentSkeleton />
+          </div>
+        }
+      >
+        <animated.div style={collapseAnimation}>
+          <div css={styles.content(data.is_active)}>
+            <Show when={!isLoading}>
+              <For each={data.contents}>
+                {(item, idx) => {
+                  return (
+                    <div css={styles.contentItem} key={idx}>
+                      {item.type === 'quiz' && !currentLoading.content && currentLoading.quiz && !item?.questions ? (
+                        <GradientLoadingSpinner />
+                      ) : (
+                        icons[item.type]
+                      )}
 
-                    <span>{item.title}</span>
-                  </div>
-                );
-              }}
-            </For>
-          </Show>
-        </div>
-      </AnimatedDiv>
+                      <span>{item.title}</span>
+                    </div>
+                  );
+                }}
+              </For>
+            </Show>
+          </div>
+        </animated.div>
+      </Show>
     </div>
   );
 };

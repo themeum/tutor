@@ -130,6 +130,11 @@ export const ImageGeneration = () => {
     }
   }, [magicImageGenerationMutation.isError]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    form.setFocus('prompt');
+  }, []);
+
   return (
     <form
       css={magicAIStyles.wrapper}

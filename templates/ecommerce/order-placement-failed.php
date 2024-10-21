@@ -9,11 +9,13 @@
  */
 
 use Tutor\Ecommerce\CheckoutController;
+use TUTOR\Input;
 
 tutor_utils()->tutor_custom_header();
 
 $order_status;
 $order_id;
+$error_msg = Input::get( 'error_message' );
 ?>
 <div class="tutor-container tutor-order-status-wrapper">
 	<div class="tutor-d-flex tutor-flex-column tutor-align-center tutor-gap-2 tutor-px-20 tutor-py-80 tutor-text-center">
@@ -26,7 +28,7 @@ $order_id;
 				<?php esc_html_e( 'Payment failed', 'tutor' ); ?>
 			</h2>
 			<p class="tutor-fs-6 tutor-color-secondary">
-				<?php esc_html_e( 'An error occurred. Please try to place the order again', 'tutor' ); ?>
+				<?php echo $error_msg ? esc_html( $error_msg ) : esc_html__( 'An error occurred. Please try to place the order again', 'tutor' ); ?>
 			</p>
 		</div>
 
