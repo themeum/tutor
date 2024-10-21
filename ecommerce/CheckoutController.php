@@ -438,7 +438,9 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
 
-		// TODO: add a check on selected gateway is configured or not.
+		if ( ! Ecommerce::is_payment_gateway_configured( $payment_method ) ) {
+			array_push( $errors, Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
+		}
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
@@ -744,14 +746,9 @@ class CheckoutController {
 								: null;
 
 		if ( $payment_gateway_class ) {
-
 			$gateway_instance = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
-			$config_class     = $gateway_instance->get_config_class();
-
-			$is_gateway_configured = ( new $config_class() )->is_configured();
-			if ( ! $is_gateway_configured ) {
-				/* translators: %s: payment gateway */
-				throw new \Exception( sprintf( __( '%s payment method is not configured properly. Please concat with site Administrator!', 'tutor' ), ucfirst( $payment_method ) ) );
+			if ( ! Ecommerce::is_payment_gateway_configured( $payment_method ) ) {
+				throw new \Exception( Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
 			}
 
 			try {
