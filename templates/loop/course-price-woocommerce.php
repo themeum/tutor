@@ -1,4 +1,4 @@
-n<?php
+<?php
 /**
  * Course loop price
  *
