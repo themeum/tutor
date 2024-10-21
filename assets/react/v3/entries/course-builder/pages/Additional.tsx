@@ -79,130 +79,132 @@ const Additional = () => {
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
         <CanvasHead title={__('Additional', 'tutor')} backUrl="/curriculum" />
-        <div css={styles.formSection}>
-          <div css={styles.titleAndSub}>
-            <div css={styles.title}>{__('Overview', 'tutor')}</div>
-            <div css={styles.subtitle}>
-              {__('Provide essential course information to attract and inform potential students', 'tutor')}
+        <div css={styles.formWrapper}>
+          <div css={styles.formSection}>
+            <div css={styles.titleAndSub}>
+              <div css={styles.title}>{__('Overview', 'tutor')}</div>
+              <div css={styles.subtitle}>
+                {__('Provide essential course information to attract and inform potential students', 'tutor')}
+              </div>
             </div>
-          </div>
-          <div css={styles.fieldsWrapper}>
-            <Controller
-              name="course_benefits"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('What Will I Learn?', 'tutor')}
-                  placeholder={__('Define the key takeaways from this course (list one benefit per line)', 'tutor')}
-                  rows={2}
-                  enableResize
-                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                />
-              )}
-            />
-
-            <Controller
-              name="course_target_audience"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('Targeted Audience', 'tutor')}
-                  placeholder={__(
-                    'Specify the target audience that will benefit the most from the course.(One Line Per target audience)',
-                    'tutor',
-                  )}
-                  rows={2}
-                  enableResize
-                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                />
-              )}
-            />
-
-            <div css={styles.totalCourseDuration}>
+            <div css={styles.fieldsWrapper}>
               <Controller
-                name="course_duration_hours"
+                name="course_benefits"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormInputWithContent
+                  <FormTextareaInput
                     {...controllerProps}
-                    type="number"
-                    label={__('Total Course Duration', 'tutor')}
-                    placeholder="0"
-                    contentPosition="right"
-                    content={__('hour', 'tutor')}
+                    label={__('What Will I Learn?', 'tutor')}
+                    placeholder={__('Define the key takeaways from this course (list one benefit per line)', 'tutor')}
+                    rows={2}
+                    enableResize
                     loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
+
               <Controller
-                name="course_duration_minutes"
+                name="course_target_audience"
                 control={form.control}
                 render={(controllerProps) => (
-                  <FormInputWithContent
+                  <FormTextareaInput
                     {...controllerProps}
-                    type="number"
-                    placeholder="0"
-                    contentPosition="right"
-                    content={__('min', 'tutor')}
+                    label={__('Targeted Audience', 'tutor')}
+                    placeholder={__(
+                      'Specify the target audience that will benefit the most from the course.(One Line Per target audience)',
+                      'tutor',
+                    )}
+                    rows={2}
+                    enableResize
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  />
+                )}
+              />
+
+              <div css={styles.totalCourseDuration}>
+                <Controller
+                  name="course_duration_hours"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      type="number"
+                      label={__('Total Course Duration', 'tutor')}
+                      placeholder="0"
+                      contentPosition="right"
+                      content={__('hour', 'tutor')}
+                      loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    />
+                  )}
+                />
+                <Controller
+                  name="course_duration_minutes"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      type="number"
+                      placeholder="0"
+                      contentPosition="right"
+                      content={__('min', 'tutor')}
+                      loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                    />
+                  )}
+                />
+              </div>
+
+              <Controller
+                name="course_material_includes"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    label={__('Materials Included', 'tutor')}
+                    placeholder={__(
+                      'A list of assets you will be providing for the students in this course (One Per Line)',
+                      'tutor',
+                    )}
+                    rows={4}
+                    enableResize
+                    loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  />
+                )}
+              />
+
+              <Controller
+                name="course_requirements"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormTextareaInput
+                    {...controllerProps}
+                    label={__('Requirements/Instructions', 'tutor')}
+                    placeholder={__(
+                      'Additional requirements or special instructions for the students (One Per Line)',
+                      'tutor',
+                    )}
+                    rows={2}
+                    enableResize
                     loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   />
                 )}
               />
             </div>
-
-            <Controller
-              name="course_material_includes"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('Materials Included', 'tutor')}
-                  placeholder={__(
-                    'A list of assets you will be providing for the students in this course (One Per Line)',
-                    'tutor',
-                  )}
-                  rows={4}
-                  enableResize
-                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                />
-              )}
-            />
-
-            <Controller
-              name="course_requirements"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormTextareaInput
-                  {...controllerProps}
-                  label={__('Requirements/Instructions', 'tutor')}
-                  placeholder={__(
-                    'Additional requirements or special instructions for the students (One Per Line)',
-                    'tutor',
-                  )}
-                  rows={2}
-                  enableResize
-                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                />
-              )}
-            />
           </div>
-        </div>
 
-        <div css={styles.formSection}>
-          <div css={styles.titleAndSub}>
-            <div css={styles.title}>
-              {__('Certificate', 'tutor')}
-              <Show when={!isTutorPro}>
-                <ProBadge content={__('Pro', 'tutor')} />
+          <div css={styles.formSection}>
+            <div css={styles.titleAndSub}>
+              <div css={styles.title}>
+                {__('Certificate', 'tutor')}
+                <Show when={!isTutorPro}>
+                  <ProBadge content={__('Pro', 'tutor')} />
+                </Show>
+              </div>
+              <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+                <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
               </Show>
-            </div>
-            <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
-              <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
-            </Show>
 
-            <Certificate />
+              <Certificate />
+            </div>
           </div>
         </div>
 
@@ -233,7 +235,7 @@ const Additional = () => {
             />
           </Show>
         </div>
-        <div css={styles.uploadAttachment}>
+        <div>
           <span css={styles.label}>
             {__('Attachments', 'tutor')}
             {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
@@ -301,7 +303,11 @@ const styles = {
   leftSide: css`
     padding: ${spacing[24]} ${spacing[36]} ${spacing[24]} 0;
 		${styleUtils.display.flex('column')}
-		gap: ${spacing[24]};
+		gap: ${spacing[32]};
+  `,
+  formWrapper: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[24]};
   `,
   formSection: css`
 		${styleUtils.display.flex('column')}
@@ -358,9 +364,6 @@ const styles = {
     max-height: 256px;
     height: 100%;
     overflow-y: auto;
-  `,
-  uploadAttachment: css`
-    padding-top: ${spacing[8]};
   `,
   liveClass: css`
     ${styleUtils.display.flex('column')}

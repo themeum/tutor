@@ -30,6 +30,6 @@ export const magicAIStyles = {
 		flex-direction: column;
 		gap: ${spacing[8]};
 		margin-top: auto;
-		padding-top: ${spacing[32]};
+		padding-top: 80px;
 	`,
 };
