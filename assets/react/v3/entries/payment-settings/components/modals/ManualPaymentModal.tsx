@@ -102,6 +102,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                     <FormImageInput
                       {...controllerProps}
                       label={field.label}
+                      size="small"
                       onChange={(value) => {
                         form.setValue('icon', value?.url ?? '');
                       }}
