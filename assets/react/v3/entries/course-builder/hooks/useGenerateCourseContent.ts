@@ -10,9 +10,8 @@ import {
 } from '@CourseBuilderServices/magic-ai';
 
 export const useGenerateCourseContent = () => {
-  const { updateContents, updateLoading, updateErrors } = useContentGenerationContext();
+  const { abortControllerRef, updateContents, updateLoading, updateErrors } = useContentGenerationContext();
   const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
-  const generateCourseImageMutation = useGenerateCourseContentMutation('image');
   const generateCourseDescriptionMutation = useGenerateCourseContentMutation('description');
   const generateCourseTopicsMutation = useGenerateCourseTopicNamesMutation();
   const generateCourseTopicContentMutation = useGenerateCourseTopicContentMutation();
@@ -20,6 +19,10 @@ export const useGenerateCourseContent = () => {
 
   const startGeneration = async (prompt: string, pointer?: number) => {
     const start = Date.now();
+
+    if (!abortControllerRef.current) {
+      abortControllerRef.current = new AbortController();
+    }
 
     if (prompt.length) {
       updateContents(
@@ -31,8 +34,12 @@ export const useGenerateCourseContent = () => {
     }
 
     try {
-      updateLoading({ title: true, image: true, description: true, content: true, topic: true, quiz: true }, pointer);
-      const response = await generateCourseTitleMutation.mutateAsync({ type: 'title', prompt });
+      updateLoading({ title: true, description: true, content: true, topic: true, quiz: true }, pointer);
+      const response = await generateCourseTitleMutation.mutateAsync({
+        type: 'title',
+        prompt,
+        signal: abortControllerRef.current.signal,
+      });
       updateLoading({ title: false }, pointer);
 
       if (!response.data) {
@@ -43,18 +50,10 @@ export const useGenerateCourseContent = () => {
       updateContents({ title: courseTitle, prompt }, pointer);
 
       try {
-        const imageResponse = await generateCourseImageMutation.mutateAsync({ type: 'image', title: courseTitle });
-        updateLoading({ image: false }, pointer);
-        updateContents({ featured_image: imageResponse.data }, pointer);
-      } catch (error) {
-        updateLoading({ image: false }, pointer);
-        updateErrors({ image: error as string }, pointer);
-      }
-
-      try {
         const descriptionResponse = await generateCourseDescriptionMutation.mutateAsync({
           type: 'description',
           title: courseTitle,
+          signal: abortControllerRef.current.signal,
         });
         updateLoading({ description: false }, pointer);
         updateContents({ description: descriptionResponse.data }, pointer);
@@ -67,6 +66,7 @@ export const useGenerateCourseContent = () => {
         const topicsResponse = await generateCourseTopicsMutation.mutateAsync({
           type: 'topic_names',
           title: courseTitle,
+          signal: abortControllerRef.current.signal,
         });
         updateLoading({ topic: false }, pointer);
         const topics = topicsResponse.data.map(
@@ -82,7 +82,12 @@ export const useGenerateCourseContent = () => {
 
         const promises = topics.map((item, index) => {
           return generateCourseTopicContentMutation
-            .mutateAsync({ title: courseTitle, topic_name: item.title, index })
+            .mutateAsync({
+              title: courseTitle,
+              topic_name: item.title,
+              index,
+              signal: abortControllerRef.current?.signal,
+            })
             .then((data) => {
               const { index: idx, topic_contents } = data.data;
               topics[idx].contents ||= [];
@@ -110,6 +115,7 @@ export const useGenerateCourseContent = () => {
                   title: courseTitle,
                   topic_name: topic.title,
                   quiz_title: quizContent.title,
+                  signal: abortControllerRef.current?.signal,
                 })
                 .then((response) => {
                   topics[i].contents[j].questions ||= [];
@@ -132,14 +138,10 @@ export const useGenerateCourseContent = () => {
         updateErrors({ topic: error as string }, pointer);
       }
     } catch (error) {
-      updateLoading(
-        { title: false, image: false, content: false, description: false, quiz: false, topic: false },
-        pointer,
-      );
+      updateLoading({ title: false, content: false, description: false, quiz: false, topic: false }, pointer);
       updateErrors(
         {
           title: error as string,
-          image: error as string,
           content: error as string,
           description: error as string,
           quiz: error as string,
@@ -150,5 +152,13 @@ export const useGenerateCourseContent = () => {
     }
   };
 
-  return { startGeneration };
+  const cancelGeneration = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+      updateLoading({ title: false, content: false, description: false, quiz: false, topic: false });
+    }
+  };
+
+  return { startGeneration, cancelGeneration };
 };

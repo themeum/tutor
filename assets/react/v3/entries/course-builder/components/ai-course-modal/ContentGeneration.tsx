@@ -3,6 +3,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
+import Alert from '@Atoms/Alert';
 import Button from '@Atoms/Button';
 import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
 import MagicButton from '@Atoms/MagicButton';
@@ -25,7 +26,6 @@ import ContentAccordion from './ContentAccordion';
 import { type Loading, useContentGenerationContext } from './ContentGenerationContext';
 import ContentSkeleton from './loaders/ContentSkeleton';
 import DescriptionSkeleton from './loaders/DescriptionSkeleton';
-import ImageSkeleton from './loaders/ImageSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
 import aiStudioError2x from '@Images/ai-studio-error-2x.webp';
@@ -45,13 +45,6 @@ const defaultSteps: Record<keyof Loading, LoadingStep> = {
     loading_label: __('Now generating course title...', 'tutor'),
     completed_label: __('Course title generated.', 'tutor'),
     error_label: __('Error generating course title.', 'tutor'),
-    completed: false,
-    hasError: false,
-  },
-  image: {
-    loading_label: __('Now generating course featured image...', 'tutor'),
-    completed_label: __('Course banner image generated.', 'tutor'),
-    error_label: __('Error generating course banner image.', 'tutor'),
     completed: false,
     hasError: false,
   },
@@ -97,18 +90,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     currentContent,
     currentLoading,
     currentErrors,
-    updateLoading,
-    updateContents,
     setPointer,
     appendContent,
-    removeContent,
     appendLoading,
-    removeLoading,
     appendErrors,
-    removeErrors,
     errors,
   } = useContentGenerationContext();
-  const { startGeneration } = useGenerateCourseContent();
+  const { startGeneration, cancelGeneration } = useGenerateCourseContent();
   const saveAIGeneratedCourseContentMutation = useSaveAIGeneratedCourseContentMutation();
   const formRef = useRef<HTMLFormElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -148,6 +136,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   }, [isCreateNewCourse]);
 
   const isLoading = getObjectValues(currentLoading).some((item) => item);
+  const isAppendingCourseNotAllowed =
+    isLoading ||
+    isCreateNewCourse ||
+    !currentContent.title ||
+    !currentContent.topics?.length ||
+    !currentContent.topics?.every((topic) => topic.contents?.length);
 
   return (
     <div css={styles.container}>
@@ -160,7 +154,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 <img
                   css={styles.errorImage}
                   src={aiStudioError}
-                  srcSet={`${aiStudioError} 1x ${aiStudioError2x} 2x`}
+                  srcSet={`${aiStudioError} 1x, ${aiStudioError2x} 2x`}
                   alt={__('Ai Studio Error', 'tutor')}
                 />
 
@@ -178,12 +172,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             <div css={styles.leftContentWrapper}>
-              <Show when={!currentLoading.image} fallback={<ImageSkeleton />}>
-                <div css={styles.imageWrapper}>
-                  <img src={currentContent?.featured_image} alt="course banner" />
-                </div>
-              </Show>
-
               <Show when={!currentLoading.description} fallback={<DescriptionSkeleton />}>
                 <div css={styles.section}>
                   <h5>{__('Course Info', 'tutor')}</h5>
@@ -253,10 +241,10 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     <div css={styles.boxContent}>
                       <h6>
                         {isLoadingItem
-                          ? __('Generating course contents', 'tutor')
+                          ? __('Generating course content', 'tutor')
                           : hasErrors
-                            ? __('Error generating course contents', 'tutor')
-                            : __('Generated course contents', 'tutor')}
+                            ? __('Error generating course content', 'tutor')
+                            : __('Generated course content', 'tutor')}
                       </h6>
                       <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
                       <div css={styles.items}>
@@ -409,6 +397,18 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               }}
             </For>
 
+            <Show
+              when={
+                !isLoading &&
+                !isCreateNewCourse &&
+                !(currentContent?.topics.every((topic) => topic.contents.length) && currentContent.topics.length)
+              }
+            >
+              <Alert icon="warning" type="danger">
+                {__('Failed to generate course content. Try again.', 'tutor')}
+              </Alert>
+            </Show>
+
             <Show when={isCreateNewCourse}>
               <div
                 css={styles.box({
@@ -464,14 +464,18 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <div css={styles.rightFooter}>
-            <MagicButton variant="primary_outline" onClick={onClose} disabled={isLoading}>
+            <MagicButton
+              variant="primary_outline"
+              onClick={() => {
+                cancelGeneration();
+                onClose();
+              }}
+            >
               {__('Cancel', 'tutor')}
             </MagicButton>
             <MagicButton
               variant="primary"
-              disabled={
-                isLoading || isCreateNewCourse || !contents[pointer].title || contents[pointer].counts?.topics === 0
-              }
+              disabled={isAppendingCourseNotAllowed}
               onClick={() => {
                 saveAIGeneratedCourseContentMutation.mutate({
                   course_id: courseId,
@@ -651,7 +655,7 @@ const styles = {
 		gap: ${spacing[4]};
 		position: relative;
 
-    [data-error] {
+    [data-error='true'] {
       color: ${colorTokens.icon.error}
     }
 	`,

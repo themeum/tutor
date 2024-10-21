@@ -1,12 +1,14 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 import { useToast } from '@Atoms/Toast';
 import type { StyleType } from '@Components/magic-ai-image/ImageContext';
+
 import type { ChatFormat, ChatLanguage, ChatTone } from '@Config/magic-ai';
 import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { Prettify, WPResponse } from '@Utils/types';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { convertToErrorMessage } from '../utils/utils';
 
 interface ImagePayload {
@@ -143,8 +145,14 @@ interface CourseGenerationOther {
 
 type CourseGenerationPayload = Prettify<CourseGenerationTitle | CourseGenerationOther>;
 
-const generateCourseContent = (payload: CourseGenerationPayload) => {
-  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<string>>(endpoints.GENERATE_COURSE_CONTENT, payload);
+const generateCourseContent = (
+  payload: CourseGenerationPayload & {
+    signal?: AbortSignal;
+  },
+) => {
+  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<string>>(endpoints.GENERATE_COURSE_CONTENT, payload, {
+    signal: payload.signal,
+  });
 };
 
 export const useGenerateCourseContentMutation = (type: ContentType) => {
@@ -163,10 +171,13 @@ interface CourseTopicPayload {
   title: string;
 }
 
-const generateCourseTopicNames = (payload: CourseTopicPayload) => {
+const generateCourseTopicNames = (payload: CourseTopicPayload & { signal?: AbortSignal }) => {
   return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<{ title: string }[]>>(
     endpoints.GENERATE_COURSE_CONTENT,
     payload,
+    {
+      signal: payload.signal,
+    },
   );
 };
 
@@ -186,10 +197,13 @@ interface TopicContentPayload {
   index: number;
 }
 
-const generateCourseTopicContent = (payload: TopicContentPayload) => {
+const generateCourseTopicContent = (payload: TopicContentPayload & { signal?: AbortSignal }) => {
   return wpAjaxInstance.post<TopicContentPayload, WPResponse<{ topic_contents: TopicContent[]; index: number }>>(
     endpoints.GENERATE_COURSE_TOPIC_CONTENT,
     payload,
+    {
+      signal: payload.signal,
+    },
   );
 };
 
@@ -239,10 +253,13 @@ export interface QuizContent {
   options?: { name: string; is_correct: boolean }[];
 }
 
-const generateQuizQuestions = (payload: QuizQuestionsPayload) => {
+const generateQuizQuestions = (payload: QuizQuestionsPayload & { signal?: AbortSignal }) => {
   return wpAjaxInstance.post<QuizQuestionsPayload, WPResponse<QuizContent[]>>(
     endpoints.GENERATE_QUIZ_QUESTIONS,
     payload,
+    {
+      signal: payload.signal,
+    },
   );
 };
 
