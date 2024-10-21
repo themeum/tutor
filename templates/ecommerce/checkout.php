@@ -92,10 +92,10 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 								// Show manual payment for only regular order.
 								if ( ! $plan_id ) {
 									foreach ( $payment_gateways['manual'] as $gateway ) {
-										list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
+										list( $name, $label, $additional_details, $payment_instructions ) = array_values( $gateway );
 										?>
-										<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
-											<input type="radio" value="<?php echo esc_attr( $label ); ?>" name="payment_method" class="tutor-form-check-input" required>
+										<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
+											<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input" required>
 											<div class="tutor-payment-item-content">
 												<?php echo esc_html( $label ); ?>
 											</div>

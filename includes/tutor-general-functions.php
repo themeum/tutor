@@ -1454,8 +1454,9 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 			$manual_gateways = tutor_get_manual_payment_gateways();
 			if ( is_array( $manual_gateways ) && count( $manual_gateways ) ) {
 				foreach ( $manual_gateways as $key => $gateway ) {
-					if ( '1' == $gateway->is_active ) {
+					if ( 1 === (int) $gateway->is_active ) {
 						$active_gateways['manual'][ $key ] = array(
+							'name'  => $gateway->name,
 							'label' => $gateway->label,
 						);
 
