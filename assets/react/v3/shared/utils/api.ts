@@ -1,8 +1,7 @@
+import axios, { type Method, type AxiosRequestHeaders } from 'axios';
 
 import config, { tutorConfig } from '@Config/config';
-import axios from 'axios';
 
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import * as querystring from 'querystring';
 
 import { convertToFormData, serializeParams } from './form';
@@ -21,13 +20,13 @@ export const authApiInstance = axios.create({
 
 authApiInstance.interceptors.request.use(
   (config) => {
-    config.headers ||= {};
+    config.headers ||= {} as AxiosRequestHeaders;
 
     config.data._tutor_nonce = tutorConfig._tutor_nonce;
 
     if (config.method && ['post', 'put', 'patch'].includes(config.method.toLocaleLowerCase())) {
       if (config.data) {
-        config.data = convertToFormData(config.data, config.method);
+        config.data = convertToFormData(config.data, config.method as Method);
       }
 
       if (['put', 'patch'].includes(config.method.toLowerCase())) {
@@ -51,7 +50,7 @@ authApiInstance.interceptors.request.use(
 );
 
 authApiInstance.interceptors.response.use((response) => {
-  return Promise.resolve<{ data: unknown }>(response).then((res) => res.data);
+  return Promise.resolve(response).then((res) => res.data);
 });
 
 export const wpAuthApiInstance = axios.create({
@@ -60,13 +59,13 @@ export const wpAuthApiInstance = axios.create({
 
 wpAuthApiInstance.interceptors.request.use(
   (config) => {
-    config.headers ||= {};
+    config.headers ||= {} as AxiosRequestHeaders;
 
     config.headers['X-WP-Nonce'] = tutorConfig.wp_rest_nonce;
 
     if (config.method && ['post', 'put', 'patch'].includes(config.method.toLocaleLowerCase())) {
       if (config.data) {
-        config.data = convertToFormData(config.data, config.method);
+        config.data = convertToFormData(config.data, config.method as Method);
       }
 
       if (['put', 'patch'].includes(config.method.toLowerCase())) {
@@ -90,7 +89,7 @@ wpAuthApiInstance.interceptors.request.use(
 );
 
 wpAuthApiInstance.interceptors.response.use((response) => {
-  return Promise.resolve<{ data: unknown }>(response).then((res) => res);
+  return Promise.resolve(response).then((res) => res);
 });
 
 export const wpAjaxInstance = axios.create({
@@ -99,7 +98,7 @@ export const wpAjaxInstance = axios.create({
 
 wpAjaxInstance.interceptors.request.use(
   (config) => {
-    config.headers ||= {};
+    config.headers ||= {} as AxiosRequestHeaders;
     // config.headers['X-WP-Nonce'] = tutorConfig._tutor_nonce;
 
     // We will use REST methods while using but wp ajax only sent via post method.
@@ -114,7 +113,7 @@ wpAjaxInstance.interceptors.request.use(
     const nonce_key = tutorConfig.nonce_key;
     const nonce_value = tutorConfig._tutor_nonce;
     config.data = { ...config.data, ...config.params, action: config.url, [nonce_key]: nonce_value };
-    config.data = convertToFormData(config.data, config.method);
+    config.data = convertToFormData(config.data, config.method as Method);
 
     config.params = {};
     config.url = undefined;

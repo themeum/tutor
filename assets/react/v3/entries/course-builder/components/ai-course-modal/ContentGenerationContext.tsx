@@ -1,7 +1,8 @@
+import React, { useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
+
 import type { QuizContent } from '@CourseBuilderServices/magic-ai';
 import { isDefined } from '@Utils/types';
 import { noop } from '@Utils/util';
-import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
 
 export type CourseContentStep = 'prompt' | 'generation';
 
@@ -46,6 +47,7 @@ export interface Errors {
   quiz: string;
 }
 interface ContextType {
+  abortControllerRef: React.MutableRefObject<AbortController | null>;
   currentStep: CourseContentStep;
   setCurrentStep: React.Dispatch<React.SetStateAction<CourseContentStep>>;
   contents: CourseContent[];
@@ -92,6 +94,7 @@ export const defaultErrors: Errors = {
 };
 
 const Context = React.createContext<ContextType>({
+  abortControllerRef: { current: null },
   currentStep: 'prompt',
   setCurrentStep: noop,
   contents: [defaultContent],
@@ -131,6 +134,7 @@ const Context = React.createContext<ContextType>({
 export const useContentGenerationContext = () => useContext(Context);
 
 const ContentGenerationContextProvider = ({ children }: { children: ReactNode }) => {
+  const abortControllerRef = useRef<AbortController | null>(null);
   const [currentStep, setCurrentStep] = useState<CourseContentStep>('prompt');
   const [contents, setContents] = useState<CourseContent[]>([defaultContent]);
   const [pointer, setPointer] = useState(0);
@@ -250,6 +254,7 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   }, []);
 
   const providerValue = {
+    abortControllerRef,
     currentStep,
     setCurrentStep,
     contents,

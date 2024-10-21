@@ -90,18 +90,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     currentContent,
     currentLoading,
     currentErrors,
-    updateLoading,
-    updateContents,
     setPointer,
     appendContent,
-    removeContent,
     appendLoading,
-    removeLoading,
     appendErrors,
-    removeErrors,
     errors,
   } = useContentGenerationContext();
-  const { startGeneration } = useGenerateCourseContent();
+  const { startGeneration, cancelGeneration } = useGenerateCourseContent();
   const saveAIGeneratedCourseContentMutation = useSaveAIGeneratedCourseContentMutation();
   const formRef = useRef<HTMLFormElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -159,7 +154,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 <img
                   css={styles.errorImage}
                   src={aiStudioError}
-                  srcSet={`${aiStudioError} 1x ${aiStudioError2x} 2x`}
+                  srcSet={`${aiStudioError} 1x, ${aiStudioError2x} 2x`}
                   alt={__('Ai Studio Error', 'tutor')}
                 />
 
@@ -469,7 +464,13 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <div css={styles.rightFooter}>
-            <MagicButton variant="primary_outline" onClick={onClose}>
+            <MagicButton
+              variant="primary_outline"
+              onClick={() => {
+                cancelGeneration();
+                onClose();
+              }}
+            >
               {__('Cancel', 'tutor')}
             </MagicButton>
             <MagicButton
