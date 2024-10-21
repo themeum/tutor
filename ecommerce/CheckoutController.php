@@ -750,6 +750,7 @@ class CheckoutController {
 
 			$is_gateway_configured = ( new $config_class() )->is_configured();
 			if ( ! $is_gateway_configured ) {
+				/* translators: %s: payment gateway */
 				throw new \Exception( sprintf( __( '%s payment method is not configured properly. Please concat with site Administrator!', 'tutor' ), ucfirst( $payment_method ) ) );
 			}
 
