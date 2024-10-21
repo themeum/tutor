@@ -186,6 +186,17 @@ class Tax {
 	}
 
 	/**
+	 * Show price with tax in course list and details.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return bool
+	 */
+	public static function show_price_with_tax() {
+		return (bool) self::get_setting( 'show_price_with_tax' );
+	}
+
+	/**
 	 * Get tax type.
 	 *
 	 * @since 3.0.0

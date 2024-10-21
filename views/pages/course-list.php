@@ -186,7 +186,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 							<th width="6%">
 								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</th>
-							<th class="tutor-table-rows-sorting" width="10%">
+							<th class="tutor-table-rows-sorting" width="15%">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
@@ -355,7 +355,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												<i class="icon2 tutor-icon-angle-down"></i>
 											</div>
 											<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
-												<?php esc_html_e( 'View Course', 'tutor' ); ?>
+												<?php esc_html_e( 'View', 'tutor' ); ?>
 											</a>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">

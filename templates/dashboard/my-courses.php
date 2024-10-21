@@ -39,7 +39,7 @@ $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
 
-$results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
+$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
 $show_course_delete = true;
 if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
 	$show_course_delete = false;
@@ -95,7 +95,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 					$course_students    = tutor_utils()->count_enrolled_users_by_course();
 					$is_main_instructor = CourseModel::is_main_instructor( $post->ID );
 					?>
-	
+
 					<div id="<?php echo esc_attr( $row_id ); ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
 						<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-d-block">
 							<div class="tutor-ratio tutor-ratio-16x9">
@@ -158,9 +158,6 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<div class="tutor-card-footer">
 							<div class="tutor-d-flex tutor-align-center tutor-justify-between">
 								<div class="tutor-d-flex tutor-align-center">
-									<span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
-										<?php esc_html_e( 'Price:', 'tutor' ); ?>
-									</span>
 									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 										<?php
 											$price = tutor_utils()->get_course_price();
@@ -181,9 +178,9 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 											<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 										</button>
 										<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-											
+
 											<!-- Submit Action -->
-											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_DRAFT ) ) ) : ?>
+											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_DRAFT ), true ) ) : ?>
 												<?php
 												$params = http_build_query(
 													array(

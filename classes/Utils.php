@@ -12,6 +12,7 @@ namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\QuizModel;
@@ -1207,6 +1208,7 @@ class Utils {
 	 * Such as Calculate discount by regular price and sale price
 	 *
 	 * @since 1.3.1
+	 * @since 3.0.0 tax support added for monetized by tutor.
 	 *
 	 * @param int $course_id courrse ID.
 	 *
@@ -1223,8 +1225,25 @@ class Utils {
 		$monetize_by = $this->get_option( 'monetize_by' );
 
 		if ( $this->is_monetize_by_tutor() ) {
-			$prices['regular_price'] = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
-			$prices['sale_price']    = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+			$regular_price = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
+			$sale_price    = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
+
+			$display_price       = $sale_price ? $sale_price : $regular_price;
+			$show_price_with_tax = Tax::show_price_with_tax();
+			$user_logged_in      = is_user_logged_in();
+
+			$tax_amount = 0;
+			if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_included_in_price() ) {
+				$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
+				$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
+				$display_price += $tax_amount;
+			}
+
+			$prices['regular_price']       = $regular_price;
+			$prices['sale_price']          = $sale_price;
+			$prices['display_price']       = $display_price;
+			$prices['tax_amount']          = $tax_amount;
+			$prices['show_price_with_tax'] = $user_logged_in && $show_price_with_tax;
 		} else {
 			$product_id = $this->get_course_product_id( $course_id );
 			if ( $product_id ) {
@@ -10245,10 +10264,9 @@ class Utils {
 				'post_status'    => 'inherit',
 			);
 
-			$media_id = wp_insert_attachment( $attachment, $uploaded['file'] );
+			$media_id    = wp_insert_attachment( $attachment, $uploaded['file'] );
 			$attach_data = wp_generate_attachment_metadata( $media_id, $uploaded['file'] );
 			wp_update_attachment_metadata( $media_id, $attach_data );
-
 
 			return (object) array(
 				'id'    => $media_id,

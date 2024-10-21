@@ -1,6 +1,7 @@
 <?php
 /**
- * Cart Template.
+ * Cart Template
+ * For tutor monetization.
  *
  * @package Tutor\Views
  * @author Themeum <support@themeum.com>
@@ -14,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Tax;
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
@@ -21,7 +23,6 @@ $courses         = $get_cart['courses'];
 $total_count     = $courses['total_count'];
 $course_list     = $courses['results'];
 $subtotal        = 0;
-$tax_amount      = 0; // @TODO: Need to implement later.
 
 ?>
 <div class="tutor-cart-page">
@@ -96,24 +97,48 @@ $tax_amount      = 0; // @TODO: Need to implement later.
 						<?php endforeach; ?>
 					</div>
 				</div>
+				<?php
+				$is_tax_included_in_price = Tax::is_tax_included_in_price();
+				$tax_rate                 = Tax::get_user_tax_rate();
+				$tax_amount               = Tax::calculate_tax( $subtotal, $tax_rate );
+				$grand_total              = $subtotal;
+				$show_tax_incl_text       = Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price;
+
+				if ( ! $is_tax_included_in_price ) {
+					$grand_total += $tax_amount;
+				}
+				?>
 				<div class="tutor-col-lg-4">
 					<h3 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-16"><div><?php esc_html_e( 'Summary:', 'tutor' ); ?></div></h3>
 					<div class="tutor-cart-summery">
 						<div class="tutor-cart-summery-top">
 							<div class="tutor-cart-summery-item tutor-fw-medium">
 								<div><?php esc_html_e( 'Subtotal:', 'tutor' ); ?></div>
-								<div><?php echo tutor_get_formatted_price( $subtotal ); //phpcs:ignore?></div>
+								<div><?php tutor_print_formatted_price( $subtotal ); ?></div>
 							</div>
-							<!-- <div class="tutor-cart-summery-item">
+							<?php if ( ! $is_tax_included_in_price ) : ?>
+							<div class="tutor-cart-summery-item">
 								<div><?php esc_html_e( 'Tax:', 'tutor' ); ?></div>
-								<div><?php echo tutor_get_formatted_price( $tax_amount ); //phpcs:ignore?></div>
-							</div> -->
+								<div><?php tutor_print_formatted_price( $tax_amount ); ?></div>
+							</div>
+							<?php endif; ?>
 						</div>
 						<div class="tutor-cart-summery-bottom">
-							<div class="tutor-cart-summery-item tutor-fw-medium tutor-mb-40">
+							<div class="tutor-cart-summery-item tutor-fw-medium <?php echo esc_attr( $show_tax_incl_text ? '' : 'tutor-mb-40' ); ?>">
 								<div><?php esc_html_e( 'Grand total', 'tutor' ); ?></div>
-								<div><?php echo tutor_get_formatted_price( $subtotal + $tax_amount ); //phpcs:ignore?></div>
+								<div><?php tutor_print_formatted_price( $grand_total ); ?></div>
 							</div>
+							<?php
+							if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) :
+								?>
+									<div class="tutor-text-right tutor-fs-7 tutor-color-muted tutor-mb-40">
+								<?php
+								/* translators: %s: tax amount */
+								echo esc_html( sprintf( __( '(Incl. Tax %s)', 'tutor' ), tutor_get_formatted_price( $tax_amount ) ) );
+								?>
+									</div>
+								<?php endif ?>
+
 							<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>">
 								<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
 							</a>
