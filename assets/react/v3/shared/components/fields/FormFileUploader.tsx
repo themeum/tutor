@@ -244,7 +244,7 @@ const FormFileUploader = ({
 
                         <button
                           type="button"
-                          css={styleUtils.resetButton}
+                          css={styles.removeButton}
                           onClick={() => {
                             clearHandler(file.id);
                           }}
@@ -364,8 +364,8 @@ const styles = {
     ${
       hasFiles &&
       css`
-      margin-right: ${spacing[16]};
-    `
+        margin-right: ${spacing[16]};
+      `
     }
   `,
   uploadButton: css`
@@ -374,5 +374,12 @@ const styles = {
   fileIcon: css`
     flex-shrink: 0;
     color: ${colorTokens.icon.default};
+  `,
+  removeButton: css`
+    ${styleUtils.resetButton};
+    ${styleUtils.flexCenter()};
+    width: 24px;
+    height: 24px;
+    color: ${colorTokens.icon.hover};
   `,
 };

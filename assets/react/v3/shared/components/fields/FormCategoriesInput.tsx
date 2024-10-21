@@ -246,7 +246,7 @@ const styles = {
       height: ${leftBarHeight};
       width: 1px;
       left: 9px;
-      top: 25px;
+      top: 26px;
       background-color: ${colorTokens.stroke.divider};
       z-index: ${zIndex.level};
     }

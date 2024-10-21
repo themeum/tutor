@@ -9,6 +9,8 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
+import { tutorConfig } from '@Config/config';
+import Show from '@Controls/Show';
 
 function Main() {
   const form = useFormWithGlobalError<Enrollment>({
@@ -56,19 +58,21 @@ function Main() {
                 rules={requiredRule()}
                 render={(controllerProps) => <FormSelectCourse {...controllerProps} />}
               />
-              <Controller
-                name="payment_status"
-                control={form.control}
-                rules={requiredRule()}
-                render={(controllerProps) => (
-                  <FormSelectInput
-                    {...controllerProps}
-                    label={__('Payment Status', 'tutor')}
-                    options={paymentStatusOptions}
-                    placeholder={__('Select payment status', 'tutor')}
-                  />
-                )}
-              />
+              <Show when={tutorConfig.settings?.monetize_by === 'tutor'}>
+                <Controller
+                  name="payment_status"
+                  control={form.control}
+                  rules={requiredRule()}
+                  render={(controllerProps) => (
+                    <FormSelectInput
+                      {...controllerProps}
+                      label={__('Payment Status', 'tutor')}
+                      options={paymentStatusOptions}
+                      placeholder={__('Select payment status', 'tutor')}
+                    />
+                  )}
+                />
+              </Show>
 
               {isSubscriptionCourse && (
                 <Controller

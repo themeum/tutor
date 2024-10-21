@@ -1,6 +1,6 @@
 import Show from '@Controls/Show';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { colorTokens, spacing, zIndex } from '@Config/styles';
+import { colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
@@ -22,6 +22,7 @@ import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
 import ProBadge from '@Atoms/ProBadge';
 import { tutorConfig } from '@Config/config';
 import { usePaymentContext } from '../contexts/payment-context';
+import StaticConfirmationModal from './modals/StaticConfirmationModal';
 
 const TaxSettingsPage = () => {
   const { payment_gateways } = usePaymentContext();
@@ -39,6 +40,7 @@ const TaxSettingsPage = () => {
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+      form.reset(form.getValues(), { keepValues: true });
     }
   }, [form.formState.isDirty]);
 
@@ -70,7 +72,35 @@ const TaxSettingsPage = () => {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <h6 css={styles.title}>{__('Payment Methods', 'tutor')}</h6>
+      <h6 css={styles.title}>
+        {__('Payment Methods', 'tutor')}
+        <Button
+          variant="text"
+          buttonCss={styles.resetButton}
+          icon={<SVGIcon name="rotate" width={22} height={22} />}
+          onClick={async () => {
+            const { action } = await showModal({
+              component: StaticConfirmationModal,
+              props: {
+                title: __('Reset to Default Settings?', 'tutor'),
+                description: __(
+                  'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.',
+                  'tutor'
+                ),
+                confirmButtonText: __('Reset', 'tutor'),
+              },
+              depthIndex: zIndex.highest,
+            });
+
+            if (action === 'CONFIRM') {
+              reset({ ...initialPaymentSettings, payment_methods: methods });
+              document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+            }
+          }}
+        >
+          {__('Reset to Default', 'tutor')}
+        </Button>
+      </h6>
       <FormProvider {...form}>
         <div css={styles.paymentButtonWrapper}>
           <PaymentMethods />
@@ -149,6 +179,18 @@ const styles = {
   title: css`
     ${typography.heading5('medium')};
     line-height: 1.6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
+  resetButton: css`
+    font-size: ${fontSize[16]};
+    padding: 0;
+    color: #757c8e;
+
+    &:hover {
+      color: ${colorTokens.action.primary};
+    }
   `,
   saveButtonContainer: css`
     display: flex;

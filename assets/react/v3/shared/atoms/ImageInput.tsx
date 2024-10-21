@@ -11,9 +11,12 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { LoadingOverlay } from './LoadingSpinner';
 
+export type ImageInputSize = 'large' | 'regular' | 'small';
+
 interface ImageInputProps {
   buttonText?: string;
   infoText?: string;
+  size?: ImageInputSize;
   value: Media | null;
   uploadHandler: () => void;
   clearHandler: () => void;
@@ -27,6 +30,7 @@ interface ImageInputProps {
 const ImageInput = ({
   buttonText = __('Upload Media', 'tutor'),
   infoText,
+  size = 'regular',
   value,
   uploadHandler,
   clearHandler,
@@ -40,7 +44,7 @@ const ImageInput = ({
     <Show
       when={!loading}
       fallback={
-        <div css={[styles.emptyMedia]}>
+        <div css={[styles.emptyMedia(size)]}>
           <LoadingOverlay />
         </div>
       }
@@ -49,7 +53,7 @@ const ImageInput = ({
         when={value?.url}
         fallback={
           <div
-            css={[styles.emptyMedia, emptyImageCss]}
+            css={[styles.emptyMedia(size), emptyImageCss]}
             onClick={(event) => {
               event.stopPropagation();
               uploadHandler();
@@ -73,11 +77,12 @@ const ImageInput = ({
       >
         {(url) => {
           return (
-            <div css={[styles.previewWrapper, previewImageCss]}>
+            <div css={[styles.previewWrapper(size), previewImageCss]}>
               <img src={url} alt={value?.title} css={styles.imagePreview} />
               <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
                 <Button
                   variant="secondary"
+                  size={size}
                   onClick={(event) => {
                     event.stopPropagation();
                     uploadHandler();
@@ -87,6 +92,7 @@ const ImageInput = ({
                 </Button>
                 <Button
                   variant="text"
+                  size={size}
                   onClick={(event) => {
                     event.stopPropagation();
                     clearHandler();
@@ -106,7 +112,7 @@ const ImageInput = ({
 export default ImageInput;
 
 const styles = {
-  emptyMedia: css`
+  emptyMedia: (size: ImageInputSize) => css`
     width: 100%;
     height: 168px;
     display: flex;
@@ -119,6 +125,11 @@ const styles = {
     background-color: ${colorTokens.bg.white};
     overflow: hidden;
     cursor: pointer;
+
+    ${size === 'small' &&
+    css`
+      width: 168px;
+    `}
 
     svg {
       color: ${colorTokens.icon.default};
@@ -135,7 +146,7 @@ const styles = {
     ${typography.small()};
     color: ${colorTokens.text.subdued};
   `,
-  previewWrapper: css`
+  previewWrapper: (size: ImageInputSize) => css`
     width: 100%;
     height: 168px;
     border: 1px solid ${colorTokens.stroke.default};
@@ -143,6 +154,11 @@ const styles = {
     overflow: hidden;
     position: relative;
     background-color: ${colorTokens.bg.white};
+
+    ${size === 'small' &&
+    css`
+      width: 168px;
+    `}
 
     &:hover {
       [data-hover-buttons-wrapper] {

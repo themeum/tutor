@@ -142,6 +142,17 @@ class Assets {
 			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' ),
 		);
 
+		/**
+		 * Get only required options.
+		 *
+		 * @since 3.0.0
+		 */
+		$required_options = array(
+			'monetize_by',
+		);
+
+		$tutor_settings = Options_V2::get_only( $required_options );
+
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => get_home_url(),
@@ -170,6 +181,7 @@ class Assets {
 			'course_post_type'             => tutor()->course_post_type,
 			'tutor_currency'               => $tutor_currency,
 			'local'                        => get_locale(),
+			'settings'                     => $tutor_settings,
 		);
 	}
 
