@@ -80,7 +80,7 @@ class PaypalConfig extends Config implements ConfigContract {
 	public function __construct() {
 		parent::__construct();
 
-		$settings = Settings::get_payment_gateway_settings( 'paypal' );
+		$settings = Settings::get_payment_gateway_settings( $this->name );
 
 		$config_keys = $this->get_config_keys();
 		foreach ( $config_keys as $key ) {
