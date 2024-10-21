@@ -1458,10 +1458,13 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 						$active_gateways['manual'][ $key ] = array(
 							'name'  => $gateway->name,
 							'label' => $gateway->label,
+							'icon'  => $gateway->icon ?? '',
 						);
 
 						foreach ( $gateway->fields as $field ) {
-							$active_gateways['manual'][ $key ][ $field->name ] = $field->value;
+							if ( in_array( $field->name, array( 'additional_details', 'payment_instructions' ), true ) ) {
+								$active_gateways['manual'][ $key ][ $field->name ] = $field->value;
+							}
 						}
 					}
 				}
