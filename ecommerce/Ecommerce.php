@@ -53,6 +53,7 @@ class Ecommerce {
 		add_filter( 'tutor_monetization_options', array( $this, 'add_monetization_option' ) );
 
 		new Settings();
+		new Tax();
 		// Include currency file.
 		require_once tutor()->path . 'ecommerce/currency.php';
 
@@ -72,7 +73,6 @@ class Ecommerce {
 		new HooksHandler();
 		new EmailController();
 		new PaymentHandler();
-		new Tax();
 	}
 
 	/**
