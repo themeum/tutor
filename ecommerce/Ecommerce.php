@@ -170,6 +170,11 @@ class Ecommerce {
 	 * @return bool
 	 */
 	public static function is_payment_gateway_configured( $gateway_slug ) {
+		$payment_settings = Settings::get_payment_gateway_settings( $gateway_slug );
+		if ( isset( $payment_settings['is_manual'] ) && $payment_settings['is_manual'] ) {
+			return true;
+		}
+
 		$gateway_ref = self::payment_gateways_with_ref( $gateway_slug );
 		if ( $gateway_ref ) {
 			try {
