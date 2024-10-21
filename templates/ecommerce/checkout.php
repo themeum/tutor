@@ -65,7 +65,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
 						</h5>
-						<div class="tutor-checkout-payment-options tutor-mb-40">
+						<div class="tutor-checkout-payment-options tutor-mb-24">
 							<input type="hidden" name="payment_type">
 							<?php
 							$payment_gateways = tutor_get_all_active_payment_gateways();
@@ -82,7 +82,9 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 										<label class="tutor-checkout-payment-item" data-payment-type="automate">
 											<input type="radio" name="payment_method" value="<?php echo esc_attr( $key ); ?>" class="tutor-form-check-input" required>
 											<div class="tutor-payment-item-content">
+												<?php if ( ! empty( $icon ) ) : ?>
 												<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
+												<?php endif; ?>
 												<?php echo esc_html( $label ); ?>
 											</div>
 										</label>
@@ -92,11 +94,14 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 								// Show manual payment for only regular order.
 								if ( ! $plan_id ) {
 									foreach ( $payment_gateways['manual'] as $gateway ) {
-										list( $label, $additional_details, $payment_instructions ) = array_values( $gateway );
+										list( $name, $label, $icon, $additional_details, $payment_instructions ) = array_values( $gateway );
 										?>
-										<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $label ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
-											<input type="radio" value="<?php echo esc_attr( $label ); ?>" name="payment_method" class="tutor-form-check-input" required>
+										<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
+											<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input" required>
 											<div class="tutor-payment-item-content">
+												<?php if ( ! empty( $icon ) ) : ?>
+												<img src ="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
+												<?php endif; ?>
 												<?php echo esc_html( $label ); ?>
 											</div>
 										</label>
@@ -148,7 +153,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 								list( $alert, $message ) = array_values( $pay_now_alert_msg );
 								?>
 								<div class="tutor-alert tutor-<?php echo esc_attr( $alert ); ?>">
-									<div class="tutor-color-success"><?php echo esc_html( $message ); ?></div>
+									<div class="tutor-color-<?php echo esc_attr( $alert ); ?>"><?php echo esc_html( $message ); ?></div>
 								</div>
 							<?php endif; ?>
 

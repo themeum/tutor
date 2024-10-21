@@ -98,11 +98,12 @@ $subtotal        = 0;
 					</div>
 				</div>
 				<?php
+				$is_tax_configured        = Tax::is_tax_configured();
 				$is_tax_included_in_price = Tax::is_tax_included_in_price();
 				$tax_rate                 = Tax::get_user_tax_rate();
 				$tax_amount               = Tax::calculate_tax( $subtotal, $tax_rate );
 				$grand_total              = $subtotal;
-				$show_tax_incl_text       = Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price;
+				$show_tax_incl_text       = $is_tax_configured && $tax_rate > 0 && $is_tax_included_in_price;
 
 				if ( ! $is_tax_included_in_price ) {
 					$grand_total += $tax_amount;
@@ -116,7 +117,7 @@ $subtotal        = 0;
 								<div><?php esc_html_e( 'Subtotal:', 'tutor' ); ?></div>
 								<div><?php tutor_print_formatted_price( $subtotal ); ?></div>
 							</div>
-							<?php if ( ! $is_tax_included_in_price ) : ?>
+							<?php if ( $is_tax_configured && $tax_rate > 0 && ! $is_tax_included_in_price ) : ?>
 							<div class="tutor-cart-summery-item">
 								<div><?php esc_html_e( 'Tax:', 'tutor' ); ?></div>
 								<div><?php tutor_print_formatted_price( $tax_amount ); ?></div>
@@ -129,7 +130,7 @@ $subtotal        = 0;
 								<div><?php tutor_print_formatted_price( $grand_total ); ?></div>
 							</div>
 							<?php
-							if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) :
+							if ( $is_tax_configured && $tax_rate > 0 && $is_tax_included_in_price ) :
 								?>
 									<div class="tutor-text-right tutor-fs-7 tutor-color-muted tutor-mb-40">
 								<?php
