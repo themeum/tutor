@@ -60,7 +60,7 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
-          <Button type="submit" size="small" variant="WP" loading={markAsPaidMutation.isPending}>
+          <Button type="submit" size="small" variant="primary" loading={markAsPaidMutation.isPending}>
             {__('Mark as Paid', 'tutor')}
           </Button>
         </div>
