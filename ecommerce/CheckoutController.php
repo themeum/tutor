@@ -747,9 +747,6 @@ class CheckoutController {
 
 		if ( $payment_gateway_class ) {
 			$gateway_instance = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
-			if ( ! Ecommerce::is_payment_gateway_configured( $payment_method ) ) {
-				throw new \Exception( Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
-			}
 
 			try {
 				add_filter(
