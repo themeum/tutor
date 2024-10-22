@@ -64,9 +64,11 @@ const AccordionItem = ({
       <Show
         when={data.contents.length > 0 && !isLoading}
         fallback={
-          <div css={css`margin-top: ${spacing[16]};`}>
-            <TopicContentSkeleton />
-          </div>
+          <Show when={isLoading}>
+            <div css={css`margin-top: ${spacing[16]};`}>
+              <TopicContentSkeleton />
+            </div>
+          </Show>
         }
       >
         <animated.div style={collapseAnimation}>

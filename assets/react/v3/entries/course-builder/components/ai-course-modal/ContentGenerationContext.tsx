@@ -46,8 +46,10 @@ export interface Errors {
   content: string;
   quiz: string;
 }
+
 interface ContextType {
   abortControllerRef: React.MutableRefObject<AbortController | null>;
+  abortStatus: boolean[];
   currentStep: CourseContentStep;
   setCurrentStep: React.Dispatch<React.SetStateAction<CourseContentStep>>;
   contents: CourseContent[];
@@ -59,8 +61,10 @@ interface ContextType {
   currentContent: CourseContent;
   currentLoading: Loading;
   currentErrors: Errors;
+  currentAbortStatus: boolean;
   errors: Errors[];
   updateErrors: (value: Partial<Errors>, forcePointer?: number) => void;
+  updateAbortStatus: (value: boolean, forcePointer?: number) => void;
   appendContent: () => void;
   removeContent: () => void;
   appendLoading: () => void;
@@ -95,6 +99,7 @@ export const defaultErrors: Errors = {
 
 const Context = React.createContext<ContextType>({
   abortControllerRef: { current: null },
+  abortStatus: [],
   currentStep: 'prompt',
   setCurrentStep: noop,
   contents: [defaultContent],
@@ -109,6 +114,7 @@ const Context = React.createContext<ContextType>({
   removeErrors: noop,
   currentContent: {} as CourseContent,
   currentErrors: {} as Errors,
+  currentAbortStatus: false,
   loading: [
     {
       title: false,
@@ -130,6 +136,7 @@ const Context = React.createContext<ContextType>({
   updateErrors: noop,
   currentLoading: {} as Loading,
   updateLoading: noop,
+  updateAbortStatus: noop,
 });
 export const useContentGenerationContext = () => useContext(Context);
 
@@ -156,6 +163,7 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
       quiz: '',
     },
   ]);
+  const [abortStatus, setAbortStatus] = useState<boolean[]>([]);
 
   const currentContent = useMemo(() => {
     return contents[pointer];
@@ -168,6 +176,10 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
   const currentErrors = useMemo(() => {
     return errors[pointer];
   }, [pointer, errors]);
+
+  const currentAbortStatus = useMemo(() => {
+    return abortStatus[pointer];
+  }, [pointer, abortStatus]);
 
   const updateContents = useCallback(
     (value: Partial<CourseContent>, forcePointer?: number) => {
@@ -229,6 +241,18 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
     [pointer],
   );
 
+  const updateAbortStatus = useCallback(
+    (value: boolean, forcePointer?: number) => {
+      const pointerValue = isDefined(forcePointer) ? forcePointer : pointer;
+      setAbortStatus((previous) => {
+        const copy = [...previous];
+        copy[pointerValue] = value;
+        return copy;
+      });
+    },
+    [pointer],
+  );
+
   const appendContent = useCallback(() => {
     setContents((previous) => [...previous, defaultContent]);
   }, []);
@@ -255,6 +279,7 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
 
   const providerValue = {
     abortControllerRef,
+    abortStatus,
     currentStep,
     setCurrentStep,
     contents,
@@ -265,9 +290,11 @@ const ContentGenerationContextProvider = ({ children }: { children: ReactNode })
     updateContents,
     updateLoading,
     updateErrors,
+    updateAbortStatus,
     currentContent,
     currentLoading,
     currentErrors,
+    currentAbortStatus,
     appendContent,
     removeContent,
     appendLoading,

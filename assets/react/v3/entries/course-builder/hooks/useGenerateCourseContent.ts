@@ -10,7 +10,8 @@ import {
 } from '@CourseBuilderServices/magic-ai';
 
 export const useGenerateCourseContent = () => {
-  const { abortControllerRef, updateContents, updateLoading, updateErrors } = useContentGenerationContext();
+  const { abortControllerRef, updateContents, updateLoading, updateErrors, updateAbortStatus } =
+    useContentGenerationContext();
   const generateCourseTitleMutation = useGenerateCourseContentMutation('title');
   const generateCourseDescriptionMutation = useGenerateCourseContentMutation('description');
   const generateCourseTopicsMutation = useGenerateCourseTopicNamesMutation();
@@ -157,6 +158,7 @@ export const useGenerateCourseContent = () => {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
       updateLoading({ title: false, content: false, description: false, quiz: false, topic: false });
+      updateAbortStatus(true);
     }
   };
 

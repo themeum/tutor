@@ -600,7 +600,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_requirements: courseDetails.course_requirements,
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1,
-    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type : '',
+    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type || '' : '',
     course_product_id:
       String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:

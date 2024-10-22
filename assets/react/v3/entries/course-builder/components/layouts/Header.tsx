@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { isBefore } from 'date-fns';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
@@ -203,6 +203,13 @@ const Header = () => {
 
     return items;
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (updateCourseMutation.isSuccess) {
+      form.reset(form.getValues());
+    }
+  }, [updateCourseMutation.isSuccess]);
 
   return (
     <div css={styles.wrapper}>

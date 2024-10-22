@@ -83,7 +83,6 @@ const CourseBasic = () => {
   );
 
   const currentAuthor = form.watch('post_author');
-  const postTitle = form.watch('post_title');
   const postStatus = form.watch('post_status');
   const isPostNameDirty = form.formState.dirtyFields.post_name;
 
@@ -252,8 +251,16 @@ const CourseBasic = () => {
       return;
     }
 
-    form.setValue('course_price', '0');
-    form.setValue('course_sale_price', '0');
+    const isCoursePriceDirty = form.formState.dirtyFields.course_price;
+    const isCourseSalePriceDirty = form.formState.dirtyFields.course_sale_price;
+
+    if (!isCoursePriceDirty) {
+      form.setValue('course_price', '0');
+    }
+
+    if (!isCourseSalePriceDirty) {
+      form.setValue('course_sale_price', '0');
+    }
   }, [wcProductDetailsQuery.data]);
 
   return (
@@ -484,21 +491,6 @@ const CourseBasic = () => {
           )}
         />
 
-        {/* <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.monetize_by === 'tutor'}>
-          <Controller
-            name="course_pricing_category"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormSelectInput
-                {...controllerProps}
-                label={__('Pricing Category', 'tutor')}
-                placeholder={__('Select pricing category', 'tutor')}
-                options={coursePricingCategoryOptions}
-                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-              />
-            )}
-          />
-        </Show> */}
         <Controller
           name="course_price_type"
           control={form.control}
