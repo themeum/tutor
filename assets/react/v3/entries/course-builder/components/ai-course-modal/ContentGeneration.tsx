@@ -11,12 +11,13 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { Addons } from '@Config/constants';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/magic-ai';
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { getObjectKeys, getObjectValues } from '@Utils/util';
@@ -87,9 +88,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     contents,
     loading,
     pointer,
+    abortStatus,
     currentContent,
     currentLoading,
     currentErrors,
+    currentAbortStatus,
     setPointer,
     appendContent,
     appendLoading,
@@ -226,13 +229,16 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 const isLoadingItem = getObjectValues(loading[index]).some((item) => item);
                 const hasErrors = getObjectValues(errors[index]).every((error) => error);
                 const itemErrors = errors[index];
+                const isAborted = abortStatus[index];
+                const hasAnyContent =
+                  (content.counts && getObjectValues(content.counts).some((count) => count > 0)) || false;
 
                 return (
                   <div
                     ref={index === pointer && !isCreateNewCourse ? boxRef : undefined}
                     css={styles.box({
                       deactivated: isDeactivated,
-                      hasError: getObjectValues(errors[index]).some((error) => error),
+                      hasError: getObjectValues(errors[index]).some((error) => error) || isAborted || hasAnyContent,
                       isActive: pointer === index && !isCreateNewCourse,
                     })}
                     key={index}
@@ -240,11 +246,10 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     <SVGIcon name="magicAiColorize" width={24} height={24} />
                     <div css={styles.boxContent}>
                       <h6>
-                        {isLoadingItem
-                          ? __('Generating course content', 'tutor')
-                          : hasErrors
-                            ? __('Error generating course content', 'tutor')
-                            : __('Generated course content', 'tutor')}
+                        {(isLoadingItem && __('Generating course content', 'tutor')) ||
+                          (isAborted && __('Generation aborted', 'tutor')) ||
+                          (hasErrors && __('Error generating course content', 'tutor')) ||
+                          __('Generated course content', 'tutor')}
                       </h6>
                       <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
                       <div css={styles.items}>
@@ -254,64 +259,94 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                             <Show
                               when={!hasErrors}
                               fallback={
-                                <For each={getObjectKeys(itemErrors)}>
-                                  {(error, index) => (
-                                    <div css={styles.item} key={index}>
-                                      <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
-                                      {loadingSteps[error].error_label}
-                                    </div>
-                                  )}
-                                </For>
+                                <Show when={!isAborted}>
+                                  <For each={getObjectKeys(itemErrors)}>
+                                    {(error, index) => (
+                                      <div css={styles.item} key={index}>
+                                        <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
+                                        {loadingSteps[error].error_label}
+                                      </div>
+                                    )}
+                                  </For>
+                                </Show>
                               }
                             >
                               <div css={styles.item}>
-                                <SVGIcon
-                                  name={content?.counts?.topics ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={content?.counts?.topics === 0}
-                                />
-                                {content?.counts?.topics
-                                  ? sprintf(__('%d Topics in total', 'tutor'), content.counts?.topics)
-                                  : loadingSteps.topic.error_label}
+                                {content?.counts?.topics ? (
+                                  <>
+                                    <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                    {sprintf(__('%d Topics in total', 'tutor'), content.counts?.topics)}
+                                  </>
+                                ) : (
+                                  (!isAborted && (
+                                    <>
+                                      <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
+                                      {loadingSteps.topic.error_label}
+                                    </>
+                                  )) ||
+                                  ''
+                                )}
                               </div>
+
                               <div css={styles.item}>
-                                <SVGIcon
-                                  name={content?.counts?.lessons ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={content?.counts?.lessons === 0}
-                                />
-                                {content?.counts?.lessons
-                                  ? sprintf(__('%d Lessons', 'tutor'), content.counts?.lessons)
-                                  : __('Error generating lessons.', 'tutor')}
+                                {content?.counts?.lessons ? (
+                                  <>
+                                    <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                    {sprintf(__('%d Lessons', 'tutor'), content.counts?.lessons)}
+                                  </>
+                                ) : (
+                                  (!isAborted && (
+                                    <>
+                                      <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
+                                      {__('Error generating lessons.', 'tutor')}
+                                    </>
+                                  )) ||
+                                  ''
+                                )}
                               </div>
+
                               <div css={styles.item}>
-                                <SVGIcon
-                                  name={content?.counts?.quizzes ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={content?.counts?.quizzes === 0}
-                                />
-                                {content?.counts?.quizzes
-                                  ? sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)
-                                  : __('Error generating quizzes.', 'tutor')}
+                                {content?.counts?.quizzes ? (
+                                  <>
+                                    <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                    {sprintf(__('%d Quizzes', 'tutor'), content.counts?.quizzes)}
+                                  </>
+                                ) : (
+                                  (!isAborted && (
+                                    <>
+                                      <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
+                                      {__('Error generating quizzes.', 'tutor')}
+                                    </>
+                                  )) ||
+                                  ''
+                                )}
                               </div>
-                              <div css={styles.item}>
-                                <SVGIcon
-                                  name={content?.counts?.assignments ? 'checkFilledWhite' : 'crossCircle'}
-                                  width={24}
-                                  height={24}
-                                  data-check-icon
-                                  data-error={content?.counts?.assignments === 0}
-                                />
-                                {content?.counts?.assignments
-                                  ? sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)
-                                  : __('Error generating assignments.', 'tutor')}
-                              </div>
+
+                              <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
+                                <div css={styles.item}>
+                                  <SVGIcon
+                                    name={content?.counts?.assignments ? 'checkFilledWhite' : 'crossCircle'}
+                                    width={24}
+                                    height={24}
+                                    data-check-icon
+                                    data-error={content?.counts?.assignments === 0}
+                                  />
+                                  {content?.counts?.assignments ? (
+                                    <>
+                                      <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
+                                      {sprintf(__('%d Assignments', 'tutor'), content.counts?.assignments)}
+                                    </>
+                                  ) : (
+                                    (!isAborted && (
+                                      <>
+                                        <SVGIcon name="crossCircle" width={24} height={24} data-check-icon data-error />
+                                        {__('Error generating assignments.', 'tutor')}
+                                      </>
+                                    )) ||
+                                    ''
+                                  )}
+                                </div>
+                              </Show>
                             </Show>
                           }
                         >
@@ -354,12 +389,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                             }}
                           </For>
                         </Show>
-                        <button
-                          type="button"
-                          css={styles.overlayButton}
-                          onClick={() => setPointer(index)}
-                          disabled={isLoading || pointer === index}
-                        />
                       </div>
 
                       <div css={styles.boxFooter}>
@@ -392,6 +421,19 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                         </MagicButton>
                       </div>
                     </div>
+
+                    <button
+                      type="button"
+                      css={styles.overlayButton({
+                        hasAnyContent: hasAnyContent,
+                      })}
+                      onClick={() => {
+                        if (hasAnyContent) {
+                          setPointer(index);
+                        }
+                      }}
+                      disabled={isLoading || pointer === index}
+                    />
                   </div>
                 );
               }}
@@ -401,7 +443,8 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
               when={
                 !isLoading &&
                 !isCreateNewCourse &&
-                !(currentContent?.topics.every((topic) => topic.contents.length) && currentContent.topics.length)
+                !(currentContent?.topics.every((topic) => topic.contents.length) && currentContent.topics.length) &&
+                !currentAbortStatus
               }
             >
               <Alert icon="warning" type="danger">
@@ -464,15 +507,28 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <div css={styles.rightFooter}>
-            <MagicButton
-              variant="primary_outline"
-              onClick={() => {
-                cancelGeneration();
-                onClose();
-              }}
+            <Show
+              when={isLoading}
+              fallback={
+                <MagicButton
+                  variant="primary_outline"
+                  onClick={() => {
+                    onClose();
+                  }}
+                >
+                  {__('Cancel', 'tutor')}
+                </MagicButton>
+              }
             >
-              {__('Cancel', 'tutor')}
-            </MagicButton>
+              <MagicButton
+                variant="primary_outline"
+                onClick={() => {
+                  cancelGeneration();
+                }}
+              >
+                {__('Stop Generation', 'tutor')}
+              </MagicButton>
+            </Show>
             <MagicButton
               variant="primary"
               disabled={isAppendingCourseNotAllowed}
@@ -568,6 +624,7 @@ const styles = {
 		display: flex;
 		gap: ${spacing[12]};
 		transition: border 0.3s ease;
+    position: relative;
 		
 		svg {
 			flex-shrink: 0;
@@ -783,13 +840,24 @@ const styles = {
     color: ${colorTokens.text.error};
     margin-inline: ${spacing[96]};
   `,
-  overlayButton: css`
+  overlayButton: ({
+    hasAnyContent,
+  }: {
+    hasAnyContent: boolean;
+  }) => css`
     ${styleUtils.resetButton};
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+
+    ${
+      !hasAnyContent &&
+      css`
+        cursor: default;
+      `
+    }
 
     :disabled {
       cursor: default;
