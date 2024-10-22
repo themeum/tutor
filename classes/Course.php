@@ -1230,6 +1230,7 @@ class Course extends Tutor_Base {
 
 		do_action( 'tutor_course_builder_before_wp_editor_load' );
 		wp_enqueue_script( 'wp-tinymce' );
+		wp_enqueue_script( 'mce-view' );
 		wp_enqueue_editor();
 
 		wp_enqueue_media();
