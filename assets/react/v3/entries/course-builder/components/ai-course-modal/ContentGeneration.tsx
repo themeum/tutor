@@ -324,13 +324,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
 
                               <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
                                 <div css={styles.item}>
-                                  <SVGIcon
-                                    name={content?.counts?.assignments ? 'checkFilledWhite' : 'crossCircle'}
-                                    width={24}
-                                    height={24}
-                                    data-check-icon
-                                    data-error={content?.counts?.assignments === 0}
-                                  />
                                   {content?.counts?.assignments ? (
                                     <>
                                       <SVGIcon name="checkFilledWhite" width={24} height={24} data-check-icon />
@@ -507,28 +500,14 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
           </div>
 
           <div css={styles.rightFooter}>
-            <Show
-              when={isLoading}
-              fallback={
-                <MagicButton
-                  variant="primary_outline"
-                  onClick={() => {
-                    onClose();
-                  }}
-                >
-                  {__('Cancel', 'tutor')}
-                </MagicButton>
-              }
+            <MagicButton
+              variant="primary_outline"
+              onClick={() => {
+                isLoading ? cancelGeneration() : onClose();
+              }}
             >
-              <MagicButton
-                variant="primary_outline"
-                onClick={() => {
-                  cancelGeneration();
-                }}
-              >
-                {__('Stop Generation', 'tutor')}
-              </MagicButton>
-            </Show>
+              {isLoading ? __('Stop Generation', 'tutor') : __('Cancel', 'tutor')}
+            </MagicButton>
             <MagicButton
               variant="primary"
               disabled={isAppendingCourseNotAllowed}
