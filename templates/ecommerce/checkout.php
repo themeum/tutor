@@ -100,7 +100,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 											<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input" required>
 											<div class="tutor-payment-item-content">
 												<?php if ( ! empty( $icon ) ) : ?>
-												<img src ="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
+												<img src ="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>
 												<?php endif; ?>
 												<?php echo esc_html( $label ); ?>
 											</div>
