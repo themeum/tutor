@@ -360,7 +360,7 @@ export const convertQuizFormDataToPayload = (
         ...(isAddonEnabled(Addons.CONTENT_DRIP) && {
           content_drip_settings: formData.quiz_option.content_drip_settings,
         }),
-        ...(isAddonEnabled(Addons.H5P_Integration) &&
+        ...(isAddonEnabled(Addons.H5P_INTEGRATION) &&
           formData.questions.every((question) => question.question_type === 'h5p') && {
             quiz_type: 'tutor_h5p_quiz',
           }),

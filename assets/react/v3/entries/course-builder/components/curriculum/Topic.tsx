@@ -581,7 +581,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                 <Show
                   when={!isTutorPro}
                   fallback={
-                    <Show when={isAddonEnabled(Addons.H5P_Integration)}>
+                    <Show when={isAddonEnabled(Addons.H5P_INTEGRATION)}>
                       <Button
                         variant="tertiary"
                         isOutlined

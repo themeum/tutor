@@ -251,7 +251,7 @@ const LessonModal = ({
                 />
 
                 <Show
-                  when={isTutorPro && isAddonEnabled(Addons.H5P_Integration)}
+                  when={isTutorPro && isAddonEnabled(Addons.H5P_INTEGRATION)}
                   fallback={
                     <Show when={!isTutorPro}>
                       <div css={styles.addH5PContentWrapper({ hasLessonId: !!lessonId })}>

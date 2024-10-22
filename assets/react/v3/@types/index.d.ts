@@ -51,6 +51,7 @@ declare global {
       };
       addons_data: {
         name: string;
+        base_name: string;
         description: string;
         url: string;
         is_enabled: number;
