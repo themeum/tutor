@@ -17,6 +17,7 @@ import generateImage2x from '@Images/pro-placeholders/generate-image-2x.webp';
 import generateImage from '@Images/pro-placeholders/generate-image.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
+import { SerializedStyles } from '@emotion/react';
 
 type MediaSize = {
   url: string;
@@ -43,6 +44,7 @@ type FormImageInputProps = {
   buttonText?: string;
   infoText?: string;
   generateWithAi?: boolean;
+  previewImageCss?: SerializedStyles;
   loading?: boolean;
   onClickAiButton?: () => void;
 } & FormControllerProps<Media | null>;
@@ -60,6 +62,7 @@ const FormImageInput = ({
   infoText,
   onChange,
   generateWithAi = false,
+  previewImageCss,
   loading,
   onClickAiButton,
 }: FormImageInputProps) => {
@@ -166,6 +169,7 @@ const FormImageInput = ({
               clearHandler={clearHandler}
               buttonText={buttonText}
               infoText={infoText}
+              previewImageCss={previewImageCss}
               loading={loading}
             />
           </div>

@@ -103,6 +103,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                       {...controllerProps}
                       label={field.label}
                       size="small"
+                      previewImageCss={styles.previewImage}
                       onChange={(value) => {
                         form.setValue('icon', value?.url ?? '');
                       }}
@@ -168,5 +169,10 @@ const styles = {
     gap: ${spacing[8]};
     padding: ${spacing[16]};
     box-shadow: ${shadow.dividerTop};
+  `,
+  previewImage: css`
+    img {
+      object-fit: contain;
+    }
   `,
 };
