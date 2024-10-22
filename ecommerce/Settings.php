@@ -10,7 +10,9 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
+use Tutor\PaymentGateways\Configs\PaypalConfig;
 use Tutor\Traits\JsonResponse;
 
 /**
@@ -31,6 +33,8 @@ class Settings {
 
 		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
 		add_action( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
+		add_action( 'wp_ajax_tutor_payment_gateways', array( $this, 'ajax_tutor_payment_gateways' ) );
+
 	}
 
 	/**
@@ -390,5 +394,90 @@ class Settings {
 
 		$settings = self::get_payment_settings();
 		$this->json_response( __( 'Success', 'tutor' ), $settings );
+	}
+
+	/**
+	 * Get tutor pro payment gateways
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void send wp_json response
+	 */
+	public function ajax_tutor_payment_gateways() {
+		tutor_utils()->checking_nonce();
+		tutor_utils()->check_current_user_capability();
+
+		try {
+			$payment_gateways = array();
+
+			$default_gateway = array(
+				'name'                 => 'paypal',
+				'label'                => 'Paypal',
+				'is_installed'         => true,
+				'is_active'            => true,
+				'icon'                 => tutor()->plugin_url . 'assets/images/paypal.svg',
+				'support_subscription' => true,
+				'fields'               => self::get_paypal_config_fields(),
+			);
+
+			$payment_gateways[] = $default_gateway;
+
+			$this->json_response( __( 'Success', 'tutor' ), apply_filters( 'tutor_payment_gateways', $payment_gateways ) );
+		} catch ( \Throwable $th ) {
+			$this->json_response( $th->getMessage(), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+	}
+
+	/**
+	 * Get paypal config keys
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_paypal_config_keys() {
+		return array(
+			'environment'    => 'select',
+			'merchant_email' => 'text',
+			'client_id'      => 'secret_key',
+			'secret_id'      => 'secret_key',
+			'webhook_id'     => 'secret_key',
+		);
+	}
+
+	/**
+	 * Get config fields
+	 *
+	 * @since 3.0.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_paypal_config_fields() {
+		$config_keys   = self::get_paypal_config_keys();
+		$config_fields = array();
+
+		foreach ( $config_keys as $key => $type ) {
+			if ( 'environment' === $key ) {
+				$config_fields[] = array(
+					'name'    => $key,
+					'label'   => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'type'    => $type,
+					'options' => array(
+						'test' => __( 'Test', 'tutor' ),
+						'live' => __( 'Live', 'tutor' ),
+					),
+					'value'   => 'test',
+				);
+			} else {
+				$config_fields[] = array(
+					'name'  => $key,
+					'type'  => $type,
+					'label' => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'value' => '',
+				);
+			}
+		}
+
+		return $config_fields;
 	}
 }

@@ -4,6 +4,7 @@ namespace Tutor\PaymentGateways\Configs;
 
 use Ollyo\PaymentHub\Contracts\Payment\ConfigContract;
 use Ollyo\PaymentHub\Payments\Paypal\Config;
+use phpDocumentor\Reflection\Types\Self_;
 use Tutor\Ecommerce\Settings;
 
 /**
@@ -168,12 +169,6 @@ class PaypalConfig extends Config implements ConfigContract {
 	 * @return array
 	 */
 	private function get_config_keys() {
-		return array(
-			'environment',
-			'merchant_email',
-			'client_id',
-			'secret_id',
-			'webhook_id',
-		);
+		return array_keys( Settings::get_paypal_config_keys() );
 	}
 }
