@@ -105,6 +105,7 @@ const styles = {
   dripWrapper: css`
     background-color: ${colorTokens.background.white};
     padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[32]};
+    min-height: 400px;
   `,
   dripTitle: css`
     ${typography.body('medium')};
