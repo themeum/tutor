@@ -85,7 +85,7 @@ class PaypalGateway extends GatewayBase {
 	 *
 	 * @return string
 	 */
-	public function get_autoload_file() {
+	public static function get_autoload_file() {
 		return tutor()->path . 'ecommerce/PaymentGateways/Paypal/vendor/autoload.php';
 	}
 }

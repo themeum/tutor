@@ -1433,46 +1433,74 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @return array [ automate =>[], manual => [] ]
+		 * @return array
 		 */
 		function tutor_get_all_active_payment_gateways() {
-			$active_gateways = array(
-				'automate' => array(),
-				'manual'   => array(),
-			);
+			$payment_settings = Settings::get_payment_settings();
+			$payment_methods  = ! empty( $payment_settings['payment_methods'] ) ? $payment_settings['payment_methods'] : array();
 
-			foreach ( Settings::get_default_automate_payment_gateways() as $k => $gateway ) {
-				list( $label, $is_active, $icon ) = array_values( $gateway );
-				if ( $is_active ) {
-					$active_gateways['automate'][ $k ] = array(
-						'label' => $label,
-						'icon'  => $icon,
-					);
+			$active_gateways = array();
+
+			foreach ( $payment_methods as $method ) {
+				$is_active = $method['is_active'] ?? false;
+				$is_manual = $method['is_manual'] ?? false;
+				if ( ! $is_active ) {
+					continue;
 				}
-			}
 
-			$manual_gateways = tutor_get_manual_payment_gateways();
-			if ( is_array( $manual_gateways ) && count( $manual_gateways ) ) {
-				foreach ( $manual_gateways as $key => $gateway ) {
-					if ( 1 === (int) $gateway->is_active ) {
-						$active_gateways['manual'][ $key ] = array(
-							'name'  => $gateway->name,
-							'label' => $gateway->label,
-							'icon'  => $gateway->icon ?? '',
-						);
+				$fields = $method['fields'];
+				unset( $method['fields'] );
 
-						foreach ( $gateway->fields as $field ) {
-							if ( in_array( $field->name, array( 'additional_details', 'payment_instructions' ), true ) ) {
-								$active_gateways['manual'][ $key ][ $field->name ] = $field->value;
-							}
+				$gateway = $method;
+				if ( $is_manual ) {
+					foreach ( $fields as $field ) {
+						if ( 'payment_instructions' === $field['name'] || 'additional_details' === $field['name'] ) {
+							$gateway[ $field['name'] ] = $field['value'];
 						}
 					}
 				}
+
+				$active_gateways[] = $gateway;
 			}
 
-			$active_gateways = apply_filters( 'tutor_active_payment_gateways', $active_gateways );
-
 			return $active_gateways;
+		}
+	}
+
+	if ( ! function_exists( 'tutor_get_supported_payment_gateways' ) ) {
+		/**
+		 * Get all supported gateways
+		 *
+		 * This function will return only subscription supported gateways if
+		 * plan id provided.
+		 *
+		 * @since 3.0.0
+		 *
+		 * @param int $plan_id Plan id.
+		 *
+		 * @return array
+		 */
+		function tutor_get_supported_payment_gateways( int $plan_id = 0 ) {
+			$payment_gateways = tutor_get_all_active_payment_gateways();
+
+			$supported_gateways = array();
+			foreach ( $payment_gateways as $gateway ) {
+				$support_subscription = $gateway['support_subscription'] ?? false;
+
+				if ( $plan_id && ! $support_subscription ) {
+					continue;
+				}
+
+				$supported_gateways[] = array(
+					'name'                 => $gateway['name'] ?? '',
+					'label'                => $gateway['label'] ?? '',
+					'icon'                 => $gateway['icon'] ?? '',
+					'support_subscription' => $gateway['support_subscription'] ?? '',
+					'is_manual'            => $gateway['is_manual'] ?? '',
+				);
+			}
+
+			return $supported_gateways;
 		}
 	}
 

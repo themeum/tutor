@@ -69,50 +69,52 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 							<input type="hidden" name="payment_type">
 							<?php
 							$payment_gateways = tutor_get_all_active_payment_gateways();
-							if ( empty( $payment_gateways['automate'] ) && empty( $payment_gateways['manual'] ) ) {
+							if ( empty( $payment_gateways ) ) {
 								?>
 								<div class="tutor-alert tutor-warning">
 									<?php esc_html_e( 'No payment method has been configured. Please contact the site administrator.', 'tutor' ); ?>
 								</div>
 								<?php
 							} else {
-								foreach ( $payment_gateways['automate'] as $key => $gateway ) {
-									list( $label, $icon ) = array_values( $gateway );
-									?>
-										<label class="tutor-checkout-payment-item" data-payment-type="automate">
-											<input type="radio" name="payment_method" value="<?php echo esc_attr( $key ); ?>" class="tutor-form-check-input" required>
-											<div class="tutor-payment-item-content">
-												<?php if ( ! empty( $icon ) ) : ?>
-												<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
-												<?php endif; ?>
-												<?php echo esc_html( $label ); ?>
-											</div>
-										</label>
-									<?php
-								}
+								$supported_gateways = tutor_get_supported_payment_gateways( $plan_id );
 
-								// Show manual payment for only regular order.
-								if ( ! $plan_id ) {
-									foreach ( $payment_gateways['manual'] as $gateway ) {
-										list( $name, $label, $icon, $additional_details, $payment_instructions ) = array_values( $gateway );
-										?>
-										<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ); ?>">
+								if ( empty( $supported_gateways ) ) {
+									?>
+
+									<div class="tutor-alert tutor-warning">
+										<?php esc_html_e( 'No payment method found. Please contact the site administrator.', 'tutor' ); ?>
+									</div>
+									<?php
+								} else {
+									foreach ( $supported_gateways as $gateway ) {
+										list( 'is_manual' => $is_manual, 'name' => $name, 'label' => $label, 'icon' => $icon ) = $gateway;
+
+										if ( $is_manual ) {
+											?>
+										<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ?? '' ); ?>">
 											<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input" required>
 											<div class="tutor-payment-item-content">
 												<?php if ( ! empty( $icon ) ) : ?>
-												<img src ="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $key ); ?>"/>
+												<img src ="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>
 												<?php endif; ?>
 												<?php echo esc_html( $label ); ?>
 											</div>
 										</label>
-										<?php
+											<?php
+										} else {
+											?>
+										<label class="tutor-checkout-payment-item" data-payment-type="automate">
+											<input type="radio" name="payment_method" value="<?php echo esc_attr( $name ); ?>" class="tutor-form-check-input" required>
+											<div class="tutor-payment-item-content">
+												<?php if ( ! empty( $icon ) ) : ?>
+												<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>
+												<?php endif; ?>
+												<?php echo esc_html( $label ); ?>
+											</div>
+										</label>
+											<?php
+										}
 									}
-								} elseif ( empty( $payment_gateways['automate'] ) ) {
-									?>
-									<div class="tutor-alert tutor-warning">
-										<?php esc_html_e( 'No payment method supporting subscriptions has been configured. Please contact the site administrator.', 'tutor' ); ?>
-									</div>
-									<?php
 								}
 							}
 							?>

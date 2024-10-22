@@ -438,9 +438,9 @@ class CheckoutController {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
 
-		if ( ! Ecommerce::is_payment_gateway_configured( $payment_method ) ) {
-			array_push( $errors, Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
-		}
+		// if ( ! Ecommerce::is_payment_gateway_configured( $payment_method ) ) {
+		// 	array_push( $errors, Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
+		// }
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
@@ -746,9 +746,8 @@ class CheckoutController {
 								: null;
 
 		if ( $payment_gateway_class ) {
-			$gateway_instance = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
-
 			try {
+
 				add_filter(
 					'tutor_ecommerce_webhook_url',
 					function ( $url ) use ( $payment_method ) {
@@ -771,6 +770,8 @@ class CheckoutController {
 						return $args;
 					}
 				);
+
+				$gateway_instance = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
 				$gateway_instance->setup_payment_and_redirect( $payment_data );
 			} catch ( \Throwable $th ) {
 				throw $th;

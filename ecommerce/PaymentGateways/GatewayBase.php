@@ -65,8 +65,16 @@ abstract class GatewayBase {
 	public function __construct() {
 		// Getting autoload file from concrete gateway class.
 		$autoload_file = $this::get_autoload_file();
-		if ( file_exists( $autoload_file ) ) {
-			require_once $autoload_file;
+		if ( is_array( $autoload_file ) ) {
+			foreach ( $autoload_file as $file ) {
+				if ( file_exists( $file ) ) {
+					require_once $file;
+				}
+			}
+		} else {
+			if ( file_exists( $autoload_file ) ) {
+				require_once $autoload_file;
+			}
 		}
 
 		$this->payment = ( new PaymentHub( $this->get_payment_class(), $this->get_config_class() ) )->make();
