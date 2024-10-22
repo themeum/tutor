@@ -502,7 +502,7 @@ class QueryHelper {
 			if ( is_array( $value ) ) {
 				continue;
 			}
-			$value = sanitize_text_field( $value );
+			$value = esc_sql( sanitize_text_field( $value ) );
 			$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
 			$set .= ",";
 		}
