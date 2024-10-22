@@ -1,6 +1,6 @@
 import Show from '@/v3/shared/controls/Show';
 import Button from '@Atoms/Button';
-import { colorPalate, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { ReactNode } from 'react';
@@ -96,7 +96,7 @@ const styles = {
   `,
   content: css`
     ${typography.body()};
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.hints};
   `,
   buttonWrapper: css`
     margin-top: ${spacing[32]};

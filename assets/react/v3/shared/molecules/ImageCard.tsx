@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate } from '@Config/styles';
+import { borderRadius, colorTokens } from '@Config/styles';
 import productPlaceholder from '@Images/course-placeholder.png';
 import { css } from '@emotion/react';
 
@@ -17,10 +17,10 @@ const ImageCard = ({ name, path }: ImageProps) => {
 
 export const styles = {
 	imageCard: css`
-		background: ${colorPalate.surface.neutral.default};
+		background: ${colorTokens.background.default};
 		border-radius: ${borderRadius[6]};
 		overflow: hidden;
-		border: 1px solid ${colorPalate.border.neutral};
+		border: 1px solid ${colorTokens.stroke.divider};
 		position: relative;
 		display: flex;
 		align-items: center;

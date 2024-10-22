@@ -1,4 +1,4 @@
-import { colorPalate } from '@Config/styles';
+import { colorTokens } from '@Config/styles';
 import { css, keyframes } from '@emotion/react';
 
 const rotatorKeyframes = keyframes`
@@ -80,7 +80,7 @@ interface LoadingSpinnerProps {
   color?: string;
 }
 
-const LoadingSpinner = ({ size = 30, color = colorPalate.icon.disabled }: LoadingSpinnerProps) => {
+const LoadingSpinner = ({ size = 30, color = colorTokens.icon.disable.default }: LoadingSpinnerProps) => {
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg width={size} height={size} css={styles.svg} viewBox="0 0 86 86" xmlns="http://www.w3.org/2000/svg">
@@ -122,7 +122,7 @@ export const FullscreenLoadingSpinner = () => {
   );
 };
 
-export const GradientLoadingSpinner = ({ size = 24, color = colorPalate.icon.disabled }: LoadingSpinnerProps) => {
+export const GradientLoadingSpinner = ({ size = 24, color = colorTokens.icon.disable.default }: LoadingSpinnerProps) => {
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

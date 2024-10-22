@@ -1,4 +1,4 @@
-import { colorPalate, shadow, spacing } from '@Config/styles';
+import { colorTokens, shadow, spacing } from '@Config/styles';
 import { nanoid } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
@@ -96,8 +96,8 @@ const styles = {
 
     & + span::before {
       content: '';
-      background-color: ${colorPalate.basic.white};
-      border: 0.5px solid ${colorPalate.interactive.disabled};
+      background-color: ${colorTokens.background.white};
+      border: 0.5px solid ${colorTokens.stroke.default};
       border-radius: 3px;
       box-shadow: ${shadow.button};
 
@@ -111,13 +111,13 @@ const styles = {
       background-size: 10px 10px;
       background-position: center center;
 
-      background-color: ${colorPalate.basic.primary.default};
-      border: 0.5px solid ${colorPalate.basic.surface};
+      background-color: ${colorTokens.brand.blue};
+      border: 0.5px solid ${colorTokens.background.default};
 
       ${
         disabled &&
         css`
-        background-color: ${colorPalate.icon.disabled};
+        background-color: ${colorTokens.icon.disable};
       `
       }
     }
@@ -130,8 +130,8 @@ const styles = {
         background-repeat: no-repeat;
         background-size: 10px;
         background-position: center center;
-        background-color: ${colorPalate.basic.primary.default};
-        border: 0.5px solid ${colorPalate.basic.surface};
+        background-color: ${colorTokens.brand.blue};
+        border: 0.5px solid ${colorTokens.background.default};
       }
     `
     }

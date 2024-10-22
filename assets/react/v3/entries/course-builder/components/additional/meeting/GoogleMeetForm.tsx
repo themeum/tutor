@@ -16,7 +16,7 @@ import FormTimeInput from '@Components/fields/FormTimeInput';
 
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -314,7 +314,7 @@ const styles = {
     ${typography.caption('regular')};
     * > label {
       font-size: ${fontSize[15]};
-      color: ${colorPalate.text.default};
+      color: ${colorTokens.text.title};
     }
   `,
   formWrapper: css`

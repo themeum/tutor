@@ -4,7 +4,7 @@ import Button from '@Atoms/Button';
 import Checkbox from '@Atoms/CheckBox';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import { colorPalate, colorTokens, fontSize, fontWeight, spacing } from '@Config/styles';
+import { colorTokens, fontSize, fontWeight, spacing } from '@Config/styles';
 import Table, { type Column } from '@Molecules/Table';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -364,7 +364,7 @@ const styles = {
   nameWrapper: css`
     display: flex;
     gap: ${spacing[8]};
-    color: ${colorPalate.text.default};
+    color: ${colorTokens.text.primary};
     font-weight: ${fontWeight.medium};
   `,
   emoji: css`

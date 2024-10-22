@@ -7,7 +7,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
-import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 
@@ -168,7 +168,7 @@ const styles = {
     border-radius: ${borderRadius[6]};
     margin-right: ${spacing[8]};
     outline: none;
-    border: 1px solid ${colorPalate.border.default};
+    border: 1px solid ${colorTokens.stroke.default};
 
     :focus {
       ${styleUtils.inputFocus}

@@ -1,7 +1,7 @@
 import Button, { type ButtonIconPosition, type ButtonSize, type ButtonVariant } from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { MAX_FILE_SIZE } from '@Config/constants';
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import { getFileExtensionFromName } from '@Utils/util';
@@ -92,8 +92,8 @@ const FileUploader = ({
 const styles = {
   uploadButton: css`
     ${styleUtils.resetButton}
-    background: ${colorPalate.surface.neutral.default};
-    border: 1px dashed ${colorPalate.border.neutral};
+    background: ${colorTokens.background.default};
+    border: 1px dashed ${colorTokens.stroke.border};
     border-radius: ${borderRadius[8]};
     display: flex;
     flex-direction: column;
@@ -106,7 +106,7 @@ const styles = {
     display: none;
   `,
   text: css`
-    color: ${colorPalate.interactive.default};
+    color: ${colorTokens.text.subdued};
     ${typography.body()}
   `,
 };

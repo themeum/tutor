@@ -1,6 +1,5 @@
 import {
 	borderRadius,
-	colorPalate,
 	colorTokens,
 	containerMaxWidth,
 	fontFamily,
@@ -269,22 +268,6 @@ export const styleUtils = {
 		display: flex;
 		flex-direction: column;
 		gap: ${spacing[gap]};
-	`,
-  addAnotherOptionButton: css`
-		background: none;
-		border: none;
-		outline: none;
-		padding: 0;
-		margin: 0;
-		text-align: inherit;
-		font-family: ${fontFamily.sfProDisplay};
-		display: flex;
-		gap: ${spacing[8]};
-		align-items: end;
-		color: ${colorPalate.actions.primary.default};
-		:hover {
-			text-decoration: underline;
-		}
 	`,
   titleAliasWrapper: css`
 		display: flex;

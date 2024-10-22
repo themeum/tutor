@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorPalate, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import { parseNumberOnly } from '@Utils/util';
@@ -147,7 +147,7 @@ const styles = {
 
     ${isInlineLabel &&
     css`
-      color: ${colorPalate.text.default};
+      color: ${colorTokens.text.primary};
     `}
   `,
   inputWrapper: css`
@@ -163,7 +163,7 @@ const styles = {
       border-radius: ${borderRadius[5]};
       border: 1px solid ${colorTokens.stroke.default};
       padding: 0 ${spacing[32]} 0 ${spacing[12]};
-      color: ${colorPalate.text.default};
+      color: ${colorTokens.text.primary};
       appearance: textfield;
 
       :focus {
@@ -199,7 +199,7 @@ const styles = {
     top: 50%;
     left: ${spacing[8]};
     transform: translateY(-50%);
-    color: ${colorPalate.icon.default};
+    color: ${colorTokens.icon.default};
     line-height: 0;
   `,
 };

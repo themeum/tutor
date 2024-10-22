@@ -1,5 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorPalate, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
 import { Children, type ReactNode } from 'react';
@@ -44,8 +44,8 @@ const styles = {
     grid-template-columns: auto 80px auto;
     position: relative;
 
-    background-color: ${colorPalate.basic.white};
-    border: 1px solid ${colorPalate.border.neutral};
+    background-color: ${colorTokens.background.white};
+    border: 1px solid ${colorTokens.border.neutral};
     border-radius: ${borderRadius[5]};
     box-shadow: ${shadow.input};
 
@@ -64,10 +64,10 @@ const styles = {
     }
 
     :hover {
-      background-color: ${colorPalate.surface.selected.default};
+      background-color: ${colorTokens.background.hover};
 
       input {
-        background-color: ${colorPalate.surface.selected.default};
+        background-color: ${colorTokens.background.hover};
       }
 
       > [data-clear] {
@@ -90,11 +90,11 @@ const styles = {
     transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 
     svg {
-      color: ${colorPalate.icon.default};
+      color: ${colorTokens.icon.default};
     }
   `,
   fieldItemWrapper: ({ isLastChild }: { isLastChild: boolean }) => css`
-    border-left: 1px solid ${colorPalate.border.neutral};
+    border-left: 1px solid ${colorTokens.border.neutral};
     padding: 0 ${spacing[2]};
     ${styleUtils.flexCenter()};
 

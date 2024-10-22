@@ -1,7 +1,6 @@
-import Show from '@/v3/shared/controls/Show';
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import { colorPalate, fontSize, fontWeight, spacing } from '@Config/styles';
+import { colorTokens, fontSize, fontWeight, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -93,7 +92,7 @@ const styles = {
 
   checkboxSubText: css`
     font-size: ${fontSize[14]};
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.hints};
     line-height: ${spacing[24]};
     font-weight: ${fontWeight.regular};
     padding-left: 28px;

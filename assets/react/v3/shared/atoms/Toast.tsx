@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useTransition } from '@react-spring/web';
 import React, { type ReactNode, useCallback, useContext, useState } from 'react';
 
-import { borderRadius, colorPalate, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { AnimatedDiv } from '@Hooks/useAnimation';
 import { isBoolean } from '@Utils/types';
@@ -168,49 +168,49 @@ const styles = {
     padding: ${spacing[16]};
 
     svg > path {
-      color: ${colorPalate.basic.white};
+      color: ${colorTokens.icon.white};
     }
 
     ${
       type === 'dark' &&
       css`
-      background: ${colorPalate.basic.onSurface};
+      background: ${colorTokens.color.black.main};
     `
     }
     ${
       type === 'danger' &&
       css`
-      background: ${colorPalate.basic.critical};
+      background: ${colorTokens.design.error};
     `
     }
     ${
       type === 'success' &&
       css`
-      background: ${colorPalate.basic.success.default};
+      background: ${colorTokens.design.success};
     `
     }
     ${
       type === 'warning' &&
       css`
-      background: ${colorPalate.basic.warning.default};
+      background: ${colorTokens.color.warning[70]};
 
       h5 {
-        color: ${colorPalate.text.default};
+        color: ${colorTokens.text.primary};
       }
 
       svg > path {
-        color: ${colorPalate.text.default};
+        color: ${colorTokens.text.primary};
       }
     `
     }
   `,
   message: css`
     ${typography.body()};
-    color: ${colorPalate.basic.white};
+    color: ${colorTokens.text.white};
   `,
   timesIcon: css`
     path {
-      color: ${colorPalate.basic.white};
+      color: ${colorTokens.icon.white};
     }
   `,
 };

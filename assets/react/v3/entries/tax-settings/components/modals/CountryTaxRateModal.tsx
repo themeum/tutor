@@ -3,7 +3,7 @@ import { styleUtils } from '@/v3/shared/utils/style-utils';
 import Button from '@Atoms/Button';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import { colorPalate, shadow, spacing, zIndex } from '@Config/styles';
+import { colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { europeanUnionData, getStatesByCountryAsOptions, isEuropeanUnion } from '@Utils/countries';
 import { requiredRule } from '@Utils/validation';
@@ -155,7 +155,7 @@ const styles = {
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: ${colorPalate.surface.default};
+    background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     display: flex;
     padding: ${spacing[16]} ${spacing[20]};

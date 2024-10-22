@@ -1,5 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -90,15 +90,15 @@ const styles = {
 	`,
 	pageStatus: css`
 		${typography.body()}
-		color: ${colorPalate.text.neutral};
+		color: ${colorTokens.text.title};
 		min-width: 100px;
 	`,
 	paginationInput: css`
 		outline: 0;
-		border: 1px solid ${colorPalate.border.neutral};
+		border: 1px solid ${colorTokens.stroke.default};
 		border-radius: ${borderRadius[6]};
 		margin: 0 ${spacing[8]};
-		color: ${colorPalate.text.neutral};
+		color: ${colorTokens.text.subdued};
 		padding: 8px 12px;
 		width: 72px;
 
@@ -124,29 +124,29 @@ const styles = {
 	`,
 	paginationButton: css`
 		${styleUtils.resetButton};
-		background: ${colorPalate.basic.white};
-		color: ${colorPalate.icon.default};
+		background: ${colorTokens.background.white};
+		color: ${colorTokens.icon.default};
 		border-radius: ${borderRadius[6]};
 
 		height: 32px;
 		width: 32px;
 		display: grid;
 		place-items: center;
-		transition: background 0.2s ease-in-out, color 0.3s ease-in-out;
+		transition: background-color 0.2s ease-in-out, color 0.3s ease-in-out;
 
 		&:hover {
-			background: ${colorPalate.basic.primary.default};
+			background: ${colorTokens.background.default};
 
 			& > svg {
-				color: ${colorPalate.basic.white};
+				color: ${colorTokens.icon.brand};
 			}
 		}
 
 		&:disabled {
-			background: ${colorPalate.surface.disabled};
+			background: ${colorTokens.background.white};
 
 			& > svg {
-				color: ${colorPalate.icon.disabled};
+				color: ${colorTokens.icon.disable.default};
 			}
 		}
 	`,

@@ -4,7 +4,7 @@ import React, { type MouseEvent, type ReactNode, useRef } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
@@ -213,7 +213,7 @@ const styles = {
 
       &:active {
         color: ${colorTokens.text.error};
-        background-color: ${colorPalate.surface.critical.neutralPressed};
+        background-color: ${colorTokens.color.danger[40]};
 
         svg {
           color: ${colorTokens.icon.error};
