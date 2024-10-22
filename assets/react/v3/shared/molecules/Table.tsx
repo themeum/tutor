@@ -221,7 +221,7 @@ const styles = {
 		${
       isRounded &&
       css`
-			border: 1px solid ${colorTokens.stroke.neutral};
+			border: 1px solid ${colorTokens.stroke.divider};
 			border-radius: ${borderRadius[6]};
 		`
     }
