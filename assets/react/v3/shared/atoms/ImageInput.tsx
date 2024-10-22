@@ -169,7 +169,7 @@ const styles = {
   imagePreview: css`
     height: 100%;
     width: 100%;
-    object-fit: contain;
+    object-fit: cover;
   `,
   hoverPreview: css`
     display: flex;

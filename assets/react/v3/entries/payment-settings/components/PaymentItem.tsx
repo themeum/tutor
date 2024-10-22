@@ -180,6 +180,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                             {...controllerProps}
                             label={field.label}
                             size="small"
+                            previewImageCss={styles.previewImage}
                             onChange={(value) => {
                               form.setValue(`payment_methods.${paymentIndex}.icon`, value?.url ?? '');
                             }}
@@ -318,5 +319,10 @@ const styles = {
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
     color: ${colorTokens.icon.default};
+  `,
+  previewImage: css`
+    img {
+      object-fit: contain;
+    }
   `,
 };
