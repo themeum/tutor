@@ -15,7 +15,7 @@ export const getCourseId = () => {
 type Addon = `${Addons}`;
 
 export const isAddonEnabled = (addon: Addon) => {
-  return !!tutorConfig.addons_data.find((item) => item.name === addon)?.is_enabled;
+  return !!tutorConfig.addons_data.find((item) => item.base_name === addon)?.is_enabled;
 };
 
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
