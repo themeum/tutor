@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useDebounce } from '@Hooks/useDebounce';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -253,7 +253,7 @@ const styles = {
     border: 1px solid ${colorTokens.stroke.default};
     box-shadow: ${shadow.input};
     padding: ${spacing[8]} ${spacing[32]} ${spacing[8]} ${spacing[16]};
-    color: ${colorPalate.text.default};
+    color: ${colorTokens.text.primary};
     appearance: textfield;
 
     ${
@@ -345,7 +345,7 @@ const styles = {
       pointer-events: none;
 
       > button {
-        color: ${colorPalate.text.disabled};
+        color: ${colorTokens.text.disable};
       }
     `
     }
@@ -376,7 +376,7 @@ const styles = {
         left: 0;
         width: 3px;
         height: 100%;
-        background-color: ${colorPalate.actions.primary.default};
+        background-color: ${colorTokens.brand.blue};
         border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
       }
     `

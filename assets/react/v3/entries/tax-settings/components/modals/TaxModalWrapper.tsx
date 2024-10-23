@@ -1,5 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import { Breakpoint, borderRadius, colorPalate, shadow, spacing } from '@Config/styles';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -48,7 +48,7 @@ const styles = {
     height: 100%;
   `,
   container: css`
-    background: ${colorPalate.basic.white};
+    background: ${colorTokens.background.white};
     margin: ${spacing[24]};
     max-width: 1236px;
     box-shadow: ${shadow.modal};
@@ -66,7 +66,7 @@ const styles = {
     align-items: center;
     padding: ${spacing[12]} ${spacing[20]};
     width: 100%;
-    background-color: ${colorPalate.surface.selected.neutral};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
   `,
   closeButton: css`
     ${styleUtils.resetButton};
@@ -76,20 +76,20 @@ const styles = {
     width: 32px;
     height: 32px;
     border-radius: ${borderRadius.circle};
-    background-color: ${colorPalate.basic.white};
+    background-color: ${colorTokens.background.white};
 
     & > span {
       display: inline;
     }
 
     svg {
-      color: ${colorPalate.icon.default};
+      color: ${colorTokens.icon.default};
       transition: color 0.3s ease-in-out;
     }
 
     :hover {
       svg {
-        color: ${colorPalate.icon.hover};
+        color: ${colorTokens.icon.hover};
       }
     }
   `,

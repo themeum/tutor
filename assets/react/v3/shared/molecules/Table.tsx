@@ -1,6 +1,6 @@
 import SVGIcon from '@Atoms/SVGIcon';
 import Skeleton from '@Atoms/Skeleton';
-import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 import { getRandom, range } from '@Utils/util';
@@ -62,8 +62,8 @@ export interface TableProps<TableItem> {
 }
 
 const defaultColors = {
-  bodyRowSelected: colorPalate.surface.pressed,
-  bodyRowHover: colorPalate.surface.hover,
+  bodyRowSelected: colorTokens.background.active,
+  bodyRowHover: colorTokens.background.hover,
 };
 
 const Table = <TableItem,>({
@@ -221,7 +221,7 @@ const styles = {
 		${
       isRounded &&
       css`
-			border: 1px solid ${colorPalate.surface.neutral.hover};
+			border: 1px solid ${colorTokens.stroke.divider};
 			border-radius: ${borderRadius[6]};
 		`
     }
@@ -229,7 +229,7 @@ const styles = {
   headerWithIcon: css`
 		${styleUtils.resetButton};
 		${typography.body()};
-		color: ${colorPalate.text.neutral};
+		color: ${colorTokens.text.subdued};
 		display: flex;
 		gap: ${spacing[4]};
 		align-items: center;
@@ -250,15 +250,15 @@ const styles = {
       isStriped &&
       css`
 			&:nth-of-type(even) {
-				background-color: ${colorPalate.surface.pressed};
+				background-color: ${colorTokens.background.active};
 			}
 		`
     }
 	`,
   th: css`
 		${typography.body()};
-		background-color: ${colorPalate.surface.neutral.default};
-		color: ${colorPalate.text.neutral};
+		background-color: ${colorTokens.background.white};
+		color: ${colorTokens.text.primary};
 		padding: 0 ${spacing[16]};
 	`,
   bodyTr: ({ colors, isSelected, isRounded }: { colors: Colors; isSelected: boolean; isRounded: boolean }) => {

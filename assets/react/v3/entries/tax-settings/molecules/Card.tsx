@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { ReactNode } from 'react';
@@ -7,14 +7,14 @@ const styles = {
   wrapper: (hasBorder: boolean) => css`
     width: 100%;
     border-radius: ${borderRadius[6]};
-    background-color: ${colorPalate.basic.white};
+    background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
     ${
       hasBorder &&
       css`
       box-shadow: none;
-      border: 1px solid ${colorPalate.border.neutral};
+      border: 1px solid ${colorTokens.border.neutral};
     `
     }
   `,
@@ -60,7 +60,7 @@ const headerStyles = {
     ${
       !collapsed &&
       css`
-      border-bottom: 1px solid ${colorPalate.surface.neutral.hover};
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
     `
     }
   `,
@@ -71,7 +71,7 @@ const headerStyles = {
   `,
   subtitle: css`
     ${typography.body()};
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.hints};
   `,
   title: css`
     ${typography.heading6('medium')};

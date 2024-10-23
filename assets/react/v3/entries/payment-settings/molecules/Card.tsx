@@ -4,7 +4,7 @@ import { type ReactNode, useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorPalate, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
@@ -109,7 +109,7 @@ const styles = {
   wrapper: (hasBorder: boolean) => css`
     width: 100%;
     border-radius: ${borderRadius.card};
-    background-color: ${colorPalate.basic.white};
+    background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
     ${hasBorder &&

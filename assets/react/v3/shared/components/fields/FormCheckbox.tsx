@@ -1,5 +1,5 @@
 import AtomCheckbox from '@Atoms/CheckBox';
-import { colorPalate, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -57,7 +57,7 @@ export default FormCheckbox;
 const styles = {
   description: css`
     ${typography.body()}
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.subdued};
     padding-left: ${spacing[28]};
     margin-top: ${spacing[6]};
   `,

@@ -1,7 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInput from '@Components/fields/FormInput';
-import { colorPalate, shadow, spacing, zIndex } from '@Config/styles';
+import { colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
@@ -260,18 +260,18 @@ const styles = {
   `,
   dropdownButton: css`
     margin-left: auto;
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.subdued};
 
     &:hover {
       text-decoration: none;
-      color: ${colorPalate.text.neutral};
+      color: ${colorTokens.text.subdued};
     }
   `,
   buttonWrapper: css`
     position: absolute;
     bottom: 0;
     width: 100%;
-    background-color: ${colorPalate.surface.default};
+    background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     display: flex;
     padding: ${spacing[16]} ${spacing[20]};

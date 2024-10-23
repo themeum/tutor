@@ -1,6 +1,6 @@
 import Checkbox from '@Atoms/CheckBox';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
@@ -162,7 +162,7 @@ const styles = {
 	`,
   checkboxLabel: css`
 		${typography.body()};
-		color: ${colorPalate.text.neutral};
+		color: ${colorTokens.text.primary};
 	`,
   price: css`
 		display: flex;

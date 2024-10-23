@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, createRef, useEffect, useRef, useState } from 'react';
@@ -125,7 +125,7 @@ const styles = {
     position: absolute;
     left: ${property.left}px;
     bottom: 0;
-    background: ${colorPalate.actions.primary.default};
+    background: ${colorTokens.brand.blue};
     border-radius: ${borderRadius[4]} ${borderRadius[4]} 0 0;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 
@@ -184,10 +184,10 @@ const styles = {
     }
 
     &:disabled {
-      color: ${colorPalate.text.neutral};
+      color: ${colorTokens.text.disable};
 
       &::before {
-        background: ${colorPalate.text.neutral};
+        background: ${colorTokens.text.disable};
       }
     }
   `,
