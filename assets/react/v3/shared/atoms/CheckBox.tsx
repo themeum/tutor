@@ -130,7 +130,7 @@ const styles = {
 				background-repeat: no-repeat;
 				background-size: 10px;
 				background-position: center center;
-				background-color: ${colorTokens.brand.black};
+				background-color: ${colorTokens.brand.blue};
 				border: 0.5px solid ${colorTokens.stroke.white};
 			}
 		`}
