@@ -352,7 +352,6 @@ const CourseBasic = () => {
                 <FormInput
                   {...controllerProps}
                   label={__('Course Title', 'tutor')}
-                  maxLimit={255}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
