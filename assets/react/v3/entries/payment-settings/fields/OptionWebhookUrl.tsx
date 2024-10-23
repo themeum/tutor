@@ -2,9 +2,9 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-import Show from '@Controls/Show';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -29,14 +29,36 @@ const OptionWebhookUrl = ({
   const { showToast } = useToast();
 
   const handleCopyClick = () => {
-    try {
-      navigator.clipboard.writeText(field.value);
-      showToast({ type: 'success', message: __('Copied to clipboard', 'tutor') });
-    } catch (error) {
-      showToast({
-        type: 'danger',
-        message: __('Failed to copy: ', 'tutor') + error,
-      });
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard
+        .writeText(field.value)
+        .then(() => {
+          showToast({ type: 'success', message: __('Copied to clipboard', 'tutor') });
+        })
+        .catch((error) => {
+          showToast({
+            type: 'danger',
+            message: __('Failed to copy: ', 'tutor') + error,
+          });
+        });
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = field.value;
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        // if navigator.clipboard is not available, use document.execCommand('copy')
+        document.execCommand('copy');
+        showToast({ type: 'success', message: __('Copied to clipboard', 'tutor') });
+      } catch (error) {
+        showToast({
+          type: 'danger',
+          message: __('Failed to copy: ', 'tutor') + error,
+        });
+      } finally {
+        document.body.removeChild(textarea); // Clean up
+      }
     }
   };
 
