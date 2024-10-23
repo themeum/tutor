@@ -1,10 +1,11 @@
+import { copyToClipboard } from '@/v3/shared/utils/util';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-import Show from '@Controls/Show';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -28,10 +29,13 @@ const OptionWebhookUrl = ({
 }: OptionWebhookUrlProps) => {
   const { showToast } = useToast();
 
-  const handleCopyClick = () => {
+  const handleCopyClick = async () => {
     try {
-      navigator.clipboard.writeText(field.value);
-      showToast({ type: 'success', message: __('Copied to clipboard', 'tutor') });
+      await copyToClipboard(field.value);
+      showToast({
+        type: 'success',
+        message: __('Copied to clipboard', 'tutor'),
+      });
     } catch (error) {
       showToast({
         type: 'danger',
