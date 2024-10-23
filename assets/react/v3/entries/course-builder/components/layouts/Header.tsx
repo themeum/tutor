@@ -53,6 +53,7 @@ const Header = () => {
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
@@ -93,11 +94,20 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     if (courseId) {
-      updateCourseMutation.mutate({
+      const response = await updateCourseMutation.mutateAsync({
         course_id: Number(courseId),
         ...payload,
         post_status: determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility),
       });
+
+      if (
+        response.data &&
+        !isAdmin &&
+        isInstructor &&
+        tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on'
+      ) {
+        window.location.href = `${tutorConfig.tutor_frontend_dashboard_url}/my-courses`;
+      }
       return;
     }
 
