@@ -106,7 +106,7 @@ const Header = () => {
         isInstructor &&
         tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on'
       ) {
-        window.location.href = `${tutorConfig.tutor_frontend_dashboard_url}/my-courses`;
+        window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
       }
       return;
     }
