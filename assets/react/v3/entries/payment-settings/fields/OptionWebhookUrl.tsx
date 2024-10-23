@@ -1,3 +1,4 @@
+import { copyToClipboard } from '@/v3/shared/utils/util';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
@@ -28,37 +29,18 @@ const OptionWebhookUrl = ({
 }: OptionWebhookUrlProps) => {
   const { showToast } = useToast();
 
-  const handleCopyClick = () => {
-    if (navigator.clipboard && window.isSecureContext) {
-      navigator.clipboard
-        .writeText(field.value)
-        .then(() => {
-          showToast({ type: 'success', message: __('Copied to clipboard', 'tutor') });
-        })
-        .catch((error) => {
-          showToast({
-            type: 'danger',
-            message: __('Failed to copy: ', 'tutor') + error,
-          });
-        });
-    } else {
-      const textarea = document.createElement('textarea');
-      textarea.value = field.value;
-      document.body.appendChild(textarea);
-      textarea.select();
-
-      try {
-        // if navigator.clipboard is not available, use document.execCommand('copy')
-        document.execCommand('copy');
-        showToast({ type: 'success', message: __('Copied to clipboard', 'tutor') });
-      } catch (error) {
-        showToast({
-          type: 'danger',
-          message: __('Failed to copy: ', 'tutor') + error,
-        });
-      } finally {
-        document.body.removeChild(textarea); // Clean up
-      }
+  const handleCopyClick = async () => {
+    try {
+      await copyToClipboard(field.value);
+      showToast({
+        type: 'success',
+        message: __('Copied to clipboard', 'tutor'),
+      });
+    } catch (error) {
+      showToast({
+        type: 'danger',
+        message: __('Failed to copy: ', 'tutor') + error,
+      });
     }
   };
 
