@@ -94,17 +94,19 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     if (courseId) {
+      const determinedPostStatus = determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility);
       const response = await updateCourseMutation.mutateAsync({
         course_id: Number(courseId),
         ...payload,
-        post_status: determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility),
+        post_status: determinedPostStatus,
       });
 
       if (
         response.data &&
         !isAdmin &&
         isInstructor &&
-        tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on'
+        tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
+        ['publish', 'future'].includes(determinedPostStatus)
       ) {
         window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
       }
