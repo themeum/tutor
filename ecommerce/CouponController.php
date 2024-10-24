@@ -748,6 +748,33 @@ class CouponController extends BaseController {
 	}
 
 	/**
+	 * Manage coupon usage
+	 *
+	 * Store usage upon order completion
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return void
+	 */
+	public function store_coupon_usage( $order_id ) {
+		$order_model = ( new OrderModel() );
+
+		$order = $order_model->get_order_by_id( $order_id );
+		if ( $order ) {
+			if ( $order->coupon_amount > 0 && $order_model::ORDER_COMPLETED === $order->order_status ) {
+				// Store coupon usage.
+				$data = array(
+					'coupon_code' => $order->coupon_code,
+					'user_id'     => $order->user_id,
+				);
+				$this->model->store_coupon_usage( $data );
+			}
+		}
+	}
+
+	/**
 	 * Validate input data based on predefined rules.
 	 *
 	 * @since 3.0.0
