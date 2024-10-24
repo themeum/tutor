@@ -281,6 +281,7 @@ const WPEditor = ({
       css={styles.wrapper({
         isMinimal,
         isFocused,
+        isReadOnly: readonly,
       })}
     >
       <textarea ref={editorRef} id={editorId} defaultValue={value} />
@@ -294,9 +295,11 @@ const styles = {
   wrapper: ({
     isMinimal,
     isFocused,
+    isReadOnly,
   }: {
     isMinimal?: boolean;
     isFocused: boolean;
+    isReadOnly?: boolean;
   }) => css`
     flex: 1;
 
@@ -360,7 +363,7 @@ const styles = {
       isMinimal &&
       css`
         .mce-tinymce.mce-container {
-          border: 1px solid ${colorTokens.stroke.default};
+          border: ${!isReadOnly ? `1px solid ${colorTokens.stroke.default}` : 'none'};
           border-radius: ${borderRadius[6]};
 
           ${
