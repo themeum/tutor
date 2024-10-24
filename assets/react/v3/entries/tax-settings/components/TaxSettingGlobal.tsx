@@ -28,8 +28,8 @@ function TaxSettingGlobal() {
       <div>
         <Card>
           <CardHeader
-            title={__('Global tax settings', 'tutor')}
-            subtitle={__('Configure how tax is displayed and how it appears on your product listings.', 'tutor')}
+            title={__('Global Tax Settings', 'tutor')}
+            subtitle={__('Set how taxes are displayed and applied to your courses.', 'tutor')}
           />
           <div css={styles.radioGroupWrapper}>
             <div>
@@ -40,7 +40,6 @@ function TaxSettingGlobal() {
                   return (
                     <FormRadioGroup
                       {...controllerProps}
-                      label={__('How would you like to collect tax?', 'tutor')}
                       options={taxCollectionProcessOptions}
                       wrapperCss={styles.radioGroupWrapperCss}
                     />
@@ -63,7 +62,7 @@ function TaxSettingGlobal() {
                       <span css={styles.checkboxSubText}>
                         {__(
                           'Show prices with tax included, so customers see the final amount they’ll pay upfront',
-                          'tutor',
+                          'tutor'
                         )}
                       </span>
                     </div>

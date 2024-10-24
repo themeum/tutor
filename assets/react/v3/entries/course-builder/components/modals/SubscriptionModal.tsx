@@ -311,7 +311,7 @@ export default function SubscriptionModal({
                       setExpandedSubscriptionId(newId);
                     }}
                   >
-                    {__('Add Subscription', 'tutor')}
+                    {__('Add New Plan', 'tutor')}
                   </Button>
                 </div>
               </div>

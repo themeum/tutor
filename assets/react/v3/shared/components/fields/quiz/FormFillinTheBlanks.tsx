@@ -145,7 +145,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   <SVGIcon name="info" height={20} width={20} />
                   <p>
                     {__(
-                      'Please make sure to use the {dash} variable in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
+                      'Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
                       'tutor',
                     )}
                   </p>

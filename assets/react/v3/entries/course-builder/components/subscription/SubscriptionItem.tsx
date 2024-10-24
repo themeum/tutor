@@ -371,8 +371,8 @@ export default function SubscriptionItem({
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
-                    label={__('Repeat every', 'tutor')}
-                    placeholder={__('Repeat every', 'tutor')}
+                    label={__('Billing Interval', 'tutor')}
+                    placeholder={__('12', 'tutor')}
                     selectOnFocus
                     type="number"
                   />
@@ -432,7 +432,7 @@ export default function SubscriptionItem({
               control={form.control}
               name={`subscriptions.${index}.charge_enrollment_fee`}
               render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Charge enrolment fee', 'tutor')} />
+                <FormCheckbox {...controllerProps} label={__('Charge enrollment fee', 'tutor')} />
               )}
             />
 
@@ -444,7 +444,7 @@ export default function SubscriptionItem({
                   ...requiredRule(),
                   validate: (value) => {
                     if (Number(value) <= 0) {
-                      return __('Enrolment fee must be greater than 0', 'tutor');
+                      return __('Enrollment fee must be greater than 0', 'tutor');
                     }
                     return true;
                   },
@@ -452,9 +452,9 @@ export default function SubscriptionItem({
                 render={(controllerProps) => (
                   <FormInputWithContent
                     {...controllerProps}
-                    label={__('Enrolment fee', 'tutor')}
+                    label={__('Enrollment fee', 'tutor')}
                     content={tutor_currency?.symbol || '$'}
-                    placeholder={__('Enter enrolment fee', 'tutor')}
+                    placeholder={__('Enter enrollment fee', 'tutor')}
                     selectOnFocus
                     contentCss={styleUtils.inputCurrencyStyle}
                     type="number"

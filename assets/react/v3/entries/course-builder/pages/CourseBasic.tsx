@@ -336,7 +336,7 @@ const CourseBasic = () => {
           render={(controllerProps) => (
             <FormSelectInput
               {...controllerProps}
-              label={__('Visibility Status', 'tutor')}
+              label={__('Visibility', 'tutor')}
               placeholder={__('Select visibility status', 'tutor')}
               options={visibilityStatusOptions}
               leftIcon={<SVGIcon name="eye" width={32} height={32} />}
@@ -378,7 +378,7 @@ const CourseBasic = () => {
             <FormImageInput
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
-              buttonText={__('Upload Thumbnail', 'tutor')}
+              buttonText={__('Upload course thumbnail', 'tutor')}
               infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
               generateWithAi={!isTutorPro || isOpenAiEnabled}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
@@ -407,7 +407,7 @@ const CourseBasic = () => {
           render={(controllerProps) => (
             <FormRadioGroup
               {...controllerProps}
-              label={__('Price Type', 'tutor')}
+              label={__('Pricing Model', 'tutor')}
               options={coursePriceOptions}
               wrapperCss={styles.priceRadioGroup}
             />
@@ -549,19 +549,19 @@ const CourseBasic = () => {
                     margin-bottom: ${spacing[10]};
                   }
                 `}
-                label={__('Selling option', 'tutor')}
+                label={__('Purchase Options', 'tutor')}
                 options={[
                   {
-                    label: __('By subscription only', 'tutor'),
+                    label: __('Subscription only', 'tutor'),
                     value: 'subscription',
                   },
                   {
-                    label: __('By subscription & one-time purchase', 'tutor'),
-                    value: 'both',
+                    label: __('One-time purchase only', 'tutor'),
+                    value: 'one_time',
                   },
                   {
-                    label: __('By one-time purchase only', 'tutor'),
-                    value: 'one_time',
+                    label: __('Subscription & one-time purchase', 'tutor'),
+                    value: 'both',
                   },
                 ]}
               />

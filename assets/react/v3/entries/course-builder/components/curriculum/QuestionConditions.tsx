@@ -189,7 +189,7 @@ const QuestionConditions = () => {
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
-                label={__('Point For This Answer', 'tutor')}
+                label={__('Point For This Question', 'tutor')}
                 type="number"
                 isInlineLabel
                 placeholder="0"

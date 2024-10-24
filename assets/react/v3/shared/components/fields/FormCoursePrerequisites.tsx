@@ -133,7 +133,7 @@ const FormCoursePrerequisites = ({
                     emptyStateImage2x={notFound2x}
                     imageAltText={__('Illustration of a no course selected', 'tutor')}
                     title={__('No course selected', 'tutor')}
-                    description={__('Select a course to add as a prerequisite', 'tutor')}
+                    description={__('Select a course to add as a prerequisite.', 'tutor')}
                   />
                 </Show>
               }
