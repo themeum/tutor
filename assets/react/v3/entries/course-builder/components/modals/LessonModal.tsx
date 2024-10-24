@@ -206,7 +206,6 @@ const LessonModal = ({
                     label={__('Lesson Name', 'tutor')}
                     placeholder={__('Enter Lesson Name', 'tutor')}
                     helpText={__('Lesson titles are displayed publicly wherever required.', 'tutor')}
-                    maxLimit={245}
                     selectOnFocus
                     isClearable
                   />

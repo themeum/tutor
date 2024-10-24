@@ -217,7 +217,6 @@ const AssignmentModal = ({
                     {...controllerProps}
                     label={__('Assignment Title', 'tutor')}
                     placeholder={__('Enter Assignment Title', 'tutor')}
-                    maxLimit={245}
                     isClearable
                     selectOnFocus
                   />
