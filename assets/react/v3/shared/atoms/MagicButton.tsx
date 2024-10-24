@@ -134,6 +134,21 @@ const styles = {
       color: ${colorTokens.text.primary};
     }
   `,
+  plain: css`
+    span {
+      background: ${colorTokens.text.ai.gradient};
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+
+      &:hover {
+        background: ${colorTokens.ai.gradient_2};
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+    }
+  `,
   size: {
     default: css`
       height: 32px;
@@ -177,6 +192,7 @@ const buttonVariants = createVariation(
         outline: styles.outline,
         primary_outline: styles.primaryOutline,
         ghost: styles.ghost,
+        plain: styles.plain,
       },
       size: {
         default: styles.size.default,

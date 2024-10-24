@@ -5,8 +5,6 @@ import type { ReactNode } from 'react';
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
-
-import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -56,8 +54,6 @@ interface FormFieldWrapperProps<T> extends FormControllerProps<T> {
   isMagicAi?: boolean;
   replaceEntireLabel?: boolean;
 }
-
-const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 
 const FormFieldWrapper = <T,>({
   field,

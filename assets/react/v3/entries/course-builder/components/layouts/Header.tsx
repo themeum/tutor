@@ -6,6 +6,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
+import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
@@ -27,14 +28,22 @@ import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
+import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
+import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import { useCourseNavigator } from '../../contexts/CourseNavigatorContext';
 import ExitCourseBuilderModal from '../modals/ExitCourseBuilderModal';
 import Tracker from './Tracker';
+
+import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 
 const Header = () => {
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
+  const { currentIndex } = useCourseNavigator();
   const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private' | 'trash'>(
     form.watch('post_status'),
   );
@@ -55,6 +64,8 @@ const Header = () => {
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
+  const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -103,7 +114,6 @@ const Header = () => {
 
       if (
         response.data &&
-        !isAdmin &&
         isInstructor &&
         tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
         ['publish', 'future'].includes(determinedPostStatus)
@@ -245,6 +255,82 @@ const Header = () => {
           <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
           <span css={styles.divider} />
           <Tracker />
+
+          <Show when={currentIndex === 0 && isOpenAiEnabled}>
+            <span css={styles.divider} />
+            <div>
+              <MagicButton
+                variant="plain"
+                css={css`
+                  display: inline-flex;
+                  align-items: center;
+                  gap: ${spacing[4]};
+                  
+
+                    padding-inline: 0px;
+                  
+                `}
+                onClick={() => {
+                  if (!isTutorPro) {
+                    showModal({
+                      component: ProIdentifierModal,
+                      props: {
+                        title: (
+                          <>
+                            {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
+                            <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                          </>
+                        ),
+                        featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
+                        image: generateCourse,
+                        image2x: generateCourse2x,
+                        features: [
+                          __('Generate a complete course outline in seconds!', 'tutor'),
+                          __(
+                            ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                            'tutor',
+                          ),
+                          __(
+                            'Generate images, customize backgrounds, and even remove unwanted objects with ease.',
+                            'tutor',
+                          ),
+                          __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
+                        ],
+                        footer: (
+                          <Button
+                            onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                            icon={<SVGIcon name="crown" width={24} height={24} />}
+                          >
+                            {__('Get Tutor LMS Pro', 'tutor')}
+                          </Button>
+                        ),
+                      },
+                    });
+                  } else if (!hasOpenAiAPIKey) {
+                    showModal({
+                      component: SetupOpenAiModal,
+                      props: {
+                        image: generateCourse,
+                        image2x: generateCourse2x,
+                      },
+                    });
+                  } else {
+                    showModal({
+                      component: AICourseBuilderModal,
+                      isMagicAi: true,
+                      props: {
+                        title: __('Create with AI', 'tutor'),
+                        icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                      },
+                    });
+                  }
+                }}
+              >
+                <SVGIcon name="magicAiColorize" width={24} height={24} />
+                {__('Generate with AI', 'tutor')}
+              </MagicButton>
+            </div>
+          </Show>
         </div>
         <div css={styles.headerRight}>
           <Show
@@ -402,5 +488,11 @@ const styles = {
     svg {
       color: ${colorTokens.icon.default};
     }
+  `,
+  aiGradientText: css`
+    background: ${colorTokens.text.ai.gradient};
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   `,
 };

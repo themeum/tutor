@@ -1,13 +1,10 @@
+import SVGIcon from '@Atoms/SVGIcon';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-import Button from '@Atoms/Button';
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
 
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
@@ -23,18 +20,14 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import { useModal } from '@Components/modals/Modal';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
-import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -49,9 +42,6 @@ import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
-
-import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
-import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 
@@ -266,82 +256,6 @@ const CourseBasic = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm({ isWpEditorFullScreen })}>
-        <CanvasHead
-          title={__('Course Basic', 'tutor')}
-          isExternalUrl
-          rightButton={
-            <Show when={isOpenAiEnabled}>
-              <div>
-                <MagicButton
-                  css={css`
-                  display: inline-flex;
-                  align-items: center;
-                  gap: ${spacing[4]};
-                `}
-                  onClick={() => {
-                    if (!isTutorPro) {
-                      showModal({
-                        component: ProIdentifierModal,
-                        props: {
-                          title: (
-                            <>
-                              {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-                              <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                            </>
-                          ),
-                          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
-                          image: generateCourse,
-                          image2x: generateCourse2x,
-                          features: [
-                            __('Generate a complete course outline in seconds!', 'tutor'),
-                            __(
-                              ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                              'tutor',
-                            ),
-                            __(
-                              'Generate images, customize backgrounds, and even remove unwanted objects with ease.',
-                              'tutor',
-                            ),
-                            __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
-                          ],
-                          footer: (
-                            <Button
-                              onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
-                              icon={<SVGIcon name="crown" width={24} height={24} />}
-                            >
-                              {__('Get Tutor LMS Pro', 'tutor')}
-                            </Button>
-                          ),
-                        },
-                      });
-                    } else if (!hasOpenAiAPIKey) {
-                      showModal({
-                        component: SetupOpenAiModal,
-                        props: {
-                          image: generateCourse,
-                          image2x: generateCourse2x,
-                        },
-                      });
-                    } else {
-                      showModal({
-                        component: AICourseBuilderModal,
-                        isMagicAi: true,
-                        props: {
-                          title: __('Create with AI', 'tutor'),
-                          icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-                        },
-                      });
-                    }
-                  }}
-                >
-                  <SVGIcon name="magicAi" width={24} height={24} />
-                  {__('Generate with AI', 'tutor')}
-                </MagicButton>
-              </div>
-            </Show>
-          }
-        />
-
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
             <Controller
@@ -758,7 +672,7 @@ const styles = {
   }: {
     isWpEditorFullScreen: boolean;
   }) => css`
-    padding-block: ${spacing[24]};
+    padding-block: ${spacing[32]} ${spacing[24]};
     align-self: start;
     top: ${headerHeight}px;
     position: sticky;
@@ -775,7 +689,6 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[24]};
-    margin-top: ${spacing[40]};
   `,
   titleAndSlug: css`
     display: flex;
@@ -832,11 +745,5 @@ const styles = {
     ${styleUtils.flexCenter()};
     background-color: ${colorTokens.bg.gray20};
     border-radius: ${borderRadius.card};
-  `,
-  aiGradientText: css`
-    background: ${colorTokens.text.ai.gradient};
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   `,
 };
