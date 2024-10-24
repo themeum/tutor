@@ -10,6 +10,7 @@ interface CheckboxProps extends FormControllerProps<boolean> {
   label?: string;
   description?: string;
   value?: string;
+  onChange?: (value: boolean) => void;
   disabled?: boolean;
   isHidden?: boolean;
   labelCss?: SerializedStyles;
@@ -20,6 +21,7 @@ const FormCheckbox = ({
   fieldState,
   disabled,
   value,
+  onChange,
   label,
   description,
   isHidden,
@@ -42,6 +44,10 @@ const FormCheckbox = ({
               label={label}
               onChange={() => {
                 field.onChange(!field.value);
+
+                if (onChange) {
+                  onChange(!field.value);
+                }
               }}
             />
             {description && <p css={styles.description}>{description}</p>}
