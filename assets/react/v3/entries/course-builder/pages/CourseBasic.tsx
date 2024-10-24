@@ -17,7 +17,6 @@ import FormSelectUser, { type UserOption } from '@Components/fields/FormSelectUs
 import FormTagsInput from '@Components/fields/FormTagsInput';
 import FormVideoInput from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
-import { useModal } from '@Components/modals/Modal';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
@@ -54,7 +53,6 @@ const CourseBasic = () => {
   const updateCourseMutation = useUpdateCourseMutation();
   const navigate = useNavigate();
   const { state } = useLocation();
-  const { showModal } = useModal();
 
   const [userSearchText, setUserSearchText] = useState('');
   const [isWpEditorFullScreen, setIsWpEditorFullScreen] = useState(false);
@@ -66,7 +64,6 @@ const CourseBasic = () => {
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
-  const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
@@ -382,7 +379,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Course Thumbnail', 'tutor')}
-              infoText={__('Standard Size: 800x450 pixels', 'tutor')}
+              infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
               generateWithAi={!isTutorPro || isOpenAiEnabled}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />

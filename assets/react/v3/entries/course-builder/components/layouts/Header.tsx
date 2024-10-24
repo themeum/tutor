@@ -326,7 +326,7 @@ const Header = () => {
                   }
                 }}
               >
-                <SVGIcon name="magicAiColorize" width={24} height={24} />
+                <SVGIcon name="magicAiColorize" width={32} height={32} />
                 {__('Generate with AI', 'tutor')}
               </MagicButton>
             </div>
