@@ -261,7 +261,7 @@ const Header = () => {
                   align-items: center;
                   gap: ${spacing[4]};
                   padding-inline: 0px;
-                  margin-left: ${spacing[12]};
+                  margin-left: ${spacing[4]};
                 `}
                 onClick={() => {
                   if (!isTutorPro) {
@@ -439,9 +439,9 @@ const styles = {
   `,
   titleAndTacker: css`
     ${styleUtils.display.flex()};
-    gap: ${spacing[20]};
+    gap: ${spacing[12]};
     align-items: center;
-    margin-right: ${spacing[20]};
+    margin-right: ${spacing[16]};
   `,
   divider: css`
     width: 2px;
@@ -450,7 +450,7 @@ const styles = {
     border-radius: ${borderRadius[20]};
   `,
   title: css`
-    ${typography.heading6('medium')};
+    ${typography.body('medium')};
     color: ${colorTokens.text.subdued};
   `,
   headerRight: css`
