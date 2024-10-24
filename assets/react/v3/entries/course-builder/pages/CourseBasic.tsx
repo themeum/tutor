@@ -262,7 +262,7 @@ const CourseBasic = () => {
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
-                  label={__('Course Title', 'tutor')}
+                  label={__('Title', 'tutor')}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus

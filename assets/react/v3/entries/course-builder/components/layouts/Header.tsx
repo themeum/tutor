@@ -235,13 +235,7 @@ const Header = () => {
 
   return (
     <div css={styles.wrapper}>
-      <button
-        type="button"
-        css={[styleUtils.resetButton, styles.logo]}
-        onClick={() => {
-          window.open(tutorConfig.tutor_frontend_dashboard_url, '_blank', 'noopener');
-        }}
-      >
+      <button type="button" css={[styleUtils.resetButton, styles.logo]}>
         <Show
           when={isTutorPro && tutorConfig.settings?.course_builder_logo_url}
           fallback={<Logo width={108} height={24} />}
@@ -251,24 +245,23 @@ const Header = () => {
       </button>
 
       <div css={styles.container}>
-        <div css={styles.titleAndTacker}>
-          <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
-          <span css={styles.divider} />
-          <Tracker />
-
+        <div css={styles.titleAndTackerWrapper}>
+          <div css={styles.titleAndTacker}>
+            <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
+            <span css={styles.divider} />
+            <Tracker />
+          </div>
           <Show when={currentIndex === 0 && isOpenAiEnabled}>
             <span css={styles.divider} />
-            <div>
+            <div css={styleUtils.flexCenter()}>
               <MagicButton
                 variant="plain"
                 css={css`
                   display: inline-flex;
                   align-items: center;
                   gap: ${spacing[4]};
-                  
-
-                    padding-inline: 0px;
-                  
+                  padding-inline: 0px;
+                  margin-left: ${spacing[12]};
                 `}
                 onClick={() => {
                   if (!isTutorPro) {
@@ -431,6 +424,7 @@ const styles = {
   `,
   logo: css`
     padding-left: ${spacing[32]};
+    cursor: default;
 
     img {
       max-height: 24px;
@@ -439,10 +433,15 @@ const styles = {
       object-position: center;
     }
   `,
+  titleAndTackerWrapper: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+  `,
   titleAndTacker: css`
     ${styleUtils.display.flex()};
     gap: ${spacing[20]};
     align-items: center;
+    margin-right: ${spacing[20]};
   `,
   divider: css`
     width: 2px;

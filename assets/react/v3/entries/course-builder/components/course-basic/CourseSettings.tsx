@@ -64,7 +64,7 @@ const CourseSettings = () => {
 
   return (
     <div>
-      <label css={typography.caption()}>{__('Course Settings', 'tutor')}</label>
+      <label css={typography.caption()}>{__('Options', 'tutor')}</label>
 
       <div css={styles.courseSettings}>
         <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />

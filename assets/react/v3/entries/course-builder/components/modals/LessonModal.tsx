@@ -197,14 +197,14 @@ const LessonModal = ({
                 name="title"
                 control={form.control}
                 rules={{
-                  required: __('Lesson Name is required', 'tutor'),
+                  required: __('Lesson title is required.', 'tutor'),
                   ...maxLimitRule(255),
                 }}
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
-                    label={__('Lesson Name', 'tutor')}
-                    placeholder={__('Enter Lesson Name', 'tutor')}
+                    label={__('Title', 'tutor')}
+                    placeholder={__('Enter Lesson Title', 'tutor')}
                     helpText={__('Lesson titles are displayed publicly wherever required.', 'tutor')}
                     selectOnFocus
                     isClearable
