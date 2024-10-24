@@ -9,6 +9,7 @@ const config = {
   TUTOR_PRICING_PAGE: 'https://tutorlms.com/pricing/',
   TUTOR_ADDONS_PAGE: `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor-addons`,
   CHATGPT_PLATFORM_URL: 'https://platform.openai.com/account/api-keys',
+  TUTOR_MY_COURSES_PAGE_URL: `${tutorConfig.tutor_frontend_dashboard_url}/my-courses`,
 };
 
 export default config;

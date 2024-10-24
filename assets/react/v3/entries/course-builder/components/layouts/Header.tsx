@@ -6,6 +6,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
+import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
@@ -27,14 +28,22 @@ import DropdownButton from '@Molecules/DropdownButton';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
+import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
+import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import { useCourseNavigator } from '../../contexts/CourseNavigatorContext';
 import ExitCourseBuilderModal from '../modals/ExitCourseBuilderModal';
 import Tracker from './Tracker';
+
+import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 
 const Header = () => {
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
+  const { currentIndex } = useCourseNavigator();
   const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private' | 'trash'>(
     form.watch('post_status'),
   );
@@ -53,7 +62,10 @@ const Header = () => {
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
+  const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -93,11 +105,21 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     if (courseId) {
-      updateCourseMutation.mutate({
+      const determinedPostStatus = determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility);
+      const response = await updateCourseMutation.mutateAsync({
         course_id: Number(courseId),
         ...payload,
-        post_status: determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility),
+        post_status: determinedPostStatus,
       });
+
+      if (
+        response.data &&
+        isInstructor &&
+        tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
+        ['publish', 'future'].includes(determinedPostStatus)
+      ) {
+        window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
+      }
       return;
     }
 
@@ -213,13 +235,7 @@ const Header = () => {
 
   return (
     <div css={styles.wrapper}>
-      <button
-        type="button"
-        css={[styleUtils.resetButton, styles.logo]}
-        onClick={() => {
-          window.open(tutorConfig.tutor_frontend_dashboard_url, '_blank', 'noopener');
-        }}
-      >
+      <button type="button" css={[styleUtils.resetButton, styles.logo]}>
         <Show
           when={isTutorPro && tutorConfig.settings?.course_builder_logo_url}
           fallback={<Logo width={108} height={24} />}
@@ -229,10 +245,85 @@ const Header = () => {
       </button>
 
       <div css={styles.container}>
-        <div css={styles.titleAndTacker}>
-          <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
-          <span css={styles.divider} />
-          <Tracker />
+        <div css={styles.titleAndTackerWrapper}>
+          <div css={styles.titleAndTacker}>
+            <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
+            <span css={styles.divider} />
+            <Tracker />
+          </div>
+          <Show when={currentIndex === 0 && isOpenAiEnabled}>
+            <span css={styles.divider} />
+            <div css={styleUtils.flexCenter()}>
+              <MagicButton
+                variant="plain"
+                css={css`
+                  display: inline-flex;
+                  align-items: center;
+                  gap: ${spacing[4]};
+                  padding-inline: 0px;
+                  margin-left: ${spacing[4]};
+                `}
+                onClick={() => {
+                  if (!isTutorPro) {
+                    showModal({
+                      component: ProIdentifierModal,
+                      props: {
+                        title: (
+                          <>
+                            {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
+                            <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
+                          </>
+                        ),
+                        featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
+                        image: generateCourse,
+                        image2x: generateCourse2x,
+                        features: [
+                          __('Generate a complete course outline in seconds!', 'tutor'),
+                          __(
+                            ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
+                            'tutor',
+                          ),
+                          __(
+                            'Generate images, customize backgrounds, and even remove unwanted objects with ease.',
+                            'tutor',
+                          ),
+                          __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
+                        ],
+                        footer: (
+                          <Button
+                            onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+                            icon={<SVGIcon name="crown" width={24} height={24} />}
+                          >
+                            {__('Get Tutor LMS Pro', 'tutor')}
+                          </Button>
+                        ),
+                      },
+                    });
+                  } else if (!hasOpenAiAPIKey) {
+                    showModal({
+                      component: SetupOpenAiModal,
+                      props: {
+                        image: generateCourse,
+                        image2x: generateCourse2x,
+                      },
+                    });
+                  } else {
+                    showModal({
+                      component: AICourseBuilderModal,
+                      isMagicAi: true,
+                      props: {
+                        title: __('Create with AI', 'tutor'),
+                        icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+                      },
+                    });
+                  }
+                }}
+              >
+                <SVGIcon name="magicAiColorize" width={32} height={32} />
+                {__('Generate with AI', 'tutor')}
+              </MagicButton>
+            </div>
+          </Show>
         </div>
         <div css={styles.headerRight}>
           <Show
@@ -333,6 +424,7 @@ const styles = {
   `,
   logo: css`
     padding-left: ${spacing[32]};
+    cursor: default;
 
     img {
       max-height: 24px;
@@ -341,10 +433,15 @@ const styles = {
       object-position: center;
     }
   `,
+  titleAndTackerWrapper: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+  `,
   titleAndTacker: css`
     ${styleUtils.display.flex()};
-    gap: ${spacing[20]};
+    gap: ${spacing[12]};
     align-items: center;
+    margin-right: ${spacing[16]};
   `,
   divider: css`
     width: 2px;
@@ -353,7 +450,7 @@ const styles = {
     border-radius: ${borderRadius[20]};
   `,
   title: css`
-    ${typography.heading6('medium')};
+    ${typography.body('medium')};
     color: ${colorTokens.text.subdued};
   `,
   headerRight: css`
@@ -390,5 +487,11 @@ const styles = {
     svg {
       color: ${colorTokens.icon.default};
     }
+  `,
+  aiGradientText: css`
+    background: ${colorTokens.text.ai.gradient};
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   `,
 };

@@ -1,5 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorPalate, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 
@@ -18,8 +18,8 @@ const EmptyImageCard = ({ placeholder }: EmptyImageCardProps) => {
 
 const styles = {
   container: css`
-    background: ${colorPalate.surface.neutral.default};
-    border: 1px dashed ${colorPalate.border.neutral};
+    background: ${colorTokens.background.default};
+    border: 1px dashed ${colorTokens.stroke.divider};
     border-radius: ${borderRadius[8]};
     display: flex;
     flex-direction: column;
@@ -29,7 +29,7 @@ const styles = {
     width: 64px;
   `,
   text: css`
-    color: ${colorPalate.interactive.default};
+    color: ${colorTokens.text.subdued};
     ${typography.body()}
     margin-top: ${spacing[12]};
   `,

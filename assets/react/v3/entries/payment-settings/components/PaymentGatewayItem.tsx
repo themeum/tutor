@@ -26,13 +26,17 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
     if (response.status_code === 200) {
       onInstallSuccess();
 
-      // Set is installed to true
-      data.is_installed = true;
-
       // Append fields to settings
-      form.setValue('payment_methods', [...form.getValues('payment_methods'), data], {
-        shouldDirty: true,
-      });
+      form.setValue(
+        'payment_methods',
+        [
+          ...form.getValues('payment_methods'),
+          { ...data, fields: data.fields.map(({ name, value }) => ({ name, value })) },
+        ],
+        {
+          shouldDirty: true,
+        }
+      );
     }
   };
 

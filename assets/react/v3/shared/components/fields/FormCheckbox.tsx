@@ -1,5 +1,5 @@
 import AtomCheckbox from '@Atoms/CheckBox';
-import { colorPalate, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -10,6 +10,7 @@ interface CheckboxProps extends FormControllerProps<boolean> {
   label?: string;
   description?: string;
   value?: string;
+  onChange?: (value: boolean) => void;
   disabled?: boolean;
   isHidden?: boolean;
   labelCss?: SerializedStyles;
@@ -20,6 +21,7 @@ const FormCheckbox = ({
   fieldState,
   disabled,
   value,
+  onChange,
   label,
   description,
   isHidden,
@@ -42,6 +44,10 @@ const FormCheckbox = ({
               label={label}
               onChange={() => {
                 field.onChange(!field.value);
+
+                if (onChange) {
+                  onChange(!field.value);
+                }
               }}
             />
             {description && <p css={styles.description}>{description}</p>}
@@ -57,7 +63,7 @@ export default FormCheckbox;
 const styles = {
   description: css`
     ${typography.body()}
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.subdued};
     padding-left: ${spacing[28]};
     margin-top: ${spacing[6]};
   `,

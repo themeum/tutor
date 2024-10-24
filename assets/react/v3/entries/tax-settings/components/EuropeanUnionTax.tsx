@@ -4,7 +4,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import { colorPalate, fontSize, fontWeight, spacing } from '@Config/styles';
+import { colorTokens, fontSize, fontWeight, spacing } from '@Config/styles';
 import Table, { type Column } from '@Molecules/Table';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
@@ -186,11 +186,11 @@ const styles = {
   nameWrapper: css`
     display: flex;
     gap: ${spacing[8]};
-    color: ${colorPalate.text.default};
+    color: ${colorTokens.text.primary};
     font-weight: ${fontWeight.medium};
   `,
   deleteIcon: css`
-    color: ${colorPalate.icon.default};
+    color: ${colorTokens.icon.default};
   `,
   emoji: css`
     font-size: ${fontSize[24]};

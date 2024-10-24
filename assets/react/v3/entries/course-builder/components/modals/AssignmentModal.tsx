@@ -215,9 +215,8 @@ const AssignmentModal = ({
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
-                    label={__('Assignment Title', 'tutor')}
+                    label={__('Title', 'tutor')}
                     placeholder={__('Enter Assignment Title', 'tutor')}
-                    maxLimit={245}
                     isClearable
                     selectOnFocus
                   />

@@ -714,32 +714,36 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
                     arrowPosition="auto"
                     hideArrow
                   >
-                    <ThreeDots.Option
-                      text={
-                        <span ref={triggerGoogleMeetRef} css={styles.threeDotButton}>
-                          {__('Meet live lesson', 'tutor')}
-                          <Show when={!isTutorPro}>
-                            <ProBadge size="small" content={__('Pro', 'tutor')} />
-                          </Show>
-                        </span>
-                      }
-                      disabled={!isTutorPro}
-                      icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
-                      onClick={() => setMeetingType('tutor-google-meet')}
-                    />
-                    <ThreeDots.Option
-                      text={
-                        <span ref={triggerZoomRef} css={styles.threeDotButton}>
-                          {__('Zoom live lesson', 'tutor')}
-                          <Show when={!isTutorPro}>
-                            <ProBadge size="small" content={__('Pro', 'tutor')} />
-                          </Show>
-                        </span>
-                      }
-                      disabled={!isTutorPro}
-                      icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
-                      onClick={() => setMeetingType('tutor_zoom_meeting')}
-                    />
+                    <Show when={isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION)}>
+                      <ThreeDots.Option
+                        text={
+                          <span ref={triggerGoogleMeetRef} css={styles.threeDotButton}>
+                            {__('Meet live lesson', 'tutor')}
+                            <Show when={!isTutorPro}>
+                              <ProBadge size="small" content={__('Pro', 'tutor')} />
+                            </Show>
+                          </span>
+                        }
+                        disabled={!isTutorPro}
+                        icon={<SVGIcon width={24} height={24} name="googleMeetColorize" isColorIcon />}
+                        onClick={() => setMeetingType('tutor-google-meet')}
+                      />
+                    </Show>
+                    <Show when={isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION)}>
+                      <ThreeDots.Option
+                        text={
+                          <span ref={triggerZoomRef} css={styles.threeDotButton}>
+                            {__('Zoom live lesson', 'tutor')}
+                            <Show when={!isTutorPro}>
+                              <ProBadge size="small" content={__('Pro', 'tutor')} />
+                            </Show>
+                          </span>
+                        }
+                        disabled={!isTutorPro}
+                        icon={<SVGIcon width={24} height={24} name="zoomColorize" isColorIcon />}
+                        onClick={() => setMeetingType('tutor_zoom_meeting')}
+                      />
+                    </Show>
                     <Show when={!isTutorPro || isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
                       <ThreeDots.Option
                         text={

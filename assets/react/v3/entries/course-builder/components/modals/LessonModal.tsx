@@ -197,16 +197,15 @@ const LessonModal = ({
                 name="title"
                 control={form.control}
                 rules={{
-                  required: __('Lesson Name is required', 'tutor'),
+                  required: __('Lesson title is required.', 'tutor'),
                   ...maxLimitRule(255),
                 }}
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
-                    label={__('Lesson Name', 'tutor')}
-                    placeholder={__('Enter Lesson Name', 'tutor')}
+                    label={__('Title', 'tutor')}
+                    placeholder={__('Enter Lesson Title', 'tutor')}
                     helpText={__('Lesson titles are displayed publicly wherever required.', 'tutor')}
-                    maxLimit={245}
                     selectOnFocus
                     isClearable
                   />
@@ -312,7 +311,7 @@ const LessonModal = ({
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
                   buttonText={__('Upload Featured Image', 'tutor')}
-                  infoText={__('Standard Size: 800x450 pixels', 'tutor')}
+                  infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
                 />
               )}
             />

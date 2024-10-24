@@ -4,7 +4,7 @@ import FormInput from '@Components/fields/FormInput';
 import FormRadioGroup from '@Components/fields/FormRadioGroup';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { DateFormats } from '@Config/constants';
-import { colorPalate, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@Config/styles';
 import type { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@Utils/style-utils';
 import { generateCouponCode } from '@Utils/util';
@@ -140,7 +140,7 @@ const styles = {
 	`,
   generateCode: css`
 		${styleUtils.resetButton};
-		color: ${colorPalate.actions.primary.default};
+		color: ${colorTokens.action.primary.default};
 		position: absolute;
 		right: ${spacing[0]};
 		top: ${spacing[0]};
@@ -148,7 +148,7 @@ const styles = {
 		&:hover,
 		&:active,
 		&:focus {
-			color: ${colorPalate.actions.primary.hover};
+			color: ${colorTokens.action.primary.hover};
 		}
 	`,
 };

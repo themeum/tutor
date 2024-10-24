@@ -131,9 +131,9 @@ export const getCategoryLeftBarHeight = (isLastChild: boolean, totalChildren: nu
     height = '100%';
   } else if (isLastChild && totalChildren > 0) {
     if (totalChildren > 1) {
-      height = `${24 + 32 * (totalChildren - 1)}px`;
+      height = `${23 + 32 * (totalChildren - 1)}px`;
     } else {
-      height = '24px';
+      height = '23px';
     }
   }
   return height;
@@ -328,4 +328,30 @@ export const convertGMTtoLocalDate = (date: string) => {
 
 export const normalizeLineEndings = (text: string) => {
   return (text || '').replace(/\r\n/g, '\n');
+};
+
+export const copyToClipboard = (text: string) => {
+  return new Promise<void>((resolve, reject) => {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard
+        .writeText(text)
+        .then(() => resolve())
+        .catch((error) => reject(error));
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        // if navigator.clipboard is not available, use document.execCommand('copy')
+        document.execCommand('copy');
+        resolve();
+      } catch (error) {
+        reject(error);
+      } finally {
+        document.body.removeChild(textarea); // Clean up
+      }
+    }
+  });
 };

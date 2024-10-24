@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
 import Button from '@Atoms/Button';
@@ -47,86 +46,77 @@ const FormAnswerExplanation = ({
   const [previousValue, setPreviousValue] = useState<string>(inputValue);
 
   return (
-    <div css={styles.container({ isEdit: isEdit || !!inputValue })}>
-      <Show
-        when={isEdit}
-        fallback={
+    <div
+      css={styles.wrapper({
+        hasValue: !!inputValue && !isEdit,
+      })}
+    >
+      <Show when={isEdit || inputValue}>
+        <label css={styles.answerLabel}>{label}</label>
+      </Show>
+      <div css={styles.editorWrapper({ isEdit })}>
+        <div css={styles.container({ isEdit: isEdit || !!inputValue })}>
           <Show
-            when={inputValue}
+            when={!inputValue && !isEdit}
             fallback={
-              <div
-                css={styles.placeholder}
-                role="button"
-                onClick={() => setIsEdit(true)}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === ' ') {
-                    setIsEdit(true);
-                  }
-                }}
-              >
-                {placeholder}
-              </div>
+              <FormWPEditor
+                field={field}
+                fieldState={fieldState}
+                disabled={disabled}
+                helpText={helpText}
+                loading={loading}
+                readOnly={!isEdit}
+                onChange={onChange}
+                placeholder={placeholder}
+                autoFocus
+                isMinimal
+              />
             }
           >
+            <div css={styles.placeholder}>{placeholder}</div>
+          </Show>
+          <Show when={isEdit}>
+            <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
+              <Button
+                variant="text"
+                size="small"
+                onClick={() => {
+                  field.onChange(previousValue);
+                  setIsEdit(false);
+                }}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="secondary"
+                size="small"
+                onClick={() => {
+                  setPreviousValue(field.value ?? '');
+                  setIsEdit(false);
+                }}
+                disabled={field.value === previousValue}
+              >
+                Ok
+              </Button>
+            </div>
+          </Show>
+          <Show when={!isEdit}>
             <div
-              css={styles.answer}
-              role="button"
-              onClick={() => setIsEdit(true)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter' || event.key === ' ') {
+              onClick={(e) => {
+                if (!isEdit && !disabled) {
                   setIsEdit(true);
                 }
               }}
-            >
-              <div css={styles.answerLabel}>{__('Answer explanation', 'tutor')}</div>
-              <p
-                css={styles.answerParagraph}
-                dangerouslySetInnerHTML={{
-                  __html: inputValue,
-                }}
-              />
-            </div>
+              onKeyDown={(event) => {
+                if ((event.key === 'Enter' || event.key === ' ') && !isEdit) {
+                  setIsEdit(true);
+                }
+              }}
+              data-overlay
+            />
           </Show>
-        }
-      >
-        <FormWPEditor
-          field={field}
-          fieldState={fieldState}
-          disabled={disabled}
-          helpText={helpText}
-          key={field.name}
-          label={label}
-          loading={loading}
-          onChange={onChange}
-          placeholder={placeholder}
-          readOnly={readOnly}
-          autoFocus
-          isMinimal
-        />
-        <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
-          <Button
-            variant="text"
-            size="small"
-            onClick={() => {
-              field.onChange(previousValue);
-              setIsEdit(false);
-            }}
-          >
-            Cancel
-          </Button>
-          <Button
-            variant="secondary"
-            size="small"
-            onClick={() => {
-              setPreviousValue(field.value ?? '');
-              setIsEdit(false);
-            }}
-            disabled={field.value === previousValue}
-          >
-            Ok
-          </Button>
         </div>
-      </Show>
+      </div>
     </div>
   );
 };
@@ -134,6 +124,41 @@ const FormAnswerExplanation = ({
 export default FormAnswerExplanation;
 
 const styles = {
+  wrapper: ({
+    hasValue,
+  }: {
+    hasValue: boolean;
+  }) => css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[10]};
+    border-radius: ${borderRadius.card};
+
+    ${
+      hasValue &&
+      css`
+        background-color: ${colorTokens.color.success[30]};
+        padding: ${spacing[12]} ${spacing[24]};
+
+        &:hover {
+          background-color: ${colorTokens.color.success[40]};
+        }
+      `
+    }
+  `,
+  editorWrapper: ({ isEdit }: { isEdit: boolean }) => css`
+    position: relative;
+    max-height: 400px;
+    overflow-y: scroll;
+
+    ${
+      isEdit &&
+      css`
+        padding-inline: 0;
+        max-height: unset;
+        overflow: unset;
+      `
+    }
+  `,
   container: ({
     isEdit,
   }: {
@@ -146,8 +171,15 @@ const styles = {
     min-height: 48px;
     height: 100%;
     width: 100%;
+    inset: 0;
     border-radius: ${borderRadius[6]};
     transition: background 0.15s ease-in-out;
+
+    [data-overlay] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+    }
 
     & label {
       ${typography.caption()}

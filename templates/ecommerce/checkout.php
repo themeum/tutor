@@ -19,7 +19,7 @@ use TUTOR\Input;
 $user_id = get_current_user_id();
 
 $tutor_toc_page_link     = tutor_utils()->get_toc_page_link();
-$tutor_privacy_page_link = null; // @TODO: Need to implement later.
+$tutor_privacy_page_link = tutor_utils()->get_privacy_page_link();
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();

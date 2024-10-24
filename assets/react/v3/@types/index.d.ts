@@ -100,6 +100,7 @@ declare global {
         course_builder_logo_url: string | false;
         chatgpt_key_exist: boolean;
         hide_admin_bar_for_users: 'on' | 'off';
+        enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
       };
       tutor_currency: {
         symbol: string;

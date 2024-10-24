@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { nanoid } from '@Utils/util';
 import { css, type SerializedStyles } from '@emotion/react';
@@ -51,7 +51,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
 				aria-invalid={props['aria-invalid']}
 				onChange={handleChange}
 				onBlur={onBlur}
-				css={[inputCss, styles.checkbox({ label, isIndeterminate, disabled })]}
+				css={[inputCss, styles.checkbox({ label: !!label, isIndeterminate, disabled })]}
 			/>
 			<span />
 			<span css={[styles.label, labelCss]}>{label}</span>
@@ -78,7 +78,7 @@ const styles = {
 		isIndeterminate,
 		disabled,
 	}: {
-		label: string;
+		label: boolean;
 		isIndeterminate: boolean;
 		disabled: boolean;
 	}) => css`
@@ -119,7 +119,7 @@ const styles = {
 
 			${disabled &&
 			css`
-				background-color: ${colorPalate.icon.disabled};
+				background-color: ${colorTokens.icon.disable.default};
 			`}
 		}
 
@@ -130,8 +130,8 @@ const styles = {
 				background-repeat: no-repeat;
 				background-size: 10px;
 				background-position: center center;
-				background-color: ${colorPalate.basic.primary.default};
-				border: 0.5px solid ${colorPalate.basic.surface};
+				background-color: ${colorTokens.brand.blue};
+				border: 0.5px solid ${colorTokens.stroke.white};
 			}
 		`}
 	`,

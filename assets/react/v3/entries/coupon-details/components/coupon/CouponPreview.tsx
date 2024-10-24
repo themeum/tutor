@@ -29,7 +29,6 @@ function CouponPreview() {
   const discountAmount = form.watch('discount_amount');
   const startDate = form.watch('start_date');
   const startTime = form.watch('start_time');
-  const isEndEnabled = form.watch('is_end_enabled');
   const endDate = form.watch('end_date');
   const appliesTo = form.watch('applies_to');
   const perUserUsageLimit = form.watch('per_user_usage_limit');
@@ -59,7 +58,7 @@ function CouponPreview() {
           <div css={styles.discountText}>{`${discountText} ${__('OFF', 'tutor')}`}</div>
         </div>
         <h1 css={styles.couponCode}>{couponType === 'automatic' ? __('Automatic', 'tutor') : couponCode}</h1>
-        {isEndEnabled && endDate && (
+        {endDate && (
           <p css={styles.couponSubtitle}>
             {sprintf(__('Valid until %s', 'tutor'), format(new Date(endDate), DateFormats.validityDate))}
           </p>

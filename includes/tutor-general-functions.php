@@ -1497,6 +1497,8 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 					'icon'                 => $gateway['icon'] ?? '',
 					'support_subscription' => $gateway['support_subscription'] ?? '',
 					'is_manual'            => $gateway['is_manual'] ?? '',
+					'additional_details'   => $gateway['additional_details'] ?? '',
+					'payment_instructions' => $gateway['payment_instructions'] ?? '',
 				);
 			}
 

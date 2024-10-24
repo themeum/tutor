@@ -168,7 +168,10 @@ $height-sm: 38px;
 		justify-content: center;
 		align-items: center;
 		color: var(--tutor-color-muted);
-		pointer-events: none;
+
+		&:not(.tutor-password-reveal) {
+			pointer-events: none;
+		}
 	
 		&-reverse {
 			right: 0;

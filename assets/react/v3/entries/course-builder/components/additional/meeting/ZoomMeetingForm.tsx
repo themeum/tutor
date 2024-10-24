@@ -12,7 +12,7 @@ import FormInput from '@Components/fields/FormInput';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
-import { borderRadius, colorPalate, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
@@ -322,7 +322,7 @@ const styles = {
 
     * > label {
       font-size: ${fontSize[15]};
-      color: ${colorPalate.text.default};
+      color: ${colorTokens.text.title};
     }
   `,
   formWrapper: css`

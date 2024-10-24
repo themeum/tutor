@@ -1,4 +1,4 @@
-import { borderRadius, colorPalate, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { AnyObject } from '@Utils/form';
 import { css } from '@emotion/react';
@@ -164,7 +164,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
                       <div>
                         <span css={styles.angleRight}> </span>
                         <span css={styles.lineNumber}>{' '.repeat(lineNumberLength.toString().length)} | </span>
-                        <span css={[styles.line, { color: colorPalate.text.critical }]}>
+                        <span css={[styles.line, { color: colorTokens.text.error }]}>
                           {' '.repeat(position.column || 0)}^
                         </span>
                       </div>
@@ -234,7 +234,7 @@ const styles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: ${colorPalate.basic.white};
+    background: ${colorTokens.background.white};
   `,
   sourceLinesWrapper: css`
     display: flex;
@@ -243,7 +243,7 @@ const styles = {
   consoleMessage: css`
     ${typography.heading6('bold')};
     margin-top: ${spacing[24]};
-    color: ${colorPalate.text.success};
+    color: ${colorTokens.text.success};
   `,
   sourceLine: (isErrorLine: boolean) => css`
     white-space: pre-wrap;
@@ -251,7 +251,7 @@ const styles = {
     ${
       isErrorLine &&
       css`
-      color: ${colorPalate.text.critical};
+      color: ${colorTokens.text.error};
     `
     }
   `,
@@ -270,7 +270,7 @@ const styles = {
   wrapper: css`
     max-width: ${errorDisplayWindowWidth}px;
     width: 100%;
-    background: ${colorPalate.basic.white};
+    background: ${colorTokens.background.white};
     box-shadow: ${shadow.modal};
     padding: ${spacing[20]};
     border-radius: ${borderRadius[6]};
@@ -284,7 +284,7 @@ const styles = {
   indicator: css`
     width: 100%;
     height: 5px;
-    background: ${colorPalate.basic.critical};
+    background: ${colorTokens.color.danger.main};
     position: absolute;
     top: 0;
     left: 0;
@@ -293,18 +293,18 @@ const styles = {
     font-size: ${fontSize[20]};
     font-weight: ${fontWeight.bold};
     margin-bottom: ${spacing[4]};
-    color: ${colorPalate.text.default};
+    color: ${colorTokens.text.primary};
   `,
   errorMessage: css`
     font-size: ${fontSize[14]};
     font-weight: ${fontWeight.bold};
-    color: ${colorPalate.basic.black.default};
+    color: ${colorTokens.text.title};
     margin-top: ${spacing[4]};
-    color: ${colorPalate.text.critical};
+    color: ${colorTokens.text.error};
   `,
   callStack: css`
     ${typography.heading6('bold')};
-    color: ${colorPalate.text.default};
+    color: ${colorTokens.text.primary};
   `,
   callStackWrapper: css`
     margin-top: ${spacing[48]};
@@ -321,10 +321,10 @@ const styles = {
   `,
   functionName: css`
     ${typography.heading6()};
-    color: ${colorPalate.text.default};
+    color: ${colorTokens.text.primary};
   `,
   filePath: css`
-    color: ${colorPalate.text.neutral};
+    color: ${colorTokens.text.subdued};
     margin-left: ${spacing[12]};
     font-size: ${fontSize[14]};
   `,
@@ -336,7 +336,7 @@ const styles = {
 
     background-color: #292929;
     border-radius: ${borderRadius[6]};
-    color: ${colorPalate.basic.highlight};
+    color: ${colorTokens.text.white};
   `,
   sourceFilePath: css`
     padding: ${spacing[8]} ${spacing[16]};
