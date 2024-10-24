@@ -8660,7 +8660,7 @@ class Utils {
 				// Add add-on enable status.
 				$addon_url = "tutor-pro/addons/{$base_name}/{$base_name}.php";
 
-				$plugins_data[ $base_name ]['base_name'] = $base_name;
+				$plugins_data[ $base_name ]['base_name']  = $base_name;
 				$plugins_data[ $base_name ]['is_enabled'] = $has_pro && isset( $addons_config[ $addon_url ]['is_enable'] ) ? (int) $addons_config[ $addon_url ]['is_enable'] : 0;
 			}
 		}
@@ -8776,6 +8776,30 @@ class Utils {
 		}
 
 		return $tutor_toc_page_link;
+	}
+
+	/**
+	 * Get tutor Privacy Policay page link
+	 * Settings > General > Privacy Policy
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return null | string
+	 */
+	function get_privacy_page_link() {
+		// Get wp privacy poicay page
+		$privacy_policy_url = get_privacy_policy_url();
+
+		$tutor_privacy_page_id   = (int) get_tutor_option( 'ecommerce_privacy_policy' );
+		$tutor_privacy_page_link = null;
+
+		if ( ! in_array( $tutor_privacy_page_id, array( 0, -1 ) ) ) {
+			$tutor_privacy_page_link = get_page_link( $tutor_privacy_page_id );
+		} elseif ( $privacy_policy_url ) {
+			$tutor_privacy_page_link = $privacy_policy_url;
+		}
+
+		return $tutor_privacy_page_link;
 	}
 
 	/**
