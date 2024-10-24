@@ -126,10 +126,12 @@ const styles = {
     overflow: hidden;
     cursor: pointer;
 
-    ${size === 'small' &&
-    css`
+    ${
+      size === 'small' &&
+      css`
       width: 168px;
-    `}
+    `
+    }
 
     svg {
       color: ${colorTokens.icon.default};
@@ -145,6 +147,8 @@ const styles = {
   infoTexts: css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
+    max-width: 200px;
+    text-align: center;
   `,
   previewWrapper: (size: ImageInputSize) => css`
     width: 100%;
@@ -155,10 +159,12 @@ const styles = {
     position: relative;
     background-color: ${colorTokens.bg.white};
 
-    ${size === 'small' &&
-    css`
+    ${
+      size === 'small' &&
+      css`
       width: 168px;
-    `}
+    `
+    }
 
     &:hover {
       [data-hover-buttons-wrapper] {

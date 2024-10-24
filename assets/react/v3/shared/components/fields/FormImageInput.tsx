@@ -16,8 +16,8 @@ import { styleUtils } from '@Utils/style-utils';
 import generateImage2x from '@Images/pro-placeholders/generate-image-2x.webp';
 import generateImage from '@Images/pro-placeholders/generate-image.webp';
 
+import type { SerializedStyles } from '@emotion/react';
 import FormFieldWrapper from './FormFieldWrapper';
-import { SerializedStyles } from '@emotion/react';
 
 type MediaSize = {
   url: string;
@@ -120,7 +120,7 @@ const FormImageInput = ({
                 __('Generate a complete course outline in seconds!', 'tutor'),
                 __(
                   'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                  'tutor'
+                  'tutor',
                 ),
                 __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
                 __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
