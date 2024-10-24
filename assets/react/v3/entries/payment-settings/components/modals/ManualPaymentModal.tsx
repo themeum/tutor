@@ -12,7 +12,7 @@ import { colorTokens, shadow, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
-import { PaymentMethod, PaymentSettings } from '../../services/payment';
+import { manualMethodFields, PaymentMethod, PaymentSettings } from '../../services/payment';
 
 interface ManualPaymentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -32,28 +32,18 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
       fields: [
         {
           name: 'method_name',
-          label: __('Payment Method Name', 'tutor'),
-          type: 'text',
           value: '',
         },
         {
           name: 'icon',
-          label: __('Icon', 'tutor'),
-          type: 'image',
           value: '',
         },
         {
           name: 'additional_details',
-          label: __('Additional details', 'tutor'),
-          type: 'textarea',
-          hint: __('Briefly describe this payment option. (e.g., Bank Transfer, Cash on Delivery).', 'tutor'),
           value: '',
         },
         {
           name: 'payment_instructions',
-          label: __('Payment instructions', 'tutor'),
-          type: 'textarea',
-          hint: __('Provide clear, step-by-step instructions on how to complete the payment.', 'tutor'),
           value: '',
         },
       ],
@@ -73,7 +63,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <form onSubmit={form.handleSubmit(onSubmit)} css={styles.contentWrapper}>
         <div css={styles.formBody}>
-          {form.getValues().fields.map((field, index) => {
+          {manualMethodFields.map((field, index) => {
             if (field.name === 'method_name') {
               return (
                 <Controller
