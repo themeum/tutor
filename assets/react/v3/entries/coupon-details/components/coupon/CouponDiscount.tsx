@@ -19,9 +19,10 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import type { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { Addons } from '@Config/constants';
 
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
-const displayBundle = isTutorProActive && isAddonEnabled('Course Bundle');
+const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);
 
 const discountTypeOptions = [
   { label: __('Percent', 'tutor'), value: 'percentage' },
