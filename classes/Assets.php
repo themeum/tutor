@@ -522,7 +522,7 @@ class Assets {
 
 		$fallback_colors = array(
 			'tutor_primary_color'       => '#3E64DE',
-			'tutor_primary_hover_color' => '#395BCA',
+			'tutor_primary_hover_color' => '#3A5CCC',
 			'tutor_text_color'          => '#212327',
 			'tutor_border_color'        => '#E3E5EB',
 			'tutor_gray_color'          => '#CDCFD5',
