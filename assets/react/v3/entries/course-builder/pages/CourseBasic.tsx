@@ -262,7 +262,7 @@ const CourseBasic = () => {
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
-                  label={__('Course Title', 'tutor')}
+                  label={__('Title', 'tutor')}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
                   selectOnFocus
@@ -378,7 +378,7 @@ const CourseBasic = () => {
             <FormImageInput
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
-              buttonText={__('Upload Course Thumbnail', 'tutor')}
+              buttonText={__('Upload Thumbnail', 'tutor')}
               infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
               generateWithAi={!isTutorPro || isOpenAiEnabled}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}

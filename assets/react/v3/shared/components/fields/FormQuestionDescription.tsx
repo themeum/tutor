@@ -24,7 +24,7 @@ const FormQuestionDescription = ({
   label,
   field,
   fieldState,
-  disabled,
+  disabled = false,
   loading,
   placeholder,
   helpText,
@@ -37,7 +37,7 @@ const FormQuestionDescription = ({
 
   return (
     <div css={styles.editorWrapper({ isEdit })}>
-      <div css={styles.container({ isEdit })}>
+      <div css={styles.container({ isEdit, isDisabled: disabled })}>
         <Show
           when={!inputValue && !isEdit}
           fallback={
@@ -109,7 +109,7 @@ const styles = {
   editorWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     position: relative;
     max-height: 400px;
-    overflow-y: scroll;
+    overflow-y: auto;
 
     ${
       isEdit &&

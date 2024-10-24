@@ -83,6 +83,7 @@ const ImageInput = ({
                 <Button
                   variant="secondary"
                   size={size}
+                  buttonCss={css`margin-top: ${spacing[16]};`}
                   onClick={(event) => {
                     event.stopPropagation();
                     uploadHandler();

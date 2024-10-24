@@ -61,11 +61,15 @@ const styles = {
     gap: ${spacing[8]};
     align-items: center;
 
+    &:is(:first-child) {
+      padding-left: 0;
+    }
+
     ${
       isActive &&
       css`
-      color: ${colorTokens.text.primary};
-    `
+        color: ${colorTokens.text.primary};
+      `
     }
 
     ${
