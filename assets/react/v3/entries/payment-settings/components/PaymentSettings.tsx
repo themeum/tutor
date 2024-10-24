@@ -26,11 +26,13 @@ import StaticConfirmationModal from './modals/StaticConfirmationModal';
 
 const TaxSettingsPage = () => {
   const { payment_gateways } = usePaymentContext();
-  const { methods } = convertPaymentMethods(initialPaymentSettings.payment_methods, payment_gateways);
   const { showModal } = useModal();
 
   const form = useFormWithGlobalError<PaymentSettings>({
-    defaultValues: { ...initialPaymentSettings, payment_methods: methods },
+    defaultValues: {
+      ...initialPaymentSettings,
+      payment_methods: convertPaymentMethods([], payment_gateways),
+    },
   });
   const { reset } = form;
   const formData = form.watch();
@@ -46,23 +48,12 @@ const TaxSettingsPage = () => {
 
   useEffect(() => {
     if (paymentSettingsQuery.data) {
-      const { methods, isModified } = convertPaymentMethods(
-        paymentSettingsQuery.data.payment_methods,
-        payment_gateways
-      );
+      const methods = convertPaymentMethods(paymentSettingsQuery.data.payment_methods, payment_gateways);
 
       reset({
         ...paymentSettingsQuery.data,
         payment_methods: methods,
       });
-
-      // Programmatically click the save button
-      if (isModified) {
-        setTimeout(() => {
-          document.getElementById('save_tutor_option')?.removeAttribute('disabled');
-          document.getElementById('save_tutor_option')?.click();
-        }, 100);
-      }
     }
   }, [reset, paymentSettingsQuery.data]);
 
@@ -93,7 +84,10 @@ const TaxSettingsPage = () => {
             });
 
             if (action === 'CONFIRM') {
-              reset({ ...initialPaymentSettings, payment_methods: methods });
+              reset({
+                ...initialPaymentSettings,
+                payment_methods: convertPaymentMethods([], payment_gateways),
+              });
               document.getElementById('save_tutor_option')?.removeAttribute('disabled');
             }
           }}

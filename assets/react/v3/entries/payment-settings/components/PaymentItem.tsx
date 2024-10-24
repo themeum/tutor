@@ -22,6 +22,7 @@ import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import {
   getWebhookUrl,
+  manualMethodFields,
   useInstallPaymentMutation,
   useRemovePaymentMutation,
   type PaymentMethod,
@@ -30,6 +31,8 @@ import {
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
 import Badge from '../atoms/Badge';
 import { isObject } from '@Utils/types';
+import { usePaymentContext } from '../contexts/payment-context';
+import Alert from '@/v3/shared/atoms/Alert';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -38,8 +41,13 @@ interface PaymentItemProps {
 }
 
 const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps) => {
+  const { payment_gateways } = usePaymentContext();
   const { showModal } = useModal();
   const form = useFormContext<PaymentSettings>();
+
+  const paymentFormFields = data.is_manual
+    ? manualMethodFields
+    : payment_gateways.find((item) => item.name === data.name)?.fields ?? [];
 
   const installPaymentMutation = useInstallPaymentMutation();
   const removePaymentMutation = useRemovePaymentMutation();
@@ -85,7 +93,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
       </button>
 
       <Card
-        title={data.is_manual ? form.getValues(`payment_methods.${paymentIndex}.fields.0.value`) : data.label}
+        title={data.label}
         titleIcon={data.icon}
         subscription={data.support_subscription}
         actionTray={
@@ -128,72 +136,93 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
       >
         <div css={styles.paymentWrapper}>
           <div css={styles.fieldWrapper}>
-            <For each={data.fields}>
-              {(field, index) => (
-                <Controller
-                  name={`payment_methods.${paymentIndex}.fields.${index}.value`}
-                  control={form.control}
-                  render={(controllerProps) => {
-                    switch (field.type) {
-                      case 'select':
-                        return (
-                          <FormSelectInput
-                            {...controllerProps}
-                            label={field.label}
-                            options={
-                              isObject(field.options)
-                                ? convertToOptions(field.options as Record<string, string>)
-                                : field.options ?? []
-                            }
-                            isInlineLabel
-                          />
-                        );
+            <Show
+              when={paymentFormFields.length}
+              fallback={<Alert>{__('Necessary plugin is not installed to display options!', 'tutor')}</Alert>}
+            >
+              <For each={paymentFormFields}>
+                {(field, index) => (
+                  <Controller
+                    name={`payment_methods.${paymentIndex}.fields.${index}.value`}
+                    control={form.control}
+                    render={(controllerProps) => {
+                      switch (field.type) {
+                        case 'select':
+                          return (
+                            <FormSelectInput
+                              {...controllerProps}
+                              label={field.label}
+                              options={
+                                isObject(field.options)
+                                  ? convertToOptions(field.options as Record<string, string>)
+                                  : field.options ?? []
+                              }
+                              isInlineLabel
+                            />
+                          );
 
-                      case 'secret_key':
-                        return (
-                          <FormInput
-                            {...controllerProps}
-                            type="password"
-                            isPassword
-                            label={field.label}
-                            isInlineLabel
-                          />
-                        );
+                        case 'secret_key':
+                          return (
+                            <FormInput
+                              {...controllerProps}
+                              type="password"
+                              isPassword
+                              label={field.label}
+                              isInlineLabel
+                            />
+                          );
 
-                      case 'textarea':
-                        return (
-                          <FormTextareaInput {...controllerProps} label={field.label} rows={6} helpText={field.hint} />
-                        );
+                        case 'textarea':
+                          return (
+                            <FormTextareaInput
+                              {...controllerProps}
+                              label={field.label}
+                              rows={6}
+                              helpText={field.hint}
+                            />
+                          );
 
-                      case 'webhook_url':
-                        return (
-                          <OptionWebhookUrl
-                            {...controllerProps}
-                            field={{ ...controllerProps.field, value: getWebhookUrl(data.name) }}
-                            label={field.label}
-                          />
-                        );
+                        case 'webhook_url':
+                          return (
+                            <OptionWebhookUrl
+                              {...controllerProps}
+                              field={{ ...controllerProps.field, value: getWebhookUrl(data.name) }}
+                              label={field.label}
+                            />
+                          );
 
-                      case 'image':
-                        return (
-                          <FormImageInput
-                            {...controllerProps}
-                            label={field.label}
-                            size="small"
-                            previewImageCss={styles.previewImage}
-                            onChange={(value) => {
-                              form.setValue(`payment_methods.${paymentIndex}.icon`, value?.url ?? '');
-                            }}
-                          />
-                        );
+                        case 'image':
+                          return (
+                            <FormImageInput
+                              {...controllerProps}
+                              label={field.label}
+                              size="small"
+                              previewImageCss={styles.previewImage}
+                              onChange={(value) => {
+                                form.setValue(`payment_methods.${paymentIndex}.icon`, value?.url ?? '');
+                              }}
+                            />
+                          );
 
-                      default:
-                        return <FormInput {...controllerProps} label={field.label} isInlineLabel />;
-                    }
-                  }}
-                />
-              )}
-            </For>
+                        default:
+                          return (
+                            <FormInput
+                              {...controllerProps}
+                              label={field.label}
+                              isInlineLabel
+                              onChange={(value) => {
+                                if (data.is_manual) {
+                                  form.setValue(`payment_methods.${paymentIndex}.label`, String(value));
+                                }
+                              }}
+                            />
+                          );
+                      }
+                    }}
+                  />
+                )}
+              </For>
+            </Show>
           </div>
           <Show when={data.name !== 'paypal'}>
             <Button
@@ -227,11 +256,14 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                     if (response.status_code === 200) {
                       form.setValue(
                         'payment_methods',
-                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
-                        {
-                          shouldDirty: true,
-                        }
+                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex)
                       );
+
+                      // Save settings
+                      setTimeout(() => {
+                        document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+                        document.getElementById('save_tutor_option')?.click();
+                      }, 100);
                     }
                   }
                 }

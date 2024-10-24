@@ -2,15 +2,15 @@ import { useToast } from '@Atoms/Toast';
 import { tutorConfig } from '@Config/config';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { Option } from '@Utils/types';
 import { convertToErrorMessage } from '../../course-builder/utils/utils';
 
 export interface PaymentField {
   name: string;
-  label: string;
-  type: 'select' | 'text' | 'secret_key' | 'textarea' | 'image' | 'webhook_url';
+  label?: string;
+  type?: 'select' | 'text' | 'secret_key' | 'textarea' | 'image' | 'webhook_url';
   options?: Option<string>[] | Record<string, string>;
   hint?: string;
   // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -23,7 +23,7 @@ export interface PaymentMethod {
   is_active: boolean;
   icon: string;
   support_subscription: boolean;
-  update_available: boolean;
+  update_available?: boolean;
   is_installable?: boolean;
   is_manual?: boolean;
   fields: PaymentField[];
@@ -38,112 +38,59 @@ export const getWebhookUrl = (gateway: string) => {
 };
 
 export const initialPaymentSettings: PaymentSettings = {
-  payment_methods: [
-    {
-      name: 'paypal',
-      label: __('PayPal', 'tutor'),
-      is_active: false,
-      icon: `${tutorConfig.tutor_url}assets/images/paypal.svg`,
-      support_subscription: true,
-      update_available: false,
-      is_manual: false,
-      fields: [
-        {
-          name: 'environment',
-          label: __('PayPal Environment', 'tutor'),
-          type: 'select',
-          options: [
-            {
-              label: __('Test', 'tutor'),
-              value: 'test',
-            },
-            {
-              label: __('Live', 'tutor'),
-              value: 'live',
-            },
-          ],
-          value: 'test',
-        },
-        {
-          name: 'merchant_email',
-          label: __('Merchant Email', 'tutor'),
-          type: 'text',
-          value: '',
-        },
-        {
-          name: 'client_id',
-          label: __('Client ID', 'tutor'),
-          type: 'text',
-          value: '',
-        },
-        {
-          name: 'secret_id',
-          label: __('Secret ID', 'tutor'),
-          type: 'secret_key',
-          value: '',
-        },
-        {
-          name: 'webhook_id',
-          label: __('Webhook ID', 'tutor'),
-          type: 'secret_key',
-          value: '',
-        },
-        {
-          name: 'webhook_url',
-          label: __('Webhook URL', 'tutor'),
-          type: 'webhook_url',
-          value: getWebhookUrl('paypal'),
-        },
-      ],
-    },
-  ],
+  payment_methods: [],
 };
 
+export const manualMethodFields: PaymentField[] = [
+  {
+    name: 'method_name',
+    label: __('Payment Method Name', 'tutor'),
+    type: 'text',
+    value: '',
+  },
+  {
+    name: 'icon',
+    label: __('Icon', 'tutor'),
+    type: 'image',
+    value: {
+      id: 0,
+      url: '',
+      title: '',
+    },
+  },
+  {
+    name: 'additional_details',
+    label: __('Additional details', 'tutor'),
+    type: 'textarea',
+    hint: __('Briefly describe this payment option. (e.g., Bank Transfer, Cash on Delivery).', 'tutor'),
+    value: '',
+  },
+  {
+    name: 'payment_instructions',
+    label: __('Payment instructions', 'tutor'),
+    type: 'textarea',
+    hint: __('Provide clear, step-by-step instructions on how to complete the payment.', 'tutor'),
+    value: '',
+  },
+];
+
 export const convertPaymentMethods = (methods: PaymentMethod[], gateways: PaymentGateway[]) => {
-  let isModified = false;
-  let updatedMethods = [...methods];
+  const gatewayMap = new Map(gateways.map((gateway) => [gateway.name, gateway]));
 
-  if (gateways.length === 0) {
-    const filteredMethods = updatedMethods.filter((method) => !Object.hasOwn(method, 'is_installable'));
-    if (filteredMethods.length !== updatedMethods.length) {
-      isModified = true;
-    }
-    return { methods: filteredMethods, isModified };
-  }
+  // Update methods with data from gateways api
+  const updatedMethods = methods.map((method) => {
+    const gateway = gatewayMap.get(method.name);
+    return gateway ? { ...gateway, is_active: method.is_active, fields: method.fields } : method;
+  });
 
-  gateways.forEach((gateway) => {
-    const existingMethod = updatedMethods.find((method) => method.name === gateway.name);
-
-    // Append new method if gateway is installed but not found in methods
-    if (gateway.is_installed && !existingMethod) {
-      updatedMethods.push(gateway);
-      isModified = true;
-    }
-
-    // Remove method if gateway is not installed but found in methods
-    if (!gateway.is_installed && existingMethod) {
-      updatedMethods = updatedMethods.filter((method) => method.name !== gateway.name);
-      isModified = true;
-    }
-
-    // Update existing method if gateway is installed and update is available
-    if (gateway.is_installed && gateway.update_available && existingMethod && !existingMethod.update_available) {
-      updatedMethods = updatedMethods.map((method) =>
-        method.name === gateway.name ? { ...method, update_available: true } : method
-      );
-      isModified = true;
-    }
-
-    // Update existing method if gateway is installed and update is not available
-    if (gateway.is_installed && !gateway.update_available && existingMethod && existingMethod.update_available) {
-      updatedMethods = updatedMethods.map((method) =>
-        method.name === gateway.name ? { ...method, update_available: false } : method
-      );
-      isModified = true;
+  // Add any new methods from installed gateways that are not already in methods
+  gatewayMap.forEach((gateway) => {
+    if (gateway.is_installed && !updatedMethods.some((method) => method.name === gateway.name)) {
+      updatedMethods.push({ ...gateway, fields: gateway.fields.map(({ name, value }) => ({ name, value })) });
     }
   });
 
-  return { methods: updatedMethods, isModified };
+  return updatedMethods;
 };
 
 const getPaymentSettings = () => {
@@ -208,11 +155,15 @@ const installPayment = (payload: PaymentPayload) => {
 
 export const useInstallPaymentMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: installPayment,
     onSuccess: (response) => {
       showToast({ type: 'success', message: response.message });
+      queryClient.invalidateQueries({
+        queryKey: ['PaymentGateways'],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
@@ -228,11 +179,15 @@ const removePayment = (payload: PaymentPayload) => {
 
 export const useRemovePaymentMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: removePayment,
     onSuccess: (response) => {
       showToast({ type: 'success', message: response.message });
+      queryClient.invalidateQueries({
+        queryKey: ['PaymentGateways'],
+      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
