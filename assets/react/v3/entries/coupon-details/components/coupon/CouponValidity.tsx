@@ -55,6 +55,12 @@ function CouponValidity() {
             <FormCheckbox
               {...controllerProps}
               label={__('Set end date', 'tutor')}
+              onChange={(value) => {
+                if (!value) {
+                  form.setValue('end_date', '');
+                  form.setValue('end_time', '');
+                }
+              }}
               disabled={!hasStartDateTime}
               labelCss={styles.setEndDateLabel}
             />
