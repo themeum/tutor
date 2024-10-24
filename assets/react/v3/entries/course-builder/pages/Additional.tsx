@@ -109,7 +109,7 @@ const Additional = () => {
                 render={(controllerProps) => (
                   <FormTextareaInput
                     {...controllerProps}
-                    label={__('Targeted Audience', 'tutor')}
+                    label={__('Target Audience', 'tutor')}
                     placeholder={__(
                       'Specify the target audience that will benefit the most from the course.(One Line Per target audience)',
                       'tutor',
@@ -132,7 +132,7 @@ const Additional = () => {
                       label={__('Total Course Duration', 'tutor')}
                       placeholder="0"
                       contentPosition="right"
-                      content={__('hour', 'tutor')}
+                      content={__('hour(s)', 'tutor')}
                       loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                     />
                   )}
@@ -146,7 +146,7 @@ const Additional = () => {
                       type="number"
                       placeholder="0"
                       contentPosition="right"
-                      content={__('min', 'tutor')}
+                      content={__('min(s)', 'tutor')}
                       loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                     />
                   )}
@@ -200,7 +200,7 @@ const Additional = () => {
                 </Show>
               </div>
               <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
-                <div css={styles.subtitle}>{__('Select certificate to inspire your students', 'tutor')}</div>
+                <div css={styles.subtitle}>{__('Select a certificate to award your learners.', 'tutor')}</div>
               </Show>
 
               <Certificate />
@@ -224,7 +224,7 @@ const Additional = () => {
               render={(controllerProps) => (
                 <FormCoursePrerequisites
                   {...controllerProps}
-                  placeholder={__('Search to add course prerequisites', 'tutor')}
+                  placeholder={__('Search courses for prerequisites', 'tutor')}
                   options={prerequisiteCoursesQuery.data || []}
                   isSearchable
                   loading={

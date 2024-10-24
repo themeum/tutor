@@ -97,9 +97,9 @@ const TaxSettingsPage = () => {
               <EmptyState
                 emptyStateImage={taxBanner}
                 imageAltText={__('Tax Banner', 'tutor')}
-                title={__('Apply Tax During Checkout', 'tutor')}
+                title={__('Configure Tax Rates', 'tutor')}
                 content={__('Start configuring the tax settings to set up and manage the tax rates.', 'tutor')}
-                buttonText={__('Add taxable country', 'tutor')}
+                buttonText={__('Add tax region', 'tutor')}
                 action={() => {
                   openCountrySelectModal({
                     form,

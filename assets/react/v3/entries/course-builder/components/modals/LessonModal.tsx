@@ -203,9 +203,9 @@ const LessonModal = ({
                 render={(controllerProps) => (
                   <FormInput
                     {...controllerProps}
-                    label={__('Title', 'tutor')}
-                    placeholder={__('Enter Lesson Title', 'tutor')}
-                    helpText={__('Lesson titles are displayed publicly wherever required.', 'tutor')}
+                    label={__('Name', 'tutor')}
+                    placeholder={__('Enter Lesson Name', 'tutor')}
+                    helpText={__('Lesson names are displayed publicly wherever required.', 'tutor')}
                     selectOnFocus
                     isClearable
                   />
@@ -220,7 +220,7 @@ const LessonModal = ({
                       {...controllerProps}
                       label={
                         <div css={styles.descriptionLabel}>
-                          {__('Description', 'tutor')}
+                          {__('Content', 'tutor')}
                           {lessonId && isClassicEditorEnabled && (
                             <Button
                               variant="text"
@@ -242,7 +242,7 @@ const LessonModal = ({
                       }
                       placeholder={__('Enter Lesson Description', 'tutor')}
                       helpText={__(
-                        'The idea of a summary is a short text to prepare students for the activities within the topic or week. The text is shown on the course page under the topic name.',
+                        'Create engaging lessons by combining text, images, audio, and links.',
                         'tutor',
                       )}
                     />
@@ -310,7 +310,7 @@ const LessonModal = ({
                 <FormImageInput
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
-                  buttonText={__('Upload Featured Image', 'tutor')}
+                  buttonText={__('Upload featured image', 'tutor')}
                   infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
                 />
               )}
@@ -334,7 +334,7 @@ const LessonModal = ({
               )}
             />
             <div css={styles.durationWrapper}>
-              <span css={styles.additionLabel}>{__('Video playback time', 'tutor')}</span>
+              <span css={styles.additionLabel}>{__('Video Playback Time', 'tutor')}</span>
               <div css={styles.duration}>
                 <Controller
                   name="duration.hour"

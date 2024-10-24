@@ -61,7 +61,7 @@ function Topbar() {
             <div>
               <div css={styles.headerContent}>
                 <h4 css={typography.heading5('medium')}>
-                  {courseId ? __('Update coupon', 'tutor') : __('Create coupon', 'tutor')}
+                  {courseId ? __('Update Coupon', 'tutor') : __('Create Coupon', 'tutor')}
                 </h4>
                 <TutorBadge variant={statusVariant[coupon.coupon_status]}>
                   {makeFirstCharacterUpperCase(coupon.coupon_status)}
