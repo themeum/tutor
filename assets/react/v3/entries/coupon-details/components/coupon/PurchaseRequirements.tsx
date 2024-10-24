@@ -27,7 +27,7 @@ function PurchaseRequirements() {
       value: 'minimum_purchase',
     },
     {
-      label: __('Minimum quantity of items', 'tutor'),
+      label: __('Minimum quantity of courses', 'tutor'),
       value: 'minimum_quantity',
     },
   ];
@@ -35,8 +35,8 @@ function PurchaseRequirements() {
   return (
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
-        <BoxTitle>{__('Minimum purchase requirements', 'tutor')}</BoxTitle>
-        <BoxSubtitle>{__('Set the minimum purchase amount/quantity for this coupon to be valid', 'tutor')}</BoxSubtitle>
+        <BoxTitle>{__('Minimum Purchase Requirements', 'tutor')}</BoxTitle>
+        <BoxSubtitle>{__('Set the minimum purchase amount/quantity for this coupon to be valid.', 'tutor')}</BoxSubtitle>
       </div>
       <Controller
         name="purchase_requirement"

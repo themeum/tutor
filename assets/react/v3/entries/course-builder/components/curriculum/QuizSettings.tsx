@@ -54,7 +54,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={__('Time limit', 'tutor')}
+                    label={__('Time Limit', 'tutor')}
                     helpText={__('Set a time limit for this quiz. A value of “0” indicates no time limit', 'tutor')}
                     selectOnFocus
                   />
@@ -104,12 +104,12 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     {
                       label: __('Default', 'tutor'),
                       value: 'default',
-                      description: __('Answers shown after quiz is finished', 'tutor'),
+                      description: __('Answers are shown after finishing the quiz.', 'tutor'),
                     },
                     {
                       label: __('Reveal Mode', 'tutor'),
                       value: 'reveal',
-                      description: __('Show the answer after attempting the quiz.', 'tutor'),
+                      description: __('Show answer after attempting the question.', 'tutor'),
                     },
                     {
                       label: __('Retry', 'tutor'),
@@ -134,7 +134,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Attempts Allowed', 'tutor')}
                   helpText={__(
                     'Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts',
-                    'tutor',
+                    'tutor'
                   )}
                   selectOnFocus
                 />
@@ -152,7 +152,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Passing is Required', 'tutor')}
                   helpText={__(
                     'By enabling this option, the student must have to pass it to access the next quiz',
-                    'tutor',
+                    'tutor'
                   )}
                 />
               )}
@@ -185,7 +185,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Max Question Allowed to Answer', 'tutor')}
                   helpText={__(
                     'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
-                    'tutor',
+                    'tutor'
                   )}
                   selectOnFocus
                 />
@@ -232,7 +232,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     placeholder={__('Select Unlock Date', 'tutor')}
                     helpText={__(
                       'This lesson will be available from the given date. Leave empty to make it available immediately',
-                      'tutor',
+                      'tutor'
                     )}
                   />
                 )}
@@ -299,7 +299,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     placeholder={__('Select an option', 'tutor')}
                     options={[
                       { label: __('Single question', 'tutor'), value: 'single_question' },
-                      { label: __('Question Pagination', 'tutor'), value: 'question_pagination' },
+                      { label: __('Question pagination', 'tutor'), value: 'question_pagination' },
                       { label: __('Question below each other', 'tutor'), value: 'question_below_each_other' },
                     ]}
                   />
@@ -331,11 +331,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               name="quiz_option.hide_question_number_overview"
               control={form.control}
               render={(controllerProps) => (
-                <FormSwitch
-                  {...controllerProps}
-                  label={__('Question number visibility', 'tutor')}
-                  helpText={__('Hide question number overview', 'tutor')}
-                />
+                <FormSwitch {...controllerProps} label={__('Hide Question Number', 'tutor')} />
               )}
             />
 
@@ -346,11 +342,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 <FormInput
                   {...controllerProps}
                   type="number"
-                  label={__('Set a character limit for Short Answers', 'tutor')}
-                  helpText={__(
-                    'Student will place answer in short answer question type within this characters limit.',
-                    'tutor',
-                  )}
+                  label={__('Set Character Limit for Short Answers', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -362,8 +354,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
               render={(controllerProps) => (
                 <FormInput
                   {...controllerProps}
-                  label={__('Open-Ended/Essay questions answer character limit', 'tutor')}
-                  helpText={__('Set a character limit for open-ended/essay answers', 'tutor')}
+                  label={__('Set Character Limit for Open-Ended/Essay Answers', 'tutor')}
                   selectOnFocus
                 />
               )}

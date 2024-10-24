@@ -293,12 +293,8 @@ export default function TaxRates() {
     <>
       <Card>
         <CardHeader
-          title={activeCountry ? __('Regions & tax rates', 'tutor') : __('Regional tax rates', 'tutor')}
-          subtitle={
-            activeCountry
-              ? __('Add region you want to collect tax & their tax rates', 'tutor')
-              : __('Add the destinations in this region', 'tutor')
-          }
+          title={__('Tax Regions & Rates', 'tutor')}
+          subtitle={__('Specify regions and their applicable tax rates.', 'tutor')}
         />
         <div css={styleUtils.cardInnerSection}>
           <Show when={activeCountry && activeCountryAllStates?.length}>

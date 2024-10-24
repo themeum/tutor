@@ -244,10 +244,10 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
-                label={__('Auto recording', 'tutor')}
+                label={__('Auto Recording', 'tutor')}
                 placeholder={__('Select auto recording option', 'tutor')}
                 options={[
-                  { label: __('No Recordings', 'tutor'), value: 'none' },
+                  { label: __('No recordings', 'tutor'), value: 'none' },
                   { label: __('Local', 'tutor'), value: 'local' },
                   { label: __('Cloud', 'tutor'), value: 'cloud' },
                 ]}

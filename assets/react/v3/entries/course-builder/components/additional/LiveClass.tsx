@@ -139,7 +139,7 @@ const LiveClass = () => {
                   onClick={() => setShowMeetingForm('zoom')}
                   ref={zoomButtonRef}
                 >
-                  {__('Create a Zoom meeting', 'tutor')}
+                  {__('Create a Zoom Meeting', 'tutor')}
                 </Button>
               </div>
             </div>
