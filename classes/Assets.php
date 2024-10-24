@@ -472,53 +472,16 @@ class Assets {
 		);
 
 		// Admin colors.
-		// $admin_colors = array();
-		// if ( is_admin() ) {
-		// 	$admin_color = get_user_option( 'admin_color' );
-
-		// 	switch ( $admin_color ) {
-		// 		case 'light':
-		// 			$admin_color_codes = array( '#04a4cc', '#04b0db' );
-		// 			break;
-
-		// 		case 'modern':
-		// 			$admin_color_codes = array( '#3858e9', '#4664eb' );
-		// 			break;
-
-		// 		case 'blue':
-		// 			$admin_color_codes = array( '#e1a948', '#e3af55' );
-		// 			break;
-
-		// 		case 'coffee':
-		// 			$admin_color_codes = array( '#c7a589', '#ccad93' );
-		// 			break;
-
-		// 		case 'ectoplasm':
-		// 			$admin_color_codes = array( '#a3b745', '#a9bd4f' );
-		// 			break;
-
-		// 		case 'midnight':
-		// 			$admin_color_codes = array( '#e14d43', '#e35950' );
-		// 			break;
-
-		// 		case 'ocean':
-		// 			$admin_color_codes = array( '#9ebaa0', '#a7c0a9' );
-		// 			break;
-
-		// 		case 'sunrise':
-		// 			$admin_color_codes = array( '#dd823b', '#df8a48' );
-		// 			break;
-
-		// 		default:
-		// 			$admin_color_codes = array( '#007cba', '#006ba1' );
-		// 			break;
-		// 	}
-
-		// 	$admin_colors = array(
-		// 		'--tutor-color-primary'       => $admin_color_codes[0],
-		// 		'--tutor-color-primary-hover' => $admin_color_codes[1],
-		// 	);
-		// }
+		$admin_colors = array();
+		if ( is_admin() ) {
+			$admin_colors = array(
+				'--tutor-color-primary'       => '#3E64DE',
+				'--tutor-color-primary-hover' => '#3A5CCC',
+				'--tutor-body-color'          => '#212327',
+				'--tutor-border-color'        => '#CDCFD5',
+				'--tutor-color-gray'          => '#CDCFD5',
+			);
+		}
 
 		$fallback_colors = array(
 			'tutor_primary_color'       => '#3E64DE',
