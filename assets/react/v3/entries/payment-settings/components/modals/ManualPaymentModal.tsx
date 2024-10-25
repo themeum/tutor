@@ -74,6 +74,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                     <FormInput
                       {...controllerProps}
                       label={__('Title', 'tutor')}
+                      placeholder={__('e.g. Bank Transfer', 'tutor')}
                       onChange={(value) => {
                         const name = String(value).toLowerCase().replace(/\s+/g, '-');
                         form.setValue('name', name);
@@ -92,7 +93,8 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                     <FormImageInput
                       {...controllerProps}
                       label={field.label}
-                      size="small"
+                      buttonText={__('Upload Image', 'tutor')}
+                      infoText={__('Recommended size: 48x48', 'tutor')}
                       previewImageCss={styles.previewImage}
                       onChange={(value) => {
                         form.setValue('icon', value?.url ?? '');
@@ -118,11 +120,11 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
           })}
         </div>
         <div css={styles.footerWrapper}>
-          <Button variant="secondary" onClick={() => closeModal({ action: 'CLOSE' })}>
+          <Button variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
             {__('Cancel', 'tutor')}
           </Button>
           <Button type="submit" variant="primary">
-            {__('Activate', 'tutor')}
+            {__('Save', 'tutor')}
           </Button>
         </div>
       </form>
@@ -155,7 +157,7 @@ const styles = {
   `,
   footerWrapper: css`
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     gap: ${spacing[8]};
     padding: ${spacing[16]};
     box-shadow: ${shadow.dividerTop};

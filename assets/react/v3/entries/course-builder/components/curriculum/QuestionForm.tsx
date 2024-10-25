@@ -76,7 +76,7 @@ const QuestionForm = () => {
 
         <p css={styles.emptyStateText}>
           {__(
-            'Taking a quiz is like a mini workout for brain. Let’s create some engaging quizzes for your students!',
+            'Enter a quiz title to begin. Choose from a variety of question types to keep things interesting!',
             'tutor',
           )}
         </p>

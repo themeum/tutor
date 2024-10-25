@@ -62,9 +62,9 @@ export default FormCheckbox;
 
 const styles = {
   description: css`
-    ${typography.body()}
-    color: ${colorTokens.text.subdued};
-    padding-left: ${spacing[28]};
+    ${typography.small()}
+    color: ${colorTokens.text.hints};
+    padding-left: 30px;
     margin-top: ${spacing[6]};
   `,
 };
