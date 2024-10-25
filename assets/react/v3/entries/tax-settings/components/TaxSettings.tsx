@@ -72,7 +72,7 @@ const TaxSettingsPage = () => {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <Show when={activeCountry} fallback={<h6 css={styles.title}>{__('Tax', 'tutor')}</h6>}>
+      <Show when={activeCountry} fallback={<h6 css={styles.title}>{__('Taxes', 'tutor')}</h6>}>
         {(countryCode) => {
           return (
             <Button

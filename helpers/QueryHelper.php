@@ -257,7 +257,7 @@ class QueryHelper {
 				$value = array( $field, 'IN', $value );
 			} else {
 				if ( 'null' == $value ) {
-					$value = array( $field, 'IS', 'NULL');
+					$value = array( $field, 'IS', 'NULL' );
 				} else {
 					$value = is_numeric( $value ) ? $value : "'" . $value . "'";
 					$value = array( $field, '=', $value );
@@ -502,8 +502,14 @@ class QueryHelper {
 			if ( is_array( $value ) ) {
 				continue;
 			}
-			$value = esc_sql( sanitize_text_field( $value ) );
-			$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
+
+			if ( is_null( $value ) ) {
+				$set  .= "$key = null";
+			} else {
+				$value = esc_sql( sanitize_text_field( $value ) );
+				$set  .= is_numeric( $value ) ? "$key = $value" : "$key = '" . $value ."'";
+			}
+			
 			$set .= ",";
 		}
 		return rtrim( $set, ',' );

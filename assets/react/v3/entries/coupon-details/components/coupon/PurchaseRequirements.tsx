@@ -36,7 +36,6 @@ function PurchaseRequirements() {
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Minimum Purchase Requirements', 'tutor')}</BoxTitle>
-        <BoxSubtitle>{__('Set the minimum purchase amount/quantity for this coupon to be valid.', 'tutor')}</BoxSubtitle>
       </div>
       <Controller
         name="purchase_requirement"

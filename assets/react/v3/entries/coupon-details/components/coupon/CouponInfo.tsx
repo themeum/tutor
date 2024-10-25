@@ -51,6 +51,9 @@ function CouponInfo() {
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Coupon Info', 'tutor')}</BoxTitle>
+        <BoxSubtitle>
+          {__('Create a coupon code or set up automatic discounts.', 'tutor')}
+        </BoxSubtitle>
       </div>
       <Controller
         name="coupon_type"
@@ -58,7 +61,7 @@ function CouponInfo() {
         render={(controllerProps) => (
           <FormRadioGroup
             {...controllerProps}
-            label={__('Coupon Application', 'tutor')}
+            label={__('Method', 'tutor')}
             options={couponTypeOptions}
             wrapperCss={styles.radioWrapper}
             disabled={isEditMode}
@@ -72,8 +75,8 @@ function CouponInfo() {
         render={(controllerProps) => (
           <FormInput
             {...controllerProps}
-            label={__('Coupon Name', 'tutor')}
-            placeholder={sprintf(__('Summer sale %s', 'tutor'), format(new Date(), DateFormats.year))}
+            label={__('Title', 'tutor')}
+            placeholder={sprintf(__('e.g. Summer Sale %s', 'tutor'), format(new Date(), DateFormats.year))}
           />
         )}
       />
