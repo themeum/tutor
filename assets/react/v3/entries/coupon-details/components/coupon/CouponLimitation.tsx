@@ -19,9 +19,6 @@ function CouponLimitation() {
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Usage Limitation', 'tutor')}</BoxTitle>
-        <BoxSubtitle>
-          {__('Set a limit on how many times this coupon can be used.', 'tutor')}
-        </BoxSubtitle>
       </div>
       <div css={styles.couponWrapper}>
         <div css={styles.limitWrapper}>

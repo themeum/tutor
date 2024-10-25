@@ -44,7 +44,7 @@ export const initialPaymentSettings: PaymentSettings = {
 export const manualMethodFields: PaymentField[] = [
   {
     name: 'method_name',
-    label: __('Payment Method Name', 'tutor'),
+    label: __('Title', 'tutor'),
     type: 'text',
     value: '',
   },
@@ -59,15 +59,8 @@ export const manualMethodFields: PaymentField[] = [
     },
   },
   {
-    name: 'additional_details',
-    label: __('Additional details', 'tutor'),
-    type: 'textarea',
-    hint: __('Briefly describe this payment option. (e.g., Bank Transfer, Cash on Delivery).', 'tutor'),
-    value: '',
-  },
-  {
     name: 'payment_instructions',
-    label: __('Payment instructions', 'tutor'),
+    label: __('Payment Instructions', 'tutor'),
     type: 'textarea',
     hint: __('Provide clear, step-by-step instructions on how to complete the payment.', 'tutor'),
     value: '',

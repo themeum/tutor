@@ -33,7 +33,7 @@ const CoursePrerequisitesEmptyState = () => {
         <div css={styles.featuresWithTitle}>
           <div css={isTutorPro && styleUtils.text.align.center}>
             {!isTutorPro
-              ? __('Level up course structure with Tutor LMS course prerequisites', 'tutor')
+              ? __('Guide Students with Course Prerequisites', 'tutor')
               : __('Activate the “Prerequisites” addon to use this feature.', 'tutor')}
           </div>
           <Show when={!isTutorPro}>
