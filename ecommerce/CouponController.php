@@ -226,13 +226,8 @@ class CouponController extends BaseController {
 
 		unset( $data['coupon_id'] );
 
-		// Convert start & expire date time into gmt.
-		if ( isset( $data['start_date_gmt'] ) ) {
-			get_gmt_from_date( $data['start_date_gmt'] );
-		}
-
-		if ( isset( $data['expire_date_gmt'] ) ) {
-			get_gmt_from_date( $data['expire_date_gmt'] );
+		if ( ! isset( $data['expire_date_gmt'] ) ) {
+			$data['expire_date_gmt'] = null;
 		}
 
 		// Set updated by.
