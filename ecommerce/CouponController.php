@@ -769,7 +769,12 @@ class CouponController extends BaseController {
 					'coupon_code' => $order->coupon_code,
 					'user_id'     => $order->user_id,
 				);
-				$this->model->store_coupon_usage( $data );
+
+				try {
+					$this->model->store_coupon_usage( $data );
+				} catch ( \Throwable $th ) {
+					tutor_log( $th );
+				}
 			}
 		}
 	}
