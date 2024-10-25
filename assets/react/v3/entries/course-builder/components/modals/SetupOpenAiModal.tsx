@@ -65,7 +65,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
   return (
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
-      title={isCurrentUserAdmin ? __('Set Open AI API key', 'tutor') : undefined}
+      title={isCurrentUserAdmin ? __('Set OpenAI API key', 'tutor') : undefined}
       entireHeader={isCurrentUserAdmin ? undefined : <>&nbsp;</>}
     >
       <div
@@ -98,8 +98,8 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
               <div>
                 {__('Find your Secret API key in your ', 'tutor')}
                 {/* @TODO: need to confirm the URL */}
-                <a href={config.CHATGPT_PLATFORM_URL}>{__('Open AI User settings', 'tutor')}</a>
-                {__(' and paste it here to connect Open AI with your Tutor LMS website.', 'tutor')}
+                <a href={config.CHATGPT_PLATFORM_URL}>{__('OpenAI User settings', 'tutor')}</a>
+                {__(' and paste it here to connect OpenAI with your Tutor LMS website.', 'tutor')}
               </div>
 
               <Alert type="info" icon="warning">
@@ -116,8 +116,8 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
                   {...controllerProps}
                   type="password"
                   isPassword
-                  label={__('Open AI API key', 'tutor')}
-                  placeholder={__('Enter your Open AI API key', 'tutor')}
+                  label={__('OpenAI API key', 'tutor')}
+                  placeholder={__('Enter your OpenAI API key', 'tutor')}
                 />
               )}
             />
@@ -125,7 +125,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
             <Controller
               name="enable_open_ai"
               control={form.control}
-              render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Enable Open AI', 'tutor')} />}
+              render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Enable OpenAI', 'tutor')} />}
             />
           </form>
           <div css={styles.formFooter}>

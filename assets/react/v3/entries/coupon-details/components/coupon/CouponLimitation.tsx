@@ -18,9 +18,9 @@ function CouponLimitation() {
   return (
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
-        <BoxTitle>{__('Usage limitation', 'tutor')}</BoxTitle>
+        <BoxTitle>{__('Usage Limitation', 'tutor')}</BoxTitle>
         <BoxSubtitle>
-          {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
+          {__('Set a limit on how many times this coupon can be used.', 'tutor')}
         </BoxSubtitle>
       </div>
       <div css={styles.couponWrapper}>
@@ -31,7 +31,7 @@ function CouponLimitation() {
             render={(controllerProps) => (
               <FormCheckbox
                 {...controllerProps}
-                label={__('Limit number of times this discount can be used in total', 'tutor')}
+                label={__('Limit number of times this coupon can be used in total', 'tutor')}
                 labelCss={styles.checkBoxLabel}
               />
             )}
@@ -58,7 +58,7 @@ function CouponLimitation() {
             render={(controllerProps) => (
               <FormCheckbox
                 {...controllerProps}
-                label={__('Limit number of times this discount can be used by a customer', 'tutor')}
+                label={__('Limit number of times this coupon can be used by a customer', 'tutor')}
                 labelCss={styles.checkBoxLabel}
               />
             )}

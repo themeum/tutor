@@ -84,7 +84,7 @@ function CouponDiscount() {
           control={form.control}
           rules={requiredRule()}
           render={(controllerProps) => (
-            <FormSelectInput {...controllerProps} label={__('Discount type', 'tutor')} options={discountTypeOptions} />
+            <FormSelectInput {...controllerProps} label={__('Discount Type', 'tutor')} options={discountTypeOptions} />
           )}
         />
         <Controller

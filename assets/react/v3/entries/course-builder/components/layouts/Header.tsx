@@ -350,7 +350,7 @@ const Header = () => {
               iconPosition="left"
               onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
             >
-              {__('Save draft', 'tutor')}
+              {__('Save as draft', 'tutor')}
             </Button>
           </Show>
 

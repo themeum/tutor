@@ -26,7 +26,7 @@ function CouponValidity() {
         <BoxTitle>{__('Validity', 'tutor')}</BoxTitle>
         <BoxSubtitle>
           {__(
-            'Define the active period for this coupon. Leaving the end date blank will make the coupon valid indefinitely',
+            'Define the active period for this coupon. Leaving the end date blank will make the coupon valid indefinitely.',
             'tutor',
           )}
         </BoxSubtitle>

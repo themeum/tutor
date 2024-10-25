@@ -229,8 +229,8 @@ const AssignmentModal = ({
                 render={(controllerProps) => (
                   <FormWPEditor
                     {...controllerProps}
-                    label={__('Summary', 'tutor')}
-                    placeholder={__('Enter Assignment Summary', 'tutor')}
+                    label={__('Content', 'tutor')}
+                    placeholder={__('Enter Assignment Content', 'tutor')}
                   />
                 )}
               />
@@ -340,7 +340,7 @@ const AssignmentModal = ({
                   <FormInput
                     {...controllerProps}
                     type="number"
-                    label={__('Time limit', 'tutor')}
+                    label={__('Time Limit', 'tutor')}
                     placeholder="0"
                     dataAttribute="data-time-limit"
                     selectOnFocus
@@ -369,9 +369,8 @@ const AssignmentModal = ({
                 <FormInput
                   {...controllerProps}
                   type="number"
-                  label={__('Total points', 'tutor')}
+                  label={__('Total Points', 'tutor')}
                   placeholder="0"
-                  helpText={__('Maximum points a student can score', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -392,9 +391,8 @@ const AssignmentModal = ({
                 <FormInput
                   {...controllerProps}
                   type="number"
-                  label={__('Minimum pass points', 'tutor')}
+                  label={__('Minimum Pass Points', 'tutor')}
                   placeholder="0"
-                  helpText={__('Minimum points required for the student to pass this assignment', 'tutor')}
                   selectOnFocus
                 />
               )}
@@ -408,7 +406,7 @@ const AssignmentModal = ({
                   {...controllerProps}
                   placeholder="0"
                   type="number"
-                  label={__('File upload Limit', 'tutor')}
+                  label={__('File Upload Limit', 'tutor')}
                   helpText={__(
                     'Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.',
                     'tutor',
@@ -425,11 +423,10 @@ const AssignmentModal = ({
                 <FormInputWithContent
                   {...controllerProps}
                   type="number"
-                  label={__('Maximum file size limit', 'tutor')}
+                  label={__('Maximum File Size Limit', 'tutor')}
                   placeholder="0"
                   content={__('MB', 'tutor')}
                   contentPosition="right"
-                  helpText={__('Define maximum file size attachment in MB', 'tutor')}
                 />
               )}
             />

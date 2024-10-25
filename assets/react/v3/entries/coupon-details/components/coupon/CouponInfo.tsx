@@ -61,7 +61,7 @@ function CouponInfo() {
         render={(controllerProps) => (
           <FormRadioGroup
             {...controllerProps}
-            label={__('Deduction type', 'tutor')}
+            label={__('Coupon Application', 'tutor')}
             options={couponTypeOptions}
             wrapperCss={styles.radioWrapper}
             disabled={isEditMode}
@@ -75,7 +75,7 @@ function CouponInfo() {
         render={(controllerProps) => (
           <FormInput
             {...controllerProps}
-            label={__('Coupon name', 'tutor')}
+            label={__('Coupon Name', 'tutor')}
             placeholder={sprintf(__('Summer sale %s', 'tutor'), format(new Date(), DateFormats.year))}
           />
         )}
@@ -90,7 +90,7 @@ function CouponInfo() {
             render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
-                label={__('Coupon code', 'tutor')}
+                label={__('Coupon Code', 'tutor')}
                 placeholder={__('e.g. SUMMER20', 'tutor')}
                 disabled={isEditMode}
               />
