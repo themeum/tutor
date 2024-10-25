@@ -416,7 +416,7 @@ export default function SubscriptionItem({
                 render={(controllerProps) => (
                   <FormInputWithPresets
                     {...controllerProps}
-                    label={__('Renew Plan', 'tutor')}
+                    label={__('Billing Cycles', 'tutor')}
                     placeholder={__('Select or type times to renewing the plan', 'tutor')}
                     content={controllerProps.field.value !== 'Until cancelled' && __('Times', 'tutor')}
                     contentPosition="right"

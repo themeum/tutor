@@ -73,7 +73,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                   render={(controllerProps) => (
                     <FormInput
                       {...controllerProps}
-                      label={__('Custom payment method name', 'tutor')}
+                      label={__('Title', 'tutor')}
                       onChange={(value) => {
                         const name = String(value).toLowerCase().replace(/\s+/g, '-');
                         form.setValue('name', name);
