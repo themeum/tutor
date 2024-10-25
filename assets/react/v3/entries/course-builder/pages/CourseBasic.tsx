@@ -378,7 +378,7 @@ const CourseBasic = () => {
             <FormImageInput
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
-              buttonText={__('Upload course thumbnail', 'tutor')}
+              buttonText={__('Upload Thumbnail', 'tutor')}
               infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
               generateWithAi={!isTutorPro || isOpenAiEnabled}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
