@@ -764,7 +764,7 @@ const styles = {
 	`,
   inputGroup: css`
 		display: grid;
-		grid-template-columns: 1fr 0.56fr 1fr 1fr;
+		grid-template-columns: 1fr 0.7fr 1fr 1fr;
 		align-items: start;
 		gap: ${spacing[8]};
 	`,

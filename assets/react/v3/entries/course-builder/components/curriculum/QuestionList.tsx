@@ -96,11 +96,7 @@ const questionTypeOptions: {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
-const QuestionList = ({
-  isEditing,
-}: {
-  isEditing: boolean;
-}) => {
+const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const questionListRef = useRef<HTMLDivElement>(null);
@@ -128,7 +124,7 @@ const QuestionList = ({
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
   const activeSortItem = useMemo(() => {
@@ -185,21 +181,21 @@ const QuestionList = ({
               },
             ]
           : questionType === 'fill_in_the_blank'
-            ? [
-                {
-                  _data_status: 'new',
-                  is_saved: false,
-                  answer_id: nanoid(),
-                  answer_title: '',
-                  belongs_question_id: questionId,
-                  belongs_question_type: 'fill_in_the_blank',
-                  answer_two_gap_match: '',
-                  answer_view_format: '',
-                  answer_order: 0,
-                  is_correct: '0',
-                },
-              ]
-            : [],
+          ? [
+              {
+                _data_status: 'new',
+                is_saved: false,
+                answer_id: nanoid(),
+                answer_title: '',
+                belongs_question_id: questionId,
+                belongs_question_type: 'fill_in_the_blank',
+                answer_two_gap_match: '',
+                answer_view_format: '',
+                answer_order: 0,
+                is_correct: '0',
+              },
+            ]
+          : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,
@@ -313,15 +309,7 @@ const QuestionList = ({
       <div ref={questionListRef} css={styles.questionList}>
         <Show
           when={questions.length > 0}
-          fallback={
-            <div
-              css={css`
-                padding-left: ${spacing[28]};
-              `}
-            >
-              {__('No questions added yet.', 'tutor')}
-            </div>
-          }
+          fallback={<div css={styles.emptyQuestionText}>{__('No questions added yet.', 'tutor')}</div>}
         >
           <DndContext
             sensors={sensors}
@@ -369,7 +357,7 @@ const QuestionList = ({
                   }}
                 </Show>
               </DragOverlay>,
-              document.body,
+              document.body
             )}
           </DndContext>
         </Show>
@@ -486,5 +474,10 @@ const styles = {
     :active:enabled {
       border-color: ${colorTokens.stroke.brand};
     }
+  `,
+  emptyQuestionText: css`
+    ${typography.small()};
+    color: ${colorTokens.text.subdued};
+    padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[28]};
   `,
 };

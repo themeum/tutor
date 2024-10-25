@@ -61,7 +61,7 @@ const styles = {
     gap: ${spacing[8]};
     align-items: center;
 
-    &:is(:first-child) {
+    &:is(:first-of-type) {
       padding-left: 0;
     }
 

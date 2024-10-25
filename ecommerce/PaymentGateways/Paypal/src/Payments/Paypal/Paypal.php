@@ -179,6 +179,7 @@ class Paypal extends BasePayment
             }
 
             header("Location: {$checkoutUrl}");
+            exit();
         } catch (RequestException $error) {
 
             $errorMessage = $this->handleErrorResponse($error) ?? $error->getMessage();

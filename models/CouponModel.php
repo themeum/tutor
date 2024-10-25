@@ -1024,4 +1024,36 @@ class CouponModel {
 	public function is_specific_applies_to( string $applies_to ) {
 		return in_array( $applies_to, array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY ) );
 	}
+
+	/**
+	 * Store coupon usage by using the provided data
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $data Data to store.
+	 *
+	 * @throws \Throwable If database error occur.
+	 *
+	 * @return mixed
+	 */
+	public function store_coupon_usage( array $data ) {
+		try {
+			return QueryHelper::insert( $this->coupon_usage_table, $data );
+		} catch ( \Throwable $th ) {
+			throw $th;
+		}
+	}
+
+	/**
+	 * Delete coupon usage by using the where condition
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $where Where condition.
+	 *
+	 * @return mixed
+	 */
+	public function delete_coupon_usage( array $where ) {
+		return QueryHelper::delete( $this->coupon_usage_table, $where );
+	}
 }

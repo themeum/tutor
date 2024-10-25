@@ -66,7 +66,7 @@ const ImageInput = ({
             }}
           >
             <SVGIcon name="addImage" width={32} height={32} />
-            <Button variant="text" buttonContentCss={styles.buttonText}>
+            <Button variant="secondary" buttonContentCss={styles.buttonText}>
               {buttonText}
             </Button>
             <Show when={infoText}>

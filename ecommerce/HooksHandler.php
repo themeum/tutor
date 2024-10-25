@@ -210,6 +210,9 @@ class HooksHandler {
 		$this->order_activities_model->add_order_meta( $data );
 
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
+
+		// Store coupon usage.
+		( new CouponController( false ) )->store_coupon_usage( $order_id );
 	}
 
 	/**
