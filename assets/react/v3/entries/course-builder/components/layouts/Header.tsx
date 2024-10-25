@@ -256,13 +256,7 @@ const Header = () => {
             <div css={styleUtils.flexCenter()}>
               <MagicButton
                 variant="plain"
-                css={css`
-                  display: inline-flex;
-                  align-items: center;
-                  gap: ${spacing[4]};
-                  padding-inline: 0px;
-                  margin-left: ${spacing[4]};
-                `}
+                css={styles.magicButton}
                 onClick={() => {
                   if (!isTutorPro) {
                     showModal({
@@ -493,5 +487,12 @@ const styles = {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  `,
+  magicButton: css`
+    display: inline-flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    padding-inline: 0px;
+    margin-left: ${spacing[4]};
   `,
 };

@@ -216,6 +216,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       ...answer,
       _data_status: 'no_change',
       is_saved: true,
+      answer_view_format: answer.image_url ? 'text_image' : 'text',
     }));
     question.question_description = normalizeLineEndings(question.question_description) || '';
     question.answer_explanation = normalizeLineEndings(question.answer_explanation) || '';
