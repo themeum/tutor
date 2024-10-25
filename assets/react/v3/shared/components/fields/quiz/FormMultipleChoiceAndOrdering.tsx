@@ -304,6 +304,7 @@ const FormMultipleChoiceAndOrdering = ({
                     url: inputValue.image_url || '',
                     title: 'Image',
                   }}
+                  buttonText={__('Upload Image', 'tutor')}
                   infoText={__('Size: 700x430 pixels', 'tutor')}
                   uploadHandler={uploadHandler}
                   clearHandler={clearHandler}
