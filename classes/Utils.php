@@ -2605,11 +2605,6 @@ class Utils {
 			// Run this hook for both of pending and completed enrollment.
 			do_action( 'tutor_after_enroll', $course_id, $is_enrolled );
 
-			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
-			if ( 'completed' === $enroll_data['post_status'] ) {
-				do_action( 'tutor_after_enrolled', $course_id, $user_id, $is_enrolled );
-			}
-
 			// Mark Current User as Students with user meta data.
 			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
 
@@ -2633,6 +2628,10 @@ class Utils {
 
 			$enrolled_id = $is_enrolled;
 
+			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
+			if ( 'completed' === $enroll_data['post_status'] ) {
+				do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
+			}
 		}
 
 		return $enrolled_id;
