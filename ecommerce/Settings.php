@@ -200,7 +200,7 @@ class Settings {
 		 * Tax settings will be generated from react app.
 		 */
 		$arr['ecommerce_tax'] = array(
-			'label'    => __( 'Tax', 'tutor' ),
+			'label'    => __( 'Taxes', 'tutor' ),
 			'slug'     => 'ecommerce_tax',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
@@ -240,7 +240,7 @@ class Settings {
 							'type'    => 'toggle_switch',
 							'label'   => __( 'Enable Coupon Code', 'tutor' ),
 							'default' => 'off',
-							'desc'    => __( 'Enable this option to allow users to apply a coupon code while checkout.', 'tutor' ),
+							'desc'    => __( 'Allow users to apply the coupon code during checkout.', 'tutor' ),
 						),
 					),
 				),

@@ -64,7 +64,7 @@ const ContentDripSettings = () => {
     return (
       <div css={styles.dripNoProWrapper}>
         <SVGIcon name="contentDrip" width={72} height={72} style={styles.dripIcon} />
-        <h6 css={typography.body('medium')}>{__('Activate the “Content Drip” addon to use this feature', 'tutor')}</h6>
+        <h6 css={typography.body('medium')}>{__('Activate the “Content Drip” addon to use this feature.', 'tutor')}</h6>
         <p css={styles.dripNoProDescription}>
           {__('Control when students can access lessons and quizzes using the Content Drip feature.', 'tutor')}
         </p>

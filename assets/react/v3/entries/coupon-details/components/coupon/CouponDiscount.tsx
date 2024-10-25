@@ -74,9 +74,6 @@ function CouponDiscount() {
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Discount', 'tutor')}</BoxTitle>
-        <BoxSubtitle>
-          {__('Add Topics in the Course Builder section to create lessons, quizzes, and assignments.', 'tutor')}
-        </BoxSubtitle>
       </div>
       <div css={styles.discountTypeWrapper}>
         <Controller
