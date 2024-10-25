@@ -66,6 +66,7 @@ const Header = () => {
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+  const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
 
   const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -221,7 +222,11 @@ const Header = () => {
       items.push(switchToDraftItem);
     }
 
-    items.push(moveToTrashItem, backToLegacyItem);
+    if (isAdmin || hasWpAdminAccess) {
+      items.push(moveToTrashItem, backToLegacyItem);
+    } else {
+      items.push(moveToTrashItem);
+    }
 
     return items;
   };
@@ -344,7 +349,7 @@ const Header = () => {
               iconPosition="left"
               onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
             >
-              {__('Save as draft', 'tutor')}
+              {__('Save draft', 'tutor')}
             </Button>
           </Show>
 
