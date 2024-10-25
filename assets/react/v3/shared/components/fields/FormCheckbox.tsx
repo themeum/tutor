@@ -64,7 +64,7 @@ const styles = {
   description: css`
     ${typography.small()}
     color: ${colorTokens.text.hints};
-    padding-left: ${spacing[28]};
+    padding-left: 30px;
     margin-top: ${spacing[6]};
   `,
 };
