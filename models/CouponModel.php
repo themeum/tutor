@@ -155,6 +155,9 @@ class CouponModel {
 		$this->table_name              = $wpdb->prefix . $this->table_name;
 		$this->coupon_usage_table      = $wpdb->prefix . $this->coupon_usage_table;
 		$this->coupon_applies_to_table = $wpdb->prefix . $this->coupon_applies_to_table;
+
+		global $coupon_apply_error_msg;
+		$coupon_apply_error_msg = __( 'This coupon code is not applicable', 'tutor' );
 	}
 
 	/**
@@ -862,11 +865,18 @@ class CouponModel {
 			}
 
 			if ( $total_price < $min_amount ) {
-				$is_meet_requirement = false;
+				$is_meet_requirement    = false;
+				// translators: $min_amount.
+				$coupon_apply_error_msg = sprintf( __( 'This coupon requires a minimum purchase of %s', 'tutor' ), tutor_get_formatted_price( $min_amount ) );
 			}
 		} elseif ( self::REQUIREMENT_MINIMUM_QUANTITY === $coupon->purchase_requirement ) {
 			$min_quantity        = $coupon->purchase_requirement_value;
 			$is_meet_requirement = count( $course_ids ) >= $min_quantity;
+
+			if ( ! $is_meet_requirement ) {
+				// translators: $min_quantity.
+				$coupon_apply_error_msg = sprintf( __( 'This coupon requires a minimum quantity of %s ', 'tutor' ), $min_quantity );
+			}
 		}
 
 		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $course_id );
@@ -887,7 +897,12 @@ class CouponModel {
 		$expire_date = $coupon->expire_date_gmt ? strtotime( $coupon->expire_date_gmt ) : 0;
 
 		// Check if the current time is within the start and expiry dates.
-		return ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
+		$has_validity = ( $now >= $start_date ) && ( $expire_date ? $now <= $expire_date : true );
+		if ( ! $has_validity ) {
+			$coupon_apply_error_msg = __( 'This coupon is no longer valid.', 'tutor' );
+		}
+
+		return $has_validity;
 	}
 
 	/**
@@ -909,14 +924,16 @@ class CouponModel {
 		if ( $total_usage_limit > 0 ) {
 			$coupon_usage_count = $this->get_coupon_usage_count( $coupon->coupon_code );
 			if ( $coupon_usage_count >= $total_usage_limit ) {
-				$has_limit = false;
+				$has_limit              = false;
+				$coupon_apply_error_msg = __( 'This coupon has reached its usage limit.', 'tutor' );
 			}
 		}
 
 		if ( $user_usage_limit > 0 ) {
 			$user_usage_count = $this->get_user_usage_count( $coupon->coupon_code, $user_id );
 			if ( $user_usage_count >= $user_usage_limit ) {
-				$has_limit = false;
+				$has_limit              = false;
+				$coupon_apply_error_msg = __( 'You have reached the maximum usage limit for this coupon.', 'tutor' );
 			}
 		}
 
