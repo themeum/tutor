@@ -17,11 +17,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 button.classList.add('is-loading');
 
                 const post = await ajaxHandler(formData);
-                const { status_code, data, message = defaultErrorMessage } = await post.json();
+				const { status_code, data, message = defaultErrorMessage } = await post.json();
+
                 if (status_code === 201) {
                     tutor_toast(__('Success', 'tutor'), message, 'success');
-                    const viewCartButton = `<a href="${data}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
-                    button.parentElement.innerHTML = viewCartButton;
+                    const viewCartButton = `<a href="${data?.cart_page_url}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
+					button.parentElement.innerHTML = viewCartButton;
+
+					// Create a custom event with cart count
+					const cartEvent = new CustomEvent('tutorCartCount', {
+						detail: { cart_count: data?.cart_count }
+					});
+
+					// Dispatch the custom cart event
+					document.dispatchEvent(cartEvent);
+
                 } else {
                     tutor_toast(__('Failed', 'tutor'), message, 'error');
                 }
