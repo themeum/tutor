@@ -286,7 +286,22 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 = 3.0.0-rc - October 25, 2024
 
-Coming soon...
+Update: Improved the user experience of Tutor LMS Subscription feature. (Pro)
+Update: Introduced the functionality to install additional payment gateways. (Pro)
+Update: Show tax included text on course listings and detail pages when tax settings are enabled.
+Update: Redesigned the checkout page for better user experience.
+Update: Implemented dynamic permalink generation based on course name.
+Update: Payment Status option is hidden in the manual enrollment tab when using WooCommerce monetization.
+Fix: Fixed an issue where users could set unrealistic tax percentages.
+Fix: Resolved the issue that caused paid course price to drop to 0 during pagination.
+Fix: Fixed 'Mark as Paid' button malfunction when description contains single quotes.
+Fix: Ensured that mp3 and mp4 files are displayed correctly in the quiz description.
+Fix: Resolved a bug preventing Certificates, Prerequisites, Attachment, and Live Class from appearing even when addons were enabled. (Pro)
+Fix: Corrected "Edit with Builder" button functionality on report page. (Pro)
+Fix: Flat discount amounts now distribute proportionally among applicable courses.
+Fix: Fixed quiz attempt details not showing correct/given answers for ordering questions. (Pro)
+Fix: Fixed Frontend Builder loading inappropriately in student and instructor sites.
+Fix: Removed BuddyPress tab from builder when the addon is deactivated. (Pro)
 
 = 3.0.0-beta4 - October 14, 2024
 
