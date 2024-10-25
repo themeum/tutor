@@ -189,7 +189,10 @@ class CartController {
 		if ( $response ) {
 			$this->json_response(
 				__( 'The course was added to the cart successfully.', 'tutor' ),
-				self::get_page_url(),
+				array(
+					'url'        => self::get_page_url(),
+					'item_count' => 10
+				),
 				HttpHelper::STATUS_CREATED
 			);
 		} else {
