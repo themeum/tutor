@@ -284,6 +284,10 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
+= 3.0.0-rc - October 25, 2024
+
+Coming soon...
+
 = 3.0.0-beta4 - October 14, 2024
 
 Update: Implemented tax calculation on the checkout page.
