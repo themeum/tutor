@@ -51,6 +51,9 @@ function CouponInfo() {
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Coupon Info', 'tutor')}</BoxTitle>
+        <BoxSubtitle>
+          {__('Boost your sales and attract new learners by offering discounts on your courses with coupons.', 'tutor')}
+        </BoxSubtitle>
       </div>
       <Controller
         name="coupon_type"
