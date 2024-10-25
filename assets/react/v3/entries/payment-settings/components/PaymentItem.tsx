@@ -196,7 +196,8 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                             <FormImageInput
                               {...controllerProps}
                               label={field.label}
-                              size="small"
+                              buttonText={__('Upload Image', 'tutor')}
+                              infoText={__('Recommended size: 48x48', 'tutor')}
                               previewImageCss={styles.previewImage}
                               onChange={(value) => {
                                 form.setValue(`payment_methods.${paymentIndex}.icon`, value?.url ?? '');
