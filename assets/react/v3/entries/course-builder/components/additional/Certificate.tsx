@@ -197,14 +197,14 @@ const Certificate = () => {
                   />
 
                   <div css={styles.featureAndActionWrapper}>
-                    <h6
+                    <p
                       css={css`
-                        ${typography.heading6('medium')}
+                        ${typography.body('medium')}
                         color: ${colorTokens.text.subdued};
                       `}
                     >
                       {__('You didn’t create any certificate yet!', 'tutor')}
-                    </h6>
+                    </p>
                   </div>
                 </div>
               </Show>

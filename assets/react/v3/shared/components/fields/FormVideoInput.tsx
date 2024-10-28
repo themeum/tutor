@@ -128,6 +128,62 @@ const determineVideoSource = (url: string) => {
   return '';
 };
 
+const validateVideoUrl = (url: string) => {
+  const value = url.trim();
+
+  const source = determineVideoSource(value);
+  const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
+  if (source === 'shortcode') {
+    const regExp = /^\[.*\]$/;
+    const match = value.match(regExp);
+
+    if (!match) {
+      return __('Invalid Shortcode', 'tutor');
+    }
+
+    return true;
+  }
+
+  if (!regex.test(value)) {
+    return __('Invalid URL', 'tutor');
+  }
+
+  if (source === 'youtube') {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = value.match(regExp);
+    if (!match || match[7].length !== 11) {
+      return __('Invalid YouTube URL', 'tutor');
+    }
+
+    return true;
+  }
+
+  if (source === 'vimeo') {
+    const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+    const match = value.match(regExp);
+
+    if (!match || !match[5]) {
+      return __('Invalid Vimeo URL', 'tutor');
+    }
+  }
+
+  if (source === 'embedded') {
+    const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
+    const match = value.match(regExp);
+
+    if (!match || !match[1]) {
+      return __('Invalid Embedded URL', 'tutor');
+    }
+  }
+
+  if (!source) {
+    return __('Select Corresponding Video Source from settings.', 'tutor');
+  }
+
+  return true;
+};
+
 const FormVideoInput = ({
   field,
   fieldState,
@@ -314,62 +370,6 @@ const FormVideoInput = ({
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const validateVideoUrl = (url: string) => {
-    const value = url.trim();
-
-    const source = determineVideoSource(value);
-    const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-
-    if (source === 'shortcode') {
-      const regExp = /^\[.*\]$/;
-      const match = value.match(regExp);
-
-      if (!match) {
-        return __('Invalid Shortcode', 'tutor');
-      }
-
-      return true;
-    }
-
-    if (!regex.test(value)) {
-      return __('Invalid URL', 'tutor');
-    }
-
-    if (source === 'youtube') {
-      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-      const match = value.match(regExp);
-      if (!match || match[7].length !== 11) {
-        return __('Invalid YouTube URL', 'tutor');
-      }
-
-      return true;
-    }
-
-    if (source === 'vimeo') {
-      const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-      const match = value.match(regExp);
-
-      if (!match || !match[5]) {
-        return __('Invalid Vimeo URL', 'tutor');
-      }
-    }
-
-    if (source === 'embedded') {
-      const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
-      const match = value.match(regExp);
-
-      if (!match || !match[1]) {
-        return __('Invalid Embedded URL', 'tutor');
-      }
-    }
-
-    if (!source) {
-      return __('Select Corresponding Video Source from settings.', 'tutor');
-    }
-
-    return true;
   };
 
   return (
