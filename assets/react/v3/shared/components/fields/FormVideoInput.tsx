@@ -272,7 +272,7 @@ const FormVideoInput = ({
 
   const handleDataFromUrl = async (data: URLFormData) => {
     const source = determineVideoSource(data.videoUrl) || 'external_url';
-    // console.log('source', source);
+
     const updatedValue = {
       source,
       [`source_${source}`]: data.videoUrl,
