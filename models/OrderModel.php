@@ -70,6 +70,13 @@ class OrderModel {
 	const TYPE_RENEWAL      = 'renewal';
 
 	/**
+	 * Transient constants
+	 *
+	 * @since 3.0.0
+	 */
+	const TRANSIENT_ORDER_BADGE_COUNT = 'tutor_order_badge_count';
+
+	/**
 	 * Order table name
 	 *
 	 * @since 3.0.0

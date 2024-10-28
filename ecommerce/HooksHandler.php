@@ -59,6 +59,26 @@ class HooksHandler {
 		add_action( 'tutor_order_payment_status_changed', array( $this, 'handle_payment_status_changed' ), 10, 3 );
 
 		add_action( 'tutor_order_placement_success', array( $this, 'handle_order_placement_success' ) );
+
+		/**
+		 * Clear order menu badge count
+		 *
+		 * @since 3.0.0
+		 */
+		add_action( 'tutor_order_placed', array( $this, 'clear_order_badge_count' ) );
+		add_action( 'tutor_order_payment_status_changed', array( $this, 'clear_order_badge_count' ) );
+		add_action( 'tutor_before_order_bulk_action', array( $this, 'clear_order_badge_count' ) );
+	}
+
+	/**
+	 * Clear order menu badge count
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function clear_order_badge_count() {
+		delete_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT );
 	}
 
 	/**
