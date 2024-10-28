@@ -205,7 +205,9 @@ const Header = () => {
           } catch (error) {
             console.error(error);
           } finally {
-            window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`;
+            window.location.href = window.location.href.includes('wp-admin')
+              ? tutorConfig.backend_course_list_url
+              : tutorConfig.frontend_course_list_url;
           }
         }
       },
@@ -273,7 +275,7 @@ const Header = () => {
     if (isAdmin || hasWpAdminAccess) {
       items.push(moveToTrashItem, backToLegacyItem);
     } else {
-      items.push(backToLegacyItem);
+      items.push(moveToTrashItem);
     }
 
     return items;
