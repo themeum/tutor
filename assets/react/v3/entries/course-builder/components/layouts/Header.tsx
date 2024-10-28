@@ -413,21 +413,36 @@ const Header = () => {
             </Button>
           </Show>
 
-          <DropdownButton
-            text={dropdownButton().text}
-            variant="primary"
-            loading={
-              createCourseMutation.isPending ||
-              (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
+          <Show
+            when={dropdownItems().length > 1}
+            fallback={
+              <Button
+                loading={
+                  createCourseMutation.isPending ||
+                  (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
+                }
+                onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
+              >
+                {dropdownButton().text}
+              </Button>
             }
-            onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
-            dropdownMaxWidth={['draft', 'future'].includes(postStatus) ? '190px' : '164px'}
-            disabledDropdown={(!form.formState.isDirty && !courseId) || dropdownItems().length === 0}
           >
-            {dropdownItems().map((item, index) => (
-              <DropdownButton.Item key={index} text={item.text} onClick={item.onClick} isDanger={item.isDanger} />
-            ))}
-          </DropdownButton>
+            <DropdownButton
+              text={dropdownButton().text}
+              variant="primary"
+              loading={
+                createCourseMutation.isPending ||
+                (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
+              }
+              onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
+              dropdownMaxWidth={['draft', 'future'].includes(postStatus) ? '190px' : '164px'}
+              disabledDropdown={(!form.formState.isDirty && !courseId) || dropdownItems().length === 0}
+            >
+              {dropdownItems().map((item, index) => (
+                <DropdownButton.Item key={index} text={item.text} onClick={item.onClick} isDanger={item.isDanger} />
+              ))}
+            </DropdownButton>
+          </Show>
         </div>
       </div>
 
