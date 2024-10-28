@@ -174,7 +174,7 @@ class Settings {
 		 */
 		$arr['ecommerce_payment'] = array(
 			'label'    => __( 'Payment Methods', 'tutor' ),
-			'slug'     => 'automate_payment_gateway',
+			'slug'     => 'ecommerce_payment',
 			'desc'     => __( 'Advanced Settings', 'tutor' ),
 			'template' => 'basic',
 			'icon'     => 'tutor-icon-credit-card',

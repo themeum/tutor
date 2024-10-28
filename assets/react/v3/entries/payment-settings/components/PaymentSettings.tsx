@@ -1,5 +1,4 @@
 import Show from '@Controls/Show';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
 import { colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -7,12 +6,7 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
-import {
-  convertPaymentMethods,
-  initialPaymentSettings,
-  type PaymentSettings,
-  usePaymentSettingsQuery,
-} from '../services/payment';
+import { convertPaymentMethods, initialPaymentSettings, type PaymentSettings } from '../services/payment';
 import PaymentMethods from './PaymentMethods';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -25,7 +19,7 @@ import { usePaymentContext } from '../contexts/payment-context';
 import StaticConfirmationModal from './modals/StaticConfirmationModal';
 
 const TaxSettingsPage = () => {
-  const { payment_gateways } = usePaymentContext();
+  const { payment_gateways, payment_settings } = usePaymentContext();
   const { showModal } = useModal();
 
   const form = useFormWithGlobalError<PaymentSettings>({
@@ -37,8 +31,6 @@ const TaxSettingsPage = () => {
   const { reset } = form;
   const formData = form.watch();
 
-  const paymentSettingsQuery = usePaymentSettingsQuery();
-
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
@@ -47,19 +39,15 @@ const TaxSettingsPage = () => {
   }, [form.formState.isDirty]);
 
   useEffect(() => {
-    if (paymentSettingsQuery.data) {
-      const methods = convertPaymentMethods(paymentSettingsQuery.data.payment_methods, payment_gateways);
+    if (payment_settings) {
+      const methods = convertPaymentMethods(payment_settings.payment_methods, payment_gateways);
 
       reset({
-        ...paymentSettingsQuery.data,
+        ...payment_settings,
         payment_methods: methods,
       });
     }
-  }, [reset, paymentSettingsQuery.data]);
-
-  if (paymentSettingsQuery.isLoading) {
-    return <LoadingSection />;
-  }
+  }, [reset, payment_settings]);
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
