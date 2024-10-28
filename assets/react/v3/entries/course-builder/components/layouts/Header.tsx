@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { isBefore } from 'date-fns';
+import { format, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -12,7 +12,7 @@ import Tooltip from '@Atoms/Tooltip';
 
 import { useModal } from '@/v3/shared/components/modals/Modal';
 import config, { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
+import { DateFormats, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -107,10 +107,21 @@ const Header = () => {
 
     if (courseId) {
       const determinedPostStatus = determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility);
+
+      console.log({
+        localPostStatus,
+        determinePostStatus: determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility),
+      });
+
       const response = await updateCourseMutation.mutateAsync({
         course_id: Number(courseId),
         ...payload,
         post_status: determinedPostStatus,
+        post_date:
+          localPostStatus === 'draft' &&
+          ['draft', 'publish'].includes(determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility))
+            ? format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)
+            : postDate,
       });
 
       if (
@@ -215,7 +226,25 @@ const Header = () => {
       isDanger: false,
     };
 
+    const publishImmediatelyItem = {
+      text: <>{__('Publish immediately', 'tutor')}</>,
+      onClick: form.handleSubmit((data) =>
+        handleSubmit(
+          {
+            ...data,
+            post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+          },
+          'publish',
+        ),
+      ),
+      isDanger: false,
+    };
+
     const items = [previewItem];
+
+    if (isBefore(new Date(), new Date(postDate))) {
+      items.unshift(publishImmediatelyItem);
+    }
 
     if (courseId && postStatus !== 'draft') {
       items.pop();
@@ -347,7 +376,17 @@ const Header = () => {
               icon={<SVGIcon name="upload" width={24} height={24} />}
               loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
               iconPosition="left"
-              onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
+              onClick={form.handleSubmit((data) =>
+                handleSubmit(
+                  {
+                    ...data,
+                    post_date: isPostDateDirty
+                      ? postDate
+                      : format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+                  },
+                  'draft',
+                ),
+              )}
             >
               {__('Save as Draft', 'tutor')}
             </Button>
@@ -361,7 +400,7 @@ const Header = () => {
               ((localPostStatus === 'publish' || localPostStatus === 'future') && updateCourseMutation.isPending)
             }
             onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
-            dropdownMaxWidth="164px"
+            dropdownMaxWidth={['draft', 'future'].includes(postStatus) ? '190px' : '164px'}
             disabledDropdown={!form.formState.isDirty && !courseId}
           >
             {dropdownItems().map((item, index) => (

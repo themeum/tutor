@@ -1,4 +1,3 @@
-import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format, isBefore, parseISO } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -10,6 +9,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
+import Tooltip from '@/v3/shared/atoms/Tooltip';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -18,6 +18,7 @@ import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
+import { css } from '@emotion/react';
 
 interface ScheduleForm {
   schedule_date: string;
@@ -29,6 +30,8 @@ const courseId = getCourseId();
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
   const postDate = useWatch({ name: 'post_date' });
+  const postStatus = useWatch({ name: 'post_status' });
+
   const [previousPostDate, setPreviousPostDate] = useState(postDate);
   const scheduleForm = useFormWithGlobalError<ScheduleForm>({
     defaultValues: {
@@ -87,17 +90,57 @@ const ScheduleOptions = () => {
       <div css={styles.scheduleInfoWrapper}>
         <div css={styles.scheduledFor}>
           <div css={styles.scheduleLabel}>
-            {isBefore(parseISO(postDate), new Date()) ? __('Published on', 'tutor') : __('Scheduled for', 'tutor')}
+            <Show
+              when={postStatus === 'draft' && isBefore(parseISO(postDate), new Date())}
+              fallback={
+                isBefore(parseISO(postDate), new Date()) ? __('Published on', 'tutor') : __('Scheduled for', 'tutor')
+              }
+            >
+              {__('Publish Immediately', 'tutor')}
+            </Show>
           </div>
           <div css={styles.scheduleInfoButtons}>
-            <button type="button" onClick={() => setShowForm(true)}>
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
+            <Show
+              when={
+                postStatus !== 'draft' || isBefore(new Date(), parseISO(postDate)) || scheduleForm.formState.isDirty
+              }
+            >
+              <Tooltip content={__('Reset to current time', 'tutor')} delay={200}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    scheduleForm.reset({
+                      schedule_date: format(new Date(), DateFormats.yearMonthDay),
+                      schedule_time: format(new Date(), DateFormats.hoursMinutes),
+                    });
+
+                    form.setValue('post_date', format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H), {
+                      shouldDirty: true,
+                    });
+                  }}
+                >
+                  <SVGIcon name="cross" width={24} height={24} />
+                </button>
+              </Tooltip>
+            </Show>
+            <Tooltip content={__('Edit', 'tutor')} delay={200}>
+              <button type="button" onClick={() => setShowForm(true)}>
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </Tooltip>
           </div>
         </div>
         <Show
           when={showForm}
-          fallback={<div css={styles.scheduleInfo}>{sprintf(__('%s at %s', 'tutor'), scheduleDate, scheduleTime)}</div>}
+          fallback={
+            <Show
+              when={
+                postStatus !== 'draft' || isBefore(new Date(), parseISO(postDate)) || scheduleForm.formState.isDirty
+              }
+            >
+              <div css={styles.scheduleInfo}>{sprintf(__('%s at %s', 'tutor'), scheduleDate, scheduleTime)}</div>
+            </Show>
+          }
         >
           <div css={styleUtils.dateAndTimeWrapper}>
             <Controller
@@ -107,7 +150,12 @@ const ScheduleOptions = () => {
                 required: __('Schedule date is required', 'tutor'),
               }}
               render={(controllerProps) => (
-                <FormDateInput {...controllerProps} isClearable={false} placeholder={__('yyyy-mm-dd', 'tutor')} />
+                <FormDateInput
+                  {...controllerProps}
+                  isClearable={false}
+                  placeholder={__('yyyy-mm-dd', 'tutor')}
+                  disabledBefore={postStatus === 'draft' ? format(new Date(), DateFormats.yearMonthDay) : undefined}
+                />
               )}
             />
 
@@ -189,6 +237,7 @@ const styles = {
     button {
       ${styleUtils.resetButton};
       color: ${colorTokens.icon.default};
+      ${styleUtils.flexCenter()};
       height: 24px;
       width: 24px;
       border-radius: ${borderRadius[2]};
