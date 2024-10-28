@@ -12,6 +12,7 @@ interface OptionWithDisabled {
   value: string | number;
   disabled?: boolean;
   legend?: string;
+  labelCss?: SerializedStyles;
 }
 
 interface FormRadioGroupProps extends FormControllerProps<string | number> {
@@ -49,6 +50,7 @@ const FormRadioGroup = ({
                   value={option.value}
                   label={option.label}
                   disabled={option.disabled || disabled}
+                  labelCss={option.labelCss}
                   checked={field.value === option.value}
                   onChange={() => {
                     field.onChange(option.value);

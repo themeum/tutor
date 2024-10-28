@@ -1,7 +1,7 @@
 import { spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
-import { css } from '@emotion/react';
+import { type SerializedStyles, css } from '@emotion/react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import AITextModal from '@Components/modals/AITextModal';
@@ -26,6 +26,7 @@ interface FormTextareaInputProps extends FormControllerProps<string | null> {
   isSecondary?: boolean;
   isMagicAi?: boolean;
   generateWithAi?: boolean;
+  inputCss?: SerializedStyles;
 }
 
 const DEFAULT_ROWS = 6;
@@ -49,6 +50,7 @@ const FormTextareaInput = ({
   isSecondary = false,
   isMagicAi = false,
   generateWithAi = false,
+  inputCss,
 }: FormTextareaInputProps) => {
   const inputValue = field.value ?? '';
   const { showModal } = useModal();
@@ -96,10 +98,11 @@ const FormTextareaInput = ({
       {(inputProps) => {
         return (
           <>
-            <div css={styles.container(enableResize)}>
+            <div css={styles.container(enableResize, inputCss)}>
               <textarea
                 {...field}
                 {...inputProps}
+                className="tutor-input-field"
                 value={inputValue}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -131,7 +134,7 @@ const FormTextareaInput = ({
 export default FormTextareaInput;
 
 const styles = {
-  container: (enableResize = false) => css`
+  container: (enableResize = false, inputCss?: SerializedStyles) => css`
     position: relative;
     display: flex;
 
@@ -141,11 +144,15 @@ const styles = {
       padding: ${spacing[8]} ${spacing[12]};
       resize: none;
 
+      &.tutor-input-field {
+        ${inputCss};
+      }
+
       ${
         enableResize &&
         css`
-        resize: vertical;
-      `
+          resize: vertical;
+        `
       }
     }
   `,
