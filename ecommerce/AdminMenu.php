@@ -30,16 +30,16 @@ class AdminMenu {
 	 * @return void
 	 */
 	public function register_menu() {
-		$order_menu_title = __( 'Orders', 'tutor' );
-		$unpaid_orders    = get_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT );
+		$order_menu_title  = __( 'Orders', 'tutor' );
+		$order_badge_count = get_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT );
 
-		if ( false === $unpaid_orders ) {
-			$unpaid_orders = ( new OrderModel() )->get_order_count( array( 'payment_status' => OrderModel::PAYMENT_UNPAID ) );
-			set_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT, $unpaid_orders, HOUR_IN_SECONDS );
+		if ( false === $order_badge_count ) {
+			$order_badge_count = ( new OrderModel() )->get_order_count( array( 'payment_status' => OrderModel::PAYMENT_UNPAID ) );
+			set_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT, $order_badge_count, HOUR_IN_SECONDS );
 		}
 
-		if ( $unpaid_orders ) {
-			$order_menu_title .= ' <span class="update-plugins"><span class="plugin-count">' . $unpaid_orders . '</span></span>';
+		if ( $order_badge_count ) {
+			$order_menu_title .= ' <span class="update-plugins"><span class="plugin-count">' . $order_badge_count . '</span></span>';
 		}
 
 		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), $order_menu_title, 'manage_options', OrderController::PAGE_SLUG, array( $this, 'orders_view' ) );
