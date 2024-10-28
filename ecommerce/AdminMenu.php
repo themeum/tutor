@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Input;
+use Tutor\Models\OrderModel;
 
 /**
  * Register ecommerce menu
@@ -29,7 +30,19 @@ class AdminMenu {
 	 * @return void
 	 */
 	public function register_menu() {
-		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), __( 'Orders', 'tutor' ), 'manage_options', OrderController::PAGE_SLUG, array( $this, 'orders_view' ) );
+		$order_menu_title = __( 'Orders', 'tutor' );
+		$unpaid_orders    = get_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT );
+
+		if ( false === $unpaid_orders ) {
+			$unpaid_orders = ( new OrderModel() )->get_order_count( array( 'payment_status' => OrderModel::PAYMENT_UNPAID ) );
+			set_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT, $unpaid_orders, HOUR_IN_SECONDS );
+		}
+
+		if ( $unpaid_orders ) {
+			$order_menu_title .= ' <span class="update-plugins"><span class="plugin-count">' . $unpaid_orders . '</span></span>';
+		}
+
+		add_submenu_page( 'tutor', __( 'Orders', 'tutor' ), $order_menu_title, 'manage_options', OrderController::PAGE_SLUG, array( $this, 'orders_view' ) );
 		do_action( 'tutor_after_orders_admin_menu' );
 		add_submenu_page( 'tutor', __( 'Coupons', 'tutor' ), __( 'Coupons', 'tutor' ), 'manage_options', CouponController::PAGE_SLUG, array( $this, 'coupons_view' ) );
 	}
