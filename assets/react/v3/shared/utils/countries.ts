@@ -1,11 +1,38 @@
-import countriesData from '@Assets/json/countries.json';
-
+import { tutorConfig } from '@Config/config';
 import { Option } from './types';
+
+export interface Country {
+  name: string;
+  numeric_code: string;
+  alpha_2: string;
+  alpha_3: string;
+  currency: string;
+  currency_name: string;
+  currency_symbol: string;
+  emoji: string;
+  states?: State[];
+}
 
 export interface State {
   name: string;
   id: number;
 }
+
+export let countriesData: Country[] = [];
+
+export const setCountriesData = (newCountriesData: Country[]) => {
+  countriesData = newCountriesData;
+};
+
+(async function fetchCountriesData() {
+  try {
+    const response = await fetch(`${tutorConfig.tutor_url}/assets/json/countries.json`);
+    const data = await response.json();
+    setCountriesData(data);
+  } catch (error) {
+    console.error('Failed to fetch countries data', error);
+  }
+})();
 
 export const euCountryCode = '000';
 
@@ -168,7 +195,6 @@ export const getStatesByCountryAsOptions = (countryCode: string) => {
   const states: State[] = country?.states || [];
   return states.map((state) => ({ label: state.name, value: String(state.id) }));
 };
-
 
 export const getCountryByCode = (countryCode: string) => {
   return countriesData.find((country) => country.numeric_code === countryCode);
