@@ -31,12 +31,13 @@ import { noop } from '@Utils/util';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
-import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
-import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 import { useCourseNavigator } from '../../contexts/CourseNavigatorContext';
 import ExitCourseBuilderModal from '../modals/ExitCourseBuilderModal';
 import SuccessModal from '../modals/SuccessModal';
 import Tracker from './Tracker';
+
+import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 
