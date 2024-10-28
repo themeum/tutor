@@ -274,7 +274,7 @@ const Header = () => {
 
     if (isAdmin || hasWpAdminAccess) {
       items.push(moveToTrashItem, backToLegacyItem);
-    } else {
+    } else if (hasTrashAccess) {
       items.push(moveToTrashItem);
     }
 
@@ -422,7 +422,7 @@ const Header = () => {
             }
             onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
             dropdownMaxWidth={['draft', 'future'].includes(postStatus) ? '190px' : '164px'}
-            disabledDropdown={!form.formState.isDirty && !courseId}
+            disabledDropdown={(!form.formState.isDirty && !courseId) || dropdownItems().length === 0}
           >
             {dropdownItems().map((item, index) => (
               <DropdownButton.Item key={index} text={item.text} onClick={item.onClick} isDanger={item.isDanger} />
