@@ -83,7 +83,10 @@ const Header = () => {
     };
 
     if (data.course_price_type === 'paid') {
-      if (tutorConfig.settings?.monetize_by === 'edd' && !data.course_product_id) {
+      if (
+        !data.course_product_id &&
+        (tutorConfig.settings?.monetize_by === 'edd' || (!isTutorPro && tutorConfig.settings?.monetize_by === 'wc'))
+      ) {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;

@@ -429,6 +429,7 @@ const CourseBasic = () => {
           <Controller
             name="course_product_id"
             control={form.control}
+            rules={!isTutorPro ? requiredRule() : {}}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
