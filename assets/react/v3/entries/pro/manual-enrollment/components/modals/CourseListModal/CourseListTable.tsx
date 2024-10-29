@@ -11,6 +11,7 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import SearchField from './SearchField';
 import coursePlaceholder from '@Images/course-placeholder.png';
+import Show from '@Controls/Show';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
@@ -61,18 +62,21 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
               </Button>
             </div>
             <div css={styles.price} data-price>
-              {item.plan_start_price ? (
-                <>
+              <Show when={item.is_purchasable} fallback={__('Free', 'tutor')}>
+                <Show
+                  when={item.plan_start_price}
+                  fallback={
+                    <>
+                      <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
+                      {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
+                    </>
+                  }
+                >
                   <span css={styles.startingFrom}>
                     {sprintf(__('Starting from %s', 'tutor'), item.plan_start_price)}
                   </span>
-                </>
-              ) : (
-                <>
-                  <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
-                  {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
-                </>
-              )}
+                </Show>
+              </Show>
             </div>
           </div>
         );

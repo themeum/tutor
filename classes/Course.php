@@ -2893,15 +2893,18 @@ class Course extends Tutor_Base {
 	 * @return array
 	 */
 	public static function get_mini_info( object $post ) {
-		$sale_price = get_post_meta( $post->ID, self::COURSE_SALE_PRICE_META, true );
-		$sale_price = ! empty( $sale_price ) ? tutor_get_formatted_price( $sale_price ) : null;
+		$is_purchasable = tutor_utils()->is_course_purchasable( $post->ID );
+		$course_price   = tutor_utils()->get_raw_course_price( $post->ID );
+		$regular_price  = tutor_get_formatted_price( $course_price->regular_price );
+		$sale_price     = ! empty( $course_price->sale_price ) ? tutor_get_formatted_price( $course_price->sale_price ) : null;
 
 		$info = array(
-			'id'            => $post->ID,
-			'title'         => $post->post_title,
-			'image'         => get_tutor_course_thumbnail_src( 'post-thumbnail', $post->ID ),
-			'regular_price' => tutor_get_formatted_price( get_post_meta( $post->ID, self::COURSE_PRICE_META, true ) ),
-			'sale_price'    => $sale_price,
+			'id'             => $post->ID,
+			'title'          => $post->post_title,
+			'image'          => get_tutor_course_thumbnail_src( 'post-thumbnail', $post->ID ),
+			'is_purchasable' => $is_purchasable,
+			'regular_price'  => $regular_price,
+			'sale_price'     => $sale_price,
 		);
 
 		if ( 'course-bundle' === $post->post_type && tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) ) {
