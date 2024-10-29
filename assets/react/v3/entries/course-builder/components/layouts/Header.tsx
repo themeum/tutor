@@ -56,6 +56,7 @@ const Header = () => {
   const postStatus = useWatch({ name: 'post_status' });
   const postVisibility = useWatch({ name: 'visibility' });
   const postDate = useWatch({ name: 'post_date' });
+  const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' });
 
   const isPostDateDirty = form.formState.dirtyFields.post_date;
   const isFormDirty = form.formState.isDirty;
@@ -113,15 +114,7 @@ const Header = () => {
         course_id: Number(courseId),
         ...payload,
         post_status: determinedPostStatus,
-        post_date:
-          (localPostStatus === 'draft' &&
-            !isBefore(
-              new Date(),
-              new Date(isPostDateDirty ? postDate : format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)),
-            )) ||
-          ['draft', 'publish'].includes(determinePostStatus(postStatus, postVisibility))
-            ? format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)
-            : postDate,
+        post_date: isScheduleEnabled ? postDate : format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
       });
 
       if (!response.data) {
@@ -158,6 +151,8 @@ const Header = () => {
     }
   };
 
+  console.log('isScheduleEnabled', isScheduleEnabled);
+
   const dropdownButton = () => {
     let text: string;
     let action: PostStatus;
@@ -165,7 +160,7 @@ const Header = () => {
     if (!isPendingAdminApproval && !isAdmin && isInstructor) {
       text = __('Submit', 'tutor');
       action = 'pending';
-    } else if (isBefore(new Date(), new Date(postDate))) {
+    } else if (isScheduleEnabled) {
       text = isPostDateDirty ? __('Schedule', 'tutor') : __('Update', 'tutor');
       action = 'future';
     } else if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {

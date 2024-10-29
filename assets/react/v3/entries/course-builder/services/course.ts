@@ -74,6 +74,7 @@ export interface CourseFormData {
   enable_tutor_bp: boolean;
   bp_attached_group_ids: string[];
   editor_used: Editor;
+  isScheduleEnabled: boolean;
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -135,6 +136,7 @@ export const courseDefaultData: CourseFormData = {
     link: '',
     name: '',
   },
+  isScheduleEnabled: false,
 };
 
 export interface CoursePayload {
@@ -472,7 +474,7 @@ interface GoogleMeetMeetingDeletePayload {
 export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
     post_date: data.post_date,
-    post_date_gmt: convertToGMT(new Date(data.post_date)),
+    post_date_gmt: data.isScheduleEnabled ? convertToGMT(new Date(data.post_date)) : '',
     post_title: data.post_title,
     post_name: data.post_name,
     ...(data.editor_used.name === 'classic' && {
@@ -624,6 +626,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
     editor_used: courseDetails.editor_used,
+    isScheduleEnabled: courseDetails.post_status === 'future',
   };
 };
 

@@ -1,11 +1,12 @@
-import SVGIcon from '@Atoms/SVGIcon';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import SVGIcon from '@Atoms/SVGIcon';
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
 import FormImageInput from '@Components/fields/FormImageInput';
@@ -23,7 +24,7 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
 import { tutorConfig } from '@Config/config';
-import { Addons, TutorRoles } from '@Config/constants';
+import { Addons, DateFormats, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -330,23 +331,33 @@ const CourseBasic = () => {
         <Navigator styleModifier={styles.navigator} />
       </div>
       <div css={styles.sidebar}>
-        <Controller
-          name="visibility"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormSelectInput
-              {...controllerProps}
-              label={__('Visibility', 'tutor')}
-              placeholder={__('Select visibility status', 'tutor')}
-              options={visibilityStatusOptions}
-              leftIcon={<SVGIcon name="eye" width={32} height={32} />}
-              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-              onChange={() => {
-                form.setValue('post_password', '');
-              }}
-            />
-          )}
-        />
+        <div css={styles.statusAndDate}>
+          <Controller
+            name="visibility"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Visibility', 'tutor')}
+                placeholder={__('Select visibility status', 'tutor')}
+                options={visibilityStatusOptions}
+                leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                onChange={() => {
+                  form.setValue('post_password', '');
+                }}
+              />
+            )}
+          />
+
+          <Show when={courseDetails?.post_modified}>
+            {(date) => (
+              <div css={styles.updatedOn}>
+                {sprintf(__('Last updated on %s', 'tutor'), format(new Date(date), DateFormats.dayMonthYear) || '')}
+              </div>
+            )}
+          </Show>
+        </div>
 
         <Show when={visibilityStatus === 'password_protected'}>
           <Controller
@@ -742,5 +753,13 @@ const styles = {
     ${styleUtils.flexCenter()};
     background-color: ${colorTokens.bg.gray20};
     border-radius: ${borderRadius.card};
+  `,
+  statusAndDate: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
+  updatedOn: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
   `,
 };

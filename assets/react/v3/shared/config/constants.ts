@@ -45,6 +45,7 @@ export enum DateFormats {
   localMonthDayYearHoursMinutes = 'PPp',
   activityDate = 'MMM dd, yyyy hh:mm aa',
   validityDate = 'dd MMMM yyyy',
+  dayMonthYear = 'do MMMM yyyy',
 }
 
 export enum Addons {
