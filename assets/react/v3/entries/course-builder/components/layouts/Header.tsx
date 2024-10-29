@@ -430,7 +430,9 @@ const Header = () => {
                 (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
               }
               onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
-              dropdownMaxWidth={['draft', 'future'].includes(postStatus) ? '190px' : '164px'}
+              dropdownMaxWidth={
+                ['draft', 'future'].includes(postStatus) || isBefore(new Date(), new Date(postDate)) ? '190px' : '164px'
+              }
               disabledDropdown={(!form.formState.isDirty && !courseId) || dropdownItems().length === 0}
             >
               {dropdownItems().map((item, index) => (
