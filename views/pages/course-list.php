@@ -183,7 +183,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 							<th width="13%">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</th>
-							<th width="6%">
+							<th width="10%">
 								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</th>
 							<th class="tutor-table-rows-sorting" width="15%">
