@@ -43,6 +43,7 @@ export interface Course {
   id: number;
   title: string;
   image: string;
+  is_purchasable: boolean;
   regular_price: string;
   sale_price: string | null;
   total_course?: number;

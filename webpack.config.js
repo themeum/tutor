@@ -95,7 +95,7 @@ module.exports = (env, options) => {
 			src_files: {
 				'manual-enrollment.min': './assets/react/v3/entries/pro/manual-enrollment/index.tsx',
 			},
-			clean: false,
+			clean: true,
 		},
 	];
 
