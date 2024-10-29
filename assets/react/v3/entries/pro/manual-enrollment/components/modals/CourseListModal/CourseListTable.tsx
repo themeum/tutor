@@ -10,6 +10,7 @@ import Table, { type Column } from '@Molecules/Table';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import SearchField from './SearchField';
+import coursePlaceholder from '@Images/course-placeholder.png';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
@@ -32,7 +33,7 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
       Cell: (item) => {
         return (
           <div css={styles.courseItemWrapper}>
-            <img src={item.image} css={styles.thumbnail} alt={__('Course item', 'tutor')} />
+            <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('Course item', 'tutor')} />
             <div css={styles.courseContent}>
               {item.total_course && (
                 <div css={styles.bundleBadge}>{sprintf(__('%d Course Bundle', 'tutor'), item.total_course)}</div>
