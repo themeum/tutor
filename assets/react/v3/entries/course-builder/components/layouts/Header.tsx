@@ -17,6 +17,7 @@ import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spa
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
+  type CourseDetailsResponse,
   type CourseFormData,
   type PostStatus,
   convertCourseDataToPayload,
@@ -39,6 +40,7 @@ import Tracker from './Tracker';
 
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@Images/pro-placeholders/generate-course.webp';
+import { useQueryClient } from '@tanstack/react-query';
 
 const courseId = getCourseId();
 
@@ -48,9 +50,12 @@ const Header = () => {
   const { currentIndex } = useCourseNavigator();
   const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(form.watch('post_status'));
   const { showModal } = useModal();
+  const queryClient = useQueryClient();
 
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
+
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const previewLink = useWatch({ name: 'preview_link' });
   const postStatus = useWatch({ name: 'post_status' });
@@ -117,7 +122,13 @@ const Header = () => {
         course_id: Number(courseId),
         ...payload,
         post_status: determinedPostStatus,
-        post_date: isScheduleEnabled ? postDate : format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+        ...(determinedPostStatus === 'draft' ||
+        (determinedPostStatus === 'publish' && isBefore(new Date(), new Date(courseDetails?.post_date ?? postDate)))
+          ? {
+              post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+              post_date_gmt: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+            }
+          : {}),
       });
 
       if (!response.data) {

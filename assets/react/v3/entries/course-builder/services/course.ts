@@ -18,6 +18,7 @@ import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
+import { isBefore } from 'date-fns';
 import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
@@ -141,8 +142,8 @@ export const courseDefaultData: CourseFormData = {
 
 export interface CoursePayload {
   course_id?: number;
-  post_date: string;
-  post_date_gmt: string;
+  post_date?: string;
+  post_date_gmt?: string;
   post_title: string;
   post_name: string;
   post_content?: string;
@@ -473,8 +474,10 @@ interface GoogleMeetMeetingDeletePayload {
 
 export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
-    post_date: data.post_date,
-    post_date_gmt: data.isScheduleEnabled ? convertToGMT(new Date(data.post_date)) : '',
+    ...(data.isScheduleEnabled && {
+      post_date: data.post_date,
+      post_date_gmt: convertToGMT(new Date(data.post_date)),
+    }),
     post_title: data.post_title,
     post_name: data.post_name,
     ...(data.editor_used.name === 'classic' && {
@@ -626,7 +629,8 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
     editor_used: courseDetails.editor_used,
-    isScheduleEnabled: courseDetails.post_status === 'future',
+    isScheduleEnabled:
+      courseDetails.post_status === 'future' && isBefore(new Date(), new Date(courseDetails.post_date)),
   };
 };
 
