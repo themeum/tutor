@@ -151,8 +151,6 @@ const Header = () => {
     }
   };
 
-  console.log('isScheduleEnabled', isScheduleEnabled);
-
   const dropdownButton = () => {
     let text: string;
     let action: PostStatus;
