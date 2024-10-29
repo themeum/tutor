@@ -10,7 +10,7 @@ import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
-import { useModal } from '@/v3/shared/components/modals/Modal';
+import { useModal } from '@Components/modals/Modal';
 import config, { tutorConfig } from '@Config/config';
 import { DateFormats, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
@@ -30,11 +30,11 @@ import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
+import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBuilderModal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 import { useCourseNavigator } from '../../contexts/CourseNavigatorContext';
-import ExitCourseBuilderModal from '../modals/ExitCourseBuilderModal';
-import SuccessModal from '../modals/SuccessModal';
 import Tracker from './Tracker';
 
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
@@ -114,7 +114,12 @@ const Header = () => {
         ...payload,
         post_status: determinedPostStatus,
         post_date:
-          localPostStatus === 'draft' || ['draft', 'publish'].includes(determinePostStatus(postStatus, postVisibility))
+          (localPostStatus === 'draft' &&
+            !isBefore(
+              new Date(),
+              new Date(isPostDateDirty ? postDate : format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)),
+            )) ||
+          ['draft', 'publish'].includes(determinePostStatus(postStatus, postVisibility))
             ? format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)
             : postDate,
       });
