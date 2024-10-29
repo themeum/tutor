@@ -147,6 +147,7 @@ const Header = () => {
           },
         });
       }
+
       if (
         isInstructor &&
         tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&

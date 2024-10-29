@@ -436,9 +436,9 @@ const CourseBasic = () => {
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
                 options={wcProductOptions(wcProductsQuery.data)}
-                helpText={__(
-                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
-                  'tutor',
+                helpText={sprintf(
+                  __('You can select an existing WooCommerce product%s', 'tutor'),
+                  isTutorPro ? ', alternatively, a new WooCommerce product will be created for you.' : '.',
                 )}
                 isSearchable
                 loading={wcProductsQuery.isLoading && !controllerProps.field.value}
