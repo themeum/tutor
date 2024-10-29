@@ -34,7 +34,12 @@ class AdminMenu {
 		$order_badge_count = get_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT );
 
 		if ( false === $order_badge_count ) {
-			$order_badge_count = ( new OrderModel() )->get_order_count( array( 'payment_status' => OrderModel::PAYMENT_UNPAID ) );
+			$order_badge_count = ( new OrderModel() )->get_order_count(
+				array(
+					'payment_status' => OrderModel::PAYMENT_UNPAID,
+					'order_type'     => OrderModel::TYPE_SINGLE_ORDER,
+				)
+			);
 			set_transient( OrderModel::TRANSIENT_ORDER_BADGE_COUNT, $order_badge_count, HOUR_IN_SECONDS );
 		}
 
