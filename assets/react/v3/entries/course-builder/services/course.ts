@@ -32,13 +32,14 @@ export type ContentDripType =
   | '';
 export type PricingType = 'free' | 'paid';
 export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
+export type PostStatus = 'publish' | 'private' | 'draft' | 'future' | 'pending' | 'trash';
 
 export interface CourseFormData {
   post_date: string;
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: 'publish' | 'private' | 'draft' | 'future';
+  post_status: PostStatus;
   visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;

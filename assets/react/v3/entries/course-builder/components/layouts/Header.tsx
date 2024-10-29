@@ -18,6 +18,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
   type CourseFormData,
+  type PostStatus,
   convertCourseDataToPayload,
   useCreateCourseMutation,
   useUpdateCourseMutation,
@@ -45,9 +46,7 @@ const Header = () => {
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
   const { currentIndex } = useCourseNavigator();
-  const [localPostStatus, setLocalPostStatus] = useState<
-    'publish' | 'draft' | 'future' | 'private' | 'trash' | 'pending'
-  >(form.watch('post_status'));
+  const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(form.watch('post_status'));
   const { showModal } = useModal();
 
   const createCourseMutation = useCreateCourseMutation();
@@ -70,10 +69,7 @@ const Header = () => {
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
   const isPendingAdminApproval = tutorConfig.settings?.enable_course_review_moderation === 'off';
 
-  const handleSubmit = async (
-    data: CourseFormData,
-    postStatus: 'publish' | 'draft' | 'future' | 'trash' | 'pending',
-  ) => {
+  const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
       Promise.resolve().then(() => {
         form.trigger(field);
@@ -111,40 +107,39 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     if (courseId) {
-      const determinedPostStatus = determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility);
+      const determinedPostStatus = determinePostStatus(postStatus, postVisibility);
 
       const response = await updateCourseMutation.mutateAsync({
         course_id: Number(courseId),
         ...payload,
         post_status: determinedPostStatus,
         post_date:
-          localPostStatus === 'draft' &&
-          ['draft', 'publish'].includes(determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility))
+          localPostStatus === 'draft' || ['draft', 'publish'].includes(determinePostStatus(postStatus, postVisibility))
             ? format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H)
             : postDate,
       });
 
-      if (response.data) {
-        if (postStatus === 'pending') {
-          showModal({
-            component: SuccessModal,
-            props: {
-              title: __('Course has been submitted for review.', 'tutor'),
-              description: __(
-                'Thank you for submitting your course. It will be reviewed by our team shortly.',
-                'tutor',
-              ),
-            },
-          });
-        }
-        if (
-          isInstructor &&
-          tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
-          ['publish', 'future'].includes(determinedPostStatus)
-        ) {
-          window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
-        }
+      if (!response.data) {
+        return;
       }
+
+      if (postStatus === 'pending') {
+        showModal({
+          component: SuccessModal,
+          props: {
+            title: __('Course has been submitted for review.', 'tutor'),
+            description: __('Thank you for submitting your course. It will be reviewed by our team shortly.', 'tutor'),
+          },
+        });
+      }
+      if (
+        isInstructor &&
+        tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
+        ['publish', 'future'].includes(determinedPostStatus)
+      ) {
+        window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
+      }
+
       return;
     }
 
@@ -157,7 +152,7 @@ const Header = () => {
 
   const dropdownButton = () => {
     let text: string;
-    let action: 'publish' | 'draft' | 'future' | 'pending';
+    let action: PostStatus;
 
     if (!isPendingAdminApproval && !isAdmin && isInstructor) {
       text = __('Submit', 'tutor');
