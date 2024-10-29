@@ -4,34 +4,55 @@ import { __ } from '@wordpress/i18n';
 import Button from '@Atoms/Button';
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 
-import { typography } from '@/v3/shared/config/typography';
 import { colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
 interface SuccessModalProps {
   title: string;
   description?: string;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  confirmAction?: () => void;
+  image?: string;
+  imageAlt?: string;
+  image2x?: string;
+  actions?: React.ReactNode;
 }
 
-const SuccessModal = ({ title, description, closeModal }: SuccessModalProps) => {
+const SuccessModal = ({ title, description, image, image2x, imageAlt, closeModal, actions }: SuccessModalProps) => {
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} entireHeader={<>&nbsp;</>}>
       <div css={styles.wrapper}>
-        <p css={styles.message}>{description}</p>
-        <div css={styles.formFooter}>
-          <Button
-            onClick={() =>
-              closeModal({
-                action: 'CLOSE',
-              })
+        <Show when={image}>
+          <img
+            src={image}
+            srcSet={image2x ? `${image} 1x, ${image2x} 2x` : undefined}
+            alt={imageAlt}
+            css={styles.image}
+          />
+        </Show>
+        <div css={styles.body}>
+          <h5 css={typography.heading5('medium')}>{title}</h5>
+          <p css={styles.message}>{description}</p>
+        </div>
+        <div css={styles.footer}>
+          <Show
+            when={actions}
+            fallback={
+              <Button
+                onClick={() =>
+                  closeModal({
+                    action: 'CLOSE',
+                  })
+                }
+                size="small"
+              >
+                {__('Ok', 'tutor')}
+              </Button>
             }
-            variant="secondary"
-            size="small"
           >
-            {__('Ok', 'tutor')}
-          </Button>
+            {actions}
+          </Show>
         </div>
       </div>
     </BasicModalWrapper>
@@ -42,24 +63,29 @@ export default SuccessModal;
 
 const styles = {
   wrapper: css`
-    width: 445px;
+    width: 408px;
     ${styleUtils.display.flex('column')};
+    padding: ${spacing[24]};
+    gap: ${spacing[24]};
+  `,
+  image: css`
+    width: 100%;
+    height: auto;
+    object-position: center;
+    object-fit: contain;
+  `,
+  body: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[24]};
   `,
   message: css`
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
-    padding: ${spacing[20]};
   `,
-  formWrapper: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[20]};
-    padding: ${spacing[16]} ${spacing[16]} 0 ${spacing[16]};
-  `,
-  formFooter: css`
+  footer: css`
     ${styleUtils.display.flex()};
     justify-content: flex-end;
     gap: ${spacing[16]};
-    border-top: 1px solid ${colorTokens.stroke.divider};
-    padding: ${spacing[12]} ${spacing[16]};
+    padding-top: ${spacing[20]};
   `,
 };

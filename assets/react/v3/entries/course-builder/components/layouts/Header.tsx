@@ -132,8 +132,11 @@ const Header = () => {
         showModal({
           component: SuccessModal,
           props: {
-            title: __('Course has been submitted for review.', 'tutor'),
-            description: __('Thank you for submitting your course. It will be reviewed by our team shortly.', 'tutor'),
+            title: __('Thank You!', 'tutor'),
+            description: __('Course has been submitted for review.', 'tutor'),
+            image: generateCourse,
+            image2x: generateCourse2x,
+            imageAlt: __('Course submitted for review', 'tutor'),
           },
         });
       }
