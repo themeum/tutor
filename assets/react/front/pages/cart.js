@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					if (status_code === 200) {
 						document.querySelector('.tutor-cart-page-wrapper').parentElement.innerHTML = data?.cart_template;
 						tutor_toast(__('Success', 'tutor'), message, 'success');
+						
 						// Trigger a custom event with cart count
 						const removeCartEvent = new CustomEvent('tutorRemoveCartEvent', {
 							detail: { cart_count: data?.cart_count },
