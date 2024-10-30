@@ -404,8 +404,8 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 				: type == 'error' ? 'danger'
 				: type == 'warning' ? 'warning' : 'primary';
 	
-	let icon = 	type == 'success' ? 'tutor-icon-mark'
-				: type == 'error' ? 'tutor-icon-times' : 'tutor-icon-circle-info-o';
+	let icon = 	type == 'success' ? 'tutor-icon-circle-mark-line'
+				: type == 'error' ? 'tutor-icon-circle-times-line' : 'tutor-icon-circle-info-o';
 	
 	let hasDescription = ( description !== undefined && description !== null && description.trim() !== '' )
 
