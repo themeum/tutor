@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { addHours, format, isBefore, isValid, parseISO } from 'date-fns';
+import { addHours, format, isBefore, isValid, parseISO, startOfDay } from 'date-fns';
 import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -16,6 +16,7 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
+import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
 
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
@@ -44,7 +45,7 @@ const ScheduleOptions = () => {
       'schedule_date',
       format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.yearMonthDay),
       {
-        shouldDirty: true,
+        shouldValidate: true,
       },
     );
 
@@ -52,7 +53,7 @@ const ScheduleOptions = () => {
       'schedule_time',
       format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.hoursMinutes),
       {
-        shouldDirty: true,
+        shouldValidate: true,
       },
     );
   };
@@ -62,7 +63,7 @@ const ScheduleOptions = () => {
       return;
     }
 
-    form.setValue('showScheduleForm', false, { shouldDirty: true });
+    form.setValue('showScheduleForm', false);
     setPreviousPostDate(
       format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H),
     );
@@ -82,14 +83,15 @@ const ScheduleOptions = () => {
               name="schedule_date"
               control={form.control}
               rules={{
-                validate: (value) => {
-                  if (!value) {
-                    return __('Schedule date is required.', 'tutor');
-                  }
-                  if (isBefore(new Date(`${value}`), new Date(new Date().setHours(0, 0, 0, 0)))) {
-                    return __('Schedule date should be in the future.', 'tutor');
-                  }
-                  return true;
+                required: __('Schedule date is required.', 'tutor'),
+                validate: {
+                  invalidDateRule: invalidDateRule,
+                  futureDate: (value) => {
+                    if (isBefore(new Date(`${value}`), startOfDay(new Date()))) {
+                      return __('Schedule date should be in the future.', 'tutor');
+                    }
+                    return true;
+                  },
                 },
               }}
               render={(controllerProps) => (
@@ -105,19 +107,15 @@ const ScheduleOptions = () => {
               name="schedule_time"
               control={form.control}
               rules={{
-                validate: (value) => {
-                  if (!value) {
-                    return __('Schedule time is required.', 'tutor');
-                  }
-
-                  if (!isValid(new Date(`${form.watch('schedule_date')} ${value}`))) {
-                    return __('Invalid time.', 'tutor');
-                  }
-
-                  if (isBefore(new Date(`${form.watch('schedule_date')} ${value}`), new Date())) {
-                    return __('Schedule time should be in the future.', 'tutor');
-                  }
-                  return true;
+                required: __('Schedule time is required.', 'tutor'),
+                validate: {
+                  invalidTimeRule: invalidTimeRule,
+                  futureDate: (value) => {
+                    if (isBefore(new Date(`${form.watch('schedule_date')} ${value}`), new Date())) {
+                      return __('Schedule time should be in the future.', 'tutor');
+                    }
+                    return true;
+                  },
                 },
               }}
               render={(controllerProps) => (

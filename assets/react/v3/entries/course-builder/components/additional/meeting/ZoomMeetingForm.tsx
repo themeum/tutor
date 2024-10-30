@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format, isValid } from 'date-fns';
+import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -26,6 +26,7 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { invalidTimeRule } from '@Utils/validation';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
@@ -184,11 +185,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               control={meetingForm.control}
               rules={{
                 required: __('Time is required', 'tutor'),
-                validate: (value) => {
-                  if (!isValid(new Date(`${meetingForm.watch('meeting_date')} ${value}`))) {
-                    return __('Invalid time', 'tutor');
-                  }
-                },
+                validate: invalidTimeRule,
               }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
