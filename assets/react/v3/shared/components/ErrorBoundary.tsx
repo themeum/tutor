@@ -234,7 +234,6 @@ const styles = {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: ${colorTokens.background.white};
   `,
   sourceLinesWrapper: css`
     display: flex;
