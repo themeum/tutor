@@ -349,7 +349,7 @@ const Header = () => {
             <span css={styles.divider} />
             <Tracker />
           </div>
-          <Show when={currentIndex === 0 && isOpenAiEnabled}>
+          <Show when={currentIndex === 0 && (isOpenAiEnabled || !isTutorPro)}>
             <span css={styles.divider} />
             <div css={styleUtils.flexCenter()}>
               <MagicButton
