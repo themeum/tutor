@@ -129,7 +129,7 @@ export const courseDefaultData: CourseFormData = {
   course_attachments: null,
   isContentDripEnabled: false,
   contentDripType: '',
-  course_product_id: '',
+  course_product_id: '-1',
   course_product_name: '',
   preview_link: '',
   course_prerequisites: [],
@@ -618,7 +618,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1,
     contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type || '' : '',
     course_product_id:
-      String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
+      String(courseDetails.course_pricing.product_id) === '0' ? '-1' : String(courseDetails.course_pricing.product_id),
     course_instructors:
       courseDetails.course_instructors?.reduce((instructors, item) => {
         if (String(item.id) !== String(courseDetails.post_author.ID)) {

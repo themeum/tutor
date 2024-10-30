@@ -152,7 +152,7 @@ const CourseBasic = () => {
     courseProductId,
     String(courseId),
     coursePriceType,
-    tutorConfig.settings?.monetize_by,
+    isTutorPro ? tutorConfig.settings?.monetize_by : undefined,
   );
 
   const wcProductOptions = (data: WcProduct[] | undefined) => {
@@ -429,13 +429,18 @@ const CourseBasic = () => {
           <Controller
             name="course_product_id"
             control={form.control}
-            rules={!isTutorPro ? requiredRule() : {}}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
-                options={wcProductOptions(wcProductsQuery.data)}
+                options={[
+                  {
+                    label: __('Select a product', 'tutor'),
+                    value: '-1',
+                  },
+                  ...wcProductOptions(wcProductsQuery.data),
+                ]}
                 helpText={sprintf(
                   __('You can select an existing WooCommerce product%s', 'tutor'),
                   isTutorPro ? ', alternatively, a new WooCommerce product will be created for you.' : '.',
@@ -478,7 +483,8 @@ const CourseBasic = () => {
         <Show
           when={
             coursePriceType === 'paid' &&
-            (tutorConfig.settings?.monetize_by === 'tutor' || tutorConfig.settings?.monetize_by === 'wc')
+            (tutorConfig.settings?.monetize_by === 'tutor' ||
+              (isTutorPro && tutorConfig.settings?.monetize_by === 'wc'))
           }
         >
           <div css={styles.coursePriceWrapper}>
