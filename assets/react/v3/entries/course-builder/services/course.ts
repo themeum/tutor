@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
+import { addHours, format, isBefore, parseISO } from 'date-fns';
 
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
@@ -9,16 +10,16 @@ import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 
-import { Addons, DateFormats } from '@/v3/shared/config/constants';
-import { convertToGMT } from '@/v3/shared/utils/util';
 import { tutorConfig } from '@Config/config';
+import { Addons, DateFormats } from '@Config/constants';
 import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { addHours, format, isBefore, parseISO } from 'date-fns';
+import { convertToGMT } from '@Utils/util';
+
 import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
