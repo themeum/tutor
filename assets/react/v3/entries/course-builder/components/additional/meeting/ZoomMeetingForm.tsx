@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -60,6 +60,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       meeting_host: Object.values(meetingHost)[0],
     },
     shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const saveZoomMeeting = useSaveZoomMeetingMutation();
@@ -183,6 +184,11 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               control={meetingForm.control}
               rules={{
                 required: __('Time is required', 'tutor'),
+                validate: (value) => {
+                  if (!isValid(new Date(`${meetingForm.watch('meeting_date')} ${value}`))) {
+                    return __('Invalid time', 'tutor');
+                  }
+                },
               }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />

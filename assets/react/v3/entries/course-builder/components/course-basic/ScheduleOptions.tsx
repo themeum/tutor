@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format, isBefore, parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { addHours, format, isBefore, isValid, parseISO } from 'date-fns';
+import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -15,92 +15,58 @@ import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
-
-interface ScheduleForm {
-  schedule_date: string;
-  schedule_time: string;
-}
-
-const courseId = getCourseId();
 
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
   const postDate = useWatch({ name: 'post_date' });
-  const postStatus = useWatch({ name: 'post_status' });
+  const scheduleDate = useWatch({ name: 'schedule_date' }) ?? '';
+  const scheduleTime = useWatch({ name: 'schedule_time' }) ?? format(addHours(new Date(), 1), DateFormats.hoursMinutes);
+  const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' }) ?? false;
+  const showForm = useWatch({ name: 'showScheduleForm' }) ?? false;
 
-  const [previousPostDate, setPreviousPostDate] = useState(postDate);
-  const scheduleForm = useFormWithGlobalError<ScheduleForm>({
-    defaultValues: {
-      schedule_date: format(new Date(), DateFormats.yearMonthDay),
-      schedule_time: format(new Date(), DateFormats.hoursMinutes),
-    },
-    mode: 'onChange',
-  });
+  const [previousPostDate, setPreviousPostDate] = useState(
+    scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
+      ? format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H)
+      : format(addHours(new Date(), 1), DateFormats.yearMonthDayHourMinuteSecond24H),
+  );
 
-  const [showForm, setShowForm] = useState(!courseId);
-
-  const isScheduleEnabled = form.watch('isScheduleEnabled');
-  const scheduleDate = scheduleForm.watch('schedule_date')
-    ? format(new Date(scheduleForm.watch('schedule_date')), DateFormats.monthDayYear)
-    : '';
-  const scheduleTime = scheduleForm.watch('schedule_time') ?? '';
-  const isScheduleFormDirty = scheduleForm.formState.isDirty;
+  const isScheduleDateTimeDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
   const handleDelete = () => {
-    setShowForm(false);
-    scheduleForm.reset();
+    form.setValue('showScheduleForm', false, { shouldDirty: true });
+    form.setValue('isScheduleEnabled', false, { shouldDirty: true });
   };
 
   const handleCancel = () => {
     const isPreviousDateInFuture = isBefore(new Date(postDate), new Date());
-    scheduleForm.setValue(
+    form.setValue(
       'schedule_date',
-      format(isPreviousDateInFuture ? new Date() : parseISO(previousPostDate), DateFormats.yearMonthDay),
+      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.yearMonthDay),
       {
         shouldDirty: true,
       },
     );
 
-    scheduleForm.setValue(
+    form.setValue(
       'schedule_time',
-      format(isPreviousDateInFuture ? new Date() : parseISO(previousPostDate), DateFormats.hoursMinutes),
+      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.hoursMinutes),
       {
         shouldDirty: true,
       },
     );
   };
 
-  const handleSave = (data: ScheduleForm) => {
-    if (!data.schedule_date || !data.schedule_time) {
+  const handleSave = () => {
+    if (!scheduleDate || !scheduleTime) {
       return;
     }
 
-    setShowForm(false);
-    form.setValue(
-      'post_date',
-      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond24H),
-      {
-        shouldDirty: true,
-      },
-    );
+    form.setValue('showScheduleForm', false, { shouldDirty: true });
     setPreviousPostDate(
-      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond),
+      format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H),
     );
   };
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (postDate && !isBefore(parseISO(postDate), new Date())) {
-      scheduleForm.reset({
-        schedule_date: format(parseISO(postDate), DateFormats.yearMonthDay),
-        schedule_time: format(parseISO(postDate), DateFormats.hoursMinutes),
-      });
-      setPreviousPostDate(postDate);
-    }
-  }, [postDate]);
 
   return (
     <div css={styles.scheduleOptions}>
@@ -114,13 +80,13 @@ const ScheduleOptions = () => {
           <div css={styleUtils.dateAndTimeWrapper}>
             <Controller
               name="schedule_date"
-              control={scheduleForm.control}
+              control={form.control}
               rules={{
                 validate: (value) => {
                   if (!value) {
                     return __('Schedule date is required.', 'tutor');
                   }
-                  if (isBefore(new Date(`${value} ${scheduleForm.watch('schedule_time')}`), new Date())) {
+                  if (isBefore(new Date(`${value}`), new Date(new Date().setHours(0, 0, 0, 0)))) {
                     return __('Schedule date should be in the future.', 'tutor');
                   }
                   return true;
@@ -137,14 +103,18 @@ const ScheduleOptions = () => {
             />
             <Controller
               name="schedule_time"
-              control={scheduleForm.control}
+              control={form.control}
               rules={{
                 validate: (value) => {
                   if (!value) {
                     return __('Schedule time is required.', 'tutor');
                   }
 
-                  if (isBefore(new Date(`${scheduleForm.watch('schedule_date')} ${value}`), new Date())) {
+                  if (!isValid(new Date(`${form.watch('schedule_date')} ${value}`))) {
+                    return __('Invalid time.', 'tutor');
+                  }
+
+                  if (isBefore(new Date(`${form.watch('schedule_date')} ${value}`), new Date())) {
                     return __('Schedule time should be in the future.', 'tutor');
                   }
                   return true;
@@ -156,10 +126,10 @@ const ScheduleOptions = () => {
             />
           </div>
           <div css={styles.scheduleButtonsWrapper}>
-            <Button variant="tertiary" size="small" onClick={handleCancel} disabled={!isScheduleFormDirty}>
+            <Button variant="tertiary" size="small" onClick={handleCancel} disabled={!isScheduleDateTimeDirty}>
               {__('Cancel', 'tutor')}
             </Button>
-            <Button variant="secondary" size="small" onClick={scheduleForm.handleSubmit(handleSave)}>
+            <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>
               {__('Ok', 'tutor')}
             </Button>
           </div>
@@ -173,7 +143,12 @@ const ScheduleOptions = () => {
               <button type="button" onClick={handleDelete}>
                 <SVGIcon name="delete" width={24} height={24} />
               </button>
-              <button type="button" onClick={() => setShowForm(true)}>
+              <button
+                type="button"
+                onClick={() => {
+                  form.setValue('showScheduleForm', true);
+                }}
+              >
                 <SVGIcon name="edit" width={24} height={24} />
               </button>
             </div>

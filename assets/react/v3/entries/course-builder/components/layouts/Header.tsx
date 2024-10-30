@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -40,7 +41,8 @@ import Tracker from './Tracker';
 
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@Images/pro-placeholders/generate-course.webp';
-import { useQueryClient } from '@tanstack/react-query';
+import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
+import reviewSubmitted from '@Images/review-submitted.webp';
 
 const courseId = getCourseId();
 
@@ -86,6 +88,19 @@ const Header = () => {
     const navigateToBasicsWithError = () => {
       navigate('/basics', { state: { isError: true } });
     };
+
+    if (
+      data.isScheduleEnabled &&
+      (!data.schedule_date ||
+        !data.schedule_time ||
+        !isBefore(new Date(), new Date(`${data.schedule_date} ${data.schedule_time}`)))
+    ) {
+      navigateToBasicsWithError();
+      form.setValue('showScheduleForm', true, { shouldDirty: true });
+      triggerAndFocus('schedule_date');
+      triggerAndFocus('schedule_time');
+      return;
+    }
 
     if (data.course_price_type === 'paid') {
       if (
@@ -139,11 +154,31 @@ const Header = () => {
         showModal({
           component: SuccessModal,
           props: {
-            title: __('Thank You!', 'tutor'),
-            description: __('Course has been submitted for review.', 'tutor'),
-            image: generateCourse,
-            image2x: generateCourse2x,
+            title: __('Course Under Review', 'tutor'),
+            description: __('Your course has been successfully submitted for review.', 'tutor'),
+            image: reviewSubmitted,
+            image2x: reviewSubmitted2x,
             imageAlt: __('Course submitted for review', 'tutor'),
+            wrapperCss: css`
+              align-items: center;
+              text-align: center;
+            `,
+            actions: (
+              <div css={styleUtils.flexCenter()}>
+                <Button
+                  onClick={() => {
+                    if (window.location.href.includes('wp-admin')) {
+                      window.location.href = tutorConfig.backend_course_list_url;
+                    } else {
+                      window.location.href = tutorConfig.frontend_course_list_url;
+                    }
+                  }}
+                  size="small"
+                >
+                  {__('Back to courses', 'tutor')}
+                </Button>
+              </div>
+            ),
           },
         });
       }

@@ -1,4 +1,4 @@
-import { css } from '@emotion/react';
+import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 import Button from '@Atoms/Button';
@@ -17,12 +17,24 @@ interface SuccessModalProps {
   imageAlt?: string;
   image2x?: string;
   actions?: React.ReactNode;
+  wrapperCss?: SerializedStyles;
+  bodyCss?: SerializedStyles;
 }
 
-const SuccessModal = ({ title, description, image, image2x, imageAlt, closeModal, actions }: SuccessModalProps) => {
+const SuccessModal = ({
+  title,
+  description,
+  image,
+  image2x,
+  imageAlt,
+  closeModal,
+  actions,
+  wrapperCss,
+  bodyCss,
+}: SuccessModalProps) => {
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} entireHeader={<>&nbsp;</>}>
-      <div css={styles.wrapper}>
+      <div css={[styles.wrapper, wrapperCss]}>
         <Show when={image}>
           <img
             src={image}
@@ -31,7 +43,7 @@ const SuccessModal = ({ title, description, image, image2x, imageAlt, closeModal
             css={styles.image}
           />
         </Show>
-        <div css={styles.body}>
+        <div css={[styles.body, bodyCss]}>
           <h5 css={typography.heading5('medium')}>{title}</h5>
           <p css={styles.message}>{description}</p>
         </div>
@@ -76,7 +88,7 @@ const styles = {
   `,
   body: css`
     ${styleUtils.display.flex('column')};
-    gap: ${spacing[24]};
+    gap: ${spacing[8]};
   `,
   message: css`
     ${typography.caption()};
@@ -86,6 +98,6 @@ const styles = {
     ${styleUtils.display.flex()};
     justify-content: flex-end;
     gap: ${spacing[16]};
-    padding-top: ${spacing[20]};
+    padding-top: ${spacing[8]};
   `,
 };

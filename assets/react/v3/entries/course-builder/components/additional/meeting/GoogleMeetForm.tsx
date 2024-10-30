@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { format } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -68,6 +68,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
       meeting_enrolledAsAttendee: currentMeeting?.meeting_data.attendees === 'Yes',
     },
     shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const saveGoogleMeetMeeting = useSaveGoogleMeetMutation();
@@ -191,7 +192,14 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               <Controller
                 name="meeting_start_time"
                 control={meetingForm.control}
-                rules={{ required: __('Start time is required', 'tutor') }}
+                rules={{
+                  required: __('Start time is required', 'tutor'),
+                  validate: (value) => {
+                    if (!isValid(new Date(`${meetingForm.watch('meeting_start_date')} ${value}`))) {
+                      return __('Invalid time.', 'tutor');
+                    }
+                  },
+                }}
                 render={(controllerProps) => (
                   <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
                 )}
@@ -242,6 +250,11 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                       const startTime = meetingForm.watch('meeting_start_time');
                       const endDate = meetingForm.watch('meeting_end_date');
                       const endTime = value;
+
+                      if (!isValid(new Date(`${endDate} ${endTime}`))) {
+                        return __('Invalid time.', 'tutor');
+                      }
+
                       if (startDate && endDate && startTime && endTime) {
                         return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
                           ? __('End time should be greater than start time', 'tutor')

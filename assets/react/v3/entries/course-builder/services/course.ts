@@ -9,7 +9,7 @@ import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 
-import { Addons } from '@/v3/shared/config/constants';
+import { Addons, DateFormats } from '@/v3/shared/config/constants';
 import { convertToGMT } from '@/v3/shared/utils/util';
 import { tutorConfig } from '@Config/config';
 import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
@@ -18,7 +18,7 @@ import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { isBefore } from 'date-fns';
+import { addHours, format, isBefore, parseISO } from 'date-fns';
 import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
@@ -76,6 +76,9 @@ export interface CourseFormData {
   bp_attached_group_ids: string[];
   editor_used: Editor;
   isScheduleEnabled: boolean;
+  showScheduleForm: boolean;
+  schedule_date: string;
+  schedule_time: string;
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -138,6 +141,9 @@ export const courseDefaultData: CourseFormData = {
     name: '',
   },
   isScheduleEnabled: false,
+  showScheduleForm: false,
+  schedule_date: '',
+  schedule_time: '',
 };
 
 export interface CoursePayload {
@@ -475,8 +481,11 @@ interface GoogleMeetMeetingDeletePayload {
 export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
   return {
     ...(data.isScheduleEnabled && {
-      post_date: data.post_date,
-      post_date_gmt: convertToGMT(new Date(data.post_date)),
+      post_date: format(
+        new Date(`${data.schedule_date} ${data.schedule_time}`),
+        DateFormats.yearMonthDayHourMinuteSecond24H,
+      ),
+      post_date_gmt: convertToGMT(new Date(`${data.schedule_date} ${data.schedule_time}`)),
     }),
     post_title: data.post_title,
     post_name: data.post_name,
@@ -631,6 +640,13 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     editor_used: courseDetails.editor_used,
     isScheduleEnabled:
       courseDetails.post_status === 'future' && isBefore(new Date(), new Date(courseDetails.post_date)),
+    showScheduleForm: false,
+    schedule_date: !isBefore(parseISO(courseDetails.post_date), new Date())
+      ? format(parseISO(courseDetails.post_date), DateFormats.yearMonthDay)
+      : format(new Date(), DateFormats.yearMonthDay),
+    schedule_time: !isBefore(parseISO(courseDetails.post_date), new Date())
+      ? format(parseISO(courseDetails.post_date), DateFormats.hoursMinutes)
+      : format(addHours(new Date(), 1), DateFormats.hoursMinutes),
   };
 };
 
