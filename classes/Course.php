@@ -1225,6 +1225,15 @@ class Course extends Tutor_Base {
 			$can_edit_course = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 
 			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
+				/**
+				 * Non-admin user can't edit trash course.
+				 *
+				 * @since 3.0.0
+				 */
+				if ( ! User::is_admin() && CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
+					wp_die( esc_html( tutor_utils()->error_message() ) );
+				}
+
 				$this->load_course_builder_view();
 			}
 		}
