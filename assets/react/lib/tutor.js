@@ -419,12 +419,12 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 			<p class="${ ! hasDescription ? 'tutor-d-none' : '' }">${description}</p>
 			</div>
 			<button class="tutor-notification-close">
-				<i class="fas fa-times"></i>
+				<i class="tutor-icon-times"></i>
 			</button>
 		</div>
     `);
 
-	content.find('.tutor-noti-close').click(function() {
+	content.find('.tutor-notification-close').click(function() {
 		content.remove();
 	});
 
