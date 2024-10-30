@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use stdClass;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
@@ -50,6 +51,7 @@ class Course extends Tutor_Base {
 	const COURSE_PRICE_META          = 'tutor_course_price';
 	const COURSE_SALE_PRICE_META     = 'tutor_course_sale_price';
 	const COURSE_SELLING_OPTION_META = 'tutor_course_selling_option';
+	const COURSE_PRODUCT_ID_META     = '_tutor_course_product_id';
 
 	/**
 	 * Selling option constants
@@ -1223,6 +1225,15 @@ class Course extends Tutor_Base {
 			$can_edit_course = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 
 			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
+				/**
+				 * Non-admin user can't edit trash course.
+				 *
+				 * @since 3.0.0
+				 */
+				if ( ! User::is_admin() && CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
+					wp_die( esc_html( tutor_utils()->error_message() ) );
+				}
+
 				$this->load_course_builder_view();
 			}
 		}
@@ -1310,6 +1321,7 @@ class Course extends Tutor_Base {
 		$data['timezones']                = tutor_global_timezone_lists();
 		$data['difficulty_levels']        = $difficulty_levels;
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
+		$data['max_upload_size']          = size_format( wp_max_upload_size() );
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
@@ -1389,8 +1401,8 @@ class Course extends Tutor_Base {
 
 		if ( $course_id ) {
 			$linked_product_id = tutor_utils()->get_course_product_id( $course_id );
-			if ( $linked_product_id && isset( $exclude[ $linked_product_id ] ) ) {
-				unset( $exclude[ $linked_product_id ] );
+			if ( $linked_product_id ) {
+				$exclude = array_filter( $exclude, fn( $id )=> $linked_product_id !== (int) $id );
 			}
 		}
 
@@ -2076,10 +2088,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.3.4
 	 *
-	 * @since 3.0.0
-	 *
-	 * Setting course regular & sale price to make compatible
-	 * with Tutor monetization
+	 * @since 3.0.0 Store regular & sale price in meta to make compatible with Tutor monetization
 	 *
 	 * @param integer $post_ID  course ID.
 	 * @param array   $post_data created course post details.
@@ -2089,29 +2098,26 @@ class Course extends Tutor_Base {
 	public function attach_product_with_course( $post_ID, $post_data ) {
 
 		$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+		$product_id  = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
+
+		if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
+			return;
+		}
 
 		/**
-		 * The function is_admin will check only loaded page from WP admin.
-		 * It does not check any role
-		 *
-		 * @since 2.6.0
-		 *
-		 * tutor_is_rest() check added, if loaded from rest api
+		 * Unlink product from course.
 		 */
-		$is_admin_panel = is_admin() || tutor_is_rest();
-		// From backend course select box.
-		$product_id = Input::post( '_tutor_course_product_id', 0, Input::TYPE_INT );
+		if ( -1 === $product_id ) {
+			delete_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META );
+			return;
+		}
 
 		/**
-		 * From Admin Panel, Free user can only select product from dropdown
+		 * Free user can only select product from dropdown
 		 */
-		if ( $is_admin_panel && 'wc' === $monetize_by && tutor()->has_pro === false ) {
+		if ( tutor()->has_pro === false && 'wc' === $monetize_by ) {
 			if ( $product_id > 0 ) {
-				update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
-			} elseif ( -1 === $product_id ) {
-				if ( ! tutor_is_rest() ) {
-					delete_post_meta( $post_ID, '_tutor_course_product_id' );
-				}
+				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
 			}
 
 			return;
@@ -2130,20 +2136,12 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_ID, self::COURSE_PRICE_TYPE_META, self::PRICE_TYPE_PAID );
 
 		if ( 'wc' === $monetize_by ) {
-			$is_update = false;
-			if ( $attached_product_id ) {
-				$wc_product = get_post_meta( $attached_product_id, '_product_version', true );
-				if ( $wc_product ) {
-					$is_update = true;
-				}
-			}
 
-			if ( $is_update || ( $product_id > 0 && $is_admin_panel ) ) {
-				// Added in @since 2.0.7.
-				if ( $product_id > 0 && $is_admin_panel ) {
-					$attached_product_id = $product_id;
-					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
-				}
+			$is_update = ( $attached_product_id && wc_get_product( $attached_product_id ) ) ? true : false;
+
+			if ( $is_update ) {
+				$attached_product_id = $product_id;
+				update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
 
 				$product_id  = self::create_wc_product( $course->post_title, $course_price, $sale_price, $attached_product_id );
 				$product_obj = wc_get_product( $product_id );
@@ -2159,7 +2157,7 @@ class Course extends Tutor_Base {
 				$product_id = self::create_wc_product( $course->post_title, $course_price, $sale_price );
 				if ( $product_id ) {
 					$product_obj = wc_get_product( $product_id );
-					update_post_meta( $post_ID, '_tutor_course_product_id', $product_id );
+					update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $product_id );
 					// Mark product for woocommerce.
 					update_post_meta( $product_id, '_virtual', 'yes' );
 					update_post_meta( $product_id, '_tutor_product', 'yes' );
@@ -2202,7 +2200,7 @@ class Course extends Tutor_Base {
 					// EDD edd_price.
 					update_post_meta( $download_id, 'edd_price', $course_price );
 
-					update_post_meta( $post_ID, '_tutor_course_product_id', $download_id );
+					update_post_meta( $post_ID, self::COURSE_PRODUCT_ID_META, $download_id );
 					// Mark product for EDD.
 					update_post_meta( $download_id, '_tutor_product', 'yes' );
 

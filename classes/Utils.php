@@ -2913,7 +2913,7 @@ class Utils {
 	 */
 	public function get_course_product_id( $course_id = 0 ) {
 		$course_id  = $this->get_post_id( $course_id );
-		$product_id = (int) get_post_meta( $course_id, '_tutor_course_product_id', true );
+		$product_id = (int) get_post_meta( $course_id, Course::COURSE_PRODUCT_ID_META, true );
 
 		return $product_id;
 	}
@@ -2932,7 +2932,7 @@ class Utils {
 				"SELECT meta_value 
 				FROM 	{$wpdb->postmeta} 
 				WHERE	meta_key = %s",
-				'_tutor_course_product_id'
+				Course::COURSE_PRODUCT_ID_META
 			)
 		);
 
@@ -2959,7 +2959,7 @@ class Utils {
 					AND meta_value = %d
 			limit 1
 			",
-				'_tutor_course_product_id',
+				Course::COURSE_PRODUCT_ID_META,
 				$product_id
 			)
 		);
@@ -6337,6 +6337,7 @@ class Utils {
 					  				AND order_meta.meta_key = '_is_tutor_order_for_course' 
 					WHERE 	orders.type = %s 
 					  		AND orders.customer_id = %d 
+							{$period_query}
 					ORDER BY orders.id DESC
 					{$offset_limit_query}",
 					$post_type,
