@@ -51,7 +51,7 @@ export const usePaginatedTable = ({ limit = ITEMS_PER_PAGE, updateQueryParams = 
   );
 
   const onPageChange = (pageNumber: number) => updatePaginationInfo({ page: pageNumber });
-  const onFilterItems = useCallback((filter: Filter) => updatePaginationInfo({ filter }), [updatePaginationInfo]);
+  const onFilterItems = useCallback((filter: Filter) => updatePaginationInfo({ page: 1, filter }), [updatePaginationInfo]);
   const onColumnSort = (sortProperty: string) => {
     let sortInfo = {};
     if (sortProperty !== pageInfo.sortProperty) {
