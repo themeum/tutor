@@ -594,7 +594,7 @@ const styles = {
     }
   `,
   infoTexts: css`
-    ${typography.small()};
+    ${typography.tiny()};
     color: ${colorTokens.text.subdued};
   `,
   warningText: css`

@@ -390,7 +390,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Thumbnail', 'tutor')}
-              infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
+              infoText={sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
               generateWithAi={!isTutorPro || isOpenAiEnabled}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
@@ -405,7 +405,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={__('Supported file format: .mp4', 'tutor')}
+              infoText={sprintf(__('MP4 format, up to %s', 'tutor'), tutorConfig.max_upload_size)}
               supportedFormats={['mp4']}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />

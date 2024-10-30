@@ -34,6 +34,7 @@ declare global {
       wp_rest_nonce: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      max_upload_size: string;
       difficulty_levels: {
         label: string;
         value: string;
