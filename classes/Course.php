@@ -1299,6 +1299,7 @@ class Course extends Tutor_Base {
 		$data['timezones']                = tutor_global_timezone_lists();
 		$data['difficulty_levels']        = $difficulty_levels;
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
+		$data['max_upload_size']          = size_format( wp_max_upload_size() );
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
