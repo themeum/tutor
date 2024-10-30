@@ -6337,6 +6337,7 @@ class Utils {
 					  				AND order_meta.meta_key = '_is_tutor_order_for_course' 
 					WHERE 	orders.type = %s 
 					  		AND orders.customer_id = %d 
+							{$period_query}
 					ORDER BY orders.id DESC
 					{$offset_limit_query}",
 					$post_type,
