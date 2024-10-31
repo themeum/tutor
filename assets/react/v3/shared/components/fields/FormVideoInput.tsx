@@ -29,6 +29,7 @@ import {
   getVimeoVideoDuration,
 } from '@CourseBuilderUtils/utils';
 import FormFieldWrapper from './FormFieldWrapper';
+import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
 
 export interface CourseVideo {
@@ -100,88 +101,6 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
   };
 
   return fieldValue ? { ...fieldValue, ...update } : { ...defaultValue, ...update };
-};
-
-const determineVideoSource = (url: string) => {
-  const value = url.trim();
-
-  if (value.match(/youtube\.com|youtu\.be/)) {
-    return videoSources.includes('youtube') ? 'youtube' : '';
-  }
-
-  if (value.match(/vimeo\.com/)) {
-    return videoSources.includes('vimeo') ? 'vimeo' : '';
-  }
-
-  if (value.match(/iframe/)) {
-    return videoSources.includes('embedded') ? 'embedded' : '';
-  }
-
-  if (value.match(/\[.*\]/)) {
-    return videoSources.includes('shortcode') ? 'shortcode' : '';
-  }
-
-  if (videoSources.includes('external_url')) {
-    return 'external_url';
-  }
-
-  return '';
-};
-
-const validateVideoUrl = (url: string) => {
-  const value = url.trim();
-
-  const source = determineVideoSource(value);
-  const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
-
-  if (source === 'shortcode') {
-    const regExp = /^\[.*\]$/;
-    const match = value.match(regExp);
-
-    if (!match) {
-      return __('Invalid Shortcode', 'tutor');
-    }
-
-    return true;
-  }
-
-  if (!regex.test(value)) {
-    return __('Invalid URL', 'tutor');
-  }
-
-  if (source === 'youtube') {
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = value.match(regExp);
-    if (!match || match[7].length !== 11) {
-      return __('Invalid YouTube URL', 'tutor');
-    }
-
-    return true;
-  }
-
-  if (source === 'vimeo') {
-    const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-    const match = value.match(regExp);
-
-    if (!match || !match[5]) {
-      return __('Invalid Vimeo URL', 'tutor');
-    }
-  }
-
-  if (source === 'embedded') {
-    const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
-    const match = value.match(regExp);
-
-    if (!match || !match[1]) {
-      return __('Invalid Embedded URL', 'tutor');
-    }
-  }
-
-  if (!source) {
-    return __('Select Corresponding Video Source from settings.', 'tutor');
-  }
-
-  return true;
 };
 
 const FormVideoInput = ({
@@ -327,8 +246,15 @@ const FormVideoInput = ({
   };
 
   const handleDataFromUrl = async (data: URLFormData) => {
-    const source = determineVideoSource(data.videoUrl) || 'external_url';
+    const sourceMap: { [key: string]: string } = {
+      external: 'external_url',
+      shortcode: 'shortcode',
+      youtube: 'youtube',
+      vimeo: 'vimeo',
+      embedded: 'embedded',
+    };
 
+    const source = sourceMap[data.videoSource] || 'external_url';
     const updatedValue = {
       source,
       [`source_${source}`]: data.videoUrl,
@@ -370,6 +296,56 @@ const FormVideoInput = ({
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const validateVideoUrl = (url: string) => {
+    const value = url.trim();
+    const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+
+    if (form.watch('videoSource') === 'shortcode') {
+      const regExp = /^\[.*\]$/;
+      const match = value.match(regExp);
+
+      if (!match) {
+        return __('Invalid Shortcode', 'tutor');
+      }
+
+      return true;
+    }
+
+    if (!regex.test(value)) {
+      return __('Invalid URL', 'tutor');
+    }
+
+    if (form.watch('videoSource') === 'youtube') {
+      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+      const match = value.match(regExp);
+      if (!match || match[7].length !== 11) {
+        return __('Invalid YouTube URL', 'tutor');
+      }
+
+      return true;
+    }
+
+    if (form.watch('videoSource') === 'vimeo') {
+      const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+      const match = value.match(regExp);
+
+      if (!match || !match[5]) {
+        return __('Invalid Vimeo URL', 'tutor');
+      }
+    }
+
+    if (form.watch('videoSource') === 'embedded') {
+      const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
+      const match = value.match(regExp);
+
+      if (!match || !match[1]) {
+        return __('Invalid Embedded URL', 'tutor');
+      }
+    }
+
+    return true;
   };
 
   return (
@@ -529,6 +505,22 @@ const FormVideoInput = ({
           <div css={styles.popoverContent}>
             <Controller
               control={form.control}
+              name="videoSource"
+              rules={{ required: __('This field is required', 'tutor') }}
+              render={(controllerProps) => {
+                return (
+                  <FormSelectInput
+                    {...controllerProps}
+                    options={videoSourceOptions}
+                    disabled={videoSourceOptions.length <= 1}
+                    placeholder={__('Select source', 'tutor')}
+                    hideCaret={videoSourceOptions.length <= 1}
+                  />
+                );
+              }}
+            />
+            <Controller
+              control={form.control}
               name="videoUrl"
               rules={{
                 required: __('This field is required', 'tutor'),
@@ -538,9 +530,13 @@ const FormVideoInput = ({
                 return (
                   <FormTextareaInput
                     {...controllerProps}
-                    rows={3}
-                    placeholder={__('Paste URL or code', 'tutor')}
                     inputCss={css`border-style: dashed;`}
+                    rows={2}
+                    placeholder={
+                      form.watch('videoSource') === 'shortcode'
+                        ? __('Enter shortcode', 'tutor')
+                        : __('Enter URL', 'tutor')
+                    }
                   />
                 );
               }}
