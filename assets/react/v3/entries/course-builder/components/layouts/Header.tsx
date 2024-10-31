@@ -1,6 +1,7 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { isBefore } from 'date-fns';
+import { format, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -10,14 +11,16 @@ import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
-import { useModal } from '@/v3/shared/components/modals/Modal';
+import { useModal } from '@Components/modals/Modal';
 import config, { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
+import { DateFormats, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
+  type CourseDetailsResponse,
   type CourseFormData,
+  type PostStatus,
   convertCourseDataToPayload,
   useCreateCourseMutation,
   useUpdateCourseMutation,
@@ -29,14 +32,17 @@ import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
+import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBuilderModal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 import { useCourseNavigator } from '../../contexts/CourseNavigatorContext';
-import ExitCourseBuilderModal from '../modals/ExitCourseBuilderModal';
 import Tracker from './Tracker';
 
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@Images/pro-placeholders/generate-course.webp';
+import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
+import reviewSubmitted from '@Images/review-submitted.webp';
 
 const courseId = getCourseId();
 
@@ -44,18 +50,20 @@ const Header = () => {
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
   const { currentIndex } = useCourseNavigator();
-  const [localPostStatus, setLocalPostStatus] = useState<'publish' | 'draft' | 'future' | 'private' | 'trash'>(
-    form.watch('post_status'),
-  );
+  const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(form.watch('post_status'));
   const { showModal } = useModal();
+  const queryClient = useQueryClient();
 
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
+
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const previewLink = useWatch({ name: 'preview_link' });
   const postStatus = useWatch({ name: 'post_status' });
   const postVisibility = useWatch({ name: 'visibility' });
   const postDate = useWatch({ name: 'post_date' });
+  const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' });
 
   const isPostDateDirty = form.formState.dirtyFields.post_date;
   const isFormDirty = form.formState.isDirty;
@@ -67,8 +75,9 @@ const Header = () => {
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
+  const isPendingAdminApproval = tutorConfig.settings?.enable_course_review_moderation === 'off';
 
-  const handleSubmit = async (data: CourseFormData, postStatus: 'publish' | 'draft' | 'future' | 'trash') => {
+  const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
       Promise.resolve().then(() => {
         form.trigger(field);
@@ -80,14 +89,27 @@ const Header = () => {
       navigate('/basics', { state: { isError: true } });
     };
 
+    if (
+      data.isScheduleEnabled &&
+      (!data.schedule_date ||
+        !data.schedule_time ||
+        !isBefore(new Date(), new Date(`${data.schedule_date} ${data.schedule_time}`)))
+    ) {
+      navigateToBasicsWithError();
+      form.setValue('showScheduleForm', true, { shouldDirty: true });
+      triggerAndFocus('schedule_date');
+      triggerAndFocus('schedule_time');
+      return;
+    }
+
     if (data.course_price_type === 'paid') {
-      if (tutorConfig.settings?.monetize_by === 'edd' && !data.course_product_id) {
+      if (!data.course_product_id && tutorConfig.settings?.monetize_by === 'edd') {
         navigateToBasicsWithError();
         triggerAndFocus('course_product_id');
         return;
       }
 
-      if (tutorConfig.settings?.monetize_by === 'wc' || tutorConfig.settings?.monetize_by === 'tutor') {
+      if ((isTutorPro && tutorConfig.settings?.monetize_by === 'wc') || tutorConfig.settings?.monetize_by === 'tutor') {
         if (data.course_price === '' || Number(data.course_price) <= 0) {
           navigateToBasicsWithError();
           triggerAndFocus('course_price');
@@ -106,21 +128,66 @@ const Header = () => {
     setLocalPostStatus(postStatus);
 
     if (courseId) {
-      const determinedPostStatus = determinePostStatus(postStatus as 'trash' | 'future' | 'draft', postVisibility);
+      const determinedPostStatus = determinePostStatus(postStatus, postVisibility);
+
       const response = await updateCourseMutation.mutateAsync({
         course_id: Number(courseId),
         ...payload,
         post_status: determinedPostStatus,
+        ...(determinedPostStatus === 'draft' ||
+        (determinedPostStatus === 'publish' && isBefore(new Date(), new Date(courseDetails?.post_date ?? postDate)))
+          ? {
+              post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+              post_date_gmt: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+            }
+          : {}),
       });
 
+      if (!response.data) {
+        return;
+      }
+
+      if (postStatus === 'pending') {
+        showModal({
+          component: SuccessModal,
+          props: {
+            title: __('Course submitted for review', 'tutor'),
+            description: __('Thank you for submitting your course. It will be reviewed by our team shortly.', 'tutor'),
+            image: reviewSubmitted,
+            image2x: reviewSubmitted2x,
+            imageAlt: __('Course submitted for review', 'tutor'),
+            wrapperCss: css`
+              align-items: center;
+              text-align: center;
+            `,
+            actions: (
+              <div css={styleUtils.flexCenter()}>
+                <Button
+                  onClick={() => {
+                    if (window.location.href.includes('wp-admin')) {
+                      window.location.href = tutorConfig.backend_course_list_url;
+                    } else {
+                      window.location.href = tutorConfig.frontend_course_list_url;
+                    }
+                  }}
+                  size="small"
+                >
+                  {__('Back to courses', 'tutor')}
+                </Button>
+              </div>
+            ),
+          },
+        });
+      }
+
       if (
-        response.data &&
         isInstructor &&
         tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
         ['publish', 'future'].includes(determinedPostStatus)
       ) {
         window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
       }
+
       return;
     }
 
@@ -133,9 +200,12 @@ const Header = () => {
 
   const dropdownButton = () => {
     let text: string;
-    let action: 'publish' | 'draft' | 'future';
+    let action: PostStatus;
 
-    if (isBefore(new Date(), new Date(postDate))) {
+    if (!isPendingAdminApproval && !isAdmin && isInstructor) {
+      text = __('Submit', 'tutor');
+      action = 'pending';
+    } else if (isScheduleEnabled) {
       text = isPostDateDirty ? __('Schedule', 'tutor') : __('Update', 'tutor');
       action = 'future';
     } else if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
@@ -178,7 +248,9 @@ const Header = () => {
           } catch (error) {
             console.error(error);
           } finally {
-            window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor`;
+            window.location.href = window.location.href.includes('wp-admin')
+              ? tutorConfig.backend_course_list_url
+              : tutorConfig.frontend_course_list_url;
           }
         }
       },
@@ -215,16 +287,37 @@ const Header = () => {
       isDanger: false,
     };
 
+    const publishImmediatelyItem = {
+      text: <>{__('Publish immediately', 'tutor')}</>,
+      onClick: form.handleSubmit((data) =>
+        handleSubmit(
+          {
+            ...data,
+            post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+          },
+          'publish',
+        ),
+      ),
+      isDanger: false,
+    };
+
     const items = [previewItem];
+
+    if (isBefore(new Date(), new Date(postDate))) {
+      items.unshift(publishImmediatelyItem);
+    }
 
     if (courseId && postStatus !== 'draft') {
       items.pop();
-      items.push(switchToDraftItem);
+
+      if (isAdmin || isPendingAdminApproval) {
+        items.push(switchToDraftItem);
+      }
     }
 
     if (isAdmin || hasWpAdminAccess) {
       items.push(moveToTrashItem, backToLegacyItem);
-    } else {
+    } else if (hasTrashAccess) {
       items.push(moveToTrashItem);
     }
 
@@ -256,7 +349,7 @@ const Header = () => {
             <span css={styles.divider} />
             <Tracker />
           </div>
-          <Show when={currentIndex === 0 && isOpenAiEnabled}>
+          <Show when={currentIndex === 0 && (isOpenAiEnabled || !isTutorPro)}>
             <span css={styles.divider} />
             <div css={styleUtils.flexCenter()}>
               <MagicButton
@@ -347,27 +440,54 @@ const Header = () => {
               icon={<SVGIcon name="upload" width={24} height={24} />}
               loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
               iconPosition="left"
-              onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
+              onClick={form.handleSubmit((data) =>
+                handleSubmit(
+                  {
+                    ...data,
+                    post_date: isPostDateDirty
+                      ? postDate
+                      : format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+                  },
+                  'draft',
+                ),
+              )}
             >
               {__('Save as Draft', 'tutor')}
             </Button>
           </Show>
 
-          <DropdownButton
-            text={dropdownButton().text}
-            variant="primary"
-            loading={
-              createCourseMutation.isPending ||
-              ((localPostStatus === 'publish' || localPostStatus === 'future') && updateCourseMutation.isPending)
+          <Show
+            when={dropdownItems().length > 1}
+            fallback={
+              <Button
+                loading={
+                  createCourseMutation.isPending ||
+                  (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
+                }
+                onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
+              >
+                {dropdownButton().text}
+              </Button>
             }
-            onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
-            dropdownMaxWidth="164px"
-            disabledDropdown={!form.formState.isDirty && !courseId}
           >
-            {dropdownItems().map((item, index) => (
-              <DropdownButton.Item key={index} text={item.text} onClick={item.onClick} isDanger={item.isDanger} />
-            ))}
-          </DropdownButton>
+            <DropdownButton
+              text={dropdownButton().text}
+              variant="primary"
+              loading={
+                createCourseMutation.isPending ||
+                (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
+              }
+              onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
+              dropdownMaxWidth={
+                ['draft', 'future'].includes(postStatus) || isBefore(new Date(), new Date(postDate)) ? '190px' : '164px'
+              }
+              disabledDropdown={(!form.formState.isDirty && !courseId) || dropdownItems().length === 0}
+            >
+              {dropdownItems().map((item, index) => (
+                <DropdownButton.Item key={index} text={item.text} onClick={item.onClick} isDanger={item.isDanger} />
+              ))}
+            </DropdownButton>
+          </Show>
         </div>
       </div>
 

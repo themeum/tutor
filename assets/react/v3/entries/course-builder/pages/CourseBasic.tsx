@@ -1,11 +1,12 @@
-import SVGIcon from '@Atoms/SVGIcon';
 import { css } from '@emotion/react';
 import { useIsFetching, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import SVGIcon from '@Atoms/SVGIcon';
 import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormEditableAlias from '@Components/fields/FormEditableAlias';
 import FormImageInput from '@Components/fields/FormImageInput';
@@ -23,7 +24,7 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
 import { tutorConfig } from '@Config/config';
-import { Addons, TutorRoles } from '@Config/constants';
+import { Addons, DateFormats, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -151,7 +152,7 @@ const CourseBasic = () => {
     courseProductId,
     String(courseId),
     coursePriceType,
-    tutorConfig.settings?.monetize_by,
+    isTutorPro ? tutorConfig.settings?.monetize_by : undefined,
   );
 
   const wcProductOptions = (data: WcProduct[] | undefined) => {
@@ -330,23 +331,33 @@ const CourseBasic = () => {
         <Navigator styleModifier={styles.navigator} />
       </div>
       <div css={styles.sidebar}>
-        <Controller
-          name="visibility"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormSelectInput
-              {...controllerProps}
-              label={__('Visibility', 'tutor')}
-              placeholder={__('Select visibility status', 'tutor')}
-              options={visibilityStatusOptions}
-              leftIcon={<SVGIcon name="eye" width={32} height={32} />}
-              loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-              onChange={() => {
-                form.setValue('post_password', '');
-              }}
-            />
-          )}
-        />
+        <div css={styles.statusAndDate}>
+          <Controller
+            name="visibility"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Visibility', 'tutor')}
+                placeholder={__('Select visibility status', 'tutor')}
+                options={visibilityStatusOptions}
+                leftIcon={<SVGIcon name="eye" width={32} height={32} />}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                onChange={() => {
+                  form.setValue('post_password', '');
+                }}
+              />
+            )}
+          />
+
+          <Show when={courseDetails?.post_modified}>
+            {(date) => (
+              <div css={styles.updatedOn}>
+                {sprintf(__('Last updated on %s', 'tutor'), format(new Date(date), DateFormats.dayMonthYear) || '')}
+              </div>
+            )}
+          </Show>
+        </div>
 
         <Show when={visibilityStatus === 'password_protected'}>
           <Controller
@@ -379,7 +390,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Featured Image', 'tutor')}
               buttonText={__('Upload Thumbnail', 'tutor')}
-              infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
+              infoText={sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
               generateWithAi={!isTutorPro || isOpenAiEnabled}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
@@ -394,7 +405,7 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={__('Supported file format: .mp4', 'tutor')}
+              infoText={sprintf(__('MP4 format, up to %s', 'tutor'), tutorConfig.max_upload_size)}
               supportedFormats={['mp4']}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
@@ -423,10 +434,16 @@ const CourseBasic = () => {
                 {...controllerProps}
                 label={__('Select product', 'tutor')}
                 placeholder={__('Select a product', 'tutor')}
-                options={wcProductOptions(wcProductsQuery.data)}
-                helpText={__(
-                  'You can select an existing WooCommerce product, alternatively, a new WooCommerce product will be created for you.',
-                  'tutor',
+                options={[
+                  {
+                    label: __('Select a product', 'tutor'),
+                    value: '-1',
+                  },
+                  ...wcProductOptions(wcProductsQuery.data),
+                ]}
+                helpText={sprintf(
+                  __('You can select an existing WooCommerce product%s', 'tutor'),
+                  isTutorPro ? ', alternatively, a new WooCommerce product will be created for you.' : '.',
                 )}
                 isSearchable
                 loading={wcProductsQuery.isLoading && !controllerProps.field.value}
@@ -466,7 +483,8 @@ const CourseBasic = () => {
         <Show
           when={
             coursePriceType === 'paid' &&
-            (tutorConfig.settings?.monetize_by === 'tutor' || tutorConfig.settings?.monetize_by === 'wc')
+            (tutorConfig.settings?.monetize_by === 'tutor' ||
+              (isTutorPro && tutorConfig.settings?.monetize_by === 'wc'))
           }
         >
           <div css={styles.coursePriceWrapper}>
@@ -742,5 +760,13 @@ const styles = {
     ${styleUtils.flexCenter()};
     background-color: ${colorTokens.bg.gray20};
     border-radius: ${borderRadius.card};
+  `,
+  statusAndDate: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
+  updatedOn: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
   `,
 };

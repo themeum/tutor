@@ -34,7 +34,7 @@ const CertificateCard = ({
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
   const certificatesData =
-    courseDetails?.course_certificates_templates.filter(
+    (courseDetails?.course_certificates_templates ?? []).filter(
       (certificate) =>
         certificate.orientation === orientation &&
         (data.is_default ? certificate.is_default === true : certificate.is_default === false),

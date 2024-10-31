@@ -111,9 +111,11 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					<th>
 						<?php esc_html_e( 'Price', 'tutor' ); ?>
 					</th>
+					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
 					<th>
 						<?php esc_html_e( 'Method', 'tutor' ); ?>
 					</th>
+					<?php endif; ?>
 					<th>
 						<?php esc_html_e( 'Status', 'tutor' ); ?>
 					</th>
@@ -161,11 +163,13 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
 									</div>
 								</td>
+								<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
 								<td>
 									<div class="tutor-fs-7">
 										<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
 									</div>
 								</td>
+								<?php endif; ?>
 								<td>
 								<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) ); ?>
 								</td>

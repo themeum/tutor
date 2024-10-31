@@ -794,7 +794,7 @@ class OrderModel {
 		$date_range_clause  = '';
 
 		if ( $start_date && $end_date ) {
-			$date_range_clause = "AND created_at_gmt BETWEEN DATE( '$start_date') AND DATE( '$end_date')";
+			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
 		} else {
 			if ( $time_period ) {
 				if ( 'today' === $time_period ) {

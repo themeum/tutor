@@ -1225,6 +1225,15 @@ class Course extends Tutor_Base {
 			$can_edit_course = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 
 			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
+				/**
+				 * Non-admin user can't edit trash course.
+				 *
+				 * @since 3.0.0
+				 */
+				if ( ! User::is_admin() && CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
+					wp_die( esc_html( tutor_utils()->error_message() ) );
+				}
+
 				$this->load_course_builder_view();
 			}
 		}
@@ -1271,6 +1280,7 @@ class Course extends Tutor_Base {
 			'chatgpt_enable',
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
+			'enable_course_review_moderation',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
@@ -1312,6 +1322,7 @@ class Course extends Tutor_Base {
 		$data['timezones']                = tutor_global_timezone_lists();
 		$data['difficulty_levels']        = $difficulty_levels;
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
+		$data['max_upload_size']          = size_format( wp_max_upload_size() );
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
