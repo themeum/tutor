@@ -1232,6 +1232,9 @@ class Course extends Tutor_Base {
 				 */
 				if ( ! User::is_admin() && CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
 					wp_die( esc_html( tutor_utils()->error_message() ) );
+				} else {
+					// For admin.
+					wp_die( esc_html( __( 'You cannot edit this course because it is in the Trash. Please restore it and try again', 'tutor' ) ) );
 				}
 
 				$this->load_course_builder_view();
