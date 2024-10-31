@@ -40,7 +40,6 @@ import {
 import { convertToSlug, determinePostStatus, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
 
 const courseId = getCourseId();
@@ -160,23 +159,13 @@ const CourseBasic = () => {
       return [];
     }
 
-    const { course_pricing } = courseDetails || {};
-    const currentSelectedWcProduct =
-      course_pricing?.product_id && course_pricing.product_id !== '0' && course_pricing.product_name
-        ? { label: course_pricing.product_name || '', value: String(course_pricing.product_id) }
-        : null;
-
     const convertedCourseProducts =
       data.map(({ post_title: label, ID: value }) => ({
         label,
         value: String(value),
       })) ?? [];
 
-    return (
-      data?.find(({ ID }) => String(ID) !== String(currentSelectedWcProduct?.value))
-        ? [currentSelectedWcProduct, ...convertedCourseProducts]
-        : convertedCourseProducts
-    ).filter(isDefined);
+    return convertedCourseProducts;
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -405,8 +394,8 @@ const CourseBasic = () => {
               {...controllerProps}
               label={__('Intro Video', 'tutor')}
               buttonText={__('Upload Video', 'tutor')}
-              infoText={sprintf(__('MP4 format, up to %s', 'tutor'), tutorConfig.max_upload_size)}
-              supportedFormats={['mp4']}
+              infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
+              supportedFormats={['mp4', 'webm']}
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}
@@ -484,7 +473,7 @@ const CourseBasic = () => {
           when={
             coursePriceType === 'paid' &&
             (tutorConfig.settings?.monetize_by === 'tutor' ||
-              (isTutorPro && tutorConfig.settings?.monetize_by === 'wc'))
+              (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && courseProductId !== '-1'))
           }
         >
           <div css={styles.coursePriceWrapper}>

@@ -323,8 +323,8 @@ const LessonModal = ({
                   {...controllerProps}
                   label={__('Video', 'tutor')}
                   buttonText={__('Upload Video', 'tutor')}
-                  infoText={sprintf(__('MP4 format, up to %s', 'tutor'), tutorConfig.max_upload_size)}
-                  supportedFormats={['mp4']}
+                  infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
+                  supportedFormats={['mp4', 'webm']}
                   onGetDuration={(duration) => {
                     form.setValue('duration.hour', duration.hours);
                     form.setValue('duration.minute', duration.minutes);
