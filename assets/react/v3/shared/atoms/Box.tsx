@@ -62,7 +62,7 @@ const styles = {
 
 		${bordered &&
 		css`
-			border: 1px solid ${colorTokens.stroke.border};
+			border: 1px solid ${colorTokens.stroke.default};
 		`}
 	`,
 	title: (separator: boolean) => css`
