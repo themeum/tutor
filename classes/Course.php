@@ -1226,12 +1226,15 @@ class Course extends Tutor_Base {
 
 			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
 				/**
-				 * Non-admin user can't edit trash course.
+				 * Edit trash course behavior
 				 *
 				 * @since 3.0.0
 				 */
-				if ( ! User::is_admin() && CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
-					wp_die( esc_html( tutor_utils()->error_message() ) );
+				if ( CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
+					$message = User::is_admin()
+								? __( 'You cannot edit this course because it is in the Trash. Please restore it and try again', 'tutor' )
+								: tutor_utils()->error_message();
+					wp_die( esc_html( $message ) );
 				}
 
 				$this->load_course_builder_view();
