@@ -593,6 +593,17 @@ class Utils {
 	}
 
 	/**
+	 * Check if tutor email addon is enabled.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return boolean
+	 */
+	public function is_email_addon_enabled() {
+		return $this->is_addon_enabled( 'tutor-pro/addons/tutor-email/tutor-email.php' );
+	}
+
+	/**
 	 * Checking if BuddyPress exists and activated.
 	 *
 	 * @since 1.4.8
