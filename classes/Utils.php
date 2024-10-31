@@ -590,6 +590,8 @@ class Utils {
 
 			return (bool) $this->avalue_dot( 'is_enable', $addon_config );
 		}
+
+		return false;
 	}
 
 	/**
