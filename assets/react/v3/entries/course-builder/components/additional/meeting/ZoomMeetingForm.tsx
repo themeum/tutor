@@ -26,6 +26,7 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { invalidTimeRule } from '@Utils/validation';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
@@ -60,6 +61,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       meeting_host: Object.values(meetingHost)[0],
     },
     shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const saveZoomMeeting = useSaveZoomMeetingMutation();
@@ -183,6 +185,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               control={meetingForm.control}
               rules={{
                 required: __('Time is required', 'tutor'),
+                validate: invalidTimeRule,
               }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />

@@ -25,7 +25,7 @@ $billing_state      = $billing_info->billing_state ?? '';
 $billing_city       = $billing_info->billing_city ?? '';
 
 $country_info = tutor_get_country_info_by_name( $billing_country );
-$states       = $country_info && isset( $country_info['states'] ) ? $country_info['states'] : null;
+$states       = $country_info && isset( $country_info['states'] ) ? $country_info['states'] : array();
 ?>
 
 <div class="tutor-row">

@@ -33,6 +33,13 @@ const ContentDripSettings = () => {
     {
       label: __('Course content unlocked after finishing prerequisites', 'tutor'),
       value: 'after_finishing_prerequisites',
+      labelCss: css`
+        align-items: start;
+
+        span {
+          top: 3px;
+        }
+      `,
     },
     {
       label: __('None', 'tutor'),

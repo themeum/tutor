@@ -530,6 +530,7 @@ const FormVideoInput = ({
                 return (
                   <FormTextareaInput
                     {...controllerProps}
+                    inputCss={css`border-style: dashed;`}
                     rows={2}
                     placeholder={
                       form.watch('videoSource') === 'shortcode'
@@ -589,7 +590,7 @@ const styles = {
     }
   `,
   infoTexts: css`
-    ${typography.small()};
+    ${typography.tiny()};
     color: ${colorTokens.text.subdued};
   `,
   warningText: css`

@@ -1228,22 +1228,7 @@ class Utils {
 			$regular_price = (float) get_post_meta( $course_id, Course::COURSE_PRICE_META, true );
 			$sale_price    = (float) get_post_meta( $course_id, Course::COURSE_SALE_PRICE_META, true );
 
-			$display_price       = $sale_price ? $sale_price : $regular_price;
-			$show_price_with_tax = Tax::show_price_with_tax();
-			$user_logged_in      = is_user_logged_in();
-
-			$tax_amount = 0;
-			if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_included_in_price() ) {
-				$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
-				$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
-				$display_price += $tax_amount;
-			}
-
-			$prices['regular_price']       = $regular_price;
-			$prices['sale_price']          = $sale_price;
-			$prices['display_price']       = $display_price;
-			$prices['tax_amount']          = $tax_amount;
-			$prices['show_price_with_tax'] = $user_logged_in && $show_price_with_tax;
+			$prices = $this->get_prices_with_tax_info( $regular_price, $sale_price );
 		} else {
 			$product_id = $this->get_course_product_id( $course_id );
 			if ( $product_id ) {
@@ -1261,6 +1246,42 @@ class Utils {
 		}
 
 		return (object) $prices;
+	}
+
+	/**
+	 * Get prices with tax info
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|float $regular_price regular price.
+	 * @param int|float $sale_price sale price.
+	 *
+	 * @return object
+	 */
+	public function get_prices_with_tax_info( $regular_price, $sale_price = null ) {
+
+		$display_price       = $sale_price ? $sale_price : $regular_price;
+		$show_price_with_tax = Tax::show_price_with_tax();
+		$user_logged_in      = is_user_logged_in();
+
+		$tax_amount = 0;
+		$tax_rate   = 0;
+		if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_included_in_price() ) {
+			$tax_rate       = $user_logged_in ? Tax::get_user_tax_rate() : 0;
+			$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
+			$display_price += $tax_amount;
+		}
+
+		$price_info = array();
+
+		$price_info['regular_price']       = $regular_price;
+		$price_info['sale_price']          = $sale_price;
+		$price_info['display_price']       = $display_price;
+		$price_info['tax_rate']            = $tax_rate;
+		$price_info['tax_amount']          = $tax_amount;
+		$price_info['show_price_with_tax'] = $user_logged_in && $show_price_with_tax;
+
+		return (object) $price_info;
 	}
 
 	/**
@@ -2892,7 +2913,7 @@ class Utils {
 	 */
 	public function get_course_product_id( $course_id = 0 ) {
 		$course_id  = $this->get_post_id( $course_id );
-		$product_id = (int) get_post_meta( $course_id, '_tutor_course_product_id', true );
+		$product_id = (int) get_post_meta( $course_id, Course::COURSE_PRODUCT_ID_META, true );
 
 		return $product_id;
 	}
@@ -2911,7 +2932,7 @@ class Utils {
 				"SELECT meta_value 
 				FROM 	{$wpdb->postmeta} 
 				WHERE	meta_key = %s",
-				'_tutor_course_product_id'
+				Course::COURSE_PRODUCT_ID_META
 			)
 		);
 
@@ -2938,7 +2959,7 @@ class Utils {
 					AND meta_value = %d
 			limit 1
 			",
-				'_tutor_course_product_id',
+				Course::COURSE_PRODUCT_ID_META,
 				$product_id
 			)
 		);
@@ -6316,6 +6337,7 @@ class Utils {
 					  				AND order_meta.meta_key = '_is_tutor_order_for_course' 
 					WHERE 	orders.type = %s 
 					  		AND orders.customer_id = %d 
+							{$period_query}
 					ORDER BY orders.id DESC
 					{$offset_limit_query}",
 					$post_type,
