@@ -7,11 +7,10 @@ import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { UserOption } from '@Components/fields/FormSelectUser';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
-import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 
 import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats } from '@Config/constants';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
@@ -19,8 +18,6 @@ import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import { convertToGMT } from '@Utils/util';
-
-import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -654,82 +651,6 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     schedule_time: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.hoursMinutes)
       : '',
-  };
-};
-
-export const convertLessonDataToPayload = (
-  data: LessonForm,
-  lessonId: ID,
-  topicId: ID,
-  contentDripType: ContentDripType,
-): LessonPayload => {
-  return {
-    ...(lessonId && { lesson_id: lessonId }),
-    topic_id: topicId,
-    title: data.title,
-    description: data.description,
-    thumbnail_id: data.thumbnail?.id ?? null,
-
-    'video[source]': data.video?.source || '-1',
-    'video[source_video_id]': data.video?.source_video_id || '',
-    'video[poster]': data.video?.poster || '',
-    'video[source_external_url]': data.video?.source_external_url || '',
-    'video[source_shortcode]': data.video?.source_shortcode || '',
-    'video[source_youtube]': data.video?.source_youtube || '',
-    'video[source_vimeo]': data.video?.source_vimeo || '',
-    'video[source_embedded]': data.video?.source_embedded || '',
-
-    'video[runtime][hours]': data.duration.hour || 0,
-    'video[runtime][minutes]': data.duration.minute || 0,
-    'video[runtime][seconds]': data.duration.second || 0,
-    ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
-    tutor_attachments: (data.tutor_attachments || []).map((attachment) => attachment.id),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_by_date' && {
-        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'specific_days' && {
-        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
-      }),
-  };
-};
-
-export const convertAssignmentDataToPayload = (
-  data: AssignmentForm,
-  assignmentId: ID,
-  topicId: ID,
-  contentDripType: ContentDripType,
-): AssignmentPayload => {
-  return {
-    ...(assignmentId && { assignment_id: assignmentId }),
-    topic_id: topicId,
-    title: data.title,
-    summary: data.summary,
-    attachments: (data.attachments || []).map((attachment) => attachment.id),
-    'assignment_option[time_duration][time]': data.time_duration.time,
-    'assignment_option[time_duration][value]': data.time_duration.value,
-    'assignment_option[total_mark]': data.total_mark,
-    'assignment_option[pass_mark]': data.pass_mark,
-    'assignment_option[upload_files_limit]': data.upload_files_limit,
-    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
-
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_by_date' && {
-        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'specific_days' && {
-        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
-      }),
   };
 };
 

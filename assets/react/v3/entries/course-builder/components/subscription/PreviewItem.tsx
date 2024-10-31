@@ -1,13 +1,15 @@
-import { useModal } from '@/v3/shared/components/modals/Modal';
-import { styleUtils } from '@/v3/shared/utils/style-utils';
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+
 import SVGIcon from '@Atoms/SVGIcon';
+import { useModal } from '@Components/modals/Modal';
+import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { DurationUnit, SubscriptionFormData } from '@CourseBuilderServices/subscription';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import SubscriptionModal from '../modals/SubscriptionModal';
+import { styleUtils } from '@Utils/style-utils';
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {

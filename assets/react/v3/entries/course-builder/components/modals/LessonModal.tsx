@@ -26,10 +26,11 @@ import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type ContentDripType, convertLessonDataToPayload } from '@CourseBuilderServices/course';
+import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   type ID,
+  convertLessonDataToPayload,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';

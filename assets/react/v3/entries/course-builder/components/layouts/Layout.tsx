@@ -3,8 +3,8 @@ import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
 
-import Header from '@/v3/entries/course-builder/components/layouts/header/Header';
 import { colorTokens, containerMaxWidth, headerHeight } from '@Config/styles';
+import Header from '@CourseBuilderComponents/layouts/header/Header';
 import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
 import {
   type CourseFormData,
