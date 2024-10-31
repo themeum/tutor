@@ -93,6 +93,11 @@ interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' |
   _data_status: QuizDataStatus;
   questions: QuizQuestionsForPayload[];
   quiz_option: Omit<QuizDetailsResponse['quiz_option'], 'content_drip_settings'> & {
+    content_drip_settings?: {
+      unlock_date?: string;
+      after_xdays_of_enroll?: number;
+      prerequisites?: ID[];
+    };
     quiz_type?: string;
   };
 }
@@ -102,9 +107,6 @@ interface QuizPayload {
   payload: QuizResponseWithStatus;
   deleted_question_ids?: ID[];
   deleted_answer_ids?: ID[];
-  'content_drip_settings[unlock_date]'?: string;
-  'content_drip_settings[after_xdays_of_enroll]'?: number;
-  'content_drip_settings[prerequisites]'?: ID[];
 }
 
 export interface QuizDetailsResponse {
@@ -356,6 +358,19 @@ export const convertQuizFormDataToPayload = (
           formData.quiz_option.feedback_mode === 'retry' && {
             pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
           }),
+        ...(isAddonEnabled(Addons.CONTENT_DRIP) && {
+          content_drip_settings: {
+            ...(contentDripType === 'unlock_by_date' && {
+              unlock_date: formData.quiz_option.content_drip_settings.unlock_date,
+            }),
+            ...(contentDripType === 'specific_days' && {
+              after_xdays_of_enroll: formData.quiz_option.content_drip_settings.after_xdays_of_enroll,
+            }),
+            ...(contentDripType === 'after_finishing_prerequisites' && {
+              prerequisites: formData.quiz_option.content_drip_settings.prerequisites,
+            }),
+          },
+        }),
         ...(isAddonEnabled(Addons.H5P_INTEGRATION) &&
           formData.questions.every((question) => question.question_type === 'h5p') && {
             quiz_type: 'tutor_h5p_quiz',
@@ -413,19 +428,6 @@ export const convertQuizFormDataToPayload = (
     },
     deleted_question_ids: formData.deleted_question_ids,
     deleted_answer_ids: formData.deleted_answer_ids,
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_by_date' && {
-        'content_drip_settings[unlock_date]': formData.quiz_option.content_drip_settings.unlock_date || '',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'specific_days' && {
-        'content_drip_settings[after_xdays_of_enroll]':
-          formData.quiz_option.content_drip_settings.after_xdays_of_enroll || 0,
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': formData.quiz_option.content_drip_settings.prerequisites || [],
-      }),
   };
 };
 
