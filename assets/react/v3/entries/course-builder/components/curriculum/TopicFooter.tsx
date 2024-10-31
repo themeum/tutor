@@ -1,34 +1,36 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
+import { useToast } from '@Atoms/Toast';
 import { useModal } from '@Components/modals/Modal';
 import Show from '@Controls/Show';
+
+import { useFileUploader } from '@Molecules/FileUploader';
+import Popover from '@Molecules/Popover';
 import ThreeDots from '@Molecules/ThreeDots';
 
-import { Addons } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
-
-import { useToast } from '@/v3/shared/atoms/Toast';
-import { tutorConfig } from '@/v3/shared/config/config';
-import { useFileUploader } from '@/v3/shared/molecules/FileUploader';
-import Popover from '@/v3/shared/molecules/Popover';
+import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import { useRef, useState } from 'react';
-import { useCourseDetails } from '../../contexts/CourseDetailsContext';
-import type { CourseTopicWithCollapse } from '../../pages/Curriculum';
-import { useImportQuizMutation } from '../../services/quiz';
-import GoogleMeetForm from '../additional/meeting/GoogleMeetForm';
-import ZoomMeetingForm from '../additional/meeting/ZoomMeetingForm';
+
+import { tutorConfig } from '@Config/config';
+import { Addons } from '@Config/constants';
+import { colorTokens, spacing } from '@Config/styles';
+import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
+
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { styleUtils } from '@Utils/style-utils';
+import { noop } from '@Utils/util';
 
 interface TopicFooterProps {
   topic: CourseTopicWithCollapse;

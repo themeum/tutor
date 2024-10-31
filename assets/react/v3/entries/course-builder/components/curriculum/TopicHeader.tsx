@@ -1,18 +1,23 @@
-import LoadingSpinner from '@/v3/shared/atoms/LoadingSpinner';
-import ProBadge from '@/v3/shared/atoms/ProBadge';
-import Tooltip from '@/v3/shared/atoms/Tooltip';
-import { tutorConfig } from '@/v3/shared/config/config';
-import { typography } from '@/v3/shared/config/typography';
-import { AnimationType } from '@/v3/shared/hooks/useAnimation';
-import { useCollapseExpandAnimation } from '@/v3/shared/hooks/useCollapseExpandAnimation';
-import { useFormWithGlobalError } from '@/v3/shared/hooks/useFormWithGlobalError';
-import ConfirmationPopover from '@/v3/shared/molecules/ConfirmationPopover';
-import { noop } from '@/v3/shared/utils/util';
+import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
+import { css } from '@emotion/react';
+import { animated } from '@react-spring/web';
+import { __, sprintf } from '@wordpress/i18n';
+import { useRef, useState } from 'react';
+import { Controller } from 'react-hook-form';
+
 import Button from '@Atoms/Button';
+import LoadingSpinner from '@Atoms/LoadingSpinner';
+import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
+import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+
 import FormInput from '@Components/fields/FormInput';
+
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import { tutorConfig } from '@Config/config';
 import { colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import {
@@ -21,14 +26,14 @@ import {
   useDuplicateContentMutation,
   useSaveTopicMutation,
 } from '@CourseBuilderServices/curriculum';
+
+import { AnimationType } from '@Hooks/useAnimation';
+import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
-import { css } from '@emotion/react';
-import { animated } from '@react-spring/web';
-import { __, sprintf } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
-import { Controller } from 'react-hook-form';
-import { getCourseId } from '../../utils/utils';
+import { noop } from '@Utils/util';
 
 interface TopicHeaderProps {
   topic: CourseTopicWithCollapse;
