@@ -1316,11 +1316,24 @@ class Course extends Tutor_Base {
 			);
 		}
 
+		$supported_video_source  = array();
+		$saved_video_source_list = (array) ( $settings['supported_video_sources'] ?? array() );
+
+		foreach ( tutor_utils()->get_video_sources( true ) as $value => $label ) {
+			if ( in_array( $value, $saved_video_source_list, true ) ) {
+				$supported_video_source[] = array(
+					'label' => $label,
+					'value' => $value,
+				);
+			}
+		}
+
 		$data['dashboard_url']            = $dashboard_url;
 		$data['backend_course_list_url']  = get_admin_url( null, '?page=tutor' );
 		$data['frontend_course_list_url'] = tutor_utils()->tutor_dashboard_url( 'my-courses' );
 		$data['timezones']                = tutor_global_timezone_lists();
 		$data['difficulty_levels']        = $difficulty_levels;
+		$data['supported_video_source']   = $supported_video_source;
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
 		$data['max_upload_size']          = size_format( wp_max_upload_size() );
 

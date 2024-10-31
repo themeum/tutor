@@ -148,6 +148,24 @@ class CartController {
 	}
 
 	/**
+	 * Get cart count.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $user_id logged in user_id.
+	 *
+	 * @return int
+	 */
+	public function get_user_cart_item_count( $user_id = 0 ) {
+		if ( ! $user_id ) {
+			$user_id = tutils()->get_user_id();
+		}
+		$cart_items = $this->model->get_cart_items( $user_id );
+		$cart_count = $cart_items['courses']['total_count'];
+		return $cart_count;
+	}
+
+	/**
 	 * Add course to cart
 	 *
 	 * @since 3.0.0
@@ -189,7 +207,10 @@ class CartController {
 		if ( $response ) {
 			$this->json_response(
 				__( 'The course was added to the cart successfully.', 'tutor' ),
-				self::get_page_url(),
+				array(
+					'cart_page_url' => self::get_page_url(),
+					'cart_count'    => self::get_user_cart_item_count( $user_id ),
+				),
 				HttpHelper::STATUS_CREATED
 			);
 		} else {
@@ -233,8 +254,11 @@ class CartController {
 		if ( $response ) {
 			ob_start();
 			tutor_load_template( 'ecommerce.cart' );
-			$data = ob_get_clean();
-
+			$cart_template = ob_get_clean();
+			$data          = array(
+				'cart_template' => $cart_template,
+				'cart_count'    => self::get_user_cart_item_count( $user_id ),
+			);
 			$this->json_response(
 				__( 'The course was removed successfully.', 'tutor' ),
 				$data,
