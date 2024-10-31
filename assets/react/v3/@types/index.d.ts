@@ -34,6 +34,7 @@ declare global {
       wp_rest_nonce: string;
       is_admin: string;
       is_admin_bar_showing: string;
+      max_upload_size: string;
       difficulty_levels: {
         label: string;
         value: string;
@@ -101,6 +102,7 @@ declare global {
         chatgpt_key_exist: boolean;
         hide_admin_bar_for_users: 'on' | 'off';
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
+        enable_course_review_moderation: 'on' | 'off';
       };
       tutor_currency: {
         symbol: string;

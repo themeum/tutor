@@ -32,6 +32,7 @@ import { type ID, useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curri
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
+import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
 
 interface GoogleMeetFormProps {
   onCancel: () => void;
@@ -68,6 +69,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
       meeting_enrolledAsAttendee: currentMeeting?.meeting_data.attendees === 'Yes',
     },
     shouldFocusError: true,
+    mode: 'onChange',
   });
 
   const saveGoogleMeetMeeting = useSaveGoogleMeetMutation();
@@ -178,7 +180,10 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               <Controller
                 name="meeting_start_date"
                 control={meetingForm.control}
-                rules={{ required: __('Start date is required', 'tutor') }}
+                rules={{
+                  required: __('Start date is required', 'tutor'),
+                  validate: invalidDateRule,
+                }}
                 render={(controllerProps) => (
                   <FormDateInput
                     {...controllerProps}
@@ -191,7 +196,10 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               <Controller
                 name="meeting_start_time"
                 control={meetingForm.control}
-                rules={{ required: __('Start time is required', 'tutor') }}
+                rules={{
+                  required: __('Start time is required', 'tutor'),
+                  validate: invalidTimeRule,
+                }}
                 render={(controllerProps) => (
                   <FormTimeInput {...controllerProps} placeholder={__('Start time', 'tutor')} />
                 )}
@@ -209,6 +217,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                 rules={{
                   required: __('End date is required', 'tutor'),
                   validate: {
+                    invalidDate: invalidDateRule,
                     checkEndDate: (value) => {
                       const startDate = meetingForm.watch('meeting_start_date');
                       const endDate = value;
@@ -237,11 +246,13 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                 rules={{
                   required: __('End time is required', 'tutor'),
                   validate: {
+                    invalidTime: invalidTimeRule,
                     checkEndTime: (value) => {
                       const startDate = meetingForm.watch('meeting_start_date');
                       const startTime = meetingForm.watch('meeting_start_time');
                       const endDate = meetingForm.watch('meeting_end_date');
                       const endTime = value;
+
                       if (startDate && endDate && startTime && endTime) {
                         return new Date(`${startDate} ${startTime}`) > new Date(`${endDate} ${endTime}`)
                           ? __('End time should be greater than start time', 'tutor')

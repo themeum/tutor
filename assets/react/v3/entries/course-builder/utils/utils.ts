@@ -5,6 +5,7 @@ import type { ErrorResponse } from '@/v3/shared/utils/form';
 import { tutorConfig } from '@Config/config';
 import type { Addons } from '@Config/constants';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
+import type { PostStatus } from '../services/course';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
@@ -160,10 +161,7 @@ export const validateQuizQuestion = (
   return true;
 };
 
-export const determinePostStatus = (
-  postStatus: 'trash' | 'future' | 'draft',
-  postVisibility: 'private' | 'password_protected',
-) => {
+export const determinePostStatus = (postStatus: PostStatus, postVisibility: 'private' | 'password_protected') => {
   if (postStatus === 'trash') {
     return 'trash';
   }
@@ -176,7 +174,7 @@ export const determinePostStatus = (
     return 'future';
   }
 
-  if (postVisibility === 'password_protected' && postStatus !== 'draft' && postStatus !== 'future') {
+  if (postVisibility === 'password_protected' && postStatus !== 'draft') {
     return 'publish';
   }
 

@@ -26,15 +26,13 @@ export const discountRule = (): object => ({
   },
 });
 
-export const invalidDateRule = (): object => ({
-  validate: (value?: string) => {
-    if (!isValid(new Date(value || ''))) {
-      return 'Invalid date entered!';
-    }
+export const invalidDateRule = (value?: string): string | undefined => {
+  if (!isValid(new Date(value || ''))) {
+    return 'Invalid date entered!';
+  }
 
-    return undefined;
-  },
-});
+  return undefined;
+};
 
 export const maxLimitRule = (maxLimit: number): object => ({
   validate: (value?: string) => {
@@ -45,42 +43,40 @@ export const maxLimitRule = (maxLimit: number): object => ({
   },
 });
 
-export const invalidTimeRule = (): object => ({
-  validate: (value?: string) => {
-    if (!value) {
-      return undefined;
-    }
-
-    const message = 'Invalid time entered!';
-
-    const [hours, minutesAndMeridian] = value.split(':');
-
-    if (!hours || !minutesAndMeridian) {
-      return message;
-    }
-
-    const [minutes, meridian] = minutesAndMeridian.split(' ');
-
-    if (!minutes || !meridian) {
-      return message;
-    }
-
-    if (hours.length !== 2 || minutes.length !== 2) {
-      return message;
-    }
-
-    if (Number(hours) < 1 || Number(hours) > 12) {
-      return message;
-    }
-
-    if (Number(minutes) < 0 || Number(minutes) > 59) {
-      return message;
-    }
-
-    if (!['am', 'pm'].includes(meridian.toLowerCase())) {
-      return message;
-    }
-
+export const invalidTimeRule = (value?: string): string | undefined => {
+  if (!value) {
     return undefined;
-  },
-});
+  }
+
+  const message = 'Invalid time entered!';
+
+  const [hours, minutesAndMeridian] = value.split(':');
+
+  if (!hours || !minutesAndMeridian) {
+    return message;
+  }
+
+  const [minutes, meridian] = minutesAndMeridian.split(' ');
+
+  if (!minutes || !meridian) {
+    return message;
+  }
+
+  if (hours.length !== 2 || minutes.length !== 2) {
+    return message;
+  }
+
+  if (Number(hours) < 1 || Number(hours) > 12) {
+    return message;
+  }
+
+  if (Number(minutes) < 0 || Number(minutes) > 59) {
+    return message;
+  }
+
+  if (!['am', 'pm'].includes(meridian.toLowerCase())) {
+    return message;
+  }
+
+  return undefined;
+};

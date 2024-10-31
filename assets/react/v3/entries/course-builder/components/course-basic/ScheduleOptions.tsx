@@ -1,143 +1,159 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { format, isBefore, parseISO } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { __ } from '@wordpress/i18n';
+import { addHours, format, isBefore, isValid, parseISO, startOfDay } from 'date-fns';
+import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormDateInput from '@Components/fields/FormDateInput';
+import FormSwitch from '@Components/fields/FormSwitch';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
-
-interface ScheduleForm {
-  schedule_date: string;
-  schedule_time: string;
-}
-
-const courseId = getCourseId();
+import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
 
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
   const postDate = useWatch({ name: 'post_date' });
-  const [previousPostDate, setPreviousPostDate] = useState(postDate);
-  const scheduleForm = useFormWithGlobalError<ScheduleForm>({
-    defaultValues: {
-      schedule_date: format(new Date(), DateFormats.yearMonthDay),
-      schedule_time: format(new Date(), DateFormats.hoursMinutes),
-    },
-  });
+  const scheduleDate = useWatch({ name: 'schedule_date' }) ?? '';
+  const scheduleTime = useWatch({ name: 'schedule_time' }) ?? format(addHours(new Date(), 1), DateFormats.hoursMinutes);
+  const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' }) ?? false;
+  const showForm = useWatch({ name: 'showScheduleForm' }) ?? false;
 
-  const [showForm, setShowForm] = useState(!courseId);
+  const [previousPostDate, setPreviousPostDate] = useState(
+    scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
+      ? format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H)
+      : format(addHours(new Date(), 1), DateFormats.yearMonthDayHourMinuteSecond24H),
+  );
 
-  const scheduleDate = scheduleForm.watch('schedule_date')
-    ? format(new Date(scheduleForm.watch('schedule_date')), DateFormats.monthDayYear)
-    : '';
-  const scheduleTime = scheduleForm.watch('schedule_time') ?? '';
+  const isScheduleDateTimeDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
-  const handleCancel = () => {
-    scheduleForm.reset({
-      schedule_date: format(parseISO(previousPostDate), DateFormats.yearMonthDay),
-      schedule_time: format(parseISO(previousPostDate), DateFormats.hoursMinutes),
-    });
-
-    setShowForm(false);
+  const handleDelete = () => {
+    form.setValue('showScheduleForm', false, { shouldDirty: true });
+    form.setValue('isScheduleEnabled', false, { shouldDirty: true });
   };
 
-  const handleSave = (data: ScheduleForm) => {
-    if (!data.schedule_date || !data.schedule_time) {
+  const handleCancel = () => {
+    const isPreviousDateInFuture = isBefore(new Date(postDate), new Date());
+    form.setValue(
+      'schedule_date',
+      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.yearMonthDay),
+      {
+        shouldValidate: true,
+      },
+    );
+
+    form.setValue(
+      'schedule_time',
+      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.hoursMinutes),
+      {
+        shouldValidate: true,
+      },
+    );
+  };
+
+  const handleSave = () => {
+    if (!scheduleDate || !scheduleTime) {
       return;
     }
 
-    setShowForm(false);
-    form.setValue(
-      'post_date',
-      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond24H),
-      {
-        shouldDirty: true,
-      },
-    );
+    form.setValue('showScheduleForm', false);
     setPreviousPostDate(
-      format(new Date(`${data.schedule_date} ${data.schedule_time}`), DateFormats.yearMonthDayHourMinuteSecond),
+      format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H),
     );
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (postDate) {
-      scheduleForm.reset({
-        schedule_date: format(parseISO(postDate), DateFormats.yearMonthDay),
-        schedule_time: format(parseISO(postDate), DateFormats.hoursMinutes),
-      });
-      setPreviousPostDate(postDate);
-    }
-  }, [postDate]);
-
   return (
     <div css={styles.scheduleOptions}>
-      <div css={styles.scheduleInfoWrapper}>
-        <div css={styles.scheduledFor}>
-          <div css={styles.scheduleLabel}>
-            {isBefore(parseISO(postDate), new Date()) ? __('Published on', 'tutor') : __('Scheduled for', 'tutor')}
-          </div>
-          <div css={styles.scheduleInfoButtons}>
-            <button type="button" onClick={() => setShowForm(true)}>
-              <SVGIcon name="edit" width={24} height={24} />
-            </button>
-          </div>
-        </div>
-        <Show
-          when={showForm}
-          fallback={<div css={styles.scheduleInfo}>{sprintf(__('%s at %s', 'tutor'), scheduleDate, scheduleTime)}</div>}
-        >
+      <Controller
+        name="isScheduleEnabled"
+        control={form.control}
+        render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
+      />
+      {isScheduleEnabled && showForm && (
+        <div css={styles.formWrapper}>
           <div css={styleUtils.dateAndTimeWrapper}>
             <Controller
               name="schedule_date"
-              control={scheduleForm.control}
+              control={form.control}
               rules={{
-                required: __('Schedule date is required', 'tutor'),
+                required: __('Schedule date is required.', 'tutor'),
+                validate: {
+                  invalidDateRule: invalidDateRule,
+                  futureDate: (value) => {
+                    if (isBefore(new Date(`${value}`), startOfDay(new Date()))) {
+                      return __('Schedule date should be in the future.', 'tutor');
+                    }
+                    return true;
+                  },
+                },
               }}
               render={(controllerProps) => (
-                <FormDateInput {...controllerProps} isClearable={false} placeholder={__('yyyy-mm-dd', 'tutor')} />
-              )}
-            />
-
-            <Controller
-              name="schedule_time"
-              control={scheduleForm.control}
-              rules={{
-                required: __('Schedule time is required', 'tutor'),
-              }}
-              render={(controllerProps) => (
-                <FormTimeInput
+                <FormDateInput
                   {...controllerProps}
-                  interval={60}
                   isClearable={false}
-                  placeholder={__('hh:mm A', 'tutor')}
+                  placeholder="yyyy-mm-dd"
+                  disabledBefore={format(new Date(), DateFormats.yearMonthDay)}
                 />
               )}
             />
+            <Controller
+              name="schedule_time"
+              control={form.control}
+              rules={{
+                required: __('Schedule time is required.', 'tutor'),
+                validate: {
+                  invalidTimeRule: invalidTimeRule,
+                  futureDate: (value) => {
+                    if (isBefore(new Date(`${form.watch('schedule_date')} ${value}`), new Date())) {
+                      return __('Schedule time should be in the future.', 'tutor');
+                    }
+                    return true;
+                  },
+                },
+              }}
+              render={(controllerProps) => (
+                <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
+              )}
+            />
           </div>
-
           <div css={styles.scheduleButtonsWrapper}>
-            <Button variant="tertiary" size="small" onClick={handleCancel}>
+            <Button variant="tertiary" size="small" onClick={handleCancel} disabled={!isScheduleDateTimeDirty}>
               {__('Cancel', 'tutor')}
             </Button>
-            <Button variant="secondary" size="small" onClick={scheduleForm.handleSubmit(handleSave)}>
+            <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>
               {__('Ok', 'tutor')}
             </Button>
           </div>
-        </Show>
-      </div>
+        </div>
+      )}
+      {isScheduleEnabled && !showForm && (
+        <div css={styles.scheduleInfoWrapper}>
+          <div css={styles.scheduledFor}>
+            <div css={styles.scheduleLabel}>{__('Scheduled for', 'tutor')}</div>
+            <div css={styles.scheduleInfoButtons}>
+              <button type="button" onClick={handleDelete}>
+                <SVGIcon name="delete" width={24} height={24} />
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  form.setValue('showScheduleForm', true);
+                }}
+              >
+                <SVGIcon name="edit" width={24} height={24} />
+              </button>
+            </div>
+          </div>
+          <div css={styles.scheduleInfo}>{__(`${scheduleDate} at ${scheduleTime}`, 'tutor')}</div>
+        </div>
+      )}
     </div>
   );
 };
@@ -149,19 +165,20 @@ const styles = {
     padding: ${spacing[12]};
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
-    display: flex;
-    flex-direction: column;
     gap: ${spacing[8]};
     background-color: ${colorTokens.bg.white};
   `,
-
+  formWrapper: css`
+    margin-top: ${spacing[16]};
+  `,
   scheduleButtonsWrapper: css`
     display: flex;
     gap: ${spacing[12]};
-
+    margin-top: ${spacing[8]};
+  
     button {
       width: 100%;
-
+  
       span {
         justify-content: center;
       }
@@ -171,6 +188,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[8]};
+    margin-top: ${spacing[12]};
   `,
   scheduledFor: css`
     display: flex;
@@ -189,6 +207,7 @@ const styles = {
     button {
       ${styleUtils.resetButton};
       color: ${colorTokens.icon.default};
+      ${styleUtils.flexCenter()};
       height: 24px;
       width: 24px;
       border-radius: ${borderRadius[2]};
