@@ -856,11 +856,17 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
   );
 };
 
-export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
+export const usePrerequisiteCoursesQuery = ({
+  excludedIds,
+  isEnabled,
+}: {
+  excludedIds: string[];
+  isEnabled: boolean;
+}) => {
   return useQuery({
-    queryKey: ['PrerequisiteCourses', excludedCourseIds],
-    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
-    enabled: isPrerequisiteAddonEnabled,
+    queryKey: ['PrerequisiteCourses', excludedIds],
+    queryFn: () => getPrerequisiteCourses(excludedIds).then((res) => res.data),
+    enabled: isEnabled,
   });
 };
 
