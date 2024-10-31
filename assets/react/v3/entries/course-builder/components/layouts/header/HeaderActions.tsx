@@ -93,7 +93,10 @@ const HeaderActions = () => {
         return;
       }
 
-      if ((isTutorPro && tutorConfig.settings?.monetize_by === 'wc') || tutorConfig.settings?.monetize_by === 'tutor') {
+      if (
+        (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && data.course_product_id !== '-1') ||
+        tutorConfig.settings?.monetize_by === 'tutor'
+      ) {
         if (data.course_price === '' || Number(data.course_price) <= 0) {
           navigateToBasicsWithError();
           triggerAndFocus('course_price');

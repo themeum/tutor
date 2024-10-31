@@ -40,6 +40,7 @@ import {
 import { convertToSlug, determinePostStatus, getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@Services/users';
 import { styleUtils } from '@Utils/style-utils';
+import { isDefined } from '@Utils/types';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
 
 const courseId = getCourseId();
@@ -159,13 +160,23 @@ const CourseBasic = () => {
       return [];
     }
 
+    const { course_pricing } = courseDetails || {};
+    const currentSelectedWcProduct =
+      course_pricing?.product_id && course_pricing.product_id !== '0' && course_pricing.product_name
+        ? { label: course_pricing.product_name || '', value: String(course_pricing.product_id) }
+        : null;
+
     const convertedCourseProducts =
       data.map(({ post_title: label, ID: value }) => ({
         label,
         value: String(value),
       })) ?? [];
 
-    return convertedCourseProducts;
+    const combinedProducts = [currentSelectedWcProduct, ...convertedCourseProducts].filter(isDefined);
+
+    const uniqueProducts = Array.from(new Map(combinedProducts.map((item) => [item.value, item])).values());
+
+    return uniqueProducts;
   };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -436,6 +447,7 @@ const CourseBasic = () => {
                 )}
                 isSearchable
                 loading={wcProductsQuery.isLoading && !controllerProps.field.value}
+                isClearable
               />
             )}
           />
