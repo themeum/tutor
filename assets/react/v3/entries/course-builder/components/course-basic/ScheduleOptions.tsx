@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { addHours, format, isBefore, isValid, parseISO, startOfDay } from 'date-fns';
-import { useState } from 'react';
+import { addHours, format, isBefore, isSameMinute, isValid, parseISO, startOfDay } from 'date-fns';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -29,7 +29,7 @@ const ScheduleOptions = () => {
   const [previousPostDate, setPreviousPostDate] = useState(
     scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
       ? format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H)
-      : format(addHours(new Date(), 1), DateFormats.yearMonthDayHourMinuteSecond24H),
+      : '',
   );
 
   const isScheduleDateTimeDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
@@ -43,18 +43,12 @@ const ScheduleOptions = () => {
     const isPreviousDateInFuture = isBefore(new Date(postDate), new Date());
     form.setValue(
       'schedule_date',
-      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.yearMonthDay),
-      {
-        shouldValidate: true,
-      },
+      isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.yearMonthDay) : '',
     );
 
     form.setValue(
       'schedule_time',
-      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.hoursMinutes),
-      {
-        shouldValidate: true,
-      },
+      isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.hoursMinutes) : '',
     );
   };
 
@@ -68,6 +62,12 @@ const ScheduleOptions = () => {
       format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H),
     );
   };
+
+  useEffect(() => {
+    if (showForm) {
+      form.setFocus('schedule_date');
+    }
+  }, [showForm, form]);
 
   return (
     <div css={styles.scheduleOptions}>
@@ -124,7 +124,15 @@ const ScheduleOptions = () => {
             />
           </div>
           <div css={styles.scheduleButtonsWrapper}>
-            <Button variant="tertiary" size="small" onClick={handleCancel} disabled={!isScheduleDateTimeDirty}>
+            <Button
+              variant="tertiary"
+              size="small"
+              onClick={handleCancel}
+              disabled={
+                !isScheduleDateTimeDirty ||
+                isSameMinute(new Date(`${scheduleDate} ${scheduleTime}`), new Date(`${previousPostDate}`))
+              }
+            >
               {__('Cancel', 'tutor')}
             </Button>
             <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>

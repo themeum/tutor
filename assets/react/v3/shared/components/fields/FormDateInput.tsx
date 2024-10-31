@@ -62,6 +62,7 @@ const FormDateInput = ({
               <input
                 {...restInputProps}
                 css={[css, styles.input]}
+                ref={field.ref}
                 type="text"
                 onFocus={() => setIsOpen(true)}
                 value={fieldValue}

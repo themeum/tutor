@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
-import { addHours, format, isBefore, parseISO } from 'date-fns';
+import { format, isBefore, parseISO } from 'date-fns';
 
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
@@ -647,13 +647,13 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     editor_used: courseDetails.editor_used,
     isScheduleEnabled:
       courseDetails.post_status === 'future' && isBefore(new Date(), new Date(courseDetails.post_date)),
-    showScheduleForm: false,
+    showScheduleForm: !isBefore(new Date(), new Date(courseDetails.post_date)),
     schedule_date: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.yearMonthDay)
-      : format(new Date(), DateFormats.yearMonthDay),
+      : '',
     schedule_time: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.hoursMinutes)
-      : format(addHours(new Date(), 1), DateFormats.hoursMinutes),
+      : '',
   };
 };
 
