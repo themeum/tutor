@@ -92,7 +92,7 @@ class Earnings extends Singleton {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
 				}
 
-				$this->earning_data = $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_details->order_status );
+				$this->earning_data[] = $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_details->order_status );
 			}
 		}
 	}
@@ -202,7 +202,9 @@ class Earnings extends Singleton {
 		}
 
 		try {
-			$inserted_id = QueryHelper::insert( $this->earning_table, $this->earning_data );
+			foreach ( $this->earning_data as $earning_data ) {
+				$inserted_id = QueryHelper::insert( $this->earning_table, $earning_data );
+			}
 		} catch ( \Throwable $th ) {
 			throw new \Exception( $th->getMessage() );
 		}
@@ -220,15 +222,16 @@ class Earnings extends Singleton {
 	 * @return mixed Earning row if exists, false|null otherwise.
 	 */
 	public function is_exist_order_earning( $order_id ) {
-		$row = QueryHelper::get_row(
-			$this->earning_table,
-			array(
-				'order_id' => $order_id,
-			),
-			'earning_id'
+		global $wpdb;
+		$rows = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$this->earning_table}
+				WHERE order_id = %d",
+				$order_id
+			)
 		);
 
-		return $row;
+		return $rows;
 	}
 
 	/**
@@ -288,9 +291,12 @@ class Earnings extends Singleton {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
-		$earning = $this->is_exist_order_earning( $this->order_id );
-		if ( $earning ) {
-			$this->delete_earning( $earning->earning_id );
+		$earnings = $this->is_exist_order_earning( $this->order_id );
+		if ( count( $earnings ) && is_array( $earnings ) ) {
+
+			foreach ( $earnings as $earning ) {
+				$this->delete_earning( $earning->earning_id );
+			}
 		}
 
 		return $this->store_earnings();

@@ -885,10 +885,10 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
+		$commission = (int) tutor_utils()->get_option( current_user_can( 'manage_options' ) ? 'earning_admin_commission' : 'earning_instructor_commission' );
 		if ( $commission ) {
 			$commission_clause = $wpdb->prepare(
-				'COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100, 0) AS total',
+				'COALESCE(MAX(o.refund_amount) * (%d / 100), 0) AS total',
 				$commission
 			);
 		} else {
@@ -908,7 +908,9 @@ class OrderModel {
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
-				{$course_clause}",
+				{$course_clause}
+				GROUP BY o.id
+				",
 				1
 			)
 		);
