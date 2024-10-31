@@ -1562,7 +1562,7 @@ if ( ! function_exists( 'tutor_get_course_formatted_price_html' ) ) {
 				<?php endif; ?>
 			</div>
 			<?php if ( $price_data->show_price_with_tax ) : ?>
-			<div class="tutor-course-price-tax tutor-color-muted"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
+			<div class="tutor-course-price-tax tutor-fs-8 tutor-fw-medium tutor-color-muted"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
 			<?php endif; ?>
 		<?php
 		$content = apply_filters( 'tutor_course_formatted_price', ob_get_clean() );
