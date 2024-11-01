@@ -27,6 +27,7 @@ import { makeFirstCharacterUpperCase } from '@Utils/util';
 import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
 import generateText from '@Images/pro-placeholders/generate-text.webp';
 
+import { TutorRoles } from '../../config/constants';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
@@ -84,6 +85,13 @@ const FormWPEditor = ({
   max_height,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
+  const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
+  const isAdmin = tutorConfig.current_user?.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user?.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+
+  const filteredEditors = editors.filter(
+    (editor) => isAdmin || (isInstructor && hasWpAdminAccess) || editor.name === 'droip',
+  );
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -139,48 +147,48 @@ const FormWPEditor = ({
     }
   };
 
-  const editorLabel = hasCustomEditorSupport ? (
-    <div css={styles.editorLabel}>
-      <span css={styles.labelWithAi}>
-        {label}
-        <Show when={generateWithAi}>
-          <button type="button" css={styles.aiButton} onClick={handleAiButtonClick}>
-            <SVGIcon name="magicAiColorize" width={32} height={32} />
-          </button>
-        </Show>
-      </span>
-      <Show when={editors.length && editorUsed.name === 'classic'}>
-        <div css={styles.editorsButtonWrapper}>
-          <span>{__('Edit with', 'tutor')}</span>
-          <div css={styles.customEditorButtons}>
-            <For each={editors}>
-              {(editor) => (
-                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.name)} delay={200}>
-                  <button
-                    key={editor.name}
-                    type="button"
-                    css={styles.customEditorButton}
-                    onClick={async () => {
-                      try {
-                        await onCustomEditorButtonClick?.(editor);
-                        window.location.href = editor.link;
-                      } catch (error) {
-                        console.error(error);
-                      }
-                    }}
-                  >
-                    <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
-                  </button>
-                </Tooltip>
-              )}
-            </For>
+  const editorLabel =
+    hasCustomEditorSupport && filteredEditors.length ? (
+      <div css={styles.editorLabel}>
+        <span css={styles.labelWithAi}>
+          {label}
+          <Show when={generateWithAi}>
+            <button type="button" css={styles.aiButton} onClick={handleAiButtonClick}>
+              <SVGIcon name="magicAiColorize" width={32} height={32} />
+            </button>
+          </Show>
+        </span>
+        <Show when={filteredEditors.length && editorUsed.name === 'classic'}>
+          <div css={styles.editorsButtonWrapper}>
+            <span>{__('Edit with', 'tutor')}</span>
+            <div css={styles.customEditorButtons}>
+              <For each={filteredEditors}>
+                {(editor) => (
+                  <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.label)} delay={200}>
+                    <button
+                      type="button"
+                      css={styles.customEditorButton}
+                      onClick={async () => {
+                        try {
+                          await onCustomEditorButtonClick?.(editor);
+                          window.location.href = editor.link;
+                        } catch (error) {
+                          console.error(error);
+                        }
+                      }}
+                    >
+                      <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
+                    </button>
+                  </Tooltip>
+                )}
+              </For>
+            </div>
           </div>
-        </div>
-      </Show>
-    </div>
-  ) : (
-    label
-  );
+        </Show>
+      </div>
+    ) : (
+      label
+    );
 
   return (
     <FormFieldWrapper
@@ -192,8 +200,9 @@ const FormWPEditor = ({
       placeholder={placeholder}
       helpText={helpText}
       isMagicAi={isMagicAi}
+      generateWithAi={(!hasCustomEditorSupport || filteredEditors.length === 0) && generateWithAi}
       onClickAiButton={handleAiButtonClick}
-      replaceEntireLabel={hasCustomEditorSupport}
+      replaceEntireLabel={hasCustomEditorSupport && filteredEditors.length > 0}
     >
       {() => {
         return (
