@@ -1,3 +1,4 @@
+import Show from '@/v3/shared/controls/Show';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
@@ -13,7 +14,9 @@ interface CourseCardProps {
 }
 
 function CourseCard({ course, isSubscriptionCourse, handleReplaceClick }: CourseCardProps) {
-  const { title, image, last_updated, course_duration, total_enrolled, regular_price, sale_price } = course;
+  const { title, image, last_updated, course_duration, total_enrolled, regular_price, sale_price, is_purchasable } =
+    course;
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.overlay} data-overlay>
@@ -42,13 +45,15 @@ function CourseCard({ course, isSubscriptionCourse, handleReplaceClick }: Course
           </div>
         </div>
       </div>
-      {!isSubscriptionCourse && (
+      <Show when={!isSubscriptionCourse}>
         <div css={styles.footer}>
           <span css={styles.priceLabel}>{__('Price:', 'tutor')}</span>
-          <span css={styles.price}>{sale_price ? sale_price : regular_price}</span>
-          {sale_price && <span css={styles.discountPrice}>{regular_price}</span>}
+          <Show when={is_purchasable} fallback={__('Free', 'tutor')}>
+            <span css={styles.price}>{sale_price ? sale_price : regular_price}</span>
+            {sale_price && <span css={styles.discountPrice}>{regular_price}</span>}
+          </Show>
         </div>
-      )}
+      </Show>
     </div>
   );
 }
