@@ -60,7 +60,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
 						</h5>
 
-						<?php require tutor()->path . 'templates/dashboard/settings/billing-form-fields.php'; ?>
+						<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
 
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>

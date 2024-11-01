@@ -13,7 +13,6 @@ $settings_url   = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings' 
 $withdraw       = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/withdraw-settings' );
 $reset_password = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/reset-password' );
 $social         = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/social-profile' );
-$billing        = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/billing' );
 
 $setting_menus = array(
 	'profile'        => array(
@@ -34,11 +33,6 @@ $setting_menus = array(
 	'social-profile' => array(
 		'url'   => esc_url( $social ),
 		'title' => __( 'Social Profile', 'tutor' ),
-		'role'  => false,
-	),
-	'billing'        => array(
-		'url'   => esc_url( $billing ),
-		'title' => __( 'Billing', 'tutor' ),
 		'role'  => false,
 	),
 );

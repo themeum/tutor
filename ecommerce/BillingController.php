@@ -58,6 +58,9 @@ class BillingController extends BaseController {
 		$this->model = new BillingModel();
 
 		if ( $register_hooks ) {
+			add_filter( 'tutor_dashboard/nav_items/settings/nav_items', array( $this, 'register_nav' ) );
+			add_filter( 'load_dashboard_template_part_from_other_location', array( $this, 'load_template' ) );
+
 			/**
 			 * Handle AJAX request for saving billing info if current user.
 			 *
@@ -72,6 +75,59 @@ class BillingController extends BaseController {
 			 */
 			add_action( 'wp_ajax_tutor_get_billing_info', array( $this, 'get_billing_info' ) );
 		}
+	}
+
+	/**
+	 * Register billing nav menu for settings
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $tabs setting navigation tabs.
+	 *
+	 * @return array
+	 */
+	public static function register_nav( $tabs ) {
+		$billing_url = tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/billing' );
+
+		$new_tab = array(
+			'url'   => esc_url( $billing_url ),
+			'title' => __( 'Billing', 'tutor' ),
+			'role'  => false,
+		);
+
+		$tabs['billing'] = $new_tab;
+
+		return $tabs;
+	}
+
+	/**
+	 * Load billing template for settings
+	 *
+	 * Based on query_vars filter template path
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $location default file location.
+	 *
+	 * @return string
+	 */
+	public static function load_template( $location ) {
+		$page_name          = get_query_var( 'pagename' );
+		$dashboard_sub_page = get_query_var( 'tutor_dashboard_sub_page' );
+
+		$dashboard_page_id = (int) tutor_utils()->get_option( 'tutor_dashboard_page_id' );
+		$dashboard_page    = get_post( $dashboard_page_id );
+
+		// Current page is dashboard & sub page is billing.
+		if ( $page_name === $dashboard_page->post_name && 'billing' === $dashboard_sub_page ) {
+			$template = tutor()->path . 'templates/ecommerce/billing.php';
+
+			if ( file_exists( $template ) ) {
+				$location = $template;
+			}
+		}
+
+		return $location;
 	}
 
 	/**
