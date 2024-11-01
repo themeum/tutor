@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
 import Button from '@Atoms/Button';
+import FormWPEditor from '@Components/fields/FormWPEditor';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
-
 import { styleUtils } from '@Utils/style-utils';
-import FormWPEditor from './FormWPEditor';
 
 interface FormAnswerExplanationProps extends FormControllerProps<string | null> {
   label?: string;
@@ -85,7 +85,7 @@ const FormAnswerExplanation = ({
                   setIsEdit(false);
                 }}
               >
-                Cancel
+                {__('Cancel', 'tutor')}
               </Button>
               <Button
                 variant="secondary"
@@ -96,7 +96,7 @@ const FormAnswerExplanation = ({
                 }}
                 disabled={field.value === previousValue}
               >
-                Ok
+                {__('Ok', 'tutor')}
               </Button>
             </div>
           </Show>
