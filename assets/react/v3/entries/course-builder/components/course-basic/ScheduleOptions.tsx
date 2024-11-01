@@ -11,6 +11,7 @@ import FormDateInput from '@Components/fields/FormDateInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
+import Show from '@/v3/shared/controls/Show';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -33,8 +34,9 @@ const ScheduleOptions = () => {
   );
 
   const handleDelete = () => {
-    form.setValue('showScheduleForm', false);
-    form.setValue('isScheduleEnabled', false);
+    form.setValue('schedule_date', '');
+    form.setValue('schedule_time', '');
+    form.setValue('showScheduleForm', true);
   };
 
   const handleCancel = () => {
@@ -78,7 +80,7 @@ const ScheduleOptions = () => {
             {...controllerProps}
             label={__('Schedule Options', 'tutor')}
             onChange={(value) => {
-              if (!value) {
+              if (!value && scheduleDate && scheduleTime) {
                 form.setValue('showScheduleForm', false);
               }
             }}
@@ -178,9 +180,11 @@ const ScheduleOptions = () => {
               </button>
             </div>
           </div>
-          <div css={styles.scheduleInfo}>
-            {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
-          </div>
+          <Show when={scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))}>
+            <div css={styles.scheduleInfo}>
+              {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
+            </div>
+          </Show>
         </div>
       )}
     </div>

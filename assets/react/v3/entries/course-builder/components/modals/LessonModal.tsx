@@ -308,7 +308,7 @@ const LessonModal = ({
                 <FormImageInput
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
-                  buttonText={__('Upload featured image', 'tutor')}
+                  buttonText={__('Upload Image', 'tutor')}
                   infoText={sprintf(
                     __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
                     tutorConfig.max_upload_size,
