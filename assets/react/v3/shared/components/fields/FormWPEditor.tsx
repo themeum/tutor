@@ -27,6 +27,7 @@ import { makeFirstCharacterUpperCase } from '@Utils/util';
 import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
 import generateText from '@Images/pro-placeholders/generate-text.webp';
 
+import { TutorRoles } from '../../config/constants';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
@@ -51,6 +52,12 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   max_height?: number;
 }
 
+interface CustomEditorOverlayProps {
+  loading: boolean;
+  editorUsed: Editor;
+  onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
+}
+
 const customEditorIcons: { [key: string]: IconCollection } = {
   droip: 'droipColorized',
   elementor: 'elementorColorized',
@@ -59,6 +66,39 @@ const customEditorIcons: { [key: string]: IconCollection } = {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+
+const CustomEditorOverlay = ({ loading, editorUsed, onCustomEditorButtonClick }: CustomEditorOverlayProps) => {
+  return (
+    <div css={styles.editorOverlay(!loading)}>
+      {loading ? (
+        <LoadingOverlay />
+      ) : (
+        <Button
+          variant="tertiary"
+          size="small"
+          buttonCss={styles.editWithButton}
+          icon={
+            customEditorIcons[editorUsed.name] && (
+              <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
+            )
+          }
+          onClick={async () => {
+            if (editorUsed) {
+              try {
+                await onCustomEditorButtonClick?.(editorUsed);
+                window.location.href = editorUsed.link;
+              } catch (error) {
+                console.error(error);
+              }
+            }
+          }}
+        >
+          {editorUsed?.label}
+        </Button>
+      )}
+    </div>
+  );
+};
 
 const FormWPEditor = ({
   label,
@@ -84,6 +124,15 @@ const FormWPEditor = ({
   max_height,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
+  const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
+  const isAdmin = tutorConfig.current_user?.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user?.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+
+  const filteredEditors = editors.filter(
+    (editor) => isAdmin || (isInstructor && hasWpAdminAccess) || editor.name === 'droip',
+  );
+
+  const hasAvailableCustomEditors = hasCustomEditorSupport && filteredEditors.length > 0;
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -139,7 +188,7 @@ const FormWPEditor = ({
     }
   };
 
-  const editorLabel = hasCustomEditorSupport ? (
+  const customLabel = (
     <div css={styles.editorLabel}>
       <span css={styles.labelWithAi}>
         {label}
@@ -149,15 +198,14 @@ const FormWPEditor = ({
           </button>
         </Show>
       </span>
-      <Show when={editors.length && editorUsed.name === 'classic'}>
+      <Show when={filteredEditors.length && editorUsed.name === 'classic'}>
         <div css={styles.editorsButtonWrapper}>
           <span>{__('Edit with', 'tutor')}</span>
           <div css={styles.customEditorButtons}>
-            <For each={editors}>
+            <For each={filteredEditors}>
               {(editor) => (
-                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.name)} delay={200}>
+                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.label)} delay={200}>
                   <button
-                    key={editor.name}
                     type="button"
                     css={styles.customEditorButton}
                     onClick={async () => {
@@ -178,13 +226,11 @@ const FormWPEditor = ({
         </div>
       </Show>
     </div>
-  ) : (
-    label
   );
 
   return (
     <FormFieldWrapper
-      label={editorLabel}
+      label={hasAvailableCustomEditors ? customLabel : label}
       field={field}
       fieldState={fieldState}
       disabled={disabled}
@@ -192,8 +238,9 @@ const FormWPEditor = ({
       placeholder={placeholder}
       helpText={helpText}
       isMagicAi={isMagicAi}
+      generateWithAi={(!hasCustomEditorSupport || filteredEditors.length === 0) && generateWithAi}
       onClickAiButton={handleAiButtonClick}
-      replaceEntireLabel={hasCustomEditorSupport}
+      replaceEntireLabel={hasAvailableCustomEditors}
     >
       {() => {
         return (
@@ -221,34 +268,11 @@ const FormWPEditor = ({
             <Show
               when={editorUsed.name === 'classic' && !loading}
               fallback={
-                <div css={styles.editorOverlay(!loading)}>
-                  {loading ? (
-                    <LoadingOverlay />
-                  ) : (
-                    <Button
-                      variant="tertiary"
-                      size="small"
-                      buttonCss={styles.editWithButton}
-                      icon={
-                        customEditorIcons[editorUsed.name] && (
-                          <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
-                        )
-                      }
-                      onClick={async () => {
-                        if (editorUsed) {
-                          try {
-                            await onCustomEditorButtonClick?.(editorUsed);
-                            window.location.href = editorUsed.link;
-                          } catch (error) {
-                            console.error(error);
-                          }
-                        }
-                      }}
-                    >
-                      {editorUsed?.label}
-                    </Button>
-                  )}
-                </div>
+                <CustomEditorOverlay
+                  loading={loading || false}
+                  editorUsed={editorUsed}
+                  onCustomEditorButtonClick={onCustomEditorButtonClick}
+                />
               }
             >
               <WPEditor
