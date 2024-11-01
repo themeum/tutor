@@ -835,6 +835,108 @@ class OrderModel {
 		return $response;
 	}
 
+
+	/**
+	 * Get earning by user_id, optionally can set period ( today | monthly| yearly )
+	 *
+	 * Optionally can set start date & end date to get earnings from date range
+	 *
+	 * If period or date range not pass then it will return all time earnings
+	 *
+	 * Optionally can set course_id for getting specific course data
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id    the user id.
+	 * @param string $period     sorting time period.
+	 * @param string $start_date start date.
+	 * @param string $end_date   end date.
+	 * @param int    $course_id  course id.
+	 *
+	 * @return array
+	 */
+	public function get_earnings_by_user( int $user_id, string $period = '', string $start_date = '', string $end_date = '', int $course_id = null ): array {
+		global $wpdb;
+		$user_id    = sanitize_text_field( $user_id );
+		$period     = sanitize_text_field( $period );
+		$start_date = sanitize_text_field( $start_date );
+		$end_date   = sanitize_text_field( $end_date );
+
+		$period_query     = '';
+		$group_query      = ' GROUP BY DATE(e.created_at) ';
+		$course_query     = '';
+		$commission_query = '';
+
+		// set additional query for period or date range if condition not meet then get all time data.
+		if ( $start_date && $end_date ) {
+			$period_query = $wpdb->prepare(
+				'AND e.created_at BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
+			$group_query  = ' GROUP BY DATE(e.created_at) ';
+		} else {
+			$period_query = QueryHelper::get_period_clause( 'e.created_at', $period );
+		}
+
+		if ( 'today' !== $period ) {
+			$group_query = ' GROUP BY MONTH(e.created_at) ';
+		}
+
+		if ( $course_id ) {
+			$course_query = $wpdb->prepare( 'AND e.course_id = %d', $course_id );
+		}
+
+		/**
+		 * Author query added to use same query for admin as well
+		 * pass user_id value 0 to get all data for admin
+		 *
+		 * @since v2.0.0
+		 */
+		$author_query = '';
+		if ( $user_id ) {
+			$author_query = $wpdb->prepare( 'AND e.user_id = %d', $user_id );
+		}
+		// Get statuses.
+		$complete_status = tutor_utils()->get_earnings_completed_statuses();
+		$complete_status = "'" . implode( "','", $complete_status ) . "'";
+
+		$amount_type = is_admin() ? 'admin_amount' : 'instructor_amount';
+
+		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_admin_commission' : 'earning_instructor_commission' );
+		if ( $commission ) {
+			$commission_query = $wpdb->prepare(
+				'COALESCE(MAX(o.refund_amount) * (%d / 100), 0)',
+				$commission
+			);
+		} else {
+			$commission_query = 'COALESCE(MAX(o.refund_amount), 0)';
+		}
+		$earnings = $wpdb->get_results(
+			"SELECT SUM($amount_type) - {$commission_query} AS total,
+					DATE(e.created_at) AS date_format
+			FROM	{$wpdb->prefix}tutor_earnings as e
+			LEFT JOIN {$this->table_name} AS o ON o.id = e.order_id
+			WHERE e.order_status IN({$complete_status})
+					{$author_query}
+					{$course_query}
+					{$period_query}
+					{$group_query},o.id
+			ORDER BY e.created_at ASC;
+			"
+		);
+
+		$total_earnings = 0;
+		foreach ( $earnings as $earning ) {
+			$total_earnings += $earning->total;
+		}
+
+		return array(
+			'earnings'       => $earnings,
+			'total_earnings' => $total_earnings,
+		);
+	}
+
 	/**
 	 * Get total refunds by user_id (instructor), optionally can set period ( today | monthly| yearly )
 	 *
@@ -892,7 +994,7 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		$commission = (int) tutor_utils()->get_option( current_user_can( 'manage_options' ) ? 'earning_admin_commission' : 'earning_instructor_commission' );
+		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_admin_commission' : 'earning_instructor_commission' );
 		if ( $commission ) {
 			$commission_clause = $wpdb->prepare(
 				'COALESCE(MAX(o.refund_amount) * (%d / 100), 0) AS total',

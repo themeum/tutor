@@ -234,6 +234,12 @@ class HooksHandler {
 			$order_status = OrderModel::ORDER_CANCELLED;
 		}
 
+		$updated_data = array(
+			'order_status' => $order_status,
+		);
+
+		$this->order_model->update_order( $order_id, $updated_data );
+
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
 		// Store coupon usage.
