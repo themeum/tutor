@@ -50,7 +50,7 @@ const HeaderActions = () => {
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
 
-  const isPostDateDirty = form.formState.dirtyFields.post_date;
+  const isPostDateDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
@@ -193,7 +193,11 @@ const HeaderActions = () => {
       text = __('Submit', 'tutor');
       action = 'pending';
     } else if (isScheduleEnabled) {
-      text = isPostDateDirty ? __('Schedule', 'tutor') : __('Update', 'tutor');
+      text =
+        isPostDateDirty &&
+        !isBefore(new Date(`${form.getValues('schedule_date')} ${form.getValues('schedule_time')}`), new Date())
+          ? __('Schedule', 'tutor')
+          : __('Update', 'tutor');
       action = 'future';
     } else if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
       text = __('Publish', 'tutor');
