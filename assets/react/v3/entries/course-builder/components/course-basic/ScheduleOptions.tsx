@@ -11,10 +11,10 @@ import FormDateInput from '@Components/fields/FormDateInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
-import Show from '@/v3/shared/controls/Show';
 import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
 import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
