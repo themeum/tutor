@@ -108,7 +108,7 @@ export const courseDefaultData: CourseFormData = {
   course_price_type: 'free',
   course_price: '',
   course_sale_price: '',
-  course_selling_option: 'subscription',
+  course_selling_option: 'one_time',
   course_categories: [],
   course_tags: [],
   course_instructors: [],
