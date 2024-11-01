@@ -314,8 +314,9 @@ const styles = {
 
       ${
         isFocused &&
+        !isReadOnly &&
         css`
-          ${!isReadOnly && styleUtils.inputFocus}
+          ${styleUtils.inputFocus}
         `
       }
 
@@ -368,8 +369,9 @@ const styles = {
 
           ${
             isFocused &&
+            !isReadOnly &&
             css`
-              ${!isReadOnly && styleUtils.inputFocus}
+              ${styleUtils.inputFocus}
             `
           }
         }
