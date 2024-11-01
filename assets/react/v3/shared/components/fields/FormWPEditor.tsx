@@ -52,6 +52,12 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   max_height?: number;
 }
 
+interface CustomEditorOverlayProps {
+  loading: boolean;
+  editorUsed: Editor;
+  onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
+}
+
 const customEditorIcons: { [key: string]: IconCollection } = {
   droip: 'droipColorized',
   elementor: 'elementorColorized',
@@ -60,6 +66,39 @@ const customEditorIcons: { [key: string]: IconCollection } = {
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+
+const CustomEditorOverlay = ({ loading, editorUsed, onCustomEditorButtonClick }: CustomEditorOverlayProps) => {
+  return (
+    <div css={styles.editorOverlay(!loading)}>
+      {loading ? (
+        <LoadingOverlay />
+      ) : (
+        <Button
+          variant="tertiary"
+          size="small"
+          buttonCss={styles.editWithButton}
+          icon={
+            customEditorIcons[editorUsed.name] && (
+              <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
+            )
+          }
+          onClick={async () => {
+            if (editorUsed) {
+              try {
+                await onCustomEditorButtonClick?.(editorUsed);
+                window.location.href = editorUsed.link;
+              } catch (error) {
+                console.error(error);
+              }
+            }
+          }}
+        >
+          {editorUsed?.label}
+        </Button>
+      )}
+    </div>
+  );
+};
 
 const FormWPEditor = ({
   label,
@@ -92,6 +131,8 @@ const FormWPEditor = ({
   const filteredEditors = editors.filter(
     (editor) => isAdmin || (isInstructor && hasWpAdminAccess) || editor.name === 'droip',
   );
+
+  const hasAvailableCustomEditors = hasCustomEditorSupport && filteredEditors.length > 0;
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -147,52 +188,49 @@ const FormWPEditor = ({
     }
   };
 
-  const editorLabel =
-    hasCustomEditorSupport && filteredEditors.length ? (
-      <div css={styles.editorLabel}>
-        <span css={styles.labelWithAi}>
-          {label}
-          <Show when={generateWithAi}>
-            <button type="button" css={styles.aiButton} onClick={handleAiButtonClick}>
-              <SVGIcon name="magicAiColorize" width={32} height={32} />
-            </button>
-          </Show>
-        </span>
-        <Show when={filteredEditors.length && editorUsed.name === 'classic'}>
-          <div css={styles.editorsButtonWrapper}>
-            <span>{__('Edit with', 'tutor')}</span>
-            <div css={styles.customEditorButtons}>
-              <For each={filteredEditors}>
-                {(editor) => (
-                  <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.label)} delay={200}>
-                    <button
-                      type="button"
-                      css={styles.customEditorButton}
-                      onClick={async () => {
-                        try {
-                          await onCustomEditorButtonClick?.(editor);
-                          window.location.href = editor.link;
-                        } catch (error) {
-                          console.error(error);
-                        }
-                      }}
-                    >
-                      <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
-                    </button>
-                  </Tooltip>
-                )}
-              </For>
-            </div>
-          </div>
+  const customLabel = (
+    <div css={styles.editorLabel}>
+      <span css={styles.labelWithAi}>
+        {label}
+        <Show when={generateWithAi}>
+          <button type="button" css={styles.aiButton} onClick={handleAiButtonClick}>
+            <SVGIcon name="magicAiColorize" width={32} height={32} />
+          </button>
         </Show>
-      </div>
-    ) : (
-      label
-    );
+      </span>
+      <Show when={filteredEditors.length && editorUsed.name === 'classic'}>
+        <div css={styles.editorsButtonWrapper}>
+          <span>{__('Edit with', 'tutor')}</span>
+          <div css={styles.customEditorButtons}>
+            <For each={filteredEditors}>
+              {(editor) => (
+                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.label)} delay={200}>
+                  <button
+                    type="button"
+                    css={styles.customEditorButton}
+                    onClick={async () => {
+                      try {
+                        await onCustomEditorButtonClick?.(editor);
+                        window.location.href = editor.link;
+                      } catch (error) {
+                        console.error(error);
+                      }
+                    }}
+                  >
+                    <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
+                  </button>
+                </Tooltip>
+              )}
+            </For>
+          </div>
+        </div>
+      </Show>
+    </div>
+  );
 
   return (
     <FormFieldWrapper
-      label={editorLabel}
+      label={hasAvailableCustomEditors ? customLabel : label}
       field={field}
       fieldState={fieldState}
       disabled={disabled}
@@ -202,7 +240,7 @@ const FormWPEditor = ({
       isMagicAi={isMagicAi}
       generateWithAi={(!hasCustomEditorSupport || filteredEditors.length === 0) && generateWithAi}
       onClickAiButton={handleAiButtonClick}
-      replaceEntireLabel={hasCustomEditorSupport && filteredEditors.length > 0}
+      replaceEntireLabel={hasAvailableCustomEditors}
     >
       {() => {
         return (
@@ -230,34 +268,11 @@ const FormWPEditor = ({
             <Show
               when={editorUsed.name === 'classic' && !loading}
               fallback={
-                <div css={styles.editorOverlay(!loading)}>
-                  {loading ? (
-                    <LoadingOverlay />
-                  ) : (
-                    <Button
-                      variant="tertiary"
-                      size="small"
-                      buttonCss={styles.editWithButton}
-                      icon={
-                        customEditorIcons[editorUsed.name] && (
-                          <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
-                        )
-                      }
-                      onClick={async () => {
-                        if (editorUsed) {
-                          try {
-                            await onCustomEditorButtonClick?.(editorUsed);
-                            window.location.href = editorUsed.link;
-                          } catch (error) {
-                            console.error(error);
-                          }
-                        }
-                      }}
-                    >
-                      {editorUsed?.label}
-                    </Button>
-                  )}
-                </div>
+                <CustomEditorOverlay
+                  loading={loading || false}
+                  editorUsed={editorUsed}
+                  onCustomEditorButtonClick={onCustomEditorButtonClick}
+                />
               }
             >
               <WPEditor

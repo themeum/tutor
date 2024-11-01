@@ -232,7 +232,7 @@ const LessonModal = ({
                             <Show
                               when={lessonId}
                               fallback={
-                                <Tooltip content={__('Save lesson first for using Wp Editor.', 'tutor')}>
+                                <Tooltip content={__('Save the lesson first to use the WP Editor.', 'tutor')}>
                                   <Button
                                     variant="text"
                                     size="small"
