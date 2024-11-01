@@ -1,27 +1,3 @@
-import { isDefined } from '@/v3/shared/utils/types';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { SubscriptionEmptyState } from '@CourseBuilderComponents/subscription/SubscriptionEmptyState';
-import SubscriptionItem from '@CourseBuilderComponents/subscription/SubscriptionItem';
-import {
-  type Subscription,
-  type SubscriptionFormData,
-  convertFormDataToSubscription,
-  convertSubscriptionToFormData,
-  defaultSubscriptionFormData,
-  useSaveCourseSubscriptionMutation,
-  useSortCourseSubscriptionsMutation,
-} from '@CourseBuilderServices/subscription';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { moveTo, nanoid, noop } from '@Utils/util';
 import {
   DndContext,
   DragOverlay,
@@ -40,6 +16,33 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FormProvider, useFieldArray } from 'react-hook-form';
+
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import type { ModalProps } from '@Components/modals/Modal';
+import ModalWrapper from '@Components/modals/ModalWrapper';
+import { SubscriptionEmptyState } from '@CourseBuilderComponents/subscription/SubscriptionEmptyState';
+import SubscriptionItem from '@CourseBuilderComponents/subscription/SubscriptionItem';
+
+import { colorTokens, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import {
+  type Subscription,
+  type SubscriptionFormData,
+  convertFormDataToSubscription,
+  convertSubscriptionToFormData,
+  defaultSubscriptionFormData,
+  useSaveCourseSubscriptionMutation,
+  useSortCourseSubscriptionsMutation,
+} from '@CourseBuilderServices/subscription';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { droppableMeasuringStrategy } from '@Utils/dndkit';
+import { isDefined } from '@Utils/types';
+import { moveTo, nanoid, noop } from '@Utils/util';
 
 interface SubscriptionModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

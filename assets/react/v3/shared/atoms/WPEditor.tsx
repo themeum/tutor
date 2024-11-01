@@ -314,13 +314,14 @@ const styles = {
 
       ${
         isFocused &&
+        !isReadOnly &&
         css`
           ${styleUtils.inputFocus}
         `
       }
 
       :focus-within {
-        ${styleUtils.inputFocus}
+        ${!isReadOnly && styleUtils.inputFocus}
       }
     }
 
@@ -368,6 +369,7 @@ const styles = {
 
           ${
             isFocused &&
+            !isReadOnly &&
             css`
               ${styleUtils.inputFocus}
             `

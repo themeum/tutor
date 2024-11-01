@@ -23,10 +23,11 @@ import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type ContentDripType, convertAssignmentDataToPayload } from '@CourseBuilderServices/course';
+import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   type ID,
+  convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
 } from '@CourseBuilderServices/curriculum';

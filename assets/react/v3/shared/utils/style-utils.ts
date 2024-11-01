@@ -225,10 +225,12 @@ export const styleUtils = {
     align-items: center;
     flex-direction: row;
 
-    ${direction === 'column' &&
-    css`
+    ${
+      direction === 'column' &&
+      css`
       flex-direction: column;
-    `}
+    `
+    }
   `,
   boxReset: css`
     padding: 0;
@@ -357,7 +359,7 @@ export const styleUtils = {
   `,
   dateAndTimeWrapper: css`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5.5fr 4.5fr;
     border-radius: ${borderRadius[6]};
 
     &:focus-within {
