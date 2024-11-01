@@ -211,7 +211,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                         {__('Available after days', 'tutor')}
                       </div>
                     }
-                    helpText={__('This lesson will be available after the given number of days', 'tutor')}
+                    helpText={__('This quiz will be available after the given number of days.', 'tutor')}
                     placeholder="0"
                     selectOnFocus
                   />
@@ -234,7 +234,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     }
                     placeholder={__('Select Unlock Date', 'tutor')}
                     helpText={__(
-                      'This lesson will be available from the given date. Leave empty to make it available immediately',
+                      'This quiz will be available from the given date. Leave empty to make it available immediately.',
                       'tutor',
                     )}
                   />

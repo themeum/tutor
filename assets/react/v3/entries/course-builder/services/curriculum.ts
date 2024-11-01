@@ -102,14 +102,14 @@ export interface LessonPayload {
   description: string;
   thumbnail_id: ID | null;
 
-  'video[source]': string;
-  'video[source_video_id]': ID;
-  'video[poster]': string;
-  'video[source_external_url]': string;
-  'video[source_shortcode]': string;
-  'video[source_youtube]': string;
-  'video[source_vimeo]': string;
-  'video[source_embedded]': string;
+  'video[source]'?: string;
+  'video[source_video_id]'?: ID;
+  'video[poster]'?: string;
+  'video[source_external_url]'?: string;
+  'video[source_shortcode]'?: string;
+  'video[source_youtube]'?: string;
+  'video[source_vimeo]'?: string;
+  'video[source_embedded]'?: string;
 
   'video[runtime][hours]': number;
   'video[runtime][minutes]': number;
@@ -177,16 +177,9 @@ export const convertLessonDataToPayload = (
     title: data.title,
     description: data.description,
     thumbnail_id: data.thumbnail?.id ?? null,
-
-    'video[source]': data.video?.source || '-1',
-    'video[source_video_id]': data.video?.source_video_id || '',
-    'video[poster]': data.video?.poster || '',
-    'video[source_external_url]': data.video?.source_external_url || '',
-    'video[source_shortcode]': data.video?.source_shortcode || '',
-    'video[source_youtube]': data.video?.source_youtube || '',
-    'video[source_vimeo]': data.video?.source_vimeo || '',
-    'video[source_embedded]': data.video?.source_embedded || '',
-
+    ...(data.video?.source
+      ? Object.fromEntries(Object.entries(data.video).map(([key, value]) => [`video[${key}]`, value]))
+      : {}),
     'video[runtime][hours]': data.duration.hour || 0,
     'video[runtime][minutes]': data.duration.minute || 0,
     'video[runtime][seconds]': data.duration.second || 0,
