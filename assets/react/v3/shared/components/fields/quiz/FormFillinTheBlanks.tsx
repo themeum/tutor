@@ -4,6 +4,7 @@ import { Fragment, useEffect, useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -61,17 +62,19 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
 
           <Show when={inputValue.is_saved}>
             <div css={styles.optionActions}>
-              <button
-                type="button"
-                css={styles.actionButton}
-                data-edit-button
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setIsEditing(true);
-                }}
-              >
-                <SVGIcon name="edit" width={24} height={24} />
-              </button>
+              <Tooltip content={__('Edit', 'tutor')}>
+                <button
+                  type="button"
+                  css={styleUtils.actionButton}
+                  data-edit-button
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsEditing(true);
+                  }}
+                >
+                  <SVGIcon name="edit" width={24} height={24} />
+                </button>
+              </Tooltip>
             </div>
           </Show>
         </div>

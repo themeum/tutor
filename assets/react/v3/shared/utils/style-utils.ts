@@ -436,4 +436,25 @@ export const styleUtils = {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
   `,
+  actionButton: css`
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    text-align: inherit;
+    color: ${colorTokens.icon.default};
+    display: flex;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+
+    :hover:not(:disabled) {
+      color: ${colorTokens.icon.brand};
+    }
+
+    :disabled {
+      color: ${colorTokens.icon.disable.background};
+      cursor: not-allowed;
+    }
+  `,
 };

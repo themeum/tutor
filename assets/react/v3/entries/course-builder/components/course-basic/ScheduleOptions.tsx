@@ -12,7 +12,7 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import FormTimeInput from '@Components/fields/FormTimeInput';
 
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { CourseFormData } from '@CourseBuilderServices/course';
@@ -167,11 +167,12 @@ const ScheduleOptions = () => {
           <div css={styles.scheduledFor}>
             <div css={styles.scheduleLabel}>{__('Scheduled for', 'tutor')}</div>
             <div css={styles.scheduleInfoButtons}>
-              <button type="button" onClick={handleDelete}>
+              <button type="button" css={styleUtils.actionButton} onClick={handleDelete}>
                 <SVGIcon name="delete" width={24} height={24} />
               </button>
               <button
                 type="button"
+                css={styleUtils.actionButton}
                 onClick={() => {
                   form.setValue('showScheduleForm', true);
                 }}
@@ -236,23 +237,6 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
-
-    button {
-      ${styleUtils.resetButton};
-      color: ${colorTokens.icon.default};
-      ${styleUtils.flexCenter()};
-      height: 24px;
-      width: 24px;
-      border-radius: ${borderRadius[2]};
-
-      &:hover {
-        color: ${colorTokens.icon.hover};
-      }
-
-      &:focus {
-        box-shadow: ${shadow.focus};
-      }
-    }
   `,
   scheduleInfo: css`
     ${typography.caption()};
