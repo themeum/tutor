@@ -1,17 +1,16 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
-import { addHours, format, isBefore, parseISO } from 'date-fns';
+import { format, isBefore, parseISO } from 'date-fns';
 
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { UserOption } from '@Components/fields/FormSelectUser';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
-import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 
 import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats } from '@Config/constants';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
@@ -19,8 +18,6 @@ import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import { convertToGMT } from '@Utils/util';
-
-import type { AssignmentPayload, ID, LessonPayload } from './curriculum';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -129,7 +126,7 @@ export const courseDefaultData: CourseFormData = {
   course_attachments: null,
   isContentDripEnabled: false,
   contentDripType: '',
-  course_product_id: '-1',
+  course_product_id: '',
   course_product_name: '',
   preview_link: '',
   course_prerequisites: [],
@@ -616,9 +613,15 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_requirements: courseDetails.course_requirements,
     course_target_audience: courseDetails.course_target_audience,
     isContentDripEnabled: courseDetails.course_settings.enable_content_drip === 1,
-    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP) ? courseDetails.course_settings.content_drip_type || '' : '',
+    contentDripType: isAddonEnabled(Addons.CONTENT_DRIP)
+      ? ['unlock_by_date', 'specific_days', 'unlock_sequentially', 'after_finishing_prerequisites'].includes(
+          courseDetails.course_settings.content_drip_type,
+        )
+        ? courseDetails.course_settings.content_drip_type
+        : ''
+      : '',
     course_product_id:
-      String(courseDetails.course_pricing.product_id) === '0' ? '-1' : String(courseDetails.course_pricing.product_id),
+      String(courseDetails.course_pricing.product_id) === '0' ? '' : String(courseDetails.course_pricing.product_id),
     course_instructors:
       courseDetails.course_instructors?.reduce((instructors, item) => {
         if (String(item.id) !== String(courseDetails.post_author.ID)) {
@@ -641,89 +644,13 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     editor_used: courseDetails.editor_used,
     isScheduleEnabled:
       courseDetails.post_status === 'future' && isBefore(new Date(), new Date(courseDetails.post_date)),
-    showScheduleForm: false,
+    showScheduleForm: !isBefore(new Date(), new Date(courseDetails.post_date)),
     schedule_date: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.yearMonthDay)
-      : format(new Date(), DateFormats.yearMonthDay),
+      : '',
     schedule_time: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.hoursMinutes)
-      : format(addHours(new Date(), 1), DateFormats.hoursMinutes),
-  };
-};
-
-export const convertLessonDataToPayload = (
-  data: LessonForm,
-  lessonId: ID,
-  topicId: ID,
-  contentDripType: ContentDripType,
-): LessonPayload => {
-  return {
-    ...(lessonId && { lesson_id: lessonId }),
-    topic_id: topicId,
-    title: data.title,
-    description: data.description,
-    thumbnail_id: data.thumbnail?.id ?? null,
-
-    'video[source]': data.video?.source || '-1',
-    'video[source_video_id]': data.video?.source_video_id || '',
-    'video[poster]': data.video?.poster || '',
-    'video[source_external_url]': data.video?.source_external_url || '',
-    'video[source_shortcode]': data.video?.source_shortcode || '',
-    'video[source_youtube]': data.video?.source_youtube || '',
-    'video[source_vimeo]': data.video?.source_vimeo || '',
-    'video[source_embedded]': data.video?.source_embedded || '',
-
-    'video[runtime][hours]': data.duration.hour || 0,
-    'video[runtime][minutes]': data.duration.minute || 0,
-    'video[runtime][seconds]': data.duration.second || 0,
-    ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
-    tutor_attachments: (data.tutor_attachments || []).map((attachment) => attachment.id),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_by_date' && {
-        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'specific_days' && {
-        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
-      }),
-  };
-};
-
-export const convertAssignmentDataToPayload = (
-  data: AssignmentForm,
-  assignmentId: ID,
-  topicId: ID,
-  contentDripType: ContentDripType,
-): AssignmentPayload => {
-  return {
-    ...(assignmentId && { assignment_id: assignmentId }),
-    topic_id: topicId,
-    title: data.title,
-    summary: data.summary,
-    attachments: (data.attachments || []).map((attachment) => attachment.id),
-    'assignment_option[time_duration][time]': data.time_duration.time,
-    'assignment_option[time_duration][value]': data.time_duration.value,
-    'assignment_option[total_mark]': data.total_mark,
-    'assignment_option[pass_mark]': data.pass_mark,
-    'assignment_option[upload_files_limit]': data.upload_files_limit,
-    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
-
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'unlock_by_date' && {
-        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'specific_days' && {
-        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
-      }),
-    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
-      contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
-      }),
+      : '',
   };
 };
 

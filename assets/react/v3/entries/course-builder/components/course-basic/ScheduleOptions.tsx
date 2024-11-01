@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { addHours, format, isBefore, isValid, parseISO, startOfDay } from 'date-fns';
-import { useState } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
+import { addHours, format, isBefore, isSameMinute, isValid, parseISO, startOfDay } from 'date-fns';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -29,32 +29,24 @@ const ScheduleOptions = () => {
   const [previousPostDate, setPreviousPostDate] = useState(
     scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
       ? format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H)
-      : format(addHours(new Date(), 1), DateFormats.yearMonthDayHourMinuteSecond24H),
+      : '',
   );
 
-  const isScheduleDateTimeDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
-
   const handleDelete = () => {
-    form.setValue('showScheduleForm', false, { shouldDirty: true });
-    form.setValue('isScheduleEnabled', false, { shouldDirty: true });
+    form.setValue('showScheduleForm', false);
+    form.setValue('isScheduleEnabled', false);
   };
 
   const handleCancel = () => {
     const isPreviousDateInFuture = isBefore(new Date(postDate), new Date());
     form.setValue(
       'schedule_date',
-      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.yearMonthDay),
-      {
-        shouldValidate: true,
-      },
+      isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.yearMonthDay) : '',
     );
 
     form.setValue(
       'schedule_time',
-      format(isPreviousDateInFuture ? parseISO(previousPostDate) : new Date(), DateFormats.hoursMinutes),
-      {
-        shouldValidate: true,
-      },
+      isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.hoursMinutes) : '',
     );
   };
 
@@ -69,12 +61,29 @@ const ScheduleOptions = () => {
     );
   };
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isScheduleEnabled && showForm) {
+      form.setFocus('schedule_date');
+    }
+  }, [showForm, isScheduleEnabled]);
+
   return (
     <div css={styles.scheduleOptions}>
       <Controller
         name="isScheduleEnabled"
         control={form.control}
-        render={(controllerProps) => <FormSwitch {...controllerProps} label={__('Schedule Options', 'tutor')} />}
+        render={(controllerProps) => (
+          <FormSwitch
+            {...controllerProps}
+            label={__('Schedule Options', 'tutor')}
+            onChange={(value) => {
+              if (!value) {
+                form.setValue('showScheduleForm', false);
+              }
+            }}
+          />
+        )}
       />
       {isScheduleEnabled && showForm && (
         <div css={styles.formWrapper}>
@@ -98,8 +107,12 @@ const ScheduleOptions = () => {
                 <FormDateInput
                   {...controllerProps}
                   isClearable={false}
-                  placeholder="yyyy-mm-dd"
+                  placeholder={__('Select date', 'tutor')}
                   disabledBefore={format(new Date(), DateFormats.yearMonthDay)}
+                  onChange={() => {
+                    form.setFocus('schedule_time');
+                  }}
+                  dateFormat={DateFormats.monthDayYear}
                 />
               )}
             />
@@ -124,10 +137,24 @@ const ScheduleOptions = () => {
             />
           </div>
           <div css={styles.scheduleButtonsWrapper}>
-            <Button variant="tertiary" size="small" onClick={handleCancel} disabled={!isScheduleDateTimeDirty}>
+            <Button
+              variant="tertiary"
+              size="small"
+              onClick={handleCancel}
+              disabled={
+                (!scheduleDate && !scheduleTime) ||
+                (isValid(new Date(`${scheduleDate} ${scheduleTime}`)) &&
+                  isSameMinute(new Date(`${scheduleDate} ${scheduleTime}`), new Date(previousPostDate)))
+              }
+            >
               {__('Cancel', 'tutor')}
             </Button>
-            <Button variant="secondary" size="small" onClick={form.handleSubmit(handleSave)}>
+            <Button
+              variant="secondary"
+              size="small"
+              onClick={form.handleSubmit(handleSave)}
+              disabled={!scheduleDate || !scheduleTime}
+            >
               {__('Ok', 'tutor')}
             </Button>
           </div>
@@ -151,7 +178,9 @@ const ScheduleOptions = () => {
               </button>
             </div>
           </div>
-          <div css={styles.scheduleInfo}>{__(`${scheduleDate} at ${scheduleTime}`, 'tutor')}</div>
+          <div css={styles.scheduleInfo}>
+            {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
+          </div>
         </div>
       )}
     </div>

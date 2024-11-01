@@ -43,7 +43,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
 
   return (
     <div css={styles.settings}>
-      <Card title={__('Basic Settings', 'tutor')} collapsedAnimationDependencies={[feedbackMode, prerequisites.length]}>
+      <Card
+        title={__('Basic Settings', 'tutor')}
+        collapsedAnimationDependencies={[feedbackMode, prerequisites?.length]}
+      >
         <div css={styles.formWrapper}>
           <Show when={contentType !== 'tutor_h5p_quiz'}>
             <div css={styles.timeWrapper}>
@@ -134,7 +137,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Attempts Allowed', 'tutor')}
                   helpText={__(
                     'Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts',
-                    'tutor'
+                    'tutor',
                   )}
                   selectOnFocus
                 />
@@ -152,7 +155,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Passing is Required', 'tutor')}
                   helpText={__(
                     'By enabling this option, the student must have to pass it to access the next quiz',
-                    'tutor'
+                    'tutor',
                   )}
                 />
               )}
@@ -185,7 +188,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Max Question Allowed to Answer', 'tutor')}
                   helpText={__(
                     'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
-                    'tutor'
+                    'tutor',
                   )}
                   selectOnFocus
                 />
@@ -232,7 +235,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                     placeholder={__('Select Unlock Date', 'tutor')}
                     helpText={__(
                       'This lesson will be available from the given date. Leave empty to make it available immediately',
-                      'tutor'
+                      'tutor',
                     )}
                   />
                 )}

@@ -5,15 +5,14 @@ import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
+import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
+import { PreviewItem } from '@CourseBuilderComponents/subscription/PreviewItem';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
-import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
+import Show from '@Controls/Show';
 import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@CourseBuilderServices/subscription';
-
-import Show from '@/v3/shared/controls/Show';
-import { PreviewItem } from './PreviewItem';
 
 function SubscriptionPreview({ courseId }: { courseId: number }) {
   const courseSubscriptionsQuery = useCourseSubscriptionsQuery(courseId);
