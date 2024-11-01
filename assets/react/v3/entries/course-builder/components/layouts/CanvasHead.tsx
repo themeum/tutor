@@ -1,11 +1,13 @@
-import Show from '@/v3/shared/controls/Show';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
+
+import { borderRadius, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 
 type CanvasHeadProps = {
   title: string;

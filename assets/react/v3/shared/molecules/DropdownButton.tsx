@@ -259,11 +259,11 @@ const styles = {
         background-color: ${colorTokens.action.primary.default};
         color: ${colorTokens.text.white};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: ${colorTokens.action.primary.hover};
         }
 
-        &:active {
+        &:active:not(:disabled) {
           background-color: ${colorTokens.action.primary.active};
         }
 
@@ -283,11 +283,11 @@ const styles = {
         background-color: ${colorTokens.action.secondary.default};
         color: ${colorTokens.text.brand};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: ${colorTokens.action.secondary.hover};
         }
 
-        &:active {
+        &:active:not(:disabled) {
           background-color: ${colorTokens.action.secondary.active};
         }
 
@@ -308,11 +308,11 @@ const styles = {
         color: ${colorTokens.text.brand};
         box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: ${colorTokens.action.outline.hover};
         }
 
-        &:active {
+        &:active:not(:disabled) {
           background-color: ${colorTokens.action.outline.active};
         }
 
@@ -333,13 +333,13 @@ const styles = {
         color: ${colorTokens.text.subdued};
         box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: ${colorTokens.background.hover};
           box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
           z-index: ${zIndex.positive};
         }
 
-        &:active {
+        &:active:not(:disabled) {
           background-color: ${colorTokens.background.active};
           box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
         }
@@ -360,11 +360,11 @@ const styles = {
         background-color: ${colorTokens.background.status.errorFail};
         color: ${colorTokens.text.error};
 
-        &:hover {
+        &:hover:not(:disabled) {
           background-color: ${colorTokens.background.status.errorFail};
         }
 
-        &:active {
+        &:active:not(:disabled) {
           background-color: ${colorTokens.background.status.errorFail};
         }
 
@@ -389,7 +389,7 @@ const styles = {
           color: ${colorTokens.icon.default};
         }
 
-        &:hover {
+        &:hover:not(:disabled) {
           text-decoration: underline;
           color: ${colorTokens.text.primary};
 
@@ -398,11 +398,11 @@ const styles = {
           }
         }
 
-        &:active {
+        &:active:not(:disabled) {
           color: ${colorTokens.text.title};
         }
 
-        &:focus {
+        &:focus:not(:disabled) {
           color: ${colorTokens.text.title};
           svg {
             color: ${colorTokens.icon.brand};

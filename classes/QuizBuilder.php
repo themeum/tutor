@@ -307,10 +307,13 @@ class QuizBuilder {
 			);
 		}
 
-		$is_update     = isset( $payload['ID'] );
-		$quiz_id       = $is_update ? $payload['ID'] : null;
-		$next_order_id = tutor_utils()->get_next_course_content_order_id( $topic_id, $quiz_id );
-		$questions     = isset( $payload['questions'] ) ? $payload['questions'] : array();
+		$is_update = isset( $payload['ID'] );
+		$quiz_id   = $is_update ? $payload['ID'] : null;
+		$questions = isset( $payload['questions'] ) ? $payload['questions'] : array();
+
+		$menu_order = (int) ( isset( $payload['menu_order'] )
+						? $payload['menu_order']
+						: tutor_utils()->get_next_course_content_order_id( $topic_id, $quiz_id ) );
 
 		$quiz_data = array(
 			'post_type'    => tutor()->quiz_post_type,
@@ -319,7 +322,7 @@ class QuizBuilder {
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
 			'post_parent'  => $topic_id,
-			'menu_order'   => $next_order_id,
+			'menu_order'   => $menu_order,
 		);
 
 		global $wpdb;

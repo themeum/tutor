@@ -146,9 +146,8 @@ const styles = {
     color: ${colorTokens.text.brand};
   `,
   infoTexts: css`
-    ${typography.small()};
+    ${typography.tiny()};
     color: ${colorTokens.text.subdued};
-    max-width: 200px;
     text-align: center;
   `,
   previewWrapper: (size: ImageInputSize) => css`

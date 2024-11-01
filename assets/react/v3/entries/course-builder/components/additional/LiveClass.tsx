@@ -101,7 +101,7 @@ const LiveClass = () => {
                   }}
                   icon={<SVGIcon name="linkExternal" width={24} height={24} />}
                 >
-                  {__('Go to addons', 'tutor')}
+                  {__('Go to Addons', 'tutor')}
                 </Button>
               }
             />

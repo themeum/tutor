@@ -1226,12 +1226,15 @@ class Course extends Tutor_Base {
 
 			if ( tutor()->course_post_type === $post_type && ( User::is_admin() || $can_edit_course ) ) {
 				/**
-				 * Non-admin user can't edit trash course.
+				 * Edit trash course behavior
 				 *
 				 * @since 3.0.0
 				 */
-				if ( ! User::is_admin() && CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
-					wp_die( esc_html( tutor_utils()->error_message() ) );
+				if ( CourseModel::STATUS_TRASH === get_post_status( $course_id ) ) {
+					$message = User::is_admin()
+								? __( 'You cannot edit this course because it is in the Trash. Please restore it and try again', 'tutor' )
+								: tutor_utils()->error_message();
+					wp_die( esc_html( $message ) );
 				}
 
 				$this->load_course_builder_view();
@@ -1280,6 +1283,7 @@ class Course extends Tutor_Base {
 			'chatgpt_enable',
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
+			'enable_course_review_moderation',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
@@ -1315,11 +1319,24 @@ class Course extends Tutor_Base {
 			);
 		}
 
+		$supported_video_source  = array();
+		$saved_video_source_list = (array) ( $settings['supported_video_sources'] ?? array() );
+
+		foreach ( tutor_utils()->get_video_sources( true ) as $value => $label ) {
+			if ( in_array( $value, $saved_video_source_list, true ) ) {
+				$supported_video_source[] = array(
+					'label' => $label,
+					'value' => $value,
+				);
+			}
+		}
+
 		$data['dashboard_url']            = $dashboard_url;
 		$data['backend_course_list_url']  = get_admin_url( null, '?page=tutor' );
 		$data['frontend_course_list_url'] = tutor_utils()->tutor_dashboard_url( 'my-courses' );
 		$data['timezones']                = tutor_global_timezone_lists();
 		$data['difficulty_levels']        = $difficulty_levels;
+		$data['supported_video_source']   = $supported_video_source;
 		$data['wp_rest_nonce']            = wp_create_nonce( 'wp_rest' );
 		$data['max_upload_size']          = size_format( wp_max_upload_size() );
 

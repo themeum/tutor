@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -26,10 +26,11 @@ import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type ContentDripType, convertLessonDataToPayload } from '@CourseBuilderServices/course';
+import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   type ID,
+  convertLessonDataToPayload,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -241,10 +242,7 @@ const LessonModal = ({
                         </div>
                       }
                       placeholder={__('Enter Lesson Description', 'tutor')}
-                      helpText={__(
-                        'Create engaging lessons by combining text, images, audio, and links.',
-                        'tutor',
-                      )}
+                      helpText={__('Create engaging lessons by combining text, images, audio, and links.', 'tutor')}
                     />
                   )}
                 />
@@ -310,8 +308,11 @@ const LessonModal = ({
                 <FormImageInput
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
-                  buttonText={__('Upload featured image', 'tutor')}
-                  infoText={__('Supported file formats: .jpg, .jpeg, .png, .gif, .webp', 'tutor')}
+                  buttonText={__('Upload Image', 'tutor')}
+                  infoText={sprintf(
+                    __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                    tutorConfig.max_upload_size,
+                  )}
                 />
               )}
             />
@@ -323,8 +324,8 @@ const LessonModal = ({
                   {...controllerProps}
                   label={__('Video', 'tutor')}
                   buttonText={__('Upload Video', 'tutor')}
-                  infoText={__('Supported file formats .mp4', 'tutor')}
-                  supportedFormats={['mp4']}
+                  infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
+                  supportedFormats={['mp4', 'webm']}
                   onGetDuration={(duration) => {
                     form.setValue('duration.hour', duration.hours);
                     form.setValue('duration.minute', duration.minutes);

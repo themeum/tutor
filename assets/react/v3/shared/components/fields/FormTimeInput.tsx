@@ -72,6 +72,7 @@ const FormTimeInput = ({
             <div css={styles.wrapper} ref={triggerRef}>
               <input
                 {...restInputProps}
+                ref={field.ref}
                 css={[css, styles.input]}
                 type="text"
                 onFocus={() => setIsOpen(true)}

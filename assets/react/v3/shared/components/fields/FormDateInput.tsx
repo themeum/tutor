@@ -22,6 +22,8 @@ interface FormDateInputProps extends FormControllerProps<string> {
   placeholder?: string;
   helpText?: string;
   isClearable?: boolean;
+  onChange?: (value: string) => void;
+  dateFormat?: string;
 }
 
 const FormDateInput = ({
@@ -35,9 +37,11 @@ const FormDateInput = ({
   placeholder,
   helpText,
   isClearable = true,
+  onChange,
+  dateFormat = DateFormats.yearMonthDay,
 }: FormDateInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
-  const fieldValue = field.value ?? '';
+  const fieldValue = isValid(new Date(field.value)) ? format(new Date(field.value), dateFormat) : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -62,6 +66,7 @@ const FormDateInput = ({
               <input
                 {...restInputProps}
                 css={[css, styles.input]}
+                ref={field.ref}
                 type="text"
                 onFocus={() => setIsOpen(true)}
                 value={fieldValue}
@@ -81,6 +86,10 @@ const FormDateInput = ({
                   }
 
                   field.onChange(value);
+
+                  if (onChange) {
+                    onChange(value);
+                  }
                 }}
                 autoComplete="off"
                 data-input
@@ -115,6 +124,10 @@ const FormDateInput = ({
 
                       field.onChange(formattedDate);
                       setIsOpen(false);
+
+                      if (onChange) {
+                        onChange(formattedDate);
+                      }
                     }
                   }}
                   showOutsideDays

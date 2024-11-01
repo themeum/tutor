@@ -1,5 +1,10 @@
+import { css } from '@emotion/react';
+import { useEffect } from 'react';
+import { FormProvider } from 'react-hook-form';
+import { Outlet } from 'react-router-dom';
+
 import { colorTokens, containerMaxWidth, headerHeight } from '@Config/styles';
-import Header from '@CourseBuilderComponents/layouts/Header';
+import Header from '@CourseBuilderComponents/layouts/header/Header';
 import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
 import {
   type CourseFormData,
@@ -9,10 +14,7 @@ import {
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { css } from '@emotion/react';
-import { useEffect } from 'react';
-import { FormProvider } from 'react-hook-form';
-import { Outlet } from 'react-router-dom';
+
 import Notebook from './Notebook';
 
 const Layout = () => {

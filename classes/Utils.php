@@ -590,6 +590,8 @@ class Utils {
 
 			return (bool) $this->avalue_dot( 'is_enable', $addon_config );
 		}
+
+		return false;
 	}
 
 	/**
@@ -5753,6 +5755,7 @@ class Utils {
 	 * Get Addon config
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 make addon_field value based on param.
 	 *
 	 * @param mixed $addon_field addon field.
 	 *
@@ -5762,6 +5765,10 @@ class Utils {
 		if ( ! $addon_field ) {
 			return false;
 		}
+
+		$addon_field = ( strpos( $addon_field, 'tutor-pro/addons/' ) === 0 )
+						? $addon_field
+						: "tutor-pro/addons/{$addon_field}/{$addon_field}.php";
 
 		$addons_config = maybe_unserialize( get_option( 'tutor_addons_config' ) );
 
