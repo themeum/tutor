@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { rgba } from 'polished';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -10,7 +9,7 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, fontWeight, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 
@@ -61,7 +60,16 @@ type FormVideoInputProps = {
 } & FormControllerProps<CourseVideo | null>;
 
 const videoSourceOptions = tutorConfig.supported_video_sources || [];
+const videoSourcesSelectOptions = videoSourceOptions.filter((option) => option.value !== 'html5');
 const videoSources = videoSourceOptions.map((item) => item.value);
+
+const placeholderMap = {
+  youtube: 'Paste YouTube Video URL',
+  vimeo: 'Paste Vimeo Video URL',
+  external_url: 'Paste External Video URL',
+  shortcode: 'Paste Video Shortcode',
+  embedded: 'Paste Embedded Video Code',
+};
 
 const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<CourseVideo>) => {
   const defaultValue = {
@@ -121,7 +129,7 @@ const FormVideoInput = ({
   const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
-      videoSource: videoSourceOptions[0]?.value || '',
+      videoSource: videoSourcesSelectOptions[0]?.value || '',
       videoUrl: '',
     },
   });
@@ -136,8 +144,8 @@ const FormVideoInput = ({
     }
 
     if (!fieldValue.source) {
-      form.setValue('videoSource', videoSourceOptions[0]?.value);
-      form.setValue('videoUrl', fieldValue[`source_${videoSourceOptions[0]?.value}` as keyof CourseVideo] || '');
+      form.setValue('videoSource', videoSourcesSelectOptions[0]?.value);
+      form.setValue('videoUrl', fieldValue[`source_${videoSourcesSelectOptions[0]?.value}` as keyof CourseVideo] || '');
       return;
     }
 
@@ -151,19 +159,6 @@ const FormVideoInput = ({
     form.setValue('videoSource', fieldValue.source);
     form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
   }, [fieldValue]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!videoSource) {
-      return;
-    }
-
-    if (!fieldValue?.[`source_${videoSource}` as keyof CourseVideo]) {
-      form.setValue('videoUrl', '');
-      return;
-    }
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
-  }, [videoSource]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -384,27 +379,42 @@ const FormVideoInput = ({
               >
                 {(media) => {
                   return (
-                    <div css={styles.previewWrapper}>
+                    <div ref={triggerRef} css={styles.previewWrapper}>
                       <div css={styles.videoInfoWrapper}>
                         <div css={styles.videoInfoCard}>
                           <SVGIcon name="video" height={40} width={40} />
 
                           <div css={styles.videoInfo}>
                             <div css={styles.videoInfoTitle}>
-                              <div css={styleUtils.text.ellipsis(1)}>{__('Video added', 'tutor')}</div>
+                              <div css={styleUtils.text.ellipsis(1)}>
+                                {videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
+                              </div>
                             </div>
                           </div>
                         </div>
 
-                        <button
-                          type="button"
-                          css={styles.removeButton}
-                          onClick={() => {
-                            handleClear('video');
-                          }}
-                        >
-                          <SVGIcon name="cross" height={24} width={24} />
-                        </button>
+                        <div css={styles.actionButtons}>
+                          <Show when={videoSource !== 'html5'}>
+                            <button
+                              type="button"
+                              css={styleUtils.actionButton}
+                              onClick={() => {
+                                setIsOpen(true);
+                              }}
+                            >
+                              <SVGIcon name="edit" height={24} width={24} />
+                            </button>
+                          </Show>
+                          <button
+                            type="button"
+                            css={styleUtils.actionButton}
+                            onClick={() => {
+                              handleClear('video');
+                            }}
+                          >
+                            <SVGIcon name="cross" height={24} width={24} />
+                          </button>
+                        </div>
                       </div>
                       <div
                         css={styles.imagePreview({
@@ -413,21 +423,7 @@ const FormVideoInput = ({
                       >
                         <Show
                           when={fieldValue?.source === 'html5'}
-                          fallback={
-                            <div css={styles.urlData}>
-                              <p>
-                                <span>{`${__('Source', 'tutor')}: `}</span>
-                                {`${
-                                  videoSourceOptions.find((option) => option.value === form.watch('videoSource'))
-                                    ?.label || ''
-                                }`}
-                              </p>
-                              <p>
-                                <span>{`${__('URL', 'tutor')}: `}</span>
-                                {`${form.watch('videoUrl')}`}
-                              </p>
-                            </div>
-                          }
+                          fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
                         >
                           <ImageInput
                             value={
@@ -479,7 +475,7 @@ const FormVideoInput = ({
                 return (
                   <FormSelectInput
                     {...controllerProps}
-                    options={videoSourceOptions}
+                    options={videoSourcesSelectOptions}
                     disabled={videoSourceOptions.length <= 1}
                     placeholder={__('Select source', 'tutor')}
                     hideCaret={videoSourceOptions.length <= 1}
@@ -503,9 +499,8 @@ const FormVideoInput = ({
                     `}
                     rows={2}
                     placeholder={
-                      form.watch('videoSource') === 'shortcode'
-                        ? __('Enter shortcode', 'tutor')
-                        : __('Enter URL', 'tutor')
+                      placeholderMap[form.watch('videoSource') as keyof typeof placeholderMap] ||
+                      __('Paste URL', 'tutor')
                     }
                   />
                 );
@@ -548,10 +543,12 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.background.status.warning};
 
-    ${hasVideoSource &&
-    css`
+    ${
+      hasVideoSource &&
+      css`
       background-color: ${colorTokens.bg.white};
-    `}
+    `
+    }
   `,
   infoTexts: css`
     ${typography.tiny()};
@@ -572,15 +569,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[12]};
     gap: ${spacing[8]};
-
-    p {
-      word-break: break-all;
-    }
-
-    span {
-      font-weight: ${fontWeight.semiBold};
-      color: ${colorTokens.text.hints};
-    }
+    word-break: break-all;
   `,
   previewWrapper: css`
     width: 100%;
@@ -638,9 +627,9 @@ const styles = {
     color: ${colorTokens.text.brand};
     margin-bottom: ${spacing[8]};
   `,
-  removeButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
+  actionButtons: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[4]};
   `,
   popover: css`
     position: absolute;
