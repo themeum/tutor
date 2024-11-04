@@ -117,24 +117,19 @@ const styles = {
     transition: all 150ms ease-in-out;
     position: relative;
 
-    ${
-      size === 'large' &&
-      css`
+    ${size === 'large' &&
+    css`
       padding: ${spacing[12]} ${spacing[24]};
-    `
-    }
+    `}
 
-    ${
-      size === 'small' &&
-      css`
+    ${size === 'small' &&
+    css`
       ${typography.small('medium')};
       padding: ${spacing[6]} ${spacing[16]};
-    `
-    }
+    `}
     
-    ${
-      variant === 'primary' &&
-      css`
+    ${variant === 'primary' &&
+    css`
       background-color: ${colorTokens.action.primary.default};
       color: ${colorTokens.text.white};
 
@@ -156,9 +151,8 @@ const styles = {
         box-shadow: none;
       }
 
-      ${
-        isOutlined &&
-        css`
+      ${isOutlined &&
+      css`
         background-color: transparent;
         box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
         color: ${colorTokens.text.brand};
@@ -190,37 +184,30 @@ const styles = {
             color: ${colorTokens.icon.white};
           }
         }
-      `
-      }
+      `}
 
-      ${
-        (disabled || loading) &&
-        css`
+      ${(disabled || loading) &&
+      css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
         svg {
           color: ${colorTokens.icon.disable.default};
         }
 
-        ${
-          isOutlined &&
-          css`
+        ${isOutlined &&
+        css`
           background-color: transparent;
           box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
           svg {
             color: ${colorTokens.icon.disable.default};
           }
-        `
-        }
-      `
-      }
-    `
-    }
+        `}
+      `}
+    `}
 
-    ${
-      variant === 'WP' &&
-      css`
+    ${variant === 'WP' &&
+    css`
       background-color: ${colorTokens.action.primary.wp};
       color: ${colorTokens.text.white};
 
@@ -242,9 +229,8 @@ const styles = {
         box-shadow: none;
       }
 
-      ${
-        isOutlined &&
-        css`
+      ${isOutlined &&
+      css`
         background-color: transparent;
         box-shadow: inset 0 0 0 1px ${colorTokens.action.primary.wp};
         color: ${colorTokens.text.wp};
@@ -276,37 +262,30 @@ const styles = {
             color: ${colorTokens.icon.white};
           }
         }
-      `
-      }
+      `}
 
-      ${
-        (disabled || loading) &&
-        css`
+      ${(disabled || loading) &&
+      css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
         svg {
           color: ${colorTokens.icon.disable.default};
         }
 
-        ${
-          isOutlined &&
-          css`
+        ${isOutlined &&
+        css`
           background-color: transparent;
           box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
           svg {
             color: ${colorTokens.icon.disable.default};
           }
-        `
-        }
-      `
-      }
-    `
-    }
+        `}
+      `}
+    `}
 
-    ${
-      variant === 'secondary' &&
-      css`
+    ${variant === 'secondary' &&
+    css`
       background-color: ${colorTokens.action.secondary.default};
       color: ${colorTokens.text.brand};
 
@@ -328,9 +307,8 @@ const styles = {
         box-shadow: none;
       }
 
-      ${
-        isOutlined &&
-        css`
+      ${isOutlined &&
+      css`
         background-color: transparent;
         box-shadow: inset 0 0 0 1px ${colorTokens.stroke.neutral};
         color: ${colorTokens.text.brand};
@@ -338,12 +316,10 @@ const styles = {
         svg {
           color: ${colorTokens.icon.brand};
         }
-      `
-      }
+      `}
 
-      ${
-        (disabled || loading) &&
-        css`
+      ${(disabled || loading) &&
+      css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
 
@@ -351,25 +327,20 @@ const styles = {
           color: ${colorTokens.icon.disable.default};
         }
 
-        ${
-          isOutlined &&
-          css`
+        ${isOutlined &&
+        css`
           background-color: transparent;
           box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
           svg {
             color: ${colorTokens.icon.disable.default};
           }
-        `
-        }
-      `
-      }
-    `
-    }
+        `}
+      `}
+    `}
 
-    ${
-      variant === 'tertiary' &&
-      css`
+    ${variant === 'tertiary' &&
+    css`
 				background-color: ${colorTokens.action.outline.default};
 				color: ${colorTokens.text.subdued};
 				box-shadow: inset 0 0 0 1px ${colorTokens.stroke.default};
@@ -425,25 +396,21 @@ const styles = {
               color: ${colorTokens.icon.disable.default};
             }
 
-            ${
-              isOutlined &&
-              css`
+            ${isOutlined &&
+            css`
               background-color: transparent;
               box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
               svg {
                 color: ${colorTokens.icon.disable.default};
               }
-            `
-            }
+            `}
           `
         }
-			`
-    }
+			`}
 
-    ${
-      variant === 'danger' &&
-      css`
+    ${variant === 'danger' &&
+    css`
       background-color: ${colorTokens.background.status.errorFail};
       color: ${colorTokens.text.error};
 
@@ -464,17 +431,14 @@ const styles = {
         box-shadow: none;
       }
 
-      ${
-        isOutlined &&
-        css`
+      ${isOutlined &&
+      css`
         background-color: transparent;
         box-shadow: inset 0 0 0 1px ${colorTokens.stroke.danger};
-      `
-      }
+      `}
 
-      ${
-        (disabled || loading) &&
-        css`
+      ${(disabled || loading) &&
+      css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
 
@@ -482,42 +446,33 @@ const styles = {
           color: ${colorTokens.icon.disable.default};
         }
 
-        ${
-          isOutlined &&
-          css`
+        ${isOutlined &&
+        css`
           background-color: transparent;
           box-shadow: inset 0 0 0 1px ${colorTokens.action.outline.disable};
 
           svg {
             color: ${colorTokens.icon.disable.default};
           }
-        `
-        }
-      `
-      }
-    `
-    }
+        `}
+      `}
+    `}
 
-    ${
-      variant === 'text' &&
-      css`
+    ${variant === 'text' &&
+    css`
       background-color: transparent;
       color: ${colorTokens.text.subdued};
       padding: ${spacing[8]};
 
-      ${
-        size === 'large' &&
-        css`
+      ${size === 'large' &&
+      css`
         padding: ${spacing[12]} ${spacing[8]};
-      `
-      }
+      `}
 
-      ${
-        size === 'small' &&
-        css`
+      ${size === 'small' &&
+      css`
         padding: ${spacing[4]} ${spacing[8]};
-      `
-      }
+      `}
 
 			svg {
         color: ${colorTokens.icon.hints};
@@ -532,18 +487,15 @@ const styles = {
         }
       }
 
-      ${
-        (disabled || loading) &&
-        css`
+      ${(disabled || loading) &&
+      css`
         color: ${colorTokens.text.disable};
 
         svg {
           color: ${colorTokens.icon.disable.default};
         }
-      `
-      }
-    `
-    }
+      `}
+    `}
 
     &:disabled {
       cursor: not-allowed;
@@ -566,13 +518,11 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
 
-    ${
-      loading &&
-      !disabled &&
-      css`
+    ${loading &&
+    !disabled &&
+    css`
       color: transparent;
-    `
-    }
+    `}
   `,
   buttonIcon: ({
     iconPosition,
@@ -586,27 +536,21 @@ const styles = {
     display: grid;
     place-items: center;
     margin-right: ${spacing[4]};
-    ${
-      iconPosition === 'right' &&
-      css`
+    ${iconPosition === 'right' &&
+    css`
       margin-right: 0;
       margin-left: ${spacing[4]};
-    `
-    }
+    `}
 
-    ${
-      loading &&
-      css`
+    ${loading &&
+    css`
       opacity: 0;
-    `
-    }
+    `}
 
-    ${
-      !hasChildren &&
-      css`
+    ${!hasChildren &&
+    css`
       margin-inline: 0;
-    `
-    }
+    `}
   `,
   spinner: css`
     position: absolute;
