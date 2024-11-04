@@ -5578,6 +5578,15 @@ class Utils {
 	}
 
 	/**
+	 * Get course archive URL
+	 *
+	 * @since 3.0.0
+	 */
+	public function get_course_archive_url() {
+		return home_url( $this->get_option( 'course_permalink_base', 'courses' ) );
+	}
+
+	/**
 	 * Get the tutor dashboard page ID
 	 *
 	 * @since 1.0.0
