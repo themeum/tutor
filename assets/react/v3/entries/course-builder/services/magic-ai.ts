@@ -9,7 +9,7 @@ import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { Prettify, WPResponse } from '@Utils/types';
-import { convertToErrorMessage } from '../utils/utils';
+import { convertToErrorMessage } from '@Utils/util';
 
 interface ImagePayload {
   prompt: string;

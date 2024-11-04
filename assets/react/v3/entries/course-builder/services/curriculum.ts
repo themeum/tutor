@@ -11,10 +11,11 @@ import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import { Addons } from '@Config/constants';
 import type { ContentDripType, GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
 import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
-import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
+import { convertToErrorMessage } from '@Utils/util';
 
 export type ID = string | number;
 

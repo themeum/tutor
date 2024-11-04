@@ -189,6 +189,14 @@ document.addEventListener('DOMContentLoaded', function () {
 			checkEmailFieldsOnSubmit(inputEmailFields);
 		}
 
+
+		// Only keep action and properties that starts with tutor_option
+		data = Object.fromEntries(
+			Object.entries(data).filter(([key, value]) => {
+				return key === 'action' || key.startsWith('tutor_option');
+			})
+		);
+
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
 				$.ajax({
@@ -544,7 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
 		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
-		
+
 		showHideOption(woocommerce_block, () => monetized_by === 'wc');
 		showHideOption(currency_block, () => monetized_by === 'tutor');
 		showHideOption(cart_page_field, () => monetized_by === 'tutor');

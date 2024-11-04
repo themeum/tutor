@@ -3,11 +3,10 @@ import { DateFormats } from '@Config/constants';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { convertGMTtoLocalDate, convertToGMT } from '@Utils/util';
+import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@Utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
 import { format } from 'date-fns';
-import { convertToErrorMessage } from '../utils/utils';
 import type { TutorMutationResponse } from './course';
 import type { ID } from './curriculum';
 

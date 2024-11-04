@@ -226,13 +226,6 @@ const FormInput = ({
                   ref.current.select();
                 }}
               />
-              {isClearable && !!field.value && (
-                <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
-                    <SVGIcon name="timesAlt" />
-                  </Button>
-                </div>
-              )}
               <Show when={isPassword}>
                 <div css={styles.eyeButtonWrapper}>
                   <button
@@ -246,7 +239,7 @@ const FormInput = ({
               </Show>
               <Show when={isClearable && !!field.value && fieldType !== 'password'}>
                 <div css={styles.clearButton}>
-                  <Button variant="text" onClick={() => field.onChange(null)}>
+                  <Button variant="text" onClick={() => field.onChange('')}>
                     <SVGIcon name="timesAlt" />
                   </Button>
                 </div>
