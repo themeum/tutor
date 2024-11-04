@@ -253,10 +253,12 @@ class WooCommerce extends Tutor_Base {
 		}
 
 		$course_id      = tutor_utils()->get_post_id( $course_id );
-		$has_product_id = get_post_meta( $course_id, '_tutor_course_product_id', true );
-		if ( $has_product_id ) {
+		$price_type     = tutor_utils()->price_type( $course_id );
+		$has_product_id = tutor_utils()->get_course_product_id( $course_id );
+		if ( Course::PRICE_TYPE_PAID === $price_type && $has_product_id ) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -573,6 +575,11 @@ class WooCommerce extends Tutor_Base {
 		}
 
 		$order = wc_get_order( $order_id );
+		/**
+		 * Loop though each WC order item.
+		 *
+		 * @var WC_Order_Item $item WC order item object.
+		 */
 		foreach ( $order->get_items() as $item ) {
 			$product_id    = $item->get_product_id();
 			$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
@@ -651,6 +658,11 @@ class WooCommerce extends Tutor_Base {
 		$tutor_product = false;
 		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
 
+		/**
+		 * Loop though each WC order item.
+		 *
+		 * @var WC_Order_Item $item WC order item object.
+		 */
 		foreach ( $order->get_items() as $item ) {
 			$product_id = $item->get_product_id();
 			// check if product associated with tutor course.
