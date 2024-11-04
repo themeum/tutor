@@ -343,6 +343,7 @@ const HeaderActions = () => {
           icon={<SVGIcon name="upload" width={24} height={24} />}
           loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
           iconPosition="left"
+          buttonCss={css`padding-inline: ${spacing[16]};`}
           onClick={form.handleSubmit((data) =>
             handleSubmit(
               {
