@@ -535,16 +535,9 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
 
     _tutor_course_additional_data_edit: true,
     _tutor_attachments_main_edit: true,
-    ...(data.video.source && {
-      'video[source]': data.video.source,
-      'video[source_video_id]': data.video.source_video_id,
-      'video[poster]': data.video.poster,
-      'video[source_external_url]': data.video.source_external_url,
-      'video[source_shortcode]': data.video.source_shortcode,
-      'video[source_youtube]': data.video.source_youtube,
-      'video[source_vimeo]': data.video.source_vimeo,
-      'video[source_embedded]': data.video.source_embedded,
-    }),
+    ...(data.video.source
+      ? Object.fromEntries(Object.entries(data.video).map(([key, value]) => [`video[${key}]`, value]))
+      : {}),
     tutor_attachments: (data.course_attachments || []).map((item) => item.id) ?? [],
     bp_attached_group_ids: data.bp_attached_group_ids,
   };
@@ -578,17 +571,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       title: '',
       url: courseDetails.thumbnail,
     },
-    video: {
-      source: courseDetails.video.source ?? '',
-      source_video_id: courseDetails.video.source_video_id ?? '',
-      poster: courseDetails.video.poster ?? '',
-      poster_url: courseDetails.video.poster_url ?? '',
-      source_external_url: courseDetails.video.source_external_url ?? '',
-      source_shortcode: courseDetails.video.source_shortcode ?? '',
-      source_youtube: courseDetails.video.source_youtube ?? '',
-      source_vimeo: courseDetails.video.source_vimeo ?? '',
-      source_embedded: courseDetails.video.source_embedded ?? '',
-    },
+    video: courseDetails.video,
     course_product_name: courseDetails.course_pricing.product_name,
     course_price_type: !courseDetails.course_pricing.type ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
@@ -783,11 +766,17 @@ const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
   );
 };
 
-export const usePrerequisiteCoursesQuery = (excludedCourseIds: string[], isPrerequisiteAddonEnabled: boolean) => {
+export const usePrerequisiteCoursesQuery = ({
+  excludedIds,
+  isEnabled,
+}: {
+  excludedIds: string[];
+  isEnabled: boolean;
+}) => {
   return useQuery({
-    queryKey: ['PrerequisiteCourses', excludedCourseIds],
-    queryFn: () => getPrerequisiteCourses(excludedCourseIds).then((res) => res.data),
-    enabled: isPrerequisiteAddonEnabled,
+    queryKey: ['PrerequisiteCourses', excludedIds],
+    queryFn: () => getPrerequisiteCourses(excludedIds).then((res) => res.data),
+    enabled: isEnabled,
   });
 };
 

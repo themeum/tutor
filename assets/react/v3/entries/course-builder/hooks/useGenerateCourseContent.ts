@@ -1,3 +1,4 @@
+import { fetchImageUrlAsBase64 } from '@/v3/shared/utils/util';
 import {
   type Topic,
   useContentGenerationContext,
@@ -8,6 +9,20 @@ import {
   useGenerateCourseTopicNamesMutation,
   useGenerateQuizQuestionsMutation,
 } from '@CourseBuilderServices/magic-ai';
+
+import courseGenerationPlaceholderBlue from '@Images/course-generation-placeholders/course-generation-placeholder-blue.webp';
+import courseGenerationPlaceholderGreen from '@Images/course-generation-placeholders/course-generation-placeholder-green.webp';
+import courseGenerationPlaceholderPurple from '@Images/course-generation-placeholders/course-generation-placeholder-purple.webp';
+import courseGenerationPlaceholderRed from '@Images/course-generation-placeholders/course-generation-placeholder-red.webp';
+import courseGenerationPlaceholderRust from '@Images/course-generation-placeholders/course-generation-placeholder-rust.webp';
+
+const courseGenerationPlaceholders = [
+  courseGenerationPlaceholderBlue,
+  courseGenerationPlaceholderRed,
+  courseGenerationPlaceholderRust,
+  courseGenerationPlaceholderGreen,
+  courseGenerationPlaceholderPurple,
+];
 
 export const useGenerateCourseContent = () => {
   const { abortControllerRef, updateContents, updateLoading, updateErrors, updateAbortStatus } =
@@ -49,6 +64,13 @@ export const useGenerateCourseContent = () => {
 
       const courseTitle = response.data;
       updateContents({ title: courseTitle, prompt }, pointer);
+
+      try {
+        const featuredImageResponse = await fetchImageUrlAsBase64(
+          courseGenerationPlaceholders[Math.floor(Math.random() * courseGenerationPlaceholders.length)],
+        );
+        updateContents({ featured_image: featuredImageResponse }, pointer);
+      } catch (error) {}
 
       try {
         const descriptionResponse = await generateCourseDescriptionMutation.mutateAsync({

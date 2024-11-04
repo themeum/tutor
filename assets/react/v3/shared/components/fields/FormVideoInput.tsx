@@ -19,7 +19,6 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import type { Option } from '@Utils/types';
 
 import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
@@ -42,6 +41,7 @@ export interface CourseVideo {
   source_youtube: string;
   source_vimeo: string;
   source_embedded: string;
+  [key: string]: string | undefined;
 }
 
 interface URLFormData {
@@ -57,35 +57,11 @@ type FormVideoInputProps = {
   infoText?: string;
   supportedFormats?: string[];
   loading?: boolean;
-  onGetDuration?: (duration: {
-    hours: number;
-    minutes: number;
-    seconds: number;
-  }) => void;
+  onGetDuration?: (duration: { hours: number; minutes: number; seconds: number }) => void;
 } & FormControllerProps<CourseVideo | null>;
 
-const videoSources =
-  (tutorConfig.settings?.supported_video_sources &&
-    (Array.isArray(tutorConfig.settings?.supported_video_sources)
-      ? tutorConfig.settings?.supported_video_sources
-      : [tutorConfig.settings?.supported_video_sources])) ||
-  [];
-
-const videoSourceLabels: Record<string, string> = {
-  external_url: __('External URL', 'tutor'),
-  shortcode: __('Shortcode', 'tutor'),
-  youtube: __('YouTube', 'tutor'),
-  vimeo: __('Vimeo', 'tutor'),
-  embedded: __('Embedded', 'tutor'),
-};
-
-const videoSourceOptions = videoSources.reduce((options, source) => {
-  const label = videoSourceLabels[source];
-  if (label) {
-    options.push({ label, value: source });
-  }
-  return options;
-}, [] as Option<string>[]);
+const videoSourceOptions = tutorConfig.supported_video_sources || [];
+const videoSources = videoSourceOptions.map((item) => item.value);
 
 const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<CourseVideo>) => {
   const defaultValue = {
@@ -173,7 +149,7 @@ const FormVideoInput = ({
     }
 
     form.setValue('videoSource', fieldValue.source);
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo]);
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
   }, [fieldValue]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -186,7 +162,7 @@ const FormVideoInput = ({
       form.setValue('videoUrl', '');
       return;
     }
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo]);
+    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
   }, [videoSource]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -246,15 +222,7 @@ const FormVideoInput = ({
   };
 
   const handleDataFromUrl = async (data: URLFormData) => {
-    const sourceMap: { [key: string]: string } = {
-      external: 'external_url',
-      shortcode: 'shortcode',
-      youtube: 'youtube',
-      vimeo: 'vimeo',
-      embedded: 'embedded',
-    };
-
-    const source = sourceMap[data.videoSource] || 'external_url';
+    const source = data.videoSource;
     const updatedValue = {
       source,
       [`source_${source}`]: data.videoUrl,
@@ -530,7 +498,9 @@ const FormVideoInput = ({
                 return (
                   <FormTextareaInput
                     {...controllerProps}
-                    inputCss={css`border-style: dashed;`}
+                    inputCss={css`
+                      border-style: dashed;
+                    `}
                     rows={2}
                     placeholder={
                       form.watch('videoSource') === 'shortcode'
@@ -566,11 +536,7 @@ const FormVideoInput = ({
 export default FormVideoInput;
 
 const styles = {
-  emptyMedia: ({
-    hasVideoSource = false,
-  }: {
-    hasVideoSource: boolean;
-  }) => css`
+  emptyMedia: ({ hasVideoSource = false }: { hasVideoSource: boolean }) => css`
     width: 100%;
     height: 164px;
     display: flex;
@@ -582,12 +548,10 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.background.status.warning};
 
-    ${
-      hasVideoSource &&
-      css`
-        background-color: ${colorTokens.bg.white};
-      `
-    }
+    ${hasVideoSource &&
+    css`
+      background-color: ${colorTokens.bg.white};
+    `}
   `,
   infoTexts: css`
     ${typography.tiny()};
@@ -650,25 +614,7 @@ const styles = {
     ${typography.caption('medium')}
     word-break: break-all;
   `,
-  fileExtension: css`
-    flex-shrink: 0;
-  `,
-  videoInfoSubtitle: css`
-    ${typography.tiny('regular')}
-    ${styleUtils.display.flex()};
-    align-items: center;
-    gap: ${spacing[8]};
-    color: ${colorTokens.text.hints};
-
-    svg {
-      color: ${colorTokens.icon.default};
-    }
-  `,
-  imagePreview: ({
-    isHTMLVideo,
-  }: {
-    isHTMLVideo: boolean;
-  }) => css`
+  imagePreview: ({ isHTMLVideo }: { isHTMLVideo: boolean }) => css`
     width: 100%;
     max-height: 168px;
     position: relative;
@@ -685,32 +631,6 @@ const styles = {
   thumbImage: css`
     border-radius: 0;
     border: none;
-  `,
-  duration: css`
-    position: absolute;
-    bottom: ${spacing[12]};
-    right: ${spacing[12]};
-    padding: ${spacing[2]} ${spacing[4]};
-    ${typography.tiny('regular')};
-    color: ${colorTokens.text.white};
-    border-radius: ${borderRadius[2]};
-    background-color: ${rgba(colorTokens.color.black.main, 0.5)};
-  `,
-  hoverPreview: css`
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    gap: ${spacing[8]};
-    opacity: 0;
-    position: absolute;
-    inset: 0;
-    background-color: ${rgba(colorTokens.color.black.main, 0.6)};
-    border-radius: ${borderRadius[8]};
-
-    button {
-      box-shadow: ${shadow.button};
-    }
   `,
   urlButton: css`
     ${styleUtils.resetButton};

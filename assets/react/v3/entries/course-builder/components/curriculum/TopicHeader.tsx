@@ -164,7 +164,7 @@ const TopicHeader = ({
               <Tooltip content={__('Edit', 'tutor')} delay={200}>
                 <button
                   type="button"
-                  css={styles.actionButton}
+                  css={styleUtils.actionButton}
                   disabled={!topic.isSaved}
                   onClick={() => {
                     setIsEdit(true);
@@ -185,7 +185,7 @@ const TopicHeader = ({
                     fallback={
                       <button
                         type="button"
-                        css={styles.actionButton}
+                        css={styleUtils.actionButton}
                         disabled={!topic.isSaved}
                         onClick={handleDuplicateTopic}
                       >
@@ -194,7 +194,7 @@ const TopicHeader = ({
                     }
                   >
                     <ProBadge size="tiny">
-                      <button type="button" css={styles.actionButton} disabled onClick={noop}>
+                      <button type="button" css={styleUtils.actionButton} disabled onClick={noop}>
                         <SVGIcon name="copyPaste" width={24} height={24} />
                       </button>
                     </ProBadge>
@@ -206,7 +206,7 @@ const TopicHeader = ({
               <Tooltip content={__('Delete', 'tutor')} delay={200}>
                 <button
                   type="button"
-                  css={styles.actionButton}
+                  css={styleUtils.actionButton}
                   disabled={!topic.isSaved}
                   data-visually-hidden
                   ref={deleteRef}
@@ -222,7 +222,7 @@ const TopicHeader = ({
             <Show when={topic.isSaved}>
               <button
                 type="button"
-                css={styles.actionButton}
+                css={styleUtils.actionButton}
                 disabled={!topic.isSaved}
                 onClick={() => {
                   onCollapse?.(topic.id);
@@ -456,16 +456,5 @@ const styles = {
     align-items: start;
     gap: ${spacing[8]};
     justify-content: end;
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    display: flex;
-    cursor: pointer;
-
-    :disabled {
-      color: ${colorTokens.icon.disable.background};
-      cursor: not-allowed;
-    }
   `,
 };

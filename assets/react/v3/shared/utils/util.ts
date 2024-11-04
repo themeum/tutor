@@ -355,3 +355,19 @@ export const copyToClipboard = (text: string) => {
     }
   });
 };
+
+export const fetchImageUrlAsBase64 = async (url: string): Promise<string> => {
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    const reader = new FileReader();
+
+    return new Promise((resolve, reject) => {
+      reader.readAsDataURL(blob);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  } catch (error) {
+    throw new Error(`Failed to fetch and convert image: ${error}`);
+  }
+};

@@ -225,7 +225,7 @@ const FormMultipleChoiceAndOrdering = ({
               <Tooltip content={__('Edit', 'tutor')} delay={200}>
                 <button
                   type="button"
-                  css={styles.actionButton}
+                  css={styleUtils.actionButton}
                   data-edit-button
                   onClick={(event) => {
                     event.stopPropagation();
@@ -241,7 +241,7 @@ const FormMultipleChoiceAndOrdering = ({
                   fallback={
                     <button
                       type="button"
-                      css={styles.actionButton}
+                      css={styleUtils.actionButton}
                       onClick={(event) => {
                         event.stopPropagation();
                         onDuplicateOption(inputValue);
@@ -252,7 +252,7 @@ const FormMultipleChoiceAndOrdering = ({
                   }
                 >
                   <ProBadge size="tiny">
-                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                    <button disabled type="button" css={styleUtils.actionButton} onClick={noop}>
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   </ProBadge>
@@ -261,7 +261,7 @@ const FormMultipleChoiceAndOrdering = ({
               <Tooltip content={__('Delete', 'tutor')} delay={200}>
                 <button
                   type="button"
-                  css={styles.actionButton}
+                  css={styleUtils.actionButton}
                   onClick={(event) => {
                     event.stopPropagation();
                     onRemoveOption();
@@ -600,16 +600,6 @@ const styles = {
     ${styleUtils.display.flex()}
     gap: ${spacing[8]};
     place-self: center end;
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    ${styleUtils.display.flex()}
-
-    :disabled {
-      cursor: not-allowed;
-      color: ${colorTokens.icon.disable.background};
-    }
   `,
   optionBody: css`
     ${styleUtils.display.flex()}
