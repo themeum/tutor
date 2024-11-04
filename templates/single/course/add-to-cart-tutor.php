@@ -56,7 +56,7 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 				</div>
 		</div>
 		<?php if ( $user_logged_in && $show_price_with_tax ) : ?>
-			<div class="tutor-course-price-tax tutor-fs-8 tutor-fw-medium tutor-color-muted"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
+			<div class="tutor-course-price-tax tutor-fs-8 tutor-fw-normal tutor-color-black"><?php esc_html_e( 'Incl. tax', 'tutor' ); ?></div>
 		<?php endif; ?>
 		<?php
 		/**
