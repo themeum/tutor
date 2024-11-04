@@ -316,141 +316,142 @@ const FormVideoInput = ({
       <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
         {() => {
           return (
-            <Show
-              when={!loading}
-              fallback={
-                <div css={styles.emptyMedia({ hasVideoSource: true })}>
-                  <LoadingOverlay />
-                </div>
-              }
-            >
+            <div ref={triggerRef}>
               <Show
-                when={isVideoAvailable()}
+                when={!loading}
                 fallback={
-                  <div
-                    ref={triggerRef}
-                    css={styles.emptyMedia({
-                      hasVideoSource: true,
-                    })}
-                  >
-                    <Show when={videoSources.includes('html5')}>
-                      <Button
-                        variant="secondary"
-                        icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
-                        onClick={() => {
-                          handleUpload('video');
-                        }}
-                      >
-                        {buttonText}
-                      </Button>
-                    </Show>
-                    <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
-                      <Show
-                        when={!videoSources.includes('html5')}
-                        fallback={
-                          <button
-                            type="button"
-                            css={styles.urlButton}
+                  <div css={styles.emptyMedia({ hasVideoSource: true })}>
+                    <LoadingOverlay />
+                  </div>
+                }
+              >
+                <Show
+                  when={isVideoAvailable()}
+                  fallback={
+                    <div
+                      css={styles.emptyMedia({
+                        hasVideoSource: true,
+                      })}
+                    >
+                      <Show when={videoSources.includes('html5')}>
+                        <Button
+                          variant="secondary"
+                          icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
+                          onClick={() => {
+                            handleUpload('video');
+                          }}
+                        >
+                          {buttonText}
+                        </Button>
+                      </Show>
+                      <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
+                        <Show
+                          when={!videoSources.includes('html5')}
+                          fallback={
+                            <button
+                              type="button"
+                              css={styles.urlButton}
+                              onClick={() => {
+                                setIsOpen((previousState) => !previousState);
+                              }}
+                            >
+                              {__('Add from URL', 'tutor')}
+                            </button>
+                          }
+                        >
+                          <Button
+                            variant="secondary"
+                            icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
                             onClick={() => {
                               setIsOpen((previousState) => !previousState);
                             }}
                           >
                             {__('Add from URL', 'tutor')}
-                          </button>
-                        }
-                      >
-                        <Button
-                          variant="secondary"
-                          icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
-                          onClick={() => {
-                            setIsOpen((previousState) => !previousState);
-                          }}
-                        >
-                          {__('Add from URL', 'tutor')}
-                        </Button>
+                          </Button>
+                        </Show>
                       </Show>
-                    </Show>
 
-                    <Show when={videoSources.includes('html5')}>
-                      <p css={styles.infoTexts}>{infoText}</p>
-                    </Show>
-                  </div>
-                }
-              >
-                {(media) => {
-                  return (
-                    <div ref={triggerRef} css={styles.previewWrapper}>
-                      <div css={styles.videoInfoWrapper}>
-                        <div css={styles.videoInfoCard}>
-                          <SVGIcon name="video" height={40} width={40} />
+                      <Show when={videoSources.includes('html5')}>
+                        <p css={styles.infoTexts}>{infoText}</p>
+                      </Show>
+                    </div>
+                  }
+                >
+                  {(media) => {
+                    return (
+                      <div css={styles.previewWrapper}>
+                        <div css={styles.videoInfoWrapper}>
+                          <div css={styles.videoInfoCard}>
+                            <SVGIcon name="video" height={40} width={40} />
 
-                          <div css={styles.videoInfo}>
-                            <div css={styles.videoInfoTitle}>
-                              <div css={styleUtils.text.ellipsis(1)}>
-                                {videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
+                            <div css={styles.videoInfo}>
+                              <div css={styles.videoInfoTitle}>
+                                <div css={styleUtils.text.ellipsis(1)}>
+                                  {videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
 
-                        <div css={styles.actionButtons}>
-                          <Show when={videoSource !== 'html5'}>
+                          <div css={styles.actionButtons}>
+                            <Show when={videoSource !== 'html5'}>
+                              <button
+                                type="button"
+                                css={styleUtils.actionButton}
+                                onClick={() => {
+                                  setIsOpen(true);
+                                }}
+                              >
+                                <SVGIcon name="edit" height={24} width={24} />
+                              </button>
+                            </Show>
                             <button
                               type="button"
                               css={styleUtils.actionButton}
                               onClick={() => {
-                                setIsOpen(true);
+                                handleClear('video');
                               }}
                             >
-                              <SVGIcon name="edit" height={24} width={24} />
+                              <SVGIcon name="cross" height={24} width={24} />
                             </button>
-                          </Show>
-                          <button
-                            type="button"
-                            css={styleUtils.actionButton}
-                            onClick={() => {
-                              handleClear('video');
-                            }}
+                          </div>
+                        </div>
+                        <div
+                          css={styles.imagePreview({
+                            isHTMLVideo: fieldValue?.source === 'html5',
+                          })}
+                        >
+                          <Show
+                            when={fieldValue?.source === 'html5'}
+                            fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
                           >
-                            <SVGIcon name="cross" height={24} width={24} />
-                          </button>
+                            <ImageInput
+                              value={
+                                fieldValue
+                                  ? {
+                                      id: Number(fieldValue.poster),
+                                      url: fieldValue.poster_url,
+                                      title: '',
+                                    }
+                                  : null
+                              }
+                              uploadHandler={() => handleUpload('poster')}
+                              clearHandler={() => handleClear('poster')}
+                              buttonText={__('Upload Thumbnail', 'tutor')}
+                              infoText={__('Upload a thumbnail image for your video', 'tutor')}
+                              emptyImageCss={styles.thumbImage}
+                              previewImageCss={styles.thumbImage}
+                              overlayCss={styles.thumbImage}
+                              replaceButtonText={__('Replace Thumbnail', 'tutor')}
+                            />
+                          </Show>
                         </div>
                       </div>
-                      <div
-                        css={styles.imagePreview({
-                          isHTMLVideo: fieldValue?.source === 'html5',
-                        })}
-                      >
-                        <Show
-                          when={fieldValue?.source === 'html5'}
-                          fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
-                        >
-                          <ImageInput
-                            value={
-                              fieldValue
-                                ? {
-                                    id: Number(fieldValue.poster),
-                                    url: fieldValue.poster_url,
-                                    title: '',
-                                  }
-                                : null
-                            }
-                            uploadHandler={() => handleUpload('poster')}
-                            clearHandler={() => handleClear('poster')}
-                            buttonText={__('Upload Thumbnail', 'tutor')}
-                            infoText={__('Upload a thumbnail image for your video', 'tutor')}
-                            emptyImageCss={styles.thumbImage}
-                            previewImageCss={styles.thumbImage}
-                            overlayCss={styles.thumbImage}
-                            replaceButtonText={__('Replace Thumbnail', 'tutor')}
-                          />
-                        </Show>
-                      </div>
-                    </div>
-                  );
-                }}
+                    );
+                  }}
+                </Show>
               </Show>
-            </Show>
+            </div>
           );
         }}
       </FormFieldWrapper>
