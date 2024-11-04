@@ -14,6 +14,7 @@ use Tutor\Helpers\QueryHelper;
 use Tutor\Models\OrderModel;
 use TUTOR\Singleton;
 use Tutor\Traits\EarningData;
+use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
  * Manage earnings
@@ -84,6 +85,61 @@ class Earnings extends Singleton {
 		$items         = is_object( $order_details ) && property_exists( $order_details, 'items' ) ? $order_details->items : array();
 
 		if ( is_array( $items ) && count( $items ) ) {
+			$courses = array();
+			foreach ( $items as $key => $item ) {
+				// Handle bundle courses.
+				if ( tutor()->bundle_post_type === $item->type ) {
+
+					$courses_list = BundleModel::get_bundle_courses( $item->id );
+					$temp_courses = array();
+					foreach( $courses_list as $course ){
+						$course_price = tutor_utils()->get_raw_course_price( $course->ID );
+						$course_item  = array(
+							'course_id' => $course->ID,
+							'price'     => $course_price->regular_price	
+						);
+						if ( $item->sale_price ) {
+							$temp_courses[] = $course_item;
+						} else {
+							$courses[] = $course_item;
+						}
+					}
+
+					// Handle bundle course sale.
+					if ( $item->sale_price ) {
+						$final_course_price = $item->sale_price / count( $courses_list );
+						$remaining_amount   = 0;
+
+						usort(
+							$temp_courses,
+							function( $a, $b ) {
+								return $a['price'] - $b['price'];
+							}
+						);
+
+						foreach( $temp_courses as $course ) {
+							if ( $final_course_price > $course['price'] ) {
+								$remaining_amount = $final_course_price - $course['price'];
+							} else {
+								$course['price']  = $final_course_price + $remaining_amount;
+								$remaining_amount = 0;
+							}
+
+							$courses[] = $course;
+						}
+						
+					}
+
+					unset( $items[$key] );
+				}
+			}
+
+			if ( count( $courses ) ) {
+				foreach( $courses as $course ) {
+					$this->earning_data[] = $this->prepare_earning_data( $course['price'], $course['course_id'], $order_id, $order_details->order_status );
+				}
+			}
+
 			foreach ( $items as $item ) {
 				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
 				$course_id   = $item->id;

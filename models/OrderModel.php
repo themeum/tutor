@@ -912,6 +912,31 @@ class OrderModel {
 		} else {
 			$commission_query = 'COALESCE(MAX(o.refund_amount), 0)';
 		}
+
+		// refund for individual courses
+		if ( $course_id ) {
+			$order_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT order_id FROM {$wpdb->prefix}tutor_earnings
+					WHERE 1=1 AND order_status IN({$complete_status})
+					AND course_id = %d",
+					$course_id
+				)
+			);
+
+			$count_ids = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT COUNT(order_id) FROM {$wpdb->prefix}tutor_earnings
+					WHERE order_id = %d",
+					$order_id
+				)
+			);
+
+			if ( $count_ids ) {
+				$commission_query .= ' /' . $count_ids;
+			}
+		}
+
 		$earnings = $wpdb->get_results(
 			"SELECT SUM($amount_type) - {$commission_query} AS total,
 					DATE(e.created_at) AS date_format
@@ -928,7 +953,9 @@ class OrderModel {
 
 		$total_earnings = 0;
 		foreach ( $earnings as $earning ) {
-			$total_earnings += $earning->total;
+			if ( $earning->total > 0 ) {
+				$total_earnings += $earning->total;
+			}
 		}
 
 		return array(
