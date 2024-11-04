@@ -1,6 +1,6 @@
-import { convertToErrorMessage } from '@/v3/entries/course-builder/utils/utils';
 import { useToast } from '@Atoms/Toast';
 import { authApiInstance } from '@Utils/api';
+import { convertToErrorMessage } from '@Utils/util';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { PaginatedParams, PaginatedResult } from '@Utils/types';

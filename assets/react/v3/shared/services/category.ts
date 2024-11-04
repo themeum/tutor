@@ -1,9 +1,9 @@
-import { convertToErrorMessage } from '@/v3/entries/course-builder/utils/utils';
 import { useToast } from '@Atoms/Toast';
 import { wpAuthApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { convertToErrorMessage } from '@Utils/util';
 
 export interface Category {
   id: number;

@@ -5,9 +5,8 @@ import { authApiInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { PaginatedParams, PaginatedResult } from '@Utils/types';
-import { convertToGMT } from '@Utils/util';
+import { convertToErrorMessage, convertToGMT } from '@Utils/util';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { convertToErrorMessage } from '../../course-builder/utils/utils';
 
 export type CouponType = 'code' | 'automatic';
 

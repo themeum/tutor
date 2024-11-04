@@ -58,7 +58,7 @@ function Main() {
                 rules={requiredRule()}
                 render={(controllerProps) => <FormSelectCourse {...controllerProps} />}
               />
-              <Show when={tutorConfig.settings?.monetize_by === 'tutor'}>
+              <Show when={tutorConfig.settings?.monetize_by === 'tutor' && course?.is_purchasable}>
                 <Controller
                   name="payment_status"
                   control={form.control}
@@ -74,7 +74,7 @@ function Main() {
                 />
               </Show>
 
-              {isSubscriptionCourse && (
+              <Show when={isSubscriptionCourse}>
                 <Controller
                   name="subscription"
                   control={form.control}
@@ -88,7 +88,7 @@ function Main() {
                     />
                   )}
                 />
-              )}
+              </Show>
             </div>
             <div css={styles.right}>
               <div css={styles.studentsWrapper}>
