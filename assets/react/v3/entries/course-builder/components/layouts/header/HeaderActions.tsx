@@ -339,7 +339,6 @@ const HeaderActions = () => {
         }
       >
         <Button
-          size="small"
           variant="secondary"
           icon={<SVGIcon name="upload" width={24} height={24} />}
           loading={localPostStatus === 'draft' && updateCourseMutation.isPending}

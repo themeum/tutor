@@ -64,11 +64,11 @@ const videoSourcesSelectOptions = videoSourceOptions.filter((option) => option.v
 const videoSources = videoSourceOptions.map((item) => item.value);
 
 const placeholderMap = {
-  youtube: 'Paste YouTube Video URL',
-  vimeo: 'Paste Vimeo Video URL',
-  external_url: 'Paste External Video URL',
-  shortcode: 'Paste Video Shortcode',
-  embedded: 'Paste Embedded Video Code',
+  youtube: __('Paste YouTube Video URL', 'tutor'),
+  vimeo: __('Paste Vimeo Video URL', 'tutor'),
+  external_url: __('Paste External Video URL', 'tutor'),
+  shortcode: __('Paste Video Shortcode', 'tutor'),
+  embedded: __('Paste Embedded Video Code', 'tutor'),
 };
 
 const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<CourseVideo>) => {
