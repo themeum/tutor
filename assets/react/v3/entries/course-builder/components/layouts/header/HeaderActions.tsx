@@ -59,7 +59,7 @@ const HeaderActions = () => {
   const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
-  const isPendingAdminApproval = tutorConfig.settings?.enable_course_review_moderation === 'off';
+  const isAllowedToPublishCourse = tutorConfig.settings?.instructor_can_publish_course === 'on';
 
   const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -189,7 +189,7 @@ const HeaderActions = () => {
     let text: string;
     let action: PostStatus;
 
-    if (!isPendingAdminApproval && !isAdmin && isInstructor) {
+    if (!isAllowedToPublishCourse && !isAdmin && isInstructor) {
       text = __('Submit', 'tutor');
       action = 'pending';
     } else if (isScheduleEnabled) {
@@ -301,7 +301,7 @@ const HeaderActions = () => {
     if (courseId && postStatus !== 'draft') {
       items.pop();
 
-      if (isAdmin || isPendingAdminApproval) {
+      if (isAdmin || isAllowedToPublishCourse) {
         items.push(switchToDraftItem);
       }
     }
