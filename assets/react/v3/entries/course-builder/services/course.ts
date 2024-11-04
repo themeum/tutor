@@ -11,13 +11,13 @@ import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats } from '@Config/constants';
 import type { ID } from '@CourseBuilderServices/curriculum';
-import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { convertToGMT } from '@Utils/util';
+import { convertToErrorMessage, convertToGMT } from '@Utils/util';
 
 const currentUser = tutorConfig.current_user.data;
 

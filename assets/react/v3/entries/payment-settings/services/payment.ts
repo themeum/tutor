@@ -5,7 +5,7 @@ import endpoints from '@Utils/endpoints';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { Option } from '@Utils/types';
-import { convertToErrorMessage } from '../../course-builder/utils/utils';
+import { convertToErrorMessage } from '@Utils/util';
 
 export interface PaymentField {
   name: string;

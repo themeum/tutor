@@ -19,6 +19,8 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { DateFormats } from '@Config/constants';
 import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
+import { ErrorResponse } from './form';
+import { __ } from '@wordpress/i18n';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {
@@ -354,4 +356,12 @@ export const copyToClipboard = (text: string) => {
       }
     }
   });
+};
+
+export const convertToErrorMessage = (error: ErrorResponse) => {
+  let errorMessage = error.response.data.message;
+  if (error.response.data.status_code === 422 && error.response.data.data) {
+    errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
+  }
+  return errorMessage || __('Something went wrong', 'tutor');
 };

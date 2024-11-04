@@ -5,7 +5,6 @@ import { tutorConfig } from '@Config/config';
 import type { Addons } from '@Config/constants';
 import type { PostStatus } from '@CourseBuilderServices/course';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import type { ErrorResponse } from '@Utils/form';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
@@ -187,12 +186,4 @@ export const convertToSlug = (value: string) => {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '');
-};
-
-export const convertToErrorMessage = (error: ErrorResponse) => {
-  let errorMessage = error.response.data.message;
-  if (error.response.data.status_code === 422 && error.response.data.data && Array.isArray(error.response.data.data)) {
-    errorMessage = error.response.data.data[Object.keys(error.response.data.data)[0]];
-  }
-  return errorMessage || __('Something went wrong', 'tutor');
 };
