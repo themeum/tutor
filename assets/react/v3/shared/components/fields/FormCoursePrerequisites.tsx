@@ -295,7 +295,7 @@ const styles = {
   }) => css`
     ${styleUtils.resetButton};
     width: 100%;
-    cursor: pointer;
+    cursor: ${onPopover ? 'pointer' : 'default'};
     position: relative;
     padding: ${spacing[8]};
     border: 1px solid transparent;
@@ -304,11 +304,9 @@ const styles = {
     grid-template-columns: 76px 1fr;
     gap: ${spacing[10]};
     align-items: center;
-    transition: border 0.3s ease;
     background-color: ${colorTokens.background.white};
     [data-visually-hidden] {
       opacity: 0;
-      transition: opacity 0.3s ease-in-out;
     }
 
     &:hover {
@@ -319,7 +317,6 @@ const styles = {
         css`
           background-color: ${colorTokens.background.white};
           border-color: ${colorTokens.stroke.default};
-          cursor: default;
         `
       }
       
@@ -359,11 +356,9 @@ const styles = {
     height: 32px;
     border-radius: ${borderRadius.circle};
     background: ${colorTokens.background.white};
-    transition: opacity 0.3s ease-in-out;
 
     svg {
       color: ${colorTokens.icon.default};
-      transition: color 0.3s ease-in-out;
     }
 
     :hover {
