@@ -12,13 +12,6 @@ import config, { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-
 import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
   convertYouTubeDurationToSeconds,
@@ -26,6 +19,13 @@ import {
   getExternalVideoDuration,
   getVimeoVideoDuration,
 } from '@CourseBuilderUtils/utils';
+import { AnimationType } from '@Hooks/useAnimation';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
+
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -470,7 +470,7 @@ const FormVideoInput = ({
             <Controller
               control={form.control}
               name="videoSource"
-              rules={{ required: __('This field is required', 'tutor') }}
+              rules={{ ...requiredRule() }}
               render={(controllerProps) => {
                 return (
                   <FormSelectInput
@@ -487,7 +487,7 @@ const FormVideoInput = ({
               control={form.control}
               name="videoUrl"
               rules={{
-                required: __('This field is required', 'tutor'),
+                ...requiredRule(),
                 validate: validateVideoUrl,
               }}
               render={(controllerProps) => {
