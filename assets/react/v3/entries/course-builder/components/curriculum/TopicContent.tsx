@@ -250,7 +250,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                   <Show when={isAddonEnabled(Addons.QUIZ_EXPORT_IMPORT)}>
                     <button
                       type="button"
-                      css={styles.actionButton}
+                      css={styleUtils.actionButton}
                       onClick={() => {
                         exportQuizMutation.mutate(content.id);
                       }}
@@ -261,7 +261,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                 }
               >
                 <ProBadge size="tiny">
-                  <button type="button" css={styles.actionButton} disabled onClick={noop}>
+                  <button type="button" css={styleUtils.actionButton} disabled onClick={noop}>
                     <SVGIcon name="export" width={24} height={24} />
                   </button>
                 </ProBadge>
@@ -269,7 +269,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
             </Tooltip>
           </Show>
           <Tooltip content={__('Edit', 'tutor')} delay={200}>
-            <button ref={editButtonRef} type="button" css={styles.actionButton} onClick={handleShowModalOrPopover}>
+            <button ref={editButtonRef} type="button" css={styleUtils.actionButton} onClick={handleShowModalOrPopover}>
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
@@ -279,13 +279,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                 <Show
                   when={!isTutorPro}
                   fallback={
-                    <button type="button" css={styles.actionButton} onClick={handleDuplicate}>
+                    <button type="button" css={styleUtils.actionButton} onClick={handleDuplicate}>
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   }
                 >
                   <ProBadge size="tiny">
-                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                    <button disabled type="button" css={styleUtils.actionButton} onClick={noop}>
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   </ProBadge>
@@ -297,7 +297,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
             <button
               ref={deleteRef}
               type="button"
-              css={styles.actionButton}
+              css={styleUtils.actionButton}
               onClick={() => {
                 setIsDeletePopoverOpen(true);
               }}
@@ -465,15 +465,5 @@ const styles = {
     align-items: start;
     gap: ${spacing[8]};
     justify-content: end;
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    display: flex;
-
-    :disabled {
-      color: ${colorTokens.icon.disable.background};
-      cursor: not-allowed;
-    }
   `,
 };

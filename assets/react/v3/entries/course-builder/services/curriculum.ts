@@ -5,12 +5,16 @@ import type { AxiosResponse } from 'axios';
 import { useToast } from '@Atoms/Toast';
 import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
-import type { GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
+import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
+import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
+
+import { Addons } from '@Config/constants';
+import type { ContentDripType, GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
+import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
+import { convertToErrorMessage, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { convertToErrorMessage } from '../utils/utils';
-import type { H5PContentResponse } from './quiz';
 
 export type ID = string | number;
 
@@ -98,14 +102,14 @@ export interface LessonPayload {
   description: string;
   thumbnail_id: ID | null;
 
-  'video[source]': string;
-  'video[source_video_id]': ID;
-  'video[poster]': string;
-  'video[source_external_url]': string;
-  'video[source_shortcode]': string;
-  'video[source_youtube]': string;
-  'video[source_vimeo]': string;
-  'video[source_embedded]': string;
+  'video[source]'?: string;
+  'video[source_video_id]'?: ID;
+  'video[poster]'?: string;
+  'video[source_external_url]'?: string;
+  'video[source_shortcode]'?: string;
+  'video[source_youtube]'?: string;
+  'video[source_vimeo]'?: string;
+  'video[source_embedded]'?: string;
 
   'video[runtime][hours]': number;
   'video[runtime][minutes]': number;
@@ -160,6 +164,75 @@ export interface ZoomMeetingDetailsPayload {
   meeting_id: ID;
   topic_id: ID;
 }
+
+export const convertLessonDataToPayload = (
+  data: LessonForm,
+  lessonId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType,
+): LessonPayload => {
+  return {
+    ...(lessonId && { lesson_id: lessonId }),
+    topic_id: topicId,
+    title: data.title,
+    description: data.description,
+    thumbnail_id: data.thumbnail?.id ?? null,
+    ...(data.video?.source
+      ? Object.fromEntries(Object.entries(data.video).map(([key, value]) => [`video[${key}]`, value]))
+      : {}),
+    'video[runtime][hours]': data.duration.hour || 0,
+    'video[runtime][minutes]': data.duration.minute || 0,
+    'video[runtime][seconds]': data.duration.second || 0,
+    ...(isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW) && { _is_preview: data.lesson_preview ? 1 : 0 }),
+    tutor_attachments: (data.tutor_attachments || []).map((attachment) => attachment.id),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+      }),
+  };
+};
+
+export const convertAssignmentDataToPayload = (
+  data: AssignmentForm,
+  assignmentId: ID,
+  topicId: ID,
+  contentDripType: ContentDripType,
+): AssignmentPayload => {
+  return {
+    ...(assignmentId && { assignment_id: assignmentId }),
+    topic_id: topicId,
+    title: data.title,
+    summary: data.summary,
+    attachments: (data.attachments || []).map((attachment) => attachment.id),
+    'assignment_option[time_duration][time]': data.time_duration.time,
+    'assignment_option[time_duration][value]': data.time_duration.value,
+    'assignment_option[total_mark]': data.total_mark,
+    'assignment_option[pass_mark]': data.pass_mark,
+    'assignment_option[upload_files_limit]': data.upload_files_limit,
+    'assignment_option[upload_file_size_limit]': data.upload_file_size_limit,
+
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'unlock_by_date' && {
+        'content_drip_settings[unlock_date]': data.content_drip_settings.unlock_date || '',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'specific_days' && {
+        'content_drip_settings[after_xdays_of_enroll]': data.content_drip_settings.after_xdays_of_enroll || '0',
+      }),
+    ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
+      contentDripType === 'after_finishing_prerequisites' && {
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+      }),
+  };
+};
 
 const getCourseTopic = (courseId: ID) => {
   return authApiInstance.post<string, AxiosResponse<CourseTopic[]>>(endpoints.ADMIN_AJAX, {

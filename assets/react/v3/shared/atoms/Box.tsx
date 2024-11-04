@@ -58,11 +58,11 @@ const styles = {
 	wrapper: (bordered: boolean) => css`
 		background-color: ${colorTokens.background.white};
 		border-radius: ${borderRadius[8]};
-		padding: ${spacing[16]} ${spacing[20]} ${spacing[20]};
+		padding: ${spacing[12]} ${spacing[20]} ${spacing[20]};
 
 		${bordered &&
 		css`
-			border: 1px solid ${colorTokens.stroke.border};
+			border: 1px solid ${colorTokens.stroke.default};
 		`}
 	`,
 	title: (separator: boolean) => css`

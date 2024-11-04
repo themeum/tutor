@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@Atoms/Button';
 import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
+import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
 import EmptyState from '@Molecules/EmptyState';
 
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
@@ -26,7 +27,7 @@ import {
 
 import config, { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
+import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
@@ -66,26 +67,26 @@ const Additional = () => {
   });
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
-  const prerequisiteCourses = (courseDetails?.course_prerequisites || []).map((prerequisite) =>
+  const prerequisiteCourseIds = (courseDetails?.course_prerequisites || []).map((prerequisite) =>
     String(prerequisite.id),
   );
 
-  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery(
-    String(courseId) ? [String(courseId), ...prerequisiteCourses] : prerequisiteCourses,
-    !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
-  );
+  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery({
+    excludedIds: [String(courseId), ...prerequisiteCourseIds],
+    isEnabled: !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
+  });
 
   return (
     <div css={styles.wrapper}>
       <div css={styles.leftSide}>
         <CanvasHead title={__('Additional', 'tutor')} backUrl="/curriculum" />
         <div css={styles.formWrapper}>
-          <div css={styles.formSection}>
+          <Box bordered>
             <div css={styles.titleAndSub}>
-              <div css={styles.title}>{__('Overview', 'tutor')}</div>
-              <div css={styles.subtitle}>
+              <BoxTitle>{__('Overview', 'tutor')}</BoxTitle>
+              <BoxSubtitle>
                 {__('Provide essential course information to attract and inform potential students', 'tutor')}
-              </div>
+              </BoxSubtitle>
             </div>
             <div css={styles.fieldsWrapper}>
               <Controller
@@ -189,34 +190,33 @@ const Additional = () => {
                 )}
               />
             </div>
-          </div>
+          </Box>
 
-          <div css={styles.formSection}>
+          <Box bordered>
             <div css={styles.titleAndSub}>
-              <div css={styles.title}>
+              <BoxTitle>
                 {__('Certificate', 'tutor')}
                 <Show when={!isTutorPro}>
                   <ProBadge content={__('Pro', 'tutor')} />
                 </Show>
-              </div>
+              </BoxTitle>
               <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
-                <div css={styles.subtitle}>{__('Select a certificate to award your learners.', 'tutor')}</div>
+                <BoxSubtitle>{__('Select a certificate to award your learners.', 'tutor')}</BoxSubtitle>
               </Show>
-
-              <Certificate />
             </div>
-          </div>
+            <Certificate />
+          </Box>
         </div>
 
-        <Navigator styleModifier={styles.navigator} />
+        <Navigator />
       </div>
 
       <div css={styles.sidebar}>
         <div>
-          <span css={styles.label}>
+          <div css={styles.label}>
             {__('Course Prerequisites', 'tutor')}
             {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
-          </span>
+          </div>
           <Show when={isTutorPro && isPrerequisiteAddonEnabled} fallback={<CoursePrerequisitesEmptyState />}>
             <Controller
               name="course_prerequisites"
@@ -236,10 +236,10 @@ const Additional = () => {
           </Show>
         </div>
         <div>
-          <span css={styles.label}>
+          <div css={styles.label}>
             {__('Attachments', 'tutor')}
             {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
-          </span>
+          </div>
           <Show
             when={isTutorPro && isAddonEnabled(Addons.TUTOR_COURSE_ATTACHMENTS)}
             fallback={
@@ -301,40 +301,20 @@ const styles = {
     grid-template-columns: 1fr 338px;
   `,
   leftSide: css`
-    padding: ${spacing[24]} ${spacing[36]} ${spacing[24]} 0;
-		${styleUtils.display.flex('column')}
-		gap: ${spacing[32]};
+    padding: ${spacing[32]} ${spacing[32]} ${spacing[32]} 0;
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[32]};
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[24]};
   `,
-  formSection: css`
-		${styleUtils.display.flex('column')}
-		gap: ${spacing[20]};
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius.card};
-		background-color: ${colorTokens.background.white};
-		padding: ${spacing[12]} ${spacing[20]} ${spacing[20]} ${spacing[20]};
-	`,
   titleAndSub: css`
-		${styleUtils.display.flex('column')}
-		gap: ${spacing[4]};
-	`,
-  title: css`
-		${typography.body('medium')};
-    ${styleUtils.display.flex()}
-    align-items: center;
+    ${styleUtils.display.flex('column')}
     gap: ${spacing[4]};
-		color: ${colorTokens.text.primary};
-	`,
-  subtitle: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-	`,
+    margin-bottom: ${spacing[20]};
+  `,
   fieldsWrapper: css`
-    position: sticky;
-    top: 0;
     ${styleUtils.display.flex('column')}
     gap: ${spacing[24]};
   `,
@@ -349,49 +329,10 @@ const styles = {
   `,
   sidebar: css`
     ${styleUtils.display.flex('column')}
-    padding: ${spacing[24]} 0 ${spacing[24]} ${spacing[32]};
+    padding: ${spacing[32]} 0 ${spacing[32]} ${spacing[32]};
     border-left: 1px solid ${colorTokens.stroke.divider};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
     gap: ${spacing[16]};
-  `,
-  coursePrerequisite: css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[8]};
-  `,
-  courses: css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[8]};
-    max-height: 256px;
-    height: 100%;
-    overflow-y: auto;
-  `,
-  liveClass: css`
-    ${styleUtils.display.flex('column')}
-    gap: ${spacing[8]};
-  `,
-  navigator: css`
-    margin-block: ${spacing[40]};
-  `,
-  tabs: css`
-    position: relative;
-  `,
-  certificateWrapper: css`
-    ${styleUtils.display.flex()}
-    gap: ${spacing[16]};
-  `,
-  orientation: css`
-    ${styleUtils.display.flex()}
-    gap: ${spacing[8]};
-    position: absolute;
-    right: 0;
-    top: 0;
-  `,
-  activeOrientation: ({
-    isActive,
-  }: {
-    isActive: boolean;
-  }) => css`
-    color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
   `,
   label: css`
     ${styleUtils.display.inlineFlex()}

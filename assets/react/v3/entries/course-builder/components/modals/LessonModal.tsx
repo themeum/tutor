@@ -9,27 +9,28 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 
+import Tooltip from '@/v3/shared/atoms/Tooltip';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
+import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
 import FormWPEditor from '@Components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
-
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type ContentDripType, convertLessonDataToPayload } from '@CourseBuilderServices/course';
+import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   type ID,
+  convertLessonDataToPayload,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -80,6 +81,12 @@ const LessonModal = ({
 }: LessonModalProps) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isClassicEditorEnabled = tutorConfig.enable_lesson_classic_editor === '1';
+  const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
+  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+
+  const isWpEditorVisible = isAdmin || (isInstructor && hasWpAdminAccess && isClassicEditorEnabled);
+
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
   const queryClient = useQueryClient();
@@ -221,23 +228,40 @@ const LessonModal = ({
                       label={
                         <div css={styles.descriptionLabel}>
                           {__('Content', 'tutor')}
-                          {lessonId && isClassicEditorEnabled && (
-                            <Button
-                              variant="text"
-                              size="small"
-                              onClick={() => {
-                                window.open(
-                                  `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
-                                  '_blank',
-                                  'noopener',
-                                );
-                              }}
-                              icon={<SVGIcon name="edit" width={24} height={24} />}
-                              buttonCss={styles.wpEditorButton}
+                          <Show when={isClassicEditorEnabled && (isAdmin || (isInstructor && hasWpAdminAccess))}>
+                            <Show
+                              when={lessonId}
+                              fallback={
+                                <Tooltip content={__('Save the lesson first to use the WP Editor.', 'tutor')}>
+                                  <Button
+                                    variant="text"
+                                    size="small"
+                                    disabled
+                                    icon={<SVGIcon name="edit" width={24} height={24} />}
+                                    buttonCss={styles.wpEditorButton}
+                                  >
+                                    {__('WP Editor', 'tutor')}
+                                  </Button>
+                                </Tooltip>
+                              }
                             >
-                              {__('WP Editor', 'tutor')}
-                            </Button>
-                          )}
+                              <Button
+                                variant="text"
+                                size="small"
+                                onClick={() => {
+                                  window.open(
+                                    `${tutorConfig.home_url}/wp-admin/post-new.php?post_type=lesson`,
+                                    '_blank',
+                                    'noopener',
+                                  );
+                                }}
+                                icon={<SVGIcon name="edit" width={24} height={24} />}
+                                buttonCss={styles.wpEditorButton}
+                              >
+                                {__('WP Editor', 'tutor')}
+                              </Button>
+                            </Show>
+                          </Show>
                         </div>
                       }
                       placeholder={__('Enter Lesson Description', 'tutor')}
@@ -307,7 +331,7 @@ const LessonModal = ({
                 <FormImageInput
                   {...controllerProps}
                   label={__('Featured Image', 'tutor')}
-                  buttonText={__('Upload featured image', 'tutor')}
+                  buttonText={__('Upload Image', 'tutor')}
                   infoText={sprintf(
                     __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
                     tutorConfig.max_upload_size,
@@ -323,8 +347,8 @@ const LessonModal = ({
                   {...controllerProps}
                   label={__('Video', 'tutor')}
                   buttonText={__('Upload Video', 'tutor')}
-                  infoText={sprintf(__('MP4 format, up to %s', 'tutor'), tutorConfig.max_upload_size)}
-                  supportedFormats={['mp4']}
+                  infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
+                  supportedFormats={['mp4', 'webm']}
                   onGetDuration={(duration) => {
                     form.setValue('duration.hour', duration.hours);
                     form.setValue('duration.minute', duration.minutes);

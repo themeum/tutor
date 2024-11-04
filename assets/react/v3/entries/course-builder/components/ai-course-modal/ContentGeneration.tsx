@@ -32,6 +32,8 @@ import TitleSkeleton from './loaders/TitleSkeleton';
 import aiStudioError2x from '@Images/ai-studio-error-2x.webp';
 import aiStudioError from '@Images/ai-studio-error.webp';
 
+import ImageSkeleton from './loaders/ImageSkeleton';
+
 interface LoadingStep {
   loading_label: string;
   completed_label: string;
@@ -175,6 +177,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             </div>
 
             <div css={styles.leftContentWrapper}>
+              <Show when={!currentLoading.title} fallback={<ImageSkeleton />}>
+                <div css={styles.imageWrapper}>
+                  <img src={currentContent.featured_image} alt={currentContent.title} />
+                </div>
+              </Show>
+
               <Show when={!currentLoading.description} fallback={<DescriptionSkeleton />}>
                 <div css={styles.section}>
                   <h5>{__('Course Info', 'tutor')}</h5>

@@ -20,6 +20,7 @@ export interface Topic {
 export interface CourseContent {
   prompt: string;
   title: string;
+  featured_image: string;
   description: string;
   topics: Topic[];
   counts?: {
@@ -76,6 +77,7 @@ interface ContextType {
 export const defaultContent: CourseContent = {
   prompt: '',
   title: '',
+  featured_image: '',
   description: '',
   topics: [],
   time: 0,

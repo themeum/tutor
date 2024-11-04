@@ -106,7 +106,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
               <button
                 ref={triggerRef}
                 type="button"
-                css={styles.actionButton}
+                css={styleUtils.actionButton}
                 data-visually-hidden
                 onClick={() => setIsOpen(true)}
               >
@@ -114,7 +114,7 @@ const GoogleMeetMeetingCard = ({ data, topicId }: GoogleMeetMeetingCardProps) =>
               </button>
               <button
                 type="button"
-                css={styles.actionButton}
+                css={styleUtils.actionButton}
                 data-visually-hidden
                 onClick={() => {
                   setIsDeletePopoverOpen(true);
@@ -242,11 +242,5 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    display: flex;
-    cursor: pointer;
   `,
 };
