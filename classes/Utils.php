@@ -15,6 +15,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\CourseModel;
 use Tutor\Models\QuizModel;
 use Tutor\Traits\JsonResponse;
 
@@ -7317,6 +7318,7 @@ class Utils {
 	 * Get Course contents by Course ID
 	 *
 	 * @since 1.4.1
+	 * @since 3.0.0 filterable `post_type` and where clause support added.
 	 *
 	 * @param int $course_id course id.
 	 *
@@ -7331,23 +7333,36 @@ class Utils {
 
 		$contents = TutorCache::get( $cache_key );
 		if ( false === $contents ) {
+			$conditions = array(
+				$wpdb->prepare( 'topic.post_parent = %d', $course_id ),
+				$wpdb->prepare( 'items.post_status = %s', CourseModel::STATUS_PUBLISH ),
+			);
+
+			$default_post_types = array( tutor()->lesson_post_type, tutor()->quiz_post_type );
+			$content_post_types = array_unique( apply_filters( 'tutor_course_contents_post_types', $default_post_types ) );
+
+			if ( $this->count( $content_post_types ) ) {
+				$placeholders = implode( ', ', array_fill( 0, count( $content_post_types ), '%s' ) );
+				$conditions[] = $wpdb->prepare( "items.post_type IN ($placeholders)", ...$content_post_types );
+			}
+
+			$conditions   = apply_filters( 'tutor_course_contents_where_clause', $conditions, $course_id );
+			$where_clause = 'WHERE ' . implode( ' AND ', $conditions );
+
 			$contents = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT items.*
+				"SELECT items.*
 				FROM 	{$wpdb->posts} topic
 						INNER JOIN {$wpdb->posts} items
 								ON topic.ID = items.post_parent
-				WHERE 	topic.post_parent = %d
-						AND items.post_status = %s
+				{$where_clause}
 				ORDER BY topic.menu_order ASC,
 						items.menu_order ASC;
-				",
-					$course_id,
-					'publish'
-				)
+				"
 			);
+
 			TutorCache::set( $cache_key, $contents );
 		}
+
 		return $contents;
 	}
 
