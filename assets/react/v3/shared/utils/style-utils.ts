@@ -225,10 +225,12 @@ export const styleUtils = {
     align-items: center;
     flex-direction: row;
 
-    ${direction === 'column' &&
-    css`
+    ${
+      direction === 'column' &&
+      css`
       flex-direction: column;
-    `}
+    `
+    }
   `,
   boxReset: css`
     padding: 0;
@@ -357,7 +359,7 @@ export const styleUtils = {
   `,
   dateAndTimeWrapper: css`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 5.5fr 4.5fr;
     border-radius: ${borderRadius[6]};
 
     &:focus-within {
@@ -433,5 +435,26 @@ export const styleUtils = {
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+  `,
+  actionButton: css`
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    text-align: inherit;
+    color: ${colorTokens.icon.default};
+    display: flex;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+
+    :hover:not(:disabled) {
+      color: ${colorTokens.icon.brand};
+    }
+
+    :disabled {
+      color: ${colorTokens.icon.disable.background};
+      cursor: not-allowed;
+    }
   `,
 };

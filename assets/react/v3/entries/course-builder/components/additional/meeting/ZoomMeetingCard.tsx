@@ -123,7 +123,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
               <button
                 ref={triggerRef}
                 type="button"
-                css={styles.actionButton}
+                css={styleUtils.actionButton}
                 data-visually-hidden
                 onClick={() => {
                   setIsOpen(true);
@@ -133,7 +133,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
               </button>
               <button
                 type="button"
-                css={styles.actionButton}
+                css={styleUtils.actionButton}
                 data-visually-hidden
                 onClick={() => setIsDeletePopoverOpen(true)}
                 ref={deleteRef}
@@ -262,11 +262,5 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[8]};
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    display: flex;
-    cursor: pointer;
   `,
 };

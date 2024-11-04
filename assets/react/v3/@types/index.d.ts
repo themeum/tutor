@@ -39,6 +39,10 @@ declare global {
         label: string;
         value: string;
       }[];
+      supported_video_sources: {
+        label: string;
+        value: string;
+      }[];
       edd_products: {
         ID: string;
         post_title: string;

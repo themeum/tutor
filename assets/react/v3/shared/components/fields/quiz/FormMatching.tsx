@@ -148,7 +148,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
               <Tooltip content={__('Edit', 'tutor')} delay={200}>
                 <button
                   type="button"
-                  css={styles.actionButton}
+                  css={styleUtils.actionButton}
                   data-edit-button
                   onClick={(event) => {
                     event.stopPropagation();
@@ -164,7 +164,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                   fallback={
                     <button
                       type="button"
-                      css={styles.actionButton}
+                      css={styleUtils.actionButton}
                       onClick={(event) => {
                         event.stopPropagation();
                         onDuplicateOption(inputValue);
@@ -175,7 +175,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                   }
                 >
                   <ProBadge size="tiny">
-                    <button disabled type="button" css={styles.actionButton} onClick={noop}>
+                    <button disabled type="button" css={styleUtils.actionButton} onClick={noop}>
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   </ProBadge>
@@ -184,7 +184,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
               <Tooltip content={__('Delete', 'tutor')} delay={200}>
                 <button
                   type="button"
-                  css={styles.actionButton}
+                  css={styleUtils.actionButton}
                   data-visually-hidden
                   onClick={(event) => {
                     event.stopPropagation();

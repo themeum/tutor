@@ -1,11 +1,11 @@
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
-import type { ErrorResponse } from '@/v3/shared/utils/form';
 import { tutorConfig } from '@Config/config';
 import type { Addons } from '@Config/constants';
+import type { PostStatus } from '@CourseBuilderServices/course';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import type { PostStatus } from '../services/course';
+import type { ErrorResponse } from '@Utils/form';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);

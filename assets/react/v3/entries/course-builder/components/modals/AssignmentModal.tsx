@@ -23,10 +23,11 @@ import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type ContentDripType, convertAssignmentDataToPayload } from '@CourseBuilderServices/course';
+import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   type ID,
+  convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -266,7 +267,7 @@ const AssignmentModal = ({
                           {__('Available after days', 'tutor')}
                         </div>
                       }
-                      helpText={__('This lesson will be available after the given number of days.', 'tutor')}
+                      helpText={__('This assignment will be available after the given number of days.', 'tutor')}
                       placeholder="0"
                       selectOnFocus
                     />
@@ -289,7 +290,7 @@ const AssignmentModal = ({
                       }
                       placeholder={__('Select Unlock Date', 'tutor')}
                       helpText={__(
-                        'This lesson will be available from the given date. Leave empty to make it available immediately.',
+                        'This assignment will be available from the given date. Leave empty to make it available immediately.',
                         'tutor',
                       )}
                     />
