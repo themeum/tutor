@@ -75,7 +75,7 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 	<?php } else { ?>
 	<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
 		<span class="tutor-icon-cart-line tutor-mr-8"></span>
-		<span><?php esc_html_e( 'Add to cart', 'tutor' ); ?></span>
+		<span><?php esc_html_e( 'Add to Cart', 'tutor' ); ?></span>
 	</button>
 		<?php
 	}
