@@ -27,7 +27,7 @@ import {
 } from '@CourseBuilderServices/course';
 import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { convertToGMT, noop } from '@Utils/util';
 
 import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
 import reviewSubmitted from '@Images/review-submitted.webp';
@@ -125,7 +125,7 @@ const HeaderActions = () => {
         (determinedPostStatus === 'publish' && isBefore(new Date(), new Date(courseDetails?.post_date ?? postDate)))
           ? {
               post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
-              post_date_gmt: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+              post_date_gmt: convertToGMT(new Date()),
             }
           : {}),
       });
@@ -199,7 +199,11 @@ const HeaderActions = () => {
           ? __('Schedule', 'tutor')
           : __('Update', 'tutor');
       action = 'future';
-    } else if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
+    } else if (
+      !courseId ||
+      postStatus === 'pending' ||
+      (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))
+    ) {
       text = __('Publish', 'tutor');
       action = 'publish';
     } else {
