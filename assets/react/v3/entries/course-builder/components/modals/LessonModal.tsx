@@ -80,6 +80,7 @@ const LessonModal = ({
   contentDripType,
 }: LessonModalProps) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const isClassicEditorEnabled = tutorConfig.enable_lesson_classic_editor === '1';
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
@@ -212,7 +213,7 @@ const LessonModal = ({
                     {...controllerProps}
                     label={__('Name', 'tutor')}
                     placeholder={__('Enter Lesson Name', 'tutor')}
-                    helpText={__('Lesson names are displayed publicly wherever required.', 'tutor')}
+                    generateWithAi={!isTutorPro || isOpenAiEnabled}
                     selectOnFocus
                     isClearable
                   />
@@ -229,24 +230,10 @@ const LessonModal = ({
                         <div css={styles.descriptionLabel}>
                           {__('Content', 'tutor')}
                           <Show when={isWpEditorVisible}>
-                            <Show
-                              when={lessonId}
-                              fallback={
-                                <Tooltip
-                                  content={__('Save the lesson first to use the WP Editor.', 'tutor')}
-                                  delay={200}
-                                >
-                                  <Button
-                                    variant="text"
-                                    size="small"
-                                    disabled
-                                    icon={<SVGIcon name="edit" width={24} height={24} />}
-                                    buttonCss={styles.wpEditorButton}
-                                  >
-                                    {__('WP Editor', 'tutor')}
-                                  </Button>
-                                </Tooltip>
-                              }
+                            <Tooltip
+                              content={__('Save the lesson first to use the WP Editor.', 'tutor')}
+                              delay={200}
+                              disabled={!!lessonId}
                             >
                               <Button
                                 variant="text"
@@ -260,15 +247,16 @@ const LessonModal = ({
                                 }}
                                 icon={<SVGIcon name="edit" width={24} height={24} />}
                                 buttonCss={styles.wpEditorButton}
+                                disabled={!lessonId}
                               >
                                 {__('WP Editor', 'tutor')}
                               </Button>
-                            </Show>
+                            </Tooltip>
                           </Show>
                         </div>
                       }
                       placeholder={__('Enter Lesson Description', 'tutor')}
-                      helpText={__('Create engaging lessons by combining text, images, audio, and links.', 'tutor')}
+                      generateWithAi={!isTutorPro || isOpenAiEnabled}
                     />
                   )}
                 />
@@ -571,11 +559,7 @@ const styles = {
     justify-content: space-between;
     height: 32px;
   `,
-  addH5PContentWrapper: ({
-    hasLessonId,
-  }: {
-    hasLessonId: boolean;
-  }) => css`
+  addH5PContentWrapper: ({ hasLessonId }: { hasLessonId: boolean }) => css`
     position: absolute;
     top: ${hasLessonId ? '36px' : '28px'};
     left: 110px;
@@ -668,14 +652,14 @@ const styles = {
     margin-top: ${spacing[12]};
   `,
   wpEditorButton: css`
-    margin-left: ${spacing[16]};
+    margin-left: ${spacing[4]};
     color: ${colorTokens.text.brand};
 
     svg {
       color: ${colorTokens.icon.brand};
     }
 
-    &:hover {      
+    &:hover {
       text-decoration: underline;
       color: ${colorTokens.text.brand};
     }
