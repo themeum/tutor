@@ -92,15 +92,16 @@ const CourseBasic = () => {
               <FormWPEditor
                 {...controllerProps}
                 label={__('Description', 'tutor')}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                 generateWithAi={!isTutorPro || isOpenAiEnabled}
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
                 editors={courseDetails?.editors}
                 onCustomEditorButtonClick={async () => {
-                  form.handleSubmit(async (data) => {
+                  return form.handleSubmit(async (data) => {
                     const payload = convertCourseDataToPayload(data);
 
-                    await updateCourseMutation.mutateAsync({
+                    return updateCourseMutation.mutateAsync({
                       course_id: courseId,
                       ...payload,
                       post_status: determinePostStatus(

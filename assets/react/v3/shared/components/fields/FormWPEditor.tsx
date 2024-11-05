@@ -2,9 +2,10 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { rgba } from 'polished';
 import type React from 'react';
+import { useState } from 'react';
 
 import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 import WPEditor from '@Atoms/WPEditor';
@@ -53,7 +54,6 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
 }
 
 interface CustomEditorOverlayProps {
-  loading: boolean;
   editorUsed: Editor;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
 }
@@ -67,35 +67,37 @@ const customEditorIcons: { [key: string]: IconCollection } = {
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
 
-const CustomEditorOverlay = ({ loading, editorUsed, onCustomEditorButtonClick }: CustomEditorOverlayProps) => {
+const CustomEditorOverlay = ({ editorUsed, onCustomEditorButtonClick }: CustomEditorOverlayProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
-    <div css={styles.editorOverlay(!loading)}>
-      {loading ? (
-        <LoadingOverlay />
-      ) : (
-        <Button
-          variant="tertiary"
-          size="small"
-          buttonCss={styles.editWithButton}
-          icon={
-            customEditorIcons[editorUsed.name] && (
-              <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
-            )
-          }
-          onClick={async () => {
-            if (editorUsed) {
-              try {
-                await onCustomEditorButtonClick?.(editorUsed);
-                window.location.href = editorUsed.link;
-              } catch (error) {
-                console.error(error);
-              }
+    <div css={styles.editorOverlay}>
+      <Button
+        variant="tertiary"
+        size="small"
+        buttonCss={styles.editWithButton}
+        loading={isLoading}
+        icon={
+          customEditorIcons[editorUsed.name] && (
+            <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
+          )
+        }
+        onClick={async () => {
+          if (editorUsed) {
+            try {
+              setIsLoading(true);
+              await onCustomEditorButtonClick?.(editorUsed);
+              window.location.href = editorUsed.link;
+            } catch (error) {
+              console.error(error);
+            } finally {
+              setIsLoading(false);
             }
-          }}
-        >
-          {editorUsed?.label}
-        </Button>
-      )}
+          }
+        }}
+      >
+        {editorUsed?.label}
+      </Button>
     </div>
   );
 };
@@ -260,16 +262,20 @@ const FormWPEditor = ({
       replaceEntireLabel={hasAvailableCustomEditors}
     >
       {() => {
+        if (loading) {
+          return (
+            <div css={styleUtils.flexCenter()}>
+              <LoadingSpinner size={20} color={colorTokens.icon.default} />
+            </div>
+          );
+        }
+
         return (
           <Show when={hasCustomEditorSupport} fallback={editor}>
             <Show
-              when={editorUsed.name === 'classic' && !loading}
+              when={editorUsed.name === 'classic'}
               fallback={
-                <CustomEditorOverlay
-                  loading={loading || false}
-                  editorUsed={editorUsed}
-                  onCustomEditorButtonClick={onCustomEditorButtonClick}
-                />
+                <CustomEditorOverlay editorUsed={editorUsed} onCustomEditorButtonClick={onCustomEditorButtonClick} />
               }
             >
               {editor}
@@ -317,10 +323,10 @@ const styles = {
     display: flex;
     align-items: center;
   `,
-  editorOverlay: (isLoading: boolean) => css`
-    height: 360px;
+  editorOverlay: css`
+    height: 300px;
     ${styleUtils.flexCenter()};
-    background-color: ${isLoading ? rgba(colorTokens.background.modal, 0.6) : 'transparent'};
+    background-color: ${rgba(colorTokens.background.modal, 0.6)};
     border-radius: ${borderRadius.card};
   `,
   editWithButton: css`
