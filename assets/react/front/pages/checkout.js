@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const url = new URL(window.location.href);
                 const plan = url.searchParams.get('plan');
                 const couponCode = document.querySelector(".tutor-apply-coupon-form input")?.value;
-                const applyCouponButton = document.querySelector(".tutor-apply-coupon-form button")
+                const applyCouponButton = document.querySelector(".tutor-apply-coupon-form button");
 
                 if (couponCode.length === 0) {
                     tutor_toast(__('Failed', 'tutor'), __('Please add a coupon code.', 'tutor'), 'error');
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const dropdown_billing_country = document.querySelector('[name=billing_country]');
         const dropdown_billing_state = document.querySelector('[name=billing_state]');
         const input_coupon_code = document.querySelector('[name=coupon_code]');
-        const spinner = '<span class="tutor-btn is-loading tutor-checkout-spinner"></span>'
+        const spinner = '<span class="tutor-btn is-loading tutor-checkout-spinner"></span>';
 
         async function saveBilling(formData) {
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
@@ -176,8 +176,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const toggleSpinner = (target, visibility) => {
             if ('show' === visibility) {
-                target?.setAttribute('disabled', 'disabled')
-                target?.closest('.tutor-position-relative')?.insertAdjacentHTML('beforeend', spinner)
+                target?.setAttribute('disabled', 'disabled');
+                target?.closest('.tutor-position-relative')?.insertAdjacentHTML('beforeend', spinner);
             } else {
                 target?.removeAttribute('disabled')
                 target?.closest('.tutor-position-relative')?.querySelector('.tutor-checkout-spinner')?.remove();
