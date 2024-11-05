@@ -98,7 +98,7 @@ class Earnings extends Singleton {
 							'course_id' => $course->ID,
 							'price'     => $course_price->regular_price,
 						);
-						if ( floatval( $item->sale_price ) >= 0 || floatval( $item->discount_price ) >= 0 ) {
+						if ( $item->sale_price || $item->discount_price ) {
 							$temp_courses[] = $course_item;
 						} else {
 							$courses[] = $course_item;
@@ -106,14 +106,14 @@ class Earnings extends Singleton {
 					}
 
 					// Handle bundle course sale.
-					if ( floatval( $item->sale_price ) >= 0 || floatval( $item->discount_price ) >= 0 ) {
+					if (  $item->sale_price ||  $item->discount_price ) {
 						$final_course_price = 0;
 
-						if ( floatval( $item->sale_price ) >= 0 ) {
+						if ( $item->sale_price  ) {
 							$final_course_price = $item->sale_price / count( $courses_list );
 						}
 
-						if ( floatval( $item->discount_price ) >= 0 ) {
+						if (  $item->discount_price ) {
 							$final_course_price = $item->discount_price / count( $courses_list );
 						}
 
@@ -150,7 +150,7 @@ class Earnings extends Singleton {
 
 			foreach ( $items as $item ) {
 				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
-				$total_price = floatval( $item->discount_price ) >= 0 ? floatval( $item->discount_price ) : $total_price;
+				$total_price = $item->discount_price ? $item->discount_price : $total_price;
 				$course_id   = $item->id;
 
 				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {

@@ -270,11 +270,11 @@ class OrderController {
 			if ( $plan && $plan->enrollment_fee > 0 ) {
 				$insert_order_data_item[0]['regular_price'] += $plan->enrollment_fee;
 
-				if ( floatval( $insert_order_data_item[0]['sale_price'] ) >= 0 ) {
+				if ( $insert_order_data_item[0]['sale_price'] ) {
 					$insert_order_data_item[0]['sale_price'] += $plan->enrollment_fee;
 				}
 
-				if ( floatval( $insert_order_data_item[0]['discount_price'] ) >= 0 ) {
+				if ( $insert_order_data_item[0]['discount_price'] ) {
 					$insert_order_data_item[0]['discount_price'] += $plan->enrollment_fee;
 				}
 			}
