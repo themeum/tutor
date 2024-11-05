@@ -1,11 +1,25 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Controller,
+  type ControllerFieldState,
+  type ControllerRenderProps,
+  type FieldValues,
+  type Path,
+} from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
+import Popover from '@Molecules/Popover';
+
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { OptionList } from '@Components/magic-ai-content/OptionList';
 import { PromptControls } from '@Components/magic-ai-content/PromptControls';
 import SkeletonLoader from '@Components/magic-ai-content/SkeletonLoader';
 import { inspirationPrompts } from '@Components/magic-ai-image/ImageContext';
+
 import { type ChatFormat, type ChatLanguage, type ChatTone, languageOptions, toneOptions } from '@Config/magic-ai';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -17,18 +31,9 @@ import {
 } from '@CourseBuilderServices/magic-ai';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Controller,
-  type ControllerFieldState,
-  type ControllerRenderProps,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form';
+import { copyToClipboard } from '@Utils/util';
+
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
 
@@ -225,7 +230,7 @@ const AITextModal = <T extends FieldValues>({
                         return;
                       }
                       const currentContent = content[pointer];
-                      await navigator.clipboard.writeText(currentContent);
+                      await copyToClipboard(currentContent);
                       setIsCopied(true);
                       setTimeout(() => {
                         setIsCopied(false);
