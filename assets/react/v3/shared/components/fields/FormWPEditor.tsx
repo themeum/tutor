@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { rgba } from 'polished';
 import type React from 'react';
 
@@ -139,15 +139,13 @@ const FormWPEditor = ({
       showModal({
         component: ProIdentifierModal,
         props: {
-          title: (
-            <>
-              {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-              <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-            </>
+          title: sprintf(
+            __('Upgrade to Tutor LMS Pro today and experience the power of %s', 'tutor'),
+            <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')}</span>,
           ),
+          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
           image: generateText,
           image2x: generateText2x,
-          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
           features: [
             __('Generate a complete course outline in seconds!', 'tutor'),
             __('Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.', 'tutor'),
@@ -179,6 +177,7 @@ const FormWPEditor = ({
         props: {
           title: __('AI Studio', 'tutor'),
           icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+          characters: 1000,
           field,
           fieldState,
           is_html: true,

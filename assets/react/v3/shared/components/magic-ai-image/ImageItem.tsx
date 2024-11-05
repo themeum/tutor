@@ -17,7 +17,7 @@ import { type DropdownState, useMagicImageGeneration } from './ImageContext';
 
 const options: Option<DropdownState>[] = [
   {
-    label: __('Magic fill', 'tutor'),
+    label: __('Magic Fill', 'tutor'),
     value: 'magic-fill',
     icon: <SVGIcon name="magicWand" width={24} height={24} />,
   },
@@ -76,7 +76,7 @@ export const AiImageItem = ({ src, loading, index }: { src: string | null; loadi
               loading={storeAIGeneratedImageMutation.isPending}
             >
               <SVGIcon name="download" width={24} height={24} />
-              {__('Use this', 'tutor')}
+              {__('Use This', 'tutor')}
             </MagicButton>
           </div>
           <MagicButton variant="primary" size="icon" css={styles.threeDots} ref={ref} onClick={() => setIsOpen(true)}>

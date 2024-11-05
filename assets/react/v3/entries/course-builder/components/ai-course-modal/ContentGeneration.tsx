@@ -402,7 +402,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                             }}
                           >
                             <SVGIcon name="magicWand" width={24} height={24} />
-                            {__('Generate a new course', 'tutor')}
+                            {__('Generate a New Course', 'tutor')}
                           </MagicButton>
                         </Show>
 
@@ -418,7 +418,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                           }}
                         >
                           <SVGIcon name="tryAgain" width={24} height={24} />
-                          {__('Regenerate course', 'tutor')}
+                          {__('Regenerate Course', 'tutor')}
                         </MagicButton>
                       </div>
                     </div>
@@ -499,7 +499,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                     </MagicButton>
                     <MagicButton type="submit" disabled={isLoading || !promptValue}>
                       <SVGIcon name="magicWand" width={24} height={24} />
-                      {__('Generate now', 'tutor')}
+                      {__('Generate Now', 'tutor')}
                     </MagicButton>
                   </div>
                 </form>
@@ -528,7 +528,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 showToast({ type: 'success', message: __('Course content stored into a local file.', 'tutor') });
               }}
             >
-              {__('Append the course', 'tutor')}
+              {__('Append the Course', 'tutor')}
             </MagicButton>
           </div>
         </div>

@@ -226,7 +226,7 @@ const MagicFill = () => {
             control={form.control}
             name="brush_size"
             render={(props) => (
-              <FormRangeSliderField {...props} label="Brush size" min={1} max={100} isMagicAi hasBorder />
+              <FormRangeSliderField {...props} label="Brush Size" min={1} max={100} isMagicAi hasBorder />
             )}
           />
           <Controller
@@ -235,7 +235,7 @@ const MagicFill = () => {
             render={(props) => (
               <FormTextareaInput
                 {...props}
-                label={__('Describe the fill', 'tutor')}
+                label={__('Describe the Fill', 'tutor')}
                 placeholder={__('Write 5 words to describe...', 'tutor')}
                 rows={4}
                 isMagicAi
@@ -247,7 +247,7 @@ const MagicFill = () => {
           <div css={styles.footerButtons}>
             <MagicButton type="submit" disabled={magicFillImageMutation.isPending || !form.watch('prompt')}>
               <SVGIcon name="magicWand" width={24} height={24} />
-              {__('Generative erase', 'tutor')}
+              {__('Generative Erase', 'tutor')}
             </MagicButton>
             <MagicButton
               variant="primary_outline"
