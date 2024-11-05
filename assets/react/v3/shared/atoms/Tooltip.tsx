@@ -15,12 +15,23 @@ interface TooltipProps {
   placement?: Placement;
   hideOnClick?: boolean;
   delay?: number;
+  disabled?: boolean;
 }
 
 const initialStyles = { opacity: 0, transform: 'scale(0.8)' };
 const config = { tension: 300, friction: 15 };
 
-const Tooltip = ({ children, content, allowHTML, placement = 'top', hideOnClick, delay = 0 }: TooltipProps) => {
+const Tooltip = ({
+  children,
+  content,
+  allowHTML,
+  placement = 'top',
+  hideOnClick,
+  delay = 0,
+  disabled = false,
+}: TooltipProps) => {
+  if (disabled) return children;
+
   const [props, setSpring] = useSpring(() => initialStyles);
 
   const onMount = () => {
@@ -30,6 +41,7 @@ const Tooltip = ({ children, content, allowHTML, placement = 'top', hideOnClick,
       config,
     });
   };
+
   const onHide = ({ unmount }: AnyObject) => {
     setSpring.start({
       ...initialStyles,
@@ -37,6 +49,7 @@ const Tooltip = ({ children, content, allowHTML, placement = 'top', hideOnClick,
       config: { ...config, clamp: true },
     });
   };
+
   return (
     <Tippy
       render={(attributes) => {
@@ -83,36 +96,30 @@ const styles = {
       left: 50%;
       transform: translateX(-50%) rotate(45deg);
 
-      ${
-        placement === 'right' &&
-        css`
+      ${placement === 'right' &&
+      css`
         bottom: auto;
         left: -4px;
         top: 50%;
         transform: translateY(-50%) rotate(45deg);
-      `
-      }
+      `}
 
-      ${
-        placement === 'bottom' &&
-        css`
+      ${placement === 'bottom' &&
+      css`
         bottom: auto;
         top: -4px;
         left: 50%;
         transform: translateX(-50%) rotate(45deg);
-      `
-      }
+      `}
 
-      ${
-        placement === 'left' &&
-        css`
+      ${placement === 'left' &&
+      css`
         bottom: auto;
         top: 50%;
         left: auto;
         right: -4px;
         transform: translateY(-50%) rotate(45deg);
-      `
-      }
+      `}
     }
   `,
 };

@@ -92,7 +92,6 @@ const CourseBasic = () => {
               <FormWPEditor
                 {...controllerProps}
                 label={__('Description', 'tutor')}
-                isMagicAi
                 generateWithAi={!isTutorPro || isOpenAiEnabled}
                 hasCustomEditorSupport
                 editorUsed={courseDetails?.editor_used}
