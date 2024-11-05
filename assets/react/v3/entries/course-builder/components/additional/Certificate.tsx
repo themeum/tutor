@@ -62,17 +62,18 @@ const Certificate = () => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (!currentCertificateKey) {
+    if (currentCertificateKey === 'none') {
+      setSelectedCertificate(currentCertificateKey);
       return;
     }
 
-    const newCertificate = certificatesData.find((certificate) => certificate.key === currentCertificateKey);
+    const newCertificate = certificatesData.find((certificate) => certificate.key === (currentCertificateKey || 'default'));
     if (newCertificate) {
       if (activeOrientation !== newCertificate.orientation) {
         setActiveOrientation(newCertificate.orientation);
       }
       setActiveCertificateTab(newCertificate.is_default ? 'templates' : 'custom_certificates');
-      setSelectedCertificate(currentCertificateKey);
+      setSelectedCertificate(newCertificate.key);
     }
   }, [currentCertificateKey, certificatesData]);
 
@@ -172,7 +173,7 @@ const Certificate = () => {
               selectedCertificate={selectedCertificate}
               onSelectCertificate={handleCertificateSelection}
               data={{
-                key: '',
+                key: 'none',
                 name: __('None', 'tutor'),
                 preview_src: '',
                 background_src: '',
