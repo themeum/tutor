@@ -106,7 +106,7 @@ declare global {
         chatgpt_key_exist: boolean;
         hide_admin_bar_for_users: 'on' | 'off';
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
-        enable_course_review_moderation: 'on' | 'off';
+        instructor_can_publish_course: 'on' | 'off';
       };
       tutor_currency: {
         symbol: string;
