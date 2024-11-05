@@ -260,9 +260,31 @@ class OrderController {
 		// Update data with arguments.
 		$order_data = apply_filters( 'tutor_before_order_create', array_merge( $order_data, $args ) );
 
+		$insert_order_data = $order_data;
+
+		$insert_order_data_item = $insert_order_data['items'];
+
+		if ( $this->model::TYPE_SUBSCRIPTION === $order_type ) {
+			$plan = apply_filters( 'tutor_checkout_plan_info', null, $insert_order_data_item[0]['item_id'] );
+
+			if ( $plan && $plan->enrollment_fee > 0 ) {
+				$insert_order_data_item[0]['regular_price'] += $plan->enrollment_fee;
+
+				if ( floatval( $insert_order_data_item[0]['sale_price'] ) >= 0 ) {
+					$insert_order_data_item[0]['sale_price'] += $plan->enrollment_fee;
+				}
+
+				if ( floatval( $insert_order_data_item[0]['discount_price'] ) >= 0 ) {
+					$insert_order_data_item[0]['discount_price'] += $plan->enrollment_fee;
+				}
+			}
+		}
+
+		$insert_order_data['items'] = $insert_order_data_item;
+
 		try {
-			do_action( 'tutor_before_order_create', $order_data );
-			$order_id = $this->model->create_order( $order_data );
+			do_action( 'tutor_before_order_create', $insert_order_data );
+			$order_id = $this->model->create_order( $insert_order_data );
 			if ( $order_id ) {
 				$order_data['id'] = $order_id;
 				do_action( 'tutor_order_placed', $order_data );
@@ -1061,6 +1083,30 @@ class OrderController {
 		$course_id  = (int) $course_id;
 
 		return $this->model->get_refunds_by_user( $user_id, $period, $start_date, $end_date, $course_id );
+	}
+
+	/**
+	 * Filter discount data if monetization is Tutor
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id Current user id.
+	 * @param string $period  Period for filter refund data.
+	 * @param string $start_date Filter start date.
+	 * @param string $end_date Filter end date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_discount_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
+		// Sanitize params.
+		$user_id    = (int) $user_id ? $user_id : get_current_user_id();
+		$period     = Input::sanitize( $period );
+		$start_date = Input::sanitize( $start_date );
+		$end_date   = Input::sanitize( $end_date );
+		$course_id  = (int) $course_id;
+
+		return $this->model->get_discounts_by_user( $user_id, $period, $start_date, $end_date, $course_id );
 	}
 
 	/**

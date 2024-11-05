@@ -92,13 +92,13 @@ class Earnings extends Singleton {
 
 					$courses_list = BundleModel::get_bundle_courses( $item->id );
 					$temp_courses = array();
-					foreach( $courses_list as $course ){
+					foreach ( $courses_list as $course ) {
 						$course_price = tutor_utils()->get_raw_course_price( $course->ID );
 						$course_item  = array(
 							'course_id' => $course->ID,
-							'price'     => $course_price->regular_price	
+							'price'     => $course_price->regular_price,
 						);
-						if ( $item->sale_price ) {
+						if ( floatval( $item->sale_price ) >= 0 || floatval( $item->discount_price ) >= 0 ) {
 							$temp_courses[] = $course_item;
 						} else {
 							$courses[] = $course_item;
@@ -106,18 +106,27 @@ class Earnings extends Singleton {
 					}
 
 					// Handle bundle course sale.
-					if ( $item->sale_price ) {
-						$final_course_price = $item->sale_price / count( $courses_list );
-						$remaining_amount   = 0;
+					if ( floatval( $item->sale_price ) >= 0 || floatval( $item->discount_price ) >= 0 ) {
+						$final_course_price = 0;
+
+						if ( floatval( $item->sale_price ) >= 0 ) {
+							$final_course_price = $item->sale_price / count( $courses_list );
+						}
+
+						if ( floatval( $item->discount_price ) >= 0 ) {
+							$final_course_price = $item->discount_price / count( $courses_list );
+						}
+
+						$remaining_amount = 0;
 
 						usort(
 							$temp_courses,
-							function( $a, $b ) {
+							function ( $a, $b ) {
 								return $a['price'] - $b['price'];
 							}
 						);
 
-						foreach( $temp_courses as $course ) {
+						foreach ( $temp_courses as $course ) {
 							if ( $final_course_price > $course['price'] ) {
 								$remaining_amount = $final_course_price - $course['price'];
 							} else {
@@ -127,21 +136,21 @@ class Earnings extends Singleton {
 
 							$courses[] = $course;
 						}
-						
 					}
 
-					unset( $items[$key] );
+					unset( $items[ $key ] );
 				}
 			}
 
 			if ( count( $courses ) ) {
-				foreach( $courses as $course ) {
+				foreach ( $courses as $course ) {
 					$this->earning_data[] = $this->prepare_earning_data( $course['price'], $course['course_id'], $order_id, $order_details->order_status );
 				}
 			}
 
 			foreach ( $items as $item ) {
 				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
+				$total_price = floatval( $item->discount_price ) >= 0 ? floatval( $item->discount_price ) : $total_price;
 				$course_id   = $item->id;
 
 				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
@@ -357,5 +366,4 @@ class Earnings extends Singleton {
 
 		return $this->store_earnings();
 	}
-
 }

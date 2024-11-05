@@ -835,6 +835,126 @@ class OrderModel {
 		return $response;
 	}
 
+	/**
+	 * Get total discounts by user_id (instructor), optionally can set period ( today | monthly| yearly )
+	 *
+	 * Optionally can set start date & end date to get enrollment list from date range
+	 *
+	 * If period or date range not pass then it will return all time enrollment list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id User id, if user not have admin access
+	 * then only this user's refund amount will fetched.
+	 * @param string $period Time period.
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_discounts_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = 0 ): array {
+		$response = array(
+			'discounts'       => array(),
+			'total_discounts' => 0,
+		);
+
+		global $wpdb;
+
+		$user_clause       = '';
+		$date_range_clause = '';
+		$period_clause     = '';
+		$course_clause     = '';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = $wpdb->prepare(
+				'AND o.created_at_gmt BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
+			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		} else {
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( 'today' !== $period ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+		}
+
+		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+		}
+
+		$item_table = $wpdb->prefix . 'tutor_order_items';
+
+		// Subscription discounts.
+		$discounts = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+				MAX(o.coupon_amount) as total,
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				LEFT JOIN {$wpdb->prefix}tutor_subscription_plan_items AS s ON s.plan_id = i.item_id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = s.object_id
+				WHERE 1 = %d AND o.coupon_amount > 0
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$course_clause}
+				{$group_clause},o.id",
+				1
+			)
+		);
+
+		if ( $discounts ) {
+			$total_discount = 0;
+
+			foreach ( $discounts as $discount ) {
+				$total_discount += $discount->total;
+			}
+
+			$response = array(
+				'discounts'       => $discounts,
+				'total_discounts' => $total_discount,
+			);
+
+			return $response;
+		}
+
+		$discounts = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+				MAX(o.coupon_amount) as total,
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				WHERE 1 = %d AND o.coupon_amount > 0
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$course_clause}
+				{$group_clause},o.id",
+				1
+			)
+		);
+
+		$total_discount = 0;
+
+		foreach ( $discounts as $discount ) {
+			$total_discount += $discount->total;
+		}
+
+		$response = array(
+			'discounts'       => $discounts,
+			'total_discounts' => $total_discount,
+		);
+
+		return $response;
+	}
 
 	/**
 	 * Get earning by user_id, optionally can set period ( today | monthly| yearly )
@@ -862,10 +982,10 @@ class OrderModel {
 		$start_date = sanitize_text_field( $start_date );
 		$end_date   = sanitize_text_field( $end_date );
 
-		$period_query     = '';
-		$group_query      = ' GROUP BY DATE(e.created_at) ';
-		$course_query     = '';
-		$commission_query = '';
+		$period_query = '';
+		$group_query  = ' GROUP BY DATE(e.created_at) ';
+		$course_query = '';
+		$refund_query = '';
 
 		// set additional query for period or date range if condition not meet then get all time data.
 		if ( $start_date && $end_date ) {
@@ -901,19 +1021,19 @@ class OrderModel {
 		$complete_status = tutor_utils()->get_earnings_completed_statuses();
 		$complete_status = "'" . implode( "','", $complete_status ) . "'";
 
-		$amount_type = is_admin() ? 'admin_amount' : 'instructor_amount';
+		$amount_type = is_admin() ? 'e.admin_amount' : 'e.instructor_amount';
 
 		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_admin_commission' : 'earning_instructor_commission' );
 		if ( $commission ) {
-			$commission_query = $wpdb->prepare(
+			$refund_query = $wpdb->prepare(
 				'COALESCE(MAX(o.refund_amount) * (%d / 100), 0)',
 				$commission
 			);
 		} else {
-			$commission_query = 'COALESCE(MAX(o.refund_amount), 0)';
+			$refund_query = 'COALESCE(MAX(o.refund_amount), 0)';
 		}
 
-		// refund for individual courses
+		// Refund for individual courses.
 		if ( $course_id ) {
 			$order_id = $wpdb->get_var(
 				$wpdb->prepare(
@@ -933,12 +1053,12 @@ class OrderModel {
 			);
 
 			if ( $count_ids ) {
-				$commission_query .= ' /' . $count_ids;
+				$refund_query .= ' /' . $count_ids;
 			}
 		}
 
 		$earnings = $wpdb->get_results(
-			"SELECT SUM($amount_type) - {$commission_query} AS total,
+			"SELECT SUM($amount_type) - {$refund_query} AS total,
 					DATE(e.created_at) AS date_format
 			FROM	{$wpdb->prefix}tutor_earnings as e
 			LEFT JOIN {$this->table_name} AS o ON o.id = e.order_id
@@ -1015,10 +1135,6 @@ class OrderModel {
 
 		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
 			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-		}
-
-		if ( $course_id ) {
-			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
 		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_admin_commission' : 'earning_instructor_commission' );
