@@ -1137,6 +1137,10 @@ class OrderModel {
 			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 		}
 
+		if ( $course_id ) {
+			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+		}
+
 		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_admin_commission' : 'earning_instructor_commission' );
 		if ( $commission ) {
 			$commission_clause = $wpdb->prepare(
