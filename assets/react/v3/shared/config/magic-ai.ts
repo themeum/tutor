@@ -4,7 +4,7 @@ import { __ } from "@wordpress/i18n";
 
 
 export type ChatTone = 'formal' | 'casual' | 'professional' | 'enthusiastic' | 'informational' | 'funny';
-export type ChatFormat = 'essay' | 'paragraph' | 'email' | 'idea' | 'blog-post' | 'outline' | 'comment';
+export type ChatFormat = 'title' | 'essay' | 'paragraph' | 'outline';
 export type ChatLength = 'short' | 'medium' | 'large';
 export type ChatLanguage =
   | 'english'
@@ -102,13 +102,10 @@ const toneOptions: Option<ChatTone>[] = [
 ];
 
 const formatOptions: Option<ChatFormat>[] = [
+  { label: __('Title', 'tutor'), value: 'title' },
   { label: __('Essay', 'tutor'), value: 'essay' },
   { label: __('Paragraph', 'tutor'), value: 'paragraph' },
-  { label: __('Email', 'tutor'), value: 'email' },
-  { label: __('Idea', 'tutor'), value: 'idea' },
-  { label: __('Blog Post', 'tutor'), value: 'blog-post' },
   { label: __('Outline', 'tutor'), value: 'outline' },
-  { label: __('Comment', 'tutor'), value: 'comment' },
 ];
 
 export { formatOptions, languageOptions, toneOptions };
