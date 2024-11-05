@@ -159,7 +159,7 @@ const HeaderActions = () => {
                   }}
                   size="small"
                 >
-                  {__('Back to courses', 'tutor')}
+                  {__('Back to Courses', 'tutor')}
                 </Button>
               </div>
             ),

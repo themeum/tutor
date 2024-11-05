@@ -282,7 +282,7 @@ export default function TaxRates() {
           });
         }}
       >
-        {__('Add region', 'tutor')}
+        {__('Add Region', 'tutor')}
       </Button>
     );
   }
@@ -330,11 +330,11 @@ export default function TaxRates() {
                           onClick={() => {
                             openCountryTaxRateModal({
                               form,
-                              title: __('Add state & VAT rate', 'tutor'),
+                              title: __('Add State & VAT Rate', 'tutor'),
                             });
                           }}
                         >
-                          {__('Add state', 'tutor')}
+                          {__('Add State', 'tutor')}
                         </Button>
                       </Show>
                     }
