@@ -94,6 +94,7 @@ class CheckoutController {
 
 		if ( $register_hooks ) {
 			add_action( 'tutor_action_tutor_pay_now', array( $this, 'pay_now' ) );
+			add_action( 'tutor_action_tutor_pay_incomplete_order', array( $this, 'pay_incomplete_order' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 			add_action( 'wp_ajax_tutor_get_checkout_html', array( $this, 'ajax_get_checkout_html' ) );
 		}
@@ -439,7 +440,7 @@ class CheckoutController {
 		}
 
 		// if ( ! Ecommerce::is_payment_gateway_configured( $payment_method ) ) {
-		// 	array_push( $errors, Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
+		// array_push( $errors, Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
 		// }
 
 		$billing_info = $billing_model->get_info( $current_user_id );
@@ -485,26 +486,12 @@ class CheckoutController {
 						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
 					} catch ( \Throwable $th ) {
 						error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
-						$order_id  = $order_data['id'];
-						$error_msg = $th->getMessage();
-
-						wp_safe_redirect( home_url( "?tutor_order_placement=failed&order_id=$order_id&error_message=$error_msg" ) );
-						exit();
+						tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
 					}
 				} else {
 					// Set alert message session.
 					$this->set_pay_now_alert_msg( $order_data );
-
-					wp_safe_redirect(
-						add_query_arg(
-							array(
-								'tutor_order_placement' => 'success',
-								'order_id'              => $order_data['id'],
-							),
-							home_url()
-						)
-					);
-					exit();
+					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_SUCCESS, $order_data['id'] );
 				}
 			} else {
 				array_push( $errors, __( 'Failed to place order!', 'tutor' ) );
@@ -836,6 +823,43 @@ class CheckoutController {
 		}
 	}
 
+	/**
+	 * Pay for the incomplete order
+	 *
+	 * Redirect to the payment gateway to complete the order
+	 * After completing the process it will redirect user to
+	 * order placement page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function pay_incomplete_order() {
+		$order_id = Input::get( 'order_id', 0 );
+		if ( $order_id ) {
+			$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
+			if ( $order_data ) {
+				try {
+					foreach ( $order_data->items as $key => $item ) {
+						$order_data->items[ $key ]->item_id = $item->id;
+					}
+
+					$payment_data = $this->prepare_payment_data( (array) $order_data, $order_data->payment_method, $order_data->order_type );
+					$this->proceed_to_payment( $payment_data, $order_data->payment_method, $order_data->order_type );
+				} catch ( \Throwable $th ) {
+					error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
+
+					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $$order_data['id'], $th->getMessage() );
+				}
+			} else {
+				$error_msg = __( 'Order not found!', 'tutor' );
+				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $$order_data['id'], $error_msg );
+			}
+		} else {
+			$error_msg = __( 'Invalid order ID!', 'tutor' );
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $$order_data['id'], $error_msg );
+		}
+	}
 
 	/**
 	 * Validate pay now request

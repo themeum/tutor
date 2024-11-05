@@ -171,7 +171,20 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								</td>
 								<?php endif; ?>
 								<td>
-								<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) ); ?>
+								<form method="get">
+									<?php
+									echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) );
+									?>
+									<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+									<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+									<?php
+									if ( $order->payment_method && 'manual' !== $order->payment_method && OrderModel::ORDER_INCOMPLETE === $order->order_status ) :
+										?>
+									<button type="submit" class="tutor-btn tutor-btn-outline-primary">
+										<?php esc_html_e( 'Pay now', 'tutor' ); ?>
+									</button>
+									<?php endif; ?>
+								</form>
 								</td>
 								<td>
 								</td>
@@ -282,21 +295,21 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			</table>
 		</div>
 
-		<?php
-			$pagination_data = array(
-				'total_items' => $total_orders,
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			);
+					<?php
+					$pagination_data = array(
+						'total_items' => $total_orders,
+						'per_page'    => $per_page,
+						'paged'       => $paged,
+					);
 
-			$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
+					$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
 
-			if ( $total_page > 1 ) {
-				$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
-	<?php else : ?>
-		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+					if ( $total_page > 1 ) {
+						$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
+						tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+					}
+					?>
+					<?php else : ?>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	<?php endif; ?>
 </div>
