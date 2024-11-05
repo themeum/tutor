@@ -119,6 +119,7 @@
 			outline: none;
 			padding: 0;
 			cursor: pointer;
+			font-size: 14px;
 		}
 	}
 	.tutor-checkout-discount-price {
@@ -325,5 +326,12 @@
 				font-weight: 600;
 			}
 		}
+	}
+
+	.tutor-checkout-spinner {
+		position: absolute;
+		top: 44px;
+		right: 16px;
+		padding: 0px;
 	}
 }

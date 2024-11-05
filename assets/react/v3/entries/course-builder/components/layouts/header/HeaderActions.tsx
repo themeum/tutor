@@ -27,7 +27,7 @@ import {
 } from '@CourseBuilderServices/course';
 import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { convertToGMT, noop } from '@Utils/util';
 
 import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
 import reviewSubmitted from '@Images/review-submitted.webp';
@@ -59,7 +59,7 @@ const HeaderActions = () => {
   const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
-  const isPendingAdminApproval = tutorConfig.settings?.enable_course_review_moderation === 'off';
+  const isAllowedToPublishCourse = tutorConfig.settings?.instructor_can_publish_course === 'on';
 
   const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -125,7 +125,7 @@ const HeaderActions = () => {
         (determinedPostStatus === 'publish' && isBefore(new Date(), new Date(courseDetails?.post_date ?? postDate)))
           ? {
               post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
-              post_date_gmt: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+              post_date_gmt: convertToGMT(new Date()),
             }
           : {}),
       });
@@ -189,7 +189,7 @@ const HeaderActions = () => {
     let text: string;
     let action: PostStatus;
 
-    if (!isPendingAdminApproval && !isAdmin && isInstructor) {
+    if (!isAllowedToPublishCourse && !isAdmin && isInstructor) {
       text = __('Submit', 'tutor');
       action = 'pending';
     } else if (isScheduleEnabled) {
@@ -199,7 +199,11 @@ const HeaderActions = () => {
           ? __('Schedule', 'tutor')
           : __('Update', 'tutor');
       action = 'future';
-    } else if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
+    } else if (
+      !courseId ||
+      postStatus === 'pending' ||
+      (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))
+    ) {
       text = __('Publish', 'tutor');
       action = 'publish';
     } else {
@@ -301,7 +305,7 @@ const HeaderActions = () => {
     if (courseId && postStatus !== 'draft') {
       items.pop();
 
-      if (isAdmin || isPendingAdminApproval) {
+      if (isAdmin || isAllowedToPublishCourse) {
         items.push(switchToDraftItem);
       }
     }
@@ -339,11 +343,11 @@ const HeaderActions = () => {
         }
       >
         <Button
-          size="small"
           variant="secondary"
           icon={<SVGIcon name="upload" width={24} height={24} />}
           loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
           iconPosition="left"
+          buttonCss={css`padding-inline: ${spacing[16]};`}
           onClick={form.handleSubmit((data) =>
             handleSubmit(
               {

@@ -34,9 +34,9 @@ const ScheduleOptions = () => {
   );
 
   const handleDelete = () => {
-    form.setValue('schedule_date', '');
-    form.setValue('schedule_time', '');
-    form.setValue('showScheduleForm', true);
+    form.setValue('schedule_date', '', { shouldDirty: true });
+    form.setValue('schedule_time', '', { shouldDirty: true });
+    form.setValue('showScheduleForm', true, { shouldDirty: true });
   };
 
   const handleCancel = () => {
@@ -44,11 +44,17 @@ const ScheduleOptions = () => {
     form.setValue(
       'schedule_date',
       isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.yearMonthDay) : '',
+      {
+        shouldDirty: true,
+      },
     );
 
     form.setValue(
       'schedule_time',
       isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.hoursMinutes) : '',
+      {
+        shouldDirty: true,
+      },
     );
   };
 
@@ -57,7 +63,7 @@ const ScheduleOptions = () => {
       return;
     }
 
-    form.setValue('showScheduleForm', false);
+    form.setValue('showScheduleForm', false, { shouldDirty: true });
     setPreviousPostDate(
       format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H),
     );
@@ -81,7 +87,9 @@ const ScheduleOptions = () => {
             label={__('Schedule Options', 'tutor')}
             onChange={(value) => {
               if (!value && scheduleDate && scheduleTime) {
-                form.setValue('showScheduleForm', false);
+                form.setValue('showScheduleForm', false, {
+                  shouldDirty: true,
+                });
               }
             }}
           />
@@ -174,7 +182,9 @@ const ScheduleOptions = () => {
                 type="button"
                 css={styleUtils.actionButton}
                 onClick={() => {
-                  form.setValue('showScheduleForm', true);
+                  form.setValue('showScheduleForm', true, {
+                    shouldDirty: true,
+                  });
                 }}
               >
                 <SVGIcon name="edit" width={24} height={24} />

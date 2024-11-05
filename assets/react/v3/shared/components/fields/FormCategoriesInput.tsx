@@ -222,7 +222,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
 
 const styles = {
   options: css`
-    border: 1px solid ${colorTokens.stroke.disable};
+    border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
     padding: ${spacing[8]} 0;
     background-color: ${colorTokens.bg.white};

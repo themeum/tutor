@@ -215,7 +215,7 @@ export const ImageGeneration = () => {
               disabled={magicImageGenerationMutation.isPending}
             >
               <SVGIcon name="bulbLine" />
-              {__('Inspire me', 'tutor')}
+              {__('Inspire Me', 'tutor')}
             </button>
           </div>
 
@@ -236,7 +236,7 @@ export const ImageGeneration = () => {
         <div css={magicAIStyles.rightFooter}>
           <MagicButton type="submit" disabled={magicImageGenerationMutation.isPending || isDisabledButton}>
             <SVGIcon name={hasGeneratedImage ? 'reload' : 'magicAi'} width={24} height={24} />
-            {hasGeneratedImage ? __('Generate again', 'tutor') : __('Generate now', 'tutor')}
+            {hasGeneratedImage ? __('Generate Again', 'tutor') : __('Generate Now', 'tutor')}
           </MagicButton>
         </div>
       </div>

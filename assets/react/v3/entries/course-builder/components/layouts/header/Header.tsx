@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -37,6 +37,66 @@ const Header = () => {
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
 
+  const handleAiButtonClick = () => {
+    if (!isTutorPro) {
+      showModal({
+        component: ProIdentifierModal,
+        props: {
+          title: sprintf(
+            __('Upgrade to Tutor LMS Pro today and experience the power of %s', 'tutor'),
+            <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')}</span>,
+          ),
+          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
+          image: generateCourse,
+          image2x: generateCourse2x,
+          features: [
+            __('Generate a complete course outline in seconds!', 'tutor'),
+            __('Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.', 'tutor'),
+            __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
+            __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
+          ],
+          footer: (
+            <Button
+              onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+              icon={<SVGIcon name="crown" width={24} height={24} />}
+            >
+              {__('Get Tutor LMS Pro', 'tutor')}
+            </Button>
+          ),
+        },
+      });
+    } else if (!hasOpenAiAPIKey) {
+      showModal({
+        component: SetupOpenAiModal,
+        props: {
+          image: generateCourse,
+          image2x: generateCourse2x,
+        },
+      });
+    } else {
+      showModal({
+        component: AICourseBuilderModal,
+        isMagicAi: true,
+        props: {
+          title: __('Create with AI', 'tutor'),
+          icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+        },
+      });
+    }
+  };
+
+  const handleExitButtonClick = () => {
+    if (isFormDirty) {
+      showModal({
+        component: ExitCourseBuilderModal,
+      });
+    } else {
+      const isFormWpAdmin = window.location.href.includes('wp-admin');
+
+      window.location.href = isFormWpAdmin ? tutorConfig.backend_course_list_url : tutorConfig.frontend_course_list_url;
+    }
+  };
+
   return (
     <div css={styles.wrapper}>
       <Logo />
@@ -53,65 +113,7 @@ const Header = () => {
             <span css={styles.divider} />
 
             <div css={styleUtils.flexCenter()}>
-              <MagicButton
-                variant="plain"
-                css={styles.magicButton}
-                onClick={() => {
-                  if (!isTutorPro) {
-                    showModal({
-                      component: ProIdentifierModal,
-                      props: {
-                        title: (
-                          <>
-                            {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-                            <span css={styles.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                          </>
-                        ),
-                        featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
-                        image: generateCourse,
-                        image2x: generateCourse2x,
-                        features: [
-                          __('Generate a complete course outline in seconds!', 'tutor'),
-                          __(
-                            ' Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                            'tutor',
-                          ),
-                          __(
-                            'Generate images, customize backgrounds, and even remove unwanted objects with ease.',
-                            'tutor',
-                          ),
-                          __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
-                        ],
-                        footer: (
-                          <Button
-                            onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
-                            icon={<SVGIcon name="crown" width={24} height={24} />}
-                          >
-                            {__('Get Tutor LMS Pro', 'tutor')}
-                          </Button>
-                        ),
-                      },
-                    });
-                  } else if (!hasOpenAiAPIKey) {
-                    showModal({
-                      component: SetupOpenAiModal,
-                      props: {
-                        image: generateCourse,
-                        image2x: generateCourse2x,
-                      },
-                    });
-                  } else {
-                    showModal({
-                      component: AICourseBuilderModal,
-                      isMagicAi: true,
-                      props: {
-                        title: __('Create with AI', 'tutor'),
-                        icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-                      },
-                    });
-                  }
-                }}
-              >
+              <MagicButton variant="plain" css={styles.magicButton} onClick={handleAiButtonClick}>
                 <SVGIcon name="magicAiColorize" width={32} height={32} />
                 {__('Generate with AI', 'tutor')}
               </MagicButton>
@@ -124,23 +126,7 @@ const Header = () => {
 
       <div css={styles.closeButtonWrapper}>
         <Tooltip delay={200} content={__('Exit', 'tutor')} placement="left">
-          <button
-            type="button"
-            css={styles.closeButton}
-            onClick={() => {
-              if (isFormDirty) {
-                showModal({
-                  component: ExitCourseBuilderModal,
-                });
-              } else {
-                const isFormWpAdmin = window.location.href.includes('wp-admin');
-
-                window.location.href = isFormWpAdmin
-                  ? tutorConfig.backend_course_list_url
-                  : tutorConfig.frontend_course_list_url;
-              }
-            }}
-          >
+          <button type="button" css={styles.closeButton} onClick={handleExitButtonClick}>
             <SVGIcon name="cross" width={32} height={32} />
           </button>
         </Tooltip>
@@ -221,12 +207,6 @@ const styles = {
     svg {
       color: ${colorTokens.icon.default};
     }
-  `,
-  aiGradientText: css`
-    background: ${colorTokens.text.ai.gradient};
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
   `,
   magicButton: css`
     display: inline-flex;

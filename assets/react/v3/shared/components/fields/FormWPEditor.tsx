@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { rgba } from 'polished';
 import type React from 'react';
 
@@ -139,15 +139,13 @@ const FormWPEditor = ({
       showModal({
         component: ProIdentifierModal,
         props: {
-          title: (
-            <>
-              {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-              <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-            </>
+          title: sprintf(
+            __('Upgrade to Tutor LMS Pro today and experience the power of %s', 'tutor'),
+            <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')}</span>,
           ),
+          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
           image: generateText,
           image2x: generateText2x,
-          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
           features: [
             __('Generate a complete course outline in seconds!', 'tutor'),
             __('Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.', 'tutor'),
@@ -179,6 +177,7 @@ const FormWPEditor = ({
         props: {
           title: __('AI Studio', 'tutor'),
           icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+          characters: 1000,
           field,
           fieldState,
           is_html: true,
@@ -204,7 +203,7 @@ const FormWPEditor = ({
           <div css={styles.customEditorButtons}>
             <For each={filteredEditors}>
               {(editor) => (
-                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.label)} delay={200}>
+                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.name)} delay={200}>
                   <button
                     type="button"
                     css={styles.customEditorButton}
@@ -228,6 +227,24 @@ const FormWPEditor = ({
     </div>
   );
 
+  const editor = (
+    <WPEditor
+      value={field.value ?? ''}
+      onChange={(value) => {
+        field.onChange(value);
+        if (onChange) {
+          onChange(value);
+        }
+      }}
+      isMinimal={isMinimal}
+      autoFocus={autoFocus}
+      onFullScreenChange={onFullScreenChange}
+      readonly={readOnly}
+      min_height={min_height}
+      max_height={max_height}
+    />
+  );
+
   return (
     <FormFieldWrapper
       label={hasAvailableCustomEditors ? customLabel : label}
@@ -238,33 +255,13 @@ const FormWPEditor = ({
       placeholder={placeholder}
       helpText={helpText}
       isMagicAi={isMagicAi}
-      generateWithAi={(!hasCustomEditorSupport || filteredEditors.length === 0) && generateWithAi}
+      generateWithAi={!hasAvailableCustomEditors && generateWithAi}
       onClickAiButton={handleAiButtonClick}
       replaceEntireLabel={hasAvailableCustomEditors}
     >
       {() => {
         return (
-          <Show
-            when={hasCustomEditorSupport}
-            fallback={
-              <WPEditor
-                value={field.value ?? ''}
-                onChange={(value) => {
-                  field.onChange(value);
-
-                  if (onChange) {
-                    onChange(value);
-                  }
-                }}
-                isMinimal={isMinimal}
-                autoFocus={autoFocus}
-                onFullScreenChange={onFullScreenChange}
-                readonly={readOnly}
-                min_height={min_height}
-                max_height={max_height}
-              />
-            }
-          >
+          <Show when={hasCustomEditorSupport} fallback={editor}>
             <Show
               when={editorUsed.name === 'classic' && !loading}
               fallback={
@@ -275,21 +272,7 @@ const FormWPEditor = ({
                 />
               }
             >
-              <WPEditor
-                value={field.value ?? ''}
-                onChange={(value) => {
-                  field.onChange(value);
-
-                  if (onChange) {
-                    onChange(value);
-                  }
-                }}
-                isMinimal={isMinimal}
-                onFullScreenChange={onFullScreenChange}
-                readonly={readOnly}
-                min_height={min_height}
-                max_height={max_height}
-              />
+              {editor}
             </Show>
           </Show>
         );

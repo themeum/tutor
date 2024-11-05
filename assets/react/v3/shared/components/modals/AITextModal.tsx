@@ -1,11 +1,25 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Controller,
+  type ControllerFieldState,
+  type ControllerRenderProps,
+  type FieldValues,
+  type Path,
+} from 'react-hook-form';
+
 import Button from '@Atoms/Button';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
+import Popover from '@Molecules/Popover';
+
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { OptionList } from '@Components/magic-ai-content/OptionList';
 import { PromptControls } from '@Components/magic-ai-content/PromptControls';
 import SkeletonLoader from '@Components/magic-ai-content/SkeletonLoader';
 import { inspirationPrompts } from '@Components/magic-ai-image/ImageContext';
+
 import { type ChatFormat, type ChatLanguage, type ChatTone, languageOptions, toneOptions } from '@Config/magic-ai';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -17,24 +31,17 @@ import {
 } from '@CourseBuilderServices/magic-ai';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import Popover from '@Molecules/Popover';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Controller,
-  type ControllerFieldState,
-  type ControllerRenderProps,
-  type FieldValues,
-  type Path,
-} from 'react-hook-form';
+import { copyToClipboard } from '@Utils/util';
+
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
 
 interface AITextModalProps<T extends FieldValues> extends ModalProps {
   field: ControllerRenderProps<T, Path<T>>;
   fieldState: ControllerFieldState;
+  characters?: number;
+  format?: ChatFormat;
   is_html?: boolean;
   fieldLabel?: string;
   fieldPlaceholder?: string;
@@ -54,6 +61,8 @@ const AITextModal = <T extends FieldValues>({
   closeModal,
   field,
   fieldState,
+  format = 'essay',
+  characters = 250,
   is_html = false,
   fieldLabel = '',
   fieldPlaceholder = '',
@@ -61,10 +70,10 @@ const AITextModal = <T extends FieldValues>({
   const form = useFormWithGlobalError<GenerateTextFieldProps>({
     defaultValues: {
       prompt: '',
-      characters: 250,
+      characters: characters,
       language: 'english',
       tone: 'formal',
-      format: 'essay',
+      format: format,
     },
   });
   const magicTextGenerationMutation = useMagicTextGenerationMutation();
@@ -181,7 +190,7 @@ const AITextModal = <T extends FieldValues>({
               }}
             >
               <SVGIcon name="bulbLine" />
-              {__('Inspire me', 'tutor')}
+              {__('Inspire Me', 'tutor')}
             </button>
           </div>
           <Show
@@ -221,7 +230,7 @@ const AITextModal = <T extends FieldValues>({
                         return;
                       }
                       const currentContent = content[pointer];
-                      await navigator.clipboard.writeText(currentContent);
+                      await copyToClipboard(currentContent);
                       setIsCopied(true);
                       setTimeout(() => {
                         setIsCopied(false);
@@ -233,7 +242,9 @@ const AITextModal = <T extends FieldValues>({
                         name="checkFilled"
                         width={20}
                         height={20}
-                        style={css`color: ${colorTokens.text.success} !important;`}
+                        style={css`
+                          color: ${colorTokens.text.success} !important;
+                        `}
                       />
                     </Show>
                   </Button>
@@ -253,10 +264,10 @@ const AITextModal = <T extends FieldValues>({
                   roundedFull={false}
                   onClick={() => handleContentModification('make_shorter')}
                 >
-                  {__('Make shorter', 'tutor')}
+                  {__('Make Shorter', 'tutor')}
                 </MagicButton>
                 <MagicButton variant="outline" roundedFull={false} ref={toneRef} onClick={() => setPopover('tone')}>
-                  {__('Change tone', 'tutor')}
+                  {__('Change Tone', 'tutor')}
                   <SVGIcon name="chevronDown" width={16} height={16} />
                 </MagicButton>
                 <MagicButton
@@ -273,21 +284,21 @@ const AITextModal = <T extends FieldValues>({
                   roundedFull={false}
                   onClick={() => handleContentModification('write_as_bullets')}
                 >
-                  {__('Write as bullets', 'tutor')}
+                  {__('Write as Bullets', 'tutor')}
                 </MagicButton>
                 <MagicButton
                   variant="outline"
                   roundedFull={false}
                   onClick={() => handleContentModification('make_longer')}
                 >
-                  {__('Make longer', 'tutor')}
+                  {__('Make Longer', 'tutor')}
                 </MagicButton>
                 <MagicButton
                   variant="outline"
                   roundedFull={false}
                   onClick={() => handleContentModification('simplify_language')}
                 >
-                  {__('Simplify language', 'tutor')}
+                  {__('Simplify Language', 'tutor')}
                 </MagicButton>
               </div>
             </Show>
@@ -332,7 +343,7 @@ const AITextModal = <T extends FieldValues>({
                 disabled={magicTextGenerationMutation.isPending || !prompt || modifyContentMutation.isPending}
               >
                 <SVGIcon name="magicWand" width={24} height={24} />
-                {__('Generate now', 'tutor')}
+                {__('Generate Now', 'tutor')}
               </MagicButton>
             }
           >
@@ -341,7 +352,7 @@ const AITextModal = <T extends FieldValues>({
               type="submit"
               disabled={magicTextGenerationMutation.isPending || !prompt || modifyContentMutation.isPending}
             >
-              {__('Generate again', 'tutor')}
+              {__('Generate Again', 'tutor')}
             </MagicButton>
             <MagicButton
               variant="primary"
@@ -353,7 +364,7 @@ const AITextModal = <T extends FieldValues>({
                 closeModal();
               }}
             >
-              {__('Use this', 'tutor')}
+              {__('Use This', 'tutor')}
             </MagicButton>
           </Show>
         </div>
@@ -365,88 +376,88 @@ const AITextModal = <T extends FieldValues>({
 export default AITextModal;
 const styles = {
   wrapper: css`
-		width: 524px;
-	`,
+    width: 524px;
+  `,
   container: css`
-		padding: ${spacing[20]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-	`,
+    padding: ${spacing[20]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+  `,
   fieldsWrapper: css`
-		position: relative;
-		textarea {
+    position: relative;
+    textarea {
       padding-bottom: ${spacing[40]} !important;
     }
-	`,
+  `,
   footer: css`
-		padding: ${spacing[12]} ${spacing[16]};
-		display: flex;
-		align-items: center;
-		justify-content: end;
-		gap: ${spacing[10]};
-		box-shadow: 0px 1px 0px 0px #E4E5E7 inset;
+    padding: ${spacing[12]} ${spacing[16]};
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: ${spacing[10]};
+    box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
 
-		button {
-			width: fit-content;
-		}
-	`,
+    button {
+      width: fit-content;
+    }
+  `,
   pageInfo: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-		
-		& > span {
-			font-weight: ${fontWeight.medium};
-			color: ${colorTokens.text.primary};
-		}
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+
+    & > span {
+      font-weight: ${fontWeight.medium};
+      color: ${colorTokens.text.primary};
+    }
+  `,
   inspireButton: css`
-		${styleUtils.resetButton};	
-		${typography.small()};
-		position: absolute;
-		height: 28px;
-		bottom: ${spacing[12]};
-		left: ${spacing[12]};
-		border: 1px solid ${colorTokens.stroke.brand};
-		border-radius: ${borderRadius[4]};
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		color: ${colorTokens.text.brand};
-		padding-inline: ${spacing[12]};
-		background-color: ${colorTokens.background.white};
+    ${styleUtils.resetButton};
+    ${typography.small()};
+    position: absolute;
+    height: 28px;
+    bottom: ${spacing[12]};
+    left: ${spacing[12]};
+    border: 1px solid ${colorTokens.stroke.brand};
+    border-radius: ${borderRadius[4]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    color: ${colorTokens.text.brand};
+    padding-inline: ${spacing[12]};
+    background-color: ${colorTokens.background.white};
 
-		&:hover {
-			background-color: ${colorTokens.background.brand};
-			color: ${colorTokens.text.white};
-		}
-	`,
+    &:hover {
+      background-color: ${colorTokens.background.brand};
+      color: ${colorTokens.text.white};
+    }
+  `,
   navigation: css`
-		margin-left: -${spacing[8]};
-		display: flex;
-		align-items: center;
-	`,
+    margin-left: -${spacing[8]};
+    display: flex;
+    align-items: center;
+  `,
   content: css`
-		${typography.caption()};
-		height: 180px;
-		overflow-y: auto;
-		background-color: ${colorTokens.background.magicAi.default};
-		border-radius: ${borderRadius[6]};
-		padding: ${spacing[6]} ${spacing[12]};
-		color: ${colorTokens.text.magicAi};
-	`,
+    ${typography.caption()};
+    height: 180px;
+    overflow-y: auto;
+    background-color: ${colorTokens.background.magicAi.default};
+    border-radius: ${borderRadius[6]};
+    padding: ${spacing[6]} ${spacing[12]};
+    color: ${colorTokens.text.magicAi};
+  `,
   actionBar: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  `,
   otherActions: css`
-		display: flex;
-		gap: ${spacing[10]};
-		flex-wrap: wrap;
+    display: flex;
+    gap: ${spacing[10]};
+    flex-wrap: wrap;
 
-		& > button {
-			width: fit-content;
-		}
-	`,
+    & > button {
+      width: fit-content;
+    }
+  `,
 };

@@ -437,7 +437,7 @@ class Utils {
 	 */
 	public function course_archive_page_url() {
 		$course_post_type = tutor()->course_post_type;
-		$course_page_url  = trailingslashit( home_url() ) . $course_post_type;
+		$course_page_url  = home_url( $this->get_option( 'course_permalink_base', $course_post_type ) );
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
 		if ( $course_archive_page && '-1' !== $course_archive_page ) {

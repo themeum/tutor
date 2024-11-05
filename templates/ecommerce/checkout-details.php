@@ -41,12 +41,6 @@ $show_coupon_box        = Settings::is_coupon_usage_enabled();
 
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
 $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
-$country                  = Input::sanitize_request_data( 'country', '' );
-$state                    = Input::sanitize_request_data( 'state', '' );
-
-if ( ! empty( $country ) ) {
-	$tax_rate = Tax::get_country_state_tax_rate( $country, $state );
-}
 ?>
 
 <div class="tutor-checkout-details">
@@ -211,7 +205,7 @@ if ( ! empty( $country ) ) {
 					<span><?php echo esc_html( $checkout_data->coupon_title ); ?></span>
 
 					<?php if ( 'manual' === $checkout_data->coupon_type && $checkout_data->is_coupon_applied ) : ?>
-					<button type="button" id="tutor-checkout-remove-coupon">
+					<button type="button" id="tutor-checkout-remove-coupon" class="tutor-btn">
 						<i class="tutor-icon-times" area-hidden="true"></i>
 					</button>
 					<?php endif; ?>

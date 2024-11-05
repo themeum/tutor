@@ -35,6 +35,7 @@ import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { normalizeLineEndings } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
+import { tutorConfig } from '@Config/config';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -93,6 +94,8 @@ const AssignmentModal = ({
   subtitle,
   contentDripType,
 }: AssignmentModalProps) => {
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const getAssignmentDetailsQuery = useAssignmentDetailsQuery(assignmentId, topicId);
   const saveAssignmentMutation = useSaveAssignmentMutation(courseId);
   const queryClient = useQueryClient();
@@ -218,6 +221,7 @@ const AssignmentModal = ({
                     {...controllerProps}
                     label={__('Title', 'tutor')}
                     placeholder={__('Enter Assignment Title', 'tutor')}
+                    generateWithAi={!isTutorPro || isOpenAiEnabled}
                     isClearable
                     selectOnFocus
                   />
@@ -232,6 +236,7 @@ const AssignmentModal = ({
                     {...controllerProps}
                     label={__('Content', 'tutor')}
                     placeholder={__('Enter Assignment Content', 'tutor')}
+                    generateWithAi={!isTutorPro || isOpenAiEnabled}
                   />
                 )}
               />

@@ -374,15 +374,15 @@ const styles = {
     justify-content: space-between;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[12]};
     border: 1px solid transparent;
-    border-radius: ${borderRadius[4]};
+    border-radius: ${borderRadius.input};
     background-color: ${colorTokens.bg.white};
 
     ${
       isDefaultItem &&
       css`
-      border-color: ${colorTokens.stroke.divider};
-      cursor: pointer;
-    `
+        border-color: ${colorTokens.stroke.default};
+        cursor: pointer;
+      `
     }
 
     &:hover {

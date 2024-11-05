@@ -991,7 +991,7 @@ class Course extends Tutor_Base {
 		 * If moderation is enabled then course status will be pending for non-admin.
 		 */
 		if ( CourseModel::STATUS_PUBLISH === $params['post_status'] ) {
-			$enable_moderation = (bool) tutor_utils()->get_option( 'enable_course_review_moderation', false );
+			$enable_moderation = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
 			if ( ! User::is_admin() && $enable_moderation ) {
 				$params['post_status'] = CourseModel::STATUS_PENDING;
 			}
@@ -1283,7 +1283,7 @@ class Course extends Tutor_Base {
 			'chatgpt_enable',
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
-			'enable_course_review_moderation',
+			'instructor_can_publish_course',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
@@ -1873,13 +1873,12 @@ class Course extends Tutor_Base {
 	 * Handle enroll now action
 	 *
 	 * @since 1.0.0
+	 *
 	 * @return void
 	 */
 	public function enroll_now() {
 
-		// Checking if action comes from Enroll form.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		if ( tutor_utils()->array_get( 'tutor_course_action', tutor_sanitize_data( $_POST ) ) !== '_tutor_course_enroll_now' || ! isset( $_POST['tutor_course_id'] ) ) {
+		if ( '_tutor_course_enroll_now' !== Input::post( 'tutor_course_action' ) || ! Input::has( 'tutor_course_id' ) ) {
 			return;
 		}
 
@@ -1892,7 +1891,6 @@ class Course extends Tutor_Base {
 		}
 
 		$course_id = Input::post( 'tutor_course_id', 0, Input::TYPE_INT );
-		$user_id   = get_current_user_id();
 
 		/**
 		 * TODO: need to check purchase information
@@ -1915,7 +1913,7 @@ class Course extends Tutor_Base {
 		}
 
 		$referer_url = wp_get_referer();
-		wp_safe_redirect( $referer_url . '?nocache=' . time() );
+		wp_safe_redirect( tutor_utils()->get_nocache_url( $referer_url ) );
 		exit;
 	}
 

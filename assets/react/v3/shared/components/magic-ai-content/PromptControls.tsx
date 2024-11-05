@@ -13,7 +13,7 @@ export const PromptControls = ({ form }: { form: UseFormReturn<GenerateTextField
       <Controller
         control={form.control}
         name="characters"
-        render={(props) => <FormInput {...props} isMagicAi label={__('Character limit', 'tutor')} type="number" />}
+        render={(props) => <FormInput {...props} isMagicAi label={__('Character Limit', 'tutor')} type="number" />}
       />
       <Controller
         control={form.control}

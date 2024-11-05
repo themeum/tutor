@@ -1,4 +1,4 @@
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 
 import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
@@ -96,67 +96,64 @@ const FormImageInput = ({
     }
   };
 
+  const handleAiButtonClick = () => {
+    if (!isTutorPro) {
+      showModal({
+        component: ProIdentifierModal,
+        props: {
+          title: sprintf(
+            __('Upgrade to Tutor LMS Pro today and experience the power of %s', 'tutor'),
+            <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')}</span>,
+          ),
+          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
+          image: generateImage,
+          image2x: generateImage2x,
+          features: [
+            __('Generate a complete course outline in seconds!', 'tutor'),
+            __('Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.', 'tutor'),
+            __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
+            __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
+          ],
+          footer: (
+            <Button
+              onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
+              icon={<SVGIcon name="crown" width={24} height={24} />}
+            >
+              {__('Get Tutor LMS Pro', 'tutor')}
+            </Button>
+          ),
+        },
+      });
+    } else if (!hasOpenAiAPIKey) {
+      showModal({
+        component: SetupOpenAiModal,
+        props: {
+          image: generateImage,
+          image2x: generateImage2x,
+        },
+      });
+    } else {
+      showModal({
+        component: AIImageModal,
+        isMagicAi: true,
+        props: {
+          title: __('AI Studio', 'tutor'),
+          icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
+          field,
+          fieldState,
+        },
+      });
+      onClickAiButton?.();
+    }
+  };
+
   return (
     <FormFieldWrapper
       label={label}
       field={field}
       fieldState={fieldState}
       helpText={helpText}
-      onClickAiButton={() => {
-        if (!isTutorPro) {
-          showModal({
-            component: ProIdentifierModal,
-            props: {
-              title: (
-                <>
-                  {__('Upgrade to Tutor LMS Pro today and experience the power of ', 'tutor')}
-                  <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')} </span>
-                </>
-              ),
-              image: generateImage,
-              image2x: generateImage2x,
-              featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
-              features: [
-                __('Generate a complete course outline in seconds!', 'tutor'),
-                __(
-                  'Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.',
-                  'tutor',
-                ),
-                __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
-                __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
-              ],
-              footer: (
-                <Button
-                  onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
-                  icon={<SVGIcon name="crown" width={24} height={24} />}
-                >
-                  {__('Get Tutor LMS Pro', 'tutor')}
-                </Button>
-              ),
-            },
-          });
-        } else if (!hasOpenAiAPIKey) {
-          showModal({
-            component: SetupOpenAiModal,
-            props: {
-              image: generateImage,
-              image2x: generateImage2x,
-            },
-          });
-        } else {
-          showModal({
-            component: AIImageModal,
-            isMagicAi: true,
-            props: {
-              title: __('AI Studio', 'tutor'),
-              icon: <SVGIcon name="magicAiColorize" width={24} height={24} />,
-              field,
-              fieldState,
-            },
-          });
-          onClickAiButton?.();
-        }
-      }}
+      onClickAiButton={handleAiButtonClick}
       generateWithAi={generateWithAi}
     >
       {() => {

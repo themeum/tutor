@@ -28,7 +28,7 @@ $order_id;
 		</div>
 
 		<div class="tutor-d-flex tutor-gap-2">
-			<a href="<?php echo esc_url( home_url( 'courses' ) ); ?>" class="tutor-btn tutor-btn-primary">
+			<a href="<?php echo esc_url( tutor_utils()->course_archive_page_url() ); ?>" class="tutor-btn tutor-btn-primary">
 				<?php esc_html_e( 'Continue Shopping', 'tutor' ); ?>
 			</a>
 			<a href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'purchase_history' ) ); ?>" class="tutor-btn tutor-btn-secondary">
