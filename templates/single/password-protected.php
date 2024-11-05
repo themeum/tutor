@@ -12,13 +12,13 @@ $course_id   = get_the_ID();
 $is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 
 ?>
-<?php get_header(); ?>
+<?php tutor_utils()->tutor_custom_header(); ?>
 
 <div class="tutor-container tutor-password-protected-course">
 	<?php ( isset( $is_enrolled ) && $is_enrolled ) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
 	<?php tutor_utils()->has_video_in_single() ? tutor_course_video() : get_tutor_course_thumbnail(); ?>
 
-	<div class="tutor-modal show">
+	<div class="tutor-modal tutor-is-active">
 		<div class="tutor-modal-overlay"></div>
 		<div class="tutor-modal-window" style="max-width: 834px;">
 			<div class="tutor-modal-content tutor-bg-white tutor-p-40">
@@ -60,4 +60,4 @@ $is_enrolled = tutor_utils()->is_enrolled( $course_id, get_current_user_id() );
 	</div>
 </div>
 
-<?php get_footer(); ?>
+<?php tutor_utils()->tutor_custom_footer(); ?>

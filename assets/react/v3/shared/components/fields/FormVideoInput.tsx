@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { rgba } from 'polished';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
@@ -10,16 +9,9 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, fontWeight, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-
 import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
   convertYouTubeDurationToSeconds,
@@ -27,6 +19,13 @@ import {
   getExternalVideoDuration,
   getVimeoVideoDuration,
 } from '@CourseBuilderUtils/utils';
+import { AnimationType } from '@Hooks/useAnimation';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import type { FormControllerProps } from '@Utils/form';
+import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
+
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -61,7 +60,16 @@ type FormVideoInputProps = {
 } & FormControllerProps<CourseVideo | null>;
 
 const videoSourceOptions = tutorConfig.supported_video_sources || [];
+const videoSourcesSelectOptions = videoSourceOptions.filter((option) => option.value !== 'html5');
 const videoSources = videoSourceOptions.map((item) => item.value);
+
+const placeholderMap = {
+  youtube: __('Paste YouTube Video URL', 'tutor'),
+  vimeo: __('Paste Vimeo Video URL', 'tutor'),
+  external_url: __('Paste External Video URL', 'tutor'),
+  shortcode: __('Paste Video Shortcode', 'tutor'),
+  embedded: __('Paste Embedded Video Code', 'tutor'),
+};
 
 const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<CourseVideo>) => {
   const defaultValue = {
@@ -121,7 +129,7 @@ const FormVideoInput = ({
   const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
-      videoSource: videoSourceOptions[0]?.value || '',
+      videoSource: videoSourcesSelectOptions[0]?.value || '',
       videoUrl: '',
     },
   });
@@ -136,8 +144,8 @@ const FormVideoInput = ({
     }
 
     if (!fieldValue.source) {
-      form.setValue('videoSource', videoSourceOptions[0]?.value);
-      form.setValue('videoUrl', fieldValue[`source_${videoSourceOptions[0]?.value}` as keyof CourseVideo] || '');
+      form.setValue('videoSource', videoSourcesSelectOptions[0]?.value);
+      form.setValue('videoUrl', fieldValue[`source_${videoSourcesSelectOptions[0]?.value}` as keyof CourseVideo] || '');
       return;
     }
 
@@ -151,19 +159,6 @@ const FormVideoInput = ({
     form.setValue('videoSource', fieldValue.source);
     form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
   }, [fieldValue]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!videoSource) {
-      return;
-    }
-
-    if (!fieldValue?.[`source_${videoSource}` as keyof CourseVideo]) {
-      form.setValue('videoUrl', '');
-      return;
-    }
-    form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
-  }, [videoSource]);
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
@@ -321,140 +316,142 @@ const FormVideoInput = ({
       <FormFieldWrapper label={label} field={field} fieldState={fieldState} helpText={helpText}>
         {() => {
           return (
-            <Show
-              when={!loading}
-              fallback={
-                <div css={styles.emptyMedia({ hasVideoSource: true })}>
-                  <LoadingOverlay />
-                </div>
-              }
-            >
+            <div ref={triggerRef}>
               <Show
-                when={isVideoAvailable()}
+                when={!loading}
                 fallback={
-                  <div
-                    ref={triggerRef}
-                    css={styles.emptyMedia({
-                      hasVideoSource: true,
-                    })}
-                  >
-                    <Show when={videoSources.includes('html5')}>
-                      <Button
-                        variant="secondary"
-                        icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
-                        onClick={() => {
-                          handleUpload('video');
-                        }}
-                      >
-                        {buttonText}
-                      </Button>
-                    </Show>
-                    <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
-                      <Show
-                        when={!videoSources.includes('html5')}
-                        fallback={
-                          <button
-                            type="button"
-                            css={styles.urlButton}
+                  <div css={styles.emptyMedia({ hasVideoSource: true })}>
+                    <LoadingOverlay />
+                  </div>
+                }
+              >
+                <Show
+                  when={isVideoAvailable()}
+                  fallback={
+                    <div
+                      css={styles.emptyMedia({
+                        hasVideoSource: true,
+                      })}
+                    >
+                      <Show when={videoSources.includes('html5')}>
+                        <Button
+                          variant="secondary"
+                          icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
+                          onClick={() => {
+                            handleUpload('video');
+                          }}
+                        >
+                          {buttonText}
+                        </Button>
+                      </Show>
+                      <Show when={videoSources.filter((source) => source !== 'html5').length > 0}>
+                        <Show
+                          when={!videoSources.includes('html5')}
+                          fallback={
+                            <button
+                              type="button"
+                              css={styles.urlButton}
+                              onClick={() => {
+                                setIsOpen((previousState) => !previousState);
+                              }}
+                            >
+                              {__('Add from URL', 'tutor')}
+                            </button>
+                          }
+                        >
+                          <Button
+                            variant="secondary"
+                            icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
                             onClick={() => {
                               setIsOpen((previousState) => !previousState);
                             }}
                           >
                             {__('Add from URL', 'tutor')}
-                          </button>
-                        }
-                      >
-                        <Button
-                          variant="secondary"
-                          icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
-                          onClick={() => {
-                            setIsOpen((previousState) => !previousState);
-                          }}
-                        >
-                          {__('Add from URL', 'tutor')}
-                        </Button>
+                          </Button>
+                        </Show>
                       </Show>
-                    </Show>
 
-                    <Show when={videoSources.includes('html5')}>
-                      <p css={styles.infoTexts}>{infoText}</p>
-                    </Show>
-                  </div>
-                }
-              >
-                {(media) => {
-                  return (
-                    <div css={styles.previewWrapper}>
-                      <div css={styles.videoInfoWrapper}>
-                        <div css={styles.videoInfoCard}>
-                          <SVGIcon name="video" height={40} width={40} />
+                      <Show when={videoSources.includes('html5')}>
+                        <p css={styles.infoTexts}>{infoText}</p>
+                      </Show>
+                    </div>
+                  }
+                >
+                  {(media) => {
+                    return (
+                      <div css={styles.previewWrapper}>
+                        <div css={styles.videoInfoWrapper}>
+                          <div css={styles.videoInfoCard}>
+                            <SVGIcon name="video" height={40} width={40} />
 
-                          <div css={styles.videoInfo}>
-                            <div css={styles.videoInfoTitle}>
-                              <div css={styleUtils.text.ellipsis(1)}>{__('Video added', 'tutor')}</div>
+                            <div css={styles.videoInfo}>
+                              <div css={styles.videoInfoTitle}>
+                                <div css={styleUtils.text.ellipsis(1)}>
+                                  {videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
+                                </div>
+                              </div>
                             </div>
                           </div>
-                        </div>
 
-                        <button
-                          type="button"
-                          css={styles.removeButton}
-                          onClick={() => {
-                            handleClear('video');
-                          }}
+                          <div css={styles.actionButtons}>
+                            <Show when={videoSource !== 'html5'}>
+                              <button
+                                type="button"
+                                css={styleUtils.actionButton}
+                                onClick={() => {
+                                  setIsOpen(true);
+                                }}
+                              >
+                                <SVGIcon name="edit" height={24} width={24} />
+                              </button>
+                            </Show>
+                            <button
+                              type="button"
+                              css={styleUtils.actionButton}
+                              onClick={() => {
+                                handleClear('video');
+                              }}
+                            >
+                              <SVGIcon name="cross" height={24} width={24} />
+                            </button>
+                          </div>
+                        </div>
+                        <div
+                          css={styles.imagePreview({
+                            isHTMLVideo: fieldValue?.source === 'html5',
+                          })}
                         >
-                          <SVGIcon name="cross" height={24} width={24} />
-                        </button>
+                          <Show
+                            when={fieldValue?.source === 'html5'}
+                            fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
+                          >
+                            <ImageInput
+                              value={
+                                fieldValue
+                                  ? {
+                                      id: Number(fieldValue.poster),
+                                      url: fieldValue.poster_url,
+                                      title: '',
+                                    }
+                                  : null
+                              }
+                              uploadHandler={() => handleUpload('poster')}
+                              clearHandler={() => handleClear('poster')}
+                              buttonText={__('Upload Thumbnail', 'tutor')}
+                              infoText={__('Upload a thumbnail image for your video', 'tutor')}
+                              emptyImageCss={styles.thumbImage}
+                              previewImageCss={styles.thumbImage}
+                              overlayCss={styles.thumbImage}
+                              replaceButtonText={__('Replace Thumbnail', 'tutor')}
+                            />
+                          </Show>
+                        </div>
                       </div>
-                      <div
-                        css={styles.imagePreview({
-                          isHTMLVideo: fieldValue?.source === 'html5',
-                        })}
-                      >
-                        <Show
-                          when={fieldValue?.source === 'html5'}
-                          fallback={
-                            <div css={styles.urlData}>
-                              <p>
-                                <span>{`${__('Source', 'tutor')}: `}</span>
-                                {`${
-                                  videoSourceOptions.find((option) => option.value === form.watch('videoSource'))
-                                    ?.label || ''
-                                }`}
-                              </p>
-                              <p>
-                                <span>{`${__('URL', 'tutor')}: `}</span>
-                                {`${form.watch('videoUrl')}`}
-                              </p>
-                            </div>
-                          }
-                        >
-                          <ImageInput
-                            value={
-                              fieldValue
-                                ? {
-                                    id: Number(fieldValue.poster),
-                                    url: fieldValue.poster_url,
-                                    title: '',
-                                  }
-                                : null
-                            }
-                            uploadHandler={() => handleUpload('poster')}
-                            clearHandler={() => handleClear('poster')}
-                            buttonText={__('Upload Thumbnail', 'tutor')}
-                            infoText={__('Upload a thumbnail image for your video', 'tutor')}
-                            emptyImageCss={styles.thumbImage}
-                            previewImageCss={styles.thumbImage}
-                            overlayCss={styles.thumbImage}
-                            replaceButtonText={__('Replace Thumbnail', 'tutor')}
-                          />
-                        </Show>
-                      </div>
-                    </div>
-                  );
-                }}
+                    );
+                  }}
+                </Show>
               </Show>
-            </Show>
+            </div>
           );
         }}
       </FormFieldWrapper>
@@ -474,12 +471,12 @@ const FormVideoInput = ({
             <Controller
               control={form.control}
               name="videoSource"
-              rules={{ required: __('This field is required', 'tutor') }}
+              rules={{ ...requiredRule() }}
               render={(controllerProps) => {
                 return (
                   <FormSelectInput
                     {...controllerProps}
-                    options={videoSourceOptions}
+                    options={videoSourcesSelectOptions}
                     disabled={videoSourceOptions.length <= 1}
                     placeholder={__('Select source', 'tutor')}
                     hideCaret={videoSourceOptions.length <= 1}
@@ -491,7 +488,7 @@ const FormVideoInput = ({
               control={form.control}
               name="videoUrl"
               rules={{
-                required: __('This field is required', 'tutor'),
+                ...requiredRule(),
                 validate: validateVideoUrl,
               }}
               render={(controllerProps) => {
@@ -503,9 +500,8 @@ const FormVideoInput = ({
                     `}
                     rows={2}
                     placeholder={
-                      form.watch('videoSource') === 'shortcode'
-                        ? __('Enter shortcode', 'tutor')
-                        : __('Enter URL', 'tutor')
+                      placeholderMap[form.watch('videoSource') as keyof typeof placeholderMap] ||
+                      __('Paste URL', 'tutor')
                     }
                   />
                 );
@@ -548,10 +544,12 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.background.status.warning};
 
-    ${hasVideoSource &&
-    css`
+    ${
+      hasVideoSource &&
+      css`
       background-color: ${colorTokens.bg.white};
-    `}
+    `
+    }
   `,
   infoTexts: css`
     ${typography.tiny()};
@@ -572,15 +570,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     padding: ${spacing[8]} ${spacing[12]};
     gap: ${spacing[8]};
-
-    p {
-      word-break: break-all;
-    }
-
-    span {
-      font-weight: ${fontWeight.semiBold};
-      color: ${colorTokens.text.hints};
-    }
+    word-break: break-all;
   `,
   previewWrapper: css`
     width: 100%;
@@ -638,9 +628,9 @@ const styles = {
     color: ${colorTokens.text.brand};
     margin-bottom: ${spacing[8]};
   `,
-  removeButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
+  actionButtons: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[4]};
   `,
   popover: css`
     position: absolute;

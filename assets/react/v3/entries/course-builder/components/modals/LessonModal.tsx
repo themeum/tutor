@@ -85,7 +85,7 @@ const LessonModal = ({
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
 
-  const isWpEditorVisible = isAdmin || (isInstructor && hasWpAdminAccess && isClassicEditorEnabled);
+  const isWpEditorVisible = isClassicEditorEnabled && (isAdmin || (isInstructor && hasWpAdminAccess));
 
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
   const saveLessonMutation = useSaveLessonMutation(courseId);
@@ -228,11 +228,14 @@ const LessonModal = ({
                       label={
                         <div css={styles.descriptionLabel}>
                           {__('Content', 'tutor')}
-                          <Show when={isClassicEditorEnabled && (isAdmin || (isInstructor && hasWpAdminAccess))}>
+                          <Show when={isWpEditorVisible}>
                             <Show
                               when={lessonId}
                               fallback={
-                                <Tooltip content={__('Save the lesson first to use the WP Editor.', 'tutor')}>
+                                <Tooltip
+                                  content={__('Save the lesson first to use the WP Editor.', 'tutor')}
+                                  delay={200}
+                                >
                                   <Button
                                     variant="text"
                                     size="small"
