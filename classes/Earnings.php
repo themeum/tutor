@@ -106,14 +106,14 @@ class Earnings extends Singleton {
 					}
 
 					// Handle bundle course sale.
-					if (  $item->sale_price ||  $item->discount_price ) {
+					if ( $item->sale_price || $item->discount_price ) {
 						$final_course_price = 0;
 
-						if ( $item->sale_price  ) {
+						if ( $item->sale_price ) {
 							$final_course_price = $item->sale_price / count( $courses_list );
 						}
 
-						if (  $item->discount_price ) {
+						if ( $item->discount_price ) {
 							$final_course_price = $item->discount_price / count( $courses_list );
 						}
 
