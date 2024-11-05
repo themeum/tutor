@@ -203,7 +203,7 @@ const FormWPEditor = ({
           <div css={styles.customEditorButtons}>
             <For each={filteredEditors}>
               {(editor) => (
-                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.label)} delay={200}>
+                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.name)} delay={200}>
                   <button
                     type="button"
                     css={styles.customEditorButton}
@@ -227,6 +227,24 @@ const FormWPEditor = ({
     </div>
   );
 
+  const editor = (
+    <WPEditor
+      value={field.value ?? ''}
+      onChange={(value) => {
+        field.onChange(value);
+        if (onChange) {
+          onChange(value);
+        }
+      }}
+      isMinimal={isMinimal}
+      autoFocus={autoFocus}
+      onFullScreenChange={onFullScreenChange}
+      readonly={readOnly}
+      min_height={min_height}
+      max_height={max_height}
+    />
+  );
+
   return (
     <FormFieldWrapper
       label={hasAvailableCustomEditors ? customLabel : label}
@@ -237,33 +255,13 @@ const FormWPEditor = ({
       placeholder={placeholder}
       helpText={helpText}
       isMagicAi={isMagicAi}
-      generateWithAi={(!hasCustomEditorSupport || filteredEditors.length === 0) && generateWithAi}
+      generateWithAi={!hasAvailableCustomEditors && generateWithAi}
       onClickAiButton={handleAiButtonClick}
       replaceEntireLabel={hasAvailableCustomEditors}
     >
       {() => {
         return (
-          <Show
-            when={hasCustomEditorSupport}
-            fallback={
-              <WPEditor
-                value={field.value ?? ''}
-                onChange={(value) => {
-                  field.onChange(value);
-
-                  if (onChange) {
-                    onChange(value);
-                  }
-                }}
-                isMinimal={isMinimal}
-                autoFocus={autoFocus}
-                onFullScreenChange={onFullScreenChange}
-                readonly={readOnly}
-                min_height={min_height}
-                max_height={max_height}
-              />
-            }
-          >
+          <Show when={hasCustomEditorSupport} fallback={editor}>
             <Show
               when={editorUsed.name === 'classic' && !loading}
               fallback={
@@ -274,21 +272,7 @@ const FormWPEditor = ({
                 />
               }
             >
-              <WPEditor
-                value={field.value ?? ''}
-                onChange={(value) => {
-                  field.onChange(value);
-
-                  if (onChange) {
-                    onChange(value);
-                  }
-                }}
-                isMinimal={isMinimal}
-                onFullScreenChange={onFullScreenChange}
-                readonly={readOnly}
-                min_height={min_height}
-                max_height={max_height}
-              />
+              {editor}
             </Show>
           </Show>
         );
