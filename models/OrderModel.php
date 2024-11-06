@@ -77,6 +77,20 @@ class OrderModel {
 	const TRANSIENT_ORDER_BADGE_COUNT = 'tutor_order_badge_count';
 
 	/**
+	 * Order placement success
+	 *
+	 * @since 3.0.0
+	 */
+	const ORDER_PLACEMENT_SUCCESS = 'success';
+
+	/**
+	 * Order placement failed
+	 *
+	 * @since 3.0.0
+	 */
+	const ORDER_PLACEMENT_FAILED = 'failed';
+
+	/**
 	 * Order table name
 	 *
 	 * @since 3.0.0
