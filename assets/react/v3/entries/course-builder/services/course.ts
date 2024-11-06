@@ -625,8 +625,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
     editor_used: courseDetails.editor_used,
-    isScheduleEnabled:
-      courseDetails.post_status === 'future' && isBefore(new Date(), new Date(courseDetails.post_date)),
+    isScheduleEnabled: isBefore(new Date(), new Date(courseDetails.post_date)),
     showScheduleForm: !isBefore(new Date(), new Date(courseDetails.post_date)),
     schedule_date: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.yearMonthDay)
