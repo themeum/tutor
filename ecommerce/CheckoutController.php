@@ -838,7 +838,11 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_incomplete_order() {
-		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
+		$order_id = Input::post( 'order_id', 0, Input::TYPE_INT );
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'purchase_history' ), tutor_utils()->error_message( 'nonce' ), 'error' );
+			exit;
+		}
 		if ( $order_id ) {
 			$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 			if ( $order_data ) {

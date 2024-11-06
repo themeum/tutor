@@ -176,7 +176,8 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									</div>
 								</td>
 								<td>
-								<form method="get">
+								<form method="post">
+									<?php tutor_nonce_field(); ?>
 									<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
 									<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
 									<?php
