@@ -210,8 +210,7 @@ class HooksHandler {
 
 		$order_status = $this->order_model->get_order_status_by_payment_status( $new_payment_status );
 
-		$cancel_reason     = Input::post( 'cancel_reason' );
-		$remove_enrollment = Input::post( 'is_remove_enrolment', false, Input::TYPE_BOOL );
+		$cancel_reason = Input::post( 'cancel_reason' );
 
 		// Store activity.
 		$data = (object) array(
@@ -229,10 +228,6 @@ class HooksHandler {
 		}
 
 		$this->order_activities_model->add_order_meta( $data );
-
-		if ( $remove_enrollment ) {
-			$order_status = OrderModel::ORDER_CANCELLED;
-		}
 
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 

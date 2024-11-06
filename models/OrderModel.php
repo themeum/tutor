@@ -885,7 +885,7 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		$commission = (int) tutor_utils()->get_option( current_user_can( 'manage_options' ) ? 'earning_admin_commission' : 'earning_instructor_commission' );
+		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_admin_commission' : 'earning_instructor_commission' );
 		if ( $commission ) {
 			$commission_clause = $wpdb->prepare(
 				'COALESCE(MAX(o.refund_amount) * (%d / 100), 0) AS total',
