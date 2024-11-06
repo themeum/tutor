@@ -273,6 +273,22 @@ class HooksHandler {
 	}
 
 	/**
+	 * Check if order is bundle order
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order order object.
+	 * @param int    $object_id object id.
+	 *
+	 * @return boolean
+	 */
+	private function is_bundle_order( $order, $object_id ) {
+		return tutor_utils()->is_addon_enabled( 'course-bundle' )
+		&& $this->order_model::TYPE_SINGLE_ORDER === $order->order_type
+		&& 'course-bundle' === get_post_type( $object_id );
+	}
+
+	/**
 	 * Manage earnings after order bulk action
 	 *
 	 * @since 3.0.0
@@ -300,7 +316,7 @@ class HooksHandler {
 				// Update enrollment status based on order status.
 				$update = tutor_utils()->update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
 				if ( $update ) {
-					if ( tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) && 'course-bundle' === get_post_type( $object_id ) ) {
+					if ( $this->is_bundle_order( $order, $object_id ) ) {
 						if ( 'completed' === $enrollment_status ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 						} else {
@@ -308,7 +324,12 @@ class HooksHandler {
 						}
 					}
 
-					update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
+					/**
+					 * For subscription, renewal no need to update order id.
+					 */
+					if ( $this->order_model::TYPE_SINGLE_ORDER === $order->order_type ) {
+						update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
+					}
 				}
 			} else {
 				if ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
@@ -323,10 +344,12 @@ class HooksHandler {
 
 					$enrollment_id = tutor_utils()->do_enroll( $object_id, $order_id, $student_id );
 					if ( $enrollment_id ) {
-						if ( tutor_utils()->is_addon_enabled( 'tutor-pro/addons/course-bundle/course-bundle.php' ) && 'course-bundle' === get_post_type( $object_id ) ) {
+						if ( $this->is_bundle_order( $order, $object_id ) ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 						}
 						update_post_meta( $enrollment_id, '_tutor_enrolled_by_order_id', $order_id );
+
+						do_action( 'tutor_order_enrolled', $order, $enrollment_id );
 					} else {
 						// Log error message with student id and course id.
 						error_log( "Error updating enrollment for student {$student_id} and course {$object_id}" );
