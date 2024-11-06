@@ -562,13 +562,16 @@ class CheckoutController {
 			$item_name       = '';
 			$enrollment_item = null;
 
+			// Support for both item_id & id added.
+			$item_id = $item->item_id ?? $item->id;
+
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-				$plan_id   = $item->item_id;
+				$plan_id   = $item_id;
 				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $plan_id );
 				$item_name = $plan_info->plan_name ?? '';
 
 				$items[] = array(
-					'item_id'          => $item->item_id,
+					'item_id'          => $item_id,
 					'item_name'        => $item_name,
 					'regular_price'    => $item->sale_price > 0 ? $item->sale_price : $item->regular_price,
 					'quantity'         => 1,
@@ -589,8 +592,8 @@ class CheckoutController {
 			} else {
 				// Single order item.
 				$items[] = array(
-					'item_id'          => $item->item_id,
-					'item_name'        => get_the_title( $item->item_id ),
+					'item_id'          => $item_id,
+					'item_name'        => get_the_title( $item_id ),
 					'regular_price'    => tutor_get_locale_price( $item->sale_price > 0 ? $item->sale_price : $item->regular_price ),
 					'quantity'         => 1,
 					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : tutor_get_locale_price( $item->discount_price ),
@@ -840,24 +843,20 @@ class CheckoutController {
 			$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
-					foreach ( $order_data->items as $key => $item ) {
-						$order_data->items[ $key ]->item_id = $item->id;
-					}
-
 					$payment_data = $this->prepare_payment_data( (array) $order_data, $order_data->payment_method, $order_data->order_type );
 					$this->proceed_to_payment( $payment_data, $order_data->payment_method, $order_data->order_type );
 				} catch ( \Throwable $th ) {
 					error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
 
-					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $$order_data['id'], $th->getMessage() );
+					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $th->getMessage() );
 				}
 			} else {
 				$error_msg = __( 'Order not found!', 'tutor' );
-				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $$order_data['id'], $error_msg );
+				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, 0, $error_msg );
 			}
 		} else {
 			$error_msg = __( 'Invalid order ID!', 'tutor' );
-			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $$order_data['id'], $error_msg );
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, 0, $error_msg );
 		}
 	}
 
