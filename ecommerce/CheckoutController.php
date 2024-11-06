@@ -485,7 +485,7 @@ class CheckoutController {
 						$payment_data = self::prepare_payment_data( $order_data );
 						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
 					} catch ( \Throwable $th ) {
-						error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
+						tutor_log( $th );
 						tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
 					}
 				} else {
@@ -838,7 +838,7 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_incomplete_order() {
-		$order_id = Input::get( 'order_id', 0 );
+		$order_id = Input::get( 'order_id', 0, Input::TYPE_INT );
 		if ( $order_id ) {
 			$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 			if ( $order_data ) {
@@ -846,17 +846,16 @@ class CheckoutController {
 					$payment_data = $this->prepare_payment_data( (array) $order_data, $order_data->payment_method, $order_data->order_type );
 					$this->proceed_to_payment( $payment_data, $order_data->payment_method, $order_data->order_type );
 				} catch ( \Throwable $th ) {
-					error_log( 'File: ' . $th->getFile() . ' line: ' . $th->getLine() . ' message: ' . $th->getMessage() );
-
+					tutor_log( $th );
 					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $th->getMessage() );
 				}
 			} else {
 				$error_msg = __( 'Order not found!', 'tutor' );
-				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, 0, $error_msg );
+				tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, $error_msg );
 			}
 		} else {
 			$error_msg = __( 'Invalid order ID!', 'tutor' );
-			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, 0, $error_msg );
+			tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_id, $error_msg );
 		}
 	}
 
