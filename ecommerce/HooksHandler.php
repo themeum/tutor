@@ -229,6 +229,15 @@ class HooksHandler {
 
 		$this->order_activities_model->add_order_meta( $data );
 
+		if ( $this->order_model::PAYMENT_REFUNDED === $new_payment_status ) {
+
+			$updated_data = array(
+				'order_status' => $order_status,
+			);
+
+			$this->order_model->update_order( $order_id, $updated_data );
+		}
+
 		$this->manage_earnings_and_enrollments( $order_status, $order_id );
 
 		// Store coupon usage.
