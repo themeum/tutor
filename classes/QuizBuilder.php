@@ -58,8 +58,8 @@ class QuizBuilder {
 	 * @return array
 	 */
 	private function prepare_question_data( $quiz_id, $input ) {
-		$question_title       = Input::sanitize( $input['question_title'], '' );
-		$question_description = Input::sanitize( $input['question_description'] ?? '', '' );
+		$question_title       = Input::sanitize( wp_slash( $input['question_title'] ), '' );
+		$question_description = Input::sanitize( wp_slash( $input['question_description'] ) ?? '', '', Input::TYPE_KSES_POST );
 		$question_type        = Input::sanitize( $input['question_type'], '' );
 		$question_mark        = Input::sanitize( $input['question_mark'], 1, Input::TYPE_INT );
 		$question_settings    = Input::sanitize_array( $input['question_settings'] );
@@ -86,7 +86,7 @@ class QuizBuilder {
 	 * @return array
 	 */
 	public function prepare_answer_data( $question_id, $question_type, $input ) {
-		$answer_title         = Input::sanitize( $input['answer_title'] ?? '', '' );
+		$answer_title         = Input::sanitize( wp_slash( $input['answer_title'] ) ?? '', '' );
 		$is_correct           = Input::sanitize( $input['is_correct'] ?? 0, 0, Input::TYPE_INT );
 		$image_id             = Input::sanitize( $input['image_id'] ?? null );
 		$answer_two_gap_match = Input::sanitize( $input['answer_two_gap_match'] ?? '' );
@@ -317,8 +317,8 @@ class QuizBuilder {
 
 		$quiz_data = array(
 			'post_type'    => tutor()->quiz_post_type,
-			'post_title'   => Input::sanitize( $payload['post_title'] ?? '' ),
-			'post_content' => Input::sanitize( $payload['post_content'] ?? '' ),
+			'post_title'   => Input::sanitize( wp_slash( $payload['post_title'] ?? '' ) ),
+			'post_content' => Input::sanitize( wp_slash( $payload['post_content'] ?? '' ) ),
 			'post_status'  => 'publish',
 			'post_author'  => get_current_user_id(),
 			'post_parent'  => $topic_id,
@@ -391,7 +391,7 @@ class QuizBuilder {
 
 		$course_cls->check_access( $course_id );
 
-		$result = $this->save_quiz( $topic_id, $payload );
+		$result = $this->save_quiz( $topic_id, wp_slash( $payload ) );
 		if ( $result->success ) {
 			$quiz_id      = $result->data;
 			$quiz_details = QuizModel::get_quiz_details( $quiz_id );
