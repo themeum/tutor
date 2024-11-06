@@ -836,6 +836,123 @@ class OrderModel {
 	}
 
 	/**
+	 * Get total discounts by user_id (instructor), optionally can set period ( today | monthly| yearly )
+	 *
+	 * Optionally can set start date & end date to get enrollment list from date range
+	 *
+	 * If period or date range not pass then it will return all time enrollment list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id User id, if user not have admin access
+	 * then only this user's refund amount will fetched.
+	 * @param string $period Time period.
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_discounts_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = 0 ): array {
+		$response = array(
+			'discounts'       => array(),
+			'total_discounts' => 0,
+		);
+
+		global $wpdb;
+
+		$user_clause       = '';
+		$date_range_clause = '';
+		$period_clause     = '';
+		$course_clause     = '';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = $wpdb->prepare(
+				'AND o.created_at_gmt BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
+			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		} else {
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( 'today' !== $period ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+		}
+
+		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+		}
+
+		$item_table = $wpdb->prefix . 'tutor_order_items';
+
+		// Subscription discounts.
+		$discounts = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+				MAX(o.coupon_amount) as total,
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				LEFT JOIN {$wpdb->prefix}tutor_subscription_plan_items AS s ON s.plan_id = i.item_id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = s.object_id
+				WHERE 1 = %d AND o.coupon_amount > 0
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$course_clause}
+				{$group_clause},o.id",
+				1
+			)
+		);
+
+		$total_discount = 0;
+		$discount_items = array();
+
+		if ( $discounts ) {
+			foreach ( $discounts as $discount ) {
+				$total_discount  += $discount->total;
+				$discount_items[] = $discount;
+			}
+		}
+
+		$discounts = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+				MAX(o.coupon_amount) as total,
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				WHERE 1 = %d AND o.coupon_amount > 0
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$course_clause}
+				{$group_clause},o.id",
+				1
+			)
+		);
+
+		if ( $discounts ) {
+			foreach ( $discounts as $discount ) {
+				$total_discount  += $discount->total;
+				$discount_items[] = $discount;
+			}
+		}
+
+		$response = array(
+			'discounts'       => $discount_items,
+			'total_discounts' => $total_discount,
+		);
+
+		return $response;
+	}
+
+	/**
 	 * Get total refunds by user_id (instructor), optionally can set period ( today | monthly| yearly )
 	 *
 	 * Optionally can set start date & end date to get enrollment list from date range
