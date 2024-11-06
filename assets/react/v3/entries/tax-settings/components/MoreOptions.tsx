@@ -7,8 +7,8 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import type { TaxSettings } from '../services/tax';
 import type { ColumnDataType } from './TaxRates';
-import StaticConfirmationModal from './modals/StaticConfirmationModal';
-import { AnimationType } from '@/v3/shared/hooks/useAnimation';
+import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
+import { AnimationType } from '@Hooks/useAnimation';
 
 interface MoreOptionsProps {
   data: ColumnDataType;

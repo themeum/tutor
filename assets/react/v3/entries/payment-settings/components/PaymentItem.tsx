@@ -12,6 +12,7 @@ import FormImageInput from '@Components/fields/FormImageInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
+import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -28,7 +29,6 @@ import {
   type PaymentMethod,
   type PaymentSettings,
 } from '../services/payment';
-import StaticConfirmationModal from './modals/StaticConfirmationModal';
 import Badge from '../atoms/Badge';
 import { isObject } from '@Utils/types';
 import { usePaymentContext } from '../contexts/payment-context';
