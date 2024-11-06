@@ -2,7 +2,6 @@ import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 import Button, { type ButtonVariant } from '@Atoms/Button';
 import { colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
