@@ -909,19 +909,13 @@ class OrderModel {
 			)
 		);
 
+		$total_discount = 0;
+		$discount_items = array();
 		if ( $discounts ) {
-			$total_discount = 0;
-
 			foreach ( $discounts as $discount ) {
-				$total_discount += $discount->total;
+				$total_discount  += $discount->total;
+				$discount_items[] = $discount;
 			}
-
-			$response = array(
-				'discounts'       => $discounts,
-				'total_discounts' => $total_discount,
-			);
-
-			return $response;
 		}
 
 		$discounts = $wpdb->get_results(
@@ -942,14 +936,18 @@ class OrderModel {
 			)
 		);
 
-		$total_discount = 0;
+		if ( $discounts ) {
+			foreach ( $discounts as $discount ) {
 
-		foreach ( $discounts as $discount ) {
-			$total_discount += $discount->total;
+				$total_discount += $discount->total;
+
+				$discount_items[] = $discount;
+
+			}
 		}
 
 		$response = array(
-			'discounts'       => $discounts,
+			'discounts'       => $discount_items,
 			'total_discounts' => $total_discount,
 		);
 
