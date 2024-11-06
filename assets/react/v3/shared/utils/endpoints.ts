@@ -20,6 +20,7 @@ const endpoints = {
   DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
   SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
   TUTOR_YOUTUBE_VIDEO_DURATION: 'tutor_youtube_video_duration',
+  TUTOR_UNLINK_PAGE_BUILDER: 'tutor_unlink_page_builder',
 
   GENERATE_AI_IMAGE: 'tutor_pro_generate_image',
   MAGIC_FILL_AI_IMAGE: 'tutor_pro_magic_fill_image',
