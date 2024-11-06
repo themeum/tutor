@@ -300,7 +300,7 @@ const FormVideoInput = ({
     }
 
     if (form.watch('videoSource') === 'embedded') {
-      const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
+      const regExp = /<iframe[^>]*src="([^"]*?)"[^>]*><\/iframe>/;
       const match = value.match(regExp);
 
       if (!match || !match[1]) {
