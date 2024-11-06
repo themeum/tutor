@@ -991,8 +991,8 @@ class Course extends Tutor_Base {
 		 * If moderation is enabled then course status will be pending for non-admin.
 		 */
 		if ( CourseModel::STATUS_PUBLISH === $params['post_status'] ) {
-			$enable_moderation = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
-			if ( ! User::is_admin() && $enable_moderation ) {
+			$is_instructor_allowed_to_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
+			if ( ! User::is_admin() && ! $is_instructor_allowed_to_publish ) {
 				$params['post_status'] = CourseModel::STATUS_PENDING;
 			}
 		}
