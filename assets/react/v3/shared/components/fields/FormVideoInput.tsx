@@ -494,10 +494,7 @@ const FormVideoInput = ({
                       border-style: dashed;
                     `}
                     rows={2}
-                    placeholder={
-                      placeholderMap[form.watch('videoSource') as keyof typeof placeholderMap] ||
-                      __('Paste URL', 'tutor')
-                    }
+                    placeholder={placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste URL', 'tutor')}
                   />
                 );
               }}
