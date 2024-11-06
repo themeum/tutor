@@ -99,7 +99,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 		<div class="tutor-table-responsive">
 			<table class="tutor-table">
 				<thead>
-					<th width="10%">
+					<th width="8%">
 						<?php esc_html_e( 'Order ID', 'tutor' ); ?>
 					</th>
 					<th width="30%">
@@ -111,15 +111,17 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					<th>
 						<?php esc_html_e( 'Price', 'tutor' ); ?>
 					</th>
-					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
-					<th>
-						<?php esc_html_e( 'Method', 'tutor' ); ?>
-					</th>
-					<?php endif; ?>
 					<th>
 						<?php esc_html_e( 'Status', 'tutor' ); ?>
 					</th>
+					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+					<th>
+						<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
+					</th>
 					<th></th>
+					<?php endif; ?>
+					<th></th>
+					
 				</thead>
 				<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
 					<tbody>
@@ -163,25 +165,25 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
 									</div>
 								</td>
-								<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+								<td>
+								<?php
+									echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) );
+								?>
+								</td>
 								<td>
 									<div class="tutor-fs-7">
 										<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
 									</div>
 								</td>
-								<?php endif; ?>
 								<td>
 								<form method="get">
-									<?php
-									echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) );
-									?>
 									<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
 									<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
 									<?php
 									if ( $order->payment_method && 'manual' !== $order->payment_method && OrderModel::ORDER_INCOMPLETE === $order->order_status ) :
 										?>
-									<button type="submit" class="tutor-btn tutor-btn-outline-primary">
-										<?php esc_html_e( 'Pay now', 'tutor' ); ?>
+									<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+										<?php esc_html_e( 'Pay', 'tutor' ); ?>
 									</button>
 									<?php endif; ?>
 								</form>
