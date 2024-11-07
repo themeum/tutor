@@ -33,7 +33,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       amount: 0,
-      is_remove_enrolment: order_type !== 'single_order' ? true : false,
+      is_remove_enrolment: order_type !== 'single_order',
       reason: '',
     },
   });
@@ -56,11 +56,11 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
               rules={{
                 ...requiredRule(),
                 validate: (value) => {
-                  if (value == 0) {
+                  if (value === 0) {
                     return __('Refund amount must be greater than zero.', 'tutor');
                   }
                   if (value > available_amount) {
-                    return __('You are exceeded the available amount', 'tutor');
+                    return __('Entered amount exceeds course payment.', 'tutor');
                   }
                   return undefined;
                 },
