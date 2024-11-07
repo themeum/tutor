@@ -373,11 +373,11 @@ class HooksHandler {
 					}
 				}
 			}
-
-			// Update earnings.
-			$earnings->prepare_order_earnings( $order_id );
-			$earnings->remove_before_store_earnings();
 		}
+
+		// Update earnings.
+		$earnings->prepare_order_earnings( $order_id );
+		$earnings->remove_before_store_earnings();
 	}
 
 }
