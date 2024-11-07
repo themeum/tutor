@@ -1084,6 +1084,7 @@ class QuizModel {
 		}
 
 		foreach ( $answers as $answer ) {
+			$answer->answer_title = stripslashes( $answer->answer_title );
 			if ( $answer->image_id ) {
 				$answer->image_url = wp_get_attachment_url( $answer->image_id );
 			}
