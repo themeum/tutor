@@ -9,7 +9,6 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
 
-import { styleUtils } from '../../utils/style-utils';
 import FormTextareaInput from './FormTextareaInput';
 import FormWPEditor from './FormWPEditor';
 
@@ -60,6 +59,8 @@ const FormQuestionDescription = ({
                   readOnly={!isEdit}
                   onChange={onChange}
                   placeholder={placeholder}
+                  autoResize
+                  maxHeight={400}
                 />
               }
             >
@@ -138,6 +139,7 @@ const styles = {
     position: relative;
     max-height: 400px;
     overflow-y: auto;
+    border-radius: ${borderRadius[6]};
 
     ${
       isEdit &&
@@ -201,8 +203,6 @@ const styles = {
     inset: 0;
     padding-block: ${spacing[8]};
     overflow-x: hidden;
-    max-height: 400px;
-    ${styleUtils.overflowYAuto};
   `,
   actionButtonWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     display: flex;
