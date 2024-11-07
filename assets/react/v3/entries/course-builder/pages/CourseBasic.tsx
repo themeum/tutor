@@ -25,6 +25,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { maxLimitRule, requiredRule } from '@Utils/validation';
 
 const courseId = getCourseId();
+let hasAliasChanged = false;
 
 const CourseBasic = () => {
   const form = useFormContext<CourseFormData>();
@@ -41,7 +42,6 @@ const CourseBasic = () => {
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 
   const postStatus = form.watch('post_status');
-  const isPostNameDirty = form.formState.dirtyFields.post_name;
 
   return (
     <div css={styles.wrapper}>
@@ -62,9 +62,10 @@ const CourseBasic = () => {
                   generateWithAi={!isTutorPro || isOpenAiEnabled}
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   onChange={(value) => {
-                    if (postStatus === 'draft' && !isPostNameDirty) {
+                    if (postStatus === 'draft' && !hasAliasChanged) {
                       form.setValue('post_name', convertToSlug(String(value)), {
                         shouldValidate: true,
+                        shouldDirty: true,
                       });
                     }
                   }}
@@ -80,6 +81,9 @@ const CourseBasic = () => {
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
                   baseURL={`${tutorConfig.home_url}/${tutorConfig.settings?.course_permalink_base}`}
+                  onChange={() => {
+                    hasAliasChanged = true;
+                  }}
                 />
               )}
             />

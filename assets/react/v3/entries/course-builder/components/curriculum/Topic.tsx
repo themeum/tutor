@@ -97,10 +97,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
 
     document.addEventListener('click', handleOutsideClick);
 
-    if (isEdit) {
-      form.setFocus('title');
-    }
-
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [isEdit]);
 
