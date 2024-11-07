@@ -813,10 +813,6 @@ export const useSaveZoomMeetingMutation = () => {
           });
         }
       }
-
-      queryClient.invalidateQueries({
-        queryKey: ['ZoomMeeting', response.data],
-      });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
