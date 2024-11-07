@@ -12,6 +12,7 @@ namespace Tutor\Ecommerce;
 
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Earnings;
+use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
 use Tutor\Models\OrderModel;
@@ -94,7 +95,7 @@ class HooksHandler {
 	public function after_order_bulk_action( $bulk_action, $bulk_ids ) {
 		$order_status = $this->order_model->get_order_status_by_payment_status( $bulk_action );
 
-		$cancel_reason = isset( $_POST['cancel_reason'] ) ? $_POST['cancel_reason'] : '';
+		$cancel_reason = Input::post( 'cancel_reason', '' );
 		foreach ( $bulk_ids as $order_id ) {
 			try {
 				$this->manage_earnings_and_enrollments( $order_status, $order_id );
@@ -318,6 +319,28 @@ class HooksHandler {
 					 */
 					if ( $this->order_model::TYPE_SINGLE_ORDER === $order->order_type ) {
 						update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
+
+						/**
+						 * Update enrollment expiry date if it is set in a course.
+						 */
+						if ( tutor()->course_post_type === get_post_type( $object_id ) ) {
+							$is_set_enrollment_expiry  = (int) get_tutor_course_settings( $object_id, 'enrollment_expiry' );
+							$enrollment_expiry_enabled = (bool) get_tutor_option( 'enrollment_expiry_enabled' );
+							if ( $enrollment_expiry_enabled && $is_set_enrollment_expiry ) {
+								global $wpdb;
+								QueryHelper::update(
+									$wpdb->posts,
+									array(
+										'post_date'     => current_time( 'mysql' ),
+										'post_date_gmt' => current_time( 'mysql', true ),
+									),
+									array(
+										'ID'        => $has_enrollment->ID,
+										'post_type' => tutor()->enrollment_post_type,
+									)
+								);
+							}
+						}
 					}
 				}
 			} else {
