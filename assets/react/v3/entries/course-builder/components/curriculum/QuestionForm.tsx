@@ -17,6 +17,7 @@ import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/questio
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -31,6 +32,8 @@ import { styleUtils } from '@Utils/style-utils';
 
 import emptyStateImage2x from '@Images/quiz-empty-state-2x.webp';
 import emptyStateImage from '@Images/quiz-empty-state.webp';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const QuestionForm = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, contentType } = useQuizModalContext();
@@ -153,7 +156,7 @@ const QuestionForm = () => {
 
       {questionTypeForm[activeQuestionType as Exclude<QuizQuestionType, 'single_choice' | 'image_matching' | 'h5p'>]}
 
-      <Show when={activeQuestionType !== 'h5p'}>
+      <Show when={isTutorPro && activeQuestionType !== 'h5p'}>
         <div css={styles.questionAnswer}>
           <Controller
             control={form.control}

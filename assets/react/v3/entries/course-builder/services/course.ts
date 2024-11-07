@@ -536,7 +536,12 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     _tutor_course_additional_data_edit: true,
     _tutor_attachments_main_edit: true,
     ...(data.video.source
-      ? Object.fromEntries(Object.entries(data.video).map(([key, value]) => [`video[${key}]`, value]))
+      ? Object.fromEntries(
+          Object.entries(data.video).map(([key, value]) => [
+            `video[${key}]`,
+            key === 'source_video_id' && data.video.source !== 'html5' ? '' : value,
+          ]),
+        )
       : {}),
     tutor_attachments: (data.course_attachments || []).map((item) => item.id) ?? [],
     bp_attached_group_ids: data.bp_attached_group_ids,
