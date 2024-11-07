@@ -77,7 +77,7 @@ const CustomEditorOverlay = ({
 }: CustomEditorOverlayProps) => {
   const form = useFormContext<CourseFormData>();
   const { showModal } = useModal();
-  const [loadingButton, setLoadingButton] = useState<'back_to' | 'edit_with' | null>(null);
+  const [loadingButton, setLoadingButton] = useState('');
 
   return (
     <div css={styles.editorOverlay}>
@@ -110,7 +110,7 @@ const CustomEditorOverlay = ({
               } catch (error) {
                 console.error(error);
               } finally {
-                setLoadingButton(null);
+                setLoadingButton('');
               }
             }
           }}
@@ -136,7 +136,7 @@ const CustomEditorOverlay = ({
           } catch (error) {
             console.error(error);
           } finally {
-            setLoadingButton(null);
+            setLoadingButton('');
           }
         }}
       >
