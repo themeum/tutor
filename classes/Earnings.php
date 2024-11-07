@@ -86,6 +86,7 @@ class Earnings extends Singleton {
 		if ( is_array( $items ) && count( $items ) ) {
 			foreach ( $items as $item ) {
 				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
+				$total_price = $item->discount_price ? $item->discount_price : $total_price;
 				$course_id   = $item->id;
 
 				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
