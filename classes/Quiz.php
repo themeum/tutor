@@ -886,6 +886,30 @@ class Quiz {
 	}
 
 	/**
+	 * Get quiz total marks.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $quiz_id quiz id.
+	 *
+	 * @return int|float
+	 */
+	public static function get_quiz_total_marks( $quiz_id ) {
+		global $wpdb;
+
+		$total_marks = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT SUM(question_mark) total_marks 
+				FROM {$wpdb->prefix}tutor_quiz_questions
+				WHERE quiz_id=%d",
+				$quiz_id
+			)
+		);
+
+		return floatval( $total_marks );
+	}
+
+	/**
 	 * Quiz timeout by ajax
 	 *
 	 * @since 1.0.0
@@ -905,8 +929,11 @@ class Quiz {
 
 			$data = array(
 				'attempt_status'   => 'attempt_timeout',
-				'attempt_ended_at' => date( 'Y-m-d H:i:s', tutor_time() ), //phpcs:ignore
+				'total_marks'      => self::get_quiz_total_marks( $quiz_id ),
+				'earned_marks'     => 0,
+				'attempt_ended_at' => gmdate( 'Y-m-d H:i:s', tutor_time() ),
 			);
+
 			$wpdb->update( $wpdb->prefix . 'tutor_quiz_attempts', $data, array( 'attempt_id' => $attempt->attempt_id ) );
 
 			do_action( 'tutor_quiz_timeout', $attempt_id, $quiz_id, $attempt->user_id );
