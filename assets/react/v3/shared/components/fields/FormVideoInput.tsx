@@ -262,10 +262,14 @@ const FormVideoInput = ({
   };
 
   const validateVideoUrl = (url: string) => {
+    if (videoSource === 'embedded') {
+      return true;
+    }
+
     const value = url.trim();
     const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
 
-    if (form.watch('videoSource') === 'shortcode') {
+    if (videoSource === 'shortcode') {
       const regExp = /^\[.*\]$/;
       const match = value.match(regExp);
 
@@ -280,7 +284,7 @@ const FormVideoInput = ({
       return __('Invalid URL', 'tutor');
     }
 
-    if (form.watch('videoSource') === 'youtube') {
+    if (videoSource === 'youtube') {
       const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
       const match = value.match(regExp);
       if (!match || match[7].length !== 11) {
@@ -290,21 +294,12 @@ const FormVideoInput = ({
       return true;
     }
 
-    if (form.watch('videoSource') === 'vimeo') {
+    if (videoSource === 'vimeo') {
       const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
       const match = value.match(regExp);
 
       if (!match || !match[5]) {
         return __('Invalid Vimeo URL', 'tutor');
-      }
-    }
-
-    if (form.watch('videoSource') === 'embedded') {
-      const regExp = /<iframe.*src="(.*)".*><\/iframe>/;
-      const match = value.match(regExp);
-
-      if (!match || !match[1]) {
-        return __('Invalid Embedded URL', 'tutor');
       }
     }
 
@@ -500,8 +495,7 @@ const FormVideoInput = ({
                     `}
                     rows={2}
                     placeholder={
-                      placeholderMap[form.watch('videoSource') as keyof typeof placeholderMap] ||
-                      __('Paste URL', 'tutor')
+                      placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')
                     }
                   />
                 );

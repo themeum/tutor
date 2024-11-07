@@ -576,7 +576,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     course_price_type: !courseDetails.course_pricing.type ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
     course_sale_price: courseDetails.course_pricing.sale_price,
-    course_selling_option: courseDetails.course_selling_option ?? 'one_time',
+    course_selling_option: courseDetails.course_selling_option || 'one_time',
     course_categories: courseDetails.course_categories.map((item) => item.term_id),
     course_tags: courseDetails.course_tags.map((item) => {
       return {
@@ -625,8 +625,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
     bp_attached_group_ids: courseDetails.bp_attached_groups ?? [],
     editor_used: courseDetails.editor_used,
-    isScheduleEnabled:
-      courseDetails.post_status === 'future' && isBefore(new Date(), new Date(courseDetails.post_date)),
+    isScheduleEnabled: isBefore(new Date(), new Date(courseDetails.post_date)),
     showScheduleForm: !isBefore(new Date(), new Date(courseDetails.post_date)),
     schedule_date: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.yearMonthDay)

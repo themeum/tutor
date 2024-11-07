@@ -77,6 +77,20 @@ class OrderModel {
 	const TRANSIENT_ORDER_BADGE_COUNT = 'tutor_order_badge_count';
 
 	/**
+	 * Order placement success
+	 *
+	 * @since 3.0.0
+	 */
+	const ORDER_PLACEMENT_SUCCESS = 'success';
+
+	/**
+	 * Order placement failed
+	 *
+	 * @since 3.0.0
+	 */
+	const ORDER_PLACEMENT_FAILED = 'failed';
+
+	/**
 	 * Order table name
 	 *
 	 * @since 3.0.0
@@ -347,8 +361,8 @@ class OrderModel {
 		$order_data->created_at_readable = DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->created_at_gmt );
 		$order_data->updated_at_readable = empty( $order_data->updated_at_gmt ) ? '' : DateTimeHelper::get_gmt_to_user_timezone_date( $order_data->updated_at_gmt );
 
-		$order_data->created_by = get_userdata( $order_data->created_by )->display_name;
-		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name;
+		$order_data->created_by = get_userdata( $order_data->created_by )->display_name ?? '';
+		$order_data->updated_by = get_userdata( $order_data->updated_by )->display_name ?? '';
 
 		$order_activities_model = new OrderActivitiesModel();
 		$order_data->activities = $order_activities_model->get_order_activities( $order_id );

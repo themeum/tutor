@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -18,7 +17,6 @@ import { DateFormats, TutorRoles } from '@Config/constants';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import {
-  type CourseDetailsResponse,
   type CourseFormData,
   type PostStatus,
   convertCourseDataToPayload,
@@ -27,7 +25,7 @@ import {
 } from '@CourseBuilderServices/course';
 import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { convertToGMT, noop } from '@Utils/util';
 
 import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
 import reviewSubmitted from '@Images/review-submitted.webp';
@@ -38,12 +36,13 @@ const HeaderActions = () => {
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
   const { showModal } = useModal();
-  const queryClient = useQueryClient();
   const postStatus = useWatch({ name: 'post_status' });
   const postVisibility = useWatch({ name: 'visibility' });
   const previewLink = useWatch({ name: 'preview_link' });
   const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' });
   const postDate = useWatch({ name: 'post_date' });
+  const scheduleDate = useWatch({ name: 'schedule_date' });
+  const scheduleTime = useWatch({ name: 'schedule_time' });
 
   const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(postStatus);
 
@@ -52,14 +51,12 @@ const HeaderActions = () => {
 
   const isPostDateDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
-  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
-
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
-  const isPendingAdminApproval = tutorConfig.settings?.enable_course_review_moderation === 'off';
+  const isAllowedToPublishCourse = tutorConfig.settings?.instructor_can_publish_course === 'on';
 
   const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
@@ -81,9 +78,14 @@ const HeaderActions = () => {
     ) {
       navigateToBasicsWithError();
       form.setValue('showScheduleForm', true, { shouldDirty: true });
-      triggerAndFocus('schedule_date');
-      triggerAndFocus('schedule_time');
-      return;
+      if (!data.schedule_date) {
+        triggerAndFocus('schedule_date');
+        return;
+      }
+      if (!data.schedule_time) {
+        triggerAndFocus('schedule_time');
+        return;
+      }
     }
 
     if (data.course_price_type === 'paid') {
@@ -121,13 +123,15 @@ const HeaderActions = () => {
         course_id: Number(courseId),
         ...payload,
         post_status: determinedPostStatus,
-        ...(determinedPostStatus === 'draft' ||
-        (determinedPostStatus === 'publish' && isBefore(new Date(), new Date(courseDetails?.post_date ?? postDate)))
+        ...(!data.isScheduleEnabled
           ? {
               post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
-              post_date_gmt: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+              post_date_gmt: convertToGMT(new Date()),
             }
           : {}),
+        ...(data.isScheduleEnabled && {
+          edit_date: true,
+        }),
       });
 
       if (!response.data) {
@@ -189,19 +193,22 @@ const HeaderActions = () => {
     let text: string;
     let action: PostStatus;
 
-    if (!isPendingAdminApproval && !isAdmin && isInstructor) {
+    if (!isAllowedToPublishCourse && !isAdmin && isInstructor) {
       text = __('Submit', 'tutor');
       action = 'pending';
+    } else if (
+      !courseId ||
+      postStatus === 'pending' ||
+      (postStatus === 'draft' && !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)))
+    ) {
+      text = __('Publish', 'tutor');
+      action = 'publish';
     } else if (isScheduleEnabled) {
       text =
-        isPostDateDirty &&
-        !isBefore(new Date(`${form.getValues('schedule_date')} ${form.getValues('schedule_time')}`), new Date())
+        isPostDateDirty && !isBefore(new Date(`${scheduleDate} ${scheduleTime}`), new Date())
           ? __('Schedule', 'tutor')
           : __('Update', 'tutor');
       action = 'future';
-    } else if (!courseId || (postStatus === 'draft' && !isBefore(new Date(), new Date(postDate)))) {
-      text = __('Publish', 'tutor');
-      action = 'publish';
     } else {
       text = __('Update', 'tutor');
       action = 'publish';
@@ -284,7 +291,7 @@ const HeaderActions = () => {
         handleSubmit(
           {
             ...data,
-            post_date: format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
+            isScheduleEnabled: false,
           },
           'publish',
         ),
@@ -294,22 +301,28 @@ const HeaderActions = () => {
 
     const items = [previewItem];
 
-    if (isBefore(new Date(), new Date(postDate))) {
+    if (
+      (isAdmin || isAllowedToPublishCourse) &&
+      isScheduleEnabled &&
+      isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`))
+    ) {
       items.unshift(publishImmediatelyItem);
     }
 
     if (courseId && postStatus !== 'draft') {
       items.pop();
 
-      if (isAdmin || isPendingAdminApproval) {
+      if (isAdmin || isAllowedToPublishCourse) {
         items.push(switchToDraftItem);
       }
     }
 
-    if (isAdmin || hasWpAdminAccess) {
-      items.push(moveToTrashItem, backToLegacyItem);
-    } else if (hasTrashAccess) {
+    if (isAdmin || hasTrashAccess) {
       items.push(moveToTrashItem);
+    }
+
+    if (isAdmin || hasWpAdminAccess) {
+      items.push(backToLegacyItem);
     }
 
     return items;
@@ -344,15 +357,7 @@ const HeaderActions = () => {
           loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
           iconPosition="left"
           buttonCss={css`padding-inline: ${spacing[16]};`}
-          onClick={form.handleSubmit((data) =>
-            handleSubmit(
-              {
-                ...data,
-                post_date: isPostDateDirty ? postDate : format(new Date(), DateFormats.yearMonthDayHourMinuteSecond24H),
-              },
-              'draft',
-            ),
-          )}
+          onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
         >
           {__('Save as Draft', 'tutor')}
         </Button>
@@ -380,7 +385,9 @@ const HeaderActions = () => {
             (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
           }
           onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
-          dropdownMaxWidth={['draft', 'future'].includes(postStatus) ? '190px' : '164px'}
+          dropdownMaxWidth={
+            isScheduleEnabled && isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)) ? '190px' : '164px'
+          }
           disabledDropdown={dropdownItems().length === 0}
         >
           {dropdownItems().map((item, index) => (

@@ -55,7 +55,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 			<input class="tutor-form-control" type="email" name="billing_email" value="<?php echo esc_attr( $billing_email ); ?>" required>
 		</div>
 	</div>
-	<div class="tutor-col-12">
+	<div class="tutor-col-12 tutor-position-relative">
 		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'Country', 'tutor' ); ?>
@@ -74,7 +74,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 		</div>
 	</div>
 
-	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6">
+	<div class="tutor-col-12 tutor-col-sm-6 tutor-col-md-12 tutor-col-lg-6 tutor-position-relative">
 		<div class="tutor-mb-16">
 			<label class="tutor-form-label tutor-color-secondary">
 				<?php esc_html_e( 'State', 'tutor' ); ?>

@@ -1662,3 +1662,34 @@ if ( ! function_exists( 'tutor_is_dev_mode' ) ) {
 		return defined( 'TUTOR_DEV_MODE' ) && TUTOR_DEV_MODE;
 	}
 }
+
+if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
+	/**
+	 * Redirect after payment with status and message
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $status Success or error status of payment.
+	 * @param int    $order_id Order ID.
+	 * @param string $message Success/error message to display.
+	 *
+	 * @return void
+	 */
+	function tutor_redirect_after_payment( $status, $order_id, $message = '' ) {
+		$query_params = array(
+			'tutor_order_placement' => $status,
+			'order_id'              => $order_id,
+		);
+
+		if ( $message ) {
+			if ( 'success' === $status ) {
+				$query_params['success_message'] = $message;
+			} else {
+				$query_params['error_message'] = $message;
+			}
+		}
+
+		wp_safe_redirect( add_query_arg( $query_params, home_url() ) );
+		exit();
+	}
+}

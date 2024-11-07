@@ -989,12 +989,12 @@ class Course extends Tutor_Base {
 		}
 
 		/**
-		 * Course review moderation check.
-		 * If moderation is enabled then course status will be pending for non-admin.
+		 * Can publish a course when user is admin or option `instructor_can_publish_course` is turned on.
+		 * If instructor_can_publish_course is turned off then course status will be pending.
 		 */
 		if ( CourseModel::STATUS_PUBLISH === $params['post_status'] ) {
-			$enable_moderation = (bool) tutor_utils()->get_option( 'enable_course_review_moderation', false );
-			if ( ! User::is_admin() && $enable_moderation ) {
+			$is_instructor_allowed_to_publish = (bool) tutor_utils()->get_option( 'instructor_can_publish_course', false );
+			if ( ! User::is_admin() && ! $is_instructor_allowed_to_publish ) {
 				$params['post_status'] = CourseModel::STATUS_PENDING;
 			}
 		}
@@ -1312,7 +1312,7 @@ class Course extends Tutor_Base {
 			'chatgpt_enable',
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
-			'enable_course_review_moderation',
+			'instructor_can_publish_course',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );

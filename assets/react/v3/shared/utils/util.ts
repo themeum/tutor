@@ -1,5 +1,6 @@
 import collection from '@Config/icon-list';
 import type { Category, CategoryWithChildren } from '@Services/category';
+import { __ } from '@wordpress/i18n';
 import {
   addMinutes,
   differenceInDays,
@@ -18,9 +19,8 @@ import type { DateRange } from 'react-day-picker';
 import { v4 as uuidv4 } from 'uuid';
 
 import { DateFormats } from '@Config/constants';
+import type { ErrorResponse } from './form';
 import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
-import { ErrorResponse } from './form';
-import { __ } from '@wordpress/i18n';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
   if (val === undefined || val === null) {

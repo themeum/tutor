@@ -99,7 +99,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 		<div class="tutor-table-responsive">
 			<table class="tutor-table">
 				<thead>
-					<th width="10%">
+					<th width="8%">
 						<?php esc_html_e( 'Order ID', 'tutor' ); ?>
 					</th>
 					<th width="30%">
@@ -111,15 +111,17 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 					<th>
 						<?php esc_html_e( 'Price', 'tutor' ); ?>
 					</th>
-					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
-					<th>
-						<?php esc_html_e( 'Method', 'tutor' ); ?>
-					</th>
-					<?php endif; ?>
 					<th>
 						<?php esc_html_e( 'Status', 'tutor' ); ?>
 					</th>
+					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+					<th>
+						<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
+					</th>
 					<th></th>
+					<?php endif; ?>
+					<th></th>
+					
 				</thead>
 				<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
 					<tbody>
@@ -163,15 +165,29 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
 									</div>
 								</td>
-								<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+								<td>
+								<?php
+									echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) );
+								?>
+								</td>
 								<td>
 									<div class="tutor-fs-7">
 										<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
 									</div>
 								</td>
-								<?php endif; ?>
 								<td>
-								<?php echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) ); ?>
+								<form method="post">
+									<?php tutor_nonce_field(); ?>
+									<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+									<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+									<?php
+									if ( $order->payment_method && 'manual' !== $order->payment_method && OrderModel::ORDER_INCOMPLETE === $order->order_status ) :
+										?>
+									<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+										<?php esc_html_e( 'Pay', 'tutor' ); ?>
+									</button>
+									<?php endif; ?>
+								</form>
 								</td>
 								<td>
 								</td>
@@ -282,21 +298,21 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 			</table>
 		</div>
 
-		<?php
-			$pagination_data = array(
-				'total_items' => $total_orders,
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			);
+					<?php
+					$pagination_data = array(
+						'total_items' => $total_orders,
+						'per_page'    => $per_page,
+						'paged'       => $paged,
+					);
 
-			$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
+					$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
 
-			if ( $total_page > 1 ) {
-				$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
-	<?php else : ?>
-		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+					if ( $total_page > 1 ) {
+						$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
+						tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+					}
+					?>
+					<?php else : ?>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	<?php endif; ?>
 </div>
