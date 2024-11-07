@@ -262,6 +262,8 @@ class Course extends Tutor_Base {
 		add_action( 'wp_ajax_tutor_course_details', array( $this, 'ajax_course_details' ) );
 		add_action( 'wp_ajax_tutor_course_contents', array( $this, 'ajax_course_contents' ) );
 		add_action( 'wp_ajax_tutor_update_course', array( $this, 'ajax_update_course' ) );
+		add_action( 'wp_ajax_tutor_unlink_page_builder', array( $this, 'ajax_unlink_page_builder' ) );
+
 		add_filter( 'tutor_user_list_access', array( $this, 'user_list_access_for_instructor' ) );
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
 
@@ -1017,6 +1019,33 @@ class Course extends Tutor_Base {
 		$this->json_response(
 			__( 'Course update successfully', 'tutor' ),
 			$update_id,
+			HttpHelper::STATUS_OK
+		);
+	}
+
+	/**
+	 * Unlink page builder from editor.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_unlink_page_builder() {
+		tutor_utils()->check_nonce();
+
+		$course_id = Input::post( 'course_id', 0, Input::TYPE_INT );
+		$builder   = Input::post( 'builder' );
+		$this->check_access( $course_id );
+
+		if ( 'elementor' === $builder ) {
+			delete_post_meta( $course_id, '_elementor_edit_mode' );
+		} elseif ( 'droip' === $builder ) {
+			delete_post_meta( $course_id, 'droip_editor_mode' );
+		}
+
+		$this->json_response(
+			__( 'Builder unlinked successfully.', 'tutor' ),
+			$course_id,
 			HttpHelper::STATUS_OK
 		);
 	}

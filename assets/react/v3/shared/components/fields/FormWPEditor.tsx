@@ -2,27 +2,29 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { rgba } from 'polished';
 import type React from 'react';
+import { useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import LoadingSpinner, { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 import WPEditor from '@Atoms/WPEditor';
 
 import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
+import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
 import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import type { Editor } from '@CourseBuilderServices/course';
+import { CourseFormData, TutorMutationResponse, type Editor } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
-import { makeFirstCharacterUpperCase } from '@Utils/util';
 
 import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
 import generateText from '@Images/pro-placeholders/generate-text.webp';
@@ -47,15 +49,16 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   isMagicAi?: boolean;
   autoFocus?: boolean;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
+  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<null>>;
   onFullScreenChange?: (isFullScreen: boolean) => void;
   min_height?: number;
   max_height?: number;
 }
 
 interface CustomEditorOverlayProps {
-  loading: boolean;
   editorUsed: Editor;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
+  onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<null>>;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -67,35 +70,78 @@ const customEditorIcons: { [key: string]: IconCollection } = {
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
 
-const CustomEditorOverlay = ({ loading, editorUsed, onCustomEditorButtonClick }: CustomEditorOverlayProps) => {
+const CustomEditorOverlay = ({
+  editorUsed,
+  onBackToWPEditorClick,
+  onCustomEditorButtonClick,
+}: CustomEditorOverlayProps) => {
+  const form = useFormContext<CourseFormData>();
+  const { showModal } = useModal();
+  const [loadingButton, setLoadingButton] = useState('');
+
   return (
-    <div css={styles.editorOverlay(!loading)}>
-      {loading ? (
-        <LoadingOverlay />
-      ) : (
+    <div css={styles.editorOverlay}>
+      <Show when={editorUsed.name !== 'gutenberg'}>
         <Button
           variant="tertiary"
           size="small"
           buttonCss={styles.editWithButton}
-          icon={
-            customEditorIcons[editorUsed.name] && (
-              <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
-            )
-          }
+          icon={<SVGIcon name="arrowLeft" height={24} width={24} />}
+          loading={loadingButton === 'back_to'}
           onClick={async () => {
-            if (editorUsed) {
+            const { action } = await showModal({
+              component: StaticConfirmationModal,
+              props: {
+                title: __('Back to WordPress Editor', 'tutor'),
+                description: __(
+                  'Please note that you are switching to WordPress default editor. Your current layout, design and content might break.',
+                  'tutor',
+                ),
+                confirmButtonText: __('Confirm', 'tutor'),
+                confirmButtonVariant: 'primary',
+              },
+              depthIndex: zIndex.highest,
+            });
+            if (action === 'CONFIRM') {
               try {
-                await onCustomEditorButtonClick?.(editorUsed);
-                window.location.href = editorUsed.link;
+                setLoadingButton('back_to');
+                await onBackToWPEditorClick?.(editorUsed.name);
+                form.setValue('editor_used', { name: 'classic', label: __('Classic Editor', 'tutor'), link: '' });
               } catch (error) {
                 console.error(error);
+              } finally {
+                setLoadingButton('');
               }
             }
           }}
         >
-          {editorUsed?.label}
+          {__('Back to WordPress Editor', 'tutor')}
         </Button>
-      )}
+      </Show>
+      <Button
+        variant="tertiary"
+        size="small"
+        buttonCss={styles.editWithButton}
+        loading={loadingButton === 'edit_with'}
+        icon={
+          customEditorIcons[editorUsed.name] && (
+            <SVGIcon name={customEditorIcons[editorUsed.name]} height={24} width={24} />
+          )
+        }
+        onClick={async () => {
+          try {
+            setLoadingButton('edit_with');
+            await onCustomEditorButtonClick?.(editorUsed);
+            window.location.href = editorUsed.link;
+          } catch (error) {
+            console.error(error);
+          } finally {
+            setLoadingButton('');
+          }
+        }}
+      >
+        {sprintf(__('Edit with %s', 'tutor'), editorUsed?.label)}
+      </Button>
     </div>
   );
 };
@@ -119,6 +165,7 @@ const FormWPEditor = ({
   isMagicAi = false,
   autoFocus = false,
   onCustomEditorButtonClick,
+  onBackToWPEditorClick,
   onFullScreenChange,
   min_height,
   max_height,
@@ -127,6 +174,8 @@ const FormWPEditor = ({
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
   const isAdmin = tutorConfig.current_user?.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = tutorConfig.current_user?.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+
+  const [customEditorLoading, setCustomEditorLoading] = useState<string | null>(null);
 
   const filteredEditors = editors.filter(
     (editor) => isAdmin || (isInstructor && hasWpAdminAccess) || editor.name === 'droip',
@@ -197,52 +246,39 @@ const FormWPEditor = ({
           </button>
         </Show>
       </span>
-      <Show when={filteredEditors.length && editorUsed.name === 'classic'}>
-        <div css={styles.editorsButtonWrapper}>
-          <span>{__('Edit with', 'tutor')}</span>
-          <div css={styles.customEditorButtons}>
-            <For each={filteredEditors}>
-              {(editor) => (
-                <Tooltip key={editor.name} content={makeFirstCharacterUpperCase(editor.name)} delay={200}>
-                  <button
-                    type="button"
-                    css={styles.customEditorButton}
-                    onClick={async () => {
-                      try {
-                        await onCustomEditorButtonClick?.(editor);
-                        window.location.href = editor.link;
-                      } catch (error) {
-                        console.error(error);
-                      }
-                    }}
-                  >
-                    <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
-                  </button>
-                </Tooltip>
-              )}
-            </For>
-          </div>
+      <div css={styles.editorsButtonWrapper}>
+        <span>{__('Edit with', 'tutor')}</span>
+        <div css={styles.customEditorButtons}>
+          <For each={filteredEditors}>
+            {(editor) => (
+              <Tooltip key={editor.name} content={editor.label} delay={200}>
+                <button
+                  type="button"
+                  css={styles.customEditorButton}
+                  disabled={customEditorLoading === editor.name}
+                  onClick={async () => {
+                    try {
+                      setCustomEditorLoading(editor.name);
+                      await onCustomEditorButtonClick?.(editor);
+                      window.location.href = editor.link;
+                    } catch (error) {
+                      console.error(error);
+                    } finally {
+                      setCustomEditorLoading(null);
+                    }
+                  }}
+                >
+                  <Show when={customEditorLoading === editor.name}>
+                    <LoadingOverlay />
+                  </Show>
+                  <SVGIcon name={customEditorIcons[editor.name]} height={24} width={24} />
+                </button>
+              </Tooltip>
+            )}
+          </For>
         </div>
-      </Show>
+      </div>
     </div>
-  );
-
-  const editor = (
-    <WPEditor
-      value={field.value ?? ''}
-      onChange={(value) => {
-        field.onChange(value);
-        if (onChange) {
-          onChange(value);
-        }
-      }}
-      isMinimal={isMinimal}
-      autoFocus={autoFocus}
-      onFullScreenChange={onFullScreenChange}
-      readonly={readOnly}
-      min_height={min_height}
-      max_height={max_height}
-    />
   );
 
   return (
@@ -260,21 +296,39 @@ const FormWPEditor = ({
       replaceEntireLabel={hasAvailableCustomEditors}
     >
       {() => {
+        if (loading) {
+          return (
+            <div css={styleUtils.flexCenter()}>
+              <LoadingSpinner size={20} color={colorTokens.icon.default} />
+            </div>
+          );
+        }
+
         return (
-          <Show when={hasCustomEditorSupport} fallback={editor}>
-            <Show
-              when={editorUsed.name === 'classic' && !loading}
-              fallback={
-                <CustomEditorOverlay
-                  loading={loading || false}
-                  editorUsed={editorUsed}
-                  onCustomEditorButtonClick={onCustomEditorButtonClick}
-                />
-              }
-            >
-              {editor}
+          <div css={styles.wrapper}>
+            <Show when={hasCustomEditorSupport && editorUsed.name !== 'classic'}>
+              <CustomEditorOverlay
+                editorUsed={editorUsed}
+                onBackToWPEditorClick={onBackToWPEditorClick}
+                onCustomEditorButtonClick={onCustomEditorButtonClick}
+              />
             </Show>
-          </Show>
+            <WPEditor
+              value={field.value ?? ''}
+              onChange={(value) => {
+                field.onChange(value);
+                if (onChange) {
+                  onChange(value);
+                }
+              }}
+              isMinimal={isMinimal}
+              autoFocus={autoFocus}
+              onFullScreenChange={onFullScreenChange}
+              readonly={readOnly}
+              min_height={min_height}
+              max_height={max_height}
+            />
+          </div>
         );
       }}
     </FormFieldWrapper>
@@ -284,6 +338,9 @@ const FormWPEditor = ({
 export default FormWPEditor;
 
 const styles = {
+  wrapper: css`
+    position: relative;
+  `,
   editorLabel: css`
     display: flex;
     width: 100%;
@@ -316,12 +373,19 @@ const styles = {
     ${styleUtils.resetButton}
     display: flex;
     align-items: center;
+    justify-content: center;
+    position: relative;
   `,
-  editorOverlay: (isLoading: boolean) => css`
-    height: 360px;
+  editorOverlay: css`
+    position: absolute;
+    height: 100%;
+    width: 100%;
     ${styleUtils.flexCenter()};
-    background-color: ${isLoading ? rgba(colorTokens.background.modal, 0.6) : 'transparent'};
-    border-radius: ${borderRadius.card};
+    gap: ${spacing[8]};
+    background-color: ${rgba(colorTokens.background.modal, 0.6)};
+    border-radius: ${borderRadius[6]};
+    z-index: ${zIndex.positive};
+    backdrop-filter: blur(8px);
   `,
   editWithButton: css`
     background: ${colorTokens.action.secondary};

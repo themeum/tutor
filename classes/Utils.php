@@ -10219,7 +10219,7 @@ class Utils {
 			$name             = 'gutenberg';
 			$editors[ $name ] = array(
 				'name'  => $name,
-				'label' => __( 'Edit with Gutenberg', 'tutor' ),
+				'label' => __( 'Gutenberg', 'tutor' ),
 				'link'  => add_query_arg(
 					array(
 						'post'   => $post_id,
@@ -10234,7 +10234,7 @@ class Utils {
 			$name             = 'droip';
 			$editors[ $name ] = array(
 				'name'  => $name,
-				'label' => __( 'Edit with Droip', 'tutor' ),
+				'label' => __( 'Droip', 'tutor' ),
 				'link'  => add_query_arg(
 					array(
 						'action'  => 'droip',
@@ -10249,7 +10249,7 @@ class Utils {
 			$name             = 'elementor';
 			$editors[ $name ] = array(
 				'name'  => $name,
-				'label' => __( 'Edit with Elementor', 'tutor' ),
+				'label' => __( 'Elementor', 'tutor' ),
 				'link'  => add_query_arg(
 					array(
 						'post'   => $post_id,
@@ -10283,9 +10283,13 @@ class Utils {
 		$content = get_post_field( 'post_content', $post_id );
 		if ( has_blocks( $content ) ) {
 			$name = 'gutenberg';
-		} elseif ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) ) {
+		}
+
+		if ( 'builder' === get_post_meta( $post_id, '_elementor_edit_mode', true ) ) {
 			$name = 'elementor';
-		} elseif ( 'droip' === get_post_meta( $post_id, 'droip_editor_mode', true ) ) {
+		}
+		 
+		if ( 'droip' === get_post_meta( $post_id, 'droip_editor_mode', true ) ) {
 			$name = 'droip';
 		}
 

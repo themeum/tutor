@@ -134,9 +134,9 @@ export const courseDefaultData: CourseFormData = {
   enable_tutor_bp: false,
   bp_attached_group_ids: [],
   editor_used: {
-    label: '',
+    name: 'classic',
+    label: __('Classic Editor', 'tutor'),
     link: '',
-    name: '',
   },
   isScheduleEnabled: false,
   showScheduleForm: false,
@@ -971,5 +971,26 @@ const getYouTubeVideoDuration = (videoId: string) => {
 export const useGetYouTubeVideoDuration = () => {
   return useMutation({
     mutationFn: getYouTubeVideoDuration,
+  });
+};
+
+interface UnlinkPageBuilderPayload {
+  courseId: number;
+  builder: string;
+}
+
+const unlinkPageBuilder = ({ courseId, builder }: UnlinkPageBuilderPayload) => {
+  return wpAjaxInstance.post<UnlinkPageBuilderPayload, TutorMutationResponse<null>>(
+    endpoints.TUTOR_UNLINK_PAGE_BUILDER,
+    {
+      course_id: courseId,
+      builder: builder,
+    },
+  );
+};
+
+export const useUnlinkPageBuilder = () => {
+  return useMutation({
+    mutationFn: unlinkPageBuilder,
   });
 };

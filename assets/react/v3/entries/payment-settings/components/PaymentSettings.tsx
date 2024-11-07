@@ -12,11 +12,11 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import ManualPaymentModal from './modals/ManualPaymentModal';
 import { useModal } from '@Components/modals/Modal';
+import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
 import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
 import ProBadge from '@Atoms/ProBadge';
 import { tutorConfig } from '@Config/config';
 import { usePaymentContext } from '../contexts/payment-context';
-import StaticConfirmationModal from './modals/StaticConfirmationModal';
 
 const TaxSettingsPage = () => {
   const { payment_gateways, payment_settings } = usePaymentContext();

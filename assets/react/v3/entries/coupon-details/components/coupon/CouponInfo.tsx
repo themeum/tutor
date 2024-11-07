@@ -98,7 +98,7 @@ function CouponInfo() {
           />
           {!isEditMode && (
             <Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
-              {__('Generate code', 'tutor')}
+              {__('Generate Code', 'tutor')}
             </Button>
           )}
         </div>

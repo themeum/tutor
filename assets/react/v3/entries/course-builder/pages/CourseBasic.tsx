@@ -18,6 +18,7 @@ import {
   type CourseDetailsResponse,
   type CourseFormData,
   convertCourseDataToPayload,
+  useUnlinkPageBuilder,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
 import { convertToSlug, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
@@ -33,6 +34,7 @@ const CourseBasic = () => {
     queryKey: ['CourseDetails', courseId],
   });
   const updateCourseMutation = useUpdateCourseMutation();
+  const unlinkPageBuilder = useUnlinkPageBuilder();
 
   const [isWpEditorFullScreen, setIsWpEditorFullScreen] = useState(false);
 
@@ -42,6 +44,8 @@ const CourseBasic = () => {
 
   const postStatus = form.watch('post_status');
   const isPostNameDirty = form.formState.dirtyFields.post_name;
+
+  const editorUsed = form.watch('editor_used');
 
   return (
     <div css={styles.wrapper}>
@@ -92,15 +96,17 @@ const CourseBasic = () => {
               <FormWPEditor
                 {...controllerProps}
                 label={__('Description', 'tutor')}
+                loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                max_height={280}
                 generateWithAi={!isTutorPro || isOpenAiEnabled}
                 hasCustomEditorSupport
-                editorUsed={courseDetails?.editor_used}
+                editorUsed={editorUsed}
                 editors={courseDetails?.editors}
-                onCustomEditorButtonClick={async () => {
-                  form.handleSubmit(async (data) => {
+                onCustomEditorButtonClick={() => {
+                  return form.handleSubmit((data) => {
                     const payload = convertCourseDataToPayload(data);
 
-                    await updateCourseMutation.mutateAsync({
+                    return updateCourseMutation.mutateAsync({
                       course_id: courseId,
                       ...payload,
                       post_status: determinePostStatus(
@@ -109,6 +115,12 @@ const CourseBasic = () => {
                       ),
                     });
                   })();
+                }}
+                onBackToWPEditorClick={(builder: string) => {
+                  return unlinkPageBuilder.mutateAsync({
+                    courseId: courseId,
+                    builder: builder,
+                  });
                 }}
                 onFullScreenChange={(isFullScreen) => {
                   setIsWpEditorFullScreen(isFullScreen);
@@ -135,22 +147,16 @@ const styles = {
     grid-template-columns: 1fr 338px;
     gap: ${spacing[32]};
   `,
-  mainForm: ({
-    isWpEditorFullScreen,
-  }: {
-    isWpEditorFullScreen: boolean;
-  }) => css`
+  mainForm: ({ isWpEditorFullScreen }: { isWpEditorFullScreen: boolean }) => css`
     padding-block: ${spacing[32]} ${spacing[24]};
     align-self: start;
     top: ${headerHeight}px;
     position: sticky;
 
-    ${
-      isWpEditorFullScreen &&
-      css`
-        z-index: ${zIndex.header + 1};
-      `
-    }
+    ${isWpEditorFullScreen &&
+    css`
+      z-index: ${zIndex.header + 1};
+    `}
   `,
 
   fieldsWrapper: css`
