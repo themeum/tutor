@@ -1406,4 +1406,19 @@ class OrderModel {
 		return tutor_get_locale_price( $sellable_price );
 	}
 
+	/**
+	 * Get item sold price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $item_id Item id.
+	 * @param bool  $format Item id.
+	 *
+	 * @return float item sellable price
+	 */
+	public static function get_item_sold_price( $item_id, $format = true ) {
+		// Ensure prices are numeric and properly formatted.
+		// @TODO
+	}
+
 }
