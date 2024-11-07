@@ -880,6 +880,7 @@ class OrderModel {
 		$period_clause     = '';
 		$course_clause     = '';
 		$commission_clause = '';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -887,8 +888,14 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
+			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
 		} else {
 			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( 'today' !== $period ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
 		}
 
 		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
@@ -919,17 +926,28 @@ class OrderModel {
 				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
 				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
 				WHERE 1 = %d
+				AND o.refund_amount > %d
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
-				{$course_clause}",
-				1
+				{$course_clause}
+				{$group_clause},
+				o.id",
+				1,
+				0
 			)
 		);
 
+		$total_refunds = 0;
+
 		foreach ( $refunds as $refund ) {
-			$response['total_refunds'] += $refund->total;
+			$total_refunds += $refund->total;
 		}
+
+		$response = array(
+			'refunds'       => $refunds,
+			'total_refunds' => $total_refunds,
+		);
 
 		return $response;
 	}
