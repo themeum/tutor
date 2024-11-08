@@ -250,7 +250,7 @@ class Ajax {
 			$review_id  = $comment_id;
 
 			if ( $comment_id ) {
-				$result = $wpdb->insert(
+				$wpdb->insert(
 					$wpdb->commentmeta,
 					array(
 						'comment_id' => $comment_id,
@@ -266,7 +266,7 @@ class Ajax {
 		if ( ! tutor_is_rest() ) {
 			wp_send_json_success(
 				array(
-					'message'   => __( 'Rating placed successsully!', 'tutor' ),
+					'message'   => __( 'Rating placed successfully!', 'tutor' ),
 					'review_id' => $review_id,
 				)
 			);
