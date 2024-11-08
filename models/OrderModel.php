@@ -1023,31 +1023,26 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
-		if ( $commission ) {
-			$commission_clause = $wpdb->prepare(
-				'COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100, 0) AS total',
-				$commission
-			);
-		} else {
-			$commission_clause = 'COALESCE(SUM(o.refund_amount), 0) AS total';
-		}
+		// Get Admin commission rate (%) from settings.
+		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
+		// Get Instructor commission rate (%) based on remaining amount.
+		$instructor_commission = 1 - $admin_commission;
 
+		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 		$refunds    = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
-				{$commission_clause},
+				COALESCE(SUM(o.refund_amount), 0) AS total,
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
-				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
 				WHERE 1 = %d
 				AND o.refund_amount > %d
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
-				{$course_clause}
 				{$group_clause},
 				o.id",
 				1,
@@ -1055,19 +1050,24 @@ class OrderModel {
 			)
 		);
 
-		$total_refunds = 0;
+		$admin_refund_amount      = 0;
+		$instructor_refund_amount = 0;
 
 		foreach ( $refunds as $refund ) {
-			$total_refunds += $refund->total;
+			// Refund amount calculation.
+			$refund_amount            = $refund->total;
+			$admin_refund_amount      = $refund_amount * $admin_commission;
+			$instructor_refund_amount = $refund_amount * $instructor_commission;
 		}
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => $total_refunds,
+			'total_refunds' => is_admin() ? $admin_refund_amount : $instructor_refund_amount,
 		);
 
 		return $response;
 	}
+
 
 	/**
 	 * Update the payment status of an order.
