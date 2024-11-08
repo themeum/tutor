@@ -68,7 +68,7 @@ function Payment() {
           <div css={styles.item({ action: 'regular' })}>
             <div>{__('Subtotal', 'tutor')}</div>
             <div>
-              {order.items.length} {__('Items', 'tutor')}
+              {order.items.length} {__('Item(s)', 'tutor')}
             </div>
             <div>{formatPrice(order.subtotal_price)}</div>
           </div>
