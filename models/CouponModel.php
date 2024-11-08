@@ -845,19 +845,28 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int|array $course_id Course id or array of ids.
+	 * @param int|array $item_id Item id or array of ids. May consist course, bundle or plan.
 	 * @param object    $coupon Coupon object.
+	 * @param string    $order_type Order type.
 	 *
 	 * @return boolean
 	 */
-	public function is_coupon_requirement_meet( $course_id, object $coupon ) {
+	public function is_coupon_requirement_meet( $item_id, object $coupon, $order_type = OrderModel::TYPE_SINGLE_ORDER ) {
 		$is_meet_requirement = true;
-		$course_ids          = is_array( $course_id ) ? $course_id : array( $course_id );
+		$item_ids            = is_array( $item_id ) ? $item_id : array( $item_id );
 		if ( self::REQUIREMENT_MINIMUM_PURCHASE === $coupon->purchase_requirement ) {
 			$total_price = 0;
 			$min_amount  = $coupon->purchase_requirement_value;
-			foreach ( $course_ids as $course_id ) {
-				$course_price = tutor_utils()->get_raw_course_price( $course_id );
+			foreach ( $item_ids as $item_id ) {
+				$course_price = tutor_utils()->get_raw_course_price( $item_id );
+				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
+					$plan_info = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+					if ( $plan_info ) {
+						$course_price->regular_price = $plan_info->regular_price;
+						$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
+					}
+				}
+
 				$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->regular_price;
 			}
 
@@ -866,10 +875,10 @@ class CouponModel {
 			}
 		} elseif ( self::REQUIREMENT_MINIMUM_QUANTITY === $coupon->purchase_requirement ) {
 			$min_quantity        = $coupon->purchase_requirement_value;
-			$is_meet_requirement = count( $course_ids ) >= $min_quantity;
+			$is_meet_requirement = count( $item_ids ) >= $min_quantity;
 		}
 
-		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $course_id );
+		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $item_id );
 	}
 
 	/**

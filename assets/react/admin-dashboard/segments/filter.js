@@ -252,11 +252,11 @@ document.addEventListener('DOMContentLoaded', function () {
 				if (response) {
 					if (typeof response === 'object' && response.success) {
 						tutor_toast(__('Delete', 'tutor'), response.data, 'success');
-						location.reload();
+						location.reload(true);
 					} else if (typeof response === 'object' && response.success === false) {
 						tutor_toast(__('Failed', 'tutor'), response.data, 'error');
 					} else {
-						tutor_toast(__('Delete', 'tutor'), __('Succefully deleted ', 'tutor'), 'success');
+						tutor_toast(__('Delete', 'tutor'), __('Successfully deleted ', 'tutor'), 'success');
 						location.reload();
 					}
 				} else {
