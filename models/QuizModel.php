@@ -461,7 +461,7 @@ class QuizModel {
 					INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
 					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
-					INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
+					-- INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
 					{$instructor_clause}
 			WHERE 	quiz_attempts.attempt_ended_at IS NOT NULL
 					AND (
@@ -1084,6 +1084,7 @@ class QuizModel {
 		}
 
 		foreach ( $answers as $answer ) {
+			$answer->answer_title = stripslashes( $answer->answer_title );
 			if ( $answer->image_id ) {
 				$answer->image_url = wp_get_attachment_url( $answer->image_id );
 			}

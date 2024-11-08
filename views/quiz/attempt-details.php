@@ -76,7 +76,7 @@ function tutor_render_answer_list( $answers = array(), $dump_data = false ) {
 
 				case 'text':
 					$ans_string = '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">'
-							. esc_html( $ans->answer_title ) .
+							. esc_html( stripslashes( $ans->answer_title ) ) .
 						'</span>';
 
 					if ( isset( $ans->answer_title ) && ! isset( $ans->answer_two_gap_match ) ) {

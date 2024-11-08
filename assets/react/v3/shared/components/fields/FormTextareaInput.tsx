@@ -3,6 +3,7 @@ import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
+import { useLayoutEffect, useRef } from 'react';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTextareaInputProps extends FormControllerProps<string | null> {
@@ -22,6 +23,8 @@ interface FormTextareaInputProps extends FormControllerProps<string | null> {
   isSecondary?: boolean;
   isMagicAi?: boolean;
   inputCss?: SerializedStyles;
+  maxHeight?: number;
+  autoResize?: boolean;
 }
 
 const DEFAULT_ROWS = 6;
@@ -45,14 +48,36 @@ const FormTextareaInput = ({
   isSecondary = false,
   isMagicAi = false,
   inputCss,
+  maxHeight,
+  autoResize = false,
 }: FormTextareaInputProps) => {
   const inputValue = field.value ?? '';
+
+  const ref = useRef<HTMLTextAreaElement>(null);
 
   let characterCount: { maxLimit: number; inputCharacter: number } | undefined = undefined;
 
   if (maxLimit) {
     characterCount = { maxLimit, inputCharacter: inputValue.toString().length };
   }
+
+  const adjustHeight = () => {
+    if (ref.current) {
+      if (maxHeight) {
+        ref.current.style.maxHeight = `${maxHeight}px`;
+      }
+
+      ref.current.style.height = 'auto';
+      ref.current.style.height = `${ref.current.scrollHeight}px`;
+    }
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useLayoutEffect(() => {
+    if (autoResize) {
+      adjustHeight();
+    }
+  }, []);
 
   return (
     <FormFieldWrapper
@@ -76,6 +101,12 @@ const FormTextareaInput = ({
               <textarea
                 {...field}
                 {...inputProps}
+                ref={(element) => {
+                  field.ref(element);
+                  // @ts-ignore
+                  ref.current = element; // this is not ideal but it is the only way to set ref to the input element
+                }}
+                style={{ maxHeight: maxHeight ? `${maxHeight}px` : 'none' }}
                 className="tutor-input-field"
                 value={inputValue}
                 onChange={(event) => {
@@ -88,6 +119,10 @@ const FormTextareaInput = ({
 
                   if (onChange) {
                     onChange(value);
+                  }
+
+                  if (autoResize) {
+                    adjustHeight();
                   }
                 }}
                 onKeyDown={(event) => {

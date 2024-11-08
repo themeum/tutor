@@ -19,7 +19,7 @@ interface FormEditableAliasProps extends FormControllerProps<string> {
   baseURL: string;
 }
 
-const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEditableAliasProps) => {
+const FormEditableAlias = ({ field, fieldState, label = '', baseURL, onChange }: FormEditableAliasProps) => {
   const { value = '' } = field;
   const fullUrl = `${baseURL}/${value}`;
   const [isEditing, setIsEditing] = useState(false);
@@ -75,6 +75,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL }: FormEdita
                       onClick={() => {
                         setIsEditing(false);
                         field.onChange(convertToSlug(editValue.replace(baseURL, '')));
+                        onChange?.(convertToSlug(editValue.replace(baseURL, '')));
                       }}
                     >
                       {__('Save', 'tutor')}

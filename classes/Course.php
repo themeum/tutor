@@ -942,7 +942,7 @@ class Course extends Tutor_Base {
 
 		$params = Input::sanitize_array(
 			//phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$_POST,
+			wp_slash( $_POST ),
 			array(
 				'post_content'             => 'wp_kses_post',
 				'course_benefits'          => 'sanitize_textarea_field',

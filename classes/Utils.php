@@ -5098,6 +5098,11 @@ class Utils {
 			)
 		);
 
+		foreach ( $questions as $question ) {
+			$question->question_title       = stripslashes( $question->question_title );
+			$question->question_description = stripslashes( $question->question_description );
+		}
+
 		return ( is_array( $questions ) && count( $questions ) ) ? $questions : false;
 	}
 

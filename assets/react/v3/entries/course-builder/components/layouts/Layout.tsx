@@ -32,7 +32,7 @@ const Layout = () => {
     if (courseDetailsQuery.data) {
       form.reset(convertCourseDataToFormData(courseDetailsQuery.data), {
         keepDirtyValues: true,
-        keepDirty: false,
+        keepDirty: true,
       });
     }
   }, [courseDetailsQuery.data, form.reset]);

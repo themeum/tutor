@@ -1,12 +1,15 @@
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
 import Button from '@Atoms/Button';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
-import { __ } from '@wordpress/i18n';
+
+import FormTextareaInput from './FormTextareaInput';
 import FormWPEditor from './FormWPEditor';
 
 interface FormQuestionDescriptionProps extends FormControllerProps<string | null> {
@@ -19,6 +22,8 @@ interface FormQuestionDescriptionProps extends FormControllerProps<string | null
   helpText?: string;
   onChange?: (value: string | number) => void;
 }
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const FormQuestionDescription = ({
   label,
@@ -39,24 +44,48 @@ const FormQuestionDescription = ({
     <div css={styles.editorWrapper({ isEdit })}>
       <div css={styles.container({ isEdit, isDisabled: disabled })}>
         <Show
-          when={!inputValue && !isEdit}
+          when={!isEdit && (!isTutorPro || !inputValue)}
           fallback={
-            <FormWPEditor
-              field={field}
-              fieldState={fieldState}
-              label={label}
-              disabled={disabled}
-              helpText={helpText}
-              loading={loading}
-              readOnly={!isEdit}
-              onChange={onChange}
-              placeholder={placeholder}
-              min_height={100}
-              max_height={400}
-            />
+            <Show
+              when={isTutorPro}
+              fallback={
+                <FormTextareaInput
+                  field={field}
+                  fieldState={fieldState}
+                  label={label}
+                  disabled={disabled}
+                  helpText={helpText}
+                  loading={loading}
+                  readOnly={!isEdit}
+                  onChange={onChange}
+                  placeholder={placeholder}
+                  autoResize
+                  maxHeight={400}
+                />
+              }
+            >
+              <FormWPEditor
+                field={field}
+                fieldState={fieldState}
+                label={label}
+                disabled={disabled}
+                helpText={helpText}
+                loading={loading}
+                readOnly={!isEdit}
+                onChange={onChange}
+                placeholder={placeholder}
+                min_height={100}
+                max_height={400}
+              />
+            </Show>
           }
         >
-          <div css={styles.placeholder}>{placeholder}</div>
+          <div
+            css={styles.placeholder}
+            dangerouslySetInnerHTML={{
+              __html: inputValue || placeholder || '',
+            }}
+          />
         </Show>
         <Show when={isEdit}>
           <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
@@ -110,6 +139,7 @@ const styles = {
     position: relative;
     max-height: 400px;
     overflow-y: auto;
+    border-radius: ${borderRadius[6]};
 
     ${
       isEdit &&
@@ -171,6 +201,8 @@ const styles = {
     color: ${colorTokens.text.hints};
     height: 100%;
     inset: 0;
+    padding-block: ${spacing[8]};
+    overflow-x: hidden;
   `,
   actionButtonWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     display: flex;

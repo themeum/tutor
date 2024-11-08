@@ -2,7 +2,7 @@ import type { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities';
 import { css } from '@emotion/react';
 import { animated } from '@react-spring/web';
 import { __, sprintf } from '@wordpress/i18n';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -118,6 +118,13 @@ const TopicHeader = ({
       onCopy?.(response.data);
     }
   };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isEdit) {
+      form.setFocus('title');
+    }
+  }, [isEdit]);
 
   return (
     <>
