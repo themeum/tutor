@@ -4130,10 +4130,12 @@ class Utils {
 							ON {$wpdb->comments}.comment_ID = {$wpdb->commentmeta}.comment_id
 			WHERE 	{$wpdb->comments}.comment_post_ID = %d
 					AND {$wpdb->comments}.comment_type = %s
+					AND {$wpdb->comments}.comment_approved = %s
 					AND meta_key = %s;
 			",
 				$course_id,
 				'tutor_course_rating',
+				'approved',
 				'tutor_rating'
 			)
 		);
