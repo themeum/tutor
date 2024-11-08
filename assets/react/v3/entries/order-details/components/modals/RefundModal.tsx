@@ -11,6 +11,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useRefundOrderMutation } from '@OrderServices/order';
 import { formatPrice } from '@Utils/currency';
 import { requiredRule } from '@Utils/validation';
+import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
@@ -56,7 +57,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
               rules={{
                 ...requiredRule(),
                 validate: (value) => {
-                  if (value === 0) {
+                  if (Number(value) === 0) {
                     return __('Refund amount must be greater than zero.', 'tutor');
                   }
                   if (value > available_amount) {
@@ -68,10 +69,11 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
               render={(props) => (
                 <FormInputWithContent
                   {...props}
-                  label={__('Refund amount', 'tutor')}
+                  label={__('Amount', 'tutor')}
                   content={tutorConfig.tutor_currency.symbol ?? '$'}
                   type="number"
                   selectOnFocus
+                  contentCss={styleUtils.inputCurrencyStyle}
                 />
               )}
             />
@@ -88,7 +90,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
             render={(props) => (
               <FormTextareaInput
                 {...props}
-                label={__('Reason for refund', 'tutor')}
+                label={__('Reason', 'tutor')}
                 placeholder={__('Enter the reason of this refund', 'tutor')}
                 rows={3}
                 enableResize
@@ -100,7 +102,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
             <Controller
               control={form.control}
               name="is_remove_enrolment"
-              render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrolment', 'tutor')} />}
+              render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrollment', 'tutor')} />}
             />
           )}
         </div>

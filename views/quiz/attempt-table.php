@@ -143,13 +143,13 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								<?php elseif ( 'question' == $key ) : ?>
 									<?php echo esc_html( count( $answers ) ); ?>
 								<?php elseif ( 'total_marks' == $key ) : ?>
-									<?php echo esc_html( round( $attempt->total_marks ) ); ?>
+									<?php echo esc_html( isset( $attempt->total_marks ) ? round( $attempt->total_marks ) : '0' ); ?>
 								<?php elseif ( 'correct_answer' == $key ) : ?>
 									<?php echo esc_html( $correct ); ?>
 								<?php elseif ( 'incorrect_answer' == $key ) : ?>
 									<?php echo esc_html( $incorrect ); ?>
 								<?php elseif ( 'earned_marks' == $key ) : ?>
-									<?php echo esc_html( round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' ); ?>
+									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
 								<?php elseif ( 'result' == $key ) : ?>
 									<?php
 									if ( $has_pending ) {
