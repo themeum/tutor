@@ -309,7 +309,7 @@ class Earnings extends Singleton {
 		}
 
 		if ( $this->is_exist_order_earning( $this->order_id ) ) {
-			$this->delete_earning( $this->order_id );
+			$this->delete_earning_by_order( $this->order_id );
 		}
 
 		try {
