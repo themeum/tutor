@@ -1381,6 +1381,25 @@ class OrderModel {
 	}
 
 	/**
+	 * Get an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $item_id Item id.
+	 *
+	 * @return mixed
+	 */
+	public function get_item( int $item_id ) {
+		return QueryHelper::get_row(
+			$this->order_item_table,
+			array(
+				'item_id' => $item_id,
+			),
+			'id'
+		);
+	}
+
+	/**
 	 * Get sellable price
 	 *
 	 * @since 3.0.0
@@ -1394,16 +1413,16 @@ class OrderModel {
 	public static function get_item_sellable_price( $regular_price, $sale_price = null, $discount_price = null ) {
 		// Ensure prices are numeric and properly formatted.
 		$sellable_price = (
-			! is_null( $sale_price ) && $sale_price > 0
+			! empty( $sale_price )
 			? $sale_price
 			: (
-				! is_null( $discount_price ) && $discount_price >= 0
+				( ! is_null( $discount_price ) && '' !== $discount_price ) && $discount_price >= 0
 				? $discount_price
 				: $regular_price
 			)
 		);
 
-		return tutor_get_locale_price( $sellable_price );
+		return $sellable_price;
 	}
 
 	/**
@@ -1414,11 +1433,16 @@ class OrderModel {
 	 * @param mixed $item_id Item id.
 	 * @param bool  $format Item id.
 	 *
-	 * @return float item sellable price
+	 * @return mixed item sellable price
 	 */
 	public static function get_item_sold_price( $item_id, $format = true ) {
-		// Ensure prices are numeric and properly formatted.
-		// @TODO
+		$item = ( new self() )->get_item( $item_id );
+
+		if ( $item ) {
+			$sold_price = self::get_item_sellable_price( $item->regular_price, $item->sale_price, $item->discount_price );
+
+			return $format ? tutor_get_formatted_price( $sold_price ) : $sold_price;
+		}
 	}
 
 }
