@@ -57,7 +57,7 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
               rules={{
                 ...requiredRule(),
                 validate: (value) => {
-                  if (value == 0) {
+                  if (Number(value) === 0) {
                     return __('Refund amount must be greater than zero.', 'tutor');
                   }
                   if (value > available_amount) {
