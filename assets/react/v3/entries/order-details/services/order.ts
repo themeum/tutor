@@ -2,6 +2,8 @@ import { useToast } from '@Atoms/Toast';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { Prettify } from '@Utils/types';
+import { ErrorResponse } from '@Utils/form';
+import { convertToErrorMessage } from '@Utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
@@ -152,7 +154,7 @@ export const useAdminCommentMutation = () => {
       showToast({ type: 'success', message: __('Comment added successfully.') });
     },
     onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -171,7 +173,7 @@ export const useMarkAsPaidMutation = () => {
       showToast({ type: 'success', message: __('Order marked as paid', 'tutor') });
     },
     onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -190,8 +192,8 @@ export const useRefundOrderMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
       showToast({ type: 'success', message: __('Order refunded successfully', 'tutor') });
     },
-    onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -216,7 +218,7 @@ export const useOrderDiscountMutation = () => {
       showToast({ type: 'success', message: __('Discount added successfully.', 'tutor') });
     },
     onError(error) {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
@@ -235,7 +237,7 @@ export const useCancelOrderMutation = () => {
       showToast({ type: 'success', message: __('Order cancelled successfully.', 'tutor') });
     },
     onError: (error) => {
-      showToast({ type: 'danger', message: error.message });
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
   });
 };
