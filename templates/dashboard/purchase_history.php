@@ -176,18 +176,17 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									</div>
 								</td>
 								<td>
-								<form method="post">
-									<?php tutor_nonce_field(); ?>
-									<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
-									<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
-									<?php
-									if ( $order->payment_method && 'manual' !== $order->payment_method && OrderModel::ORDER_INCOMPLETE === $order->order_status ) :
-										?>
-									<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
-										<?php esc_html_e( 'Pay', 'tutor' ); ?>
-									</button>
+									<?php if ( $order->payment_method && 'manual' !== $order->payment_method && OrderModel::ORDER_INCOMPLETE === $order->order_status ) : ?>
+									<form method="post">
+										<?php tutor_nonce_field(); ?>
+										<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+										<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+										<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+											<?php esc_html_e( 'Pay', 'tutor' ); ?>
+										</button>
+									</form>
 									<?php endif; ?>
-								</form>
+									<?php do_action( 'tutor_dashboard_invoice_button', $order ); ?>
 								</td>
 								<td>
 								</td>
