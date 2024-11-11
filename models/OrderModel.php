@@ -888,7 +888,7 @@ class OrderModel {
 		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_admin_commission' : 'earning_instructor_commission' );
 		if ( $commission ) {
 			$commission_clause = $wpdb->prepare(
-				'COALESCE(MAX(o.refund_amount) * (%d / 100), 0) AS total',
+				'COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100, 0) AS total',
 				$commission
 			);
 		} else {
