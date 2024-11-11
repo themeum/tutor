@@ -154,7 +154,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									</div>
 								</td>
 								<td>
-									<div class="tutor-fs-7">
+									<div class="tutor-fs-7 tutor-text-nowrap">
 									<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
 									</div>
 								</td>

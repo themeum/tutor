@@ -93,7 +93,7 @@ class Earnings extends Singleton {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
 				}
 
-				$this->earning_data = $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_details->order_status );
+				$this->earning_data[] = $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_details->order_status );
 			}
 		}
 	}
@@ -202,8 +202,11 @@ class Earnings extends Singleton {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
+		$inserted_id = 0;
 		try {
-			$inserted_id = QueryHelper::insert( $this->earning_table, $this->earning_data );
+			foreach ( $this->earning_data as $earning ) {
+				$inserted_id = QueryHelper::insert( $this->earning_table, $earning );
+			}
 		} catch ( \Throwable $th ) {
 			throw new \Exception( $th->getMessage() );
 		}
@@ -274,6 +277,22 @@ class Earnings extends Singleton {
 	}
 
 	/**
+	 * Delete earning by order id
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return bool true|false
+	 */
+	public function delete_earning_by_order( $order_id ) {
+		return QueryHelper::delete(
+			$this->earning_table,
+			array( 'order_id' => $order_id )
+		);
+	}
+
+	/**
 	 * Before storing earning this method will check if
 	 * earning exist for the given order id. If found it will
 	 * remove then store.
@@ -289,12 +308,15 @@ class Earnings extends Singleton {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
-		$earning = $this->is_exist_order_earning( $this->order_id );
-		if ( $earning ) {
-			$this->delete_earning( $earning->earning_id );
+		if ( $this->is_exist_order_earning( $this->order_id ) ) {
+			$this->delete_earning_by_order( $this->order_id );
 		}
 
-		return $this->store_earnings();
+		try {
+			return $this->store_earnings();
+		} catch ( \Throwable $th ) {
+			tutor_log( $th );
+		}
 	}
 
 }

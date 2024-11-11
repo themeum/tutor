@@ -344,7 +344,8 @@ export const convertQuizFormDataToPayload = (
         feedback_mode: formData.quiz_option.feedback_mode,
         hide_question_number_overview: formData.quiz_option.hide_question_number_overview ? '1' : '0',
         hide_quiz_time_display: formData.quiz_option.hide_quiz_time_display ? '1' : '0',
-        max_questions_for_answer: formData.quiz_option.max_questions_for_answer,
+        max_questions_for_answer: isAddonEnabled(Addons.H5P_INTEGRATION) &&
+          formData.questions.every((question) => question.question_type === 'h5p') ? formData.questions.length : formData.quiz_option.max_questions_for_answer,
         open_ended_answer_characters_limit: formData.quiz_option.open_ended_answer_characters_limit,
         pass_is_required: formData.quiz_option.pass_is_required ? '1' : '0',
         passing_grade: formData.quiz_option.passing_grade,

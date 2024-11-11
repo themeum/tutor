@@ -77,6 +77,11 @@ abstract class GatewayBase {
 			}
 		}
 
+		if ( ! class_exists( '\Brick\Money' ) ) {
+			$autoload_file = tutor()->path . 'ecommerce/PaymentGateways/Paypal/vendor/autoload.php';
+			include $autoload_file;
+		}
+
 		$this->payment = ( new PaymentHub( $this->get_payment_class(), $this->get_config_class() ) )->make();
 
 		if ( ! $this->payment ) {

@@ -879,7 +879,8 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$course_clause     = '';
-		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+		$group_clause      = ' GROUP BY DATE(date_format) ';
+		$discount_clause   = 'o.coupon_amount as total';
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -887,33 +888,36 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
-			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+			$group_clause      = ' GROUP BY DATE(date_format) ';
 
 		} else {
-			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+			$period_clause = QueryHelper::get_period_clause( 'date_format', $period );
 		}
 
 		if ( 'today' !== $period ) {
-			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+			$group_clause = ' GROUP BY MONTH(date_format) ';
 		}
 
 		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
-			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			$user_clause = $wpdb->prepare( 'AND e.user_id = %d', $user_id );
+		}
+
+		if ( $course_id ) {
+			$course_clause   = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+			$discount_clause = 'i.regular_price - i.discount_price AS total';
 		}
 
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 
-		// Subscription discounts.
 		$discounts = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
-				MAX(o.coupon_amount) as total,
+				{$discount_clause},
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
 				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->prefix}tutor_subscription_plan_items AS s ON s.plan_id = i.item_id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = s.object_id
-				WHERE 1 = %d AND o.coupon_amount > 0
+				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
+				WHERE 1 = %d
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
@@ -931,16 +935,31 @@ class OrderModel {
 				$total_discount  += $discount->total;
 				$discount_items[] = $discount;
 			}
+
+			$response = array(
+				'discounts'       => $discount_items,
+				'total_discounts' => $total_discount,
+			);
+
+			return $response;
 		}
 
+		if ( $course_id ) {
+			$course_clause   = $wpdb->prepare( 'AND c.id = %d', $course_id );
+			$discount_clause = 'i.regular_price - i.discount_price AS total';
+		}
+
+		// Subscription discounts.
 		$discounts = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
-				MAX(o.coupon_amount) as total,
+				{$discount_clause},
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
 				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				LEFT JOIN {$wpdb->prefix}tutor_subscription_plan_items AS s ON s.plan_id = i.item_id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = s.object_id
+				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
 				WHERE 1 = %d AND o.coupon_amount > 0
 				{$user_clause}
 				{$period_clause}
@@ -1023,31 +1042,26 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		$commission = (int) tutor_utils()->get_option( is_admin() ? 'earning_instructor_commission' : 'earning_admin_commission' );
-		if ( $commission ) {
-			$commission_clause = $wpdb->prepare(
-				'COALESCE(SUM(o.refund_amount) - SUM(o.refund_amount) * %d / 100, 0) AS total',
-				$commission
-			);
-		} else {
-			$commission_clause = 'COALESCE(SUM(o.refund_amount), 0) AS total';
-		}
+		// Get Admin commission rate (%) from settings.
+		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
+		// Get Instructor commission rate (%) based on remaining amount.
+		$instructor_commission = 1 - $admin_commission;
 
+		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 		$refunds    = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
-				{$commission_clause},
+				COALESCE(SUM(o.refund_amount), 0) AS total,
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
-				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
 				WHERE 1 = %d
 				AND o.refund_amount > %d
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
-				{$course_clause}
 				{$group_clause},
 				o.id",
 				1,
@@ -1055,19 +1069,24 @@ class OrderModel {
 			)
 		);
 
-		$total_refunds = 0;
+		$admin_refund_amount      = 0;
+		$instructor_refund_amount = 0;
 
 		foreach ( $refunds as $refund ) {
-			$total_refunds += $refund->total;
+			// Refund amount calculation.
+			$refund_amount            = $refund->total;
+			$admin_refund_amount      = $refund_amount * $admin_commission;
+			$instructor_refund_amount = $refund_amount * $instructor_commission;
 		}
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => $total_refunds,
+			'total_refunds' => is_admin() ? $admin_refund_amount : $instructor_refund_amount,
 		);
 
 		return $response;
 	}
+
 
 	/**
 	 * Update the payment status of an order.
@@ -1381,6 +1400,25 @@ class OrderModel {
 	}
 
 	/**
+	 * Get an item
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param integer $item_id Item id.
+	 *
+	 * @return mixed
+	 */
+	public function get_item( int $item_id ) {
+		return QueryHelper::get_row(
+			$this->order_item_table,
+			array(
+				'item_id' => $item_id,
+			),
+			'id'
+		);
+	}
+
+	/**
 	 * Get sellable price
 	 *
 	 * @since 3.0.0
@@ -1394,16 +1432,36 @@ class OrderModel {
 	public static function get_item_sellable_price( $regular_price, $sale_price = null, $discount_price = null ) {
 		// Ensure prices are numeric and properly formatted.
 		$sellable_price = (
-			! is_null( $sale_price ) && $sale_price > 0
+			! empty( $sale_price )
 			? $sale_price
 			: (
-				! is_null( $discount_price ) && $discount_price >= 0
+				( ! is_null( $discount_price ) && '' !== $discount_price ) && $discount_price >= 0
 				? $discount_price
 				: $regular_price
 			)
 		);
 
-		return tutor_get_locale_price( $sellable_price );
+		return $sellable_price;
+	}
+
+	/**
+	 * Get item sold price
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param mixed $item_id Item id.
+	 * @param bool  $format Item id.
+	 *
+	 * @return mixed item sellable price
+	 */
+	public static function get_item_sold_price( $item_id, $format = true ) {
+		$item = ( new self() )->get_item( $item_id );
+
+		if ( $item ) {
+			$sold_price = self::get_item_sellable_price( $item->regular_price, $item->sale_price, $item->discount_price );
+
+			return $format ? tutor_get_formatted_price( $sold_price ) : $sold_price;
+		}
 	}
 
 }
