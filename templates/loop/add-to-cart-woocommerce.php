@@ -42,7 +42,7 @@ $defaults = array(
 		' ',
 		array_filter(
 			array(
-				'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block tutor-nowrap-ellipsis ',
+				'tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ',
 				'product_type_' . $product->get_type(),
 				$product->is_purchasable() && $product->is_in_stock() ? 'add_to_cart_button ' : '',
 				$ajax_add_to_cart_class,
