@@ -200,7 +200,7 @@ const QuizModal = ({
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''} contentType={contentType || 'tutor_quiz'}>
-        {(activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError) => (
+        {({ activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError }) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}

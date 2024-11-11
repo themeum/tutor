@@ -41,17 +41,22 @@ export const QuizModalContextProvider = ({
 }: {
   children:
     | React.ReactNode
-    | ((
-        item: NonNullable<number>,
-        activeQuestionId: ID,
-        setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>,
+    | (({
+        activeQuestionIndex,
+        activeQuestionId,
+        setActiveQuestionId,
+        setValidationError,
+      }: {
+        activeQuestionIndex: NonNullable<number>;
+        activeQuestionId: ID;
+        setActiveQuestionId: React.Dispatch<React.SetStateAction<ID>>;
         setValidationError: React.Dispatch<
           React.SetStateAction<{
             message: string;
             type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
           } | null>
-        >,
-      ) => React.ReactNode);
+        >;
+      }) => React.ReactNode);
   quizId: ID;
   contentType: ContentType;
   validationError?: {
@@ -108,7 +113,12 @@ export const QuizModalContextProvider = ({
       }}
     >
       {typeof children === 'function'
-        ? children(activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError)
+        ? children({
+            activeQuestionIndex,
+            activeQuestionId,
+            setActiveQuestionId,
+            setValidationError,
+          })
         : children}
     </QuizModalContext.Provider>
   );
