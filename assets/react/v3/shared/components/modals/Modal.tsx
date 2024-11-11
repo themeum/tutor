@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { colorTokens, zIndex } from '@Config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
@@ -58,7 +58,7 @@ type ModalContextType = {
 };
 
 const ModalContext = React.createContext<ModalContextType>({
-  showModal: () => Promise.resolve({ action: 'CLOSE' }),
+  showModal: () => Promise.resolve({ action: 'CLOSE' as const }),
   closeModal: noop,
   hasModalOnStack: false,
 });
@@ -125,6 +125,23 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   const hasModalOnStack = useMemo(() => {
     return state.modals.length > 0;
   }, [state.modals]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        closeModal({ action: 'CLOSE' });
+      }
+    };
+
+    // Use capture phase to ensure this event is caught even when input is focused
+    if (state.modals.length > 0) {
+      document.addEventListener('keydown', handleKeyDown, true);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [state.modals.length, closeModal]);
 
   return (
     <ModalContext.Provider value={{ showModal, closeModal, hasModalOnStack }}>
