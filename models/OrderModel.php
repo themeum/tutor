@@ -57,6 +57,16 @@ class OrderModel {
 	const META_KEY_HISTORY = 'history';
 	const META_KEY_REFUND  = 'refund';
 
+	/**
+	 * Tax type constants
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const TAX_TYPE_EXCLUSIVE = 'exclusive';
+	const TAX_TYPE_INCLUSIVE = 'inclusive';
+
 
 	/**
 	 * Order type
@@ -1397,6 +1407,32 @@ class OrderModel {
 			'subtotal' => tutor_get_locale_price( $subtotal ),
 			'total'    => tutor_get_locale_price( $total ),
 		);
+	}
+
+	/**
+	 * Check has exclusive type tax.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order order object.
+	 *
+	 * @return boolean
+	 */
+	public static function has_exclusive_tax( $order ) {
+		return self::TAX_TYPE_EXCLUSIVE === $order->tax_type && $order->tax_rate > 0 && $order->tax_amount > 0;
+	}
+
+	/**
+	 * Check has inclusive type tax.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order order object.
+	 *
+	 * @return boolean
+	 */
+	public static function has_inclusive_tax( $order ) {
+		return self::TAX_TYPE_INCLUSIVE === $order->tax_type && $order->tax_rate > 0 && $order->tax_amount > 0;
 	}
 
 	/**
