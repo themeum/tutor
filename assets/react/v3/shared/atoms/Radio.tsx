@@ -1,4 +1,4 @@
-import { colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { nanoid } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -98,6 +98,13 @@ const styles = {
     &:checked + span::before {
       background-color: ${colorTokens.action.primary.default};
     }
+
+    &:focus-visible { 
+			& + span {
+				outline: 2px solid ${colorTokens.stroke.brand};
+				outline-offset: 1px;
+			}
+		}
   `,
 };
 

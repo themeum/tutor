@@ -378,7 +378,7 @@ export const shadow = {
   drag: '3px 7px 8px 0px #00000014',
   dropList: '0px 6px 20px 0px rgba(28, 49, 104, 0.1)',
   notebook: '0 0 4px 0 rgba(0, 30, 43, 0.16)',
-  scrollable: '0px -1px 4px 0px #00000014',
+  scrollable: '0px -2px 2px 0px #00000014',
   footer: '0px 1px 0px 0px #E4E5E7 inset',
 } as const;
 

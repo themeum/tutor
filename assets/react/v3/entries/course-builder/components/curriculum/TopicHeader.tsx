@@ -16,7 +16,7 @@ import FormInput from '@Components/fields/FormInput';
 
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { tutorConfig } from '@Config/config';
-import { colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
@@ -377,7 +377,7 @@ const styles = {
         transition: opacity 0.3s ease-in-out;
       }
 
-      :hover {
+      :hover, :focus-within {
         [data-visually-hidden] {
           opacity: 1;
         }
@@ -417,6 +417,12 @@ const styles = {
 
     :disabled {
       cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+      border-radius: ${borderRadius[2]};
     }
   `,
   title: ({ isEdit }: { isEdit: boolean }) => css`

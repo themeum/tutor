@@ -61,6 +61,12 @@ const styles = {
     gap: ${spacing[8]};
     align-items: center;
 
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+      border-radius: ${borderRadius[4]};
+    }
+
     &:is(:first-of-type) {
       padding-left: 0;
     }

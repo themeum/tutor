@@ -487,6 +487,11 @@ const styles = {
         }
       }
 
+      &:focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
+
       ${(disabled || loading) &&
       css`
         color: ${colorTokens.text.disable};

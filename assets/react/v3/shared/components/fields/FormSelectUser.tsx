@@ -381,13 +381,16 @@ const styles = {
     border-radius: ${borderRadius.input};
     background-color: ${colorTokens.bg.white};
 
-    ${
-      isDefaultItem &&
-      css`
-        border-color: ${colorTokens.stroke.default};
-        cursor: pointer;
-      `
+    &:focus {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
     }
+
+    ${isDefaultItem &&
+    css`
+      border-color: ${colorTokens.stroke.default};
+      cursor: pointer;
+    `}
 
     &:hover {
       border-color: ${colorTokens.stroke.divider};
@@ -396,7 +399,6 @@ const styles = {
         display: block;
       }
     }
-    
   `,
   instructorInfo: css`
     display: flex;
@@ -473,6 +475,12 @@ const styles = {
     line-height: ${lineHeight[24]};
     word-break: break-all;
     cursor: pointer;
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -2px;
+      border-radius: ${borderRadius[6]};
+    }
   `,
   optionsContainer: css`
     position: absolute;
@@ -491,12 +499,10 @@ const styles = {
     color: ${colorTokens.icon.default};
     transition: transform 0.3s ease-in-out;
 
-    ${
-      isOpen &&
-      css`
-        transform: rotate(180deg);
-      `
-    }
+    ${isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   noUserFound: css`
     padding: ${spacing[8]};

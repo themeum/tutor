@@ -1,5 +1,5 @@
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
 import { css } from '@emotion/react';
@@ -387,6 +387,7 @@ const styles = {
       resize: none;
       border: none;
       outline: none;
+      padding: ${spacing[10]};
     }
   `,
 };

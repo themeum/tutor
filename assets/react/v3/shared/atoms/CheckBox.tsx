@@ -134,6 +134,14 @@ const styles = {
 				border: 0.5px solid ${colorTokens.stroke.white};
 			}
 		`}
+
+		&:focus-visible { 
+			& + span {
+				border-radius: ${borderRadius[2]};
+				outline: 2px solid ${colorTokens.stroke.brand};
+				outline-offset: 1px;
+			}
+		}
 	`,
 };
 

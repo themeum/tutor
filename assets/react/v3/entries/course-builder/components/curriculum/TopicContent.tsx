@@ -237,7 +237,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
             <Show when={(type === 'tutor_quiz' || type === 'tutor_h5p_quiz') && !!content.total_question}>
-              <span data-question-count>({content.total_question} Questions)</span>
+              <span data-question-count>({sprintf(__('%s Questions', 'tutor'), content.total_question)})</span>
             </Show>
           </p>
         </div>
@@ -380,7 +380,7 @@ const styles = {
       height: 24px;
     }
 
-    :hover {
+    :hover, :focus-within {
       border-color: ${colorTokens.stroke.border};
       background-color: ${colorTokens.background.white};
 
