@@ -94,7 +94,7 @@ const CustomEditorOverlay = ({
               props: {
                 title: __('Back to WordPress Editor', 'tutor'),
                 description: __(
-                  'Please note that you are switching to WordPress default editor. Your current layout, design and content might break.',
+                  'Warning: Switching to the WordPress default editor may cause issues with your current layout, design, and content.',
                   'tutor',
                 ),
                 confirmButtonText: __('Confirm', 'tutor'),
