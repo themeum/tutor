@@ -50,6 +50,7 @@ type ModalContextType = {
     component: React.FunctionComponent<P>;
     props?: Omit<P, 'closeModal'>;
     closeOnOutsideClick?: boolean;
+    closeOnEscape?: boolean;
     isMagicAi?: boolean;
     depthIndex?: number;
   }): Promise<NonNullable<Parameters<P['closeModal']>[0]> | PromiseResolvePayload<'CLOSE'>>;
@@ -75,6 +76,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
+      closeOnEscape?: boolean;
       isMagicAi?: boolean;
       depthIndex?: number;
     }[];
@@ -83,7 +85,14 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(
-    ({ component, props, closeOnOutsideClick = false, isMagicAi = false, depthIndex = zIndex.modal }) => {
+    ({
+      component,
+      props,
+      closeOnOutsideClick = false,
+      closeOnEscape = true,
+      isMagicAi = false,
+      depthIndex = zIndex.modal,
+    }) => {
       return new Promise((resolve) => {
         setState((previousState) => ({
           ...previousState,
@@ -94,6 +103,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               props,
               resolve,
               closeOnOutsideClick,
+              closeOnEscape,
               id: nanoid(),
               depthIndex,
               isMagicAi,
@@ -126,9 +136,10 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     return state.modals.length > 0;
   }, [state.modals]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && state.modals[state.modals.length - 1]?.closeOnEscape) {
         closeModal({ action: 'CLOSE' });
       }
     };

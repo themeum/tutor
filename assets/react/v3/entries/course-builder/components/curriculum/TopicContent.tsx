@@ -158,6 +158,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
             contentType: 'tutor_h5p_quiz',
           }),
         },
+        closeOnEscape: !['tutor_quiz', 'tutor_h5p_quiz'].includes(type),
       });
     }
     if (type === 'tutor_zoom_meeting') {

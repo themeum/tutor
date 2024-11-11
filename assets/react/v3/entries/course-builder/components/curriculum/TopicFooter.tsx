@@ -117,6 +117,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                   icon: <SVGIcon name="quiz" width={24} height={24} />,
                   subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                 },
+                closeOnEscape: false,
               });
             }}
           >
@@ -144,6 +145,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                         subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
                         contentType: 'tutor_h5p_quiz',
                       },
+                      closeOnEscape: false,
                     });
                   }}
                 >
