@@ -4,6 +4,7 @@ namespace Ollyo\PaymentHub\Core\Support;
 use stdClass;
 use Brick\Money\Money;
 use Brick\Math\RoundingMode;
+use GuzzleHttp\Client;
 use Ollyo\PaymentHub\Exceptions\NotFoundException;
 use Ollyo\PaymentHub\Exceptions\InvalidDataException;
 
@@ -214,5 +215,43 @@ class System
         $totalAmount = ($data->subtotal + $data->tax + $data->shipping_charge) - $data->coupon_discount;
 
         return empty(filter_var($totalAmount, FILTER_VALIDATE_FLOAT)) ? true : false;
+    }
+
+	/**
+	 * Updates and returns a webhook URL by encoding success and cancel URLs as parameters.
+	 *
+	 * @param 	object $config 	Configuration object that provides the URLs and payment method.
+	 * @return 	string 			The updated webhook URL with encoded data.
+	 * @since 	1.0.0
+	 */
+	public static function updateWebhookUrl($config): string
+    {
+        $encodedUrlData = base64_encode(json_encode([
+            'success_url'   => $config->get('success_url'),
+            'cancel_url'    => $config->get('cancel_url')]
+        ));
+
+        $webhookUrl = Uri::getInstance($config->get('webhook_url'));
+        $webhookUrl->setVar('encodedData', $encodedUrlData);
+        $webhookUrl->setVar('payment_method', $config->get('name'));
+
+        return $webhookUrl->__toString();
+    }
+
+	/**
+     * Sends an HTTP request using the specified method and options.
+     *
+     * @param   object      $requestData    An object containing the request method, URL, and options (e.g., headers, body).
+     * @return  object|null                 The decoded JSON response body if $return is true, otherwise null.
+     * @since   1.0.0
+     */
+    public static function sendHttpRequest($requestData)
+    {
+        $http       = new Client();
+        $method     = $requestData->method;
+        $requestUrl = $requestData->url;
+        $response   = $http->$method($requestUrl, $requestData->options);
+
+        return json_decode($response->getBody());
     }
 }

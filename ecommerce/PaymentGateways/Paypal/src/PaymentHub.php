@@ -42,6 +42,7 @@ class PaymentHub
 	 */
 	protected function boot()
 	{
+
 		$container = Factory::getContainer();
 		$container->set(Application::class, function() {
 			$app = new Application();
