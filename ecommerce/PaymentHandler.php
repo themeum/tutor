@@ -72,7 +72,7 @@ class PaymentHandler {
 		if ( $payment_gateway_class ) {
 			$payment = Ecommerce::get_payment_gateway_object( $payment_gateway_class );
 			$res     = $payment->verify_webhook_signature( $webhook_data );
-			if ( is_object( $res ) ) {
+			if ( is_object( $res ) && property_exists( $res, 'id' ) ) {
 				do_action( 'tutor_order_payment_updated', $res );
 				if ( property_exists( $res, 'redirectUrl' ) ) {
 					wp_safe_redirect( $res->redirectUrl );
