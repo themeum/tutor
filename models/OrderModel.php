@@ -1410,7 +1410,6 @@ class OrderModel {
 	}
 
 	/**
-<<<<<<< HEAD
 	 * Check has exclusive type tax.
 	 *
 	 * @since 3.0.0
