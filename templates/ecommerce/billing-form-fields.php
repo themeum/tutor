@@ -11,7 +11,7 @@
 
 use Tutor\Ecommerce\BillingController;
 
-$billing_controller = new BillingController();
+$billing_controller = new BillingController( false );
 $billing_info       = $billing_controller->get_billing_info();
 
 $billing_first_name = $billing_info->billing_first_name ?? '';
