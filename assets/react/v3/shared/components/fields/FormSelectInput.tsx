@@ -232,6 +232,11 @@ const FormSelectInput = <T,>({
                 setIsSearching(false);
                 setSearchText('');
               }}
+              onEscape={() => {
+                setIsOpen(false);
+                setIsSearching(false);
+                setSearchText('');
+              }}
             >
               <div
                 css={[

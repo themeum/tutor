@@ -112,7 +112,7 @@ const FormTagsInput = ({
               </div>
             )}
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
                 css={[
                   styles.optionsWrapper,

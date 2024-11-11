@@ -98,7 +98,7 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
               </Button>
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
                 css={[styles.optionsWrapper, { left: position.left, top: position.top, maxWidth: triggerWidth }]}
                 ref={popoverRef}
