@@ -139,7 +139,13 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && state.modals[state.modals.length - 1]?.closeOnEscape) {
+      const currentlyOpenPopovers = document.querySelectorAll('.tutor-portal-popover');
+
+      if (
+        event.key === 'Escape' &&
+        state.modals[state.modals.length - 1]?.closeOnEscape &&
+        !currentlyOpenPopovers.length
+      ) {
         closeModal({ action: 'CLOSE' });
       }
     };
