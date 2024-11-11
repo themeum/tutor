@@ -196,4 +196,23 @@ class System
 
 		return null;
 	}
+
+	/**
+	 * Determines if the total amount is zero or not.
+	 *
+	 * @param  object $data Contains the order's necessary charges.
+	 * @return bool         Returns true if the total amount equals zero, false otherwise.
+	 * @since  1.0.0
+	 */
+	public static function isTotalAmountZero(&$data): bool
+    {
+        $data->subtotal ??= 0;
+        $data->tax ??= 0;
+        $data->shipping_charge ??= 0;
+        $data->coupon_discount ??= 0;
+        
+        $totalAmount = ($data->subtotal + $data->tax + $data->shipping_charge) - $data->coupon_discount;
+
+        return empty(filter_var($totalAmount, FILTER_VALIDATE_FLOAT)) ? true : false;
+    }
 }
