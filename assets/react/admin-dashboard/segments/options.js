@@ -549,6 +549,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		const revenue_sharing_block = document.querySelector(".tutor-option-single-item.revenue_sharing");
 		const fees_block = document.querySelector(".tutor-option-single-item.fees");
 		const withdraw_block = document.querySelector(".tutor-option-single-item.withdraw");
+		const invoice_block = document.querySelector(".tutor-option-single-item.ecommerce_invoice");
 
 		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
 		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
@@ -557,6 +558,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		showHideOption(currency_block, () => monetized_by === 'tutor');
 		showHideOption(cart_page_field, () => monetized_by === 'tutor');
 		showHideOption(checkout_page_field, () => monetized_by === 'tutor');
+		showHideOption(invoice_block, () => monetized_by === 'tutor');
 
 		showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(monetized_by));
 		showHideOption(fees_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
@@ -569,6 +571,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			showHideOption(currency_block, () => value === 'tutor');
 			showHideOption(cart_page_field, () => value === 'tutor');
 			showHideOption(checkout_page_field, () => value === 'tutor');
+			showHideOption(invoice_block, () => value === 'tutor');
 
 			showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(value));
 			showHideOption(fees_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
