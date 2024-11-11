@@ -232,6 +232,11 @@ const FormSelectInput = <T,>({
                 setIsSearching(false);
                 setSearchText('');
               }}
+              onEscape={() => {
+                setIsOpen(false);
+                setIsSearching(false);
+                setSearchText('');
+              }}
             >
               <div
                 css={[
@@ -580,14 +585,18 @@ const styles = {
   caretButton: ({ isOpen = false }: { isOpen: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
-    top: 0;
-    bottom: 0;
-    right: ${spacing[8]};
-    margin: auto 0;
+    top: ${spacing[4]};
+    right: ${spacing[4]};
     display: flex;
     align-items: center;
 		transition: transform 0.3s ease-in-out;
 		color: ${colorTokens.icon.default};
+    border-radius: ${borderRadius[4]};
+    padding: ${spacing[6]};
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+    }
 		
 		${
       isOpen &&

@@ -115,7 +115,7 @@ const FormMultiLevelInput = ({
               </div>
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div css={[styles.categoryFormWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
                 <Controller
                   name="name"
@@ -143,6 +143,7 @@ const FormMultiLevelInput = ({
                 <div css={styles.categoryFormButtons}>
                   <Button
                     variant="text"
+                    size="small"
                     onClick={() => {
                       setIsOpen(false);
                       form.reset();
@@ -152,6 +153,7 @@ const FormMultiLevelInput = ({
                   </Button>
                   <Button
                     variant="secondary"
+                    size="small"
                     loading={createCategoryMutation.isPending}
                     onClick={form.handleSubmit(handleCreateCategory)}
                   >
@@ -251,9 +253,8 @@ const styles = {
       z-index: ${zIndex.level};
     }
 
-    ${
-      hasParent &&
-      css`
+    ${hasParent &&
+    css`
       &:before {
         content: '';
         position: absolute;
@@ -265,15 +266,20 @@ const styles = {
         background-color: ${colorTokens.stroke.divider};
         z-index: ${zIndex.level};
       }
-    `
-    }
+    `}
   `,
   addNewButton: css`
     ${styleUtils.resetButton};
     color: ${colorTokens.brand.blue};
-    padding: ${spacing[4]} ${spacing[16]};
+    padding: 0 ${spacing[8]};
     display: flex;
     align-items: center;
+    border-radius: ${borderRadius[2]};
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
   `,
   categoryFormWrapper: css`
     position: absolute;
@@ -294,11 +300,11 @@ const styles = {
   `,
   addButtonWrapper: ({ isActive = false }) => css`
     transition: box-shadow 0.3s ease-in-out;
-    ${
-      isActive &&
-      css`
+    padding: ${spacing[8]};
+    padding-bottom: 0;
+    ${isActive &&
+    css`
       box-shadow: ${shadow.scrollable};
-    `
-    }
+    `}
   `,
 };

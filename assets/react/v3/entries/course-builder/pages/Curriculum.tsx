@@ -440,7 +440,7 @@ export default Curriculum;
 
 const styles = {
   container: css`
-    margin-top: ${spacing[24]};
+    margin-top: ${spacing[32]};
   `,
   wrapper: css`
     max-width: ${containerMaxWidth}px;

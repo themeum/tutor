@@ -114,7 +114,7 @@ const Header = () => {
 
             <div css={styleUtils.flexCenter()}>
               <MagicButton variant="plain" css={styles.magicButton} onClick={handleAiButtonClick}>
-                <SVGIcon name="magicAiColorize" width={32} height={32} />
+                <SVGIcon name="magicAiColorize" width={24} height={24} />
                 {__('Generate with AI', 'tutor')}
               </MagicButton>
             </div>
@@ -212,7 +212,7 @@ const styles = {
     display: inline-flex;
     align-items: center;
     gap: ${spacing[4]};
-    padding-inline: 0px;
+    padding-inline: ${spacing[4]};
     margin-left: ${spacing[4]};
   `,
 };

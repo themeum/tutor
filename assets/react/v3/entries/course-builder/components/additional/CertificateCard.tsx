@@ -151,7 +151,7 @@ const styles = {
       `
     }
 
-    &:hover {
+    &:hover, &:focus-within {
       border-color: ${colorTokens.stroke.brand};
 
       [data-footer-actions] {

@@ -137,7 +137,7 @@ const styles = {
     border-radius: ${borderRadius[4]};
 
     :focus {
-      box-shadow: ${shadow.focus};
+      ${styleUtils.inputFocus}
     }
   `,
   editIcon: css`

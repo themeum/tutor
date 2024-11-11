@@ -83,7 +83,7 @@ const FormMultiLevelSelect = ({
               </button>
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div css={[styles.categoryWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}
                 <div css={[styles.options, optionsWrapperStyle]}>

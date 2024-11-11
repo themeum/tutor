@@ -147,7 +147,7 @@ const QuestionForm = () => {
       </div>
 
       <Show when={validationError}>
-        <div ref={alertRef} css={styles.alertWrapper}>
+        <div key={Math.random()} ref={alertRef} css={styles.alertWrapper}>
           <Alert type="danger" icon="warning">
             {validationError?.message}
           </Alert>
@@ -247,14 +247,23 @@ const styles = {
   `,
   alertWrapper: css`
     padding-left: ${spacing[40]};
-    animation: fadeIn 0.25s ease-in-out;
+    animation: shake 0.3s linear;
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
+    @keyframes shake {
+      0% {
+        transform: translateX(0);
       }
-      to {
-        opacity: 1;
+      25% {
+        transform: translateX(-5px);
+      }
+      50% {
+        transform: translateX(5px);
+      }
+      75% {
+        transform: translateX(-5px);
+      }
+      100% {
+        transform: translateX(0);
       }
     }
   `,

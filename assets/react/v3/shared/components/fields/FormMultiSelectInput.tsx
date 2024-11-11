@@ -8,12 +8,12 @@ import { useState } from 'react';
 
 import Checkbox from '@Atoms/CheckBox';
 import Chip from '@Atoms/Chip';
+import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useDebounce } from '@Hooks/useDebounce';
+import type { Option } from '@Utils/types';
 import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
-import type { Option } from '@Utils/types';
-import For from '@Controls/For';
 
 interface FormMultiSelectInputProps extends FormControllerProps<string[] | null> {
   label?: string;
@@ -45,7 +45,7 @@ const FormMultiSelectInput = ({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
   const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(debouncedSearchText.toLowerCase())
+    option.label.toLowerCase().includes(debouncedSearchText.toLowerCase()),
   );
 
   const [isOpen, setIsOpen] = useState(false);
@@ -105,7 +105,7 @@ const FormMultiSelectInput = ({
               </div>
             )}
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
                 css={[
                   styles.optionsWrapper,

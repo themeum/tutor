@@ -348,12 +348,17 @@ const styles = {
     ${styleUtils.resetButton};
     width: 32px;
     height: 32px;
+    border-radius: ${borderRadius[4]};
     display: flex;
     align-items: center;
     justify-content: center;
     
     :disabled {
       cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
     }
   `,
   inputWrapper: css`

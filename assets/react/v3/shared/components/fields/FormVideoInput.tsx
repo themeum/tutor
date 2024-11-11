@@ -450,7 +450,12 @@ const FormVideoInput = ({
           );
         }}
       </FormFieldWrapper>
-      <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} animationType={AnimationType.fadeIn}>
+      <Portal
+        isOpen={isOpen}
+        onClickOutside={() => setIsOpen(false)}
+        onEscape={() => setIsOpen(false)}
+        animationType={AnimationType.fadeIn}
+      >
         <div
           ref={popoverRef}
           css={[
@@ -620,7 +625,14 @@ const styles = {
     ${styleUtils.resetButton};
     ${typography.small('medium')};
     color: ${colorTokens.text.brand};
+    border-radius: ${borderRadius[2]};
+    padding: 0 ${spacing[4]};
     margin-bottom: ${spacing[8]};
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
   `,
   actionButtons: css`
     ${styleUtils.display.flex()};

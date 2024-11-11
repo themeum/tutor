@@ -1,5 +1,5 @@
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid } from '@Utils/util';
 import { css } from '@emotion/react';
@@ -98,7 +98,10 @@ function editorConfig(
 
             setTimeout(() => {
               const height = editorBody.scrollHeight;
-              editor.iframeElement.style.height = `${height}px`;
+
+              if (height) {
+                editor.iframeElement.style.height = `${height}px`;
+              }
             }, 500);
           }
         });
@@ -384,6 +387,7 @@ const styles = {
       resize: none;
       border: none;
       outline: none;
+      padding: ${spacing[10]};
     }
   `,
 };

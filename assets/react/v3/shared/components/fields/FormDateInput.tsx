@@ -93,6 +93,9 @@ const FormDateInput = ({
                 }}
                 autoComplete="off"
                 data-input
+                onBlur={() => {
+                  setIsOpen(false);
+                }}
               />
               <SVGIcon name="calendarLine" width={30} height={32} style={styles.icon} />
 
@@ -109,7 +112,7 @@ const FormDateInput = ({
               )}
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div css={[styles.pickerWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
                 <DayPicker
                   mode="single"
