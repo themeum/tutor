@@ -167,18 +167,32 @@ interface PortalProps {
   isOpen: boolean;
   children: ReactNode;
   onClickOutside?: () => void;
+  onEscape?: () => void;
   animationType?: AnimationType;
 }
 
 let portalCount = 0;
 
-export const Portal = ({ isOpen, children, onClickOutside, animationType = AnimationType.slideDown }: PortalProps) => {
+export const Portal = ({
+  isOpen,
+  children,
+  onClickOutside,
+  onEscape,
+  animationType = AnimationType.slideDown,
+}: PortalProps) => {
   const { hasModalOnStack } = useModal();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        onEscape?.();
+      }
+    };
     if (isOpen) {
       portalCount++;
       document.body.style.overflow = 'hidden';
+      document.addEventListener('keydown', handleKeyDown, true);
     }
 
     return () => {
@@ -189,6 +203,8 @@ export const Portal = ({ isOpen, children, onClickOutside, animationType = Anima
       if (!hasModalOnStack && portalCount === 0) {
         document.body.style.overflow = 'initial';
       }
+
+      document.removeEventListener('keydown', handleKeyDown, true);
     };
   }, [isOpen, hasModalOnStack]);
 

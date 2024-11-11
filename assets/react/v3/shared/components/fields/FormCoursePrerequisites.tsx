@@ -174,6 +174,10 @@ const FormCoursePrerequisites = ({
                 setIsOpen(false);
                 setSearchText('');
               }}
+              onEscape={() => {
+                setIsOpen(false);
+                setSearchText('');
+              }}
             >
               <div
                 css={[

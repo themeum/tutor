@@ -200,7 +200,7 @@ const QuizModal = ({
   return (
     <FormProvider {...form}>
       <QuizModalContextProvider quizId={quizId || ''} contentType={contentType || 'tutor_quiz'}>
-        {(activeQuestionIndex, setValidationError) => (
+        {({ activeQuestionIndex, activeQuestionId, setActiveQuestionId, setValidationError }) => (
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
@@ -387,6 +387,13 @@ const QuizModal = ({
               }}
               onConfirmation={() => {
                 form.reset();
+
+                if (
+                  !getQuizDetailsQuery.data?.questions.find((question) => question.question_id === activeQuestionId)
+                ) {
+                  setActiveQuestionId('');
+                  setValidationError(null);
+                }
                 !quizId && closeModal();
               }}
             />

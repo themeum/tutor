@@ -13,6 +13,7 @@ interface PopoverProps<T> {
   gap?: number;
   maxWidth?: string;
   closePopover: () => void;
+  closeOnEscape?: boolean;
   animationType?: AnimationType;
   hideArrow?: boolean;
 }
@@ -25,6 +26,7 @@ const Popover = <T extends HTMLElement>({
   gap,
   maxWidth,
   closePopover,
+  closeOnEscape = true,
   animationType = AnimationType.slideLeft,
   hideArrow,
 }: PopoverProps<T>) => {
@@ -36,7 +38,12 @@ const Popover = <T extends HTMLElement>({
   });
 
   return (
-    <Portal isOpen={isOpen} onClickOutside={closePopover} animationType={animationType}>
+    <Portal
+      isOpen={isOpen}
+      onClickOutside={closePopover}
+      animationType={animationType}
+      onEscape={closeOnEscape ? closePopover : undefined}
+    >
       <div
         css={[
           styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
