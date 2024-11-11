@@ -53,8 +53,8 @@ const styles = {
     transition: box-shadow 0.5s ease;
 
     &:focus-visible {
-      outline: none;
-      box-shadow: ${shadow.button};
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
     }
 
     &:disabled {

@@ -356,11 +356,16 @@ const styles = {
 		bottom: 0;
 		right: 0;
 		height: ${notebook.MIN_NOTEBOOK_HEIGHT}px;
-		border-radius: ${borderRadius.card} 0 ${borderRadius.card} 0;
-		transition: box-shadow background 0.3s ease-in-out;
+		border-radius: ${borderRadius.card} 0 0 0;
+		transition: box-shadow background-color 0.3s ease-in-out;
 		box-shadow: ${shadow.notebook};
 		z-index: ${zIndex.notebook};
     overflow: hidden;
+
+    &:focus-within { 
+			outline: 2px solid ${colorTokens.stroke.brand};
+			outline-offset: 1px;
+		}
 		
 		${
       !isCollapsed &&

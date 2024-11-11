@@ -73,7 +73,6 @@ const Tabs = <T extends string | number>({
                 onChange(tab.value);
               }}
               css={styles.tabButton({ isActive: activeTab === tab.value, orientation })}
-              tabIndex={activeTab === tab.value ? 0 : -1}
               disabled={disabled || tab.disabled}
               type="button"
               role="tab"
@@ -190,6 +189,12 @@ const styles = {
         background: ${colorTokens.text.disable};
       }
     }
+
+    &:focus-visible { 
+			outline: 2px solid ${colorTokens.stroke.brand};
+			outline-offset: -2px;
+      border-radius: ${borderRadius[4]};
+		}
   `,
   activeBadge: css`
     display: inline-block;

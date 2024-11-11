@@ -352,6 +352,15 @@ const styles = {
     ${styleUtils.flexCenter()};
     width: 32px;
     height: 32px;
+    border-radius: ${borderRadius[4]};
+
+    :disabled {
+      cursor: not-allowed;
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+    }
   `,
   labelWithAi: css`
     display: flex;
@@ -375,6 +384,12 @@ const styles = {
     align-items: center;
     justify-content: center;
     position: relative;
+    border-radius: ${borderRadius.circle};
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
   `,
   editorOverlay: css`
     position: absolute;

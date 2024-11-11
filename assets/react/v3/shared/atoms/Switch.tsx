@@ -33,6 +33,11 @@ const styles = {
         box-shadow: none;
       }
 
+      &:focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
+
       &:after {
         content: '';
         position: absolute;
