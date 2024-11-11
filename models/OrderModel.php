@@ -879,7 +879,8 @@ class OrderModel {
 		$date_range_clause = '';
 		$period_clause     = '';
 		$course_clause     = '';
-		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+		$group_clause      = ' GROUP BY DATE(date_format) ';
+		$discount_clause   = 'o.coupon_amount as total';
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare(
@@ -887,33 +888,36 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
-			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+			$group_clause      = ' GROUP BY DATE(date_format) ';
 
 		} else {
-			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+			$period_clause = QueryHelper::get_period_clause( 'date_format', $period );
 		}
 
 		if ( 'today' !== $period ) {
-			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+			$group_clause = ' GROUP BY MONTH(date_format) ';
 		}
 
 		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
-			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			$user_clause = $wpdb->prepare( 'AND e.user_id = %d', $user_id );
+		}
+
+		if ( $course_id ) {
+			$course_clause   = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+			$discount_clause = 'i.regular_price - i.discount_price AS total';
 		}
 
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 
-		// Subscription discounts.
 		$discounts = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
-				MAX(o.coupon_amount) as total,
+				{$discount_clause},
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
 				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->prefix}tutor_subscription_plan_items AS s ON s.plan_id = i.item_id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = s.object_id
-				WHERE 1 = %d AND o.coupon_amount > 0
+				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
+				WHERE 1 = %d
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
@@ -931,16 +935,31 @@ class OrderModel {
 				$total_discount  += $discount->total;
 				$discount_items[] = $discount;
 			}
+
+			$response = array(
+				'discounts'       => $discount_items,
+				'total_discounts' => $total_discount,
+			);
+
+			return $response;
 		}
 
+		if ( $course_id ) {
+			$course_clause   = $wpdb->prepare( 'AND c.id = %d', $course_id );
+			$discount_clause = 'i.regular_price - i.discount_price AS total';
+		}
+
+		// Subscription discounts.
 		$discounts = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT 
-				MAX(o.coupon_amount) as total,
+				{$discount_clause},
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
 				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				LEFT JOIN {$wpdb->prefix}tutor_subscription_plan_items AS s ON s.plan_id = i.item_id
+				LEFT JOIN {$wpdb->posts} AS c ON c.id = s.object_id
+				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
 				WHERE 1 = %d AND o.coupon_amount > 0
 				{$user_clause}
 				{$period_clause}
