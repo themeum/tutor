@@ -100,6 +100,7 @@ const styles = {
       transition: opacity 0.15s ease-in-out;
       fill: none;
       flex-shrink: 0;
+      color: ${colorTokens.icon.default};
     }
 
     &:hover {

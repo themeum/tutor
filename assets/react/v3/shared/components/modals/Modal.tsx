@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import React, { useCallback, useContext, useMemo, useState, type ReactNode } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
 import { colorTokens, zIndex } from '@Config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
@@ -50,6 +50,7 @@ type ModalContextType = {
     component: React.FunctionComponent<P>;
     props?: Omit<P, 'closeModal'>;
     closeOnOutsideClick?: boolean;
+    closeOnEscape?: boolean;
     isMagicAi?: boolean;
     depthIndex?: number;
   }): Promise<NonNullable<Parameters<P['closeModal']>[0]> | PromiseResolvePayload<'CLOSE'>>;
@@ -58,7 +59,7 @@ type ModalContextType = {
 };
 
 const ModalContext = React.createContext<ModalContextType>({
-  showModal: () => Promise.resolve({ action: 'CLOSE' }),
+  showModal: () => Promise.resolve({ action: 'CLOSE' as const }),
   closeModal: noop,
   hasModalOnStack: false,
 });
@@ -75,6 +76,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       // biome-ignore lint/suspicious/noExplicitAny: <explanation>
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
+      closeOnEscape?: boolean;
       isMagicAi?: boolean;
       depthIndex?: number;
     }[];
@@ -83,7 +85,14 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   });
 
   const showModal = useCallback<ModalContextType['showModal']>(
-    ({ component, props, closeOnOutsideClick = false, isMagicAi = false, depthIndex = zIndex.modal }) => {
+    ({
+      component,
+      props,
+      closeOnOutsideClick = false,
+      closeOnEscape = true,
+      isMagicAi = false,
+      depthIndex = zIndex.modal,
+    }) => {
       return new Promise((resolve) => {
         setState((previousState) => ({
           ...previousState,
@@ -94,6 +103,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               props,
               resolve,
               closeOnOutsideClick,
+              closeOnEscape,
               id: nanoid(),
               depthIndex,
               isMagicAi,
@@ -125,6 +135,30 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   const hasModalOnStack = useMemo(() => {
     return state.modals.length > 0;
   }, [state.modals]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const currentlyOpenPopovers = document.querySelectorAll('.tutor-portal-popover');
+
+      if (
+        event.key === 'Escape' &&
+        state.modals[state.modals.length - 1]?.closeOnEscape &&
+        !currentlyOpenPopovers.length
+      ) {
+        closeModal({ action: 'CLOSE' });
+      }
+    };
+
+    // Use capture phase to ensure this event is caught even when input is focused
+    if (state.modals.length > 0) {
+      document.addEventListener('keydown', handleKeyDown, true);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown, true);
+    };
+  }, [state.modals.length, closeModal]);
 
   return (
     <ModalContext.Provider value={{ showModal, closeModal, hasModalOnStack }}>

@@ -450,7 +450,12 @@ const FormVideoInput = ({
           );
         }}
       </FormFieldWrapper>
-      <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} animationType={AnimationType.fadeIn}>
+      <Portal
+        isOpen={isOpen}
+        onClickOutside={() => setIsOpen(false)}
+        onEscape={() => setIsOpen(false)}
+        animationType={AnimationType.fadeIn}
+      >
         <div
           ref={popoverRef}
           css={[

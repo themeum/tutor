@@ -98,7 +98,10 @@ function editorConfig(
 
             setTimeout(() => {
               const height = editorBody.scrollHeight;
-              editor.iframeElement.style.height = `${height}px`;
+
+              if (height) {
+                editor.iframeElement.style.height = `${height}px`;
+              }
             }, 500);
           }
         });
