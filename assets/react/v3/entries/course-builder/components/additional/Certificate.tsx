@@ -127,7 +127,7 @@ const Certificate = () => {
                   type="button"
                   css={[
                     styleUtils.resetButton,
-                    styles.activeOrientation({
+                    styles.orientationButton({
                       isActive: activeOrientation === 'landscape',
                     }),
                   ]}
@@ -145,7 +145,7 @@ const Certificate = () => {
                   type="button"
                   css={[
                     styleUtils.resetButton,
-                    styles.activeOrientation({
+                    styles.orientationButton({
                       isActive: activeOrientation === 'portrait',
                     }),
                   ]}
@@ -260,15 +260,23 @@ const styles = {
     ${styleUtils.display.flex()}
     gap: ${spacing[8]};
     position: absolute;
+    height: 32px;
     right: 0;
-    top: 0;
+    bottom: ${spacing[4]};
   `,
-  activeOrientation: ({
+  orientationButton: ({
     isActive,
   }: {
     isActive: boolean;
   }) => css`
+    display: inline-flex;
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
+    border-radius: ${borderRadius[4]};
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
   `,
   emptyState: css`
     padding-block: ${spacing[16]} ${spacing[12]};

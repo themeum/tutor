@@ -456,5 +456,11 @@ export const styleUtils = {
       color: ${colorTokens.icon.disable.background};
       cursor: not-allowed;
     }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+      border-radius: ${borderRadius[2]};
+    }
   `,
 };
