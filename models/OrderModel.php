@@ -1516,7 +1516,7 @@ class OrderModel {
 		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : true;
 
 		if ( $is_incomplete_payment && ! $is_manual_payment && $order_items ) {
-			if ( self::TYPE_SINGLE_ORDER ) {
+			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
 				foreach ( $order_items as $item ) {
 					$course_id = $item->id;
 					if ( $course_id ) {
