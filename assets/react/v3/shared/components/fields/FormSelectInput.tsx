@@ -43,6 +43,139 @@ type FormSelectInputProps<T> = {
   selectOnFocus?: boolean;
 } & FormControllerProps<T | null>;
 
+const registerOpenDropdownHandlers = ({
+  options,
+  activeIndex,
+  setActiveIndex,
+  select,
+}: {
+  options: Option<string>[];
+  activeIndex: number;
+  setActiveIndex: (index: number) => void;
+  select: (value: string | boolean) => void;
+}) => {
+  const optionsLength = options.length;
+  const keyDownCallback = (e: KeyboardEvent) => {
+    e.preventDefault();
+    console.log(e);
+    switch (e.key) {
+      case 'Up':
+      case 'ArrowUp':
+        e.preventDefault();
+        setActiveIndex(activeIndex <= 0 ? optionsLength - 1 : activeIndex - 1);
+        return;
+      case 'Down':
+      case 'ArrowDown':
+        e.preventDefault();
+        setActiveIndex(activeIndex + 1 === optionsLength ? 0 : activeIndex + 1);
+        return;
+      case 'Enter':
+      case ' ': // Space
+        e.preventDefault();
+        select(options[activeIndex].value);
+        return;
+      case 'Esc':
+      case 'Escape':
+        e.preventDefault();
+        select(false);
+        return;
+      case 'PageUp':
+      case 'Home':
+        e.preventDefault();
+        setActiveIndex(0);
+        return;
+      case 'PageDown':
+      case 'End':
+        e.preventDefault();
+        setActiveIndex(options.length - 1);
+        return;
+    }
+  };
+  document.addEventListener('keydown', keyDownCallback);
+  return () => {
+    document.removeEventListener('keydown', keyDownCallback);
+  };
+};
+
+const registerClosedDropdownHandlers = ({
+  setIsDropdownOpen,
+}: {
+  setIsDropdownOpen: (value: boolean) => void;
+}) => {
+  const keyDownCallback = (e: KeyboardEvent) => {
+    switch (e.key) {
+      case 'Up':
+      case 'ArrowUp':
+      case 'Down':
+      case 'ArrowDown':
+      case ' ': // Space
+      case 'Enter':
+        e.preventDefault();
+        setIsDropdownOpen(true);
+    }
+  };
+  document.addEventListener('keydown', keyDownCallback);
+  return () => {
+    document.removeEventListener('keydown', keyDownCallback);
+  };
+};
+
+const useAccessibleDropdown = ({
+  isOpen,
+  options,
+  value,
+  onChange,
+}: {
+  isOpen: boolean;
+  options: Option<string>[];
+  value: string;
+  onChange: (value: string) => void;
+}) => {
+  const listRef = useRef();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isFocus, setIsFocus] = useState(false);
+  const select = (value: string | boolean) => {
+    if (value) {
+      onChange?.(value as string);
+    }
+    setIsDropdownOpen(false);
+  };
+
+  const setIsDropdownOpen = (v: boolean) => {
+    if (v) {
+      const selected = options.findIndex((o) => o.value === value);
+      setActiveIndex(selected < 0 ? 0 : selected);
+    }
+  };
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isOpen) {
+      return registerOpenDropdownHandlers({
+        activeIndex,
+        setActiveIndex,
+        options,
+        select,
+      });
+    }
+
+    if (isFocus) {
+      return registerClosedDropdownHandlers({
+        setIsDropdownOpen,
+      });
+    }
+  }, [isOpen, activeIndex, isFocus]);
+
+  return {
+    setIsDropdownOpen,
+    activeIndex,
+    setActiveIndex,
+    select,
+    setIsFocus,
+    listRef,
+  };
+};
+
 const FormSelectInput = <T,>({
   options,
   field,
@@ -101,6 +234,12 @@ const FormSelectInput = <T,>({
     isOpen,
     isDropdown: true,
     dependencies: [selections.length],
+  });
+  const { activeIndex, setActiveIndex, select, setIsFocus } = useAccessibleDropdown({
+    isOpen: isOpen,
+    options: options as Option<string>[],
+    value: field.value as string,
+    onChange: field.onChange as (value: string) => void,
   });
 
   const additionalAttributes = {
@@ -255,13 +394,20 @@ const FormSelectInput = <T,>({
                     when={selections.length > 0}
                     fallback={<li css={styles.emptyState}>{__('No options available', 'tutor')}</li>}
                   >
-                    {selections.map((option) => (
+                    {selections.map((option, index) => (
                       <li
                         key={String(option.value)}
                         ref={option.value === field.value ? optionRef : null}
                         css={styles.optionItem({
                           isSelected: option.value === field.value,
+                          isActive: activeIndex === index,
                         })}
+                        onFocus={() => {
+                          setActiveIndex(options.findIndex((o) => o.value === option.value));
+                        }}
+                        onMouseOver={() => {
+                          setActiveIndex(options.findIndex((o) => o.value === option.value));
+                        }}
                       >
                         <button
                           type="button"
@@ -515,7 +661,7 @@ const styles = {
     `
     }
   `,
-  optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
+  optionItem: ({ isSelected = false, isActive = false }: { isSelected: boolean; isActive: boolean }) => css`
     ${typography.body()};
     min-height: 36px;
     height: 100%;
@@ -524,6 +670,13 @@ const styles = {
     align-items: center;
     transition: background-color 0.3s ease-in-out;
     cursor: pointer;
+
+    ${
+      isActive &&
+      css`
+        background-color: ${colorTokens.background.hover};
+      `
+    }
 
     &:hover {
       background-color: ${colorTokens.background.hover};
