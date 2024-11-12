@@ -346,6 +346,10 @@ class HooksHandler {
 								);
 							}
 						}
+
+						if ( OrderModel::ORDER_COMPLETED === $order_status ) {
+							do_action( 'tutor_after_enrolled', $object_id, $student_id, $has_enrollment->ID );
+						}
 					}
 				}
 			} else {
