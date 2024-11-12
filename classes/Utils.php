@@ -3190,7 +3190,7 @@ class Utils {
 			if ( 5 === (int) $rating ) {
 				$max_rating = 5;
 			}
-			$rating_having = " HAVING rating >= {$rating} AND rating <= {$max_rating} ";
+			$rating_having = $wpdb->prepare( " HAVING rating >= %d AND rating <= %d ", $rating, $max_rating );
 		}
 
 		/**
