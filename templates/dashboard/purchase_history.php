@@ -170,7 +170,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								</td>
 								<td>
 									<div class="tutor-fs-7">
-										<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
+										<?php echo esc_html( Ecommerce::get_payment_method_label( $order->payment_method ?? '' ) ); ?>
 									</div>
 								</td>
 								<td>
