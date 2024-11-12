@@ -175,7 +175,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								</td>
 								<td>
 									<div class="tutor-d-flex tutor-gap-1 tutor-justify-end">
-										<?php if ( $order->payment_method && 'manual' !== $order->payment_method && OrderModel::ORDER_INCOMPLETE === $order->order_status ) : ?>
+										<?php if ( OrderModel::should_show_pay_btn( $order ) ) : ?>
 										<form method="post">
 											<?php tutor_nonce_field(); ?>
 											<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
