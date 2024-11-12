@@ -39,6 +39,8 @@ class Permalink {
 		add_action( 'tutor_option_lesson_permalink_base_changed', array( $this, 'listen_tutor_setting_changes' ), 10, 2 );
 		add_action( 'tutor_option_quiz_permalink_base_changed', array( $this, 'listen_tutor_setting_changes' ), 10, 2 );
 		add_action( 'tutor_option_assignment_permalink_base_changed', array( $this, 'listen_tutor_setting_changes' ), 10, 2 );
+		
+		add_filter( 'post_type_archive_link', array( $this, 'update_archive_link' ), 10, 2 );
 	}
 
 	/**
@@ -51,6 +53,33 @@ class Permalink {
 	public static function update_required() {
 		return (bool) get_transient( self::TRANS_KEY );
 	}
+
+	/**
+	 * Filter course archive page wpml permalink after translation.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $link the link to filter.
+	 * @param string $post_type the post type.
+	 * @return string
+	 */
+	public function update_archive_link( string $link, string $post_type ) : string {
+
+		if ( tutor()->course_post_type === $post_type ) {
+			$current_lang = apply_filters( 'wpml_current_language', null );
+			$default_lang = apply_filters( 'wpml_default_language', null );
+
+			if ( $current_lang !== $default_lang ) {
+				$course_archive_page = tutor_utils()->get_option( 'course_archive_page' );
+				if ( $course_archive_page && '-1' !== $course_archive_page ) {
+					$link = get_permalink( $course_archive_page );
+				}
+			}
+		}
+
+		return $link;
+	}
+
 
 	/**
 	 * Set permalink update required flag

@@ -101,6 +101,8 @@ class Template extends Tutor_Base {
 			if ( $queried_object instanceof \WP_Post ) {
 				$page_id               = $queried_object->ID;
 				$selected_archive_page = (int) tutor_utils()->get_option( 'course_archive_page' );
+				// Get translated wpml id.
+				$selected_archive_page = apply_filters( 'wpml_object_id', $selected_archive_page, get_post_type( $selected_archive_page ), true );
 
 				if ( $page_id === $selected_archive_page ) {
 					$paged        = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
