@@ -39,7 +39,7 @@ class Permalink {
 		add_action( 'tutor_option_lesson_permalink_base_changed', array( $this, 'listen_tutor_setting_changes' ), 10, 2 );
 		add_action( 'tutor_option_quiz_permalink_base_changed', array( $this, 'listen_tutor_setting_changes' ), 10, 2 );
 		add_action( 'tutor_option_assignment_permalink_base_changed', array( $this, 'listen_tutor_setting_changes' ), 10, 2 );
-		
+
 		add_filter( 'post_type_archive_link', array( $this, 'update_archive_link' ), 10, 2 );
 	}
 
