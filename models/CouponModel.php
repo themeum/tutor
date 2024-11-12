@@ -854,28 +854,41 @@ class CouponModel {
 	public function is_coupon_requirement_meet( $item_id, object $coupon, $order_type = OrderModel::TYPE_SINGLE_ORDER ) {
 		$is_meet_requirement = true;
 		$item_ids            = is_array( $item_id ) ? $item_id : array( $item_id );
-		if ( self::REQUIREMENT_MINIMUM_PURCHASE === $coupon->purchase_requirement ) {
-			$total_price = 0;
-			$min_amount  = $coupon->purchase_requirement_value;
-			foreach ( $item_ids as $item_id ) {
-				$course_price = tutor_utils()->get_raw_course_price( $item_id );
-				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-					$plan_info = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
-					if ( $plan_info ) {
-						$course_price->regular_price = $plan_info->regular_price;
-						$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
-					}
+
+		$total_price              = 0;
+		$min_amount               = $coupon->purchase_requirement_value;
+		$regular_price_item_count = 0;
+
+		foreach ( $item_ids as $item_id ) {
+			$course_price = tutor_utils()->get_raw_course_price( $item_id );
+			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
+				$plan_info = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				if ( $plan_info ) {
+					$course_price->regular_price = $plan_info->regular_price;
+					$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
 				}
-
-				$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->regular_price;
 			}
 
-			if ( $total_price < $min_amount ) {
-				$is_meet_requirement = false;
+			$total_price += $course_price->sale_price ? $course_price->sale_price : $course_price->regular_price;
+			if ( ! $course_price->sale_price ) {
+				$regular_price_item_count++;
 			}
-		} elseif ( self::REQUIREMENT_MINIMUM_QUANTITY === $coupon->purchase_requirement ) {
+		}
+
+		if ( self::REQUIREMENT_MINIMUM_QUANTITY === $coupon->purchase_requirement ) {
 			$min_quantity        = $coupon->purchase_requirement_value;
 			$is_meet_requirement = count( $item_ids ) >= $min_quantity;
+		} elseif ( self::REQUIREMENT_MINIMUM_PURCHASE === $coupon->purchase_requirement && $total_price < $min_amount ) {
+			$is_meet_requirement = false;
+		}
+
+		/**
+		 * If there is no regular price item in the cart, then it's not meet requirement.
+		 *
+		 * @since 3.0.0
+		 */
+		if ( 0 === $regular_price_item_count ) {
+			$is_meet_requirement = false;
 		}
 
 		return apply_filters( 'tutor_coupon_is_meet_requirement', $is_meet_requirement, $coupon, $item_id );
