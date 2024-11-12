@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 2.7.6
+Stable tag: 2.7.7
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -283,6 +283,10 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 
 == Changelog ==
+
+= 2.7.7 - November 12, 2024
+
+Fix: Security vulnerabilities
 
 = 2.7.6 - September 19, 2024
 
