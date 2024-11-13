@@ -1232,6 +1232,7 @@ final class Tutor {
 			'earning_instructor_commission'     => '80',
 			'color_preset_type'                 => 'default',
 			'monetize_by'                       => Ecommerce::MONETIZE_BY,
+			'currency_code'                     => Ecommerce::DEFAULT_CURRENCY_CODE,
 		);
 		return $options;
 	}

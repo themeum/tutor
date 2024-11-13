@@ -38,6 +38,15 @@ class Ecommerce {
 	const MONETIZE_BY = 'tutor';
 
 	/**
+	 * Default currency code
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var string
+	 */
+	const DEFAULT_CURRENCY_CODE = 'USD';
+
+	/**
 	 * Construct function to initialize e-commerce classes
 	 *
 	 * @since 3.0.0
