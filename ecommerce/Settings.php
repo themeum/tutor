@@ -412,7 +412,7 @@ class Settings {
 
 			$default_gateway = array(
 				'name'                 => 'paypal',
-				'label'                => 'Paypal',
+				'label'                => 'PayPal',
 				'is_installed'         => true,
 				'is_active'            => true,
 				'icon'                 => tutor()->url . 'assets/images/paypal.svg',
