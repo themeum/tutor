@@ -232,7 +232,6 @@ const Curriculum = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
-    let overTopicId: ID = '';
 
     if (!over) {
       setActiveSortId(null);
@@ -262,7 +261,6 @@ const Curriculum = () => {
     ) {
       const activeTopic = findValueOfItems(active.id, 'content');
       const overTopic = findValueOfItems(over.id, 'content');
-      overTopicId = overTopic?.id || '';
 
       if (!activeTopic || !overTopic || overTopic.isCollapsed) {
         return;
@@ -295,18 +293,17 @@ const Curriculum = () => {
     ) {
       const activeTopic = findValueOfItems(active.id, 'content');
       const overTopic = findValueOfItems(over.id, 'topic');
-      overTopicId = overTopic?.id || '';
 
       if (!activeTopic || !overTopic || overTopic.isCollapsed) {
         return;
       }
 
-      const activeContainerIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
-      const overContainerIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+      const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
+      const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
       const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
 
-      const [removedContent] = topicAfterSort[activeContainerIndex].contents.splice(activeContentIndex, 1);
-      topicAfterSort[overContainerIndex].contents.push(removedContent);
+      const [removedContent] = topicAfterSort[activeTopicIndex].contents.splice(activeContentIndex, 1);
+      topicAfterSort[overTopicIndex].contents.push(removedContent);
       setTopics(topicAfterSort);
     }
 
@@ -334,7 +331,7 @@ const Curriculum = () => {
       tutor_topics_lessons_sorting: convertedObject,
       ...(active.id.toString().includes('content') && {
         'content_parent[parent_topic_id]': courseCurriculumQuery.data?.find((item) =>
-          item.contents.find((content) => String(content.ID) === getIdWithoutPrefix('content-', active.id)),
+          item.contents.find((content) => String(content.ID) === getIdWithoutPrefix('content-', over.id)),
         )?.id,
         'content_parent[content_id]': getIdWithoutPrefix('content-', active.id),
       }),
