@@ -341,15 +341,6 @@ class Tools_V2 {
 					'block' => array(),
 				),
 			),
-			'tutor-setup'    => array(
-				'label'  => __( 'Setup Wizard', 'tutor' ),
-				'slug'   => 'tutor-setup',
-				'desc'   => __( 'Setup Wizard Settings', 'tutor' ),
-				'icon'   => 'tutor-icon-earth',
-				'blocks' => array(
-					'block' => array(),
-				),
-			),
 		);
 
 		$attr_tools = apply_filters( 'tutor/tools/extend/attr', apply_filters( 'tutor/tools/attr', apply_filters( 'tutor_tool_pages', $attr_tools ) ) );
