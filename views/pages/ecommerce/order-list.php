@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
@@ -156,7 +157,7 @@ $available_status = array(
 
 									<td>
 										<div class="tutor-fs-7">
-											<?php echo esc_html( ucwords( $order->payment_method ?? '' ) ); ?>
+											<?php echo esc_html( Ecommerce::get_payment_method_label( $order->payment_method ?? '' ) ); ?>
 										</div>
 									</td>
 

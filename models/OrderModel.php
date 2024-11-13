@@ -1500,4 +1500,63 @@ class OrderModel {
 		}
 	}
 
+	/**
+	 * Should show pay btn to the user
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order Order object.
+	 *
+	 * @return boolean
+	 */
+	public static function should_show_pay_btn( object $order ) {
+		$order_items            = ( new self() )->get_order_items_by_id( $order->id );
+		$is_enrolled_any_course = false;
+		$is_incomplete_payment  = ! empty( $order->payment_method ) && self::ORDER_INCOMPLETE === $order->order_status;
+		$is_manual_payment      = $order->payment_method ? self::is_manual_payment( $order->payment_method ) : true;
+
+		if ( $is_incomplete_payment && ! $is_manual_payment && $order_items ) {
+			if ( self::TYPE_SINGLE_ORDER === $order->order_type ) {
+				foreach ( $order_items as $item ) {
+					$course_id = $item->id;
+					if ( $course_id ) {
+						$is_enrolled = tutor_utils()->is_enrolled( $course_id );
+						if ( $is_enrolled ) {
+							$is_enrolled_any_course = true;
+							break;
+						}
+					}
+				}
+			} else {
+				if ( tutor_utils()->count( $order_items ) ) {
+					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
+					if ( tutor_utils()->is_enrolled( $course_id ) ) {
+						$is_enrolled_any_course = true;
+					}
+				}
+			}
+		}
+
+		return apply_filters( 'tutor_should_show_pay_btn', $is_incomplete_payment && ! $is_manual_payment && ! $is_enrolled_any_course );
+	}
+
+	/**
+	 * Check is manual payment
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $method_name Payment method name.
+	 *
+	 * @return boolean
+	 */
+	public static function is_manual_payment( $method_name ) {
+		$payment_methods = tutor_get_manual_payment_gateways();
+
+		$is_manual_payment = false;
+		foreach ( $payment_methods as $payment_method ) {
+			$is_manual_payment = $payment_method->name === $method_name;
+		}
+
+		return $is_manual_payment;
+	}
 }

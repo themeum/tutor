@@ -441,7 +441,8 @@ class Utils {
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
 		if ( $course_archive_page && '-1' !== $course_archive_page ) {
-			$course_page_url = get_permalink( $course_archive_page );
+			$course_archive_page = apply_filters( 'tutor_filter_course_archive_page', $course_archive_page );
+			$course_page_url     = get_permalink( $course_archive_page );
 		}
 		return trailingslashit( $course_page_url );
 	}
@@ -6834,17 +6835,25 @@ class Utils {
 	 * Get the frontend dashboard course edit page
 	 *
 	 * @since 1.3.4
+	 * @since 3.0.0 hide admin bar support and location param added.
 	 *
 	 * @param int $course_id course id.
+	 * @param mixed $location possible values `null|backend|frontend`.
 	 *
 	 * @return false|string
 	 */
-	public function course_edit_link( $course_id = 0 ) {
-		$course_id = $this->get_post_id( $course_id );
+	public function course_edit_link( $course_id = 0, $location = null ) {
+		$course_id    = $this->get_post_id( $course_id );
+		$frontend_url = $this->tutor_dashboard_url( 'create-course?course_id=' . $course_id );
+		$backend_url  = admin_url( "admin.php?page=create-course&course_id={$course_id}" );
 
-		$url = admin_url( "admin.php?page=create-course&course_id={$course_id}" );
-		if ( tutor()->has_pro ) {
-			$url = $this->tutor_dashboard_url( 'create-course?course_id=' . $course_id );
+		$url = $frontend_url;
+		if ( is_null( $location ) ) {
+			if ( User::is_admin() || ! (bool) get_tutor_option( 'hide_admin_bar_for_users' ) ) {
+				$url = $backend_url;
+			}
+		} elseif ( 'backend' === $location ) {
+			$url = $backend_url;
 		}
 
 		return $url;
