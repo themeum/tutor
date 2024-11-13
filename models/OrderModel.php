@@ -1154,11 +1154,6 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		// Get Admin commission rate (%) from settings.
-		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
-		// Get Instructor commission rate (%) based on remaining amount.
-		$instructor_commission = 1 - $admin_commission;
-
 		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 		$refunds    = $wpdb->get_results(
@@ -1186,11 +1181,10 @@ class OrderModel {
 		$admin_refund_amount      = 0;
 		$instructor_refund_amount = 0;
 
-		foreach ( $refunds as $refund ) {
-			// Refund amount calculation.
-			$refund_amount            = $refund->total;
-			$admin_refund_amount      = $refund_amount * $admin_commission;
-			$instructor_refund_amount = $refund_amount * $instructor_commission;
+		if ( ! empty( $refunds ) ) {
+			$split_amount             = tutor_split_amounts( array_column( $refunds, 'total' ) );
+			$admin_refund_amount      = $split_amount['admin'];
+			$instructor_refund_amount = $split_amount['instructor'];
 		}
 
 		$response = array(
@@ -1259,11 +1253,6 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		// Get Admin commission rate (%) from settings.
-		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
-		// Get Instructor commission rate (%) based on remaining amount.
-		$instructor_commission = 1 - $admin_commission;
-
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 		$discounts  = $wpdb->get_results(
 			$wpdb->prepare(
@@ -1290,11 +1279,10 @@ class OrderModel {
 		$admin_discount_amount      = 0;
 		$instructor_discount_amount = 0;
 
-		foreach ( $discounts as $discount ) {
-			// Discount amount calculation.
-			$discount_amount            = $discount->total;
-			$admin_discount_amount      = $discount_amount * $admin_commission;
-			$instructor_discount_amount = $discount_amount * $instructor_commission;
+		if ( ! empty( $discounts ) ) {
+			$split_amount               = tutor_split_amounts( array_column( $discounts, 'total' ) );
+			$admin_discount_amount      = $split_amount['admin'];
+			$instructor_discount_amount = $split_amount['instructor'];
 		}
 
 		$response = array(
