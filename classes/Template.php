@@ -100,7 +100,7 @@ class Template extends Tutor_Base {
 			$queried_object = get_queried_object();
 			if ( $queried_object instanceof \WP_Post ) {
 				$page_id               = $queried_object->ID;
-				$selected_archive_page = (int) tutor_utils()->get_option( 'course_archive_page' );
+				$selected_archive_page = (int) apply_filters( 'tutor_filter_course_archive_page', tutor_utils()->get_option( 'course_archive_page' ) );
 
 				if ( $page_id === $selected_archive_page ) {
 					$paged        = ( get_query_var( 'paged' ) ) ? absint( get_query_var( 'paged' ) ) : 1;
