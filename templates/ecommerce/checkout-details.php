@@ -44,15 +44,11 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 ?>
 
 <div class="tutor-checkout-details">
-	<h4 class="tutor-fs-3 tutor-fw-bold tutor-color-black tutor-mb-24">
-		<?php echo esc_html_e( 'Checkout', 'tutor' ); ?>
-	</h4>
 	<div class="tutor-checkout-details-inner">
+		<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-border-bottom tutor-pb-8">
+			<?php esc_html_e( 'Order Details', 'tutor' ); ?>
+		</h5>
 		<div class="tutor-checkout-detail-item">
-			<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
-				<?php esc_html_e( 'Order Details', 'tutor' ); ?>
-			</h5>
-
 			<div class="tutor-checkout-courses">
 				<?php
 				// Subscription plan checkout item.
