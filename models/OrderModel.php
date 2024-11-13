@@ -1528,9 +1528,11 @@ class OrderModel {
 					}
 				}
 			} else {
-				$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-				if ( tutor_utils()->is_enrolled( $course_id ) ) {
-					$is_enrolled_any_course = true;
+				if ( tutor_utils()->count( $order_items ) ) {
+					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
+					if ( tutor_utils()->is_enrolled( $course_id ) ) {
+						$is_enrolled_any_course = true;
+					}
 				}
 			}
 		}
