@@ -542,7 +542,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	if (monetization_field) {
 		const monetized_by = monetization_field?.value;
 		const revenue_sharing_checkbox = document.querySelector("[data-toggle-fields=sharing_percentage]");
-		const revenue_sharing_engines = ['tutor', 'wc', 'edd'];
+		const revenue_sharing_engines = ['tutor', 'wc', 'edd', 'pmpro', 'restrict-content-pro'];
 
 		const woocommerce_block = document.querySelector(".tutor-option-single-item.woocommerce");
 		const currency_block = document.querySelector(".tutor-option-single-item.ecommerce_currency");

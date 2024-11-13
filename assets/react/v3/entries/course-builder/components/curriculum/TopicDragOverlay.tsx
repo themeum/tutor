@@ -6,14 +6,14 @@ import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 
 interface TopicDragOverlayProps {
-  topicTitle: string;
+  title: string;
 }
 
-const TopicDragOverlay = ({ topicTitle }: TopicDragOverlayProps) => {
+const TopicDragOverlay = ({ title }: TopicDragOverlayProps) => {
   return (
     <div css={styles.wrapper}>
       <SVGIcon name="dragVertical" width={24} height={24} />
-      <span>{topicTitle}</span>
+      <span>{title}</span>
     </div>
   );
 };
