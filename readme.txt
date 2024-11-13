@@ -284,6 +284,9 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
+= 3.0.0-rc2 - November 13, 2024
+
+
 = 3.0.0-rc - October 25, 2024
 
 Update: Improved the user experience of Tutor LMS Subscription feature. (Pro)
