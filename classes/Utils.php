@@ -441,7 +441,8 @@ class Utils {
 
 		$course_archive_page = $this->get_option( 'course_archive_page' );
 		if ( $course_archive_page && '-1' !== $course_archive_page ) {
-			$course_page_url = get_permalink( $course_archive_page );
+			$course_archive_page = apply_filters( 'tutor_filter_course_archive_page', $course_archive_page );
+			$course_page_url     = get_permalink( $course_archive_page );
 		}
 		return trailingslashit( $course_page_url );
 	}
