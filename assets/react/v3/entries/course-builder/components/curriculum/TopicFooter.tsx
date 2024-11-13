@@ -23,19 +23,20 @@ import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { colorTokens, spacing } from '@Config/styles';
-import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
 
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface TopicFooterProps {
   topic: CourseTopicWithCollapse;
 }
 
+const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasLiveAddons =
   isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION) || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -53,12 +54,13 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
 
   const importQuizMutation = useImportQuizMutation();
 
-  const courseDetails = useCourseDetails();
+  const queryClient = useQueryClient();
+  const courseDetails = queryClient.getQueryData(['CourseDetails', Number(courseId)]) as CourseDetailsResponse;
   const { fileInputRef, handleChange } = useFileUploader({
     acceptedTypes: ['.csv'],
     onUpload: async (files) => {
       await importQuizMutation.mutateAsync({
-        topic_id: topic.id,
+        topic_id: getIdWithoutPrefix('topic-', topic.id),
         csv_file: files[0],
       });
       setIsThreeDotOpen(false);
@@ -90,7 +92,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                 component: LessonModal,
                 props: {
                   contentDripType: courseDetailsForm.watch('contentDripType'),
-                  topicId: topic.id,
+                  topicId: getIdWithoutPrefix('topic-', topic.id),
                   title: __('Lesson', 'tutor'),
                   icon: <SVGIcon name="lesson" width={24} height={24} />,
                   subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
@@ -111,7 +113,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
               showModal({
                 component: QuizModal,
                 props: {
-                  topicId: topic.id,
+                  topicId: getIdWithoutPrefix('topic-', topic.id),
                   contentDripType: courseDetailsForm.watch('contentDripType'),
                   title: __('Quiz', 'tutor'),
                   icon: <SVGIcon name="quiz" width={24} height={24} />,
@@ -138,7 +140,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                     showModal({
                       component: QuizModal,
                       props: {
-                        topicId: topic.id,
+                        topicId: getIdWithoutPrefix('topic-', topic.id),
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Interactive Quiz', 'tutor'),
                         icon: <SVGIcon name="interactiveQuiz" width={24} height={24} />,
@@ -182,7 +184,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                     showModal({
                       component: AssignmentModal,
                       props: {
-                        topicId: topic.id,
+                        topicId: getIdWithoutPrefix('topic-', topic.id),
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
@@ -331,7 +333,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         maxWidth="306px"
       >
         <GoogleMeetForm
-          topicId={topic.id}
+          topicId={getIdWithoutPrefix('topic-', topic.id)}
           data={null}
           onCancel={() => {
             setMeetingType(null);
@@ -349,7 +351,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         maxWidth="306px"
       >
         <ZoomMeetingForm
-          topicId={topic.id}
+          topicId={getIdWithoutPrefix('topic-', topic.id)}
           meetingHost={courseDetails?.zoom_users || {}}
           data={null}
           onCancel={() => {

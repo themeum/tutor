@@ -31,7 +31,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 
-import { getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
@@ -93,7 +93,7 @@ const TopicHeader = ({
 
   const handleSubmit = async (values: TopicForm) => {
     const response = await saveTopicMutation.mutateAsync({
-      ...(topic.isSaved && { topic_id: topic.id }),
+      ...(topic.isSaved && { topic_id: getIdWithoutPrefix('topic-', topic.id) }),
       course_id: courseId,
       title: values.title,
       summary: values.summary,
@@ -110,12 +110,12 @@ const TopicHeader = ({
   const handleDuplicateTopic = async () => {
     const response = await duplicateContentMutation.mutateAsync({
       course_id: courseId,
-      content_id: topic.id,
+      content_id: getIdWithoutPrefix('topic-', topic.id),
       content_type: 'topic',
     });
 
     if (response.data) {
-      onCopy?.(response.data);
+      onCopy?.(`topic-${response.data}`);
     }
   };
 
@@ -319,7 +319,7 @@ const TopicHeader = ({
           variant: 'text',
         }}
         onConfirmation={async () => {
-          await deleteTopicMutation.mutateAsync(topic.id);
+          await deleteTopicMutation.mutateAsync(getIdWithoutPrefix('topic-', topic.id));
           setIsDeletePopoverOpen(false);
           onDelete?.();
         }}

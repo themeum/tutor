@@ -1,25 +1,14 @@
 import {
-  DndContext,
-  DragOverlay,
-  KeyboardSensor,
-  PointerSensor,
-  type UniqueIdentifier,
-  closestCenter,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import { restrictToWindowEdges } from '@dnd-kit/modifiers';
-import {
+  type AnimateLayoutChanges,
   SortableContext,
-  sortableKeyboardCoordinates,
+  defaultAnimateLayoutChanges,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { animated, useSpring } from '@react-spring/web';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import TopicFooter from '@CourseBuilderComponents/curriculum//TopicFooter';
 import TopicHeader from '@CourseBuilderComponents/curriculum//TopicHeader';
@@ -27,16 +16,13 @@ import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
 import For from '@Controls/For';
-import Show from '@Controls/Show';
 
+import Show from '@/v3/shared/controls/Show';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import type { ID, Content as TopicContentType } from '@CourseBuilderServices/curriculum';
-import {} from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { animateLayoutChanges } from '@Utils/dndkit';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
-import { moveTo, noop } from '@Utils/util';
+import { noop } from '@Utils/util';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -48,28 +34,12 @@ interface TopicProps {
   isOverlay?: boolean;
 }
 
-interface TopicForm {
-  title: string;
-  summary: string;
-}
+const animateLayoutChanges: AnimateLayoutChanges = (args) =>
+  defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
 const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay = false }: TopicProps) => {
-  const form = useFormWithGlobalError<TopicForm>({
-    defaultValues: {
-      title: topic.title,
-      summary: topic.summary,
-    },
-    shouldFocusError: true,
-  });
-
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(!topic.isSaved);
-  const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
-  const [content, setContent] = useState<TopicContentType[]>(topic.contents);
-
-  useEffect(() => {
-    setContent(topic.contents);
-  }, [topic]);
 
   const topicRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -84,7 +54,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
         easing: (t) => t * (2 - t),
       },
     },
-    [content.length],
+    [topic.contents.length],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -100,23 +70,11 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [isEdit]);
 
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: {
-        distance: 10,
-      },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
-
-  const activeSortItem = useMemo(() => {
-    return topic.contents.find((item) => item.ID === activeSortId);
-  }, [activeSortId, topic.contents]);
-
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: topic.id,
+    data: {
+      type: 'topic',
+    },
     animateLayoutChanges,
   });
 
@@ -146,7 +104,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
         opacity: !topic.isCollapsed ? 1 : 0,
       });
     }
-  }, [topic.isCollapsed, content.length]);
+  }, [topic.isCollapsed, topic.contents.length]);
 
   return (
     <div
@@ -179,72 +137,30 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
 
       <animated.div style={{ ...collapseAnimation }}>
         <div css={styles.content} ref={topicRef}>
-          <Show when={content.length > 0}>
-            <DndContext
-              sensors={sensors}
-              collisionDetection={closestCenter}
-              modifiers={[restrictToWindowEdges]}
-              onDragStart={(event) => {
-                setActiveSortId(event.active.id);
-              }}
-              onDragEnd={(event) => {
-                const { active, over } = event;
-                if (!over) {
-                  return;
-                }
-
-                if (active.id !== over.id) {
-                  const activeIndex = content.findIndex((item) => item.ID === active.id);
-                  const overIndex = content.findIndex((item) => item.ID === over.id);
-                  onSort?.(activeIndex, overIndex);
-                  setContent(moveTo(content, activeIndex, overIndex));
-                }
-              }}
+          <Show when={topic.contents.length > 0}>
+            <SortableContext
+              items={topic.contents.map((item) => ({ ...item, id: item.ID }))}
+              strategy={verticalListSortingStrategy}
             >
-              <SortableContext
-                items={content.map((item) => ({ ...item, id: item.ID }))}
-                strategy={verticalListSortingStrategy}
-              >
-                <div>
-                  <For each={content}>
-                    {(content) => {
-                      return (
-                        <TopicContent
-                          key={content.ID}
-                          type={content.post_type}
-                          topic={topic}
-                          content={{
-                            id: content.ID,
-                            title: content.post_title,
-                            total_question: content.total_question || 0,
-                          }}
-                        />
-                      );
-                    }}
-                  </For>
-                </div>
-              </SortableContext>
-
-              {createPortal(
-                <DragOverlay>
-                  <Show when={activeSortItem}>
-                    {(content) => (
+              <div>
+                <For each={topic.contents}>
+                  {(content) => {
+                    return (
                       <TopicContent
+                        key={content.ID}
+                        type={content.post_type}
                         topic={topic}
                         content={{
                           id: content.ID,
                           title: content.post_title,
                           total_question: content.total_question || 0,
                         }}
-                        type={content.post_type}
-                        isOverlay
                       />
-                    )}
-                  </Show>
-                </DragOverlay>,
-                document.body,
-              )}
-            </DndContext>
+                    );
+                  }}
+                </For>
+              </div>
+            </SortableContext>
           </Show>
 
           <TopicFooter topic={topic} />
