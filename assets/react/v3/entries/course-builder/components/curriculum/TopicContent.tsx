@@ -18,7 +18,6 @@ import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMee
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import { useCourseDetails } from '@CourseBuilderContexts/CourseDetailsContext';
 import {
   type ContentType,
   type ID,
@@ -33,13 +32,14 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { noop } from '@Utils/util';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface TopicContentProps {
   type: ContentType;
@@ -112,7 +112,11 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
 const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = false }: TopicContentProps) => {
-  const courseDetails = useCourseDetails();
+  const topicId = getIdWithoutPrefix('topic-', topic.id);
+  const contentId = getIdWithoutPrefix('content-', content.id);
+
+  const queryClient = useQueryClient();
+  const courseDetails = queryClient.getQueryData(['CourseDetails', Number(courseId)]) as CourseDetailsResponse;
   const form = useFormContext<CourseFormData>();
   const [meetingType, setMeetingType] = useState<'tutor_zoom_meeting' | 'tutor-google-meet' | null>(null);
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
@@ -123,6 +127,9 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const icon = icons[type];
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: content.id,
+    data: {
+      type: 'content',
+    },
     animateLayoutChanges,
   });
 
@@ -147,12 +154,12 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         component: modalComponent[isContentType],
         props: {
           contentDripType: form.watch('contentDripType'),
-          topicId: topic.id,
-          lessonId: content.id,
-          assignmentId: content.id,
-          quizId: content.id,
+          topicId: topicId,
+          lessonId: contentId,
+          assignmentId: contentId,
+          quizId: contentId,
           title: modalTitle[isContentType],
-          subtitle: `${__('Topic')}: ${topic.title}`,
+          subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
           ...(type === 'tutor_h5p_quiz' && {
             contentType: 'tutor_h5p_quiz',
@@ -172,13 +179,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
   const handleDelete = async () => {
     if (['lesson', 'tutor_assignments'].includes(type)) {
-      await deleteContentMutation.mutateAsync(content.id);
+      await deleteContentMutation.mutateAsync(contentId);
     } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type)) {
-      await deleteQuizMutation.mutateAsync(content.id);
+      await deleteQuizMutation.mutateAsync(contentId);
     } else if (type === 'tutor-google-meet') {
-      await deleteGoogleMeetMutation.mutateAsync(content.id);
+      await deleteGoogleMeetMutation.mutateAsync(contentId);
     } else if (type === 'tutor_zoom_meeting') {
-      await deleteZoomMeetingMutation.mutateAsync(content.id);
+      await deleteZoomMeetingMutation.mutateAsync(contentId);
     }
 
     setIsDeletePopoverOpen(false);
@@ -203,7 +210,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
     duplicateContentMutation.mutateAsync({
       course_id: courseId,
-      content_id: content.id,
+      content_id: contentId,
       content_type: convertedContentType[type as Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
     });
     onCopy?.();

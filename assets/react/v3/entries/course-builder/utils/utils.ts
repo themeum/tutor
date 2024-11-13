@@ -5,6 +5,7 @@ import { tutorConfig } from '@Config/config';
 import type { Addons } from '@Config/constants';
 import type { PostStatus } from '@CourseBuilderServices/course';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
+import type { ID } from '../services/curriculum';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
@@ -186,4 +187,8 @@ export const convertToSlug = (value: string) => {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/-+/g, '-')
     .replace(/^-+|-+$/g, '');
+};
+
+export const getIdWithoutPrefix = (prefix: string, id: ID) => {
+  return id.toString().replace(prefix, '');
 };
