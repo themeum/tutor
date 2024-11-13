@@ -263,15 +263,15 @@ const styles = {
   `,
   clearButton: css`
     position: absolute;
-    right: ${spacing[2]};
-    top: ${spacing[2]};
-    width: 36px;
-    height: 36px;
-    border-radius: ${borderRadius[2]};
+    right: ${spacing[4]};
+    top: ${spacing[4]};
+    width: 32px;
+    height: 32px;
     background: transparent;
-
+    
     button {
-      padding: ${spacing[10]};
+      padding: ${spacing[8]};
+      border-radius: ${borderRadius[2]};
     }
   `,
   eyeButtonWrapper: css`
