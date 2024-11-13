@@ -185,8 +185,6 @@ const Curriculum = () => {
       return;
     }
 
-    console.table({ active: active.id, over: over.id });
-
     if (active.id.toString().includes('content') && over.id.toString().includes('content') && active.id !== over.id) {
       const activeTopic = findValueOfItems(active.id, 'content');
       const overTopic = findValueOfItems(over.id, 'content');
