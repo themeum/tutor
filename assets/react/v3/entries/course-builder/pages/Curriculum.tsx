@@ -195,7 +195,6 @@ const Curriculum = () => {
       const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
 
       if (overTopic.isCollapsed || activeTopicIndex === overTopicIndex) {
-        console.log('return');
         return;
       }
 
@@ -219,7 +218,6 @@ const Curriculum = () => {
       const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
 
       if (activeTopicIndex === overTopicIndex) {
-        console.log('Same container');
         return;
       }
 
@@ -234,6 +232,7 @@ const Curriculum = () => {
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
+    let overTopicId: ID = '';
 
     if (!over) {
       setActiveSortId(null);
@@ -263,6 +262,7 @@ const Curriculum = () => {
     ) {
       const activeTopic = findValueOfItems(active.id, 'content');
       const overTopic = findValueOfItems(over.id, 'content');
+      overTopicId = overTopic?.id || '';
 
       if (!activeTopic || !overTopic || overTopic.isCollapsed) {
         return;
@@ -295,6 +295,7 @@ const Curriculum = () => {
     ) {
       const activeTopic = findValueOfItems(active.id, 'content');
       const overTopic = findValueOfItems(over.id, 'topic');
+      overTopicId = overTopic?.id || '';
 
       if (!activeTopic || !overTopic || overTopic.isCollapsed) {
         return;
@@ -331,6 +332,12 @@ const Curriculum = () => {
 
     updateCourseContentOrderMutation.mutate({
       tutor_topics_lessons_sorting: convertedObject,
+      ...(active.id.toString().includes('content') && {
+        'content_parent[parent_topic_id]': courseCurriculumQuery.data?.find((item) =>
+          item.contents.find((content) => String(content.ID) === getIdWithoutPrefix('content-', active.id)),
+        )?.id,
+        'content_parent[content_id]': getIdWithoutPrefix('content-', active.id),
+      }),
     });
 
     setActiveSortId(null);
@@ -355,54 +362,6 @@ const Curriculum = () => {
       currentExpandedTopics.current = [...currentExpandedTopics.current, topicId];
     } else {
       currentExpandedTopics.current = currentExpandedTopics.current.filter((id) => id !== topicId);
-    }
-  };
-
-  const handleTopicSort = (index: number, topic: CourseTopicWithCollapse, activeIndex: number, overIndex: number) => {
-    const previousContent = topics;
-    const contentAfterSort = () => {
-      return topics.map((item, idx) => {
-        if (idx === index) {
-          return {
-            ...item,
-            contents: moveTo(item.contents, activeIndex, overIndex),
-          };
-        }
-
-        return item;
-      });
-    };
-    setTopics(contentAfterSort);
-
-    const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] = contentAfterSort().reduce(
-      (topics, topic, topicIndex) => {
-        let contentIndex = 0;
-        topics[topicIndex] = {
-          topic_id: topic.id,
-          lesson_ids: topic.contents.reduce(
-            (contents, content) => {
-              contents[contentIndex] = content.ID;
-              contentIndex++;
-
-              return contents;
-            },
-            {} as { [key: ID]: ID },
-          ),
-        };
-        return topics;
-      },
-      {} as CourseContentOrderPayload['tutor_topics_lessons_sorting'],
-    );
-
-    updateCourseContentOrderMutation.mutate({
-      tutor_topics_lessons_sorting: convertedObject,
-
-      'content_parent[parent_topic_id]': topic.id,
-      'content_parent[content_id]': topic.contents[activeIndex].ID,
-    });
-
-    if (updateCourseContentOrderMutation.isError) {
-      setTopics(previousContent);
     }
   };
 
@@ -494,7 +453,6 @@ const Curriculum = () => {
                             onEdit={(topicId) => {
                               currentExpandedTopics.current = [topicId];
                             }}
-                            onSort={(activeIndex, overIndex) => handleTopicSort(index, topic, activeIndex, overIndex)}
                           />
                         )
                       );

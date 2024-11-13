@@ -68,6 +68,8 @@ const TopicHeader = ({
   onDelete,
   setIsEdit,
 }: TopicHeaderProps) => {
+  const topicId = getIdWithoutPrefix('topic-', topic.id);
+
   const form = useFormWithGlobalError<TopicForm>({
     defaultValues: {
       title: topic.title,
@@ -93,7 +95,7 @@ const TopicHeader = ({
 
   const handleSubmit = async (values: TopicForm) => {
     const response = await saveTopicMutation.mutateAsync({
-      ...(topic.isSaved && { topic_id: getIdWithoutPrefix('topic-', topic.id) }),
+      ...(topic.isSaved && { topic_id: topicId }),
       course_id: courseId,
       title: values.title,
       summary: values.summary,
@@ -110,7 +112,7 @@ const TopicHeader = ({
   const handleDuplicateTopic = async () => {
     const response = await duplicateContentMutation.mutateAsync({
       course_id: courseId,
-      content_id: getIdWithoutPrefix('topic-', topic.id),
+      content_id: topicId,
       content_type: 'topic',
     });
 
@@ -319,7 +321,7 @@ const TopicHeader = ({
           variant: 'text',
         }}
         onConfirmation={async () => {
-          await deleteTopicMutation.mutateAsync(getIdWithoutPrefix('topic-', topic.id));
+          await deleteTopicMutation.mutateAsync(topicId);
           setIsDeletePopoverOpen(false);
           onDelete?.();
         }}

@@ -42,6 +42,8 @@ const hasLiveAddons =
   isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION) || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
 
 const TopicFooter = ({ topic }: TopicFooterProps) => {
+  const topicId = getIdWithoutPrefix('topic-', topic.id);
+
   const { showToast } = useToast();
   const { showModal } = useModal();
   const courseDetailsForm = useFormContext<CourseFormData>();
@@ -60,7 +62,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
     acceptedTypes: ['.csv'],
     onUpload: async (files) => {
       await importQuizMutation.mutateAsync({
-        topic_id: getIdWithoutPrefix('topic-', topic.id),
+        topic_id: topicId,
         csv_file: files[0],
       });
       setIsThreeDotOpen(false);
@@ -92,7 +94,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                 component: LessonModal,
                 props: {
                   contentDripType: courseDetailsForm.watch('contentDripType'),
-                  topicId: getIdWithoutPrefix('topic-', topic.id),
+                  topicId: topicId,
                   title: __('Lesson', 'tutor'),
                   icon: <SVGIcon name="lesson" width={24} height={24} />,
                   subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
@@ -113,7 +115,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
               showModal({
                 component: QuizModal,
                 props: {
-                  topicId: getIdWithoutPrefix('topic-', topic.id),
+                  topicId: topicId,
                   contentDripType: courseDetailsForm.watch('contentDripType'),
                   title: __('Quiz', 'tutor'),
                   icon: <SVGIcon name="quiz" width={24} height={24} />,
@@ -140,7 +142,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                     showModal({
                       component: QuizModal,
                       props: {
-                        topicId: getIdWithoutPrefix('topic-', topic.id),
+                        topicId: topicId,
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Interactive Quiz', 'tutor'),
                         icon: <SVGIcon name="interactiveQuiz" width={24} height={24} />,
@@ -184,7 +186,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                     showModal({
                       component: AssignmentModal,
                       props: {
-                        topicId: getIdWithoutPrefix('topic-', topic.id),
+                        topicId: topicId,
                         contentDripType: courseDetailsForm.watch('contentDripType'),
                         title: __('Assignment', 'tutor'),
                         icon: <SVGIcon name="assignment" width={24} height={24} />,
@@ -333,7 +335,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         maxWidth="306px"
       >
         <GoogleMeetForm
-          topicId={getIdWithoutPrefix('topic-', topic.id)}
+          topicId={topicId}
           data={null}
           onCancel={() => {
             setMeetingType(null);
@@ -351,7 +353,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         maxWidth="306px"
       >
         <ZoomMeetingForm
-          topicId={getIdWithoutPrefix('topic-', topic.id)}
+          topicId={topicId}
           meetingHost={courseDetails?.zoom_users || {}}
           data={null}
           onCancel={() => {

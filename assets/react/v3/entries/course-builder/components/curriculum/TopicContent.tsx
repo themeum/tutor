@@ -112,6 +112,8 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
 const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = false }: TopicContentProps) => {
+  const contentId = getIdWithoutPrefix('content-', content.id);
+
   const queryClient = useQueryClient();
   const courseDetails = queryClient.getQueryData(['CourseDetails', Number(courseId)]) as CourseDetailsResponse;
   const form = useFormContext<CourseFormData>();
@@ -176,13 +178,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
   const handleDelete = async () => {
     if (['lesson', 'tutor_assignments'].includes(type)) {
-      await deleteContentMutation.mutateAsync(getIdWithoutPrefix('content-', content.id));
+      await deleteContentMutation.mutateAsync(contentId);
     } else if (['tutor_quiz', 'tutor_h5p_quiz'].includes(type)) {
-      await deleteQuizMutation.mutateAsync(getIdWithoutPrefix('content-', content.id));
+      await deleteQuizMutation.mutateAsync(contentId);
     } else if (type === 'tutor-google-meet') {
-      await deleteGoogleMeetMutation.mutateAsync(getIdWithoutPrefix('content-', content.id));
+      await deleteGoogleMeetMutation.mutateAsync(contentId);
     } else if (type === 'tutor_zoom_meeting') {
-      await deleteZoomMeetingMutation.mutateAsync(getIdWithoutPrefix('content-', content.id));
+      await deleteZoomMeetingMutation.mutateAsync(contentId);
     }
 
     setIsDeletePopoverOpen(false);
@@ -207,7 +209,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
 
     duplicateContentMutation.mutateAsync({
       course_id: courseId,
-      content_id: getIdWithoutPrefix('content-', content.id),
+      content_id: contentId,
       content_type: convertedContentType[type as Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>],
     });
     onCopy?.();
