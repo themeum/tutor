@@ -112,6 +112,7 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 
 const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = false }: TopicContentProps) => {
+  const topicId = getIdWithoutPrefix('topic-', topic.id);
   const contentId = getIdWithoutPrefix('content-', content.id);
 
   const queryClient = useQueryClient();
@@ -153,10 +154,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         component: modalComponent[isContentType],
         props: {
           contentDripType: form.watch('contentDripType'),
-          topicId: String(topic.id).split('-')[1],
-          lessonId: String(content.id).split('-')[1],
-          assignmentId: String(content.id).split('-')[1],
-          quizId: String(content.id).split('-')[1],
+          topicId: topicId,
+          lessonId: contentId,
+          assignmentId: contentId,
+          quizId: contentId,
           title: modalTitle[isContentType],
           subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
           icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,

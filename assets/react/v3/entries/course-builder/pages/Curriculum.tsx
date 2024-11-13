@@ -466,7 +466,7 @@ const Curriculum = () => {
                       {(item) => {
                         return (
                           <TopicDragOverlay
-                            topicTitle={
+                            title={
                               activeSortId?.toString().includes('topic')
                                 ? (item as CourseTopicWithCollapse).title
                                 : (item as Content).post_title
