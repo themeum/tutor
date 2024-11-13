@@ -6,7 +6,7 @@ const billing_country = document.querySelector('[name=billing_country]');
 if (billing_country) {
     billing_country.addEventListener('change', (e) => {
         const countryName = e.target.value;
-        const states = countries.find(country => country.name === countryName).states;
+        const states = countries.find(country => country.name === countryName)?.states;
         const stateDropdown = document.querySelector('[name=billing_state]');
     
         // Clear current state options

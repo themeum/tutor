@@ -187,17 +187,17 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown_billing_country?.addEventListener('change', async (e) => {
             const country = e.target.value;
             const coupon_code = input_coupon_code.value;
-
-            toggleSpinner(e.target, 'show')
-
+            
             if (country) {
+                toggleSpinner(e.target, 'show');
+                
                 const formData = new FormData();
                 formData.set('billing_country', country);
 
-                await saveBilling(formData)
-                await updateCheckoutData(coupon_code)
+                await saveBilling(formData);
+                await updateCheckoutData(coupon_code);
 
-                toggleSpinner(e.target, 'hide')
+                toggleSpinner(e.target, 'hide');
             }
         })
 
@@ -206,17 +206,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const state = e.target.value;
             const coupon_code = input_coupon_code.value;
 
-            toggleSpinner(e.target, 'show')
-
             if (state) {
+                toggleSpinner(e.target, 'show');
+
                 const formData = new FormData();
                 formData.set('billing_country', country);
                 formData.set('billing_state', state);
 
-                await saveBilling(formData)
-                await updateCheckoutData(coupon_code)
+                await saveBilling(formData);
+                await updateCheckoutData(coupon_code);
 
-                toggleSpinner(e.target, 'hide')
+                toggleSpinner(e.target, 'hide');
             }
         })
     }

@@ -30,9 +30,12 @@ $subtotal        = 0;
 $course_ids      = implode( ', ', array_values( array_column( $course_list, 'ID' ) ) );
 $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 
+$is_checkout_page = true;
+
 ?>
 <div class="tutor-checkout-page">
-
+<div class="tutor-container">
+<div class="tutor-checkout-container">
 	<?php
 	$echo_before_return    = true;
 	$user_has_subscription = apply_filters( 'tutor_checkout_user_has_subscription', false, $plan_id, $echo_before_return );
@@ -44,7 +47,7 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 	<form method="post" id="tutor-checkout-form">
 		<?php tutor_nonce_field(); ?>
 		<input type="hidden" name="tutor_action" value="tutor_pay_now">
-		<div class="tutor-row tutor-g-0">
+		<div class="tutor-row tutor-g-5">
 			<div class="tutor-col-md-6" tutor-checkout-details>
 				<?php
 				$file = __DIR__ . '/checkout-details.php';
@@ -60,7 +63,9 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
 						</h5>
 
-						<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
+						<div class="tutor-billing-fields">
+							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
+						</div>
 
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
@@ -180,4 +185,6 @@ $plan_id         = Input::get( 'plan', 0, Input::TYPE_INT );
 			</div>
 		</div>
 	</form>
+</div>
+</div>
 </div>
