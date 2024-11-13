@@ -1097,6 +1097,214 @@ class OrderModel {
 		return $response;
 	}
 
+	/**
+	 * Get total partial refunds by user_id (instructor), optionally can set period ( today | monthly| yearly )
+	 *
+	 * Optionally can set start date & end date to get enrollment list from date range
+	 *
+	 * If period or date range not pass then it will return all time enrollment list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id User id, if user not have admin access
+	 * then only this user's refund amount will fetched.
+	 * @param string $period Time period.
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_partial_refunds_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = 0 ): array {
+		$response = array(
+			'refunds'       => array(),
+			'total_refunds' => 0,
+		);
+
+		global $wpdb;
+
+		$user_clause       = '';
+		$date_range_clause = '';
+		$period_clause     = '';
+		$course_clause     = '';
+		$commission_clause = '';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = $wpdb->prepare(
+				'AND o.created_at_gmt BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
+			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		} else {
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( 'today' !== $period ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+		}
+
+		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+		}
+
+		if ( $course_id ) {
+			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+		}
+
+		// Get Admin commission rate (%) from settings.
+		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
+		// Get Instructor commission rate (%) based on remaining amount.
+		$instructor_commission = 1 - $admin_commission;
+
+		// Refund query logic remains the same.
+		$item_table = $wpdb->prefix . 'tutor_order_items';
+		$refunds    = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+				COALESCE(SUM(o.refund_amount), 0) AS total,
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				WHERE 1 = %d
+				AND o.payment_status = '%s'
+				AND o.refund_amount > %d
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$group_clause},
+				o.id",
+				1,
+				self::PAYMENT_PARTIALLY_REFUNDED,
+				0
+			)
+		);
+
+		$admin_refund_amount      = 0;
+		$instructor_refund_amount = 0;
+
+		foreach ( $refunds as $refund ) {
+			// Refund amount calculation.
+			$refund_amount            = $refund->total;
+			$admin_refund_amount      = $refund_amount * $admin_commission;
+			$instructor_refund_amount = $refund_amount * $instructor_commission;
+		}
+
+		$response = array(
+			'refunds'       => $refunds,
+			'total_refunds' => is_admin() ? $admin_refund_amount : $instructor_refund_amount,
+		);
+
+		return $response;
+	}
+
+	/**
+	 * Get total discount amount that given manually.
+	 *
+	 * Specify user id to get amount that given by a user
+	 * Optionally can set start date & end date to get enrollment list from date range
+	 *
+	 * If period or date range not pass then it will return all time enrollment list
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $user_id User id, if user not have admin access
+	 * then only this user's refund amount will fetched.
+	 * @param string $period Time period.
+	 * @param string $start_date Start date.
+	 * @param string $end_date End date.
+	 * @param int    $course_id Course id.
+	 *
+	 * @return array
+	 */
+	public function get_discount_amount_by_user( int $user_id, string $period = '', $start_date = '', string $end_date = '', int $course_id = 0 ): array {
+		$response = array(
+			'refunds'       => array(),
+			'total_refunds' => 0,
+		);
+
+		global $wpdb;
+
+		$user_clause       = '';
+		$date_range_clause = '';
+		$period_clause     = '';
+		$course_clause     = '';
+		$commission_clause = '';
+		$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		if ( $start_date && $end_date ) {
+			$date_range_clause = $wpdb->prepare(
+				'AND o.created_at_gmt BETWEEN %s AND %s',
+				$start_date,
+				$end_date
+			);
+			$group_clause      = ' GROUP BY DATE(o.created_at_gmt) ';
+
+		} else {
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
+		}
+
+		if ( 'today' !== $period ) {
+			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
+		}
+
+		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
+			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+		}
+
+		if ( $course_id ) {
+			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+		}
+
+		// Get Admin commission rate (%) from settings.
+		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
+		// Get Instructor commission rate (%) based on remaining amount.
+		$instructor_commission = 1 - $admin_commission;
+
+		$item_table = $wpdb->prefix . 'tutor_order_items';
+		$discounts  = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT 
+				COALESCE(
+					SUM(o.subtotal_price - o.net_payment), 0) AS total,
+				created_at_gmt AS date_format
+				FROM {$this->table_name} AS o
+				-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+				WHERE 1 = %d
+				AND o.payment_status IN ('paid', 'partially-refunded')
+				AND o.discount_amount > %d
+				{$user_clause}
+				{$period_clause}
+				{$date_range_clause}
+				{$group_clause},
+				o.id",
+				1,
+				0
+			)
+		);
+
+		$admin_discount_amount      = 0;
+		$instructor_discount_amount = 0;
+
+		foreach ( $discounts as $discount ) {
+			// Discount amount calculation.
+			$discount_amount            = $discount->total;
+			$admin_discount_amount      = $discount_amount * $admin_commission;
+			$instructor_discount_amount = $discount_amount * $instructor_commission;
+		}
+
+		$response = array(
+			'discounts'      => $discounts,
+			'total_discount' => is_admin() ? $admin_discount_amount : $instructor_discount_amount,
+		);
+
+		return $response;
+	}
+
 
 	/**
 	 * Update the payment status of an order.
