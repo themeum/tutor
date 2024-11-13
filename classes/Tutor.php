@@ -602,6 +602,7 @@ final class Tutor {
 			$this->redirect_to_setup_page();
 		}
 	}
+
 	/**
 	 * Redirect to setup page
 	 *
@@ -1230,6 +1231,7 @@ final class Tutor {
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
 			'color_preset_type'                 => 'default',
+			'monetize_by'                       => Ecommerce::MONETIZE_BY,
 		);
 		return $options;
 	}
