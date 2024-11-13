@@ -47,11 +47,13 @@ class Tutor_Setup {
 		$options   = (array) maybe_unserialize( get_option( 'tutor_option' ) );
 		$final_arr = array();
 		$data_arr  = $this->tutor_setup_attributes();
+
 		foreach ( $data_arr as $key => $section ) {
 			foreach ( $section['attr'] as $k => $val ) {
 				$final_arr[ $k ] = isset( $options[ $k ] ) ? $options[ $k ] : '';
 			}
 		}
+
 		return $final_arr;
 	}
 
@@ -506,11 +508,6 @@ class Tutor_Setup {
 			'payment'    => array(
 				'lable' => __( 'Payment Settings ', 'tutor' ),
 				'attr'  => array(
-					'enable_guest_course_cart'      => array(
-						'type'  => 'switch',
-						'lable' => __( 'Guest Checkout', 'tutor' ),
-						'desc'  => __( 'Allow users to buy and consume content without logging in.', 'tutor' ),
-					),
 					'commission_split'              => array(
 						'type'    => 'range',
 						'lable'   => __( 'Commission Rate', 'tutor' ),
@@ -670,7 +667,7 @@ class Tutor_Setup {
 				$html     .= '<a href="' . esc_url( $welcome_url ) . '" class="tutor-btn tutor-btn-ghost">' . __( 'Skip this step', 'tutor' ) . '</a>';
 			$html         .= '</div>';
 			$html         .= '<div class="tutor-setup-btn-wrapper">';
-				$html     .= '<a href="' . esc_url( $welcome_url ) . '" class="tutor-btn tutor-btn-primary tutor-btn-md">' . __( 'Finish Setup', 'tutor' ) . '</a>';
+				$html     .= '<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-finish-setup" data-redirect-url="' . esc_url( $welcome_url ) . '">' . __( 'Finish Setup', 'tutor' ) . '</button>';
 			$html         .= '</div>';
 		$html             .= '</div>';
 
