@@ -365,11 +365,6 @@ class OrderController {
 			);
 		}
 
-		// Update earnings.
-		$earnings = Earnings::get_instance();
-		$earnings->prepare_order_earnings( $order_id );
-		$earnings->remove_before_store_earnings();
-
 		$this->json_response( __( 'Order payment status successfully updated', 'tutor' ) );
 	}
 
@@ -534,11 +529,6 @@ class OrderController {
 			);
 
 			$this->model->update_order( $order_id, $update_data );
-
-			// Update earnings.
-			$earnings = Earnings::get_instance();
-			$earnings->prepare_order_earnings( $order_id );
-			$earnings->remove_before_store_earnings();
 
 			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status );
 
