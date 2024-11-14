@@ -66,7 +66,7 @@ class PaymentHub
 			);
 
 			if (!$paymentInstance->check()) {
-				throw new InvalidConfigurationException(sprintf('%s is not configured properly! Contact with Site Administrator.', ucfirst($configInstance->getName())));
+				throw new InvalidConfigurationException(sprintf('%s payment method is not configured properly! Contact with Site Administrator.', ucfirst($configInstance->getName())));
 			}
 
 			$paymentInstance->setup();
