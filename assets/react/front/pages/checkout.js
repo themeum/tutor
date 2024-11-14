@@ -12,24 +12,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Handle payment method click 
         const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
-        const paymentTypeInput = document.querySelector("input[name=payment_type]");
-        const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
+        if (paymentOptionsWrapper) {
+            const paymentTypeInput = document.querySelector("input[name=payment_type]");
+            const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
 
-        paymentOptions.forEach((option) => {
-            option.addEventListener('click', (e) => {
-                paymentOptions.forEach(item => item.classList.remove('active'));
-                option.classList.add('active');
-                paymentTypeInput.value = option.dataset.paymentType;
+            paymentOptions.forEach((option) => {
+                option.addEventListener('click', (e) => {
+                    paymentOptions.forEach(item => item.classList.remove('active'));
+                    option.classList.add('active');
+                    paymentTypeInput.value = option.dataset.paymentType;
 
-                const paymentInstructions = option.dataset.paymentInstruction;
-                if (paymentInstructions) {
-                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
-                } else {
-                    document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
-                }
+                    const paymentInstructions = option.dataset.paymentInstruction;
+                    if (paymentInstructions) {
+                        document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                        document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                    } else {
+                        document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                    }
+                });
             });
-        });
+        }
 
         // Handle toggle coupon form button click
         window.addEventListener('click', (e) => {
@@ -115,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validate checkout form.
         const tutorCheckoutForm = document.getElementById('tutor-checkout-form');
-        tutorCheckoutForm.addEventListener('submit', function (e) {
+        tutorCheckoutForm?.addEventListener('submit', function (e) {
             e.preventDefault();
 
             const submitButton = document.getElementById('tutor-checkout-pay-now-button');
@@ -187,10 +189,10 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown_billing_country?.addEventListener('change', async (e) => {
             const country = e.target.value;
             const coupon_code = input_coupon_code.value;
-            
+
             if (country) {
                 toggleSpinner(e.target, 'show');
-                
+
                 const formData = new FormData();
                 formData.set('billing_country', country);
 
