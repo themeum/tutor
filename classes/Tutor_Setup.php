@@ -178,7 +178,6 @@ class Tutor_Setup {
 						$html .= '<div class="tutor-setting' . ( in_array( $field['type'], $full_width_fields ) ? ' course-setting-wrapper' : '' ) . ' ' . ( isset( $field['class'] ) ? $field['class'] : '' ) . '">';
 						$html .= isset( $field['lable'] ) ? '<div class="tutor-fs-6  tutor-color-black ______">' . $field['lable'] : '';
 
-						$html .= isset( $field['tooltip'] ) ? '<span class="tooltip-wrap tooltip-icon"><span class="tooltip-txt tooltip-right">' . $field['tooltip'] . '</span></span>' : '';
 						$html .= isset( $field['lable'] ) ? '</div>' : '';
 
 				if ( ! in_array( $field['type'], $down_desc_fields ) ) {
@@ -420,7 +419,7 @@ class Tutor_Setup {
 
 		$general_fields = array(
 			'general'    => array(
-				'lable' => __( 'General Settings', 'tutor' ),
+				'lable' => __( 'General', 'tutor' ),
 				'attr'  => array(
 					'enable_course_marketplace'     => array(
 						'type' => 'marketplace',
@@ -461,13 +460,8 @@ class Tutor_Setup {
 			),
 
 			'course'     => array(
-				'lable' => __( 'Course Settings', 'tutor' ),
+				'lable' => __( 'Course', 'tutor' ),
 				'attr'  => array(
-					'display_course_instructors' => array(
-						'type'  => 'switch',
-						'lable' => __( 'Show Instructor Bio', 'tutor' ),
-						'desc'  => __( 'Let the students know the instructor(s). Display their credentials, professional experience, and more.', 'tutor' ),
-					),
 					'enable_q_and_a_on_course'   => array(
 						'type'  => 'switch',
 						'lable' => __( 'Question and Answer', 'tutor' ),
@@ -487,13 +481,8 @@ class Tutor_Setup {
 			),
 
 			'instructor' => array(
-				'lable' => __( 'Instructor Settings', 'tutor' ),
+				'lable' => __( 'Instructor', 'tutor' ),
 				'attr'  => array(
-					'enable_become_instructor_btn'  => array(
-						'type'  => 'switch',
-						'lable' => __( 'New Signup', 'tutor' ),
-						'desc'  => __( 'Choose between open and closed instructor signup. If you’re creating a course marketplace, instructor signup should be open.', 'tutor' ),
-					),
 					'instructor_can_publish_course' => array(
 						'type'  => 'switch',
 						'lable' => __( 'Revenue Sharing', 'tutor' ),
@@ -501,8 +490,8 @@ class Tutor_Setup {
 					),
 					'commission_split'              => array(
 						'type'    => 'range',
-						'lable'   => __( 'Commission Rate', 'tutor' ),
-						'tooltip' => __( 'Control revenue sharing between admin and instructor.', 'tutor' ),
+						'lable'   => __( 'Sharing Percentage', 'tutor' ),
+						'tooltip' => '',
 					),
 					'earning_instructor_commission' => array(
 						'type' => 'commission',
@@ -513,13 +502,13 @@ class Tutor_Setup {
 					'withdraw_split'                => array(
 						'type'  => 'payments',
 						'lable' => __( 'Payment Withdrawal Method', 'tutor' ),
-						'desc'  => __( 'Choose your preferred withdrawal method from the options.', 'tutor' ),
+						// 'desc'  => __( 'Choose your preferred withdrawal method from the options.', 'tutor' ),
 					),
 				),
 			),
 
 			'payment'    => array(
-				'lable' => __( 'Payment Settings ', 'tutor' ),
+				'lable' => __( 'Currency ', 'tutor' ),
 				'attr'  => array(
 					'currency_code'     => array(
 						'type'    => 'dropdown',
@@ -566,7 +555,7 @@ class Tutor_Setup {
 								<?php esc_html_e( 'Instructor', 'tutor' ); ?>
 							</li>
 							<li data-url="payment" class="payment">
-								<?php esc_html_e( 'Payment', 'tutor' ); ?>
+								<?php esc_html_e( 'Currency', 'tutor' ); ?>
 							</li>
 							<li data-url="finish" style="display:none" class="finish">
 								<?php esc_html_e( 'Finish', 'tutor' ); ?>
