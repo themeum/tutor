@@ -132,7 +132,15 @@ const TopicHeader = ({
     <>
       <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen })}>
         <div css={styles.headerContent({ isSaved: topic.isSaved })}>
-          <div css={styles.grabberInput}>
+          <div
+            css={styles.grabberInput}
+            onClick={() => onCollapse(topic.id)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') {
+                onCollapse(topic.id);
+              }
+            }}
+          >
             <button
               {...(topic.isSaved ? listeners : {})}
               css={styles.grabButton({ isDragging: isDragging })}
