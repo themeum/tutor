@@ -137,7 +137,7 @@ const TopicHeader = ({
             onClick={() => onCollapse(topic.id)}
             onKeyDown={(event) => {
               if (event.key === 'Enter') {
-                setIsEdit(true);
+                onCollapse(topic.id);
               }
             }}
           >
