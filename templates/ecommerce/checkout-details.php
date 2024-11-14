@@ -100,7 +100,23 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 							</div>
 							<?php endif; ?>
 							<div class="tutor-fs-7 tutor-color-hints">
-								/<?php echo esc_html( $plan_info->recurring_interval ); ?>
+								<?php
+								echo esc_html(
+									$plan_info->recurring_value > 1
+									? sprintf(
+										/* translators: %s: value, %s: name */
+										__( '/%1$s %2$s', 'tutor-pro' ),
+										$plan_info->recurring_value,
+										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
+									)
+									:
+									sprintf(
+										/* translators: %s: recurring interval */
+										__( '/%1$s', 'tutor-pro' ),
+										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
+									)
+								);
+								?>
 							</div>
 						</div>
 					</div>
@@ -237,10 +253,10 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					<?php endif; ?>
 		</div>
 
-		<div class="tutor-checkout-detail-item">
+		<div class="tutor-pt-12 tutor-pb-20">
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
-				<div class="tutor-fw-bold tutor-checkout-grand-total">
+				<div class="tutor-fs-5 tutor-fw-bold tutor-checkout-grand-total">
 					<?php tutor_print_formatted_price( $checkout_data->total_price ); ?>
 				</div>
 			</div>
