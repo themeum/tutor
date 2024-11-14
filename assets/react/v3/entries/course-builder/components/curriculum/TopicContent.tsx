@@ -318,8 +318,9 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       <Popover
         triggerRef={editButtonRef}
         isOpen={meetingType !== null}
-        closePopover={() => setMeetingType(null)}
+        closePopover={noop}
         maxWidth="306px"
+        closeOnEscape={false}
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
