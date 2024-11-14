@@ -21,12 +21,13 @@ import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
+import { noop } from '@Utils/util';
+
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import { noop } from '@/v3/shared/utils/util';
 import addonDisabled2x from '@Images/addon-disabled-2x.webp';
 import addonDisabled from '@Images/addon-disabled.webp';
 import liveClassPro2x from '@Images/pro-placeholders/live-class-2x.webp';
