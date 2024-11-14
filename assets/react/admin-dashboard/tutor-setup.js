@@ -258,23 +258,16 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Select Option
 	* ---------------------- */
-	$(document).on('click', function (e) {
-		if (!e.target.closest('.grade-calculation')) {
-			if ($(".grade-calculation .options-container") && $(".grade-calculation .options-container").hasClass('active')) {
-				$(".grade-calculation .options-container").removeClass('active');
-			}
-		}
-	});
+	$('.select-box').click(function (e) {
+		e.preventDefault()
+		console.log('ddd')
+		$(this).parent().find('.options-container').toggleClass('active');
+	})
 
-	$(".selected").on("click", function () {
-		$(".options-container").toggleClass("active");
-	});
-
-	$(".option").each(function () {
-		$(this).on("click", function () {
-			$(".selected").html($(this).find("label").html());
-			$(".options-container").removeClass("active");
-		});
+	$('.select-box .options-container .option').click(function (e) {
+		e.stopPropagation();
+		$(this).parent().parent().find(".selected").html($(this).find("label").html());
+		$(this).parent().removeClass("active");
 	});
 
 
