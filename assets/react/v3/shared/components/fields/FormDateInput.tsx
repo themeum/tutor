@@ -94,7 +94,14 @@ const FormDateInput = ({
                 autoComplete="off"
                 data-input
                 onBlur={() => {
-                  setIsOpen(false);
+                  setTimeout(() => {
+                    const focusedElement = document.activeElement;
+                    const isPopoverFocused = popoverRef.current?.contains(focusedElement);
+
+                    if (!isPopoverFocused) {
+                      setIsOpen(false);
+                    }
+                  }, 0);
                 }}
               />
               <SVGIcon name="calendarLine" width={30} height={32} style={styles.icon} />

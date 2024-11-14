@@ -75,8 +75,6 @@ const FormTimeInput = ({
     }
   }, [isOpen, activeIndex]);
 
-  console.log(activeIndex);
-
   return (
     <FormFieldWrapper
       label={label}

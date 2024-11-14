@@ -3,7 +3,7 @@ import { AnimationType } from '@Hooks/useAnimation';
 import { Portal, type arrowPosition, usePortalPopover } from '@Hooks/usePortalPopover';
 import { css } from '@emotion/react';
 import type React from 'react';
-import type { RefObject } from 'react';
+import { type RefObject, useEffect } from 'react';
 
 interface PopoverProps<T> {
   children: React.ReactNode;
@@ -37,6 +37,16 @@ const Popover = <T extends HTMLElement>({
     gap,
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isOpen) {
+      // Focus on the first focusable element in the popover
+      const focusableElement = popoverRef.current?.querySelector<HTMLElement>('button, a');
+
+      focusableElement?.focus();
+    }
+  }, [isOpen]);
+
   return (
     <Portal
       isOpen={isOpen}
@@ -68,15 +78,15 @@ const styles = {
         arrow &&
         !hideArrow &&
         css`
-        content: '';
-        position: absolute;
-        border: ${spacing[8]} solid transparent;
+          content: '';
+          position: absolute;
+          border: ${spacing[8]} solid transparent;
 
-        ${arrow === 'left' && styles.arrowLeft}
-        ${arrow === 'right' && styles.arrowRight}
-        ${arrow === 'top' && styles.arrowTop}
-        ${arrow === 'bottom' && styles.arrowBottom}
-      `
+          ${arrow === 'left' && styles.arrowLeft}
+          ${arrow === 'right' && styles.arrowRight}
+          ${arrow === 'top' && styles.arrowTop}
+          ${arrow === 'bottom' && styles.arrowBottom}
+        `
       }
     }
   `,

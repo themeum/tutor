@@ -201,29 +201,35 @@ const styles = {
     ${
       isTrash &&
       css`
-      color: ${colorTokens.text.error};
-      svg {
-        color: ${colorTokens.icon.error};
-      }
-
-      &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
-        background-color: ${rgba(colorTokens.bg.error, 0.1)};
-
         svg {
           color: ${colorTokens.icon.error};
         }
-      }
 
-      &:active {
-        color: ${colorTokens.text.error};
-        background-color: ${colorTokens.color.danger[40]};
+        &:hover:not(:disabled) {
+          color: ${colorTokens.text.error};
+          background-color: ${rgba(colorTokens.bg.error, 0.1)};
 
-        svg {
-          color: ${colorTokens.icon.error};
+          svg {
+            color: ${colorTokens.icon.error};
+          }
         }
-      }
-    `
+
+        &:active {
+          color: ${colorTokens.text.error};
+          background-color: ${colorTokens.color.danger[40]};
+
+          svg {
+            color: ${colorTokens.icon.error};
+          }
+        }
+      `
+    }
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -4px;
+      border-radius: ${borderRadius.input};
     }
   `,
   button: ({ isOpen = false, isInverse = false, isDisabled = false }) => css`
