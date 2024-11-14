@@ -18,6 +18,16 @@ import './quiz-attempts';
 import './wp-events-subscriber';
 import './segments/manage-api-keys';
 
+document.querySelectorAll('.tutor-control-button').forEach(function (button) {
+	button.addEventListener('click', function (event) {
+		button.classList.toggle('active');
+
+		const checkbox = button.querySelector('input[type="checkbox"]');
+		checkbox.checked = !checkbox.checked;
+		checkbox.dispatchEvent(new Event('change', { bubbles: true }));
+	});
+});
+
 const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
 toggleChange.forEach((element) => {
 	element.addEventListener('change', (e) => {
@@ -28,7 +38,7 @@ toggleChange.forEach((element) => {
 	});
 });
 
-jQuery(document).ready(function($) {
+jQuery(document).ready(function ($) {
 	'use strict';
 
 	const { __ } = wp.i18n;
@@ -61,7 +71,7 @@ jQuery(document).ready(function($) {
 			.addClass('wp-has-current-submenu');
 	}
 
-	$(document).on('click', '.tutor-option-media-upload-btn', function(e) {
+	$(document).on('click', '.tutor-option-media-upload-btn', function (e) {
 		e.preventDefault();
 
 		var $that = $(this);
@@ -77,7 +87,7 @@ jQuery(document).ready(function($) {
 			},
 			multiple: false,
 		});
-		frame.on('select', function() {
+		frame.on('select', function () {
 			var attachment = frame
 				.state()
 				.get('selection')
@@ -103,7 +113,7 @@ jQuery(document).ready(function($) {
 	 * Remove option media
 	 * @since v.1.4.3
 	 */
-	$(document).on('click', '.tutor-media-option-trash-btn', function(e) {
+	$(document).on('click', '.tutor-media-option-trash-btn', function (e) {
 		e.preventDefault();
 
 		var $that = $(this);
@@ -147,7 +157,7 @@ jQuery(document).ready(function($) {
 	 * Add instructor
 	 * @since v.1.0.3
 	 */
-	$(document).on('submit', '#tutor-new-instructor-form', function(e) {
+	$(document).on('submit', '#tutor-new-instructor-form', function (e) {
 		e.preventDefault();
 		var $that = $(this);
 		var formData = $that.serializeObject();
@@ -158,7 +168,7 @@ jQuery(document).ready(function($) {
 			url: window._tutorobject.ajaxurl,
 			type: 'POST',
 			data: formData,
-			beforeSend: function() {
+			beforeSend: function () {
 				submitButton.attr('disabled', 'disable').addClass('is-loading');
 				responseContainer.html('');
 			},
@@ -202,7 +212,7 @@ jQuery(document).ready(function($) {
 					location.reload();
 				}
 			},
-			complete: function() {
+			complete: function () {
 				submitButton.removeAttr('disabled').removeClass('is-loading');
 			},
 		});
@@ -212,7 +222,7 @@ jQuery(document).ready(function($) {
 	 * Instructor block unblock action
 	 * @since v.1.5.3
 	 */
-	$(document).on('click', 'a.instructor-action', async function(e) {
+	$(document).on('click', 'a.instructor-action', async function (e) {
 		e.preventDefault();
 
 		const $that = $(this);
@@ -278,7 +288,7 @@ jQuery(document).ready(function($) {
 	 */
 	const instructorModal = document.querySelector('.tutor-modal-ins-approval .tutor-icon-56.tutor-icon-line-cross-line');
 	if (instructorModal) {
-		instructorModal.addEventListener('click', function() {
+		instructorModal.addEventListener('click', function () {
 			console.log('ckk');
 			location.href = `${window._tutorobject.home_url}/wp-admin/admin.php?page=tutor-instructors`;
 		});
@@ -318,13 +328,13 @@ jQuery(document).ready(function($) {
 	/**
 	 * Password Reveal
 	 */
-	$(document).on('click', '.tutor-password-reveal', function(e) {
+	$(document).on('click', '.tutor-password-reveal', function (e) {
 		//toggle icon
 		$(this).toggleClass('tutor-icon-eye-line tutor-icon-eye-bold');
 		//toggle attr
 		$(this)
 			.next()
-			.attr('type', function(index, attr) {
+			.attr('type', function (index, attr) {
 				return attr == 'password' ? 'text' : 'password';
 			});
 	});
@@ -334,7 +344,7 @@ jQuery(document).ready(function($) {
 	 */
 
 	//tutor_video_poster_upload_btn
-	$(document).on('click', '.tutor_video_poster_upload_btn', function(event) {
+	$(document).on('click', '.tutor_video_poster_upload_btn', function (event) {
 		event.preventDefault();
 
 		var $that = $(this);
@@ -355,7 +365,7 @@ jQuery(document).ready(function($) {
 		});
 
 		// When an image is selected in the media frame...
-		frame.on('select', function() {
+		frame.on('select', function () {
 			// Get media attachment details from the frame state
 			var attachment = frame
 				.state()
@@ -380,7 +390,7 @@ jQuery(document).ready(function($) {
 	 * @since v.1.3.6
 	 */
 
-	$(document).on('change', '#tutor_pmpro_membership_model_select', function(e) {
+	$(document).on('change', '#tutor_pmpro_membership_model_select', function (e) {
 		e.preventDefault();
 
 		var $that = $(this);
@@ -392,7 +402,7 @@ jQuery(document).ready(function($) {
 		}
 	});
 
-	$(document).on('change', '#tutor_pmpro_membership_model_select', function(e) {
+	$(document).on('change', '#tutor_pmpro_membership_model_select', function (e) {
 		e.preventDefault();
 
 		var $that = $(this);
@@ -405,7 +415,7 @@ jQuery(document).ready(function($) {
 	});
 
 	// Require category selection
-	$(document).on('submit', '.pmpro_admin form', function(e) {
+	$(document).on('submit', '.pmpro_admin form', function (e) {
 		var form = $(this);
 
 		if (!form.find('input[name="tutor_action"]').length) {
@@ -433,7 +443,7 @@ jQuery(document).ready(function($) {
 		$('#_tutor_is_course_public_meta_checkbox').show();
 	} else {
 		price_type
-			.change(function() {
+			.change(function () {
 				if ($(this).prop('checked')) {
 					var method = $(this).val() == 'paid' ? 'hide' : 'show';
 					$('#_tutor_is_course_public_meta_checkbox')[method]();
@@ -447,7 +457,7 @@ jQuery(document).ready(function($) {
 	 *
 	 * @since  v.1.7.5
 	 */
-	$(document).on('click', '.instructor-layout-template', function() {
+	$(document).on('click', '.instructor-layout-template', function () {
 		$('.instructor-layout-template').removeClass('selected-template');
 		$(this).addClass('selected-template');
 	});
@@ -457,7 +467,7 @@ jQuery(document).ready(function($) {
 	 *
 	 * @since  v.1.7.9
 	 */
-	$('#preview-action a.preview').click(function(e) {
+	$('#preview-action a.preview').click(function (e) {
 		var href = $(this).attr('href');
 
 		if (href) {
@@ -494,16 +504,16 @@ jQuery(document).ready(function($) {
 				let currentA = item.closest('#toplevel_page_tutor  li.wp-not-current-submenu.menu-top.toplevel_page_tutor > a');
 				if (mainMenu) {
 					mainMenu.className =
-					'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
 				}
 				if (currentA) {
 					currentA.className =
-					'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
+						'wp-has-submenu wp-has-current-submenu wp-menu-open menu-top toplevel_page_tutor current';
 				}
 			}
 		});
 	}
-	
+
 	/**
 	 * Fix - Table last row context menu hidden.
 	 * 

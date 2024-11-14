@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,6 +30,9 @@ class Admin {
 	 * @return void
 	 */
 	public function __construct() {
+
+		add_action( 'admin_notices', array( $this, 'show_unstable_version_admin_notice' ) );
+
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		// Force activate menu for necessary.
 		add_filter( 'parent_file', array( $this, 'parent_menu_active' ) );
@@ -50,6 +54,29 @@ class Admin {
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
 		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
+
+		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
+	}
+
+	/**
+	 * Show unstable version notice.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function show_unstable_version_admin_notice() {
+		$version = tutor_utils()->extract_version_details( TUTOR_VERSION );
+		if ( ! $version->is_stable ) {
+			/* translators: %s: version name */
+			$message = sprintf( __( 'You\'re currently using Tutor LMS %s. To ensure stability, please do not use it on a live site.', 'tutor' ), '<strong>' . $version->version . '</strong>' );
+			?>
+			<div class="notice notice-warning">
+				<p><strong><?php esc_html_e( 'Warning!', 'tutor' ); ?></strong></p>
+				<p><?php echo wp_kses_post( $message ); ?></p>
+			</div>
+			<?php
+		}
 	}
 
 	/**
@@ -98,6 +125,11 @@ class Admin {
 
 		// Added @since v2.0.0.
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
+
+		// Ecommerce menu @since 3.0.0.
+		do_action( 'tutor_after_courses_admin_menu' );
+
+		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), __( '<span class="tutor-create-course">Create Course</span>', 'tutor' ), 'manage_tutor_instructor', 'create-course', '__return_true' );
 
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
@@ -555,6 +587,51 @@ class Admin {
 	}
 
 	/**
+	 * Orders view page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function orders_view() {
+		$current_page = Input::get( 'page' );
+		$action       = Input::get( 'action' );
+
+		if ( OrderController::PAGE_SLUG === $current_page && 'edit' === $action ) {
+			?>
+				<div class="tutor-admin-wrap tutor-order-details-wrapper">
+					<div id="tutor-order-details-root">
+					</div>
+				</div>
+			<?php
+			return;
+		}
+
+		include tutor()->path . 'views/pages/ecommerce/order-list.php';
+	}
+
+	/**
+	 * Coupons view page
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function coupons_view() {
+		$action = Input::get( 'action' );
+		if ( in_array( $action, array( 'add_new', 'edit' ) ) ) {
+			?>
+				<div class="tutor-admin-wrap">
+					<div id="tutor-coupon-root">
+					</div>
+				</div>
+			<?php
+			return;
+		}
+		include tutor()->path . 'views/pages/ecommerce/coupon-list.php';
+	}
+
+	/**
 	 * Show welcome page
 	 *
 	 * @since 1.0.0
@@ -564,5 +641,47 @@ class Admin {
 		Tutor_Setup::mark_as_visited();
 		include tutor()->path . 'views/pages/welcome.php';
 		exit;
+	}
+
+	/**
+	 * Add toolbar items
+	 *
+	 * @since 1.4.6
+	 *
+	 * @param \WP_Admin_Bar $admin_bar admin bar object.
+	 *
+	 * @return mixed
+	 */
+	public function add_toolbar_items( \WP_Admin_Bar $admin_bar ) {
+		global $post;
+
+		$course_id        = Input::get( 'post', 0, Input::TYPE_INT );
+		$course_post_type = tutor()->course_post_type;
+
+		if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
+			return $admin_bar;
+		}
+
+		$admin_bar->remove_node( 'new-courses' );
+
+		if (
+				( is_admin() && $post && $course_id && $post->post_type === $course_post_type ) ||
+				( ! is_admin() && is_single() && $post && $course_post_type === $post->post_type )
+			) {
+
+			$admin_bar->add_menu(
+				array(
+					'id'    => 'edit',
+					'title' => __( 'Edit with Course Builder', 'tutor' ),
+					'href'  => tutor_utils()->course_edit_link( $post->ID ),
+					'meta'  => array(
+						'title'  => __( 'Edit with Course Builder', 'tutor' ),
+						'target' => '_blank',
+					),
+				)
+			);
+		}
+
+		return $admin_bar;
 	}
 }

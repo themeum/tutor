@@ -143,8 +143,7 @@ class Quiz_Attempts_List {
 				$select_stmt = "SELECT COUNT( DISTINCT attempt_id)
 								FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 								INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
-								INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans  
-										ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
+								-- INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
 
 				$count_obj->pass = (int) $wpdb->get_var(
 					$wpdb->prepare(

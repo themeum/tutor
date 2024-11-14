@@ -4,8 +4,12 @@ import './dashboard';
 import './dashboard/export-csv';
 import './pages/course-landing';
 import './pages/instructor-list-filter';
+import './pages/cart';
+import './pages/checkout';
 import './_select_dd_search';
 import sprintf from '../helper/sprintf';
+import './pages/billing';
+
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
  * It's a legacy file.

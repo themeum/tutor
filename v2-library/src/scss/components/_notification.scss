@@ -1,0 +1,222 @@
+// @todo: rework on the design
+.tutor-notification {
+	border: 1px solid var(--tutor-border-color);
+	padding: 16px 20px;
+	box-sizing: border-box;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	width: 340px;
+	position: relative;
+	overflow-wrap: anywhere;
+	background: var(--tutor-color-white);
+
+	// tutor-notification-icon
+	&.tutor-bg-primary {
+		border-color: var(--tutor-color-primary);
+	}
+	&.tutor-bg-success {
+		border-color: var(--tutor-color-success);
+	}
+	&.tutor-bg-warning {
+		border-color: var(--tutor-color-warning);
+	}
+	&.tutor-bg-danger {
+		border-color: var(--tutor-color-color);
+	}
+
+	&-icon {
+		color: var(--tutor-color-primary);
+		font-size: 32px;
+		@if ($is_rtl == true) {
+			margin-left: 16px;
+		} @else {
+			margin-right: 16px;
+		}
+	}
+
+	&-content {
+		font-size: 14px;
+		line-height: 18px;
+		flex-grow: 1;
+		color: var(--tutor-color-muted);
+
+		h5 {
+			font-size: 16px;
+			font-weight: 500;
+			margin: 0;
+			line-height: 26px;
+			color: var(--tutor-color-primary);
+		}
+
+		p {
+			margin: 0;
+		}
+	}
+
+	&-close {
+		border: none;
+		background: none;
+		position: absolute;
+		padding: 5px;
+		right: 6px;
+		top: 6px;
+		color: var(--tutor-border-color);
+		transition: 200ms;
+		outline: none;
+		cursor: pointer;
+		
+		&:hover {
+			color: var(--tutor-body-color);
+		}
+
+		span {
+			display: block;
+			font-size: 16px;
+		}
+	}
+}
+
+// alert
+$alertVariations: (
+	'primary' rgba(var(--tutor-color-primary-rgb), 0.7) $color-secondary $color-white var(--tutor-color-primary) var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3),
+	'success' rgba(var(--tutor-color-success-rgb), 0.7) $color-secondary $color-white var(--tutor-color-success) var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15) rgba(var(--tutor-color-success-rgb), 0.3),
+	'danger' rgba(var(--tutor-color-danger-rgb), 0.7) $color-secondary $color-white var(--tutor-color-danger) var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15) rgba(var(--tutor-color-danger-rgb), 0.3),
+	'warning' rgba(var(--tutor-color-warning-rgb), 0.7) $color-secondary $color-white var(--tutor-color-warning) var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15) rgba(var(--tutor-color-warning-rgb), 0.3)
+);
+
+// Tutor alert
+.tutor-alert {
+	font-size: 16px;
+	border-radius: 6px;
+	margin-bottom: 16px;
+	display: grid;
+	
+	@include breakpoint-min(mobile) {
+		grid-template-columns: 1fr auto;
+	}
+
+	padding: 13px 16px;
+	grid-gap: 24px;
+	background: var(--tutor-color-white);
+	border: 1px solid var(--tutor-border-color);
+
+	@each $suffix, $border, $color, $background, $icon-color, $btn-color, $btn-bg, $btn-border in $alertVariations {
+		&.tutor-#{$suffix} {
+			background: #{$background};
+			color: #{$color};
+			border: 1px solid #{$border};
+
+			.tutor-alert-icon {
+				color: #{$icon-color};
+			}
+
+			.tutor-btn:not(.tutor-btn-outline-primary) {
+				color: #{$btn-color};
+				background: #{$btn-bg};
+				border: 1px solid #{$btn-border};
+			}
+		}
+	}
+
+	.tutor-alert-text {
+		@extend .text-regular-caption;
+		color: var(--tutor-color-secondary);
+		display: flex;
+		@include breakpoint-min(tablet) {
+			align-items: center;
+		}
+	}
+		
+	.alert-btn-group {
+		display: flex;
+		justify-self: flex-end;
+		align-items: center;
+		grid-gap: 10px;
+	}
+
+	.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
+		padding: 7.5px 13px;
+	}
+	.tutor-btn.tutor-btn-outline-primary {
+		border-color: var(--tutor-border-color);
+	}
+
+	.tutor-alert-close {
+		cursor: pointer;
+		@include breakpoint-max(mobile) {
+			display: none;
+		}
+	}
+}
+
+// icon---title---btnC---btnBg---btnBdr
+$largeNotificationVariations: (
+	'primary' var(--tutor-color-primary) var(--tutor-color-primary) var(--tutor-color-primary) rgba(var(--tutor-color-primary-rgb), 0.15) rgba(var(--tutor-color-primary-rgb), 0.3),
+	'success' var(--tutor-color-success) var(--tutor-color-success) var(--tutor-color-success) rgba(var(--tutor-color-success-rgb), 0.15) rgba(var(--tutor-color-success-rgb), 0.3),
+	'warning' var(--tutor-color-warning) var(--tutor-color-warning) var(--tutor-color-warning) rgba(var(--tutor-color-warning-rgb), 0.15) rgba(var(--tutor-color-warning-rgb), 0.3),
+	'danger' var(--tutor-color-danger) var(--tutor-color-danger) var(--tutor-color-danger) rgba(var(--tutor-color-danger-rgb), 0.15) rgba(var(--tutor-color-danger-rgb), 0.3)
+);
+
+.tutor-large-notification {
+	display: flex;
+	box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+	backdrop-filter: blur(24px);
+	position: relative;
+	background: #fff;
+	border: 1px solid var(--tutor-border-color);
+
+	@extend .tutor-radius-10;
+	@extend .tutor-p-24;
+
+	@include breakpoint-min(desktop-lg) {
+		padding-right: 90px;
+	}
+
+	&-icon {
+		font-size: 32px;
+		@if ($is_rtl == true) {
+			margin-left: 20px;
+		} @else {
+			margin-right: 20px;
+		}
+	}
+
+	&-btns {
+		.tutor-btn:not(.tutor-btn-icon).tutor-btn-sm {
+			padding: 8px 12px;
+		}
+
+		> *:not(:last-child) {
+			@if ($is_rtl == true) {
+				margin-left: 10px;
+			} @else {
+				margin-right: 10px;
+			}
+		}
+	}
+
+	.tutor-noti-close {
+		position: absolute;
+		top: 16px;
+		right: 13px;
+		cursor: pointer;
+	}
+
+	@each $suffix, $icon, $title, $btnC, $btnBg, $btnBdr in $largeNotificationVariations {
+		&.tutor-large-notification-#{$suffix} {
+			.tutor-large-notification-icon {
+				color: #{$icon};
+			}
+			.tutor-large-notification-title {
+				color: #{$title};
+			}
+	
+			.tutor-btn:not(.tutor-is-outline).tutor-btn-secondary {
+				border-color: #{$btnBdr};
+				background: #{$btnBg};
+				color: #{$btnC};
+			}
+		}
+	}
+}

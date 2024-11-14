@@ -1,0 +1,70 @@
+name: Staging Build and Deploy
+
+on:
+  push:
+    branches:
+      - ecommerce-backend
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16.17.0'
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Install Composer
+        run: sudo apt-get update && sudo apt-get install -y composer
+
+      - name: Install Composer Dependencies in Paypal Directory
+        run: composer install --no-dev --working-dir=./ecommerce/PaymentGateways/Paypal
+
+      - name: Clone tutor-droip repository
+        run: |
+          if [ ! -d "tutor-droip" ]; then
+            git clone https://github.com/jshossen/tutor-droip.git tutor-droip
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract version number
+        id: get_version
+        run: |
+          version=$(grep -Po 'Version:\s*\K[\d.]+(?:-[\w]+)?' tutor.php)
+          echo "VERSION_NUMBER=$version" >> $GITHUB_ENV
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifact
+          path: tutor-${{ env.VERSION_NUMBER }}.zip
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add remote server to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H 45.79.123.135 >> ~/.ssh/known_hosts
+
+      - name: Transfer file to remote
+        run: scp tutor-${{ env.VERSION_NUMBER }}.zip shewa@45.79.123.135:/var/www/html/subdomains/tutor-lms/wp-content/plugins
+
+      - name: UNZIP file
+        run: |
+          ssh shewa@45.79.123.135 << 'EOF'
+            rm -rf /var/www/html/subdomains/tutor-lms/wp-content/plugins/tutor
+            unzip -o /var/www/html/subdomains/tutor-lms/wp-content/plugins/tutor-${{ env.VERSION_NUMBER }}.zip -d /var/www/html/subdomains/tutor-lms/wp-content/plugins
+          EOF

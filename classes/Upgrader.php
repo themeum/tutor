@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
 use Tutor\Helpers\QueryHelper;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -81,6 +83,7 @@ class Upgrader {
 		if ( $version ) {
 			$upgrades[] = 'upgrade_to_1_3_1';
 			$upgrades[] = 'upgrade_to_2_6_0';
+			$upgrades[] = 'upgrade_to_3_0_0';
 		}
 
 		return $upgrades;
@@ -120,6 +123,58 @@ class Upgrader {
 			do_action( 'before_tutor_version_upgrade_to_2_6_0', $this->installed_version );
 			update_option( 'tutor_version', TUTOR_VERSION );
 		}
+	}
+
+	/**
+	 * Migration logic when user upgrade to 3.0.0.
+	 *
+	 * @return void
+	 */
+	public function upgrade_to_3_0_0() {
+		global $wpdb;
+
+		if ( version_compare( $this->installed_version, '3.0.0', '<' ) ) {
+			$table_name = $wpdb->prefix . 'tutor_orders';
+			if ( ! QueryHelper::table_exists( $table_name ) ) {
+				Tutor::tutor_activate();
+			}
+			update_option( 'tutor_version', TUTOR_VERSION );
+		}
+
+		// Beta upgrade.
+		if ( version_compare( TUTOR_VERSION, '3.0.0-beta2', '>=' ) ) {
+			$order_items_table = $wpdb->prefix . 'tutor_order_items';
+			if ( ! QueryHelper::column_exist( $order_items_table, 'discount_price' ) ) {
+				// If 'discount_price' does not exist, alter the table to add 'discount_price' and 'coupon_code', and update 'sale_price'.
+				$wpdb->query(
+					"ALTER TABLE {$order_items_table}
+						ADD COLUMN discount_price VARCHAR(13) DEFAULT NULL,
+						ADD COLUMN coupon_code VARCHAR(255) DEFAULT NULL,
+						MODIFY COLUMN sale_price VARCHAR(13) NULL"
+				);
+			}
+		}
+
+		// New field added coupon_amount in orders table.
+		if ( version_compare( TUTOR_VERSION, '3.0.0-beta4', '>=' ) ) {
+			$order_table = $wpdb->prefix . 'tutor_orders';
+
+			$coupon_amount = 'coupon_amount';
+			if ( ! QueryHelper::column_exist( $order_table, $coupon_amount ) ) {
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $coupon_amount DECIMAL(13, 2) DEFAULT NULL AFTER coupon_code" );//phpcs:ignore
+			}
+
+			/**
+			 * Tax Type: inclusive, exclusive
+			 */
+			$tax_type = 'tax_type';
+			if ( ! QueryHelper::column_exist( $order_table, $tax_type ) ) {
+				$wpdb->query( "ALTER TABLE {$order_table} ADD COLUMN $tax_type VARCHAR(50) DEFAULT NULL AFTER discount_reason" );//phpcs:ignore
+			}
+		}
+
+		CartController::create_cart_page();
+		CheckoutController::create_checkout_page();
 	}
 
 	/**

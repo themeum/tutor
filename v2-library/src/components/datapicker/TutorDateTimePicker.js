@@ -1,16 +1,12 @@
 import { getMonth, getYear } from 'date-fns';
 import range from 'lodash.range';
 import React, { useState } from 'react';
-import DatePicker, { CalendarContainer } from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CustomInput } from '../CustomInput';
 
-
-// import './TutorDatepicker.scss';
-// import '../../../bundle/main.min.css';
-
-const TutorDateTimePicker = () => {
-	const [startDate, setStartDate] = useState(new Date());
+const TutorDateTimePicker = (data) => {
+	const [startDate, setStartDate] = useState(data.input_value ? new Date(data.input_value) : new Date());
 	const [dropdownMonth, setDropdownMonth] = useState(false);
 	const [dropdownYear, setDropdownYear] = useState(false);
 
@@ -42,47 +38,23 @@ const TutorDateTimePicker = () => {
 		'December',
 	];
 
-	const handleTimeChange = (e) => {
-		const [hour, minute] = e.target.value.split(':');
-		const prevDate = new Date(startDate);
-		prevDate.setHours(+hour, +minute);
-		setStartDate(prevDate);
-	};
-
-	const ContainerWrapper = ({ className, children }) => {
-		return (
-			<CalendarContainer className={className}>
-				<div style={{ position: 'relative' }} className="react-datepicker__custom-wrapper">
-					{children}
-					<div className="react-datepicker__input-time-container">
-						<div className="">
-							<input
-								onChange={handleTimeChange}
-								type="time"
-								name="tutor-timepicker-input"
-								id="tutor-timepicker-input"
-							/>
-						</div>
-					</div>
-				</div>
-			</CalendarContainer>
-		);
-	};
-
 	return (
 		<div className="tutor-react-datepicker">
+			{data.inline && <input type="hidden" name={data.input_name} value={startDate} />}
 			<DatePicker
+				inline={data.inline ? true : false}
 				customInput={<CustomInput />}
 				placeholderText="DD-MM-YYYY"
 				selected={startDate}
 				onChange={(date) => handleCalendarChange(date)}
 				showPopperArrow={false}
 				shouldCloseOnSelect={false}
+				showTimeSelect
 				onCalendarClose={handleCalendarClose}
 				onClick={handleCalendarClose}
 				timeInputLabel="Time:"
 				dateFormat="dd/MM/yyyy h:mm aa"
-				calendarContainer={ContainerWrapper}
+				minDate={data.disable_previous ? new Date() : false}
 				renderCustomHeader={({
 					date,
 					changeYear,
@@ -166,6 +138,7 @@ const TutorDateTimePicker = () => {
 
 							<div className="navigation-icon">
 								<button
+									type="button"
 									onClick={() => {
 										decreaseMonth();
 										handleCalendarClose();
@@ -180,6 +153,7 @@ const TutorDateTimePicker = () => {
 									</svg>
 								</button>
 								<button
+									type="button"
 									onClick={() => {
 										increaseMonth();
 										handleCalendarClose();

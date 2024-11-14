@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 2.7.7
+Stable tag: 2.7.5
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -284,14 +284,75 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 2.7.7 - November 12, 2024
+= 3.0.0-rc2 - November 13, 2024
 
-Fix: Security vulnerabilities
 
-= 2.7.6 - September 19, 2024
+= 3.0.0-rc - October 25, 2024
 
-New: Filter hook added to alter the redirect URL after course purchase
-Fix: Instructor not able to delete their announcement or student quiz attempts from Admin panel
+Update: Improved the user experience of Tutor LMS Subscription feature. (Pro)
+Update: Introduced the functionality to install additional payment gateways. (Pro)
+Update: Show tax included text on course listings and detail pages when tax settings are enabled.
+Update: Redesigned the checkout page for better user experience.
+Update: Implemented dynamic permalink generation based on course name.
+Update: Payment Status option is hidden in the manual enrollment tab when using WooCommerce monetization.
+Fix: Fixed an issue where users could set unrealistic tax percentages.
+Fix: Resolved the issue that caused paid course price to drop to 0 during pagination.
+Fix: Fixed 'Mark as Paid' button malfunction when description contains single quotes.
+Fix: Ensured that mp3 and mp4 files are displayed correctly in the quiz description.
+Fix: Resolved a bug preventing Certificates, Prerequisites, Attachment, and Live Class from appearing even when addons were enabled. (Pro)
+Fix: Corrected "Edit with Builder" button functionality on report page. (Pro)
+Fix: Flat discount amounts now distribute proportionally among applicable courses.
+Fix: Fixed quiz attempt details not showing correct/given answers for ordering questions. (Pro)
+Fix: Fixed Frontend Builder loading inappropriately in student and instructor sites.
+Fix: Removed BuddyPress tab from builder when the addon is deactivated. (Pro)
+
+= 3.0.0-beta4 - October 14, 2024
+
+Update: Implemented tax calculation on the checkout page.
+Update: Added clear discount breakdown in order details.
+Update: Displayed payment gateway names on frontend and backend order pages.
+Update: Checkout page payment method list design updated.
+Fix: Resolved issue preventing permanent order deletion.
+Fix: Addressed course/bundle assignment issue when updating automatic coupons.
+Fix: Fixed PHP fatal error related to course intro video source.
+
+= 3.0.0-beta3 - October 08, 2024
+
+New: H5P integration added
+New: Advanced tax management
+New: Password-protected course modal added
+New: Certificate control on subscription plans
+New: Stripe payment gateway added
+Fix: Courses cannot be removed from coupons
+Fix: Quiz active question not resetting after discarding changes
+Fix: Instructors unable to create AI-generated courses
+
+= 3.0.0-beta2 - September 30, 2024
+
+Update: Added Legacy Mode support for course and lesson descriptions.
+Update: Enhanced subscription creation process and resolved issues with subscription expiration and renewal dates. (Pro)
+Fix: Automatic WooCommerce product creation for courses, and resolved issues with applying coupon codes for subscription-based courses. (Pro)
+Fix: Addressed course bundle behavior, preventing access without completing payment. (Pro)
+Fix: Spotlight mode issues in quizzes have been resolved.
+Fix: Enhanced course bundle compatibility with Tutor’s native payment. (Pro)
+Fix: Fixed subscription trash and delete functionality. (Pro)
+Fix: Fatal errors related to course bundles and subscription pages have been resolved. (Pro)
+Fix: Corrected warnings and inaccurate order status count for subscriptions. (Pro)
+Fix: Addressed issues with lesson prerequisites and full-screen mode.
+Fix: AI Studio functionality is enhanced with image generation fixes. (Pro)
+
+= 3.0.0-beta1 - September 10, 2024
+
+New: Brand new course and quiz builder with a fresh, intuitive interface for a smoother course creation experience.
+New: Introducing groundbreaking AI Studio in Tutor LMS for generating complete courses, lessons, quizzes, thumbnails, etc with AI. (Pro)
+New: Seamlessly sell courses directly using Native Payment within Tutor LMS.
+New: Native Subscription system for recurring payments, perfect for membership-style eLearning programs. (Pro)
+New: Automated order emails to keep learners and instructors informed at every step of the payment process. (Pro)
+New: Customizable order and subscription emails for effortless communications. (Pro)
+New: Lesson note feature for instructors to jot down their course or lesson descriptions.
+New: Deep integration with Droip no-code website builder to design beautiful course single and listing pages.
+Update: Enhanced course creation process for faster, more efficient performance.
+Update: Optimized for improved scalability to ensure a smooth experience as your platform grows.
 
 = 2.7.5 - September 04, 2024
 

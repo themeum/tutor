@@ -253,10 +253,12 @@ class WooCommerce extends Tutor_Base {
 		}
 
 		$course_id      = tutor_utils()->get_post_id( $course_id );
-		$has_product_id = get_post_meta( $course_id, '_tutor_course_product_id', true );
-		if ( $has_product_id ) {
+		$price_type     = tutor_utils()->price_type( $course_id );
+		$has_product_id = tutor_utils()->get_course_product_id( $course_id );
+		if ( Course::PRICE_TYPE_PAID === $price_type && $has_product_id ) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -441,7 +443,7 @@ class WooCommerce extends Tutor_Base {
 	 * @return mixed
 	 */
 	public function add_options( $attr ) {
-		$attr['monetization']['blocks']['block_options']['fields'][] = array(
+		$attr['monetization']['blocks']['block_woocommerce']['fields'][] = array(
 			'key'         => 'enable_guest_course_cart',
 			'type'        => 'toggle_switch',
 			'label'       => __( 'Enable Guest Mode', 'tutor' ),
@@ -521,76 +523,8 @@ class WooCommerce extends Tutor_Base {
 
 			$total_price = $item->get_total();
 
-			$fees_deduct_data      = array();
-			$tutor_earning_fees    = tutor_utils()->get_option( 'fee_amount_type' );
-			$enable_fees_deducting = tutor_utils()->get_option( 'enable_fees_deducting' );
-
-			$course_price_grand_total = $total_price;
-
-			// Deduct predefined amount (percent or fixed).
-			if ( $enable_fees_deducting ) {
-				$fees_name   = tutor_utils()->get_option( 'fees_name', '' );
-				$fees_amount = (int) tutor_utils()->avalue_dot( 'fees_amount', $tutor_earning_fees );
-				$fees_type   = tutor_utils()->avalue_dot( 'fees_type', $tutor_earning_fees );
-
-				if ( $fees_amount > 0 ) {
-					if ( 'percent' === $fees_type ) {
-						$fees_amount = ( $total_price * $fees_amount ) / 100;
-					}
-
-					$course_price_grand_total = $total_price - $fees_amount;
-				}
-
-				$fees_deduct_data = array(
-					'deduct_fees_amount' => $fees_amount,
-					'deduct_fees_name'   => $fees_name,
-					'deduct_fees_type'   => $fees_type,
-				);
-			}
-
-			// Distribute amount between admin and instructor.
-			$sharing_enabled   = tutor_utils()->get_option( 'enable_revenue_sharing' );
-			$instructor_rate   = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
-			$admin_rate        = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
-			$commission_type   = 'percent';
-			$instructor_amount = $instructor_rate > 0 ? ( ( $course_price_grand_total * $instructor_rate ) / 100 ) : 0;
-			$admin_amount      = $admin_rate > 0 ? ( ( $course_price_grand_total * $admin_rate ) / 100 ) : 0;
-
-			// (Use Pro Filter - Start)
-			// The response must be same array structure.
-			// Do not change used variable names here, or change in both of here and pro plugin
-			$pro_arg         = array(
-				'user_id'                  => $user_id,
-				'instructor_rate'          => $instructor_rate,
-				'admin_rate'               => $admin_rate,
-				'instructor_amount'        => $instructor_amount,
-				'admin_amount'             => $admin_amount,
-				'course_price_grand_total' => $course_price_grand_total,
-				'commission_type'          => $commission_type,
-			);
-			$pro_calculation = apply_filters( 'tutor_pro_earning_calculator', $pro_arg );
-			extract( $pro_calculation ); //phpcs:ignore
-			// (Use Pro Filter - End).
-
-			// Prepare insertable earning data.
-			$earning_data = array(
-				'user_id'                  => $user_id,
-				'course_id'                => $course_id,
-				'order_id'                 => $order_id,
-				'order_status'             => $order_status,
-				'course_price_total'       => $total_price,
-				'course_price_grand_total' => $course_price_grand_total,
-
-				'instructor_amount'        => $instructor_amount,
-				'instructor_rate'          => $instructor_rate,
-				'admin_amount'             => $admin_amount,
-				'admin_rate'               => $admin_rate,
-
-				'commission_type'          => $commission_type,
-				'process_by'               => 'woocommerce',
-				'created_at'               => gmdate( 'Y-m-d H:i:s', tutor_time() ),
-			);
-			$earning_data = apply_filters( 'tutor_new_earning_data', array_merge( $earning_data, $fees_deduct_data ) );
+			$earnings     = Earnings::get_instance();
+			$earning_data = apply_filters( 'tutor_new_earning_data', $earnings->prepare_earning_data( $total_price, $course_id, $order_id, $order_status ) );
 
 			$wpdb->insert( $wpdb->prefix . 'tutor_earnings', $earning_data );
 		}
@@ -641,6 +575,11 @@ class WooCommerce extends Tutor_Base {
 		}
 
 		$order = wc_get_order( $order_id );
+		/**
+		 * Loop though each WC order item.
+		 *
+		 * @var WC_Order_Item $item WC order item object.
+		 */
 		foreach ( $order->get_items() as $item ) {
 			$product_id    = $item->get_product_id();
 			$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
@@ -719,6 +658,11 @@ class WooCommerce extends Tutor_Base {
 		$tutor_product = false;
 		$url           = tutor_utils()->tutor_dashboard_url() . 'enrolled-courses/';
 
+		/**
+		 * Loop though each WC order item.
+		 *
+		 * @var WC_Order_Item $item WC order item object.
+		 */
 		foreach ( $order->get_items() as $item ) {
 			$product_id = $item->get_product_id();
 			// check if product associated with tutor course.

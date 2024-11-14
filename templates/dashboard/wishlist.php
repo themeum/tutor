@@ -12,7 +12,7 @@
 use TUTOR\Input;
 
 global $post;
-$per_page     = tutor_utils()->get_option( 'statement_show_per_page', 20 );
+$per_page     = tutor_utils()->get_option( 'pagination_per_page', 20 );
 $current_page = max( 1, Input::get( 'current_page', 1, Input::TYPE_INT ) );
 $offset       = ( $current_page - 1 ) * $per_page;
 

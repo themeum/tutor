@@ -47,7 +47,7 @@ if ( $best_watch_time > 0 ) {
 	$json_data['best_watch_time'] = $best_watch_time;
 }
 
-$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open();
+$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
 
 ?>
 
@@ -161,9 +161,29 @@ tutor_load_template(
 							<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'About Lesson', 'tutor' ); ?>
 							</div>
-							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
-								<?php the_content(); ?>
-							</div>
+							<?php
+							if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
+								$shortcodes = \TutorPro\H5P\Utils::get_h5p_shortcodes( $post->post_content );
+								?>
+								<?php if ( count( $shortcodes ) ) : ?>
+									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper tutor-spotlight-h5p-lesson-content" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-topic-id="<?php echo esc_attr( $post->post_parent ); ?>">
+										<input type="hidden" id="complete_lesson_enabled" value="<?php echo esc_attr( tutor_utils()->get_option( 'disable_complete_lesson_button' ) ); ?>" />
+										<?php the_content(); ?>
+									</div>
+								<?php else : ?>
+									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
+										<?php the_content(); ?>
+									</div>
+								<?php endif; ?>
+								<?php
+							} else {
+								?>
+								<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
+									<?php the_content(); ?>
+								</div>
+								<?php
+							}
+							?>
 						</div>
 					</div>
 				</div>

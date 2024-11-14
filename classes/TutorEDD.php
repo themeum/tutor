@@ -156,10 +156,13 @@ class TutorEDD extends Tutor_Base {
 		}
 
 		$course_id      = tutor_utils()->get_post_id( $course_id );
-		$has_product_id = get_post_meta( $course_id, '_tutor_course_product_id', true );
-		if ( $has_product_id ) {
+		$price_type     = tutor_utils()->price_type( $course_id );
+		$has_product_id = tutor_utils()->get_course_product_id( $course_id );
+
+		if ( Course::PRICE_TYPE_PAID === $price_type && $has_product_id ) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -176,7 +179,6 @@ class TutorEDD extends Tutor_Base {
 		if ( tutils()->has_edd() ) {
 			return edd_price( $product_id, false );
 		}
-		
 	}
 
 	/**

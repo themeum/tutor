@@ -10,6 +10,10 @@
 
 namespace TUTOR;
 
+use Tutor\Helpers\HttpHelper;
+use Tutor\Models\UserModel;
+use Tutor\Traits\JsonResponse;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -20,13 +24,32 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class User {
+	use JsonResponse;
 
 	const STUDENT    = 'subscriber';
 	const INSTRUCTOR = 'tutor_instructor';
 	const ADMIN      = 'administrator';
 
-	const REVIEW_POPUP_META = 'tutor_review_course_popup';
-	const LAST_LOGIN_META   = 'tutor_last_login';
+	/**
+	 * User meta keys.
+	 */
+	const REVIEW_POPUP_META      = 'tutor_review_course_popup';
+	const LAST_LOGIN_META        = 'tutor_last_login';
+	const TIMEZONE_META          = '_tutor_timezone';
+	const PROFILE_PHOTO_META     = '_tutor_profile_photo';
+	const PHONE_NUMBER_META      = 'phone_number';
+	const COVER_PHOTO_META       = '_tutor_cover_photo';
+	const PROFILE_BIO_META       = '_tutor_profile_bio';
+	const PROFILE_JOB_TITLE_META = '_tutor_profile_job_title';
+
+	/**
+	 * User model
+	 *
+	 * @since 3.0.0
+	 *
+	 * @var UserModel
+	 */
+	private $model;
 
 	/**
 	 * Registration notice
@@ -48,6 +71,7 @@ class User {
 	 * @return void
 	 */
 	public function __construct( $register_hooks = true ) {
+		$this->model = new UserModel();
 		if ( ! $register_hooks ) {
 			return;
 		}
@@ -64,6 +88,10 @@ class User {
 		add_action( 'admin_notices', array( $this, 'show_registration_disabled' ) );
 		add_action( 'admin_init', array( $this, 'hide_notices' ) );
 		add_action( 'wp_login', array( $this, 'update_user_last_login' ), 10, 2 );
+		add_action( 'login_form', array( $this, 'add_timezone_input' ) );
+		add_action( 'wp_login', array( $this, 'set_timezone' ), 10, 2 );
+
+		add_action( 'wp_ajax_tutor_user_list', array( $this, 'ajax_user_list' ) );
 	}
 
 	/**
@@ -282,6 +310,30 @@ class User {
 	}
 
 	/**
+	 * Get user timezone string.
+	 *
+	 * @param int|object $user user id or user object. Default: current user.
+	 *
+	 * @return string user timezone string, fallback site timezone string.
+	 */
+	public static function get_user_timezone_string( $user = 0 ) {
+		if ( is_numeric( $user ) ) {
+			$user = get_user_by( 'id', tutor_utils()->get_user_id( $user ) );
+		}
+
+		if ( ! is_a( $user, 'WP_User' ) ) {
+			return wp_timezone_string();
+		}
+
+		$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
+		if ( self::is_admin() || empty( $timezone ) ) {
+			$timezone = wp_timezone_string();
+		}
+
+		return $timezone;
+	}
+
+	/**
 	 * Profile update
 	 *
 	 * @since 1.0.0
@@ -295,13 +347,15 @@ class User {
 			return;
 		}
 
-		$_tutor_profile_job_title = Input::post( '_tutor_profile_job_title', '' );
-		$_tutor_profile_bio       = Input::post( '_tutor_profile_bio', '', Input::TYPE_KSES_POST );
-		$_tutor_profile_image     = Input::post( '_tutor_profile_photo', '', Input::TYPE_KSES_POST );
+		$timezone                 = Input::post( 'timezone', '' );
+		$_tutor_profile_job_title = Input::post( self::PROFILE_JOB_TITLE_META, '' );
+		$_tutor_profile_bio       = Input::post( self::PROFILE_BIO_META, '', Input::TYPE_KSES_POST );
+		$_tutor_profile_image     = Input::post( self::PROFILE_PHOTO_META, '', Input::TYPE_KSES_POST );
 
-		update_user_meta( $user_id, '_tutor_profile_job_title', $_tutor_profile_job_title );
-		update_user_meta( $user_id, '_tutor_profile_bio', $_tutor_profile_bio );
-		update_user_meta( $user_id, '_tutor_profile_photo', $_tutor_profile_image );
+		update_user_meta( $user_id, self::PROFILE_JOB_TITLE_META, $_tutor_profile_job_title );
+		update_user_meta( $user_id, self::PROFILE_BIO_META, $_tutor_profile_bio );
+		update_user_meta( $user_id, self::PROFILE_PHOTO_META, $_tutor_profile_image );
+		update_user_meta( $user_id, self::TIMEZONE_META, $timezone );
 	}
 
 	/**
@@ -397,5 +451,97 @@ class User {
 	 */
 	public function update_user_last_login( $user_login, $user ) {
 		update_user_meta( $user->ID, self::LAST_LOGIN_META, time() );
+	}
+
+	/**
+	 * Add timezone input field to login form.
+	 *
+	 * @since 3.0.0
+	 */
+	public function add_timezone_input() {
+		?>
+		<input type="hidden" name="timezone" value="<?php echo esc_attr( wp_timezone_string() ); ?>" />
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				const timezone = document.querySelector('input[name="timezone"]');
+				if ( timezone) {
+					const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+					timezone.value = tz
+				}
+			});
+		</script>
+		<?php
+	}
+
+	/**
+	 * Set user timezone if not it set.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string   $user_login active user name.
+	 * @param \WP_User $user User object data.
+	 *
+	 * @return void
+	 */
+	public function set_timezone( $user_login, $user ) {
+		if ( Input::has( 'timezone' ) ) {
+			$timezone = get_user_meta( $user->ID, self::TIMEZONE_META, true );
+			if ( empty( $timezone ) ) {
+				update_user_meta( $user->ID, self::TIMEZONE_META, Input::post( 'timezone', wp_timezone_string() ) );
+			}
+		}
+	}
+
+	/**
+	 * Get user list with pagination & support
+	 * search term
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_user_list() {
+		tutor_utils()->check_nonce();
+
+		$can_access = apply_filters( 'tutor_user_list_access', current_user_can( 'manage_options' ) );
+		if ( ! $can_access ) {
+			$this->json_response( tutor_utils()->error_message( 'forbidden' ), HttpHelper::STATUS_FORBIDDEN );
+		}
+
+		$response = array(
+			'results'     => array(),
+			'total_items' => 0,
+		);
+
+		$limit  = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset = Input::post( 'offset', 0, Input::TYPE_INT );
+
+		$args = array(
+			'limit'  => $limit,
+			'offset' => $offset,
+		);
+
+		$filter = json_decode( wp_unslash( $_POST['filter'] ?? '{}' ) );//phpcs:ignore
+		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) && ! empty( $filter->search ) ) {
+			$args['search']         = '*' . Input::sanitize( $filter->search ) . '*';
+			$args['search_columns'] = array( 'user_login', 'user_email', 'user_nicename', 'display_name', 'ID' );
+		}
+
+		$user_list = $this->model->get_users_list( $args );
+
+		if ( is_object( $user_list ) ) {
+			foreach ( $user_list->get_results() as $user ) {
+				// Set user avatar.
+				$user->avatar_url      = get_avatar_url( $user->ID, array( 'size' => 32 ) );
+				$response['results'][] = $user;
+			}
+
+			$response['total_items'] = $user_list->get_total();
+		}
+
+		$this->json_response(
+			__( 'User list fetched successfully!', 'tutor' ),
+			$response
+		);
 	}
 }

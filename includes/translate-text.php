@@ -68,6 +68,10 @@ function tutor_get_translate_text() {
 			'badge' => 'success',
 			'text'  => __( 'Completed', 'tutor' ),
 		),
+		'incomplete'  => array(
+			'badge' => 'default',
+			'text'  => __( 'Incomplete', 'tutor' ),
+		),
 		'processing' => array(
 			'badge' => 'warning',
 			'text'  => __( 'Processing', 'tutor' ),
@@ -80,6 +84,10 @@ function tutor_get_translate_text() {
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
 		),
+		'expired'    => array(
+			'badge' => 'danger',
+			'text'  => __( 'Expired', 'tutor' ),
+		),
 		'blocked'    => array(
 			'badge' => 'danger',
 			'text'  => __( 'Blocked', 'tutor' ),
@@ -87,6 +95,10 @@ function tutor_get_translate_text() {
 		'cancel'     => array(
 			'badge' => 'danger',
 			'text'  => __( 'Cancelled', 'tutor' ),
+		),
+		'hold' => array(
+			'badge' => 'warning',
+			'text'  => __( 'On Hold', 'tutor' ),
 		),
 		'on-hold'    => array(
 			'badge' => 'warning',
@@ -100,9 +112,29 @@ function tutor_get_translate_text() {
 			'badge' => 'warning',
 			'text'  => __( 'On Hold', 'tutor' ),
 		),
-		'publish'    => array(
+		'partially-refunded' => array(
+			'badge' => 'default',
+			'text'  => __( 'Partially Refunded', 'tutor' ),
+		),
+		'refunded' => array(
+			'badge' => 'danger',
+			'text'  => __( 'Refunded', 'tutor' ),
+		),
+		'unpaid' => array(
+			'badge' => 'warning',
+			'text'  => __( 'Unpaid', 'tutor' ),
+		),
+		'paid' => array(
 			'badge' => 'success',
-			'text'  => __( 'Publish', 'tutor' ),
+			'text'  => __( 'Paid', 'tutor' ),
+		),
+		'failed' => array(
+			'badge' => 'danger',
+			'text'  => __( 'Failed', 'tutor' ),
+		),
+		'partially-paid'    => array(
+			'badge' => 'success',
+			'text'  => __( 'Partially Paid', 'tutor' ),
 		),
 		'trash'      => array(
 			'badge' => 'danger',
@@ -115,6 +147,14 @@ function tutor_get_translate_text() {
 		'private'    => array(
 			'badge' => 'warning',
 			'text'  => __( 'Private', 'tutor' ),
+		),
+		'active'    => array(
+			'badge' => 'success',
+			'text'  => __( 'Active', 'tutor' ),
+		),
+		'inactive'    => array(
+			'badge' => 'default',
+			'text'  => __( 'Inactive', 'tutor' ),
 		),
 		'true'       => array(
 			'text' => _x( 'True', 'true/false question options', 'tutor' ),

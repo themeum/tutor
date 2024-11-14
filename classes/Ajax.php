@@ -14,7 +14,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\LessonModel;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Ajax Class
@@ -22,6 +24,7 @@ use Tutor\Models\LessonModel;
  * @since 1.0.0
  */
 class Ajax {
+	use JsonResponse;
 
 	const LOGIN_ERRORS_TRANSIENT_KEY = 'tutor_login_errors';
 	/**
@@ -45,16 +48,6 @@ class Ajax {
 			add_action( 'wp_ajax_nopriv_tutor_course_add_to_wishlist', array( $this, 'tutor_course_add_to_wishlist' ) );
 
 			/**
-			 * Get all addons
-			 */
-			add_action( 'wp_ajax_tutor_get_all_addons', array( $this, 'tutor_get_all_addons' ) );
-
-			/**
-			 * Addon Enable Disable Control
-			 */
-			add_action( 'wp_ajax_addon_enable_disable', array( $this, 'addon_enable_disable' ) );
-
-			/**
 			 * Ajax login
 			 *
 			 * @since  v.1.6.3
@@ -68,6 +61,8 @@ class Ajax {
 			 */
 			add_action( 'wp_ajax_tutor_announcement_create', array( $this, 'create_or_update_annoucement' ) );
 			add_action( 'wp_ajax_tutor_announcement_delete', array( $this, 'delete_annoucement' ) );
+
+			add_action( 'wp_ajax_tutor_youtube_video_duration', array( $this, 'ajax_youtube_video_duration' ) );
 		}
 	}
 
@@ -255,7 +250,7 @@ class Ajax {
 			$review_id  = $comment_id;
 
 			if ( $comment_id ) {
-				$result = $wpdb->insert(
+				$wpdb->insert(
 					$wpdb->commentmeta,
 					array(
 						'comment_id' => $comment_id,
@@ -271,7 +266,7 @@ class Ajax {
 		if ( ! tutor_is_rest() ) {
 			wp_send_json_success(
 				array(
-					'message'   => __( 'Rating placed successsully!', 'tutor' ),
+					'message'   => __( 'Rating placed successfully!', 'tutor' ),
 					'review_id' => $review_id,
 				)
 			);
@@ -388,167 +383,6 @@ class Ajax {
 		}
 
 		return $result;
-	}
-
-	/**
-	 * Prepare addons data
-	 *
-	 * @since 1.0.0
-	 * @return array
-	 */
-	public function prepare_addons_data() {
-		$addons       = apply_filters( 'tutor_addons_lists_config', array() );
-		$plugins_data = $addons;
-
-		if ( is_array( $addons ) && count( $addons ) ) {
-			foreach ( $addons as $base_name => $addon ) {
-				$addon_config = tutor_utils()->get_addon_config( $base_name );
-				$is_enabled   = (bool) tutor_utils()->avalue_dot( 'is_enable', $addon_config );
-
-				$plugins_data[ $base_name ]['is_enabled'] = $is_enabled;
-
-				$thumbnail_url = tutor()->url . 'assets/images/tutor-plugin.png';
-				if ( file_exists( $addon['path'] . 'assets/images/thumbnail.png' ) ) {
-					$thumbnail_url = $addon['url'] . 'assets/images/thumbnail.png';
-				} elseif ( file_exists( $addon['path'] . 'assets/images/thumbnail.jpg' ) ) {
-					$thumbnail_url = $addon['url'] . 'assets/images/thumbnail.jpg';
-				} elseif ( file_exists( $addon['path'] . 'assets/images/thumbnail.svg' ) ) {
-					$thumbnail_url = $addon['url'] . 'assets/images/thumbnail.svg';
-				}
-
-				$plugins_data[ $base_name ]['thumb_url'] = $thumbnail_url;
-
-				/**
-				 * Checking if there any dependant plugin exists
-				 */
-				$depends          = tutor_utils()->array_get( 'depend_plugins', $addon );
-				$plugins_required = array();
-				if ( tutor_utils()->count( $depends ) ) {
-					foreach ( $depends as $plugin_base => $plugin_name ) {
-						if ( ! is_plugin_active( $plugin_base ) ) {
-							$plugins_required[ $plugin_base ] = $plugin_name;
-						}
-					}
-				}
-
-				$depended_plugins = array();
-				foreach ( $plugins_required as $required_plugin ) {
-					array_push( $depended_plugins, $required_plugin );
-				}
-
-				$plugins_data[ $base_name ]['plugins_required'] = $depended_plugins;
-
-				// Check if it's notifications.
-				if ( function_exists( 'tutor_notifications' ) && tutor_notifications()->basename === $base_name ) {
-
-					$required = array();
-					version_compare( PHP_VERSION, '7.2.5', '>=' ) ? 0 : $required[] = __( 'PHP 7.2.5 or greater is required', 'tutor' );
-					! is_ssl() ? $required[]                                        = __( 'SSL certificate', 'tutor' ) : 0;
-
-					foreach ( array( 'curl', 'gmp', 'mbstring', 'openssl' ) as $ext ) {
-						! extension_loaded( $ext ) ? $required[] = 'PHP extension <strong>' . $ext . '</strong>' : 0;
-					}
-
-					$plugins_data[ $base_name ]['ext_required'] = $required;
-				}
-			}
-		}
-
-		/**
-		 * Keep same sorting order.
-		 *
-		 * @since 2.2.4
-		 */
-		$free_addon_list = apply_filters( 'tutor_pro_addons_lists_for_display', array() );
-		$prepared_addons = array();
-
-		foreach ( $free_addon_list as $addon_name => $addon ) {
-			$key = "tutor-pro/addons/{$addon_name}/{$addon_name}.php";
-			if ( isset( $plugins_data[ $key ] ) ) {
-				$prepared_addons[] = $plugins_data[ $key ];
-			}
-		}
-
-		return $prepared_addons;
-	}
-
-	/**
-	 * Get all notifications
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function tutor_get_all_addons() {
-
-		// Check and verify the request.
-		tutor_utils()->checking_nonce();
-
-		if ( ! User::is_admin() ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
-		// All good, let's proceed.
-		$all_addons = $this->prepare_addons_data();
-
-		wp_send_json_success(
-			array(
-				'addons' => $all_addons,
-			)
-		);
-	}
-
-	/**
-	 * Method for enable / disable addons
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function addon_enable_disable() {
-
-		tutor_utils()->checking_nonce();
-
-		if ( ! current_user_can( 'manage_options' ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
-		}
-
-		$form_data     = json_decode( Input::post( 'addonFieldNames' ) );
-		$before_config = get_option( 'tutor_addons_config' );
-		$addons_config = array();
-
-		foreach ( $form_data as $addon_field_name => $is_enable ) {
-
-			$before_status = ! isset( $before_config[ $addon_field_name ] ) ? 0 : $before_config[ $addon_field_name ]['is_enable'];
-			$after_status  = $is_enable ? 1 : 0;
-
-			if ( $before_status !== $after_status ) {
-				do_action( 'tutor_addon_before_enable_disable' );
-				if ( $is_enable ) {
-					do_action( "tutor_addon_before_enable_{$addon_field_name}" );
-					do_action( 'tutor_addon_before_enable', $addon_field_name );
-
-					$addons_config[ $addon_field_name ]['is_enable'] = 1;
-					update_option( 'tutor_addons_config', $addons_config );
-
-					do_action( 'tutor_addon_after_enable', $addon_field_name );
-					do_action( "tutor_addon_after_enable_{$addon_field_name}" );
-				} else {
-					do_action( "tutor_addon_before_disable_{$addon_field_name}" );
-					do_action( 'tutor_addon_before_disable', $addon_field_name );
-
-					$addons_config[ $addon_field_name ]['is_enable'] = 0;
-					update_option( 'tutor_addons_config', $addons_config );
-
-					do_action( 'tutor_addon_after_disable', $addon_field_name );
-					do_action( "tutor_addon_after_disable_{$addon_field_name}" );
-				}
-				do_action( 'tutor_addon_after_enable_disable' );
-			} else {
-				$addons_config[ $addon_field_name ]['is_enable'] = $after_status;
-				update_option( 'tutor_addons_config', $addons_config );
-			}
-		}
-
-		wp_send_json_success();
 	}
 
 	/**
@@ -753,5 +587,46 @@ class Ajax {
 		}
 
 		wp_send_json_error( array( 'message' => __( 'Announcement delete failed', 'tutor' ) ) );
+	}
+
+	/**
+	 * Get youtube video duration.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return void
+	 */
+	public function ajax_youtube_video_duration() {
+		tutor_utils()->check_nonce();
+
+		$video_id = Input::post( 'video_id' );
+		if ( empty( $video_id ) ) {
+			$this->json_response( __( 'Video ID is required', 'tutor' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
+
+		tutor_utils()->check_current_user_capability( 'edit_tutor_course' );
+
+		$api_key = tutor_utils()->get_option( 'lesson_video_duration_youtube_api_key', '' );
+		$url     = "https://www.googleapis.com/youtube/v3/videos?id=$video_id&part=contentDetails&key=$api_key";
+
+		$request = HttpHelper::get( $url );
+		if ( HttpHelper::STATUS_OK === $request->get_status_code() ) {
+			$response = $request->get_json();
+			if ( isset( $response->items[0]->contentDetails->duration ) ) {
+				$duration = $response->items[0]->contentDetails->duration;
+				$this->json_response(
+					__( 'Fetched duration successfully', 'tutor' ),
+					array(
+						'duration' => $duration,
+					)
+				);
+			}
+		}
+
+		$this->json_response(
+			__( 'Failed to fetch duration', 'tutor' ),
+			null,
+			HttpHelper::STATUS_BAD_REQUEST
+		);
 	}
 }

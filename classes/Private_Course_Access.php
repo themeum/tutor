@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Cache\TutorCache;
+use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -21,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 1.0.0
  */
-class Private_Course_Access {
+class Private_Course_Access extends Tutor_Base {
 
 	/**
 	 * Allow empty
@@ -36,7 +37,10 @@ class Private_Course_Access {
 	 * @since 1.0.0
 	 */
 	public function __construct() {
+		parent::__construct();
+
 		add_action( 'pre_get_posts', array( $this, 'enable_private_access' ) );
+		add_filter( 'post_type_link', array( $this, 'permalink_for_private_course' ), 10, 2 );
 	}
 
 	/**
@@ -90,5 +94,23 @@ class Private_Course_Access {
 				$query->set( 'post_status', array( 'private', 'publish' ) );
 			}
 		}
+	}
+
+	/**
+	 * Make permalink for private course.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string  $url permalink.
+	 * @param WP_Post $post post object.
+	 *
+	 * @return string
+	 */
+	public function permalink_for_private_course( $url, $post ) {
+		if ( CourseModel::STATUS_PRIVATE === $post->post_status && $this->course_post_type === $post->post_type ) {
+			$url = home_url( $this->course_base_permalink . '/' . $post->post_name );
+		}
+
+		return $url;
 	}
 }

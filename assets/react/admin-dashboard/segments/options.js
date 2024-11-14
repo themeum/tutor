@@ -1,4 +1,7 @@
+
 import { get_response_message } from '../../helper/response';
+import tutorFormData from '../../helper/tutor-formdata';
+import ajaxHandler from './filter';
 
 // SVG Icons Totor V2
 const tutorIconsV2 = {
@@ -134,7 +137,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			let pageTitle = pageNeedsValidation && pageNeedsValidation.querySelector('[tutor-option-title]').innerText;
 
 			let invalidMessage = '"' + pageTitle + ' > ' + invalidLabel + '" email is invalid!';
-			if (false === validateEmail(emailField.value)) {
+			if (emailField.value && false === validateEmail(emailField.value)) {
 				emailField.style.borderColor = 'red';
 				emailField.focus();
 				tutor_toast('Warning', invalidMessage, 'error');
@@ -155,7 +158,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const inputNumberFields = document.querySelectorAll('.tutor-form-control[type="number"]');
 	// const inputNumberFields = document.querySelectorAll('[type="number"]');
 
-	if(inputNumberFields.length) checkNumberFields(inputNumberFields);
+	if (inputNumberFields.length) checkNumberFields(inputNumberFields);
 
 	if (0 !== inputEmailFields.length) {
 		checkEmailFields(inputEmailFields);
@@ -186,7 +189,13 @@ document.addEventListener('DOMContentLoaded', function () {
 			checkEmailFieldsOnSubmit(inputEmailFields);
 		}
 
-		// console.log(formSubmit);
+
+		// Only keep action and properties that starts with tutor_option
+		data = Object.fromEntries(
+			Object.entries(data).filter(([key, value]) => {
+				return key === 'action' || key.startsWith('tutor_option');
+			})
+		);
 
 		if (true === formSubmit) {
 			if (!e.detail || e.detail == 1) {
@@ -199,17 +208,20 @@ document.addEventListener('DOMContentLoaded', function () {
 						button.attr('disabled', true);
 					},
 					success: function (resp) {
-						const { data = {}, success, message = __('Settings Saved', 'tutor')  } = resp || {};
+						const { data = {}, success, message = __('Settings Saved', 'tutor'), reload_required = false } = resp || {};
 
 						if (success) {
 							// Disabling save btn after saved successfully
 							if (document.getElementById('save_tutor_option')) {
 								document.getElementById('save_tutor_option').disabled = true;
 							}
-							tutor_toast( __('Success!','tutor'), message , 'success');
-							window.dispatchEvent(new CustomEvent('tutor_option_saved', {detail: data}));
-						}else{
-							tutor_toast( __('Warning!','tutor'), message, 'warning');
+							tutor_toast(__('Success!', 'tutor'), message, 'success');
+							window.dispatchEvent(new CustomEvent('tutor_option_saved', { detail: data }));
+							if (reload_required) {
+								window.location.reload(true);
+							}
+						} else {
+							tutor_toast(__('Warning!', 'tutor'), message, 'warning');
 						}
 					},
 					complete: function () {
@@ -401,23 +413,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/**
-	 * Show/Hide setting option
-	 * @param object element			Dom object
-	 * @param string value 				change value
-	 * @param string required_value		Required value for match the conditon for show, else it will hide
-	 * @return void
-	 * 
-	 * @since 2.0.7
-	 */
-	function showHideOption(element, value, required_value) {
-		if (element.style === undefined) return;
-
-		value === (required_value !== undefined ? required_value : 'on')
-			? element.style.display = 'grid'
-			: element.style.display = 'none'
-	}
-
-	/**
 	 * Input value change detector (Normal/Hidden input)
 	 * 
 	 * @param object	element 
@@ -438,33 +433,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		observer.observe(element, {
 			attributes: true
 		});
-	}
-
-	/**
-	 * Woocommerce order auto complete
-	 *
-	 * @since 2.0.5
-	 * 
-	 * Invoice generate options added
-	 *
-	 * @since 2.1.4
-	 */
-	const monetization_field = document.querySelector("[name='tutor_option[monetize_by]']");
-	const order_autocomplete_wrapper = document.getElementById('field_tutor_woocommerce_order_auto_complete');
-
-	const invoice_field = document.querySelector("[name='tutor_option[tutor_woocommerce_invoice]']");
-	const invoice_field_wrapper = document.getElementById('field_tutor_woocommerce_invoice');
-
-	if (invoice_field) {
-		showHideOption(invoice_field_wrapper, monetization_field.value, 'wc')
-	}
-
-	if (monetization_field) {
-		showHideOption(order_autocomplete_wrapper, monetization_field.value, 'wc');
-		monetization_field.onchange = (e) => {
-			showHideOption(order_autocomplete_wrapper, e.target.value, 'wc');
-			showHideOption(invoice_field_wrapper, e.target.value, 'wc');
-		}
 	}
 
 	/**
@@ -501,6 +469,117 @@ document.addEventListener('DOMContentLoaded', function () {
 	})
 
 	/**
+	 * On toggle switch change - show, hide setting's blocks
+	 * @since 3.0.0
+	 */
+	function showHideToggleBlock(el) {
+		let isChecked = el.is(':checked')
+		let fields = el.data('toggle-blocks').split(',')
+		if (Array.isArray(fields) === false || fields.length === 0) return
+
+		fields = fields.map(s => s.trim());
+		fields.forEach((f) => {
+			if (isChecked) {
+				$(`.tutor-option-single-item.${f}`).removeClass('tutor-d-none');
+			} else {
+				$(`.tutor-option-single-item.${f}`).addClass('tutor-d-none');
+			}
+		});
+	}
+
+	const btnToggleBlocks = $('input[type="checkbox"][data-toggle-blocks]');
+	btnToggleBlocks.each(function () {
+		showHideToggleBlock($(this));
+	});
+
+	btnToggleBlocks.change(function () {
+		showHideToggleBlock($(this));
+	});
+
+	/**
+	 * Show/Hide setting option
+	 * @param object element			Dom object
+	 * @param conditionFn function	Condition function
+	 * @return void
+	 * 
+	 * @since 2.0.7
+	 */
+	function showHideOption(element, conditionFn) {
+		if (!element) return;
+
+		if (conditionFn()) {
+			element.classList.remove("tutor-d-none");
+		} else {
+			element.classList.add("tutor-d-none");
+		}
+
+		// Remove border if only one item left.
+		const blockWrapper = element.closest(".item-wrapper");
+		if (blockWrapper) {
+			const displayItems = blockWrapper.querySelectorAll(".tutor-option-field-row:not(.tutor-d-none)");
+			if (displayItems.length && displayItems.length === 1) {
+				displayItems[0].classList.add("tutor-option-no-bottom-border");
+			} else {
+				displayItems[0].classList.remove("tutor-option-no-bottom-border");
+			}
+		}
+	}
+
+	/**
+	 * Woocommerce order auto complete
+	 *
+	 * @since 2.0.5
+	 * 
+	 * Invoice generate options added
+	 *
+	 * @since 2.1.4
+	 * 
+	 * Monetization options refactored
+	 *
+	 * @since 3.0.0
+	 */
+	const monetization_field = document.querySelector("[name='tutor_option[monetize_by]']");
+	if (monetization_field) {
+		const monetized_by = monetization_field?.value;
+		const revenue_sharing_checkbox = document.querySelector("[data-toggle-fields=sharing_percentage]");
+		const revenue_sharing_engines = ['tutor', 'wc', 'edd', 'pmpro', 'restrict-content-pro'];
+
+		const woocommerce_block = document.querySelector(".tutor-option-single-item.woocommerce");
+		const currency_block = document.querySelector(".tutor-option-single-item.ecommerce_currency");
+		const revenue_sharing_block = document.querySelector(".tutor-option-single-item.revenue_sharing");
+		const fees_block = document.querySelector(".tutor-option-single-item.fees");
+		const withdraw_block = document.querySelector(".tutor-option-single-item.withdraw");
+		const invoice_block = document.querySelector(".tutor-option-single-item.ecommerce_invoice");
+
+		const cart_page_field = document.querySelector("#field_tutor_cart_page_id");
+		const checkout_page_field = document.querySelector("#field_tutor_checkout_page_id");
+
+		showHideOption(woocommerce_block, () => monetized_by === 'wc');
+		showHideOption(currency_block, () => monetized_by === 'tutor');
+		showHideOption(cart_page_field, () => monetized_by === 'tutor');
+		showHideOption(checkout_page_field, () => monetized_by === 'tutor');
+		showHideOption(invoice_block, () => monetized_by === 'tutor');
+
+		showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(monetized_by));
+		showHideOption(fees_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
+		showHideOption(withdraw_block, () => revenue_sharing_engines.includes(monetized_by) && revenue_sharing_checkbox?.checked);
+
+		// Handle monetization fields on change.
+		monetization_field.onchange = (e) => {
+			const value = e.target.value;
+			showHideOption(woocommerce_block, () => value === 'wc');
+			showHideOption(currency_block, () => value === 'tutor');
+			showHideOption(cart_page_field, () => value === 'tutor');
+			showHideOption(checkout_page_field, () => value === 'tutor');
+			showHideOption(invoice_block, () => value === 'tutor');
+
+			showHideOption(revenue_sharing_block, () => revenue_sharing_engines.includes(value));
+			showHideOption(fees_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
+			showHideOption(withdraw_block, () => revenue_sharing_engines.includes(value) && revenue_sharing_checkbox?.checked);
+		}
+	}
+
+	/**
 	 * Maxlength counter for Textarea and Text field.
 	 * @since 2.2.3
 	 */
@@ -524,4 +603,24 @@ document.addEventListener('DOMContentLoaded', function () {
 		el.parent().find('.tutor-field-maxlength-info').text(text)
 	})
 
+	/**
+	 * Tutor option password type hide and show
+	 * 
+	 * @since 3.0.0
+	 */
+	document.querySelectorAll('.tutor-option-field-input .tutor-type-password').forEach((item) => {
+		const input = item.querySelector('input');
+		const button = item.querySelector('button');
+		const icon = button?.querySelector('i');
+
+		if (!input || !button || !icon) {
+			return;
+		}
+
+		button.addEventListener('click', () => {
+			const isPassword = input.type === 'password';
+			input.type = isPassword ? 'text' : 'password';
+			icon.className = isPassword ? 'tutor-icon-eye-bold' : 'tutor-icon-eye-slash-bold';
+		});
+	});
 });

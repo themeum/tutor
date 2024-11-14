@@ -41,7 +41,7 @@
 										<?php esc_html_e( 'Advanced customization options for each add-on', 'tutor' ); ?>
 									</div>
 
-									<a class="tutor-btn tutor-btn-primary tutor-btn-lg" href="<?php echo esc_url( 'https://www.themeum.com/tutor-lms/pricing?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists#comparison' ); ?>" target="_blank">
+									<a class="tutor-btn tutor-btn-primary tutor-btn-lg" href="<?php echo esc_url( 'https://tutorlms.com/free-vs-pro?utm_source=tutor&utm_medium=addons_lists&utm_campaign=tutor_addons_lists#pricing-section' ); ?>" target="_blank">
 										<?php esc_html_e( 'Compare Free vs Pro', 'tutor' ); ?>
 									</a>
 								</div>

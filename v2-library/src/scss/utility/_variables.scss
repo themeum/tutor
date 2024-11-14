@@ -1,0 +1,25 @@
+// Shadows
+$shadow-1: 0px 8px 16px rgba(41, 45, 47, 0.08);
+$shadow-3: 0px 6px 20px rgba(28, 49, 104, 0.1);
+
+// Colors
+$color-white:           #ffffff !default;
+$color-primary:         var(--tutor-color-primary) !default;
+$color-success:         #24A148 !default;
+$color-success-rgb:     36, 161, 72 !default;
+$color-warning:         #ED9700 !default;
+$color-warning-rgb:     237, 151, 0 !default;
+$color-danger:          #F44337 !default;
+$color-danger-rgb:      244, 67, 55 !default;
+$color-secondary:       #41454F !default;
+$color-subdued:         #5B616F !default;
+$color-hints:           #767C8E !default;
+
+// extra color
+$color-muted: #757c8e;
+$color-light-gray: #cdcfd5;
+$color-gray-2:  #FCFCFD;
+$color-gray-5:  #EFF1F6;
+$color-gray-10: #eff1f6;
+$color-gray-20: #e3e5eb;
+$border-color-secondary: #E0E2EA;

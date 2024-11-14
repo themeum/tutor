@@ -10,6 +10,11 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\OptionKeys;
+use Tutor\Ecommerce\OrderController;
+use Tutor\Ecommerce\Settings;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -21,14 +26,24 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Assets {
 
+
 	/**
 	 * Constructor
 	 *
 	 * @since 1.0.0
+	 *
+	 * @since 3.0.0 register hook param added
+	 *
+	 * @param bool $register_hooks param added to enable or disable registering hooks.
+	 *
 	 * @return void
 	 */
-	public function __construct() {
-		 /**
+	public function __construct( $register_hooks = true ) {
+		if ( ! $register_hooks ) {
+			return;
+		}
+
+		/**
 		 * Common scripts loading
 		 */
 		add_action( 'admin_enqueue_scripts', array( $this, 'common_scripts' ) );
@@ -54,7 +69,7 @@ class Assets {
 		 * Handled script with text domain attached to
 		 *
 		 * @since 1.9.0
-		*/
+		 */
 		add_action( 'admin_head', array( $this, 'tutor_add_mce_button' ) );
 		add_filter( 'get_the_generator_html', array( $this, 'tutor_generator_tag' ), 10, 2 );
 		add_filter( 'get_the_generator_xhtml', array( $this, 'tutor_generator_tag' ), 10, 2 );
@@ -88,7 +103,7 @@ class Assets {
 	 * @since 1.0.0
 	 * @return array
 	 */
-	private function get_default_localized_data() {
+	public function get_default_localized_data() {
 		$home_url = get_home_url();
 		$parsed   = parse_url( $home_url );
 
@@ -110,13 +125,33 @@ class Assets {
 
 		if ( $userdata ) {
 			$current_user = array(
-				'roles' => $userdata->roles,
+				'roles' => array_values( $userdata->roles ),
 				'data'  => array(
 					'id'           => $userdata->ID,
 					'display_name' => $userdata->display_name,
 				),
 			);
 		}
+
+		$tutor_currency = array(
+			'symbol'             => Settings::get_currency_symbol_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE, 'USD' ) ),
+			'currency'           => tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ),
+			'position'           => tutor_utils()->get_option( OptionKeys::CURRENCY_POSITION, 'left' ),
+			'thousand_separator' => tutor_utils()->get_option( OptionKeys::THOUSAND_SEPARATOR, ',' ),
+			'decimal_separator'  => tutor_utils()->get_option( OptionKeys::DECIMAL_SEPARATOR, '.' ),
+			'no_of_decimal'      => tutor_utils()->get_option( OptionKeys::NUMBER_OF_DECIMALS, '2' ),
+		);
+
+		/**
+		 * Get only required options.
+		 *
+		 * @since 3.0.0
+		 */
+		$required_options = array(
+			'monetize_by',
+		);
+
+		$tutor_settings = Options_V2::get_only( $required_options );
 
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
@@ -144,6 +179,9 @@ class Assets {
 			'is_ssl'                       => is_ssl(),
 			'course_list_page_url'         => admin_url( 'admin.php?page=tutor' ),
 			'course_post_type'             => tutor()->course_post_type,
+			'tutor_currency'               => $tutor_currency,
+			'local'                        => get_locale(),
+			'settings'                     => $tutor_settings,
 		);
 	}
 
@@ -151,10 +189,12 @@ class Assets {
 	 * Enqueue scripts for admin
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 Order details & coupon scripts added.
+	 *
 	 * @return void
 	 */
 	public function admin_scripts() {
-		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION );
+		wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
 		wp_enqueue_style( 'tutor-admin', tutor()->url . 'assets/css/tutor-admin.min.css', array(), TUTOR_VERSION );
 		/**
 		 * Scripts
@@ -167,8 +207,33 @@ class Assets {
 		wp_enqueue_script( 'jquery-ui-slider' );
 		wp_enqueue_script( 'jquery-ui-datepicker' );
 
-		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		wp_enqueue_script( 'tutor-admin', tutor()->url . 'assets/js/tutor-admin.min.js', array( 'jquery', 'tutor-script', 'wp-color-picker', 'wp-i18n', 'wp-data' ), TUTOR_VERSION, true );
+
+		// Tutor order detail & coupon scripts.
+		$page   = Input::get( 'page', '' );
+		$action = Input::get( 'action' );
+
+		$allowed_actions = array( 'add_new', 'edit' );
+
+		if ( tutor_utils()->is_monetize_by_tutor() ) {
+			if ( OrderController::PAGE_SLUG === $page && 'edit' === $action ) {
+				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-order-details', tutor()->url . 'assets/js/tutor-order-details.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
+			}
+
+			if ( CouponController::PAGE_SLUG === $page && in_array( $action, $allowed_actions, true ) ) {
+				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
+			}
+
+			// @since 3.0.0 add tax react app on the settings page.
+			if ( 'tutor_settings' === $page && ! Input::has( 'edit' ) ) {
+				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-tax-settings.min', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-payment-settings.min', tutor()->url . 'assets/js/tutor-payment-settings.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
+			}
+		}
 	}
 
 	/**
@@ -211,16 +276,16 @@ class Assets {
 		 * Enabling Sorting, draggable, droppable...
 		 */
 		wp_enqueue_script( 'jquery-ui-sortable' );
-		wp_enqueue_script( 'jquery-touch-punch', array( 'jquery-ui-sortable' ) ); //phpcs:ignore
+        wp_enqueue_script('jquery-touch-punch', ['jquery-ui-sortable']); //phpcs:ignore
 
 		// Plyr.
 		if ( is_single_course( true ) ) {
-			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/packages/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_style( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.css', array(), TUTOR_VERSION );
+			wp_enqueue_script( 'tutor-plyr', tutor()->url . 'assets/lib/plyr/plyr.polyfilled.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 		}
 
 		// Social Share.
-		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/packages/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-social-share', tutor()->url . 'assets/lib/SocialShare/SocialShare.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 		/**
 		 * Chart Data
@@ -228,11 +293,11 @@ class Assets {
 		if ( ! empty( $wp_query->query_vars['tutor_dashboard_page'] ) ) {
 			wp_enqueue_script( 'jquery-ui-slider' );
 
-			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/packages/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_style( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.min.css', array(), TUTOR_VERSION );
+			wp_enqueue_script( 'tutor-select2', tutor()->url . 'assets/lib/select2/select2.full.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
 			if ( 'earning' === $wp_query->query_vars['tutor_dashboard_page'] ) {
-				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/js/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
+				wp_enqueue_script( 'tutor-front-chart-js', tutor()->url . 'assets/lib/Chart.bundle.min.js', array(), TUTOR_VERSION );
 				wp_enqueue_script( 'jquery-ui-datepicker' );
 			}
 		}
@@ -340,18 +405,12 @@ class Assets {
 			wp_enqueue_style( 'tutor', tutor()->url . 'assets/css/tutor.min.css', array(), TUTOR_VERSION );
 		}
 
-		// Load course builder resources.
-		$load_course_builder_scripts = apply_filters( 'tutor_load_course_builder_scripts', tutor_utils()->get_course_builder_screen() );
-		if ( $load_course_builder_scripts ) {
-			wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
-			wp_enqueue_style( 'tutor-course-builder-css', tutor()->url . 'assets/css/tutor-course-builder.min.css', array(), TUTOR_VERSION );
-		}
 		/**
 		 * Load tutor common scripts both backend and frontend
 		 *
 		 * @since v2.0.0
 		 */
-		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 
 		/**
 		 * Enqueue datetime countdown scripts & styles
@@ -364,15 +423,15 @@ class Assets {
 		 */
 		$should_enqueue = apply_filters( 'tutor_should_enqueue_countdown_scripts', false );
 		if ( $should_enqueue ) {
-			wp_enqueue_script( 'tutor-moment', tutor()->url . 'assets/js/lib/countdown/moment.min.js', array(), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-moment', tutor()->url . 'assets/lib/countdown/moment.min.js', array(), TUTOR_VERSION, true );
 
-			wp_enqueue_script( 'tutor-moment-timezone', tutor()->url . 'assets/js/lib/countdown/moment-timezone-with-data.min.js', array(), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-moment-timezone', tutor()->url . 'assets/lib/countdown/moment-timezone-with-data.min.js', array(), TUTOR_VERSION, true );
 
-			wp_enqueue_script( 'tutor-jquery-countdown', tutor()->url . 'assets/js/lib/countdown/jquery.countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-jquery-countdown', tutor()->url . 'assets/lib/countdown/jquery.countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
-			wp_enqueue_script( 'tutor-countdown', tutor()->url . 'assets/js/lib/countdown/tutor-countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-countdown', tutor()->url . 'assets/lib/countdown/tutor-countdown.min.js', array( 'jquery' ), TUTOR_VERSION, true );
 
-			wp_enqueue_style( 'tutor-countdown', tutor()->url . 'assets/js/lib/countdown/tutor-countdown.min.css', '', TUTOR_VERSION );
+			wp_enqueue_style( 'tutor-countdown', tutor()->url . 'assets/lib/countdown/tutor-countdown.min.css', '', TUTOR_VERSION );
 		}
 	}
 
@@ -387,8 +446,10 @@ class Assets {
 		$localize_data = apply_filters( 'tutor_localize_data', $this->get_default_localized_data() );
 		wp_localize_script( 'tutor-frontend', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-admin', '_tutorobject', $localize_data );
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-script', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-order-details', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-tax-settings', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-coupon', '_tutorobject', $localize_data );
 
 		// Inline styles.
 		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
@@ -402,92 +463,55 @@ class Assets {
 	 * @return string
 	 */
 	private function load_color_palette() {
-		 $colors = array(
-			 'tutor_primary_color'       => '--tutor-color-primary',
-			 'tutor_primary_hover_color' => '--tutor-color-primary-hover',
-			 'tutor_text_color'          => '--tutor-body-color',
-			 'tutor_border_color'        => '--tutor-border-color',
-			 'tutor_gray_color'          => '--tutor-color-gray',
-		 );
+		$colors = array(
+			'tutor_primary_color'       => '--tutor-color-primary',
+			'tutor_primary_hover_color' => '--tutor-color-primary-hover',
+			'tutor_text_color'          => '--tutor-body-color',
+			'tutor_border_color'        => '--tutor-border-color',
+			'tutor_gray_color'          => '--tutor-color-gray',
+		);
 
-		 // Admin colors.
-		 $admin_colors = array();
-		 if ( is_admin() ) {
-			 $admin_color = get_user_option( 'admin_color' );
+		// Admin colors.
+		$admin_colors = array();
+		if ( is_admin() ) {
+			$admin_colors = array(
+				'--tutor-color-primary'       => '#3E64DE',
+				'--tutor-color-primary-hover' => '#3A5CCC',
+				'--tutor-body-color'          => '#212327',
+				'--tutor-border-color'        => '#CDCFD5',
+				'--tutor-color-gray'          => '#CDCFD5',
+			);
+		}
 
-			 switch ( $admin_color ) {
-				 case 'light':
-					 $admin_color_codes = array( '#04a4cc', '#04b0db' );
-					 break;
+		$fallback_colors = array(
+			'tutor_primary_color'       => '#3E64DE',
+			'tutor_primary_hover_color' => '#3A5CCC',
+			'tutor_text_color'          => '#212327',
+			'tutor_border_color'        => '#E3E5EB',
+			'tutor_gray_color'          => '#CDCFD5',
+		);
 
-				 case 'modern':
-					 $admin_color_codes = array( '#3858e9', '#4664eb' );
-					 break;
+		$color_string = '';
+		foreach ( $colors as $key => $property ) {
+			$fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
+			$color          = tutor_utils()->get_option( $key, $fallback_color );
+			$color_rgb      = tutor_utils()->hex2rgb( $color );
 
-				 case 'blue':
-					 $admin_color_codes = array( '#e1a948', '#e3af55' );
-					 break;
+			if ( is_admin() && isset( $admin_colors[ $property ] ) ) {
+				$color     = $admin_colors[ $property ];
+				$color_rgb = tutor_utils()->hex2rgb( $admin_colors[ $property ] );
+			}
 
-				 case 'coffee':
-					 $admin_color_codes = array( '#c7a589', '#ccad93' );
-					 break;
+			if ( $color ) {
+				$color_string .= $property . ':' . $color . ';';
+			}
 
-				 case 'ectoplasm':
-					 $admin_color_codes = array( '#a3b745', '#a9bd4f' );
-					 break;
+			if ( $color_rgb ) {
+				$color_string .= $property . '-rgb:' . $color_rgb . ';';
+			}
+		}
 
-				 case 'midnight':
-					 $admin_color_codes = array( '#e14d43', '#e35950' );
-					 break;
-
-				 case 'ocean':
-					 $admin_color_codes = array( '#9ebaa0', '#a7c0a9' );
-					 break;
-
-				 case 'sunrise':
-					 $admin_color_codes = array( '#dd823b', '#df8a48' );
-					 break;
-
-				 default:
-					 $admin_color_codes = array( '#007cba', '#006ba1' );
-					 break;
-			 }
-
-			 $admin_colors = array(
-				 '--tutor-color-primary'       => $admin_color_codes[0],
-				 '--tutor-color-primary-hover' => $admin_color_codes[1],
-			 );
-		 }
-
-		 $fallback_colors = array(
-			 'tutor_primary_color'       => '#3E64DE',
-			 'tutor_primary_hover_color' => '#395BCA',
-			 'tutor_text_color'          => '#212327',
-			 'tutor_border_color'        => '#E3E5EB',
-			 'tutor_gray_color'          => '#CDCFD5',
-		 );
-
-		 $color_string = '';
-		 foreach ( $colors as $key => $property ) {
-			 $fallback_color = isset( $fallback_colors[ $key ] ) ? $fallback_colors[ $key ] : '#212327';
-			 $color          = tutor_utils()->get_option( $key, $fallback_color );
-			 $color_rgb      = tutor_utils()->hex2rgb( $color );
-
-			 if ( is_admin() && isset( $admin_colors[ $property ] ) ) {
-				 $color     = $admin_colors[ $property ];
-				 $color_rgb = tutor_utils()->hex2rgb( $admin_colors[ $property ] );
-			 }
-
-			 if ( $color ) {
-				 $color_string .= $property . ':' . $color . ';';
-			 }
-
-			 if ( $color_rgb ) {
-				 $color_string .= $property . '-rgb:' . $color_rgb . ';';
-			 }
-		 }
-
-		 return ':root{' . $color_string . '}';
+		return ':root{' . $color_string . '}';
 	}
 
 	/**
@@ -517,7 +541,7 @@ class Assets {
 	 * @return array
 	 */
 	public function tutor_add_tinymce_js( $plugin_array ) {
-		$plugin_array['tutor_button'] = tutor()->url . 'assets/js/lib/mce-button.js';
+		$plugin_array['tutor_button'] = tutor()->url . 'assets/lib/mce-button.js';
 		return $plugin_array;
 	}
 
@@ -566,7 +590,9 @@ class Assets {
 	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**
@@ -671,7 +697,7 @@ class Assets {
 		if ( is_a( $wp_screen, 'WP_Screen' ) && tutor()->course_post_type === $wp_screen->post_type ) {
 			wp_enqueue_script( 'tutor-gutenberg', tutor()->url . 'assets/js/tutor-gutenberg.min.js', array(), TUTOR_VERSION, true );
 			$data = array(
-				'frontend_dashboard_url' => esc_url( trailingslashit( tutor_utils()->tutor_dashboard_url( 'create-course' ) ) ) . '?course_ID=' . get_the_ID(),
+				'frontend_dashboard_url' => esc_url( trailingslashit( tutor_utils()->tutor_dashboard_url( 'create-course' ) ) ) . '?course_id=' . get_the_ID(),
 			);
 
 			wp_add_inline_script(

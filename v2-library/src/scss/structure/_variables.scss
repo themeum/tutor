@@ -1,0 +1,112 @@
+// Variables
+
+$enable-negative-margins:     true !default;
+$enable-grid-classes:         true !default;
+$variable-prefix:             tutor- !default;
+$enable-important-utilities:  false !default;
+
+$grid-breakpoints: (
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 1400px
+) !default;
+// scss-docs-end grid-breakpoints
+
+@include _assert-ascending($grid-breakpoints, "$grid-breakpoints");
+@include _assert-starts-at-zero($grid-breakpoints, "$grid-breakpoints");
+
+
+// Grid containers
+//
+// Define the maximum width of `.container` for different screen sizes.
+
+// scss-docs-start container-max-widths
+$container-max-widths: (
+  sm: 540px,
+  md: 720px,
+  lg: 960px,
+  xl: 1140px,
+  xxl: 1320px
+) !default;
+// scss-docs-end container-max-widths
+
+@include _assert-ascending($container-max-widths, "$container-max-widths");
+
+
+// Grid columns
+//
+// Set the number of columns and specify the width of the gutters.
+
+$grid-columns:                12 !default;
+$grid-gutter-width:           1.5rem !default;
+$grid-row-columns:            6 !default;
+
+$gutter: 1rem !default;
+$gutters: (
+  0: 0,
+  1: $gutter * .5,
+  2: $gutter,
+  3: $gutter * 1.5,
+  4: $gutter * 2,
+  5: $gutter * 3,
+  '4px': $gutter * .25,
+  '12px': $gutter * .75,
+) !default;
+
+// Container padding
+
+$container-padding-x: $grid-gutter-width * .5 !default;
+
+// scss-docs-start position-map
+$position-values: (
+  0: 0,
+  50: 50%,
+  100: 100%
+) !default;
+// scss-docs-end position-map
+
+// padding & margin spacer
+$utility-spacer: 4px !default;
+$utility-spacers: (
+  0: 0,
+  2: $utility-spacer * 0.5,
+  4: $utility-spacer * 1,
+  8: $utility-spacer * 2,
+  12: $utility-spacer * 3,
+  16: $utility-spacer * 4,
+  20: $utility-spacer * 5,
+  24: $utility-spacer * 6,
+  28: $utility-spacer * 7,
+  32: $utility-spacer * 8,
+  36: $utility-spacer * 9,
+  40: $utility-spacer * 10,
+  44: $utility-spacer * 11,
+  48: $utility-spacer * 12,
+  52: $utility-spacer * 13,
+  56: $utility-spacer * 14,
+  60: $utility-spacer * 15,
+  64: $utility-spacer * 16,
+  68: $utility-spacer * 17,
+  72: $utility-spacer * 18,
+  76: $utility-spacer * 19,
+  80: $utility-spacer * 20,
+) !default;
+
+$negative-utility-spacers: negativify-map($utility-spacers);
+
+// scss-docs-start font-sizes
+$font-sizes: (
+  1: 64px,
+  2: 48px,
+  3: 32px,
+  4: 24px,
+  5: 20px,
+  6: 16px,
+  7: 14px,
+  8: 12px,
+  9: 10px
+) !default;
+// scss-docs-end font-sizes

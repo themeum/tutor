@@ -285,7 +285,7 @@ class Input {
 						$callback = $sanitize_mapping[ $key ];
 						$value    = call_user_func( $callback, wp_unslash( $value ) );
 					} else {
-						$value = sanitize_text_field( wp_unslash( $value ) );
+						$value = is_null( $value ) ? null : sanitize_text_field( wp_unslash( $value ) );
 					}
 					$array[ $key ] = $value;
 				}

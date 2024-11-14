@@ -12,6 +12,7 @@ namespace Tutor\Models;
 
 use Tutor\Cache\TutorCache;
 use Tutor\Helpers\QueryHelper;
+use TUTOR\Quiz;
 
 /**
  * Class QuizModel
@@ -460,7 +461,7 @@ class QuizModel {
 					INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
 					INNER JOIN {$wpdb->users} AS users ON quiz_attempts.user_id = users.ID
 					INNER JOIN {$wpdb->posts} AS course ON course.ID = quiz_attempts.course_id
-					INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
+					-- INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id
 					{$instructor_clause}
 			WHERE 	quiz_attempts.attempt_ended_at IS NOT NULL
 					AND (
@@ -1023,6 +1024,7 @@ class QuizModel {
 				50		
 		";
 
+		//phpcs:ignore
 		$result = $wpdb->get_results( $wpdb->prepare( $query, $attempt_id ) );
 
 		// If array and count result then loop with each result and prepare given answer.
@@ -1040,5 +1042,105 @@ class QuizModel {
 		}
 
 		return $result;
+	}
+
+	/**
+	 * Get a question record.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $question_id quiz question id.
+	 *
+	 * @return array|object|null|void
+	 */
+	public static function get_question( $question_id ) {
+		global $wpdb;
+		return $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->prefix}tutor_quiz_questions WHERE question_id = %d", $question_id ) );
+	}
+
+	/**
+	 * Get all answer's of a quiz question.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int    $question_id question id.
+	 * @param string $question_type question type.
+	 *
+	 * @return array
+	 */
+	public static function get_question_answers( $question_id, $question_type = null ) {
+		global $wpdb;
+
+		$query = "SELECT * FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d";
+
+		if ( $question_type ) {
+			$query .= ' AND belongs_question_type = %s ORDER BY answer_order ASC';
+			//phpcs:ignore
+			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id, $question_type ) );
+		} else {
+			$query .= ' ORDER BY answer_order ASC';
+			//phpcs:ignore
+			$answers = $wpdb->get_results( $wpdb->prepare( $query, $question_id ) );
+		}
+
+		foreach ( $answers as $answer ) {
+			$answer->answer_title = stripslashes( $answer->answer_title );
+			if ( $answer->image_id ) {
+				$answer->image_url = wp_get_attachment_url( $answer->image_id );
+			}
+		}
+
+		return $answers;
+	}
+
+	/**
+	 * Get next answer order SL no
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $question_id question id.
+	 * @param int $question_type question type.
+	 *
+	 * @return int
+	 */
+	public static function get_next_answer_order( $question_id, $question_type ) {
+		global $wpdb;
+		$max_id = (int) $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT MAX(answer_order) FROM {$wpdb->prefix}tutor_quiz_question_answers WHERE belongs_question_id = %d AND belongs_question_type = %s",//phpcs:ignore
+				$question_id,
+				$question_type
+			)
+		);
+
+		return $max_id + 1;
+	}
+
+	/**
+	 * Get quiz details by quiz id.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $quiz_id quiz id.
+	 *
+	 * @return object
+	 */
+	public static function get_quiz_details( $quiz_id ) {
+		$quiz              = get_post( $quiz_id );
+		$quiz->quiz_option = get_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, true );
+		$quiz->questions   = tutor_utils()->get_questions_by_quiz( $quiz_id );
+
+		if ( ! is_array( $quiz->questions ) ) {
+			$quiz->questions = array();
+		}
+
+		foreach ( $quiz->questions as $question ) {
+			$question->question_answers = self::get_question_answers( $question->question_id );
+			if ( isset( $question->question_settings ) ) {
+				$question->question_settings = maybe_unserialize( $question->question_settings );
+			}
+		}
+
+		return $quiz;
 	}
 }

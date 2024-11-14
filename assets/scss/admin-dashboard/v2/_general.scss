@@ -169,7 +169,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	margin-bottom: 15px;
+	margin-bottom: 32px;
 	h2 {
 		@extend .text-medium-h5;
 		color: var(--tutor-body-color);
@@ -186,7 +186,7 @@
 		border: 1px solid #d3d4d9;
 		box-sizing: border-box;
 		border-radius: 6px;
-		padding: 20px 26px;
+		padding: 24px;
 
 		&:not(:last-child) {
 			margin-bottom: 8px;
@@ -613,7 +613,7 @@
 	&.tutor-d-flex {
 		text-align: left;
 		.tutor-form-check:not(:last-child) {
-			margin-right: 30px;
+			margin-right: 20px;
 		}
 	}
 	&.tutor-d-flex,
@@ -769,15 +769,12 @@
 		@include getTypography(400, 15px, 160%);
 		color: var(--tutor-body-color);
 	}
-} // end of .tutor-option-field-input
 
-// Input field variations
-.tutor-option-field-input {
 	.type-check {
 		&.tutor-d-flex {
 			.tutor-form-check {
 				&:not(:last-child) {
-					margin-right: 30px;
+					margin-right: 20px;
 				}
 			}
 		}
@@ -829,6 +826,29 @@
 			.tooltip-wrap.tooltip-icon {
 				margin-left: 5px;
 			}
+		}
+	}
+
+	.tutor-type-password {
+		position: relative;
+
+		input {
+			margin: 0;
+			padding-right: 30px;
+		}
+
+		button {
+			position: absolute;
+			top: 2px;
+			right: 2px;
+			background-color: #ffffff;
+			border: none;
+			outline: none;
+			height: calc(100% - 4px);
+			padding: 8px;
+			border-radius: 4px;
+			cursor: pointer;
+			line-height: 1;
 		}
 	}
 

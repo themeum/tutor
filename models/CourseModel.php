@@ -10,6 +10,7 @@
 
 namespace Tutor\Models;
 
+use TUTOR\Course;
 use Tutor\Helpers\QueryHelper;
 
 /**
@@ -31,6 +32,7 @@ class CourseModel {
 	const STATUS_PENDING    = 'pending';
 	const STATUS_PRIVATE    = 'private';
 	const STATUS_FUTURE     = 'future';
+	const STATUS_TRASH      = 'trash';
 
 	/**
 	 * Course completion modes
@@ -58,6 +60,25 @@ class CourseModel {
 	 * @var string
 	 */
 	const BENEFITS_META_KEY = '_tutor_course_benefits';
+
+	/**
+	 * Get available status list.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_status_list() {
+		return array(
+			self::STATUS_DRAFT,
+			self::STATUS_AUTO_DRAFT,
+			self::STATUS_PUBLISH,
+			self::STATUS_PRIVATE,
+			self::STATUS_FUTURE,
+			self::STATUS_PENDING,
+			self::STATUS_TRASH,
+		);
+	}
 
 	/**
 	 * Course record count
@@ -129,6 +150,34 @@ class CourseModel {
 	}
 
 	/**
+	 * Get courses using provided args
+	 *
+	 * If user is not admin then it will return only current user's post
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $args Args.
+	 *
+	 * @return \WP_Query
+	 */
+	public static function get_courses_by_args( array $args = array() ) {
+
+		$default_args = array(
+			'post_type'      => tutor()->course_post_type,
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+		);
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			$default_args['author'] = get_current_user_id();
+		}
+
+		$args = wp_parse_args( $args, $default_args );
+
+		return new \WP_Query( $args );
+	}
+
+	/**
 	 * Get course count by instructor
 	 *
 	 * @since 1.0.0
@@ -189,19 +238,19 @@ class CourseModel {
 		return false;
 	}
 
-	 /**
-	  * Get courses by a instructor
-	  *
-	  * @since 1.0.0
-	  *
-	  * @param integer      $instructor_id instructor id.
-	  * @param array|string $post_status post status.
-	  * @param integer      $offset offset.
-	  * @param integer      $limit limit.
-	  * @param boolean      $count_only count or not.
-	  *
-	  * @return array|null|object
-	  */
+	/**
+	 * Get courses by a instructor
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param integer      $instructor_id instructor id.
+	 * @param array|string $post_status post status.
+	 * @param integer      $offset offset.
+	 * @param integer      $limit limit.
+	 * @param boolean      $count_only count or not.
+	 *
+	 * @return array|null|object
+	 */
 	public static function get_courses_by_instructor( $instructor_id = 0, $post_status = array( 'publish' ), int $offset = 0, int $limit = PHP_INT_MAX, $count_only = false ) {
 		global $wpdb;
 		$offset           = sanitize_text_field( $offset );
@@ -398,6 +447,10 @@ class CourseModel {
 			return false;
 		}
 
+		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
+			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( $post_id, 0 );
+		}
+
 		global $wpdb;
 
 		$lesson_post_type     = tutor()->lesson_post_type;
@@ -419,6 +472,10 @@ class CourseModel {
 					if ( get_post_type( $content_id ) === 'tutor_quiz' ) {
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempts', array( 'quiz_id' => $content_id ) );
 						$wpdb->delete( $wpdb->prefix . 'tutor_quiz_attempt_answers', array( 'quiz_id' => $content_id ) );
+
+						if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
+							\TutorPro\H5P\Utils::delete_h5p_quiz_statements_by_id( $content_id );
+						}
 
 						$questions_ids = $wpdb->get_col( $wpdb->prepare( "SELECT question_id FROM {$wpdb->prefix}tutor_quiz_questions WHERE quiz_id = %d ", $content_id ) );
 						if ( is_array( $questions_ids ) && count( $questions_ids ) ) {
@@ -553,25 +610,26 @@ class CourseModel {
 	 *
 	 * @since 2.2.0
 	 *
-	 * @param string $meta_key course product id meta key.
-	 * @param array  $args wp_query args.
+	 * @since 3.0.0
 	 *
-	 * @return array
+	 * Meta key removed and default meta query updated
+	 *
+	 * @param array $args wp_query args.
+	 *
+	 * @return \WP_Query
 	 */
-	public static function get_paid_courses( string $meta_key, array $args = array() ): array {
+	public static function get_paid_courses( array $args = array() ) {
 		$current_user = wp_get_current_user();
+
 		$default_args = array(
-			'post_type'      => 'courses',
-			'post_status'    => 'publish',
-			'no_found_rows'  => true,
+			'post_type'      => tutor()->course_post_type,
 			'posts_per_page' => -1,
-			'relation'       => 'AND',
+			'offset'         => 0,
+			'post_status'    => 'publish',
 			'meta_query'     => array(
-				array(
-					'key'     => sanitize_text_field( $meta_key ),
-					'value'   => 0,
-					'compare' => '!=',
-					'type'    => 'NUMERIC',
+				'paid_clause' => array(
+					'key'   => Course::COURSE_PRICE_TYPE_META,
+					'value' => array( 'paid', 'subscription' ),
 				),
 			),
 		);
@@ -581,13 +639,9 @@ class CourseModel {
 			$args['author'] = $current_user->ID;
 		}
 
-		$query = new \WP_Query( wp_parse_args( $args, $default_args ) );
+		$args = wp_parse_args( $args, $default_args );
+		return new \WP_Query( $args );
 
-		if ( $query->have_posts() ) {
-			return $query->posts;
-		}
-
-		return array();
 	}
 
 	/**
@@ -649,7 +703,6 @@ class CourseModel {
 		}
 
 		return false;
-
 	}
 
 	/**
@@ -724,5 +777,105 @@ class CourseModel {
 		}
 
 		return $permalink;
+	}
+
+	/**
+	 * Get course preview image placeholder
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return string
+	 */
+	public static function get_course_preview_image_placeholder() {
+		return tutor()->url . 'assets/images/placeholder.svg';
+	}
+
+	/**
+	 * Retrieve the courses or course bundles that a given coupon code applies to.
+	 *
+	 * This function fetches published courses or course bundles from the database
+	 * based on the specified type. For each course, it retrieves the course prices
+	 * and the course thumbnail URL. If the user has Tutor Pro, it additionally
+	 * retrieves the total number of courses in a course bundle.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string $applies_to The type of items the coupon applies to. Accepts 'specific_courses'
+	 *                           for individual courses or any other value for course bundles.
+	 *
+	 * @global wpdb $wpdb WordPress database abstraction object.
+	 *
+	 * @return array An array of course objects. Each course object contains:
+	 *               - int $id: The ID of the course.
+	 *               - string $title: The title of the course.
+	 *               - string $type: The post type of the course (e.g., 'courses', 'course-bundle').
+	 *               - float $price: The regular price of the course.
+	 *               - float $sale_price: The sale price of the course.
+	 *               - string $image: The URL of the course's thumbnail image.
+	 *               - int|null $total_courses: The total number of courses in the bundle
+	 *                                          (only if the user has Tutor Pro and the course type is 'course-bundle').
+	 */
+	public function get_coupon_applies_to_courses( string $applies_to ) {
+		global $wpdb;
+
+		$post_type = 'specific_courses' === $applies_to ? 'courses' : 'course-bundle';
+
+		$where = array(
+			'post_status' => 'publish',
+			'post_type'   => $post_type,
+		);
+
+		$courses = QueryHelper::get_all( $wpdb->posts, $where, 'ID' );
+
+		if ( tutor()->has_pro ) {
+			$bundle_model = new \TutorPro\CourseBundle\Models\BundleModel();
+		}
+
+		$final_data = array();
+
+		if ( ! empty( $courses ) ) {
+			foreach ( $courses as $course ) {
+				$data = new \stdClass();
+
+				if ( tutor()->has_pro && 'course-bundle' === $course->type ) {
+					$data->total_courses = count( $bundle_model->get_bundle_course_ids( $course->ID ) );
+				}
+
+				$author_name      = get_the_author_meta( 'display_name', $course->post_author );
+				$course_prices    = tutor_utils()->get_raw_course_price( $course->ID );
+				$data->id         = (int) $course->ID;
+				$data->title      = $course->post_title;
+				$data->price      = $course_prices->regular_price;
+				$data->sale_price = $course_prices->sale_price;
+				$data->image      = get_the_post_thumbnail_url( $course->ID );
+				$data->author     = $author_name;
+
+				$final_data[] = $data;
+			}
+		}
+
+		return ! empty( $final_data ) ? $final_data : array();
+	}
+
+	/**
+	 * Get course instructor IDs.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $course_id course id.
+	 *
+	 * @return array
+	 */
+	public static function get_course_instructor_ids( $course_id ) {
+		global $wpdb;
+		$instructor_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT user_id FROM {$wpdb->usermeta} WHERE meta_key=%s AND meta_value=%s",
+				'_tutor_instructor_course_id',
+				$course_id
+			)
+		);
+
+		return $instructor_ids;
 	}
 }

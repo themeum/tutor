@@ -41,7 +41,13 @@ class ValidationHelper {
 		foreach ( $validation_rules as $key => $validation_rule ) {
 			$rules = explode( '|', $validation_rule );
 
+			$required_rule_failed = false;
+
 			foreach ( $rules as $rule ) {
+				if ( $required_rule_failed ) {
+					break;
+				}
+
 				$nested_rules = explode( ':', $rule );
 
 				/**
@@ -59,6 +65,7 @@ class ValidationHelper {
 							if ( ! self::has_key( $key, $data ) || self::is_empty( $data[ $key ] ) ) {
 								$validation_pass             = false;
 								$validation_errors[ $key ][] = $key . __( ' is required', 'tutor' );
+								$required_rule_failed        = true;
 							}
 							break;
 						case 'numeric':
@@ -67,10 +74,41 @@ class ValidationHelper {
 								$validation_errors[ $key ][] = $key . __( ' is not numeric', 'tutor' );
 							}
 							break;
+						/* Greater than (gt) */
+						case 'gt':
+							if ( $data[ $key ] < $nested_rules[1] ) {
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s need to be greater than %2$d', 'tutor' ), $key, $nested_rules[1] );
+							}
+							break;
+						/* Less than (lt) */
+						case 'lt':
+							if ( $data[ $key ] > $nested_rules[1] ) {
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s need to be less than %2$d', 'tutor' ), $key, $nested_rules[1] );
+							}
+							break;
+						case 'email':
+							if ( ! is_email( $data[ $key ] ) ) {
+								$validation_pass = false;
+								/* translators: %s: field name */
+								$validation_errors[ $key ][] = sprintf( __( '%s is not valid email', 'tutor' ), $key );
+							}
+							break;
 						case 'min_length':
 							if ( strlen( $data[ $key ] ) < $nested_rules[1] ) {
-								$validation_pass             = false;
-								$validation_errors[ $key ][] = $key . __( ' minimum length is ', 'tutor' ) . $nested_rules[1];
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s minimum length is %2$d' ), $key, $nested_rule[1] );
+							}
+							break;
+						case 'max_length':
+							if ( strlen( $data[ $key ] ) > $nested_rules[1] ) {
+								$validation_pass = false;
+								/* translators: %1$s: field name, %2$d: value */
+								$validation_errors[ $key ][] = sprintf( __( '%1$s maximum length is %2$d' ), $key, $nested_rule[1] );
 							}
 							break;
 						case 'mimes':
@@ -100,7 +138,7 @@ class ValidationHelper {
 							}
 							break;
 						case 'date_format':
-							$format = $nested_rules[1];
+							$format = explode( ':', $rule, 2 )[1];
 							if ( ! self::is_valid_date( $data[ $key ], $format ) ) {
 								$validation_pass             = false;
 								$validation_errors[ $key ][] = $key . __( ' invalid date format', 'tutor' );
@@ -246,11 +284,8 @@ class ValidationHelper {
 	 * string is valid according to the specified format.
 	 */
 	public static function is_valid_date( $date_string, $format ): bool {
-		$date_string    = gmdate( $format, strtotime( $date_string ) );
-		$date_object    = \DateTime::createFromFormat( $format, $date_string );
-		$formatted_date = is_object( $date_object ) ? $date_object->format( $format ) : null;
-
-		return $date_object && $formatted_date === $date_string ? true : false;
+		$date_object = \DateTime::createFromFormat( $format, $date_string );
+		return $date_object && $date_object->format( $format ) === $date_string;
 	}
 
 	/**
