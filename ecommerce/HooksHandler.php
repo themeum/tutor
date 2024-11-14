@@ -71,6 +71,7 @@ class HooksHandler {
 		add_action( 'tutor_order_payment_status_changed', array( $this, 'clear_order_badge_count' ) );
 		add_action( 'tutor_before_order_bulk_action', array( $this, 'clear_order_badge_count' ) );
 		add_action( 'tutor_after_order_refund', array( $this, 'handle_order_refund' ), 10, 2 );
+		add_action( 'tutor_after_order_mark_as_paid', array( $this, 'handle_discount_add' ), 10, 2 );
 	}
 
 	/**
@@ -405,6 +406,23 @@ class HooksHandler {
 			$earnings = Earnings::get_instance();
 			$earnings->deduct_earnings( $order_data, $amount );
 		}
+	}
+
+	/**
+	 * Handle discount add
+	 *
+	 * Update earnings after discount
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $order_id Order id.
+	 * @param mixed $amount Amount that has refunded.
+	 *
+	 * @return void
+	 */
+	public function handle_order_mark_as_paid( $order_data, $discount_amount ) {
+		$earnings = Earnings::get_instance();
+		$earnings->deduct_earnings( $order_data, $discount_amount );
 	}
 }
 

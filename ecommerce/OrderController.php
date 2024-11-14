@@ -677,7 +677,7 @@ class OrderController {
 				);
 			}
 
-			do_action( 'tutor_after_add_order_discount', $request );
+			do_action( 'tutor_after_add_order_discount', $order, $discount_amount );
 
 			$this->json_response( __( 'Order discount successful added', 'tutor' ) );
 		} catch ( \Throwable $th ) {
