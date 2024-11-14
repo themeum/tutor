@@ -92,7 +92,7 @@ const ContentDripSettings = () => {
     <div css={styles.dripWrapper}>
       <h6 css={styles.dripTitle}>{__('Content Drip Type', 'tutor')}</h6>
       <p css={styles.dripSubTitle}>
-        {__('You can schedule your course content using the following Content Drip option', 'tutor')}
+        {__('You can schedule your course content using one of the following Content Drip options', 'tutor')}
       </p>
 
       <Controller
@@ -121,7 +121,6 @@ const styles = {
   dripSubTitle: css`
     ${typography.small()};
     color: ${colorTokens.text.hints};
-    max-width: 280px;
     margin-bottom: ${spacing[16]};
   `,
   radioWrapper: css`

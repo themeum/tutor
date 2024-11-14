@@ -82,13 +82,21 @@ class Announcements {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
-		$update   = self::delete_announcements( $action, $bulk_ids );
+
+		// prevent instructor to delete admin announcement.
+		$bulk_ids = array_filter(
+			explode( ',', $bulk_ids ),
+			function ( $announcement_id ) {
+				return tutor_utils()->can_user_manage( 'announcement', $announcement_id );
+			}
+		);
+		$update   = self::delete_announcements( $action, implode( ',', $bulk_ids ) );
 		return true === $update ? wp_send_json_success() : wp_send_json_error();
 	}
 

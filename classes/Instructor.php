@@ -79,7 +79,7 @@ class Instructor {
 	 */
 	public function register_instructor() {
 		// Here tutor_action checking required before nonce checking.
-		if ( 'tutor_register_instructor' !== Input::post( 'tutor_action' ) ) {
+		if ( 'tutor_register_instructor' !== Input::post( 'tutor_action' ) || ! get_option( 'users_can_register', false ) ) {
 			return;
 		}
 

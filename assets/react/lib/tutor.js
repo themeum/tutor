@@ -482,13 +482,18 @@ window.addEventListener('tutor_modal_shown', (e) => {
  * Create new draft course
  * @since 3.0.0
  */
-const createNewCourse = document.querySelector('a.tutor-create-new-course');
+const createNewCourse = document.querySelector('a.tutor-create-new-course,li.tutor-create-new-course a');
 if (createNewCourse) {
 	createNewCourse.onclick = async (e) => {
 		e.preventDefault();
 		const { __ } = wp.i18n;
-		
+
 		try {
+			// For wp-admin bar quick create.
+			if (e.target.classList.contains('ab-item')) {
+				e.target.innerHTML = 'Creating...'
+			}
+
 			createNewCourse.classList.add('is-loading');
 			createNewCourse.style.pointerEvents = 'none';
 

@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -18,8 +18,10 @@ import FormFieldWrapper from './FormFieldWrapper';
 
 import { tutorConfig } from '@Config/config';
 import { TutorRoles } from '@Config/constants';
+import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
 import profileImage from '@Images/profile-photo.png';
 import type { User } from '@Services/users';
+
 export interface UserOption extends User {
   isRemoveAble?: boolean;
 }
@@ -98,6 +100,36 @@ const FormSelectUser = ({
     dependencies: [filteredOption.length],
   });
 
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: filteredOption.map((option) => ({
+      label: option.name,
+      value: option,
+    })),
+    isOpen,
+    onSelect: (selectedUser) => {
+      handleUserSelection(selectedUser.value);
+    },
+    onClose: () => {
+      setIsOpen(false);
+      setSearchText('');
+    },
+    selectedValue: Array.isArray(inputValue) ? null : inputValue,
+  });
+
+  const handleUserSelection = (instructor: UserOption) => {
+    const selectedValue = isInstructorMode
+      ? {
+          ...instructor,
+          isRemoveAble: true,
+        }
+      : instructor;
+    const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
+    field.onChange(newValue);
+    setSearchText('');
+    onChange(newValue);
+    setIsOpen(false);
+  };
+
   const handleDeleteSelection = (id: number) => {
     if (Array.isArray(inputValue)) {
       const updatedValue = inputValue.filter((item) => item.id !== id);
@@ -106,6 +138,17 @@ const FormSelectUser = ({
       onChange(updatedValue);
     }
   };
+
+  const activeItemRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [isOpen, activeIndex]);
 
   return (
     <FormFieldWrapper
@@ -276,8 +319,14 @@ const FormSelectUser = ({
                       </li>
                     }
                   >
-                    {filteredOption.map((instructor) => (
-                      <li key={String(instructor.id)} css={styles.optionItem}>
+                    {filteredOption.map((instructor, index) => (
+                      <li
+                        key={String(instructor.id)}
+                        css={styles.optionItem}
+                        data-active={activeIndex === index}
+                        onMouseEnter={() => setActiveIndex(index)}
+                        ref={activeIndex === index ? activeItemRef : null}
+                      >
                         <button
                           type="button"
                           css={styles.label}
@@ -294,6 +343,7 @@ const FormSelectUser = ({
                             onChange(newValue);
                             setIsOpen(false);
                           }}
+                          aria-selected={activeIndex === index}
                         >
                           <img
                             src={instructor.avatar_url ? instructor.avatar_url : profileImage}
@@ -386,11 +436,13 @@ const styles = {
       outline-offset: 1px;
     }
 
-    ${isDefaultItem &&
-    css`
-      border-color: ${colorTokens.stroke.default};
-      cursor: pointer;
-    `}
+    ${
+      isDefaultItem &&
+      css`
+        border-color: ${colorTokens.stroke.default};
+        cursor: pointer;
+      `
+    }
 
     &:hover {
       border-color: ${colorTokens.stroke.divider};
@@ -460,6 +512,10 @@ const styles = {
     transition: background-color 0.3s ease-in-out;
     cursor: pointer;
 
+    &[data-active='true'] {
+      background-color: ${colorTokens.background.hover};
+    }
+
     &:hover {
       background-color: ${colorTokens.background.hover};
     }
@@ -499,10 +555,12 @@ const styles = {
     color: ${colorTokens.icon.default};
     transition: transform 0.3s ease-in-out;
 
-    ${isOpen &&
-    css`
-      transform: rotate(180deg);
-    `}
+    ${
+      isOpen &&
+      css`
+        transform: rotate(180deg);
+      `
+    }
   `,
   noUserFound: css`
     padding: ${spacing[8]};

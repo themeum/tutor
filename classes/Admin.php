@@ -662,7 +662,12 @@ class Admin {
 			return $admin_bar;
 		}
 
-		$admin_bar->remove_node( 'new-courses' );
+		if ( $admin_bar->get_node( 'new-courses' ) ) {
+			$args                = $admin_bar->get_node( 'new-courses' );
+			$args->href          = '#';
+			$args->meta['class'] = 'tutor-create-new-course';
+			$admin_bar->add_node( $args );
+		}
 
 		if (
 				( is_admin() && $post && $course_id && $post->post_type === $course_post_type ) ||

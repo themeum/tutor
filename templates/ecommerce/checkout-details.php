@@ -25,7 +25,6 @@ $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
 $course_list         = $courses['results'];
 
-
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );
 $plan_info = apply_filters( 'tutor_checkout_plan_info', new stdClass(), $plan_id );
 
@@ -57,20 +56,32 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					$enrollment_fee  = floatval( $plan_info->enrollment_fee );
 					$show_coupon_box = $plan_info->in_sale_price ? false : true;
 
+					$plan_course_id        = apply_filters( 'tutor_subscription_course_by_plan', $plan_id );
+					$plan_course           = get_post( $plan_course_id );
+					$plan_course_thumbnail = get_tutor_course_thumbnail_src( 'post-thumbnail', $plan_course_id );
+
 					/**
 					 * Plan item details.
-					 * Use can purchase a plan at a time.
+					 * User can purchase only one plan at a time.
 					 */
 					$item = $checkout_data->items[0];
 
 					array_push( $object_ids, $plan_info->id );
 					?>
 				<div class="tutor-checkout-course-item">
+					<div class="tutor-checkout-course-plan-badge">
+						<?php echo esc_html( $item->item_name ); ?>
+					</div>
 					<div class="tutor-checkout-course-content">
-						<div>
-							<h6 class="tutor-checkout-course-title">
-								<?php echo esc_html( $item->item_name ); ?>
-							</h6>
+						<div class="tutor-d-flex tutor-flex-column tutor-gap-1">
+							<div class="tutor-checkout-course-thumb-title">
+								<img src="<?php echo esc_url( $plan_course_thumbnail ); ?>" alt="<?php echo esc_attr( $plan_course->post_title ); ?>" />
+								<h6 class="tutor-checkout-course-title">
+									<a href="<?php echo esc_url( get_the_permalink( $plan_course ) ); ?>">
+										<?php echo esc_html( $plan_course->post_title ); ?>
+									</a>
+								</h6>
+							</div>
 							<?php if ( $item->is_coupon_applied ) : ?>
 							<div class="tutor-checkout-coupon-badge">
 								<i class="tutor-icon-tag" area-hidden="true"></i>
@@ -88,11 +99,30 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 								<?php tutor_print_formatted_price( $item->regular_price ); ?>
 							</div>
 							<?php endif; ?>
+							<div class="tutor-fs-7 tutor-color-hints">
+								<?php
+								echo esc_html(
+									$plan_info->recurring_value > 1
+									? sprintf(
+										/* translators: %s: value, %s: name */
+										__( '/%1$s %2$s', 'tutor-pro' ),
+										$plan_info->recurring_value,
+										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
+									)
+									:
+									sprintf(
+										/* translators: %s: recurring interval */
+										__( '/%1$s', 'tutor-pro' ),
+										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
+									)
+								);
+								?>
+							</div>
 						</div>
 					</div>
 					<?php if ( $enrollment_fee > 0 ) : ?>
 						<div class="tutor-checkout-enrollment-fee">
-							<div class="tutor-checkout-course-title">
+							<div class="tutor-fs-6 tutor-color-black">
 								<?php echo esc_html_e( 'Enrollment Fee', 'tutor' ); ?>
 							</div>
 							<div class="tutor-text-right">
@@ -115,7 +145,8 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 						?>
 						<?php
 						foreach ( $checkout_data->items as $item ) :
-							$course = get_post( $item->item_id );
+							$course           = get_post( $item->item_id );
+							$course_thumbnail = get_tutor_course_thumbnail_src( 'post-thumbnail', $course->ID );
 							array_push( $object_ids, $item->item_id );
 							?>
 							<div class="tutor-checkout-course-item" data-course-id="<?php echo esc_attr( $item->item_id ); ?>">
@@ -130,12 +161,15 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 								</div>
 								<?php endif; ?>
 								<div class="tutor-checkout-course-content">
-									<div>
-										<h6 class="tutor-checkout-course-title">
-											<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
-												<?php echo esc_html( $course->post_title ); ?>
-											</a>
-										</h6>
+									<div class="tutor-d-flex tutor-flex-column tutor-gap-1">
+										<div class="tutor-checkout-course-thumb-title">
+											<img src="<?php echo esc_url( $course_thumbnail ); ?>" alt="<?php echo esc_attr( $course->post_title ); ?>" />
+											<h6 class="tutor-checkout-course-title">
+												<a href="<?php echo esc_url( get_the_permalink( $course ) ); ?>">
+													<?php echo esc_html( $course->post_title ); ?>
+												</a>
+											</h6>
+										</div>
 										<div class="tutor-checkout-coupon-badge <?php echo esc_attr( $item->is_coupon_applied ? '' : 'tutor-d-none' ); ?>">
 											<i class="tutor-icon-tag" area-hidden="true"></i>
 											<span><?php echo esc_html( $item->is_coupon_applied ? $checkout_data->coupon_title : '' ); ?></span>
@@ -219,10 +253,10 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					<?php endif; ?>
 		</div>
 
-		<div class="tutor-checkout-detail-item">
+		<div class="tutor-pt-12 tutor-pb-20">
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
-				<div class="tutor-fw-bold tutor-checkout-grand-total">
+				<div class="tutor-fs-5 tutor-fw-bold tutor-checkout-grand-total">
 					<?php tutor_print_formatted_price( $checkout_data->total_price ); ?>
 				</div>
 			</div>
