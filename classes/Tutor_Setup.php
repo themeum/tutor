@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Ecommerce\Settings;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -66,14 +68,13 @@ class Tutor_Setup {
 	 */
 	public function tutor_setup_action() {
 		tutor_utils()->checking_nonce();
-
-		$options = (array) maybe_unserialize( get_option( 'tutor_option' ) );
-		$action  = Input::post( 'action', '' );
-		if ( 'setup_action' !== $action || ! current_user_can( 'manage_options' ) ) {
+		if ( 'setup_action' !== Input::post( 'action', '' ) || ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( tutor_utils()->error_message() );
 			return;
 		}
 
 		// General Settings.
+		$options     = (array) maybe_unserialize( get_option( 'tutor_option' ) );
 		$change_data = apply_filters( 'tutor_wizard_attributes', array() );
 		foreach ( $change_data as $key => $value ) {
 			$post_key = Input::post( $key, '' );
@@ -91,30 +92,22 @@ class Tutor_Setup {
 			}
 		}
 
+		// Payment Settings.
+		$withdrawal_payments_methods         = array( 'bank_transfer_withdraw', 'echeck_withdraw', 'paypal_withdraw' );
+		$options['tutor_withdrawal_methods'] = array();
+
+		foreach ( $withdrawal_payments_methods as $key ) {
+			if ( 'on' === Input::post( $key ) ) {
+				$options['tutor_withdrawal_methods'][ $key ] = $key;
+			}
+		}
+
 		update_option( 'tutor_default_option', $options_preset );
 		update_option( 'tutor_option', $options );
 
-		// Payment Settings.
-		$payments      = (array) maybe_unserialize( get_option( 'tutor_withdraw_options' ) );
-		$payments_data = array( 'bank_transfer_withdraw', 'echeck_withdraw', 'paypal_withdraw' );
-		foreach ( $payments_data as $key ) {
-			$post_key = Input::post( $key, '' );
-			if ( Input::has( $key ) ) {
-				$payments[ $key ]['enabled'] = 1;
-			} else {
-				if ( 'bank_transfer_withdraw' === $key ) {
-					unset( $payments[ $key ]['enabled'] );
-				} else {
-					unset( $payments[ $key ] );
-				}
-			}
-		}
-		update_option( 'tutor_withdraw_options', $payments );
-
 		do_action( 'tutor_setup_finished' );
 
-		// Add wizard flag.
-		wp_send_json_success( array( 'status' => 'success' ) );
+		wp_send_json_success( __( 'Success', 'tutor' ) );
 	}
 
 	/**
@@ -163,15 +156,12 @@ class Tutor_Setup {
 		$full_width_fields = array( 'rows', 'slider', 'radio', 'range', 'payments', 'dropdown' );
 
 		foreach ( $field_arr as $key_parent => $field_parent ) {
-			$html             .= '<li class="' . ( 1 == $i ? 'active' : '' ) . '">';
-				$html         .= '<div class="tutor-setup-content-heading heading">';
-					$html     .= '<div class="setup-section-title tutor-fs-6 tutor-fw-medium tutor-color-black">' . $field_parent['lable'] . '</div>';
-					$html     .= '<div class="step-info">';
-						$html .= '<span class="tutor-fs-7 tutor-color-muted">' . __( 'Step', 'tutor' ) . ':</span> <strong class="tutor-color-black">' . $i . '/' . count( $field_arr ) . ' </strong>';
-					$html     .= '</div>';
-					$html     .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-secondary tutor-d-flex tutor-align-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
-				$html         .= '</div>';
-				$html         .= '<div class="tutor-setup-content-heading body">';
+			$html         .= '<li class="' . ( 1 == $i ? 'active' : '' ) . '">';
+				$html     .= '<div class="tutor-setup-content-heading heading">';
+					$html .= '<div class="setup-section-title tutor-fs-6 tutor-fw-medium tutor-color-black">' . $field_parent['lable'] . '</div>';
+					$html .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-secondary tutor-d-flex tutor-align-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
+				$html     .= '</div>';
+				$html     .= '<div class="tutor-setup-content-heading body">';
 
 			foreach ( $field_parent['attr'] as $key => $field ) {
 				if ( ! isset( $field['lable'] ) ) {
@@ -280,19 +270,17 @@ class Tutor_Setup {
 						$html             .= '<div class="grade-calculation"><div class="select-box"><div class="options-container">';
 							$selected_data = '';
 						if ( isset( $field['options'] ) ) {
-							foreach ( $field['options'] as $val ) {
+							foreach ( $field['options'] as $value => $label ) {
 								$html .= '<div class="option">';
-								$html .= '<input type="radio" class="radio" id="' . $val['value'] . '" name="' . $key . '" value="' . $val['value'] . '" ' . ( isset( $options[ $key ] ) && $options[ $key ] == $val['value'] ? 'checked' : '' ) . ' />';
-								$html .= '<label for="' . $val['value'] . '">';
-								$html .= '<h3>' . $val['title'] . '</h3>';
-								$html .= '<h5>' . $val['desc'] . '</h5>';
+								$html .= '<input type="radio" class="radio" id="' . $value . '" name="' . $key . '" value="' . $value . '" ' . ( isset( $options[ $key ] ) && $options[ $key ] === $value ? 'checked' : '' ) . ' />';
+								$html .= '<label for="' . $value . '">';
+								$html .= '<h3>' . $label . '</h3>';
 								$html .= '</label>';
 								$html .= '</div>';
 
-								if ( isset( $options[ $key ] ) && $options[ $key ] == $val['value'] ) {
+								if ( isset( $options[ $key ] ) && $options[ $key ] === $value ) {
 											$selected_data .= '<div class="selected">';
-											$selected_data .= '<h3>' . $val['title'] . '</h3>';
-											$selected_data .= '<h5>' . $val['desc'] . '</h5>';
+											$selected_data .= '<h3>' . $label . '</h3>';
 											$selected_data .= '</div>';
 								}
 							}
@@ -310,7 +298,7 @@ class Tutor_Setup {
 								$html .= '<div class="payment-setting">';
 								$html .= '<label for="' . $key . '" class="label">';
 								$html .= '<div>';
-								$html .= '<input type="checkbox" name="' . $key . '" id="' . $key . '" class="checkbox payment" ' . ( isset( $payments[ $key ]['enabled'] ) && $payments[ $key ]['enabled'] ? 'checked' : '' ) . ' />';
+								$html .= '<input type="checkbox" name="' . $key . '" id="' . $key . '" class="checkbox payment" ' . ( isset( $value['enabled'] ) && $value['enabled'] ? 'checked' : '' ) . ' />';
 								$html .= '<span class="check-icon round"></span>';
 								$html .= '</div>';
 								$html .= '<div>';
@@ -427,8 +415,10 @@ class Tutor_Setup {
 	 * @return array
 	 */
 	public function tutor_setup_attributes() {
-		$general_fields = array(
+		$currency_options   = Settings::get_currency_options();
+		$currency_positions = Settings::get_currency_position_options();
 
+		$general_fields = array(
 			'general'    => array(
 				'lable' => __( 'General Settings', 'tutor' ),
 				'attr'  => array(
@@ -452,6 +442,13 @@ class Tutor_Setup {
 						),
 						'lable' => __( 'Student Profile', 'tutor' ),
 						'desc'  => __( 'Allow users to have a student profile to showcase awards and completed courses.', 'tutor' ),
+					),
+					'course_permalink_base'         => array(
+						'type'  => 'text',
+						'max'   => 50,
+						'lable' => __( 'Course permalink', 'tutor' ),
+						/* translators: %s: sample permalink */
+						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/' . tutor()->course_post_type . '/sample-course/<strong>' . ( tutor_utils()->get_option( 'course_permalink_base', 'courses' ) ) . '</strong>/sample-lesson/' ),//phpcs:ignore
 					),
 					'lesson_permalink_base'         => array(
 						'type'  => 'text',
@@ -499,15 +496,9 @@ class Tutor_Setup {
 					),
 					'instructor_can_publish_course' => array(
 						'type'  => 'switch',
-						'lable' => __( 'Earning', 'tutor' ),
+						'lable' => __( 'Revenue Sharing', 'tutor' ),
 						'desc'  => __( 'Enable earning for instructors?', 'tutor' ),
 					),
-				),
-			),
-
-			'payment'    => array(
-				'lable' => __( 'Payment Settings ', 'tutor' ),
-				'attr'  => array(
 					'commission_split'              => array(
 						'type'    => 'range',
 						'lable'   => __( 'Commission Rate', 'tutor' ),
@@ -523,6 +514,24 @@ class Tutor_Setup {
 						'type'  => 'payments',
 						'lable' => __( 'Payment Withdrawal Method', 'tutor' ),
 						'desc'  => __( 'Choose your preferred withdrawal method from the options.', 'tutor' ),
+					),
+				),
+			),
+
+			'payment'    => array(
+				'lable' => __( 'Payment Settings ', 'tutor' ),
+				'attr'  => array(
+					'currency_code'     => array(
+						'type'    => 'dropdown',
+						'options' => $currency_options,
+						'lable'   => __( 'Currency Symbol', 'tutor' ),
+						'tooltip' => __( 'Choose the currency for transactions', 'tutor' ),
+					),
+					'currency_position' => array(
+						'type'    => 'dropdown',
+						'options' => $currency_positions,
+						'lable'   => __( 'Currency Position', 'tutor' ),
+						'tooltip' => __( 'Set the position of the currency symbol', 'tutor' ),
 					),
 
 				),
