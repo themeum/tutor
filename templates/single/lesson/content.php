@@ -47,7 +47,7 @@ if ( $best_watch_time > 0 ) {
 	$json_data['best_watch_time'] = $best_watch_time;
 }
 
-$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open();
+$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
 
 ?>
 
