@@ -343,6 +343,7 @@ const FormSelectUser = ({
                             onChange(newValue);
                             setIsOpen(false);
                           }}
+                          aria-selected={activeIndex === index}
                         >
                           <img
                             src={instructor.avatar_url ? instructor.avatar_url : profileImage}

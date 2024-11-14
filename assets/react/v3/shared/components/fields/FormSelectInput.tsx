@@ -300,8 +300,6 @@ const FormSelectInput = <T,>({
                           isActive: index === activeIndex,
                           isDisabled: !!option.disabled,
                         })}
-                        onMouseOver={() => setActiveIndex(index)}
-                        onFocus={() => setActiveIndex(index)}
                       >
                         <button
                           type="button"
@@ -313,6 +311,9 @@ const FormSelectInput = <T,>({
                           }}
                           disabled={option.disabled}
                           title={option.label}
+                          onMouseOver={() => setActiveIndex(index)}
+                          onFocus={() => setActiveIndex(index)}
+                          aria-selected={activeIndex === index}
                         >
                           <Show when={option.icon}>
                             <SVGIcon name={option.icon as IconCollection} width={32} height={32} />

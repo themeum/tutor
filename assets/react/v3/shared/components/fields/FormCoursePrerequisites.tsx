@@ -11,16 +11,17 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
-import { useDebounce } from '@Hooks/useDebounce';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
 
+import { useDebounce } from '@Hooks/useDebounce';
+import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
+
 import notFound2x from '@Images/not-found-2x.webp';
 import notFound from '@Images/not-found.webp';
 
-import { useSelectKeyboardNavigation } from '../../hooks/useSelectKeyboardNavigation';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormCoursePrerequisitesProps = {
@@ -252,7 +253,7 @@ const FormCoursePrerequisites = ({
                             }}
                             onMouseOver={() => setActiveIndex(index)}
                             onFocus={() => setActiveIndex(index)}
-                            aria-selected={activeIndex === course.id}
+                            aria-selected={activeIndex === index}
                           >
                             <div css={styles.imageWrapper}>
                               <img src={course.featured_image} alt={course.post_title} css={styles.image} />
