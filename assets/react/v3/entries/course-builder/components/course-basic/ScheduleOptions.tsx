@@ -84,7 +84,7 @@ const ScheduleOptions = () => {
         render={(controllerProps) => (
           <FormSwitch
             {...controllerProps}
-            label={__('Schedule Options', 'tutor')}
+            label={__('Schedule', 'tutor')}
             onChange={(value) => {
               if (!value && scheduleDate && scheduleTime) {
                 form.setValue('showScheduleForm', false, {

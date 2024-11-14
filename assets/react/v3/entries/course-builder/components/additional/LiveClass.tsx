@@ -21,6 +21,8 @@ import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
+import { noop } from '@Utils/util';
+
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
@@ -188,8 +190,9 @@ const LiveClass = () => {
       <Popover
         triggerRef={zoomButtonRef}
         isOpen={showMeetingForm === 'zoom'}
-        closePopover={() => setShowMeetingForm(null)}
+        closePopover={noop}
         animationType={AnimationType.slideUp}
+        closeOnEscape={false}
       >
         <ZoomMeetingForm
           data={null}
@@ -202,8 +205,9 @@ const LiveClass = () => {
       <Popover
         triggerRef={googleMeetButtonRef}
         isOpen={showMeetingForm === 'google_meet'}
-        closePopover={() => setShowMeetingForm(null)}
+        closePopover={noop}
         animationType={AnimationType.slideUp}
+        closeOnEscape={false}
       >
         <GoogleMeetForm
           data={null}

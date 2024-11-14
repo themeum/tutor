@@ -101,27 +101,33 @@ const FormVideoInput = ({
 }: FormVideoInputProps) => {
   if (!videoSources.length) {
     return (
-      <div
-        css={styles.emptyMedia({
-          hasVideoSource: false,
-        })}
-      >
-        <p css={styles.warningText}>
-          <SVGIcon name="info" height={20} width={20} />
-          {__('No video source selected', 'tutor')}
-        </p>
+      <div css={styles.emptyMediaWrapper}>
+        <Show when={label}>
+          <label>{label}</label>
+        </Show>
 
-        <Button
-          buttonCss={styles.selectFromSettingsButton}
-          variant="secondary"
-          size="small"
-          icon={<SVGIcon name="linkExternal" height={24} width={24} />}
-          onClick={() => {
-            window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
-          }}
+        <div
+          css={styles.emptyMedia({
+            hasVideoSource: false,
+          })}
         >
-          {__('Select from settings', 'tutor')}
-        </Button>
+          <p css={styles.warningText}>
+            <SVGIcon name="info" height={20} width={20} />
+            {__('No video source selected', 'tutor')}
+          </p>
+
+          <Button
+            buttonCss={styles.selectFromSettingsButton}
+            variant="secondary"
+            size="small"
+            icon={<SVGIcon name="linkExternal" height={24} width={24} />}
+            onClick={() => {
+              window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
+            }}
+          >
+            {__('Select from settings', 'tutor')}
+          </Button>
+        </div>
       </div>
     );
   }
@@ -531,6 +537,15 @@ const FormVideoInput = ({
 export default FormVideoInput;
 
 const styles = {
+  emptyMediaWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+    
+    label {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+  `,
   emptyMedia: ({ hasVideoSource = false }: { hasVideoSource: boolean }) => css`
     width: 100%;
     height: 164px;
