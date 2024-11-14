@@ -100,6 +100,36 @@ const FormSelectUser = ({
     dependencies: [filteredOption.length],
   });
 
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: filteredOption.map((option) => ({
+      label: option.name,
+      value: option,
+    })),
+    isOpen,
+    onSelect: (selectedUser) => {
+      handleUserSelection(selectedUser.value);
+    },
+    onClose: () => {
+      setIsOpen(false);
+      setSearchText('');
+    },
+    selectedValue: Array.isArray(inputValue) ? null : inputValue,
+  });
+
+  const handleUserSelection = (instructor: UserOption) => {
+    const selectedValue = isInstructorMode
+      ? {
+          ...instructor,
+          isRemoveAble: true,
+        }
+      : instructor;
+    const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
+    field.onChange(newValue);
+    setSearchText('');
+    onChange(newValue);
+    setIsOpen(false);
+  };
+
   const handleDeleteSelection = (id: number) => {
     if (Array.isArray(inputValue)) {
       const updatedValue = inputValue.filter((item) => item.id !== id);
@@ -108,33 +138,6 @@ const FormSelectUser = ({
       onChange(updatedValue);
     }
   };
-
-  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
-    options: filteredOption.map((option) => ({
-      label: option.name,
-      value: option,
-      disabled: false,
-    })),
-    isOpen,
-    onSelect: (option) => {
-      const selectedValue = isInstructorMode
-        ? {
-            ...option.value,
-            isRemoveAble: true,
-          }
-        : option.value;
-      const newValue = Array.isArray(inputValue) ? [...inputValue, selectedValue] : selectedValue;
-      field.onChange(newValue);
-      setSearchText('');
-      onChange(newValue);
-      setIsOpen(false);
-    },
-    onClose: () => {
-      setIsOpen(false);
-      setSearchText('');
-    },
-    selectedValue: Array.isArray(inputValue) ? null : inputValue,
-  });
 
   const activeItemRef = useRef<HTMLLIElement>(null);
 

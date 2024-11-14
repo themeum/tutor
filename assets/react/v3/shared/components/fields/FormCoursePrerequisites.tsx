@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -20,6 +20,7 @@ import { noop } from '@Utils/util';
 import notFound2x from '@Images/not-found-2x.webp';
 import notFound from '@Images/not-found.webp';
 
+import { useSelectKeyboardNavigation } from '../../hooks/useSelectKeyboardNavigation';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormCoursePrerequisitesProps = {
@@ -54,8 +55,9 @@ const FormCoursePrerequisites = ({
   const inputValue = field.value ?? [];
   const selectedIds = inputValue.map((course) => String(course.id));
 
-  const [isOpen, setIsOpen] = useState(false);
+  const activeItemRef = useRef<HTMLLIElement | null>(null);
 
+  const [isOpen, setIsOpen] = useState(false);
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText);
 
@@ -79,6 +81,26 @@ const FormCoursePrerequisites = ({
     dependencies: [filteredOption.length],
   });
 
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: filteredOption.map((option) => ({
+      label: option.post_title,
+      value: option,
+    })),
+    isOpen,
+    selectedValue: null,
+    onSelect: (selectedOption) => {
+      field.onChange([...inputValue, selectedOption.value]);
+      onChange([...inputValue, selectedOption.value]);
+      setIsOpen(false);
+      setSearchText('');
+    },
+    onClose: () => {
+      setIsOpen(false);
+      setSearchText('');
+      setSearchText('');
+    },
+  });
+
   const handleDeleteSelection = (id: number) => {
     if (Array.isArray(inputValue)) {
       const updatedValue = inputValue.filter((item) => item.id !== id);
@@ -87,6 +109,15 @@ const FormCoursePrerequisites = ({
       onChange(updatedValue);
     }
   };
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [isOpen, activeIndex]);
 
   return (
     <FormFieldWrapper
@@ -110,6 +141,11 @@ const FormCoursePrerequisites = ({
                 <input
                   {...restInputProps}
                   onClick={() => setIsOpen((previousState) => !previousState)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      setIsOpen(true);
+                    }
+                  }}
                   className="tutor-input-field"
                   css={[inputCss, styles.input]}
                   autoComplete="off"
@@ -200,12 +236,13 @@ const FormCoursePrerequisites = ({
                     }
                   >
                     <For each={filteredOption}>
-                      {(course) => (
-                        <li key={course.id}>
+                      {(course, index) => (
+                        <li key={course.id} ref={activeIndex === index ? activeItemRef : null}>
                           <button
                             type="button"
                             css={styles.courseCard({
                               onPopover: true,
+                              isActive: activeIndex === index,
                             })}
                             onClick={() => {
                               field.onChange([...inputValue, course]);
@@ -213,6 +250,9 @@ const FormCoursePrerequisites = ({
                               setIsOpen(false);
                               setSearchText('');
                             }}
+                            onMouseOver={() => setActiveIndex(index)}
+                            onFocus={() => setActiveIndex(index)}
+                            aria-selected={activeIndex === course.id}
                           >
                             <div css={styles.imageWrapper}>
                               <img src={course.featured_image} alt={course.post_title} css={styles.image} />
@@ -294,8 +334,10 @@ const styles = {
   `,
   courseCard: ({
     onPopover = false,
+    isActive = false,
   }: {
     onPopover: boolean;
+    isActive?: boolean;
   }) => css`
     ${styleUtils.resetButton};
     width: 100%;
@@ -311,6 +353,14 @@ const styles = {
     background-color: ${colorTokens.background.white};
     [data-visually-hidden] {
       opacity: 0;
+    }
+
+    ${
+      isActive &&
+      css`
+        background-color: ${colorTokens.background.hover};
+        border-color: ${colorTokens.stroke.default};
+      `
     }
 
     &:hover {
