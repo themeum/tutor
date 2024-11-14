@@ -1231,9 +1231,16 @@ final class Tutor {
 			'earning_admin_commission'          => '20',
 			'earning_instructor_commission'     => '80',
 			'color_preset_type'                 => 'default',
+
+			// Default options for tutor ecommerce.
 			'monetize_by'                       => Ecommerce::MONETIZE_BY,
-			'currency_code'                     => Ecommerce::DEFAULT_CURRENCY_CODE,
+			'currency_code'                     => 'USD',
+			'currency_position'                 => 'left',
+			'thousand_separator'                => ',',
+			'decimal_separator'                 => '.',
+			'number_of_decimals'                => '2',
 		);
+
 		return $options;
 	}
 
