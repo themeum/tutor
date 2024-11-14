@@ -189,6 +189,23 @@ class Earnings extends Singleton {
 	}
 
 	/**
+	 * Get order earnings
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int $order_id Order id.
+	 *
+	 * @return mixed Array of objects on success
+	 */
+	public function get_order_earnings( int $order_id ) {
+		return QueryHelper::get_all(
+			$this->earning_table,
+			array( 'order_id' => $order_id ),
+			'id'
+		);
+	}
+
+	/**
 	 * Store earnings
 	 *
 	 * @since 3.0.0

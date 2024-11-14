@@ -486,8 +486,6 @@ class OrderController {
 			'meta_value' => wp_json_encode( $meta_value ),
 		);
 
-		do_action( 'tutor_before_order_refund', $params );
-
 		// Validate request.
 		$validation = $this->validate( $params );
 		if ( ! $validation->success ) {
@@ -531,6 +529,8 @@ class OrderController {
 			$this->model->update_order( $order_id, $update_data );
 
 			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status );
+
+			do_action( 'tutor_after_order_refund', $order_data );
 
 			$this->json_response( __( 'Order refund successful', 'tutor' ) );
 		} else {
