@@ -439,9 +439,9 @@ const styles = {
     ${
       isDefaultItem &&
       css`
-      border-color: ${colorTokens.stroke.default};
-      cursor: pointer;
-    `
+        border-color: ${colorTokens.stroke.default};
+        cursor: pointer;
+      `
     }
 
     &:hover {
@@ -558,8 +558,8 @@ const styles = {
     ${
       isOpen &&
       css`
-      transform: rotate(180deg);
-    `
+        transform: rotate(180deg);
+      `
     }
   `,
   noUserFound: css`
