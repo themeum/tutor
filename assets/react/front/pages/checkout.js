@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle coupon remove button click
         window.addEventListener('click', (e) => {
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
+                document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
                 updateCheckoutData('');
             }
@@ -164,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
          */
         const dropdown_billing_country = document.querySelector('[name=billing_country]');
         const dropdown_billing_state = document.querySelector('[name=billing_state]');
-        const input_coupon_code = document.querySelector('[name=coupon_code]');
         const spinner = '<span class="tutor-btn is-loading tutor-checkout-spinner"></span>';
 
         async function saveBilling(formData) {
@@ -187,6 +187,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         dropdown_billing_country?.addEventListener('change', async (e) => {
+            const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = e.target.value;
             const coupon_code = input_coupon_code.value;
 
@@ -204,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         dropdown_billing_state?.addEventListener('change', async (e) => {
+            const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = dropdown_billing_country.value;
             const state = e.target.value;
             const coupon_code = input_coupon_code.value;
