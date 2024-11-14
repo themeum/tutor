@@ -152,8 +152,8 @@ class Tutor_Setup {
 		$payments  = (array) maybe_unserialize( get_option( 'tutor_withdraw_options' ) );
 		$field_arr = $this->tutor_setup_attributes();
 
-		$down_desc_fields  = array( 'rows', 'slider', 'text', 'radio', 'dropdown', 'range', 'payments' );
-		$full_width_fields = array( 'rows', 'slider', 'radio', 'range', 'payments', 'dropdown' );
+		$down_desc_fields  = array( 'rows', 'slider', 'text', 'radio', 'dropdown', 'select', 'range', 'payments' );
+		$full_width_fields = array( 'rows', 'slider', 'radio', 'range', 'payments', 'dropdown', 'select' );
 
 		foreach ( $field_arr as $key_parent => $field_parent ) {
 			$html         .= '<li class="' . ( 1 == $i ? 'active' : '' ) . '">';
@@ -289,6 +289,21 @@ class Tutor_Setup {
 							$html .= '</div></div>';
 						break;
 
+					case 'select':
+						$html .= '<select name="' . $key . '" class="tutor-form-select"';
+						if ( isset( $field['searchable'] ) ) {
+							$html .= ' data-searchable>';
+						} else {
+							$html .= '>';
+						}
+						if ( isset( $field['options'] ) ) {
+							foreach ( $field['options'] as $value => $label ) {
+								$html .= '<option value="' . $value . '"' . ( isset( $options[ $key ] ) && $options[ $key ] === $value ? 'selected' : '' ) . '>' . $label . '</option>';
+							}
+						}
+						$html .= '</select>';
+						break;
+
 					case 'payments':
 						$html                          .= '<div class="checkbox-wrapper column-3">';
 							$available_withdraw_methods = get_tutor_all_withdrawal_methods();
@@ -394,7 +409,7 @@ class Tutor_Setup {
 
 			}
 				$html .= '</div>';
-			if ( 'dropdown' !== $field['type'] ) {
+			if ( 'select' !== $field['type'] ) {
 				$html .= $this->tutor_setup_wizard_action();
 			} else {
 				$html .= $this->tutor_setup_wizard_action_final();
@@ -462,17 +477,17 @@ class Tutor_Setup {
 			'course'     => array(
 				'lable' => __( 'Course', 'tutor' ),
 				'attr'  => array(
-					'enable_q_and_a_on_course'   => array(
+					'enable_q_and_a_on_course' => array(
 						'type'  => 'switch',
 						'lable' => __( 'Question and Answer', 'tutor' ),
 						'desc'  => __( 'Allows a Q&A forum on each course.', 'tutor' ),
 					),
-					'courses_col_per_row'        => array(
+					'courses_col_per_row'      => array(
 						'type'    => 'rows',
 						'lable'   => __( 'Courses Per Row', 'tutor' ),
 						'tooltip' => __( 'How many courses per row on the archive pages.', 'tutor' ),
 					),
-					'courses_per_page'           => array(
+					'courses_per_page'         => array(
 						'type'    => 'slider',
 						'lable'   => __( 'Courses Per Page', 'tutor' ),
 						'tooltip' => __( 'How many courses per page on the archive pages.', 'tutor' ),
@@ -486,7 +501,7 @@ class Tutor_Setup {
 					'instructor_can_publish_course' => array(
 						'type'  => 'switch',
 						'lable' => __( 'Revenue Sharing', 'tutor' ),
-						'desc'  => __( 'Enable earning for instructors?', 'tutor' ),
+						'desc'  => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
 					),
 					'commission_split'              => array(
 						'type'    => 'range',
@@ -511,13 +526,14 @@ class Tutor_Setup {
 				'lable' => __( 'Currency ', 'tutor' ),
 				'attr'  => array(
 					'currency_code'     => array(
-						'type'    => 'dropdown',
-						'options' => $currency_options,
-						'lable'   => __( 'Currency Symbol', 'tutor' ),
-						'tooltip' => __( 'Choose the currency for transactions', 'tutor' ),
+						'type'       => 'select',
+						'options'    => $currency_options,
+						'lable'      => __( 'Currency Symbol', 'tutor' ),
+						'tooltip'    => __( 'Choose the currency for transactions', 'tutor' ),
+						'searchable' => true,
 					),
 					'currency_position' => array(
-						'type'    => 'dropdown',
+						'type'    => 'select',
 						'options' => $currency_positions,
 						'lable'   => __( 'Currency Position', 'tutor' ),
 						'tooltip' => __( 'Set the position of the currency symbol', 'tutor' ),
@@ -684,79 +700,39 @@ class Tutor_Setup {
 		?>
 			<div class="tutor-wizard-container">
 				<div class="tutor-wrapper-boarding tutor-setup-wizard-boarding active">
-					<div class="wizard-boarding-header">
-						<div>
-							<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/tutor-logo.svg'; ?>" />
-						</div>
-						<div>
-							<div class="wizard-boarding-header-sub tutor-fs-5 tutor-color-black">
-							<?php
-								$greeting  = _x( 'Hello ', 'tutor-wizard-greeting', 'tutor' );
-								$greeting .= tutor_utils()->display_name( $current_user->ID );
-								$greeting .= _x( ' welcome to Tutor LMS!', 'tutor-wizard-greeting', 'tutor' );
-								echo esc_html( $greeting );
-							?>
+					<div class="tutor-setup-wizard-boarding-inner">
+						<div class="wizard-boarding-header">
+							<div>
+								<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/tutor-logo.svg'; ?>" />
 							</div>
-							<div class="wizard-boarding-header-main tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mt-10">
-							<?php esc_html_e( 'Thank You for Choosing Us', 'tutor' ); ?>
+							<div>
+								<div class="wizard-boarding-header-sub tutor-fs-5 tutor-color-black">
+								<?php
+									$greeting  = _x( 'Hello ', 'tutor-wizard-greeting', 'tutor' );
+									$greeting .= tutor_utils()->display_name( $current_user->ID );
+									$greeting .= '!';
+									echo esc_html( $greeting );
+								?>
+								</div>
+								<div class="wizard-boarding-header-main tutor-fs-3 tutor-fw-medium tutor-color-black tutor-mt-10">
+									<?php esc_html_e( 'Welcome to Tutor LMS', 'tutor' ); ?>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="wizard-boarding-body tutor-mt-60">
-						<ul class="slider tutor-boarding">
-							<li>
-								<div class="slide-thumb">
-									<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/scalable_lms_solution.jpg'; ?>" alt="<?php esc_html_e( 'A Powerful, Smart, and Scalable LMS Solution', 'tutor' ); ?>"/>
-								</div>
-								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php esc_html_e( 'A Powerful, Smart, and Scalable LMS Solution', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
-								<?php esc_html_e( 'From individual instructors to vast eLearning platforms, Tutor LMS grows with you to create your ideal vision of an LMS website.', 'tutor' ); ?>
-								</div>
-							</li>
-							<li>
-								<div class="slide-thumb">
-									<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/extensive_course_builder.jpg'; ?>" alt="<?php esc_html_e( 'Extensive Course Builder', 'tutor' ); ?>"/>
-								</div>
-								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php esc_html_e( 'Extensive Course Builder', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
-								<?php esc_html_e( 'Tutor LMS comes with a state-of-the-art frontend course builder. Construct rich and resourceful courses with ease.', 'tutor' ); ?>
-								</div>
-							</li>
-							<li>
-								<div class="slide-thumb">
-									<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/advanced_quiz_creator.jpg'; ?>" alt="<?php esc_html_e( 'Advanced Quiz Creator', 'tutor' ); ?>"/>
-								</div>
-								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php esc_html_e( 'Advanced Quiz Creator', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
-								<?php esc_html_e( 'Build interactive quizzes with the vast selection of question types and verify the learning of your students.', 'tutor' ); ?>
-								</div>
-							</li>
-							<li>
-								<div class="slide-thumb">
-									<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/freedom_with_ecommerce.jpg'; ?>" alt="<?php esc_html_e( 'Freedom With eCommerce', 'tutor' ); ?>"/>
-								</div>
-								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php esc_html_e( 'Freedom With eCommerce', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
-								<?php esc_html_e( 'Select an eCommerce plugin and sell courses any way you like and use any payment gateway you want!', 'tutor' ); ?>
-								</div>
-							</li>
-							<li>
-								<div class="slide-thumb">
-									<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/reports_and_analytics.jpg'; ?>" alt="<?php esc_html_e( 'Reports and Analytics', 'tutor' ); ?>"/>
-								</div>
-								<div class="slide-title tutor-fs-5 tutor-fw-medium  tutor-color-black"><?php esc_html_e( 'Reports and Analytics', 'tutor' ); ?></div>
-								<div class="slide-subtitle tutor-fs-6 tutor-color-secondary tutor-mt-16">
-								<?php esc_html_e( 'Track what type of courses sell the most! Gain insights on user purchases, manage reviews and track quiz attempts.', 'tutor' ); ?>
-								</div>
-							</li>
-						</ul>
-					</div>
-					<div class="wizard-boarding-footer">
+						<div class="wizard-boarding-body">
+							<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/setup/welcome-to-tutor-lms.png'; ?>" />
+
+							<p class="description">
+								<?php esc_html_e( 'Get started with an all-in-one platform to create, manage, and sell your courses effortlessly—trusted by over 90,000 eLearning websites worldwide.', 'tutor' ); ?>
+							</p>
+						</div>
 						<div class="">
-							<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-boarding-next">
+							<button class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-boarding-next">
 							<?php esc_html_e( 'Let’s Start', 'tutor' ); ?>
 							</button>
 						</div>
+					</div>
+					<div class="wizard-boarding-footer">
 						<div>
 							<a href="<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>" class="tutor-text-btn-medium">
 							<?php esc_html_e( 'I already know, skip it!', 'tutor' ); ?>
@@ -781,59 +757,56 @@ class Tutor_Setup {
 		?>
 			<div class="tutor-wizard-container">
 				<div class="tutor-wrapper-type tutor-setup-wizard-type">
-					<div class="wizard-type-header">
-						<div class="logo"><img src="<?php echo esc_url( tutor()->url . 'assets/images/tutor-logo.svg' ); ?>" /></div>
-						<div class="title"><?php esc_html_e( 'Let’s get the platform up and running', 'tutor' ); ?></div>
-						<div class="subtitle"><?php esc_html_e( 'Pick a category for your LMS platform. You can always update this later.', 'tutor' ); ?></div>
-					</div>
-					<div class="wizard-type-body">
-						<div class="wizard-type-item">
-							<input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="off" 
-							<?php
-							if ( ! $course_marketplace ) {
-								echo 'checked'; }
-							?>
-							/>
-							<span class="icon"></span>
-							<label for="enable_course_marketplace-0">
-								<img src="<?php echo esc_url( tutor()->url . 'assets/images/single-marketplace.svg' ); ?>" />
-								<div class="title"><?php esc_html_e( 'Individual', 'tutor' ); ?></div>
-								<div class="subtitle"><?php esc_html_e( 'Share solo journey as an educator and spread knowledge', 'tutor' ); ?></div>
-								<div class="action">
-									<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-type-next">
-									<?php esc_html_e( 'Next', 'tutor' ); ?>
-									</button>
-								</div>
-							</label>
+					<div class="tutor-setup-wizard-type-inner">
+						<div class="wizard-type-header">
+							<div class="logo"><img src="<?php echo esc_url( tutor()->url . 'assets/images/tutor-logo.svg' ); ?>" /></div>
+							<div class="title"><?php esc_html_e( 'How do you want to set up?', 'tutor' ); ?></div>
+							<div class="subtitle"><?php esc_html_e( 'Select the option that best fits your needs. You can change this setting anytime.', 'tutor' ); ?></div>
+						</div>
+						<div class="wizard-type-body">
+							<div class="wizard-type-item">
+								<input id="enable_course_marketplace-0" type="radio" name="enable_course_marketplace" value="off" 
+								<?php
+								if ( ! $course_marketplace ) {
+									echo 'checked'; }
+								?>
+								/>
+								<span class="icon"></span>
+								<label for="enable_course_marketplace-0">
+									<img src="<?php echo esc_url( tutor()->url . 'assets/images/setup/individual.svg' ); ?>" />
+									<div class="title"><?php esc_html_e( 'Individual', 'tutor' ); ?></div>
+									<div class="subtitle"><?php esc_html_e( 'Start as an independent educator and share your expertise.', 'tutor' ); ?></div>
+								</label>
+							</div>
+
+							<div class="wizard-type-item">
+								<input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="on" 
+								<?php
+								if ( $course_marketplace ) {
+									echo 'checked'; }
+								?>
+								/>
+								<span class="icon"></span>
+								<label for="enable_course_marketplace-1">
+									<img src="<?php echo esc_url( tutor()->url . 'assets/images/setup/marketplace.svg' ); ?>" />
+									<div class="title"><?php esc_html_e( 'Marketplace', 'tutor' ); ?></div>
+									<div class="subtitle"><?php esc_html_e( 'Build a marketplace that empowers others to sell courses online.', 'tutor' ); ?></div>
+								</label>
+							</div>
 						</div>
 
-						<div class="wizard-type-item">
-							<input id="enable_course_marketplace-1" type="radio" name="enable_course_marketplace" value="on" 
-							<?php
-							if ( $course_marketplace ) {
-								echo 'checked'; }
-							?>
-							/>
-							<span class="icon"></span>
-							<label for="enable_course_marketplace-1">
-								<img src="<?php echo esc_url( tutor()->url . 'assets/images/multiple-marketplace.svg' ); ?>" />
-								<div class="title"><?php esc_html_e( 'Marketplace', 'tutor' ); ?></div>
-								<div class="subtitle"><?php esc_html_e( 'Create an eLearning platform to let anyone earn by teaching online', 'tutor' ); ?></div>
-								<div class="action">
-									<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-type-next">
-									<?php esc_html_e( 'Next', 'tutor' ); ?>
-									</button>
-								</div>
-							</label>
-						</div>
-					</div>
+						<div class="wizard-type-footer">
+							<div class="action">
+								<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-type-previous">
+									<span>←</span>&nbsp;<span><?php esc_html_e( 'Previous ', 'tutor' ); ?></span>
+								</button>
+							</div>
 
-					<div class="wizard-type-footer">
-						<div class="tutor-fs-7">
-							<span><?php esc_html_e( 'Not sure?', 'tutor' ); ?></span>&nbsp;
-							<a href="#" class="tutor-type-skip" class="">
-							<?php esc_html_e( 'Let’s go to the next step.', 'tutor' ); ?>
-							</a>
+							<div class="action">
+								<button class="tutor-btn tutor-btn-primary tutor-btn-md tutor-type-next">
+									<span><?php esc_html_e( 'Next ', 'tutor' ); ?></span>&nbsp;<span>→</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -898,11 +871,7 @@ class Tutor_Setup {
 		$page = Input::get( 'page', '' );
 		if ( 'tutor-setup' === $page ) {
 			wp_enqueue_style( 'tutor-setup', tutor()->url . 'assets/css/tutor-setup.min.css', array(), TUTOR_VERSION );
-			wp_enqueue_style( 'tutor-slick', tutor()->url . 'assets/lib/slick/slick.css', array(), TUTOR_VERSION );
-			wp_enqueue_style( 'tutor-slick-theme', tutor()->url . 'assets/lib/slick/slick-theme.css', array(), TUTOR_VERSION );
-			wp_register_script( 'tutor-slick', tutor()->url . 'assets/lib/slick/slick.min.js', array( 'jquery' ), TUTOR_VERSION, true );
-			wp_register_script( 'tutor-setup-v2', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
-			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.min.js', array( 'jquery', 'tutor-slick', 'wp-i18n' ), TUTOR_VERSION, true );
+			wp_register_script( 'tutor-setup', tutor()->url . 'assets/js/tutor-setup.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
 			wp_localize_script( 'tutor-setup', '_tutorobject', array( 'ajaxurl' => admin_url( 'admin-ajax.php' ) ) );
 		}
 	}

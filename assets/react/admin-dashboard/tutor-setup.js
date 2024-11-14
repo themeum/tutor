@@ -1,3 +1,37 @@
+import '../front/_select_dd_search';
+
+/**
+ * Escape HTML and return safe HTML
+ * 
+ * @since 2.2.4
+ * 
+ * @param {string} unsafeText HTML string
+ * @returns string
+ */
+window.tutor_esc_html = function (unsafeText) {
+	let safeHTML = ''
+	let div = document.createElement('div');
+	/**
+	 * When set an HTML string to an element's innerText
+	 * the browser automatically escapes any HTML tags and
+	 * treats the content as plain text.
+	 */
+	div.innerText = unsafeText;
+	safeHTML = div.innerHTML;
+	div.remove()
+
+	return safeHTML;
+}
+
+
+window.tutor_esc_attr = function(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
+}
+
 jQuery.fn.serializeObject = function () {
 	var $ = jQuery;
 	var values = {};
@@ -65,13 +99,19 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Navigate Wizard Screens
 	* ---------------------- */
-	$(".tutor-type-next, .tutor-type-skip").on("click", function (e) {
+	$(".tutor-type-next").on("click", function (e) {
 		e.preventDefault();
 		$(".tutor-setup-wizard-type").removeClass("active");
 		$(".tutor-setup-wizard-settings").addClass("active");
 		$('.tutor-setup-title li').eq(0).addClass('active')
 		window.location.hash = "general";
 		showHide($("input[name='enable_course_marketplace']:checked").val())
+	});
+
+	$(".tutor-type-previous").on("click", function (e) {
+		e.preventDefault();
+		$(".tutor-setup-wizard-type").removeClass("active");
+		$(".tutor-setup-wizard-boarding").addClass("active");
 	});
 
 	/* ---------------------
@@ -125,39 +165,6 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 		$(".tutor-setup-wizard-boarding").removeClass("active");
 		$(".tutor-setup-wizard-type").addClass("active");
-	});
-
-
-	/* ---------------------
-	* Wizard Slick Slider
-	* ---------------------- */
-	$(".tutor-boarding").slick({
-		speed: 1000,
-		centerMode: true,
-		centerPadding: "19.5%",
-		slidesToShow: 1,
-		arrows: false,
-		dots: true,
-		responsive: [
-			{
-				breakpoint: 768,
-				settings: {
-					arrows: false,
-					centerMode: true,
-					centerPadding: "50px",
-					slidesToShow: 1
-				}
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					arrows: false,
-					centerMode: true,
-					centerPadding: "30px",
-					slidesToShow: 1
-				}
-			}
-		]
 	});
 
 	/* ---------------------
