@@ -26,6 +26,7 @@ import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
+import { noop } from '@/v3/shared/utils/util';
 import addonDisabled2x from '@Images/addon-disabled-2x.webp';
 import addonDisabled from '@Images/addon-disabled.webp';
 import liveClassPro2x from '@Images/pro-placeholders/live-class-2x.webp';
@@ -188,8 +189,9 @@ const LiveClass = () => {
       <Popover
         triggerRef={zoomButtonRef}
         isOpen={showMeetingForm === 'zoom'}
-        closePopover={() => setShowMeetingForm(null)}
+        closePopover={noop}
         animationType={AnimationType.slideUp}
+        closeOnEscape={false}
       >
         <ZoomMeetingForm
           data={null}
@@ -202,8 +204,9 @@ const LiveClass = () => {
       <Popover
         triggerRef={googleMeetButtonRef}
         isOpen={showMeetingForm === 'google_meet'}
-        closePopover={() => setShowMeetingForm(null)}
+        closePopover={noop}
         animationType={AnimationType.slideUp}
+        closeOnEscape={false}
       >
         <GoogleMeetForm
           data={null}

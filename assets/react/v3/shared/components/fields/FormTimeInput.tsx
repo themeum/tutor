@@ -8,8 +8,9 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
+import { useSelectKeyboardNavigation } from '../../hooks/useSelectKeyboardNavigation';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTimeInputProps extends FormControllerProps<string> {
@@ -35,10 +36,7 @@ const FormTimeInput = ({
 }: FormTimeInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    isDropdown: true,
-  });
+  const activeItemRef = useRef<HTMLLIElement | null>(null);
 
   const options = useMemo(() => {
     const start = setMinutes(setHours(new Date(), 0), 0);
@@ -54,6 +52,30 @@ const FormTimeInput = ({
 
     return range.map((date) => format(date, DateFormats.hoursMinutes));
   }, [interval]);
+
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    isDropdown: true,
+  });
+
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: options.map((option) => ({ label: option, value: option })),
+    isOpen,
+    selectedValue: field.value,
+    onSelect: (selectedOption) => {
+      field.onChange(selectedOption.value);
+      setIsOpen(false);
+    },
+    onClose: () => setIsOpen(false),
+  });
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+  }, [isOpen, activeIndex]);
+
+  console.log(activeIndex);
 
   return (
     <FormFieldWrapper
@@ -104,7 +126,12 @@ const FormTimeInput = ({
                 <ul css={styles.list}>
                   {options.map((option, index) => {
                     return (
-                      <li key={index} css={styles.listItem}>
+                      <li
+                        key={index}
+                        css={styles.listItem}
+                        ref={activeIndex === index ? activeItemRef : null}
+                        data-active={activeIndex === index}
+                      >
                         <button
                           type="button"
                           css={styles.itemButton}
@@ -112,6 +139,8 @@ const FormTimeInput = ({
                             field.onChange(option);
                             setIsOpen(false);
                           }}
+                          onMouseOver={() => setActiveIndex(index)}
+                          onFocus={() => setActiveIndex(index)}
                         >
                           {option}
                         </button>
@@ -173,6 +202,10 @@ const styles = {
     display: flex;
     align-items: center;
     transition: background-color 0.3s ease-in-out;
+
+    &[data-active='true'] {
+      background-color: ${colorTokens.background.hover};
+    }
 
     :hover {
       background-color: ${colorTokens.background.hover};
