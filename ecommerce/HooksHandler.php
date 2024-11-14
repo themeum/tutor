@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use TUTOR\Course;
 use Tutor\Models\OrderActivitiesModel;
 use TUTOR\Earnings;
 use Tutor\Helpers\QueryHelper;
@@ -141,7 +142,8 @@ class HooksHandler {
 	 * @return mixed
 	 */
 	public function alter_course_price( $price, $course_id ) {
-		if ( tutor_utils()->is_monetize_by_tutor() ) {
+		$price_type = tutor_utils()->price_type( $course_id );
+		if ( tutor_utils()->is_monetize_by_tutor() && Course::PRICE_TYPE_PAID === $price_type ) {
 			$price = tutor_get_course_formatted_price_html( $course_id, false );
 		}
 
