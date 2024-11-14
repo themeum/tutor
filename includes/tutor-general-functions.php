@@ -1703,11 +1703,12 @@ if ( ! function_exists( 'tutor_split_amounts' ) ) {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param array $amounts List of amount array. For ex: [12,20,100].
+	 * @param array $amounts Single amount or list of amount array. For ex: [12,20,100].
 	 *
 	 * @return array
 	 */
 	function tutor_split_amounts( $amounts ) {
+		$amounts = is_array( $amounts ) ? $amounts: array( $amounts );
 		// Get Admin commission rate (%) from settings.
 		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
 		// Get Instructor commission rate (%) based on remaining amount.
