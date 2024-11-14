@@ -395,7 +395,7 @@ class Tutor_Setup {
 
 			}
 				$html .= '</div>';
-			if ( 'payments' !== $field['type'] ) {
+			if ( 'dropdown' !== $field['type'] ) {
 				$html .= $this->tutor_setup_wizard_action();
 			} else {
 				$html .= $this->tutor_setup_wizard_action_final();
