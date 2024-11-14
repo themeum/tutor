@@ -163,19 +163,28 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Form Submit and Redirect after Finished
 	* ---------------------- */
-	$(".tutor-redirect").on("click", function (e) {
-		const that = $(this)
+	$(".tutor-finish-setup").on("click", function (e) {
 		e.preventDefault();
+
+		const btnSubmit = $(this);
 		const formData = $("#tutor-setup-form").serializeObject();
+		const redirectUrl = btnSubmit.data("redirect-url");
+		const url = _tutorobject.ajaxurl;
 
 		$.ajax({
-			url: _tutorobject.ajaxurl,
-			type: "POST",
+			url: url,
+			type: 'POST',
 			data: formData,
+			beforeSend: function () {
+				btnSubmit.attr('disabled', 'disabled').addClass('is-loading');
+			},
 			success: function (data) {
 				if (data.success) {
-					// window.location = that.data("url");
+					window.location = redirectUrl
 				}
+			},
+			complete: function () {
+				btnSubmit.removeAttr('disabled').removeClass('is-loading');
 			}
 		});
 	});
@@ -249,23 +258,16 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Select Option
 	* ---------------------- */
-	$(document).on('click', function (e) {
-		if (!e.target.closest('.grade-calculation')) {
-			if ($(".grade-calculation .options-container") && $(".grade-calculation .options-container").hasClass('active')) {
-				$(".grade-calculation .options-container").removeClass('active');
-			}
-		}
-	});
+	$('.select-box').click(function (e) {
+		e.preventDefault()
+		console.log('ddd')
+		$(this).parent().find('.options-container').toggleClass('active');
+	})
 
-	$(".selected").on("click", function () {
-		$(".options-container").toggleClass("active");
-	});
-
-	$(".option").each(function () {
-		$(this).on("click", function () {
-			$(".selected").html($(this).find("label").html());
-			$(".options-container").removeClass("active");
-		});
+	$('.select-box .options-container .option').click(function (e) {
+		e.stopPropagation();
+		$(this).parent().parent().find(".selected").html($(this).find("label").html());
+		$(this).parent().removeClass("active");
 	});
 
 
