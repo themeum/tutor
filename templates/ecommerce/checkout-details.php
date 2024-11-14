@@ -25,9 +25,8 @@ $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
 $course_list         = $courses['results'];
 
-$plan_id        = (int) Input::sanitize_request_data( 'plan' );
-$plan_info      = apply_filters( 'tutor_checkout_plan_info', new stdClass(), $plan_id );
-$plan_course_id = apply_filters( 'tutor_subscription_course_by_plan', $plan_id );
+$plan_id   = (int) Input::sanitize_request_data( 'plan' );
+$plan_info = apply_filters( 'tutor_checkout_plan_info', new stdClass(), $plan_id );
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
@@ -57,6 +56,7 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					$enrollment_fee  = floatval( $plan_info->enrollment_fee );
 					$show_coupon_box = $plan_info->in_sale_price ? false : true;
 
+					$plan_course_id        = apply_filters( 'tutor_subscription_course_by_plan', $plan_id );
 					$plan_course           = get_post( $plan_course_id );
 					$plan_course_thumbnail = get_tutor_course_thumbnail_src( 'post-thumbnail', $plan_course_id );
 
