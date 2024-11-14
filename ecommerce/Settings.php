@@ -117,10 +117,7 @@ class Settings {
 						'type'           => 'select',
 						'label'          => __( 'Currency Position', 'tutor' ),
 						'select_options' => false,
-						'options'        => array(
-							'left'  => 'Left',
-							'right' => 'Right',
-						),
+						'options'        => self::get_currency_position_options(),
 						'default'        => 'left',
 						'desc'           => __( 'Set the position of the currency symbol.', 'tutor' ),
 					),
@@ -314,6 +311,20 @@ class Settings {
 			$options[ $currency['code'] ] = $currency['code'] . ' (' . $currency['symbol'] . ')';
 		}
 		return $options;
+	}
+
+	/**
+	 * Currency position options
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_currency_position_options() {
+		return array(
+			'left'  => __( 'Left', 'tutor' ),
+			'right' => __( 'Right', 'tutor' ),
+		);
 	}
 
 	/**
