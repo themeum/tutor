@@ -163,19 +163,28 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Form Submit and Redirect after Finished
 	* ---------------------- */
-	$(".tutor-redirect").on("click", function (e) {
-		const that = $(this)
+	$(".tutor-finish-setup").on("click", function (e) {
 		e.preventDefault();
+
+		const btnSubmit = $(this);
 		const formData = $("#tutor-setup-form").serializeObject();
+		const redirectUrl = btnSubmit.data("redirect-url");
+		const url = _tutorobject.ajaxurl;
 
 		$.ajax({
-			url: _tutorobject.ajaxurl,
-			type: "POST",
+			url: url,
+			type: 'POST',
 			data: formData,
+			beforeSend: function () {
+				btnSubmit.attr('disabled', 'disabled').addClass('is-loading');
+			},
 			success: function (data) {
 				if (data.success) {
-					// window.location = that.data("url");
+					window.location = redirectUrl
 				}
+			},
+			complete: function () {
+				btnSubmit.removeAttr('disabled').removeClass('is-loading');
 			}
 		});
 	});
