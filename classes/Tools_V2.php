@@ -79,11 +79,7 @@ class Tools_V2 {
 	 */
 	public function load_tools_page() {
 		$tools_fields = $this->get_tools_fields();
-		$tutor_setup  = array( 'tutor-setup' => $tools_fields['tutor-setup'] );
-		unset( $tools_fields['tutor-setup'] );
-		$tools_fields = array_merge( $tools_fields, $tutor_setup );
-
-		$active_tab = Input::get( 'sub_page', 'status' );
+		$active_tab   = Input::get( 'sub_page', 'status' );
 		include tutor()->path . '/views/options/tools.php';
 	}
 
