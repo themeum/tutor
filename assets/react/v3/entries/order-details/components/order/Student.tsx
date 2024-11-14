@@ -19,16 +19,6 @@ function Student() {
         <Avatar image={student.image} name={student.name} />
         <div css={styles.innerContent}>
           <div css={styles.row}>
-            {/* @TODO: need confirmation */}
-            <span>{sprintf(__('Active order number: #%s', 'tutor'), order.id)}</span>
-            <span>
-              {sprintf(
-                __('Enrolled course numbers: %s', 'tutor'),
-                order.items.map((course) => `#${course.id}`).join(', '),
-              )}
-            </span>
-          </div>
-          <div css={styles.row}>
             <h4>{__('Contact information', 'tutor')}</h4>
             <span>{student.email}</span>
             <span>{student.phone}</span>
