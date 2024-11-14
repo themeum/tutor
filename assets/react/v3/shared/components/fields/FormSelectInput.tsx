@@ -7,13 +7,14 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { type IconCollection, type Option, isDefined } from '@Utils/types';
-
-import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
@@ -42,139 +43,6 @@ type FormSelectInputProps<T> = {
   isAiOutline?: boolean;
   selectOnFocus?: boolean;
 } & FormControllerProps<T | null>;
-
-const registerOpenDropdownHandlers = ({
-  options,
-  activeIndex,
-  setActiveIndex,
-  select,
-}: {
-  options: Option<string>[];
-  activeIndex: number;
-  setActiveIndex: (index: number) => void;
-  select: (value: string | boolean) => void;
-}) => {
-  const optionsLength = options.length;
-  const keyDownCallback = (e: KeyboardEvent) => {
-    e.preventDefault();
-    console.log(e);
-    switch (e.key) {
-      case 'Up':
-      case 'ArrowUp':
-        e.preventDefault();
-        setActiveIndex(activeIndex <= 0 ? optionsLength - 1 : activeIndex - 1);
-        return;
-      case 'Down':
-      case 'ArrowDown':
-        e.preventDefault();
-        setActiveIndex(activeIndex + 1 === optionsLength ? 0 : activeIndex + 1);
-        return;
-      case 'Enter':
-      case ' ': // Space
-        e.preventDefault();
-        select(options[activeIndex].value);
-        return;
-      case 'Esc':
-      case 'Escape':
-        e.preventDefault();
-        select(false);
-        return;
-      case 'PageUp':
-      case 'Home':
-        e.preventDefault();
-        setActiveIndex(0);
-        return;
-      case 'PageDown':
-      case 'End':
-        e.preventDefault();
-        setActiveIndex(options.length - 1);
-        return;
-    }
-  };
-  document.addEventListener('keydown', keyDownCallback);
-  return () => {
-    document.removeEventListener('keydown', keyDownCallback);
-  };
-};
-
-const registerClosedDropdownHandlers = ({
-  setIsDropdownOpen,
-}: {
-  setIsDropdownOpen: (value: boolean) => void;
-}) => {
-  const keyDownCallback = (e: KeyboardEvent) => {
-    switch (e.key) {
-      case 'Up':
-      case 'ArrowUp':
-      case 'Down':
-      case 'ArrowDown':
-      case ' ': // Space
-      case 'Enter':
-        e.preventDefault();
-        setIsDropdownOpen(true);
-    }
-  };
-  document.addEventListener('keydown', keyDownCallback);
-  return () => {
-    document.removeEventListener('keydown', keyDownCallback);
-  };
-};
-
-const useAccessibleDropdown = ({
-  isOpen,
-  options,
-  value,
-  onChange,
-}: {
-  isOpen: boolean;
-  options: Option<string>[];
-  value: string;
-  onChange: (value: string) => void;
-}) => {
-  const listRef = useRef();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isFocus, setIsFocus] = useState(false);
-  const select = (value: string | boolean) => {
-    if (value) {
-      onChange?.(value as string);
-    }
-    setIsDropdownOpen(false);
-  };
-
-  const setIsDropdownOpen = (v: boolean) => {
-    if (v) {
-      const selected = options.findIndex((o) => o.value === value);
-      setActiveIndex(selected < 0 ? 0 : selected);
-    }
-  };
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (isOpen) {
-      return registerOpenDropdownHandlers({
-        activeIndex,
-        setActiveIndex,
-        options,
-        select,
-      });
-    }
-
-    if (isFocus) {
-      return registerClosedDropdownHandlers({
-        setIsDropdownOpen,
-      });
-    }
-  }, [isOpen, activeIndex, isFocus]);
-
-  return {
-    setIsDropdownOpen,
-    activeIndex,
-    setActiveIndex,
-    select,
-    setIsFocus,
-    listRef,
-  };
-};
 
 const FormSelectInput = <T,>({
   options,
@@ -217,6 +85,7 @@ const FormSelectInput = <T,>({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const optionRef = useRef<HTMLLIElement>(null);
+  const activeItemRef = useRef<HTMLLIElement>(null);
 
   const selections = useMemo(() => {
     if (isSearchable) {
@@ -235,12 +104,6 @@ const FormSelectInput = <T,>({
     isDropdown: true,
     dependencies: [selections.length],
   });
-  const { activeIndex, setActiveIndex, select, setIsFocus } = useAccessibleDropdown({
-    isOpen: isOpen,
-    options: options as Option<string>[],
-    value: field.value as string,
-    onChange: field.onChange as (value: string) => void,
-  });
 
   const additionalAttributes = {
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
@@ -258,6 +121,39 @@ const FormSelectInput = <T,>({
     }
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
+
+  const handleOptionSelect = (option: Option<T>, event?: React.MouseEvent) => {
+    event?.stopPropagation();
+
+    if (!option.disabled) {
+      field.onChange(option.value);
+      onChange(option);
+      setSearchText('');
+      setIsSearching(false);
+      setIsOpen(false);
+    }
+  };
+
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: selections,
+    isOpen,
+    selectedValue: field.value,
+    onSelect: handleOptionSelect,
+    onClose: () => {
+      setIsOpen(false);
+      setIsSearching(false);
+      setSearchText('');
+    },
+  });
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [isOpen, activeIndex]);
 
   return (
     <FormFieldWrapper
@@ -290,7 +186,8 @@ const FormSelectInput = <T,>({
                 css={{
                   width: '100%',
                 }}
-                onClick={() => {
+                onClick={(event) => {
+                  event.stopPropagation();
                   setIsOpen((previousState) => !previousState);
                   inputRef.current?.focus();
                 }}
@@ -397,29 +294,24 @@ const FormSelectInput = <T,>({
                     {selections.map((option, index) => (
                       <li
                         key={String(option.value)}
-                        ref={option.value === field.value ? optionRef : null}
+                        ref={option.value === field.value ? optionRef : activeIndex === index ? activeItemRef : null}
                         css={styles.optionItem({
                           isSelected: option.value === field.value,
-                          isActive: activeIndex === index,
+                          isActive: index === activeIndex,
+                          isDisabled: !!option.disabled,
                         })}
-                        onFocus={() => {
-                          setActiveIndex(options.findIndex((o) => o.value === option.value));
-                        }}
-                        onMouseOver={() => {
-                          setActiveIndex(options.findIndex((o) => o.value === option.value));
-                        }}
+                        onMouseOver={() => setActiveIndex(index)}
+                        onFocus={() => setActiveIndex(index)}
                       >
                         <button
                           type="button"
                           css={styles.label}
-                          onClick={() => {
-                            field.onChange(option.value);
-                            onChange(option);
-
-                            setSearchText('');
-                            setIsSearching(false);
-                            setIsOpen(false);
+                          onClick={(event) => {
+                            if (!option.disabled) {
+                              handleOptionSelect(option, event);
+                            }
                           }}
+                          disabled={option.disabled}
                           title={option.label}
                         >
                           <Show when={option.icon}>
@@ -653,6 +545,7 @@ const styles = {
     max-height: 500px;
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
 
     ${
       !removeOptionsMinWidth &&
@@ -661,7 +554,15 @@ const styles = {
     `
     }
   `,
-  optionItem: ({ isSelected = false, isActive = false }: { isSelected: boolean; isActive: boolean }) => css`
+  optionItem: ({
+    isSelected = false,
+    isActive = false,
+    isDisabled = false,
+  }: {
+    isSelected: boolean;
+    isActive: boolean;
+    isDisabled: boolean;
+  }) => css`
     ${typography.body()};
     min-height: 36px;
     height: 100%;
@@ -669,7 +570,8 @@ const styles = {
     display: flex;
     align-items: center;
     transition: background-color 0.3s ease-in-out;
-    cursor: pointer;
+    cursor: ${isDisabled ? 'not-allowed' : 'pointer'};
+    opacity: ${isDisabled ? 0.5 : 1};
 
     ${
       isActive &&
@@ -679,26 +581,27 @@ const styles = {
     }
 
     &:hover {
-      background-color: ${colorTokens.background.hover};
+      background-color: ${!isDisabled && colorTokens.background.hover};
     }
 
     ${
+      !isDisabled &&
       isSelected &&
       css`
-      background-color: ${colorTokens.background.active};
-      position: relative;
+        background-color: ${colorTokens.background.active};
+        position: relative;
 
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 3px;
-        height: 100%;
-        background-color: ${colorTokens.action.primary.default};
-        border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
-      }
-    `
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 3px;
+          height: 100%;
+          background-color: ${colorTokens.action.primary.default};
+          border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
+        }
+      `
     }
   `,
   label: css`

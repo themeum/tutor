@@ -67,6 +67,7 @@ interface ThreeDotsProps {
   isInverse?: boolean;
   hideArrow?: boolean;
   size?: 'small' | 'medium';
+  closeOnEscape?: boolean;
 }
 
 const ThreeDots = ({
@@ -82,9 +83,11 @@ const ThreeDots = ({
   isInverse = false,
   hideArrow = false,
   size = 'medium',
+  closeOnEscape = true,
   ...props
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
+
   return (
     <>
       <button
@@ -106,6 +109,7 @@ const ThreeDots = ({
         closePopover={closePopover}
         animationType={animationType}
         hideArrow={hideArrow}
+        closeOnEscape={closeOnEscape}
       >
         <div css={styles.wrapper({ size })}>
           {React.Children.map(children, (child) => {
