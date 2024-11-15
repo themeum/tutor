@@ -425,7 +425,7 @@ class Settings {
 				'name'                 => 'paypal',
 				'label'                => 'PayPal',
 				'is_installed'         => true,
-				'is_active'            => true,
+				'is_active'            => false,
 				'icon'                 => tutor()->url . 'assets/images/paypal.svg',
 				'support_subscription' => true,
 				'fields'               => self::get_paypal_config_fields(),
