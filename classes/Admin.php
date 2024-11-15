@@ -135,7 +135,7 @@ class Admin {
 		do_action( 'tutor_after_courses_menu' );
 
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Email', 'tutor' ), __( 'Email <span class="tutor-pro-badge">Hot</span>', 'tutor' ), 'manage_tutor', 'new-key-feature', array( $this, 'feature_promotion_page' ) );
+			add_submenu_page( 'tutor', __( 'Version 3.0', 'tutor' ), __( 'Version 3.0 <span class="tutor-pro-badge">Hot</span>', 'tutor' ), 'manage_tutor', 'new-key-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
@@ -181,7 +181,12 @@ class Admin {
 	 * @return void
 	 */
 	public function feature_promotion_page() {
-		include tutor()->path . 'views/pages/feature-promotion.php';
+		/**
+		 * For single feature promotion: include tutor()->path . 'views/pages/feature-promotion.php';
+		 * Will be update on next version.
+		 */
+		wp_safe_redirect( admin_url( 'admin.php?page=tutor&welcome=1' ) );
+		exit;
 	}
 
 	/**
