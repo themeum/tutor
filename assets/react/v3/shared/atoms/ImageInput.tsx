@@ -3,6 +3,7 @@ import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
 
 import Button from '@Atoms/Button';
+import type { ButtonSize } from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import type { Media } from '@Components/fields/FormImageInput';
@@ -26,6 +27,12 @@ interface ImageInputProps {
   replaceButtonText?: string;
   loading?: boolean;
 }
+
+const sizeMap: Record<ImageInputSize, ButtonSize> = {
+  large: 'regular',
+  regular: 'small',
+  small: 'small',
+};
 
 const ImageInput = ({
   buttonText = __('Upload Media', 'tutor'),
@@ -66,7 +73,7 @@ const ImageInput = ({
             }}
           >
             <SVGIcon name="addImage" width={32} height={32} />
-            <Button variant="secondary" buttonContentCss={styles.buttonText}>
+            <Button size={sizeMap[size]} variant="secondary" buttonContentCss={styles.buttonText}>
               {buttonText}
             </Button>
             <Show when={infoText}>
@@ -82,7 +89,7 @@ const ImageInput = ({
               <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
                 <Button
                   variant="secondary"
-                  size={size}
+                  size={sizeMap[size]}
                   buttonCss={css`margin-top: ${spacing[16]};`}
                   onClick={(event) => {
                     event.stopPropagation();
@@ -93,7 +100,7 @@ const ImageInput = ({
                 </Button>
                 <Button
                   variant="text"
-                  size={size}
+                  size={sizeMap[size]}
                   onClick={(event) => {
                     event.stopPropagation();
                     clearHandler();

@@ -248,6 +248,7 @@ const FormSelectInput = <T,>({
 
               {!hideCaret && !loading && (
                 <button
+                  tabIndex={-1}
                   type="button"
                   css={styles.caretButton({ isOpen })}
                   onClick={() => {
@@ -446,17 +447,17 @@ const styles = {
       ${
         hasError &&
         css`
-        background-color: ${colorTokens.background.status.errorFail};
-      `
+          background-color: ${colorTokens.background.status.errorFail};
+        `
       }
 
       ${
         isAiOutline &&
         css`
-        position: relative;
-        border: none;
-        background: transparent;
-      `
+          position: relative;
+          border: none;
+          background: transparent;
+        `
       }
 
       :focus {
@@ -465,17 +466,17 @@ const styles = {
         ${
           isMagicAi &&
           css`
-          outline-color: ${colorTokens.stroke.magicAi};
-          background-color: ${colorTokens.background.magicAi[8]};
-        `
+            outline-color: ${colorTokens.stroke.magicAi};
+            background-color: ${colorTokens.background.magicAi[8]};
+          `
         }
 
         ${
           hasError &&
           css`
-          border-color: ${colorTokens.stroke.danger};
-          background-color: ${colorTokens.background.status.errorFail};
-        `
+            border-color: ${colorTokens.stroke.danger};
+            background-color: ${colorTokens.background.status.errorFail};
+          `
         }
       }
     }
@@ -495,8 +496,8 @@ const styles = {
 		${
       hasLeftIcon &&
       css`
-			padding-left: calc(${spacing[48]} + 1px);
-		`
+        padding-left: calc(${spacing[48]} + 1px);
+      `
     }
 	`,
   listLabel: css`
@@ -523,12 +524,12 @@ const styles = {
       ${
         !isDisabled &&
         css`
-        color: ${colorTokens.text.title};
+          color: ${colorTokens.text.title};
 
-        &:hover {
-          text-decoration: underline;
-        }
-      `
+          &:hover {
+            text-decoration: underline;
+          }
+        `
       }
     }
   `,
@@ -551,8 +552,8 @@ const styles = {
     ${
       !removeOptionsMinWidth &&
       css`
-      min-width: 200px;
-    `
+        min-width: 200px;
+      `
     }
   `,
   optionItem: ({
@@ -658,8 +659,8 @@ const styles = {
 		${
       isOpen &&
       css`
-      transform: rotate(180deg);
-    `
+        transform: rotate(180deg);
+      `
     }
   `,
   emptyState: css`
