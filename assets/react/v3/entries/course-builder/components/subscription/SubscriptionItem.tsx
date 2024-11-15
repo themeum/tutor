@@ -313,7 +313,7 @@ export default function SubscriptionItem({
                 <FormInput
                   {...controllerProps}
                   placeholder={__('Enter plan name', 'tutor')}
-                  label={__('Plan name', 'tutor')}
+                  label={__('Plan Name', 'tutor')}
                 />
               )}
             />
