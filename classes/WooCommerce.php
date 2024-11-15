@@ -127,7 +127,7 @@ class WooCommerce extends Tutor_Base {
 		$show = get_option( 'tutor_show_woocommerce_notice' ) && 'free' === tutor_utils()->get_option( 'monetize_by', 'free' );
 
 		if ( $show ) {
-			$message = __( 'Since WooCommerce is disabled, your monetized courses have been set to free. Please make sure to enable Tutor LMS monetization if you decide to re-enable WooCommerce.', 'tutor' );
+			$message = __( 'Since monetization is currently disabled, your courses are set to free. Enable Tutor LMS monetization to start selling your courses.', 'tutor' );
 			echo '<div class="notice notice-error"><p>' . esc_html( $message ) . '</p></div>';
 		}
 	}
