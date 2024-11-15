@@ -201,7 +201,7 @@ class Earnings extends Singleton {
 		return QueryHelper::get_all(
 			$this->earning_table,
 			array( 'order_id' => $order_id ),
-			'id'
+			'earning_id'
 		);
 	}
 
@@ -270,11 +270,17 @@ class Earnings extends Singleton {
 			throw new \Exception( self::INVALID_DATA_MSG );
 		}
 
-		return QueryHelper::update(
+		$update = QueryHelper::update(
 			$this->earning_table,
 			$this->earning_data,
-			array( 'id' => $earning_id )
+			array( 'earning_id' => $earning_id )
 		);
+
+		if ( $update ) {
+			$this->earning_data = null;
+		}
+
+		return $update;
 	}
 
 	/**
@@ -333,6 +339,50 @@ class Earnings extends Singleton {
 			return $this->store_earnings();
 		} catch ( \Throwable $th ) {
 			tutor_log( $th );
+		}
+	}
+
+	/**
+	 * Deduct earning after partial refund or manual discount
+	 *
+	 * Amount will deducted proportionally from admin & instructor
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param int|object $order Order id or object.
+	 * @param mixed $amount Amount to deduct.
+	 *
+	 * @throws \DivisionByZeroError Throw DivisionByZeroError.
+	 * @throws \Throwable           Throwable if update failed.
+	 *
+	 * @return void
+	 */
+	public function deduct_earnings( $order, $amount ) {
+		$order_model  = new OrderModel();
+		$order_data   = is_object( $order ) ? $order : $order_model->get_order_by_id( $order ); 
+		$earning_list = $this->get_order_earnings( $order_data->id );
+		if ( $amount && ! empty( $earning_list ) ) {
+			try {
+				$per_earning_refund = $amount / count( $earning_list );
+			} catch ( \DivisionByZeroError $th ) {
+				throw $th;
+			}
+
+			foreach ( $earning_list as $list ) {
+				$split_refund = tutor_split_amounts( $per_earning_refund );
+
+				$update_data = array(
+					'admin_amount'      => $list->admin_amount - $split_refund['admin'],
+					'instructor_amount' => $list->instructor_amount - $split_refund['instructor'],
+				);
+
+				try {
+					$this->earning_data = $update_data;
+					$this->update_earning( $list->earning_id );
+				} catch ( \Throwable $th ) {
+					throw $th;
+				}
+			}
 		}
 	}
 

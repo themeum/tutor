@@ -413,6 +413,10 @@ class OrderModel {
 
 		if ( $trigger_hooks ) {
 			do_action( 'tutor_order_payment_status_changed', $order_id, self::PAYMENT_UNPAID, self::PAYMENT_PAID );
+
+			$order = $this->get_order_by_id( $order_id );
+			$discount_amount = $this->calculate_discount_amount( $order->discount_type, $order->discount_amount, $order->subtotal_price );
+			do_action( 'tutor_after_order_mark_as_paid', $order, $discount_amount );
 		}
 
 		return true;

@@ -530,7 +530,9 @@ class OrderController {
 
 			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status );
 
-			do_action( 'tutor_after_order_refund', $order_data );
+			$order_data->payment_status = $update_data['payment_status'];
+			$order_data->order_status   = $update_data['order_status'];
+			do_action( 'tutor_after_order_refund', $order_data, $amount );
 
 			$this->json_response( __( 'Order refund successful', 'tutor' ) );
 		} else {
@@ -675,7 +677,7 @@ class OrderController {
 				);
 			}
 
-			do_action( 'tutor_after_add_order_discount', $request );
+			do_action( 'tutor_after_add_order_discount', $order, $discount_amount );
 
 			$this->json_response( __( 'Order discount successful added', 'tutor' ) );
 		} catch ( \Throwable $th ) {
