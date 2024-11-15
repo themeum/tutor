@@ -9504,7 +9504,7 @@ class Utils {
 				'icon'  => 'external_url',
 			),
 			'youtube'      => array(
-				'title' => __( 'Youtube', 'tutor' ),
+				'title' => __( 'YouTube', 'tutor' ),
 				'icon'  => 'youtube',
 			),
 			'vimeo'        => array(
