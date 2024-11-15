@@ -1578,7 +1578,7 @@ class Utils {
 
 			foreach ( $lessons as $lesson ) {
 				$is_complete = get_user_meta( $user_id, "_tutor_completed_lesson_id_{$lesson->ID}", true );
-				if ( ! $is_complete ) {
+				if ( ! $is_complete && ! $this->has_attempted_quiz( $user_id, $lesson->ID ) ) {
 					$first_lesson = $lesson;
 					break;
 				}
