@@ -82,7 +82,7 @@ jQuery(document).ready(function ($) {
 		const enable_marketplace = $("input[name='enable_course_marketplace']:checked").val();
 		const url = new URL(window.location.href);
 		url.searchParams.set('marketplace', enable_marketplace);
-		url.hash = 'general';
+		url.hash = 'course';
 		window.history.pushState(null, '', url);
 		showHide(enable_marketplace);
 	});
