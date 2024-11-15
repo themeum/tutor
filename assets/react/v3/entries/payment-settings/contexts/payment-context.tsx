@@ -1,6 +1,11 @@
-import { createContext, ReactNode, useContext } from 'react';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { PaymentGateway, PaymentSettings, usePaymentGatewaysQuery, usePaymentSettingsQuery } from '../services/payment';
+import { type ReactNode, createContext, useContext } from 'react';
+import {
+  type PaymentGateway,
+  type PaymentSettings,
+  usePaymentGatewaysQuery,
+  usePaymentSettingsQuery,
+} from '../services/payment';
 
 interface PaymentContextType {
   payment_gateways: PaymentGateway[];

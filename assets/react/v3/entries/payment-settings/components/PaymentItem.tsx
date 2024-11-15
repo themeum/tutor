@@ -2,37 +2,42 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
+import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import Alert from '@Atoms/Alert';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import { useToast } from '@Atoms/Toast';
+
+import FormImageInput from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormImageInput from '@Components/fields/FormImageInput';
 import FormSwitch from '@Components/fields/FormSwitch';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
+
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
 import { animateLayoutChanges } from '@Utils/dndkit';
+import { styleUtils } from '@Utils/style-utils';
+import { isObject } from '@Utils/types';
+import { requiredRule } from '@Utils/validation';
 
+import Badge from '../atoms/Badge';
+import { usePaymentContext } from '../contexts/payment-context';
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
 import Card from '../molecules/Card';
 import {
+  type PaymentMethod,
+  type PaymentSettings,
   getWebhookUrl,
   manualMethodFields,
   useInstallPaymentMutation,
   useRemovePaymentMutation,
-  type PaymentMethod,
-  type PaymentSettings,
 } from '../services/payment';
-import Badge from '../atoms/Badge';
-import { isObject } from '@Utils/types';
-import { usePaymentContext } from '../contexts/payment-context';
-import Alert from '@/v3/shared/atoms/Alert';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -43,7 +48,9 @@ interface PaymentItemProps {
 const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps) => {
   const { payment_gateways } = usePaymentContext();
   const { showModal } = useModal();
+  const { showToast } = useToast();
   const form = useFormContext<PaymentSettings>();
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
   const paymentFormFields = data.is_manual
     ? manualMethodFields
@@ -73,6 +80,21 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     });
   };
 
+  const fieldsErrorAfterTrigger = form.formState.errors.payment_methods?.[paymentIndex]?.fields?.length;
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    const fieldsErrorAfterTrigger = (form.formState.errors.payment_methods?.[paymentIndex]?.fields?.length ?? 0) > 0;
+    if (fieldsErrorAfterTrigger) {
+      form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
+    }
+  }, [fieldsErrorAfterTrigger]);
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    form.trigger(`payment_methods.${paymentIndex}.fields`);
+  }, []);
+
   return (
     <div
       {...attributes}
@@ -95,6 +117,10 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
       <Card
         title={data.label}
         titleIcon={data.icon}
+        toggleCollapse={() => {
+          form.trigger(`payment_methods.${paymentIndex}.fields`);
+          setIsCollapsed(!isCollapsed);
+        }}
         subscription={data.support_subscription}
         actionTray={
           <div css={styles.cardActions}>
@@ -124,15 +150,34 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
             <Controller
               name={`payment_methods.${paymentIndex}.is_active`}
               control={form.control}
-              render={(controllerProps) => <FormSwitch {...controllerProps} />}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  onChange={(value) => {
+                    form.trigger(`payment_methods.${paymentIndex}.fields`);
+                    const hasErrors = (form.formState.errors.payment_methods?.[paymentIndex]?.fields?.length ?? 0) > 0;
+
+                    if (value && hasErrors) {
+                      form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
+                      showToast({
+                        message: __('Please configure the payment method first.', 'tutor'),
+                        type: 'danger',
+                      });
+                      setIsCollapsed(false);
+                      return;
+                    }
+                  }}
+                />
+              )}
             />
           </div>
         }
         style={style}
         hasBorder
         noSeparator
-        collapsed
+        collapsed={isCollapsed}
         dataAttribute="data-card"
+        collapsedAnimationDependencies={[fieldsErrorAfterTrigger]}
       >
         <div css={styles.paymentWrapper}>
           <div css={styles.fieldWrapper}>
@@ -145,6 +190,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                   <Controller
                     name={`payment_methods.${paymentIndex}.fields.${index}.value`}
                     control={form.control}
+                    rules={['image', 'webhook_url'].includes(field.type || '') ? {} : { ...requiredRule() }}
                     render={(controllerProps) => {
                       switch (field.type) {
                         case 'select':
@@ -247,7 +293,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                       form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
                       {
                         shouldDirty: true,
-                      }
+                      },
                     );
                   } else {
                     const response = await removePaymentMutation.mutateAsync({
@@ -257,7 +303,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                     if (response.status_code === 200) {
                       form.setValue(
                         'payment_methods',
-                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex)
+                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
                       );
 
                       // Save settings
@@ -291,12 +337,14 @@ const styles = {
       }
     }
 
-    ${isOverlay &&
-    css`
+    ${
+      isOverlay &&
+      css`
       [data-card] {
         box-shadow: ${shadow.drag} !important;
       }
-    `}
+    `
+    }
   `,
   cardActions: css`
     display: flex;

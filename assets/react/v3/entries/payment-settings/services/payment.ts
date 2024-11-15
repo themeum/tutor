@@ -2,10 +2,10 @@ import { useToast } from '@Atoms/Toast';
 import { tutorConfig } from '@Config/config';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
+import type { Option } from '@Utils/types';
+import { convertToErrorMessage } from '@Utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { Option } from '@Utils/types';
-import { convertToErrorMessage } from '@Utils/util';
 
 export interface PaymentField {
   name: string;
@@ -77,11 +77,11 @@ export const convertPaymentMethods = (methods: PaymentMethod[], gateways: Paymen
   });
 
   // Add any new methods from installed gateways that are not already in methods
-  gatewayMap.forEach((gateway) => {
+  for (const gateway of gatewayMap.values()) {
     if (gateway.is_installed && !updatedMethods.some((method) => method.name === gateway.name)) {
       updatedMethods.push({ ...gateway, fields: gateway.fields.map(({ name, value }) => ({ name, value })) });
     }
-  });
+  }
 
   return updatedMethods;
 };

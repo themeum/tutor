@@ -576,7 +576,14 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       title: '',
       url: courseDetails.thumbnail,
     },
-    video: courseDetails.video,
+    video: {
+      ...courseDetails.video,
+      source: Object.values(tutorConfig.supported_video_sources).find(
+        (item) => item.value === courseDetails.video.source,
+      )
+        ? courseDetails.video.source
+        : '',
+    },
     course_product_name: courseDetails.course_pricing.product_name,
     course_price_type: !courseDetails.course_pricing.type ? 'free' : courseDetails.course_pricing.type,
     course_price: courseDetails.course_pricing.price,
