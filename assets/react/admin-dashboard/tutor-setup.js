@@ -1,4 +1,5 @@
 import '../front/_select_dd_search';
+import { tutor_esc_attr, tutor_esc_html } from '../lib/tutor';
 
 jQuery.fn.serializeObject = function () {
 	var $ = jQuery;
@@ -375,37 +376,5 @@ jQuery(document).ready(function ($) {
 
 });
 
-
-/**
- * Escape HTML and return safe HTML
- * 
- * @since 2.2.4
- * 
- * @param {string} unsafeText HTML string
- * @returns string
- */
-window.tutor_esc_html = function (unsafeText) {
-	let safeHTML = ''
-	let div = document.createElement('div');
-	/**
-	 * When set an HTML string to an element's innerText
-	 * the browser automatically escapes any HTML tags and
-	 * treats the content as plain text.
-	 */
-	div.innerText = unsafeText;
-	safeHTML = div.innerHTML;
-	div.remove()
-
-	return safeHTML;
-}
-
-
-window.tutor_esc_attr = function(str) {
-    return str.replace(/&/g, '&amp;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#039;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;');
-}
-
-
+window.tutor_esc_attr = tutor_esc_attr;
+window.tutor_esc_html = tutor_esc_html;
