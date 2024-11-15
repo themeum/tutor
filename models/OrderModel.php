@@ -414,7 +414,7 @@ class OrderModel {
 		if ( $trigger_hooks ) {
 			do_action( 'tutor_order_payment_status_changed', $order_id, self::PAYMENT_UNPAID, self::PAYMENT_PAID );
 
-			$order = $this->get_order_by_id( $order_id );
+			$order           = $this->get_order_by_id( $order_id );
 			$discount_amount = $this->calculate_discount_amount( $order->discount_type, $order->discount_amount, $order->subtotal_price );
 			do_action( 'tutor_after_order_mark_as_paid', $order, $discount_amount );
 		}
@@ -932,10 +932,11 @@ class OrderModel {
 				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
 				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
 				WHERE 1 = %d
+				AND o.coupon_amount > 0
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
-				{$course_clause}
+				-- {$course_clause}
 				{$group_clause},o.id",
 				1
 			)
@@ -948,11 +949,18 @@ class OrderModel {
 			foreach ( $discounts as $discount ) {
 				$total_discount  += $discount->total;
 				$discount_items[] = $discount;
+
+				// Split each discount.
+				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
+
+				$discount->total = is_admin() ? $admin_discount : $instructor_discount;
 			}
+
+			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
 			$response = array(
 				'discounts'       => $discount_items,
-				'total_discounts' => $total_discount,
+				'total_discounts' => is_admin() ? $admin_total : $instructor_total,
 			);
 
 			return $response;
@@ -988,12 +996,19 @@ class OrderModel {
 			foreach ( $discounts as $discount ) {
 				$total_discount  += $discount->total;
 				$discount_items[] = $discount;
+
+				// Split each discount.
+				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
+
+				$discount->total = is_admin() ? $admin_discount : $instructor_discount;
 			}
 		}
 
+		list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
+
 		$response = array(
 			'discounts'       => $discount_items,
-			'total_discounts' => $total_discount,
+			'total_discounts' => is_admin() ? $admin_total : $instructor_total,
 		);
 
 		return $response;
