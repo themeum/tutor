@@ -1,37 +1,5 @@
 import '../front/_select_dd_search';
 
-/**
- * Escape HTML and return safe HTML
- * 
- * @since 2.2.4
- * 
- * @param {string} unsafeText HTML string
- * @returns string
- */
-window.tutor_esc_html = function (unsafeText) {
-	let safeHTML = ''
-	let div = document.createElement('div');
-	/**
-	 * When set an HTML string to an element's innerText
-	 * the browser automatically escapes any HTML tags and
-	 * treats the content as plain text.
-	 */
-	div.innerText = unsafeText;
-	safeHTML = div.innerHTML;
-	div.remove()
-
-	return safeHTML;
-}
-
-
-window.tutor_esc_attr = function(str) {
-    return str.replace(/&/g, '&amp;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#039;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;');
-}
-
 jQuery.fn.serializeObject = function () {
 	var $ = jQuery;
 	var values = {};
@@ -61,8 +29,11 @@ jQuery.fn.serializeObject = function () {
 jQuery(document).ready(function ($) {
 	"use strict";
 
+	selectSearchField('.tutor-form-select');
 
 	const url = window.location.href;
+	const params = new URLSearchParams(window.location.search);
+	const enable_marketplace = params.get('marketplace');
 	if (url.indexOf('#') > 0) {
 		$(".tutor-wizard-container > div").removeClass("active");
 		$(".tutor-wizard-container > div.tutor-setup-wizard-settings").addClass("active");
@@ -79,8 +50,11 @@ jQuery(document).ready(function ($) {
 				}
 			}
 		}
-		const enable = $("input[name='enable_course_marketplace'").val()
-		showHide('on' == enable ? 'on' : 'off')
+		showHide(enable_marketplace);
+	}
+
+	if (enable_marketplace === 'off') {
+		$("#enable_course_marketplace-0").prop('checked', true);
 	}
 
 	$(".tutor-setup-title li").on("click", function (e) {
@@ -103,9 +77,13 @@ jQuery(document).ready(function ($) {
 		e.preventDefault();
 		$(".tutor-setup-wizard-type").removeClass("active");
 		$(".tutor-setup-wizard-settings").addClass("active");
-		$('.tutor-setup-title li').eq(0).addClass('active')
-		window.location.hash = "general";
-		showHide($("input[name='enable_course_marketplace']:checked").val())
+		$('.tutor-setup-title li').eq(0).addClass('active');
+		const enable_marketplace = $("input[name='enable_course_marketplace']:checked").val();
+		const url = new URL(window.location.href);
+		url.searchParams.set('marketplace', enable_marketplace);
+		url.hash = 'general';
+		window.history.pushState(null, '', url);
+		showHide(enable_marketplace);
 	});
 
 	$(".tutor-type-previous").on("click", function (e) {
@@ -396,3 +374,38 @@ jQuery(document).ready(function ($) {
 
 
 });
+
+
+/**
+ * Escape HTML and return safe HTML
+ * 
+ * @since 2.2.4
+ * 
+ * @param {string} unsafeText HTML string
+ * @returns string
+ */
+window.tutor_esc_html = function (unsafeText) {
+	let safeHTML = ''
+	let div = document.createElement('div');
+	/**
+	 * When set an HTML string to an element's innerText
+	 * the browser automatically escapes any HTML tags and
+	 * treats the content as plain text.
+	 */
+	div.innerText = unsafeText;
+	safeHTML = div.innerHTML;
+	div.remove()
+
+	return safeHTML;
+}
+
+
+window.tutor_esc_attr = function(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;');
+}
+
+

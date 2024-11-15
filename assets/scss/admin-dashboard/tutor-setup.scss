@@ -105,7 +105,9 @@ ul.tutor-setup-content li.active {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding-block: 24px;
+
+	background-image: url(../images/setup/background.png);
+	background-position: left;
 }
 
 .tutor-setup-wrapper {
@@ -1382,7 +1384,7 @@ input.checkbox {
 .wizard-boarding-header {
 	display: grid;
 	place-items: center;
-	grid-gap: 32px;
+	grid-gap: 24px;
 	&-main {
 		font-size: clamp(3em, 10vw, 40px);
 	}
@@ -1397,7 +1399,7 @@ input.checkbox {
 	flex-direction: column;
 	align-items: center;
 	gap: 32px;
-	margin-top: 42px;
+	margin-top: 32px;
 	margin-bottom: 20px;
 }
 
@@ -1409,6 +1411,7 @@ input.checkbox {
 }
 
 .wizard-boarding-body img {
+	width: 100%;
 	max-width: 428px;
 }
 
@@ -1446,6 +1449,7 @@ input.checkbox {
 	flex-direction: column;
     align-items: center;
     justify-content: center;
+	padding-block: 24px;
 }
 
 .tutor-setup-wizard-type-inner {
@@ -1465,7 +1469,7 @@ input.checkbox {
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
-	padding-top: 40px;
+	padding: 40px 24px 0px 24px;
 
 	.title {
 		font-size: 32px;
@@ -1494,6 +1498,7 @@ input.checkbox {
 	align-items: center;
 	justify-content: center;
 	grid-gap: 32px;
+	padding-inline: 24px;
 }
 
 .wizard-type-footer {

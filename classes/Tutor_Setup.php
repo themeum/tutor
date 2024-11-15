@@ -836,8 +836,6 @@ class Tutor_Setup {
 			} catch ( \Throwable $th ) { //phpcs:ignore
 			}
 			?>
-			<?php wp_print_scripts( 'tutor-plyr' ); ?>
-			<?php wp_print_scripts( 'tutor-slick' ); ?>
 			<?php wp_print_scripts( 'tutor-setup' ); ?>
 			<?php do_action( 'admin_print_styles' ); ?>
 			<?php do_action( 'admin_head' ); ?>
