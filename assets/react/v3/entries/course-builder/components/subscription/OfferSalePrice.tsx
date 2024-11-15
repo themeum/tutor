@@ -58,7 +58,7 @@ export function OfferSalePrice({ index }: { index: number }) {
               <FormInputWithContent
                 {...props}
                 type="number"
-                label="Sale price"
+                label="Sale Price"
                 content={tutor_currency?.symbol || '$'}
                 selectOnFocus
                 contentCss={styleUtils.inputCurrencyStyle}

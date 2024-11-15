@@ -36,7 +36,7 @@ const defaultSteps: Step[] = [
   {
     indicator: 1,
     id: 'basic',
-    label: __('Course Basic', 'tutor'),
+    label: __('Basics', 'tutor'),
     path: CourseBuilderRouteConfigs.CourseBasics.buildLink(),
     isDisabled: false,
     isActive: true,

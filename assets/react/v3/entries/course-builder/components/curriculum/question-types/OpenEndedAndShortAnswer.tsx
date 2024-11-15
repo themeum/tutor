@@ -7,7 +7,7 @@ import { spacing } from '@Config/styles';
 const OpenEndedAndShortAnswer = () => {
   return (
     <div css={styles.optionWrapper}>
-      <Alert icon="bulb">{__('No option is necessary for this question type', 'tutor')}</Alert>
+      <Alert icon="bulb">{__('No options are necessary for this question type', 'tutor')}</Alert>
     </div>
   );
 };
