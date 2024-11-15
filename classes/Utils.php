@@ -3969,7 +3969,7 @@ class Utils {
 		$output  = '<div class="tutor-avatar' . $class . '">';
 		$output .= '<div class="tutor-ratio tutor-ratio-1x1">';
 
-		if ( is_object( $user ) && $user->tutor_profile_photo ) {
+		if ( is_object( $user ) && $user->tutor_profile_photo && wp_get_attachment_image_url( $user->tutor_profile_photo ) ) {
 			$output .= '<img src="' . wp_get_attachment_image_url( $user->tutor_profile_photo, 'thumbnail' ) . '" alt="' . esc_attr( $name ) . '" /> ';
 		} else {
 			$first_char     = ! empty( $arr[0] ) ? $this->str_split( $arr[0] )[0] : '';
