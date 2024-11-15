@@ -449,7 +449,7 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
  * @param {string} unsafeText HTML string
  * @returns string
  */
-window.tutor_esc_html = function (unsafeText) {
+export function tutor_esc_html(unsafeText) {
 	let safeHTML = ''
 	let div = document.createElement('div');
 	/**
@@ -463,15 +463,17 @@ window.tutor_esc_html = function (unsafeText) {
 
 	return safeHTML;
 }
+window.tutor_esc_html = tutor_esc_html;
 
-
-window.tutor_esc_attr = function(str) {
+export function tutor_esc_attr(str) {
     return str.replace(/&/g, '&amp;')
               .replace(/"/g, '&quot;')
               .replace(/'/g, '&#039;')
               .replace(/</g, '&lt;')
               .replace(/>/g, '&gt;');
 }
+
+window.tutor_esc_attr = tutor_esc_attr;
 
 // enable custom selector when modal opens
 window.addEventListener('tutor_modal_shown', (e) => {
