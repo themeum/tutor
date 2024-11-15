@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown_billing_country?.addEventListener('change', async (e) => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = e.target.value;
-            const coupon_code = input_coupon_code.value;
+            const coupon_code = input_coupon_code?.value;
 
             if (country) {
                 toggleSpinner(e.target, 'show');
@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = dropdown_billing_country.value;
             const state = e.target.value;
-            const coupon_code = input_coupon_code.value;
+            const coupon_code = input_coupon_code?.value;
 
             if (state) {
                 toggleSpinner(e.target, 'show');
