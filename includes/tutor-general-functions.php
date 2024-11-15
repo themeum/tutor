@@ -1709,18 +1709,6 @@ if ( ! function_exists( 'tutor_split_amounts' ) ) {
 	 */
 	function tutor_split_amounts( $amounts ) {
 		$amounts = is_array( $amounts ) ? $amounts : array( $amounts );
-		// Get Admin commission rate (%) from settings.
-		// $admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
-		// // Get Instructor commission rate (%) based on remaining amount.
-		// $instructor_commission = 1 - $admin_commission;
-
-		// $admin_amount      = 0;
-		// $instructor_amount = 0;
-
-		// foreach ( $amounts as $amount ) {
-		// $admin_amount      += $amount * $admin_commission;
-		// $instructor_amount += $amount * $instructor_commission;
-		// }
 
 		$admin_amount      = 0;
 		$instructor_amount = 0;
