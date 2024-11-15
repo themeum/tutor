@@ -336,6 +336,7 @@ const FormVideoInput = ({
                     >
                       <Show when={videoSources.includes('html5')}>
                         <Button
+                          size="small"
                           variant="secondary"
                           icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
                           onClick={() => {
@@ -361,6 +362,7 @@ const FormVideoInput = ({
                           }
                         >
                           <Button
+                            size="small"
                             variant="secondary"
                             icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
                             onClick={() => {
