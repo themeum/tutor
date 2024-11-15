@@ -130,7 +130,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 			<div class="tutor-builder-section">
 				<div class="tutor-row tutor-align-center">
 					<div class="tutor-col-lg-4 tutor-gap-4">
-						<div class="tutor-pl-lg-60 tutor-p-24 tutor-p-lg-0">
+						<div class="tutor-pl-lg-40 tutor-p-24 tutor-p-lg-0">
 							<h3 class="tutor-section-title">
 								<?php esc_html_e( 'Reimagined Course & Quiz Builder', 'tutor' ); ?>
 							</h3>
