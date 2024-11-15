@@ -83,6 +83,15 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 	margin: 0px;
 }
 
+@media (max-width: 1560px) {
+	.tutor-lms-welcome-page .tutor-header-section{
+		padding: 64px 0px 110px;
+	}
+	.tutor-container {
+		max-width: 1080px;
+	}
+}
+
 @media (max-width: 767px) {
 	.tutor-lms-welcome-page {
 		margin-left: -10px;
