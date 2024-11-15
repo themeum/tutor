@@ -53,7 +53,7 @@ class Admin {
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'admin_head', array( new Utils(), 'handle_flash_message' ), 999 );
-		add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
+		// add_action( 'tutor_after_settings_menu', '\TUTOR\WhatsNew::whats_new_menu', 11 );
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
@@ -137,7 +137,7 @@ class Admin {
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'Version 3.0', 'tutor' ), __( 'Version 3.0 <span class="tutor-pro-badge">Hot</span>', 'tutor' ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
+			add_submenu_page( 'tutor', __( 'What\'s New in 3.0', 'tutor' ), sprintf( '<span class="tutor-text-orange">%s</span>', __( 'What\'s New in 3.0', 'tutor' ) ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
 		// Ecommerce menu @since 3.0.0.
@@ -168,7 +168,7 @@ class Admin {
 			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
 		}
 
-		add_submenu_page( 'tutor', __( 'Add-ons', 'tutor' ), sprintf( '<span class="tutor-addons-text">%s</span>', __( 'Add-ons', 'tutor' ) ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
+		add_submenu_page( 'tutor', __( 'Addons', 'tutor' ), sprintf( '<span class="tutor-addons-text">%s</span>', __( 'Addons', 'tutor' ) ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
 		do_action( 'tutor_admin_register' );
 
