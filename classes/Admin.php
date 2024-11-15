@@ -137,7 +137,7 @@ class Admin {
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
 		if ( ! $has_pro ) {
-			add_submenu_page( 'tutor', __( 'What\'s New in 3.0', 'tutor' ), sprintf( '<span class="tutor-text-orange">%s</span>', __( 'What\'s New in 3.0', 'tutor' ) ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
+			add_submenu_page( 'tutor', __( 'What\'s New in 3.0', 'tutor' ), sprintf( '<span class="tutor-new-feature tutor-text-orange">%s</span>', __( 'What\'s New in 3.0', 'tutor' ) ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
 		// Ecommerce menu @since 3.0.0.
