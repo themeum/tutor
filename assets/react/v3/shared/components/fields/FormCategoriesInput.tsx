@@ -8,7 +8,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { generateTree, getCategoryLeftBarHeight } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { produce } from 'immer';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import LoadingSpinner from '@Atoms/LoadingSpinner';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -16,6 +16,7 @@ import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
 import { Controller, type FieldValues } from 'react-hook-form';
+import Show from '../../controls/Show';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
@@ -50,6 +51,19 @@ const FormMultiLevelInput = ({
   }>({
     shouldFocusError: true,
   });
+
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+  useEffect(() => {
+    if (isOpen) {
+      const timeout = setTimeout(() => {
+        form.setFocus('name');
+      }, 250);
+
+      return () => {
+        clearTimeout(timeout);
+      };
+    }
+  }, [isOpen]);
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -108,7 +122,10 @@ const FormMultiLevelInput = ({
                 ))}
               </div>
 
-              <div ref={triggerRef} css={styles.addButtonWrapper({ isActive: isScrolling })}>
+              <div
+                ref={triggerRef}
+                css={styles.addButtonWrapper({ isActive: isScrolling, hasCategories: treeOptions.length > 0 })}
+              >
                 <button type="button" css={styles.addNewButton} onClick={() => setIsOpen(true)}>
                   <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
                 </button>
@@ -127,18 +144,20 @@ const FormMultiLevelInput = ({
                     <FormInput {...controllerProps} placeholder={__('Category name', 'tutor')} selectOnFocus />
                   )}
                 />
-                <Controller
-                  name="parent"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormMultiLevelSelect
-                      {...controllerProps}
-                      placeholder={__('Select parent', 'tutor')}
-                      options={categoryListQuery.data ?? []}
-                      clearable
-                    />
-                  )}
-                />
+                <Show when={treeOptions.length > 0}>
+                  <Controller
+                    name="parent"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormMultiLevelSelect
+                        {...controllerProps}
+                        placeholder={__('Select parent', 'tutor')}
+                        options={categoryListQuery.data ?? []}
+                        clearable={!!controllerProps.field.value}
+                      />
+                    )}
+                  />
+                </Show>
 
                 <div css={styles.categoryFormButtons}>
                   <Button
@@ -253,8 +272,9 @@ const styles = {
       z-index: ${zIndex.level};
     }
 
-    ${hasParent &&
-    css`
+    ${
+      hasParent &&
+      css`
       &:before {
         content: '';
         position: absolute;
@@ -266,7 +286,8 @@ const styles = {
         background-color: ${colorTokens.stroke.divider};
         z-index: ${zIndex.level};
       }
-    `}
+    `
+    }
   `,
   addNewButton: css`
     ${styleUtils.resetButton};
@@ -286,6 +307,7 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
+    border: 1px solid ${colorTokens.stroke.border};
     padding: ${spacing[16]};
     min-width: 306px;
 
@@ -298,13 +320,15 @@ const styles = {
     justify-content: end;
     gap: ${spacing[8]};
   `,
-  addButtonWrapper: ({ isActive = false }) => css`
+  addButtonWrapper: ({ isActive = false, hasCategories = false }) => css`
     transition: box-shadow 0.3s ease-in-out;
-    padding: ${spacing[8]};
-    padding-bottom: 0;
-    ${isActive &&
-    css`
+    padding-inline: ${spacing[8]};
+    padding-block: ${hasCategories ? spacing[4] : '0px'};
+    ${
+      isActive &&
+      css`
       box-shadow: ${shadow.scrollable};
-    `}
+    `
+    }
   `,
 };

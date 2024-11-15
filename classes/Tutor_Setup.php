@@ -159,7 +159,6 @@ class Tutor_Setup {
 			$html         .= '<li class="' . ( 1 == $i ? 'active' : '' ) . '">';
 				$html     .= '<div class="tutor-setup-content-heading heading">';
 					$html .= '<div class="setup-section-title tutor-fs-6 tutor-fw-medium tutor-color-black">' . $field_parent['lable'] . '</div>';
-					$html .= '<div class="tutor-reset-section tutor-text-btn-small tutor-color-secondary tutor-d-flex tutor-align-center">' . __( 'Reset Default', 'tutor' ) . '</div>';
 				$html     .= '</div>';
 				$html     .= '<div class="tutor-setup-content-heading body">';
 
@@ -433,50 +432,23 @@ class Tutor_Setup {
 		$currency_positions = Settings::get_currency_position_options();
 
 		$general_fields = array(
-			'general'    => array(
-				'lable' => __( 'General', 'tutor' ),
+			'course'     => array(
+				'lable' => __( 'Course', 'tutor' ),
 				'attr'  => array(
-					'enable_course_marketplace'     => array(
-						'type' => 'marketplace',
-					),
-					'public_profile_layout'         => array(
-						'type'  => 'switch',
-						'data'  => array(
-							'off' => 'private',
-							'on'  => 'pp-rectangle',
-						),
-						'lable' => __( 'Instructor Profile', 'tutor' ),
-						'desc'  => __( 'Allow users to have a instructor profile to showcase awards and completed courses.', 'tutor' ),
-					),
-					'student_public_profile_layout' => array(
-						'type'  => 'switch',
-						'data'  => array(
-							'off' => 'private',
-							'on'  => 'pp-rectangle',
-						),
-						'lable' => __( 'Student Profile', 'tutor' ),
-						'desc'  => __( 'Allow users to have a student profile to showcase awards and completed courses.', 'tutor' ),
-					),
-					'course_permalink_base'         => array(
+					'course_permalink_base'    => array(
 						'type'  => 'text',
 						'max'   => 50,
 						'lable' => __( 'Course permalink', 'tutor' ),
 						/* translators: %s: sample permalink */
 						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/' . tutor()->course_post_type . '/sample-course/<strong>' . ( tutor_utils()->get_option( 'course_permalink_base', 'courses' ) ) . '</strong>/sample-lesson/' ),//phpcs:ignore
 					),
-					'lesson_permalink_base'         => array(
+					'lesson_permalink_base'    => array(
 						'type'  => 'text',
 						'max'   => 50,
 						'lable' => __( 'Lesson permalink', 'tutor' ),
 						/* translators: %s: sample permalink */
 						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/' . tutor()->course_post_type . '/sample-course/<strong>' . ( tutor_utils()->get_option( 'lesson_permalink_base', 'lessons' ) ) . '</strong>/sample-lesson/' ),//phpcs:ignore
 					),
-				),
-			),
-
-			'course'     => array(
-				'lable' => __( 'Course', 'tutor' ),
-				'attr'  => array(
 					'enable_q_and_a_on_course' => array(
 						'type'  => 'switch',
 						'lable' => __( 'Question and Answer', 'tutor' ),
@@ -498,7 +470,7 @@ class Tutor_Setup {
 			'instructor' => array(
 				'lable' => __( 'Instructor', 'tutor' ),
 				'attr'  => array(
-					'instructor_can_publish_course' => array(
+					'enable_revenue_sharing'        => array(
 						'type'  => 'switch',
 						'lable' => __( 'Revenue Sharing', 'tutor' ),
 						'desc'  => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
@@ -561,20 +533,17 @@ class Tutor_Setup {
 				<div class="tutor-wrapper-boarding tutor-setup-wizard-settings">
 					<div class="tutor-setup-wrapper">
 						<ul class="tutor-setup-title">
-							<li data-url="general" class="general active current">
-								<?php esc_html_e( 'General', 'tutor' ); ?>
-							</li>
 							<li data-url="course" class="course">
-								<?php esc_html_e( 'Course', 'tutor' ); ?>
+								<span><?php esc_html_e( 'Course', 'tutor' ); ?></span>
 							</li>
 							<li data-url="instructor" class="instructor">
-								<?php esc_html_e( 'Instructor', 'tutor' ); ?>
+								<span><?php esc_html_e( 'Instructor', 'tutor' ); ?></span>
 							</li>
 							<li data-url="payment" class="payment">
-								<?php esc_html_e( 'Currency', 'tutor' ); ?>
+								<span><?php esc_html_e( 'Currency', 'tutor' ); ?></span>
 							</li>
 							<li data-url="finish" style="display:none" class="finish">
-								<?php esc_html_e( 'Finish', 'tutor' ); ?>
+								<span><?php esc_html_e( 'Finish', 'tutor' ); ?></span>
 							</li>
 						</ul>
 
