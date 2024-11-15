@@ -413,6 +413,10 @@ class OrderModel {
 
 		if ( $trigger_hooks ) {
 			do_action( 'tutor_order_payment_status_changed', $order_id, self::PAYMENT_UNPAID, self::PAYMENT_PAID );
+
+			$order = $this->get_order_by_id( $order_id );
+			$discount_amount = $this->calculate_discount_amount( $order->discount_type, $order->discount_amount, $order->subtotal_price );
+			do_action( 'tutor_after_order_mark_as_paid', $order, $discount_amount );
 		}
 
 		return true;
@@ -1052,11 +1056,6 @@ class OrderModel {
 			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
 		}
 
-		// Get Admin commission rate (%) from settings.
-		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
-		// Get Instructor commission rate (%) based on remaining amount.
-		$instructor_commission = 1 - $admin_commission;
-
 		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 		$refunds    = $wpdb->get_results(
@@ -1079,24 +1078,25 @@ class OrderModel {
 			)
 		);
 
-		$admin_refund_amount      = 0;
-		$instructor_refund_amount = 0;
+		$total_refund = 0;
 
 		foreach ( $refunds as $refund ) {
-			// Refund amount calculation.
-			$refund_amount            = $refund->total;
-			$admin_refund_amount      = $refund_amount * $admin_commission;
-			$instructor_refund_amount = $refund_amount * $instructor_commission;
+			$total_refund += $refund->total;
+
+			// Update total amount from list.
+			$split_refund  = (object) tutor_split_amounts( $refund->total );
+			$refund->total = is_admin() ? $split_refund->admin : $split_refund->instructor;
 		}
+
+		$split_total_refund = (object) tutor_split_amounts( $total_refund );
 
 		$response = array(
 			'refunds'       => $refunds,
-			'total_refunds' => is_admin() ? $admin_refund_amount : $instructor_refund_amount,
+			'total_refunds' => is_admin() ? $split_total_refund->admin : $split_total_refund->instructor,
 		);
 
 		return $response;
 	}
-
 
 	/**
 	 * Update the payment status of an order.

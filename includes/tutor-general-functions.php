@@ -1693,3 +1693,39 @@ if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
 		exit();
 	}
 }
+
+if ( ! function_exists( 'tutor_split_amounts' ) ) {
+	/**
+	 * Split amounts into parts for admin & instructor
+	 *
+	 * Amount split will be proportionally based on
+	 * admin commission rate & instructor commission rate.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param array $amounts Single amount or list of amount array. For ex: [12,20,100].
+	 *
+	 * @return array
+	 */
+	function tutor_split_amounts( $amounts ) {
+		$amounts = is_array( $amounts ) ? $amounts : array( $amounts );
+
+		$admin_amount      = 0;
+		$instructor_amount = 0;
+
+		$sharing_enabled = tutor_utils()->get_option( 'enable_revenue_sharing' );
+		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
+		$admin_rate      = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
+
+		foreach ( $amounts as $amount ) {
+			$instructor_amount = $instructor_rate > 0 ? ( ( $amount * $instructor_rate ) / 100 ) : 0;
+			$admin_amount      = $admin_rate > 0 ? ( ( $amount * $admin_rate ) / 100 ) : 0;
+		}
+
+		return array(
+			'admin'      => $admin_amount,
+			'instructor' => $instructor_amount,
+		);
+	}
+}
+
