@@ -9,7 +9,7 @@
  * @since 1.0.0
  */
 
-$image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
+$image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 ?>
 
 <style type="text/css">
@@ -85,8 +85,8 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 }
 
 @media (max-width: 1560px) {
-	.tutor-lms-welcome-page .tutor-header-section{
-		padding: 64px 0px 110px;
+	.tutor-lms-welcome-page .tutor-header-section .banner-image {
+		padding-top: 50px;
 	}
 	.tutor-container {
 		max-width: 1080px;
@@ -119,7 +119,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 				</div>
 
 				<div class="tutor-col-xl-6">
-					<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/banner.png'; ?>" alt="banner" />
+					<img src="<?php echo esc_url( $image_url ) . '/banner.png'; ?>" alt="banner" class="banner-image" />
 				</div>
 			</div>
 		</div>
@@ -140,7 +140,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 						</div>
 					</div>
 					<div class="tutor-col-lg-8">
-						<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/course-builder.png'; ?>" alt="Course builder" />
+						<img src="<?php echo esc_url( $image_url ) . '/course-builder.png'; ?>" alt="Course builder" />
 					</div>
 				</div>
 			</div>
@@ -161,7 +161,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 							</p>
 						</div>
 						<div>
-							<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/ecommerce.png'; ?>" alt="Ecommerce" />
+							<img src="<?php echo esc_url( $image_url ) . '/ecommerce.png'; ?>" alt="Ecommerce" />
 						</div>
 					</div>
 				</div>
@@ -169,7 +169,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					<div class="tutor-welcome-card tutor-pt-44 tutor-pb-40 tutor-px-32">
 						<div class="tutor-row tutor-align-center">
 							<div class="tutor-col-md-6">
-								<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/subscriptions.png'; ?>" alt="Subscriptions" />
+								<img src="<?php echo esc_url( $image_url ) . '/subscriptions.png'; ?>" alt="Subscriptions" />
 							</div>
 							<div class="tutor-col-md-6">
 								<div class="">
@@ -186,7 +186,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					<div class="tutor-welcome-card tutor-mt-32">
 						<div class="tutor-row tutor-align-center">
 							<div class="tutor-col-md-6">
-								<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/analytics.png'; ?>" alt="Analytics" />
+								<img src="<?php echo esc_url( $image_url ) . '/analytics.png'; ?>" alt="Analytics" />
 							</div>
 							<div class="tutor-col-md-6">
 								<div class="tutor-p-24 tutor-pr-md-40">
@@ -220,7 +220,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 						</div>
 					</div>
 					<div class="tutor-col-lg-8">
-						<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/ai-studio.png'; ?>" alt="AI Studio" />
+						<img src="<?php echo esc_url( $image_url ) . '/ai-studio.png'; ?>" alt="AI Studio" />
 					</div>
 				</div>
 			</div>
@@ -234,7 +234,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					<div class="tutor-welcome-card tutor-pt-40 tutor-pl-lg-32">
 						<div class="tutor-row tutor-align-center">
 							<div class="tutor-col-md-6">
-								<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/design.png'; ?>" alt="Design" />
+								<img src="<?php echo esc_url( $image_url ) . '/design.png'; ?>" alt="Design" />
 							</div>
 							<div class="tutor-col-md-6">
 								<div class="tutor-p-24 tutor-pr-md-40">
@@ -253,7 +253,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 					<div class="tutor-welcome-card tutor-p-40 tutor-d-flex tutor-align-center" style="height: 100%;">
 						<div class="tutor-row tutor-g-4 tutor-align-center">
 							<div class="tutor-col-md-4">
-								<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/welcome/add-more.png'; ?>" alt="Add more" />
+								<img src="<?php echo esc_url( $image_url ) . '/add-more.png'; ?>" alt="Add more" />
 							</div>
 							<div class="tutor-col-md-8">
 								<div class="tutor-pr-md-40">
