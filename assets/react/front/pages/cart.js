@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
 			const formData = tutorFormData([
 				{ action: 'tutor_add_course_to_cart', course_id: button.dataset.courseId },
 			]);
-			const isSinglePage = document.body.classList.contains('single-courses');
+			const isSinglePage = document.body.classList.contains('single-courses') || document.body.classList.contains('single-course-bundle');
 
 			try {
 				button.setAttribute('disabled', 'disabled');
