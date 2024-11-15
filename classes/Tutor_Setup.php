@@ -271,26 +271,26 @@ class Tutor_Setup {
 						if ( isset( $field['options'] ) ) {
 							foreach ( $field['options'] as $value => $label ) {
 								$html .= '<div class="option">';
-								$html .= '<input type="radio" class="radio" id="' . $value . '" name="' . $key . '" value="' . $value . '" ' . ( isset( $options[ $key ] ) && $options[ $key ] === $value ? 'checked' : '' ) . ' />';
-								$html .= '<label for="' . $value . '">';
-								$html .= '<h3>' . $label . '</h3>';
+								$html .= '<input type="radio" class="radio" id="' . esc_attr( $value ) . '" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" ' . ( isset( $options[ $key ] ) && $options[ $key ] === $value ? 'checked' : '' ) . ' />';
+								$html .= '<label for="' . esc_attr( $value ) . '">';
+								$html .= '<h3>' . esc_html( $label ) . '</h3>';
 								$html .= '</label>';
 								$html .= '</div>';
 
 								if ( isset( $options[ $key ] ) && $options[ $key ] === $value ) {
 											$selected_data .= '<div class="selected">';
-											$selected_data .= '<h3>' . $label . '</h3>';
+											$selected_data .= '<h3>' . esc_html( $label ) . '</h3>';
 											$selected_data .= '</div>';
 								}
 							}
 						}
 							$html .= '</div>';
-							$html .= $selected_data ? $selected_data : '<div class="selected"><h3>' . $field['options'][0]['title'] . '</h3><h5>' . $field['options'][0]['desc'] . '</h5></div>';
+							$html .= $selected_data ? $selected_data : '<div class="selected"><h3>' . esc_html( $field['options'][0]['title'] ) . '</h3><h5>' . $field['options'][0]['desc'] . '</h5></div>';
 							$html .= '</div></div>';
 						break;
 
 					case 'select':
-						$html .= '<select name="' . $key . '" class="tutor-form-select"';
+						$html .= '<select name="' . esc_attr( $key ) . '" class="tutor-form-select"';
 						if ( isset( $field['searchable'] ) ) {
 							$html .= ' data-searchable>';
 						} else {
@@ -298,7 +298,7 @@ class Tutor_Setup {
 						}
 						if ( isset( $field['options'] ) ) {
 							foreach ( $field['options'] as $value => $label ) {
-								$html .= '<option value="' . $value . '"' . ( isset( $options[ $key ] ) && $options[ $key ] === $value ? 'selected' : '' ) . '>' . $label . '</option>';
+								$html .= '<option value="' . esc_attr( $value ) . '"' . ( isset( $options[ $key ] ) && $options[ $key ] === $value ? 'selected' : '' ) . '>' . esc_html( $label ) . '</option>';
 							}
 						}
 						$html .= '</select>';
