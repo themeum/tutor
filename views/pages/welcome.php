@@ -56,6 +56,7 @@ $image_url = 'https://api.tutorlms.com/wp-json/restapi/v1/tutor-assets/welcome';
 }
 
 .tutor-builder-section {
+	position: relative;
 	background: #F8F8F8;
 	border-radius: 18px;
 	margin-top: -124px;
