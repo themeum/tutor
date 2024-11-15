@@ -672,9 +672,12 @@ class WooCommerce extends Tutor_Base {
 			}
 		}
 
+		// filter redirection url after woocommerce product purchase.
+		$redirect_url = apply_filters( 'tutor_woocommerce_redirect_url', $url );
+
 		// if tutor product & order status completed.
 		if ( $order->has_status( 'completed' ) && $tutor_product ) {
-			wp_safe_redirect( $url );
+			wp_safe_redirect( $redirect_url );
 			exit;
 		}
 	}

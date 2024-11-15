@@ -263,6 +263,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
               isInverse
               arrowPosition="auto"
               hideArrow
+              closeOnEscape={false}
             >
               <Show when={isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION)}>
                 <ThreeDots.Option
@@ -328,11 +329,9 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
       <Popover
         triggerRef={triggerGoogleMeetRef}
         isOpen={meetingType === 'tutor-google-meet'}
-        closePopover={() => {
-          setMeetingType(null);
-          setIsThreeDotOpen(false);
-        }}
+        closePopover={noop}
         maxWidth="306px"
+        closeOnEscape={false}
       >
         <GoogleMeetForm
           topicId={topicId}
@@ -346,11 +345,9 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
       <Popover
         triggerRef={triggerZoomRef}
         isOpen={meetingType === 'tutor_zoom_meeting'}
-        closePopover={() => {
-          setMeetingType(null);
-          setIsThreeDotOpen(false);
-        }}
+        closePopover={noop}
         maxWidth="306px"
+        closeOnEscape={false}
       >
         <ZoomMeetingForm
           topicId={topicId}

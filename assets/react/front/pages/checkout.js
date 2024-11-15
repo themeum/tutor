@@ -12,24 +12,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Handle payment method click 
         const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
-        const paymentTypeInput = document.querySelector("input[name=payment_type]");
-        const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
+        if (paymentOptionsWrapper) {
+            const paymentTypeInput = document.querySelector("input[name=payment_type]");
+            const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
 
-        paymentOptions.forEach((option) => {
-            option.addEventListener('click', (e) => {
-                paymentOptions.forEach(item => item.classList.remove('active'));
-                option.classList.add('active');
-                paymentTypeInput.value = option.dataset.paymentType;
+            paymentOptions.forEach((option) => {
+                option.addEventListener('click', (e) => {
+                    paymentOptions.forEach(item => item.classList.remove('active'));
+                    option.classList.add('active');
+                    paymentTypeInput.value = option.dataset.paymentType;
 
-                const paymentInstructions = option.dataset.paymentInstruction;
-                if (paymentInstructions) {
-                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
-                } else {
-                    document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
-                }
+                    const paymentInstructions = option.dataset.paymentInstruction;
+                    if (paymentInstructions) {
+                        document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                        document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                    } else {
+                        document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                    }
+                });
             });
-        });
+        }
 
         // Handle toggle coupon form button click
         window.addEventListener('click', (e) => {
@@ -107,6 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Handle coupon remove button click
         window.addEventListener('click', (e) => {
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
+                document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
                 updateCheckoutData('');
             }
@@ -115,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Validate checkout form.
         const tutorCheckoutForm = document.getElementById('tutor-checkout-form');
-        tutorCheckoutForm.addEventListener('submit', function (e) {
+        tutorCheckoutForm?.addEventListener('submit', function (e) {
             e.preventDefault();
 
             const submitButton = document.getElementById('tutor-checkout-pay-now-button');
@@ -162,7 +165,6 @@ document.addEventListener('DOMContentLoaded', () => {
          */
         const dropdown_billing_country = document.querySelector('[name=billing_country]');
         const dropdown_billing_state = document.querySelector('[name=billing_state]');
-        const input_coupon_code = document.querySelector('[name=coupon_code]');
         const spinner = '<span class="tutor-btn is-loading tutor-checkout-spinner"></span>';
 
         async function saveBilling(formData) {
@@ -185,12 +187,13 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         dropdown_billing_country?.addEventListener('change', async (e) => {
+            const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = e.target.value;
             const coupon_code = input_coupon_code.value;
-            
+
             if (country) {
                 toggleSpinner(e.target, 'show');
-                
+
                 const formData = new FormData();
                 formData.set('billing_country', country);
 
@@ -202,6 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
 
         dropdown_billing_state?.addEventListener('change', async (e) => {
+            const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = dropdown_billing_country.value;
             const state = e.target.value;
             const coupon_code = input_coupon_code.value;

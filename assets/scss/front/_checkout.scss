@@ -97,6 +97,8 @@
 		gap: 24px;
 	}
 	.tutor-checkout-course-item {
+		display: flex;
+		flex-direction: column;
 		color: var(--tutor-body-color);
 	}
 	.tutor-checkout-course-content {
@@ -105,26 +107,51 @@
 		justify-content: space-between;
 		gap: 56px;
 	}
+	.tutor-checkout-course-thumb-title {
+		display: grid;
+		grid-template-columns: 56px 1fr;
+		align-items: start;
+		gap: 8px;
+
+		img {
+			max-width: 100%;
+			border-radius: 3px;
+			margin-top: 6px;
+		}
+	}
 	.tutor-checkout-enrollment-fee {
 		display: flex;
 		align-items: start;
 		justify-content: space-between;
 		font-size: 14px;
+		margin-top: 16px;
 	}
 	.tutor-checkout-course-bundle-badge {
+		width: fit-content;
 		display: inline-block;
 		font-size: 11px;
 		line-height: 16px;
-		background-color: #7a078d;
+		background-color: #9342E7;
 		color: #ffffff;
 		border-radius: 13px;
 		padding: 0px 6px;
+	}
+	.tutor-checkout-course-plan-badge {
+		width: fit-content;
+		display: inline-block;
+		font-size: 11px;
+		line-height: 14px;
+		font-weight: 500;
+		background-color: #F0F1F5;
+		color: #41454F;
+		border-radius: 2px;
+		padding: 4px 8px;
 	}
 	.tutor-checkout-course-title {
 		font-weight: 500;
 		font-size: 16px;
 		line-height: 26px;
-		margin-bottom: 8px;
+		margin: 0px;
 
 		a {
 			color: var(--tutor-body-color);

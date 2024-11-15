@@ -229,8 +229,8 @@ const FormTopicPrerequisites = ({
                           {content.post_title}
                         </span>
                         <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
-                          <span css={typography.tiny()}>
-                            {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
+                          <span data-question-count css={typography.tiny()}>
+                            {sprintf(__('(%s questions)', 'tutor'), content.total_question)}
                           </span>
                         </Show>
                       </div>
@@ -319,8 +319,8 @@ const FormTopicPrerequisites = ({
                                     {content.post_title}
                                   </span>
                                   <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
-                                    <span css={typography.tiny()}>
-                                      {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
+                                    <span data-question-count css={typography.tiny()}>
+                                      {sprintf(__('(%s questions)', 'tutor'), content.total_question)}
                                     </span>
                                   </Show>
                                 </div>
@@ -510,13 +510,26 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
-    flex-grow: 1;
 
     ${
       onPopover &&
       css`
         padding-left: ${spacing[16]};
       `
+    }
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    span {
+      text-align: left;
+      ${styleUtils.text.ellipsis(1)};
+    }
+
+    [data-question-count] {
+      flex-shrink: 0;
+      text-decoration: none;
     }
   `,
 };

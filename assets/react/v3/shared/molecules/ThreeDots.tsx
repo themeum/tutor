@@ -67,6 +67,7 @@ interface ThreeDotsProps {
   isInverse?: boolean;
   hideArrow?: boolean;
   size?: 'small' | 'medium';
+  closeOnEscape?: boolean;
 }
 
 const ThreeDots = ({
@@ -82,9 +83,11 @@ const ThreeDots = ({
   isInverse = false,
   hideArrow = false,
   size = 'medium',
+  closeOnEscape = true,
   ...props
 }: ThreeDotsProps) => {
   const ref = useRef<HTMLButtonElement>(null);
+
   return (
     <>
       <button
@@ -106,6 +109,7 @@ const ThreeDots = ({
         closePopover={closePopover}
         animationType={animationType}
         hideArrow={hideArrow}
+        closeOnEscape={closeOnEscape}
       >
         <div css={styles.wrapper({ size })}>
           {React.Children.map(children, (child) => {
@@ -197,29 +201,35 @@ const styles = {
     ${
       isTrash &&
       css`
-      color: ${colorTokens.text.error};
-      svg {
-        color: ${colorTokens.icon.error};
-      }
-
-      &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
-        background-color: ${rgba(colorTokens.bg.error, 0.1)};
-
         svg {
           color: ${colorTokens.icon.error};
         }
-      }
 
-      &:active {
-        color: ${colorTokens.text.error};
-        background-color: ${colorTokens.color.danger[40]};
+        &:hover:not(:disabled) {
+          color: ${colorTokens.text.error};
+          background-color: ${rgba(colorTokens.bg.error, 0.1)};
 
-        svg {
-          color: ${colorTokens.icon.error};
+          svg {
+            color: ${colorTokens.icon.error};
+          }
         }
-      }
-    `
+
+        &:active {
+          color: ${colorTokens.text.error};
+          background-color: ${colorTokens.color.danger[40]};
+
+          svg {
+            color: ${colorTokens.icon.error};
+          }
+        }
+      `
+    }
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -4px;
+      border-radius: ${borderRadius.input};
     }
   `,
   button: ({ isOpen = false, isInverse = false, isDisabled = false }) => css`

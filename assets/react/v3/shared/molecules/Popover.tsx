@@ -68,15 +68,15 @@ const styles = {
         arrow &&
         !hideArrow &&
         css`
-        content: '';
-        position: absolute;
-        border: ${spacing[8]} solid transparent;
+          content: '';
+          position: absolute;
+          border: ${spacing[8]} solid transparent;
 
-        ${arrow === 'left' && styles.arrowLeft}
-        ${arrow === 'right' && styles.arrowRight}
-        ${arrow === 'top' && styles.arrowTop}
-        ${arrow === 'bottom' && styles.arrowBottom}
-      `
+          ${arrow === 'left' && styles.arrowLeft}
+          ${arrow === 'right' && styles.arrowRight}
+          ${arrow === 'top' && styles.arrowTop}
+          ${arrow === 'bottom' && styles.arrowBottom}
+        `
       }
     }
   `,

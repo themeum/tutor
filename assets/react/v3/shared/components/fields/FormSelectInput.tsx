@@ -7,13 +7,14 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { type IconCollection, type Option, isDefined } from '@Utils/types';
-
-import Show from '@Controls/Show';
 import { noop } from '@Utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
@@ -84,6 +85,7 @@ const FormSelectInput = <T,>({
 
   const inputRef = useRef<HTMLInputElement>(null);
   const optionRef = useRef<HTMLLIElement>(null);
+  const activeItemRef = useRef<HTMLLIElement>(null);
 
   const selections = useMemo(() => {
     if (isSearchable) {
@@ -120,6 +122,39 @@ const FormSelectInput = <T,>({
     // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   }, [getInitialValue, isOpen]);
 
+  const handleOptionSelect = (option: Option<T>, event?: React.MouseEvent) => {
+    event?.stopPropagation();
+
+    if (!option.disabled) {
+      field.onChange(option.value);
+      onChange(option);
+      setSearchText('');
+      setIsSearching(false);
+      setIsOpen(false);
+    }
+  };
+
+  const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
+    options: selections,
+    isOpen,
+    selectedValue: field.value,
+    onSelect: handleOptionSelect,
+    onClose: () => {
+      setIsOpen(false);
+      setIsSearching(false);
+      setSearchText('');
+    },
+  });
+
+  useEffect(() => {
+    if (isOpen && activeIndex >= 0 && activeItemRef.current) {
+      activeItemRef.current.scrollIntoView({
+        block: 'nearest',
+        behavior: 'smooth',
+      });
+    }
+  }, [isOpen, activeIndex]);
+
   return (
     <FormFieldWrapper
       fieldState={fieldState}
@@ -151,7 +186,8 @@ const FormSelectInput = <T,>({
                 css={{
                   width: '100%',
                 }}
-                onClick={() => {
+                onClick={(event) => {
+                  event.stopPropagation();
                   setIsOpen((previousState) => !previousState);
                   inputRef.current?.focus();
                 }}
@@ -255,26 +291,29 @@ const FormSelectInput = <T,>({
                     when={selections.length > 0}
                     fallback={<li css={styles.emptyState}>{__('No options available', 'tutor')}</li>}
                   >
-                    {selections.map((option) => (
+                    {selections.map((option, index) => (
                       <li
                         key={String(option.value)}
-                        ref={option.value === field.value ? optionRef : null}
+                        ref={option.value === field.value ? optionRef : activeIndex === index ? activeItemRef : null}
                         css={styles.optionItem({
                           isSelected: option.value === field.value,
+                          isActive: index === activeIndex,
+                          isDisabled: !!option.disabled,
                         })}
                       >
                         <button
                           type="button"
                           css={styles.label}
-                          onClick={() => {
-                            field.onChange(option.value);
-                            onChange(option);
-
-                            setSearchText('');
-                            setIsSearching(false);
-                            setIsOpen(false);
+                          onClick={(event) => {
+                            if (!option.disabled) {
+                              handleOptionSelect(option, event);
+                            }
                           }}
+                          disabled={option.disabled}
                           title={option.label}
+                          onMouseOver={() => setActiveIndex(index)}
+                          onFocus={() => setActiveIndex(index)}
+                          aria-selected={activeIndex === index}
                         >
                           <Show when={option.icon}>
                             <SVGIcon name={option.icon as IconCollection} width={32} height={32} />
@@ -507,6 +546,7 @@ const styles = {
     max-height: 500px;
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
 
     ${
       !removeOptionsMinWidth &&
@@ -515,7 +555,15 @@ const styles = {
     `
     }
   `,
-  optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
+  optionItem: ({
+    isSelected = false,
+    isActive = false,
+    isDisabled = false,
+  }: {
+    isSelected: boolean;
+    isActive: boolean;
+    isDisabled: boolean;
+  }) => css`
     ${typography.body()};
     min-height: 36px;
     height: 100%;
@@ -523,29 +571,38 @@ const styles = {
     display: flex;
     align-items: center;
     transition: background-color 0.3s ease-in-out;
-    cursor: pointer;
+    cursor: ${isDisabled ? 'not-allowed' : 'pointer'};
+    opacity: ${isDisabled ? 0.5 : 1};
+
+    ${
+      isActive &&
+      css`
+        background-color: ${colorTokens.background.hover};
+      `
+    }
 
     &:hover {
-      background-color: ${colorTokens.background.hover};
+      background-color: ${!isDisabled && colorTokens.background.hover};
     }
 
     ${
+      !isDisabled &&
       isSelected &&
       css`
-      background-color: ${colorTokens.background.active};
-      position: relative;
+        background-color: ${colorTokens.background.active};
+        position: relative;
 
-      &::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 3px;
-        height: 100%;
-        background-color: ${colorTokens.action.primary.default};
-        border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
-      }
-    `
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 3px;
+          height: 100%;
+          background-color: ${colorTokens.action.primary.default};
+          border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
+        }
+      `
     }
   `,
   label: css`

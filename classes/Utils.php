@@ -1159,9 +1159,9 @@ class Utils {
 		$course_id  = $this->get_post_id( $course_id );
 		$price_type = $this->price_type( $course_id );
 
-		if ( 'paid' === $price_type ) {
+		if ( Course::PRICE_TYPE_PAID === $price_type ) {
 			$is_purchaseable = true;
-		} elseif ( 'free' === $price_type ) {
+		} elseif ( Course::PRICE_TYPE_FREE === $price_type ) {
 			$is_purchaseable = apply_filters( 'is_course_paid', $is_purchaseable, $course_id );
 		}
 
@@ -3351,7 +3351,7 @@ class Utils {
 			if ( 5 === (int) $rating ) {
 				$max_rating = 5;
 			}
-			$rating_having = " HAVING rating >= {$rating} AND rating <= {$max_rating} ";
+			$rating_having = $wpdb->prepare( " HAVING rating >= %d AND rating <= %d ", $rating, $max_rating );
 		}
 
 		/**
