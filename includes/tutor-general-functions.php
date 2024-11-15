@@ -1708,18 +1708,30 @@ if ( ! function_exists( 'tutor_split_amounts' ) ) {
 	 * @return array
 	 */
 	function tutor_split_amounts( $amounts ) {
-		$amounts = is_array( $amounts ) ? $amounts: array( $amounts );
+		$amounts = is_array( $amounts ) ? $amounts : array( $amounts );
 		// Get Admin commission rate (%) from settings.
-		$admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
-		// Get Instructor commission rate (%) based on remaining amount.
-		$instructor_commission = 1 - $admin_commission;
+		// $admin_commission = tutor_utils()->get_option( 'earning_admin_commission' ) / 100;
+		// // Get Instructor commission rate (%) based on remaining amount.
+		// $instructor_commission = 1 - $admin_commission;
+
+		// $admin_amount      = 0;
+		// $instructor_amount = 0;
+
+		// foreach ( $amounts as $amount ) {
+		// $admin_amount      += $amount * $admin_commission;
+		// $instructor_amount += $amount * $instructor_commission;
+		// }
 
 		$admin_amount      = 0;
 		$instructor_amount = 0;
 
+		$sharing_enabled = tutor_utils()->get_option( 'enable_revenue_sharing' );
+		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
+		$admin_rate      = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
+
 		foreach ( $amounts as $amount ) {
-			$admin_amount      += $amount * $admin_commission;
-			$instructor_amount += $amount * $instructor_commission;
+			$instructor_amount = $instructor_rate > 0 ? ( ( $amount * $instructor_rate ) / 100 ) : 0;
+			$admin_amount      = $admin_rate > 0 ? ( ( $amount * $admin_rate ) / 100 ) : 0;
 		}
 
 		return array(

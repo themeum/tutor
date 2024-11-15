@@ -83,17 +83,35 @@ class Earnings extends Singleton {
 		$order_details = $order_model->get_order_by_id( $order_id );
 		$items         = is_object( $order_details ) && property_exists( $order_details, 'items' ) ? $order_details->items : array();
 
+		$deducted_amount = $order_details->refund_amount + $order_details->coupon_amount;
+		if ( $order_details->discount_amount ) {
+			$discount_amount  = $order_model->calculate_discount_amount( $order_details->discount_type, $order_details->discount_amount, $order_details->subtotal_price );
+			$deducted_amount += $discount_amount;
+		}
+
 		if ( is_array( $items ) && count( $items ) ) {
+			$per_earning_refund = $deducted_amount / count( $items );
 			foreach ( $items as $item ) {
-				$total_price = $item->sale_price ? $item->sale_price : $item->regular_price;
-				$total_price = $item->discount_price ? $item->discount_price : $total_price;
-				$course_id   = $item->id;
+				$subtotal_price  = $item->regular_price;
+				$item_sold_price = $order_model->get_item_sold_price( $item->id, false );
+
+				// Split deduct amount fro admin & instructor.
+				$split_deduction = tutor_split_amounts( $per_earning_refund );
+
+				// Split earnings.
+				$split_earnings = tutor_split_amounts( $subtotal_price );
+
+				// Deduct earnings.
+				$admin_amount      = $split_earnings['admin'] - $split_deduction['admin'];
+				$instructor_amount = $split_earnings['instructor'] - $split_deduction['instructor'];
+
+				$course_id = $item->id;
 
 				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
 				}
 
-				$this->earning_data[] = $this->prepare_earning_data( $total_price, $course_id, $order_id, $order_details->order_status );
+				$this->earning_data[] = $this->prepare_earning_data( $item_sold_price, $course_id, $order_id, $order_details->order_status, $admin_amount, $instructor_amount );
 			}
 		}
 	}
@@ -107,10 +125,12 @@ class Earnings extends Singleton {
 	 * @param int    $course_id Connected course id.
 	 * @param int    $order_id Order id.
 	 * @param string $order_status Order status.
+	 * @param string $admin_amount Admin amount.
+	 * @param string $instructor_amount Instructor status.
 	 *
 	 * @return array
 	 */
-	public function prepare_earning_data( $total_price, $course_id, $order_id, $order_status ) {
+	public function prepare_earning_data( $total_price, $course_id, $order_id, $order_status, $admin_amount, $instructor_amount ) {
 		$fees_deduct_data      = array();
 		$tutor_earning_fees    = tutor_utils()->get_option( 'fee_amount_type' );
 		$enable_fees_deducting = tutor_utils()->get_option( 'enable_fees_deducting' );
@@ -139,12 +159,10 @@ class Earnings extends Singleton {
 		}
 
 		// Distribute amount between admin and instructor.
-		$sharing_enabled   = tutor_utils()->get_option( 'enable_revenue_sharing' );
-		$instructor_rate   = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
-		$admin_rate        = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
-		$commission_type   = 'percent';
-		$instructor_amount = $instructor_rate > 0 ? ( ( $course_price_grand_total * $instructor_rate ) / 100 ) : 0;
-		$admin_amount      = $admin_rate > 0 ? ( ( $course_price_grand_total * $admin_rate ) / 100 ) : 0;
+		$sharing_enabled = tutor_utils()->get_option( 'enable_revenue_sharing' );
+		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
+		$admin_rate      = $sharing_enabled ? tutor_utils()->get_option( 'earning_admin_commission' ) : 100;
+		$commission_type = 'percent';
 
 		// Course author id.
 		$user_id = get_post_field( 'post_author', $course_id );
@@ -339,50 +357,6 @@ class Earnings extends Singleton {
 			return $this->store_earnings();
 		} catch ( \Throwable $th ) {
 			tutor_log( $th );
-		}
-	}
-
-	/**
-	 * Deduct earning after partial refund or manual discount
-	 *
-	 * Amount will deducted proportionally from admin & instructor
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int|object $order Order id or object.
-	 * @param mixed $amount Amount to deduct.
-	 *
-	 * @throws \DivisionByZeroError Throw DivisionByZeroError.
-	 * @throws \Throwable           Throwable if update failed.
-	 *
-	 * @return void
-	 */
-	public function deduct_earnings( $order, $amount ) {
-		$order_model  = new OrderModel();
-		$order_data   = is_object( $order ) ? $order : $order_model->get_order_by_id( $order ); 
-		$earning_list = $this->get_order_earnings( $order_data->id );
-		if ( $amount && ! empty( $earning_list ) ) {
-			try {
-				$per_earning_refund = $amount / count( $earning_list );
-			} catch ( \DivisionByZeroError $th ) {
-				throw $th;
-			}
-
-			foreach ( $earning_list as $list ) {
-				$split_refund = tutor_split_amounts( $per_earning_refund );
-
-				$update_data = array(
-					'admin_amount'      => $list->admin_amount - $split_refund['admin'],
-					'instructor_amount' => $list->instructor_amount - $split_refund['instructor'],
-				);
-
-				try {
-					$this->earning_data = $update_data;
-					$this->update_earning( $list->earning_id );
-				} catch ( \Throwable $th ) {
-					throw $th;
-				}
-			}
 		}
 	}
 
