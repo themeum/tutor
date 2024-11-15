@@ -929,7 +929,7 @@ class OrderModel {
 				{$discount_clause},
 				created_at_gmt AS date_format
 				FROM {$this->table_name} AS o
-				-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
 				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
 				WHERE 1 = %d
 				AND o.coupon_amount > 0
