@@ -435,14 +435,14 @@ class Tutor_Setup {
 			'course'     => array(
 				'lable' => __( 'Course', 'tutor' ),
 				'attr'  => array(
-					'course_permalink_base'         => array(
+					'course_permalink_base'    => array(
 						'type'  => 'text',
 						'max'   => 50,
 						'lable' => __( 'Course permalink', 'tutor' ),
 						/* translators: %s: sample permalink */
 						'desc'  => sprintf( __( 'Example:  %s', 'tutor' ), get_home_url() . '/' . tutor()->course_post_type . '/sample-course/<strong>' . ( tutor_utils()->get_option( 'course_permalink_base', 'courses' ) ) . '</strong>/sample-lesson/' ),//phpcs:ignore
 					),
-					'lesson_permalink_base'         => array(
+					'lesson_permalink_base'    => array(
 						'type'  => 'text',
 						'max'   => 50,
 						'lable' => __( 'Lesson permalink', 'tutor' ),
@@ -470,7 +470,7 @@ class Tutor_Setup {
 			'instructor' => array(
 				'lable' => __( 'Instructor', 'tutor' ),
 				'attr'  => array(
-					'instructor_can_publish_course' => array(
+					'enable_revenue_sharing'        => array(
 						'type'  => 'switch',
 						'lable' => __( 'Revenue Sharing', 'tutor' ),
 						'desc'  => __( 'Allow revenue generated from selling courses to be shared with course creators.', 'tutor' ),
