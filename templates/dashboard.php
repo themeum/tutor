@@ -72,10 +72,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar">
 					<?php
-					echo wp_kses(
-						tutor_utils()->get_tutor_avatar( $user_id, 'xl' ),
-						tutor_utils()->allowed_avatar_tags()
-					);
+					tutor_utils()->get_tutor_avatar( $user_id, 'xl', true )
 					?>
 				</div>
 

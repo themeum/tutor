@@ -112,6 +112,12 @@ class Withdraw {
 			),
 		);
 
+		$saved_options              = (array) get_option( 'tutor_option', array() );
+		$withdrawal_payment_methods = $saved_options['tutor_withdrawal_methods'] ?? array();
+		foreach ( $methods as $key => $method ) {
+			$methods[ $key ]['enabled'] = in_array( $key, $withdrawal_payment_methods, true );
+		}
+
 		return apply_filters( 'tutor_withdraw_methods', $methods );
 	}
 

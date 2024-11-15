@@ -117,10 +117,7 @@ class Settings {
 						'type'           => 'select',
 						'label'          => __( 'Currency Position', 'tutor' ),
 						'select_options' => false,
-						'options'        => array(
-							'left'  => 'Left',
-							'right' => 'Right',
-						),
+						'options'        => self::get_currency_position_options(),
 						'default'        => 'left',
 						'desc'           => __( 'Set the position of the currency symbol.', 'tutor' ),
 					),
@@ -317,6 +314,20 @@ class Settings {
 	}
 
 	/**
+	 * Currency position options
+	 *
+	 * @since 3.0.0
+	 *
+	 * @return array
+	 */
+	public static function get_currency_position_options() {
+		return array(
+			'left'  => __( 'Left', 'tutor' ),
+			'right' => __( 'Right', 'tutor' ),
+		);
+	}
+
+	/**
 	 * Get currency options where key is symbol
 	 * and code is value
 	 *
@@ -414,7 +425,7 @@ class Settings {
 				'name'                 => 'paypal',
 				'label'                => 'PayPal',
 				'is_installed'         => true,
-				'is_active'            => true,
+				'is_active'            => false,
 				'icon'                 => tutor()->url . 'assets/images/paypal.svg',
 				'support_subscription' => true,
 				'fields'               => self::get_paypal_config_fields(),
@@ -460,7 +471,7 @@ class Settings {
 			if ( 'environment' === $key ) {
 				$config_fields[] = array(
 					'name'    => $key,
-					'label'   => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label'   => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor' ),//phpcs:ignore
 					'type'    => $type,
 					'options' => array(
 						'test' => __( 'Test', 'tutor' ),
@@ -472,7 +483,7 @@ class Settings {
 				$config_fields[] = array(
 					'name'  => $key,
 					'type'  => $type,
-					'label' => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label' => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-' ),//phpcs:ignore
 					'value' => '',
 				);
 			}

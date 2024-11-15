@@ -51,7 +51,7 @@
 				</div>
 
 				<div class="tutor-d-flex tutor-justify-between tutor-align-center tutor-mb-32">
-					<div class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Add-ons', 'tutor' ); ?></div>
+					<div class="tutor-fs-5 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Addons', 'tutor' ); ?></div>
 					<div class="tutor-addons-list-select-filter">
 						<div class="tutor-form-wrap">
 							<span class="tutor-icon-search tutor-form-icon" area-hidden="true"></span>

@@ -11,6 +11,7 @@
 namespace Tutor\Ecommerce;
 
 use TUTOR\Backend_Page_Trait;
+use TUTOR\Earnings;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
@@ -485,8 +486,6 @@ class OrderController {
 			'meta_value' => wp_json_encode( $meta_value ),
 		);
 
-		do_action( 'tutor_before_order_refund', $params );
-
 		// Validate request.
 		$validation = $this->validate( $params );
 		if ( ! $validation->success ) {
@@ -530,6 +529,10 @@ class OrderController {
 			$this->model->update_order( $order_id, $update_data );
 
 			do_action( 'tutor_order_payment_status_changed', $order_data->id, $order_data->payment_status, $payment_status );
+
+			$order_data->payment_status = $update_data['payment_status'];
+			$order_data->order_status   = $update_data['order_status'];
+			do_action( 'tutor_after_order_refund', $order_data, $amount );
 
 			$this->json_response( __( 'Order refund successful', 'tutor' ) );
 		} else {
@@ -674,7 +677,7 @@ class OrderController {
 				);
 			}
 
-			do_action( 'tutor_after_add_order_discount', $request );
+			do_action( 'tutor_after_add_order_discount', $order, $discount_amount );
 
 			$this->json_response( __( 'Order discount successful added', 'tutor' ) );
 		} catch ( \Throwable $th ) {

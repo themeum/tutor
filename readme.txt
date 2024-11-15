@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 2.7.5
+Stable tag: 3.0.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -284,8 +284,24 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 
 == Changelog ==
 
-= 3.0.0-rc2 - November 13, 2024
-
+= 3.0.0 - November 20, 2024
+New: Redesigned course and quiz builders with an intuitive interface for easier course creation.
+New: Native eCommerce to sell courses directly within Tutor LMS.
+New: Added popular payment gateways support: PayPal, Stripe, Mollie, Klarna, Razorpay, Paystack, and Alipay.
+New: Native Subscription system with recurring payments, certificate control, enrollment fees, sale pricing, and featured plans. (Pro)
+New: Introduced advanced Tax management with region-based tax calculations. 
+New: Added all-new Coupon management feature to create and manage discount coupons.
+New: Streamlined Order management for easy order tracking, updates, completion, cancellation, and refunds.
+New: AI Studio for generating courses, lessons, quizzes, thumbnails, and more with AI. (Pro)
+New: Added Tutor LMS Cart and Checkout pages for a seamless course purchase experience.
+New: Notebook feature for instructors to jot down their course ideas. 
+New: H5P integration for creating interactive quizzes. (Pro)
+New: Customizable order and subscription email templates. (Pro)
+Update: Added course scheduling options for better control over course availability.
+Update: Password-protected courses for private access.
+Update: Improved manual enrollment process.
+Update: Added Legacy Mode support for course and lesson descriptions.
+Update: Dynamic permalink generation based on course names.
 
 = 3.0.0-rc - October 25, 2024
 

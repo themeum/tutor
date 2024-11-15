@@ -73,13 +73,14 @@ const FormMultiLevelSelect = ({
                 placeholder={placeholder}
               />
               <button
+                tabIndex={-1}
                 type="button"
-                css={styleUtils.resetButton}
+                css={styles.toggleIcon(isOpen)}
                 onClick={() => {
                   setIsOpen((prev) => !prev);
                 }}
               >
-                <SVGIcon name="chevronDown" width={20} height={20} style={styles.toggleIcon(isOpen)} />
+                <SVGIcon name="chevronDown" width={20} height={20} />
               </button>
             </div>
 
@@ -126,9 +127,10 @@ export default FormMultiLevelSelect;
 interface BranchProps {
   option: CategoryWithChildren;
   onChange: (item: number) => void;
+  level?: number; // Add level prop
 }
 
-export const Branch = ({ option, onChange }: BranchProps) => {
+export const Branch = ({ option, onChange, level = 0 }: BranchProps) => {
   const hasChildren = option.children.length > 0;
 
   const renderBranches = () => {
@@ -137,12 +139,12 @@ export const Branch = ({ option, onChange }: BranchProps) => {
     }
 
     return option.children.map((child) => {
-      return <Branch key={child.id} option={child} onChange={onChange} />;
+      return <Branch key={child.id} option={child} onChange={onChange} level={level + 1} />;
     });
   };
 
   return (
-    <div css={styles.branchItem}>
+    <div css={styles.branchItem(level)}>
       <button type="button" onClick={() => onChange(option.id)}>
         {option.name}
       </button>
@@ -158,6 +160,7 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
+    border: 1px solid ${colorTokens.stroke.border};
     padding: ${spacing[8]} 0;
     min-width: 275px;
   `,
@@ -165,32 +168,37 @@ const styles = {
     max-height: 455px;
     overflow-y: auto;
   `,
-  branchItem: css`
+  branchItem: (level: number) => css`
     position: relative;
     z-index: ${zIndex.positive};
-    padding-left: ${spacing[24]};
 
     button {
       ${styleUtils.resetButton};
+      padding-left: calc(${spacing[24]} + ${spacing[24]} * ${level});
       line-height: ${lineHeight[36]};
       width: 100%;
 
       &:hover {
-        color: ${colorTokens.text.brand};
+        background-color: ${colorTokens.background.hover};
       }
     }
   `,
   toggleIcon: (isOpen: boolean) => css`
+    ${styleUtils.resetButton};
     position: absolute;
-    top: 12px;
-    right: ${spacing[12]};
+    top: ${spacing[4]};
+    right: ${spacing[4]};
+    display: flex;
+    align-items: center;
     transition: transform 0.3s ease-in-out;
+    color: ${colorTokens.icon.default};
+    padding: ${spacing[6]};
 
     ${
       isOpen &&
       css`
-      transform: rotate(180deg);
-    `
+        transform: rotate(180deg);
+      `
     }
   `,
   inputWrapper: css`

@@ -208,8 +208,10 @@ const styles = {
     padding: ${spacing[4]} 0;
     margin: 0;
     max-height: 400px;
+    border: 1px solid ${colorTokens.stroke.border};
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
+    scrollbar-gutter: auto;
 
     ${
       !removeOptionsMinWidth &&
