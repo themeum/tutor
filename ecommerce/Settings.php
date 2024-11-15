@@ -471,7 +471,7 @@ class Settings {
 			if ( 'environment' === $key ) {
 				$config_fields[] = array(
 					'name'    => $key,
-					'label'   => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label'   => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor' ),//phpcs:ignore
 					'type'    => $type,
 					'options' => array(
 						'test' => __( 'Test', 'tutor' ),
@@ -483,7 +483,7 @@ class Settings {
 				$config_fields[] = array(
 					'name'  => $key,
 					'type'  => $type,
-					'label' => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-pro' ),
+					'label' => __( ucfirst( str_replace( '_', ' ', $key ) ), 'tutor-' ),//phpcs:ignore
 					'value' => '',
 				);
 			}
