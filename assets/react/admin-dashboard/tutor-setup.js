@@ -1,3 +1,6 @@
+import '../front/_select_dd_search';
+import { tutor_esc_attr, tutor_esc_html } from '../lib/tutor';
+
 jQuery.fn.serializeObject = function () {
 	var $ = jQuery;
 	var values = {};
@@ -27,8 +30,11 @@ jQuery.fn.serializeObject = function () {
 jQuery(document).ready(function ($) {
 	"use strict";
 
+	selectSearchField('.tutor-form-select');
 
 	const url = window.location.href;
+	const params = new URLSearchParams(window.location.search);
+	const enable_marketplace = params.get('marketplace');
 	if (url.indexOf('#') > 0) {
 		$(".tutor-wizard-container > div").removeClass("active");
 		$(".tutor-wizard-container > div.tutor-setup-wizard-settings").addClass("active");
@@ -45,8 +51,11 @@ jQuery(document).ready(function ($) {
 				}
 			}
 		}
-		const enable = $("input[name='enable_course_marketplace'").val()
-		showHide('on' == enable ? 'on' : 'off')
+		showHide(enable_marketplace);
+	}
+
+	if (enable_marketplace === 'off') {
+		$("#enable_course_marketplace-0").prop('checked', true);
 	}
 
 	$(".tutor-setup-title li").on("click", function (e) {
@@ -65,13 +74,23 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Navigate Wizard Screens
 	* ---------------------- */
-	$(".tutor-type-next, .tutor-type-skip").on("click", function (e) {
+	$(".tutor-type-next").on("click", function (e) {
 		e.preventDefault();
 		$(".tutor-setup-wizard-type").removeClass("active");
 		$(".tutor-setup-wizard-settings").addClass("active");
-		$('.tutor-setup-title li').eq(0).addClass('active')
-		window.location.hash = "general";
-		showHide($("input[name='enable_course_marketplace']:checked").val())
+		$('.tutor-setup-title li').eq(0).addClass('active');
+		const enable_marketplace = $("input[name='enable_course_marketplace']:checked").val();
+		const url = new URL(window.location.href);
+		url.searchParams.set('marketplace', enable_marketplace);
+		url.hash = 'general';
+		window.history.pushState(null, '', url);
+		showHide(enable_marketplace);
+	});
+
+	$(".tutor-type-previous").on("click", function (e) {
+		e.preventDefault();
+		$(".tutor-setup-wizard-type").removeClass("active");
+		$(".tutor-setup-wizard-boarding").addClass("active");
 	});
 
 	/* ---------------------
@@ -127,55 +146,31 @@ jQuery(document).ready(function ($) {
 		$(".tutor-setup-wizard-type").addClass("active");
 	});
 
-
-	/* ---------------------
-	* Wizard Slick Slider
-	* ---------------------- */
-	$(".tutor-boarding").slick({
-		speed: 1000,
-		centerMode: true,
-		centerPadding: "19.5%",
-		slidesToShow: 1,
-		arrows: false,
-		dots: true,
-		responsive: [
-			{
-				breakpoint: 768,
-				settings: {
-					arrows: false,
-					centerMode: true,
-					centerPadding: "50px",
-					slidesToShow: 1
-				}
-			},
-			{
-				breakpoint: 480,
-				settings: {
-					arrows: false,
-					centerMode: true,
-					centerPadding: "30px",
-					slidesToShow: 1
-				}
-			}
-		]
-	});
-
 	/* ---------------------
 	* Form Submit and Redirect after Finished
 	* ---------------------- */
-	$(".tutor-redirect").on("click", function (e) {
-		const that = $(this)
+	$(".tutor-finish-setup").on("click", function (e) {
 		e.preventDefault();
+
+		const btnSubmit = $(this);
 		const formData = $("#tutor-setup-form").serializeObject();
+		const redirectUrl = btnSubmit.data("redirect-url");
+		const url = _tutorobject.ajaxurl;
 
 		$.ajax({
-			url: _tutorobject.ajaxurl,
-			type: "POST",
+			url: url,
+			type: 'POST',
 			data: formData,
+			beforeSend: function () {
+				btnSubmit.attr('disabled', 'disabled').addClass('is-loading');
+			},
 			success: function (data) {
 				if (data.success) {
-					// window.location = that.data("url");
+					window.location = redirectUrl
 				}
+			},
+			complete: function () {
+				btnSubmit.removeAttr('disabled').removeClass('is-loading');
 			}
 		});
 	});
@@ -249,23 +244,16 @@ jQuery(document).ready(function ($) {
 	/* ---------------------
 	* Select Option
 	* ---------------------- */
-	$(document).on('click', function (e) {
-		if (!e.target.closest('.grade-calculation')) {
-			if ($(".grade-calculation .options-container") && $(".grade-calculation .options-container").hasClass('active')) {
-				$(".grade-calculation .options-container").removeClass('active');
-			}
-		}
-	});
+	$('.select-box').click(function (e) {
+		e.preventDefault()
+		console.log('ddd')
+		$(this).parent().find('.options-container').toggleClass('active');
+	})
 
-	$(".selected").on("click", function () {
-		$(".options-container").toggleClass("active");
-	});
-
-	$(".option").each(function () {
-		$(this).on("click", function () {
-			$(".selected").html($(this).find("label").html());
-			$(".options-container").removeClass("active");
-		});
+	$('.select-box .options-container .option').click(function (e) {
+		e.stopPropagation();
+		$(this).parent().parent().find(".selected").html($(this).find("label").html());
+		$(this).parent().removeClass("active");
 	});
 
 
@@ -387,3 +375,6 @@ jQuery(document).ready(function ($) {
 
 
 });
+
+window.tutor_esc_attr = tutor_esc_attr;
+window.tutor_esc_html = tutor_esc_html;

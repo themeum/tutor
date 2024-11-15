@@ -449,7 +449,7 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
  * @param {string} unsafeText HTML string
  * @returns string
  */
-window.tutor_esc_html = function (unsafeText) {
+export function tutor_esc_html(unsafeText) {
 	let safeHTML = ''
 	let div = document.createElement('div');
 	/**
@@ -463,15 +463,17 @@ window.tutor_esc_html = function (unsafeText) {
 
 	return safeHTML;
 }
+window.tutor_esc_html = tutor_esc_html;
 
-
-window.tutor_esc_attr = function(str) {
+export function tutor_esc_attr(str) {
     return str.replace(/&/g, '&amp;')
               .replace(/"/g, '&quot;')
               .replace(/'/g, '&#039;')
               .replace(/</g, '&lt;')
               .replace(/>/g, '&gt;');
 }
+
+window.tutor_esc_attr = tutor_esc_attr;
 
 // enable custom selector when modal opens
 window.addEventListener('tutor_modal_shown', (e) => {
@@ -482,22 +484,21 @@ window.addEventListener('tutor_modal_shown', (e) => {
  * Create new draft course
  * @since 3.0.0
  */
-const createNewCourse = document.querySelector('a.tutor-create-new-course,li.tutor-create-new-course a');
-if (createNewCourse) {
-	createNewCourse.onclick = async (e) => {
+const createNewCourseButtons = document.querySelectorAll('a.tutor-create-new-course,li.tutor-create-new-course a');
+createNewCourseButtons.forEach((button) => {
+	button.addEventListener('click', async (e) => {
 		e.preventDefault();
 		const { __ } = wp.i18n;
-
 		try {
 			// For wp-admin bar quick create.
 			if (e.target.classList.contains('ab-item')) {
 				e.target.innerHTML = 'Creating...'
 			}
 
-			createNewCourse.classList.add('is-loading');
-			createNewCourse.style.pointerEvents = 'none';
+			button.classList.add('is-loading');
+			button.style.pointerEvents = 'none';
 
-			const from_dashboard = createNewCourse.classList.contains('tutor-dashboard-create-course')
+			const from_dashboard = button.classList.contains('tutor-dashboard-create-course')
 			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
 			const post = await ajaxHandler(formData);
 
@@ -511,9 +512,8 @@ if (createNewCourse) {
 		} catch (error) {
 			tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
 		} finally {
-			createNewCourse.removeAttribute('disabled');
-			createNewCourse.classList.remove('is-loading');
+			button.removeAttribute('disabled');
+			button.classList.remove('is-loading');
 		}
-		
-	}
-}
+	});
+});
