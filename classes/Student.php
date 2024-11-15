@@ -38,7 +38,7 @@ class Student {
 	public function __construct() {
 		add_action( 'template_redirect', array( $this, 'register_student' ) );
 		add_filter( 'get_avatar_url', array( $this, 'filter_avatar' ), 10, 3 );
-		add_action( 'tutor_action_tutor_social_profile', array( $this, 'tutor_social_profile' ) );
+		add_action( 'wp_ajax_tutor_social_profile', array( $this, 'tutor_social_profile' ) );
 		add_action( 'wp_ajax_tutor_profile_password_reset', array( $this, 'tutor_reset_password' ) );
 		add_action( 'wp_ajax_tutor_update_profile', array( $this, 'update_profile' ) );
 	}
@@ -339,7 +339,8 @@ class Student {
 				delete_user_meta( $user_id, $key );
 			}
 		}
-		wp_safe_redirect( wp_get_raw_referer() );
+
+		wp_send_json_success( array( 'message' => __( 'Social Profile Updated', 'tutor' ) ) );
 		die();
 	}
 }
