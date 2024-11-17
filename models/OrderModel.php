@@ -912,7 +912,7 @@ class OrderModel {
 			$group_clause = ' GROUP BY MONTH(date_format) ';
 		}
 
-		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
+		if ( $user_id ) {
 			$user_clause = $wpdb->prepare( 'AND e.user_id = %d', $user_id );
 		}
 
@@ -933,10 +933,11 @@ class OrderModel {
 				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
 				WHERE 1 = %d
 				AND o.coupon_amount > 0
+				AND o.order_status = 'completed'
 				{$user_clause}
 				{$period_clause}
 				{$date_range_clause}
-				-- {$course_clause}
+				{$course_clause}
 				{$group_clause},o.id",
 				1
 			)
