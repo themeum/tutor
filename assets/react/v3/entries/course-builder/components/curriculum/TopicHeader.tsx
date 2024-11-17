@@ -130,7 +130,7 @@ const TopicHeader = ({
 
   return (
     <>
-      <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen })}>
+      <div css={styles.header({ isCollapsed: topic.isCollapsed, isEdit, isDeletePopoverOpen, isDragging })}>
         <div css={styles.headerContent({ isSaved: topic.isSaved })}>
           <div
             css={styles.grabberInput}
@@ -346,10 +346,12 @@ const styles = {
     isCollapsed,
     isEdit,
     isDeletePopoverOpen,
+    isDragging,
   }: {
     isCollapsed: boolean;
     isEdit: boolean;
     isDeletePopoverOpen: boolean;
+    isDragging: boolean;
   }) => css`
     padding: ${spacing[12]} ${spacing[16]};
     ${styleUtils.display.flex('column')};
@@ -389,7 +391,7 @@ const styles = {
 
       :hover, :focus-within {
         [data-visually-hidden] {
-          opacity: 1;
+          opacity: ${isDragging ? 0 : 1};
         }
       }
     `

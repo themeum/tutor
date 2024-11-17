@@ -5,10 +5,10 @@ import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
 import Button from '@Atoms/Button';
 import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
 import EmptyState from '@Molecules/EmptyState';
 
 import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
@@ -194,7 +194,7 @@ const Additional = () => {
 
           <Box bordered>
             <div css={styles.titleAndSub}>
-              <BoxTitle>
+              <BoxTitle css={styles.titleWithBadge}>
                 {__('Certificate', 'tutor')}
                 <Show when={!isTutorPro}>
                   <ProBadge content={__('Pro', 'tutor')} />
@@ -313,6 +313,13 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[4]};
     margin-bottom: ${spacing[20]};
+  `,
+  titleWithBadge: css`
+    span {
+      ${styleUtils.display.flex()};
+      align-items: centerTC;
+      gap: ${spacing[4]};
+    }
   `,
   fieldsWrapper: css`
     ${styleUtils.display.flex('column')}
