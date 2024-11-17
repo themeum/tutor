@@ -177,8 +177,8 @@ class Earnings extends Singleton {
 			'user_id'                  => $user_id,
 			'instructor_rate'          => $instructor_rate,
 			'admin_rate'               => $admin_rate,
-			'instructor_amount'        => $instructor_amount,
-			'admin_amount'             => $admin_amount,
+			'instructor_amount'        => max( 0, $instructor_amount ),
+			'admin_amount'             => max( 0, $admin_amount ),
 			'course_price_grand_total' => $course_price_grand_total,
 			'commission_type'          => $commission_type,
 		);

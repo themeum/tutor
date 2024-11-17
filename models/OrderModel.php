@@ -1063,35 +1063,84 @@ class OrderModel {
 			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
 		}
 
-		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
-			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+		if ( $course_id ) {
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
+		} else {
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
 		}
 
-		if ( $course_id ) {
-			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
-		}
 
 		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
-		$refunds    = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 
-				COALESCE(SUM(o.refund_amount), 0) AS total,
-				created_at_gmt AS date_format
-				FROM {$this->table_name} AS o
-				-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
-				WHERE 1 = %d
-				AND o.refund_amount > %d
-				{$user_clause}
-				{$period_clause}
-				{$date_range_clause}
-				{$group_clause},
-				o.id",
-				1,
-				0
-			)
-		);
+
+		if ( $course_id ) {
+			$refunds    = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+						i.item_id AS course_id,
+						ROUND(
+							SUM(
+								o.refund_amount * 
+								(
+									CASE 
+										WHEN i.discount_price THEN i.discount_price
+										WHEN i.sale_price > 0 THEN i.sale_price
+										ELSE i.regular_price
+									END / o.total_price
+								)
+							), 2
+						) AS total
+					FROM 
+						{$this->table_name} o
+					JOIN 
+						{$item_table} i ON o.id = i.order_id
+					JOIN 
+						{$wpdb->posts} c
+						ON c.ID = i.item_id
+						AND c.post_type = %s
+					WHERE 
+						o.refund_amount > 0
+						AND i.item_id = %d
+						{$user_clause}
+						{$period_clause}
+						{$date_range_clause}
+					{$group_clause},
+					i.item_id
+					",
+					tutor()->course_post_type,
+					$course_id
+				)
+			);
+		} else {
+			$earning_table = $wpdb->tutor_earnings;
+			if ( $user_id ) {
+				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} LIMIT 1)";
+			}
+
+			$refunds = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+					COALESCE(SUM(o.refund_amount), 0) AS total,
+					created_at_gmt AS date_format
+					FROM {$this->table_name} AS o
+					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+					WHERE 1 = %d
+					AND o.refund_amount > %d
+					{$user_clause}
+					{$period_clause}
+					{$date_range_clause}
+					{$group_clause},
+					o.id",
+					1,
+					0
+				)
+			);
+		}
 
 		$total_refund = 0;
 

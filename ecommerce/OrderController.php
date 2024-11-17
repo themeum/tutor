@@ -1032,7 +1032,7 @@ class OrderController {
 	 */
 	public function get_discount_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
 		// Sanitize params.
-		$user_id    = (int) $user_id ? $user_id : get_current_user_id();
+		$user_id    = is_admin() ? 0 : $user_id;
 		$period     = Input::sanitize( $period );
 		$start_date = Input::sanitize( $start_date );
 		$end_date   = Input::sanitize( $end_date );
@@ -1056,7 +1056,7 @@ class OrderController {
 	 */
 	public function get_refund_data( $user_id = 0, $period = '', $start_date = '', $end_date = '', $course_id = 0 ) {
 		// Sanitize params.
-		$user_id    = (int) $user_id ? $user_id : get_current_user_id();
+		$user_id    = is_admin() ? 0 : $user_id;
 		$period     = Input::sanitize( $period );
 		$start_date = Input::sanitize( $start_date );
 		$end_date   = Input::sanitize( $end_date );
