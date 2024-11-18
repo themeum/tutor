@@ -265,7 +265,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
               hideArrow
               closeOnEscape={false}
             >
-              <Show when={isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION)}>
+              <Show when={!isTutorPro || isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION)}>
                 <ThreeDots.Option
                   text={
                     <span ref={triggerGoogleMeetRef} css={styles.threeDotButton}>
@@ -280,7 +280,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
                   onClick={() => setMeetingType('tutor-google-meet')}
                 />
               </Show>
-              <Show when={isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION)}>
+              <Show when={!isTutorPro || isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION)}>
                 <ThreeDots.Option
                   text={
                     <span ref={triggerZoomRef} css={styles.threeDotButton}>

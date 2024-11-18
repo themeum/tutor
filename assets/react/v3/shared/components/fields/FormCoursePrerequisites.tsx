@@ -425,6 +425,10 @@ const styles = {
     :focus {
       box-shadow: ${shadow.focus};
     }
+
+    :focus-visible {
+      opacity: 1;
+    }
   `,
   emptyOption: css`
     ${typography.caption('medium')};
