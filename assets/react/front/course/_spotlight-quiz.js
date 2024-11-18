@@ -396,7 +396,6 @@ window.jQuery(document).ready($ => {
     // @todo: check the button class functionality
 
     $(document).on('click', 'a',  function(event) {
-        const href = $(this).attr('href');
         // if user click on ask question then return, no warning.
         if (event.target.classList.contains('sidebar-ask-new-qna-btn') || event.target.classList.contains('tutor-quiz-question-paginate-item')) {
             return;
@@ -426,7 +425,7 @@ window.jQuery(document).ready($ => {
                                 },
                                 success: function(response) {
                                     if (response.success) {
-                                        location.href = href;
+                                        location.reload(true);
                                     } else {
                                         alert(__('Something went wrong', 'tutor'));
                                     }
