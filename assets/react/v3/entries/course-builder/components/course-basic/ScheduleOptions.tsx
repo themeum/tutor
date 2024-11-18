@@ -117,12 +117,11 @@ const ScheduleOptions = () => {
                 <FormDateInput
                   {...controllerProps}
                   isClearable={false}
-                  placeholder={__('Select date', 'tutor')}
+                  placeholder={__('yyyy-mm-dd', 'tutor')}
                   disabledBefore={format(new Date(), DateFormats.yearMonthDay)}
                   onChange={() => {
                     form.setFocus('schedule_time');
                   }}
-                  dateFormat={DateFormats.monthDayYear}
                 />
               )}
             />

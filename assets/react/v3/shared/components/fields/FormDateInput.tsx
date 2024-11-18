@@ -6,7 +6,7 @@ import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import { format, isAfter, isBefore, isValid, parseISO } from 'date-fns';
+import { format, isValid } from 'date-fns';
 import { useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
@@ -68,27 +68,15 @@ const FormDateInput = ({
                 css={[css, styles.input]}
                 ref={field.ref}
                 type="text"
-                onFocus={() => setIsOpen(true)}
                 value={fieldValue}
-                onChange={(event) => {
-                  const { value } = event.target;
-
-                  const currentDate = parseISO(value);
-                  const disabledBeforeDate = disabledBefore && parseISO(disabledBefore);
-                  const disabledAfterDate = disabledAfter && parseISO(disabledAfter);
-
-                  if (
-                    !isValid(currentDate) ||
-                    (disabledBeforeDate && isAfter(disabledBeforeDate, currentDate)) ||
-                    (disabledAfterDate && isBefore(disabledAfterDate, currentDate))
-                  ) {
-                    return;
-                  }
-
-                  field.onChange(value);
-
-                  if (onChange) {
-                    onChange(value);
+                onClick={(event) => {
+                  event.stopPropagation();
+                  !disabled && setIsOpen((previousState) => !previousState);
+                }}
+                onKeyDown={(event) => {
+                  if (!disabled && event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen((previousState) => !previousState);
                   }
                 }}
                 autoComplete="off"

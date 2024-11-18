@@ -200,7 +200,16 @@ const FormSelectUser = ({
                   </div>
                   <input
                     {...restInputProps}
-                    onClick={() => setIsOpen((previousState) => !previousState)}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      !disabled && setIsOpen((previousState) => !previousState);
+                    }}
+                    onKeyDown={(event) => {
+                      if (!disabled && event.key === 'Enter') {
+                        event.preventDefault();
+                        setIsOpen((previousState) => !previousState);
+                      }
+                    }}
                     className="tutor-input-field"
                     css={[inputCss, styles.input]}
                     autoComplete="off"
@@ -210,6 +219,7 @@ const FormSelectUser = ({
                     onChange={(event) => {
                       setSearchText(event.target.value);
                     }}
+                    onBlur={() => setIsOpen(false)}
                   />
                 </div>
               )}
@@ -448,7 +458,7 @@ const styles = {
       border-color: ${colorTokens.stroke.divider};
 
       [data-instructor-delete-button] {
-        display: block;
+        opacity: 1;
       }
     }
   `,
@@ -478,16 +488,17 @@ const styles = {
     width: 100%;
   `,
   instructorDeleteButton: css`
-    ${styleUtils.resetButton};
-    display: flex;
-    height: 32px;
-    width: 32px;
+    ${styleUtils.crossButton};
     color: ${colorTokens.icon.default};
-    border-radius: ${borderRadius[2]};
-    display: none;
+    opacity: 0;
+    transition: none;
 
     &:focus {
       box-shadow: ${shadow.focus};
+    }
+
+    :focus-visible {
+      opacity: 1;
     }
   `,
   options: css`

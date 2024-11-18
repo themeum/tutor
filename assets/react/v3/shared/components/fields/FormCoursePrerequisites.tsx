@@ -141,9 +141,13 @@ const FormCoursePrerequisites = ({
                 </div>
                 <input
                   {...restInputProps}
-                  onClick={() => setIsOpen((previousState) => !previousState)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    !disabled && setIsOpen((previousState) => !previousState);
+                  }}
                   onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
+                    if (!disabled && event.key === 'Enter') {
+                      event.preventDefault();
                       setIsOpen(true);
                     }
                   }}
@@ -156,6 +160,7 @@ const FormCoursePrerequisites = ({
                   onChange={(event) => {
                     setSearchText(event.target.value);
                   }}
+                  onBlur={() => setIsOpen(false)}
                 />
               </div>
             </div>

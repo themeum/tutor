@@ -66,7 +66,17 @@ const FormMultiLevelSelect = ({
               <input
                 {...inputProps}
                 type="text"
-                onFocus={() => setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  !disabled && setIsOpen(true);
+                }}
+                onKeyDown={(event) => {
+                  if (!disabled && event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen(true);
+                  }
+                }}
+                onBlur={() => setIsOpen(false)}
                 autoComplete="off"
                 readOnly={true}
                 value={Array.isArray(field.value) ? '' : options.find((item) => item.id === field.value)?.name ?? ''}

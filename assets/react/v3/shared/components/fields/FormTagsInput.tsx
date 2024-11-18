@@ -93,7 +93,16 @@ const FormTagsInput = ({
               <input
                 {...restInputProps}
                 css={[inputCss, styles.input]}
-                onClick={() => setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  !disabled && setIsOpen((previousState) => !previousState);
+                }}
+                onKeyDown={(event) => {
+                  if (!disabled && event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen((previousState) => !previousState);
+                  }
+                }}
                 autoComplete="off"
                 readOnly={readOnly}
                 placeholder={placeholder}
@@ -101,6 +110,7 @@ const FormTagsInput = ({
                 onChange={(event) => {
                   setSearchText(event.target.value);
                 }}
+                onBlur={() => setIsOpen(false)}
               />
             </div>
 

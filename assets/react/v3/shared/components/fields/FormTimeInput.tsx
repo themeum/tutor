@@ -95,7 +95,12 @@ const FormTimeInput = ({
                 ref={field.ref}
                 css={[css, styles.input]}
                 type="text"
-                onFocus={() => setIsOpen(true)}
+                onClick={() => !disabled && setIsOpen(true)}
+                onKeyDown={(event) => {
+                  if (!disabled && event.key === 'Enter') {
+                    setIsOpen(true);
+                  }
+                }}
                 value={field.value ?? ''}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -138,6 +143,9 @@ const FormTimeInput = ({
                             setIsOpen(false);
                           }}
                           onMouseOver={() => setActiveIndex(index)}
+                          onMouseLeave={() => {
+                            index !== activeIndex && setActiveIndex(-1);
+                          }}
                           onFocus={() => setActiveIndex(index)}
                         >
                           {option}

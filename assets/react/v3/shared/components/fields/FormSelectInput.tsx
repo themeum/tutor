@@ -182,22 +182,7 @@ const FormSelectInput = <T,>({
                 </Show>
               </div>
 
-              <div
-                css={{
-                  width: '100%',
-                }}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setIsOpen((previousState) => !previousState);
-                  inputRef.current?.focus();
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === '') {
-                    setIsOpen((previousState) => !previousState);
-                    inputRef.current?.focus();
-                  }
-                }}
-              >
+              <div css={{ width: '100%' }}>
                 <input
                   {...restInputProps}
                   {...additionalAttributes}
@@ -222,6 +207,19 @@ const FormSelectInput = <T,>({
                   placeholder={placeholder}
                   value={isSearching ? searchText : inputValue}
                   title={inputValue}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsOpen((previousState) => !previousState);
+                    inputRef.current?.focus();
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+
+                      setIsOpen((previousState) => !previousState);
+                      inputRef.current?.focus();
+                    }
+                  }}
                   onFocus={
                     selectOnFocus && isSearchable
                       ? (event) => {
@@ -236,6 +234,7 @@ const FormSelectInput = <T,>({
                       setSearchText(event.target.value);
                     }
                   }}
+                  onBlur={() => setIsOpen(false)}
                   data-select
                 />
 
