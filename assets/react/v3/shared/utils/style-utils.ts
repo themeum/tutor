@@ -225,12 +225,10 @@ export const styleUtils = {
     align-items: center;
     flex-direction: row;
 
-    ${
-      direction === 'column' &&
-      css`
+    ${direction === 'column' &&
+    css`
       flex-direction: column;
-    `
-    }
+    `}
   `,
   boxReset: css`
     padding: 0;
@@ -461,6 +459,30 @@ export const styleUtils = {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
       border-radius: ${borderRadius[2]};
+    }
+  `,
+  backButton: css`
+    background-color: transparent;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid ${colorTokens.border.neutral};
+    border-radius: ${borderRadius[4]};
+    outline: none;
+    color: ${colorTokens.icon.default};
+    transition: color 0.3s ease-in-out;
+
+    :hover {
+      color: ${colorTokens.icon.hover};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
     }
   `,
 };
