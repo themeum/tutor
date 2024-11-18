@@ -133,7 +133,7 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
               render={(props) => (
                 <FormInput
                   {...props}
-                  label={__('Discount reason', 'tutor')}
+                  label={__('Discount Reason', 'tutor')}
                   placeholder={__('Enter the reason of this discount', 'tutor')}
                 />
               )}

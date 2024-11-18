@@ -118,7 +118,7 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
             render={(props) => (
               <FormSelectInput
                 {...props}
-                label={__('Reason for cancellation', 'tutor')}
+                label={__('Reason for Cancellation', 'tutor')}
                 options={reasonOptions}
                 placeholder={__('Select a reason', 'tutor')}
               />
