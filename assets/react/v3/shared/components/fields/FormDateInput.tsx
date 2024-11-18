@@ -71,26 +71,20 @@ const FormDateInput = ({
                 value={fieldValue}
                 onClick={(event) => {
                   event.stopPropagation();
-                  !disabled && setIsOpen((previousState) => !previousState);
+                  setIsOpen((previousState) => !previousState);
                 }}
                 onKeyDown={(event) => {
-                  if (!disabled && event.key === 'Enter') {
+                  if (event.key === 'Enter') {
                     event.preventDefault();
                     setIsOpen((previousState) => !previousState);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
                   }
                 }}
                 autoComplete="off"
                 data-input
-                onBlur={() => {
-                  setTimeout(() => {
-                    const focusedElement = document.activeElement;
-                    const isPopoverFocused = popoverRef.current?.contains(focusedElement);
-
-                    if (!isPopoverFocused) {
-                      setIsOpen(false);
-                    }
-                  }, 0);
-                }}
               />
               <SVGIcon name="calendarLine" width={30} height={32} style={styles.icon} />
 

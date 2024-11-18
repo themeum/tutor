@@ -143,12 +143,16 @@ const FormCoursePrerequisites = ({
                   {...restInputProps}
                   onClick={(event) => {
                     event.stopPropagation();
-                    !disabled && setIsOpen((previousState) => !previousState);
+                    setIsOpen((previousState) => !previousState);
                   }}
                   onKeyDown={(event) => {
-                    if (!disabled && event.key === 'Enter') {
+                    if (event.key === 'Enter') {
                       event.preventDefault();
                       setIsOpen(true);
+                    }
+
+                    if (event.key === 'Tab') {
+                      setIsOpen(false);
                     }
                   }}
                   className="tutor-input-field"
@@ -160,7 +164,6 @@ const FormCoursePrerequisites = ({
                   onChange={(event) => {
                     setSearchText(event.target.value);
                   }}
-                  onBlur={() => setIsOpen(false)}
                 />
               </div>
             </div>
