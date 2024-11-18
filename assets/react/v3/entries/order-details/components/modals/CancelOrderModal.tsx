@@ -15,6 +15,7 @@ import type { Option } from '@Utils/types';
 import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface CancelOrderModalProps extends ModalProps {
@@ -41,7 +42,7 @@ const reasonOptions: (Option<CancellationReason> & { explanation?: string })[] =
     value: 'customer_changed_or_canceled_order',
     explanation: __(
       'The customer has modified or canceled their order. This action indicates that the customer has either updated their order details or decided to cancel their order entirely. Please review the order history for specific changes or cancellation details.',
-      'tutor'
+      'tutor',
     ),
   },
   {
@@ -54,7 +55,7 @@ const reasonOptions: (Option<CancellationReason> & { explanation?: string })[] =
     value: 'fraudulent_order',
     explanation: __(
       'The order has been flagged as fraudulent. This action indicates that the order has been identified as potentially fraudulent and requires immediate attention. Please investigate the order details and take appropriate measures to prevent any unauthorized transactions.',
-      'tutor'
+      'tutor',
     ),
   },
   {
@@ -82,8 +83,12 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
     reasonOptions.find((item) => item.value === reasonValue)?.explanation ??
     __(
       'Please select a reason for the order cancellation. Your input is valuable for understanding the cause.',
-      'tutor'
+      'tutor',
     );
+
+  useEffect(() => {
+    form.setFocus('reason');
+  }, []);
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
