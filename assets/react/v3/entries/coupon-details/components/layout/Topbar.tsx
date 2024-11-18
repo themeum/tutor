@@ -55,7 +55,7 @@ function Topbar() {
       <Container>
         <div css={styles.innerWrapper}>
           <div css={styles.left}>
-            <button type="button" css={styles.backButton} onClick={handleGoBack}>
+            <button type="button" css={styleUtils.backButton} onClick={handleGoBack}>
               <SVGIcon name="arrowLeft" width={26} height={26} />
             </button>
             <div>
@@ -143,22 +143,5 @@ const styles = {
   updateMessage: css`
 		${typography.body()};
 		color: ${colorTokens.text.subdued};
-	`,
-  backButton: css`
-		${styleUtils.resetButton};
-		background-color: transparent;
-		width: 32px;
-		height: 32px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		border: 1px solid ${colorTokens.border.neutral};
-		border-radius: ${borderRadius[4]};
-		color: ${colorTokens.icon.default};
-		transition: color 0.3s ease-in-out;
-
-		:hover {
-			color: ${colorTokens.icon.hover};
-		}
 	`,
 };
