@@ -12,10 +12,11 @@ import config, { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
+import { type TutorMutationResponse, useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
   convertYouTubeDurationToSeconds,
   covertSecondsToHMS,
+  generateVideoThumbnail,
   getExternalVideoDuration,
   getVimeoVideoDuration,
 } from '@CourseBuilderUtils/utils';
@@ -25,7 +26,7 @@ import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
-
+import type { UseMutationResult } from '@tanstack/react-query';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -35,6 +36,7 @@ export interface CourseVideo {
   source_video_id: string;
   poster: string;
   poster_url: string;
+  source_html5: string;
   source_external_url: string;
   source_shortcode: string;
   source_youtube: string;
@@ -77,6 +79,7 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
     source_video_id: '',
     poster: '',
     poster_url: '',
+    source_html5: '',
     source_external_url: '',
     source_shortcode: '',
     source_youtube: '',
@@ -85,6 +88,69 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
   };
 
   return fieldValue ? { ...fieldValue, ...update } : { ...defaultValue, ...update };
+};
+
+const videoValidation = {
+  youtube: (url: string) => {
+    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
+    const match = url.match(regExp);
+    return match && match[7].length === 11 ? match[7] : null;
+  },
+  vimeo: (url: string) => {
+    const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
+    const match = url.match(regExp);
+    return match?.[5] || null;
+  },
+  shortcode: (code: string) => {
+    return /^\[.*\]$/.test(code);
+  },
+  url: (url: string) => {
+    return /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(url);
+  },
+};
+
+const getVideoDuration = async (
+  source: string,
+  url: string,
+  getYouTubeVideoDurationMutation: UseMutationResult<
+    TutorMutationResponse<{
+      duration: string;
+    }>,
+    Error,
+    string,
+    unknown
+  >,
+) => {
+  try {
+    let seconds = 0;
+
+    switch (source) {
+      case 'vimeo':
+        seconds = (await getVimeoVideoDuration(url)) ?? 0;
+        break;
+      case 'html5':
+      case 'external_url':
+        seconds = (await getExternalVideoDuration(url)) ?? 0;
+        break;
+      case 'youtube': {
+        const videoId = videoValidation.youtube(url);
+        if (videoId) {
+          const response = await getYouTubeVideoDurationMutation.mutateAsync(videoId);
+          seconds = convertYouTubeDurationToSeconds(response.data.duration);
+        }
+        break;
+      }
+    }
+
+    if (seconds) {
+      const duration = covertSecondsToHMS(Math.floor(seconds));
+      return duration;
+    }
+    return null;
+  } catch (error) {
+    console.error('Error getting video duration:', error);
+    return null;
+  }
 };
 
 const FormVideoInput = ({
@@ -140,6 +206,12 @@ const FormVideoInput = ({
     },
   });
   const getYouTubeVideoDurationMutation = useGetYouTubeVideoDuration();
+  const [isThumbnailLoading, setIsThumbnailLoading] = useState(false);
+  const [duration, setDuration] = useState({
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
 
   const videoSource = form.watch('videoSource') || '';
 
@@ -164,6 +236,76 @@ const FormVideoInput = ({
 
     form.setValue('videoSource', fieldValue.source);
     form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
+
+    if (!fieldValue.poster_url && ['vimeo', 'youtube', 'external_url', 'html5'].includes(fieldValue.source)) {
+      const source = fieldValue.source as 'vimeo' | 'youtube' | 'external_url' | 'html5';
+      generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
+        .then((url) => {
+          setIsThumbnailLoading(false);
+          field.onChange(updateFieldValue(fieldValue, { poster_url: url }));
+        })
+        .finally(() => {
+          setIsThumbnailLoading(false);
+        });
+    }
+
+    if (Object.values(duration).some((value) => value > 0)) {
+      return;
+    }
+
+    if (fieldValue.source === 'vimeo') {
+      getVimeoVideoDuration(fieldValue['source_vimeo' as keyof CourseVideo] || '')
+        .then((duration) => {
+          if (!duration) {
+            return;
+          }
+
+          setDuration(covertSecondsToHMS(Math.floor(duration)));
+
+          if (onGetDuration) {
+            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    if (['external_url', 'html5'].includes(fieldValue.source)) {
+      getExternalVideoDuration(fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '')
+        .then((duration) => {
+          if (!duration) {
+            return;
+          }
+
+          setDuration(covertSecondsToHMS(Math.floor(duration)));
+
+          if (onGetDuration) {
+            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+
+    if (fieldValue.source === 'youtube') {
+      const videoId = videoValidation.youtube(fieldValue['source_youtube' as keyof CourseVideo] || '') ?? '';
+      getYouTubeVideoDurationMutation.mutateAsync(videoId).then((response) => {
+        const duration = response.data.duration;
+        if (!duration) {
+          return;
+        }
+
+        const seconds = convertYouTubeDurationToSeconds(duration);
+
+        setDuration(covertSecondsToHMS(Math.floor(seconds)));
+
+        if (onGetDuration) {
+          onGetDuration(covertSecondsToHMS(Math.floor(seconds)));
+        }
+      });
+    }
   }, [fieldValue]);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -185,31 +327,66 @@ const FormVideoInput = ({
     });
 
     uploader.open();
-    uploader.on('select', () => {
+    uploader.on('select', async () => {
       const attachment = uploader.state().get('selection').first().toJSON();
+
       const updateData =
         type === 'video'
           ? { source: 'html5', source_video_id: attachment.id }
           : { poster: attachment.id, poster_url: attachment.url };
-
-      if (type === 'video' && onGetDuration) {
-        getExternalVideoDuration(attachment.url).then((duration) => {
-          if (duration) {
-            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-          }
-        });
-      }
-
       field.onChange(updateFieldValue(fieldValue, updateData));
       onChange?.(updateFieldValue(fieldValue, updateData));
+
+      if (type === 'video') {
+        try {
+          setIsThumbnailLoading(true);
+          const posterUrl = await generateVideoThumbnail('external_url', attachment.url);
+          const duration = await getExternalVideoDuration(attachment.url);
+
+          if (!duration) {
+            return;
+          }
+          setDuration(covertSecondsToHMS(Math.floor(duration)));
+          if (onGetDuration) {
+            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+          }
+
+          if (posterUrl) {
+            field.onChange(
+              updateFieldValue(fieldValue, {
+                ...updateData,
+                poster_url: posterUrl,
+              }),
+            );
+
+            onChange?.(
+              updateFieldValue(fieldValue, {
+                ...updateData,
+                poster_url: posterUrl,
+              }),
+            );
+          }
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setIsThumbnailLoading(false);
+        }
+      }
     });
   };
 
   const handleClear = (type: 'video' | 'poster') => {
     const updateData = type === 'video' ? { source: '' } : { poster: '', poster_url: '' };
-    field.onChange(updateFieldValue(fieldValue, updateData));
+    const updatedValue = updateFieldValue(fieldValue, updateData);
+
+    field.onChange(updatedValue);
+    setDuration({
+      hours: 0,
+      minutes: 0,
+      seconds: 0,
+    });
     if (onChange) {
-      onChange(updateFieldValue(fieldValue, updateData));
+      onChange(updatedValue);
     }
   };
 
@@ -223,94 +400,69 @@ const FormVideoInput = ({
   };
 
   const handleDataFromUrl = async (data: URLFormData) => {
-    const source = data.videoSource;
-    const updatedValue = {
-      source,
-      [`source_${source}`]: data.videoUrl,
-    };
-
-    field.onChange(updateFieldValue(fieldValue, updatedValue));
-    onChange?.(updateFieldValue(fieldValue, updatedValue));
-    setIsOpen(false);
-
+    setIsThumbnailLoading(true);
     try {
-      if (source === 'vimeo') {
-        const duration = await getVimeoVideoDuration(data.videoUrl);
-        if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-        }
+      const { videoSource: source, videoUrl: url } = data;
+      const updatedValue = {
+        source,
+        [`source_${source}`]: url,
+      };
+
+      // Update form value
+      field.onChange(updateFieldValue(fieldValue, updatedValue));
+      onChange?.(updateFieldValue(fieldValue, updatedValue));
+      setIsOpen(false);
+
+      // Get duration and thumbnail in parallel
+      const [duration, thumbnail] = await Promise.all([
+        getVideoDuration(source, url, getYouTubeVideoDurationMutation),
+        ['youtube', 'vimeo', 'external_url', 'html5'].includes(source)
+          ? generateVideoThumbnail(source as 'youtube' | 'vimeo' | 'external_url' | 'html5', url)
+          : null,
+      ]);
+
+      if (duration) {
+        setDuration(duration);
+        onGetDuration?.(duration);
       }
 
-      if (source === 'external_url') {
-        const duration = await getExternalVideoDuration(data.videoUrl);
-
-        if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-        }
+      if (thumbnail) {
+        const valueWithThumbnail = updateFieldValue(fieldValue, {
+          ...updatedValue,
+          poster_url: thumbnail,
+        });
+        field.onChange(valueWithThumbnail);
+        onChange?.(valueWithThumbnail);
       }
-
-      if (source === 'youtube') {
-        const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-        const match = data.videoUrl.match(regExp);
-        const videoId = match && match[7].length === 11 ? match[7] : '';
-        const response = await getYouTubeVideoDurationMutation.mutateAsync(videoId);
-
-        const duration = response.data.duration;
-        const seconds = convertYouTubeDurationToSeconds(duration);
-
-        if (onGetDuration && duration) {
-          onGetDuration(covertSecondsToHMS(Math.floor(seconds)));
-        }
-      }
-    } catch (error) {
-      console.error(error);
+    } finally {
+      setIsThumbnailLoading(false);
     }
   };
 
   const validateVideoUrl = (url: string) => {
-    if (videoSource === 'embedded') {
-      return true;
-    }
-
-    const value = url.trim();
-    const regex = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    const videoUrl = url.trim();
+    if (videoSource === 'embedded') return true;
 
     if (videoSource === 'shortcode') {
-      const regExp = /^\[.*\]$/;
-      const match = value.match(regExp);
-
-      if (!match) {
-        return __('Invalid Shortcode', 'tutor');
-      }
-
-      return true;
+      return videoValidation.shortcode(videoUrl) || __('Invalid Shortcode', 'tutor');
     }
 
-    if (!regex.test(value)) {
+    if (!videoValidation.url(videoUrl)) {
       return __('Invalid URL', 'tutor');
     }
 
-    if (videoSource === 'youtube') {
-      const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-      const match = value.match(regExp);
-      if (!match || match[7].length !== 11) {
-        return __('Invalid YouTube URL', 'tutor');
-      }
-
-      return true;
+    if (videoSource === 'youtube' && !videoValidation.youtube(videoUrl)) {
+      return __('Invalid YouTube URL', 'tutor');
     }
 
-    if (videoSource === 'vimeo') {
-      const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-      const match = value.match(regExp);
-
-      if (!match || !match[5]) {
-        return __('Invalid Vimeo URL', 'tutor');
-      }
+    if (videoSource === 'vimeo' && !videoValidation.vimeo(videoUrl)) {
+      return __('Invalid Vimeo URL', 'tutor');
     }
 
     return true;
   };
+
+  console.log('duration', duration);
 
   return (
     <>
@@ -390,7 +542,12 @@ const FormVideoInput = ({
                             <div css={styles.videoInfo}>
                               <div css={styles.videoInfoTitle}>
                                 <div css={styleUtils.text.ellipsis(1)}>
-                                  {videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
+                                  {/* {fieldValue?.source === 'html5' &&
+                                      videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label} */}
+                                  {/* {fieldValue ? fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] : ''} */}
+                                  {['vimeo', 'youtube', 'external_url', 'html5'].includes(fieldValue?.source || '')
+                                    ? fieldValue?.[`source_${fieldValue.source}` as keyof CourseVideo]
+                                    : videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
                                 </div>
                               </div>
                             </div>
@@ -425,7 +582,7 @@ const FormVideoInput = ({
                           })}
                         >
                           <Show
-                            when={fieldValue?.source === 'html5'}
+                            when={['html5', 'vimeo', 'youtube'].includes(fieldValue?.source || '')}
                             fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
                           >
                             <ImageInput
@@ -438,6 +595,9 @@ const FormVideoInput = ({
                                     }
                                   : null
                               }
+                              loading={isThumbnailLoading}
+                              isClearAble={!!fieldValue?.poster}
+                              disabled={['vimeo', 'youtube'].includes(fieldValue?.source || '')}
                               uploadHandler={() => handleUpload('poster')}
                               clearHandler={() => handleClear('poster')}
                               buttonText={__('Upload Thumbnail', 'tutor')}
@@ -447,6 +607,12 @@ const FormVideoInput = ({
                               overlayCss={styles.thumbImage}
                               replaceButtonText={__('Replace Thumbnail', 'tutor')}
                             />
+
+                            <Show when={duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0}>
+                              <div css={styles.duration}>
+                                {duration.hours}h {duration.minutes}m {duration.seconds}s
+                              </div>
+                            </Show>
                           </Show>
                         </div>
                       </div>
@@ -504,8 +670,8 @@ const FormVideoInput = ({
                   <FormTextareaInput
                     {...controllerProps}
                     inputCss={css`
-                      border-style: dashed;
-                    `}
+                        border-style: dashed;
+                      `}
                     rows={2}
                     placeholder={
                       placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')
@@ -525,7 +691,13 @@ const FormVideoInput = ({
               >
                 {__('Cancel', 'tutor')}
               </Button>
-              <Button variant="secondary" size="small" onClick={form.handleSubmit(handleDataFromUrl)}>
+              <Button
+                variant="secondary"
+                size="small"
+                onClick={async () => {
+                  await form.handleSubmit(handleDataFromUrl)();
+                }}
+              >
                 {__('Ok', 'tutor')}
               </Button>
             </div>
@@ -540,137 +712,149 @@ export default FormVideoInput;
 
 const styles = {
   emptyMediaWrapper: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[4]};
-    
-    label {
-      ${typography.caption()};
-      color: ${colorTokens.text.title};
-    }
-  `,
-  emptyMedia: ({ hasVideoSource = false }: { hasVideoSource: boolean }) => css`
-    width: 100%;
-    height: 164px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: ${spacing[8]};
-    border: 1px dashed ${colorTokens.stroke.border};
-    border-radius: ${borderRadius[8]};
-    background-color: ${colorTokens.background.status.warning};
-
-    ${
-      hasVideoSource &&
-      css`
-      background-color: ${colorTokens.bg.white};
-    `
-    }
-  `,
-  infoTexts: css`
-    ${typography.tiny()};
-    color: ${colorTokens.text.subdued};
-  `,
-  warningText: css`
-    ${styleUtils.display.flex()};
-    align-items: center;
-    gap: ${spacing[4]};
-    ${typography.caption()};
-    color: ${colorTokens.text.warning};
-  `,
-  selectFromSettingsButton: css`
-    background: ${colorTokens.bg.white};
-  `,
-  urlData: css`
-    ${typography.caption()};
-    ${styleUtils.display.flex('column')};
-    padding: ${spacing[8]} ${spacing[12]};
-    gap: ${spacing[8]};
-    word-break: break-all;
-  `,
-  previewWrapper: css`
-    width: 100%;
-    height: 100%;
-    border: 1px solid ${colorTokens.stroke.default};
-    border-radius: ${borderRadius[8]};
-    overflow: hidden;
-  `,
-  videoInfoWrapper: css`
-    ${styleUtils.display.flex()};
-    justify-content: space-between;
-    align-items: center;
-    gap: ${spacing[20]};
-    padding: ${spacing[8]} ${spacing[12]};
-  `,
-  videoInfoCard: css`
-    ${styleUtils.display.flex()};
-    align-items: center;
-    gap: ${spacing[8]};
-
-    svg {
-      color: ${colorTokens.icon.hover};
-    }
-  `,
-  videoInfo: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[4]};
-  `,
-  videoInfoTitle: css`
-    ${styleUtils.display.flex()};
-    ${typography.caption('medium')}
-    word-break: break-all;
-  `,
-  imagePreview: ({ isHTMLVideo }: { isHTMLVideo: boolean }) => css`
-    width: 100%;
-    max-height: 168px;
-    position: relative;
-    overflow: hidden;
-    background-color: ${colorTokens.bg.white};
-    ${!isHTMLVideo && styleUtils.overflowYAuto};
-
-    &:hover {
-      [data-hover-buttons-wrapper] {
-        opacity: 1;
+      ${styleUtils.display.flex('column')};
+      gap: ${spacing[4]};
+      
+      label {
+        ${typography.caption()};
+        color: ${colorTokens.text.title};
       }
-    }
-  `,
-  thumbImage: css`
-    border-radius: 0;
-    border: none;
-  `,
-  urlButton: css`
-    ${styleUtils.resetButton};
-    ${typography.small('medium')};
-    color: ${colorTokens.text.brand};
-    border-radius: ${borderRadius[2]};
-    padding: 0 ${spacing[4]};
-    margin-bottom: ${spacing[8]};
+    `,
+  emptyMedia: ({ hasVideoSource = false }: { hasVideoSource: boolean }) => css`
+      width: 100%;
+      height: 164px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: ${spacing[8]};
+      border: 1px dashed ${colorTokens.stroke.border};
+      border-radius: ${borderRadius[8]};
+      background-color: ${colorTokens.background.status.warning};
 
-    &:focus-visible {
-      outline: 2px solid ${colorTokens.stroke.brand};
-      outline-offset: 1px;
-    }
-  `,
+      ${
+        hasVideoSource &&
+        css`
+        background-color: ${colorTokens.bg.white};
+      `
+      }
+    `,
+  infoTexts: css`
+      ${typography.tiny()};
+      color: ${colorTokens.text.subdued};
+    `,
+  warningText: css`
+      ${styleUtils.display.flex()};
+      align-items: center;
+      gap: ${spacing[4]};
+      ${typography.caption()};
+      color: ${colorTokens.text.warning};
+    `,
+  selectFromSettingsButton: css`
+      background: ${colorTokens.bg.white};
+    `,
+  urlData: css`
+      ${typography.caption()};
+      ${styleUtils.display.flex('column')};
+      padding: ${spacing[8]} ${spacing[12]};
+      gap: ${spacing[8]};
+      word-break: break-all;
+    `,
+  previewWrapper: css`
+      width: 100%;
+      height: 100%;
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius[8]};
+      overflow: hidden;
+    `,
+  videoInfoWrapper: css`
+      ${styleUtils.display.flex()};
+      justify-content: space-between;
+      align-items: center;
+      gap: ${spacing[20]};
+      padding: ${spacing[8]} ${spacing[12]};
+    `,
+  videoInfoCard: css`
+      ${styleUtils.display.flex()};
+      align-items: center;
+      gap: ${spacing[8]};
+
+      svg {
+        flex-shrink: 0;
+        color: ${colorTokens.icon.hover};
+      }
+    `,
+  videoInfo: css`
+      ${styleUtils.display.flex('column')};
+      gap: ${spacing[4]};
+    `,
+  videoInfoTitle: css`
+      ${styleUtils.display.flex()};
+      ${typography.caption('medium')}
+      word-break: break-all;
+    `,
+  imagePreview: ({ isHTMLVideo }: { isHTMLVideo: boolean }) => css`
+      width: 100%;
+      max-height: 168px;
+      position: relative;
+      overflow: hidden;
+      background-color: ${colorTokens.bg.white};
+      ${!isHTMLVideo && styleUtils.overflowYAuto};
+      scrollbar-gutter: auto;
+
+      &:hover {
+        [data-hover-buttons-wrapper] {
+          opacity: 1;
+        }
+      }
+    `,
+  duration: css`
+      ${typography.tiny()};
+      position: absolute;
+      bottom: ${spacing[12]};
+      right: ${spacing[12]};
+      background-color: rgba(0, 0, 0, 0.5);
+      color: ${colorTokens.text.white};
+      padding: ${spacing[4]} ${spacing[8]};
+      border-radius: ${borderRadius[6]};
+    `,
+  thumbImage: css`
+      border-radius: 0;
+      border: none;
+    `,
+  urlButton: css`
+      ${styleUtils.resetButton};
+      ${typography.small('medium')};
+      color: ${colorTokens.text.brand};
+      border-radius: ${borderRadius[2]};
+      padding: 0 ${spacing[4]};
+      margin-bottom: ${spacing[8]};
+
+      &:focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
+    `,
   actionButtons: css`
-    ${styleUtils.display.flex()};
-    gap: ${spacing[4]};
-  `,
+      ${styleUtils.display.flex()};
+      gap: ${spacing[4]};
+    `,
   popover: css`
-    position: absolute;
-    width: 100%;
-    z-index: ${zIndex.dropdown};
-    background-color: ${colorTokens.bg.white};
-    border-radius: ${borderRadius.card};
-    box-shadow: ${shadow.popover};
-  `,
+      position: absolute;
+      width: 100%;
+      z-index: ${zIndex.dropdown};
+      background-color: ${colorTokens.bg.white};
+      border-radius: ${borderRadius.card};
+      box-shadow: ${shadow.popover};
+    `,
   popoverContent: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
-    padding: ${spacing[16]};
-  `,
+      ${styleUtils.display.flex('column')};
+      gap: ${spacing[12]};
+      padding: ${spacing[16]};
+    `,
   popoverButtonWrapper: css`
-    ${styleUtils.display.flex()};
-    gap: ${spacing[8]};
-    justify-content: flex-end;
-  `,
+      ${styleUtils.display.flex()};
+      gap: ${spacing[8]};
+      justify-content: flex-end;
+    `,
 };

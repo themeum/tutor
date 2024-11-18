@@ -26,6 +26,8 @@ interface ImageInputProps {
   overlayCss?: SerializedStyles;
   replaceButtonText?: string;
   loading?: boolean;
+  disabled?: boolean;
+  isClearAble?: boolean;
 }
 
 const sizeMap: Record<ImageInputSize, ButtonSize> = {
@@ -46,12 +48,19 @@ const ImageInput = ({
   overlayCss,
   replaceButtonText,
   loading,
+  disabled = false,
+  isClearAble = true,
 }: ImageInputProps) => {
   return (
     <Show
       when={!loading}
       fallback={
-        <div css={[styles.emptyMedia(size)]}>
+        <div
+          css={styles.emptyMedia({
+            size,
+            isDisabled: disabled,
+          })}
+        >
           <LoadingOverlay />
         </div>
       }
@@ -60,20 +69,32 @@ const ImageInput = ({
         when={value?.url}
         fallback={
           <div
-            css={[styles.emptyMedia(size), emptyImageCss]}
+            aria-disabled={disabled}
+            css={[
+              styles.emptyMedia({
+                size,
+                isDisabled: disabled,
+              }),
+              emptyImageCss,
+            ]}
             onClick={(event) => {
               event.stopPropagation();
+
+              if (disabled) {
+                return;
+              }
+
               uploadHandler();
             }}
             onKeyDown={(event) => {
-              if (event.key === 'Enter') {
+              if (!disabled && event.key === 'Enter') {
                 event.preventDefault();
                 uploadHandler();
               }
             }}
           >
             <SVGIcon name="addImage" width={32} height={32} />
-            <Button size={sizeMap[size]} variant="secondary" buttonContentCss={styles.buttonText}>
+            <Button disabled={disabled} size={sizeMap[size]} variant="secondary" buttonContentCss={styles.buttonText}>
               {buttonText}
             </Button>
             <Show when={infoText}>
@@ -84,10 +105,19 @@ const ImageInput = ({
       >
         {(url) => {
           return (
-            <div css={[styles.previewWrapper(size), previewImageCss]}>
+            <div
+              css={[
+                styles.previewWrapper({
+                  size,
+                  isDisabled: disabled,
+                }),
+                previewImageCss,
+              ]}
+            >
               <img src={url} alt={value?.title} css={styles.imagePreview} />
               <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
                 <Button
+                  disabled={disabled}
                   variant="secondary"
                   size={sizeMap[size]}
                   buttonCss={css`margin-top: ${spacing[16]};`}
@@ -98,16 +128,19 @@ const ImageInput = ({
                 >
                   {replaceButtonText || __('Replace Image', 'tutor')}
                 </Button>
-                <Button
-                  variant="text"
-                  size={sizeMap[size]}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    clearHandler();
-                  }}
-                >
-                  {__('Remove', 'tutor')}
-                </Button>
+                <Show when={isClearAble}>
+                  <Button
+                    disabled={disabled}
+                    variant="text"
+                    size={sizeMap[size]}
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      clearHandler();
+                    }}
+                  >
+                    {__('Remove', 'tutor')}
+                  </Button>
+                </Show>
               </div>
             </div>
           );
@@ -120,7 +153,13 @@ const ImageInput = ({
 export default ImageInput;
 
 const styles = {
-  emptyMedia: (size: ImageInputSize) => css`
+  emptyMedia: ({
+    size,
+    isDisabled,
+  }: {
+    size: ImageInputSize;
+    isDisabled: boolean;
+  }) => css`
     width: 100%;
     height: 168px;
     display: flex;
@@ -132,13 +171,13 @@ const styles = {
     border-radius: ${borderRadius[8]};
     background-color: ${colorTokens.bg.white};
     overflow: hidden;
-    cursor: pointer;
+    cursor: ${isDisabled ? 'not-allowed' : 'pointer'};
 
     ${
       size === 'small' &&
       css`
-      width: 168px;
-    `
+        width: 168px;
+      `
     }
 
     svg {
@@ -146,7 +185,7 @@ const styles = {
     }
 
     &:hover svg {
-      color: ${colorTokens.brand.blue};
+      color: ${!isDisabled && colorTokens.brand.blue};
     }
   `,
   buttonText: css`
@@ -157,7 +196,7 @@ const styles = {
     color: ${colorTokens.text.subdued};
     text-align: center;
   `,
-  previewWrapper: (size: ImageInputSize) => css`
+  previewWrapper: ({ size, isDisabled }: { size: ImageInputSize; isDisabled: boolean }) => css`
     width: 100%;
     height: 168px;
     border: 1px solid ${colorTokens.stroke.default};
@@ -169,13 +208,14 @@ const styles = {
     ${
       size === 'small' &&
       css`
-      width: 168px;
-    `
+        width: 168px;
+      `
     }
 
     &:hover {
       [data-hover-buttons-wrapper] {
-        opacity: 1;
+        display: ${isDisabled ? 'none' : 'flex'};
+        opacity: ${isDisabled ? 0 : 1};
       }
     }
   `,
@@ -199,7 +239,7 @@ const styles = {
       box-shadow: ${shadow.button};
     }
 
-    button:last-of-type {
+    button:last-of-type:not(:only-of-type) {
       color: ${colorTokens.text.white};
       box-shadow: none;
     }
