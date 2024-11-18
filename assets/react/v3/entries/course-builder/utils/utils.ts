@@ -229,6 +229,7 @@ export const generateVideoThumbnail = async (
         video.muted = true;
         video.style.cssText =
           'position: fixed; left: 0; top: 0; width: 1px; height: 1px; object-fit: contain; z-index: -1;';
+        video.crossOrigin = 'Anonymous';
 
         // Create canvas element
         const canvas = document.createElement('canvas');

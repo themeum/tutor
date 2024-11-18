@@ -99,6 +99,7 @@ export const courseDefaultData: CourseFormData = {
     source_video_id: '',
     poster: '',
     poster_url: '',
+    source_html5: '',
     source_external_url: '',
     source_shortcode: '',
     source_youtube: '',
@@ -583,6 +584,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       )
         ? courseDetails.video.source
         : '',
+      poster_url: courseDetails.video.poster ? courseDetails.video.poster_url : '',
     },
     course_product_name: courseDetails.course_pricing.product_name,
     course_price_type: !courseDetails.course_pricing.type ? 'free' : courseDetails.course_pricing.type,

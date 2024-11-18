@@ -67,6 +67,8 @@ const videoSourceOptions = tutorConfig.supported_video_sources || [];
 const videoSourcesSelectOptions = videoSourceOptions.filter((option) => option.value !== 'html5');
 const videoSources = videoSourceOptions.map((item) => item.value);
 
+const thumbnailGeneratorSources = ['vimeo', 'youtube', 'external_url', 'html5'];
+
 const placeholderMap = {
   youtube: __('Paste YouTube Video URL', 'tutor'),
   vimeo: __('Paste Vimeo Video URL', 'tutor'),
@@ -244,8 +246,9 @@ const FormVideoInput = ({
     form.setValue('videoSource', fieldValue.source);
     form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
 
-    if (!fieldValue.poster_url && ['vimeo', 'youtube', 'external_url', 'html5'].includes(fieldValue.source)) {
+    if (!fieldValue.poster_url && thumbnailGeneratorSources.includes(fieldValue.source)) {
       const source = fieldValue.source as 'vimeo' | 'youtube' | 'external_url' | 'html5';
+      console.log('source', source);
       generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
         .then((url) => {
           setIsThumbnailLoading(false);
@@ -421,7 +424,7 @@ const FormVideoInput = ({
 
       const [duration, thumbnail] = await Promise.all([
         getVideoDuration(source, url, getYouTubeVideoDurationMutation),
-        ['youtube', 'vimeo', 'external_url', 'html5'].includes(source)
+        thumbnailGeneratorSources.includes(source)
           ? generateVideoThumbnail(source as 'youtube' | 'vimeo' | 'external_url' | 'html5', url)
           : null,
       ]);
@@ -552,7 +555,7 @@ const FormVideoInput = ({
                             <div css={styles.videoInfo}>
                               <div css={styles.videoInfoTitle}>
                                 <div css={styleUtils.text.ellipsis(1)}>
-                                  {['vimeo', 'youtube', 'external_url', 'html5'].includes(fieldValue?.source || '')
+                                  {thumbnailGeneratorSources.includes(fieldValue?.source || '')
                                     ? fieldValue?.[`source_${fieldValue.source}` as keyof CourseVideo]
                                     : videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
                                 </div>
@@ -585,13 +588,11 @@ const FormVideoInput = ({
                         </div>
                         <div
                           css={styles.imagePreview({
-                            hasImageInput: ['vimeo', 'youtube', 'html5', 'external_url'].includes(
-                              fieldValue?.source || '',
-                            ),
+                            hasImageInput: thumbnailGeneratorSources.includes(fieldValue?.source || ''),
                           })}
                         >
                           <Show
-                            when={['html5', 'vimeo', 'youtube'].includes(fieldValue?.source || '')}
+                            when={thumbnailGeneratorSources.includes(fieldValue?.source || '')}
                             fallback={<div css={styles.urlData}>{form.watch('videoUrl')}</div>}
                           >
                             <ImageInput
@@ -606,7 +607,7 @@ const FormVideoInput = ({
                               }
                               loading={isThumbnailLoading}
                               isClearAble={!!fieldValue?.poster}
-                              disabled={['vimeo', 'youtube'].includes(fieldValue?.source || '')}
+                              disabled={['vimeo', 'youtube', 'external_url'].includes(fieldValue?.source || '')}
                               uploadHandler={() => handleUpload('poster')}
                               clearHandler={() => handleClear('poster')}
                               buttonText={__('Upload Thumbnail', 'tutor')}
