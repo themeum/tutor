@@ -386,7 +386,7 @@ const styles = {
       css`
       [data-visually-hidden] {
         opacity: 0;
-        transition: opacity 0.3s ease-in-out;
+        transition: ${!isDragging ? 'opacity 0.3s ease-in-out' : 'none'}
       }
 
       :hover, :focus-within {
