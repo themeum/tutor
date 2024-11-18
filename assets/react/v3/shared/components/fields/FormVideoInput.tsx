@@ -347,7 +347,7 @@ const FormVideoInput = ({
 
       const updateData =
         type === 'video'
-          ? { source: 'html5', source_video_id: attachment.id }
+          ? { source: 'html5', source_video_id: attachment.id, source_html5: attachment.url }
           : { poster: attachment.id, poster_url: attachment.url };
       field.onChange(updateFieldValue(fieldValue, updateData));
       onChange?.(updateFieldValue(fieldValue, updateData));
