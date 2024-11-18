@@ -120,7 +120,7 @@ const ImageInput = ({
                   disabled={disabled}
                   variant="secondary"
                   size={sizeMap[size]}
-                  buttonCss={css`margin-top: ${spacing[16]};`}
+                  buttonCss={css`margin-top: ${isClearAble && spacing[16]};`}
                   onClick={(event) => {
                     event.stopPropagation();
                     uploadHandler();
