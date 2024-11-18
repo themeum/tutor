@@ -203,17 +203,15 @@ export const generateVideoThumbnail = async (
   source: 'youtube' | 'vimeo' | 'external_url' | 'html5',
   url: string,
 ): Promise<string> => {
-  // Handle different video sources
   if (source === 'youtube') {
     const match = url.match(VideoRegex.YOUTUBE);
     const videoId = match && match[7].length === 11 ? match[7] : '';
-    // Return YouTube thumbnail
+
     return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
   }
 
   if (source === 'vimeo') {
     try {
-      // Get Vimeo thumbnail
       const vimeoId = url.split('/').pop();
       const response = await fetch(`https://vimeo.com/api/v2/video/${vimeoId}.json`);
       const data = await response.json();
@@ -301,6 +299,7 @@ export const generateVideoThumbnail = async (
         });
 
         // Set timeout
+        // 30 seconds is a reasonable maximum time to wait for video metadata and frame capture
         const timeoutId = setTimeout(() => {
           cleanup();
           reject(new Error('Thumbnail generation timed out'));

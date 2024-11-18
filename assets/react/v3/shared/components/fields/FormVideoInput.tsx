@@ -28,6 +28,7 @@ import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
+import type { IconCollection } from '../../utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -72,6 +73,13 @@ const placeholderMap = {
   external_url: __('Paste External Video URL', 'tutor'),
   shortcode: __('Paste Video Shortcode', 'tutor'),
   embedded: __('Paste Embedded Video Code', 'tutor'),
+};
+
+const videoIconMap = {
+  youtube: 'youtube',
+  vimeo: 'vimeo',
+  shortcode: 'shortcode',
+  embedded: 'coding',
 };
 
 const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<CourseVideo>) => {
@@ -532,14 +540,18 @@ const FormVideoInput = ({
                       <div css={styles.previewWrapper}>
                         <div css={styles.videoInfoWrapper}>
                           <div css={styles.videoInfoCard}>
-                            <SVGIcon name="video" height={40} width={40} />
+                            <SVGIcon
+                              name={
+                                (videoIconMap[fieldValue?.source as keyof typeof videoIconMap] as IconCollection) ||
+                                'video'
+                              }
+                              height={36}
+                              width={36}
+                            />
 
                             <div css={styles.videoInfo}>
                               <div css={styles.videoInfoTitle}>
                                 <div css={styleUtils.text.ellipsis(1)}>
-                                  {/* {fieldValue?.source === 'html5' &&
-                                      videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label} */}
-                                  {/* {fieldValue ? fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] : ''} */}
                                   {['vimeo', 'youtube', 'external_url', 'html5'].includes(fieldValue?.source || '')
                                     ? fieldValue?.[`source_${fieldValue.source}` as keyof CourseVideo]
                                     : videoSourceOptions.find((option) => option.value === fieldValue?.source)?.label}
@@ -573,7 +585,9 @@ const FormVideoInput = ({
                         </div>
                         <div
                           css={styles.imagePreview({
-                            isHTMLVideo: fieldValue?.source === 'html5',
+                            hasImageInput: ['vimeo', 'youtube', 'html5', 'external_url'].includes(
+                              fieldValue?.source || '',
+                            ),
                           })}
                         >
                           <Show
@@ -761,6 +775,7 @@ const styles = {
       border: 1px solid ${colorTokens.stroke.default};
       border-radius: ${borderRadius[8]};
       overflow: hidden;
+      background-color: ${colorTokens.bg.white};
     `,
   videoInfoWrapper: css`
       ${styleUtils.display.flex()};
@@ -788,13 +803,18 @@ const styles = {
       ${typography.caption('medium')}
       word-break: break-all;
     `,
-  imagePreview: ({ isHTMLVideo }: { isHTMLVideo: boolean }) => css`
+  imagePreview: ({ hasImageInput }: { hasImageInput: boolean }) => css`
       width: 100%;
       max-height: 168px;
       position: relative;
       overflow: hidden;
-      background-color: ${colorTokens.bg.white};
-      ${!isHTMLVideo && styleUtils.overflowYAuto};
+      background-color: ${colorTokens.background.default};
+      ${
+        !hasImageInput &&
+        css`
+          ${styleUtils.overflowYAuto};
+        `
+      };
       scrollbar-gutter: auto;
 
       &:hover {
