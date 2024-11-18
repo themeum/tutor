@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { tutorConfig } from '@Config/config';
-import type { Addons } from '@Config/constants';
+import { type Addons, VideoRegex } from '@Config/constants';
 import type { PostStatus } from '@CourseBuilderServices/course';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import type { ID } from '../services/curriculum';
@@ -195,7 +195,7 @@ export const getIdWithoutPrefix = (prefix: string, id: ID) => {
 
 /**
  * Generates a thumbnail from different video sources
- * @param {string} source - Video source type ('youtube', 'vimeo', 'external_url')
+ * @param {string} source - Video source type ('youtube', 'vimeo', 'external_url', 'html5')
  * @param {string} url - Video URL
  * @returns {Promise<string>} - Base64 encoded thumbnail image
  */
@@ -205,8 +205,7 @@ export const generateVideoThumbnail = async (
 ): Promise<string> => {
   // Handle different video sources
   if (source === 'youtube') {
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = url.match(regExp);
+    const match = url.match(VideoRegex.YOUTUBE);
     const videoId = match && match[7].length === 11 ? match[7] : '';
     // Return YouTube thumbnail
     return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;

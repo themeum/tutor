@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import type { UseMutationResult } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
@@ -9,6 +10,7 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
+import { VideoRegex } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -26,7 +28,6 @@ import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
-import type { UseMutationResult } from '@tanstack/react-query';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -92,20 +93,18 @@ const updateFieldValue = (fieldValue: CourseVideo | null, update: Partial<Course
 
 const videoValidation = {
   youtube: (url: string) => {
-    const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
-    const match = url.match(regExp);
+    const match = url.match(VideoRegex.YOUTUBE);
     return match && match[7].length === 11 ? match[7] : null;
   },
   vimeo: (url: string) => {
-    const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
-    const match = url.match(regExp);
+    const match = url.match(VideoRegex.VIMEO);
     return match?.[5] || null;
   },
   shortcode: (code: string) => {
-    return /^\[.*\]$/.test(code);
+    return code.match(VideoRegex.SHORTCODE) ? code : null;
   },
   url: (url: string) => {
-    return /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(url);
+    return url.match(VideoRegex.EXTERNAL_URL) ? url : null;
   },
 };
 
@@ -408,12 +407,10 @@ const FormVideoInput = ({
         [`source_${source}`]: url,
       };
 
-      // Update form value
       field.onChange(updateFieldValue(fieldValue, updatedValue));
       onChange?.(updateFieldValue(fieldValue, updatedValue));
       setIsOpen(false);
 
-      // Get duration and thumbnail in parallel
       const [duration, thumbnail] = await Promise.all([
         getVideoDuration(source, url, getYouTubeVideoDurationMutation),
         ['youtube', 'vimeo', 'external_url', 'html5'].includes(source)
@@ -444,7 +441,7 @@ const FormVideoInput = ({
     if (videoSource === 'embedded') return true;
 
     if (videoSource === 'shortcode') {
-      return videoValidation.shortcode(videoUrl) || __('Invalid Shortcode', 'tutor');
+      return videoValidation.shortcode(videoUrl) ? true : __('Invalid Shortcode', 'tutor');
     }
 
     if (!videoValidation.url(videoUrl)) {
@@ -461,8 +458,6 @@ const FormVideoInput = ({
 
     return true;
   };
-
-  console.log('duration', duration);
 
   return (
     <>
@@ -610,7 +605,7 @@ const FormVideoInput = ({
 
                             <Show when={duration.hours > 0 || duration.minutes > 0 || duration.seconds > 0}>
                               <div css={styles.duration}>
-                                {duration.hours}h {duration.minutes}m {duration.seconds}s
+                                {duration.hours > 0 && `${duration.hours}h`} {duration.minutes}m {duration.seconds}s
                               </div>
                             </Show>
                           </Show>
@@ -817,6 +812,7 @@ const styles = {
       color: ${colorTokens.text.white};
       padding: ${spacing[4]} ${spacing[8]};
       border-radius: ${borderRadius[6]};
+      pointer-events: none;
     `,
   thumbImage: css`
       border-radius: 0;
