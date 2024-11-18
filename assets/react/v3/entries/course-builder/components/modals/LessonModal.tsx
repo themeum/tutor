@@ -565,9 +565,6 @@ const styles = {
     left: 110px;
   `,
   addH5PContentButton: css`
-    position: absolute;
-    top: 36px;
-    left: 110px;
     display: inline-block;
     text-decoration: none;
     font-size: 13px;
