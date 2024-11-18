@@ -107,6 +107,9 @@ window.jQuery(document).ready($=>{
 									$(`${alertDiv} .tutor-quiz-alert-text`).html(
 										`${__('Unfortunately, you are out of time and quiz attempts. ', 'tutor')}`
 									);
+									
+									// No attempt is remaining, so reload the page.
+									window.location.reload(true)
 								}
 							},
 							complete: function() {},

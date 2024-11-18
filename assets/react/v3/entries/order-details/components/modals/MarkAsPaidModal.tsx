@@ -9,6 +9,7 @@ import { useMarkAsPaidMutation } from '@OrderServices/order';
 import { formatPrice } from '@Utils/currency';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 interface MarkAsPaidModalProps extends ModalProps {
@@ -28,6 +29,10 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
       note: '',
     },
   });
+
+  useEffect(() => {
+    form.setFocus('note');
+  }, []);
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>

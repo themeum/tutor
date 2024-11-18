@@ -57,13 +57,13 @@ function Payment() {
       </BoxTitle>
       <div css={styles.content}>
         <Box bordered css={styleUtils.boxReset}>
-          {order.subscription_fees?.map((item) =>
+          {order.subscription_fees?.map((item) => (
             <div css={styles.item({ action: 'regular' })}>
               <div>{item.title}</div>
               <div>-</div>
               <div>{formatPrice(Number(item.value))}</div>
             </div>
-          )}
+          ))}
 
           <div css={styles.item({ action: 'regular' })}>
             <div>{__('Subtotal', 'tutor')}</div>
@@ -146,7 +146,16 @@ function Payment() {
               </div>
               <div>
                 {order.discount_reason ?? '-'}
-                <strong> ({`${order.discount_type === 'percentage' ? `${order.discount_amount}%` : formatPrice(order.discount_amount)}`})</strong>
+                <strong>
+                  {' '}
+                  (
+                  {`${
+                    order.discount_type === 'percentage'
+                      ? `${order.discount_amount}%`
+                      : formatPrice(order.discount_amount)
+                  }`}
+                  )
+                </strong>
               </div>
               <div>
                 -
@@ -155,12 +164,12 @@ function Payment() {
                     discount_amount: order.discount_amount,
                     discount_type: order.discount_type,
                     total: order.subtotal_price,
-                  })
+                  }),
                 )}
               </div>
             </Show>
           </div>
-          <Show when={order.tax_amount && order.tax_type==='exclusive'}>
+          <Show when={order.tax_amount && order.tax_type === 'exclusive'}>
             <div css={styles.item({ action: 'regular' })}>
               <div>{__('Estimated tax', 'tutor')}</div>
               <div>{order.tax_rate}%</div>
@@ -182,7 +191,7 @@ function Payment() {
             <div>{__('Total Paid', 'tutor')}</div>
             <div css={styles.includeTax}>
               <Show when={order.tax_type === 'inclusive'}>
-                {sprintf(__('Incl. tax %s', 'tutor' ), order.tax_amount ? formatPrice( order.tax_amount ) : 0)}
+                {sprintf(__('Incl. tax %s', 'tutor'), order.tax_amount ? formatPrice(order.tax_amount) : 0)}
               </Show>
             </div>
             <div>{formatPrice(order.total_price)}</div>
@@ -265,19 +274,12 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
-    &:hover {
-      button {
-        opacity: 1;
-      }
-    }
   `,
   editDiscountButton: css`
     ${styleUtils.resetButton};
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0;
-    transition: 0.3s ease opacity;
     color: ${colorTokens.icon.brand};
   `,
   item: ({ action = 'regular' }: { action: 'regular' | 'bold' | 'destructive' }) => css`
@@ -325,7 +327,7 @@ const styles = {
     color: ${colorTokens.brand.blue};
   `,
   includeTax: css`
-      ${typography.caption()};
-      color: ${colorTokens.text.subdued};
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
   `,
 };

@@ -21,7 +21,7 @@ import type { IconCollection } from '@Utils/types';
 
 const questionTypes = {
   true_false: {
-    label: __('True/ False', 'tutor'),
+    label: __('True/False', 'tutor'),
     icon: 'quizTrueFalse',
   },
   multiple_choice: {

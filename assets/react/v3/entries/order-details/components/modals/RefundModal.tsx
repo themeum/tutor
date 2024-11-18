@@ -1,4 +1,5 @@
 import Button from '@Atoms/Button';
+import Alert from '@Atoms/Alert';
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -15,6 +16,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller } from 'react-hook-form';
+import { useEffect } from 'react';
 
 interface RefundModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -39,6 +41,10 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
     },
   });
   const amount = form.watch('amount', 0);
+
+  useEffect(() => {
+    form.setFocus('amount');
+  }, []);
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
@@ -105,6 +111,13 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
               render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrollment', 'tutor')} />}
             />
           )}
+
+          <Alert type="warning" icon="bulb">
+            {__(
+              "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.",
+              'tutor',
+            )}
+          </Alert>
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
