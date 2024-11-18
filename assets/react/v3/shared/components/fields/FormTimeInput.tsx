@@ -95,10 +95,18 @@ const FormTimeInput = ({
                 ref={field.ref}
                 css={[css, styles.input]}
                 type="text"
-                onClick={() => !disabled && setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsOpen((previousState) => !previousState);
+                }}
                 onKeyDown={(event) => {
-                  if (!disabled && event.key === 'Enter') {
-                    setIsOpen(true);
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen((previousState) => !previousState);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
                   }
                 }}
                 value={field.value ?? ''}
@@ -108,9 +116,6 @@ const FormTimeInput = ({
                 }}
                 autoComplete="off"
                 data-input
-                onBlur={() => {
-                  setIsOpen(false);
-                }}
               />
               <SVGIcon name="clock" width={32} height={32} style={styles.icon} />
 

@@ -219,6 +219,10 @@ const FormSelectInput = <T,>({
                       setIsOpen((previousState) => !previousState);
                       inputRef.current?.focus();
                     }
+
+                    if (event.key === 'Tab') {
+                      setIsOpen(false);
+                    }
                   }}
                   onFocus={
                     selectOnFocus && isSearchable
@@ -234,7 +238,6 @@ const FormSelectInput = <T,>({
                       setSearchText(event.target.value);
                     }
                   }}
-                  onBlur={() => setIsOpen(false)}
                   data-select
                 />
 
@@ -312,6 +315,9 @@ const FormSelectInput = <T,>({
                           disabled={option.disabled}
                           title={option.label}
                           onMouseOver={() => setActiveIndex(index)}
+                          onMouseLeave={() => {
+                            index !== activeIndex && setActiveIndex(-1);
+                          }}
                           onFocus={() => setActiveIndex(index)}
                           aria-selected={activeIndex === index}
                         >

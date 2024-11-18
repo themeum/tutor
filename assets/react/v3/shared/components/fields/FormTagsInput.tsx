@@ -95,12 +95,16 @@ const FormTagsInput = ({
                 css={[inputCss, styles.input]}
                 onClick={(event) => {
                   event.stopPropagation();
-                  !disabled && setIsOpen((previousState) => !previousState);
+                  setIsOpen((previousState) => !previousState);
                 }}
                 onKeyDown={(event) => {
-                  if (!disabled && event.key === 'Enter') {
+                  if (event.key === 'Enter') {
                     event.preventDefault();
                     setIsOpen((previousState) => !previousState);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
                   }
                 }}
                 autoComplete="off"
@@ -110,7 +114,6 @@ const FormTagsInput = ({
                 onChange={(event) => {
                   setSearchText(event.target.value);
                 }}
-                onBlur={() => setIsOpen(false)}
               />
             </div>
 

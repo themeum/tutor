@@ -202,12 +202,16 @@ const FormSelectUser = ({
                     {...restInputProps}
                     onClick={(event) => {
                       event.stopPropagation();
-                      !disabled && setIsOpen((previousState) => !previousState);
+                      setIsOpen((previousState) => !previousState);
                     }}
                     onKeyDown={(event) => {
-                      if (!disabled && event.key === 'Enter') {
+                      if (event.key === 'Enter') {
                         event.preventDefault();
                         setIsOpen((previousState) => !previousState);
+                      }
+
+                      if (event.key === 'Tab') {
+                        setIsOpen(false);
                       }
                     }}
                     className="tutor-input-field"
@@ -219,7 +223,6 @@ const FormSelectUser = ({
                     onChange={(event) => {
                       setSearchText(event.target.value);
                     }}
-                    onBlur={() => setIsOpen(false)}
                   />
                 </div>
               )}
@@ -334,8 +337,12 @@ const FormSelectUser = ({
                         key={String(instructor.id)}
                         css={styles.optionItem}
                         data-active={activeIndex === index}
-                        onMouseEnter={() => setActiveIndex(index)}
+                        onMouseOver={() => setActiveIndex(index)}
+                        onMouseLeave={() => {
+                          index !== activeIndex && setActiveIndex(-1);
+                        }}
                         ref={activeIndex === index ? activeItemRef : null}
+                        onFocus={() => setActiveIndex(index)}
                       >
                         <button
                           type="button"

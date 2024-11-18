@@ -257,6 +257,9 @@ const FormCoursePrerequisites = ({
                               setSearchText('');
                             }}
                             onMouseOver={() => setActiveIndex(index)}
+                            onMouseLeave={() => {
+                              index !== activeIndex && setActiveIndex(-1);
+                            }}
                             onFocus={() => setActiveIndex(index)}
                             aria-selected={activeIndex === index}
                           >

@@ -126,16 +126,7 @@ const FormMultiLevelInput = ({
                 ref={triggerRef}
                 css={styles.addButtonWrapper({ isActive: isScrolling, hasCategories: treeOptions.length > 0 })}
               >
-                <button
-                  type="button"
-                  css={styles.addNewButton}
-                  onClick={() => setIsOpen(true)}
-                  onKeyDown={(event) => {
-                    if (event.key === 'Enter') {
-                      setIsOpen(true);
-                    }
-                  }}
-                >
+                <button type="button" css={styles.addNewButton} onClick={() => setIsOpen(true)}>
                   <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
                 </button>
               </div>
