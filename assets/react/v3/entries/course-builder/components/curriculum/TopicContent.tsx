@@ -221,7 +221,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       <div
         {...attributes}
         css={styles.wrapper({
-          isDragging: isOverlay,
+          isDragging,
+          isOverlay,
           isActive: meetingType === type || isDeletePopoverOpen || duplicateContentMutation.isPending,
         })}
         ref={setNodeRef}
@@ -369,9 +370,11 @@ export default TopicContent;
 const styles = {
   wrapper: ({
     isDragging = false,
+    isOverlay = false,
     isActive: isMeetingSelected = false,
   }: {
     isDragging: boolean;
+    isOverlay: boolean;
     isActive: boolean;
   }) => css`
     width: 100%;
@@ -400,7 +403,7 @@ const styles = {
       }
 
       [data-actions] {
-        opacity: 1;
+        opacity: ${isDragging ? 0 : 1};
       }
     }
 
@@ -422,16 +425,16 @@ const styles = {
     }
 
     ${
-      isDragging &&
+      isOverlay &&
       css`
-      box-shadow: ${shadow.drag};
-      border-color: ${colorTokens.stroke.border};
-      background-color: ${colorTokens.background.white};
+        box-shadow: ${shadow.drag};
+        border-color: ${colorTokens.stroke.border};
+        background-color: ${colorTokens.background.white};
 
-      [data-actions] {
-        opacity: 1;
-      }
-    `
+        [data-actions] {
+          opacity: 1;
+        }
+      `
     }
   `,
   title: css`
