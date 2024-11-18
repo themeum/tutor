@@ -1,7 +1,7 @@
 import {
   DndContext,
   type DragEndEvent,
-  type DragMoveEvent,
+  type DragOverEvent,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
@@ -178,7 +178,7 @@ const Curriculum = () => {
     }
   };
 
-  const handleDragMove = (event: DragMoveEvent) => {
+  const handleDragOver = (event: DragOverEvent) => {
     const { active, over } = event;
 
     if (!over || !active) {
@@ -425,7 +425,7 @@ const Curriculum = () => {
                 onDragStart={(event) => {
                   setActiveSortId(event.active.id);
                 }}
-                onDragMove={(event) => handleDragMove(event)}
+                onDragOver={(event) => handleDragOver(event)}
                 onDragEnd={(event) => handleDragEnd(event)}
               >
                 <SortableContext
