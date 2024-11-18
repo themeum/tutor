@@ -45,7 +45,7 @@ const questionTypeOptions: {
   isPro: boolean;
 }[] = [
   {
-    label: __('True/ False', 'tutor'),
+    label: __('True/False', 'tutor'),
     value: 'true_false',
     icon: 'quizTrueFalse',
     isPro: false,
