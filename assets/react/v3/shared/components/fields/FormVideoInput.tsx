@@ -248,7 +248,7 @@ const FormVideoInput = ({
 
     if (!fieldValue.poster_url && thumbnailGeneratorSources.includes(fieldValue.source)) {
       const source = fieldValue.source as 'vimeo' | 'youtube' | 'external_url' | 'html5';
-      console.log('source', source);
+      setIsThumbnailLoading(true);
       generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
         .then((url) => {
           setIsThumbnailLoading(false);
