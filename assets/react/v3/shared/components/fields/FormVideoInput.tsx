@@ -252,7 +252,12 @@ const FormVideoInput = ({
       generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
         .then((url) => {
           setIsThumbnailLoading(false);
-          field.onChange(updateFieldValue(fieldValue, { poster_url: url }));
+          field.onChange(
+            updateFieldValue(fieldValue, {
+              poster: '',
+              poster_url: url,
+            }),
+          );
         })
         .finally(() => {
           setIsThumbnailLoading(false);
@@ -365,6 +370,7 @@ const FormVideoInput = ({
             field.onChange(
               updateFieldValue(fieldValue, {
                 ...updateData,
+                poster: '',
                 poster_url: posterUrl,
               }),
             );
@@ -372,6 +378,7 @@ const FormVideoInput = ({
             onChange?.(
               updateFieldValue(fieldValue, {
                 ...updateData,
+                poster: '',
                 poster_url: posterUrl,
               }),
             );
@@ -437,6 +444,7 @@ const FormVideoInput = ({
       if (thumbnail) {
         const valueWithThumbnail = updateFieldValue(fieldValue, {
           ...updatedValue,
+          poster: '',
           poster_url: thumbnail,
         });
         field.onChange(valueWithThumbnail);
@@ -701,13 +709,7 @@ const FormVideoInput = ({
               >
                 {__('Cancel', 'tutor')}
               </Button>
-              <Button
-                variant="secondary"
-                size="small"
-                onClick={async () => {
-                  await form.handleSubmit(handleDataFromUrl)();
-                }}
-              >
+              <Button variant="secondary" size="small" onClick={form.handleSubmit(handleDataFromUrl)}>
                 {__('Ok', 'tutor')}
               </Button>
             </div>
