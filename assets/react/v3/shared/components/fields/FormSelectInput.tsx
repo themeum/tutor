@@ -182,22 +182,7 @@ const FormSelectInput = <T,>({
                 </Show>
               </div>
 
-              <div
-                css={{
-                  width: '100%',
-                }}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  setIsOpen((previousState) => !previousState);
-                  inputRef.current?.focus();
-                }}
-                onKeyDown={(event) => {
-                  if (event.key === 'Enter' || event.key === '') {
-                    setIsOpen((previousState) => !previousState);
-                    inputRef.current?.focus();
-                  }
-                }}
-              >
+              <div css={{ width: '100%' }}>
                 <input
                   {...restInputProps}
                   {...additionalAttributes}
@@ -222,6 +207,23 @@ const FormSelectInput = <T,>({
                   placeholder={placeholder}
                   value={isSearching ? searchText : inputValue}
                   title={inputValue}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsOpen((previousState) => !previousState);
+                    inputRef.current?.focus();
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+
+                      setIsOpen((previousState) => !previousState);
+                      inputRef.current?.focus();
+                    }
+
+                    if (event.key === 'Tab') {
+                      setIsOpen(false);
+                    }
+                  }}
                   onFocus={
                     selectOnFocus && isSearchable
                       ? (event) => {
@@ -313,6 +315,9 @@ const FormSelectInput = <T,>({
                           disabled={option.disabled}
                           title={option.label}
                           onMouseOver={() => setActiveIndex(index)}
+                          onMouseLeave={() => {
+                            index !== activeIndex && setActiveIndex(-1);
+                          }}
                           onFocus={() => setActiveIndex(index)}
                           aria-selected={activeIndex === index}
                         >

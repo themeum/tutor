@@ -95,7 +95,20 @@ const FormTimeInput = ({
                 ref={field.ref}
                 css={[css, styles.input]}
                 type="text"
-                onFocus={() => setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsOpen((previousState) => !previousState);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen((previousState) => !previousState);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
+                  }
+                }}
                 value={field.value ?? ''}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -103,9 +116,6 @@ const FormTimeInput = ({
                 }}
                 autoComplete="off"
                 data-input
-                onBlur={() => {
-                  setIsOpen(false);
-                }}
               />
               <SVGIcon name="clock" width={32} height={32} style={styles.icon} />
 
@@ -138,6 +148,9 @@ const FormTimeInput = ({
                             setIsOpen(false);
                           }}
                           onMouseOver={() => setActiveIndex(index)}
+                          onMouseLeave={() => {
+                            index !== activeIndex && setActiveIndex(-1);
+                          }}
                           onFocus={() => setActiveIndex(index)}
                         >
                           {option}

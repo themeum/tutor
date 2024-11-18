@@ -174,7 +174,20 @@ const FormTopicPrerequisites = ({
                 </div>
                 <input
                   {...restInputProps}
-                  onClick={() => setIsOpen((previousState) => !previousState)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsOpen((previousState) => !previousState);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') {
+                      event.preventDefault();
+                      setIsOpen((previousState) => !previousState);
+                    }
+
+                    if (event.key === 'Tab') {
+                      setIsOpen(false);
+                    }
+                  }}
                   className="tutor-input-field"
                   css={[inputCss, styles.input]}
                   autoComplete="off"
