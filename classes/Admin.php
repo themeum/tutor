@@ -11,7 +11,9 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\OrderController;
+use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,6 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Admin {
+	use JsonResponse;
+
 	/**
 	 * Constructor
 	 *
@@ -61,28 +65,14 @@ class Admin {
 			'admin_init',
 			function() {
 				$welcome_page = admin_url( 'admin.php?page=tutor&welcome=1' );
-
 				if ( 'tutor-new-feature' === Input::get( 'page' ) ) {
-					wp_safe_redirect( $welcome_page );
-					exit;
-				}
-
-				/**
-				 * Pro user redirect to version 3 welcome page first time.
-				 *
-				 * @since 3.0.0
-				 */
-				if ( version_compare( get_option( 'tutor_version' ), '3.0.0', '=' )
-					&& tutor()->has_pro
-					&& is_admin()
-					&& empty( get_option( 'tutor_v3_welcome' ) )
-				) {
-					update_option( 'tutor_v3_welcome', 'visited' );
 					wp_safe_redirect( $welcome_page );
 					exit;
 				}
 			}
 		);
+
+		add_action( 'wp_ajax_tutor_do_not_show_welcome', array( $this, 'handle_do_not_show_welcome' ) );
 	}
 
 	/**
@@ -153,7 +143,7 @@ class Admin {
 		// Added @since v2.0.0.
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
-		if ( ! $has_pro ) {
+		if ( 'do_not_show' !== get_option( 'tutor-new-feature' ) ) {
 			add_submenu_page( 'tutor', __( 'What\'s New in 3.0', 'tutor' ), sprintf( '<span class="tutor-new-feature tutor-text-orange">%s</span>', __( 'What\'s New in 3.0', 'tutor' ) ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
@@ -198,6 +188,26 @@ class Admin {
 		if ( ! $has_pro ) {
 			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
+	}
+
+	/**
+	 * Welcome page opt-out
+	 *
+	 * @since 3.0.0
+	 */
+	public function handle_do_not_show_welcome() {
+		tutor_utils()->check_nonce();
+
+		if ( ! User::is_admin() ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		update_option( 'tutor-new-feature', 'do_not_show' );
+		$this->json_response( __( 'Success', 'tutor' ) );
 	}
 
 	/**

@@ -28,6 +28,16 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	border-radius: 18px;
 }
 
+.tutor-hide-welcome-button {
+	position: absolute;
+	top: -20px;
+	right: 12px;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	color: #ffffff;
+}
+
 .tutor-lms-welcome-page {
 	margin-left: -20px;
 }
@@ -39,6 +49,10 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 .tutor-lms-welcome-page .tutor-header-section {
 	padding: 64px 0px 90px;
 	background-color: #0049F8;
+}
+
+.tutor-header-section .tutor-container {
+	position: relative;
 }
 
 .tutor-header-section .banner-content {
@@ -119,6 +133,10 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 				</div>
 
 				<div class="tutor-col-xl-6">
+					<button class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-hide-welcome-button">
+						<i class="tutor-icon-times"></i>
+						<?php esc_html_e( "Don't Show Again", 'tutor' ); ?>
+					</button>
 					<img src="<?php echo esc_url( $image_url ) . '/banner.png'; ?>" alt="banner" class="banner-image" />
 				</div>
 			</div>
@@ -286,3 +304,29 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 		</div>
 	</section>
 </div>
+
+<script>
+	jQuery(document).ready(function($) {
+		$('.tutor-hide-welcome-button').on('click', function(e) {
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				data: {
+					_tutor_nonce: '<?php echo esc_attr( wp_create_nonce( 'tutor_nonce_action' ) ); ?>',
+					action: 'tutor_do_not_show_welcome'
+				},
+				beforeSend: function () {
+					e.target.classList.add('is-loading');
+					e.target.setAttribute('disabled', true);
+				},
+				success: function(response) {
+					window.location.href = window.location.href.split('&')[0];
+				},
+				complete: function() {
+					e.target.classList.remove('is-loading');
+					e.target.removeAttribute('disabled');
+				}
+			});
+		});
+	});
+</script>
