@@ -145,6 +145,9 @@ class Earnings extends Singleton {
 
 		$course_price_grand_total = $total_price;
 
+		// Site maintenance fees.
+		$fees_amount = 0;
+
 		// Deduct predefined amount (percent or fixed).
 		if ( $enable_fees_deducting ) {
 			$fees_name   = tutor_utils()->get_option( 'fees_name', '' );
@@ -166,6 +169,14 @@ class Earnings extends Singleton {
 			);
 		}
 
+		if ( $fees_amount ) {
+			list( $admin_fees, $instructor_fees ) = array_values( tutor_split_amounts( $fees_amount ) );
+
+			// Deduct fees.
+			$admin_amount      -= $admin_fees;
+			$instructor_amount -= $instructor_fees;
+		}
+
 		// Distribute amount between admin and instructor.
 		$sharing_enabled = tutor_utils()->get_option( 'enable_revenue_sharing' );
 		$instructor_rate = $sharing_enabled ? tutor_utils()->get_option( 'earning_instructor_commission' ) : 0;
@@ -178,7 +189,7 @@ class Earnings extends Singleton {
 		// (Use Pro Filter - Start)
 		// The response must be same array structure.
 		// Do not change used variable names here, or change in both of here and pro plugin
-		$pro_arg         = array(
+		$pro_arg = array(
 			'user_id'                  => $user_id,
 			'instructor_rate'          => $instructor_rate,
 			'admin_rate'               => $admin_rate,
@@ -187,6 +198,7 @@ class Earnings extends Singleton {
 			'course_price_grand_total' => $course_price_grand_total,
 			'commission_type'          => $commission_type,
 		);
+
 		$pro_calculation = apply_filters( 'tutor_pro_earning_calculator', $pro_arg );
 		extract( $pro_calculation ); //phpcs:ignore
 		// (Use Pro Filter - End).
