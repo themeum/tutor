@@ -253,17 +253,12 @@ const styles = {
     button {
       padding: ${spacing[8]};
       border-radius: ${borderRadius[2]};
-
-      :focus-visible {
-        outline: 2px solid ${colorTokens.stroke.brand};
-        outline-offset: 2px;
-      }
     }
   `,
   eyeButtonWrapper: css`
     position: absolute;
     display: flex;
-    right: ${spacing[8]};
+    right: ${spacing[4]};
     top: 50%;
     transform: translateY(-50%);
     border-radius: ${borderRadius[2]};
@@ -282,12 +277,11 @@ const styles = {
     ${styleUtils.resetButton}
     ${styleUtils.flexCenter()}
     color: ${colorTokens.icon.default};
+    padding: ${spacing[4]};
 
-    ${
-      type !== 'password' &&
-      css`
-        color: ${colorTokens.icon.brand};
-      `
-    }
+    ${type !== 'password' &&
+    css`
+      color: ${colorTokens.icon.brand};
+    `}
   `,
 };
