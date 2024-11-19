@@ -285,6 +285,7 @@ All of these Tutor LMS features allow the users to design a more powerful and di
 == Changelog ==
 
 = 3.0.0 - November 20, 2024
+
 New: Redesigned course and quiz builders with an intuitive interface for easier course creation.
 New: Native eCommerce to sell courses directly within Tutor LMS.
 New: Added popular payment gateways support: PayPal, Stripe, Mollie, Klarna, Razorpay, Paystack, and Alipay.
