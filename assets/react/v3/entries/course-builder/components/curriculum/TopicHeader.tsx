@@ -103,7 +103,7 @@ const TopicHeader = ({
 
     if (response.data) {
       if (response.status_code === 201) {
-        onEdit?.(response.data);
+        onEdit?.(`topic-${response.data}`);
       }
       setIsEdit(false);
     }
@@ -386,7 +386,7 @@ const styles = {
       css`
       [data-visually-hidden] {
         opacity: 0;
-        transition: ${!isDragging ? 'opacity 0.3s ease-in-out' : 'none'}
+        transition: ${!isDragging ? 'opacity 0.3s ease-in-out' : 'none'};
       }
 
       :hover, :focus-within {

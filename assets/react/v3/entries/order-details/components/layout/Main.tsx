@@ -1,14 +1,17 @@
+import { css } from '@emotion/react';
+
 import Container from '@Components/Container';
-import { colorTokens, spacing } from '@Config/styles';
 import Activities from '@OrderComponents/order/Activities';
 import Notes from '@OrderComponents/order/Notes';
 import Payment from '@OrderComponents/order/Payment';
+import PaymentInfo from '@OrderComponents/order/PaymentInfo';
 import Student from '@OrderComponents/order/Student';
 import Summary from '@OrderComponents/order/Summary';
 import { OrderProvider } from '@OrderContexts/order-context';
+
+import { colorTokens, spacing } from '@Config/styles';
 import { isDefined } from '@Utils/types';
 import { getQueryParam } from '@Utils/url';
-import { css } from '@emotion/react';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {
@@ -31,6 +34,7 @@ function Main() {
             </div>
             <div css={styles.right}>
               <Student />
+              <PaymentInfo />
               <Notes />
             </div>
           </div>
