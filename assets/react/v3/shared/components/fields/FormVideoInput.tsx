@@ -63,6 +63,19 @@ type FormVideoInputProps = {
   onGetDuration?: (duration: { hours: number; minutes: number; seconds: number }) => void;
 } & FormControllerProps<CourseVideo | null>;
 
+interface GetVideoDuration {
+  source: string;
+  url: string;
+  getYouTubeVideoDurationMutation: UseMutationResult<
+    TutorMutationResponse<{
+      duration: string;
+    }>,
+    Error,
+    string,
+    unknown
+  >;
+}
+
 const videoSourceOptions = tutorConfig.supported_video_sources || [];
 const videoSourcesSelectOptions = videoSourceOptions.filter((option) => option.value !== 'html5');
 const videoSources = videoSourceOptions.map((item) => item.value);
@@ -118,18 +131,7 @@ const videoValidation = {
   },
 };
 
-const getVideoDuration = async (
-  source: string,
-  url: string,
-  getYouTubeVideoDurationMutation: UseMutationResult<
-    TutorMutationResponse<{
-      duration: string;
-    }>,
-    Error,
-    string,
-    unknown
-  >,
-) => {
+const getVideoDuration = async ({ source, url, getYouTubeVideoDurationMutation }: GetVideoDuration) => {
   try {
     let seconds = 0;
 
@@ -430,7 +432,7 @@ const FormVideoInput = ({
       setIsOpen(false);
 
       const [duration, thumbnail] = await Promise.all([
-        getVideoDuration(source, url, getYouTubeVideoDurationMutation),
+        getVideoDuration({ source, url, getYouTubeVideoDurationMutation }),
         thumbnailGeneratorSources.includes(source)
           ? generateVideoThumbnail(source as 'youtube' | 'vimeo' | 'external_url' | 'html5', url)
           : null,
@@ -615,7 +617,7 @@ const FormVideoInput = ({
                               }
                               loading={isThumbnailLoading}
                               isClearAble={!!fieldValue?.poster}
-                              disabled={['vimeo', 'youtube', 'external_url'].includes(fieldValue?.source || '')}
+                              disabled={['vimeo', 'youtube'].includes(fieldValue?.source || '')}
                               uploadHandler={() => handleUpload('poster')}
                               clearHandler={() => handleClear('poster')}
                               buttonText={__('Upload Thumbnail', 'tutor')}
