@@ -80,20 +80,16 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     });
   };
 
-  const fieldsErrorAfterTrigger = form.formState.errors.payment_methods?.[paymentIndex]?.fields?.length;
+  const hasEmptyFields = form
+    .getValues(`payment_methods.${paymentIndex}.fields`)
+    .some((field) => !['icon', 'webhook_url'].includes(field.name) && !field.value);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    const fieldsErrorAfterTrigger = (form.formState.errors.payment_methods?.[paymentIndex]?.fields?.length ?? 0) > 0;
-    if (fieldsErrorAfterTrigger) {
+    if (hasEmptyFields) {
       form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
     }
-  }, [fieldsErrorAfterTrigger]);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    form.trigger(`payment_methods.${paymentIndex}.fields`);
-  }, []);
+  }, [hasEmptyFields]);
 
   return (
     <div
@@ -118,9 +114,13 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
         title={data.label}
         titleIcon={data.icon}
         toggleCollapse={() => {
-          form.trigger(`payment_methods.${paymentIndex}.fields`);
           setIsCollapsed(!isCollapsed);
         }}
+        style={style}
+        hasBorder
+        noSeparator
+        collapsed={isDragging || isCollapsed}
+        dataAttribute="data-card"
         subscription={data.support_subscription}
         actionTray={
           <div css={styles.cardActions}>
@@ -153,16 +153,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               render={(controllerProps) => (
                 <FormSwitch
                   {...controllerProps}
-                  onChange={(value) => {
-                    form.trigger(`payment_methods.${paymentIndex}.fields`);
-                    const hasErrors = (form.formState.errors.payment_methods?.[paymentIndex]?.fields?.length ?? 0) > 0;
+                  onChange={async (value) => {
+                    const isValid = await form.trigger(`payment_methods.${paymentIndex}.fields`);
 
-                    if (value && hasErrors) {
+                    if (value && !isValid) {
                       form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
-                      showToast({
-                        message: __('Please configure the payment method first.', 'tutor'),
-                        type: 'danger',
-                      });
                       setIsCollapsed(false);
                       return;
                     }
@@ -172,12 +167,6 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
             />
           </div>
         }
-        style={style}
-        hasBorder
-        noSeparator
-        collapsed={isCollapsed}
-        dataAttribute="data-card"
-        collapsedAnimationDependencies={[fieldsErrorAfterTrigger]}
       >
         <div css={styles.paymentWrapper}>
           <div css={styles.fieldWrapper}>
@@ -188,9 +177,16 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               <For each={paymentFormFields}>
                 {(field, index) => (
                   <Controller
+                    key={field.name}
                     name={`payment_methods.${paymentIndex}.fields.${index}.value`}
                     control={form.control}
-                    rules={['image', 'webhook_url'].includes(field.type || '') ? {} : { ...requiredRule() }}
+                    rules={
+                      ['icon', 'webhook_url'].includes(field.name || '')
+                        ? {
+                            required: false,
+                          }
+                        : { ...requiredRule() }
+                    }
                     render={(controllerProps) => {
                       switch (field.type) {
                         case 'select':

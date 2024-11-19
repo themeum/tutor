@@ -42,10 +42,6 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
           value: '',
         },
         {
-          name: 'additional_details',
-          value: '',
-        },
-        {
           name: 'payment_instructions',
           value: '',
         },

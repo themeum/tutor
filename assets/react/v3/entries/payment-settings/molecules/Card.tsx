@@ -10,6 +10,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
+import {} from '@/v3/shared/hooks/useAnimation';
 import { isDefined } from '@Utils/types';
 import Badge from '../atoms/Badge';
 
@@ -25,8 +26,6 @@ interface CardProps {
   dataAttribute?: string;
   style?: React.CSSProperties;
   toggleCollapse: () => void;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-  collapsedAnimationDependencies?: any[];
 }
 
 const Card = ({
@@ -41,7 +40,6 @@ const Card = ({
   style = {},
   dataAttribute,
   toggleCollapse,
-  collapsedAnimationDependencies,
 }: CardProps) => {
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -59,18 +57,29 @@ const Card = ({
         easing: (t) => t * (2 - t),
       },
     },
-    [collapsed, ...(collapsedAnimationDependencies || [])],
+    [collapsed],
   );
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (isDefined(cardRef.current)) {
-      collapseAnimate.start({
-        height: !collapsed ? cardRef.current.scrollHeight : 0,
-        opacity: !collapsed ? 1 : 0,
-      });
-    }
-  }, [collapsed, ...(collapsedAnimationDependencies || [])]);
+    if (!cardRef.current) return;
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      const [entry] = entries;
+      if (entry) {
+        collapseAnimate.start({
+          height: !collapsed ? cardRef.current?.scrollHeight : 0,
+          opacity: !collapsed ? 1 : 0,
+        });
+      }
+    });
+
+    resizeObserver.observe(cardRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [collapsed]);
 
   return (
     <div css={styles.wrapper(hasBorder)} {...additionalAttributes} style={style}>

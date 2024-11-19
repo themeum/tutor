@@ -1,5 +1,5 @@
 import { type SerializedStyles, css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
@@ -11,7 +11,7 @@ import { useModal } from '@Components/modals/Modal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
@@ -253,6 +253,11 @@ const styles = {
     button {
       padding: ${spacing[8]};
       border-radius: ${borderRadius[2]};
+
+      :focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 2px;
+      }
     }
   `,
   eyeButtonWrapper: css`
@@ -263,6 +268,14 @@ const styles = {
     transform: translateY(-50%);
     border-radius: ${borderRadius[2]};
     background: transparent;
+
+    button {
+      :focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 2px;
+        border-radius: ${borderRadius[2]};
+      }
+    }
   `,
 
   eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
@@ -270,9 +283,11 @@ const styles = {
     ${styleUtils.flexCenter()}
     color: ${colorTokens.icon.default};
 
-    ${type !== 'password' &&
-    css`
-      color: ${colorTokens.icon.brand};
-    `}
+    ${
+      type !== 'password' &&
+      css`
+        color: ${colorTokens.icon.brand};
+      `
+    }
   `,
 };
