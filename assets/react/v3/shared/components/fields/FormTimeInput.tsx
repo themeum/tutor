@@ -174,7 +174,8 @@ const styles = {
   wrapper: css`
     position: relative;
 
-    :hover {
+    &:hover,
+    &:focus-within {
       & > button {
         opacity: 1;
       }
@@ -239,6 +240,7 @@ const styles = {
     ${styleUtils.flexCenter()};
     opacity: 0;
     transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    border-radius: ${borderRadius[2]};
 
     :hover {
       background-color: ${colorTokens.background.hover};

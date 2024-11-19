@@ -178,8 +178,13 @@ export const convertLessonDataToPayload = (
     title: data.title,
     description: data.description,
     thumbnail_id: data.thumbnail?.id ?? null,
-    ...(data.video?.source
-      ? Object.fromEntries(Object.entries(data.video).map(([key, value]) => [`video[${key}]`, value]))
+    ...(data.video
+      ? Object.fromEntries(
+          Object.entries(data.video).map(([key, value]) => [
+            `video[${key}]`,
+            key === 'source' && !value ? '-1' : key === 'poster_url' && !data.video?.poster ? '' : value,
+          ]),
+        )
       : {}),
     'video[runtime][hours]': data.duration.hour || 0,
     'video[runtime][minutes]': data.duration.minute || 0,

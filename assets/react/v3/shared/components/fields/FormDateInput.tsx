@@ -7,7 +7,7 @@ import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { format, isValid } from 'date-fns';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 import 'react-day-picker/dist/style.css';
 
@@ -40,6 +40,7 @@ const FormDateInput = ({
   onChange,
   dateFormat = DateFormats.yearMonthDay,
 }: FormDateInputProps) => {
+  const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const fieldValue = isValid(new Date(field.value)) ? format(new Date(field.value), dateFormat) : '';
 
@@ -47,6 +48,11 @@ const FormDateInput = ({
     isOpen,
     isDropdown: true,
   });
+
+  const handleClosePortal = () => {
+    setIsOpen(false);
+    inputRef.current?.focus();
+  };
 
   return (
     <FormFieldWrapper
@@ -66,8 +72,13 @@ const FormDateInput = ({
               <input
                 {...restInputProps}
                 css={[css, styles.input]}
-                ref={field.ref}
+                ref={(element) => {
+                  field.ref(element);
+                  // @ts-ignore
+                  inputRef.current = element;
+                }}
                 type="text"
+                readOnly
                 value={fieldValue}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -77,10 +88,6 @@ const FormDateInput = ({
                   if (event.key === 'Enter') {
                     event.preventDefault();
                     setIsOpen((previousState) => !previousState);
-                  }
-
-                  if (event.key === 'Tab') {
-                    setIsOpen(false);
                   }
                 }}
                 autoComplete="off"
@@ -101,7 +108,7 @@ const FormDateInput = ({
               )}
             </div>
 
-            <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
+            <Portal isOpen={isOpen} onClickOutside={handleClosePortal} onEscape={handleClosePortal}>
               <div css={[styles.pickerWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
                 <DayPicker
                   mode="single"
@@ -115,7 +122,7 @@ const FormDateInput = ({
                       const formattedDate = format(value, DateFormats.yearMonthDay);
 
                       field.onChange(formattedDate);
-                      setIsOpen(false);
+                      handleClosePortal();
 
                       if (onChange) {
                         onChange(formattedDate);
@@ -124,6 +131,7 @@ const FormDateInput = ({
                   }}
                   showOutsideDays
                   captionLayout="dropdown-buttons"
+                  initialFocus={true}
                   defaultMonth={isValid(new Date(field.value)) ? new Date(field.value) : new Date()}
                   fromMonth={disabledBefore ? new Date(disabledBefore) : new Date(new Date().getFullYear() - 10, 0)}
                   toMonth={disabledAfter ? new Date(disabledAfter) : new Date(new Date().getFullYear() + 10, 11)}
@@ -141,58 +149,68 @@ export default FormDateInput;
 
 const styles = {
   wrapper: css`
-		position: relative;
+    position: relative;
 
-		:hover {
-			& > button {
-				opacity: 1;
-			}
-		}
-	`,
+    &:hover,
+    &:focus-within {
+      & > button {
+        opacity: 1;
+      }
+    }
+  `,
   input: css`
-		&[data-input] {
-			padding-left: ${spacing[40]};
-		}
-	`,
+    &[data-input] {
+      padding-left: ${spacing[40]};
+    }
+  `,
   icon: css`
-		position: absolute;
-		top: 50%;
-		left: ${spacing[8]};
-		transform: translateY(-50%);
-		color: ${colorTokens.icon.default};
-	`,
+    position: absolute;
+    top: 50%;
+    left: ${spacing[8]};
+    transform: translateY(-50%);
+    color: ${colorTokens.icon.default};
+  `,
   pickerWrapper: css`
-		position: absolute;
-		background-color: ${colorTokens.background.white};
-		box-shadow: ${shadow.popover};
-		border-radius: ${borderRadius[6]};
-		color: ${colorTokens.text.primary};
+    position: absolute;
+    background-color: ${colorTokens.background.white};
+    box-shadow: ${shadow.popover};
+    border-radius: ${borderRadius[6]};
+    color: ${colorTokens.text.primary};
 
-		.rdp {
-			--rdp-cell-size: 40px; /* Size of the day cells. */
-			--rdp-caption-font-size: ${fontSize[18]}; /* Font size for the caption labels. */
-			--rdp-accent-color: ${colorTokens.action.primary.default}; /* Accent color for the background of selected days. */
-			--rdp-background-color: ${colorTokens.background.hover}; /* Background color for the hovered/focused elements. */
-			--rdp-accent-color-dark: ${colorTokens.action.primary.active}; /* Accent color for the background of selected days (to use in dark-mode). */
-			--rdp-background-color-dark: ${colorTokens.action.primary.hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
-			--rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
-			--rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
-			--rdp-selected-color: ${colorTokens.text.white}; /* Color of selected day text */
-		}
-	`,
+    .rdp {
+      --rdp-cell-size: 40px; /* Size of the day cells. */
+      --rdp-caption-font-size: ${fontSize[18]}; /* Font size for the caption labels. */
+      --rdp-accent-color: ${colorTokens.action.primary.default}; /* Accent color for the background of selected days. */
+      --rdp-background-color: ${colorTokens.background.hover}; /* Background color for the hovered/focused elements. */
+      --rdp-accent-color-dark: ${colorTokens.action.primary
+        .active}; /* Accent color for the background of selected days (to use in dark-mode). */
+      --rdp-background-color-dark: ${colorTokens.action.primary
+        .hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
+      --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
+      --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
+      --rdp-selected-color: ${colorTokens.text.white}; /* Color of selected day text */
+    }
+
+    .rdp-button:focus-visible:not([disabled]) {
+      color: var(--rdp-selected-color);
+      opacity: 1;
+      background-color: var(--rdp-accent-color);
+    }
+  `,
   clearButton: css`
-		position: absolute;
-		top: 50%;
-		right: ${spacing[4]};
-		transform: translateY(-50%);
-		width: 32px;
-		height: 32px;
-		${styleUtils.flexCenter()};
-		opacity: 0;
-		transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    position: absolute;
+    top: 50%;
+    right: ${spacing[4]};
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    ${styleUtils.flexCenter()};
+    opacity: 0;
+    transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    border-radius: ${borderRadius[2]};
 
-		:hover {
-			background-color: ${colorTokens.background.hover};
-		}
-	`,
+    :hover {
+      background-color: ${colorTokens.background.hover};
+    }
+  `,
 };

@@ -198,8 +198,10 @@ class Lesson extends Tutor_Base {
 			if ( $video ) {
 				$source = $video['source'] ?? '';
 				if ( 'html5' === $source ) {
-					$poster_url          = wp_get_attachment_url( $video['poster'] ?? 0 );
-					$video['poster_url'] = $poster_url;
+					$poster_url            = wp_get_attachment_url( $video['poster'] ?? 0 );
+					$source_html5          = wp_get_attachment_url( $video['source_video_id'] ?? 0 );
+					$video['poster_url']   = $poster_url;
+					$video['source_html5'] = $source_html5;
 				}
 			}
 			$post['video'] = $video;

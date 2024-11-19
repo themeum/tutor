@@ -18,7 +18,7 @@ const PaymentInfo = () => {
     <Box bordered css={styleUtils.boxReset}>
       <BoxTitle separator>{__('Payment Method', 'tutor')}</BoxTitle>
       <div css={styles.content}>
-        <div>{sprintf(__('Name: %s', 'tutor'), payment_method_readable || __('Manual', 'tutor'))}</div>
+        <div>{sprintf(__('Gateway: %s', 'tutor'), payment_method_readable || __('Manual', 'tutor'))}</div>
         <Show when={transaction_id}>
           <div>{sprintf(__('Trx ID: %s', 'tutor'), transaction_id)}</div>
         </Show>
