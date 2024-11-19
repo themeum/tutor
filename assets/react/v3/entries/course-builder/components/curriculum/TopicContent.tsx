@@ -326,14 +326,14 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
             data={null}
-            topicId={topic.id}
+            topicId={topicId}
             meetingHost={courseDetails?.zoom_users || {}}
             onCancel={() => setMeetingType(null)}
-            meetingId={content.id}
+            meetingId={contentId}
           />
         </Show>
         <Show when={meetingType === 'tutor-google-meet'}>
-          <GoogleMeetForm data={null} topicId={topic.id} onCancel={() => setMeetingType(null)} meetingId={content.id} />
+          <GoogleMeetForm data={null} topicId={topicId} onCancel={() => setMeetingType(null)} meetingId={contentId} />
         </Show>
       </Popover>
       <ConfirmationPopover
