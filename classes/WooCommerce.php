@@ -523,8 +523,10 @@ class WooCommerce extends Tutor_Base {
 
 			$total_price = $item->get_total();
 
+			list( $admin_amount, $instructor_amount ) = array_values( tutor_split_amounts( $total_price ) );
+
 			$earnings     = Earnings::get_instance();
-			$earning_data = apply_filters( 'tutor_new_earning_data', $earnings->prepare_earning_data( $total_price, $course_id, $order_id, $order_status ) );
+			$earning_data = apply_filters( 'tutor_new_earning_data', $earnings->prepare_earning_data( $total_price, $course_id, $order_id, $order_status, $admin_amount, $instructor_amount ) );
 
 			$wpdb->insert( $wpdb->prefix . 'tutor_earnings', $earning_data );
 		}

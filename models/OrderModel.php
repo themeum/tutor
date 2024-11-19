@@ -902,18 +902,12 @@ class OrderModel {
 				$start_date,
 				$end_date
 			);
-			$group_clause      = ' GROUP BY DATE(date_format) ';
-
 		} else {
-			$period_clause = QueryHelper::get_period_clause( 'date_format', $period );
+			$period_clause = QueryHelper::get_period_clause( 'o.created_at_gmt', $period );
 		}
 
 		if ( 'today' !== $period ) {
 			$group_clause = ' GROUP BY MONTH(date_format) ';
-		}
-
-		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
-			$user_clause = $wpdb->prepare( 'AND e.user_id = %d', $user_id );
 		}
 
 		if ( $course_id ) {
@@ -923,27 +917,89 @@ class OrderModel {
 
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 
-		$discounts = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 
-				{$discount_clause},
-				created_at_gmt AS date_format
-				FROM {$this->table_name} AS o
-				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
-				WHERE 1 = %d
-				AND o.coupon_amount > 0
-				{$user_clause}
-				{$period_clause}
-				{$date_range_clause}
-				-- {$course_clause}
-				{$group_clause},o.id",
-				1
-			)
-		);
+		if ( $course_id ) {
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
+
+			$discounts = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+						i.item_id AS course_id,
+						SUM(
+							COALESCE(o.coupon_amount, 0) +
+							COALESCE(
+								IF(
+									o.discount_type = 'percentage', 
+									COALESCE(o.subtotal_price * (o.discount_amount / 100), 0), 
+									COALESCE(o.discount_amount, 0)
+								), 
+								0
+							)
+						) AS total,
+						o.created_at_gmt AS date_format
+					FROM 
+						{$this->table_name} o
+					JOIN 
+						{$item_table} i ON o.id = i.order_id
+					JOIN 
+						{$wpdb->posts} c
+						ON c.ID = i.item_id
+						AND c.post_type = %s
+					WHERE 
+						1 = 1
+						AND i.item_id = %d
+						{$user_clause}
+						{$period_clause}
+						{$date_range_clause}
+					{$group_clause}
+					",
+					tutor()->course_post_type,
+					$course_id
+				)
+			);
+		} else {
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( "AND %d = (SELECT user_id FROM {$wpdb->tutor_earnings} WHERE order_status = 'completed' LIMIT 1) ", $user_id );
+			}
+
+			$discounts = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+					SUM(
+						COALESCE(o.coupon_amount, 0) +
+						COALESCE(
+							IF(
+								o.discount_type = 'percentage', 
+								COALESCE(o.subtotal_price * (o.discount_amount / 100), 0), 
+								COALESCE(o.discount_amount, 0)
+							), 
+							0
+						)
+					) AS total,
+					o.created_at_gmt AS date_format
+					FROM {$this->table_name} AS o
+					WHERE 1 = %d
+					AND o.order_status = 'completed'
+					{$user_clause}
+					{$period_clause}
+					{$date_range_clause}
+					{$course_clause}
+					{$group_clause}
+					HAVING total > 0
+					",
+					1
+				)
+			);
+		}
 
 		$total_discount = 0;
 		$discount_items = array();
+
+		$response = array(
+			'discounts'       => array(),
+			'total_discounts' => 0,
+		);
 
 		if ( $discounts ) {
 			foreach ( $discounts as $discount ) {
@@ -958,58 +1014,9 @@ class OrderModel {
 
 			list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
 
-			$response = array(
-				'discounts'       => $discount_items,
-				'total_discounts' => is_admin() ? $admin_total : $instructor_total,
-			);
-
-			return $response;
+			$response['discounts']       = $discount_items;
+			$response['total_discounts'] = is_admin() ? $admin_total : $instructor_total;
 		}
-
-		if ( $course_id ) {
-			$course_clause   = $wpdb->prepare( 'AND c.id = %d', $course_id );
-			$discount_clause = 'i.regular_price - i.discount_price AS total';
-		}
-
-		// Subscription discounts.
-		$discounts = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 
-				{$discount_clause},
-				created_at_gmt AS date_format
-				FROM {$this->table_name} AS o
-				LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				LEFT JOIN {$wpdb->prefix}tutor_subscription_plan_items AS s ON s.plan_id = i.item_id
-				LEFT JOIN {$wpdb->posts} AS c ON c.id = s.object_id
-				LEFT JOIN {$wpdb->prefix}tutor_earnings AS e ON e.order_id = o.id
-				WHERE 1 = %d AND o.coupon_amount > 0
-				{$user_clause}
-				{$period_clause}
-				{$date_range_clause}
-				{$course_clause}
-				{$group_clause},o.id",
-				1
-			)
-		);
-
-		if ( $discounts ) {
-			foreach ( $discounts as $discount ) {
-				$total_discount  += $discount->total;
-				$discount_items[] = $discount;
-
-				// Split each discount.
-				list( $admin_discount, $instructor_discount ) = array_values( tutor_split_amounts( $discount->total ) );
-
-				$discount->total = is_admin() ? $admin_discount : $instructor_discount;
-			}
-		}
-
-		list( $admin_total, $instructor_total ) = array_values( tutor_split_amounts( $total_discount ) );
-
-		$response = array(
-			'discounts'       => $discount_items,
-			'total_discounts' => is_admin() ? $admin_total : $instructor_total,
-		);
 
 		return $response;
 	}
@@ -1063,35 +1070,83 @@ class OrderModel {
 			$group_clause = ' GROUP BY MONTH(o.created_at_gmt) ';
 		}
 
-		if ( $user_id && ! user_can( $user_id, 'manage_options' ) ) {
-			$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-		}
-
 		if ( $course_id ) {
-			$course_clause = $wpdb->prepare( 'AND i.item_id = %d', $course_id );
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
+		} else {
+			if ( $user_id ) {
+				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
 		}
 
 		// Refund query logic remains the same.
 		$item_table = $wpdb->prefix . 'tutor_order_items';
-		$refunds    = $wpdb->get_results(
-			$wpdb->prepare(
-				"SELECT 
-				COALESCE(SUM(o.refund_amount), 0) AS total,
-				created_at_gmt AS date_format
-				FROM {$this->table_name} AS o
-				-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
-				-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
-				WHERE 1 = %d
-				AND o.refund_amount > %d
-				{$user_clause}
-				{$period_clause}
-				{$date_range_clause}
-				{$group_clause},
-				o.id",
-				1,
-				0
-			)
-		);
+
+		if ( $course_id ) {
+			$refunds = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+						i.item_id AS course_id,
+						ROUND(
+							SUM(
+								o.refund_amount * 
+								(
+									CASE 
+										WHEN i.discount_price THEN i.discount_price
+										WHEN i.sale_price > 0 THEN i.sale_price
+										ELSE i.regular_price
+									END / o.total_price
+								)
+							), 2
+						) AS total
+					FROM 
+						{$this->table_name} o
+					JOIN 
+						{$item_table} i ON o.id = i.order_id
+					JOIN 
+						{$wpdb->posts} c
+						ON c.ID = i.item_id
+						AND c.post_type = %s
+					WHERE 
+						o.refund_amount > 0
+						AND i.item_id = %d
+						{$user_clause}
+						{$period_clause}
+						{$date_range_clause}
+					{$group_clause},
+					i.item_id
+					",
+					tutor()->course_post_type,
+					$course_id
+				)
+			);
+		} else {
+			$earning_table = $wpdb->tutor_earnings;
+			if ( $user_id ) {
+				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} LIMIT 1)";
+			}
+
+			$refunds = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT 
+					COALESCE(SUM(o.refund_amount), 0) AS total,
+					created_at_gmt AS date_format
+					FROM {$this->table_name} AS o
+					-- LEFT JOIN {$item_table} AS i ON i.order_id = o.id
+					-- LEFT JOIN {$wpdb->posts} AS c ON c.id = i.item_id
+					WHERE 1 = %d
+					AND o.refund_amount > %d
+					{$user_clause}
+					{$period_clause}
+					{$date_range_clause}
+					{$group_clause},
+					o.id",
+					1,
+					0
+				)
+			);
+		}
 
 		$total_refund = 0;
 
