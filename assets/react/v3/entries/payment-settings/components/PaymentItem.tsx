@@ -8,7 +8,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 import Alert from '@Atoms/Alert';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
 
 import FormImageInput from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
@@ -48,7 +47,6 @@ interface PaymentItemProps {
 const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps) => {
   const { payment_gateways } = usePaymentContext();
   const { showModal } = useModal();
-  const { showToast } = useToast();
   const form = useFormContext<PaymentSettings>();
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
 
