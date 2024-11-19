@@ -67,7 +67,7 @@ const videoSourceOptions = tutorConfig.supported_video_sources || [];
 const videoSourcesSelectOptions = videoSourceOptions.filter((option) => option.value !== 'html5');
 const videoSources = videoSourceOptions.map((item) => item.value);
 
-const thumbnailGeneratorSources = ['vimeo', 'youtube', 'external_url', 'html5'];
+const thumbnailGeneratorSources = ['vimeo', 'youtube', 'html5'];
 
 const placeholderMap = {
   youtube: __('Paste YouTube Video URL', 'tutor'),
@@ -247,7 +247,7 @@ const FormVideoInput = ({
     form.setValue('videoUrl', fieldValue[`source_${fieldValue.source}` as keyof CourseVideo] || '');
 
     if (!fieldValue.poster_url && thumbnailGeneratorSources.includes(fieldValue.source)) {
-      const source = fieldValue.source as 'vimeo' | 'youtube' | 'external_url' | 'html5';
+      const source = fieldValue.source as 'vimeo' | 'youtube' | 'html5';
       setIsThumbnailLoading(true);
       generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
         .then((url) => {
@@ -393,7 +393,7 @@ const FormVideoInput = ({
   };
 
   const handleClear = (type: 'video' | 'poster') => {
-    const updateData = type === 'video' ? { source: '' } : { poster: '', poster_url: '' };
+    const updateData = type === 'video' ? { source: '', poster: '', poster_url: '' } : { poster: '', poster_url: '' };
     const updatedValue = updateFieldValue(fieldValue, updateData);
 
     field.onChange(updatedValue);
