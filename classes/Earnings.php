@@ -169,7 +169,13 @@ class Earnings extends Singleton {
 			);
 		}
 
-		list( $admin_fees, $instructor_fees ) = array_values( tutor_split_amounts( $fees_amount ) );
+		if ( $fees_amount ) {
+			list( $admin_fees, $instructor_fees ) = array_values( tutor_split_amounts( $fees_amount ) );
+
+			// Deduct fees.
+			$admin_amount      -= $admin_fees;
+			$instructor_amount -= $instructor_fees;
+		}
 
 		// Distribute amount between admin and instructor.
 		$sharing_enabled = tutor_utils()->get_option( 'enable_revenue_sharing' );
@@ -187,8 +193,8 @@ class Earnings extends Singleton {
 			'user_id'                  => $user_id,
 			'instructor_rate'          => $instructor_rate,
 			'admin_rate'               => $admin_rate,
-			'instructor_amount'        => max( 0, $instructor_amount - $instructor_fees ),
-			'admin_amount'             => max( 0, $admin_amount - $admin_fees ),
+			'instructor_amount'        => max( 0, $instructor_amount ),
+			'admin_amount'             => max( 0, $admin_amount ),
 			'course_price_grand_total' => $course_price_grand_total,
 			'commission_type'          => $commission_type,
 		);
