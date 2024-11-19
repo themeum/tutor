@@ -1,5 +1,6 @@
 import type { PromiseResolvePayload } from '@Components/modals/Modal';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { __ } from '@wordpress/i18n';
 import React, { useCallback, useContext, useState } from 'react';
 import {
   type ControllerFieldState,
@@ -42,15 +43,16 @@ interface ImageContextType<T extends FieldValues> {
 }
 
 export const inspirationPrompts = [
-  'A detailed infographic of the human digestive system.',
-  'An infographic displaying the process of the carbon cycle, highlighting the role of photosynthesis and respiration',
-  'A visually appealing map highlighting the key trade routes of the Silk Road, with major cities and regions	',
-  'A timeline chart of the major milestones in space exploration history.',
-  'A visual timeline of the stages of human development, from infancy to adulthood, with key milestones',
-  "A poster explaining the principles of Newton's three laws of motion with real-life examples.",
-  'An illustrated timeline of major inventions and technological advancements from the 18th to the 21st century.',
-  'A diagram showing the parts of a volcano.',
-  'A step-by-step guide on how plants grow from seeds.',
+  __('A serene classroom setting with books and a chalkboard', 'tutor'),
+  __('An abstract representation of innovation and creativity', 'tutor'),
+  __('A vibrant workspace with a laptop and coffee cup', 'tutor'),
+  __('A modern design with digital learning icons', 'tutor'),
+  __('A futuristic cityscape with a glowing pathway', 'tutor'),
+  __('A peaceful nature scene with soft colors', 'tutor'),
+  __('A professional boardroom with sleek visuals', 'tutor'),
+  __('A stack of books with warm, inviting lighting', 'tutor'),
+  __('A dynamic collage of technology and education themes', 'tutor'),
+  __('A bold and minimalistic design with striking colors', 'tutor'),
 ];
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>

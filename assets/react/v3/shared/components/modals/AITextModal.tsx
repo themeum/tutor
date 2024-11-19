@@ -18,7 +18,6 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { OptionList } from '@Components/magic-ai-content/OptionList';
 import { PromptControls } from '@Components/magic-ai-content/PromptControls';
 import SkeletonLoader from '@Components/magic-ai-content/SkeletonLoader';
-import { inspirationPrompts } from '@Components/magic-ai-image/ImageContext';
 
 import { type ChatFormat, type ChatLanguage, type ChatTone, languageOptions, toneOptions } from '@Config/magic-ai';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
@@ -54,6 +53,19 @@ export interface GenerateTextFieldProps {
   tone: ChatTone;
   format: ChatFormat;
 }
+
+const inspirationPrompts = [
+  __('Mastering Digital Marketing: A Complete Guide', 'tutor'),
+  __('The Ultimate Photoshop Course for Beginners', 'tutor'),
+  __('Python Programming: From Zero to Hero', 'tutor'),
+  __('Creative Writing Essentials: Unlock Your Storytelling Potential', 'tutor'),
+  __('The Complete Guide to Web Development with React', 'tutor'),
+  __('Master Public Speaking: Deliver Powerful Presentations', 'tutor'),
+  __('Excel for Business: From Basics to Advanced Analytics', 'tutor'),
+  __('Fitness Fundamentals: Build Strength and Confidence', 'tutor'),
+  __('Photography Made Simple: Capture Stunning Shots', 'tutor'),
+  __('Financial Freedom: Learn the Basics of Investing', 'tutor'),
+];
 
 const AITextModal = <T extends FieldValues>({
   title,
@@ -430,6 +442,16 @@ const styles = {
     &:hover {
       background-color: ${colorTokens.background.brand};
       color: ${colorTokens.text.white};
+    }
+
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
+    &:disabled {
+      background-color: ${colorTokens.background.disable};
+      color: ${colorTokens.text.disable};
     }
   `,
   navigation: css`

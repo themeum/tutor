@@ -67,7 +67,9 @@ const Certificate = () => {
       return;
     }
 
-    const newCertificate = certificatesData.find((certificate) => certificate.key === (currentCertificateKey || 'default'));
+    const newCertificate = certificatesData.find(
+      (certificate) => certificate.key === (currentCertificateKey || 'default'),
+    );
     if (newCertificate) {
       if (activeOrientation !== newCertificate.orientation) {
         setActiveOrientation(newCertificate.orientation);
@@ -102,7 +104,7 @@ const Certificate = () => {
       if (hasLandScapeCertificatesForSelectedTab && hasPortraitCertificatesForSelectedTab) {
         return previousOrientation;
       }
-      return hasLandScapeCertificatesForSelectedTab ? 'landscape' : 'portrait';
+      return certificatesData.find((certificate) => certificate.orientation === 'landscape') ? 'landscape' : 'portrait';
     });
   };
 

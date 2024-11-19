@@ -101,27 +101,8 @@ const FormImageInput = ({
       showModal({
         component: ProIdentifierModal,
         props: {
-          title: sprintf(
-            __('Upgrade to Tutor LMS Pro today and experience the power of %s', 'tutor'),
-            <span css={styleUtils.aiGradientText}>{__('AI Studio', 'tutor')}</span>,
-          ),
-          featuresTitle: __('Don’t miss out on this game-changing feature!', 'tutor'),
           image: generateImage,
           image2x: generateImage2x,
-          features: [
-            __('Generate a complete course outline in seconds!', 'tutor'),
-            __('Let the AI Studio create Quizzes on your behalf and give your brain a well-deserved break.', 'tutor'),
-            __('Generate images, customize backgrounds, and even remove unwanted objects with ease.', 'tutor'),
-            __('Say goodbye to typos and grammar errors with AI-powered copy editing.', 'tutor'),
-          ],
-          footer: (
-            <Button
-              onClick={() => window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener')}
-              icon={<SVGIcon name="crown" width={24} height={24} />}
-            >
-              {__('Get Tutor LMS Pro', 'tutor')}
-            </Button>
-          ),
         },
       });
     } else if (!hasOpenAiAPIKey) {

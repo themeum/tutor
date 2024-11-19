@@ -141,10 +141,18 @@ const FormCoursePrerequisites = ({
                 </div>
                 <input
                   {...restInputProps}
-                  onClick={() => setIsOpen((previousState) => !previousState)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setIsOpen((previousState) => !previousState);
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') {
+                      event.preventDefault();
                       setIsOpen(true);
+                    }
+
+                    if (event.key === 'Tab') {
+                      setIsOpen(false);
                     }
                   }}
                   className="tutor-input-field"
@@ -252,6 +260,9 @@ const FormCoursePrerequisites = ({
                               setSearchText('');
                             }}
                             onMouseOver={() => setActiveIndex(index)}
+                            onMouseLeave={() => {
+                              index !== activeIndex && setActiveIndex(-1);
+                            }}
                             onFocus={() => setActiveIndex(index)}
                             aria-selected={activeIndex === index}
                           >
@@ -424,6 +435,10 @@ const styles = {
 
     :focus {
       box-shadow: ${shadow.focus};
+    }
+
+    :focus-visible {
+      opacity: 1;
     }
   `,
   emptyOption: css`

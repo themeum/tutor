@@ -93,7 +93,20 @@ const FormTagsInput = ({
               <input
                 {...restInputProps}
                 css={[inputCss, styles.input]}
-                onClick={() => setIsOpen(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setIsOpen((previousState) => !previousState);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter') {
+                    event.preventDefault();
+                    setIsOpen((previousState) => !previousState);
+                  }
+
+                  if (event.key === 'Tab') {
+                    setIsOpen(false);
+                  }
+                }}
                 autoComplete="off"
                 readOnly={readOnly}
                 placeholder={placeholder}

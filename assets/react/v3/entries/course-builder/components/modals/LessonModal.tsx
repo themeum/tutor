@@ -240,7 +240,7 @@ const LessonModal = ({
                                 size="small"
                                 onClick={() => {
                                   window.open(
-                                    `${tutorConfig.home_url}/wp-admin/post-new.php?post_type=lesson`,
+                                    `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
                                     '_blank',
                                     'noopener',
                                   );
@@ -265,7 +265,7 @@ const LessonModal = ({
                   when={isTutorPro && isAddonEnabled(Addons.H5P_INTEGRATION)}
                   fallback={
                     <Show when={!isTutorPro}>
-                      <div css={styles.addH5PContentWrapper({ hasLessonId: !!lessonId })}>
+                      <div css={styles.addH5PContentWrapper}>
                         <ProBadge>
                           <button css={styles.addH5PContentButton} type="button" disabled onClick={noop}>
                             {__('Add H5P Content', 'tutor')}
@@ -559,9 +559,9 @@ const styles = {
     justify-content: space-between;
     height: 32px;
   `,
-  addH5PContentWrapper: ({ hasLessonId }: { hasLessonId: boolean }) => css`
+  addH5PContentWrapper: css`
     position: absolute;
-    top: ${hasLessonId ? '36px' : '28px'};
+    top: 36px;
     left: 110px;
   `,
   addH5PContentButton: css`

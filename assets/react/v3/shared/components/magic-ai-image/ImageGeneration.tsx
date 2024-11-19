@@ -285,6 +285,11 @@ const styles = {
 			color: ${colorTokens.text.white};
 		}
 
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
 		&:disabled {
 			background-color: ${colorTokens.background.disable};
 			color: ${colorTokens.text.disable};
