@@ -16,11 +16,11 @@ const PaymentInfo = () => {
 
   return (
     <Box bordered css={styleUtils.boxReset}>
-      <BoxTitle separator>{__('Payment Info', 'tutor')}</BoxTitle>
+      <BoxTitle separator>{__('Payment Method', 'tutor')}</BoxTitle>
       <div css={styles.content}>
-        <div>{sprintf(__('Payment Method: %s'), payment_method_readable)}</div>
+        <div>{sprintf(__('Name: %s', 'tutor'), payment_method_readable || __('Manual', 'tutor'))}</div>
         <Show when={transaction_id}>
-          <div>{sprintf(__('Transaction ID: %s'), transaction_id)}</div>
+          <div>{sprintf(__('Trx ID: %s', 'tutor'), transaction_id)}</div>
         </Show>
       </div>
     </Box>
