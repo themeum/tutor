@@ -108,7 +108,11 @@ class CheckoutController {
 	 * @return string
 	 */
 	public static function get_page_url() {
-		return get_post_permalink( self::get_page_id() );
+		$post_permalink = get_post_permalink( self::get_page_id() );
+		if ( ! $post_permalink ) {
+			return get_home_url();
+		}
+		return $post_permalink;
 	}
 
 	/**
