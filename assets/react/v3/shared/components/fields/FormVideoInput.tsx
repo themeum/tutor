@@ -395,7 +395,10 @@ const FormVideoInput = ({
   };
 
   const handleClear = (type: 'video' | 'poster') => {
-    const updateData = type === 'video' ? { source: '', poster: '', poster_url: '' } : { poster: '', poster_url: '' };
+    const updateData =
+      type === 'video'
+        ? { source: '', source_video_id: '', poster: '', poster_url: '' }
+        : { poster: '', poster_url: '' };
     const updatedValue = updateFieldValue(fieldValue, updateData);
 
     field.onChange(updatedValue);
@@ -417,6 +420,8 @@ const FormVideoInput = ({
     const videoIdKey = `source_${sourceType}` as keyof CourseVideo;
     return fieldValue && fieldValue[videoIdKey] !== '';
   };
+
+  console.log(fieldValue);
 
   const handleDataFromUrl = async (data: URLFormData) => {
     setIsThumbnailLoading(true);
