@@ -1,18 +1,21 @@
-import { useEffect } from 'react';
-import Button from '@Atoms/Button';
-import FormInput from '@Components/fields/FormInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormImageInput from '@Components/fields/FormImageInput';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { typography } from '@Config/typography';
-import { FormWithGlobalErrorType, useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { requiredRule } from '@Utils/validation';
-import { colorTokens, shadow, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
-import { manualMethodFields, PaymentMethod, PaymentSettings } from '../../services/payment';
+
+import Button from '@Atoms/Button';
+import FormImageInput from '@Components/fields/FormImageInput';
+import FormInput from '@Components/fields/FormInput';
+import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
+import type { ModalProps } from '@Components/modals/Modal';
+
+import { colorTokens, shadow, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import { type FormWithGlobalErrorType, useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { requiredRule } from '@Utils/validation';
+
+import { type PaymentMethod, type PaymentSettings, manualMethodFields } from '../../services/payment';
 
 interface ManualPaymentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -39,10 +42,6 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
           value: '',
         },
         {
-          name: 'additional_details',
-          value: '',
-        },
-        {
           name: 'payment_instructions',
           value: '',
         },
@@ -50,6 +49,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     },
   });
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('fields.0.value');
   }, []);
@@ -67,6 +67,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
             if (field.name === 'method_name') {
               return (
                 <Controller
+                  key={field.name}
                   name={`fields.${index}.value`}
                   control={form.control}
                   rules={requiredRule()}
@@ -84,9 +85,11 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                   )}
                 />
               );
-            } else if (field.type === 'image') {
+            }
+            if (field.type === 'image') {
               return (
                 <Controller
+                  key={field.name}
                   name={`fields.${index}.value`}
                   control={form.control}
                   render={(controllerProps) => (
@@ -103,20 +106,18 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
                   )}
                 />
               );
-            } else {
-              return (
-                <div css={styles.inputWrapper}>
-                  <Controller
-                    name={`fields.${index}.value`}
-                    control={form.control}
-                    render={(controllerProps) => (
-                      <FormTextareaInput {...controllerProps} label={field.label} rows={5} />
-                    )}
-                  />
-                  <div css={styles.inputHint}>{field.hint}</div>
-                </div>
-              );
             }
+            return (
+              <div key={field.name} css={styles.inputWrapper}>
+                <Controller
+                  name={`fields.${index}.value`}
+                  control={form.control}
+                  rules={{ ...requiredRule() }}
+                  render={(controllerProps) => <FormTextareaInput {...controllerProps} label={field.label} rows={5} />}
+                />
+                <div css={styles.inputHint}>{field.hint}</div>
+              </div>
+            );
           })}
         </div>
         <div css={styles.footerWrapper}>

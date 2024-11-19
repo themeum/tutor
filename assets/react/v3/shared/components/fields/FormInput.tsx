@@ -1,5 +1,5 @@
 import { type SerializedStyles, css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
 import Button from '@Atoms/Button';
@@ -11,7 +11,7 @@ import { useModal } from '@Components/modals/Modal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
@@ -258,21 +258,27 @@ const styles = {
   eyeButtonWrapper: css`
     position: absolute;
     display: flex;
-    right: ${spacing[8]};
+    right: ${spacing[4]};
     top: 50%;
     transform: translateY(-50%);
-    border-radius: ${borderRadius[2]};
-    background: transparent;
   `,
 
   eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
     ${styleUtils.resetButton}
     ${styleUtils.flexCenter()}
     color: ${colorTokens.icon.default};
+    padding: ${spacing[4]};
+    border-radius: ${borderRadius[2]};
+    background: transparent;
 
     ${type !== 'password' &&
     css`
       color: ${colorTokens.icon.brand};
     `}
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 2px;
+    }
   `,
 };

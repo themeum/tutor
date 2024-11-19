@@ -18,12 +18,12 @@ document.addEventListener('DOMContentLoaded', function () {
 				button.setAttribute('disabled', 'disabled');
 				button.classList.add('is-loading');
 
-                const post = await ajaxHandler(formData);
+				const post = await ajaxHandler(formData);
 				const { status_code, data, message = defaultErrorMessage } = await post.json();
 
-                if (status_code === 201) {
-                    tutor_toast(__('Success', 'tutor'), message, 'success');
-                    const viewCartButton = `<a href="${data?.cart_page_url}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'}">${__('View Cart', 'tutor')}</a>`
+				if (status_code === 201) {
+					tutor_toast(__('Success', 'tutor'), message, 'success');
+					const viewCartButton = `<a href="${data?.cart_page_url ?? "#"}" class="tutor-btn tutor-btn-outline-primary ${isSinglePage ? 'tutor-btn-lg tutor-btn-block' : 'tutor-btn-md'} ${!data?.cart_page_url ? 'tutor-cart-page-not-configured' : ''}">${__('View Cart', 'tutor')}</a>`
 					button.parentElement.innerHTML = viewCartButton;
 
 					// Create a custom event with cart count
@@ -34,17 +34,17 @@ document.addEventListener('DOMContentLoaded', function () {
 					// Dispatch the custom cart event
 					document.dispatchEvent(addToCartEvent);
 
-                } else {
-                    tutor_toast(__('Failed', 'tutor'), message, 'error');
-                }
-            } catch (error) {
-                tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
-            } finally {
-                button.removeAttribute('disabled');
-                button.classList.remove('is-loading');
-            }
-        }
-    });
+				} else {
+					tutor_toast(__('Failed', 'tutor'), message, 'error');
+				}
+			} catch (error) {
+				tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+			} finally {
+				button.removeAttribute('disabled');
+				button.classList.remove('is-loading');
+			}
+		}
+	});
 
 	// Remove course from card
 	const tutorCartPage = document.querySelector('.tutor-cart-page');
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function () {
 					if (status_code === 200) {
 						document.querySelector('.tutor-cart-page-wrapper').parentElement.innerHTML = data?.cart_template;
 						tutor_toast(__('Success', 'tutor'), message, 'success');
-						
+
 						// Trigger a custom event with cart count
 						const removeCartEvent = new CustomEvent('tutorRemoveCartEvent', {
 							detail: { cart_count: data?.cart_count },
@@ -86,4 +86,21 @@ document.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 	}
+
+
+	// Display toast if cart page is not configured.
+	document.addEventListener('click', (e) => {
+		if (e.target.classList.contains('tutor-cart-page-not-configured')) {
+			e.preventDefault();
+			tutor_toast('Error!', 'Cart page is not configured.', 'error');
+		}
+	});
+
+	// Display toast if checkout page is not configured.
+	document.addEventListener('click', (e) => {
+		if (e.target.classList.contains('tutor-checkout-page-not-configured')) {
+			e.preventDefault();
+			tutor_toast('Error!', 'Checkout page is not configured.', 'error');
+		}
+	});
 });

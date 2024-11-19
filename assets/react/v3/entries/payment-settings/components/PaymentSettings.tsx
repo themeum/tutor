@@ -1,22 +1,25 @@
-import Show from '@Controls/Show';
-import { colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
-import { convertPaymentMethods, initialPaymentSettings, type PaymentSettings } from '../services/payment';
-import PaymentMethods from './PaymentMethods';
+
 import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import ManualPaymentModal from './modals/ManualPaymentModal';
-import { useModal } from '@Components/modals/Modal';
-import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
-import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
 import ProBadge from '@Atoms/ProBadge';
+import SVGIcon from '@Atoms/SVGIcon';
+import { useModal } from '@Components/modals/Modal';
+
+import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
 import { tutorConfig } from '@Config/config';
+import { colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
+import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
+import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+
 import { usePaymentContext } from '../contexts/payment-context';
+import { type PaymentSettings, convertPaymentMethods, initialPaymentSettings } from '../services/payment';
+import PaymentMethods from './PaymentMethods';
+import ManualPaymentModal from './modals/ManualPaymentModal';
+import PaymentGatewaysModal from './modals/PaymentGatewaysModal';
 
 const TaxSettingsPage = () => {
   const { payment_gateways, payment_settings } = usePaymentContext();
@@ -27,10 +30,12 @@ const TaxSettingsPage = () => {
       ...initialPaymentSettings,
       payment_methods: convertPaymentMethods([], payment_gateways),
     },
+    mode: 'all',
   });
   const { reset } = form;
   const formData = form.watch();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
@@ -38,6 +43,7 @@ const TaxSettingsPage = () => {
     }
   }, [form.formState.isDirty]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (payment_settings) {
       const methods = convertPaymentMethods(payment_settings.payment_methods, payment_gateways);
@@ -64,7 +70,7 @@ const TaxSettingsPage = () => {
                 title: __('Reset to Default Settings?', 'tutor'),
                 description: __(
                   'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.',
-                  'tutor'
+                  'tutor',
                 ),
                 confirmButtonText: __('Reset', 'tutor'),
               },
