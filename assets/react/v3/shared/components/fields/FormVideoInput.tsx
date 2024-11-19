@@ -421,8 +421,6 @@ const FormVideoInput = ({
     return fieldValue && fieldValue[videoIdKey] !== '';
   };
 
-  console.log(fieldValue);
-
   const handleDataFromUrl = async (data: URLFormData) => {
     setIsThumbnailLoading(true);
     try {
