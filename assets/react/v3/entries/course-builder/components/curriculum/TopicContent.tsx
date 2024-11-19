@@ -261,7 +261,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                       type="button"
                       css={styleUtils.actionButton}
                       onClick={() => {
-                        exportQuizMutation.mutate(content.id);
+                        exportQuizMutation.mutate(contentId);
                       }}
                     >
                       <SVGIcon name="export" width={24} height={24} />
