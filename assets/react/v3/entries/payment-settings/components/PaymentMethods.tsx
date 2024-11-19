@@ -38,7 +38,7 @@ const PaymentMethods = () => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   const activeSortItem = useMemo(() => {
@@ -99,7 +99,7 @@ const PaymentMethods = () => {
                 }}
               </Show>
             </DragOverlay>,
-            document.body
+            document.body,
           )}
         </DndContext>
       </div>

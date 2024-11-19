@@ -40,7 +40,6 @@ const HeaderActions = () => {
   const postVisibility = useWatch({ name: 'visibility' });
   const previewLink = useWatch({ name: 'preview_link' });
   const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' });
-  const postDate = useWatch({ name: 'post_date' });
   const scheduleDate = useWatch({ name: 'schedule_date' });
   const scheduleTime = useWatch({ name: 'schedule_time' });
 
@@ -61,8 +60,7 @@ const HeaderActions = () => {
   const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
       Promise.resolve().then(() => {
-        form.trigger(field);
-        form.setFocus(field);
+        form.trigger(field, { shouldFocus: true });
       });
     };
 
