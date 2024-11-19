@@ -623,4 +623,23 @@ document.addEventListener('DOMContentLoaded', function () {
 			icon.className = isPassword ? 'tutor-icon-eye-bold' : 'tutor-icon-eye-slash-bold';
 		});
 	});
+
+	/**
+	 * Tutor option withdraw bank transfer instruction hide and show
+	 * 
+	 * @since 3.0.0
+	 */
+	const bankTransferInput = document.querySelector('#tutor_check_bank_transfer_withdraw');
+	const bankTransferInstruction = document.querySelector('#field_tutor_bank_transfer_withdraw_instruction');
+	if (bankTransferInput && bankTransferInstruction) {
+		if (!bankTransferInput.checked) {
+			bankTransferInstruction.classList.add('tutor-d-none');
+			bankTransferInstruction.previousElementSibling?.classList.add('tutor-option-no-bottom-border');
+		}
+
+		bankTransferInput.addEventListener('change', (e) => {
+			bankTransferInstruction.classList.toggle('tutor-d-none', !e.target.checked);
+			bankTransferInstruction.previousElementSibling?.classList.toggle('tutor-option-no-bottom-border', !e.target.checked);
+		});
+	}
 });
