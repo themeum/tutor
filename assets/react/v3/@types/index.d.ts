@@ -107,6 +107,7 @@ declare global {
         hide_admin_bar_for_users: 'on' | 'off';
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
         instructor_can_publish_course: 'on' | 'off';
+        youtube_api_key_exist: boolean;
       };
       tutor_currency: {
         symbol: string;

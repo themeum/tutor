@@ -223,6 +223,7 @@ const FormVideoInput = ({
     minutes: 0,
     seconds: 0,
   });
+  const [localPoster, setLocalPoster] = useState<string>('');
 
   const videoSource = form.watch('videoSource') || '';
 
@@ -254,12 +255,7 @@ const FormVideoInput = ({
       generateVideoThumbnail(source, fieldValue[`source_${source}` as keyof CourseVideo] || '')
         .then((url) => {
           setIsThumbnailLoading(false);
-          field.onChange(
-            updateFieldValue(fieldValue, {
-              poster: '',
-              poster_url: url,
-            }),
-          );
+          setLocalPoster(url);
         })
         .finally(() => {
           setIsThumbnailLoading(false);
@@ -306,7 +302,7 @@ const FormVideoInput = ({
         });
     }
 
-    if (fieldValue.source === 'youtube') {
+    if (fieldValue.source === 'youtube' && tutorConfig.settings?.youtube_api_key_exist) {
       const videoId = videoValidation.youtube(fieldValue['source_youtube' as keyof CourseVideo] || '') ?? '';
       getYouTubeVideoDurationMutation.mutateAsync(videoId).then((response) => {
         const duration = response.data.duration;
@@ -369,21 +365,7 @@ const FormVideoInput = ({
           }
 
           if (posterUrl) {
-            field.onChange(
-              updateFieldValue(fieldValue, {
-                ...updateData,
-                poster: '',
-                poster_url: posterUrl,
-              }),
-            );
-
-            onChange?.(
-              updateFieldValue(fieldValue, {
-                ...updateData,
-                poster: '',
-                poster_url: posterUrl,
-              }),
-            );
+            setLocalPoster(posterUrl);
           }
         } catch (error) {
           console.error(error);
@@ -402,6 +384,7 @@ const FormVideoInput = ({
     const updatedValue = updateFieldValue(fieldValue, updateData);
 
     field.onChange(updatedValue);
+    setLocalPoster('');
     setDuration({
       hours: 0,
       minutes: 0,
@@ -447,13 +430,7 @@ const FormVideoInput = ({
       }
 
       if (thumbnail) {
-        const valueWithThumbnail = updateFieldValue(fieldValue, {
-          ...updatedValue,
-          poster: '',
-          poster_url: thumbnail,
-        });
-        field.onChange(valueWithThumbnail);
-        onChange?.(valueWithThumbnail);
+        setLocalPoster(thumbnail);
       }
     } finally {
       setIsThumbnailLoading(false);
@@ -612,8 +589,8 @@ const FormVideoInput = ({
                               value={
                                 fieldValue
                                   ? {
-                                      id: Number(fieldValue.poster),
-                                      url: fieldValue.poster_url,
+                                      id: Number(fieldValue.poster) || 0,
+                                      url: fieldValue.poster_url || localPoster,
                                       title: '',
                                     }
                                   : null

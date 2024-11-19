@@ -1321,6 +1321,7 @@ class Course extends Tutor_Base {
 		$settings                            = Options_V2::get_only( $required_options );
 		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
 		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+		$settings['youtube_api_key_exist']   = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$new_data = array( 'settings' => $settings );
 
