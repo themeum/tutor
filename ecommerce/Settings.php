@@ -453,6 +453,7 @@ class Settings {
 			'client_id'      => 'secret_key',
 			'secret_id'      => 'secret_key',
 			'webhook_id'     => 'secret_key',
+			'webhook_url'    => 'webhook_url',
 		);
 	}
 

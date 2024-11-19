@@ -99,6 +99,7 @@ export const courseDefaultData: CourseFormData = {
     source_video_id: '',
     poster: '',
     poster_url: '',
+    source_html5: '',
     source_external_url: '',
     source_shortcode: '',
     source_youtube: '',
@@ -539,7 +540,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
       ? Object.fromEntries(
           Object.entries(data.video).map(([key, value]) => [
             `video[${key}]`,
-            key === 'source_video_id' && data.video.source !== 'html5' ? '' : value,
+            key === 'poster_url' && !data.video.poster ? '' : value,
           ]),
         )
       : {}),

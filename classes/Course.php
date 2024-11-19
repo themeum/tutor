@@ -1186,8 +1186,10 @@ class Course extends Tutor_Base {
 		if ( $video_intro ) {
 			$source = $video_intro['source'] ?? '';
 			if ( 'html5' === $source ) {
-				$poster_url                = wp_get_attachment_url( $video_intro['poster'] ?? 0 );
-				$video_intro['poster_url'] = $poster_url;
+					$poster_url            = wp_get_attachment_url( $video['poster'] ?? 0 );
+					$source_html5          = wp_get_attachment_url( $video['source_video_id'] ?? 0 );
+					$video['poster_url']   = $poster_url;
+					$video['source_html5'] = $source_html5;
 			}
 		}
 
@@ -1319,6 +1321,7 @@ class Course extends Tutor_Base {
 		$settings                            = Options_V2::get_only( $required_options );
 		$settings['course_builder_logo_url'] = wp_get_attachment_image_url( $full_settings['tutor_frontend_course_page_logo_id'] ?? 0, 'full' );
 		$settings['chatgpt_key_exist']       = tutor()->has_pro && ! empty( $full_settings['chatgpt_api_key'] ?? '' );
+		$settings['youtube_api_key_exist']   = ! empty( $full_settings['lesson_video_duration_youtube_api_key'] ?? '' );
 
 		$new_data = array( 'settings' => $settings );
 

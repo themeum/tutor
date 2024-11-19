@@ -77,3 +77,10 @@ export enum Addons {
   WPML_MULTILINGUAL_CMS = 'tutor-wpml',
   H5P_INTEGRATION = 'h5p',
 }
+
+export const VideoRegex = {
+  YOUTUBE: /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/,
+  VIMEO: /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/,
+  EXTERNAL_URL: /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/,
+  SHORTCODE: /^\[.*\]$/,
+};

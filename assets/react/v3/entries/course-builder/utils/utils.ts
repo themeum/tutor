@@ -2,7 +2,7 @@ import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
 import { tutorConfig } from '@Config/config';
-import type { Addons } from '@Config/constants';
+import { type Addons, VideoRegex } from '@Config/constants';
 import type { PostStatus } from '@CourseBuilderServices/course';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import type { ID } from '../services/curriculum';
@@ -191,4 +191,133 @@ export const convertToSlug = (value: string) => {
 
 export const getIdWithoutPrefix = (prefix: string, id: ID) => {
   return id.toString().replace(prefix, '');
+};
+
+/**
+ * Generates a thumbnail from different video sources
+ * @param {string} source - Video source type ('youtube', 'vimeo', 'external_url', 'html5')
+ * @param {string} url - Video URL
+ * @returns {Promise<string>} - Base64 encoded thumbnail image
+ */
+export const generateVideoThumbnail = async (
+  source: 'youtube' | 'vimeo' | 'external_url' | 'html5',
+  url: string,
+): Promise<string> => {
+  if (source === 'youtube') {
+    const match = url.match(VideoRegex.YOUTUBE);
+    const videoId = match && match[7].length === 11 ? match[7] : '';
+
+    return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+  }
+
+  if (source === 'vimeo') {
+    try {
+      const vimeoId = url.split('/').pop();
+      const response = await fetch(`https://vimeo.com/api/v2/video/${vimeoId}.json`);
+      const data = await response.json();
+      return data[0].thumbnail_large;
+    } catch (error) {
+      throw new Error('Failed to get Vimeo thumbnail');
+    }
+  }
+
+  if (source === 'external_url' || source === 'html5') {
+    return new Promise((resolve, reject) => {
+      try {
+        // Create video element
+        const video = document.createElement('video');
+        video.muted = true;
+        video.style.cssText =
+          'position: fixed; left: 0; top: 0; width: 1px; height: 1px; object-fit: contain; z-index: -1;';
+        video.crossOrigin = 'Anonymous';
+
+        // Create canvas element
+        const canvas = document.createElement('canvas');
+
+        // Track loading states
+        let isMetadataLoaded = false;
+        let isDataLoaded = false;
+        let isSuspended = false;
+        let isSeeked = false;
+
+        const cleanup = () => {
+          video.src = '';
+          video.remove();
+          canvas.remove();
+          clearTimeout(timeoutId);
+        };
+
+        const attemptSnapshot = () => {
+          if (isMetadataLoaded && isDataLoaded && isSuspended && isSeeked) {
+            try {
+              canvas.height = video.videoHeight;
+              canvas.width = video.videoWidth;
+
+              const ctx = canvas.getContext('2d');
+              if (!ctx) {
+                throw new Error('Failed to get canvas context');
+              }
+
+              ctx.drawImage(video, 0, 0);
+
+              const thumbnail = canvas.toDataURL('image/png');
+              cleanup();
+              resolve(thumbnail);
+            } catch (error) {
+              cleanup();
+              const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+              reject(new Error(`Thumbnail generation failed: ${errorMessage}`));
+            }
+          }
+        };
+
+        // Setup event listeners
+        video.addEventListener('loadedmetadata', () => {
+          isMetadataLoaded = true;
+          if (!video.currentTime || video.currentTime < 2) {
+            video.currentTime = 2; // Take snapshot at 2 seconds
+          }
+        });
+
+        video.addEventListener('loadeddata', () => {
+          isDataLoaded = true;
+          attemptSnapshot();
+        });
+
+        video.addEventListener('suspend', () => {
+          isSuspended = true;
+          attemptSnapshot();
+        });
+
+        video.addEventListener('seeked', () => {
+          isSeeked = true;
+          attemptSnapshot();
+        });
+
+        video.addEventListener('error', (error) => {
+          cleanup();
+          reject(new Error(`Video loading failed: ${error.message}`));
+        });
+
+        // Set timeout
+        // 30 seconds is a reasonable maximum time to wait for video metadata and frame capture
+        const timeoutId = setTimeout(() => {
+          cleanup();
+          reject(new Error('Thumbnail generation timed out'));
+        }, 30000);
+
+        // Add elements to DOM
+        document.body.appendChild(video);
+        document.body.appendChild(canvas);
+
+        // Start loading the video
+        video.src = url;
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+        reject(new Error(`Thumbnail generation failed: ${errorMessage}`));
+      }
+    });
+  }
+
+  throw new Error('Unsupported video source');
 };
