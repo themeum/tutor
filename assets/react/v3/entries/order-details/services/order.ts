@@ -1,8 +1,8 @@
 import { useToast } from '@Atoms/Toast';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
+import type { ErrorResponse } from '@Utils/form';
 import type { Prettify } from '@Utils/types';
-import { ErrorResponse } from '@Utils/form';
 import { convertToErrorMessage } from '@Utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
@@ -95,6 +95,7 @@ export interface Order {
   id: number;
   payment_status: PaymentStatus;
   payment_method: string;
+  payment_method_readable: string;
   payment_payloads: string | null;
   order_status: OrderStatus;
   order_type: string;
@@ -104,7 +105,7 @@ export interface Order {
   discount_amount: number;
   discount_reason: string;
   discount_type: DiscountType;
-  tax_type?: string|null;
+  tax_type?: string | null;
   tax_rate?: number;
   tax_amount?: number;
   total_price: number;
@@ -116,7 +117,7 @@ export interface Order {
   transaction_id?: string | null;
   activities?: Activity[];
   coupon_code?: string | null;
-  coupon_amount?: number|null;
+  coupon_amount?: number | null;
   created_by: string;
   updated_by?: string;
   created_at_gmt: string;
