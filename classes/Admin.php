@@ -60,8 +60,25 @@ class Admin {
 		add_action(
 			'admin_init',
 			function() {
+				$welcome_page = admin_url( 'admin.php?page=tutor&welcome=1' );
+
 				if ( 'tutor-new-feature' === Input::get( 'page' ) ) {
-					wp_safe_redirect( admin_url( 'admin.php?page=tutor&welcome=1' ) );
+					wp_safe_redirect( $welcome_page );
+					exit;
+				}
+
+				/**
+				 * Pro user redirect to version 3 welcome page first time.
+				 *
+				 * @since 3.0.0
+				 */
+				if ( version_compare( get_option( 'tutor_version' ), '3.0.0', '=' )
+					&& tutor()->has_pro
+					&& is_admin()
+					&& empty( get_option( 'tutor_v3_welcome' ) )
+				) {
+					update_option( 'tutor_v3_welcome', 'visited' );
+					wp_safe_redirect( $welcome_page );
 					exit;
 				}
 			}
