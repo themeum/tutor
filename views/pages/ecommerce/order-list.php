@@ -117,7 +117,7 @@ $available_status = array(
 					<tbody>
 						<?php if ( is_array( $orders ) && count( $orders ) ) : ?>
 							<?php
-							foreach ( $orders as $key => $order ) :
+							foreach ( $orders as $key => $order ) : //phpcs:ignore
 								$user_data = get_userdata( $order->user_id );
 								?>
 								<tr>
@@ -158,6 +158,15 @@ $available_status = array(
 									<td>
 										<div class="tutor-fs-7">
 											<?php echo esc_html( Ecommerce::get_payment_method_label( $order->payment_method ?? '' ) ); ?>
+											<?php if ( ! empty( $order->transaction_id ) ) : ?>
+												<br>
+												<span class="tutor-fw-normal tutor-fs-8 tutor-color-muted">
+													<?php
+													/* translators: %s: transaction id */
+													echo esc_html( sprintf( __( 'Trx ID: %s', 'tutor' ), $order->transaction_id ) );
+													?>
+												</span>
+											<?php endif; ?>
 										</div>
 									</td>
 
