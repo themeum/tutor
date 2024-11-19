@@ -261,16 +261,6 @@ const styles = {
     right: ${spacing[4]};
     top: 50%;
     transform: translateY(-50%);
-    border-radius: ${borderRadius[2]};
-    background: transparent;
-
-    button {
-      :focus-visible {
-        outline: 2px solid ${colorTokens.stroke.brand};
-        outline-offset: 2px;
-        border-radius: ${borderRadius[2]};
-      }
-    }
   `,
 
   eyeButton: ({ type }: { type: 'password' | 'text' | 'number' }) => css`
@@ -278,10 +268,17 @@ const styles = {
     ${styleUtils.flexCenter()}
     color: ${colorTokens.icon.default};
     padding: ${spacing[4]};
+    border-radius: ${borderRadius[2]};
+    background: transparent;
 
     ${type !== 'password' &&
     css`
       color: ${colorTokens.icon.brand};
     `}
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 2px;
+    }
   `,
 };
