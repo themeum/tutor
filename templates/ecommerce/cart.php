@@ -140,9 +140,16 @@ $subtotal        = 0;
 									</div>
 								<?php endif ?>
 
-							<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>">
-								<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
-							</a>
+
+							<?php if ( CheckoutController::get_page_id() !== -1 ) { ?>
+								<a class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center" href="<?php echo esc_url( CheckoutController::get_page_url() ); ?>">
+									<?php esc_html_e( 'Proceed to checkout', 'tutor' ); ?>
+								</a>
+								<?php
+							} else {
+								tutor_alert( __( 'Checkout page is not configured', 'tutor' ) );
+							}
+							?>
 						</div>
 					</div>
 				</div>
