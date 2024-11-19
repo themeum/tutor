@@ -9,6 +9,7 @@ import { OrderProvider } from '@OrderContexts/order-context';
 import { isDefined } from '@Utils/types';
 import { getQueryParam } from '@Utils/url';
 import { css } from '@emotion/react';
+import PaymentInfo from '../order/PaymentInfo';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {
@@ -31,6 +32,7 @@ function Main() {
             </div>
             <div css={styles.right}>
               <Student />
+              <PaymentInfo />
               <Notes />
             </div>
           </div>
