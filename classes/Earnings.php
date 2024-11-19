@@ -90,13 +90,18 @@ class Earnings extends Singleton {
 		}
 
 		if ( is_array( $items ) && count( $items ) ) {
-			
+
 			foreach ( $items as $item ) {
-		
+
 				$subtotal_price  = $item->regular_price;
 				$item_sold_price = $order_model->get_item_sold_price( $item->id, false );
 
-				$per_earning_refund = ( $deducted_amount * $subtotal_price ) / $order_details->total_price;
+				try {
+					$per_earning_refund = ( $deducted_amount * $subtotal_price ) / $order_details->total_price;
+				} catch ( \Throwable $th ) {
+					tutor_log( $th );
+					$per_earning_refund = 0;
+				}
 
 				// Split deduct amount fro admin & instructor.
 				$split_deduction = tutor_split_amounts( $per_earning_refund );
