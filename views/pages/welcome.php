@@ -28,6 +28,16 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	border-radius: 18px;
 }
 
+.tutor-hide-welcome-button {
+	position: absolute;
+	top: -20px;
+	right: 12px;
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	color: #ffffff;
+}
+
 .tutor-lms-welcome-page {
 	margin-left: -20px;
 }
@@ -41,8 +51,12 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	background-color: #0049F8;
 }
 
+.tutor-header-section .tutor-container {
+	position: relative;
+}
+
 .tutor-header-section .banner-content {
-	margin-top: 76px;
+	margin-top: 50px;
 }
 
 .tutor-header-section .banner-title {
@@ -50,6 +64,7 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	line-height: 50px;
 	font-weight: 400;
 	color: #ffffff;
+	margin: 0px;
 }
 .tutor-header-section .banner-title strong {
 	font-weight: 700;
@@ -85,9 +100,6 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 }
 
 @media (max-width: 1560px) {
-	.tutor-lms-welcome-page .tutor-header-section .banner-image {
-		padding-top: 50px;
-	}
 	.tutor-container {
 		max-width: 1080px;
 	}
@@ -105,10 +117,10 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	<section class="tutor-header-section">
 		<div class="tutor-container">
 			<div class="tutor-row">
-				<div class="tutor-col-xl-6">
+				<div class="tutor-col-lg-5">
 					<div class="banner-content">
-						<div class="tutor-mb-48">
-							<a href="https://tutorlms.com">
+						<div class="tutor-mb-32">
+							<a href="https://tutorlms.com" class="tutor-d-inline-block">
 								<img src="<?php echo esc_url( tutor()->url ) . 'assets/images/tutor-logo-white.svg'; ?>" alt="Tutor LMS" />
 							</a>
 						</div>
@@ -118,7 +130,11 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 					</div>
 				</div>
 
-				<div class="tutor-col-xl-6">
+				<div class="tutor-col-lg-7">
+					<button class="tutor-btn tutor-btn-outline-primary tutor-btn-lg tutor-hide-welcome-button">
+						<i class="tutor-icon-times"></i>
+						<?php esc_html_e( "Don't Show Again", 'tutor' ); ?>
+					</button>
 					<img src="<?php echo esc_url( $image_url ) . '/banner.png'; ?>" alt="banner" class="banner-image" />
 				</div>
 			</div>
@@ -286,3 +302,33 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 		</div>
 	</section>
 </div>
+
+<script>
+	jQuery(document).ready(function($) {
+		$('.tutor-hide-welcome-button').on('click', function(e) {
+
+			const courseUrl = '<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>';
+			const nonce = '<?php echo esc_attr( wp_create_nonce( 'tutor_nonce_action' ) ); ?>';
+
+			$.ajax({
+				url: ajaxurl,
+				type: 'POST',
+				data: {
+					_tutor_nonce: nonce,
+					action: 'tutor_do_not_show_feature_page'
+				},
+				beforeSend: function () {
+					e.target.classList.add('is-loading');
+					e.target.setAttribute('disabled', true);
+				},
+				success: function(response) {
+					window.location.href = courseUrl;
+				},
+				complete: function() {
+					e.target.classList.remove('is-loading');
+					e.target.removeAttribute('disabled');
+				}
+			});
+		});
+	});
+</script>
