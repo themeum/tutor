@@ -29,15 +29,15 @@ You can also join our [official Facebook Community](https://www.facebook.com/gro
 
 Also, check out our Tutor LMS overview video:
 
-https://www.youtube.com/watch?v=Eu9cVlNATwk
+https://www.youtube.com/watch?v=78t8LnQjOVs 
 
-Overall, Tutor LMS is the best WordPress LMS plugin for eLearning enthusiasts. It comes with every core feature you’ll need to build a perfect eLearning website. Additionally, it also has plenty of premium add-ons to empower the core plugin more! A few important add-ons are Course Builder, Certificate, Social Login, Reports, Content Drip, Assignments, Calendar, etc.
+Overall, Tutor LMS is the best WordPress LMS plugin for eLearning enthusiasts. It comes with every core feature you’ll need to build a perfect eLearning website. Additionally, it also has plenty of premium add-ons to empower the core plugin more! A few important addons are Course Builder, Certificate, Social Login, Reports, Content Drip, Assignments, Calendar, etc.
 
 🔥 [Get Tutor LMS](https://tutorlms.com/) today and create, customize, manage, and sell online courses efficiently.
 
 == Listen to What People Have to Say: ==
 
-🙆 “After hours and hours of research and trying several LMS platforms, I have decided to purchase Tutor LMS. I’ve run into some bugs, but they were quickly solved by their customer support team. I’m using it for some time now and have been able to check out the V2 beta. It will be a great step and make this amazing LMS even better!” —nowhereman78
+🙆 “After hours and hours of research and trying several LMS platforms, I have decided to purchase Tutor LMS. I’ve run into some bugs, but they were quickly solved by their customer support team. I’m using it for some time now and have been able to check out the beta. It will be a great step and make this amazing LMS even better!” —nowhereman78
 
 🙆 “This LMS has pretty much everything you’d expect from an LMS and more: Course builder, lessons, several quiz/assignment types, video embed, zoom integration, front-end dashboard, payment/woocommerce integrations, and a lot of other great add-ons. It provides a streamlined experience and is easy to use for both admins, tutors and students. Great support and reasonably priced.” —mariusandersen
 
@@ -46,20 +46,24 @@ Overall, Tutor LMS is the best WordPress LMS plugin for eLearning enthusiasts. I
 == 🌟 Top Features ==
 
 Here are the most notable features of Tutor LMS:
-🏗️ Frontend & backend course builder
+🏗️ Advanced course builder
+🛒 Native eCommerce
+📆 Built-in subscriptions
+🖥️Tutor LMS AI Studio
 📚 Unlimited courses and lessons
-🧩 Advance course builder
+🎓 Course bundle
 👁️ Course preview
+🧩 Advanced quiz builder
+⏱️ Quiz timer
+📝 Quiz attempts
 📊 Frontend student dashboard
 📌 Personalized dashboard for each role (admins, instructors, students)
 📽️ Video lessons
 📹 Multiple video sources (self-hosted, YouTube, Vimeo, embedded video, etc)
+📅 Content drip
 👩‍🏫 Unlimited teacher profiles
 📝 Lesson management
 🏆 Advanced drag-and-drop certificate builder
-🧩 Advanced quiz builder
-⏱️ Quiz Timer
-📝 Quiz Attempts
 💳 Centralized monetization settings
 💰 Earning & commission allocation
 💸 Multiple withdrawal options
@@ -80,11 +84,9 @@ Here are the most notable features of Tutor LMS:
 📚 Gutenberg compatible
 🔐 Content security
 📈 Advanced analytics and more
-📅 Content drip
 👥 Manual enrollment
 📊 Creating custom grading scales
 🔔 Automated notifications
-🎓 Course bundle
 👩‍🏫 Multi-instructor system
 🔐 Social login functionalities
 📧 Email verification
@@ -108,6 +110,7 @@ Tutor LMS is a perfect solution for anyone who wants to create a full-fledged le
 🏫 Industrial Training
 💻 Online Classroom
 🎓 Training Courses
+🧑‍💼 Employee Training
 
 These are just a few possibilities! There’s a whole new world of eLearning that’s yet to be discovered using this WordPress LMS plugin.
 
@@ -117,9 +120,35 @@ Tutor LMS has the most minimalistic, functional, and uniform user interface for 
 
 == 📒 INTUITIVE COURSE BUILDER ==
 
-With Tutor LMS's state-of-the-art backend and frontend course builders, creating engaging online courses has never been easier. This advanced WordPress LMS plugin empowers you to design unlimited courses with unlimited lessons, quizzes, assignments, videos, and more. Thus, the instructors will have the flexibility and scalability to meet your teaching goals.
+With Tutor LMS's state-of-the-art course builder, creating engaging online courses has never been easier. This advanced WordPress LMS plugin empowers you to design unlimited courses with unlimited lessons, quizzes, assignments, videos, and more.
  
-To focus solely on the course-building process, Tutor LMS also lets you hide headers and footers in the course builder for a distraction-free course creation using the spotlight mode. So, whether you're a seasoned educator or just starting your online teaching journey, Tutor LMS equips you with the tools you need to create dynamic and interactive learning experiences for your students. 
+To focus solely on the course-building process, Tutor LMS also lets you hide headers and footers in the course builder using the spotlight mode. So, whether you're a seasoned educator or just starting your online teaching journey, this WordPress LMS plugin equips you with the tools you need to create dynamic and interactive learning experiences for your students. 
+
+== 🧩 ADVANCED QUIZ BUILDER ==
+
+Create unlimited quizzes with this WordPress course plugin. You can add questions, set the time limit, restrict attempts, set passing grades, etc, right from this WordPress LMS plugin.
+
+This free LMS plugin supports various quizzes that you can use to fulfill all your quizzing needs. For example, true/false, multiple choice, single choice, matching, Fill-in-the-blanks, etc.
+
+== 🛒 NATIVE ECOMMERCE ==
+
+Tutor LMS has the most important streamlined eCommerce solution to sell courses directly without relying on third-party plugins. It simplifies the payment processing with support for lots of popular payment gateways, like PayPal, Stripe, Razorpay, etc. 
+
+With features like advanced coupon management, you can create custom codes or automatic discounts, set validity periods, and run promotional campaigns. Managing taxes is equally simple, with auto-calculated regional tax rates ensuring compliance for learners across the globe. 
+
+Additionally, the upgraded order management interface enables you to track, update, and refund orders quickly and efficiently. Native eCommerce brings unparalleled speed and convenience, empowering you to manage your online course sales like a pro.
+
+== 📆 BUILT-IN SUBSCRIPTIONS ==
+
+The built-in Subscriptions feature in Tutor LMS offers a fully integrated solution for managing recurring payments. You can design flexible subscription plans tailored to your audience, including monthly, yearly, or custom durations. Add enrollment fees, schedule exclusive discounts, and even offer certificates as part of premium subscription packages. 
+
+With subscriptions built directly into the platform, you no longer need external plugins, resulting in a faster, more reliable site. This feature provides complete control over pricing models, ensuring a smooth workflow for instructors and a seamless experience for students. 
+
+== 🖥️ AI STUDIO ==
+
+Tutor LMS revolutionizes course creation with its cutting-edge AI Studio. This innovative tool allows instructors to generate high-quality course content, including course outlines, lessons, quizzes, etc with minimal effort. Simply provide a prompt, and the AI will create structured, engaging content in seconds. 
+
+The Tutor LMS AI Studio also supports feature image generation, helping you craft visually appealing thumbnails that stand out. By automating time-consuming tasks, AI Studio enables educators to focus on teaching and enhancing the learning experience.
 
 == 📚 COURSE BUNDLES ==
 
@@ -135,20 +164,14 @@ Each student registered on your WordPress learning management system will have a
 
 Tutor LMS is the best LMS plugin to create a course marketplace. You can add unlimited courses and instructors using Tutor LMS. As an Admin, you can review instructor profiles before approval, manage instructor’s earnings distribution, set commission rates, deduct charges, and more. Instructors can also withdraw their earnings conveniently via bank transfer, PayPal, eCheck, etc.
 
-== 🧩 ADVANCED QUIZ BUILDER ==
-
-Create unlimited quizzes with this WordPress course plugin. You can add questions, set the time limit, restrict attempts, set passing grades, etc, right from this WordPress LMS plugin.
-
-This free LMS plugin supports various quizzes that you can use to fulfill all your quizzing needs. For example, true/false, multiple choice, single choice, matching, Fill-in-the-bluks, etc.
-
 == 📹 MULTIMEDIA ATTACHMENTS ==
 
-Keep your eLearning students engaged using multimedia lessons, SCORM files, etc. Tutor LMS supports versatile video sources such as Vimeo, YouTube, Bunny Stream, etc. You can also set an introductory video for your course. This video will be set as the featured video of your course.
+Keep your eLearning students engaged using multimedia lessons, H5P interactive lessons, SCORM files, etc. Tutor LMS supports versatile video sources such as Vimeo, YouTube, Bunny Stream, etc. You can also set an introductory video for your course. This video will act as the featured video of your course.
 
 == 💬 ENGAGE STUDENTS WITH LIVE LESSONS ==
 
-Conduct live video sessions with students within Tutor LMS courses & lessons and increase interaction with students and connect with them. Instructors can schedule real-time video meetings using integrated platforms like Google Meet, Zoom, etc. Just share the meeting link within the lesson, and students can join your live classes with one click.
- 
+Conduct live video sessions with students within Tutor LMS courses & lessons and increase interaction with students and connect with them. Instructors can schedule real-time video meetings using Google Meet, Zoom, etc. Just share the meeting link within the lesson, and students can join your live classes with one click.
+
 Video sessions enable interactive class lectures, discussions, and collaboration. During the live lessons, instructors can use all of the required features to conduct a live class. For example, screen sharing, live question answering, engaging students face-to-face online, etc. 
 
 == 🧑‍🎓 STUDENT QUESTION AND ANSWERS (Q&A) ==
@@ -157,41 +180,39 @@ Students can submit questions about courses from their respective profiles even 
 
 == ✉️ BUILT-IN EMAIL MARKETING AND AUTOMATION ==
 
-Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 37 email triggers and numerous placeholders. You can use those placeholders to send highly customizable and personalized emails right from your LMS plugin. 
+Tutor LMS supports automatic email notifications for admins, instructors, and students. It is equipped with 40+ email triggers and numerous placeholders. You can use those placeholders to send highly customizable and personalized emails right from your LMS plugin. 
 
-The built-in email editor of Tutor LMS lets you use those placeholders in both the subject lines and the body of your customized email. A few common automated email triggers are user registration, course enrollment, inactivity reminders, quiz completions, course completions, assignment grading, announcements, etc. This comprehensive system ensures that all user interactions are met with relevant and timely email notifications.
+The built-in email editor of Tutor LMS lets you use those placeholders in both the subject lines and the body of your customized email. A few common automated email triggers are user registration, course enrollment, inactivity reminders, quiz completions, course completions, assignment grading, announcements, eCommerce orders, subscriptions, etc. This comprehensive system ensures that all user interactions are met with relevant and timely email notifications.
 
 == 💵 MULTIPLE COURSE MONETIZATION TOOLS ==
 
-You can monetize your eLearning courses with various monetization plugins such as WooCommerce, Easy Digital Downloads, Paid Membership Pro, and Restrict Content Pro. These integrations streamline the course selling and commission allocation process, making it easy to manage your financial transactions and track revenue.
+You can monetize your eLearning courses using the Tutor LMS native eCommerce. Besides, this WordPress LMS plugin has supports for various monetization plugins such as WooCommerce, Easy Digital Downloads, Paid Membership Pro, and Restrict Content Pro. These integrations streamline the course selling and commission allocation process, making it easy to manage your financial transactions and track revenue.
 
-With WooCommerce, you can not only sell courses but also generate coupons and invoices too. It will help you to offer discounts and invoices with detailed billing information. Additionally, you can monitor sales data and analytics through WooCommerce, helping you understand your business performance and make informed decisions to optimize your revenue streams.
+With the native eCommerce engine, you can not only sell courses but also generate coupons and manage taxation too. It will help you to offer discounts and set taxes with detailed billing information. Additionally, you can monitor sales data and analytics to track your business growth and make informed decisions.
 
 == 🏗️ PAGE BUILDER COMPATIBILITY ==
 
-Tutor LMS is a versatile WordPress learning management system plugin that is compatible with popular page builders like Gutenberg, Elementor, Divi, Oxygen Builder, etc. It also has a dedicated [Elementor addons plugin](https://wordpress.org/plugins/tutor-lms-elementor-addons/), [Divi modules](https://wordpress.org/plugins/tutor-lms-divi-modules/), and [Oxygen builder plugin](https://wordpress.org/plugins/oxygen-tutor-lms/). These plugins allow you to create and customize stunning and responsive course pages for your students.
+Tutor LMS is a versatile WordPress learning management system plugin that is compatible with popular page builders like Gutenberg, Elementor, Divi, Oxygen Builder, etc. It also has a dedicated [Elementor addons plugin](https://wordpress.org/plugins/tutor-lms-elementor-addons/), [Divi modules](https://wordpress.org/plugins/tutor-lms-divi-modules/), and [Oxygen builder plugin](https://wordpress.org/plugins/oxygen-tutor-lms/).
 
-These integrations ensure seamless design capabilities, enabling you to use each builder's unique tools and templates. Thus, you can craft a visually appealing and highly functional eLearning platform that aligns with your brand and effectively engages your students.
+These integrations ensure seamless design capabilities, enabling you to use each builder's unique tools and templates. Thus, you can craft a visually appealing and highly functional eLearning platform that aligns with your brand and effectively engages your students using this free LMS plugin.
 
 == 🛡️ CONTENT SECURITY ==
 
-Tutor LMS ensures the highest level of content security with a comprehensive suite of features designed to protect your eLearning platform. These include copy protection, which prevents unauthorized duplication of your content, and hotlink prevention, which stops other websites from directly linking to your files. Tutor LMS also offers management of active login sessions, allowing administrators to monitor and control user access effectively.
+Tutor LMS provides top-notch content security to safeguard your eLearning website. With features like copy protection to prevent unauthorized duplication, hotlink prevention to block external sites from misusing your files, and active login session management, you can easily monitor and control user access.
 
-Besides, email verification ensures that only legitimate users can enroll in your courses. Additionally, Tutor LMS includes security measures such as honeypot and reCAPTCHA integration to prevent bots and spam, two-factor authentication for enhanced login security, and regular updates to patch any vulnerabilities. These robust security features work together to safeguard your content and provide a secure learning environment for your students.
+Besides, email verification ensures that only legitimate users can enroll in your courses. Additionally, Tutor LMS includes security measures such as honeypot and reCAPTCHA integration to prevent bots and spam, two-factor authentication for enhanced login security, and regular updates to patch any vulnerabilities. All of these robust security features work together to safeguard your content and make it the best WordPress LMS plugin regarding content security.
 
 == 🚀 POWERFUL ADD-ONS ==
 
-This WordPress online course plugin has lots of [advanced add-ons](https://tutorlms.com/addons/) to enhance your eLearning platform. A few notable add-ons are Course Bundle, Content Drip, Certificate, Reports, Social Login, Email, Quiz Export/Import, Gradebook, Prerequisite, Google Meet, etc.
+This WordPress online course plugin has lots of [advanced add-ons](https://tutorlms.com/addons/) to enhance your eLearning platform. A few notable add-ons are Course Bundle, Subscriptions, Content Drip, Certificate, Reports, Social Login, Email, Quiz Export/Import, H5P, Gradebook, Prerequisite, Google Meet, etc.
 
 == 📅 CONTENT DRIP TO SCHEDULE COURSE CONTENT ==
 
 Tutor LMS's Content Drip feature allows you to schedule when your course content will be released. This means you can unlock lessons, quizzes, and other materials based on certain prerequisites or specific future dates. By gradually providing access to new content over time rather than all at once, Content Drip helps keep students engaged and motivated.
 
-Thus, students will regularly receive new materials to work on. It encourages continuous learning and prevents them from feeling overwhelmed. This structured release of content ensures that students stay on track and fully absorb the material at a manageable pace.
+== 🧑🏻‍🏫 INSTRUCTOR COLLABORATION ==
 
-== 🧑🏻‍🏫INSTRUCTOR COLLABORATION ==
-
-With Tutor LMS's Multi-Instructor add-on, multiple instructors can work together on a single course. They can collaborate to create and manage lectures and quizzes of a single course. Each instructor can track learner progress from their own account.
+With Tutor LMS's Multi-Instructor addon, multiple instructors can work together on a single course. They can collaborate to create and manage lectures and quizzes of a single course. Each instructor can track learner progress from their own account.
 
 This teamwork allows for a richer learning experience as instructors bring their unique expertise to the course. It also makes managing the course easier, as responsibilities are shared among several instructors. This feature is perfect for large courses that benefit from diverse teaching styles and knowledge areas.
 
@@ -203,17 +224,13 @@ Besides, students can also share their certificates on social media to showcase 
 
 == 🔗 SINGLE CLICK SOCIAL LOGIN WITH Google, Facebook, and Twitter accounts ==
 
-Tutor LMS offers one-click login functionality using the Social Login add-on. Students can register and log into your eLearning website using their existing Google, Facebook, and Twitter accounts. 
+Tutor LMS offers one-click login functionality using the Social Login addon. Students can register and log into your eLearning website using their existing Google, Facebook, and Twitter accounts. 
 
 == 📊 INSIGHTFUL REPORTS ==
 
-The Reports addon of Tutor LMS offers comprehensive data on student progress, course performance, analytics, and more. Administrators can access detailed information about Courses, Reviews, Sales, and Student data right from their LMS platform. These reports provide valuable insights into course effectiveness, helping instructors implement more informed teaching strategies.
+The Reports addon of Tutor LMS offers comprehensive data on student progress, course performance, analytics, and more. Administrators can access detailed information about Courses, Reviews, Sales, Student data, Earning data, etc right from their LMS platform. These reports provide valuable insights into course effectiveness, helping instructors implement more informed teaching strategies.
 
 By analyzing student engagement, course completion rates, and other metrics, instructors can identify areas for improvement and optimize their courses for better learning outcomes. With Tutor LMS Reports, instructors have the tools they need to track progress, measure success, and continually enhance their students' learning experience.
-
-== 🤖 AI SUPPORT ==
-
-With ChatGPT integration in Tutor LMS, admins can quickly generate content for their courses. It's like having an AI assistant to craft course content, summaries, and lesson material swiftly.
 
 == 🌐 MULTILINGUAL SUPPORT ==
 
@@ -244,42 +261,53 @@ Here are a few other notable features of this free WordPress LMS plugin.
     
 *   BuddyPress support
     
+*   H5P integration
+    
 
 All of these Tutor LMS features allow the users to design a more powerful and diverse learning management system.
+
+== Frequently Asked Questions ==
+
+= Is Tutor LMS free? =  
+Yes, Tutor LMS is available for free with a wide range of features to help you create and manage courses. For access to additional advanced features, you can upgrade to the Pro version.
+
+= How do I sell courses with Tutor LMS? =
+Tutor LMS comes with a Native eCommerce system that'll allow you to sell your courses directly on your WordPress site. You can also manage payments, discounts, and taxes within the platform.
+
+= Can I create quizzes with Tutor LMS? =
+Yes, Tutor LMS offers an advanced quiz builder that allows you to create a variety of quiz types including multiple-choice, true/false, matching, and more. You can also set time limits, restrict attempts, and define passing grades.
+
+= Can I use Tutor LMS for membership sites? =
+Yes, Tutor LMS has a built-in subscription feature which will allow you to create membership-based eLearning platforms.
+
+= Can I offer certifications with Tutor LMS? =
+Tutor LMS allows you to offer certificates to your students upon course completion. You can create and customize the certificate design and include student information, course details, and your branding using the Tutor LMS Certificate Builder.
+
 
 == Screenshots ==
 
 1. Single course page: Get a detailed course details page to instantly grab students' attention
-2. Notifications: Get instant personalized notifications about important course updates
-3. Dashboard: Intuitive & personalized dashboard for instructors and students
-4. Course Catalog: Set your preferences to create a beautiful course catalog
-5. Advanced Analytics: Get next-level report insights with detailed advanced analytics
-6. Intuitive Settings: Modern and more flexible configuration with intuitive backend settings
-7. Content Drip: Schedule content releases, unlocking lessons, quizzes, etc based on prerequisites or future dates
-8. Email Template: Edit email template content right from the settings to make life easy
-9. Course Bundle: Sell multiple courses in bundles as a single product
-10. Multi-Instructor: Multiple instructors can collaborate on a single course to create a perfect course together
-11. Instructor List: Frontend preview of the brilliant showcase of instructors list layouts
-12. Public Profile(Instructor): The instructor’s public profile layout beautifully segmented with all their details
-13. Color Preset: Preset Colors tab to configure color settings throughout your entire site
-14. Gradebook: Ease of access to edit your entire Grading point system for your LMS
-15. Certificate Configuration: A guided certificate setup page to create the best certificates
-16. Certificate Builder: Fully customizable certificates using drag & drop Certificate Builder
-17. Student Progress: In-depth analytics & metrics detailing student progress
-18. Quiz Types: A plethora of unique and engaging quiz question types
-19. Quiz Builder: A powerful Quiz Builder revived with a new look and feel
-20. Add Quiz: Drag & drop editor to effortlessly create and edit quiz questions
-21. Quiz Customization: Nifty quiz options to enable Time Limit, Quiz Feedback Mode, and more
-22. Quiz Attempt History: Detailed list of Quiz Attempt History all gathered in one place
-23. Course Progress: Home to essential features like Course Progress and Announcements
-24. Course Curriculum: View a detailed list of any course's curriculum at a glance
-25. Q&A Section: Engaging Q&A functionality to encourage better communication
-26. Rating: Share thoughts with the community through Rate & Review
-27. Spotlight Mode: Get in the zone by disabling all distractions using Spotlight Mode
-28. Assignments: Stay ahead of the test using the handy Assignment feature 
-29. Q&A List: Use the Q&A page to easily manage and filter all queries
-30. Q&A Communication: Prioritize important Q&As and mark them as solved once completed
-31. Mobile Responsive: Highly responsive UI designed for quality user experience
+2. Dashboard: Intuitive & personalized dashboard for instructors and students
+3. Course Builder: More organized and intuitive interface for seamless course creation
+4. Course Curriculum: Create topics, lessons, quizzes, assignments, live classes, etc
+5. Quiz Builder: A powerful Quiz Builder revived with a new look and feel
+6. Assignments: Assess students using the handy Assignment feature 
+7. AI Studio: Generate entire course including lessons, quizzes, thumbnails, etc with AI
+8. Native eCommerce: Sell courses directly within Tutor LMS, supports popular payment gateways
+9. Order Management: Manage orders, update order status, initiate refunds, etc
+10. Coupon Management: Create custom coupon codes or automatic discounts, set validity, etc
+11. Tax Management: Set up regional tax rates for seamless tax management
+12. Subscriptions: Create recurring revenue with built-in subscriptions feature
+13. Advanced Analytics: Get next-level report insights with detailed advanced analytics
+14. Email Templates: Edit email template content right from the settings to make life easy
+15. Course Bundle: Sell multiple courses in bundles as a single product
+16. Multi-Instructor: Multiple instructors can collaborate on a single course 
+17. Certificate Builder: Fully customizable certificates using drag & drop Certificate Builder
+18. Q&A Section: Engaging Q&A functionality to encourage better communication
+19. Q&A List: Use the Q&A page to easily manage and filter all queries
+20. Ratings: Share thoughts with the community through Rate & Review
+21. Spotlight Mode: Get in the zone by disabling all distractions using Spotlight Mode
+22. Mobile Responsive: Highly responsive UI designed for quality user experience
 
 
 == Changelog ==
@@ -371,6 +399,11 @@ New: Deep integration with Droip no-code website builder to design beautiful cou
 Update: Enhanced course creation process for faster, more efficient performance.
 Update: Optimized for improved scalability to ensure a smooth experience as your platform grows.
 
+= 2.7.6 - September 19, 2024
+
+New: Filter hook added to alter the redirect URL after course purchase.
+Fix: Instructor not able to delete their announcement or student quiz attempts from Admin panel.
+
 = 2.7.5 - September 04, 2024
 
 Fix: Fixed the malfunctioning export feature for Tutor LMS settings.
@@ -397,7 +430,7 @@ Fix: Bundle course products were showing on the shop page despite 'Hide Course P
 Fix: Answer Required option not working for Image Matching, Matching, and Ordering quiz types
 Fix: Course progress resetting when WC Subscriptions expired (Pro)
 Fix: Assignment submission time was not showing WP timezone on the frontend dashboard (Pro)
-Fix: HTML text appearing in enrolment box with Paid Membership Pro (Pro)
+Fix: HTML text appearing in enrollment box with Paid Membership Pro (Pro)
 Fix: Course content access not working for instructors and admins when a course has prerequisites (Pro)
 Fix: Error on first-time installation
 Fix: Enhanced plugin security
@@ -466,73 +499,8 @@ Fix: Resolved design conflict with block themes in the course content area
 Fix: Fixed email not triggering when updating course status from the backend course list page (Pro)
 Fix: "All fields required" messages when creating a Zoom meeting with non-English time settings (Pro)
 
-= 2.5.0 - December 07, 2023
 
-New: A revamped design for email with a better user experience (Pro)
-New: Default configuration for email templates (Pro)
-New: Option to add Alt tag/text for Email logo (Pro)
-New: Customize the email template color for each part (header, body, button, footer) (Pro)
-New: Option to align email logo, title, body, button, and footer text (Pro)
-New: (Triggered Event) Send a test email to a given email address (Pro)
-New: (Triggered Event) Reminder email to students to resume the course if they are inactive for a certain period (Pro)
-New: (Triggered Event) A welcome email to students after registration (Pro)
-New: (Triggered Event) Reminder email for lesson comments (Pro)
-New: (Triggered Event) Email notification for instructors if their application gets rejected (Pro)
-New: Manual template creation for manually sending email (Pro)
-New: (Manual email) Email everyone about any news, event, or manual notifications (Pro)
-New: (Manual email) Email only all admins about any updates (Pro)
-New: (Manual email) Email all students about any events (Pro)
-New: (Manual email) Email all instructors about any events (Pro)
-New: (Manual email) Email all instructors of a selected course/courses (Pro)
-New: (Manual email) Email all students of a selected course/courses (Pro)
-New: (Manual email) Email all students who completed any course. (Pro)
-New: (Manual email) Email all students who completed a selected course/courses (Pro)
-New: (Manual email) Email all students except selected courses. (Pro)
-Update: Custom course slug will be applied in the learning area
-Update: Added WordPress 6.4 compatibility
-Update: Added MySQL 8 compatibility
-Fix: Students getting course access even after the PM Pro subscription had expired issue fixed (Pro)
-Fix: New student sign-up mail not being sent to the admin issue fixed (Pro)
-Fix: The “Complete Course” button not appearing issue on mobile devices in the learning area fixed
-Fix: Email template translation issues and some Email triggers not working issue fixed (Pro)
-
-= 2.4.0 - October 16, 2023
-
-New: Display lesson, quiz, and assignment status with colored tick marks in learning area
-New: Let students track the course progress on the course detail page with a new "Review Progress" button
-New: Showcase Zoom and Google Meet meetings on the Tutor LMS Calendar (Pro)
-New: Showcase upcoming lessons and quizzes on the Tutor LMS Calendar upon scheduling them with Content Drip (Pro)
-New: Let students share their certificates to social media from the certificate download page (Pro)
-New: “Complete Course” button added on learning area upon completing all course content (Pro)
-New: Ability to check for admins and instructors if a student has generated a certificate (Pro)
-New: Ability to update instructor information and set custom revenue share percentage on a popup (Pro)
-Update: Editor support for instructor bio from the backend instructor list
-Update: Certificate preview and OTP page are now compatible with Elementor/Divi custom header, footer (Pro)
-Update: Optimized certificate download time (Pro)
-Update: Enhanced certificate resolution for certificate builder-generated certificates
-Update: Tutor Player optimized for Vimeo videos (Pro)
-Fix: Ability to complete a course without passing quizzes/assignments with auto-complete enabled on strict mode
-Fix: Inaccurate course percentage in some cases
-Fix: Pagination issues on the course list page resolved for users who used shortcodes
-Fix: The Certificate preview section issues on the course details page on Safari
-Fix: Social links not working issue on the Instructor profile page in the mobile view
-
-= 2.3.0 - September 20, 2023
-
-New: Secure your Tutor LMS site content with Hotlink protection
-New: Disable right-click for Tutor LMS site content to prevent copying
-New: Recommended YouTube videos will be hidden on Tutor Player
-New: Added course review pop-up when a course is automatically completed
-New: Course permalink base is now updatable
-Update: For live lessons, the “Mark as complete” button will only appear once the Zoom/Google Meet meeting has started.
-Update: Tutor LMS settings navigation bar is now sticky
-Fix: Resolved email formatting issues on Gmail and Outlook web versions
-Fix: Resolved the on-site notification system’s incorrect time issue
-Fix: Various translation related issues
-Fix: Resolved known security issues
-
-
-[View the full changelog](https://tutorlms.com/release-notes/)
+[View the full changelog](https://tutorlms.com/releases/)
 
 == Upgrade Notice ==
 
