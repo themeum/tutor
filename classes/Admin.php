@@ -61,18 +61,7 @@ class Admin {
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
-		add_action(
-			'admin_init',
-			function() {
-				$welcome_page = admin_url( 'admin.php?page=tutor&welcome=1' );
-				if ( 'tutor-new-feature' === Input::get( 'page' ) ) {
-					wp_safe_redirect( $welcome_page );
-					exit;
-				}
-			}
-		);
-
-		add_action( 'wp_ajax_tutor_do_not_show_welcome', array( $this, 'handle_do_not_show_welcome' ) );
+		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
 	}
 
 	/**
@@ -143,7 +132,7 @@ class Admin {
 		// Added @since v2.0.0.
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
-		if ( 'do_not_show' !== get_option( 'tutor-new-feature' ) ) {
+		if ( '3.0.0' !== get_option( 'tutor-new-feature' ) ) {
 			add_submenu_page( 'tutor', __( 'What\'s New in 3.0', 'tutor' ), sprintf( '<span class="tutor-new-feature tutor-text-orange">%s</span>', __( 'What\'s New in 3.0', 'tutor' ) ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
@@ -195,7 +184,7 @@ class Admin {
 	 *
 	 * @since 3.0.0
 	 */
-	public function handle_do_not_show_welcome() {
+	public function handle_do_not_show_feature_page() {
 		tutor_utils()->check_nonce();
 
 		if ( ! User::is_admin() ) {
@@ -206,7 +195,7 @@ class Admin {
 			);
 		}
 
-		update_option( 'tutor-new-feature', 'do_not_show' );
+		update_option( 'tutor-new-feature', '3.0.0' );
 		$this->json_response( __( 'Success', 'tutor' ) );
 	}
 
@@ -218,7 +207,8 @@ class Admin {
 	 * @return void
 	 */
 	public function feature_promotion_page() {
-		include tutor()->path . 'views/pages/feature-promotion.php';
+		include tutor()->path . 'views/pages/welcome.php';
+		// include tutor()->path . 'views/pages/feature-promotion.php';
 	}
 
 	/**

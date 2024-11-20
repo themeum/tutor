@@ -306,19 +306,23 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 <script>
 	jQuery(document).ready(function($) {
 		$('.tutor-hide-welcome-button').on('click', function(e) {
+
+			const courseUrl = '<?php echo esc_url( admin_url( 'admin.php?page=tutor' ) ); ?>';
+			const nonce = '<?php echo esc_attr( wp_create_nonce( 'tutor_nonce_action' ) ); ?>';
+
 			$.ajax({
 				url: ajaxurl,
 				type: 'POST',
 				data: {
-					_tutor_nonce: '<?php echo esc_attr( wp_create_nonce( 'tutor_nonce_action' ) ); ?>',
-					action: 'tutor_do_not_show_welcome'
+					_tutor_nonce: nonce,
+					action: 'tutor_do_not_show_feature_page'
 				},
 				beforeSend: function () {
 					e.target.classList.add('is-loading');
 					e.target.setAttribute('disabled', true);
 				},
 				success: function(response) {
-					window.location.href = window.location.href.split('&')[0];
+					window.location.href = courseUrl;
 				},
 				complete: function() {
 					e.target.classList.remove('is-loading');
