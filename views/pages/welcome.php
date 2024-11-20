@@ -19,7 +19,7 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	box-sizing: border-box;
 }
 
-.notice, .tutor-user-registration-notice-wrapper, #wpbody-content > .error {
+.notice, .tutor-user-registration-notice-wrapper, #wpbody-content .error {
 	display: none;
 }
 
