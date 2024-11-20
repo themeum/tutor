@@ -1570,6 +1570,8 @@ class OrderModel {
 
 			return $format ? tutor_get_formatted_price( $sold_price ) : $sold_price;
 		}
+
+		return 0;
 	}
 
 	/**
