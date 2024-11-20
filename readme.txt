@@ -144,7 +144,7 @@ The built-in Subscriptions feature in Tutor LMS offers a fully integrated soluti
 
 With subscriptions built directly into the platform, you no longer need external plugins, resulting in a faster, more reliable site. This feature provides complete control over pricing models, ensuring a smooth workflow for instructors and a seamless experience for students. 
 
-== 🖥️AI STUDIO ==
+== 🖥️ AI STUDIO ==
 
 Tutor LMS revolutionizes course creation with its cutting-edge AI Studio. This innovative tool allows instructors to generate high-quality course content, including course outlines, lessons, quizzes, etc with minimal effort. Simply provide a prompt, and the AI will create structured, engaging content in seconds. 
 
