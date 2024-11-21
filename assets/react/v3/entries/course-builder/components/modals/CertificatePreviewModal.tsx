@@ -6,6 +6,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import type { Certificate } from '@CourseBuilderServices/course';
@@ -128,7 +129,7 @@ const CertificatePreviewModal = ({
             onClick={() => handleNavigate('previous')}
             disabled={previousIndex < 0}
           >
-            <SVGIcon name="chevronLeft" width={40} height={40} />
+            <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={40} height={40} />
           </button>
           <Button
             variant="primary"
@@ -146,7 +147,7 @@ const CertificatePreviewModal = ({
             onClick={() => handleNavigate('next')}
             disabled={nextIndex > certificates.length - 1}
           >
-            <SVGIcon name="chevronRight" width={40} height={40} />
+            <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={40} height={40} />
           </button>
         </div>
       </div>

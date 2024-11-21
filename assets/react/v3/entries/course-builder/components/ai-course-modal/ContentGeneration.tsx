@@ -11,7 +11,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { Addons } from '@Config/constants';
+import { Addons, isRTL } from '@Config/constants';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -212,7 +212,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 disabled={pointer === 0 || isLoading}
                 onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
               >
-                <SVGIcon name="chevronLeft" width={20} height={20} />
+                <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={20} height={20} />
               </Button>
               <div css={styles.navigatorContent}>
                 <span>{pointer + 1}</span>
@@ -224,7 +224,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 disabled={pointer >= contents.length - 1 || isLoading}
                 onClick={() => setPointer((previous) => Math.min(contents.length - 1, previous + 1))}
               >
-                <SVGIcon name="chevronRight" width={20} height={20} />
+                <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={20} height={20} />
               </Button>
             </div>
           </Show>

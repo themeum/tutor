@@ -11,6 +11,7 @@ import { produce } from 'immer';
 import { useEffect, useState } from 'react';
 
 import LoadingSpinner from '@Atoms/LoadingSpinner';
+import { isRTL } from '@Config/constants';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useIsScrolling } from '@Hooks/useIsScrolling';
 import { styleUtils } from '@Utils/style-utils';
@@ -133,7 +134,10 @@ const FormMultiLevelInput = ({
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div css={[styles.categoryFormWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
+              <div
+                css={[styles.categoryFormWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                ref={popoverRef}
+              >
                 <Controller
                   name="name"
                   control={form.control}

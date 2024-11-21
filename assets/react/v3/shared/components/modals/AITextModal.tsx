@@ -35,6 +35,7 @@ import { copyToClipboard } from '@Utils/util';
 
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
+import { isRTL } from '@Config/constants';
 
 interface AITextModalProps<T extends FieldValues> extends ModalProps {
   field: ControllerRenderProps<T, Path<T>>;
@@ -219,7 +220,7 @@ const AITextModal = <T extends FieldValues>({
                         onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
                         disabled={pointer === 0}
                       >
-                        <SVGIcon name="chevronLeft" width={20} height={20} />
+                        <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={20} height={20} />
                       </Button>
 
                       <div css={styles.pageInfo}>
@@ -231,7 +232,7 @@ const AITextModal = <T extends FieldValues>({
                         onClick={() => setPointer((previous) => Math.min(content.length - 1, previous + 1))}
                         disabled={pointer === content.length - 1}
                       >
-                        <SVGIcon name="chevronRight" width={20} height={20} />
+                        <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={20} height={20} />
                       </Button>
                     </Show>
                   </div>
