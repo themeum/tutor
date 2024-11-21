@@ -97,6 +97,8 @@ const AITextModal = <T extends FieldValues>({
   const toneRef = useRef<HTMLButtonElement>(null);
   const translateRef = useRef<HTMLButtonElement>(null);
 
+  const isRTL = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
+
   const currentContent = useMemo(() => {
     return content[pointer];
   }, [content, pointer]);
@@ -219,7 +221,7 @@ const AITextModal = <T extends FieldValues>({
                         onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
                         disabled={pointer === 0}
                       >
-                        <SVGIcon name="chevronLeft" width={20} height={20} />
+                        <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={20} height={20} />
                       </Button>
 
                       <div css={styles.pageInfo}>
@@ -231,7 +233,7 @@ const AITextModal = <T extends FieldValues>({
                         onClick={() => setPointer((previous) => Math.min(content.length - 1, previous + 1))}
                         disabled={pointer === content.length - 1}
                       >
-                        <SVGIcon name="chevronRight" width={20} height={20} />
+                        <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={20} height={20} />
                       </Button>
                     </Show>
                   </div>

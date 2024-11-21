@@ -18,6 +18,7 @@ type CanvasHeadProps = {
 
 const CanvasHead = ({ title, backUrl, rightButton, isExternalUrl }: CanvasHeadProps) => {
   const navigate = useNavigate();
+  const isRTL = typeof window !== 'undefined' && document.documentElement.dir === 'rtl';
 
   const handleBackClick = () => {
     if (backUrl) {
@@ -35,7 +36,7 @@ const CanvasHead = ({ title, backUrl, rightButton, isExternalUrl }: CanvasHeadPr
     <div css={styles.wrapper}>
       <div css={styles.left}>
         <Show when={backUrl}>
-          <Button variant="text" buttonCss={styles.button} onClick={handleBackClick}>
+          <Button variant="text" buttonCss={styles.button({ isRTL })} onClick={handleBackClick}>
             <SVGIcon name="back" width={32} height={32} />
           </Button>
         </Show>
@@ -59,9 +60,16 @@ const styles = {
     align-items: center;
     gap: ${spacing[16]};
   `,
-  button: css`
+  button: ({ isRTL }: { isRTL: boolean }) => css`
     padding: 0;
     border-radius: ${borderRadius[2]};
+
+    ${
+      isRTL &&
+      css`
+        transform: rotate(180deg);
+      `
+    }
   `,
   title: css`
     ${typography.heading6('medium')};

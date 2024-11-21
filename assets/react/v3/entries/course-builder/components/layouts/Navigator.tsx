@@ -27,6 +27,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const previousStep = steps[previousIndex];
   const nextStep = steps[nextIndex];
   const postTitle = form.watch('post_title');
+  const isRTL = typeof window !== 'undefined' && document.documentElement.dir === 'rtl';
 
   const handlePreviousClick = () => {
     setSteps((previous) => {
@@ -88,13 +89,13 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         `}
           disabled={previousIndex < 0}
         >
-          <SVGIcon name="chevronLeft" height={18} width={18} />
+          <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} height={18} width={18} />
         </Button>
       </Show>
       <Show when={currentIndex < steps.length - 1 && postTitle}>
         <Button
           variant="tertiary"
-          icon={<SVGIcon name="chevronRight" />}
+          icon={<SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} />}
           iconPosition="right"
           size="small"
           onClick={handleNextClick}

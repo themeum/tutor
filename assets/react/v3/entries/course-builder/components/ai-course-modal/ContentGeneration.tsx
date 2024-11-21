@@ -109,6 +109,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
   const promptValue = form.watch('prompt');
   const { showToast } = useToast();
+  const isRTL = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
 
   useEffect(() => {
     setLoadingSteps((previous) => {
@@ -212,7 +213,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 disabled={pointer === 0 || isLoading}
                 onClick={() => setPointer((previous) => Math.max(0, previous - 1))}
               >
-                <SVGIcon name="chevronLeft" width={20} height={20} />
+                <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={20} height={20} />
               </Button>
               <div css={styles.navigatorContent}>
                 <span>{pointer + 1}</span>
@@ -224,7 +225,7 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                 disabled={pointer >= contents.length - 1 || isLoading}
                 onClick={() => setPointer((previous) => Math.min(contents.length - 1, previous + 1))}
               >
-                <SVGIcon name="chevronRight" width={20} height={20} />
+                <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={20} height={20} />
               </Button>
             </div>
           </Show>
