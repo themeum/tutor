@@ -9,8 +9,6 @@ import { TaxCollectionProcess, type TaxSettings } from '../services/tax';
 
 function TaxSettingGlobal() {
   const form = useFormContext<TaxSettings>();
-  const { watch } = form;
-  const isTaxIncludedInPrice = watch('is_tax_included_in_price');
 
   const taxCollectionProcessOptions = [
     {
@@ -18,7 +16,7 @@ function TaxSettingGlobal() {
       value: TaxCollectionProcess.isTaxIncludedInPrice,
     },
     {
-      label: __('Tax should be calculated & display in the checkout page', 'tutor'),
+      label: __('Tax should be calculated and displayed on the checkout page', 'tutor'),
       value: TaxCollectionProcess.taxIsNotIncluded,
     },
   ];
@@ -61,7 +59,7 @@ function TaxSettingGlobal() {
                       />
                       <span css={styles.checkboxSubText}>
                         {__(
-                          'Show prices with tax included, so customers see the final amount they’ll pay upfront',
+                          'Show prices with tax included, so customers see the final amount they’ll pay upfront.',
                           'tutor'
                         )}
                       </span>
