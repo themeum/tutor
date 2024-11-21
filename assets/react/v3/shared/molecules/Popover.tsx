@@ -1,3 +1,4 @@
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { AnimationType } from '@Hooks/useAnimation';
 import { Portal, type arrowPosition, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -47,7 +48,11 @@ const Popover = <T extends HTMLElement>({
       <div
         css={[
           styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
-          { left: position.left, top: position.top, maxWidth: maxWidth ?? triggerWidth },
+          {
+            [isRTL ? 'right' : 'left']: position.left,
+            top: position.top,
+            maxWidth: maxWidth ?? triggerWidth,
+          },
         ]}
         ref={popoverRef}
       >

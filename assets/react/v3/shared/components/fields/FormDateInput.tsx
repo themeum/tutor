@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { DateFormats } from '@Config/constants';
+import { DateFormats, isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
@@ -109,7 +109,10 @@ const FormDateInput = ({
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={handleClosePortal} onEscape={handleClosePortal}>
-              <div css={[styles.pickerWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
+              <div
+                css={[styles.pickerWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
+                ref={popoverRef}
+              >
                 <DayPicker
                   mode="single"
                   disabled={[
@@ -182,10 +185,8 @@ const styles = {
       --rdp-caption-font-size: ${fontSize[18]}; /* Font size for the caption labels. */
       --rdp-accent-color: ${colorTokens.action.primary.default}; /* Accent color for the background of selected days. */
       --rdp-background-color: ${colorTokens.background.hover}; /* Background color for the hovered/focused elements. */
-      --rdp-accent-color-dark: ${colorTokens.action.primary
-        .active}; /* Accent color for the background of selected days (to use in dark-mode). */
-      --rdp-background-color-dark: ${colorTokens.action.primary
-        .hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
+      --rdp-accent-color-dark: ${colorTokens.action.primary.active}; /* Accent color for the background of selected days (to use in dark-mode). */
+      --rdp-background-color-dark: ${colorTokens.action.primary.hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
       --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
       --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
       --rdp-selected-color: ${colorTokens.text.white}; /* Color of selected day text */

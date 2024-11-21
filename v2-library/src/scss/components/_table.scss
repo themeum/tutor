@@ -49,11 +49,19 @@
 			}
 
 			&:first-child {
-				border-left: 1px solid var(--tutor-border-color);
+				@if ($is-rtl) {
+					border-right: 1px solid var(--tutor-border-color);
+				} @else {
+					border-left: 1px solid var(--tutor-border-color);
+				}
 			}
 
 			&:last-child {
-				border-right: 1px solid var(--tutor-border-color);
+				@if ($is-rtl) {
+					border-left: 1px solid var(--tutor-border-color);
+				} @else {
+					border-right: 1px solid var(--tutor-border-color);
+				}
 			}
 		}
 
@@ -82,21 +90,37 @@
 			}
 
 			&:first-child {
-				border-left: 1px solid var(--tutor-border-color);
+				@if ($is-rtl) {
+					border-right: 1px solid var(--tutor-border-color);
+				} @else {
+					border-left: 1px solid var(--tutor-border-color);
+				}
 			}
 
 			&:last-child {
-				border-right: 1px solid var(--tutor-border-color);
+				@if ($is-rtl) {
+					border-left: 1px solid var(--tutor-border-color);
+				} @else {
+					border-right: 1px solid var(--tutor-border-color);
+				}
 			}
 		}
 
 		&:first-child {
 			th {
 				&:first-child {
-					border-top-left-radius: var(--tutor-table-border-radius);
+					@if ($is-rtl) {
+						border-top-right-radius: var(--tutor-table-border-radius);
+					} @else {
+						border-top-left-radius: var(--tutor-table-border-radius);
+					}
 				}
 				&:last-child {
-					border-top-right-radius: var(--tutor-table-border-radius);
+					@if ($is-rtl) {
+						border-top-left-radius: var(--tutor-table-border-radius);
+					} @else {
+						border-top-right-radius: var(--tutor-table-border-radius);
+					}
 				}
 			}
 		}
@@ -104,10 +128,18 @@
 		&:last-child {
 			td {
 				&:first-child {
-					border-bottom-left-radius: var(--tutor-table-border-radius);
+					@if ($is-rtl) {
+						border-bottom-right-radius: var(--tutor-table-border-radius);
+					} @else {
+						border-bottom-left-radius: var(--tutor-table-border-radius);
+					}
 				}
 				&:last-child {
-					border-bottom-right-radius: var(--tutor-table-border-radius);
+					@if ($is-rtl) {
+						border-bottom-left-radius: var(--tutor-table-border-radius);
+					} @else {
+						border-bottom-right-radius: var(--tutor-table-border-radius);
+					}
 				}
 			}
 		}

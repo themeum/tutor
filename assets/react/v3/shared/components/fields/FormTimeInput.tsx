@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { DateFormats } from '@Config/constants';
+import { DateFormats, isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -128,7 +128,14 @@ const FormTimeInput = ({
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
-                css={[styles.popover, { left: position.left, top: position.top, maxWidth: triggerWidth }]}
+                css={[
+                  styles.popover,
+                  {
+                    [isRTL ? 'right' : 'left']: position.left,
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
                 ref={popoverRef}
               >
                 <ul css={styles.list}>
