@@ -1135,7 +1135,7 @@ class QuizModel {
 		}
 
 		foreach ( $quiz->questions as $question ) {
-			$question->question_answers = self::get_question_answers( $question->question_id );
+			$question->question_answers = self::get_question_answers( $question->question_id, $question->question_type );
 			if ( isset( $question->question_settings ) ) {
 				$question->question_settings = maybe_unserialize( $question->question_settings );
 			}
