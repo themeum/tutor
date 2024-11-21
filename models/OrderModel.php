@@ -1637,9 +1637,9 @@ class OrderModel {
 	/**
 	 * Render pay button
 	 *
-	 * @since 3.0.0
+	 * @since 3.0.1
 	 *
-	 * @param int|object $order Order object.
+	 * @param int|object $order Order id or object.
 	 *
 	 * @return void
 	 */
