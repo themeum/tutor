@@ -46,7 +46,7 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
   const studentListResult = studentListQuery.data?.results ?? [];
 
   const [isOpen, setIsOpen] = useState(false);
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -100,7 +100,14 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
-                css={[styles.optionsWrapper, { left: position.left, top: position.top, maxWidth: triggerWidth }]}
+                css={[
+                  styles.optionsWrapper,
+                  {
+                    ...(isRTL ? { right: position.left } : { left: position.left }),
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
                 ref={popoverRef}
               >
                 {studentListQuery.isFetching ? (

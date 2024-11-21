@@ -99,7 +99,7 @@ const FormSelectInput = <T,>({
     return options.find((item) => item.value === field.value);
   }, [field.value, options]);
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
     dependencies: [selections.length],
@@ -281,7 +281,7 @@ const FormSelectInput = <T,>({
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    ...(isRTL ? { right: position.left } : { left: position.left }),
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

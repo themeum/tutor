@@ -65,7 +65,7 @@ const FormMultiLevelInput = ({
     }
   }, [isOpen]);
 
-  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
   });
 
@@ -133,7 +133,13 @@ const FormMultiLevelInput = ({
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div css={[styles.categoryFormWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
+              <div
+                css={[
+                  styles.categoryFormWrapper,
+                  { ...(isRTL ? { right: position.left } : { left: position.left }), top: position.top },
+                ]}
+                ref={popoverRef}
+              >
                 <Controller
                   name="name"
                   control={form.control}

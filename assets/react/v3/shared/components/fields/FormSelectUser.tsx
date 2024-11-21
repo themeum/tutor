@@ -94,7 +94,7 @@ const FormSelectUser = ({
     }
   }, [debouncedSearchText, handleSearchOnChange]);
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
     dependencies: [filteredOption.length],
@@ -293,7 +293,7 @@ const FormSelectUser = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    ...(isRTL ? { right: position.left } : { left: position.left }),
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

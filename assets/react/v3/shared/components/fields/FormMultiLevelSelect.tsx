@@ -43,7 +43,7 @@ const FormMultiLevelSelect = ({
   const treeOptions = generateTree(options);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -98,7 +98,13 @@ const FormMultiLevelSelect = ({
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
-              <div css={[styles.categoryWrapper, { left: position.left, top: position.top }]} ref={popoverRef}>
+              <div
+                css={[
+                  styles.categoryWrapper,
+                  { ...(isRTL ? { right: position.left } : { left: position.left }), top: position.top },
+                ]}
+                ref={popoverRef}
+              >
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}
                 <div css={[styles.options, optionsWrapperStyle]}>
                   {treeOptions.map((option) => (

@@ -53,7 +53,7 @@ const FormTimeInput = ({
     return range.map((date) => format(date, DateFormats.hoursMinutes));
   }, [interval]);
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -128,7 +128,14 @@ const FormTimeInput = ({
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
-                css={[styles.popover, { left: position.left, top: position.top, maxWidth: triggerWidth }]}
+                css={[
+                  styles.popover,
+                  {
+                    ...(isRTL ? { right: position.left } : { left: position.left }),
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
                 ref={popoverRef}
               >
                 <ul css={styles.list}>

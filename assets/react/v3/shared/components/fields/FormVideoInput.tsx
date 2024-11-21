@@ -323,7 +323,7 @@ const FormVideoInput = ({
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { popoverRef, position, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     triggerRef,
     positionModifier: {
@@ -635,7 +635,7 @@ const FormVideoInput = ({
           css={[
             styles.popover,
             {
-              left: position.left,
+              ...(isRTL ? { right: position.left } : { left: position.left }),
               top: triggerRef.current?.getBoundingClientRect().top,
               maxWidth: triggerRef.current?.offsetWidth,
             },

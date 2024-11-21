@@ -30,7 +30,7 @@ const Popover = <T extends HTMLElement>({
   animationType = AnimationType.slideLeft,
   hideArrow,
 }: PopoverProps<T>) => {
-  const { position, triggerWidth, popoverRef } = usePortalPopover<T, HTMLDivElement>({
+  const { position, triggerWidth, popoverRef, isRTL } = usePortalPopover<T, HTMLDivElement>({
     triggerRef,
     isOpen,
     arrow,
@@ -47,7 +47,11 @@ const Popover = <T extends HTMLElement>({
       <div
         css={[
           styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
-          { left: position.left, top: position.top, maxWidth: maxWidth ?? triggerWidth },
+          {
+            ...(isRTL ? { right: position.left } : { left: position.left }),
+            top: position.top,
+            maxWidth: maxWidth ?? triggerWidth,
+          },
         ]}
         ref={popoverRef}
       >

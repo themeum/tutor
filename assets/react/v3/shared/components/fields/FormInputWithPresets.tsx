@@ -62,7 +62,7 @@ const FormInputWithPresets = ({
   const ref = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -131,7 +131,7 @@ const FormInputWithPresets = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    ...(isRTL ? { right: position.left } : { left: position.left }),
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

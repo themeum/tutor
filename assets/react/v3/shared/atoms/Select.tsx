@@ -82,7 +82,7 @@ const Select = <T,>({
     return options;
   }, [debouncedSearchText, isSearchable, options]);
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -148,7 +148,14 @@ const Select = <T,>({
 
       <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
         <div
-          css={[styles.optionsWrapper, { left: position.left, top: position.top, maxWidth: triggerWidth }]}
+          css={[
+            styles.optionsWrapper,
+            {
+              ...(isRTL ? { right: position.left } : { left: position.left }),
+              top: position.top,
+              maxWidth: triggerWidth,
+            },
+          ]}
           ref={popoverRef}
         >
           <ul css={styles.options}>

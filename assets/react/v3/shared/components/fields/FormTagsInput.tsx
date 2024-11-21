@@ -47,7 +47,7 @@ const FormTagsInput = ({
   const tagListQuery = useTagListQuery({ search: debouncedSearchText });
   const createTagMutation = useCreateTagMutation();
 
-  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
     dependencies: [tagListQuery.data?.length],
@@ -130,7 +130,7 @@ const FormTagsInput = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    ...(isRTL ? { right: position.left } : { left: position.left }),
                     top: position.top,
                     maxWidth: triggerWidth,
                   },
