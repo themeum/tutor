@@ -37,7 +37,7 @@ use TUTOR\Quiz;
 			foreach ( $questions as $question ) {
 				$id_target = 'quiz-popup-menu-' . $question->question_id;
 				?>
-				<div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo esc_attr( $question->question_id ); ?>">
+				<div class="tutor-quiz-item quiz-builder-question-wrap" data-question-id="<?php echo esc_attr( $question->question_id ); ?>" >
 					<div class="tutor-quiz-item-label">
 						<span class="tutor-quiz-item-draggable tutor-icon-drag question-sorting"></span>
 						<h6 class="tutor-quiz-item-name">
@@ -84,6 +84,8 @@ use TUTOR\Quiz;
 			<?php esc_html_e( 'Add Question', 'tutor' ); ?>
 		</a>
 	</div>
+
+	
 </div>
 
 <div id="quiz-builder-tab-settings" class="quiz-builder-tab-container">

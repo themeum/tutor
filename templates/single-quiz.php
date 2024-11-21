@@ -26,7 +26,7 @@ ob_start();
 <?php tutor_load_template( 'single.common.header', array( 'course_id' => $course_id ) ); ?>
 
 <?php ob_start(); ?>
-<div class="tutor-quiz-wrapper tutor-d-flex tutor-justify-center tutor-mt-80 tutor-pb-80 tutor-px-16">
+<div class="tutor-quiz-wrapper">
 	<input type="hidden" name="tutor_quiz_id" id="tutor_quiz_id" value="<?php the_ID(); ?>">
 
 	<?php

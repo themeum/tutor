@@ -39,7 +39,7 @@ $courses      = ( current_user_can( 'administrator' ) ) ? CourseModel::get_cours
 			<label class="tutor-form-label">
 				<?php esc_html_e( 'Courses', 'tutor' ); ?>
 			</label>
-			<select class="tutor-form-select tutor-announcement-course-sorting">
+			<select class="tutor-form-select tutor-announcement-course-sorting" data-searchable>
 				<option value=""><?php esc_html_e( 'All', 'tutor' ); ?></option>
 				<?php if ( $courses ) : ?>
 					<?php foreach ( $courses as $course ) : ?>

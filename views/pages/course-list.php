@@ -40,14 +40,15 @@ $offset       = ( $limit * $paged_filter ) - $limit;
 /**
  * Navbar data to make nav menu
  */
-$add_course_url = esc_url( admin_url( 'post-new.php?post_type=' . tutor()->course_post_type ) );
+$add_course_url = esc_url( admin_url( 'admin.php?page=create-course' ) );
 $navbar_data    = array(
 	'page_title'   => $courses->page_title,
 	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
 	'active'       => $active_tab,
 	'add_button'   => true,
 	'button_title' => __( 'Add New', 'tutor' ),
-	'button_url'   => $add_course_url,
+	'button_url'   => '#',
+	'button_class' => 'tutor-create-new-course',
 );
 
 /**
@@ -74,6 +75,7 @@ $args = array(
 if ( 'all' === $active_tab || 'mine' === $active_tab ) {
 	$args['post_status'] = array( 'publish', 'pending', 'draft', 'private', 'future' );
 } else {
+	//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 	$status              = 'published' === $active_tab ? 'publish' : $active_tab;
 	$args['post_status'] = array( $status );
 }
@@ -83,9 +85,10 @@ if ( 'mine' === $active_tab ) {
 }
 $date_filter = sanitize_text_field( tutor_utils()->array_get( 'date', $_GET, '' ) );
 
-$year  = date( 'Y', strtotime( $date_filter ) );
-$month = date( 'm', strtotime( $date_filter ) );
-$day   = date( 'd', strtotime( $date_filter ) );
+//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+$year  = gmdate( 'Y', strtotime( $date_filter ) );
+$month = gmdate( 'm', strtotime( $date_filter ) );
+$day   = gmdate( 'd', strtotime( $date_filter ) );
 // Add date query.
 if ( '' !== $date_filter ) {
 	$args['date_query'] = array(
@@ -180,10 +183,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 							<th width="13%">
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</th>
-							<th width="6%">
+							<th width="10%">
 								<?php esc_html_e( 'Price', 'tutor' ); ?>
 							</th>
-							<th class="tutor-table-rows-sorting" width="10%">
+							<th class="tutor-table-rows-sorting" width="15%">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
 								<span class="a-to-z-sort-icon tutor-icon-ordering-a-z"></span>
 							</th>
@@ -198,6 +201,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 							$course_meta_data = tutor_utils()->get_course_meta_data( $course_ids );
 							$authors          = array();
 
+							//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 							foreach ( $the_query->posts as $key => $post ) :
 								$count_lesson = isset( $course_meta_data[ $post->ID ] ) ? $course_meta_data[ $post->ID ]['lesson'] : 0;
 
@@ -215,6 +219,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 								}
 
 								$author_details = $authors[ $post->post_author ];
+								$edit_link      = $add_course_url . "&course_id=$post->ID";
 								?>
 								<tr>
 									<td>
@@ -225,7 +230,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-gap-2">
-											<a href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>" class="tutor-d-block">
+											<a href="<?php echo esc_url( $edit_link ); ?>" class="tutor-d-block">
 												<div style="width: 76px;">
 													<div class="tutor-ratio tutor-ratio-16x9">
 														<img class="tutor-radius-6" src="<?php echo esc_url( $thumbnail ); ?>" alt="<?php the_title(); ?>" loading="lazy">
@@ -234,7 +239,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 											</a>
 
 											<div>
-												<a class="tutor-table-link" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+												<a class="tutor-table-link" href="<?php echo esc_url( $edit_link ); ?>">
 													<?php echo esc_html( $post->post_title ); ?>
 												</a>
 
@@ -310,6 +315,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												echo $price; //phpcs:ignore
 											}
 												// Alert class for course status.
+												//phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 												$status = ( 'publish' === $post->post_status ? 'select-success' : ( 'pending' === $post->post_status ? 'select-warning' : ( 'trash' === $post->post_status ? 'select-danger' : ( 'private' === $post->post_status ? 'select-default' : 'select-default' ) ) ) );
 											?>
 										</div>
@@ -349,7 +355,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												<i class="icon2 tutor-icon-angle-down"></i>
 											</div>
 											<a class="tutor-btn tutor-btn-outline-primary tutor-btn-sm" href="<?php echo esc_url( get_permalink( $post->ID ) ); ?>" target="_blank">
-												<?php esc_html_e( 'View Course', 'tutor' ); ?>
+												<?php esc_html_e( 'View', 'tutor' ); ?>
 											</a>
 											<div class="tutor-dropdown-parent">
 												<button type="button" class="tutor-iconic-btn" action-tutor-dropdown="toggle">
@@ -357,7 +363,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												</button>
 												<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
 													<?php do_action( 'tutor_admin_befor_course_list_action', $post->ID ); ?>
-													<a class="tutor-dropdown-item" href="<?php echo esc_url( admin_url( 'post.php?post=' . $post->ID . '&action=edit' ) ); ?>">
+													<a class="tutor-dropdown-item" href="<?php echo esc_url( $edit_link ); ?>">
 														<i class="tutor-icon-edit tutor-mr-8" area-hidden="true"></i>
 														<span><?php esc_html_e( 'Edit', 'tutor' ); ?></span>
 													</a>

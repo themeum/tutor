@@ -274,4 +274,34 @@ window.jQuery(document).ready(($) => {
 			},
 		});
 	});
+
+	$('#user_social_form').submit(function (e) {
+		e.preventDefault();
+
+		const btnSubmit = $(this).find('button[type=submit]');
+		const url = _tutorobject.ajaxurl;
+		const data = $(this).serializeObject();
+
+		$.ajax({
+			url: url,
+			type: 'POST',
+			data,
+			beforeSend: () => {
+				btnSubmit.addClass('is-loading');
+			},
+			success: (resp) => {
+				let { success } = resp;
+				let message = get_response_message(resp);
+				if (success) {
+					window.tutor_toast(__('Success', 'tutor'), message, 'success');
+				} else {
+					window.tutor_toast(__('Error', 'tutor'), message, 'error');
+				}
+			},
+			complete: () => {
+				btnSubmit.removeClass('is-loading');
+			},
+		});
+
+	})
 });

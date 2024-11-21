@@ -1,4 +1,7 @@
-import '../../../v2-library/_src/js/main';
+import '../../../v2-library/src/js/main';
+import ajaxHandler from '../admin-dashboard/segments/filter';
+import tutorFormData from "../helper/tutor-formdata";
+
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};
 	var nonce_key = nonce_data.nonce_key || '';
@@ -401,8 +404,8 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 				: type == 'error' ? 'danger'
 				: type == 'warning' ? 'warning' : 'primary';
 	
-	let icon = 	type == 'success' ? 'tutor-icon-mark'
-				: type == 'error' ? 'tutor-icon-times' : 'tutor-icon-circle-info-o';
+	let icon = 	type == 'success' ? 'tutor-icon-circle-mark-line'
+				: type == 'error' ? 'tutor-icon-circle-times-line' : 'tutor-icon-circle-info-o';
 	
 	let hasDescription = ( description !== undefined && description !== null && description.trim() !== '' )
 
@@ -416,12 +419,12 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 			<p class="${ ! hasDescription ? 'tutor-d-none' : '' }">${description}</p>
 			</div>
 			<button class="tutor-notification-close">
-				<i class="fas fa-times"></i>
+				<i class="tutor-icon-times"></i>
 			</button>
 		</div>
     `);
 
-	content.find('.tutor-noti-close').click(function() {
+	content.find('.tutor-notification-close').click(function() {
 		content.remove();
 	});
 
@@ -446,7 +449,7 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
  * @param {string} unsafeText HTML string
  * @returns string
  */
-window.tutor_esc_html = function (unsafeText) {
+export function tutor_esc_html(unsafeText) {
 	let safeHTML = ''
 	let div = document.createElement('div');
 	/**
@@ -460,9 +463,9 @@ window.tutor_esc_html = function (unsafeText) {
 
 	return safeHTML;
 }
+window.tutor_esc_html = tutor_esc_html;
 
-
-window.tutor_esc_attr = function(str) {
+export function tutor_esc_attr(str) {
     return str.replace(/&/g, '&amp;')
               .replace(/"/g, '&quot;')
               .replace(/'/g, '&#039;')
@@ -470,7 +473,47 @@ window.tutor_esc_attr = function(str) {
               .replace(/>/g, '&gt;');
 }
 
+window.tutor_esc_attr = tutor_esc_attr;
+
 // enable custom selector when modal opens
 window.addEventListener('tutor_modal_shown', (e) => {
 	selectSearchField('.tutor-form-select');
 })
+
+/**
+ * Create new draft course
+ * @since 3.0.0
+ */
+const createNewCourseButtons = document.querySelectorAll('a.tutor-create-new-course,li.tutor-create-new-course a');
+createNewCourseButtons.forEach((button) => {
+	button.addEventListener('click', async (e) => {
+		e.preventDefault();
+		const { __ } = wp.i18n;
+		try {
+			// For wp-admin bar quick create.
+			if (e.target.classList.contains('ab-item')) {
+				e.target.innerHTML = 'Creating...'
+			}
+
+			button.classList.add('is-loading');
+			button.style.pointerEvents = 'none';
+
+			const from_dashboard = button.classList.contains('tutor-dashboard-create-course')
+			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
+			const post = await ajaxHandler(formData);
+
+			const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
+			const { status_code, data, message } = await post.json();
+			if (status_code === 201) {
+				window.location = data;
+			} else {
+				tutor_toast(__('Failed', 'tutor'), message, 'error');
+			}
+		} catch (error) {
+			tutor_toast(__('Failed', 'tutor'), defaultErrorMessage, 'error');
+		} finally {
+			button.removeAttribute('disabled');
+			button.classList.remove('is-loading');
+		}
+	});
+});

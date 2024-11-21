@@ -1,0 +1,25 @@
+$variations: (
+	'default' var(--tutor-color-gray-10) var(--tutor-color-muted),
+	'primary' rgba(var(--tutor-color-primary-rgb), 0.15) var(--tutor-color-primary),
+	'success' rgba(var(--tutor-color-success-rgb), 0.15) #202223,
+	'warning' rgba(var(--tutor-color-warning-rgb), 0.15) var(--tutor-color-warning),
+	'danger' rgba(var(--tutor-color-danger-rgb), 0.15) var(--tutor-color-danger),
+);
+
+.tutor-tag {
+    display: inline-block;
+    width: fit-content;
+    font-size: 14px;
+    line-height: 24px;
+    background-color: #E4E5E7;
+    color: #202223;
+    border-radius: 4px;
+    padding: 4px 8px;
+
+	@each $suffix, $bg, $color in $variations {
+		&.tag-#{$suffix} {
+			background: #{$bg};
+			color: #{$color};
+		}
+	}
+}

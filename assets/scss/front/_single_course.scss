@@ -144,3 +144,33 @@ table.course-single-gradebooks .datetime {
 .theme-twentytwentytwo .select2-container .select2-selection {
     padding: 0.2rem;
 }
+
+.tutor-password-protected-course{
+    .tutor-modal-overlay {
+        backdrop-filter: blur(10px);
+    }
+
+    .tutor-course-thumbnail {
+        margin-bottom: 60px;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .tutor-locked-badge {
+        display: inline-block;
+        width: fit-content;
+        font-size: 14px;
+        line-height: 24px;
+        background-color: #FDF4E3;
+        color: #202223;
+        border-radius: 4px;
+        padding: 4px 8px;
+    }
+
+    .tutor-btn {
+        min-width: 110px;
+        justify-content: center;
+    }
+}

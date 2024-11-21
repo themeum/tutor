@@ -112,4 +112,10 @@
 			line-height: 32px;
 		}
 	}
+
+	@include breakpoint-max(mobile) {
+		.tutor-manual-review-wrapper {
+			text-align: left;
+		}
+	}
 }

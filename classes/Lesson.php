@@ -14,7 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use Tutor\Helpers\HttpHelper;
+use Tutor\Helpers\ValidationHelper;
 use Tutor\Models\LessonModel;
+use Tutor\Traits\JsonResponse;
 
 /**
  * Lesson class
@@ -22,6 +25,7 @@ use Tutor\Models\LessonModel;
  * @since 1.0.0
  */
 class Lesson extends Tutor_Base {
+	use JsonResponse;
 
 	/**
 	 * Register hooks
@@ -33,20 +37,13 @@ class Lesson extends Tutor_Base {
 	public function __construct() {
 		parent::__construct();
 
-		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->lesson_post_type, array( $this, 'save_lesson_meta' ) );
 
-		add_action( 'wp_ajax_tutor_load_edit_lesson_modal', array( $this, 'tutor_load_edit_lesson_modal' ) );
-		add_action( 'wp_ajax_tutor_modal_create_or_update_lesson', array( $this, 'tutor_modal_create_or_update_lesson' ) );
-		add_action( 'wp_ajax_tutor_delete_lesson_by_id', array( $this, 'tutor_delete_lesson_by_id' ) );
+		add_action( 'wp_ajax_tutor_lesson_details', array( $this, 'ajax_lesson_details' ) );
+		add_action( 'wp_ajax_tutor_save_lesson', array( $this, 'ajax_save_lesson' ) );
+		add_action( 'wp_ajax_tutor_delete_lesson', array( $this, 'ajax_delete_lesson' ) );
 
 		add_filter( 'get_sample_permalink', array( $this, 'change_lesson_permalink' ), 10, 2 );
-
-		/**
-		 * Add Column
-		 */
-		add_filter( "manage_{$this->lesson_post_type}_posts_columns", array( $this, 'add_column' ), 10, 1 );
-		add_action( "manage_{$this->lesson_post_type}_posts_custom_column", array( $this, 'custom_lesson_column' ), 10, 2 );
 
 		/**
 		 * Frontend Action
@@ -109,55 +106,6 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Registering metabox
-	 *
-	 * @since 1.0.0
-	 * @return void
-	 */
-	public function register_meta_box() {
-		$lesson_post_type = $this->lesson_post_type;
-
-		tutor_meta_box_wrapper( 'tutor-course-select', __( 'Select Course', 'tutor' ), array( $this, 'lesson_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-
-		tutor_meta_box_wrapper( 'tutor-lesson-videos', __( 'Lesson Video', 'tutor' ), array( $this, 'lesson_video_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-
-		tutor_meta_box_wrapper( 'tutor-lesson-attachments', __( 'Attachments', 'tutor' ), array( $this, 'lesson_attachments_metabox' ), $lesson_post_type, 'advanced', 'default', 'tutor-admin-post-meta' );
-	}
-
-	/**
-	 * Lesson metabox
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function lesson_metabox() {
-		include tutor()->path . 'views/metabox/lesson-metabox.php';
-	}
-
-	/**
-	 * Video metabox
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function lesson_video_metabox() {
-		include tutor()->path . 'views/metabox/video-metabox.php';
-	}
-
-	/**
-	 * Attachment metabox
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function lesson_attachments_metabox() {
-		include tutor()->path . 'views/metabox/lesson-attachments-metabox.php';
-	}
-
-	/**
 	 * Saving lesson meta and assets
 	 *
 	 * @since 1.0.0
@@ -207,62 +155,81 @@ class Lesson extends Tutor_Base {
 	}
 
 	/**
-	 * Load edit lesson modal
+	 * Get lesson details data.
 	 *
-	 * @since 1.0.0
+	 * @since 3.0.0
 	 *
 	 * @return void
 	 */
-	public function tutor_load_edit_lesson_modal() {
-		tutor_utils()->checking_nonce();
+	public function ajax_lesson_details() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
-		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 		$topic_id  = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
 		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
 		}
 
 		if ( 0 !== $lesson_id ) {
 			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+				$this->json_response(
+					tutor_utils()->error_message(),
+					null,
+					HttpHelper::STATUS_FORBIDDEN
+				);
 			}
 		}
 
-		/**
-		 * If Lesson Not Exists, provide dummy
-		 */
-		$post_arr = array(
-			'ID'           => 0,
-			'post_content' => '',
-			'post_type'    => $this->lesson_post_type,
-			'post_title'   => __( 'Draft Lesson', 'tutor' ),
-			'post_status'  => 'publish',
-			'post_author'  => get_current_user_id(),
-			'post_parent'  => $topic_id,
+		$post = get_post( $lesson_id, ARRAY_A );
+
+		if ( $post ) {
+			$post['thumbnail_id'] = get_post_meta( $lesson_id, '_thumbnail_id', true );
+			$post['thumbnail']    = get_the_post_thumbnail_url( $lesson_id );
+			$post['attachments']  = tutor_utils()->get_attachments( $lesson_id );
+
+			$video = maybe_unserialize( get_post_meta( $lesson_id, '_video', true ) );
+			if ( $video ) {
+				$source = $video['source'] ?? '';
+				if ( 'html5' === $source ) {
+					$poster_url            = wp_get_attachment_url( $video['poster'] ?? 0 );
+					$source_html5          = wp_get_attachment_url( $video['source_video_id'] ?? 0 );
+					$video['poster_url']   = $poster_url;
+					$video['source_html5'] = $source_html5;
+				}
+			}
+			$post['video'] = $video;
+		} else {
+			$post = array();
+		}
+
+		$data = apply_filters( 'tutor_lesson_details_response', $post, $lesson_id );
+
+		$this->json_response(
+			__( 'Lesson data fetched successfully', 'tutor' ),
+			$data
 		);
-
-		$post = $lesson_id ? get_post( $lesson_id ) : (object) $post_arr;
-
-		ob_start();
-		include tutor()->path . 'views/modal/edit-lesson.php';
-		$output = ob_get_clean();
-
-		wp_send_json_success( array( 'output' => $output ) );
 	}
 
 	/**
-	 * Load lesson modal for create or update lesson
+	 * Create or update lesson.
 	 *
 	 * @since 1.0.0
 	 * @since 1.5.1 updated
+	 * @since 3.0.0 refactor and response updated.
 	 *
 	 * @return void
 	 */
-	public function tutor_modal_create_or_update_lesson() {
-		tutor_utils()->checking_nonce();
-
-		global $wpdb;
+	public function ajax_save_lesson() {
+		if ( ! tutor_utils()->is_nonce_verified() ) {
+			$this->json_response( tutor_utils()->error_message( 'nonce' ), null, HttpHelper::STATUS_BAD_REQUEST );
+		}
 
 		/**
 		 * Allow iframe inside lesson content to support
@@ -272,21 +239,48 @@ class Lesson extends Tutor_Base {
 		 */
 		add_filter( 'wp_kses_allowed_html', Input::class . '::allow_iframe', 10, 2 );
 
-		$lesson_id        = Input::post( 'lesson_id', 0, Input::TYPE_INT );
-		$topic_id         = Input::post( 'current_topic_id', 0, Input::TYPE_INT );
-		$current_topic_id = $topic_id;
-		$course_id        = tutor_utils()->get_course_id_by( 'topic', $topic_id );
+		$is_update = false;
 
-		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
+		$topic_id  = Input::post( 'topic_id', 0, Input::TYPE_INT );
+		$course_id = tutor_utils()->get_course_id_by( 'topic', $topic_id );
+
+		if ( $lesson_id ) {
+			$is_update = true;
 		}
 
-		$title                = Input::post( 'lesson_title' );
-		$_lesson_thumbnail_id = Input::post( '_lesson_thumbnail_id', 0, Input::TYPE_INT );
-		$lesson_content       = Input::post( 'lesson_content', '', Input::TYPE_KSES_POST );
-		$is_html_active       = Input::post( 'is_html_active' ) === 'true' ? true : false;
-		$raw_html_content     = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
-		$post_content         = $is_html_active ? $raw_html_content : $lesson_content;
+		if ( ! tutor_utils()->can_user_manage( 'topic', $topic_id ) ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
+
+		$title        = Input::post( 'title' );
+		$description  = Input::post( 'description', '', Input::TYPE_KSES_POST );
+		$thumbnail_id = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
+
+		$is_html_active   = Input::post( 'is_html_active' ) === 'true' ? true : false;
+		$raw_html_content = Input::post( 'tutor_lesson_modal_editor', '', Input::TYPE_KSES_POST );
+		$post_content     = $is_html_active ? $raw_html_content : $description;
+
+		$rules = array(
+			'topic_id'  => 'required|numeric',
+			'lesson_id' => 'if_input|numeric',
+		);
+
+		//phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$params = Input::sanitize_array( $_POST, array( 'description' => 'wp_kses_post' ) );
+
+		$validation = ValidationHelper::validate( $rules, $params );
+		if ( ! $validation->success ) {
+			$this->json_response(
+				__( 'Invalid inputs', 'tutor' ),
+				$validation->errors,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
 
 		$lesson_data = array(
 			'post_type'      => $this->lesson_post_type,
@@ -299,58 +293,89 @@ class Lesson extends Tutor_Base {
 			'post_parent'    => $topic_id,
 		);
 
-		if ( 0 === $lesson_id ) {
+		if ( ! $is_update ) {
 			$lesson_data['menu_order'] = tutor_utils()->get_next_course_content_order_id( $topic_id );
 			$lesson_id                 = wp_insert_post( $lesson_data );
 
 			if ( $lesson_id ) {
 				do_action( 'tutor/lesson/created', $lesson_id );
 			} else {
-				wp_send_json_error( array( 'message' => __( 'Couldn\'t create lesson.', 'tutor' ) ) );
+				$this->json_response(
+					tutor_utils()->error_message(),
+					null,
+					HttpHelper::STATUS_INTERNAL_SERVER_ERROR
+				);
 			}
 		} else {
 			$lesson_data['ID'] = $lesson_id;
 
 			if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-				wp_send_json_error( array( 'message' => tutor_utils()->error_message() ) );
+				$this->json_response(
+					tutor_utils()->error_message(),
+					null,
+					HttpHelper::STATUS_FORBIDDEN
+				);
 			}
 
 			do_action( 'tutor/lesson_update/before', $lesson_id );
 			wp_update_post( $lesson_data );
-			if ( $_lesson_thumbnail_id ) {
-				update_post_meta( $lesson_id, '_thumbnail_id', $_lesson_thumbnail_id );
-			} else {
-				delete_post_meta( $lesson_id, '_thumbnail_id' );
-			}
-
 			do_action( 'tutor/lesson_update/after', $lesson_id );
 		}
 
-		ob_start();
-		include tutor()->path . 'views/metabox/course-contents.php';
-		$course_contents = ob_get_clean();
+		if ( $thumbnail_id ) {
+			update_post_meta( $lesson_id, '_thumbnail_id', $thumbnail_id );
+		} else {
+			delete_post_meta( $lesson_id, '_thumbnail_id' );
+		}
 
-		wp_send_json_success( array( 'course_contents' => $course_contents ) );
+		if ( $is_update ) {
+			$this->json_response(
+				__( 'Lesson updated successfully', 'tutor' ),
+				$lesson_id
+			);
+		} else {
+			$this->json_response(
+				__( 'Lesson created successfully', 'tutor' ),
+				$lesson_id,
+				HttpHelper::STATUS_CREATED
+			);
+		}
 	}
 
 	/**
 	 * Delete Lesson from course builder by ID
 	 *
 	 * @since 1.0.0
+	 * @since 3.0.0 refactor and update response.
 	 *
 	 * @return void
 	 */
-	public function tutor_delete_lesson_by_id() {
-		tutor_utils()->checking_nonce();
+	public function ajax_delete_lesson() {
+		tutor_utils()->check_nonce();
 
 		$lesson_id = Input::post( 'lesson_id', 0, Input::TYPE_INT );
 
 		if ( ! tutor_utils()->can_user_manage( 'lesson', $lesson_id ) ) {
-			wp_send_json_error( array( 'message' => __( 'Access Denied', 'tutor' ) ) );
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_FORBIDDEN
+			);
+		}
+
+		$content   = __( 'Lesson', 'tutor' );
+		$post_type = get_post_type( $lesson_id );
+		if ( tutor()->assignment_post_type === $post_type ) {
+			$content = __( 'Assignment', 'tutor' );
+		}
+
+		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
+			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
 		}
 
 		wp_delete_post( $lesson_id, true );
-		wp_send_json_success();
+		/* translators: %s refers to the name of the content being deleted */
+		$this->json_response( sprintf( __( '%s deleted successfully', 'tutor' ), $content ) );
 	}
 
 
@@ -384,46 +409,6 @@ class Lesson extends Tutor_Base {
 		}
 
 		return $uri;
-	}
-
-	/**
-	 * Add column to lesson HTML table
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $columns columns.
-	 * @return array
-	 */
-	public function add_column( $columns ) {
-		$date_col = $columns['date'];
-		unset( $columns['date'] );
-		$columns['course'] = __( 'Course', 'tutor' );
-		$columns['date']   = $date_col;
-
-		return $columns;
-	}
-
-	/**
-	 * Add custom lesson column.
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string  $column column name.
-	 * @param integer $post_id post ID.
-	 *
-	 * @return mixed
-	 */
-	public function custom_lesson_column( $column, $post_id ) {
-		if ( 'course' === $column ) {
-
-			$course_id = tutor_utils()->get_course_id_by( 'lesson', $post_id );
-			if ( $course_id ) {
-				echo wp_kses(
-					'<a href="' . admin_url( 'post.php?post=' . $course_id . '&action=edit' ) . '">' . get_the_title( $course_id ) . '</a>',
-					array( 'a' => array( 'href' => true ) )
-				);
-			}
-		}
 	}
 
 	/**
@@ -643,5 +628,3 @@ class Lesson extends Tutor_Base {
 	}
 
 }
-
-

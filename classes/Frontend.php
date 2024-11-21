@@ -33,6 +33,7 @@ class Frontend {
 		add_action( 'after_setup_theme', array( $this, 'remove_admin_bar' ) );
 		add_filter( 'nav_menu_link_attributes', array( $this, 'add_menu_atts' ), 10, 3 );
 		add_action( 'admin_init', array( $this, 'restrict_wp_admin_area' ) );
+		add_action( 'tutor_before_course_builder_load', array( $this, 'restrict_wp_admin_area' ) );
 
 		// Handle flash toast message for redirect_to util helper.
 		add_action( 'wp_head', array( new Utils(), 'handle_flash_message' ), 999 );
@@ -102,7 +103,7 @@ class Frontend {
 		$hide_admin_bar_for_users = (bool) get_tutor_option( 'hide_admin_bar_for_users' );
 		$has_access               = $this->has_admin_area_access();
 
-		if ( tutor()->has_pro && $hide_admin_bar_for_users && ! $has_access && ! wp_doing_ajax() ) {
+		if ( is_admin() && tutor()->has_pro && $hide_admin_bar_for_users && ! $has_access && ! wp_doing_ajax() ) {
 			wp_die( esc_html__( 'Access Denied!', 'tutor' ) );
 		}
 	}

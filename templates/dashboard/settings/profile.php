@@ -9,21 +9,25 @@
  * @since 1.6.2
  */
 
+use TUTOR\User;
+
 $user = wp_get_current_user();
 
 // Prepare profile pic.
 $profile_placeholder = apply_filters( 'tutor_login_default_avatar', tutor()->url . 'assets/images/profile-photo.png' );
 $profile_photo_src   = $profile_placeholder;
-$profile_photo_id    = get_user_meta( $user->ID, '_tutor_profile_photo', true );
+$profile_photo_id    = get_user_meta( $user->ID, User::PROFILE_PHOTO_META, true );
 if ( $profile_photo_id ) {
 	$url                                 = wp_get_attachment_image_url( $profile_photo_id, 'full' );
 	! empty( $url ) ? $profile_photo_src = $url : 0;
 }
 
+$timezone = User::get_user_timezone_string( $user );
+
 // Prepare cover photo.
 $cover_placeholder = tutor()->url . 'assets/images/cover-photo.jpg';
 $cover_photo_src   = $cover_placeholder;
-$cover_photo_id    = get_user_meta( $user->ID, '_tutor_cover_photo', true );
+$cover_photo_id    = get_user_meta( $user->ID, User::COVER_PHOTO_META, true );
 if ( $cover_photo_id ) {
 	$url                               = wp_get_attachment_image_url( $cover_photo_id, 'full' );
 	! empty( $url ) ? $cover_photo_src = $url : 0;
@@ -149,11 +153,19 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 		</div>
 
 		<div class="tutor-row">
-			<div class="tutor-col-12 tutor-mb-32">
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Skill/Occupation', 'tutor' ); ?>
 				</label>
 				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php echo esc_attr( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
+			</div>
+			<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-32">
+				<label class="tutor-form-label tutor-color-secondary">
+					<?php esc_html_e( 'Timezone', 'tutor' ); ?>
+				</label>
+				<select name="timezone" class="tutor-form-select" data-searchable>
+					<?php echo wp_timezone_choice( $timezone ); //phpcs:ignore ?>
+				</select>
 			</div>
 		</div>
 
@@ -163,7 +175,7 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 					<?php esc_html_e( 'Bio', 'tutor' ); ?>
 				</label>
 				<?php
-				$profile_bio = get_user_meta( $user->ID, '_tutor_profile_bio', true );
+				$profile_bio = get_user_meta( $user->ID, User::PROFILE_BIO_META, true );
 				wp_editor( $profile_bio, 'tutor_profile_bio', tutor_utils()->get_profile_bio_editor_config() );
 				?>
 			</div>

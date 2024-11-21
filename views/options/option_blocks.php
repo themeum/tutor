@@ -10,6 +10,7 @@
  */
 
 // @todo: replace the h4
+$block_slug = $blocks['slug'] ?? '';
 ?>
 <?php if ( 'uniform' == $blocks['block_type'] ) : ?>
 	<div class="tutor-option-single-item tutor-mb-32 <?php echo isset( $blocks['class'] ) ? esc_attr( $blocks['class'] ) : ( isset( $blocks['slug'] ) ? esc_attr( $blocks['slug'] ) : null ); ?>">
@@ -18,15 +19,17 @@
 				<div class="tutor-fs-6 tutor-color-muted"><?php echo esc_attr( $blocks['label'] ); ?></div>
 			</div>
 		<?php endif; ?>
-		<div class="item-wrapper">
-			<?php
-			foreach ( $blocks['fields'] as $field ) :
-				$this->generate_field( $field );
-			endforeach;
-			?>
-		</div>
+		<?php if ( ! empty( $blocks['fields'] ) ) : ?>
+			<div class="item-wrapper">
+				<?php
+				foreach ( $blocks['fields'] as $field ) :
+					$this->generate_field( $field );
+				endforeach;
+				?>
+			</div>
+		<?php endif; ?>
+		<?php do_action( 'tutor_after_block_single_item', $block_slug ); ?>
 	</div>
-
 <?php elseif ( 'isolate' == $blocks['block_type'] ) : ?>
 	<div class="tutor-option-single-item tutor-mb-32 <?php echo esc_attr( $blocks['slug'] ); ?>">
 		<?php if ( isset( $blocks['label'] ) ) : ?>
@@ -89,5 +92,7 @@ elseif ( 'color_picker' == $blocks['block_type'] ) :
 	);
 elseif ( 'custom' == $blocks['block_type'] ) :
 	include $blocks['template_path'];
+elseif ( 'action_placeholder' === $blocks['block_type'] ) :
+	do_action( $blocks['action'] );
 endif;
 ?>

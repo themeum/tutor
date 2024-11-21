@@ -10,8 +10,8 @@
  */
 
 ?>
-<div class="quiz-meta-info tutor-d-flex tutor-justify-between">
-	<div class="quiz-meta-info-left tutor-d-flex">
+<div class="quiz-meta-info">
+	<div class="quiz-meta-info-left">
 		<?php
 			$total_questions = tutor_utils()->total_questions_for_student_by_quiz( get_the_ID() );
 

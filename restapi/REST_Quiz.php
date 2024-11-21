@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Helpers\QueryHelper;
+use Tutor\Models\QuizModel;
 use WP_REST_Request;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -129,21 +130,9 @@ class REST_Quiz {
 				$question->question_settings = maybe_unserialize( $quiz->question_settings );
 			}
 
-			// question options with correct ans.
-			$options                    = $wpdb->get_results(
-				$wpdb->prepare(
-					"SELECT
-					answer_id,
-					answer_title,
-					is_correct FROM {$wpdb->q_a_t}
-					WHERE belongs_question_id = %d
-					",
-					$question->question_id
-				)
-			);
-			$question->question_answers = $options;
-
+			$question->question_answers = QuizModel::get_question_answers( $question->question_id, $question->question_type );
 		}
+
 		$quiz->quiz_questions = $questions;
 
 		$response = array(

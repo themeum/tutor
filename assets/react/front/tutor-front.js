@@ -4,8 +4,12 @@ import './dashboard';
 import './dashboard/export-csv';
 import './pages/course-landing';
 import './pages/instructor-list-filter';
+import './pages/cart';
+import './pages/checkout';
 import './_select_dd_search';
 import sprintf from '../helper/sprintf';
+import './pages/billing';
+
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
  * It's a legacy file.
@@ -166,13 +170,13 @@ jQuery(document).ready(function($) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
 					if (_tutorobject.tutor_pro_url && best_watch_time > 0) {
-						var previous_duration = Math.round(best_watch_time);
+						var previous_duration = Math.floor(best_watch_time);
 						var previousTimeSetter = setTimeout(function(){
 							if (player.playing !== true && player.currentTime !== previous_duration) {
 								if (instance.provider === 'youtube') {
 									instance.embed.seekTo(best_watch_time);
 								} else {
-									instance.media.currentTime = previous_duration;
+									instance.media.currentTime = 0;
 								}
 							} else {
 								clearTimeout(previousTimeSetter);

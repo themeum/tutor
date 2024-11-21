@@ -180,8 +180,12 @@ class Course_Filter {
 			$type_array = tutils()->array_get( 'tutor-course-filter-' . $type, $sanitized_post, array() );
 			$type_array = array_map( 'sanitize_text_field', ( is_array( $type_array ) ? $type_array : array( $type_array ) ) );
 
-			if ( 'level' == $type && in_array( 'all_levels', $type_array ) ) {
+			if ( 'level' === $type && in_array( 'all_levels', $type_array, true ) ) {
 				continue;
+			}
+
+			if ( in_array( Course::PRICE_TYPE_PAID, $type_array, true ) ) {
+				$type_array = apply_filters( 'tutor_course_filter_price_type_paid', $type_array );
 			}
 
 			if ( count( $type_array ) > 0 ) {

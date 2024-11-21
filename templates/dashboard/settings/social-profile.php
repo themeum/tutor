@@ -23,7 +23,7 @@ $user = wp_get_current_user();
 
 	<form id="user_social_form" action="" method="post" enctype="multipart/form-data">
 		<?php wp_nonce_field( tutor()->nonce_action, tutor()->nonce ); ?>
-		<input type="hidden" value="tutor_social_profile" name="tutor_action" />
+		<input type="hidden" value="tutor_social_profile" name="action" />
 		<?php
 			do_action( 'tutor_profile_edit_before_social_media', $user );
 			$tutor_user_social_icons = tutor_utils()->tutor_user_social_icons();

@@ -88,4 +88,3 @@ if ( tutor_utils()->is_course_purchasable() ) {
 } else {
 	echo $free_html; //phpcs:ignore --contain safe data
 }
-

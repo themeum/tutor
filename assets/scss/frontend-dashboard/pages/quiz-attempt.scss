@@ -13,10 +13,7 @@
         th,
         td {
             &:first-child {
-                width: 15%;
-                @include breakpoint-min(1366) {
-                    width: 25%;
-                }
+                min-width: 200px;
             }
         }
     }

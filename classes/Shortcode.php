@@ -51,6 +51,9 @@ class Shortcode {
 		add_action( 'wp_ajax_load_filtered_instructor', array( $this, 'load_filtered_instructor' ) );
 		add_action( 'wp_ajax_nopriv_load_filtered_instructor', array( $this, 'load_filtered_instructor' ) );
 
+		add_shortcode( 'tutor_cart', array( $this, 'tutor_cart_page' ) );
+		add_shortcode( 'tutor_checkout', array( $this, 'tutor_checkout_page' ) );
+
 		/**
 		 * Load more categories
 		 *
@@ -104,7 +107,7 @@ class Shortcode {
 			 *
 			 * @since 2.1.3
 			 */
-			$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
+			$login_url   = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
 			$signin_link = '<a data-login_url="' . esc_url( $login_url ) . '" href="#" class="tutor-open-login-modal">' . __( 'Sign-In', 'tutor' ) . '</a>';
 			/* translators: %s is anchor link for signin */
 			echo sprintf( __( 'Please %s to view this page', 'tutor' ), $signin_link ); //phpcs:ignore
@@ -483,5 +486,31 @@ class Shortcode {
 		tutor_load_template( 'shortcode.tutor-instructor', $data );
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 		exit;
+	}
+
+	/**
+	 * Tutor Cart Shortcode
+	 *
+	 * @since v.3.0.0
+	 *
+	 * @return mixed
+	 */
+	public function tutor_cart_page() {
+		ob_start();
+		tutor_load_template( 'ecommerce.cart' );
+		return apply_filters( 'tutor_ecommerce/cart', ob_get_clean() );
+	}
+
+	/**
+	 * Tutor Checkout Shortcode
+	 *
+	 * @since v.3.0.0
+	 *
+	 * @return mixed
+	 */
+	public function tutor_checkout_page() {
+		ob_start();
+		tutor_load_template( 'ecommerce.checkout' );
+		return apply_filters( 'tutor_ecommerce/checkout', ob_get_clean() );
 	}
 }

@@ -1,7 +1,7 @@
-const path = require('path');
+const path = require('node:path');
 const TerserPlugin = require('terser-webpack-plugin');
-const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const webpack = require('webpack');
 
 module.exports = (env, options) => {
 	const mode = options.mode || 'development';
@@ -11,12 +11,16 @@ module.exports = (env, options) => {
 		module: {
 			rules: [
 				{
-					test: /\.js$/,
+					test: /\.css$/i,
+					use: ['style-loader', 'css-loader'],
+				},
+				{
+					test: /\.(js|ts|tsx)$/,
 					exclude: /node_modules/,
 					use: 'babel-loader',
 				},
 				{
-					test: /\.(png|jp(e*)g|svg|gif)$/,
+					test: /\.(png|jp(e*)g|gif|webp)$/,
 					use: [
 						{
 							loader: 'file-loader',
@@ -26,82 +30,78 @@ module.exports = (env, options) => {
 						},
 					],
 				},
+				{
+					test: /\.svg$/i,
+					issuer: /\.[jt]sx?$/,
+					use: ['@svgr/webpack'],
+				},
 			],
+		},
+		plugins: [new webpack.ProvidePlugin({ React: 'react' })],
+		externals: {
+			react: 'React',
+			'react-dom': 'ReactDOM',
+			'@wordpress/i18n': 'wp.i18n',
 		},
 		devtool: 'source-map',
 	};
 
 	if ('production' === mode) {
-		var minimizer = !env.build
-			? new TerserPlugin({
-					terserOptions: {},
-					minify: (file) => {
-						const uglifyJsOptions = {
-							sourceMap: true,
-						};
-						return require('uglify-js').minify(file, uglifyJsOptions);
-					},
-			  })
-			: new TerserPlugin({
-					terserOptions: {},
-					minify: (file) => {
-						const uglifyJsOptions = {
-							sourceMap: false,
-						};
-						return require('uglify-js').minify(file, uglifyJsOptions);
-					},
-			  });
-
 		config.devtool = false;
 		config.optimization = {
-			// minimize: true,
-			// minimizer: [minimizer, new CssMinimizerPlugin()],
+			splitChunks: {
+				cacheGroups: {
+					shared: {
+						test: /[\\/]assets[\\/]react[\\/]v3[\\/]shared[\\/]/,
+						name: 'tutor-shared.min',
+						chunks: 'all',
+					},
+				},
+			},
+			minimize: true,
 			minimizer: [
-				// we specify a custom UglifyJsPlugin here to get source maps in production
-				new UglifyJsPlugin({
-					cache: true,
+				new TerserPlugin({
 					parallel: true,
-					uglifyOptions: {
+					terserOptions: {
 						compress: false,
 						ecma: 6,
 						mangle: true,
 					},
-					// sourceMap: true,
+					extractComments: false,
 				}),
-				new CssMinimizerPlugin(),
 			],
 		};
 	}
 
-	var react_blueprints = [
+	const react_blueprints = [
 		{
 			dest_path: './assets/js',
 			src_files: {
+				'tutor.min': './assets/react/v2/common.js',
 				'tutor-front.min': './assets/react/front/tutor-front.js',
 				'tutor-admin.min': './assets/react/admin-dashboard/tutor-admin.js',
-				'tutor-course-builder.min': './assets/react/course-builder/index.js',
 				'tutor-setup.min': './assets/react/admin-dashboard/tutor-setup.js',
-				'tutor.min': './assets/react/v2/common.js',
 				'tutor-gutenberg.min': './assets/react/gutenberg/index.js',
+				'tutor-course-builder.min': './assets/react/v3/entries/course-builder/index.tsx',
+				'tutor-order-details.min': './assets/react/v3/entries/order-details/index.tsx',
+				'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
+				'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
+				'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
 			},
+			clean: true,
 		},
 		{
-			dest_path: './v2-library/bundle',
+			dest_path: '../tutor-pro/addons/enrollments/assets/js',
 			src_files: {
-				'main.min': './v2-library/_src/js/main.js',
+				'manual-enrollment.min': './assets/react/v3/entries/pro/manual-enrollment/index.tsx',
 			},
-		},
-		{
-			dest_path: './.docz/static/v2-library/bundle',
-			src_files: {
-				'main.min': './v2-library/_src/js/main.js',
-			},
+			clean: true,
 		},
 	];
 
-	var configEditors = [];
+	const configEditors = [];
 	for (let i = 0; i < react_blueprints.length; i++) {
-		let { src_files, dest_path } = react_blueprints[i];
+		const { src_files, dest_path, clean } = react_blueprints[i];
 
 		configEditors.push(
 			Object.assign({}, config, {
@@ -109,7 +109,43 @@ module.exports = (env, options) => {
 				entry: src_files,
 				output: {
 					path: path.resolve(dest_path),
-					filename: `[name].js`,
+					filename: '[name].js',
+					clean: clean,
+				},
+				resolve: {
+					extensions: ['.js', '.jsx', '.ts', '.tsx'],
+					fallback: {
+						fs: false,
+						path: false,
+						os: false,
+					},
+					alias: {
+						'@': path.resolve(__dirname, './assets/react/'),
+						'@Assets': path.resolve(__dirname, './assets/'),
+						'@Atoms': path.resolve(__dirname, './assets/react/v3/shared/atoms/'),
+						'@Molecules': path.resolve(__dirname, './assets/react/v3/shared/molecules/'),
+						'@Components': path.resolve(__dirname, './assets/react/v3/shared/components/'),
+						'@Config': path.resolve(__dirname, './assets/react/v3/shared/config/'),
+						'@Hooks': path.resolve(__dirname, './assets/react/v3/shared/hooks/'),
+						'@Services': path.resolve(__dirname, './assets/react/v3/shared/services/'),
+						'@Utils': path.resolve(__dirname, './assets/react/v3/shared/utils/'),
+						'@Images': path.resolve(__dirname, './assets/react/v3/public/images'),
+						'@Controls': path.resolve(__dirname, './assets/react/v3/shared/controls/'),
+						'@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
+						'@CourseBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/course-builder/services/'),
+						'@CourseBuilderConfig': path.resolve(__dirname, './assets/react/v3/entries/course-builder/config/'),
+						'@CourseBuilderPages': path.resolve(__dirname, './assets/react/v3/entries/course-builder/pages/'),
+						'@CourseBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/course-builder/utils/'),
+						'@CourseBuilderContexts': path.resolve(__dirname, './assets/react/v3/entries/course-builder/contexts/'),
+						'@OrderComponents': path.resolve(__dirname, './assets/react/v3/entries/order-details/components/'),
+						'@OrderServices': path.resolve(__dirname, './assets/react/v3/entries/order-details/services/'),
+						'@OrderAtoms': path.resolve(__dirname, './assets/react/v3/entries/order-details/atoms/'),
+						'@OrderContexts': path.resolve(__dirname, './assets/react/v3/entries/order-details/contexts/'),
+						'@CouponComponents': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/components/'),
+						'@CouponServices': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/services/'),
+						'@EnrollmentComponents': path.resolve(__dirname, './assets/react/v3/entries/pro/manual-enrollment/components/'),
+						'@EnrollmentServices': path.resolve(__dirname, './assets/react/v3/entries/pro/manual-enrollment/services/'),
+					},
 				},
 			}),
 		);

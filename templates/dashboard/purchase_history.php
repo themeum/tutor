@@ -11,7 +11,10 @@
 
 defined( 'ABSPATH' ) || exit;
 
+use Tutor\Ecommerce\Ecommerce;
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
+use Tutor\Models\OrderModel;
 
 // Global variables.
 $user_id     = get_current_user_id();
@@ -80,8 +83,14 @@ tutor_load_template_from_custom_path( $filter_period_calendar_template, $filter_
 
 $orders       = tutor_utils()->get_orders_by_user_id( $user_id, $time_period, $start_date, $end_date, $offset, $per_page );
 $total_orders = tutor_utils()->get_total_orders_by_user_id( $user_id, $time_period, $start_date, $end_date );
-$monetize_by  = tutor_utils()->get_option( 'monetize_by' );
+$total_orders = ! empty( $total_orders ) ? count( $total_orders ) : 0;
 
+$monetize_by = tutor_utils()->get_option( 'monetize_by' );
+if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
+	$response     = ( new OrderModel() )->get_user_orders( $time_period, $start_date, $end_date, $user_id, $per_page, $offset );
+	$orders       = $response['results'];
+	$total_orders = $response['total_count'];
+}
 ?>
 
 <div class="tutor-purchase-history"> 
@@ -90,10 +99,10 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 		<div class="tutor-table-responsive">
 			<table class="tutor-table">
 				<thead>
-					<th width="10%">
+					<th width="8%">
 						<?php esc_html_e( 'Order ID', 'tutor' ); ?>
 					</th>
-					<th width="40%">
+					<th width="30%">
 						<?php esc_html_e( 'Course Name', 'tutor' ); ?>
 					</th>
 					<th>
@@ -105,124 +114,202 @@ $monetize_by  = tutor_utils()->get_option( 'monetize_by' );
 					<th>
 						<?php esc_html_e( 'Status', 'tutor' ); ?>
 					</th>
+					<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+					<th>
+						<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
+					</th>
+					<?php endif; ?>
 					<th></th>
 				</thead>
-
-				<tbody>
-					<?php foreach ( $orders as $order ) : ?>
+				<?php if ( Ecommerce::MONETIZE_BY === $monetize_by ) : ?>
+					<tbody>
 						<?php
-						if ( 'wc' === $monetize_by ) {
-							$wc_order          = wc_get_order( $order->ID );
-							$price             = tutor_utils()->tutor_price( $wc_order->get_total() );
-							$raw_price         = $wc_order->get_total();
-							$status            = $order->post_status;
-							$badge_class       = 'primary';
-							$order_status_text = '';
-
-							switch ( $status ) {
-								case 'wc-completed' === $status:
-									$badge_class       = 'success';
-									$order_status_text = __( 'Completed', 'tutor' );
-									break;
-								case 'wc-processing' === $status:
-									$badge_class       = 'warning';
-									$order_status_text = __( 'Processing', 'tutor' );
-									break;
-								case 'wc-on-hold' === $status:
-									$badge_class       = 'warning';
-									$order_status_text = __( 'On Hold', 'tutor' );
-									break;
-								case 'wc-refunded' === $status:
-									$badge_class       = 'danger';
-									$order_status_text = __( 'Processing', 'tutor' );
-									break;
-								case 'wc-cancelled' === $status:
-									$badge_class       = 'danger';
-									$order_status_text = __( 'Cancelled', 'tutor' );
-									break;
-								case 'wc-pending' === $status:
-									$badge_class       = 'warning';
-									$order_status_text = __( 'Pending', 'tutor' );
-									break;
-							}
-						} elseif ( 'edd' === $monetize_by ) {
-							$edd_order         = edd_get_payment( $order->ID );
-							$price             = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
-							$raw_price         = $edd_order->total;
-							$status            = $edd_order->status_nicename;
-							$badge_class       = 'primary';
-							$order_status_text = $status;
-						}
-						?>
-						<tr>
-							<td>
-								#<?php echo esc_html( $order->ID ); ?>
-							</td>
-
-							<td>
-								<?php
-									$courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
-								if ( tutor_utils()->count( $courses ) ) {
-									foreach ( $courses as $course ) {
-										echo '<div>' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
+						if ( is_array( $orders ) && count( $orders ) ) :
+							?>
+							<?php
+							foreach ( $orders as $order ) :
+								?>
+								<tr>
+								<td>
+									<div class="tutor-fs-7">
+										#<?php echo esc_html( $order->id ); ?>
+									</div>
+								</td>
+								<td>
+									<div class="tutor-fs-7">
+									<?php
+									$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
+									foreach ( $items as $item ) {
+										$course_id = $item->id;
+										if ( OrderModel::TYPE_SUBSCRIPTION ) {
+											$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+										}
+										?>
+										<li>
+										<?php echo esc_html( get_the_title( $course_id ) ); ?>
+										</li>
+										<?php
 									}
-								}
-								?>
-							</td>
-
-							<td>
-								<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>
-							</td>
-
-							<td>
-								<?php echo wp_kses_post( $price ); ?>
-							</td>
-
-							<td>
-								<span class="tutor-badge-label label-<?php echo esc_attr( $badge_class ); ?> tutor-m-4"><?php echo esc_html( $order_status_text ); ?></span>
-							</td>
-							
-							<td>
+									?>
+									</div>
+								</td>
+								<td>
+									<div class="tutor-fs-7 tutor-text-nowrap">
+									<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $order->created_at_gmt ) ); ?>
+									</div>
+								</td>
+								<td>
+									<div class="tutor-fs-7">
+										<?php echo esc_html( tutor_get_formatted_price( $order->total_price ) ); ?>
+									</div>
+								</td>
+								<td>
 								<?php
-									$pay_now_url = '';
+									echo wp_kses_post( tutor_utils()->translate_dynamic_text( $order->order_status, true ) );
+								?>
+								</td>
+								<td>
+									<div class="tutor-fs-7">
+										<?php echo esc_html( Ecommerce::get_payment_method_label( $order->payment_method ?? '' ) ); ?>
+									</div>
+								</td>
+								<td>
+									<div class="tutor-d-flex tutor-gap-1 tutor-justify-end">
+										<?php if ( OrderModel::should_show_pay_btn( $order ) ) : ?>
+										<form method="post">
+											<?php tutor_nonce_field(); ?>
+											<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+											<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+											<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+												<?php esc_html_e( 'Pay', 'tutor' ); ?>
+											</button>
+										</form>
+										<?php endif; ?>
+										<?php do_action( 'tutor_dashboard_invoice_button', $order ); ?>
+									</div>
+								</td>
+								</tr>
+							<?php endforeach; ?>
+						<?php else : ?>
+							<?php tutor_utils()->tutor_empty_state(); ?>
+						<?php endif; ?>
+					</tbody>
+					<?php else : ?>
+					<tbody>
+							<?php foreach ( $orders as $order ) : ?>
+								<?php
 								if ( 'wc' === $monetize_by ) {
-									$wc_order    = wc_get_order( $order->ID );
-									$pay_now_url = esc_url( $wc_order->get_checkout_payment_url() );
+									$wc_order          = wc_get_order( $order->ID );
+									$price             = tutor_utils()->tutor_price( $wc_order->get_total() );
+									$raw_price         = $wc_order->get_total();
+									$status            = $order->post_status;
+									$badge_class       = 'primary';
+									$order_status_text = '';
+
+									switch ( $status ) {
+										case 'wc-completed' === $status:
+											$badge_class       = 'success';
+											$order_status_text = __( 'Completed', 'tutor' );
+											break;
+										case 'wc-processing' === $status:
+											$badge_class       = 'warning';
+											$order_status_text = __( 'Processing', 'tutor' );
+											break;
+										case 'wc-on-hold' === $status:
+											$badge_class       = 'warning';
+											$order_status_text = __( 'On Hold', 'tutor' );
+											break;
+										case 'wc-refunded' === $status:
+											$badge_class       = 'danger';
+											$order_status_text = __( 'Processing', 'tutor' );
+											break;
+										case 'wc-cancelled' === $status:
+											$badge_class       = 'danger';
+											$order_status_text = __( 'Cancelled', 'tutor' );
+											break;
+										case 'wc-pending' === $status:
+											$badge_class       = 'warning';
+											$order_status_text = __( 'Pending', 'tutor' );
+											break;
+									}
+								} elseif ( 'edd' === $monetize_by ) {
+									$edd_order         = edd_get_payment( $order->ID );
+									$price             = edd_currency_filter( edd_format_amount( $edd_order->total ), edd_get_payment_currency_code( $order->ID ) );
+									$raw_price         = $edd_order->total;
+									$status            = $edd_order->status_nicename;
+									$badge_class       = 'primary';
+									$order_status_text = $status;
 								}
 								?>
-								<div class="tutor-order-history-actions">
-									<?php if ( 'wc-pending' === $status ) : ?>
-									<a href="<?php echo esc_url( $pay_now_url ); ?>" 
-										class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-mr-8">
-										<?php esc_html_e( 'Pay', 'tutor-pro' ); ?>	
-									</a>
-									<?php endif; ?>
-									<a href="javascript:;" class="tutor-export-purchase-history tutor-iconic-btn tutor-iconic-btn-secondary" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
-										<span class="tutor-icon-receipt-line" area-hidden="true"></span>
-									</a>
-								</div>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-				</tbody>
+							<tr>
+								<td>
+									#<?php echo esc_html( $order->ID ); ?>
+								</td>
+
+								<td>
+									<?php
+										$courses = tutor_utils()->get_course_enrolled_ids_by_order_id( $order->ID );
+									if ( tutor_utils()->count( $courses ) ) {
+										foreach ( $courses as $course ) {
+											echo '<div>' . esc_html( get_the_title( $course['course_id'] ) ) . '</div>';
+										}
+									}
+									?>
+								</td>
+
+								<td>
+									<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>
+								</td>
+
+								<td>
+									<?php echo wp_kses_post( $price ); ?>
+								</td>
+
+								<td>
+									<span class="tutor-badge-label label-<?php echo esc_attr( $badge_class ); ?> tutor-m-4"><?php echo esc_html( $order_status_text ); ?></span>
+								</td>
+								<td>
+									<?php
+										$pay_now_url = '';
+									if ( 'wc' === $monetize_by ) {
+										$wc_order    = wc_get_order( $order->ID );
+										$pay_now_url = esc_url( $wc_order->get_checkout_payment_url() );
+									}
+									?>
+									<div class="tutor-order-history-actions">
+										<?php if ( 'wc-pending' === $status ) : ?>
+										<a href="<?php echo esc_url( $pay_now_url ); ?>" 
+											class="tutor-btn tutor-btn-outline-primary tutor-btn-sm tutor-mr-8">
+											<?php esc_html_e( 'Pay', 'tutor-pro' ); ?>	
+										</a>
+										<?php endif; ?>
+										<a href="javascript:;" class="tutor-export-purchase-history tutor-iconic-btn tutor-iconic-btn-secondary" data-order="<?php echo esc_attr( $order->ID ); ?>" data-course-name="<?php echo esc_attr( get_the_title( $course['course_id'] ) ); ?>" data-price="<?php echo esc_attr( $raw_price ); ?>" data-date="<?php echo esc_attr( date_i18n( get_option( 'date_format' ), strtotime( $order->post_date ) ) ); ?>" data-status="<?php echo esc_attr( $order_status_text ); ?>">
+											<span class="tutor-icon-receipt-line" area-hidden="true"></span>
+										</a>
+									</div>
+								</td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
+				<?php endif; ?>
 			</table>
 		</div>
 
-		<?php
-			$pagination_data = array(
-				'total_items' => ! empty( $total_orders ) ? count( $total_orders ) : 0,
-				'per_page'    => $per_page,
-				'paged'       => $paged,
-			);
+					<?php
+					$pagination_data = array(
+						'total_items' => $total_orders,
+						'per_page'    => $per_page,
+						'paged'       => $paged,
+					);
 
-			$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
+					$total_page = ceil( $pagination_data['total_items'] / $pagination_data['per_page'] );
 
-			if ( $total_page > 1 ) {
-				$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
-				tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
-			}
-			?>
-	<?php else : ?>
-		<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
+					if ( $total_page > 1 ) {
+						$pagination_template = tutor()->path . 'templates/dashboard/elements/pagination.php';
+						tutor_load_template_from_custom_path( $pagination_template, $pagination_data );
+					}
+					?>
+					<?php else : ?>
+						<?php tutor_utils()->tutor_empty_state( tutor_utils()->not_found_text() ); ?>
 	<?php endif; ?>
 </div>

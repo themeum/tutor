@@ -25,7 +25,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 ?>
 
 <?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) : ?>
-	<div class="tutor-table-responsive tutor-my-24">
+	<div class="tutor-table-responsive tutor-table-mobile tutor-my-24">
 		<table class="tutor-table tutor-table-quiz-attempts">
 			<thead>
 				<tr>
@@ -97,7 +97,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								continue;
 							}
 							?>
-							<td>
+							<td data-title="<?php echo esc_attr( $column ); ?>">
 								<?php if ( 'checkbox' == $key ) : ?>
 									<div class="tutor-d-flex">
 										<input id="tutor-admin-list-<?php echo esc_attr( $attempt->attempt_id ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $attempt->attempt_id ); ?>" />
@@ -143,13 +143,13 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								<?php elseif ( 'question' == $key ) : ?>
 									<?php echo esc_html( count( $answers ) ); ?>
 								<?php elseif ( 'total_marks' == $key ) : ?>
-									<?php echo esc_html( round( $attempt->total_marks ) ); ?>
+									<?php echo esc_html( isset( $attempt->total_marks ) ? round( $attempt->total_marks ) : '0' ); ?>
 								<?php elseif ( 'correct_answer' == $key ) : ?>
 									<?php echo esc_html( $correct ); ?>
 								<?php elseif ( 'incorrect_answer' == $key ) : ?>
 									<?php echo esc_html( $incorrect ); ?>
 								<?php elseif ( 'earned_marks' == $key ) : ?>
-									<?php echo esc_html( round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' ); ?>
+									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
 								<?php elseif ( 'result' == $key ) : ?>
 									<?php
 									if ( $has_pending ) {

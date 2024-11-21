@@ -2,8 +2,11 @@
     margin-top: 24px;
     ul {
         margin: 0;
-        padding: 0;
+        padding: 0!important;
         list-style: none;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
         li {
             display: inline-block;
             a {
@@ -11,7 +14,6 @@
                 padding: 7px 13px;
                 display: block;
                 border-radius: 50%;
-                margin-right: 10px;
                 color: var(--tutor-color-primary);
                 font-weight: bold;
                 font-size: 15px;

@@ -19,7 +19,7 @@ const Header = () => {
 				<div className="tutor-col-lg">
 					<div className="tutor-p-12">
 						<span className="tutor-fs-5 tutor-fw-medium tutor-mr-16">
-							{__('Add-ons', 'tutor')}
+							{__('Addons', 'tutor')}
 						</span>
 					</div>
 				</div>

@@ -288,7 +288,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 					continue;
 				}
 				?>
-				<li class="tutor-d-flex<?php echo $key > 0 ? ' tutor-mt-12' : ''; ?>">
+				<li class="tutor-d-flex<?php echo $key > 0 ? ' tutor-mt-12' : ''; ?> <?php echo esc_attr( isset( $meta['list_class'] ) ? $meta['list_class'] : '' ); ?>">
 					<span class="<?php echo esc_attr( $meta['icon_class'] ); ?> tutor-color-black tutor-mt-4 tutor-mr-12" aria-labelledby="<?php echo esc_html( $meta['label'] ); ?>"></span>
 					<span class="tutor-fs-6 tutor-color-secondary">
 						<?php echo wp_kses_post( $meta['value'] ); ?>
