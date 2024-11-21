@@ -6,11 +6,12 @@ import { styleUtils } from '@Utils/style-utils';
 import type { Option } from '@Utils/types';
 import { nanoid, noop } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
 
 import { isRTL } from '@Config/constants';
 import useIntersectionObserver from '@Hooks/useIntersectionObserver';
-import { __ } from '@wordpress/i18n';
+
 import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import SVGIcon from './SVGIcon';
@@ -152,7 +153,7 @@ const Select = <T,>({
           css={[
             styles.optionsWrapper,
             {
-              ...(isRTL ? { right: position.left } : { left: position.left }),
+              [isRTL ? 'right' : 'left']: position.left,
               top: position.top,
               maxWidth: triggerWidth,
             },
