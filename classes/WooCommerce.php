@@ -255,6 +255,15 @@ class WooCommerce extends Tutor_Base {
 		$course_id      = tutor_utils()->get_post_id( $course_id );
 		$price_type     = tutor_utils()->price_type( $course_id );
 		$has_product_id = tutor_utils()->get_course_product_id( $course_id );
+
+		/**
+		 * WC course bundle don't have free or paid price types.
+		 * Check if the bundle has a WC product attached.
+		 */
+		if ( $has_product_id && tutor()->bundle_post_type === get_post_type( $course_id ) ) {
+			return true;
+		}
+
 		if ( Course::PRICE_TYPE_PAID === $price_type && $has_product_id ) {
 			return true;
 		}
