@@ -292,7 +292,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       default:
         return {
           ...question,
-          _data_status: QuizDataStatus.UPDATE,
+          _data_status: QuizDataStatus.NO_CHANGE,
         } as QuizQuestion;
     }
   };
