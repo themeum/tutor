@@ -11,7 +11,6 @@ import { useEffect, useMemo, useState } from 'react';
 
 import { isRTL } from '@Config/constants';
 import useIntersectionObserver from '@Hooks/useIntersectionObserver';
-
 import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import SVGIcon from './SVGIcon';
