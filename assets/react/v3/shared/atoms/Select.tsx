@@ -8,6 +8,7 @@ import { nanoid, noop } from '@Utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { useEffect, useMemo, useState } from 'react';
 
+import { isRTL } from '@Config/constants';
 import useIntersectionObserver from '@Hooks/useIntersectionObserver';
 import { __ } from '@wordpress/i18n';
 import Button from './Button';
@@ -82,7 +83,7 @@ const Select = <T,>({
     return options;
   }, [debouncedSearchText, isSearchable, options]);
 
-  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });

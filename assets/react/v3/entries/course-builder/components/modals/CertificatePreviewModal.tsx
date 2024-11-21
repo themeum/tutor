@@ -6,6 +6,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import type { Certificate } from '@CourseBuilderServices/course';
@@ -36,8 +37,6 @@ const CertificatePreviewModal = ({
   const previousIndex = Math.max(-1, currentCertificateIndex - 1);
 
   const nextIndex = Math.min(certificates.length, currentCertificateIndex + 1);
-
-  const isRTL = typeof window !== 'undefined' && document.documentElement.dir === 'rtl';
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {

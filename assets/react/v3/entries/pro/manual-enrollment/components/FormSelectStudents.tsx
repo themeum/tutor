@@ -3,6 +3,7 @@ import { LoadingSection } from '@Atoms/LoadingSpinner';
 import TextInput from '@Atoms/TextInput';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import { useModal } from '@Components/modals/Modal';
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import StudentListModal from '@EnrollmentComponents/modals/StudentListModal';
 import { type Enrollment, type Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
@@ -46,7 +47,7 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
   const studentListResult = studentListQuery.data?.results ?? [];
 
   const [isOpen, setIsOpen] = useState(false);
-  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });

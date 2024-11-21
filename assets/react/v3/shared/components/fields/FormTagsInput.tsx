@@ -5,14 +5,16 @@ import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
 import Checkbox from '@Atoms/CheckBox';
 import Chip from '@Atoms/Chip';
+import { isRTL } from '@Config/constants';
 import Show from '@Controls/Show';
 import { useDebounce } from '@Hooks/useDebounce';
 import { type Tag, useCreateTagMutation, useTagListQuery } from '@Services/tags';
-import { __ } from '@wordpress/i18n';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTagsInputProps extends FormControllerProps<Tag[] | null> {
@@ -47,7 +49,7 @@ const FormTagsInput = ({
   const tagListQuery = useTagListQuery({ search: debouncedSearchText });
   const createTagMutation = useCreateTagMutation();
 
-  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
     dependencies: [tagListQuery.data?.length],
@@ -130,7 +132,7 @@ const FormTagsInput = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    ...(isRTL ? { right: position.left } : { left: position.left }),
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

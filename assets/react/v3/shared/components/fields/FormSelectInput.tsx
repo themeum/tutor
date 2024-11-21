@@ -5,6 +5,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -99,7 +100,7 @@ const FormSelectInput = <T,>({
     return options.find((item) => item.value === field.value);
   }, [field.value, options]);
 
-  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
     dependencies: [selections.length],
@@ -281,7 +282,7 @@ const FormSelectInput = <T,>({
                 css={[
                   styles.optionsWrapper,
                   {
-                    ...(isRTL ? { right: position.left } : { left: position.left }),
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

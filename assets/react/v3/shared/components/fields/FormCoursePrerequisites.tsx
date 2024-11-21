@@ -6,6 +6,7 @@ import { LoadingSection } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -76,7 +77,7 @@ const FormCoursePrerequisites = ({
     }
   }, [debouncedSearchText, handleSearchOnChange]);
 
-  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
     dependencies: [filteredOption.length],
@@ -228,7 +229,7 @@ const FormCoursePrerequisites = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    ...(isRTL ? { right: position.left } : { left: position.left }),
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { DateFormats } from '@Config/constants';
+import { DateFormats, isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
@@ -44,7 +44,7 @@ const FormDateInput = ({
   const [isOpen, setIsOpen] = useState(false);
   const fieldValue = isValid(new Date(field.value)) ? format(new Date(field.value), dateFormat) : '';
 
-  const { triggerRef, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -110,10 +110,7 @@ const FormDateInput = ({
 
             <Portal isOpen={isOpen} onClickOutside={handleClosePortal} onEscape={handleClosePortal}>
               <div
-                css={[
-                  styles.pickerWrapper,
-                  { ...(isRTL ? { right: position.left } : { left: position.left }), top: position.top },
-                ]}
+                css={[styles.pickerWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
                 ref={popoverRef}
               >
                 <DayPicker

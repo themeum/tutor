@@ -1,5 +1,10 @@
+import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -7,10 +12,7 @@ import type { Category, CategoryWithChildren } from '@Services/category';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { generateTree } from '@Utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import { useState } from 'react';
 
-import { __ } from '@wordpress/i18n';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiLevelSelectProps extends FormControllerProps<number | null> {
@@ -43,7 +45,7 @@ const FormMultiLevelSelect = ({
   const treeOptions = generateTree(options);
   const [isOpen, setIsOpen] = useState(false);
 
-  const { triggerRef, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -99,10 +101,7 @@ const FormMultiLevelSelect = ({
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
-                css={[
-                  styles.categoryWrapper,
-                  { ...(isRTL ? { right: position.left } : { left: position.left }), top: position.top },
-                ]}
+                css={[styles.categoryWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
                 ref={popoverRef}
               >
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}

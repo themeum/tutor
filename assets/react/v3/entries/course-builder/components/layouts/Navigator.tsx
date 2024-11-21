@@ -1,5 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import { isRTL } from '@Config/constants';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import routes from '@CourseBuilderConfig/routes';
@@ -27,7 +28,6 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const previousStep = steps[previousIndex];
   const nextStep = steps[nextIndex];
   const postTitle = form.watch('post_title');
-  const isRTL = typeof window !== 'undefined' && document.documentElement.dir === 'rtl';
 
   const handlePreviousClick = () => {
     setSteps((previous) => {

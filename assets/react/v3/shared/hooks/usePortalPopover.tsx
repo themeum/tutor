@@ -55,7 +55,6 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
   const popoverRef = useRef<D>(null);
   const [triggerWidth, setTriggerWidth] = useState(0);
   const [position, setPosition] = useState<PopoverPosition>({ left: 0, top: 0, arrowPlacement: ArrowPosition.bottom });
-  const isRTL = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
 
   useEffect(() => {
     if (!triggerRef.current) return;
@@ -159,7 +158,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     setPosition({ ...calculatedPosition, arrowPlacement });
   }, [triggerRef, popoverRef, triggerWidth, isOpen, gap, arrow, isDropdown, ...dependencies]);
 
-  return { position, triggerWidth, triggerRef, popoverRef, isRTL };
+  return { position, triggerWidth, triggerRef, popoverRef };
 };
 
 interface PortalProps {

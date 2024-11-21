@@ -11,7 +11,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
 
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { Addons } from '@Config/constants';
+import { Addons, isRTL } from '@Config/constants';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -109,7 +109,6 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
   const form = useFormWithGlobalError<{ prompt: string }>({ defaultValues: { prompt: '' } });
   const promptValue = form.watch('prompt');
   const { showToast } = useToast();
-  const isRTL = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
 
   useEffect(() => {
     setLoadingSteps((previous) => {

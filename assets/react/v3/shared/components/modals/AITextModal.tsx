@@ -35,6 +35,7 @@ import { copyToClipboard } from '@Utils/util';
 
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
+import { isRTL } from '@Config/constants';
 
 interface AITextModalProps<T extends FieldValues> extends ModalProps {
   field: ControllerRenderProps<T, Path<T>>;
@@ -96,8 +97,6 @@ const AITextModal = <T extends FieldValues>({
   const [popover, setPopover] = useState<'tone' | 'translate' | null>(null);
   const toneRef = useRef<HTMLButtonElement>(null);
   const translateRef = useRef<HTMLButtonElement>(null);
-
-  const isRTL = typeof document !== 'undefined' && document.documentElement.dir === 'rtl';
 
   const currentContent = useMemo(() => {
     return content[pointer];

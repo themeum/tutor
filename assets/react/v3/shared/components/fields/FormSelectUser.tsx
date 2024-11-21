@@ -17,7 +17,7 @@ import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 import { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
+import { TutorRoles, isRTL } from '@Config/constants';
 import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
 import profileImage from '@Images/profile-photo.png';
 import type { User } from '@Services/users';
@@ -94,7 +94,7 @@ const FormSelectUser = ({
     }
   }, [debouncedSearchText, handleSearchOnChange]);
 
-  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
     dependencies: [filteredOption.length],
@@ -293,7 +293,7 @@ const FormSelectUser = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    ...(isRTL ? { right: position.left } : { left: position.left }),
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

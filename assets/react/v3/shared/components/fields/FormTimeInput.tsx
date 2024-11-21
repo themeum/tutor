@@ -1,6 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
-import { DateFormats } from '@Config/constants';
+import { DateFormats, isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -53,7 +53,7 @@ const FormTimeInput = ({
     return range.map((date) => format(date, DateFormats.hoursMinutes));
   }, [interval]);
 
-  const { triggerRef, triggerWidth, position, popoverRef, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
@@ -131,7 +131,7 @@ const FormTimeInput = ({
                 css={[
                   styles.popover,
                   {
-                    ...(isRTL ? { right: position.left } : { left: position.left }),
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

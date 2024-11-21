@@ -1,4 +1,5 @@
 import SVGIcon from '@Atoms/SVGIcon';
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
@@ -16,7 +17,6 @@ interface PaginatorProps {
 const Paginator = ({ currentPage, onPageChange, totalItems, itemsPerPage }: PaginatorProps) => {
   const totalPage = Math.max(Math.ceil(totalItems / itemsPerPage), 1);
   const [pageNumber, setPageNumber] = useState('');
-  const isRTL = typeof window !== 'undefined' && document.documentElement.dir === 'rtl';
 
   useEffect(() => {
     setPageNumber(currentPage.toString());

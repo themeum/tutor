@@ -10,7 +10,7 @@ import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
-import { VideoRegex } from '@Config/constants';
+import { VideoRegex, isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -28,6 +28,7 @@ import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
+
 import type { IconCollection } from '../../utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
@@ -323,7 +324,7 @@ const FormVideoInput = ({
 
   const [isOpen, setIsOpen] = useState(false);
   const triggerRef = useRef<HTMLDivElement>(null);
-  const { popoverRef, position, isRTL } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     triggerRef,
     positionModifier: {
@@ -635,7 +636,7 @@ const FormVideoInput = ({
           css={[
             styles.popover,
             {
-              ...(isRTL ? { right: position.left } : { left: position.left }),
+              [isRTL ? 'right' : 'left']: position.left,
               top: triggerRef.current?.getBoundingClientRect().top,
               maxWidth: triggerRef.current?.offsetWidth,
             },
