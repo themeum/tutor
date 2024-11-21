@@ -9,10 +9,8 @@
       "Ollyo\\PaymentHub\\": "src/"
     }
   },
-  "require-dev": {
-    "guzzlehttp/guzzle": "^7.9.2"
-  },
   "require": {
+    "guzzlehttp/guzzle": "^7.9.2",
     "brick/money": "0.7"
   }
 }

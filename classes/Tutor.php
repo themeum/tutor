@@ -1240,6 +1240,7 @@ final class Tutor {
 			'thousand_separator'                => ',',
 			'decimal_separator'                 => '.',
 			'number_of_decimals'                => '2',
+			'is_coupon_applicable'              => 'on',
 		);
 
 		return $options;

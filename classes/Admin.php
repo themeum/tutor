@@ -11,7 +11,9 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\OrderController;
+use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
+use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,6 +25,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class Admin {
+	use JsonResponse;
+
 	/**
 	 * Constructor
 	 *
@@ -57,15 +61,7 @@ class Admin {
 
 		add_action( 'admin_bar_menu', array( $this, 'add_toolbar_items' ), 100 );
 
-		add_action(
-			'admin_init',
-			function() {
-				if ( 'tutor-new-feature' === Input::get( 'page' ) ) {
-					wp_safe_redirect( admin_url( 'admin.php?page=tutor&welcome=1' ) );
-					exit;
-				}
-			}
-		);
+		add_action( 'wp_ajax_tutor_do_not_show_feature_page', array( $this, 'handle_do_not_show_feature_page' ) );
 	}
 
 	/**
@@ -136,7 +132,7 @@ class Admin {
 		// Added @since v2.0.0.
 		add_submenu_page( 'tutor', __( 'Courses', 'tutor' ), __( 'Courses', 'tutor' ), 'manage_tutor_instructor', 'tutor', array( $this, 'tutor_course_list' ) );
 
-		if ( ! $has_pro ) {
+		if ( '3.0.0' !== get_option( 'tutor-new-feature' ) ) {
 			add_submenu_page( 'tutor', __( 'What\'s New in 3.0', 'tutor' ), sprintf( '<span class="tutor-new-feature tutor-text-orange">%s</span>', __( 'What\'s New in 3.0', 'tutor' ) ), 'manage_tutor', 'tutor-new-feature', array( $this, 'feature_promotion_page' ) );
 		}
 
@@ -184,6 +180,26 @@ class Admin {
 	}
 
 	/**
+	 * Welcome page opt-out
+	 *
+	 * @since 3.0.0
+	 */
+	public function handle_do_not_show_feature_page() {
+		tutor_utils()->check_nonce();
+
+		if ( ! User::is_admin() ) {
+			$this->json_response(
+				tutor_utils()->error_message(),
+				null,
+				HttpHelper::STATUS_BAD_REQUEST
+			);
+		}
+
+		update_option( 'tutor-new-feature', '3.0.0' );
+		$this->json_response( __( 'Success', 'tutor' ) );
+	}
+
+	/**
 	 * Show Feature Promotion Page for Free User.
 	 *
 	 * @since 2.2.0
@@ -191,7 +207,8 @@ class Admin {
 	 * @return void
 	 */
 	public function feature_promotion_page() {
-		include tutor()->path . 'views/pages/feature-promotion.php';
+		include tutor()->path . 'views/pages/welcome.php';
+		// include tutor()->path . 'views/pages/feature-promotion.php';
 	}
 
 	/**
