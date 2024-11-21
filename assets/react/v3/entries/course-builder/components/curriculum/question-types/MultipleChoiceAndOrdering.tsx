@@ -25,7 +25,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
@@ -86,16 +86,16 @@ const MultipleChoiceAndOrdering = () => {
     if (hasMultipleCorrectAnswer) {
       updateOption(index, {
         ...option,
-        ...(calculateQuizDataStatus(option._data_status, 'update') && {
-          _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+        ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+          _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
         }),
         is_correct: option.is_correct === '1' ? '0' : '1',
       });
     } else {
       const updatedOptions = currentOptions.map((item) => ({
         ...item,
-        ...(calculateQuizDataStatus(item._data_status, 'update') && {
-          _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+        ...(calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) && {
+          _data_status: calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
         }),
         is_correct: item.answer_id === option.answer_id ? '1' : '0',
       })) as QuizQuestionOption[];
@@ -110,7 +110,7 @@ const MultipleChoiceAndOrdering = () => {
   const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
     const duplicateOption: QuizQuestionOption = {
       ...data,
-      _data_status: 'new',
+      _data_status: QuizDataStatus.NEW,
       is_saved: true,
       answer_id: nanoid(),
       answer_title: `${data.answer_title} (copy)`,
@@ -122,7 +122,7 @@ const MultipleChoiceAndOrdering = () => {
   const handleDeleteOption = (index: number, option: QuizQuestionOption) => {
     removeOption(index);
 
-    if (option._data_status !== 'new') {
+    if (option._data_status !== QuizDataStatus.NEW) {
       form.setValue('deleted_answer_ids', [...form.getValues('deleted_answer_ids'), option.answer_id]);
     }
   };
@@ -139,8 +139,8 @@ const MultipleChoiceAndOrdering = () => {
     if (!hasMultipleCorrectAnswer && !isInitialRenderRef.current) {
       const resetOptions = currentOptions.map((option) => ({
         ...option,
-        ...(calculateQuizDataStatus(option._data_status, 'update') && {
-          _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+        ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+          _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
         }),
         is_correct: '0' as '0' | '1',
         is_saved: true,
@@ -239,7 +239,7 @@ const MultipleChoiceAndOrdering = () => {
         onClick={() => {
           appendOption(
             {
-              _data_status: 'new',
+              _data_status: QuizDataStatus.NEW,
               is_saved: false,
               answer_id: nanoid(),
               answer_title: '',

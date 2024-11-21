@@ -20,7 +20,13 @@ import { normalizeLineEndings } from '@Utils/util';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ContentType, ID } from './curriculum';
 
-export type QuizDataStatus = 'new' | 'update' | 'no_change';
+export const QuizDataStatus = {
+  NEW: 'new' as const,
+  UPDATE: 'update' as const,
+  NO_CHANGE: 'no_change' as const,
+} as const;
+
+export type QuizDataStatus = (typeof QuizDataStatus)[keyof typeof QuizDataStatus];
 
 export type QuizQuestionType =
   | 'true_false'
@@ -143,7 +149,7 @@ export interface QuizDetailsResponse {
 }
 export interface QuizForm {
   ID: ID;
-  _data_status: 'new' | 'update' | 'no_change';
+  _data_status: QuizDataStatus;
   quiz_title: string;
   quiz_description: string;
   quiz_option: {
@@ -203,10 +209,10 @@ export interface H5PContentResponse {
 export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
   const calculateQuizDataStatus = (answer: QuizQuestionOption) => {
     if (answer.image_url) {
-      return answer.answer_view_format === 'text_image' ? 'no_change' : 'update';
+      return answer.answer_view_format === 'text_image' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
     }
 
-    return answer.answer_view_format === 'text' ? 'no_change' : 'update';
+    return answer.answer_view_format === 'text' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
   };
 
   const convertedQuestion = (question: Omit<QuizQuestion, '_data_status'>): QuizQuestion => {
@@ -228,11 +234,11 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'single_choice': {
         return {
           ...question,
-          _data_status: 'update',
+          _data_status: QuizDataStatus.UPDATE,
           question_type: 'multiple_choice',
           question_answers: question.question_answers.map((answer) => ({
             ...answer,
-            _data_status: 'update',
+            _data_status: QuizDataStatus.UPDATE,
           })),
           question_settings: {
             ...question.question_settings,
@@ -244,7 +250,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'multiple_choice': {
         return {
           ...question,
-          _data_status: question.question_settings.has_multiple_correct_answer ? 'no_change' : 'update',
+          _data_status: question.question_settings.has_multiple_correct_answer
+            ? QuizDataStatus.NO_CHANGE
+            : QuizDataStatus.UPDATE,
           question_settings: {
             ...question.question_settings,
             has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer
@@ -256,7 +264,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'matching': {
         return {
           ...question,
-          _data_status: question.question_settings.is_image_matching ? 'no_change' : 'update',
+          _data_status: question.question_settings.is_image_matching ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE,
           question_settings: {
             ...question.question_settings,
             is_image_matching: question.question_settings.is_image_matching
@@ -268,11 +276,11 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       case 'image_matching': {
         return {
           ...question,
-          _data_status: 'update',
+          _data_status: QuizDataStatus.UPDATE,
           question_type: 'matching',
           question_answers: question.question_answers.map((answer) => ({
             ...answer,
-            _data_status: 'update',
+            _data_status: QuizDataStatus.UPDATE,
           })),
           question_settings: {
             ...question.question_settings,
@@ -284,14 +292,14 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       default:
         return {
           ...question,
-          _data_status: 'no_change',
+          _data_status: QuizDataStatus.UPDATE,
         } as QuizQuestion;
     }
   };
 
   return {
     ID: quiz.ID,
-    _data_status: 'no_change',
+    _data_status: QuizDataStatus.NO_CHANGE,
     quiz_title: quiz.post_title || '',
     quiz_description: quiz.post_content || '',
     quiz_option: {
@@ -618,15 +626,18 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
     return null;
   }
 
-  if (dataStatus === 'new') {
-    return 'new';
+  if (dataStatus === QuizDataStatus.NEW) {
+    return QuizDataStatus.NEW;
   }
 
-  if ((dataStatus === 'update' || dataStatus === 'no_change') && currentStatus === 'update') {
-    return 'update';
+  if (
+    (dataStatus === QuizDataStatus.UPDATE || dataStatus === QuizDataStatus.NO_CHANGE) &&
+    currentStatus === QuizDataStatus.UPDATE
+  ) {
+    return QuizDataStatus.UPDATE;
   }
 
-  return 'no_change';
+  return QuizDataStatus.NO_CHANGE;
 };
 
 const getH5PQuizContents = (search: string) => {
