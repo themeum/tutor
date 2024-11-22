@@ -17,7 +17,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
@@ -88,8 +88,8 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
 
     field.onChange({
       ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       image_id: id,
       image_url: url,
@@ -99,8 +99,8 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       image_id: '',
       image_url: '',
@@ -259,8 +259,11 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                 onChange={(event) => {
                   field.onChange({
                     ...inputValue,
-                    ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                      _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                    ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                      _data_status: calculateQuizDataStatus(
+                        inputValue._data_status,
+                        QuizDataStatus.UPDATE,
+                      ) as QuizDataStatus,
                     }),
                     answer_title: event.target.value,
                   });
@@ -275,8 +278,11 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                   ) {
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                     });
                     setIsEditing(false);
@@ -296,8 +302,11 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       answer_two_gap_match: event.target.value,
                     });
@@ -312,8 +321,11 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                     ) {
                       field.onChange({
                         ...inputValue,
-                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                          _data_status: calculateQuizDataStatus(
+                            inputValue._data_status,
+                            QuizDataStatus.UPDATE,
+                          ) as QuizDataStatus,
                           is_saved: true,
                         }),
                       });
@@ -350,16 +362,22 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                     event.stopPropagation();
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       is_saved: true,
                     });
 
                     setPreviousValue({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       is_saved: true,
                     });

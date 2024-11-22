@@ -8,8 +8,6 @@ import { useModal } from '@Components/modals/Modal';
 import { noop } from '@Utils/util';
 import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
 
-const ANIMATION_DURATION_WITH_THRESHOLD = 200;
-
 enum ArrowPosition {
   left = 'left',
   right = 'right',

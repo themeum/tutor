@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
+import { isRTL } from '@Config/constants';
 import { borderRadius, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -35,7 +36,7 @@ const CanvasHead = ({ title, backUrl, rightButton, isExternalUrl }: CanvasHeadPr
     <div css={styles.wrapper}>
       <div css={styles.left}>
         <Show when={backUrl}>
-          <Button variant="text" buttonCss={styles.button} onClick={handleBackClick}>
+          <Button variant="text" buttonCss={styles.button({ isRTL: isRTL })} onClick={handleBackClick}>
             <SVGIcon name="back" width={32} height={32} />
           </Button>
         </Show>
@@ -59,9 +60,16 @@ const styles = {
     align-items: center;
     gap: ${spacing[16]};
   `,
-  button: css`
+  button: ({ isRTL }: { isRTL: boolean }) => css`
     padding: 0;
     border-radius: ${borderRadius[2]};
+
+    ${
+      isRTL &&
+      css`
+        transform: rotate(180deg);
+      `
+    }
   `,
   title: css`
     ${typography.heading6('medium')};

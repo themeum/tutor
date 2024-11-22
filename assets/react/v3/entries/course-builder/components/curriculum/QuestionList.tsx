@@ -31,7 +31,13 @@ import Show from '@Controls/Show';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { H5PContent, QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
+import {
+  type H5PContent,
+  QuizDataStatus,
+  type QuizForm,
+  type QuizQuestion,
+  type QuizQuestionType,
+} from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
@@ -124,7 +130,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         distance: 10,
       },
     }),
-    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
   );
 
   const activeSortItem = useMemo(() => {
@@ -147,7 +153,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
 
     const questionId = nanoid();
     appendQuestion({
-      _data_status: 'new',
+      _data_status: QuizDataStatus.NEW,
       question_id: questionId,
       question_title: questionType === 'h5p' ? content?.title : `Question ${questionFields.length + 1}`,
       question_description: questionType === 'h5p' ? content?.id : '',
@@ -157,7 +163,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
           ? [
               {
                 answer_id: nanoid(),
-                _data_status: 'new',
+                _data_status: QuizDataStatus.NEW,
                 is_saved: true,
                 answer_title: __('True', 'tutor'),
                 is_correct: '1',
@@ -170,7 +176,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               {
                 answer_id: nanoid(),
                 is_saved: true,
-                _data_status: 'new',
+                _data_status: QuizDataStatus.NEW,
                 answer_title: __('False', 'tutor'),
                 is_correct: '0',
                 answer_order: 2,
@@ -181,21 +187,21 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               },
             ]
           : questionType === 'fill_in_the_blank'
-          ? [
-              {
-                _data_status: 'new',
-                is_saved: false,
-                answer_id: nanoid(),
-                answer_title: '',
-                belongs_question_id: questionId,
-                belongs_question_type: 'fill_in_the_blank',
-                answer_two_gap_match: '',
-                answer_view_format: '',
-                answer_order: 0,
-                is_correct: '0',
-              },
-            ]
-          : [],
+            ? [
+                {
+                  _data_status: QuizDataStatus.NEW,
+                  is_saved: false,
+                  answer_id: nanoid(),
+                  answer_title: '',
+                  belongs_question_id: questionId,
+                  belongs_question_type: 'fill_in_the_blank',
+                  answer_two_gap_match: '',
+                  answer_view_format: '',
+                  answer_order: 0,
+                  is_correct: '0',
+                },
+              ]
+            : [],
       answer_explanation: '',
       question_mark: 1,
       question_order: questionFields.length + 1,
@@ -228,12 +234,12 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     const convertedQuestion: QuizQuestion = {
       ...data,
       question_id: nanoid(),
-      _data_status: 'new',
+      _data_status: QuizDataStatus.NEW,
       question_title: `${currentQuestion.question_title} (copy)`,
       question_answers: currentQuestion.question_answers.map((answer) => ({
         ...answer,
         answer_id: nanoid(),
-        _data_status: 'new',
+        _data_status: QuizDataStatus.NEW,
       })),
     };
     const duplicateQuestionIndex = index + 1;
@@ -248,7 +254,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       setValidationError(null);
     }
 
-    if (question._data_status !== 'new') {
+    if (question._data_status !== QuizDataStatus.NEW) {
       form.setValue('deleted_question_ids', [...form.getValues('deleted_question_ids'), question.question_id]);
     }
   };
@@ -357,7 +363,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
                   }}
                 </Show>
               </DragOverlay>,
-              document.body
+              document.body,
             )}
           </DndContext>
         </Show>

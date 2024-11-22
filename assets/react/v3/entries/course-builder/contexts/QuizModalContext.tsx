@@ -5,7 +5,7 @@ import { useFormContext } from 'react-hook-form';
 import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
 import type { QuizForm, QuizQuestion } from '@CourseBuilderServices/quiz';
 
-type ValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
 
 interface QuizModalContextProps {
   activeQuestionIndex: number;
@@ -15,12 +15,12 @@ interface QuizModalContextProps {
   contentType: ContentType;
   validationError: {
     message: string;
-    type: ValidationErrorType;
+    type: QuizValidationErrorType;
   } | null;
   setValidationError: React.Dispatch<
     React.SetStateAction<{
       message: string;
-      type: ValidationErrorType;
+      type: QuizValidationErrorType;
     } | null>
   >;
 }
@@ -55,7 +55,7 @@ export const QuizModalContextProvider = ({
         setValidationError: React.Dispatch<
           React.SetStateAction<{
             message: string;
-            type: ValidationErrorType;
+            type: QuizValidationErrorType;
           } | null>
         >;
       }) => React.ReactNode);
@@ -63,7 +63,7 @@ export const QuizModalContextProvider = ({
   contentType: ContentType;
   validationError?: {
     message: string;
-    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    type: QuizValidationErrorType;
   } | null;
 }) => {
   const [activeQuestionId, setActiveQuestionId] = useState<ID>('');
@@ -72,7 +72,7 @@ export const QuizModalContextProvider = ({
   const previousQuestions = useRef<QuizQuestion[]>(questions);
   const [validationError, setValidationError] = useState<{
     message: string;
-    type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+    type: QuizValidationErrorType;
   } | null>(propsValidationError || null);
 
   const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);

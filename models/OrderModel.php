@@ -1633,4 +1633,32 @@ class OrderModel {
 
 		return $is_manual_payment;
 	}
+
+	/**
+	 * Render pay button
+	 *
+	 * @since 3.0.1
+	 *
+	 * @param int|object $order Order id or object.
+	 *
+	 * @return void
+	 */
+	public static function render_pay_button( $order ) {
+		if ( is_numeric( $order ) ) {
+			$order = ( new self() )->get_order_by_id( $order );
+		}
+
+		if ( self::should_show_pay_btn( $order ) ) {
+			?>
+			<form method="post">
+				<?php tutor_nonce_field(); ?>
+				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
+				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+					<?php esc_html_e( 'Pay', 'tutor' ); ?>
+				</button>
+			</form>
+			<?php
+		}
+	}
 }

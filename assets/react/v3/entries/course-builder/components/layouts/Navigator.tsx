@@ -1,5 +1,6 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
+import { isRTL } from '@Config/constants';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import routes from '@CourseBuilderConfig/routes';
@@ -88,13 +89,13 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
         `}
           disabled={previousIndex < 0}
         >
-          <SVGIcon name="chevronLeft" height={18} width={18} />
+          <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} height={18} width={18} />
         </Button>
       </Show>
       <Show when={currentIndex < steps.length - 1 && postTitle}>
         <Button
           variant="tertiary"
-          icon={<SVGIcon name="chevronRight" />}
+          icon={<SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} />}
           iconPosition="right"
           size="small"
           onClick={handleNextClick}

@@ -1,18 +1,21 @@
+import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
+
 import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { useState } from 'react';
 
 import Checkbox from '@Atoms/CheckBox';
 import Chip from '@Atoms/Chip';
+import { isRTL } from '@Config/constants';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useDebounce } from '@Hooks/useDebounce';
 import type { Option } from '@Utils/types';
-import { __ } from '@wordpress/i18n';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiSelectInputProps extends FormControllerProps<string[] | null> {
@@ -110,7 +113,7 @@ const FormMultiSelectInput = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

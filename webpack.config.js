@@ -110,6 +110,7 @@ module.exports = (env, options) => {
 				output: {
 					path: path.resolve(dest_path),
 					filename: '[name].js',
+					chunkFilename: 'lazy-chunks/[name].[contenthash].min.js',
 					clean: clean,
 				},
 				resolve: {
