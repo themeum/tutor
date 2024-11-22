@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
 import Button from '@Atoms/Button';
@@ -22,7 +22,7 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 import { tutorConfig } from '@Config/config';
-import { Addons, TutorRoles } from '@Config/constants';
+import { Addons, TutorRoles, isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -86,6 +86,8 @@ const LessonModal = ({
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
 
+  const [addMediaButtonWidth, setAddMediaButtonWidth] = useState(110);
+
   const isWpEditorVisible = isClassicEditorEnabled && (isAdmin || (isInstructor && hasWpAdminAccess));
 
   const getLessonDetailsQuery = useLessonDetailsQuery(lessonId, topicId);
@@ -120,6 +122,18 @@ const LessonModal = ({
   });
 
   const isFormDirty = form.formState.isDirty;
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      if (document.querySelector('.add_media')?.clientWidth) {
+        setAddMediaButtonWidth(document.querySelector('.add_media')?.clientWidth || 0);
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -265,7 +279,12 @@ const LessonModal = ({
                   when={isTutorPro && isAddonEnabled(Addons.H5P_INTEGRATION)}
                   fallback={
                     <Show when={!isTutorPro}>
-                      <div css={styles.addH5PContentWrapper}>
+                      <div
+                        css={styles.addH5PContentWrapper}
+                        style={{
+                          [!isRTL ? 'left' : 'right']: `${addMediaButtonWidth}px`,
+                        }}
+                      >
                         <ProBadge>
                           <button css={styles.addH5PContentButton} type="button" disabled onClick={noop}>
                             {__('Add H5P Content', 'tutor')}
@@ -277,6 +296,9 @@ const LessonModal = ({
                 >
                   <button
                     css={styles.addH5PContentButton}
+                    style={{
+                      [!isRTL ? 'left' : 'right']: `${addMediaButtonWidth}px`,
+                    }}
                     type="button"
                     onClick={() => {
                       showModal({
@@ -562,12 +584,10 @@ const styles = {
   addH5PContentWrapper: css`
     position: absolute;
     top: 36px;
-    left: 110px;
   `,
   addH5PContentButton: css`
     position: absolute;
     top: 36px;
-    left: 110px;
     display: inline-block;
     text-decoration: none;
     font-size: 13px;
@@ -583,10 +603,7 @@ const styles = {
     color: #3e64de;
     border-color: #3e64de;
     background: transparent;
-
-    :dir(rtl) {
-      margin-left: ${spacing[8]};
-    }
+    margin-left: ${spacing[8]};
 
     :hover:not(:disabled) {
       background: ${colorTokens.background.white};
