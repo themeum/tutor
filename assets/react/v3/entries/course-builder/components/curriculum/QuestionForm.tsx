@@ -110,7 +110,7 @@ const QuestionForm = () => {
                       calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
                 }}
-                selectOnFocus={questions[activeQuestionIndex]._data_status === QuizDataStatus.NEW}
+                selectOnFocus={questions[activeQuestionIndex]?._data_status === QuizDataStatus.NEW}
               />
             )}
           />
