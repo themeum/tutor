@@ -21,9 +21,9 @@ import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ContentType, ID } from './curriculum';
 
 export const QuizDataStatus = {
-  NEW: 'new' as const,
-  UPDATE: 'update' as const,
-  NO_CHANGE: 'no_change' as const,
+  NEW: 'new',
+  UPDATE: 'update',
+  NO_CHANGE: 'no_change',
 } as const;
 
 export type QuizDataStatus = (typeof QuizDataStatus)[keyof typeof QuizDataStatus];
