@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import React from 'react';
 
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { type VariantProps, createVariation } from '@Utils/create-variation';
 import { styleUtils } from '@Utils/style-utils';
@@ -81,6 +81,31 @@ const styles = {
     &:hover::before {
       opacity: 1;
     }
+
+    :dir(rtl) {
+      background: ${colorTokens.ai.gradient_1_rtl};
+      color: ${colorTokens.text.white};
+      
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: ${colorTokens.ai.gradient_2_rtl};
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+      
+      &:hover::before {
+        opacity: 1;
+      }
+
+      :disabled {
+        cursor: not-allowed;
+        background: ${colorTokens.action.primary.disable};
+        pointer-events: none;
+        color: ${colorTokens.text.disable};
+      }
+    }
   `,
   secondary: css`
     background-color: ${colorTokens.action.secondary.default};
@@ -146,6 +171,27 @@ const styles = {
         background-clip: text;
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+      }
+
+      :dir(rtl) {
+        background: ${colorTokens.ai.gradient_1_rtl};
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+
+        &:hover {
+          background: ${colorTokens.ai.gradient_2_rtl};
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        :disabled {
+          cursor: not-allowed;
+          background: ${colorTokens.action.primary.disable};
+          pointer-events: none;
+          color: ${colorTokens.text.disable};
+        }
       }
     }
   `,
