@@ -228,7 +228,10 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
       answer_view_format: answer.image_url ? 'text_image' : 'text',
     }));
     question.question_description = normalizeLineEndings(question.question_description) || '';
-    question.answer_explanation = normalizeLineEndings(question.answer_explanation) || '';
+    question.answer_explanation =
+      question.answer_explanation === '<p><br data-mce-bogus="1"></p>'
+        ? ''
+        : normalizeLineEndings(question.answer_explanation) || '';
 
     switch (question.question_type) {
       case 'single_choice': {
