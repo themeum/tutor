@@ -312,7 +312,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.0.1 - November 21, 2024
+= 3.0.1 - November 22, 2024
 
 Update: Added "Pay" and "Invoice" buttons to Subscriptions payment history (Pro).
 Fix: Fixed WooCommerce bundle courses price incorrectly showing as free (Pro).
