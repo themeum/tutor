@@ -57,6 +57,8 @@ export const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUpl
     if (errorMessages.length) {
       onError(errorMessages);
     }
+
+    event.target.value = '';
   };
 
   return { fileInputRef, handleChange };

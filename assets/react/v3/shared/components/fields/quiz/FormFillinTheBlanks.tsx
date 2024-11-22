@@ -11,7 +11,7 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
+import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
@@ -22,7 +22,7 @@ interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOptio
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const inputValue = field.value ?? {
-    _data_status: 'new',
+    _data_status: QuizDataStatus.NEW,
     is_saved: false,
     answer_id: nanoid(),
     answer_title: '',
@@ -124,8 +124,11 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       answer_title: event.target.value,
                     });
@@ -135,8 +138,11 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
                       field.onChange({
                         ...inputValue,
-                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                          _data_status: calculateQuizDataStatus(
+                            inputValue._data_status,
+                            QuizDataStatus.UPDATE,
+                          ) as QuizDataStatus,
                         }),
                       });
                       setIsEditing(false);
@@ -167,8 +173,11 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       answer_two_gap_match: event.target.value,
                     });
@@ -177,8 +186,11 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_two_gap_match) {
                       field.onChange({
                         ...inputValue,
-                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                          _data_status: calculateQuizDataStatus(
+                            inputValue._data_status,
+                            QuizDataStatus.UPDATE,
+                          ) as QuizDataStatus,
                           is_saved: true,
                         }),
                       });
@@ -232,16 +244,22 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     }
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                         is_saved: true,
                       }),
                     });
 
                     setPreviousValue({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                         is_saved: true,
                       }),
                     });

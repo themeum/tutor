@@ -15,7 +15,7 @@ import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { type QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
+import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -77,8 +77,8 @@ const FormImageAnswering = ({
 
     field.onChange({
       ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       image_id: id,
       image_url: url,
@@ -88,8 +88,8 @@ const FormImageAnswering = ({
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       image_id: '',
       image_url: '',
@@ -241,8 +241,11 @@ const FormImageAnswering = ({
                   onChange={(event) => {
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       answer_title: event.target.value,
                     });
@@ -252,8 +255,11 @@ const FormImageAnswering = ({
                     if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
                       field.onChange({
                         ...inputValue,
-                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                          _data_status: calculateQuizDataStatus(
+                            inputValue._data_status,
+                            QuizDataStatus.UPDATE,
+                          ) as QuizDataStatus,
                           is_saved: true,
                         }),
                       });
@@ -299,16 +305,22 @@ const FormImageAnswering = ({
                     event.stopPropagation();
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       is_saved: true,
                     });
 
                     setPreviousValue({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       is_saved: true,
                     });

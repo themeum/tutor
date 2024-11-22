@@ -17,7 +17,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
@@ -97,8 +97,8 @@ const FormMultipleChoiceAndOrdering = ({
 
     field.onChange({
       ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       image_id: id,
       image_url: url,
@@ -109,8 +109,8 @@ const FormMultipleChoiceAndOrdering = ({
   const clearHandler = () => {
     field.onChange({
       ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       image_id: '',
       image_url: '',
@@ -189,8 +189,11 @@ const FormMultipleChoiceAndOrdering = ({
                       event.stopPropagation();
                       field.onChange({
                         ...inputValue,
-                        ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                          _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                        ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                          _data_status: calculateQuizDataStatus(
+                            inputValue._data_status,
+                            QuizDataStatus.UPDATE,
+                          ) as QuizDataStatus,
                         }),
                         image_id: '',
                         image_url: '',
@@ -327,8 +330,11 @@ const FormMultipleChoiceAndOrdering = ({
 
                   field.onChange({
                     ...inputValue,
-                    ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                      _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                    ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                      _data_status: calculateQuizDataStatus(
+                        inputValue._data_status,
+                        QuizDataStatus.UPDATE,
+                      ) as QuizDataStatus,
                     }),
                     answer_title: value,
                   });
@@ -338,8 +344,11 @@ const FormMultipleChoiceAndOrdering = ({
                   if ((event.metaKey || event.ctrlKey) && event.key === 'Enter' && inputValue.answer_title) {
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                         is_saved: true,
                       }),
                     });
@@ -376,15 +385,21 @@ const FormMultipleChoiceAndOrdering = ({
                     event.stopPropagation();
                     field.onChange({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       is_saved: true,
                     });
                     setPreviousValue({
                       ...inputValue,
-                      ...(calculateQuizDataStatus(inputValue._data_status, 'update') && {
-                        _data_status: calculateQuizDataStatus(inputValue._data_status, 'update') as QuizDataStatus,
+                      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+                        _data_status: calculateQuizDataStatus(
+                          inputValue._data_status,
+                          QuizDataStatus.UPDATE,
+                        ) as QuizDataStatus,
                       }),
                       is_saved: true,
                     });

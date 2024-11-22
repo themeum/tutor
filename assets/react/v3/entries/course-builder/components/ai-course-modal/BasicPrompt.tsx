@@ -88,6 +88,10 @@ const styles = {
 		top: 50%;
 		left: 50%;
 		translate: -50% -50%;
+
+		:dir(rtl) {
+			translate: 50% -50%;
+		}
 		
 		${Breakpoint.smallTablet} {
 			width: 90%;

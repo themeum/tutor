@@ -23,7 +23,7 @@ import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
@@ -71,8 +71,8 @@ const TrueFalse = () => {
   const handleCheckCorrectAnswer = (index: number, option: QuizQuestionOption) => {
     const updatedOptions = currentOptions.map((item) => ({
       ...item,
-      ...(calculateQuizDataStatus(item._data_status, 'update') && {
-        _data_status: calculateQuizDataStatus(item._data_status, 'update') as QuizDataStatus,
+      ...(calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) && {
+        _data_status: calculateQuizDataStatus(item._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
       }),
       is_correct: item.answer_id === option.answer_id ? '1' : '0',
     })) as QuizQuestionOption[];
@@ -101,8 +101,8 @@ const TrueFalse = () => {
       if (index !== changedOptionIndex) {
         updatedOptions[index] = {
           ...option,
-          ...(calculateQuizDataStatus(option._data_status, 'update') && {
-            _data_status: calculateQuizDataStatus(option._data_status, 'update') as QuizDataStatus,
+          ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
+            _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
           }),
           is_correct: '0' as '0' | '1',
         };

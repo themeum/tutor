@@ -11,7 +11,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionType,
   calculateQuizDataStatus,
@@ -105,10 +105,10 @@ const QuestionConditions = () => {
                   {...controllerProps}
                   label={__('Multiple Correct Answer', 'tutor')}
                   onChange={() => {
-                    calculateQuizDataStatus(activeDataStatus, 'update') &&
+                    calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
-                        calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                        calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
                   }}
                 />
@@ -127,10 +127,10 @@ const QuestionConditions = () => {
                   {...controllerProps}
                   label={__('Image Matching', 'tutor')}
                   onChange={() => {
-                    calculateQuizDataStatus(activeDataStatus, 'update') &&
+                    calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
-                        calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                        calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
                   }}
                 />
@@ -148,10 +148,10 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Answer Required', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
                 }}
               />
@@ -168,10 +168,10 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Randomize Choice', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
                 }}
               />
@@ -198,10 +198,10 @@ const QuestionConditions = () => {
                   max-width: 80px;
                 `}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
                 }}
               />
@@ -218,10 +218,10 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Display Points', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, 'update') &&
+                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
                 }}
               />
