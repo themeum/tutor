@@ -134,11 +134,9 @@
 						}
 					}
 
-					if ( class_exists( '\TutorPro\H5P\H5P' ) && tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-						if ( 'h5p' === $question->question_type ) {
-							$h5p_short_code = '[h5p id=' . $question->question_description . ']';
-							echo do_shortcode( $h5p_short_code );
-						}
+					if ( 'h5p' === $question->question_type ) {
+						$h5p_short_code = '[h5p id=' . $question->question_description . ']';
+						echo do_shortcode( $h5p_short_code );
 					}
 					?>
 					</div>
@@ -192,10 +190,8 @@
 					}
 
 					// H5P.
-					if ( class_exists( '\TutorPro\H5P\H5P' ) && tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-						if ( 'h5p' === $question_type ) {
-							require \TutorPro\H5P\Utils::addon_config()->path . 'views/h5p-question-answer.php';
-						}
+					if ( 'h5p' === $question_type ) {
+						require \TutorPro\H5P\Utils::addon_config()->path . 'views/h5p-question-answer.php';
 					}
 					?>
 

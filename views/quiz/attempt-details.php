@@ -330,6 +330,7 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 if ( is_array( $answers ) && count( $answers ) ) {
 	// Filter out not needed columns based on question type.
 	$table_2_columns = apply_filters( 'tutor_filter_attempt_answer_column', $table_2_columns, $answers );
+	$answers         = apply_filters( 'tutor_filter_attempt_answers', $answers );
 	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
 		<div class="tutor-table-responsive tutor-table-mobile tutor-mt-16">
@@ -736,7 +737,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											?>
 												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
 												<?php
-												if ( class_exists( '\TutorPro\H5P\H5P' ) && tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() && 'h5p' === $answer->question_type ) {
+												if ( 'h5p' === $answer->question_type ) {
 													$attempt_results     = \TutorPro\H5P\Utils::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
 													$has_attempt_results = is_array( $attempt_results ) && count( $attempt_results );
 													$has_response        = true;
@@ -813,28 +814,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 			</table>
 		</div>
 		<?php
-		if ( class_exists( '\TutorPro\H5P\H5P' ) && tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-			?>
-			<div class="tutor-modal tutor-modal-scrollable<?php echo is_admin() ? ' tutor-admin-design-init' : ''; ?> h5p-quiz-result-modal">
-				<div class="tutor-modal-overlay"></div>
-				<div class="tutor-modal-window">
-						<div class="tutor-modal-content">
-							<div class="tutor-modal-header">
-								<div class="tutor-modal-title">
-								<?php esc_html_e( 'H5P Question Answer', 'tutor' ); ?>
-							</div>
-							<button class="tutor-iconic-btn tutor-modal-close" data-tutor-modal-close>
-								<span class="tutor-icon-times" area-hidden="true"></span>
-							</button>
-						</div>
-						<div class="tutor-modal-body tutor-modal-container"></div>
-					</div>
-				</div>
-			</div>
-			<?php
-		}
-		?>
-		<?php
+		do_action( 'tutor_quiz_attempt_details_loop_after' );
 }
 ?>
 
