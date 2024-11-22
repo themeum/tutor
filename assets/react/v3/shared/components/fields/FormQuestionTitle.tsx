@@ -28,6 +28,7 @@ interface FormQuestionTitleProps extends FormControllerProps<string | null> {
   dataAttribute?: string;
   isInlineLabel?: boolean;
   style?: SerializedStyles;
+  selectOnFocus?: boolean;
 }
 
 const FormQuestionTitle = ({
@@ -47,6 +48,7 @@ const FormQuestionTitle = ({
   dataAttribute,
   isInlineLabel = false,
   style,
+  selectOnFocus = false,
 }: FormQuestionTitleProps) => {
   const inputValue = field.value ?? '';
   const inputRef = useRef<HTMLInputElement>(null);
@@ -139,6 +141,11 @@ const FormQuestionTitle = ({
                         setIsEdit(false);
                       }
                       onKeyDown?.(event.key);
+                    }}
+                    onFocus={(event) => {
+                      if (selectOnFocus) {
+                        event.target.select();
+                      }
                     }}
                     autoComplete="off"
                   />
