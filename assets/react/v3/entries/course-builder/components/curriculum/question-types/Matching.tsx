@@ -23,7 +23,7 @@ import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import type { QuizForm, QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import { QuizDataStatus, type QuizForm, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import { styleUtils } from '@Utils/style-utils';
 import { nanoid, noop } from '@Utils/util';
 
@@ -69,7 +69,7 @@ const Matching = () => {
   const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
     const duplicateOption: QuizQuestionOption = {
       ...data,
-      _data_status: 'new',
+      _data_status: QuizDataStatus.NEW,
       is_saved: true,
       answer_id: nanoid(),
       answer_title: `${data.answer_title} (copy)`,
@@ -82,7 +82,7 @@ const Matching = () => {
   const handleDeleteOption = (index: number, option: QuizQuestionOption) => {
     removeOption(index);
 
-    if (option._data_status !== 'new') {
+    if (option._data_status !== QuizDataStatus.NEW) {
       form.setValue('deleted_answer_ids', [...form.getValues('deleted_answer_ids'), option.answer_id]);
     }
   };
@@ -170,7 +170,7 @@ const Matching = () => {
         onClick={() => {
           appendOption(
             {
-              _data_status: 'new',
+              _data_status: QuizDataStatus.NEW,
               is_saved: false,
               answer_id: nanoid(),
               answer_title: '',

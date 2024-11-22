@@ -22,7 +22,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
-  type QuizDataStatus,
+  QuizDataStatus,
   type QuizForm,
   type QuizQuestionType,
   calculateQuizDataStatus,
@@ -104,10 +104,10 @@ const QuestionForm = () => {
                 placeholder={__('Write your question here..', 'tutor')}
                 disabled={contentType === 'tutor_h5p_quiz'}
                 onChange={() => {
-                  calculateQuizDataStatus(dataStatus, 'update') &&
+                  calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) &&
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
                 }}
               />
@@ -133,10 +133,10 @@ const QuestionForm = () => {
                   placeholder={__('Description (optional)', 'tutor')}
                   disabled={contentType === 'tutor_h5p_quiz'}
                   onChange={() => {
-                    calculateQuizDataStatus(dataStatus, 'update') &&
+                    calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) &&
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
-                        calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                        calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
                   }}
                 />
@@ -167,10 +167,10 @@ const QuestionForm = () => {
                 label={__('Answer Explanation', 'tutor')}
                 placeholder={__('Write answer explanation...', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(dataStatus, 'update') &&
+                  calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) &&
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(dataStatus, 'update') as QuizDataStatus,
+                      calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
                 }}
               />

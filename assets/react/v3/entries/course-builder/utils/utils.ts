@@ -3,9 +3,10 @@ import type { UseFormReturn } from 'react-hook-form';
 
 import { tutorConfig } from '@Config/config';
 import { type Addons, VideoRegex } from '@Config/constants';
+import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
 import type { PostStatus } from '@CourseBuilderServices/course';
+import type { ID } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import type { ID } from '../services/curriculum';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
@@ -88,7 +89,7 @@ export const validateQuizQuestion = (
 ):
   | {
       message: string;
-      type: 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
+      type: QuizValidationErrorType;
     }
   | true => {
   if (activeQuestionIndex !== -1) {
