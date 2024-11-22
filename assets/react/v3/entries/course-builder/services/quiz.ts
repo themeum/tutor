@@ -229,7 +229,9 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     }));
     question.question_description = normalizeLineEndings(question.question_description) || '';
     question.answer_explanation =
-      normalizeLineEndings(question.answer_explanation.replace('<p><br data-mce-bogus="1"></p>', '')) || '';
+      question.answer_explanation === '<p><br data-mce-bogus="1"></p>'
+        ? ''
+        : normalizeLineEndings(question.answer_explanation) || '';
 
     switch (question.question_type) {
       case 'single_choice': {
