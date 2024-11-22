@@ -614,6 +614,9 @@ class CourseModel {
 	 *
 	 * Meta key removed and default meta query updated
 	 *
+	 * @since 3.0.1
+	 * Course::COURSE_PRICE_META meta key exists clause added
+	 *
 	 * @param array $args wp_query args.
 	 *
 	 * @return \WP_Query
@@ -626,10 +629,16 @@ class CourseModel {
 			'posts_per_page' => -1,
 			'offset'         => 0,
 			'post_status'    => 'publish',
-			'meta_query'     => array(
-				'paid_clause' => array(
-					'key'   => Course::COURSE_PRICE_TYPE_META,
-					'value' => array( 'paid', 'subscription' ),
+			'meta_query' => array(
+				'relation' => 'AND',
+				array(
+					'key'     => Course::COURSE_PRICE_TYPE_META,
+					'value'   => Course::PRICE_TYPE_SUBSCRIPTION,
+					'compare' => '!=',
+				),
+				array(
+					'key'     => Course::COURSE_PRICE_META,
+					'compare' => 'EXISTS',
 				),
 			),
 		);
