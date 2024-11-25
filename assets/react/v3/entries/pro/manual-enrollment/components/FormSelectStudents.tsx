@@ -3,6 +3,7 @@ import { LoadingSection } from '@Atoms/LoadingSpinner';
 import TextInput from '@Atoms/TextInput';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import { useModal } from '@Components/modals/Modal';
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import StudentListModal from '@EnrollmentComponents/modals/StudentListModal';
 import { type Enrollment, type Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
@@ -100,7 +101,14 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
               <div
-                css={[styles.optionsWrapper, { left: position.left, top: position.top, maxWidth: triggerWidth }]}
+                css={[
+                  styles.optionsWrapper,
+                  {
+                    [isRTL ? 'right' : 'left']: position.left,
+                    top: position.top,
+                    maxWidth: triggerWidth,
+                  },
+                ]}
                 ref={popoverRef}
               >
                 {studentListQuery.isFetching ? (

@@ -1,4 +1,5 @@
 import Button, { type ButtonVariant } from '@Atoms/Button';
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -69,7 +70,7 @@ const ConfirmationPopover = <TRef extends HTMLElement>({
         css={[
           styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
           {
-            left: position.left,
+            [isRTL ? 'right' : 'left']: position.left,
             top: position.top,
             maxWidth: maxWidth ?? triggerWidth,
           },

@@ -138,15 +138,6 @@ const styles = {
     align-items: center;
     gap: ${spacing[12]};
     padding-left: ${spacing[24]};
-
-    & span {
-      ::before {
-        content: '';
-        border-left: 1px solid ${colorTokens.icon.hints};
-        margin-right: ${spacing[12]};
-        border-radius: ${borderRadius[14]};
-      }
-    }
   `,
   headerChildren: css`
     place-self: center center;
@@ -166,6 +157,8 @@ const styles = {
     ${styleUtils.text.ellipsis(1)}
     ${typography.caption()};
     color: ${colorTokens.text.hints};
+    padding-left: ${spacing[12]};
+    border-left: 1px solid ${colorTokens.icon.hints};
   `,
   actionsWrapper: css`
     place-self: center end;

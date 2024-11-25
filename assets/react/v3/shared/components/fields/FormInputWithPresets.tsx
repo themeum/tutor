@@ -3,6 +3,7 @@ import { type ReactNode, useRef, useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -131,7 +132,7 @@ const FormInputWithPresets = ({
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },

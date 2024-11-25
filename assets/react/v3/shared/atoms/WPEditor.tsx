@@ -69,7 +69,7 @@ function editorConfig(
       plugins:
         'charmap,colorpicker,hr,lists,image,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview',
       skin: 'light',
-      skin_url: '/wp-content/plugins/tutor/assets/lib/tinymce/light',
+      skin_url: `${tutorConfig.home_url}/wp-content/plugins/tutor/assets/lib/tinymce/light`,
       submit_patch: true,
       link_context_toolbar: false,
       theme: 'modern',
@@ -83,7 +83,7 @@ function editorConfig(
       toolbar2:
         'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown',
       content_css:
-        '/wp-includes/css/dashicons.min.css,/wp-includes/js/tinymce/skins/wordpress/wp-content.css, /wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css',
+        `${tutorConfig.home_url}/wp-includes/css/dashicons.min.css,${tutorConfig.home_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tutorConfig.home_url}/wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css`,
 
       statusbar: !readOnly,
       branding: false,

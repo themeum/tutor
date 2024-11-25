@@ -5,6 +5,7 @@ import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
+import { isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -175,7 +176,7 @@ const FormSelectInput = <T,>({
         return (
           <div css={styles.mainWrapper}>
             <div css={styles.inputWrapper(isAiOutline)} ref={triggerRef}>
-              <div css={styles.leftIcon({ hasDescription })}>
+              <div css={styles.leftIcon}>
                 <Show when={leftIcon}>{leftIcon}</Show>
                 <Show when={selectedItem?.icon}>
                   {(iconName) => <SVGIcon name={iconName as IconCollection} width={32} height={32} />}
@@ -281,7 +282,7 @@ const FormSelectInput = <T,>({
                 css={[
                   styles.optionsWrapper,
                   {
-                    left: position.left,
+                    [isRTL ? 'right' : 'left']: position.left,
                     top: position.top,
                     maxWidth: triggerWidth,
                   },
@@ -392,23 +393,13 @@ const styles = {
     `
     }
   `,
-  leftIcon: ({
-    hasDescription = false,
-  }: {
-    hasDescription: boolean;
-  }) => css`
+  leftIcon: css`
     position: absolute;
     left: ${spacing[8]};
-    top: ${spacing[4]};
+    ${styleUtils.display.flex()};
+    align-items: center;
+    height: 100%;
     color: ${colorTokens.icon.default};
-
-		${
-      hasDescription &&
-      css`
-			top: calc(${spacing[12]});
-		`
-    }
-		
   `,
   input: ({
     hasLeftIcon,
@@ -648,7 +639,6 @@ const styles = {
   caretButton: ({ isOpen = false }: { isOpen: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
-    top: ${spacing[4]};
     right: ${spacing[4]};
     display: flex;
     align-items: center;
@@ -656,6 +646,7 @@ const styles = {
 		color: ${colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
     padding: ${spacing[6]};
+    height: 100%;
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
@@ -664,7 +655,7 @@ const styles = {
 		${
       isOpen &&
       css`
-        transform: rotate(180deg);
+        transform: rotate(180deg); 
       `
     }
   `,

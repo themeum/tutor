@@ -584,6 +584,10 @@ const styles = {
     border-color: #3e64de;
     background: transparent;
 
+    :dir(rtl) {
+      margin-left: ${spacing[8]};
+    }
+
     :hover:not(:disabled) {
       background: ${colorTokens.background.white};
     }
