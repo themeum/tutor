@@ -10276,6 +10276,21 @@ class Utils {
 			);
 		}
 
+		if ( function_exists( 'et_setup_theme' ) ){
+			$name             = 'divi';
+			$editors[ $name ] = array(
+				'name'  => $name,
+				'label' => __( 'Divi', 'tutor' ),
+				'link'  => add_query_arg(
+					array(
+						'post'   => $post_id,
+						'action' => $name,
+					),
+					get_admin_url( null, 'post.php' )
+				),
+			);
+		}
+
 		return apply_filters( 'tutor_course_builder_editor_list', $editors, $post_id );
 	}
 
