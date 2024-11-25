@@ -16,10 +16,10 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormMatching from '@Components/fields/quiz/FormMatching';
 
-import Button from '@/v3/shared/atoms/Button';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';

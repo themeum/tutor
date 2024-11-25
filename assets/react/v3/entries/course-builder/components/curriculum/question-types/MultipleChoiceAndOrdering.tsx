@@ -16,12 +16,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import FormMultipleChoiceAndOrdering from '@Components/fields/quiz/FormMultipleChoiceAndOrdering';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import Button from '@/v3/shared/atoms/Button';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';

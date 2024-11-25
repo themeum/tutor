@@ -204,7 +204,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     padding-left: ${spacing[40]};
-    `,
+  `,
   addOptionButton: css`
     gap: ${spacing[4]};
     color: ${colorTokens.text.brand};
