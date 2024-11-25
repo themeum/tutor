@@ -104,7 +104,7 @@ const Certificate = () => {
       if (hasLandScapeCertificatesForSelectedTab && hasPortraitCertificatesForSelectedTab) {
         return previousOrientation;
       }
-      return certificatesData.find((certificate) => certificate.orientation === 'landscape') ? 'landscape' : 'portrait';
+      return hasLandScapeCertificatesForSelectedTab ? 'landscape' : 'portrait';
     });
   };
 
