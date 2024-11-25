@@ -322,7 +322,7 @@ const styles = {
 
   `,
   actionButton: css`
-		padding-inline: 0;
+		padding: 0;
 		color: ${colorTokens.icon.subdued};
 	`,
 };
