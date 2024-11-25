@@ -576,10 +576,6 @@ const styles = {
     justify-content: space-between;
     height: 32px;
   `,
-  addH5PContentWrapper: css`
-    /* position: absolute; */
-    /* top: 36px; */
-  `,
   addH5PContentButton: css`
     text-decoration: none;
     font-size: 13px;
