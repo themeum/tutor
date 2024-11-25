@@ -55,12 +55,12 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   }, [isEditing]);
 
   return (
-    <div css={styles.option({ isEditing })}>
+    <div css={styles.option}>
       <div css={styles.optionLabel({ isEditing })}>
         <div css={styles.optionHeader}>
           <div css={styles.optionTitle}>{__('Fill in the blanks', 'tutor')}</div>
 
-          <Show when={inputValue.is_saved}>
+          <Show when={inputValue.is_saved && !isEditing}>
             <div css={styles.optionActions}>
               <Tooltip content={__('Edit', 'tutor')}>
                 <button
@@ -109,13 +109,12 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
               </div>
             }
           >
-            <div css={styles.optionInputWrapper}>
+            <div css={[styleUtils.optionInputWrapper, css`gap: ${spacing[16]};`]}>
               <div css={styles.inputWithHints}>
                 <input
                   {...field}
                   ref={inputRef}
                   type="text"
-                  css={styles.optionInput}
                   placeholder={__('Question title...', 'tutor')}
                   value={inputValue.answer_title}
                   onClick={(event) => {
@@ -164,7 +163,6 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                 <input
                   {...field}
                   type="text"
-                  css={styles.optionInput}
                   placeholder={__('Correct Answer(s)...')}
                   value={fillInTheBlanksCorrectAnswer?.join('|')}
                   onClick={(event) => {
@@ -286,61 +284,13 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
 export default FormFillInTheBlanks;
 
 const styles = {
-  option: ({
-    isEditing,
-  }: {
-    isEditing: boolean;
-  }) => css`
+  option: css`
       ${styleUtils.display.flex()};
       ${typography.caption('medium')};
       align-items: center;
       color: ${colorTokens.text.subdued};
       gap: ${spacing[10]};
       align-items: center;
-  
-      [data-check-icon] {
-        opacity: 0;
-        transition: opacity 0.15s ease-in-out;
-        fill: none;
-      }
-
-      [data-visually-hidden] {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-      }
-
-      [data-edit-button] {
-        opacity: 0;
-        transition: opacity 0.3s ease-in-out;
-      }
-  
-      &:hover {
-        [data-check-icon] {
-          opacity: 1;
-        }
-
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-
-        ${
-          !isEditing &&
-          css`
-          [data-edit-button] {
-            opacity: 1;
-          }
-        `
-        }
-      }
-
-      ${
-        isEditing &&
-        css`
-        [data-edit-button] {
-          opacity: 0;
-        }
-      `
-      }
     `,
   optionLabel: ({
     isEditing,
@@ -355,9 +305,16 @@ const styles = {
       padding: ${spacing[12]} ${spacing[16]};
       transition: box-shadow 0.15s ease-in-out;
       background-color: ${colorTokens.background.white};
+
+      [data-visually-hidden] {
+        opacity: 0;
+      }
   
       &:hover {
         box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+        [data-visually-hidden] {
+          opacity: 1;
+        }
       }
 
       ${
@@ -432,12 +389,6 @@ const styles = {
       `
     }
   `,
-  optionInputWrapper: css`
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    gap: ${spacing[16]};
-  `,
   inputWithHints: css`
     display: flex;
     flex-direction: column;
@@ -465,21 +416,6 @@ const styles = {
     svg {
       flex-shrink: 0;
       color: ${colorTokens.icon.error};
-    }
-  `,
-  optionInput: css`
-    ${styleUtils.resetButton};
-    ${typography.caption()};
-    flex: 1;
-    color: ${colorTokens.text.subdued};
-    padding: ${spacing[4]} ${spacing[10]};
-    border: 1px solid ${colorTokens.stroke.default};
-    border-radius: ${borderRadius[6]};
-    resize: vertical;
-    cursor: text;
-
-    &:focus {
-      ${styleUtils.inputFocus};
     }
   `,
   optionInputButtons: css`

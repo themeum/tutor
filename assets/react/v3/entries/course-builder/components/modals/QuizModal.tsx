@@ -193,7 +193,7 @@ const QuizModal = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isEdit) {
-      form.setFocus('quiz_title');
+      return form.setFocus('quiz_title');
     }
   }, [isEdit]);
 
@@ -272,7 +272,10 @@ const QuizModal = ({
               )
             }
           >
-            <div css={styles.wrapper({ activeTab, isH5pQuiz: contentType === 'tutor_h5p_quiz' })}>
+            <div
+              className="quiz-modal"
+              css={styles.wrapper({ activeTab, isH5pQuiz: contentType === 'tutor_h5p_quiz' })}
+            >
               <Show when={!getQuizDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
                 <Show when={activeTab === 'details'}>
                   <div css={styles.left}>

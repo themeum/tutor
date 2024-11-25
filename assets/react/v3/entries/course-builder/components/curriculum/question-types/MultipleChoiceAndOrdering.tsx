@@ -21,6 +21,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormMultipleChoiceAndOrdering from '@Components/fields/quiz/FormMultipleChoiceAndOrdering';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
+import Button from '@/v3/shared/atoms/Button';
 import { colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -107,6 +108,31 @@ const MultipleChoiceAndOrdering = () => {
     }
   };
 
+  const handleAddOption = () => {
+    appendOption(
+      {
+        _data_status: QuizDataStatus.NEW,
+        is_saved: false,
+        answer_id: nanoid(),
+        answer_title: '',
+        is_correct: '0',
+        belongs_question_id: activeQuestionId,
+        belongs_question_type: currentQuestionType,
+        answer_order: optionsFields.length,
+        answer_two_gap_match: '',
+        answer_view_format: 'text',
+      },
+      {
+        shouldFocus: true,
+        focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
+      },
+    );
+
+    if (validationError?.type === 'add_option') {
+      setValidationError(null);
+    }
+  };
+
   const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
     const duplicateOption: QuizQuestionOption = {
       ...data,
@@ -153,7 +179,7 @@ const MultipleChoiceAndOrdering = () => {
   return (
     <div
       css={styles.optionWrapper({
-        currentQuestionType: currentQuestionType as 'multiple_choice' | 'ordering',
+        isOrdering: currentQuestionType === 'ordering',
       })}
     >
       <DndContext
@@ -234,39 +260,12 @@ const MultipleChoiceAndOrdering = () => {
         )}
       </DndContext>
 
-      <button
-        type="button"
-        onClick={() => {
-          appendOption(
-            {
-              _data_status: QuizDataStatus.NEW,
-              is_saved: false,
-              answer_id: nanoid(),
-              answer_title: '',
-              is_correct: '0',
-              belongs_question_id: activeQuestionId,
-              belongs_question_type: currentQuestionType,
-              answer_order: optionsFields.length,
-              answer_two_gap_match: '',
-              answer_view_format: 'text',
-            },
-            {
-              shouldFocus: true,
-              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
-            },
-          );
-
-          if (validationError?.type === 'add_option') {
-            setValidationError(null);
-          }
-        }}
-        css={styles.addOptionButton({
-          currentQuestionType: currentQuestionType as 'multiple_choice' | 'ordering',
-        })}
-      >
-        <SVGIcon name="plus" height={24} width={24} />
-        {__('Add Option', 'tutor')}
-      </button>
+      <div css={styles.addOptionButtonWrapper({ isOrdering: currentQuestionType === 'ordering' })}>
+        <Button variant="text" onClick={handleAddOption} buttonContentCss={styles.addOptionButton}>
+          <SVGIcon name="plus" height={24} width={24} />
+          {__('Add Option', 'tutor')}
+        </Button>
+      </div>
     </div>
   );
 };
@@ -275,42 +274,40 @@ export default MultipleChoiceAndOrdering;
 
 const styles = {
   optionWrapper: ({
-    currentQuestionType,
+    isOrdering,
   }: {
-    currentQuestionType: 'multiple_choice' | 'ordering';
+    isOrdering: boolean;
   }) => css`
       ${styleUtils.display.flex('column')};
       gap: ${spacing[12]};
       
       ${
-        currentQuestionType === 'ordering' &&
+        isOrdering &&
         css`
           padding-left: ${spacing[40]};
         `
       }
     `,
-  addOptionButton: ({
-    currentQuestionType,
+  addOptionButtonWrapper: ({
+    isOrdering,
   }: {
-    currentQuestionType: 'multiple_choice' | 'ordering';
+    isOrdering: boolean;
   }) => css`
-    ${styleUtils.resetButton}
-    ${styleUtils.display.flex()}
-    align-items: center;
-    gap: ${spacing[8]};
-    color: ${colorTokens.text.brand};
     margin-left: ${spacing[48]};
-    margin-top: ${spacing[28]};
-
-    svg {
-      color: ${colorTokens.icon.brand};
-    }
 
     ${
-      currentQuestionType === 'ordering' &&
+      isOrdering &&
       css`
         margin-left: ${spacing[8]};
       `
+    }
+  `,
+  addOptionButton: css`
+    gap: ${spacing[4]};
+    color: ${colorTokens.text.brand};
+
+    svg {
+      color: ${colorTokens.icon.brand};
     }
   `,
 };
