@@ -183,7 +183,7 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 							</p>
 						</div>
 						<div>
-							<img src="<?php echo esc_url( $image_url ) . '/ecommerce.png'; ?>" alt="Ecommerce" />
+							<img src="https://tutorlms.com/wp-content/uploads/2024/11/welcome-ecommerce.png" alt="Ecommerce" />
 						</div>
 					</div>
 				</div>

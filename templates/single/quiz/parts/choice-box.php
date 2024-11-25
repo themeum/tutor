@@ -48,8 +48,15 @@ if ( $stat['text'] && ! $stat['image'] && ! $stat['text_image'] ) {
  *
  * @since 3.0.0
  */
-$multiple_answer_allowed = isset( $question_settings['has_multiple_correct_answer'] ) && '1' === $question_settings['has_multiple_correct_answer'];
-$choice_type             = $multiple_answer_allowed ? 'checkbox' : 'radio';
+
+$multiple_answer_allowed = isset( $question_settings['question_type'] ) && 'multiple_choice' === $question_settings['question_type'];
+
+// Version 3 new `multiple-choice` must have property `has_multiple_correct_answer`.
+if ( isset( $question_settings['has_multiple_correct_answer'] ) ) {
+	$multiple_answer_allowed = '1' === $question_settings['has_multiple_correct_answer'];
+}
+
+$choice_type = $multiple_answer_allowed ? 'checkbox' : 'radio';
 ?>
 
 <div class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo esc_attr( $question_type ); ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?>">
