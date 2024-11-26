@@ -109,7 +109,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
               </div>
             }
           >
-            <div css={[styleUtils.optionInputWrapper, css`gap: ${spacing[16]};`]}>
+            <div css={styles.optionInputWrapper}>
               <div css={styles.inputWithHints}>
                 <input
                   {...field}
@@ -351,6 +351,10 @@ const styles = {
   `,
   optionBody: css`
     display: flex;
+  `,
+  optionInputWrapper: css`
+    ${styleUtils.optionInputWrapper};
+    gap: ${spacing[16]};
   `,
   placeholderWrapper: css`
     display: flex;

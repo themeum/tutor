@@ -261,8 +261,12 @@ const MultipleChoiceAndOrdering = () => {
       </DndContext>
 
       <div css={styles.addOptionButtonWrapper({ isOrdering: currentQuestionType === 'ordering' })}>
-        <Button variant="text" onClick={handleAddOption} buttonContentCss={styles.addOptionButton}>
-          <SVGIcon name="plus" height={24} width={24} />
+        <Button
+          variant="text"
+          onClick={handleAddOption}
+          buttonContentCss={styles.addOptionButton}
+          icon={<SVGIcon name="plus" height={24} width={24} />}
+        >
           {__('Add Option', 'tutor')}
         </Button>
       </div>
@@ -303,7 +307,6 @@ const styles = {
     }
   `,
   addOptionButton: css`
-    gap: ${spacing[4]};
     color: ${colorTokens.text.brand};
 
     svg {
