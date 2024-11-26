@@ -10275,7 +10275,7 @@ class Utils {
 				),
 			);
 		}
-
+					
 		if ( function_exists( 'et_setup_theme' ) ){
 			$name             = 'divi';
 			$editors[ $name ] = array(
@@ -10283,10 +10283,9 @@ class Utils {
 				'label' => __( 'Divi', 'tutor' ),
 				'link'  => add_query_arg(
 					array(
-						'post'   => $post_id,
-						'action' => $name,
+						'et_fb_activation_nonce' => wp_create_nonce( 'et_fb_activation_nonce_' . $post_id ),
 					),
-					get_admin_url( null, 'post.php' )
+					get_permalink( $post_id )
 				),
 			);
 		}
@@ -10322,6 +10321,10 @@ class Utils {
 		 
 		if ( 'droip' === get_post_meta( $post_id, 'droip_editor_mode', true ) ) {
 			$name = 'droip';
+		}
+
+		if ( 'on' === get_post_meta( $post_id, '_et_pb_use_builder', true ) ) {
+			$name = 'divi';
 		}
 
 		$editor_list = $this->get_editor_list( $post_id );
