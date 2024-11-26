@@ -8,7 +8,7 @@ import { typography } from '@Config/typography';
 import { type VariantProps, createVariation } from '@Utils/create-variation';
 import { styleUtils } from '@Utils/style-utils';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'wp' | 'text';
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'WP' | 'text';
 type ButtonSize = 'regular' | 'large' | 'small';
 type ButtonIconPosition = 'left' | 'right';
 
@@ -205,7 +205,7 @@ const styles = {
         background-color: ${colorTokens.background.status.errorFail};
       }
     `,
-    wp: css`
+    WP: css`
       background-color: ${colorTokens.action.primary.wp};
       &:hover:not(:disabled), &:focus:not(:disabled) {
         background-color: ${colorTokens.action.primary.wp_hover};
@@ -281,7 +281,7 @@ const styles = {
         background-color: ${colorTokens.background.status.errorFail};
       }
     `,
-    wp: css`
+    WP: css`
       background-color: transparent;
       border: 1px solid ${colorTokens.action.primary.wp};
       color: ${colorTokens.action.primary.wp};
@@ -415,7 +415,7 @@ const buttonVariants = createVariation(
         secondary: styles.variant.secondary,
         tertiary: styles.variant.tertiary,
         danger: styles.variant.danger,
-        wp: styles.variant.wp,
+        WP: styles.variant.WP,
         text: styles.variant.text,
       },
       outlined: {
@@ -423,7 +423,7 @@ const buttonVariants = createVariation(
         secondary: styles.outlined.secondary,
         tertiary: styles.outlined.tertiary,
         danger: styles.outlined.danger,
-        wp: styles.outlined.wp,
+        WP: styles.outlined.WP,
         text: styles.outlined.text,
         none: styles.outlined.none,
       },
