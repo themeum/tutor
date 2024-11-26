@@ -141,14 +141,16 @@ const styles = {
         }
       }
 
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        background-color: ${colorTokens.action.primary.hover};
-      }
-      &:active:not(:disabled) {
-        background-color: ${colorTokens.action.primary.active};
-        color: ${colorTokens.text.white};
-        svg {
-          color: ${colorTokens.icon.white};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          background-color: ${colorTokens.action.primary.hover};
+        }
+        &:active {
+          background-color: ${colorTokens.action.primary.active};
+          color: ${colorTokens.text.white};
+          svg {
+            color: ${colorTokens.icon.white};
+          }
         }
       }
     `,
@@ -159,11 +161,13 @@ const styles = {
         color: ${colorTokens.icon.brand};
       }
 
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        background-color: ${colorTokens.action.secondary.hover};
-      }
-      &:active:not(:disabled) {
-        background-color: ${colorTokens.action.secondary.active};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          background-color: ${colorTokens.action.secondary.hover};
+        }
+        &:active {
+          background-color: ${colorTokens.action.secondary.active};
+        }
       }
     `,
     tertiary: css`
@@ -175,20 +179,22 @@ const styles = {
           color: ${colorTokens.icon.hints};
       }
 
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        background-color: ${colorTokens.background.hover};
-        outline: 1px solid ${colorTokens.stroke.hover};
-        color: ${colorTokens.text.title};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          background-color: ${colorTokens.background.hover};
+          outline: 1px solid ${colorTokens.stroke.hover};
+          color: ${colorTokens.text.title};
 
-        svg {
-          color: ${colorTokens.icon.brand};
+          svg {
+            color: ${colorTokens.icon.brand};
+          }
         }
-      }
-      
-      &:active:not(:disabled) {
-        background-color: ${colorTokens.background.active};
-        svg {
-          color: ${colorTokens.icon.hints};
+        
+        &:active {
+          background-color: ${colorTokens.background.active};
+          svg {
+            color: ${colorTokens.icon.hints};
+          }
         }
       }
     `,
@@ -199,36 +205,42 @@ const styles = {
         color: ${colorTokens.icon.error};
       }
 
-      &:hover:not(:disabled), &:focus:not(:disabled), &:active:not(:disabled) {
-        background-color: ${colorTokens.background.status.errorFail};
+      &:not(:disabled) {
+        &:hover, &:focus, &:active {
+          background-color: ${colorTokens.background.status.errorFail};
+        }
       }
     `,
     WP: css`
       background-color: ${colorTokens.action.primary.wp};
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        background-color: ${colorTokens.action.primary.wp_hover};
-      }
-      &:active:not(:disabled) {
-        background-color: ${colorTokens.action.primary.wp};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          background-color: ${colorTokens.action.primary.wp_hover};
+        }
+        &:active {
+          background-color: ${colorTokens.action.primary.wp};
+        }
       }
     `,
     text: css`
       background-color: transparent;
       color: ${colorTokens.text.subdued};
       padding: ${spacing[8]};
-
       svg {
         color: ${colorTokens.icon.hints};
       }
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        color: ${colorTokens.text.brand};
 
-        svg {
-          color: ${colorTokens.icon.brand};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          color: ${colorTokens.text.brand};
+
+          svg {
+            color: ${colorTokens.icon.brand};
+          }
         }
-      }
-      &:active:not(:disabled) {
-        color: ${colorTokens.text.subdued};
+        &:active {
+          color: ${colorTokens.text.subdued};
+        }
       }
     `,
   },
@@ -249,11 +261,13 @@ const styles = {
         }
       }
 
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        color: ${colorTokens.text.white};
-        
-        svg {
-          color: ${colorTokens.icon.white};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          color: ${colorTokens.text.white};
+          
+          svg {
+            color: ${colorTokens.icon.white};
+          }
         }
       }
     `,
@@ -265,8 +279,10 @@ const styles = {
         color: ${colorTokens.icon.brand};
       }
 
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        background-color: ${colorTokens.action.secondary.hover};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          background-color: ${colorTokens.action.secondary.hover};
+        }
       }
     `,
     tertiary: css`
@@ -275,8 +291,11 @@ const styles = {
     danger: css`
       background-color: transparent;
       border: 1px solid ${colorTokens.stroke.danger};
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        background-color: ${colorTokens.background.status.errorFail};
+      
+      &:not(:disabled) {
+        &:hover, &:focus {
+          background-color: ${colorTokens.background.status.errorFail};
+        }
       }
     `,
     WP: css`
@@ -286,12 +305,15 @@ const styles = {
       svg {
         color: ${colorTokens.icon.wp};
       }
-      &:hover:not(:disabled), &:focus:not(:disabled) {
-        background-color: ${colorTokens.action.primary.wp_hover};
-        color: ${colorTokens.text.white};
 
-        svg {
-          color: ${colorTokens.icon.white};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          background-color: ${colorTokens.action.primary.wp_hover};
+          color: ${colorTokens.text.white};
+
+          svg {
+            color: ${colorTokens.icon.white};
+          }
         }
       }
     `,
@@ -299,8 +321,10 @@ const styles = {
       background-color: transparent;
       border: none;
       color: ${colorTokens.text.primary};
-      &:hover:not(:disabled) {
-        color: ${colorTokens.text.brand};
+      &:not(:disabled) {
+        &:hover, &:focus {
+          color: ${colorTokens.text.brand};
+        }
       }
     `,
     none: css``,
