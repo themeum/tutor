@@ -103,12 +103,7 @@ const FormImageAnswering = ({
   }, [isEditing]);
 
   return (
-    <div
-      {...attributes}
-      css={styles.option({ isSelected: !!Number(inputValue.is_correct), isEditing })}
-      ref={setNodeRef}
-      style={style}
-    >
+    <div {...attributes} css={styles.option} ref={setNodeRef} style={style} tabIndex={-1}>
       <div
         css={styles.optionLabel({ isEditing, isOverlay, isDragging })}
         onClick={() => {
@@ -122,13 +117,19 @@ const FormImageAnswering = ({
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isEditing })}>{String.fromCharCode(65 + index)}</div>
+          <div
+            css={styleUtils.optionCounter({
+              isEditing,
+            })}
+          >
+            {String.fromCharCode(65 + index)}
+          </div>
 
           <Show when={!isEditing && inputValue.is_saved}>
             <button
               {...listeners}
               type="button"
-              css={styles.optionDragButton({
+              css={styleUtils.optionDragButton({
                 isOverlay,
               })}
               data-visually-hidden
@@ -141,7 +142,6 @@ const FormImageAnswering = ({
                 <button
                   type="button"
                   css={styleUtils.actionButton}
-                  data-edit-button
                   onClick={(event) => {
                     event.stopPropagation();
                     setIsEditing(true);
@@ -213,7 +213,7 @@ const FormImageAnswering = ({
               </div>
             }
           >
-            <div css={styles.optionInputWrapper}>
+            <div css={styleUtils.optionInputWrapper}>
               <ImageInput
                 value={{
                   id: Number(inputValue.image_id),
@@ -232,7 +232,6 @@ const FormImageAnswering = ({
                   {...field}
                   ref={inputRef}
                   type="text"
-                  css={styles.optionInput}
                   placeholder={__('Input answer here', 'tutor')}
                   value={inputValue.answer_title}
                   onClick={(event) => {
@@ -347,52 +346,14 @@ const FormImageAnswering = ({
 export default FormImageAnswering;
 
 const styles = {
-  option: ({
-    isSelected,
-    isEditing,
-  }: {
-    isSelected: boolean;
-    isEditing: boolean;
-  }) => css`
-      ${styleUtils.display.flex()};
-      ${typography.caption('medium')};
-      align-items: center;
-      color: ${colorTokens.text.subdued};
-      gap: ${spacing[10]};
-      align-items: center;
-
-      [data-visually-hidden] {
-        opacity: 0;
-      }
-
-      [data-edit-button] {
-        opacity: 0;
-      }
-  
-      &:hover {
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-
-        ${
-          !isEditing &&
-          css`
-          [data-edit-button] {
-            opacity: 1;
-          }
-        `
-        }
-      }
-
-      ${
-        isEditing &&
-        css`
-        [data-edit-button] {
-          opacity: 0;
-        }
-      `
-      }
-    `,
+  option: css`
+    ${styleUtils.display.flex()};
+    ${typography.caption('medium')};
+    align-items: center;
+    color: ${colorTokens.text.subdued};
+    gap: ${spacing[10]};
+    align-items: center;
+  `,
   optionLabel: ({
     isEditing,
     isOverlay,
@@ -408,9 +369,18 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
-  
+
+
+      [data-visually-hidden] {
+        opacity: 0;
+      }
+    
       &:hover {
         outline: 1px solid ${colorTokens.stroke.hover};
+
+        [data-visually-hidden] {
+          opacity: 1;
+        }
       }
 
       ${
@@ -443,62 +413,17 @@ const styles = {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-  `,
-  optionCounter: ({
-    isEditing,
-  }: {
-    isEditing: boolean;
-  }) => css`
-    height: ${spacing[24]};
-    width: ${spacing[24]};
-    border-radius: ${borderRadius.min};
-    ${typography.caption('medium')};
-    color: ${colorTokens.text.subdued};
-    background-color: ${colorTokens.background.default};
-    text-align: center;
-    place-self: center start;
 
-    ${
-      !isEditing &&
-      css`
-        background-color: ${colorTokens.bg.white};
-      `
-    }
-  `,
-  optionDragButton: ({
-    isOverlay,
-  }: {
-    isOverlay: boolean;
-  }) => css`
-    ${styleUtils.resetButton}
-    ${styleUtils.flexCenter()}
-    transform: rotate(90deg);
-    color: ${colorTokens.icon.default};
-    cursor: grab;
-    place-self: center center;
-
-    ${
-      isOverlay &&
-      css`
-        cursor: grabbing;
-      `
+    :focus-within {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
   `,
   optionActions: css`
     ${styleUtils.display.flex()}
     gap: ${spacing[8]};
     place-self: center end;
-  `,
-  actionButton: css`
-    ${styleUtils.resetButton};
-    color: ${colorTokens.icon.default};
-    ${styleUtils.display.flex()}
-    cursor: pointer;
-
-    :disabled {
-      cursor: not-allowed;
-      color: ${colorTokens.icon.disable.background};
-    }
   `,
   optionBody: css`
     ${styleUtils.display.flex()}
@@ -538,11 +463,6 @@ const styles = {
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};
   `,
-  optionInputWrapper: css`
-    ${styleUtils.display.flex('column')}
-    width: 100%;
-    gap: ${spacing[12]};
-  `,
   inputWithHints: css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[8]};
@@ -556,21 +476,6 @@ const styles = {
 
     svg {
       flex-shrink: 0;
-    }
-  `,
-  optionInput: css`
-    ${styleUtils.resetButton};
-    ${typography.caption()};
-    flex: 1;
-    color: ${colorTokens.text.subdued};
-    padding: ${spacing[4]} ${spacing[10]};
-    border: 1px solid ${colorTokens.stroke.default};
-    border-radius: ${borderRadius[6]};
-    resize: vertical;
-    cursor: text;
-
-    &:focus {
-      ${styleUtils.inputFocus};
     }
   `,
   optionInputButtons: css`

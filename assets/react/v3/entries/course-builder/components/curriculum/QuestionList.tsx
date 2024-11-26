@@ -24,7 +24,7 @@ import Popover from '@Molecules/Popover';
 
 import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
-import { colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -428,11 +428,16 @@ const styles = {
       ${styleUtils.resetButton};
       width: 32px;
       height: 32px;
+      border-radius: ${borderRadius[6]};
 
       svg {
         color: ${colorTokens.action.primary.default};
         width: 100%;
         height: 100%;
+      }
+
+      :focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
       }
     }
   `,

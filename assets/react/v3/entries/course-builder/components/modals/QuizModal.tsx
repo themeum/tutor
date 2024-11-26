@@ -281,7 +281,7 @@ const QuizModal = ({
                         <Show
                           when={isEdit}
                           fallback={
-                            <div css={styles.quizNameWithButton}>
+                            <div role="button" tabIndex={0} css={styles.quizNameWithButton}>
                               <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
                               <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
                                 <SVGIcon name="edit" width={24} height={24} />
@@ -459,7 +459,15 @@ const styles = {
       display: none;
     }
 
-    :hover {
+    :hover, :focus-within {
+      button {
+        display: block;
+      }
+    }
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      border-radius: ${borderRadius[6]};
       button {
         display: block;
       }

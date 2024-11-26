@@ -80,12 +80,11 @@ const FormQuestionTitle = ({
   }, [isEdit, inputRef.current]);
 
   return (
-    <div data-container css={styles.container({ isEdit, isDisabled: disabled || false })}>
+    <div role="button" tabIndex={0} css={styles.container({ isEdit, isDisabled: disabled || false })}>
       <Show when={!isEdit}>
         <div
           css={styles.placeholder}
           onClick={() => !disabled && setIsEdit(true)}
-          role="button"
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
               setIsEdit(true);
@@ -225,18 +224,26 @@ const styles = {
       !isDisabled &&
       css`
         &:hover {
-        background-color: ${colorTokens.background.white};
-        color: ${colorTokens.text.subdued};
+          background-color: ${colorTokens.background.white};
+          color: ${colorTokens.text.subdued};
 
-        [data-action-buttons] {
-          opacity: ${!isDisabled ? 1 : 0};
+          [data-action-buttons] {
+            opacity: ${!isDisabled ? 1 : 0};
+          }
+        };
+
+        &:focus-within {
+          ${isEdit && styleUtils.inputFocus}
+
+          [data-action-buttons] {
+            opacity: 1;
+          }
         }
-      };
 
-      &:focus-within {
-        ${isEdit && styleUtils.inputFocus}
-      }
-    `
+        &:focus-visible {
+          outline: 2px solid ${colorTokens.stroke.brand};
+        }
+      `
     }
 
     ${
@@ -293,6 +300,7 @@ const styles = {
   placeholder: css`
     ${typography.heading6()}
     color: ${colorTokens.text.hints};
+    border-radius: ${borderRadius[6]};
   `,
   actionButtonWrapper: ({
     isEdit,
@@ -314,7 +322,7 @@ const styles = {
 
   `,
   actionButton: css`
-		padding-inline: 0;
+		padding: 0;
 		color: ${colorTokens.icon.subdued};
 	`,
 };

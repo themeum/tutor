@@ -16,6 +16,7 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormMatching from '@Components/fields/quiz/FormMatching';
 
@@ -65,6 +66,31 @@ const Matching = () => {
 
     return optionsFields.find((item) => item.answer_id === activeSortId);
   }, [activeSortId, optionsFields]);
+
+  const handleAddOption = () => {
+    appendOption(
+      {
+        _data_status: QuizDataStatus.NEW,
+        is_saved: false,
+        answer_id: nanoid(),
+        answer_title: '',
+        is_correct: '0',
+        belongs_question_id: activeQuestionId,
+        belongs_question_type: imageMatching ? 'image_matching' : 'matching',
+        answer_order: optionsFields.length,
+        answer_two_gap_match: '',
+        answer_view_format: '',
+      },
+      {
+        shouldFocus: true,
+        focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
+      },
+    );
+
+    if (validationError?.type === 'add_option') {
+      setValidationError(null);
+    }
+  };
 
   const handleDuplicateOption = (index: number, data: QuizQuestionOption) => {
     const duplicateOption: QuizQuestionOption = {
@@ -165,37 +191,16 @@ const Matching = () => {
         )}
       </DndContext>
 
-      <button
-        type="button"
-        onClick={() => {
-          appendOption(
-            {
-              _data_status: QuizDataStatus.NEW,
-              is_saved: false,
-              answer_id: nanoid(),
-              answer_title: '',
-              is_correct: '0',
-              belongs_question_id: activeQuestionId,
-              belongs_question_type: imageMatching ? 'image_matching' : 'matching',
-              answer_order: optionsFields.length,
-              answer_two_gap_match: '',
-              answer_view_format: '',
-            },
-            {
-              shouldFocus: true,
-              focusName: `questions.${activeQuestionIndex}.question_answers.${optionsFields.length}.answer_title`,
-            },
-          );
-
-          if (validationError?.type === 'add_option') {
-            setValidationError(null);
-          }
-        }}
-        css={styles.addOptionButton}
-      >
-        <SVGIcon name="plus" height={24} width={24} />
-        {__('Add Option', 'tutor')}
-      </button>
+      <div>
+        <Button
+          variant="text"
+          onClick={handleAddOption}
+          buttonContentCss={styles.addOptionButton}
+          icon={<SVGIcon name="plus" height={24} width={24} />}
+        >
+          {__('Add Option', 'tutor')}
+        </Button>
+      </div>
     </div>
   );
 };
@@ -209,13 +214,7 @@ const styles = {
     padding-left: ${spacing[40]};
   `,
   addOptionButton: css`
-    ${styleUtils.resetButton}
-    ${styleUtils.display.flex()}
-    align-items: center;
-    gap: ${spacing[8]};
     color: ${colorTokens.text.brand};
-    margin-left: ${spacing[8]};
-    margin-top: ${spacing[28]};
 
     svg {
       color: ${colorTokens.icon.brand};

@@ -114,7 +114,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
   }, [isEditing]);
 
   return (
-    <div {...attributes} css={styles.option({ isEditing })} ref={setNodeRef} style={style}>
+    <div {...attributes} css={styles.option} ref={setNodeRef} tabIndex={-1} style={style}>
       <div
         css={styles.optionLabel({ isEditing, isDragging, isOverlay })}
         onClick={() => {
@@ -128,15 +128,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
         }}
       >
         <div css={styles.optionHeader}>
-          <div css={styles.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
-            {String.fromCharCode(65 + index)}
-          </div>
+          <div css={styleUtils.optionCounter({ isEditing })}>{String.fromCharCode(65 + index)}</div>
 
           <Show when={!isEditing && inputValue.is_saved}>
             <button
               {...listeners}
               type="button"
-              css={styles.optionDragButton({
+              css={styleUtils.optionDragButton({
                 isOverlay,
               })}
               data-visually-hidden
@@ -231,7 +229,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
               </div>
             }
           >
-            <div css={styles.optionInputWrapper}>
+            <div css={styleUtils.optionInputWrapper}>
               <Show when={imageMatching}>
                 <ImageInput
                   value={{
@@ -250,7 +248,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                 {...field}
                 type="text"
                 ref={inputRef}
-                css={styles.optionInput}
                 placeholder={!imageMatching ? __('Question', 'tutor') : __('Image matched text..', 'tutor')}
                 value={inputValue.answer_title}
                 onClick={(event) => {
@@ -293,7 +290,6 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                 <input
                   {...field}
                   type="text"
-                  css={styles.optionInput}
                   placeholder={__('Matched option..', 'tutor')}
                   value={inputValue.answer_two_gap_match}
                   onClick={(event) => {
@@ -406,49 +402,13 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
 export default FormMatching;
 
 const styles = {
-  option: ({
-    isEditing,
-  }: {
-    isEditing: boolean;
-  }) => css`
+  option: css`
       ${styleUtils.display.flex()};
       ${typography.caption('medium')};
       align-items: center;
       color: ${colorTokens.text.subdued};
       gap: ${spacing[10]};
       align-items: center;
-
-      [data-visually-hidden] {
-        opacity: 0;
-      }
-
-      [data-edit-button] {
-        opacity: 0;
-      }
-  
-      &:hover {
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-
-        ${
-          !isEditing &&
-          css`
-          [data-edit-button] {
-            opacity: 1;
-          }
-        `
-        }
-      }
-
-      ${
-        isEditing &&
-        css`
-        [data-edit-button] {
-          opacity: 0;
-        }
-      `
-      }
     `,
   optionLabel: ({
     isEditing,
@@ -466,9 +426,17 @@ const styles = {
       border-radius: ${borderRadius.card};
       padding: ${spacing[12]} ${spacing[16]};
       background-color: ${colorTokens.background.white};
-  
+      
+      [data-visually-hidden] {
+        opacity: 0;
+      }
+
       &:hover {
         outline: 1px solid ${colorTokens.stroke.hover};
+
+        [data-visually-hidden] {
+          opacity: 1;
+        }
       }
 
       ${
@@ -501,50 +469,12 @@ const styles = {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
-  `,
-  optionCounter: ({
-    isSelected,
-    isEditing,
-  }: {
-    isSelected: boolean;
-    isEditing: boolean;
-  }) => css`
-    height: ${spacing[24]};
-    width: ${spacing[24]};
-    border-radius: ${borderRadius.min};
-    ${typography.caption('medium')};
-    color: ${colorTokens.text.subdued};
-    background-color: ${colorTokens.background.default};
-    text-align: center;
-    place-self: center start;
 
-    ${
-      isSelected &&
-      !isEditing &&
-      css`
-        background-color: ${colorTokens.bg.white};
-      `
+    &:focus-within {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
-  `,
-  optionDragButton: ({
-    isOverlay,
-  }: {
-    isOverlay: boolean;
-  }) => css`
-    ${styleUtils.resetButton}
-    ${styleUtils.flexCenter()}
-    transform: rotate(90deg);
-    color: ${colorTokens.icon.default};
-    cursor: grab;
-    place-self: center center;
-
-    ${
-      isOverlay &&
-      css`
-        cursor: grabbing;
-      `
-    }
-    
   `,
   optionActions: css`
     ${styleUtils.display.flex()}
@@ -557,7 +487,7 @@ const styles = {
     color: ${colorTokens.icon.default};
     cursor: pointer;
 
-    :disabled {
+    &:disabled {
       cursor: not-allowed;
       color: ${colorTokens.icon.disable.background};
     }
@@ -614,21 +544,6 @@ const styles = {
     ${styleUtils.display.flex('column')}
     width: 100%;
     gap: ${spacing[12]};
-  `,
-  optionInput: css`
-    ${styleUtils.resetButton};
-    ${typography.caption()};
-    flex: 1;
-    color: ${colorTokens.text.subdued};
-    padding: ${spacing[4]} ${spacing[10]};
-    border: 1px solid ${colorTokens.stroke.default};
-    border-radius: ${borderRadius[6]};
-    resize: vertical;
-    cursor: text;
-
-    &:focus {
-      ${styleUtils.inputFocus};
-    }
   `,
   optionInputButtons: css`
     ${styleUtils.display.flex()}

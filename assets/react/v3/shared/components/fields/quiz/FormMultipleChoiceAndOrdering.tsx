@@ -129,17 +129,16 @@ const FormMultipleChoiceAndOrdering = ({
       {...attributes}
       css={styles.option({
         isSelected: !!Number(inputValue.is_correct),
-        isEditing,
         isMultipleChoice: hasMultipleCorrectAnswer,
-        isOverlay,
       })}
+      tabIndex={-1}
       ref={setNodeRef}
       style={style}
     >
       <Show when={currentQuestionType === 'multiple_choice'}>
         <button
           key={inputValue.is_correct}
-          css={styleUtils.resetButton}
+          css={styleUtils.optionCheckButton}
           data-check-button
           type="button"
           onClick={onCheckCorrectAnswer}
@@ -175,7 +174,7 @@ const FormMultipleChoiceAndOrdering = ({
       >
         <div css={styles.optionHeader}>
           <div css={styles.optionCounterAndButton}>
-            <div css={styles.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
+            <div css={styleUtils.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
               {String.fromCharCode(65 + index)}
             </div>
             <Show when={isEditing}>
@@ -220,7 +219,7 @@ const FormMultipleChoiceAndOrdering = ({
           </div>
 
           <Show when={!isEditing && inputValue.is_saved}>
-            <button {...listeners} type="button" css={styles.optionDragButton({ isOverlay })} data-visually-hidden>
+            <button {...listeners} type="button" css={styleUtils.optionDragButton({ isOverlay })} data-visually-hidden>
               <SVGIcon name="dragVertical" height={24} width={24} />
             </button>
 
@@ -229,7 +228,6 @@ const FormMultipleChoiceAndOrdering = ({
                 <button
                   type="button"
                   css={styleUtils.actionButton}
-                  data-edit-button
                   onClick={(event) => {
                     event.stopPropagation();
                     setIsEditing(true);
@@ -299,7 +297,7 @@ const FormMultipleChoiceAndOrdering = ({
               </div>
             }
           >
-            <div css={styles.optionInputWrapper}>
+            <div css={styleUtils.optionInputWrapper}>
               <Show when={isUploadImageVisible}>
                 <ImageInput
                   value={{
@@ -319,7 +317,6 @@ const FormMultipleChoiceAndOrdering = ({
               <textarea
                 {...field}
                 ref={inputRef}
-                css={styles.optionInput}
                 placeholder={__('Write option...', 'tutor')}
                 value={inputValue.answer_title}
                 onClick={(event) => {
@@ -427,14 +424,10 @@ export default FormMultipleChoiceAndOrdering;
 const styles = {
   option: ({
     isSelected,
-    isEditing,
     isMultipleChoice,
-    isOverlay,
   }: {
     isSelected: boolean;
-    isEditing: boolean;
     isMultipleChoice: boolean;
-    isOverlay: boolean;
   }) => css`
       ${styleUtils.display.flex()};
       ${typography.caption('medium')};
@@ -444,7 +437,6 @@ const styles = {
       align-items: center;
   
       [data-check-button] {
-        opacity: 0;
         color: ${colorTokens.icon.default};
         ${
           !isMultipleChoice &&
@@ -452,14 +444,23 @@ const styles = {
             fill: none;
           `
         }
+
+        &:focus-visible {
+          opacity: 1;
+        }
       }
   
       &:hover {
         [data-check-button] {
-          opacity: ${isEditing || isOverlay ? 0 : 1};
+          opacity: 1;
         }
       }
-  
+
+      &:focus-within {
+        [data-check-button] {
+          opacity: 1;
+        }
+      }
   
       ${
         isSelected &&
@@ -499,25 +500,12 @@ const styles = {
       [data-visually-hidden] {
         opacity: 0;
       }
-
-      [data-edit-button] {
-        opacity: 0;
-      }
   
       &:hover {
         outline: 1px solid ${colorTokens.stroke.hover};
 
         [data-visually-hidden] {
           opacity: 1;
-        }
-
-        ${
-          !isEditing &&
-          css`
-            [data-edit-button] {
-              opacity: 1;
-            }
-          `
         }
       }
   
@@ -561,6 +549,12 @@ const styles = {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
+
+    &:focus-within {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
   `,
   optionCounterAndButton: css`
     ${styleUtils.display.flex()}
@@ -568,47 +562,6 @@ const styles = {
     place-self: center start;
     button {
       padding: 0;
-    }
-  `,
-  optionCounter: ({
-    isSelected,
-    isEditing,
-  }: {
-    isSelected: boolean;
-    isEditing: boolean;
-  }) => css`
-    height: ${spacing[24]};
-    width: ${spacing[24]};
-    border-radius: ${borderRadius.min};
-    ${typography.caption('medium')};
-    color: ${colorTokens.text.subdued};
-    background-color: ${colorTokens.background.default};
-    text-align: center;
-    ${
-      isSelected &&
-      !isEditing &&
-      css`
-        background-color: ${colorTokens.bg.white};
-      `
-    }
-  `,
-  optionDragButton: ({
-    isOverlay,
-  }: {
-    isOverlay: boolean;
-  }) => css`
-    ${styleUtils.resetButton}
-    ${styleUtils.flexCenter()}
-    transform: rotate(90deg);
-    color: ${colorTokens.icon.default};
-    cursor: grab;
-    place-self: center center;
-
-    ${
-      isOverlay &&
-      css`
-        cursor: grabbing;
-      `
     }
   `,
   optionActions: css`
@@ -653,26 +606,6 @@ const styles = {
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};
-  `,
-  optionInputWrapper: css`
-    ${styleUtils.display.flex('column')}
-    width: 100%;
-    gap: ${spacing[12]};
-  `,
-  optionInput: css`
-    ${styleUtils.resetButton};
-    ${typography.caption()};
-    flex: 1;
-    color: ${colorTokens.text.subdued};
-    padding: ${spacing[4]} ${spacing[10]};
-    border: 1px solid ${colorTokens.stroke.default};
-    border-radius: ${borderRadius[6]};
-    resize: vertical;
-    cursor: text;
-    
-    &:focus {
-      ${styleUtils.inputFocus}
-    }
   `,
   optionInputButtons: css`
     ${styleUtils.display.flex()}
