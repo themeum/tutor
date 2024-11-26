@@ -128,6 +128,12 @@ const styles = {
       box-shadow: ${shadow.focus};
     }
 
+    &:focus-visible {
+      box-shadow: none;
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
   `,
   variant: {
     primary: css`
