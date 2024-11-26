@@ -7070,12 +7070,15 @@ class Utils {
 		if ( 'approved' === $status ) {
 			$status = 'completed';
 		} elseif ( 'cancelled' === $status ) {
-			$status = 'cancel';
+			$status = array( 'cancel', 'canceled', 'cancelled' );
 		} else {
 			$status = '';
 		}
-		$status_query = "AND enrol.post_status IN ('completed', 'cancel') ";
-		if ( '' !== $status ) {
+		$status_query = "AND enrol.post_status IN ('completed', 'cancel', 'canceled', 'cancelled') ";
+		if ( is_array( $status ) && count( $status ) ) {
+			$in_clause    =  QueryHelper::prepare_in_clause( $status );
+			$status_query = "AND enrol.post_status IN ({$in_clause})";
+		} elseif ( ! empty( $status ) ) {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
@@ -7130,13 +7133,16 @@ class Utils {
 		if ( 'approved' === $status ) {
 			$status = 'completed';
 		} elseif ( 'cancelled' === $status ) {
-			$status = 'cancel';
+			$status = array( 'cancel', 'canceled', 'cancelled' );
 		} else {
 			$status = '';
 		}
 		// default will return approved & cancelled status record.
-		$status_query = "AND enrol.post_status IN ('completed', 'cancel') ";
-		if ( '' !== $status ) {
+		$status_query = "AND enrol.post_status IN ('completed', 'cancel', 'canceled', 'cancelled') ";
+		if ( is_array( $status ) && count( $status ) ) {
+			$in_clause    =  QueryHelper::prepare_in_clause( $status );
+			$status_query = "AND enrol.post_status IN ({$in_clause})";
+		} elseif ( ! empty( $status ) ) {
 			$status_query = "AND enrol.post_status = '$status' ";
 		}
 
