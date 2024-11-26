@@ -9,8 +9,8 @@ import { type VariantProps, createVariation } from '@Utils/create-variation';
 import { styleUtils } from '@Utils/style-utils';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text' | 'WP';
-type ButtonSize = 'large' | 'regular' | 'small';
-type ButtonIconPosition = 'left' | 'right';
+export type ButtonSize = 'large' | 'regular' | 'small';
+export type ButtonIconPosition = 'left' | 'right';
 
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   children?: ReactNode;
