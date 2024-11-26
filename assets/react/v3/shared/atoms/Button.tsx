@@ -95,6 +95,37 @@ const spin = keyframes`
   }
 `;
 
+const disabledStyles = {
+  notOutlined: css`
+    &:disabled {
+      background-color: ${colorTokens.action.primary.disable};
+      color: ${colorTokens.text.disable};
+      svg {
+        color: ${colorTokens.icon.disable.default};
+      }
+    }
+  `,
+  outlined: css`
+    &:disabled {
+      background-color: transparent;
+      border: none;
+      outline: 1px solid ${colorTokens.action.outline.disable};
+      color: ${colorTokens.text.disable};
+      svg {
+        color: ${colorTokens.icon.disable.default};
+      }
+    }
+  `,
+  text: css`
+    &:disabled {
+      color: ${colorTokens.text.disable};
+      svg {
+        color: ${colorTokens.icon.disable.default};
+      }
+    }
+  `,
+};
+
 const styles = {
   base: css`
     ${styleUtils.resetButton};
@@ -121,7 +152,6 @@ const styles = {
 
     &:disabled {
       cursor: not-allowed;
-      opacity: 0.65;
     }
 
     &:focus {
@@ -138,14 +168,7 @@ const styles = {
   variant: {
     primary: css`
       background-color: ${colorTokens.action.primary.default};
-
-      &:disabled {
-        background-color: ${colorTokens.action.primary.disable};
-        color: ${colorTokens.text.disable};
-        svg {
-          color: ${colorTokens.icon.disable.default};
-        }
-      }
+      ${disabledStyles.notOutlined};
 
       &:not(:disabled) {
         &:hover, &:focus {
@@ -166,6 +189,7 @@ const styles = {
       svg {
         color: ${colorTokens.icon.brand};
       }
+      ${disabledStyles.notOutlined};
 
       &:not(:disabled) {
         &:hover, &:focus {
@@ -177,13 +201,12 @@ const styles = {
       }
     `,
     tertiary: css`
-      background-color: ${colorTokens.action.outline.default};
       outline: 1px solid ${colorTokens.stroke.default};
-      background-color: ${colorTokens.background.hover};
       color: ${colorTokens.text.subdued};
       svg {
           color: ${colorTokens.icon.hints};
       }
+      ${disabledStyles.outlined};
 
       &:not(:disabled) {
         &:hover, &:focus {
@@ -210,6 +233,7 @@ const styles = {
       svg {
         color: ${colorTokens.icon.error};
       }
+      ${disabledStyles.notOutlined};
 
       &:not(:disabled) {
         &:hover, &:focus, &:active {
@@ -219,6 +243,8 @@ const styles = {
     `,
     WP: css`
       background-color: ${colorTokens.action.primary.wp};
+      ${disabledStyles.notOutlined};
+
       &:not(:disabled) {
         &:hover, &:focus {
           background-color: ${colorTokens.action.primary.wp_hover};
@@ -235,6 +261,7 @@ const styles = {
       svg {
         color: ${colorTokens.icon.hints};
       }
+      ${disabledStyles.text};
 
       &:not(:disabled) {
         &:hover, &:focus {
@@ -259,13 +286,7 @@ const styles = {
       svg {
         color: ${colorTokens.icon.brand};
       }
-
-      &:disabled {
-        outline: 1px solid ${colorTokens.action.outline.disable};
-        svg {
-          color: ${colorTokens.icon.disable.default};
-        }
-      }
+      ${disabledStyles.outlined};
 
       &:not(:disabled) {
         &:hover, &:focus {
@@ -279,11 +300,12 @@ const styles = {
     `,
     secondary: css`
       background-color: transparent;
-      outline: 1px solid ${colorTokens.stroke.neutral};
+      outline: 1px solid ${colorTokens.stroke.brand};
       color: ${colorTokens.text.brand};
       svg {
         color: ${colorTokens.icon.brand};
       }
+      ${disabledStyles.outlined};
 
       &:not(:disabled) {
         &:hover, &:focus {
@@ -293,10 +315,12 @@ const styles = {
     `,
     tertiary: css`
       background-color: transparent;
+      ${disabledStyles.outlined};
     `,
     danger: css`
       background-color: transparent;
       border: 1px solid ${colorTokens.stroke.danger};
+      ${disabledStyles.outlined};
       
       &:not(:disabled) {
         &:hover, &:focus {
@@ -311,6 +335,7 @@ const styles = {
       svg {
         color: ${colorTokens.icon.wp};
       }
+      ${disabledStyles.outlined};
 
       &:not(:disabled) {
         &:hover, &:focus {
@@ -327,6 +352,8 @@ const styles = {
       background-color: transparent;
       border: none;
       color: ${colorTokens.text.primary};
+      ${disabledStyles.text};
+
       &:not(:disabled) {
         &:hover, &:focus {
           color: ${colorTokens.text.brand};

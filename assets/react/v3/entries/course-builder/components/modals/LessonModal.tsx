@@ -667,10 +667,5 @@ const styles = {
     svg {
       color: ${colorTokens.icon.brand};
     }
-
-    &:hover {
-      text-decoration: underline;
-      color: ${colorTokens.text.brand};
-    }
   `,
 };
