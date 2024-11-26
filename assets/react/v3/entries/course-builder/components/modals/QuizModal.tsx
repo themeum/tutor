@@ -153,8 +153,7 @@ const QuizModal = ({
       setActiveTab('details');
 
       Promise.resolve().then(() => {
-        form.trigger('quiz_title');
-        form.setFocus('quiz_title');
+        form.trigger('quiz_title', { shouldFocus: true });
       });
 
       return;
