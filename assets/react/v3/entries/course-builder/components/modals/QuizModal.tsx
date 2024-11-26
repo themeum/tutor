@@ -193,7 +193,7 @@ const QuizModal = ({
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isEdit) {
-      return form.setFocus('quiz_title');
+      form.setFocus('quiz_title');
     }
   }, [isEdit]);
 
