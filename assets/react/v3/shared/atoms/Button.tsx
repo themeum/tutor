@@ -8,8 +8,8 @@ import { typography } from '@Config/typography';
 import { type VariantProps, createVariation } from '@Utils/create-variation';
 import { styleUtils } from '@Utils/style-utils';
 
-export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'WP' | 'text';
-type ButtonSize = 'regular' | 'large' | 'small';
+export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text' | 'WP';
+type ButtonSize = 'large' | 'regular' | 'small';
 type ButtonIconPosition = 'left' | 'right';
 
 interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
@@ -31,7 +31,6 @@ interface ButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantPr
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      className,
       variant = 'primary',
       isOutlined = false,
       size = 'regular',
@@ -61,7 +60,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         }),
         buttonCss,
       ]}
-      className={className}
       disabled={disabled || loading}
       onClick={onClick}
       tabIndex={tabIndex}
