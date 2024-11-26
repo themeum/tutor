@@ -10,6 +10,7 @@ import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import Tooltip from '@/v3/shared/atoms/Tooltip';
+import { styleUtils } from '@/v3/shared/utils/style-utils';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
@@ -38,7 +39,6 @@ import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { normalizeLineEndings } from '@Utils/util';
-import { noop } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 
@@ -93,7 +93,7 @@ const LessonModal = ({
   const queryClient = useQueryClient();
   const { showModal } = useModal();
 
-  const { data: lessonDetails } = getLessonDetailsQuery;
+  const { data: lessonDetails, isLoading } = getLessonDetailsQuery;
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
   const form = useFormWithGlobalError<LessonForm>({
@@ -123,7 +123,7 @@ const LessonModal = ({
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
-    if (lessonDetails) {
+    if (lessonDetails && !isLoading) {
       form.reset({
         title: lessonDetails.post_title || '',
         description: normalizeLineEndings(lessonDetails.post_content) || '',
@@ -148,6 +148,12 @@ const LessonModal = ({
       });
     }
 
+    const addMediaButton = document.querySelector('.button.insert-media.add_media');
+    const h5pButton = document.querySelector('.add-h5p-content-button');
+    if (addMediaButton && h5pButton) {
+      addMediaButton.after(h5pButton);
+    }
+
     const timeoutId = setTimeout(() => {
       form.setFocus('title');
     }, 0);
@@ -155,7 +161,7 @@ const LessonModal = ({
     return () => {
       clearTimeout(timeoutId);
     };
-  }, [lessonDetails]);
+  }, [lessonDetails, isLoading]);
 
   const onSubmit = async (data: LessonForm) => {
     const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
@@ -164,6 +170,36 @@ const LessonModal = ({
     if (response.data) {
       closeModal({ action: 'CONFIRM' });
     }
+  };
+
+  const onAddH5PContentButtonClick = () => {
+    const description = form.getValues('description');
+    const h5pShortCodes = description.match(/\[h5p id="(\d+)"\]/g) || [];
+    const addedContentIds = h5pShortCodes.map((shortcode) => {
+      const id = shortcode.match(/\[h5p id="(\d+)"\]/)?.[1] || '';
+      return String(id);
+    });
+
+    const onAddContent = (contents: H5PContent[]) => {
+      const convertToH5PShortCode = (content: H5PContent) => {
+        return `[h5p id="${content.id}"]`;
+      };
+      const h5pContents = contents.map(convertToH5PShortCode);
+
+      form.setValue('description', `${description}\n${h5pContents.join('\n')}`, {
+        shouldDirty: true,
+      });
+    };
+
+    showModal({
+      component: H5PContentListModal,
+      props: {
+        title: __('Select H5P Content', 'tutor'),
+        onAddContent: onAddContent,
+        contentType: 'lesson',
+        addedContentIds: addedContentIds,
+      },
+    });
   };
 
   return (
@@ -265,47 +301,24 @@ const LessonModal = ({
                   when={isTutorPro && isAddonEnabled(Addons.H5P_INTEGRATION)}
                   fallback={
                     <Show when={!isTutorPro}>
-                      <div css={styles.addH5PContentWrapper}>
+                      <button
+                        css={styles.addH5PContentButton({ isPro: false })}
+                        type="reset"
+                        className="add-h5p-content-button"
+                        disabled
+                      >
                         <ProBadge>
-                          <button css={styles.addH5PContentButton} type="button" disabled onClick={noop}>
-                            {__('Add H5P Content', 'tutor')}
-                          </button>
+                          <div data-button-text>{__('Add H5P Content', 'tutor')}</div>
                         </ProBadge>
-                      </div>
+                      </button>
                     </Show>
                   }
                 >
                   <button
+                    className="add-h5p-content-button"
                     css={styles.addH5PContentButton}
                     type="button"
-                    onClick={() => {
-                      showModal({
-                        component: H5PContentListModal,
-                        props: {
-                          title: __('Select H5P Content', 'tutor'),
-                          onAddContent: (contents) => {
-                            const convertToH5PShortCode = (content: H5PContent) => {
-                              return `[h5p id="${content.id}"]`;
-                            };
-                            const description = form.getValues('description');
-                            const h5pContents = contents.map(convertToH5PShortCode);
-
-                            form.setValue('description', `${description}\n${h5pContents.join('\n')}`, {
-                              shouldDirty: true,
-                            });
-                          },
-                          contentType: 'lesson',
-                          addedContentIds: (() => {
-                            const description = form.getValues('description');
-                            const h5pShortCodes = description.match(/\[h5p id="(\d+)"\]/g) || [];
-                            return h5pShortCodes.map((shortcode) => {
-                              const id = shortcode.match(/\[h5p id="(\d+)"\]/)?.[1] || '';
-                              return String(id);
-                            });
-                          })(),
-                        },
-                      });
-                    }}
+                    onClick={onAddH5PContentButtonClick}
                   >
                     {__('Add H5P Content', 'tutor')}
                   </button>
@@ -559,22 +572,13 @@ const styles = {
     justify-content: space-between;
     height: 32px;
   `,
-  addH5PContentWrapper: css`
-    position: absolute;
-    top: 36px;
-    left: 110px;
-  `,
-  addH5PContentButton: css`
-    position: absolute;
-    top: 36px;
-    left: 110px;
-    display: inline-block;
+  addH5PContentButton: ({ isPro = true }) => css`
     text-decoration: none;
     font-size: 13px;
     line-height: 2.15384615;
     min-height: 30px;
     margin: 0;
-    padding: 0 10px;
+    padding: ${!isPro ? '0px' : '0 10px'};
     cursor: pointer;
     border: 1px solid #3e64de;
     border-radius: 3px;
@@ -584,8 +588,9 @@ const styles = {
     border-color: #3e64de;
     background: transparent;
 
-    :dir(rtl) {
-      margin-left: ${spacing[8]};
+    [data-button-text] {
+      ${styleUtils.flexCenter()};
+      padding: 0 10px;
     }
 
     :hover:not(:disabled) {
