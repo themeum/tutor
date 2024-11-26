@@ -39,7 +39,6 @@ import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { normalizeLineEndings } from '@Utils/util';
-import { noop } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 
@@ -149,7 +148,7 @@ const LessonModal = ({
       });
     }
 
-    const addMediaButton = document.querySelector('.add_media');
+    const addMediaButton = document.querySelector('.button.insert-media.add_media');
     const h5pButton = document.querySelector('.add-h5p-content-button');
     if (addMediaButton && h5pButton) {
       addMediaButton.after(h5pButton);
@@ -302,11 +301,14 @@ const LessonModal = ({
                   when={isTutorPro && isAddonEnabled(Addons.H5P_INTEGRATION)}
                   fallback={
                     <Show when={!isTutorPro}>
-                      <button type="reset" css={styleUtils.resetButton} className="add-h5p-content-button">
+                      <button
+                        css={styles.addH5PContentButton({ isPro: false })}
+                        type="reset"
+                        className="add-h5p-content-button"
+                        disabled
+                      >
                         <ProBadge>
-                          <button css={styles.addH5PContentButton} type="button" disabled onClick={noop}>
-                            {__('Add H5P Content', 'tutor')}
-                          </button>
+                          <div data-button-text>{__('Add H5P Content', 'tutor')}</div>
                         </ProBadge>
                       </button>
                     </Show>
@@ -570,13 +572,13 @@ const styles = {
     justify-content: space-between;
     height: 32px;
   `,
-  addH5PContentButton: css`
+  addH5PContentButton: ({ isPro = true }) => css`
     text-decoration: none;
     font-size: 13px;
     line-height: 2.15384615;
     min-height: 30px;
     margin: 0;
-    padding: 0 10px;
+    padding: ${!isPro ? '0px' : '0 10px'};
     cursor: pointer;
     border: 1px solid #3e64de;
     border-radius: 3px;
@@ -585,6 +587,11 @@ const styles = {
     color: #3e64de;
     border-color: #3e64de;
     background: transparent;
+
+    [data-button-text] {
+      ${styleUtils.flexCenter()};
+      padding: 0 10px;
+    }
 
     :hover:not(:disabled) {
       background: ${colorTokens.background.white};
