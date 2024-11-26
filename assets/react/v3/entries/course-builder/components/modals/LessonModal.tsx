@@ -304,13 +304,7 @@ const LessonModal = ({
                     <Show when={!isTutorPro}>
                       <button type="reset" css={styleUtils.resetButton} className="add-h5p-content-button">
                         <ProBadge>
-                          <button
-                            className="add-h5p-content-button"
-                            css={styles.addH5PContentButton}
-                            type="button"
-                            disabled
-                            onClick={noop}
-                          >
+                          <button css={styles.addH5PContentButton} type="button" disabled onClick={noop}>
                             {__('Add H5P Content', 'tutor')}
                           </button>
                         </ProBadge>
