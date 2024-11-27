@@ -667,5 +667,9 @@ const styles = {
     svg {
       color: ${colorTokens.icon.brand};
     }
+
+    &:hover:not(:disabled) {
+      text-decoration: underline;
+    }
   `,
 };
