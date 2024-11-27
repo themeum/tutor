@@ -1,14 +1,17 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
 import profilePlaceholder from '@Images/profile-photo.png';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
+import { __ } from '@wordpress/i18n';
 
 interface StudentCardProps {
   name: string;
   email: string;
   avatar?: string;
+  isEnrolled?: boolean;
   hasSideBorders?: boolean;
   isSelected?: boolean;
   onItemClick?: () => void;
@@ -19,19 +22,29 @@ function StudentCard({
   name,
   email,
   avatar,
+  isEnrolled = false,
   hasSideBorders = false,
   isSelected = false,
   onItemClick,
   onRemoveClick,
 }: StudentCardProps) {
   return (
-    <div css={styles.studentItem(hasSideBorders, !!onItemClick, isSelected)} onClick={onItemClick}>
+    <div
+      role="button"
+      css={styles.studentItem(hasSideBorders, !!onItemClick, isSelected, isEnrolled)}
+      onClick={!isEnrolled ? onItemClick : undefined}
+    >
       <div css={styles.studentThumb}>
         <img src={avatar || profilePlaceholder} css={styles.thumbnail} alt="avatar" />
       </div>
       <div css={styles.studentContent}>
-        <div css={styles.studentTitle}>{name}</div>
-        <div css={styles.studentSubTitle}>{email}</div>
+        <div css={styles.studentTitle(isEnrolled)}>
+          {name}
+          <Show when={isEnrolled}>
+            <div css={styles.alreadyEnrolled}>{__('Already Enrolled', 'tutor')}</div>
+          </Show>
+        </div>
+        <div css={styles.studentSubTitle(isEnrolled)}>{email}</div>
       </div>
       {onRemoveClick && (
         <div data-student-item-cross>
@@ -47,7 +60,7 @@ function StudentCard({
 export default StudentCard;
 
 const styles = {
-  studentItem: (hasSideBorders: boolean, hasOnClick: boolean, isSelected: boolean) => css`
+  studentItem: (hasSideBorders: boolean, hasOnClick: boolean, isSelected: boolean, isEnrolled: boolean) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[8]} ${spacing[16]};
     display: flex;
     align-items: center;
@@ -57,6 +70,7 @@ const styles = {
     position: relative;
 
     ${hasOnClick &&
+    !isEnrolled &&
     css`
       cursor: pointer;
     `}
@@ -64,7 +78,7 @@ const styles = {
     ${isSelected &&
     css`
       &::before {
-        content: "";
+        content: '';
         position: absolute;
         left: 0;
         top: 0;
@@ -85,7 +99,10 @@ const styles = {
     }
 
     &:hover {
-      background-color: ${colorTokens.background.hover};
+      ${!isEnrolled &&
+      css`
+        background-color: ${colorTokens.background.hover};
+      `}
 
       ${hasSideBorders &&
       css`
@@ -109,12 +126,34 @@ const styles = {
   studentContent: css`
     width: 100%;
   `,
-  studentTitle: css`
+  studentTitle: (disabled: boolean) => css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+
     ${typography.body('medium')};
     color: ${colorTokens.text.primary};
+
+    ${disabled &&
+    css`
+      color: ${colorTokens.text.disable};
+    `}
   `,
-  studentSubTitle: css`
+  studentSubTitle: (disabled: boolean) => css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
+
+    ${disabled &&
+    css`
+      color: ${colorTokens.text.disable};
+    `}
+  `,
+  alreadyEnrolled: css`
+    font-size: ${fontSize[12]};
+    line-height: ${lineHeight[16]};
+    padding: ${spacing[2]} ${spacing[4]};
+    border-radius: ${borderRadius[2]};
+    background-color: ${colorTokens.background.disable};
+    color: ${colorTokens.text.primary};
   `,
 };
