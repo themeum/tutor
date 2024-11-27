@@ -104,12 +104,25 @@ const QuestionConditions = () => {
                 <FormSwitch
                   {...controllerProps}
                   label={__('Multiple Correct Answer', 'tutor')}
-                  onChange={() => {
+                  onChange={(value) => {
                     calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
                         calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
+
+                    // Reset all answers to incorrect on multiple correct answer toggle from true to false
+                    if (!value) {
+                      form.setValue(
+                        `questions.${activeQuestionIndex}.question_answers`,
+                        form.getValues(`questions.${activeQuestionIndex}.question_answers`).map((answer) => {
+                          return {
+                            ...answer,
+                            is_correct: '0' as '0' | '1',
+                          };
+                        }),
+                      );
+                    }
                   }}
                 />
               )}

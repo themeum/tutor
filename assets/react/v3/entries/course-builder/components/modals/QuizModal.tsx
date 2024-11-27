@@ -153,8 +153,7 @@ const QuizModal = ({
       setActiveTab('details');
 
       Promise.resolve().then(() => {
-        form.trigger('quiz_title');
-        form.setFocus('quiz_title');
+        form.trigger('quiz_title', { shouldFocus: true });
       });
 
       return;
@@ -186,6 +185,7 @@ const QuizModal = ({
 
     if (response.data) {
       setIsEdit(false);
+      form.reset();
       closeModal({ action: 'CONFIRM' });
     }
   };
@@ -252,18 +252,9 @@ const QuizModal = ({
                       loading={saveQuizMutation.isPending}
                       variant="primary"
                       size="small"
-                      onClick={async () => {
-                        if (activeQuestionIndex < 0) {
-                          await form.handleSubmit((data) =>
-                            onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                          )();
-                          return;
-                        }
-
-                        await form.handleSubmit((data) =>
-                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                        )();
-                      }}
+                      onClick={form.handleSubmit((data) =>
+                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                      )}
                     >
                       {__('Save', 'tutor')}
                     </Button>
