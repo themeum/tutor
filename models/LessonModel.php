@@ -109,7 +109,7 @@ class LessonModel {
 
 		if ( $key ) {
 			$lesson_info                       = (array) maybe_unserialize( get_user_meta( $user_id, '_lesson_reading_info', true ) );
-			$lesson_info[ $lesson_id ][ $key ] = (int) $value;
+			$lesson_info[ $lesson_id ][ $key ] = $value;
 			update_user_meta( $user_id, '_lesson_reading_info', $lesson_info );
 		}
 	}
