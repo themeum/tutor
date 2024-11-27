@@ -111,6 +111,7 @@ const QuestionConditions = () => {
                         calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
 
+                    // Reset all answers to incorrect on multiple correct answer toggle from true to false
                     if (!value) {
                       form.setValue(
                         `questions.${activeQuestionIndex}.question_answers`,
