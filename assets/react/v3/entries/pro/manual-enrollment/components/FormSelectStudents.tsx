@@ -79,6 +79,11 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                 value={searchText}
                 onFocus={() => setIsOpen(true)}
                 onChange={setSearchText}
+                onKeyDown={(key) => {
+                  if (key === 'Tab') {
+                    setIsOpen(false);
+                  }
+                }}
                 disabled={disabled}
               />
               <Button
