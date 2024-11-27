@@ -176,7 +176,7 @@ jQuery(document).ready(function($) {
 								if (instance.provider === 'youtube') {
 									instance.embed.seekTo(best_watch_time);
 								} else {
-									instance.media.currentTime = 0;
+									instance.media.currentTime = previous_duration;
 								}
 							} else {
 								clearTimeout(previousTimeSetter);

@@ -668,9 +668,8 @@ const styles = {
       color: ${colorTokens.icon.brand};
     }
 
-    &:hover {
+    &:hover:not(:disabled) {
       text-decoration: underline;
-      color: ${colorTokens.text.brand};
     }
   `,
 };
