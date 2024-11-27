@@ -1,6 +1,5 @@
-import { __, sprintf } from '@wordpress/i18n';
+import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
 import ImageInput from '@Atoms/ImageInput';
 import SVGIcon from '@Atoms/SVGIcon';
 
@@ -9,22 +8,14 @@ import { useModal } from '@Components/modals/Modal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
 
 import generateImage2x from '@Images/pro-placeholders/generate-image-2x.webp';
 import generateImage from '@Images/pro-placeholders/generate-image.webp';
 
 import type { SerializedStyles } from '@emotion/react';
 import FormFieldWrapper from './FormFieldWrapper';
-
-type MediaSize = {
-  url: string;
-  width: number;
-  height: number;
-  orientation?: string;
-};
 
 export type Media = {
   id: number;

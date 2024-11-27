@@ -8,22 +8,25 @@
 	"yet-phpunit.xmlConfigFilepath": "${workspaceRoot}/wp-content/plugins/tutor/phpunit.xml.dist",
 	"editor.formatOnSave": true,
 	"[javascript]": {
-		"editor.defaultFormatter": "biomejs.biome"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescript]": {
-		"editor.defaultFormatter": "biomejs.biome"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[javascriptreact]": {
-		"editor.defaultFormatter": "biomejs.biome"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"[typescriptreact]": {
-		"editor.defaultFormatter": "biomejs.biome"
+		"editor.defaultFormatter": "esbenp.prettier-vscode"
 	},
 	"editor.codeActionsOnSave": {
-		"quickfix.biome": "explicit",
-		"source.organizeImports.biome": "explicit"
+		"source.fixAll.eslint": "explicit",
+		"source.fixAll.tslint": "always",
+		"source.organizeImports": "explicit"
 	},
-	"prettier.enable": false,
-	"eslint.enable": false,
-	"biome.enabled": true,
+	"prettier.enable": true,
+	"eslint.enable": true,
+	"eslint.workingDirectories": [
+		"./wp-content/plugins/tutor"
+	],
 }

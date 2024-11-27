@@ -346,7 +346,11 @@ const FormVideoInput = ({
 
       const updateData =
         type === 'video'
-          ? { source: 'html5', source_video_id: attachment.id, source_html5: attachment.url }
+          ? {
+              source: 'html5',
+              source_video_id: attachment.id,
+              source_html5: attachment.url,
+            }
           : { poster: attachment.id, poster_url: attachment.url };
       field.onChange(updateFieldValue(fieldValue, updateData));
       onChange?.(updateFieldValue(fieldValue, updateData));
@@ -529,7 +533,7 @@ const FormVideoInput = ({
                     </div>
                   }
                 >
-                  {(media) => {
+                  {() => {
                     return (
                       <div css={styles.previewWrapper}>
                         <div css={styles.videoInfoWrapper}>
@@ -671,8 +675,8 @@ const FormVideoInput = ({
                   <FormTextareaInput
                     {...controllerProps}
                     inputCss={css`
-                        border-style: dashed;
-                      `}
+                      border-style: dashed;
+                    `}
                     rows={2}
                     placeholder={
                       placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')
@@ -707,156 +711,152 @@ export default FormVideoInput;
 
 const styles = {
   emptyMediaWrapper: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[4]};
-      
-      label {
-        ${typography.caption()};
-        color: ${colorTokens.text.title};
-      }
-    `,
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+
+    label {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+  `,
   emptyMedia: ({ hasVideoSource = false }: { hasVideoSource: boolean }) => css`
-      width: 100%;
-      height: 164px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: ${spacing[8]};
-      border: 1px dashed ${colorTokens.stroke.border};
-      border-radius: ${borderRadius[8]};
-      background-color: ${colorTokens.background.status.warning};
+    width: 100%;
+    height: 164px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: ${spacing[8]};
+    border: 1px dashed ${colorTokens.stroke.border};
+    border-radius: ${borderRadius[8]};
+    background-color: ${colorTokens.background.status.warning};
 
-      ${
-        hasVideoSource &&
-        css`
-        background-color: ${colorTokens.bg.white};
-      `
-      }
-    `,
+    ${hasVideoSource &&
+    css`
+      background-color: ${colorTokens.bg.white};
+    `}
+  `,
   infoTexts: css`
-      ${typography.tiny()};
-      color: ${colorTokens.text.subdued};
-    `,
+    ${typography.tiny()};
+    color: ${colorTokens.text.subdued};
+  `,
   warningText: css`
-      ${styleUtils.display.flex()};
-      align-items: center;
-      gap: ${spacing[4]};
-      ${typography.caption()};
-      color: ${colorTokens.text.warning};
-    `,
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[4]};
+    ${typography.caption()};
+    color: ${colorTokens.text.warning};
+  `,
   selectFromSettingsButton: css`
-      background: ${colorTokens.bg.white};
-    `,
+    background: ${colorTokens.bg.white};
+  `,
   urlData: css`
-      ${typography.caption()};
-      ${styleUtils.display.flex('column')};
-      padding: ${spacing[8]} ${spacing[12]};
-      gap: ${spacing[8]};
-      word-break: break-all;
-    `,
+    ${typography.caption()};
+    ${styleUtils.display.flex('column')};
+    padding: ${spacing[8]} ${spacing[12]};
+    gap: ${spacing[8]};
+    word-break: break-all;
+  `,
   previewWrapper: css`
-      width: 100%;
-      height: 100%;
-      border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius[8]};
-      overflow: hidden;
-      background-color: ${colorTokens.bg.white};
-    `,
+    width: 100%;
+    height: 100%;
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius[8]};
+    overflow: hidden;
+    background-color: ${colorTokens.bg.white};
+  `,
   videoInfoWrapper: css`
-      ${styleUtils.display.flex()};
-      justify-content: space-between;
-      align-items: center;
-      gap: ${spacing[20]};
-      padding: ${spacing[8]} ${spacing[12]};
-    `,
+    ${styleUtils.display.flex()};
+    justify-content: space-between;
+    align-items: center;
+    gap: ${spacing[20]};
+    padding: ${spacing[8]} ${spacing[12]};
+  `,
   videoInfoCard: css`
-      ${styleUtils.display.flex()};
-      align-items: center;
-      gap: ${spacing[8]};
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[8]};
 
-      svg {
-        flex-shrink: 0;
-        color: ${colorTokens.icon.hover};
-      }
-    `,
+    svg {
+      flex-shrink: 0;
+      color: ${colorTokens.icon.hover};
+    }
+  `,
   videoInfo: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[4]};
-    `,
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
   videoInfoTitle: css`
-      ${styleUtils.display.flex()};
-      ${typography.caption('medium')}
-      word-break: break-all;
-    `,
+    ${styleUtils.display.flex()};
+    ${typography.caption('medium')}
+    word-break: break-all;
+  `,
   imagePreview: ({ hasImageInput }: { hasImageInput: boolean }) => css`
-      width: 100%;
-      max-height: 168px;
-      position: relative;
-      overflow: hidden;
-      background-color: ${colorTokens.background.default};
-      ${
-        !hasImageInput &&
-        css`
-          ${styleUtils.overflowYAuto};
-        `
-      };
-      scrollbar-gutter: auto;
+    width: 100%;
+    max-height: 168px;
+    position: relative;
+    overflow: hidden;
+    background-color: ${colorTokens.background.default};
+    ${!hasImageInput &&
+    css`
+      ${styleUtils.overflowYAuto};
+    `};
+    scrollbar-gutter: auto;
 
-      &:hover {
-        [data-hover-buttons-wrapper] {
-          opacity: 1;
-        }
+    &:hover {
+      [data-hover-buttons-wrapper] {
+        opacity: 1;
       }
-    `,
+    }
+  `,
   duration: css`
-      ${typography.tiny()};
-      position: absolute;
-      bottom: ${spacing[12]};
-      right: ${spacing[12]};
-      background-color: rgba(0, 0, 0, 0.5);
-      color: ${colorTokens.text.white};
-      padding: ${spacing[4]} ${spacing[8]};
-      border-radius: ${borderRadius[6]};
-      pointer-events: none;
-    `,
+    ${typography.tiny()};
+    position: absolute;
+    bottom: ${spacing[12]};
+    right: ${spacing[12]};
+    background-color: rgba(0, 0, 0, 0.5);
+    color: ${colorTokens.text.white};
+    padding: ${spacing[4]} ${spacing[8]};
+    border-radius: ${borderRadius[6]};
+    pointer-events: none;
+  `,
   thumbImage: css`
-      border-radius: 0;
-      border: none;
-    `,
+    border-radius: 0;
+    border: none;
+  `,
   urlButton: css`
-      ${styleUtils.resetButton};
-      ${typography.small('medium')};
-      color: ${colorTokens.text.brand};
-      border-radius: ${borderRadius[2]};
-      padding: 0 ${spacing[4]};
-      margin-bottom: ${spacing[8]};
+    ${styleUtils.resetButton};
+    ${typography.small('medium')};
+    color: ${colorTokens.text.brand};
+    border-radius: ${borderRadius[2]};
+    padding: 0 ${spacing[4]};
+    margin-bottom: ${spacing[8]};
 
-      &:focus-visible {
-        outline: 2px solid ${colorTokens.stroke.brand};
-        outline-offset: 1px;
-      }
-    `,
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+  `,
   actionButtons: css`
-      ${styleUtils.display.flex()};
-      gap: ${spacing[4]};
-    `,
+    ${styleUtils.display.flex()};
+    gap: ${spacing[4]};
+  `,
   popover: css`
-      position: absolute;
-      width: 100%;
-      z-index: ${zIndex.dropdown};
-      background-color: ${colorTokens.bg.white};
-      border-radius: ${borderRadius.card};
-      box-shadow: ${shadow.popover};
-    `,
+    position: absolute;
+    width: 100%;
+    z-index: ${zIndex.dropdown};
+    background-color: ${colorTokens.bg.white};
+    border-radius: ${borderRadius.card};
+    box-shadow: ${shadow.popover};
+  `,
   popoverContent: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[12]};
-      padding: ${spacing[16]};
-    `,
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+    padding: ${spacing[16]};
+  `,
   popoverButtonWrapper: css`
-      ${styleUtils.display.flex()};
-      gap: ${spacing[8]};
-      justify-content: flex-end;
-    `,
+    ${styleUtils.display.flex()};
+    gap: ${spacing[8]};
+    justify-content: flex-end;
+  `,
 };

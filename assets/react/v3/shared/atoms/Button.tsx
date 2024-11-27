@@ -83,6 +83,8 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ),
 );
 
+Button.displayName = 'Button';
+
 export default Button;
 
 const spin = keyframes`
@@ -163,7 +165,6 @@ const styles = {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
     }
-
   `,
   variant: {
     primary: css`
@@ -171,7 +172,8 @@ const styles = {
       ${disabledStyles.notOutlined};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: ${colorTokens.action.primary.hover};
         }
         &:active {
@@ -192,7 +194,8 @@ const styles = {
       ${disabledStyles.notOutlined};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: ${colorTokens.action.secondary.hover};
         }
         &:active {
@@ -204,12 +207,13 @@ const styles = {
       outline: 1px solid ${colorTokens.stroke.default};
       color: ${colorTokens.text.subdued};
       svg {
-          color: ${colorTokens.icon.hints};
+        color: ${colorTokens.icon.hints};
       }
       ${disabledStyles.outlined};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: ${colorTokens.background.hover};
           outline: 1px solid ${colorTokens.stroke.hover};
           color: ${colorTokens.text.title};
@@ -218,7 +222,7 @@ const styles = {
             color: ${colorTokens.icon.brand};
           }
         }
-        
+
         &:active {
           background-color: ${colorTokens.background.active};
           svg {
@@ -236,7 +240,9 @@ const styles = {
       ${disabledStyles.notOutlined};
 
       &:not(:disabled) {
-        &:hover, &:focus, &:active {
+        &:hover,
+        &:focus,
+        &:active {
           background-color: ${colorTokens.background.status.errorFail};
         }
       }
@@ -246,7 +252,8 @@ const styles = {
       ${disabledStyles.notOutlined};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: ${colorTokens.action.primary.wp_hover};
         }
         &:active {
@@ -264,7 +271,8 @@ const styles = {
       ${disabledStyles.text};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           color: ${colorTokens.text.brand};
 
           svg {
@@ -282,16 +290,17 @@ const styles = {
       background-color: transparent;
       outline: 1px solid ${colorTokens.stroke.brand};
       color: ${colorTokens.text.brand};
-      
+
       svg {
         color: ${colorTokens.icon.brand};
       }
       ${disabledStyles.outlined};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           color: ${colorTokens.text.white};
-          
+
           svg {
             color: ${colorTokens.icon.white};
           }
@@ -308,7 +317,8 @@ const styles = {
       ${disabledStyles.outlined};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: ${colorTokens.action.secondary.hover};
         }
       }
@@ -321,9 +331,10 @@ const styles = {
       background-color: transparent;
       border: 1px solid ${colorTokens.stroke.danger};
       ${disabledStyles.outlined};
-      
+
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: ${colorTokens.background.status.errorFail};
         }
       }
@@ -338,7 +349,8 @@ const styles = {
       ${disabledStyles.outlined};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           background-color: ${colorTokens.action.primary.wp_hover};
           color: ${colorTokens.text.white};
 
@@ -355,7 +367,8 @@ const styles = {
       ${disabledStyles.text};
 
       &:not(:disabled) {
-        &:hover, &:focus {
+        &:hover,
+        &:focus {
           color: ${colorTokens.text.brand};
         }
       }
@@ -398,13 +411,11 @@ const styles = {
     ${styleUtils.display.flex()};
     align-items: center;
 
-    ${
-      loading &&
-      !disabled &&
-      css`
-        color: transparent;
-      `
-    }
+    ${loading &&
+    !disabled &&
+    css`
+      color: transparent;
+    `}
   `,
   buttonIcon: ({
     iconPosition,
@@ -418,27 +429,21 @@ const styles = {
     display: grid;
     place-items: center;
     margin-right: ${spacing[4]};
-    ${
-      iconPosition === 'right' &&
-      css`
-        margin-right: 0;
-        margin-left: ${spacing[4]};
-      `
-    }
+    ${iconPosition === 'right' &&
+    css`
+      margin-right: 0;
+      margin-left: ${spacing[4]};
+    `}
 
-    ${
-      loading &&
-      css`
-        opacity: 0;
-      `
-    }
+    ${loading &&
+    css`
+      opacity: 0;
+    `}
 
-    ${
-      !hasChildren &&
-      css`
-        margin-inline: 0;
-      `
-    }
+    ${!hasChildren &&
+    css`
+      margin-inline: 0;
+    `}
   `,
   spinner: css`
     position: absolute;
