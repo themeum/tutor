@@ -21,6 +21,7 @@ export default [
       '@typescript-eslint/consistent-type-imports': [
         'error',
         {
+          fixStyle: 'inline-type-imports',
           prefer: 'type-imports',
         },
       ],

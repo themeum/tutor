@@ -14,8 +14,7 @@ import { VideoRegex, isRTL } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { TutorMutationResponse } from '@CourseBuilderServices/course';
-import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
+import { type TutorMutationResponse, useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
   convertYouTubeDurationToSeconds,
   covertSecondsToHMS,
