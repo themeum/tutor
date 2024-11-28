@@ -144,7 +144,7 @@ export const validateQuizQuestion = (
         if (!everyOptionHasImage) {
           return {
             message: __('Please add images to all options.', 'tutor'),
-            type: 'save_option',
+            type: 'question',
           };
         }
       } else {
@@ -218,7 +218,7 @@ export const generateVideoThumbnail = async (
       const data = await response.json();
       return data[0].thumbnail_large;
     } catch (error) {
-      throw new Error('Failed to get Vimeo thumbnail');
+      throw new Error(`Failed to get Vimeo thumbnail. Error: ${error}`);
     }
   }
 

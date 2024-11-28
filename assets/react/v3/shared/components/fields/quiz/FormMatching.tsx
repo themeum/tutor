@@ -84,7 +84,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
 
   wpMedia.on('select', () => {
     const attachment = wpMedia.state().get('selection').first().toJSON();
-    const { id, url, title } = attachment;
+    const { id, url } = attachment;
 
     field.onChange({
       ...inputValue,
@@ -216,7 +216,7 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                       </div>
                     }
                   >
-                    {(image) => (
+                    {() => (
                       <div css={styles.imagePlaceholder}>
                         <img src={inputValue.image_url} alt={inputValue.image_url} />
                       </div>
@@ -345,6 +345,9 @@ const FormMatching = ({ index, onDuplicateOption, onRemoveOption, field, isOverl
                     field.onChange(previousValue);
 
                     if (!inputValue.is_saved) {
+                      if (validationError?.type === 'save_option') {
+                        setValidationError(null);
+                      }
                       onRemoveOption();
                     }
                   }}
@@ -403,13 +406,13 @@ export default FormMatching;
 
 const styles = {
   option: css`
-      ${styleUtils.display.flex()};
-      ${typography.caption('medium')};
-      align-items: center;
-      color: ${colorTokens.text.subdued};
-      gap: ${spacing[10]};
-      align-items: center;
-    `,
+    ${styleUtils.display.flex()};
+    ${typography.caption('medium')};
+    align-items: center;
+    color: ${colorTokens.text.subdued};
+    gap: ${spacing[10]};
+    align-items: center;
+  `,
   optionLabel: ({
     isEditing,
     isDragging,
@@ -419,52 +422,46 @@ const styles = {
     isDragging: boolean;
     isOverlay: boolean;
   }) => css`
-      display: flex;
-      flex-direction: column;
-      gap: ${spacing[12]};
-      width: 100%;
-      border-radius: ${borderRadius.card};
-      padding: ${spacing[12]} ${spacing[16]};
-      background-color: ${colorTokens.background.white};
-      
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    width: 100%;
+    border-radius: ${borderRadius.card};
+    padding: ${spacing[12]} ${spacing[16]};
+    background-color: ${colorTokens.background.white};
+
+    [data-visually-hidden] {
+      opacity: 0;
+    }
+
+    &:hover {
+      outline: 1px solid ${colorTokens.stroke.hover};
+
       [data-visually-hidden] {
-        opacity: 0;
+        opacity: 1;
       }
+    }
+
+    ${isEditing &&
+    css`
+      background-color: ${colorTokens.background.white};
+      outline: 1px solid ${colorTokens.stroke.brand};
 
       &:hover {
-        outline: 1px solid ${colorTokens.stroke.hover};
-
-        [data-visually-hidden] {
-          opacity: 1;
-        }
+        outline: 1px solid ${colorTokens.stroke.brand};
       }
+    `}
 
-      ${
-        isEditing &&
-        css`
-          background-color: ${colorTokens.background.white};
-          outline: 1px solid ${colorTokens.stroke.brand};
+    ${isDragging &&
+    css`
+      background-color: ${colorTokens.stroke.hover};
+    `}
 
-          &:hover {
-            outline: 1px solid ${colorTokens.stroke.brand};
-          }
-        `
-      }
-
-      ${
-        isDragging &&
-        css`
-          background-color: ${colorTokens.stroke.hover};
-        `
-      }
-
-      ${
-        isOverlay &&
-        css`
-          box-shadow: ${shadow.drag};
-        `
-      }
-    `,
+      ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
+  `,
   optionHeader: css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -495,20 +492,14 @@ const styles = {
   optionBody: css`
     ${styleUtils.display.flex()}
   `,
-  placeholderWrapper: ({
-    isImageMatching,
-  }: {
-    isImageMatching: boolean;
-  }) => css`
+  placeholderWrapper: ({ isImageMatching }: { isImageMatching: boolean }) => css`
     ${styleUtils.display.flex('column')}
     width: 100%;
 
-    ${
-      isImageMatching &&
-      css`
-        gap: ${spacing[12]};
-      `
-    }
+    ${isImageMatching &&
+    css`
+      gap: ${spacing[12]};
+    `}
   `,
   imagePlaceholder: css`
     ${styleUtils.flexCenter()};

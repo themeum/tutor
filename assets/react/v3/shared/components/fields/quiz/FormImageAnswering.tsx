@@ -73,7 +73,7 @@ const FormImageAnswering = ({
 
   wpMedia.on('select', () => {
     const attachment = wpMedia.state().get('selection').first().toJSON();
-    const { id, url, title } = attachment;
+    const { id, url } = attachment;
 
     field.onChange({
       ...inputValue,
@@ -201,7 +201,7 @@ const FormImageAnswering = ({
                     </div>
                   }
                 >
-                  {(image) => (
+                  {() => (
                     <div css={styles.imagePlaceholder}>
                       <img src={inputValue.image_url} alt={inputValue.image_url} />
                     </div>
@@ -292,6 +292,10 @@ const FormImageAnswering = ({
 
                     if (!inputValue.is_saved) {
                       onRemoveOption();
+
+                      if (validationError?.type === 'save_option') {
+                        setValidationError(null);
+                      }
                     }
                   }}
                 >
@@ -363,52 +367,45 @@ const styles = {
     isOverlay: boolean;
     isDragging: boolean;
   }) => css`
-      ${styleUtils.display.flex('column')}
-      gap: ${spacing[20]};
-      width: 100%;
-      border-radius: ${borderRadius.card};
-      padding: ${spacing[12]} ${spacing[16]};
-      background-color: ${colorTokens.background.white};
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[20]};
+    width: 100%;
+    border-radius: ${borderRadius.card};
+    padding: ${spacing[12]} ${spacing[16]};
+    background-color: ${colorTokens.background.white};
 
+    [data-visually-hidden] {
+      opacity: 0;
+    }
+
+    &:hover {
+      outline: 1px solid ${colorTokens.stroke.hover};
 
       [data-visually-hidden] {
-        opacity: 0;
+        opacity: 1;
       }
-    
+    }
+
+    ${isEditing &&
+    css`
+      background-color: ${colorTokens.background.white};
+      outline: 1px solid ${colorTokens.stroke.brand};
+
       &:hover {
-        outline: 1px solid ${colorTokens.stroke.hover};
-
-        [data-visually-hidden] {
-          opacity: 1;
-        }
+        outline: 1px solid ${colorTokens.stroke.brand};
       }
+    `}
 
-      ${
-        isEditing &&
-        css`
-          background-color: ${colorTokens.background.white};
-          outline: 1px solid ${colorTokens.stroke.brand};
+    ${isDragging &&
+    css`
+      background-color: ${colorTokens.stroke.hover};
+    `}
 
-          &:hover {
-            outline: 1px solid ${colorTokens.stroke.brand};
-          }
-        `
-      }
-
-      ${
-        isDragging &&
-        css`
-          background-color: ${colorTokens.stroke.hover};
-        `
-      }
-
-      ${
-        isOverlay &&
-        css`
-          box-shadow: ${shadow.drag};
-        `
-      }
-    `,
+      ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
+  `,
   optionHeader: css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
