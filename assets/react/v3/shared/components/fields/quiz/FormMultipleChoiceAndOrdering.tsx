@@ -11,7 +11,6 @@ import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
-import useWPMedia, { type ProcessedMediaFile } from '@/v3/shared/hooks/useWpMedia';
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -23,6 +22,7 @@ import {
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import useWPMedia from '@Hooks/useWpMedia';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -82,8 +82,8 @@ const FormMultipleChoiceAndOrdering = ({
       type: 'image',
     },
     onChange: (file) => {
-      if (file) {
-        const { id, url } = file as ProcessedMediaFile;
+      if (file && !Array.isArray(file)) {
+        const { id, url } = file;
 
         field.onChange({
           ...inputValue,
@@ -98,18 +98,14 @@ const FormMultipleChoiceAndOrdering = ({
       }
     },
     initialFiles: field.value?.image_id
-      ? ([{ id: Number(field.value.image_id), url: field.value.image_url }] as ProcessedMediaFile[])
-      : [],
+      ? { id: Number(field.value.image_id), url: field.value.image_url || '', title: '' }
+      : null,
   });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : undefined,
-  };
-
-  const uploadHandler = () => {
-    openMediaLibrary();
   };
 
   const clearHandler = () => {
@@ -206,7 +202,7 @@ const FormMultipleChoiceAndOrdering = ({
                   icon={<SVGIcon name="addImage" width={24} height={24} />}
                   onClick={(event) => {
                     event.stopPropagation();
-                    uploadHandler();
+                    openMediaLibrary();
                   }}
                 >
                   {__('Add Image', 'tutor')}
@@ -299,7 +295,7 @@ const FormMultipleChoiceAndOrdering = ({
                   }}
                   buttonText={__('Upload Image', 'tutor')}
                   infoText={__('Size: 700x430 pixels', 'tutor')}
-                  uploadHandler={uploadHandler}
+                  uploadHandler={openMediaLibrary}
                   clearHandler={clearHandler}
                   emptyImageCss={styles.emptyImageInput}
                   previewImageCss={styles.previewImageInput}

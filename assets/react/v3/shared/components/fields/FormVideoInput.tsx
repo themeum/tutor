@@ -25,11 +25,11 @@ import {
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import useWPMedia, { type ProcessedMediaFile } from '@Hooks/useWpMedia';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
 
-import useWPMedia, { type ProcessedMediaFile } from '../../hooks/useWpMedia';
 import type { IconCollection } from '../../utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
@@ -252,7 +252,7 @@ const FormVideoInput = ({
     options: {
       type: 'image',
     },
-    onChange: async (files) => {
+    onChange: (files) => {
       if (!files) {
         return;
       }
