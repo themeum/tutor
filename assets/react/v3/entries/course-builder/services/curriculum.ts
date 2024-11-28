@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@Atoms/Toast';
-import type { Media } from '@Components/fields/FormImageInput';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
@@ -12,6 +11,7 @@ import { Addons } from '@Config/constants';
 import type { ContentDripType, GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
 import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { type ProcessedMediaFile } from '@Hooks/useWpMedia';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -38,7 +38,7 @@ export interface Content {
 }
 
 export interface Lesson extends Content {
-  attachments: Media[];
+  attachments: ProcessedMediaFile[];
   thumbnail: string;
   thumbnail_id: ID;
   available_on: string;
@@ -57,7 +57,7 @@ export interface Lesson extends Content {
   };
 }
 export interface Assignment extends Content {
-  attachments: Media[];
+  attachments: ProcessedMediaFile[];
   assignment_option: {
     time_duration: {
       time: string;

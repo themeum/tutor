@@ -8,12 +8,11 @@ import Button from '@Atoms/Button';
 import { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import ProBadge from '@Atoms/ProBadge';
 import SVGIcon from '@Atoms/SVGIcon';
+import Tooltip from '@Atoms/Tooltip';
 
-import Tooltip from '@/v3/shared/atoms/Tooltip';
-import { styleUtils } from '@/v3/shared/utils/style-utils';
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormFileUploader from '@Components/fields/FormFileUploader';
-import FormImageInput, { type Media } from '@Components/fields/FormImageInput';
+import FormImageInput from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSwitch from '@Components/fields/FormSwitch';
@@ -22,6 +21,7 @@ import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoIn
 import FormWPEditor from '@Components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
+
 import { tutorConfig } from '@Config/config';
 import { Addons, TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
@@ -38,6 +38,8 @@ import {
 import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import { styleUtils } from '@Utils/style-utils';
 import { normalizeLineEndings } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
 import H5PContentListModal from './H5PContentListModal';
@@ -52,8 +54,8 @@ interface LessonModalProps extends ModalProps {
 export interface LessonForm {
   title: string;
   description: string;
-  thumbnail: Media | null;
-  tutor_attachments: Media[];
+  thumbnail: ProcessedMediaFile | null;
+  tutor_attachments: ProcessedMediaFile[];
   lesson_preview: boolean;
   video: CourseVideo | null;
   duration: {
@@ -121,7 +123,6 @@ const LessonModal = ({
 
   const isFormDirty = form.formState.isDirty;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (lessonDetails && !isLoading) {
       form.reset({
@@ -161,6 +162,7 @@ const LessonModal = ({
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [lessonDetails, isLoading]);
 
   const onSubmit = async (data: LessonForm) => {
@@ -216,7 +218,7 @@ const LessonModal = ({
               variant="text"
               size="small"
               onClick={() => {
-                lessonId ? form.reset() : closeModal({ action: 'CLOSE' });
+                return lessonId ? form.reset() : closeModal({ action: 'CLOSE' });
               }}
             >
               {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
