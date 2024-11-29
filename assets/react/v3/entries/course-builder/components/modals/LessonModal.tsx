@@ -218,7 +218,11 @@ const LessonModal = ({
               variant="text"
               size="small"
               onClick={() => {
-                return lessonId ? form.reset() : closeModal({ action: 'CLOSE' });
+                if (lessonId) {
+                  form.reset();
+                } else {
+                  closeModal({ action: 'CLOSE' });
+                }
               }}
             >
               {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
