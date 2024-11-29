@@ -238,7 +238,8 @@ const styles = {
       opacity: 0;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       background: ${colorTokens.background.hover};
 
       button {
@@ -289,10 +290,9 @@ const styles = {
     color: ${colorTokens.icon.default};
   `,
   removeButton: css`
-    ${styleUtils.resetButton};
-    ${styleUtils.flexCenter()};
-    width: 24px;
-    height: 24px;
-    color: ${colorTokens.icon.hover};
+    ${styleUtils.crossButton};
+    background: none;
+    transition: none;
+    flex-shrink: 0;
   `,
 };
