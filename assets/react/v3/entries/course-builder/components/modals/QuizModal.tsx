@@ -185,8 +185,8 @@ const QuizModal = ({
 
     if (response.data) {
       setIsEdit(false);
-      form.reset();
       closeModal({ action: 'CONFIRM' });
+      form.reset();
     }
   };
 
