@@ -188,12 +188,7 @@ const ZoomMeetingCard = ({ data, meetingHost, topicId }: ZoomMeetingCardProps) =
 export default ZoomMeetingCard;
 
 const styles = {
-  card: ({
-    isPopoverOpen = false,
-  }: {
-    isPopoverOpen: boolean;
-  }) =>
-    css`
+  card: ({ isPopoverOpen = false }: { isPopoverOpen: boolean }) => css`
     ${styleUtils.display.flex('column')}
     padding: ${spacing[8]} ${spacing[12]} ${spacing[12]} ${spacing[12]};
     gap: ${spacing[8]};
@@ -205,20 +200,18 @@ const styles = {
       transition: opacity 0.3s ease-in-out;
     }
 
-    ${
-      isPopoverOpen &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-        .date-time {
-          background: none;
-        }
-      `
-    }
+    ${isPopoverOpen &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+      .date-time {
+        background: none;
+      }
+    `}
 
-    &:hover {
+    &:hover, &:focus-within {
       background-color: ${colorTokens.background.hover};
       [data-visually-hidden] {
         opacity: 1;

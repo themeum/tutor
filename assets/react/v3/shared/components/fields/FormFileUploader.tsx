@@ -282,25 +282,19 @@ const FormFileUploader = ({
 export default FormFileUploader;
 
 const styles = {
-  wrapper: ({
-    hasFiles,
-  }: {
-    hasFiles: boolean;
-  }) => css`
+  wrapper: ({ hasFiles }: { hasFiles: boolean }) => css`
     display: flex;
     flex-direction: column;
     position: relative;
-    
-    ${
-      hasFiles &&
-      css`
-        background-color: ${colorTokens.background.white};
-        padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
-        border: 1px solid ${colorTokens.stroke.default};
-        border-radius: ${borderRadius.card};
-        gap: ${spacing[8]};
-      `
-    }
+
+    ${hasFiles &&
+    css`
+      background-color: ${colorTokens.background.white};
+      padding: ${spacing[16]} 0 ${spacing[16]} ${spacing[16]};
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius.card};
+      gap: ${spacing[8]};
+    `}
   `,
   attachmentsWrapper: css`
     max-height: 260px;
@@ -319,7 +313,8 @@ const styles = {
       opacity: 0;
     }
 
-    &:hover {
+    &:hover,
+    &:focus-within {
       background: ${colorTokens.background.hover};
 
       button {
@@ -356,17 +351,11 @@ const styles = {
       color: ${colorTokens.icon.default};
     }
   `,
-  uploadButtonWrapper: ({
-    hasFiles,
-  }: {
-    hasFiles: boolean;
-  }) => css`
-    ${
-      hasFiles &&
-      css`
-        margin-right: ${spacing[16]};
-      `
-    }
+  uploadButtonWrapper: ({ hasFiles }: { hasFiles: boolean }) => css`
+    ${hasFiles &&
+    css`
+      margin-right: ${spacing[16]};
+    `}
   `,
   uploadButton: css`
     width: 100%;
@@ -376,10 +365,7 @@ const styles = {
     color: ${colorTokens.icon.default};
   `,
   removeButton: css`
-    ${styleUtils.resetButton};
-    ${styleUtils.flexCenter()};
-    width: 24px;
-    height: 24px;
-    color: ${colorTokens.icon.hover};
+    ${styleUtils.crossButton};
+    flex-shrink: 0;
   `,
 };
