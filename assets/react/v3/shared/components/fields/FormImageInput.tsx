@@ -1,3 +1,4 @@
+import type { SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
 import ImageInput from '@Atoms/ImageInput';
@@ -9,13 +10,12 @@ import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierMod
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@Config/config';
-import useWpMedia, { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import useWPMedia, { type ProcessedMediaFile } from '@Hooks/useWpMedia';
 import type { FormControllerProps } from '@Utils/form';
 
 import generateImage2x from '@Images/pro-placeholders/generate-image-2x.webp';
 import generateImage from '@Images/pro-placeholders/generate-image.webp';
 
-import type { SerializedStyles } from '@emotion/react';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormImageInputProps = {
@@ -50,14 +50,14 @@ const FormImageInput = ({
 }: FormImageInputProps) => {
   const { showModal } = useModal();
 
-  const { openMediaLibrary, resetFiles } = useWpMedia({
+  const { openMediaLibrary, resetFiles } = useWPMedia({
     options: {
       type: 'image',
       multiple: false,
     },
     onChange: (file) => {
-      if (file) {
-        const { id, url, title } = file as ProcessedMediaFile;
+      if (file && !Array.isArray(file)) {
+        const { id, url, title } = file;
 
         field.onChange({ id, url, title });
 
