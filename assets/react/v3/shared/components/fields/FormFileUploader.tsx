@@ -366,6 +366,8 @@ const styles = {
   `,
   removeButton: css`
     ${styleUtils.crossButton};
+    background: none;
+    transition: none;
     flex-shrink: 0;
   `,
 };
