@@ -188,7 +188,11 @@ const AssignmentModal = ({
               variant="text"
               size="small"
               onClick={() => {
-                return assignmentId ? form.reset() : closeModal({ action: 'CLOSE' });
+                if (assignmentId) {
+                  form.reset();
+                } else {
+                  closeModal({ action: 'CLOSE' });
+                }
               }}
             >
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
