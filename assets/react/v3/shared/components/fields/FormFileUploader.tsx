@@ -10,7 +10,7 @@ import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import useWPMedia, { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -28,13 +28,13 @@ export type WpMediaDetails = {
 
 type FormFileUploaderProps = {
   label?: string;
-  onChange?: (media: ProcessedMediaFile[] | ProcessedMediaFile | null) => void;
+  onChange?: (media: WPMedia[] | WPMedia | null) => void;
   helpText?: string;
   buttonText?: string;
   selectMultiple?: boolean;
   maxFiles?: number;
   maxFileSize?: number; // in bytes
-} & FormControllerProps<ProcessedMediaFile[] | ProcessedMediaFile | null>;
+} & FormControllerProps<WPMedia[] | WPMedia | null>;
 
 const iconMapping: { [key: string]: string[] } = {
   iso: ['iso'],
@@ -99,7 +99,7 @@ const FormFileUploader = ({
         onChange(files);
       }
     },
-    initialFiles: fieldValue ? ((Array.isArray(fieldValue) ? fieldValue : [fieldValue]) as ProcessedMediaFile[]) : [],
+    initialFiles: fieldValue ? ((Array.isArray(fieldValue) ? fieldValue : [fieldValue]) as WPMedia[]) : [],
   });
 
   const uploadHandler = () => {

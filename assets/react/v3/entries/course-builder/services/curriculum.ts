@@ -11,7 +11,7 @@ import { Addons } from '@Config/constants';
 import type { ContentDripType, GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
 import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import { type WPMedia } from '@Hooks/useWpMedia';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
@@ -38,7 +38,7 @@ export interface Content {
 }
 
 export interface Lesson extends Content {
-  attachments: ProcessedMediaFile[];
+  attachments: WPMedia[];
   thumbnail: string;
   thumbnail_id: ID;
   available_on: string;
@@ -57,7 +57,7 @@ export interface Lesson extends Content {
   };
 }
 export interface Assignment extends Content {
-  attachments: ProcessedMediaFile[];
+  attachments: WPMedia[];
   assignment_option: {
     time_duration: {
       time: string;

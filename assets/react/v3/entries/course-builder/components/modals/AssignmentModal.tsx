@@ -33,7 +33,7 @@ import {
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import { type WPMedia } from '@Hooks/useWpMedia';
 import { normalizeLineEndings } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
 
@@ -49,7 +49,7 @@ type TimeLimitUnit = 'weeks' | 'days' | 'hours';
 export interface AssignmentForm {
   title: string;
   summary: string;
-  attachments: ProcessedMediaFile[];
+  attachments: WPMedia[];
   time_duration: {
     value: string;
     time: TimeLimitUnit;

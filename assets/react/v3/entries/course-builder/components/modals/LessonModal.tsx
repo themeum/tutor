@@ -38,7 +38,7 @@ import {
 import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import { type WPMedia } from '@Hooks/useWpMedia';
 import { styleUtils } from '@Utils/style-utils';
 import { normalizeLineEndings } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
@@ -54,8 +54,8 @@ interface LessonModalProps extends ModalProps {
 export interface LessonForm {
   title: string;
   description: string;
-  thumbnail: ProcessedMediaFile | null;
-  tutor_attachments: ProcessedMediaFile[];
+  thumbnail: WPMedia | null;
+  tutor_attachments: WPMedia[];
   lesson_preview: boolean;
   video: CourseVideo | null;
   duration: {

@@ -10,7 +10,7 @@ import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierMod
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@Config/config';
-import useWPMedia, { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
 import type { FormControllerProps } from '@Utils/form';
 
 import generateImage2x from '@Images/pro-placeholders/generate-image-2x.webp';
@@ -21,7 +21,7 @@ import FormFieldWrapper from './FormFieldWrapper';
 type FormImageInputProps = {
   label?: string;
   size?: 'large' | 'regular' | 'small';
-  onChange?: (media: ProcessedMediaFile | null) => void;
+  onChange?: (media: WPMedia | null) => void;
   helpText?: string;
   buttonText?: string;
   infoText?: string;
@@ -29,7 +29,7 @@ type FormImageInputProps = {
   previewImageCss?: SerializedStyles;
   loading?: boolean;
   onClickAiButton?: () => void;
-} & FormControllerProps<ProcessedMediaFile | null>;
+} & FormControllerProps<WPMedia | null>;
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
@@ -66,7 +66,7 @@ const FormImageInput = ({
         }
       }
     },
-    initialFiles: field.value as ProcessedMediaFile,
+    initialFiles: field.value as WPMedia,
   });
 
   const fieldValue = field.value;

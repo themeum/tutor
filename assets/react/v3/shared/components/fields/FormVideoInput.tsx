@@ -25,7 +25,7 @@ import {
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import useWPMedia, { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
@@ -203,7 +203,7 @@ const FormVideoInput = ({
     },
   });
 
-  const handleVideoFileUpdate = async (files: ProcessedMediaFile | ProcessedMediaFile[] | null) => {
+  const handleVideoFileUpdate = async (files: WPMedia | WPMedia[] | null) => {
     if (!files) {
       return;
     }
@@ -266,7 +266,7 @@ const FormVideoInput = ({
       onChange?.(updateFieldValue(field.value, updateData));
     },
     initialFiles: field.value?.poster
-      ? ({ id: Number(field.value.poster), url: field.value.poster_url } as ProcessedMediaFile)
+      ? ({ id: Number(field.value.poster), url: field.value.poster_url } as WPMedia)
       : null,
   });
 

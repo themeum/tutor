@@ -11,7 +11,7 @@ import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats } from '@Config/constants';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import { type WPMedia } from '@Hooks/useWpMedia';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
@@ -42,7 +42,7 @@ export interface CourseFormData {
   visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
-  thumbnail: ProcessedMediaFile | null;
+  thumbnail: WPMedia | null;
   video: CourseVideo;
   course_price_type: string;
   course_price: string;
@@ -62,7 +62,7 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
-  course_attachments: ProcessedMediaFile[] | null;
+  course_attachments: WPMedia[] | null;
   isContentDripEnabled: boolean;
   contentDripType: ContentDripType;
   course_product_id: string;
@@ -344,7 +344,7 @@ export interface CourseDetailsResponse {
   course_prerequisites: PrerequisiteCourses[];
   course_certificate_template: string;
   course_certificates_templates: Certificate[];
-  course_attachments: ProcessedMediaFile[];
+  course_attachments: WPMedia[];
   zoom_users: {
     [key: string]: string;
   };

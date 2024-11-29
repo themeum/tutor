@@ -9,7 +9,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type ProcessedMediaFile } from '@Hooks/useWpMedia';
+import { type WPMedia } from '@Hooks/useWpMedia';
 
 import { LoadingOverlay } from './LoadingSpinner';
 
@@ -19,7 +19,7 @@ interface ImageInputProps {
   buttonText?: string;
   infoText?: string;
   size?: ImageInputSize;
-  value: ProcessedMediaFile | null;
+  value: WPMedia | null;
   uploadHandler: () => void;
   clearHandler: () => void;
   emptyImageCss?: SerializedStyles;

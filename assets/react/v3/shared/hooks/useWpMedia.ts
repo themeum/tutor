@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useToast } from '@Atoms/Toast';
 
-export interface ProcessedMediaFile {
+export interface WPMedia {
   id: number;
   title: string;
   url: string;
@@ -45,11 +45,11 @@ export interface WPMediaOptions {
   priority?: number;
 }
 
-export type WPMediaOnChangeCallback = (files: ProcessedMediaFile[] | ProcessedMediaFile | null) => void;
+export type WPMediaOnChangeCallback = (files: WPMedia[] | WPMedia | null) => void;
 
 export interface WPMediaHookReturn {
   openMediaLibrary: () => void;
-  existingFiles: ProcessedMediaFile[];
+  existingFiles: WPMedia[];
   resetFiles: () => void;
 }
 
@@ -87,7 +87,7 @@ export interface WPMediaAttachment {
 interface UseWPMediaParams {
   options?: WPMediaHookOptions;
   onChange?: WPMediaOnChangeCallback;
-  initialFiles?: ProcessedMediaFile[] | ProcessedMediaFile | null;
+  initialFiles?: WPMedia[] | WPMedia | null;
 }
 
 const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams): WPMediaHookReturn => {
@@ -106,7 +106,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
     [options],
   );
 
-  const [existingFiles, setExistingFiles] = useState<ProcessedMediaFile[]>(normalizedInitialFiles);
+  const [existingFiles, setExistingFiles] = useState<WPMedia[]>(normalizedInitialFiles);
 
   useEffect(() => {
     if (normalizedInitialFiles && !existingFiles.length) {
@@ -156,7 +156,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
           return files;
         }
 
-        const newFile: ProcessedMediaFile = {
+        const newFile: WPMedia = {
           id: file.id,
           title: file.title,
           url: file.url,
@@ -168,7 +168,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
 
         files.push(newFile);
         return files;
-      }, [] as ProcessedMediaFile[]);
+      }, [] as WPMedia[]);
 
       const updatedFiles = mediaOptions.multiple ? [...remainingFiles, ...newFiles] : newFiles.slice(0, 1);
 
