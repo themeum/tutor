@@ -16,7 +16,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
-import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
+import useWPMedia from '@Hooks/useWpMedia';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -62,8 +62,8 @@ const FormImageAnswering = ({
       type: 'image',
     },
     onChange: (file) => {
-      if (file) {
-        const { id, url } = file as WPMedia;
+      if (file && !Array.isArray(file)) {
+        const { id, url } = file;
         field.onChange({
           ...inputValue,
           ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {

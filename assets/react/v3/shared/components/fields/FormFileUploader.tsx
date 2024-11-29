@@ -99,7 +99,7 @@ const FormFileUploader = ({
         onChange(files);
       }
     },
-    initialFiles: fieldValue ? ((Array.isArray(fieldValue) ? fieldValue : [fieldValue]) as WPMedia[]) : [],
+    initialFiles: fieldValue ? (Array.isArray(fieldValue) ? fieldValue : [fieldValue]) : [],
   });
 
   const uploadHandler = () => {

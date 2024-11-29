@@ -266,7 +266,7 @@ const FormVideoInput = ({
       onChange?.(updateFieldValue(field.value, updateData));
     },
     initialFiles: field.value?.poster
-      ? ({ id: Number(field.value.poster), url: field.value.poster_url } as WPMedia)
+      ? { id: Number(field.value.poster), url: field.value.poster_url, title: '' }
       : null,
   });
 

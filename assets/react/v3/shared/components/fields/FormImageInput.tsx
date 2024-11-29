@@ -66,7 +66,7 @@ const FormImageInput = ({
         }
       }
     },
-    initialFiles: field.value as WPMedia,
+    initialFiles: field.value,
   });
 
   const fieldValue = field.value;
