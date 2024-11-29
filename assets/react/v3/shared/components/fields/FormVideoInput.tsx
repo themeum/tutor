@@ -25,6 +25,7 @@ import {
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
@@ -177,40 +178,6 @@ const FormVideoInput = ({
   loading,
   onGetDuration,
 }: FormVideoInputProps) => {
-  if (!videoSources.length) {
-    return (
-      <div css={styles.emptyMediaWrapper}>
-        <Show when={label}>
-          <label>{label}</label>
-        </Show>
-
-        <div
-          css={styles.emptyMedia({
-            hasVideoSource: false,
-          })}
-        >
-          <p css={styles.warningText}>
-            <SVGIcon name="info" height={20} width={20} />
-            {__('No video source selected', 'tutor')}
-          </p>
-
-          <Button
-            buttonCss={styles.selectFromSettingsButton}
-            variant="secondary"
-            size="small"
-            icon={<SVGIcon name="linkExternal" height={24} width={24} />}
-            onClick={() => {
-              window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
-            }}
-          >
-            {__('Select from settings', 'tutor')}
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
       videoSource: videoSourcesSelectOptions[0]?.value || '',
@@ -225,8 +192,86 @@ const FormVideoInput = ({
     seconds: 0,
   });
   const [localPoster, setLocalPoster] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    triggerRef,
+    positionModifier: {
+      top: triggerRef.current?.getBoundingClientRect().top || 0,
+      left: 0,
+    },
+  });
+
+  const handleVideoFileUpdate = async (files: WPMedia | WPMedia[] | null) => {
+    if (!files) {
+      return;
+    }
+
+    const file = Array.isArray(files) ? files[0] : files;
+    const updateData = {
+      source: 'html5',
+      source_video_id: file.id.toString(),
+      source_html5: file.url,
+    };
+    field.onChange(updateFieldValue(field.value, updateData));
+    onChange?.(updateFieldValue(field.value, updateData));
+
+    try {
+      setIsThumbnailLoading(true);
+      resetImageSelection();
+      const posterUrl = await generateVideoThumbnail('external_url', file.url);
+      const duration = await getExternalVideoDuration(file.url);
+
+      if (!duration) {
+        return;
+      }
+      setDuration(covertSecondsToHMS(Math.floor(duration)));
+      if (onGetDuration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+      }
+
+      if (posterUrl) {
+        setLocalPoster(posterUrl);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsThumbnailLoading(false);
+    }
+  };
+
+  const { openMediaLibrary: openVideoLibrary, resetFiles: resetVideoSelection } = useWPMedia({
+    options: {
+      type: (supportedFormats || []).map((format) => `video/${format}`).join(','),
+    },
+    onChange: handleVideoFileUpdate,
+  });
+
+  const { openMediaLibrary: openImageLibrary, resetFiles: resetImageSelection } = useWPMedia({
+    options: {
+      type: 'image',
+    },
+    onChange: (files) => {
+      if (!files) {
+        return;
+      }
+
+      const file = Array.isArray(files) ? files[0] : files;
+      const updateData = {
+        poster: file.id.toString(),
+        poster_url: file.url,
+      };
+      field.onChange(updateFieldValue(field.value, updateData));
+      onChange?.(updateFieldValue(field.value, updateData));
+    },
+    initialFiles: field.value?.poster
+      ? { id: Number(field.value.poster), url: field.value.poster_url, title: '' }
+      : null,
+  });
 
   const videoSource = form.watch('videoSource') || '';
+  const fieldValue = field.value;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -320,65 +365,48 @@ const FormVideoInput = ({
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldValue]);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    triggerRef,
-    positionModifier: {
-      top: triggerRef.current?.getBoundingClientRect().top || 0,
-      left: 0,
-    },
-  });
+  if (!videoSources.length) {
+    return (
+      <div css={styles.emptyMediaWrapper}>
+        <Show when={label}>
+          <label>{label}</label>
+        </Show>
+
+        <div
+          css={styles.emptyMedia({
+            hasVideoSource: false,
+          })}
+        >
+          <p css={styles.warningText}>
+            <SVGIcon name="info" height={20} width={20} />
+            {__('No video source selected', 'tutor')}
+          </p>
+
+          <Button
+            buttonCss={styles.selectFromSettingsButton}
+            variant="secondary"
+            size="small"
+            icon={<SVGIcon name="linkExternal" height={24} width={24} />}
+            onClick={() => {
+              window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
+            }}
+          >
+            {__('Select from settings', 'tutor')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const handleUpload = (type: 'video' | 'poster') => {
-    const uploader = window.wp.media({
-      library: {
-        type: type === 'video' ? (supportedFormats || []).map((format) => `video/${format}`).join(',') : 'image',
-      },
-    });
-
-    uploader.open();
-    uploader.on('select', async () => {
-      const attachment = uploader.state().get('selection').first().toJSON();
-
-      const updateData =
-        type === 'video'
-          ? {
-              source: 'html5',
-              source_video_id: attachment.id,
-              source_html5: attachment.url,
-            }
-          : { poster: attachment.id, poster_url: attachment.url };
-      field.onChange(updateFieldValue(fieldValue, updateData));
-      onChange?.(updateFieldValue(fieldValue, updateData));
-
-      if (type === 'video') {
-        try {
-          setIsThumbnailLoading(true);
-          const posterUrl = await generateVideoThumbnail('external_url', attachment.url);
-          const duration = await getExternalVideoDuration(attachment.url);
-
-          if (!duration) {
-            return;
-          }
-          setDuration(covertSecondsToHMS(Math.floor(duration)));
-          if (onGetDuration) {
-            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-          }
-
-          if (posterUrl) {
-            setLocalPoster(posterUrl);
-          }
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsThumbnailLoading(false);
-        }
-      }
-    });
+    if (type === 'video') {
+      openVideoLibrary();
+      return;
+    }
+    openImageLibrary();
   };
 
   const handleClear = (type: 'video' | 'poster') => {
@@ -387,6 +415,11 @@ const FormVideoInput = ({
         ? { source: '', source_video_id: '', poster: '', poster_url: '' }
         : { poster: '', poster_url: '' };
     const updatedValue = updateFieldValue(fieldValue, updateData);
+    if (type === 'video') {
+      resetVideoSelection();
+    } else {
+      resetImageSelection();
+    }
 
     field.onChange(updatedValue);
     setLocalPoster('');
