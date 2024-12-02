@@ -396,7 +396,7 @@ const Curriculum = () => {
                     variant="secondary"
                     icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
                     onClick={() => {
-                      setTopics((previous) => {
+                      setTopics(() => {
                         return [
                           {
                             id: nanoid(),

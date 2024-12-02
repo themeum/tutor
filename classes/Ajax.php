@@ -110,6 +110,7 @@ class Ajax {
 
 		if ( Input::post( 'is_ended', false, Input::TYPE_BOOL ) ) {
 			LessonModel::mark_lesson_complete( $post_id );
+			LessonModel::update_lesson_reading_info( $post_id, $user_id, 'video_best_watched_time', 0 );
 		}
 		exit();
 	}

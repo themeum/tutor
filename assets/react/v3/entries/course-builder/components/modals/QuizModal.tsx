@@ -111,7 +111,6 @@ const QuizModal = ({
 
   const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (isFormDirty) {
@@ -126,9 +125,9 @@ const QuizModal = ({
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFormDirty]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!getQuizDetailsQuery.data) {
       return;
@@ -137,6 +136,7 @@ const QuizModal = ({
     const convertedData = convertQuizResponseToFormData(getQuizDetailsQuery.data);
 
     form.reset(convertedData);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getQuizDetailsQuery.data]);
 
   const onQuizFormSubmit = async (
@@ -153,8 +153,7 @@ const QuizModal = ({
       setActiveTab('details');
 
       Promise.resolve().then(() => {
-        form.trigger('quiz_title');
-        form.setFocus('quiz_title');
+        form.trigger('quiz_title', { shouldFocus: true });
       });
 
       return;
@@ -187,14 +186,15 @@ const QuizModal = ({
     if (response.data) {
       setIsEdit(false);
       closeModal({ action: 'CONFIRM' });
+      form.reset();
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isEdit) {
       form.setFocus('quiz_title');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
   return (
@@ -209,8 +209,8 @@ const QuizModal = ({
             headerChildren={
               <Tabs
                 wrapperCss={css`
-                height: ${modal.HEADER_HEIGHT}px;
-              `}
+                  height: ${modal.HEADER_HEIGHT}px;
+                `}
                 activeTab={activeTab}
                 tabList={[
                   {
@@ -252,18 +252,9 @@ const QuizModal = ({
                       loading={saveQuizMutation.isPending}
                       variant="primary"
                       size="small"
-                      onClick={async () => {
-                        if (activeQuestionIndex < 0) {
-                          await form.handleSubmit((data) =>
-                            onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                          )();
-                          return;
-                        }
-
-                        await form.handleSubmit((data) =>
-                          onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
-                        )();
-                      }}
+                      onClick={form.handleSubmit((data) =>
+                        onQuizFormSubmit(data, activeQuestionIndex, setValidationError),
+                      )}
                     >
                       {__('Save', 'tutor')}
                     </Button>
@@ -387,14 +378,16 @@ const QuizModal = ({
               }}
               onConfirmation={() => {
                 form.reset();
+                setValidationError(null);
 
                 if (
                   !getQuizDetailsQuery.data?.questions.find((question) => question.question_id === activeQuestionId)
                 ) {
                   setActiveQuestionId('');
-                  setValidationError(null);
                 }
-                !quizId && closeModal();
+                if (!quizId) {
+                  closeModal();
+                }
               }}
             />
           </ModalWrapper>
@@ -407,13 +400,7 @@ const QuizModal = ({
 export default QuizModal;
 
 const styles = {
-  wrapper: ({
-    activeTab,
-    isH5pQuiz,
-  }: {
-    activeTab: QuizTabs;
-    isH5pQuiz: boolean;
-  }) => css`
+  wrapper: ({ activeTab, isH5pQuiz }: { activeTab: QuizTabs; isH5pQuiz: boolean }) => css`
     width: 1218px;
     display: grid;
     grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '352px 1fr 280px') : '1fr'};
@@ -422,21 +409,15 @@ const styles = {
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
   `,
-  content: ({
-    activeTab,
-  }: {
-    activeTab: QuizTabs;
-  }) => css`
+  content: ({ activeTab }: { activeTab: QuizTabs }) => css`
     ${styleUtils.overflowYAuto};
     padding: ${spacing[32]} 0 ${spacing[48]} ${spacing[6]};
 
-		${
-      activeTab === 'settings' &&
-      css`
-			  padding-top: ${spacing[24]};
-        padding-inline: 352px 352px; // 352px is the width of the left and right side
-		  `
-    }
+    ${activeTab === 'settings' &&
+    css`
+      padding-top: ${spacing[24]};
+      padding-inline: 352px 352px; // 352px is the width of the left and right side
+    `}
   `,
   right: css`
     ${styleUtils.overflowYAuto};
@@ -459,7 +440,8 @@ const styles = {
       display: none;
     }
 
-    :hover, :focus-within {
+    :hover,
+    :focus-within {
       button {
         display: block;
       }

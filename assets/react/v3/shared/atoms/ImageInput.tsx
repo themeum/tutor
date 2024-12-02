@@ -2,14 +2,15 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
 
-import Button from '@Atoms/Button';
 import type { ButtonSize } from '@Atoms/Button';
+import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import type { Media } from '@Components/fields/FormImageInput';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
+import { type WPMedia } from '@Hooks/useWpMedia';
+
 import { LoadingOverlay } from './LoadingSpinner';
 
 export type ImageInputSize = 'large' | 'regular' | 'small';
@@ -18,7 +19,7 @@ interface ImageInputProps {
   buttonText?: string;
   infoText?: string;
   size?: ImageInputSize;
-  value: Media | null;
+  value: WPMedia | null;
   uploadHandler: () => void;
   clearHandler: () => void;
   emptyImageCss?: SerializedStyles;
@@ -120,7 +121,9 @@ const ImageInput = ({
                   disabled={disabled}
                   variant="secondary"
                   size={sizeMap[size]}
-                  buttonCss={css`margin-top: ${isClearAble && spacing[16]};`}
+                  buttonCss={css`
+                    margin-top: ${isClearAble && spacing[16]};
+                  `}
                   onClick={(event) => {
                     event.stopPropagation();
                     uploadHandler();
@@ -153,13 +156,7 @@ const ImageInput = ({
 export default ImageInput;
 
 const styles = {
-  emptyMedia: ({
-    size,
-    isDisabled,
-  }: {
-    size: ImageInputSize;
-    isDisabled: boolean;
-  }) => css`
+  emptyMedia: ({ size, isDisabled }: { size: ImageInputSize; isDisabled: boolean }) => css`
     width: 100%;
     height: 168px;
     display: flex;
@@ -173,12 +170,10 @@ const styles = {
     overflow: hidden;
     cursor: ${isDisabled ? 'not-allowed' : 'pointer'};
 
-    ${
-      size === 'small' &&
-      css`
-        width: 168px;
-      `
-    }
+    ${size === 'small' &&
+    css`
+      width: 168px;
+    `}
 
     svg {
       color: ${colorTokens.icon.default};
@@ -205,12 +200,10 @@ const styles = {
     position: relative;
     background-color: ${colorTokens.bg.white};
 
-    ${
-      size === 'small' &&
-      css`
-        width: 168px;
-      `
-    }
+    ${size === 'small' &&
+    css`
+      width: 168px;
+    `}
 
     &:hover {
       [data-hover-buttons-wrapper] {

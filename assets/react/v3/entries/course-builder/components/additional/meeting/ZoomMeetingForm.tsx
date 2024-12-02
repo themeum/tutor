@@ -53,7 +53,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       meeting_summary: currentMeeting?.post_content ?? '',
       meeting_date: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.yearMonthDay) : '',
       meeting_time: meetingStartsAt ? format(new Date(meetingStartsAt), DateFormats.hoursMinutes) : '',
-      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '60',
+      meeting_duration: currentMeeting?.meeting_data.duration ? String(currentMeeting?.meeting_data.duration) : '40',
       meeting_duration_unit: currentMeeting?.meeting_data.duration_unit ?? 'min',
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
       auto_recording: currentMeeting?.meeting_data.settings?.auto_recording ?? 'none',
@@ -199,7 +199,13 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                   required: __('Duration is required', 'tutor'),
                 }}
                 render={(controllerProps) => (
-                  <FormInput {...controllerProps} placeholder={__('Duration', 'tutor')} type="number" selectOnFocus />
+                  <FormInput 
+                    {...controllerProps}
+                    label={__('Meeting Duration', 'tutor')}
+                    placeholder={__('Duration', 'tutor')}
+                    type="number" 
+                    selectOnFocus
+                  />
                 )}
               />
               <Controller
@@ -211,6 +217,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 render={(controllerProps) => (
                   <FormSelectInput
                     {...controllerProps}
+                    label={<span>&nbsp;</span>}
                     options={[
                       { label: 'Minutes', value: 'min' },
                       { label: 'Hours', value: 'hr' },
@@ -225,13 +232,13 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
             name="meeting_timezone"
             control={meetingForm.control}
             rules={{
-              required: __('Time zone is required', 'tutor'),
+              required: __('Timezone is required', 'tutor'),
             }}
             render={(controllerProps) => (
               <FormSelectInput
                 {...controllerProps}
                 label={__('Timezone', 'tutor')}
-                placeholder={__('Select time zone', 'tutor')}
+                placeholder={__('Select timezone', 'tutor')}
                 options={timeZonesOptions}
                 selectOnFocus
                 isSearchable

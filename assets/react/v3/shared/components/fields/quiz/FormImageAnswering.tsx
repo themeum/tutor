@@ -16,6 +16,7 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
+import useWPMedia from '@Hooks/useWpMedia';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -56,34 +57,37 @@ const FormImageAnswering = ({
     id: field.value.answer_id || 0,
     animateLayoutChanges,
   });
+  const { openMediaLibrary, resetFiles } = useWPMedia({
+    options: {
+      type: 'image',
+    },
+    onChange: (file) => {
+      if (file && !Array.isArray(file)) {
+        const { id, url } = file;
+        field.onChange({
+          ...inputValue,
+          ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+            _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+          }),
+          image_id: id,
+          image_url: url,
+        });
+      }
+    },
+    initialFiles: field.value.image_id
+      ? {
+          id: Number(inputValue.image_id),
+          url: inputValue.image_url || '',
+          title: inputValue.image_url || '',
+        }
+      : null,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : undefined,
   };
-
-  const wpMedia = window.wp.media({
-    library: { type: 'image' },
-  });
-
-  const uploadHandler = () => {
-    wpMedia.open();
-  };
-
-  wpMedia.on('select', () => {
-    const attachment = wpMedia.state().get('selection').first().toJSON();
-    const { id, url, title } = attachment;
-
-    field.onChange({
-      ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-      }),
-      image_id: id,
-      image_url: url,
-    });
-  });
 
   const clearHandler = () => {
     field.onChange({
@@ -94,6 +98,7 @@ const FormImageAnswering = ({
       image_id: '',
       image_url: '',
     });
+    resetFiles();
   };
 
   useEffect(() => {
@@ -201,7 +206,7 @@ const FormImageAnswering = ({
                     </div>
                   }
                 >
-                  {(image) => (
+                  {() => (
                     <div css={styles.imagePlaceholder}>
                       <img src={inputValue.image_url} alt={inputValue.image_url} />
                     </div>
@@ -222,7 +227,7 @@ const FormImageAnswering = ({
                 }}
                 buttonText={__('Upload Image', 'tutor')}
                 infoText={__('Standard Size: 700x430 pixels', 'tutor')}
-                uploadHandler={uploadHandler}
+                uploadHandler={openMediaLibrary}
                 clearHandler={clearHandler}
                 emptyImageCss={styles.emptyImageInput}
                 previewImageCss={styles.previewImageInput}
@@ -292,6 +297,10 @@ const FormImageAnswering = ({
 
                     if (!inputValue.is_saved) {
                       onRemoveOption();
+
+                      if (validationError?.type === 'save_option') {
+                        setValidationError(null);
+                      }
                     }
                   }}
                 >
@@ -363,52 +372,45 @@ const styles = {
     isOverlay: boolean;
     isDragging: boolean;
   }) => css`
-      ${styleUtils.display.flex('column')}
-      gap: ${spacing[20]};
-      width: 100%;
-      border-radius: ${borderRadius.card};
-      padding: ${spacing[12]} ${spacing[16]};
-      background-color: ${colorTokens.background.white};
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[20]};
+    width: 100%;
+    border-radius: ${borderRadius.card};
+    padding: ${spacing[12]} ${spacing[16]};
+    background-color: ${colorTokens.background.white};
 
+    [data-visually-hidden] {
+      opacity: 0;
+    }
+
+    &:hover {
+      outline: 1px solid ${colorTokens.stroke.hover};
 
       [data-visually-hidden] {
-        opacity: 0;
+        opacity: 1;
       }
-    
+    }
+
+    ${isEditing &&
+    css`
+      background-color: ${colorTokens.background.white};
+      outline: 1px solid ${colorTokens.stroke.brand};
+
       &:hover {
-        outline: 1px solid ${colorTokens.stroke.hover};
-
-        [data-visually-hidden] {
-          opacity: 1;
-        }
+        outline: 1px solid ${colorTokens.stroke.brand};
       }
+    `}
 
-      ${
-        isEditing &&
-        css`
-          background-color: ${colorTokens.background.white};
-          outline: 1px solid ${colorTokens.stroke.brand};
+    ${isDragging &&
+    css`
+      background-color: ${colorTokens.stroke.hover};
+    `}
 
-          &:hover {
-            outline: 1px solid ${colorTokens.stroke.brand};
-          }
-        `
-      }
-
-      ${
-        isDragging &&
-        css`
-          background-color: ${colorTokens.stroke.hover};
-        `
-      }
-
-      ${
-        isOverlay &&
-        css`
-          box-shadow: ${shadow.drag};
-        `
-      }
-    `,
+      ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
+  `,
   optionHeader: css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;

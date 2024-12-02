@@ -22,6 +22,7 @@ import {
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import useWPMedia from '@Hooks/useWpMedia';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
@@ -76,6 +77,30 @@ const FormMultipleChoiceAndOrdering = ({
     id: field.value?.answer_id || 0,
     animateLayoutChanges,
   });
+  const { openMediaLibrary, resetFiles } = useWPMedia({
+    options: {
+      type: 'image',
+    },
+    onChange: (file) => {
+      if (file && !Array.isArray(file)) {
+        const { id, url } = file;
+
+        field.onChange({
+          ...inputValue,
+          ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
+            _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
+          }),
+          image_id: id,
+          image_url: url,
+          answer_view_format: 'text_image',
+        });
+        setIsUploadImageVisible(true);
+      }
+    },
+    initialFiles: field.value?.image_id
+      ? { id: Number(field.value.image_id), url: field.value.image_url || '', title: '' }
+      : null,
+  });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -83,30 +108,8 @@ const FormMultipleChoiceAndOrdering = ({
     opacity: isDragging ? 0.3 : undefined,
   };
 
-  const wpMedia = window.wp.media({
-    library: { type: 'image' },
-  });
-
-  const uploadHandler = () => {
-    wpMedia.open();
-  };
-
-  wpMedia.on('select', () => {
-    const attachment = wpMedia.state().get('selection').first().toJSON();
-    const { id, url, title } = attachment;
-
-    field.onChange({
-      ...inputValue,
-      ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
-        _data_status: calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-      }),
-      image_id: id,
-      image_url: url,
-      answer_view_format: 'text_image',
-    });
-  });
-
   const clearHandler = () => {
+    resetFiles();
     field.onChange({
       ...inputValue,
       ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
@@ -116,6 +119,7 @@ const FormMultipleChoiceAndOrdering = ({
       image_url: '',
       answer_view_format: 'text',
     });
+    setIsUploadImageVisible(false);
   };
 
   useEffect(() => {
@@ -186,18 +190,7 @@ const FormMultipleChoiceAndOrdering = ({
                     icon={<SVGIcon name="removeImage" width={24} height={24} />}
                     onClick={(event) => {
                       event.stopPropagation();
-                      field.onChange({
-                        ...inputValue,
-                        ...(calculateQuizDataStatus(inputValue._data_status, QuizDataStatus.UPDATE) && {
-                          _data_status: calculateQuizDataStatus(
-                            inputValue._data_status,
-                            QuizDataStatus.UPDATE,
-                          ) as QuizDataStatus,
-                        }),
-                        image_id: '',
-                        image_url: '',
-                      });
-                      setIsUploadImageVisible(false);
+                      clearHandler();
                     }}
                   >
                     {__('Remove Image', 'tutor')}
@@ -209,7 +202,7 @@ const FormMultipleChoiceAndOrdering = ({
                   icon={<SVGIcon name="addImage" width={24} height={24} />}
                   onClick={(event) => {
                     event.stopPropagation();
-                    setIsUploadImageVisible(true);
+                    openMediaLibrary();
                   }}
                 >
                   {__('Add Image', 'tutor')}
@@ -279,17 +272,12 @@ const FormMultipleChoiceAndOrdering = ({
             when={isEditing}
             fallback={
               <div css={styles.placeholderWrapper}>
-                <Show when={isUploadImageVisible && !isDefined(inputValue.image_url)}>
-                  <div css={styles.imagePlaceholder}>
-                    <SVGIcon name="imagePreview" height={48} width={48} />
-                  </div>
-                </Show>
                 <Show when={inputValue.image_url}>
-                  {(image) => (
+                  {
                     <div css={styles.imagePlaceholder}>
                       <img src={inputValue.image_url} alt={inputValue.image_url} />
                     </div>
-                  )}
+                  }
                 </Show>
                 <div css={styles.optionPlaceholder}>
                   {inputValue.answer_title || __('Write answer option...', 'tutor')}
@@ -307,7 +295,7 @@ const FormMultipleChoiceAndOrdering = ({
                   }}
                   buttonText={__('Upload Image', 'tutor')}
                   infoText={__('Size: 700x430 pixels', 'tutor')}
-                  uploadHandler={uploadHandler}
+                  uploadHandler={openMediaLibrary}
                   clearHandler={clearHandler}
                   emptyImageCss={styles.emptyImageInput}
                   previewImageCss={styles.previewImageInput}
@@ -369,6 +357,9 @@ const FormMultipleChoiceAndOrdering = ({
                     field.onChange(previousValue);
 
                     if (!inputValue.is_saved) {
+                      if (validationError?.type === 'save_option') {
+                        setValidationError(null);
+                      }
                       onRemoveOption();
                     }
                   }}
@@ -422,62 +413,50 @@ const FormMultipleChoiceAndOrdering = ({
 export default FormMultipleChoiceAndOrdering;
 
 const styles = {
-  option: ({
-    isSelected,
-    isMultipleChoice,
-  }: {
-    isSelected: boolean;
-    isMultipleChoice: boolean;
-  }) => css`
-      ${styleUtils.display.flex()};
-      ${typography.caption('medium')};
-      align-items: center;
-      color: ${colorTokens.text.subdued};
-      gap: ${spacing[10]};
-      align-items: center;
-  
+  option: ({ isSelected, isMultipleChoice }: { isSelected: boolean; isMultipleChoice: boolean }) => css`
+    ${styleUtils.display.flex()};
+    ${typography.caption('medium')};
+    align-items: center;
+    color: ${colorTokens.text.subdued};
+    gap: ${spacing[10]};
+    align-items: center;
+
+    [data-check-button] {
+      color: ${colorTokens.icon.default};
+      ${!isMultipleChoice &&
+      css`
+        fill: none;
+      `}
+
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
+
+    &:hover {
       [data-check-button] {
-        color: ${colorTokens.icon.default};
-        ${
-          !isMultipleChoice &&
-          css`
-            fill: none;
-          `
-        }
+        opacity: 1;
+      }
+    }
 
-        &:focus-visible {
-          opacity: 1;
-        }
+    &:focus-within {
+      [data-check-button] {
+        opacity: 1;
       }
-  
-      &:hover {
-        [data-check-button] {
-          opacity: 1;
-        }
-      }
+    }
 
-      &:focus-within {
-        [data-check-button] {
-          opacity: 1;
-        }
-      }
-  
-      ${
-        isSelected &&
+    ${isSelected &&
+    css`
+      [data-check-button] {
+        opacity: 1;
+        color: ${colorTokens.bg.success};
+        ${!isMultipleChoice &&
         css`
-          [data-check-button] {
-            opacity: 1;
-            color: ${colorTokens.bg.success};
-            ${
-              !isMultipleChoice &&
-              css`
-                fill: ${colorTokens.bg.success};
-              `
-            }
-          }
-        `
+          fill: ${colorTokens.bg.success};
+        `}
       }
-    `,
+    `}
+  `,
   optionLabel: ({
     isSelected,
     isEditing,
@@ -489,62 +468,54 @@ const styles = {
     isDragging: boolean;
     isOverlay: boolean;
   }) => css`
-      display: flex;
-      flex-direction: column;
-      gap: ${spacing[12]};
-      width: 100%;
-      border-radius: ${borderRadius.card};
-      padding: ${spacing[12]} ${spacing[16]};
-      background-color: ${colorTokens.background.white};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    width: 100%;
+    border-radius: ${borderRadius.card};
+    padding: ${spacing[12]} ${spacing[16]};
+    background-color: ${colorTokens.background.white};
+
+    [data-visually-hidden] {
+      opacity: 0;
+    }
+
+    &:hover {
+      outline: 1px solid ${colorTokens.stroke.hover};
 
       [data-visually-hidden] {
-        opacity: 0;
+        opacity: 1;
       }
-  
+    }
+
+    ${isSelected &&
+    css`
+      background-color: ${colorTokens.background.success.fill40};
+      color: ${colorTokens.text.primary};
+
       &:hover {
-        outline: 1px solid ${colorTokens.stroke.hover};
+        outline: 1px solid ${colorTokens.stroke.success.fill70};
+      }
+    `}
+    ${isEditing &&
+    css`
+      background-color: ${colorTokens.background.white};
+      outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+      &:hover {
+        outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
+      }
+    `}
 
-        [data-visually-hidden] {
-          opacity: 1;
-        }
-      }
-  
-      ${
-        isSelected &&
-        css`
-          background-color: ${colorTokens.background.success.fill40};
-          color: ${colorTokens.text.primary};
-  
-          &:hover {
-            outline: 1px solid ${colorTokens.stroke.success.fill70};
-          }
-        `
-      }
-      ${
-        isEditing &&
-        css`
-          background-color: ${colorTokens.background.white};
-          outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
-          &:hover {
-            outline: 1px solid ${isSelected ? colorTokens.stroke.success.fill70 : colorTokens.stroke.brand};
-          }
-        `
-      }
+      ${isDragging &&
+    css`
+      background-color: ${colorTokens.stroke.hover};
+    `}
 
-      ${
-        isDragging &&
-        css`
-          background-color: ${colorTokens.stroke.hover};
-        `
-      }
-
-      ${
-        isOverlay &&
-        css`
-          box-shadow: ${shadow.drag};
-        `
-      }
-    `,
+      ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
+  `,
   optionHeader: css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;

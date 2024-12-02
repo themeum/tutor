@@ -107,7 +107,7 @@ class LessonModel {
 		$lesson_id = tutor_utils()->get_post_id( $lesson_id );
 		$user_id   = tutor_utils()->get_user_id( $user_id );
 
-		if ( $key && $value ) {
+		if ( $key ) {
 			$lesson_info                       = (array) maybe_unserialize( get_user_meta( $user_id, '_lesson_reading_info', true ) );
 			$lesson_info[ $lesson_id ][ $key ] = $value;
 			update_user_meta( $user_id, '_lesson_reading_info', $lesson_info );

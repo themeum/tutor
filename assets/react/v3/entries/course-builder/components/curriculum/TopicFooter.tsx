@@ -383,7 +383,7 @@ const styles = {
     :hover:not(:disabled) {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.brand};
-      box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
+      outline: 1px solid ${colorTokens.stroke.brand};
     }
   `,
 };

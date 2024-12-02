@@ -12,7 +12,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
@@ -35,7 +35,6 @@ import { styleUtils } from '@Utils/style-utils';
 import { nanoid, noop } from '@Utils/util';
 
 const MultipleChoiceAndOrdering = () => {
-  const isInitialRenderRef = useRef(false);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const form = useFormContext<QuizForm>();
   const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
@@ -152,29 +151,6 @@ const MultipleChoiceAndOrdering = () => {
       form.setValue('deleted_answer_ids', [...form.getValues('deleted_answer_ids'), option.answer_id]);
     }
   };
-
-  useEffect(() => {
-    isInitialRenderRef.current = true;
-    return () => {
-      isInitialRenderRef.current = false;
-    };
-  }, []);
-
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
-  useEffect(() => {
-    if (!hasMultipleCorrectAnswer && !isInitialRenderRef.current) {
-      const resetOptions = currentOptions.map((option) => ({
-        ...option,
-        ...(calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) && {
-          _data_status: calculateQuizDataStatus(option._data_status, QuizDataStatus.UPDATE) as QuizDataStatus,
-        }),
-        is_correct: '0' as '0' | '1',
-        is_saved: true,
-      }));
-      replaceOption(resetOptions);
-    }
-    isInitialRenderRef.current = false;
-  }, [hasMultipleCorrectAnswer]);
 
   return (
     <div
