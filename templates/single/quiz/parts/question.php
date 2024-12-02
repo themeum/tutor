@@ -189,10 +189,8 @@
 						require 'short-answer.php';
 					}
 
-					// H5P.
-					if ( 'h5p' === $question_type ) {
-						require \TutorPro\H5P\Utils::addon_config()->path . 'views/h5p-question-answer.php';
-					}
+					
+					do_action( 'tutor_require_question_answer_file', $question_type, $is_started_quiz, $question );
 					?>
 
 					<div class="answer-help-block tutor-mt-24"></div>

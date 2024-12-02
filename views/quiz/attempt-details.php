@@ -736,37 +736,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 										case 'result':
 											?>
 												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
-												<?php
-												if ( 'h5p' === $answer->question_type ) {
-													$attempt_results     = \TutorPro\H5P\Utils::get_h5p_quiz_results( $answer->question_id, $answer->user_id, $answer->quiz_attempt_id, $answer->quiz_id, $answer->question_description );
-													$has_attempt_results = is_array( $attempt_results ) && count( $attempt_results );
-													$has_response        = true;
-													if ( $has_attempt_results ) {
-														$score = $attempt_results[0]->raw_score . '/' . $attempt_results[0]->max_score;
+												<?php do_action( 'tutor_quiz_attempt_after_result_column', $answer, $answer_status ); ?>
 
-														if ( is_array( $attempt_results ) && 1 === count( $attempt_results ) ) {
-															if ( is_null( $attempt_results[0]->response ) ) {
-																$has_response = false;
-															}
-														}
-														if ( $has_response ) {
-														?>
-															<a class=" tutor-btn tutor-btn-outline-primary tutor-btn-sm open-tutor-h5p-quiz-result-modal-btn" data-quiz-id="<?php echo esc_attr( $answer->quiz_id ); ?>" 
-																data-question-id="<?php echo esc_attr( $answer->question_id ); ?>" 
-																data-user-id="<?php echo esc_attr( $answer->user_id ); ?>"
-																data-attempt-id="<?php echo esc_attr( $answer->quiz_attempt_id ); ?>"
-																data-content-id="<?php echo esc_attr( $answer->question_description ); ?>"
-															>
-																<?php esc_html_e( 'View', 'tutor' ); ?>
-															</a>
-														<?php
-														} else {
-														?>
-															<span class="<?php echo $attempt_results[0]->max_score === $attempt_results[0]->raw_score ? 'tutor-color-success' : 'tutor-color-danger'; ?> tutor-fw-normal"><?php echo esc_html( $score ); ?></span>
-														<?php
-														}
-													}
-												} else {
+												<?php
+												if ( 'h5p' !== $answer->question_type ) {
 													switch ( $answer_status ) {
 														case 'correct':
 															echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
