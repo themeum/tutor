@@ -125,7 +125,7 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                       name={item.display_name}
                       email={item.user_email}
                       avatar={item.avatar_url}
-                      isEnrolled={item.is_enrolled}
+                      isEnrolled={item.is_enrolled === 1}
                       isSelected={!!students.find((student) => student.ID === item.ID)}
                       onItemClick={() => handleItemClick(item)}
                     />

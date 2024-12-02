@@ -87,8 +87,8 @@ class UserModel {
 		);
 
 		foreach ( $response['results'] as $result ) {
-			// Convert `is_enrolled` from int to boolean for clarity.
-			$result->is_enrolled = (bool) $result->is_enrolled;
+			// Typecast `is_enrolled` to int.
+			$result->is_enrolled = (int) $result->is_enrolled;
 
 			// Add avatar URL for the user.
 			$result->avatar_url = get_avatar_url( $result->ID );

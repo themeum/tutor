@@ -70,18 +70,18 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
                 }
               }}
               checked={courseList.map((course) => course.ID).includes(item.ID)}
-              disabled={item.is_enrolled}
+              disabled={item.is_enrolled === 1}
             />
             <div css={styles.studentInfo}>
               <img src={item.avatar_url} css={styles.thumbnail} alt={__('Student item', 'tutor')} />
               <div>
-                <div css={styles.title(item.is_enrolled)}>
+                <div css={styles.title(item.is_enrolled === 1)}>
                   {item.display_name}
-                  <Show when={item.is_enrolled}>
+                  <Show when={item.is_enrolled === 1}>
                     <div css={styles.alreadyEnrolled}>{__('Already Enrolled', 'tutor')}</div>
                   </Show>
                 </div>
-                <p css={styles.subTitle(item.is_enrolled)}>{item.user_email}</p>
+                <p css={styles.subTitle(item.is_enrolled === 1)}>{item.user_email}</p>
               </div>
             </div>
           </div>
