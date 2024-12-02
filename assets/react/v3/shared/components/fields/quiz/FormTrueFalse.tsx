@@ -44,16 +44,12 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }
     <div
       {...attributes}
       css={styles.option({ isSelected: !!Number(field.value.is_correct), isOverlay })}
+      tabIndex={-1}
       ref={setNodeRef}
       style={style}
     >
-      <button type="button" css={styleUtils.resetButton} onClick={onCheckCorrectAnswer}>
-        <SVGIcon
-          data-check-icon
-          name={Number(field.value.is_correct) ? 'checkFilled' : 'check'}
-          height={32}
-          width={32}
-        />
+      <button data-check-button type="button" css={styleUtils.optionCheckButton} onClick={onCheckCorrectAnswer}>
+        <SVGIcon name={Number(field.value.is_correct) ? 'checkFilled' : 'check'} height={32} width={32} />
       </button>
       <div css={styles.optionLabel({ isSelected: !!Number(field.value.is_correct), isDragging, isOverlay })}>
         <span>{inputValue.answer_title}</span>
@@ -61,7 +57,7 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }
         <button
           {...listeners}
           type="button"
-          css={styles.optionDragButton({
+          css={styleUtils.optionDragButton({
             isOverlay,
           })}
           data-visually-hidden
@@ -76,10 +72,6 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }
 export default FormTrueFalse;
 
 const styles = {
-  optionWrapper: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[12]};
-  `,
   option: ({
     isSelected,
     isOverlay,
@@ -95,16 +87,25 @@ const styles = {
     height: 48px;
     align-items: center;
 
-    [data-check-icon] {
+    [data-check-button] {
+      color: ${colorTokens.icon.default};
       opacity: 0;
-      transition: opacity 0.15s ease-in-out;
       fill: none;
       flex-shrink: 0;
-      color: ${colorTokens.icon.default};
+
+      &:focus-visible {
+        opacity: 1;
+      }
+    }
+
+    &:focus-within {
+      [data-check-button] {
+        opacity: 1;
+      }
     }
 
     &:hover {
-      [data-check-icon] {
+      [data-check-button] {
         opacity: ${isOverlay ? 0 : 1};
       }
     }
@@ -113,7 +114,7 @@ const styles = {
     ${
       isSelected &&
       css`
-        [data-check-icon] {
+        [data-check-button] {
           opacity: 1;
           color: ${colorTokens.bg.success};
         }
@@ -150,6 +151,12 @@ const styles = {
       }
     }
 
+    &:focus-within {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
+
     ${
       isSelected &&
       css`
@@ -173,25 +180,6 @@ const styles = {
       isOverlay &&
       css`
         box-shadow: ${shadow.drag};
-      `
-    }
-  `,
-  optionDragButton: ({
-    isOverlay,
-  }: {
-    isOverlay: boolean;
-  }) => css`
-    ${styleUtils.resetButton}
-    ${styleUtils.flexCenter()}
-    transform: rotate(90deg);
-    color: ${colorTokens.icon.default};
-    cursor: grab;
-    place-self: center center;
-
-    ${
-      isOverlay &&
-      css`
-        cursor: grabbing;
       `
     }
   `,

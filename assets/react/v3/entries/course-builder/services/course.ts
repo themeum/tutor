@@ -4,7 +4,6 @@ import type { AxiosResponse } from 'axios';
 import { format, isBefore, parseISO } from 'date-fns';
 
 import { useToast } from '@Atoms/Toast';
-import type { Media } from '@Components/fields/FormImageInput';
 import type { UserOption } from '@Components/fields/FormSelectUser';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 
@@ -12,6 +11,7 @@ import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats } from '@Config/constants';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { type WPMedia } from '@Hooks/useWpMedia';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
 import { authApiInstance, wpAjaxInstance } from '@Utils/api';
@@ -42,7 +42,7 @@ export interface CourseFormData {
   visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
-  thumbnail: Media | null;
+  thumbnail: WPMedia | null;
   video: CourseVideo;
   course_price_type: string;
   course_price: string;
@@ -62,7 +62,7 @@ export interface CourseFormData {
   course_material_includes: string;
   course_duration_hours: number;
   course_duration_minutes: number;
-  course_attachments: Media[] | null;
+  course_attachments: WPMedia[] | null;
   isContentDripEnabled: boolean;
   contentDripType: ContentDripType;
   course_product_id: string;
@@ -279,13 +279,10 @@ export interface CourseDetailsResponse {
   post_mime_type: string;
   comment_count: string;
   filter: string;
-  // biome-ignore lint/suspicious/noExplicitAny: <Allow for now>
-  ancestors: any[];
+  ancestors: unknown[];
   page_template: string;
-  // biome-ignore lint/suspicious/noExplicitAny: <Allow for now>
-  post_category: any[];
-  // biome-ignore lint/suspicious/noExplicitAny: <Allow for now>
-  tags_input: any[];
+  post_category: unknown[];
+  tags_input: unknown[];
   course_categories: {
     term_id: number;
     name: string;
@@ -347,7 +344,7 @@ export interface CourseDetailsResponse {
   course_prerequisites: PrerequisiteCourses[];
   course_certificate_template: string;
   course_certificates_templates: Certificate[];
-  course_attachments: Media[];
+  course_attachments: WPMedia[];
   zoom_users: {
     [key: string]: string;
   };
@@ -500,8 +497,8 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
         'pricing[product_id]': data.course_product_id,
       }),
 
-    course_price: Number(data.course_price) ?? 0,
-    course_sale_price: Number(data.course_sale_price) ?? 0,
+    course_price: Number(data.course_price) || 0,
+    course_sale_price: Number(data.course_sale_price) || 0,
     course_selling_option: data.course_selling_option,
 
     course_categories: data.course_categories ?? [],

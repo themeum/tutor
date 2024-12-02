@@ -104,11 +104,12 @@ const QuestionForm = () => {
                 placeholder={__('Write your question here..', 'tutor')}
                 disabled={contentType === 'tutor_h5p_quiz'}
                 onChange={() => {
-                  calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) &&
+                  if (calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
                       calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
                 selectOnFocus={questions[activeQuestionIndex]?._data_status === QuizDataStatus.NEW}
               />
@@ -134,11 +135,12 @@ const QuestionForm = () => {
                   placeholder={__('Description (optional)', 'tutor')}
                   disabled={contentType === 'tutor_h5p_quiz'}
                   onChange={() => {
-                    calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) &&
+                    if (calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE)) {
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
                         calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
+                    }
                   }}
                 />
               )}
@@ -168,11 +170,12 @@ const QuestionForm = () => {
                 label={__('Answer Explanation', 'tutor')}
                 placeholder={__('Write answer explanation...', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) &&
+                  if (calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
                       calculateQuizDataStatus(dataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
@@ -190,7 +193,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     padding-right: ${spacing[48]};
     gap: ${spacing[16]};
-    animation:  ${isSameQuestion ? undefined : 'fadeIn 0.25s ease-in-out'};
+    animation: ${isSameQuestion ? undefined : 'fadeIn 0.25s ease-in-out'};
 
     @keyframes fadeIn {
       from {
@@ -222,7 +225,7 @@ const styles = {
     padding: ${spacing[4]} ${spacing[8]};
     ${typography.caption()};
     color: ${colorTokens.text.white};
-    background-color: #2575BE;
+    background-color: #2575be;
     border-radius: ${borderRadius.card};
     width: fit-content;
     font-family: 'Fire Code', monospace;
@@ -232,7 +235,7 @@ const styles = {
   `,
   emptyState: css`
     ${styleUtils.flexCenter('column')};
-    padding-left: ${spacing[40]}; 
+    padding-left: ${spacing[40]};
     padding-right: ${spacing[48]};
     gap: ${spacing[16]};
   `,

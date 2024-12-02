@@ -93,11 +93,11 @@ const styles = {
     size?: ProBadgeSize;
   }) => css`
     position: relative;
-    height: ${badgeSizes[size].height};
-
+    
     ${
       !hasChildren &&
       css`
+        height: ${badgeSizes[size].height};
         display: flex;
         border-radius: ${badgeSizes[size].borderRadius};
         align-items: center;

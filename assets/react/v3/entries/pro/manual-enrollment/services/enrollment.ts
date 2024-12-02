@@ -10,6 +10,7 @@ export interface Student {
   ID: string;
   display_name: string;
   user_email: string;
+  is_enrolled: number;
   avatar_url: string;
 }
 

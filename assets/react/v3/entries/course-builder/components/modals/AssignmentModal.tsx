@@ -10,7 +10,6 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import FormDateInput from '@Components/fields/FormDateInput';
 import FormFileUploader from '@Components/fields/FormFileUploader';
-import type { Media } from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormSelectInput from '@Components/fields/FormSelectInput';
@@ -19,6 +18,7 @@ import FormWPEditor from '@Components/fields/FormWPEditor';
 import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
+import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
@@ -33,9 +33,9 @@ import {
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { type WPMedia } from '@Hooks/useWpMedia';
 import { normalizeLineEndings } from '@Utils/util';
 import { maxLimitRule } from '@Utils/validation';
-import { tutorConfig } from '@Config/config';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -49,7 +49,7 @@ type TimeLimitUnit = 'weeks' | 'days' | 'hours';
 export interface AssignmentForm {
   title: string;
   summary: string;
-  attachments: Media[];
+  attachments: WPMedia[];
   time_duration: {
     value: string;
     time: TimeLimitUnit;
@@ -128,7 +128,6 @@ const AssignmentModal = ({
 
   const isFormDirty = form.formState.isDirty;
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (assignmentDetails) {
       form.reset(
@@ -163,6 +162,7 @@ const AssignmentModal = ({
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [assignmentDetails]);
 
   const onSubmit = async (data: AssignmentForm) => {
@@ -188,7 +188,11 @@ const AssignmentModal = ({
               variant="text"
               size="small"
               onClick={() => {
-                assignmentId ? form.reset() : closeModal({ action: 'CLOSE' });
+                if (assignmentId) {
+                  form.reset();
+                } else {
+                  closeModal({ action: 'CLOSE' });
+                }
               }}
             >
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}

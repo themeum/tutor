@@ -317,7 +317,7 @@ const styles = {
   titleWithBadge: css`
     span {
       ${styleUtils.display.flex()};
-      align-items: centerTC;
+      align-items: center;
       gap: ${spacing[4]};
     }
   `,

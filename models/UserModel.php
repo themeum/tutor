@@ -77,11 +77,9 @@ class UserModel {
 				'u.user_login',
 				'u.user_email',
 				'u.display_name',
-				'p.post_author',
+				'CASE WHEN p.ID IS NOT NULL THEN 1 ELSE 0 END AS is_enrolled',
 			),
-			array(
-				'p.post_author' => 'null',
-			),
+			array(),
 			$search_clause,
 			'ID',
 			$limit,
@@ -89,7 +87,10 @@ class UserModel {
 		);
 
 		foreach ( $response['results'] as $result ) {
-			// set avatar url.
+			// Typecast `is_enrolled` to int.
+			$result->is_enrolled = (int) $result->is_enrolled;
+
+			// Add avatar URL for the user.
 			$result->avatar_url = get_avatar_url( $result->ID );
 		}
 

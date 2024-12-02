@@ -278,7 +278,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
               <FormSelectInput
                 {...controllerProps}
                 label={__('Timezone', 'tutor')}
-                placeholder={__('Select time zone', 'tutor')}
+                placeholder={__('Select timezone', 'tutor')}
                 options={timeZonesOptions}
                 selectOnFocus
                 isSearchable

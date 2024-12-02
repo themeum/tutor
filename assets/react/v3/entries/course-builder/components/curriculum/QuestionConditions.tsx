@@ -59,7 +59,7 @@ const questionTypes = {
 };
 
 const QuestionConditions = () => {
-  const { activeQuestionIndex, activeQuestionId } = useQuizModalContext();
+  const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
   const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as Omit<
@@ -104,12 +104,26 @@ const QuestionConditions = () => {
                 <FormSwitch
                   {...controllerProps}
                   label={__('Multiple Correct Answer', 'tutor')}
-                  onChange={() => {
-                    calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
+                  onChange={(value) => {
+                    if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
                         calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
+                    }
+
+                    // Reset all answers to incorrect on multiple correct answer toggle from true to false
+                    if (!value) {
+                      form.setValue(
+                        `questions.${activeQuestionIndex}.question_answers`,
+                        form.getValues(`questions.${activeQuestionIndex}.question_answers`).map((answer) => {
+                          return {
+                            ...answer,
+                            is_correct: '0' as '0' | '1',
+                          };
+                        }),
+                      );
+                    }
                   }}
                 />
               )}
@@ -126,12 +140,17 @@ const QuestionConditions = () => {
                 <FormSwitch
                   {...controllerProps}
                   label={__('Image Matching', 'tutor')}
-                  onChange={() => {
-                    calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
+                  onChange={(value) => {
+                    if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                       form.setValue(
                         `questions.${activeQuestionIndex}._data_status`,
                         calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                       );
+                    }
+
+                    if (validationError?.type === 'question' && !value) {
+                      setValidationError(null);
+                    }
                   }}
                 />
               )}
@@ -148,11 +167,12 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Answer Required', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
+                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
                       calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
@@ -168,11 +188,12 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Randomize Choice', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
+                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
                       calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
@@ -198,11 +219,12 @@ const QuestionConditions = () => {
                   max-width: 80px;
                 `}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
+                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
                       calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
@@ -218,11 +240,12 @@ const QuestionConditions = () => {
                 {...controllerProps}
                 label={__('Display Points', 'tutor')}
                 onChange={() => {
-                  calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) &&
+                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
                     form.setValue(
                       `questions.${activeQuestionIndex}._data_status`,
                       calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
                     );
+                  }
                 }}
               />
             )}
