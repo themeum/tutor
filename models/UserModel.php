@@ -73,7 +73,7 @@ class UserModel {
 			$primary_table,
 			$joining_tables,
 			array(
-				'u.ID',
+				'distinct u.ID',
 				'u.user_login',
 				'u.user_email',
 				'u.display_name',
