@@ -161,7 +161,7 @@ tutor_load_template(
 							<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'About Lesson', 'tutor' ); ?>
 							</div>
-							<?php do_action( 'tutor_before_the_content', $post, $course_id ); ?>
+							<?php do_action( 'tutor_lesson_before_the_content', $post, $course_id ); ?>
 							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
 								<?php the_content(); ?>
 							</div>
