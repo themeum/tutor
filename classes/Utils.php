@@ -7088,6 +7088,7 @@ class Utils {
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
+							AND course.post_type != 'course-bundle'
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
@@ -7162,6 +7163,7 @@ class Utils {
 			FROM 	{$wpdb->posts} enrol
 					INNER JOIN {$wpdb->posts} course
 							ON enrol.post_parent = course.ID
+							AND course.post_type != 'course-bundle'
 					INNER JOIN {$wpdb->users} student
 							ON enrol.post_author = student.ID
 			WHERE 	enrol.post_type = %s
