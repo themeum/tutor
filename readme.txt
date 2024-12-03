@@ -314,10 +314,10 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.0.2 - December 03, 2024
 
-Fix: Cannot select certificate if there is only one portrait type certificates
-Fix: H5P Fatal Error when Tutor free & pro version mismatch
-Fix: Some cancel enrollments does not appear on the manual enrollment page
-Fix: Vimeo video does not start where left off
+Fixed: Issue with selecting certificates when only one portrait-type certificate is available.
+Fixed: H5P fatal error caused by a version mismatch between Tutor LMS Free and Pro.
+Fixed: Canceled enrollments not appearing on the manual enrollment page.
+Fixed: Vimeo videos aren’t resuming playback from the last played position.
 
 = 3.0.1 - November 22, 2024
 
