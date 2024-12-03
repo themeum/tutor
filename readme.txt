@@ -312,7 +312,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.0.2 - November 03, 2024
+= 3.0.2 - December 03, 2024
 
 Fix: Cannot select certificate if there is only one portrait type certificates
 Fix: H5P Fatal Error when Tutor free & pro version mismatch
