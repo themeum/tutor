@@ -13,7 +13,7 @@ import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 
 interface StudentListTableProps {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 
@@ -78,7 +78,9 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
                 <div css={styles.title(item.is_enrolled === 1)}>
                   {item.display_name}
                   <Show when={item.is_enrolled === 1}>
-                    <div css={styles.alreadyEnrolled}>{__('Already Enrolled', 'tutor')}</div>
+                    <div css={styles.alreadyEnrolled}>
+                      {__('Already Enrolled', 'tutor')} ({item.enrollment_status})
+                    </div>
                   </Show>
                 </div>
                 <p css={styles.subTitle(item.is_enrolled === 1)}>{item.user_email}</p>

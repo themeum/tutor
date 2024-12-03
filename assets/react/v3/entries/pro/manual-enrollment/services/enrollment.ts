@@ -11,6 +11,7 @@ export interface Student {
   display_name: string;
   user_email: string;
   is_enrolled: number;
+  enrollment_status: string;
   avatar_url: string;
 }
 
