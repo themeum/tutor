@@ -1077,15 +1077,6 @@ class Course extends Tutor_Base {
 				if ( $topic_contents->have_posts() ) {
 					foreach ( $topic_contents->get_posts() as $post ) {
 						if ( tutor()->quiz_post_type === $post->post_type ) {
-							$quiz_option = get_post_meta( $post->ID, Quiz::META_QUIZ_OPTION, true );
-							if ( isset( $quiz_option['quiz_type'] ) && 'tutor_h5p_quiz' === $quiz_option['quiz_type'] ) {
-								$post->quiz_type = 'tutor_h5p_quiz';
-								// remove h5p quiz if tutor h5p addon is disabled.
-								$is_h5p_enabled = tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled();
-								if ( ! $is_h5p_enabled ) {
-									continue;
-								}
-							}
 							$questions            = tutor_utils()->get_questions_by_quiz( $post->ID );
 							$post->total_question = is_array( $questions ) ? count( $questions ) : 0;
 						}
@@ -1093,6 +1084,8 @@ class Course extends Tutor_Base {
 						array_push( $current_topic['contents'], $post );
 					}
 				}
+
+				$current_topic = apply_filters( 'tutor_filter_course_content', $current_topic );
 
 				array_push( $data, $current_topic );
 			}

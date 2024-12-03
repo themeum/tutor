@@ -369,9 +369,7 @@ class Lesson extends Tutor_Base {
 			$content = __( 'Assignment', 'tutor' );
 		}
 
-		if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-			\TutorPro\H5P\Lesson::delete_h5p_lesson_statements_by_id( 0, $lesson_id );
-		}
+		do_action( 'tutor_before_delete_course_content', 0, $lesson_id );
 
 		wp_delete_post( $lesson_id, true );
 		/* translators: %s refers to the name of the content being deleted */

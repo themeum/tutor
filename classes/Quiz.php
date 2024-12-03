@@ -593,22 +593,7 @@ class Quiz {
 				$total_question_marks = $wpdb->get_var( $query );
 				//phpcs:enable
 
-				// Check if h5p addon is enabled.
-				if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-					// Update the total marks to include the marks from h5p questions.
-					foreach ( $question_ids as $question_id ) {
-						$question       = QuizModel::get_quiz_question_by_id( $question_id );
-						$question_type  = $question->question_type;
-						$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
-
-						if ( 'h5p' === $question_type ) {
-							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
-								$h5p_attempt_answer    = $attempt_result[0];
-								$total_question_marks += $h5p_attempt_answer->max_score;
-							}
-						}
-					}
-				}
+				$total_question_marks = apply_filters( 'tutor_filter_update_before_question_mark', $total_question_marks, $question_ids, $user_id, $attempt_id );
 
 				// Set the the total mark in the attempt table for the question.
 				$wpdb->update(
@@ -787,6 +772,8 @@ class Quiz {
 					$question_mark = $is_answer_was_correct ? $question->question_mark : 0;
 					$total_marks  += $question_mark;
 
+					$total_marks = apply_filters( 'tutor_filter_quiz_total_marks', $total_marks, $question_id, $question_type, $user_id, $attempt_id );
+
 					$answers_data = array(
 						'user_id'         => $user_id,
 						'quiz_id'         => $attempt->quiz_id,
@@ -807,21 +794,8 @@ class Quiz {
 						$answers_data['is_correct'] = null;
 						$review_required            = true;
 					}
-					// Check if h5p addon is enabled.
-					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-						// Check if it is a h5p question.
-						if ( 'h5p' === $question_type ) {
-							$attempt_result = \TutorPro\H5P\Utils::get_h5p_quiz_result( $question_id, $user_id, $attempt_id );
-							// Set the h5p question answer to tutor quiz attempt result.
-							if ( is_array( $attempt_result ) && count( $attempt_result ) ) {
-								$h5p_question_answer           = $attempt_result[0];
-								$answers_data['question_mark'] = $h5p_question_answer->max_score;
-								$answers_data['achieved_mark'] = $h5p_question_answer->raw_score;
-								$answers_data['is_correct']    = $h5p_question_answer->max_score === $h5p_question_answer->raw_score;
-								$total_marks                  += $h5p_question_answer->raw_score;
-							}
-						}
-					}
+
+					$answers_data = apply_filters( 'tutor_filter_quiz_answer_data', $answers_data, $question_id, $question_type, $user_id, $attempt_id );
 
 					$wpdb->insert( $wpdb->prefix . 'tutor_quiz_attempt_answers', $answers_data );
 				}
