@@ -79,7 +79,7 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
                   {item.display_name}
                   <Show when={item.is_enrolled === 1}>
                     <div css={styles.alreadyEnrolled}>
-                      {__('Already Enrolled', 'tutor')} ({item.enrollment_status})
+                      {__('Enrollment Status', 'tutor')} ({item.enrollment_status})
                     </div>
                   </Show>
                 </div>

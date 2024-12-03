@@ -44,7 +44,7 @@ function StudentCard({
           {name}
           <Show when={isEnrolled}>
             <div css={styles.alreadyEnrolled}>
-              {__('Already Enrolled', 'tutor')} ({enrollmentStatus})
+              {__('Enrollment Status', 'tutor')} ({enrollmentStatus})
             </div>
           </Show>
         </div>
