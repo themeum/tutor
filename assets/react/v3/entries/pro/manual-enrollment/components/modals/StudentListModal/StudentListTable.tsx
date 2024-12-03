@@ -186,6 +186,7 @@ const styles = {
     border-radius: ${borderRadius[2]};
     background-color: ${colorTokens.background.disable};
     color: ${colorTokens.text.primary};
+    text-transform: capitalize;
   `,
   checkboxLabel: css`
     ${typography.body()};

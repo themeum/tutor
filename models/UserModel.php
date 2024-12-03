@@ -92,7 +92,7 @@ class UserModel {
 			$result->is_enrolled = (int) $result->is_enrolled;
 
 			// Add enrollment status.
-			$result->enrollment_status = in_array( $result->post_status, array( 'cancel', 'cancelled', 'canceled' ) ) ? __( 'Cancelled', 'tutor' ) : ( 'completed' === $result->post_status ? __( 'Approved', 'tutor' ) : ( 'pending' === $result->post_status ? __( 'Pending', 'tutor' ) : '' ) );
+			$result->enrollment_status = in_array( $result->post_status, array( 'cancel', 'cancelled', 'canceled' ) ) ? __( 'Cancelled', 'tutor' ) : ( 'completed' === $result->post_status ? __( 'Approved', 'tutor' ) : ( 'pending' === $result->post_status ? __( 'Pending', 'tutor' ) : $result->post_status ) );
 
 			// Add avatar URL for the user.
 			$result->avatar_url = get_avatar_url( $result->ID );
