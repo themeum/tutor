@@ -129,7 +129,7 @@
 						if ( tutor()->has_pro ) {
 							do_action( 'tutor_quiz_question_desc_render', $markup, $question );
 						} else {
-							echo wp_kses_post( apply_filters( 'tutor_quiz_question_description', $markup, $question ) );
+							echo wp_kses_post( $markup );
 						}
 					}
 
