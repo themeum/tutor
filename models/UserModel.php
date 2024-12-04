@@ -78,6 +78,7 @@ class UserModel {
 				'u.user_email',
 				'u.display_name',
 				'CASE WHEN p.ID IS NOT NULL THEN 1 ELSE 0 END AS is_enrolled',
+				'p.post_status',
 			),
 			array(),
 			$search_clause,
@@ -89,6 +90,9 @@ class UserModel {
 		foreach ( $response['results'] as $result ) {
 			// Typecast `is_enrolled` to int.
 			$result->is_enrolled = (int) $result->is_enrolled;
+
+			// Add enrollment status.
+			$result->enrollment_status = in_array( $result->post_status, array( 'cancel', 'cancelled', 'canceled' ) ) ? __( 'Cancelled', 'tutor' ) : ( 'completed' === $result->post_status ? __( 'Approved', 'tutor' ) : ( 'pending' === $result->post_status ? __( 'Pending', 'tutor' ) : $result->post_status ) );
 
 			// Add avatar URL for the user.
 			$result->avatar_url = get_avatar_url( $result->ID );

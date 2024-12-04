@@ -122,24 +122,17 @@
 						);
 					}
 
-					if ( 'h5p' !== $question->question_type ) {
-						$question_description = wp_unslash( $question->question_description );
-						if ( $question_description ) {
-							$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
-							if ( tutor()->has_pro ) {
-								do_action( 'tutor_quiz_question_desc_render', $markup, $question );
-							} else {
-								echo wp_kses_post( $markup );
-							}
+					
+					$question_description = wp_unslash( $question->question_description );
+					if ( $question_description ) {
+						$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
+						if ( tutor()->has_pro ) {
+							do_action( 'tutor_quiz_question_desc_render', $markup, $question );
+						} else {
+							echo wp_kses_post( $markup );
 						}
 					}
 
-					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-						if ( 'h5p' === $question->question_type ) {
-							$h5p_short_code = '[h5p id=' . $question->question_description . ']';
-							echo do_shortcode( $h5p_short_code );
-						}
-					}
 					?>
 					</div>
 					<!-- Quiz Answer -->
@@ -191,12 +184,8 @@
 						require 'short-answer.php';
 					}
 
-					// H5P.
-					if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-						if ( 'h5p' === $question_type ) {
-							require \TutorPro\H5P\Utils::addon_config()->path . 'views/h5p-question-answer.php';
-						}
-					}
+					
+					do_action( 'tutor_require_question_answer_file', $question_type, $is_started_quiz, $question );
 					?>
 
 					<div class="answer-help-block tutor-mt-24"></div>

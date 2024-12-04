@@ -12,6 +12,7 @@ interface StudentCardProps {
   email: string;
   avatar?: string;
   isEnrolled?: boolean;
+  enrollmentStatus?: string;
   hasSideBorders?: boolean;
   isSelected?: boolean;
   onItemClick?: () => void;
@@ -23,6 +24,7 @@ function StudentCard({
   email,
   avatar,
   isEnrolled = false,
+  enrollmentStatus,
   hasSideBorders = false,
   isSelected = false,
   onItemClick,
@@ -41,7 +43,9 @@ function StudentCard({
         <div css={styles.studentTitle(isEnrolled)}>
           {name}
           <Show when={isEnrolled}>
-            <div css={styles.alreadyEnrolled}>{__('Already Enrolled', 'tutor')}</div>
+            <div css={styles.alreadyEnrolled}>
+              {__('Enrollment Status', 'tutor')} ({enrollmentStatus})
+            </div>
           </Show>
         </div>
         <div css={styles.studentSubTitle(isEnrolled)}>{email}</div>
@@ -155,5 +159,6 @@ const styles = {
     border-radius: ${borderRadius[2]};
     background-color: ${colorTokens.background.disable};
     color: ${colorTokens.text.primary};
+    text-transform: capitalize;
   `,
 };
