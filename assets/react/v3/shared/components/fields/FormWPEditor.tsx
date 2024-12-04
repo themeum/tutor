@@ -17,11 +17,11 @@ import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal'
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
-import { CourseFormData, TutorMutationResponse, type Editor } from '@CourseBuilderServices/course';
+import type { CourseFormData, Editor, TutorMutationResponse } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
@@ -65,6 +65,7 @@ const customEditorIcons: { [key: string]: IconCollection } = {
   droip: 'droipColorized',
   elementor: 'elementorColorized',
   gutenberg: 'gutenbergColorized',
+  divi: 'diviColorized',
 };
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;

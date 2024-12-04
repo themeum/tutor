@@ -1,18 +1,19 @@
 import Checkbox from '@Atoms/CheckBox';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { type Enrollment, type Student, useStudentListQuery } from '@EnrollmentServices/enrollment';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import Paginator from '@Molecules/Paginator';
 import Table, { type Column } from '@Molecules/Table';
+import Show from '@Controls/Show';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 
 interface StudentListTableProps {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 
@@ -69,12 +70,20 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
                 }
               }}
               checked={courseList.map((course) => course.ID).includes(item.ID)}
+              disabled={item.is_enrolled === 1}
             />
             <div css={styles.studentInfo}>
               <img src={item.avatar_url} css={styles.thumbnail} alt={__('Student item', 'tutor')} />
               <div>
-                <div css={styles.title}>{item.display_name}</div>
-                <p css={styles.subTitle}>{item.user_email}</p>
+                <div css={styles.title(item.is_enrolled === 1)}>
+                  {item.display_name}
+                  <Show when={item.is_enrolled === 1}>
+                    <div css={styles.alreadyEnrolled}>
+                      {__('Enrollment Status', 'tutor')} ({item.enrollment_status})
+                    </div>
+                  </Show>
+                </div>
+                <p css={styles.subTitle(item.is_enrolled === 1)}>{item.user_email}</p>
               </div>
             </div>
           </div>
@@ -147,14 +156,37 @@ const styles = {
     height: 34px;
     border-radius: ${borderRadius.circle};
   `,
-  title: css`
+  title: (disabled: boolean) => css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+
     ${typography.body('medium')};
     color: ${colorTokens.text.primary};
+
+    ${disabled &&
+    css`
+      color: ${colorTokens.text.disable};
+    `}
   `,
-  subTitle: css`
+  subTitle: (disabled: boolean) => css`
     ${typography.small()};
     color: ${colorTokens.text.subdued};
     margin: 0px;
+
+    ${disabled &&
+    css`
+      color: ${colorTokens.text.disable};
+    `}
+  `,
+  alreadyEnrolled: css`
+    font-size: ${fontSize[12]};
+    line-height: ${lineHeight[16]};
+    padding: ${spacing[2]} ${spacing[4]};
+    border-radius: ${borderRadius[2]};
+    background-color: ${colorTokens.background.disable};
+    color: ${colorTokens.text.primary};
+    text-transform: capitalize;
   `,
   checkboxLabel: css`
     ${typography.body()};

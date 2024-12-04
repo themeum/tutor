@@ -1,5 +1,6 @@
 import { borderRadius, colorTokens, containerMaxWidth, fontFamily, fontSize, shadow, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
+import { typography } from '../config/typography';
 
 export const createGlobalCss = () => css`
   body:not(.tutor-screen-backend-settings) {
@@ -225,10 +226,12 @@ export const styleUtils = {
     align-items: center;
     flex-direction: row;
 
-    ${direction === 'column' &&
-    css`
+    ${
+      direction === 'column' &&
+      css`
       flex-direction: column;
-    `}
+    `
+    }
   `,
   boxReset: css`
     padding: 0;
@@ -455,7 +458,7 @@ export const styleUtils = {
       cursor: not-allowed;
     }
 
-    &:focus-visible {
+    :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
       border-radius: ${borderRadius[2]};
@@ -483,6 +486,111 @@ export const styleUtils = {
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
+    }
+  `,
+  optionCheckButton: css`
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    text-align: inherit;
+    font-family: ${fontFamily.sfProDisplay};
+    cursor: pointer;
+    height: 32px;
+    width: 32px;
+    border-radius: ${borderRadius.circle};
+    opacity: 0;
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+    }
+  `,
+  optionCounter: ({
+    isEditing,
+    isSelected = false,
+  }: {
+    isEditing: boolean;
+    isSelected?: boolean;
+  }) => css`
+    height: ${spacing[24]};
+    width: ${spacing[24]};
+    border-radius: ${borderRadius.min};
+    ${typography.caption('medium')};
+    color: ${colorTokens.text.subdued};
+    background-color: ${colorTokens.background.default};
+    text-align: center;
+    ${
+      isSelected &&
+      !isEditing &&
+      css`
+        background-color: ${colorTokens.bg.white};
+      `
+    }
+  `,
+  optionDragButton: ({
+    isOverlay,
+  }: {
+    isOverlay: boolean;
+  }) => css`
+    background: none;
+    border: none;
+    outline: none;
+    padding: 0;
+    margin: 0;
+    text-align: inherit;
+    font-family: ${fontFamily.sfProDisplay};
+    cursor: grab;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: rotate(90deg);
+    color: ${colorTokens.icon.default};
+    cursor: grab;
+    place-self: center center;
+    border-radius: ${borderRadius[2]};
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+
+    ${
+      isOverlay &&
+      css`
+        cursor: grabbing;
+      `
+    }
+  `,
+  optionInputWrapper: css`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: ${spacing[12]};
+
+    input, textarea {
+      background: none;
+      border: none;
+      outline: none;
+      padding: 0;
+      margin: 0;
+      text-align: inherit;
+      font-family: ${fontFamily.sfProDisplay};
+      ${typography.caption()};
+      flex: 1;
+      color: ${colorTokens.text.subdued};
+      padding: ${spacing[4]} ${spacing[10]};
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius[6]};
+      resize: vertical;
+      cursor: text;
+
+      &:focus {
+        box-shadow: none;
+        border-color: ${colorTokens.stroke.default};
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
     }
   `,
 };

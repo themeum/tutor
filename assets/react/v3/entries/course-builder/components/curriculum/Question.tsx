@@ -93,7 +93,6 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
         ref.current = element;
       }}
       style={style}
-      tabIndex={-1}
       onClick={() => {
         if (activeQuestionId === question.question_id) {
           return;
@@ -227,6 +226,10 @@ const styles = {
       svg {
         color: ${colorTokens.icon.default};
       }
+
+      :focus-visible {
+        opacity: 1;
+      }
     }
 
     ${
@@ -267,6 +270,16 @@ const styles = {
         border-bottom-right-radius: 3px;
         border-color: transparent;
       }
+
+      [data-three-dots] {
+        opacity: 1;
+      }
+    }
+
+    :focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -2px;
+      border-radius: ${borderRadius.card};
 
       [data-three-dots] {
         opacity: 1;

@@ -57,9 +57,9 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('openAIApiKey');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -97,7 +97,6 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
             <div css={styles.infoText}>
               <div>
                 {__('Find your Secret API key in your ', 'tutor')}
-                {/* @TODO: need to confirm the URL */}
                 <a href={config.CHATGPT_PLATFORM_URL}>{__('OpenAI User settings', 'tutor')}</a>
                 {__(' and paste it here to connect OpenAI with your Tutor LMS website.', 'tutor')}
               </div>
@@ -157,23 +156,16 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
 export default SetupOpenAiModal;
 
 const styles = {
-  wrapper: ({
-    isCurrentUserAdmin,
-  }: {
-    isCurrentUserAdmin: boolean;
-  }) => css`
+  wrapper: ({ isCurrentUserAdmin }: { isCurrentUserAdmin: boolean }) => css`
     width: 560px;
     ${styleUtils.display.flex('column')};
     gap: ${spacing[20]};
 
-    ${
-      !isCurrentUserAdmin &&
-      css`
-        padding: ${spacing[24]};
-        padding-top: ${spacing[6]};
-      `
-    }
-    
+    ${!isCurrentUserAdmin &&
+    css`
+      padding: ${spacing[24]};
+      padding-top: ${spacing[6]};
+    `}
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')};
@@ -199,7 +191,7 @@ const styles = {
     padding: ${spacing[16]};
   `,
   image: css`
-    height:310px;
+    height: 310px;
     width: 100%;
     object-fit: cover;
     object-position: center;

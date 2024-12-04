@@ -224,6 +224,7 @@ gulp.task('copy', function () {
 			'!./LICENSE.txt',
 			'!./*.lock',
 			'!./*.js',
+			'!./*.mjs',
 			'!./*.json',
 			'!yarn-error.log',
 			'!bin/**',
@@ -261,7 +262,7 @@ gulp.task('copy-fonts', function () {
 		.pipe(gulp.dest(ASSETS_FONTS_DIR));
 });
 
-gulp.task("copy-tutor-droip", function() {
+gulp.task("copy-tutor-droip", function () {
 	return gulp
 		.src("tutor-droip/dist/**")
 		.pipe(gulp.dest("build/tutor/tutor-droip"));

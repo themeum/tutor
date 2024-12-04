@@ -125,6 +125,8 @@ const FormQuestionDescription = ({
               }
             }}
             data-overlay
+            tabIndex={0}
+            role="button"
           />
         </Show>
       </div>
@@ -166,7 +168,13 @@ const styles = {
     [data-overlay] {
       position: absolute;
       inset: 0;
-      opacity: 0;
+      opacity: 1;
+
+      &:focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: -2px;
+        border-radius: ${borderRadius.card};
+      }
     }
 
     & label {

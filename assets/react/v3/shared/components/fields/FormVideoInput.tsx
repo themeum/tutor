@@ -25,6 +25,7 @@ import {
 import { AnimationType } from '@Hooks/useAnimation';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
+import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
 import { requiredRule } from '@Utils/validation';
@@ -177,40 +178,6 @@ const FormVideoInput = ({
   loading,
   onGetDuration,
 }: FormVideoInputProps) => {
-  if (!videoSources.length) {
-    return (
-      <div css={styles.emptyMediaWrapper}>
-        <Show when={label}>
-          <label>{label}</label>
-        </Show>
-
-        <div
-          css={styles.emptyMedia({
-            hasVideoSource: false,
-          })}
-        >
-          <p css={styles.warningText}>
-            <SVGIcon name="info" height={20} width={20} />
-            {__('No video source selected', 'tutor')}
-          </p>
-
-          <Button
-            buttonCss={styles.selectFromSettingsButton}
-            variant="secondary"
-            size="small"
-            icon={<SVGIcon name="linkExternal" height={24} width={24} />}
-            onClick={() => {
-              window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
-            }}
-          >
-            {__('Select from settings', 'tutor')}
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  const fieldValue = field.value;
   const form = useFormWithGlobalError<URLFormData>({
     defaultValues: {
       videoSource: videoSourcesSelectOptions[0]?.value || '',
@@ -225,8 +192,86 @@ const FormVideoInput = ({
     seconds: 0,
   });
   const [localPoster, setLocalPoster] = useState<string>('');
+  const [isOpen, setIsOpen] = useState(false);
+  const triggerRef = useRef<HTMLDivElement>(null);
+  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+    isOpen,
+    triggerRef,
+    positionModifier: {
+      top: triggerRef.current?.getBoundingClientRect().top || 0,
+      left: 0,
+    },
+  });
+
+  const handleVideoFileUpdate = async (files: WPMedia | WPMedia[] | null) => {
+    if (!files) {
+      return;
+    }
+
+    const file = Array.isArray(files) ? files[0] : files;
+    const updateData = {
+      source: 'html5',
+      source_video_id: file.id.toString(),
+      source_html5: file.url,
+    };
+    field.onChange(updateFieldValue(field.value, updateData));
+    onChange?.(updateFieldValue(field.value, updateData));
+
+    try {
+      setIsThumbnailLoading(true);
+      resetImageSelection();
+      const posterUrl = await generateVideoThumbnail('external_url', file.url);
+      const duration = await getExternalVideoDuration(file.url);
+
+      if (!duration) {
+        return;
+      }
+      setDuration(covertSecondsToHMS(Math.floor(duration)));
+      if (onGetDuration) {
+        onGetDuration(covertSecondsToHMS(Math.floor(duration)));
+      }
+
+      if (posterUrl) {
+        setLocalPoster(posterUrl);
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsThumbnailLoading(false);
+    }
+  };
+
+  const { openMediaLibrary: openVideoLibrary, resetFiles: resetVideoSelection } = useWPMedia({
+    options: {
+      type: (supportedFormats || []).map((format) => `video/${format}`).join(','),
+    },
+    onChange: handleVideoFileUpdate,
+  });
+
+  const { openMediaLibrary: openImageLibrary, resetFiles: resetImageSelection } = useWPMedia({
+    options: {
+      type: 'image',
+    },
+    onChange: (files) => {
+      if (!files) {
+        return;
+      }
+
+      const file = Array.isArray(files) ? files[0] : files;
+      const updateData = {
+        poster: file.id.toString(),
+        poster_url: file.url,
+      };
+      field.onChange(updateFieldValue(field.value, updateData));
+      onChange?.(updateFieldValue(field.value, updateData));
+    },
+    initialFiles: field.value?.poster
+      ? { id: Number(field.value.poster), url: field.value.poster_url, title: '' }
+      : null,
+  });
 
   const videoSource = form.watch('videoSource') || '';
+  const fieldValue = field.value;
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
@@ -320,61 +365,48 @@ const FormVideoInput = ({
         }
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldValue]);
 
-  const [isOpen, setIsOpen] = useState(false);
-  const triggerRef = useRef<HTMLDivElement>(null);
-  const { popoverRef, position } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
-    isOpen,
-    triggerRef,
-    positionModifier: {
-      top: triggerRef.current?.getBoundingClientRect().top || 0,
-      left: 0,
-    },
-  });
+  if (!videoSources.length) {
+    return (
+      <div css={styles.emptyMediaWrapper}>
+        <Show when={label}>
+          <label>{label}</label>
+        </Show>
+
+        <div
+          css={styles.emptyMedia({
+            hasVideoSource: false,
+          })}
+        >
+          <p css={styles.warningText}>
+            <SVGIcon name="info" height={20} width={20} />
+            {__('No video source selected', 'tutor')}
+          </p>
+
+          <Button
+            buttonCss={styles.selectFromSettingsButton}
+            variant="secondary"
+            size="small"
+            icon={<SVGIcon name="linkExternal" height={24} width={24} />}
+            onClick={() => {
+              window.open(config.VIDEO_SOURCES_SETTINGS_URL, '_blank', 'noopener');
+            }}
+          >
+            {__('Select from settings', 'tutor')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   const handleUpload = (type: 'video' | 'poster') => {
-    const uploader = window.wp.media({
-      library: {
-        type: type === 'video' ? (supportedFormats || []).map((format) => `video/${format}`).join(',') : 'image',
-      },
-    });
-
-    uploader.open();
-    uploader.on('select', async () => {
-      const attachment = uploader.state().get('selection').first().toJSON();
-
-      const updateData =
-        type === 'video'
-          ? { source: 'html5', source_video_id: attachment.id, source_html5: attachment.url }
-          : { poster: attachment.id, poster_url: attachment.url };
-      field.onChange(updateFieldValue(fieldValue, updateData));
-      onChange?.(updateFieldValue(fieldValue, updateData));
-
-      if (type === 'video') {
-        try {
-          setIsThumbnailLoading(true);
-          const posterUrl = await generateVideoThumbnail('external_url', attachment.url);
-          const duration = await getExternalVideoDuration(attachment.url);
-
-          if (!duration) {
-            return;
-          }
-          setDuration(covertSecondsToHMS(Math.floor(duration)));
-          if (onGetDuration) {
-            onGetDuration(covertSecondsToHMS(Math.floor(duration)));
-          }
-
-          if (posterUrl) {
-            setLocalPoster(posterUrl);
-          }
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setIsThumbnailLoading(false);
-        }
-      }
-    });
+    if (type === 'video') {
+      openVideoLibrary();
+      return;
+    }
+    openImageLibrary();
   };
 
   const handleClear = (type: 'video' | 'poster') => {
@@ -383,6 +415,11 @@ const FormVideoInput = ({
         ? { source: '', source_video_id: '', poster: '', poster_url: '' }
         : { poster: '', poster_url: '' };
     const updatedValue = updateFieldValue(fieldValue, updateData);
+    if (type === 'video') {
+      resetVideoSelection();
+    } else {
+      resetImageSelection();
+    }
 
     field.onChange(updatedValue);
     setLocalPoster('');
@@ -529,7 +566,7 @@ const FormVideoInput = ({
                     </div>
                   }
                 >
-                  {(media) => {
+                  {() => {
                     return (
                       <div css={styles.previewWrapper}>
                         <div css={styles.videoInfoWrapper}>
@@ -671,8 +708,8 @@ const FormVideoInput = ({
                   <FormTextareaInput
                     {...controllerProps}
                     inputCss={css`
-                        border-style: dashed;
-                      `}
+                      border-style: dashed;
+                    `}
                     rows={2}
                     placeholder={
                       placeholderMap[videoSource as keyof typeof placeholderMap] || __('Paste Here', 'tutor')
@@ -707,156 +744,152 @@ export default FormVideoInput;
 
 const styles = {
   emptyMediaWrapper: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[4]};
-      
-      label {
-        ${typography.caption()};
-        color: ${colorTokens.text.title};
-      }
-    `,
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+
+    label {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+  `,
   emptyMedia: ({ hasVideoSource = false }: { hasVideoSource: boolean }) => css`
-      width: 100%;
-      height: 164px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: ${spacing[8]};
-      border: 1px dashed ${colorTokens.stroke.border};
-      border-radius: ${borderRadius[8]};
-      background-color: ${colorTokens.background.status.warning};
+    width: 100%;
+    height: 164px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: ${spacing[8]};
+    border: 1px dashed ${colorTokens.stroke.border};
+    border-radius: ${borderRadius[8]};
+    background-color: ${colorTokens.background.status.warning};
 
-      ${
-        hasVideoSource &&
-        css`
-        background-color: ${colorTokens.bg.white};
-      `
-      }
-    `,
+    ${hasVideoSource &&
+    css`
+      background-color: ${colorTokens.bg.white};
+    `}
+  `,
   infoTexts: css`
-      ${typography.tiny()};
-      color: ${colorTokens.text.subdued};
-    `,
+    ${typography.tiny()};
+    color: ${colorTokens.text.subdued};
+  `,
   warningText: css`
-      ${styleUtils.display.flex()};
-      align-items: center;
-      gap: ${spacing[4]};
-      ${typography.caption()};
-      color: ${colorTokens.text.warning};
-    `,
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[4]};
+    ${typography.caption()};
+    color: ${colorTokens.text.warning};
+  `,
   selectFromSettingsButton: css`
-      background: ${colorTokens.bg.white};
-    `,
+    background: ${colorTokens.bg.white};
+  `,
   urlData: css`
-      ${typography.caption()};
-      ${styleUtils.display.flex('column')};
-      padding: ${spacing[8]} ${spacing[12]};
-      gap: ${spacing[8]};
-      word-break: break-all;
-    `,
+    ${typography.caption()};
+    ${styleUtils.display.flex('column')};
+    padding: ${spacing[8]} ${spacing[12]};
+    gap: ${spacing[8]};
+    word-break: break-all;
+  `,
   previewWrapper: css`
-      width: 100%;
-      height: 100%;
-      border: 1px solid ${colorTokens.stroke.default};
-      border-radius: ${borderRadius[8]};
-      overflow: hidden;
-      background-color: ${colorTokens.bg.white};
-    `,
+    width: 100%;
+    height: 100%;
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius[8]};
+    overflow: hidden;
+    background-color: ${colorTokens.bg.white};
+  `,
   videoInfoWrapper: css`
-      ${styleUtils.display.flex()};
-      justify-content: space-between;
-      align-items: center;
-      gap: ${spacing[20]};
-      padding: ${spacing[8]} ${spacing[12]};
-    `,
+    ${styleUtils.display.flex()};
+    justify-content: space-between;
+    align-items: center;
+    gap: ${spacing[20]};
+    padding: ${spacing[8]} ${spacing[12]};
+  `,
   videoInfoCard: css`
-      ${styleUtils.display.flex()};
-      align-items: center;
-      gap: ${spacing[8]};
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[8]};
 
-      svg {
-        flex-shrink: 0;
-        color: ${colorTokens.icon.hover};
-      }
-    `,
+    svg {
+      flex-shrink: 0;
+      color: ${colorTokens.icon.hover};
+    }
+  `,
   videoInfo: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[4]};
-    `,
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+  `,
   videoInfoTitle: css`
-      ${styleUtils.display.flex()};
-      ${typography.caption('medium')}
-      word-break: break-all;
-    `,
+    ${styleUtils.display.flex()};
+    ${typography.caption('medium')}
+    word-break: break-all;
+  `,
   imagePreview: ({ hasImageInput }: { hasImageInput: boolean }) => css`
-      width: 100%;
-      max-height: 168px;
-      position: relative;
-      overflow: hidden;
-      background-color: ${colorTokens.background.default};
-      ${
-        !hasImageInput &&
-        css`
-          ${styleUtils.overflowYAuto};
-        `
-      };
-      scrollbar-gutter: auto;
+    width: 100%;
+    max-height: 168px;
+    position: relative;
+    overflow: hidden;
+    background-color: ${colorTokens.background.default};
+    ${!hasImageInput &&
+    css`
+      ${styleUtils.overflowYAuto};
+    `};
+    scrollbar-gutter: auto;
 
-      &:hover {
-        [data-hover-buttons-wrapper] {
-          opacity: 1;
-        }
+    &:hover {
+      [data-hover-buttons-wrapper] {
+        opacity: 1;
       }
-    `,
+    }
+  `,
   duration: css`
-      ${typography.tiny()};
-      position: absolute;
-      bottom: ${spacing[12]};
-      right: ${spacing[12]};
-      background-color: rgba(0, 0, 0, 0.5);
-      color: ${colorTokens.text.white};
-      padding: ${spacing[4]} ${spacing[8]};
-      border-radius: ${borderRadius[6]};
-      pointer-events: none;
-    `,
+    ${typography.tiny()};
+    position: absolute;
+    bottom: ${spacing[12]};
+    right: ${spacing[12]};
+    background-color: rgba(0, 0, 0, 0.5);
+    color: ${colorTokens.text.white};
+    padding: ${spacing[4]} ${spacing[8]};
+    border-radius: ${borderRadius[6]};
+    pointer-events: none;
+  `,
   thumbImage: css`
-      border-radius: 0;
-      border: none;
-    `,
+    border-radius: 0;
+    border: none;
+  `,
   urlButton: css`
-      ${styleUtils.resetButton};
-      ${typography.small('medium')};
-      color: ${colorTokens.text.brand};
-      border-radius: ${borderRadius[2]};
-      padding: 0 ${spacing[4]};
-      margin-bottom: ${spacing[8]};
+    ${styleUtils.resetButton};
+    ${typography.small('medium')};
+    color: ${colorTokens.text.brand};
+    border-radius: ${borderRadius[2]};
+    padding: 0 ${spacing[4]};
+    margin-bottom: ${spacing[8]};
 
-      &:focus-visible {
-        outline: 2px solid ${colorTokens.stroke.brand};
-        outline-offset: 1px;
-      }
-    `,
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
+    }
+  `,
   actionButtons: css`
-      ${styleUtils.display.flex()};
-      gap: ${spacing[4]};
-    `,
+    ${styleUtils.display.flex()};
+    gap: ${spacing[4]};
+  `,
   popover: css`
-      position: absolute;
-      width: 100%;
-      z-index: ${zIndex.dropdown};
-      background-color: ${colorTokens.bg.white};
-      border-radius: ${borderRadius.card};
-      box-shadow: ${shadow.popover};
-    `,
+    position: absolute;
+    width: 100%;
+    z-index: ${zIndex.dropdown};
+    background-color: ${colorTokens.bg.white};
+    border-radius: ${borderRadius.card};
+    box-shadow: ${shadow.popover};
+  `,
   popoverContent: css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[12]};
-      padding: ${spacing[16]};
-    `,
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+    padding: ${spacing[16]};
+  `,
   popoverButtonWrapper: css`
-      ${styleUtils.display.flex()};
-      gap: ${spacing[8]};
-      justify-content: flex-end;
-    `,
+    ${styleUtils.display.flex()};
+    gap: ${spacing[8]};
+    justify-content: flex-end;
+  `,
 };

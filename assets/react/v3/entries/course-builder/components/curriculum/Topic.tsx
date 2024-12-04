@@ -204,37 +204,4 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
   `,
-  contentButtons: css`
-    ${styleUtils.display.flex()};
-    justify-content: space-between;
-  `,
-  footerButtons: css`
-    display: flex;
-    align-items: center;
-  `,
-  grabButton: ({
-    isDragging = false,
-  }: {
-    isDragging: boolean;
-  }) => css`
-    ${styleUtils.resetButton};
-    ${styleUtils.flexCenter()};
-    cursor: ${isDragging ? 'grabbing' : 'grab'};
-
-    :disabled {
-      cursor: not-allowed;
-    }
-  `,
-  threeDotButton: css`
-    display: flex;
-    align-items: center;
-    gap: ${spacing[4]};
-  `,
-  contentButton: css`
-    :hover:not(:disabled) {
-      background-color: ${colorTokens.background.white};
-      color: ${colorTokens.text.brand};
-      box-shadow: inset 0 0 0 1px ${colorTokens.stroke.brand};
-    }
-  `,
 };

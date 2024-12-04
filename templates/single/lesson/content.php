@@ -161,29 +161,10 @@ tutor_load_template(
 							<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'About Lesson', 'tutor' ); ?>
 							</div>
-							<?php
-							if ( tutor()->has_pro && \TutorPro\H5P\H5P::is_enabled() ) {
-								$shortcodes = \TutorPro\H5P\Utils::get_h5p_shortcodes( $post->post_content );
-								?>
-								<?php if ( count( $shortcodes ) ) : ?>
-									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper tutor-spotlight-h5p-lesson-content" data-lesson-id="<?php echo esc_attr( $post->ID ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-topic-id="<?php echo esc_attr( $post->post_parent ); ?>">
-										<input type="hidden" id="complete_lesson_enabled" value="<?php echo esc_attr( tutor_utils()->get_option( 'disable_complete_lesson_button' ) ); ?>" />
-										<?php the_content(); ?>
-									</div>
-								<?php else : ?>
-									<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
-										<?php the_content(); ?>
-									</div>
-								<?php endif; ?>
-								<?php
-							} else {
-								?>
-								<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
-									<?php the_content(); ?>
-								</div>
-								<?php
-							}
-							?>
+							<?php do_action( 'tutor_lesson_before_the_content', $post, $course_id ); ?>
+							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
+								<?php the_content(); ?>
+							</div>
 						</div>
 					</div>
 				</div>

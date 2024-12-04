@@ -139,13 +139,11 @@ const styles = {
 
     tr {
       &:hover {
-        &:hover {
-          [data-button] {
-            display: block;
-          }
-          [data-price] {
-            display: none;
-          }
+        [data-button] {
+          display: block;
+        }
+        [data-price] {
+          display: none;
         }
       }
     }

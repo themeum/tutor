@@ -79,6 +79,11 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                 value={searchText}
                 onFocus={() => setIsOpen(true)}
                 onChange={setSearchText}
+                onKeyDown={(key) => {
+                  if (key === 'Tab') {
+                    setIsOpen(false);
+                  }
+                }}
                 disabled={disabled}
               />
               <Button
@@ -120,6 +125,8 @@ function FormSelectStudents({ label, field, fieldState, helpText, disabled, load
                       name={item.display_name}
                       email={item.user_email}
                       avatar={item.avatar_url}
+                      isEnrolled={item.is_enrolled === 1}
+                      enrollmentStatus={item.enrollment_status}
                       isSelected={!!students.find((student) => student.ID === item.ID)}
                       onItemClick={() => handleItemClick(item)}
                     />
