@@ -48,6 +48,9 @@ const endpoints = {
   GET_PAYMENT_GATEWAYS: 'tutor_payment_gateways',
   INSTALL_PAYMENT_GATEWAY: 'tutor_install_payment_gateway',
   REMOVE_PAYMENT_GATEWAY: 'tutor_remove_payment_gateway',
+
+  // ADDON LIST
+  GET_ADDON_LIST: 'tutor_get_all_addons',
 };
 
 export default endpoints;

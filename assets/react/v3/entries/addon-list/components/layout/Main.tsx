@@ -1,15 +1,18 @@
 import { css } from '@emotion/react';
-import Container from '@Components/Container';
-import { colorTokens, spacing } from '@Config/styles';
-import Topbar, { TOPBAR_HEIGHT } from './Topbar';
+import Topbar from './Topbar';
+import { AddonProvider } from '@AddonList/contexts/addon-context';
+import AddonList from '@AddonList/components/AddonList';
+import Container from './Container';
 
 function Main() {
   return (
     <div css={styles.wrapper}>
-      <Topbar />
-      <Container>
-        <div css={styles.content}>Addon list</div>
-      </Container>
+      <AddonProvider>
+        <Topbar />
+        <Container>
+          <AddonList />
+        </Container>
+      </AddonProvider>
     </div>
   );
 }
@@ -17,12 +20,5 @@ function Main() {
 export default Main;
 
 const styles = {
-  wrapper: css`
-    background-color: ${colorTokens.background.default};
-  `,
-  content: css`
-    min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
-    width: 100%;
-    margin-top: ${spacing[32]};
-  `,
+  wrapper: css``,
 };

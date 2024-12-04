@@ -5,9 +5,10 @@ import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent } from 'react';
 
 type labelPositionType = 'left' | 'right';
+type SwitchSize = 'large' | 'regular' | 'small';
 
 const styles = {
-  switchStyles: css`
+  switchStyles: (size: SwitchSize) => css`
     /** Increasing the css specificity */
     &[data-input] {
       all: unset;
@@ -22,6 +23,12 @@ const styles = {
       vertical-align: middle;
       cursor: pointer;
       transition: background-color 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+
+      ${size === 'small' &&
+      css`
+        width: 26px;
+        height: 16px;
+      `}
 
       &::before {
         display: none !important;
@@ -49,12 +56,25 @@ const styles = {
         border-radius: ${borderRadius.circle};
         box-shadow: ${shadow.switch};
         transition: left 0.25s cubic-bezier(0.785, 0.135, 0.15, 0.86);
+
+        ${size === 'small' &&
+        css`
+          top: 2px;
+          left: 3px;
+          width: 12px;
+          height: 12px;
+        `}
       }
 
       &:checked {
         background: ${colorTokens.primary.main};
         &:after {
           left: 18px;
+
+          ${size === 'small' &&
+          css`
+            left: 11px;
+          `}
         }
       }
 
@@ -91,10 +111,22 @@ interface SwitchProps {
   disabled?: boolean;
   labelPosition?: labelPositionType;
   labelCss?: SerializedStyles;
+  size?: SwitchSize;
 }
 
 const Switch = React.forwardRef<HTMLInputElement, SwitchProps>((props: SwitchProps, ref) => {
-  const { id = nanoid(), name, label, value, checked, disabled, onChange, labelPosition = 'left', labelCss } = props;
+  const {
+    id = nanoid(),
+    name,
+    label,
+    value,
+    checked,
+    disabled,
+    onChange,
+    labelPosition = 'left',
+    labelCss,
+    size = 'regular',
+  } = props;
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     onChange?.(event.target.checked, event);
@@ -115,7 +147,7 @@ const Switch = React.forwardRef<HTMLInputElement, SwitchProps>((props: SwitchPro
         id={id}
         checked={!!checked}
         disabled={disabled}
-        css={styles.switchStyles}
+        css={styles.switchStyles(size)}
         onChange={handleChange}
         data-input
       />

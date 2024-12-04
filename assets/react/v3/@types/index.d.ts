@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type {};
 
 declare module '*.png';
@@ -6,13 +7,10 @@ declare module '*.jpeg';
 declare module '*.jpg';
 
 declare global {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
   const wp: any;
   interface Window {
-    // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
     wp: any;
     ajaxurl: string;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     tinymce: any;
     _tutorobject: {
       ajaxurl: string;
