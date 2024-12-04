@@ -241,7 +241,7 @@ class Addons {
 			),
 			'social-login'             => array(
 				'name'        => __( 'Social Login', 'tutor' ),
-				'description' => __( 'Let users register & login through social network like Facebook, Google, etc.', 'tutor' ),
+				'description' => __( 'Let users register & login through social networks.', 'tutor' ),
 			),
 			'content-drip'             => array(
 				'name'        => __( 'Content Drip', 'tutor' ),
@@ -289,7 +289,7 @@ class Addons {
 			),
 			'tutor-zoom'               => array(
 				'name'        => __( 'Tutor Zoom Integration', 'tutor' ),
-				'description' => __( 'Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.', 'tutor' ),
+				'description' => __( 'Connect Tutor LMS with Zoom to host live online classes.', 'tutor' ),
 			),
 			'quiz-import-export'       => array(
 				'name'        => __( 'Quiz Export/Import', 'tutor' ),
@@ -321,7 +321,7 @@ class Addons {
 			),
 			'pmpro'                    => array(
 				'name'        => __( 'Paid Memberships Pro', 'tutor' ),
-				'description' => __( 'Maximize revenue by selling membership access to all of your courses.', 'tutor' ),
+				'description' => __( 'Boost revenue by selling course memberships.', 'tutor' ),
 			),
 			'restrict-content-pro'     => array(
 				'name'        => __( 'Restrict Content Pro', 'tutor' ),
@@ -329,14 +329,14 @@ class Addons {
 			),
 			'tutor-weglot'             => array(
 				'name'        => 'Weglot',
-				'description' => __( 'Translate & manage multilingual courses for global reach with full edit control.', 'tutor' ),
+				'description' => __( 'Translate & manage multilingual courses for global reach.', 'tutor' ),
 			),
 			'tutor-wpml'               => array(
-				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
-				'description' => __( 'Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor' ),
+				'name'        => __( 'WPML', 'tutor' ),
+				'description' => __( 'Create multilingual courses, lessons, dashboard and more.', 'tutor' ),
 			),
 			'h5p'                      => array(
-				'name'        => __( 'H5P Integration', 'tutor' ),
+				'name'        => __( 'H5P', 'tutor' ),
 				'description' => __( 'Integrate H5P to add interactivity and engagement to your courses.', 'tutor' ),
 			),
 		);

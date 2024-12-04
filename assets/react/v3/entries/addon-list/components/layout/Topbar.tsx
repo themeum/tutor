@@ -17,7 +17,7 @@ function Topbar() {
         <div css={styles.innerWrapper}>
           <div css={styles.left}>
             <SVGIcon name="addons" width={32} height={32} />
-            {__('Add-one', 'tutor')}
+            {__('Addons', 'tutor')}
           </div>
           <div css={styles.right}>
             <TextInput
