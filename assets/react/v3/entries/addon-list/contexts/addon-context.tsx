@@ -5,12 +5,16 @@ import { tutorConfig } from '@Config/config';
 
 interface AddonContextType {
   addons: Addon[];
+  updatedAddons: Addon[];
+  setUpdatedAddons: (addon: Addon[]) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
 }
 
 const AddonContext = React.createContext<AddonContextType>({
   addons: [] as Addon[],
+  updatedAddons: [] as Addon[],
+  setUpdatedAddons: () => {},
   searchTerm: '' as string,
   setSearchTerm: () => {},
 });
@@ -20,6 +24,7 @@ export const useAddonContext = () => React.useContext(AddonContext);
 export const AddonProvider = ({ children }: { children: React.ReactNode }) => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const [addonList, setAddonList] = useState<Addon[]>([]);
+  const [updatedAddons, setUpdatedAddons] = useState<Addon[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   const addonListQuery = useAddonListQuery();
@@ -47,6 +52,16 @@ export const AddonProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   return (
-    <AddonContext.Provider value={{ addons: addonList, searchTerm, setSearchTerm }}>{children}</AddonContext.Provider>
+    <AddonContext.Provider
+      value={{
+        addons: addonList,
+        updatedAddons,
+        setUpdatedAddons,
+        searchTerm,
+        setSearchTerm,
+      }}
+    >
+      {children}
+    </AddonContext.Provider>
   );
 };

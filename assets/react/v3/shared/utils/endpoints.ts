@@ -51,6 +51,7 @@ const endpoints = {
 
   // ADDON LIST
   GET_ADDON_LIST: 'tutor_get_all_addons',
+  ADDON_ENABLE_DISABLE: 'addon_enable_disable',
 };
 
 export default endpoints;

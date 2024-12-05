@@ -1,5 +1,5 @@
 import { css } from '@emotion/react';
-import { type Addon } from '../services/addons';
+import { useEnableDisableAddon, type Addon } from '../services/addons';
 import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@/v3/shared/config/styles';
 import Switch from '@/v3/shared/atoms/Switch';
 import { tutorConfig } from '@/v3/shared/config/config';
@@ -7,42 +7,99 @@ import Show from '@/v3/shared/controls/Show';
 import SVGIcon from '@/v3/shared/atoms/SVGIcon';
 import Tooltip from '@/v3/shared/atoms/Tooltip';
 import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
+import { useAddonContext } from '../contexts/addon-context';
+import { useToast } from '@/v3/shared/atoms/Toast';
 
 function AddonCard({ addon }: { addon: Addon }) {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const { showToast } = useToast();
+  const { addons, updatedAddons, setUpdatedAddons } = useAddonContext();
+
+  const [isChecked, setIsChecked] = useState(!!addon.is_enabled);
+  const [isTooltipVisible, setIsTooltipVisible] = useState(false);
+
+  const enableDisableAddon = useEnableDisableAddon();
+
+  async function handleAddonChange(checked: boolean) {
+    setIsChecked(checked);
+
+    const addonObject = {} as Record<string, number>;
+
+    addons.forEach((item) => {
+      const alreadyUpdatedItem = updatedAddons.find((updatedItem) => updatedItem.basename === item.basename);
+      if (item.basename === addon.basename) {
+        addonObject[item.basename as string] = checked ? 1 : 0;
+      } else if (alreadyUpdatedItem) {
+        addonObject[item.basename as string] = alreadyUpdatedItem.is_enabled ? 1 : 0;
+      } else {
+        addonObject[item.basename as string] = item.is_enabled ? 1 : 0;
+      }
+    });
+
+    const response = await enableDisableAddon.mutateAsync({
+      addonFieldNames: JSON.stringify(addonObject),
+    });
+
+    if (response.success) {
+      setUpdatedAddons([
+        ...updatedAddons.filter((item) => item.base_name === addon.base_name),
+        { ...addon, is_enabled: checked ? 1 : 0 },
+      ]);
+    } else {
+      setIsChecked(!checked);
+      showToast({ type: 'danger', message: __('Something went wrong!', 'tutor') });
+    }
+  }
 
   return (
-    <div css={styles.wrapper(!!addon.is_enabled)}>
+    <div
+      css={styles.wrapper}
+      onMouseEnter={() => setIsTooltipVisible(true)}
+      onMouseLeave={() => setIsTooltipVisible(false)}
+    >
       <div css={styles.addonTop}>
         <div css={styles.thumb}>
           <img src={addon.thumb_url || addon.url} alt={addon.name} />
         </div>
-        <div data-addon-action css={styles.addonAction}>
+        <div css={styles.addonAction}>
           <Show
             when={isTutorPro}
             fallback={
-              <Tooltip content={__('Available in Pro', 'tutor')}>
+              <Tooltip content={__('Available in Pro', 'tutor')} visible={isTooltipVisible}>
                 <SVGIcon name="lockStroke" width={24} height={24} />
               </Tooltip>
             }
           >
-            <Show when={!addon.plugins_required?.length && !addon.required_settings}>
-              <Switch size="small" checked={!!addon.is_enabled} />
+            <Show
+              when={addon.plugins_required?.length || addon.required_settings}
+              fallback={
+                <Switch
+                  size="small"
+                  checked={isChecked}
+                  onChange={handleAddonChange}
+                  disabled={enableDisableAddon.isPending}
+                />
+              }
+            >
+              <Show when={addon.plugins_required?.length}>
+                <Tooltip content={addon.plugins_required?.join(', ')} visible={isTooltipVisible}>
+                  <div css={styles.requiredBadge}>{__('Plugin Required', 'tutor')}</div>
+                </Tooltip>
+              </Show>
+              <Show when={addon.required_settings}>
+                <Tooltip content={addon.required_message} visible={isTooltipVisible}>
+                  <div css={styles.requiredBadge}>{__('Settings Required', 'tutor')}</div>
+                </Tooltip>
+              </Show>
             </Show>
           </Show>
         </div>
       </div>
       <div css={styles.addonTitle}>
-        <span css={styles.addonTitleText}>{addon.name}</span>
-        <Show when={addon.plugins_required?.length}>
-          <Tooltip content={addon.plugins_required?.join(', ')}>
-            <div css={styles.requiredBadge}>{__('Plugin Required', 'tutor')}</div>
-          </Tooltip>
-        </Show>
-        <Show when={addon.required_settings}>
-          <Tooltip content={addon.required_message}>
-            <div css={styles.requiredBadge}>{__('Settings Required', 'tutor')}</div>
-          </Tooltip>
+        {addon.name}
+        <Show when={addon.is_new}>
+          <div css={styles.newBadge}>{__('New', 'tutor')}</div>
         </Show>
       </div>
       <div css={styles.addonDescription}>{addon.description}</div>
@@ -53,23 +110,10 @@ function AddonCard({ addon }: { addon: Addon }) {
 export default AddonCard;
 
 const styles = {
-  wrapper: (isEnabled: boolean) => css`
+  wrapper: css`
     background-color: ${colorTokens.background.white};
-    padding: ${spacing[16]} ${spacing[12]};
+    padding: ${spacing[16]};
     border-radius: ${borderRadius[6]};
-
-    ${!isEnabled &&
-    css`
-      [data-addon-action] {
-        display: none;
-      }
-    `}
-
-    &:hover {
-      [data-addon-action] {
-        display: block;
-      }
-    }
   `,
   addonTop: css`
     display: flex;
@@ -102,15 +146,17 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
-
-    > div {
-      flex-shrink: 0;
-    }
   `,
-  addonTitleText: css`
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  newBadge: css`
+    min-width: fit-content;
+    background-color: ${colorTokens.brand.blue};
+    color: ${colorTokens.text.white};
+    border-radius: ${borderRadius[4]};
+    font-size: ${fontSize[11]};
+    line-height: ${lineHeight[15]};
+    font-weight: ${fontWeight.semiBold};
+    padding: ${spacing[2]} ${spacing[8]} 1px;
+    text-transform: uppercase;
   `,
   requiredBadge: css`
     min-width: fit-content;

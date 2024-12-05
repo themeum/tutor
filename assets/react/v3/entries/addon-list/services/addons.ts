@@ -1,7 +1,10 @@
 import endpoints from '@Utils/endpoints';
 import { wpAjaxInstance } from '@Utils/api';
 import { tutorConfig } from '@Config/config';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { convertToErrorMessage } from '@/v3/shared/utils/util';
+import { type ErrorResponse } from '@/v3/shared/utils/form';
+import { useToast } from '@/v3/shared/atoms/Toast';
 
 export interface Addon {
   name: string;
@@ -16,11 +19,20 @@ export interface Addon {
   required_message?: string;
   thumb_url?: string;
   plugins_required?: string[];
+  is_new?: boolean;
 }
 
 interface AddonListResponse {
   addons: Addon[];
   success: boolean;
+}
+
+interface Response {
+  success: boolean;
+}
+
+interface AddonPayload {
+  addonFieldNames: string;
 }
 
 const getAddonList = () => {
@@ -32,5 +44,22 @@ export const useAddonListQuery = () => {
     enabled: !!tutorConfig.tutor_pro_url,
     queryKey: ['AddonList'],
     queryFn: () => getAddonList(),
+  });
+};
+
+const addonEnableDisable = (payload: AddonPayload) => {
+  return wpAjaxInstance.post<AddonPayload, Response>(endpoints.ADDON_ENABLE_DISABLE, {
+    ...payload,
+  });
+};
+
+export const useEnableDisableAddon = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: addonEnableDisable,
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
   });
 };
