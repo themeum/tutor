@@ -119,6 +119,11 @@ window.jQuery(document).ready(function($) {
 		window.location.assign(url);
 	});
 
+	/**
+	 * Toggle switch button handler.
+	 *
+	 * @since 1.0.0
+	 */
 	const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
 	toggleChange.forEach((element) => {
 		element.addEventListener('change', (e) => {
