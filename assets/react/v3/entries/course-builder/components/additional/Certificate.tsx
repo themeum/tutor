@@ -77,6 +77,7 @@ const Certificate = () => {
       setActiveCertificateTab(newCertificate.is_default ? 'templates' : 'custom_certificates');
       setSelectedCertificate(newCertificate.key);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCertificateKey, certificatesData]);
 
   const filteredCertificatesData = certificatesData.filter(
@@ -249,14 +250,12 @@ const styles = {
     gap: ${spacing[16]};
     padding-top: ${spacing[12]};
 
-    ${
-      !hasCertificates &&
-      activeCertificateTab !== 'templates' &&
-      css`
-        grid-template-columns: 1fr;
-        place-items: center;
-      `
-    }
+    ${!hasCertificates &&
+    activeCertificateTab !== 'templates' &&
+    css`
+      grid-template-columns: 1fr;
+      place-items: center;
+    `}
   `,
   orientation: css`
     ${styleUtils.display.flex()}
@@ -266,11 +265,7 @@ const styles = {
     right: 0;
     bottom: ${spacing[4]};
   `,
-  orientationButton: ({
-    isActive,
-  }: {
-    isActive: boolean;
-  }) => css`
+  orientationButton: ({ isActive }: { isActive: boolean }) => css`
     display: inline-flex;
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
@@ -285,11 +280,7 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
   `,
-  placeholderImage: ({
-    notFound,
-  }: {
-    notFound?: boolean;
-  }) => css`
+  placeholderImage: ({ notFound }: { notFound?: boolean }) => css`
     max-width: 100%;
     width: 100%;
     height: ${notFound ? '189px' : '312px;'};

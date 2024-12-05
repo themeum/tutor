@@ -359,6 +359,7 @@ export interface CourseDetailsResponse {
   bp_attached_groups: string[];
   editor_used: Editor;
   editors: Editor[];
+  total_enrolled_student: number;
 }
 
 export type MeetingType = 'zoom' | 'google_meet';

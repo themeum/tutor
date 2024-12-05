@@ -28,8 +28,6 @@ import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import addonDisabled2x from '@Images/addon-disabled-2x.webp';
-import addonDisabled from '@Images/addon-disabled.webp';
 import liveClassPro2x from '@Images/pro-placeholders/live-class-2x.webp';
 import liveClassPro from '@Images/pro-placeholders/live-class.webp';
 
@@ -52,6 +50,10 @@ const LiveClass = () => {
 
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
   const googleMeetButtonRef = useRef<HTMLButtonElement>(null);
+
+  if (!isTutorPro && !isZoomAddonEnabled && !isGoogleMeetAddonEnabled) {
+    return null;
+  }
 
   return (
     <div css={styles.liveClass}>
@@ -83,32 +85,7 @@ const LiveClass = () => {
           />
         }
       >
-        <Show
-          when={isZoomAddonEnabled || isGoogleMeetAddonEnabled}
-          fallback={
-            <EmptyState
-              size="small"
-              removeBorder={false}
-              emptyStateImage={addonDisabled}
-              emptyStateImage2x={addonDisabled2x}
-              imageAltText={__('No live class addons found', 'tutor')}
-              title={__('Activate the Google Meet or Zoom addon to use this feature.', 'tutor')}
-              description={__('Engage students in real-time with live classes using Google Meet or Zoom.', 'tutor')}
-              actions={
-                <Button
-                  size="small"
-                  variant="secondary"
-                  onClick={() => {
-                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-                  }}
-                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                >
-                  {__('Go to Addons', 'tutor')}
-                </Button>
-              }
-            />
-          }
-        >
+        <Show when={isZoomAddonEnabled || isGoogleMeetAddonEnabled}>
           <Show when={isZoomAddonEnabled}>
             <div
               css={styles.meetingsWrapper({
@@ -239,29 +216,23 @@ const styles = {
     background-color: ${colorTokens.background.white};
     border-radius: ${borderRadius.card};
 
-    ${
-      hasMeeting &&
-      css`
-        border: 1px solid ${colorTokens.stroke.default};
-      `
-    }
+    ${hasMeeting &&
+    css`
+      border: 1px solid ${colorTokens.stroke.default};
+    `}
   `,
   meeting: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[12]} ${spacing[8]};
-    ${
-      hasMeeting &&
-      css`
-        border-bottom: 1px solid ${colorTokens.stroke.divider};
-      `
-    }
+    ${hasMeeting &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
   `,
   meetingsFooter: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     width: 100%;
-    ${
-      hasMeeting &&
-      css`
-        padding: ${spacing[12]} ${spacing[8]};
-      `
-    }
+    ${hasMeeting &&
+    css`
+      padding: ${spacing[12]} ${spacing[8]};
+    `}
   `,
 };
