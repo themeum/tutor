@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.0.1
+Stable tag: 3.0.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,13 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.0.2 - December 03, 2024
+
+Fixed: Issue with selecting certificates when only one portrait-type certificate is available.
+Fixed: H5P fatal error caused by a version mismatch between Tutor LMS Free and Pro.
+Fixed: Canceled enrollments not appearing on the manual enrollment page.
+Fixed: Vimeo videos aren’t resuming playback from the last played position.
 
 = 3.0.1 - November 22, 2024
 
