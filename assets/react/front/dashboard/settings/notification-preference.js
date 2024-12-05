@@ -9,11 +9,19 @@ document.addEventListener('DOMContentLoaded', function () {
         const buttonSubmit = notificationPrefForm.querySelector('button[type="submit"]');
         const checkboxDisableAll = document.querySelector('#tutor-disable-all-notification');
         const customizePref = document.querySelector('#tutor-customize-notification-preference')
+        const iconBell = document.querySelector('.tutor-icon-image-bell')
+        const iconBellSlash = document.querySelector('.tutor-icon-image-bell-slash')
 
         checkboxDisableAll.addEventListener('change', function (e) {
-            e.target.checked
-                ? customizePref.classList.add('tutor-d-none')
-                : customizePref.classList.remove('tutor-d-none');
+            if (e.target.checked) {
+                customizePref.classList.add('tutor-d-none')
+                iconBell.classList.add('tutor-d-none')
+                iconBellSlash.classList.remove('tutor-d-none')
+            } else {
+                customizePref.classList.remove('tutor-d-none')
+                iconBell.classList.remove('tutor-d-none')
+                iconBellSlash.classList.add('tutor-d-none')
+            }
         })
 
         notificationPrefForm.addEventListener('submit', async function (e) {
