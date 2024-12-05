@@ -123,11 +123,13 @@ const styles = {
   thumb: css`
     width: 32px;
     height: 32px;
-    border-radius: ${borderRadius.circle};
+    background-color: ${colorTokens.background.hover};
+    border-radius: ${borderRadius[4]};
     overflow: hidden;
 
     img {
       max-width: 100%;
+      border-radius: ${borderRadius.circle};
     }
   `,
   addonAction: css`
