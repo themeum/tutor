@@ -1741,13 +1741,6 @@ input.checkbox {
 	}
 }
 
-@media (max-width: 650px) {
-	.slick-dotted.slick-slider {
-		padding-bottom: 70px;
-		margin-bottom: 0 !important;
-	}
-}
-
 @media (max-width: 575px) {
 	.wizard-type-body {
 		grid-template-columns: auto;
@@ -1878,12 +1871,6 @@ input.checkbox {
 	}
 }
 
-.slick-slider li:hover {
-	cursor: ew-resize;
-}
-.slick-slider li.slick-current:hover {
-	cursor: pointer;
-}
 .tutor-show-hide {
 	display: none !important;
 }
