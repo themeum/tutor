@@ -214,6 +214,7 @@ export interface ZoomMeeting {
     duration: number;
     timezone: string;
     password: string;
+    host: string;
     start_url: string;
     duration_unit: 'min' | 'hr';
     settings: {
