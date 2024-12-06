@@ -28,16 +28,6 @@ document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	});
 });
 
-const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
-toggleChange.forEach((element) => {
-	element.addEventListener('change', (e) => {
-		let check_value = element.previousElementSibling;
-		if (check_value) {
-			check_value.value == 'on' ? (check_value.value = 'off') : (check_value.value = 'on');
-		}
-	});
-});
-
 jQuery(document).ready(function ($) {
 	'use strict';
 
