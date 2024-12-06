@@ -162,8 +162,10 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 									?>
 								<?php elseif ( 'details' == $key ) : ?>
 									<?php
-										$url   = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
-										$style = '';
+										$admin_url = add_query_arg( array( 'page' => 'tutor_quiz_attempts', 'view_quiz_attempt_id' => $attempt->attempt_id ), admin_url( 'admin.php' ) );
+										$front_url = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
+										$url       = is_admin() ? $admin_url : $front_url;
+										$style     = '';
 									?>
 									<div class="tutor-d-inline-flex tutor-align-center" style="<?php echo esc_attr( ! is_admin() ? $style : '' ); ?>">
 										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
