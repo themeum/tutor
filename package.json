@@ -7,7 +7,7 @@
     "node": ">=14.17.5"
   },
   "scripts": {
-    "build": "composer install --no-dev && webpack --env=build --mode=production && npm run tutor-droip && npm run gulp-build",
+    "build": " webpack --env=build --mode=production && npm run tutor-droip && npm run gulp-build",
     "build-dev": "webpack --mode=development && npm run gulp-build-dev",
     "gulp-build": "npm run rm-lang && _GULP_ENV='build' gulp build",
     "gulp-build-dev": "npm run rm-lang && gulp build",
@@ -48,7 +48,7 @@
     "concurrently": "^9.1.0",
     "css-loader": "^5.0.2",
     "css-minimizer-webpack-plugin": "^1.2.0",
-    "date-fns": "^2.25.0",
+    "date-fns": "^2.30.0",
     "eslint": "^9.15.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-wordpress": "^2.0.0",

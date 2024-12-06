@@ -72,6 +72,11 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     value: key,
   }));
 
+  const hostOptions = Object.keys(meetingHost).map((key) => ({
+    label: meetingHost[key],
+    value: key,
+  }));
+
   const onSubmit = async (formData: ZoomMeetingFormData) => {
     if (!courseId) {
       return;
@@ -91,7 +96,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       auto_recording: formData.auto_recording,
       meeting_password: formData.meeting_password,
       click_form: topicId ? 'course_builder' : 'metabox',
-      meeting_host: Object.keys(meetingHost)[0],
+      meeting_host: formData.meeting_host,
     });
 
     if (response.data) {
@@ -113,7 +118,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
         meeting_timezone: currentMeeting.meeting_data.timezone,
         auto_recording: currentMeeting.meeting_data.settings?.auto_recording ?? 'none',
         meeting_password: currentMeeting.meeting_data.password,
-        meeting_host: Object.values(meetingHost)[0],
+        meeting_host: currentMeeting.meeting_data.host,
       });
     }
 
@@ -199,11 +204,11 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                   required: __('Duration is required', 'tutor'),
                 }}
                 render={(controllerProps) => (
-                  <FormInput 
+                  <FormInput
                     {...controllerProps}
                     label={__('Meeting Duration', 'tutor')}
                     placeholder={__('Duration', 'tutor')}
-                    type="number" 
+                    type="number"
                     selectOnFocus
                   />
                 )}
@@ -290,6 +295,24 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               required: __('Meeting host is required', 'tutor'),
             }}
             render={(controllerProps) => (
+              <FormSelectInput
+                {...controllerProps}
+                label={__('Meeting Host', 'tutor')}
+                placeholder={__('Enter meeting host', 'tutor')}
+                options={hostOptions}
+                selectOnFocus
+                isSearchable
+              />
+            )}
+          />
+
+          {/* <Controller
+            name="meeting_host"
+            control={meetingForm.control}
+            rules={{
+              required: __('Meeting host is required', 'tutor'),
+            }}
+            render={(controllerProps) => (
               <FormInput
                 {...controllerProps}
                 label={__('Meeting Host', 'tutor')}
@@ -298,7 +321,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 selectOnFocus
               />
             )}
-          />
+          /> */}
         </Show>
       </div>
 
@@ -361,11 +384,9 @@ const styles = {
     gap: ${spacing[8]};
     z-index: ${zIndex.positive};
 
-    ${
-      isScrolling &&
-      css`
-        box-shadow: ${shadow.scrollable};
-      `
-    }
+    ${isScrolling &&
+    css`
+      box-shadow: ${shadow.scrollable};
+    `}
   `,
 };
