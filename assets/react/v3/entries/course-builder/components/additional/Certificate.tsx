@@ -26,6 +26,10 @@ import CertificateEmptyState from './CertificateEmptyState';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
 
+interface CertificateProps {
+  isSidebarVisible: boolean;
+}
+
 const certificateTabs: { label: string; value: CertificateTabValue }[] = [
   { label: __('Templates', 'tutor'), value: 'templates' },
   { label: __('Custom Certificates', 'tutor'), value: 'custom_certificates' },
@@ -35,7 +39,7 @@ const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
-const Certificate = () => {
+const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   const queryClient = useQueryClient();
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
@@ -77,6 +81,7 @@ const Certificate = () => {
       setActiveCertificateTab(newCertificate.is_default ? 'templates' : 'custom_certificates');
       setSelectedCertificate(newCertificate.key);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCertificateKey, certificatesData]);
 
   const filteredCertificatesData = certificatesData.filter(
@@ -168,6 +173,7 @@ const Certificate = () => {
           css={styles.certificateWrapper({
             hasCertificates: filteredCertificatesData.length > 0,
             activeCertificateTab,
+            isSidebarVisible,
           })}
         >
           <Show when={activeCertificateTab === 'templates'}>
@@ -240,23 +246,23 @@ const styles = {
   certificateWrapper: ({
     hasCertificates,
     activeCertificateTab,
+    isSidebarVisible,
   }: {
     hasCertificates: boolean;
     activeCertificateTab: CertificateTabValue;
+    isSidebarVisible: boolean;
   }) => css`
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(${isSidebarVisible ? 3 : 4}, 1fr);
     gap: ${spacing[16]};
     padding-top: ${spacing[12]};
 
-    ${
-      !hasCertificates &&
-      activeCertificateTab !== 'templates' &&
-      css`
-        grid-template-columns: 1fr;
-        place-items: center;
-      `
-    }
+    ${!hasCertificates &&
+    activeCertificateTab !== 'templates' &&
+    css`
+      grid-template-columns: 1fr;
+      place-items: center;
+    `}
   `,
   orientation: css`
     ${styleUtils.display.flex()}
@@ -266,11 +272,7 @@ const styles = {
     right: 0;
     bottom: ${spacing[4]};
   `,
-  orientationButton: ({
-    isActive,
-  }: {
-    isActive: boolean;
-  }) => css`
+  orientationButton: ({ isActive }: { isActive: boolean }) => css`
     display: inline-flex;
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
@@ -285,11 +287,7 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
   `,
-  placeholderImage: ({
-    notFound,
-  }: {
-    notFound?: boolean;
-  }) => css`
+  placeholderImage: ({ notFound }: { notFound?: boolean }) => css`
     max-width: 100%;
     width: 100%;
     height: ${notFound ? '189px' : '312px;'};
