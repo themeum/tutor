@@ -51,7 +51,7 @@ const LiveClass = () => {
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
   const googleMeetButtonRef = useRef<HTMLButtonElement>(null);
 
-  if (!isTutorPro && !isZoomAddonEnabled && !isGoogleMeetAddonEnabled) {
+  if (isTutorPro && !isZoomAddonEnabled && !isGoogleMeetAddonEnabled) {
     return null;
   }
 

@@ -70,7 +70,7 @@ const Additional = () => {
     return null;
   }
 
-  const showSidebar =
+  const isSidebarVisible =
     !isTutorPro ||
     [
       Addons.TUTOR_PREREQUISITES,
@@ -82,7 +82,7 @@ const Additional = () => {
   return (
     <div
       css={styles.wrapper({
-        showSidebar: showSidebar,
+        showSidebar: isSidebarVisible,
       })}
     >
       <div css={styles.leftSide}>
@@ -212,7 +212,7 @@ const Additional = () => {
                   <BoxSubtitle>{__('Select a certificate to award your learners.', 'tutor')}</BoxSubtitle>
                 </Show>
               </div>
-              <Certificate />
+              <Certificate isSidebarVisible={isSidebarVisible} />
             </Box>
           </Show>
         </div>
@@ -220,7 +220,7 @@ const Additional = () => {
         <Navigator />
       </div>
 
-      <Show when={showSidebar}>
+      <Show when={isSidebarVisible}>
         <div css={styles.sidebar}>
           <Show when={!isTutorPro || isPrerequisiteAddonEnabled}>
             <div>
