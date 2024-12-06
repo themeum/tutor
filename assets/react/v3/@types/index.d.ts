@@ -17,6 +17,7 @@ declare global {
     _tutorobject: {
       ajaxurl: string;
       home_url: string;
+      asset_base_url: string;
       site_title: string;
       base_path: string;
       tutor_url: string;
