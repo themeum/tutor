@@ -119,11 +119,20 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 								<?php elseif ( 'action' == $key ) : ?>
 									<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-1">
 										<?php
-											$front_url = add_query_arg( array( 'question_id' => $qna->comment_ID ), tutor()->current_url );
-											$admin_url = add_query_arg( array( 'page' => 'question_answer', 'question_id' => $qna->comment_ID ), admin_url( 'admin.php' ) );
+											$front_url = add_query_arg(
+												array( 'question_id' => $qna->comment_ID ),
+												tutor()->current_url
+											);
+											$admin_url = add_query_arg(
+												array(
+													'page' => 'question_answer',
+													'question_id' => $qna->comment_ID
+												),
+												admin_url( 'admin.php' )
+											);
 											$url       = is_admin() ? $admin_url : $front_url;
 										?>
-										<a href="<?php echo $url; ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
 											<?php esc_html_e( 'Reply', 'tutor' ); ?>
 										</a>
 
