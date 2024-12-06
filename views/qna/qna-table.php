@@ -126,7 +126,7 @@ $view_as       = isset( $view_as ) ? $view_as : ( is_admin() ? 'instructor' : 's
 											$admin_url = add_query_arg(
 												array(
 													'page' => 'question_answer',
-													'question_id' => $qna->comment_ID
+													'question_id' => $qna->comment_ID,
 												),
 												admin_url( 'admin.php' )
 											);

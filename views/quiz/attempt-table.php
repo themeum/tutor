@@ -165,7 +165,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 										$admin_url = add_query_arg(
 											array(
 												'page' => 'tutor_quiz_attempts',
-												'view_quiz_attempt_id' => $attempt->attempt_id
+												'view_quiz_attempt_id' => $attempt->attempt_id,
 											),
 											admin_url( 'admin.php' )
 										);
