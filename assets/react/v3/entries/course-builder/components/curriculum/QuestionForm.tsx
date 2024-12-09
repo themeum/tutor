@@ -78,10 +78,10 @@ const QuestionForm = () => {
         />
 
         <p css={styles.emptyStateText}>
-          {__(
-            'Enter a quiz title to begin. Choose from a variety of question types to keep things interesting!',
-            'tutor',
-          )}
+          {
+            // prettier-ignore
+            __('Enter a quiz title to begin. Choose from a variety of question types to keep things interesting!', 'tutor')
+          }
         </p>
       </div>
     );

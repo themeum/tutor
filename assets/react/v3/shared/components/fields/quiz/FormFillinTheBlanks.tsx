@@ -17,7 +17,7 @@ import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
 import { nanoid } from '@Utils/util';
 
-interface FormFillInTheBlanksProps extends FormControllerProps<QuizQuestionOption | null> {}
+type FormFillInTheBlanksProps = FormControllerProps<QuizQuestionOption | null>;
 
 const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
   const { activeQuestionId, validationError, setValidationError } = useQuizModalContext();
@@ -152,10 +152,10 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                 <div css={styles.inputHints}>
                   <SVGIcon name="info" height={20} width={20} />
                   <p>
-                    {__(
-                      'Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.',
-                      'tutor',
-                    )}
+                    {
+                      // prettier-ignore
+                      __('Please make sure to use the variable {dash} in your question title to show the blanks in your question. You can use multiple {dash} variables in one question.', 'tutor')
+                    }
                   </p>
                 </div>
               </div>
@@ -210,10 +210,10 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                 <div css={styles.inputHints}>
                   <SVGIcon name="info" height={20} width={20} />
                   <p>
-                    {__(
-                      'Separate multiple answers by a vertical bar |. 1 answer per {dash} variable is defined in the question. Example: Apple | Banana | Orange',
-                      'tutor',
-                    )}
+                    {
+                      // prettier-ignore
+                      __( 'Separate multiple answers by a vertical bar |. 1 answer per {dash} variable is defined in the question. Example: Apple | Banana | Orange', 'tutor')
+                    }
                   </p>
                 </div>
               </div>
@@ -285,50 +285,44 @@ export default FormFillInTheBlanks;
 
 const styles = {
   option: css`
-      ${styleUtils.display.flex()};
-      ${typography.caption('medium')};
-      align-items: center;
-      color: ${colorTokens.text.subdued};
-      gap: ${spacing[10]};
-      align-items: center;
-    `,
-  optionLabel: ({
-    isEditing,
-  }: {
-    isEditing: boolean;
-  }) => css`
-      display: flex;
-      flex-direction: column;
-      gap: ${spacing[12]};
-      width: 100%;
-      border-radius: ${borderRadius.card};
-      padding: ${spacing[12]} ${spacing[16]};
-      transition: box-shadow 0.15s ease-in-out;
-      background-color: ${colorTokens.background.white};
+    ${styleUtils.display.flex()};
+    ${typography.caption('medium')};
+    align-items: center;
+    color: ${colorTokens.text.subdued};
+    gap: ${spacing[10]};
+    align-items: center;
+  `,
+  optionLabel: ({ isEditing }: { isEditing: boolean }) => css`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    width: 100%;
+    border-radius: ${borderRadius.card};
+    padding: ${spacing[12]} ${spacing[16]};
+    transition: box-shadow 0.15s ease-in-out;
+    background-color: ${colorTokens.background.white};
 
+    [data-visually-hidden] {
+      opacity: 0;
+    }
+
+    &:hover {
+      box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
       [data-visually-hidden] {
-        opacity: 0;
+        opacity: 1;
       }
-  
+    }
+
+    ${isEditing &&
+    css`
+      background-color: ${colorTokens.background.white};
+      box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+
       &:hover {
-        box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
-        [data-visually-hidden] {
-          opacity: 1;
-        }
+        box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
       }
-
-      ${
-        isEditing &&
-        css`
-          background-color: ${colorTokens.background.white};
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
-
-          &:hover {
-            box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
-          }
-        `
-      }
-    `,
+    `}
+  `,
   optionHeader: css`
     display: flex;
     justify-content: space-between;
@@ -360,14 +354,7 @@ const styles = {
     display: flex;
     flex-direction: column;
   `,
-  optionPlaceholder: ({
-    isTitle,
-    isCorrectAnswer,
-  }: {
-    isTitle?: boolean;
-    isCorrectAnswer?: number;
-  }) =>
-    css`
+  optionPlaceholder: ({ isTitle, isCorrectAnswer }: { isTitle?: boolean; isCorrectAnswer?: number }) => css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
     padding-block: ${spacing[4]};
@@ -375,23 +362,19 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
 
-    ${
-      isTitle &&
-      css`
-        color: ${colorTokens.text.hints};
-      `
-    }
+    ${isTitle &&
+    css`
+      color: ${colorTokens.text.hints};
+    `}
 
-    ${
-      isCorrectAnswer &&
-      css`
-        color: ${colorTokens.text.success};
+    ${isCorrectAnswer &&
+    css`
+      color: ${colorTokens.text.success};
 
-        span {
-          color: ${colorTokens.stroke.border};
-        }
-      `
-    }
+      span {
+        color: ${colorTokens.stroke.border};
+      }
+    `}
   `,
   inputWithHints: css`
     display: flex;
