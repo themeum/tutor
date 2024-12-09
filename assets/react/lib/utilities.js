@@ -118,4 +118,19 @@ window.jQuery(document).ready(function($) {
 		let url = $(this).val();
 		window.location.assign(url);
 	});
+
+	/**
+	 * Toggle switch button handler.
+	 *
+	 * @since 1.0.0
+	 */
+	const toggleChange = document.querySelectorAll('.tutor-form-toggle-input');
+	toggleChange.forEach((element) => {
+		element.addEventListener('change', (e) => {
+			let check_value = element.previousElementSibling;
+			if (check_value) {
+				check_value.value == 'on' ? (check_value.value = 'off') : (check_value.value = 'on');
+			}
+		});
+	});
 });

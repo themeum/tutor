@@ -387,6 +387,37 @@ class OrderModel {
 	}
 
 	/**
+	 * Get order data
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param int|object $order order id or object.
+	 *
+	 * @return object
+	 */
+	public static function get_order( $order ) {
+		if ( is_numeric( $order ) ) {
+			$order = ( new self() )->get_order_by_id( $order );
+		}
+
+		return $order;
+	}
+
+	/**
+	 * Check order is subscription order
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param int|object $order order id or object.
+	 *
+	 * @return boolean
+	 */
+	public static function is_subscription_order( $order ) {
+		$order = self::get_order( $order );
+		return $order && self::TYPE_SUBSCRIPTION === $order->order_type;
+	}
+
+	/**
 	 * Mark order Unpaid to Paid.
 	 *
 	 * @since 3.0.0
