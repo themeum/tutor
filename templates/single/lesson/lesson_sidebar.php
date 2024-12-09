@@ -144,14 +144,25 @@ if ( $topics->have_posts() ) {
 									}
 
 									if ( $time_limit ) {
-										$time_type                             = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
-										 'minutes' == $time_type ? $time_limit = $time_limit * 60 : 0;
-										 'hours' == $time_type ? $time_limit   = $time_limit * 3660 : 0;
-										 'days' == $time_type ? $time_limit    = $time_limit * 86400 : 0;
-										 'weeks' == $time_type ? $time_limit   = $time_limit * 86400 * 7 : 0;
+										$time_type = tutor_utils()->get_quiz_option( $quiz->ID, 'time_limit.time_type' );
 
-										// To Fix: If time larger than 24 hours, the hour portion starts from 0 again. Fix later.
-										$markup = '<span class="tutor-course-topic-item-duration tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-8">' . tutor_utils()->course_content_time_format( gmdate( 'H:i:s', $time_limit ) ) . '</span>';
+										$time_multipliers = array(
+											'minutes' => MINUTE_IN_SECONDS,
+											'hours'   => HOUR_IN_SECONDS,
+											'days'    => DAY_IN_SECONDS,
+											'weeks'   => WEEK_IN_SECONDS,
+										);
+
+										if ( isset( $time_multipliers[ $time_type ] ) ) {
+											$time_limit *= $time_multipliers[ $time_type ];
+										}
+
+										$hours          = floor( $time_limit / HOUR_IN_SECONDS );
+										$minutes        = floor( ( $time_limit % HOUR_IN_SECONDS ) / MINUTE_IN_SECONDS );
+										$seconds        = $time_limit % MINUTE_IN_SECONDS;
+										$formatted_time = sprintf( '%02d:%02d:%02d', $hours, $minutes, $seconds );
+
+										$markup = '<span class="tutor-course-topic-item-duration tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-8">' . $formatted_time . '</span>';
 										echo wp_kses(
 											$markup,
 											array(
