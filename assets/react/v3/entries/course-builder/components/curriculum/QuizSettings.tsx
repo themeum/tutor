@@ -131,7 +131,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   label={__('Attempts Allowed', 'tutor')}
                   helpText={
                     // prettier-ignore
-                    __('Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts','tutor')
+                    __('Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts', 'tutor')
                   }
                   selectOnFocus
                 />
