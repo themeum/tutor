@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
@@ -7,9 +8,9 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { useModal } from '@Components/modals/Modal';
-import Tracker from '@CourseBuilderComponents/layouts/Tracker';
 import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
 import Logo from '@CourseBuilderComponents/layouts/header/Logo';
+import Tracker from '@CourseBuilderComponents/layouts/Tracker';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
 import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBuilderModal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
@@ -23,10 +24,9 @@ import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContex
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
 
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@Images/pro-placeholders/generate-course.webp';
-import { useQueryClient } from '@tanstack/react-query';
-import { getCourseId } from '../../../utils/utils';
 
 const courseId = getCourseId();
 
