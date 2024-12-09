@@ -282,7 +282,7 @@ const LessonModal = ({
                                 size="small"
                                 onClick={() => {
                                   window.open(
-                                    `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
+                                    `${tutorConfig.site_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
                                     '_blank',
                                     'noopener',
                                   );

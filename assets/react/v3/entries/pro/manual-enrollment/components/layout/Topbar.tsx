@@ -27,7 +27,7 @@ function Topbar() {
     });
 
     if (response.status_code === 200) {
-      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=enrollments`;
+      handleGoBack();
     }
   }
 
