@@ -27,7 +27,7 @@ function Topbar() {
     if (redirectUrl) {
       window.location.href = decodeURIComponent(redirectUrl);
     } else {
-      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_orders`;
+      window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_orders`;
     }
   }
 

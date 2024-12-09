@@ -25,7 +25,7 @@ if ( property_exists( $question, 'meta' ) ) {
 }
 
 	$answers  = tutor_utils()->get_qa_answer_by_question( $question_id );
-	$back_url = isset( $back_url ) ? $back_url : remove_query_arg( 'question_id', tutor()->current_url );
+	$back_url = isset( $back_url ) ? $back_url : remove_query_arg( 'question_id', is_admin() ? admin_url( 'admin.php?page=question_answer' ) : tutor()->current_url );
 
 	// Badges data.
 	$_user_id = get_current_user_id();
