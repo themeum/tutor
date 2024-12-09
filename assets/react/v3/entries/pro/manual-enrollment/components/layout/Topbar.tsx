@@ -32,7 +32,7 @@ function Topbar() {
   }
 
   function handleGoBack() {
-    window.location.href = `${tutorConfig.is_admin ? tutorConfig.site_url : tutorConfig.home_url}/wp-admin/admin.php?page=enrollments`;
+    window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=enrollments`;
   }
 
   return (
