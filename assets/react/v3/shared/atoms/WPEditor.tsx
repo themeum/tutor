@@ -83,7 +83,7 @@ function editorConfig(
       toolbar2:
         'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown',
       content_css:
-        `${tutorConfig.asset_base_url}/wp-includes/css/dashicons.min.css,${tutorConfig.asset_base_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tutorConfig.asset_base_url}/wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css`,
+        `${tutorConfig.site_url}/wp-includes/css/dashicons.min.css,${tutorConfig.site_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tutorConfig.asset_base_url}/wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css`,
 
       statusbar: !readOnly,
       branding: false,
