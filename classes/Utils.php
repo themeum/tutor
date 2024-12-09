@@ -7074,6 +7074,7 @@ class Utils {
 		} elseif ( 'all' === $status ) {
 			$status = '';
 		}
+
 		$status_query = "";
 		if ( is_array( $status ) && count( $status ) ) {
 			$in_clause    =  QueryHelper::prepare_in_clause( $status );
@@ -7138,7 +7139,7 @@ class Utils {
 		} elseif ( 'all' === $status ) {
 			$status = '';
 		}
-		// default will return approved & cancelled status record.
+
 		$status_query = "";
 		if ( is_array( $status ) && count( $status ) ) {
 			$in_clause    =  QueryHelper::prepare_in_clause( $status );
