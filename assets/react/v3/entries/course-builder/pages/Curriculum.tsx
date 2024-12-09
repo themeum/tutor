@@ -379,7 +379,7 @@ const Curriculum = () => {
 
         <div css={styles.content}>
           <Show
-            when={!courseCurriculumQuery.isLoading && courseCurriculumQuery.data && topics.length > 0}
+            when={!courseCurriculumQuery.isLoading && topics.length > 0}
             fallback={
               <EmptyState
                 emptyStateImage={curriculumEmptyState}
