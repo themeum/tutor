@@ -19,7 +19,7 @@ const popupToggle = () => {
 			});
 		});
 
-		window.addEventListener('click', (e) => {
+		document.addEventListener('click', (e) => {
 			if (!e.target.matches('.popup-opener .popup-btn')) {
 				popupMenus.forEach((popupMenu) => {
 					if (popupMenu.classList.contains('visible')) {

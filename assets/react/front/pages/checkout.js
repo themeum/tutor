@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // Handle toggle coupon form button click
-        window.addEventListener('click', (e) => {
+        document.addEventListener('click', (e) => {
             if (e.target.closest("#tutor-toggle-coupon-button")) {
                 const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
                 const applyCouponInput = applyCouponForm?.querySelector("input");
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Apply coupon on enter coupon field.
          */
-        window.addEventListener('keydown', (e) => {
+        document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.target.closest("input[name=coupon_code]")) {
                 e.preventDefault();
                 const btnApply = e.target.parentNode.querySelector("#tutor-apply-coupon-button");
@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Handle apply coupon button.
          */
-        window.addEventListener('click', async (e) => {
+        document.addEventListener('click', async (e) => {
             if (e.target.closest("#tutor-apply-coupon-button")) {
                 const url = new URL(window.location.href);
                 const plan = url.searchParams.get('plan');
@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Handle coupon remove button click
-        window.addEventListener('click', (e) => {
+        document.addEventListener('click', (e) => {
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
                 document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
