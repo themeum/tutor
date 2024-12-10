@@ -5,14 +5,26 @@ import { spacing } from '@/v3/shared/config/styles';
 import { typography } from '@/v3/shared/config/typography';
 import { __ } from '@wordpress/i18n';
 import Show from '@/v3/shared/controls/Show';
+import FreeBanner from './FreeBanner';
+import { tutorConfig } from '@/v3/shared/config/config';
+import EmptyState from './EmptyState';
 
 function AddonList() {
-  const { addons } = useAddonContext();
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const { addons, searchTerm } = useAddonContext();
   const activeAddons = addons.filter((addon) => !!addon.is_enabled);
   const availableAddons = addons.filter((addon) => !addon.is_enabled);
 
+  if (searchTerm.length && addons.length === 0) {
+    return <EmptyState />;
+  }
+
   return (
     <div css={styles.wrapper}>
+      <Show when={!isTutorPro}>
+        <FreeBanner />
+      </Show>
+
       <Show when={activeAddons.length}>
         <h5 css={styles.addonListTitle}>{__('Active Addons', 'tutor')}</h5>
         <div css={styles.addonListWrapper}>

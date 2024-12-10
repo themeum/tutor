@@ -3,12 +3,12 @@ import { css } from '@emotion/react';
 import { typography } from '../config/typography';
 
 export const createGlobalCss = () => css`
-  body:not(.tutor-screen-backend-settings):not(.tutor-backend-tutor-addons) {
+  body:not(.tutor-screen-backend-settings) {
     #wpcontent {
       padding-left: 0;
     }
 
-    #wpbody {
+    &:not(.tutor-backend-tutor-addons) #wpbody {
       background-color: ${colorTokens.background.default};
     }
   }
