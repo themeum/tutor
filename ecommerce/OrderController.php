@@ -532,7 +532,7 @@ class OrderController {
 
 			$order_data->payment_status = $update_data['payment_status'];
 			$order_data->order_status   = $update_data['order_status'];
-			do_action( 'tutor_after_order_refund', $order_data, $amount );
+			do_action( 'tutor_after_order_refund', $order_id, $amount, $reason );
 
 			$this->json_response( __( 'Order refund successful', 'tutor' ) );
 		} else {
