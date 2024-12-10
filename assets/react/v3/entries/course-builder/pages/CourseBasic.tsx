@@ -12,7 +12,7 @@ import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
 import { tutorConfig } from '@Config/config';
-import { CURRENT_WINDOW } from '@Config/constants';
+import { CURRENT_VIEWPORT } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -137,13 +137,13 @@ const CourseBasic = () => {
 
           <CourseSettings />
         </div>
-        <Show when={CURRENT_WINDOW.isDesktop}>
+        <Show when={CURRENT_VIEWPORT.isAboveDesktop}>
           <Navigator styleModifier={styles.navigator} />
         </Show>
       </div>
 
       <CourseBasicSidebar />
-      <Show when={!CURRENT_WINDOW.isDesktop}>
+      <Show when={!CURRENT_VIEWPORT.isAboveDesktop}>
         <Navigator styleModifier={styles.navigator} />
       </Show>
     </div>
@@ -176,6 +176,7 @@ const styles = {
     `}
 
     ${Breakpoint.tablet} {
+      padding-top: ${spacing[16]};
       position: unset;
     }
   `,

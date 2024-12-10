@@ -33,7 +33,7 @@ import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContex
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
 
-import { CURRENT_WINDOW } from '@Config/constants';
+import { CURRENT_VIEWPORT } from '@Config/constants';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@Images/pro-placeholders/generate-course.webp';
@@ -112,19 +112,19 @@ const Header = () => {
             <div css={styleUtils.flexCenter()}>
               <MagicButton variant="plain" css={styles.magicButton} onClick={handleAiButtonClick}>
                 <SVGIcon name="magicAiColorize" width={24} height={24} />
-                <Show when={CURRENT_WINDOW.isDesktop}>{__('Generate with AI', 'tutor')}</Show>
+                <Show when={CURRENT_VIEWPORT.isAboveDesktop}>{__('Generate with AI', 'tutor')}</Show>
               </MagicButton>
             </div>
           </Show>
         </div>
 
-        <Show when={CURRENT_WINDOW.isDesktop}>
+        <Show when={CURRENT_VIEWPORT.isAboveDesktop}>
           <HeaderActions />
         </Show>
       </div>
 
       <div css={styles.closeButtonWrapper}>
-        <Show when={!CURRENT_WINDOW.isDesktop}>
+        <Show when={!CURRENT_VIEWPORT.isAboveDesktop}>
           <HeaderActions />
         </Show>
         <Tooltip delay={200} content={__('Exit', 'tutor')} placement="left">
@@ -162,6 +162,7 @@ const styles = {
       grid-template-areas:
         'logo closeButton'
         'container container';
+      row-gap: ${spacing[8]};
     }
   `,
   container: css`
@@ -179,6 +180,7 @@ const styles = {
     }
 
     ${Breakpoint.smallMobile} {
+      height: auto;
       grid-area: container;
       order: 2;
       justify-content: center;

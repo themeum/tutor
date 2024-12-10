@@ -25,7 +25,7 @@ import {
 } from '@CourseBuilderServices/course';
 
 import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_WINDOW } from '@Config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
 import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -223,7 +223,7 @@ const Additional = () => {
           </Show>
         </div>
 
-        <Show when={CURRENT_WINDOW.isDesktop}>
+        <Show when={CURRENT_VIEWPORT.isAboveDesktop}>
           <Navigator />
         </Show>
       </div>
@@ -296,7 +296,7 @@ const Additional = () => {
           <LiveClass />
         </div>
       </Show>
-      <Show when={!CURRENT_WINDOW.isDesktop}>
+      <Show when={!CURRENT_VIEWPORT.isAboveDesktop}>
         <Navigator />
       </Show>
     </div>
@@ -312,6 +312,7 @@ const styles = {
 
     ${Breakpoint.tablet} {
       grid-template-columns: 1fr;
+      gap: ${spacing[24]};
     }
   `,
   leftSide: css`

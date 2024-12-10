@@ -14,7 +14,7 @@ import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_WINDOW } from '@Config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -70,13 +70,13 @@ const CourseSettings = () => {
       <div css={styles.courseSettings}>
         <Tabs
           tabList={
-            CURRENT_WINDOW.isSmallMobile
+            CURRENT_VIEWPORT.isAboveSmallMobile
               ? tabList
               : tabList.map((tab) => ({ ...tab, label: activeTab === tab.value ? tab.label : '' }))
           }
           activeTab={activeTab}
           onChange={setActiveTab}
-          orientation={!CURRENT_WINDOW.isDesktop ? 'horizontal' : 'vertical'}
+          orientation={!CURRENT_VIEWPORT.isAboveDesktop ? 'horizontal' : 'vertical'}
           wrapperCss={css`
             button {
               min-width: auto;
@@ -238,6 +238,10 @@ const styles = {
     gap: ${spacing[12]};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[48]} ${spacing[32]};
     background-color: ${colorTokens.background.white};
+
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[16]};
+    }
   `,
   courseAndQna: css`
     display: flex;

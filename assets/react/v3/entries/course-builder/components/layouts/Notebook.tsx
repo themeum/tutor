@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { CURRENT_WINDOW, LocalStorageKeys, notebook } from '@Config/constants';
+import { CURRENT_VIEWPORT, LocalStorageKeys, notebook } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -44,7 +44,7 @@ const Notebook = () => {
 
   const expandAnimation = useSpring({
     width: !isCollapsed ? notebook.MIN_NOTEBOOK_WIDTH : notebook.NOTEBOOK_HEADER,
-    height: CURRENT_WINDOW.isDesktop
+    height: CURRENT_VIEWPORT.isAboveDesktop
       ? notebook.MIN_NOTEBOOK_HEIGHT
       : !isCollapsed
         ? notebook.MIN_NOTEBOOK_HEIGHT
@@ -210,7 +210,7 @@ const Notebook = () => {
     if (!isFloating) {
       wrapper.style.left = 'auto';
       wrapper.style.top = 'auto';
-      wrapper.style.height = CURRENT_WINDOW.isDesktop
+      wrapper.style.height = CURRENT_VIEWPORT.isAboveDesktop
         ? `${notebook.MIN_NOTEBOOK_HEIGHT}px`
         : `${notebook.NOTEBOOK_HEADER}px`;
 
@@ -270,7 +270,11 @@ const Notebook = () => {
               css={[styleUtils.resetButton, styles.verticalButton]}
               onClick={() => setIsCollapsed(false)}
             >
-              {CURRENT_WINDOW.isDesktop ? __('Notebook', 'tutor') : <SVGIcon name="note" height={24} width={24} />}
+              {CURRENT_VIEWPORT.isAboveDesktop ? (
+                __('Notebook', 'tutor')
+              ) : (
+                <SVGIcon name="note" height={24} width={24} />
+              )}
             </button>
           </div>
         }

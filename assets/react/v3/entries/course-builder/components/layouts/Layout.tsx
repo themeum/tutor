@@ -68,7 +68,7 @@ const styles = {
 
     ${Breakpoint.tablet} {
       padding-inline: ${spacing[12]};
-      padding-bottom: ${spacing[12]};
+      padding-bottom: ${spacing[56]};
     }
   `,
 };

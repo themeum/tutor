@@ -12,11 +12,11 @@ export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
 export const currentWindowWidth = window.innerWidth;
-export const CURRENT_WINDOW = {
-  isDesktop: currentWindowWidth >= DesktopBreakpoint,
-  isTablet: currentWindowWidth >= TabletBreakpoint,
-  isMobile: currentWindowWidth >= MobileBreakpoint,
-  isSmallMobile: currentWindowWidth >= SmallMobileBreakpoint,
+export const CURRENT_VIEWPORT = {
+  isAboveDesktop: currentWindowWidth >= DesktopBreakpoint,
+  isAboveTablet: currentWindowWidth >= TabletBreakpoint,
+  isAboveMobile: currentWindowWidth >= MobileBreakpoint,
+  isAboveSmallMobile: currentWindowWidth >= SmallMobileBreakpoint,
 };
 
 export const modal = {

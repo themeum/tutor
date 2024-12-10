@@ -29,7 +29,7 @@ import {
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
 
-import { CURRENT_WINDOW, modal } from '@Config/constants';
+import { CURRENT_VIEWPORT, modal } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -204,8 +204,8 @@ const QuizModal = ({
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-            title={isFormDirty ? (CURRENT_WINDOW.isDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
-            subtitle={CURRENT_WINDOW.isSmallMobile ? subtitle : ''}
+            title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+            subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
             maxWidth={1218}
             headerChildren={
               <Tabs
@@ -213,14 +213,14 @@ const QuizModal = ({
                 activeTab={activeTab}
                 tabList={[
                   {
-                    label: CURRENT_WINDOW.isMobile ? __('Question Details', 'tutor') : '',
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Question Details', 'tutor') : '',
                     value: 'details',
-                    icon: !CURRENT_WINDOW.isMobile ? <SVGIcon name="text" width={24} height={24} /> : null,
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="text" width={24} height={24} /> : null,
                   },
                   {
-                    label: CURRENT_WINDOW.isMobile ? __('Settings', 'tutor') : '',
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Settings', 'tutor') : '',
                     value: 'settings',
-                    icon: !CURRENT_WINDOW.isMobile ? <SVGIcon name="settings" width={24} height={24} /> : null,
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="settings" width={24} height={24} /> : null,
                   },
                 ]}
                 onChange={(tab) => setActiveTab(tab)}

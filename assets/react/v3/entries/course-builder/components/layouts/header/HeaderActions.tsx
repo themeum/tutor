@@ -13,7 +13,7 @@ import { useModal } from '@Components/modals/Modal';
 import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 
 import config, { tutorConfig } from '@Config/config';
-import { CURRENT_WINDOW, DateFormats, TutorRoles } from '@Config/constants';
+import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@Config/constants';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import {
@@ -344,8 +344,9 @@ const HeaderActions = () => {
             iconPosition="right"
             onClick={() => window.open(previewLink, '_blank', 'noopener')}
             disabled={!previewLink}
+            size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           >
-            {__('Preview', 'tutor')}
+            <Show when={CURRENT_VIEWPORT.isAboveDesktop}>{__('Preview', 'tutor')}</Show>
           </Button>
         }
       >
@@ -358,8 +359,9 @@ const HeaderActions = () => {
             padding-inline: ${spacing[16]};
           `}
           onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
+          size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
         >
-          <Show when={CURRENT_WINDOW.isDesktop}>{__('Save as Draft', 'tutor')}</Show>
+          <Show when={CURRENT_VIEWPORT.isAboveDesktop}>{__('Save as Draft', 'tutor')}</Show>
         </Button>
       </Show>
 
@@ -367,6 +369,7 @@ const HeaderActions = () => {
         when={dropdownItems().length > 1}
         fallback={
           <Button
+            size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
             loading={
               createCourseMutation.isPending ||
               (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
@@ -379,6 +382,7 @@ const HeaderActions = () => {
       >
         <DropdownButton
           text={dropdownButton().text}
+          size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           variant="primary"
           loading={
             createCourseMutation.isPending ||
