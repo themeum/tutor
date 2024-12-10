@@ -21,7 +21,7 @@ function AddonCard({ addon }: { addon: Addon }) {
 
   const enableDisableAddon = useEnableDisableAddon();
 
-  async function handleAddonChange(checked: boolean) {
+  const handleAddonChange = async (checked: boolean) => {
     setIsChecked(checked);
 
     const addonObject = {} as Record<string, number>;
@@ -50,7 +50,7 @@ function AddonCard({ addon }: { addon: Addon }) {
       setIsChecked(!checked);
       showToast({ type: 'danger', message: __('Something went wrong!', 'tutor') });
     }
-  }
+  };
 
   return (
     <div

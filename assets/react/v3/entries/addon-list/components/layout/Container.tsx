@@ -1,3 +1,4 @@
+import { spacing } from '@/v3/shared/config/styles';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
@@ -12,8 +13,7 @@ export default Container;
 const styles = {
   wrapper: css`
     max-width: ${CONTAINER_WIDTH}px;
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-inline: ${spacing[12]};
     margin: 0 auto;
     height: 100%;
     width: 100%;
