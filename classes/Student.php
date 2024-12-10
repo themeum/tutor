@@ -206,13 +206,24 @@ class Student {
 			'last_name'    => $last_name,
 			'display_name' => $display_name,
 		);
-		$user_id  = wp_update_user( $userdata );
+
+		$user_id = wp_update_user( $userdata );
 
 		if ( ! is_wp_error( $user_id ) ) {
 			update_user_meta( $user_id, User::PHONE_NUMBER_META, $phone_number );
 			update_user_meta( $user_id, User::PROFILE_BIO_META, $tutor_profile_bio );
 			update_user_meta( $user_id, User::PROFILE_JOB_TITLE_META, $tutor_profile_job_title );
 			update_user_meta( $user_id, User::TIMEZONE_META, $timezone );
+		}
+
+		/**
+		 * For admin update site timezone.
+		 *
+		 * @since 3.1.0
+		 */
+		if ( User::is_admin() && in_array( $timezone, timezone_identifiers_list(), true ) ) {
+			update_option( 'timezone_string', $timezone );
+			update_option( 'gmt_offset', 0 );
 		}
 
 		do_action( 'tutor_profile_update_after', $user_id );
