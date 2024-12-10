@@ -571,6 +571,6 @@ const styles = {
     }
   `,
   navigator: css`
-    margin: 40px auto;
+    margin: ${spacing[40]} auto;
   `,
 };
