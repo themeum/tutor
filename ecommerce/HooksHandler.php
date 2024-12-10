@@ -436,7 +436,6 @@ class HooksHandler {
 	 * @return object
 	 */
 	public function prepare_refund_data( $order, $amount, $reason ) {
-
 		$currency = tutor_get_currencies_info_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) );
 
 		$refund_data = array(
