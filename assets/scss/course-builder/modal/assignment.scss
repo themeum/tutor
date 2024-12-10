@@ -1,9 +1,0 @@
-.tutor-input-group{
-    flex-flow: column;
-    
-    input{
-        &:not([name=assignment_title]) {
-            max-width: 135px;
-        }
-    }
-}
