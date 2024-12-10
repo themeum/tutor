@@ -68,10 +68,9 @@ const TaxSettingsPage = () => {
               component: StaticConfirmationModal,
               props: {
                 title: __('Reset to Default Settings?', 'tutor'),
-                description: __(
-                  'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.',
-                  'tutor',
-                ),
+                description:
+                  // prettier-ignore
+                  __( 'WARNING! This will overwrite all customized settings of this section and reset them to default. Proceed with caution.', 'tutor'),
                 confirmButtonText: __('Reset', 'tutor'),
               },
               depthIndex: zIndex.highest,

@@ -24,10 +24,10 @@ export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubsc
       <div css={styles.content}>
         <h5>{__('Boost Revenue with Subscriptions', 'tutor')}</h5>
         <p>
-          {__(
-            'Offer flexible subscription plans to maximize your earnings and provide students with affordable access to your courses.',
-            'tutor',
-          )}
+          {
+            // prettier-ignore
+            __('Offer flexible subscription plans to maximize your earnings and provide students with affordable access to your courses.', 'tutor')
+          }
         </p>
       </div>
 
@@ -85,16 +85,16 @@ const styles = {
     align-items: center;
     justify-content: center;
     border-radius: ${borderRadius[8]};
-		position: relative;
-		overflow: hidden;
+    position: relative;
+    overflow: hidden;
 
     img {
       position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   `,
 };
