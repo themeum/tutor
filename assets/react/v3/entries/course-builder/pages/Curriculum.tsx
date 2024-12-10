@@ -27,7 +27,7 @@ import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import {
@@ -541,6 +541,10 @@ const styles = {
   container: css`
     margin-top: ${spacing[32]};
     width: 100%;
+
+    ${Breakpoint.smallMobile} {
+      margin-top: ${spacing[16]};
+    }
   `,
   wrapper: css`
     width: 100%;
@@ -550,6 +554,10 @@ const styles = {
   `,
   content: css`
     margin-top: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      margin-top: 0;
+    }
   `,
 
   topicWrapper: css`

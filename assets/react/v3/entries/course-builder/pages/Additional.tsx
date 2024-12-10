@@ -322,7 +322,8 @@ const styles = {
 
     ${Breakpoint.tablet} {
       padding: 0;
-      padding-top: ${spacing[24]};
+      padding-top: ${spacing[16]};
+      gap: ${spacing[16]};
     }
   `,
   formWrapper: css`
