@@ -908,7 +908,7 @@ class Options_V2 {
 									'auto_abandon' => array(
 										'label' => __( 'Auto Abandon', 'tutor' ),
 										'desc'  => __( 'Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor' ),
-									)
+									),
 								),
 								'desc'           => __( 'Choose which action to follow when the quiz time expires.', 'tutor' ),
 							),
