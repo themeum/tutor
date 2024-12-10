@@ -58,10 +58,10 @@ function TaxSettingGlobal() {
                         labelCss={styles.checkboxLabel}
                       />
                       <span css={styles.checkboxSubText}>
-                        {__(
-                          'Show prices with tax included, so customers see the final amount they’ll pay upfront.',
-                          'tutor'
-                        )}
+                        {
+                          // prettier-ignore
+                          __('Show prices with tax included, so customers see the final amount they’ll pay upfront.', 'tutor')
+                        }
                       </span>
                     </div>
                   );

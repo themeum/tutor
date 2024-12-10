@@ -155,7 +155,8 @@ class Assets {
 
 		return array(
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
-			'home_url'                     => get_home_url(),
+			'home_url'                     => rtrim( get_home_url(), '/' ),
+			'site_url'                     => rtrim( get_site_url(), '/' ),
 			'site_title'                   => get_bloginfo( 'title' ),
 			'base_path'                    => tutor()->basepath,
 			'tutor_url'                    => tutor()->url,

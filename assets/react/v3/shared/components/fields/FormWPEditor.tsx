@@ -5,6 +5,7 @@ import type React from 'react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
+import Alert from '@Atoms/Alert';
 import Button from '@Atoms/Button';
 import LoadingSpinner, { LoadingOverlay } from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -18,6 +19,7 @@ import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierMod
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@Config/config';
+import { TutorRoles } from '@Config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -29,7 +31,6 @@ import type { IconCollection } from '@Utils/types';
 import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
 import generateText from '@Images/pro-placeholders/generate-text.webp';
 
-import { TutorRoles } from '../../config/constants';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
@@ -94,9 +95,13 @@ const CustomEditorOverlay = ({
               component: StaticConfirmationModal,
               props: {
                 title: __('Back to WordPress Editor', 'tutor'),
-                description: __(
-                  'Warning: Switching to the WordPress default editor may cause issues with your current layout, design, and content.',
-                  'tutor',
+                description: (
+                  <Alert type="warning" icon="warning">
+                    {
+                      // prettier-ignore
+                      __( 'Warning: Switching to the WordPress default editor may cause issues with your current layout, design, and content.', 'tutor')
+                    }
+                  </Alert>
                 ),
                 confirmButtonText: __('Confirm', 'tutor'),
                 confirmButtonVariant: 'primary',
@@ -385,8 +390,10 @@ const styles = {
     backdrop-filter: blur(8px);
   `,
   editWithButton: css`
-    background: ${colorTokens.action.secondary};
+    background: ${colorTokens.action.secondary.default};
     color: ${colorTokens.text.primary};
-    box-shadow: inset 0 -1px 0 0 ${rgba('#1112133D', 0.24)}, 0 1px 0 0 ${rgba('#1112133D', 0.8)};
+    box-shadow:
+      inset 0 -1px 0 0 ${rgba('#1112133D', 0.24)},
+      0 1px 0 0 ${rgba('#1112133D', 0.8)};
   `,
 };

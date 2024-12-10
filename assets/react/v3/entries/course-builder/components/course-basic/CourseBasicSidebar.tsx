@@ -81,7 +81,7 @@ const CourseBasicSidebar = () => {
 
   const userList = useUserListQuery(userSearchText);
 
-  const instructorListQuery = useInstructorListQuery(String(courseId) ?? '', isMultiInstructorEnabled);
+  const instructorListQuery = useInstructorListQuery(String(courseId), isMultiInstructorEnabled);
 
   const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
     id: instructor.id,
@@ -171,7 +171,6 @@ const CourseBasicSidebar = () => {
             label={__('Intro Video', 'tutor')}
             buttonText={__('Upload Video', 'tutor')}
             infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
-            supportedFormats={['mp4', 'webm']}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
           />
         )}

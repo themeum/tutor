@@ -41,20 +41,20 @@ const CertificateEmptyState = () => {
             }
           >
             <div>
-              {__(
-                'Celebrate success with personalized certificates. Recognize student achievements with unique designs that inspire and motivate students.',
-                'tutor',
-              )}
+              {
+                // prettier-ignore
+                __( 'Celebrate success with personalized certificates. Recognize student achievements with unique designs that inspire and motivate students.', 'tutor')
+              }
             </div>
 
             <div css={styles.features}>
               <div css={styles.feature}>
                 <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
                 <span>
-                  {__(
-                    'Design personalized certificates that highlight their accomplishments and boost their confidence.',
-                    'tutor',
-                  )}
+                  {
+                    // prettier-ignore
+                    __('Design personalized certificates that highlight their accomplishments and boost their confidence.', 'tutor')
+                  }
                 </span>
               </div>
               <div css={styles.feature}>
@@ -91,11 +91,7 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
   `,
-  placeholderImage: ({
-    notFound,
-  }: {
-    notFound?: boolean;
-  }) => css`
+  placeholderImage: ({ notFound }: { notFound?: boolean }) => css`
     max-width: 100%;
     width: 100%;
     height: ${notFound ? '189px' : '312px;'};
