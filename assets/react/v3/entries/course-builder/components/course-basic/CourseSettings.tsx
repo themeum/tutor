@@ -70,7 +70,7 @@ const CourseSettings = () => {
       <div css={styles.courseSettings}>
         <Tabs
           tabList={
-            // this is a hack to only show the tab labels on desktop
+            // this is a hack to only show the tab labels on screens above small mobile
             CURRENT_VIEWPORT.isAboveSmallMobile
               ? tabList
               : tabList.map((tab) => ({ ...tab, label: activeTab === tab.value ? tab.label : '' }))
