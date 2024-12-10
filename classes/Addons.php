@@ -245,23 +245,23 @@ class Addons {
 			),
 			'content-drip'             => array(
 				'name'        => __( 'Content Drip', 'tutor' ),
-				'description' => 'Unlock lessons by schedule or when students meet a specific condition.',
+				'description' => __( 'Unlock lessons by schedule or when students meet a specific condition.', 'tutor' ),
 			),
 			'tutor-multi-instructors'  => array(
 				'name'        => __( 'Tutor Multi Instructors', 'tutor' ),
-				'description' => 'Collaborate and add multiple instructors to a course.',
+				'description' => __( 'Collaborate and add multiple instructors to a course.', 'tutor' ),
 			),
 			'tutor-assignments'        => array(
 				'name'        => __( 'Tutor Assignments', 'tutor' ),
-				'description' => 'Assess student learning with assignments.',
+				'description' => __( 'Assess student learning with assignments.', 'tutor' ),
 			),
 			'tutor-course-preview'     => array(
 				'name'        => __( 'Tutor Course Preview', 'tutor' ),
-				'description' => 'Offer free previews of specific lessons before enrollment.',
+				'description' => __( 'Offer free previews of specific lessons before enrollment.', 'tutor' ),
 			),
 			'tutor-course-attachments' => array(
 				'name'        => __( 'Tutor Course Attachments', 'tutor' ),
-				'description' => 'Add unlimited attachments/ private files to any Tutor course',
+				'description' => __( 'Add unlimited attachments/ private files to any Tutor course', 'tutor' ),
 			),
 			'google-meet'              => array(
 				'name'        => __( 'Tutor Google Meet Integration', 'tutor' ),
@@ -276,11 +276,11 @@ class Addons {
 				'description' => __( 'Send automated and customized emails for various Tutor events.', 'tutor' ),
 			),
 			'calendar'                 => array(
-				'name'        => 'Calendar',
+				'name'        => __( 'Calendar', 'tutor' ),
 				'description' => __( 'Enable to let students view all your course events in one place.', 'tutor' ),
 			),
 			'tutor-notifications'      => array(
-				'name'        => 'Notifications',
+				'name'        => __( 'Notifications', 'tutor' ),
 				'description' => __( 'Keep students and instructors notified of course events on their dashboard.', 'tutor' ),
 			),
 			'google-classroom'         => array(
@@ -328,7 +328,7 @@ class Addons {
 				'description' => __( 'Enable to manage content access through Restrict Content Pro. ', 'tutor' ),
 			),
 			'tutor-weglot'             => array(
-				'name'        => 'Weglot',
+				'name'        => __( 'Weglot', 'tutor' ),
 				'description' => __( 'Translate & manage multilingual courses for global reach.', 'tutor' ),
 			),
 			'tutor-wpml'               => array(
