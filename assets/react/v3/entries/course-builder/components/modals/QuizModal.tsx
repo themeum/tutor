@@ -438,8 +438,12 @@ const styles = {
       padding-inline: 352px 352px; // 352px is the width of the left and right side
 
       ${Breakpoint.tablet} {
-        padding-inline: 0;
+        padding: ${spacing[16]} ${spacing[8]} ${spacing[24]} ${spacing[8]};
         margin: 0 auto;
+      }
+
+      ${Breakpoint.smallMobile} {
+        padding-top: ${spacing[8]};
       }
     `}
   `,
