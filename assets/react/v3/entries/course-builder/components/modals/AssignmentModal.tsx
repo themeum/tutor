@@ -20,7 +20,7 @@ import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { ContentDripType } from '@CourseBuilderServices/course';
@@ -451,12 +451,21 @@ export default AssignmentModal;
 
 const styles = {
   wrapper: css`
-    width: 1070px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 338px;
+    width: 100%;
     height: 100%;
     padding-inline: ${spacing[32]};
+
+    ${Breakpoint.tablet} {
+      grid-template-columns: 1fr;
+      padding-inline: ${spacing[24]};
+    }
+
+    ${Breakpoint.mobile} {
+      padding-inline: ${spacing[16]};
+    }
   `,
   assignmentInfo: css`
     padding-block: ${spacing[24]};
@@ -467,6 +476,11 @@ const styles = {
     position: sticky;
     top: 0;
     z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
+
+    ${Breakpoint.tablet} {
+      position: unset;
+      padding-right: 0;
+    }
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};
@@ -475,6 +489,11 @@ const styles = {
     gap: ${spacing[16]};
     padding-block: ${spacing[24]};
     padding-left: ${spacing[32]};
+
+    ${Breakpoint.tablet} {
+      border-left: none;
+      padding-left: 0;
+    }
   `,
   timeLimit: css`
     display: grid;

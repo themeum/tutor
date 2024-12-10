@@ -1,3 +1,5 @@
+import { DesktopBreakpoint, MobileBreakpoint, SmallMobileBreakpoint, TabletBreakpoint } from '@Config/styles';
+
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
 export const ITEMS_PER_PAGE = 10;
@@ -9,6 +11,13 @@ export const ALIAS_CATEGORY_ROUTE_PREFIX = '/category';
 export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
+export const currentWindowWidth = window.innerWidth;
+export const CURRENT_WINDOW = {
+  isDesktop: currentWindowWidth >= DesktopBreakpoint,
+  isTablet: currentWindowWidth >= TabletBreakpoint,
+  isMobile: currentWindowWidth >= MobileBreakpoint,
+  isSmallMobile: currentWindowWidth >= SmallMobileBreakpoint,
+};
 
 export const modal = {
   HEADER_HEIGHT: 56,

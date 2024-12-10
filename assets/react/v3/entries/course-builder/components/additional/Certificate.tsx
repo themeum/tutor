@@ -10,7 +10,7 @@ import Tabs from '@Molecules/Tabs';
 
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -249,13 +249,16 @@ const styles = {
     gap: ${spacing[16]};
     padding-top: ${spacing[12]};
 
-    ${
-      !hasCertificates &&
-      activeCertificateTab !== 'templates' &&
-      css`
-        grid-template-columns: 1fr;
-        place-items: center;
-      `
+    ${!hasCertificates &&
+    activeCertificateTab !== 'templates' &&
+    css`
+      grid-template-columns: 1fr;
+      place-items: center;
+    `}
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr 1fr;
+      gap: ${spacing[12]};
     }
   `,
   orientation: css`
@@ -266,11 +269,7 @@ const styles = {
     right: 0;
     bottom: ${spacing[4]};
   `,
-  orientationButton: ({
-    isActive,
-  }: {
-    isActive: boolean;
-  }) => css`
+  orientationButton: ({ isActive }: { isActive: boolean }) => css`
     display: inline-flex;
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
@@ -285,11 +284,7 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
   `,
-  placeholderImage: ({
-    notFound,
-  }: {
-    notFound?: boolean;
-  }) => css`
+  placeholderImage: ({ notFound }: { notFound?: boolean }) => css`
     max-width: 100%;
     width: 100%;
     height: ${notFound ? '189px' : '312px;'};

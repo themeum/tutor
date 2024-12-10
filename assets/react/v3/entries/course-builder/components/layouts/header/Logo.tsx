@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 
 import { tutorConfig } from '@Config/config';
-import { spacing } from '@Config/styles';
+import { Breakpoint, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
@@ -32,6 +32,15 @@ const styles = {
       width: auto;
       object-fit: contain;
       object-position: center;
+    }
+
+    ${Breakpoint.tablet} {
+      padding-left: ${spacing[24]};
+    }
+
+    ${Breakpoint.smallMobile} {
+      grid-area: logo;
+      padding-left: ${spacing[16]};
     }
   `,
 };

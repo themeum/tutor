@@ -13,7 +13,7 @@ import { useModal } from '@Components/modals/Modal';
 import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 
 import config, { tutorConfig } from '@Config/config';
-import { DateFormats, TutorRoles } from '@Config/constants';
+import { CURRENT_WINDOW, DateFormats, TutorRoles } from '@Config/constants';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import {
@@ -326,11 +326,11 @@ const HeaderActions = () => {
     return items;
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (updateCourseMutation.isSuccess) {
       form.reset(form.getValues());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateCourseMutation.isSuccess]);
 
   return (
@@ -354,10 +354,12 @@ const HeaderActions = () => {
           icon={<SVGIcon name="upload" width={24} height={24} />}
           loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
           iconPosition="left"
-          buttonCss={css`padding-inline: ${spacing[16]};`}
+          buttonCss={css`
+            padding-inline: ${spacing[16]};
+          `}
           onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
         >
-          {__('Save as Draft', 'tutor')}
+          <Show when={CURRENT_WINDOW.isDesktop}>{__('Save as Draft', 'tutor')}</Show>
         </Button>
       </Show>
 

@@ -14,8 +14,8 @@ import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { Addons, CURRENT_WINDOW } from '@Config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
@@ -49,13 +49,14 @@ const CourseSettings = () => {
     },
   ];
 
-  isAddonEnabled(Addons.BUDDYPRESS) &&
+  if (isAddonEnabled(Addons.BUDDYPRESS)) {
     tabList.push({
       label: __('BuddyPress', 'tutor'),
       value: 'buddyPress',
       icon: <SVGIcon name="buddyPress" width={24} height={24} />,
       activeBadge: isBuddyPressEnabled,
     });
+  }
 
   const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
     label: level.label,
@@ -67,7 +68,21 @@ const CourseSettings = () => {
       <label css={typography.caption()}>{__('Options', 'tutor')}</label>
 
       <div css={styles.courseSettings}>
-        <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
+        <Tabs
+          tabList={
+            CURRENT_WINDOW.isSmallMobile
+              ? tabList
+              : tabList.map((tab) => ({ ...tab, label: activeTab === tab.value ? tab.label : '' }))
+          }
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          orientation={!CURRENT_WINDOW.isDesktop ? 'horizontal' : 'vertical'}
+          wrapperCss={css`
+            button {
+              min-width: auto;
+            }
+          `}
+        />
 
         <div
           css={{
@@ -211,6 +226,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     background-color: ${colorTokens.background.default};
     overflow: hidden;
+
+    ${Breakpoint.tablet} {
+      grid-template-columns: 1fr;
+    }
   `,
   settingsOptions: css`
     min-height: 400px;

@@ -16,6 +16,7 @@ import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
+import Certificate from '@CourseBuilderComponents/additional/Certificate';
 import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
@@ -26,8 +27,8 @@ import {
 } from '@CourseBuilderServices/course';
 
 import config, { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
+import { Addons, CURRENT_WINDOW } from '@Config/constants';
+import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
@@ -38,8 +39,6 @@ import addonDisabled2x from '@Images/addon-disabled-2x.webp';
 import addonDisabled from '@Images/addon-disabled.webp';
 import attachmentsPro2x from '@Images/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@Images/pro-placeholders/attachments.webp';
-
-import Certificate from '../components/additional/Certificate';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
@@ -56,10 +55,6 @@ const Additional = () => {
     }
   }, [navigate]);
 
-  if (!courseId) {
-    return null;
-  }
-
   const form = useFormContext<CourseFormData>();
   const queryClient = useQueryClient();
   const isCourseDetailsFetching = useIsFetching({
@@ -75,6 +70,10 @@ const Additional = () => {
     excludedIds: [String(courseId), ...prerequisiteCourseIds],
     isEnabled: !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
   });
+
+  if (!courseId) {
+    return null;
+  }
 
   return (
     <div css={styles.wrapper}>
@@ -208,7 +207,9 @@ const Additional = () => {
           </Box>
         </div>
 
-        <Navigator />
+        <Show when={CURRENT_WINDOW.isDesktop}>
+          <Navigator />
+        </Show>
       </div>
 
       <div css={styles.sidebar}>
@@ -289,6 +290,9 @@ const Additional = () => {
         </div>
         <LiveClass />
       </div>
+      <Show when={!CURRENT_WINDOW.isDesktop}>
+        <Navigator />
+      </Show>
     </div>
   );
 };
@@ -299,11 +303,21 @@ const styles = {
   wrapper: css`
     display: grid;
     grid-template-columns: 1fr 338px;
+    width: 100%;
+
+    ${Breakpoint.tablet} {
+      grid-template-columns: 1fr;
+    }
   `,
   leftSide: css`
     padding: ${spacing[32]} ${spacing[32]} ${spacing[32]} 0;
     ${styleUtils.display.flex('column')}
     gap: ${spacing[32]};
+
+    ${Breakpoint.tablet} {
+      padding: 0;
+      padding-top: ${spacing[24]};
+    }
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}
@@ -340,6 +354,13 @@ const styles = {
     border-left: 1px solid ${colorTokens.stroke.divider};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
     gap: ${spacing[16]};
+
+    ${Breakpoint.tablet} {
+      padding: 0;
+      padding-top: ${spacing[24]};
+      border-left: none;
+      border-top: 1px solid ${colorTokens.stroke.divider};
+    }
   `,
   label: css`
     ${styleUtils.display.inlineFlex()}
