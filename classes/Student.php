@@ -216,16 +216,6 @@ class Student {
 			update_user_meta( $user_id, User::TIMEZONE_META, $timezone );
 		}
 
-		/**
-		 * For admin update site timezone.
-		 *
-		 * @since 3.1.0
-		 */
-		if ( User::is_admin() && in_array( $timezone, timezone_identifiers_list(), true ) ) {
-			update_option( 'timezone_string', $timezone );
-			update_option( 'gmt_offset', 0 );
-		}
-
 		do_action( 'tutor_profile_update_after', $user_id );
 
 		wp_send_json_success( array( 'message' => __( 'Profile Updated', 'tutor' ) ) );
