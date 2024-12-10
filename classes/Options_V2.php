@@ -830,12 +830,12 @@ class Options_V2 {
 								'options'        => array(
 									'flexible' => array(
 										'label' => __( 'Flexible', 'tutor' ),
-										'desc'  => __( 'Students can complete courses anytime in the Flexible mode', 'tutor' )
+										'desc'  => __( 'Students can complete courses anytime in the Flexible mode', 'tutor' ),
 									),
 									'strict'   => array(
 										'label' => __( 'Strict', 'tutor' ),
 										'desc'  => __( 'Students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
-									)
+									),
 								),
 								'desc'           => __( 'Choose when a user can click on the <strong>“Complete Course”</strong> button', 'tutor' ),
 							),
