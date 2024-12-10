@@ -122,7 +122,7 @@ class Course_List {
 	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $category_slug, $course_id, $date, $search ): array {
-		$url = get_pagenum_link();
+		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$all       = self::count_course( 'all', $category_slug, $course_id, $date, $search );
 		$mine      = self::count_course( 'mine', $category_slug, $course_id, $date, $search );

@@ -81,7 +81,7 @@ class Instructors_List {
 	 * @return array
 	 */
 	public function tabs_key_value( $search = '', $course_id = '', $date = '' ): array {
-		$url     = get_pagenum_link();
+		$url     = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 		$approve = self::count_total_instructors( array( 'approved' ), $search, $course_id, $date, 'approved' );
 		$pending = self::count_total_instructors( array( 'pending' ), $search, $course_id, $date, 'pending' );
 		$blocked = self::count_total_instructors( array( 'blocked' ), $search, $course_id, $date, 'blocked' );

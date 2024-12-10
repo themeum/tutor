@@ -401,6 +401,21 @@ class EmailController {
 				continue;
 			}
 
+			/**
+			 * Notification preference check for student.
+			 *
+			 * @since 3.1.0
+			 */
+			if ( self::TO_STUDENTS === $recipient_type ) {
+				$trigger_name = $email_type;
+				$user_id      = $recipient;
+
+				$notification_enabled = apply_filters( 'tutor_is_notification_enabled_for_user', true, 'email', self::TO_STUDENTS, $trigger_name, $user_id );
+				if ( ! $notification_enabled ) {
+					continue;
+				}
+			}
+
 			$user_data = get_userdata( $recipient );
 			$header    = 'Content-Type: ' . $this->get_content_type() . "\r\n";
 			$header    = apply_filters( 'new_order_email_header', $header );

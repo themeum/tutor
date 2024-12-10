@@ -243,7 +243,7 @@ const FormVideoInput = ({
 
   const { openMediaLibrary: openVideoLibrary, resetFiles: resetVideoSelection } = useWPMedia({
     options: {
-      type: (supportedFormats || []).map((format) => `video/${format}`).join(','),
+      type: supportedFormats?.length ? supportedFormats.map((format) => `video/${format}`).join(',') : 'video',
     },
     onChange: handleVideoFileUpdate,
   });

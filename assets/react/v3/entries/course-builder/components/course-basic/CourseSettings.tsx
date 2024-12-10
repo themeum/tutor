@@ -117,10 +117,10 @@ const CourseSettings = () => {
                     <FormInput
                       {...controllerProps}
                       label={__('Enrollment Expiration', 'tutor')}
-                      helpText={__(
-                        "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __("Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.", 'tutor')
+                      }
                       placeholder="0"
                       type="number"
                       isClearable

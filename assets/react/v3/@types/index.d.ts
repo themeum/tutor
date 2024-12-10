@@ -16,6 +16,7 @@ declare global {
     tinymce: any;
     _tutorobject: {
       ajaxurl: string;
+      site_url: string;
       home_url: string;
       site_title: string;
       base_path: string;

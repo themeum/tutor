@@ -1,12 +1,13 @@
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import Button, { type ButtonVariant } from '@Atoms/Button';
-import { colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
+import Button, { type ButtonVariant } from '@Atoms/Button';
+import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
+import type { ModalProps } from '@Components/modals/Modal';
+import { colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
+
 interface StaticConfirmationModalProps extends ModalProps {
-  description?: string;
+  description?: React.ReactNode | string;
   confirmButtonText?: string;
   cancelButtonText?: string;
   confirmButtonVariant?: ButtonVariant;
@@ -24,7 +25,9 @@ const StaticConfirmationModal = ({
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
       <div css={styles.contentWrapper}>
-        <p css={styles.content}>{description ?? __('Once you perform this action this can’t be undone.', 'tutor')}</p>
+        <div css={styles.content}>
+          {description ?? __('Once you perform this action this can’t be undone.', 'tutor')}
+        </div>
         <div css={styles.footerWrapper}>
           <Button variant="text" onClick={() => closeModal({ action: 'CLOSE' })} size="small">
             {cancelButtonText ?? __('Cancel', 'tutor')}

@@ -228,7 +228,7 @@ export const useCreateCouponMutation = () => {
   return useMutation({
     mutationFn: createCoupon,
     onSuccess: (response) => {
-      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_coupons`;
+      window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_coupons`;
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {

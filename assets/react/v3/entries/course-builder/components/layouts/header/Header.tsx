@@ -1,38 +1,44 @@
 import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
+import { useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
 import MagicButton from '@Atoms/MagicButton';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { useModal } from '@Components/modals/Modal';
-import Tracker from '@CourseBuilderComponents/layouts/Tracker';
 import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
 import Logo from '@CourseBuilderComponents/layouts/header/Logo';
+import Tracker from '@CourseBuilderComponents/layouts/Tracker';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
 import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBuilderModal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import config, { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
 
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@Images/pro-placeholders/generate-course.webp';
 
+const courseId = getCourseId();
+
 const Header = () => {
   const form = useFormContext<CourseFormData>();
+  const queryClient = useQueryClient();
   const { currentIndex } = useCourseNavigator();
   const { showModal } = useModal();
-  const isFormDirty = form.formState.isDirty;
 
+  const totalEnrolledStudents = (queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse)
+    ?.total_enrolled_student;
+  const isFormDirty = form.formState.isDirty;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
@@ -90,7 +96,7 @@ const Header = () => {
             <Tracker />
           </div>
 
-          <Show when={currentIndex === 0 && (isOpenAiEnabled || !isTutorPro)}>
+          <Show when={currentIndex === 0 && totalEnrolledStudents === 0 && (isOpenAiEnabled || !isTutorPro)}>
             <span css={styles.divider} />
 
             <div css={styleUtils.flexCenter()}>

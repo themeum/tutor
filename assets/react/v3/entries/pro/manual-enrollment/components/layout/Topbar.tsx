@@ -27,12 +27,12 @@ function Topbar() {
     });
 
     if (response.status_code === 200) {
-      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=enrollments`;
+      handleGoBack();
     }
   }
 
   function handleGoBack() {
-    window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=enrollments`;
+    window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=enrollments`;
   }
 
   return (
