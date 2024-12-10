@@ -5,7 +5,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import config, { tutorConfig } from '@Config/config';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { styleUtils } from '@Utils/style-utils';
 
@@ -100,13 +100,10 @@ const styles = {
   `,
   featuresWithTitle: css`
     ${styleUtils.display.flex('column')}
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     gap: ${spacing[8]};
     ${typography.body('regular')};
-
-    ${Breakpoint.tablet} {
-      width: 100%;
-    }
   `,
   features: css`
     ${styleUtils.display.flex('column')}
