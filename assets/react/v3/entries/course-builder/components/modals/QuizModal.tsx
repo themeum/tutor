@@ -366,7 +366,7 @@ const QuizModal = ({
               triggerRef={cancelRef}
               closePopover={() => setIsConfirmationOpen(false)}
               maxWidth="258px"
-              title={__(`Your quiz has unsaved changes. If you cancel, you'll lose your progress.`, 'tutor')}
+              title={__('Your quiz has unsaved changes. If you cancel, you will lose your progress.', 'tutor')}
               message={__('Are you sure you want to continue?', 'tutor')}
               animationType={AnimationType.slideUp}
               arrow="top"

@@ -1,5 +1,5 @@
-import Button from '@Atoms/Button';
 import Alert from '@Atoms/Alert';
+import Button from '@Atoms/Button';
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -11,12 +11,12 @@ import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useRefundOrderMutation } from '@OrderServices/order';
 import { formatPrice } from '@Utils/currency';
-import { requiredRule } from '@Utils/validation';
 import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller } from 'react-hook-form';
 import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 
 interface RefundModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
@@ -113,10 +113,10 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
           )}
 
           <Alert type="warning" icon="bulb">
-            {__(
-              "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.",
-              'tutor',
-            )}
+            {
+              // prettier-ignore
+              __( "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.", 'tutor')
+            }
           </Alert>
         </div>
         <div css={styles.footer}>

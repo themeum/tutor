@@ -735,7 +735,7 @@ class OrderController {
 	 * @since 3.0.0
 	 */
 	public function tabs_key_value(): array {
-		$url = get_pagenum_link();
+		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$date           = Input::get( 'date', '' );
 		$payment_status = Input::get( 'payment-status', '' );

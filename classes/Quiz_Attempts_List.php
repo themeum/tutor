@@ -205,7 +205,7 @@ class Quiz_Attempts_List {
 	 * @return array
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
-		$url   = get_pagenum_link();
+		$url   = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link());
 		$stats = $this->get_quiz_attempts_stat();
 
 		$tabs = array(

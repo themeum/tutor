@@ -298,10 +298,10 @@ const AssignmentModal = ({
                         </div>
                       }
                       placeholder={__('Select Unlock Date', 'tutor')}
-                      helpText={__(
-                        'This assignment will be available from the given date. Leave empty to make it available immediately.',
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __('This assignment will be available from the given date. Leave empty to make it available immediately.', 'tutor')
+                      }
                     />
                   )}
                 />
@@ -417,10 +417,10 @@ const AssignmentModal = ({
                   placeholder="0"
                   type="number"
                   label={__('File Upload Limit', 'tutor')}
-                  helpText={__(
-                    'Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.',
-                    'tutor',
-                  )}
+                  helpText={
+                    // prettier-ignore
+                    __('Define the number of files that a student can upload in this assignment. Input 0 to disable the option to upload.','tutor')
+                  }
                   selectOnFocus
                 />
               )}

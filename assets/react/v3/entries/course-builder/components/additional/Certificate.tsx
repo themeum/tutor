@@ -26,6 +26,10 @@ import CertificateEmptyState from './CertificateEmptyState';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
 
+interface CertificateProps {
+  isSidebarVisible: boolean;
+}
+
 const certificateTabs: { label: string; value: CertificateTabValue }[] = [
   { label: __('Templates', 'tutor'), value: 'templates' },
   { label: __('Custom Certificates', 'tutor'), value: 'custom_certificates' },
@@ -35,7 +39,7 @@ const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
-const Certificate = () => {
+const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   const queryClient = useQueryClient();
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
@@ -77,6 +81,7 @@ const Certificate = () => {
       setActiveCertificateTab(newCertificate.is_default ? 'templates' : 'custom_certificates');
       setSelectedCertificate(newCertificate.key);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCertificateKey, certificatesData]);
 
   const filteredCertificatesData = certificatesData.filter(
@@ -168,6 +173,7 @@ const Certificate = () => {
           css={styles.certificateWrapper({
             hasCertificates: filteredCertificatesData.length > 0,
             activeCertificateTab,
+            isSidebarVisible,
           })}
         >
           <Show when={activeCertificateTab === 'templates'}>
@@ -240,12 +246,14 @@ const styles = {
   certificateWrapper: ({
     hasCertificates,
     activeCertificateTab,
+    isSidebarVisible,
   }: {
     hasCertificates: boolean;
     activeCertificateTab: CertificateTabValue;
+    isSidebarVisible: boolean;
   }) => css`
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(${isSidebarVisible ? 3 : 4}, 1fr);
     gap: ${spacing[16]};
     padding-top: ${spacing[12]};
 
@@ -258,7 +266,6 @@ const styles = {
 
     ${Breakpoint.smallMobile} {
       grid-template-columns: 1fr 1fr;
-      gap: ${spacing[12]};
     }
   `,
   orientation: css`

@@ -47,7 +47,7 @@ function Topbar() {
   }
 
   function handleGoBack() {
-    window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_coupons`;
+    window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_coupons`;
   }
 
   return (
