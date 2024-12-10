@@ -451,10 +451,10 @@ const LessonModal = ({
                         </div>
                       }
                       placeholder={__('Select Unlock Date', 'tutor')}
-                      helpText={__(
-                        'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __('This lesson will be available from the given date. Leave empty to make it available immediately.', 'tutor')
+                      }
                     />
                   )}
                 />
@@ -523,19 +523,19 @@ const LessonModal = ({
                           {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
                         </div>
                       }
-                      helpText={__(
-                        'If checked, any user/guest can view this lesson without enrolling in the course.',
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __( 'If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
+                      }
                     />
                   )}
                 />
                 <Show when={form.watch('lesson_preview')}>
                   <div css={styles.previewInfo}>
-                    {__(
-                      'This lesson is now available for preview. Users and guests can view it without enrolling in the course.',
-                      'tutor',
-                    )}
+                    {
+                      // prettier-ignore
+                      __('This lesson is now available for preview. Users and guests can view it without enrolling in the course.', 'tutor')
+                    }
                   </div>
                 </Show>
               </div>

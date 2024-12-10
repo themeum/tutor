@@ -97,10 +97,10 @@ const CustomEditorOverlay = ({
                 title: __('Back to WordPress Editor', 'tutor'),
                 description: (
                   <Alert type="warning" icon="warning">
-                    {__(
-                      'Warning: Switching to the WordPress default editor may cause issues with your current layout, design, and content.',
-                      'tutor',
-                    )}
+                    {
+                      // prettier-ignore
+                      __( 'Warning: Switching to the WordPress default editor may cause issues with your current layout, design, and content.', 'tutor')
+                    }
                   </Alert>
                 ),
                 confirmButtonText: __('Confirm', 'tutor'),

@@ -1398,7 +1398,7 @@ class Options_V2 {
 										'label'       => __( 'Requirements', 'tutor' ),
 										'label_title' => __( 'Enable', 'tutor' ),
 										'default'     => 'on',
-										'desc'        => __( 'Enable to show courses requirements setion', 'tutor' ),
+										'desc'        => __( 'Enable to show courses requirements section', 'tutor' ),
 									),
 									array(
 										'key'         => 'enable_course_target_audience',
