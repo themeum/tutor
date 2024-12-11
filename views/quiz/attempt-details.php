@@ -396,7 +396,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														?>
 															</span>
 														</div>
-													<?php echo wp_kses_post( apply_filters( 'tutor_attempt_answer_question_type_icon', ob_get_clean(), $answer ) ); ?>
+													<?php echo wp_kses_post( apply_filters( 'tutor_question_type_icon', ob_get_clean(), $answer ) ); ?>
 												</td>
 												<?php
 											break;
