@@ -258,8 +258,8 @@ const Additional = () => {
                       emptyStateImage={attachmentsPro}
                       emptyStateImage2x={attachmentsPro2x}
                       title={__(
-                        'Provide additional resources like downloadable files and reference materials.',
-                        'tutor',
+                        // prettier-ignore
+                        __( 'Provide additional resources like downloadable files and reference materials.', 'tutor'),
                       )}
                     />
                   </Show>

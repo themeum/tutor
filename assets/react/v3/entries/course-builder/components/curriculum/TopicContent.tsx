@@ -77,8 +77,20 @@ const icons = {
   },
 } as const;
 
+const confirmationMessages = {
+  tutor_assignments:
+    // prettier-ignore
+    __('Are you sure you want to delete this assignment? All existing assignment submissions will be permanently deleted.', 'tutor'),
+  tutor_quiz:
+    // prettier-ignore
+    __('Are you sure you want to delete this quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
+  tutor_h5p_quiz:
+    // prettier-ignore
+    __( 'Are you sure you want to delete this interactive quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
+} as const;
+
 const modalComponent: {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
 } = {
   lesson: LessonModal,
@@ -235,8 +247,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
               width={24}
               height={24}
               style={css`
-								color: ${icon.color};
-							`}
+                color: ${icon.color};
+              `}
             />
           </div>
           <div data-bar-icon>
@@ -345,7 +357,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         closePopover={noop}
         maxWidth="258px"
         title={sprintf(__('Delete "%s"', 'tutor'), content.title)}
-        message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
+        message={
+          confirmationMessages[type as keyof typeof confirmationMessages] ||
+          __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')
+        }
         animationType={AnimationType.slideUp}
         arrow="auto"
         hideArrow
@@ -391,7 +406,8 @@ const styles = {
       height: 24px;
     }
 
-    :hover, :focus-within {
+    :hover,
+    :focus-within {
       border-color: ${colorTokens.stroke.border};
       background-color: ${colorTokens.background.white};
 
@@ -407,35 +423,31 @@ const styles = {
       }
     }
 
-    ${
-      isMeetingSelected &&
-      css`
-        border-color: ${colorTokens.stroke.border};
-        background-color: ${colorTokens.background.white};
-        [data-content-icon] {
-          display: flex;
-        }
-        [data-bar-icon] {
-          display: none;
-        }
-        [data-actions] {
-          opacity: 1;
-        }
-      `
-    }
+    ${isMeetingSelected &&
+    css`
+      border-color: ${colorTokens.stroke.border};
+      background-color: ${colorTokens.background.white};
+      [data-content-icon] {
+        display: flex;
+      }
+      [data-bar-icon] {
+        display: none;
+      }
+      [data-actions] {
+        opacity: 1;
+      }
+    `}
 
-    ${
-      isOverlay &&
-      css`
-        box-shadow: ${shadow.drag};
-        border-color: ${colorTokens.stroke.border};
-        background-color: ${colorTokens.background.white};
+    ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+      border-color: ${colorTokens.stroke.border};
+      background-color: ${colorTokens.background.white};
 
-        [data-actions] {
-          opacity: 1;
-        }
-      `
-    }
+      [data-actions] {
+        opacity: 1;
+      }
+    `}
   `,
   title: css`
     ${typography.caption()};
@@ -458,9 +470,8 @@ const styles = {
     [data-bar-icon] {
       display: none;
     }
-    ${
-      isDragging &&
-      css`
+    ${isDragging &&
+    css`
       [data-content-icon] {
         display: none;
       }
@@ -468,8 +479,7 @@ const styles = {
         display: block;
       }
       cursor: grabbing;
-    `
-    }
+    `}
   `,
   actions: css`
     display: flex;
