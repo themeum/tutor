@@ -410,7 +410,7 @@ const styles = {
     grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '352px 1fr 280px') : '1fr'};
     height: 100%;
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       width: 100%;
       grid-template-columns: 1fr;
       height: max-content;
@@ -437,7 +437,7 @@ const styles = {
       padding-top: ${spacing[24]};
       padding-inline: 352px 352px; // 352px is the width of the left and right side
 
-      ${Breakpoint.tablet} {
+      ${Breakpoint.smallTablet} {
         padding: ${spacing[16]} ${spacing[8]} ${spacing[24]} ${spacing[8]};
         margin: 0 auto;
       }

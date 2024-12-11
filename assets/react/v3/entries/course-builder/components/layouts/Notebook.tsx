@@ -393,7 +393,7 @@ const styles = {
     background-color: ${colorTokens.background.active};
     color: ${colorTokens.text.title};
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       transform: translate(-50%, -50%) rotate(0deg);
     }
   `,

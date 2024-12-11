@@ -19,7 +19,7 @@ import type { ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
@@ -178,8 +178,8 @@ const AssignmentModal = ({
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
       icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-      title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
-      subtitle={subtitle}
+      title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+      subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
       maxWidth={1070}
       actions={
         isFormDirty && (
@@ -458,7 +458,7 @@ const styles = {
     height: 100%;
     padding-inline: ${spacing[32]};
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       grid-template-columns: 1fr;
       padding-inline: ${spacing[24]};
     }
@@ -477,7 +477,7 @@ const styles = {
     top: 0;
     z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       position: unset;
       padding-right: 0;
     }
@@ -490,7 +490,7 @@ const styles = {
     padding-block: ${spacing[24]};
     padding-left: ${spacing[32]};
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       border-left: none;
       padding-left: 0;
     }

@@ -223,7 +223,7 @@ const Additional = () => {
           </Show>
         </div>
 
-        <Show when={CURRENT_VIEWPORT.isAboveDesktop}>
+        <Show when={CURRENT_VIEWPORT.isAboveTablet}>
           <Navigator />
         </Show>
       </div>
@@ -296,7 +296,7 @@ const Additional = () => {
           <LiveClass />
         </div>
       </Show>
-      <Show when={!CURRENT_VIEWPORT.isAboveDesktop}>
+      <Show when={!CURRENT_VIEWPORT.isAboveTablet}>
         <Navigator />
       </Show>
     </div>
@@ -310,7 +310,7 @@ const styles = {
     grid-template-columns: ${showSidebar ? '1fr 338px' : '1fr'};
     width: 100%;
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       grid-template-columns: 1fr;
       gap: ${spacing[24]};
     }
@@ -320,7 +320,7 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[32]};
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       padding: 0;
       padding-top: ${spacing[16]};
       gap: ${spacing[16]};
@@ -362,7 +362,7 @@ const styles = {
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
     gap: ${spacing[16]};
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       padding: 0;
       padding-top: ${spacing[24]};
       border-left: none;

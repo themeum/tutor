@@ -228,7 +228,7 @@ const styles = {
     background-color: ${colorTokens.background.default};
     overflow: hidden;
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       grid-template-columns: 1fr;
     }
   `,

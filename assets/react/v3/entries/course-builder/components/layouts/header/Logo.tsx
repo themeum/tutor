@@ -34,7 +34,7 @@ const styles = {
       object-position: center;
     }
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       padding-left: ${spacing[24]};
     }
 

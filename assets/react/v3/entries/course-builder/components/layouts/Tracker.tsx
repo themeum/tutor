@@ -113,7 +113,7 @@ const styles = {
       margin-inline: 4px;
     }
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       [data-element-name]:not([data-isActive='true']) {
         display: none;
       }

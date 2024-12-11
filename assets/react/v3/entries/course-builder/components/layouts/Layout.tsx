@@ -66,7 +66,7 @@ const styles = {
     min-height: calc(100vh - ${headerHeight}px);
     margin: 0 auto;
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       padding-inline: ${spacing[12]};
       padding-bottom: ${spacing[56]};
     }

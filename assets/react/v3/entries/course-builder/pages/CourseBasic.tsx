@@ -137,13 +137,13 @@ const CourseBasic = () => {
 
           <CourseSettings />
         </div>
-        <Show when={CURRENT_VIEWPORT.isAboveDesktop}>
+        <Show when={CURRENT_VIEWPORT.isAboveTablet}>
           <Navigator styleModifier={styles.navigator} />
         </Show>
       </div>
 
       <CourseBasicSidebar />
-      <Show when={!CURRENT_VIEWPORT.isAboveDesktop}>
+      <Show when={!CURRENT_VIEWPORT.isAboveTablet}>
         <Navigator styleModifier={styles.navigator} />
       </Show>
     </div>
@@ -159,7 +159,7 @@ const styles = {
     gap: ${spacing[32]};
     width: 100%;
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       grid-template-columns: 1fr;
       gap: 0;
     }
@@ -175,7 +175,7 @@ const styles = {
       z-index: ${zIndex.header + 1};
     `}
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       padding-top: ${spacing[16]};
       position: unset;
     }
@@ -213,7 +213,7 @@ const styles = {
   navigator: css`
     margin-top: ${spacing[40]};
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       margin-top: 0;
     }
   `,

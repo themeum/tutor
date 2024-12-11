@@ -276,7 +276,7 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[16]};
 
-    ${Breakpoint.tablet} {
+    ${Breakpoint.smallTablet} {
       border-left: none;
       border-top: 1px solid ${colorTokens.stroke.divider};
       padding-block: ${spacing[16]};
