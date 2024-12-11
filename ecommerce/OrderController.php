@@ -534,7 +534,15 @@ class OrderController {
 			$order_data->order_status   = $update_data['order_status'];
 			do_action( 'tutor_after_order_refund', $order_id, $amount, $reason );
 
-			$this->json_response( __( 'Order refund successful', 'tutor' ) );
+			$res_msg = __( 'Order refund successful', 'tutor' );
+
+			try {
+				$this->refund_from_payment_gateway( $order_id, $amount, $reason );
+				$this->json_response( $res_msg );
+			} catch ( \Throwable $th ) {
+				$res_msg = __( 'Order refunded successfully, but pending payment gateway issuance.', 'tutor' );
+				$this->json_response( $res_msg );
+			}
 		} else {
 			$this->json_response(
 				__( 'Failed to make refund', 'tutor' ),
@@ -1097,6 +1105,68 @@ class OrderController {
 		}
 
 		return ValidationHelper::validate( $validation_rules, $data );
+	}
+
+	/**
+	 * Process refund from payment gateway
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param int    $order_id Order id.
+	 * @param string $amount Refund amount.
+	 * @param string $reason Refund reason.
+	 *
+	 * @return void
+	 */
+	public function refund_from_payment_gateway( $order_id, $amount, $reason ) {
+		$order = $this->model->get_order_by_id( $order_id );
+		if ( $order ) {
+			if ( ! $this->model->is_manual_payment( $order->payment_method ) ) {
+
+				$refund_data = $this->prepare_refund_data( $order, $amount, $reason );
+				try {
+					$payment_gateway = Ecommerce::get_payment_gateway_object( $order->payment_method );
+					if ( $payment_gateway ) {
+						$payment_gateway->make_refund( $refund_data );
+					}
+				} catch ( \Throwable $th ) {
+					tutor_log( $th );
+				}
+			}
+		}
+	}
+
+	/**
+	 * Prepare refund data
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param object $order Order object.
+	 * @param string $amount Raw amount.
+	 * @param string $reason Refund reason.
+	 *
+	 * @return object
+	 */
+	public function prepare_refund_data( $order, $amount, $reason ) {
+		$currency = tutor_get_currencies_info_by_code( tutor_utils()->get_option( OptionKeys::CURRENCY_CODE ) );
+
+		$refund_data = array(
+			'type'            => 'refund',
+			'amount'          => $amount,
+			'payment_payload' => $order->payment_payload, // JSON string representing the  payment payload.
+			'order_id'        => $order->id,
+			'reason'          => $reason,
+			'refund_type'     => $order->net_payment == $amount ? 'full' : 'partial',
+			'currency'        => (object) array(
+				'code'         => $currency['code'],
+				'symbol'       => $currency['symbol'],
+				'name'         => $currency['name'],
+				'locale'       => $currency['locale'],
+				'numeric_code' => $currency['numeric_code'],
+			),
+		);
+
+		return (object) $refund_data;
 	}
 
 }
