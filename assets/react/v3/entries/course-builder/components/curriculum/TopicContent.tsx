@@ -78,18 +78,15 @@ const icons = {
 } as const;
 
 const confirmationMessages = {
-  tutor_assignments: __(
-    'Are you sure you want to delete this assignment? All existing assignment submissions will be permanently deleted.',
-    'tutor',
-  ),
-  tutor_quiz: __(
-    'Are you sure you want to delete this quiz? All existing quiz attempts will be permanently deleted.',
-    'tutor',
-  ),
-  tutor_h5p_quiz: __(
-    'Are you sure you want to delete this interactive quiz? All existing quiz attempts will be permanently deleted.',
-    'tutor',
-  ),
+  tutor_assignments:
+    // prettier-ignore
+    __('Are you sure you want to delete this assignment? All existing assignment submissions will be permanently deleted.', 'tutor'),
+  tutor_quiz:
+    // prettier-ignore
+    __('Are you sure you want to delete this quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
+  tutor_h5p_quiz:
+    // prettier-ignore
+    __( 'Are you sure you want to delete this interactive quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
 } as const;
 
 const modalComponent: {
