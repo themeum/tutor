@@ -167,7 +167,7 @@ abstract class GatewayBase {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int   $order_id Order ID.
+	 * @param int $order_id Order ID.
 	 *
 	 * @throws \Throwable Throw throwable if error occur.
 	 * @throws \InvalidArgumentException Throw throwable if error occur.
@@ -201,6 +201,31 @@ abstract class GatewayBase {
 			// Catch and rethrow any exception.
 			throw $th;
 		}
+	}
+
+	/**
+	 * Make refund against a order
+	 *
+	 * @since 3.1.0
+	 *
+	 * @param object $refund_data Refund data.
+	 *
+	 * @throws \InvalidArgumentException Throw throwable if error occur.
+	 *
+	 * @return void
+	 */
+	public function make_refund( object $refund_data ) {
+		// Check if payment object is initialized.
+		if ( ! $this->payment ) {
+			throw new \InvalidArgumentException( 'Payment object is not initialized.' );
+		}
+
+		if ( ! method_exists( $this->payment, 'createRefund' ) ) {
+			throw new \InvalidArgumentException( 'Refund from payment gateway is not available.' );
+		}
+
+		$this->payment->setData( $refund_data );
+		$this->payment->createRefund();
 	}
 
 }
