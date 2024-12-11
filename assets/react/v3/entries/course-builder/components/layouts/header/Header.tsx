@@ -112,7 +112,7 @@ const Header = () => {
             <div css={styleUtils.flexCenter()}>
               <MagicButton variant="plain" css={styles.magicButton} onClick={handleAiButtonClick}>
                 <SVGIcon name="magicAiColorize" width={24} height={24} />
-                <Show when={CURRENT_VIEWPORT.isAboveDesktop}>{__('Generate with AI', 'tutor')}</Show>
+                <Show when={CURRENT_VIEWPORT.isAboveTablet}>{__('Generate with AI', 'tutor')}</Show>
               </MagicButton>
             </div>
           </Show>
@@ -227,6 +227,7 @@ const styles = {
     ${Breakpoint.smallMobile} {
       grid-area: closeButton;
       order: 1;
+      margin-right: ${spacing[8]};
     }
   `,
   closeButton: css`

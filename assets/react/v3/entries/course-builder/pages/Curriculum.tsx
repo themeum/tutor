@@ -542,7 +542,7 @@ const styles = {
     margin-top: ${spacing[32]};
     width: 100%;
 
-    ${Breakpoint.smallMobile} {
+    ${Breakpoint.smallTablet} {
       margin-top: ${spacing[16]};
     }
   `,
