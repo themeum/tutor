@@ -10,17 +10,17 @@
 
 namespace Tutor\Ecommerce;
 
-use TUTOR\Backend_Page_Trait;
-use TUTOR\Earnings;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\QueryHelper;
-use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
+use TUTOR\Earnings;
+use Tutor\Models\OrderModel;
+use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
-use Tutor\Models\OrderActivitiesModel;
-use Tutor\Models\OrderModel;
+use Tutor\Helpers\QueryHelper;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\ValidationHelper;
+use Tutor\Models\OrderActivitiesModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1125,9 +1125,10 @@ class OrderController {
 
 				$refund_data = $this->prepare_refund_data( $order, $amount, $reason );
 				try {
-					$payment_gateway = Ecommerce::get_payment_gateway_object( $order->payment_method );
-					if ( $payment_gateway ) {
-						$payment_gateway->make_refund( $refund_data );
+					$payment_gateway_ref = Ecommerce::payment_gateways_with_ref( $order->payment_method );
+					if ( $payment_gateway_ref ) {
+						$gateway_obj = Ecommerce::get_payment_gateway_object( $payment_gateway_ref['gateway_class'] );
+						$gateway_obj->make_refund( $refund_data );
 					}
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
@@ -1153,7 +1154,7 @@ class OrderController {
 		$refund_data = array(
 			'type'            => 'refund',
 			'amount'          => $amount,
-			'payment_payload' => $order->payment_payload, // JSON string representing the  payment payload.
+			'payment_payload' => $order->payment_payloads, // JSON string representing the  payment payload.
 			'order_id'        => $order->id,
 			'reason'          => $reason,
 			'refund_type'     => $order->net_payment == $amount ? 'full' : 'partial',
