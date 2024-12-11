@@ -241,27 +241,27 @@ class Addons {
 			),
 			'social-login'             => array(
 				'name'        => __( 'Social Login', 'tutor' ),
-				'description' => __( 'Let users register & login through social network like Facebook, Google, etc.', 'tutor' ),
+				'description' => __( 'Let users register & login through social networks.', 'tutor' ),
 			),
 			'content-drip'             => array(
 				'name'        => __( 'Content Drip', 'tutor' ),
-				'description' => 'Unlock lessons by schedule or when students meet a specific condition.',
+				'description' => __( 'Unlock lessons by schedule or when students meet a specific condition.', 'tutor' ),
 			),
 			'tutor-multi-instructors'  => array(
 				'name'        => __( 'Tutor Multi Instructors', 'tutor' ),
-				'description' => 'Collaborate and add multiple instructors to a course.',
+				'description' => __( 'Collaborate and add multiple instructors to a course.', 'tutor' ),
 			),
 			'tutor-assignments'        => array(
 				'name'        => __( 'Tutor Assignments', 'tutor' ),
-				'description' => 'Assess student learning with assignments.',
+				'description' => __( 'Assess student learning with assignments.', 'tutor' ),
 			),
 			'tutor-course-preview'     => array(
 				'name'        => __( 'Tutor Course Preview', 'tutor' ),
-				'description' => 'Offer free previews of specific lessons before enrollment.',
+				'description' => __( 'Offer free previews of specific lessons before enrollment.', 'tutor' ),
 			),
 			'tutor-course-attachments' => array(
 				'name'        => __( 'Tutor Course Attachments', 'tutor' ),
-				'description' => 'Add unlimited attachments/ private files to any Tutor course',
+				'description' => __( 'Add unlimited attachments/ private files to any Tutor course', 'tutor' ),
 			),
 			'google-meet'              => array(
 				'name'        => __( 'Tutor Google Meet Integration', 'tutor' ),
@@ -276,11 +276,11 @@ class Addons {
 				'description' => __( 'Send automated and customized emails for various Tutor events.', 'tutor' ),
 			),
 			'calendar'                 => array(
-				'name'        => 'Calendar',
+				'name'        => __( 'Calendar', 'tutor' ),
 				'description' => __( 'Enable to let students view all your course events in one place.', 'tutor' ),
 			),
 			'tutor-notifications'      => array(
-				'name'        => 'Notifications',
+				'name'        => __( 'Notifications', 'tutor' ),
 				'description' => __( 'Keep students and instructors notified of course events on their dashboard.', 'tutor' ),
 			),
 			'google-classroom'         => array(
@@ -289,7 +289,7 @@ class Addons {
 			),
 			'tutor-zoom'               => array(
 				'name'        => __( 'Tutor Zoom Integration', 'tutor' ),
-				'description' => __( 'Connect Tutor LMS with Zoom to host live online classes. Students can attend live classes right from the lesson page.', 'tutor' ),
+				'description' => __( 'Connect Tutor LMS with Zoom to host live online classes.', 'tutor' ),
 			),
 			'quiz-import-export'       => array(
 				'name'        => __( 'Quiz Export/Import', 'tutor' ),
@@ -321,23 +321,24 @@ class Addons {
 			),
 			'pmpro'                    => array(
 				'name'        => __( 'Paid Memberships Pro', 'tutor' ),
-				'description' => __( 'Maximize revenue by selling membership access to all of your courses.', 'tutor' ),
+				'description' => __( 'Boost revenue by selling course memberships.', 'tutor' ),
 			),
 			'restrict-content-pro'     => array(
 				'name'        => __( 'Restrict Content Pro', 'tutor' ),
 				'description' => __( 'Enable to manage content access through Restrict Content Pro. ', 'tutor' ),
 			),
 			'tutor-weglot'             => array(
-				'name'        => 'Weglot',
-				'description' => __( 'Translate & manage multilingual courses for global reach with full edit control.', 'tutor' ),
+				'name'        => __( 'Weglot', 'tutor' ),
+				'description' => __( 'Translate & manage multilingual courses for global reach.', 'tutor' ),
 			),
 			'tutor-wpml'               => array(
-				'name'        => __( 'WPML Multilingual CMS', 'tutor' ),
-				'description' => __( 'Create multilingual courses, lessons, dashboard and more for a global audience.', 'tutor' ),
+				'name'        => __( 'WPML', 'tutor' ),
+				'description' => __( 'Create multilingual courses, lessons, dashboard and more.', 'tutor' ),
 			),
 			'h5p'                      => array(
-				'name'        => __( 'H5P Integration', 'tutor' ),
+				'name'        => __( 'H5P', 'tutor' ),
 				'description' => __( 'Integrate H5P to add interactivity and engagement to your courses.', 'tutor' ),
+				'is_new'      => true,
 			),
 		);
 
