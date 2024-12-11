@@ -88,7 +88,7 @@ class Withdraw_Requests_List {
 			),
 			array(
 				'key'   => 'rejected',
-				'title' => __( 'Rejected', 'tutor-pro' ),
+				'title' => __( 'Rejected', 'tutor' ),
 				'value' => $rejected,
 				'url'   => $url . '&data=rejected',
 			),
