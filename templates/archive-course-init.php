@@ -126,7 +126,7 @@ if ( isset( $the_query ) ) {
 	?>
 
 <div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode( $GLOBALS['tutor_course_archive_arg'] ) ); ?>">
-	<?php if ( $has_course_filters && in_array( 'search', $supported_filters_keys ) ) : ?>
+	<?php if ( $has_course_filters ) : ?>
 		<div class="tutor-d-block tutor-d-xl-none tutor-mb-32">
 			<div class="tutor-d-flex tutor-align-center tutor-justify-between">
 				<span class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></span>
