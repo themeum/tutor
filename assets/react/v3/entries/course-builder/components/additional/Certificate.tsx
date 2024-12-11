@@ -9,7 +9,7 @@ import Tooltip from '@Atoms/Tooltip';
 import Tabs from '@Molecules/Tabs';
 
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -32,7 +32,10 @@ interface CertificateProps {
 
 const certificateTabs: { label: string; value: CertificateTabValue }[] = [
   { label: __('Templates', 'tutor'), value: 'templates' },
-  { label: __('Custom Certificates', 'tutor'), value: 'custom_certificates' },
+  {
+    label: __(`Custom ${CURRENT_VIEWPORT.isAboveSmallMobile ? ' Certificates' : ''}`, 'tutor'),
+    value: 'custom_certificates',
+  },
 ];
 
 const courseId = getCourseId();
@@ -126,7 +129,12 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
     <Show when={isTutorPro && isCertificateAddonEnabled} fallback={<CertificateEmptyState />}>
       <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
-          <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
+          <Tabs
+            wrapperCss={styles.tabsWrapper}
+            tabList={certificateTabs}
+            activeTab={activeCertificateTab}
+            onChange={handleTabChange}
+          />
           <div css={styles.orientation}>
             <Show when={hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab}>
               <Tooltip delay={200} content={__('Landscape', 'tutor')}>
@@ -242,6 +250,11 @@ export default Certificate;
 const styles = {
   tabs: css`
     position: relative;
+  `,
+  tabsWrapper: css`
+    button {
+      min-width: auto;
+    }
   `,
   certificateWrapper: ({
     hasCertificates,
