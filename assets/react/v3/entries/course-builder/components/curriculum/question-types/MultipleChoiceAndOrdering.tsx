@@ -253,34 +253,22 @@ const MultipleChoiceAndOrdering = () => {
 export default MultipleChoiceAndOrdering;
 
 const styles = {
-  optionWrapper: ({
-    isOrdering,
-  }: {
-    isOrdering: boolean;
-  }) => css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[12]};
-      
-      ${
-        isOrdering &&
-        css`
-          padding-left: ${spacing[40]};
-        `
-      }
-    `,
-  addOptionButtonWrapper: ({
-    isOrdering,
-  }: {
-    isOrdering: boolean;
-  }) => css`
+  optionWrapper: ({ isOrdering }: { isOrdering: boolean }) => css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+
+    ${isOrdering &&
+    css`
+      padding-left: ${spacing[40]};
+    `}
+  `,
+  addOptionButtonWrapper: ({ isOrdering }: { isOrdering: boolean }) => css`
     margin-left: ${spacing[48]};
 
-    ${
-      isOrdering &&
-      css`
-        margin-left: ${spacing[8]};
-      `
-    }
+    ${isOrdering &&
+    css`
+      margin-left: ${spacing[8]};
+    `}
   `,
   addOptionButton: css`
     color: ${colorTokens.text.brand};

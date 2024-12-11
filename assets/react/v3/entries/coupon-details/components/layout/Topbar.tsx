@@ -83,11 +83,7 @@ function Topbar() {
               >
                 {() => (
                   <p css={styles.updateMessage}>
-                    {sprintf(
-                      __('Updated by %s at %s', 'tutor'),
-                      coupon.coupon_update_by,
-                      coupon.updated_at_readable
-                    )}
+                    {sprintf(__('Updated by %s at %s', 'tutor'), coupon.coupon_update_by, coupon.updated_at_readable)}
                   </p>
                 )}
               </Show>
@@ -115,33 +111,33 @@ export default Topbar;
 
 const styles = {
   wrapper: css`
-		height: ${TOPBAR_HEIGHT}px;
-		background: ${colorTokens.background.white};
-		position: sticky;
-		top: 32px;
-		z-index: ${zIndex.positive};
-	`,
+    height: ${TOPBAR_HEIGHT}px;
+    background: ${colorTokens.background.white};
+    position: sticky;
+    top: 32px;
+    z-index: ${zIndex.positive};
+  `,
   innerWrapper: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		height: 100%;
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+  `,
   headerContent: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
   left: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+  `,
   right: css`
-		display: flex;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    gap: ${spacing[12]};
+  `,
   updateMessage: css`
-		${typography.body()};
-		color: ${colorTokens.text.subdued};
-	`,
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
+  `,
 };

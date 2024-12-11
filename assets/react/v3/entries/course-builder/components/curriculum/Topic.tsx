@@ -176,28 +176,26 @@ const styles = {
   wrapper: ({ isActive = false, isOverlay = false }) => css`
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
-    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      border-color 0.3s ease-in-out;
     background-color: ${colorTokens.bg.white};
     width: 100%;
 
-    ${
-      isActive &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-        background-color: ${colorTokens.background.hover};
-      `
-    }
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+      background-color: ${colorTokens.background.hover};
+    `}
 
     :hover {
       background-color: ${colorTokens.background.hover};
     }
 
-    ${
-      isOverlay &&
-      css`
+    ${isOverlay &&
+    css`
       box-shadow: ${shadow.drag};
-    `
-    }
+    `}
   `,
   content: css`
     padding: ${spacing[16]};

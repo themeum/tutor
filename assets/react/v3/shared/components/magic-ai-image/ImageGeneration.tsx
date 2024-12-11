@@ -246,53 +246,53 @@ export const ImageGeneration = () => {
 
 const styles = {
   images: css`
-		display: grid;
-		grid-template-columns: repeat(2, minmax(300px, 1fr));
+    display: grid;
+    grid-template-columns: repeat(2, minmax(300px, 1fr));
     grid-template-rows: repeat(2, minmax(300px, 1fr));
-		gap: ${spacing[12]};
+    gap: ${spacing[12]};
     align-self: start;
     margin-block: ${spacing[24]};
-	`,
+  `,
   fields: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   promptWrapper: css`
-		position: relative;
+    position: relative;
     textarea {
       padding-bottom: ${spacing[40]} !important;
     }
-	`,
+  `,
   inspireButton: css`
-		${styleUtils.resetButton};	
-		${typography.small()};
-		position: absolute;
-		height: 28px;
-		bottom: ${spacing[12]};
-		left: ${spacing[12]};
-		border: 1px solid ${colorTokens.stroke.brand};
-		border-radius: ${borderRadius[4]};
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		color: ${colorTokens.text.brand};
-		padding-inline: ${spacing[12]};
-		background-color: ${colorTokens.background.white};
+    ${styleUtils.resetButton};
+    ${typography.small()};
+    position: absolute;
+    height: 28px;
+    bottom: ${spacing[12]};
+    left: ${spacing[12]};
+    border: 1px solid ${colorTokens.stroke.brand};
+    border-radius: ${borderRadius[4]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    color: ${colorTokens.text.brand};
+    padding-inline: ${spacing[12]};
+    background-color: ${colorTokens.background.white};
 
-		&:hover {
-			background-color: ${colorTokens.background.brand};
-			color: ${colorTokens.text.white};
-		}
+    &:hover {
+      background-color: ${colorTokens.background.brand};
+      color: ${colorTokens.text.white};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
     }
 
-		&:disabled {
-			background-color: ${colorTokens.background.disable};
-			color: ${colorTokens.text.disable};
-		}
-	`,
+    &:disabled {
+      background-color: ${colorTokens.background.disable};
+      color: ${colorTokens.text.disable};
+    }
+  `,
 };

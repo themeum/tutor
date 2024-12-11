@@ -143,14 +143,12 @@ const styles = {
     overflow-y: auto;
     border-radius: ${borderRadius[6]};
 
-    ${
-      isEdit &&
-      css`
-        padding-inline: 0;
-        max-height: unset;
-        overflow: unset;
-      `
-    }
+    ${isEdit &&
+    css`
+      padding-inline: 0;
+      max-height: unset;
+      overflow: unset;
+    `}
   `,
   container: ({ isEdit, isDisabled }: { isEdit: boolean; isDisabled: boolean }) => css`
     position: relative;
@@ -183,26 +181,22 @@ const styles = {
       color: ${colorTokens.text.title};
     }
 
-    ${
-      !isDisabled &&
-      css`
-          &:hover {
-          background-color: ${!isEdit && colorTokens.background.white};
-          color: ${colorTokens.text.subdued};
+    ${!isDisabled &&
+    css`
+      &:hover {
+        background-color: ${!isEdit && colorTokens.background.white};
+        color: ${colorTokens.text.subdued};
 
-          [data-action-buttons] {
-            opacity: 1;
-          }
+        [data-action-buttons] {
+          opacity: 1;
         }
-      `
-    }
+      }
+    `}
 
-    ${
-      isEdit &&
-      css`
-        padding-inline: 0;
-      `
-    }
+    ${isEdit &&
+    css`
+      padding-inline: 0;
+    `}
   `,
   placeholder: css`
     ${typography.caption()}
@@ -219,12 +213,10 @@ const styles = {
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
 
-    ${
-      isEdit &&
-      css`
-        opacity: 1;
-      `
-    }
+    ${isEdit &&
+    css`
+      opacity: 1;
+    `}
   `,
   overlay: css`
     position: absolute;

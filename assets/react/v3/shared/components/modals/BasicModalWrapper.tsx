@@ -86,121 +86,103 @@ const BasicModalWrapper = ({
 export default BasicModalWrapper;
 
 const styles = {
-  container: ({
-    isFullScreen,
-  }: {
-    isFullScreen?: boolean;
-  }) => css`
-		position: relative;
-		background: ${colorTokens.background.white};
-		max-width: 1218px;
-		box-shadow: ${shadow.modal};
-		border-radius: ${borderRadius[10]};
-		overflow: hidden;
-		top: 50%;
-		transform: translateY(-50%);
-		
-		${
-      isFullScreen &&
-      css`
-				max-width: 100vw;
-				width: 100vw;
-				height: 95vh;
-			`
-    }
+  container: ({ isFullScreen }: { isFullScreen?: boolean }) => css`
+    position: relative;
+    background: ${colorTokens.background.white};
+    max-width: 1218px;
+    box-shadow: ${shadow.modal};
+    border-radius: ${borderRadius[10]};
+    overflow: hidden;
+    top: 50%;
+    transform: translateY(-50%);
 
-		${Breakpoint.smallTablet} {
-			width: 90%;
-		}
-	`,
-  header: ({
-    hasEntireHeader,
-  }: {
-    hasEntireHeader?: boolean;
-  }) => css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-		height: ${!hasEntireHeader ? `${modal.BASIC_MODAL_HEADER_HEIGHT}px` : 'auto'};
-		background: ${colorTokens.background.white};
-		border-bottom: ${!hasEntireHeader ? `1px solid ${colorTokens.stroke.divider}` : 'none'};
-		padding-inline: ${spacing[16]};
-	`,
+    ${isFullScreen &&
+    css`
+      max-width: 100vw;
+      width: 100vw;
+      height: 95vh;
+    `}
+
+    ${Breakpoint.smallTablet} {
+      width: 90%;
+    }
+  `,
+  header: ({ hasEntireHeader }: { hasEntireHeader?: boolean }) => css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: ${!hasEntireHeader ? `${modal.BASIC_MODAL_HEADER_HEIGHT}px` : 'auto'};
+    background: ${colorTokens.background.white};
+    border-bottom: ${!hasEntireHeader ? `1px solid ${colorTokens.stroke.divider}` : 'none'};
+    padding-inline: ${spacing[16]};
+  `,
   headerContent: css`
-		place-self: center start;
-		display: inline-flex;
-		align-items: center;
-		gap: ${spacing[12]};
-	`,
+    place-self: center start;
+    display: inline-flex;
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
   iconWithTitle: css`
-		display: inline-flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		color: ${colorTokens.icon.default};
-	`,
+    display: inline-flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    color: ${colorTokens.icon.default};
+  `,
   title: css`
-		${typography.body('medium')};
-		color: ${colorTokens.text.title};
-	`,
+    ${typography.body('medium')};
+    color: ${colorTokens.text.title};
+  `,
   subtitle: css`
-		${styleUtils.text.ellipsis(1)}
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-	`,
+    ${styleUtils.text.ellipsis(1)}
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+  `,
   actionsWrapper: ({ hasEntireHeader }: { hasEntireHeader: boolean }) => css`
-		place-self: center end;
-		display: inline-flex;
-		gap: ${spacing[16]};
-    
-    ${
-      hasEntireHeader &&
-      css`
-        position: absolute;
-        right: ${spacing[16]};
-        top: ${spacing[16]};
-      `
-    }
-	`,
+    place-self: center end;
+    display: inline-flex;
+    gap: ${spacing[16]};
+
+    ${hasEntireHeader &&
+    css`
+      position: absolute;
+      right: ${spacing[16]};
+      top: ${spacing[16]};
+    `}
+  `,
   closeButton: css`
-		${styleUtils.resetButton};
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 32px;
-		height: 32px;
-		border-radius: ${borderRadius.circle};
-		background: ${colorTokens.background.white};
+    ${styleUtils.resetButton};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: ${borderRadius.circle};
+    background: ${colorTokens.background.white};
 
-		svg {
-			color: ${colorTokens.icon.default};
-			transition: color 0.3s ease-in-out;
-		}
-
-		:hover {
-			svg {
-				color: ${colorTokens.icon.hover};
-			}
-		}
-
-		:focus {
-			box-shadow: ${shadow.focus};
-		}
-	`,
-  content: ({
-    isFullScreen,
-  }: {
-    isFullScreen?: boolean;
-  }) => css`
-		background-color: ${colorTokens.background.white};
-		overflow-y: auto;
-		max-height: 90vh;
-
-		${
-      isFullScreen &&
-      css`
-				height: calc(100% - ${modal.BASIC_MODAL_HEADER_HEIGHT}px);
-			`
+    svg {
+      color: ${colorTokens.icon.default};
+      transition: color 0.3s ease-in-out;
     }
-	`,
+
+    :hover {
+      svg {
+        color: ${colorTokens.icon.hover};
+      }
+    }
+
+    :focus {
+      box-shadow: ${shadow.focus};
+    }
+  `,
+  content: ({ isFullScreen }: { isFullScreen?: boolean }) => css`
+    background-color: ${colorTokens.background.white};
+    overflow-y: auto;
+    max-height: 90vh;
+
+    ${isFullScreen &&
+    css`
+      height: calc(100% - ${modal.BASIC_MODAL_HEADER_HEIGHT}px);
+    `}
+  `,
 };

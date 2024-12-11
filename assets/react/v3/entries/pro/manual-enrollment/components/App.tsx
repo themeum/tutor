@@ -10,36 +10,36 @@ import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
 import Main from './layout/Main';
 
 function App() {
-	const [queryClient] = useState(
-		() =>
-			new QueryClient({
-				defaultOptions: {
-					queries: {
-						retry: false,
-						refetchOnWindowFocus: false,
-						networkMode: 'always',
-					},
-					mutations: {
-						retry: false,
-						networkMode: 'always',
-					},
-				},
-			}),
-	);
-	return (
-		<RTLProvider>
-			<QueryParamProvider adapter={ReactRouter6Adapter}>
-				<QueryClientProvider client={queryClient}>
-					<ToastProvider position="bottom-center">
-						<ModalProvider>
-							<Global styles={createGlobalCss()} />
-							<Main />
-						</ModalProvider>
-					</ToastProvider>
-				</QueryClientProvider>
-			</QueryParamProvider>
-		</RTLProvider>
-	);
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: false,
+            refetchOnWindowFocus: false,
+            networkMode: 'always',
+          },
+          mutations: {
+            retry: false,
+            networkMode: 'always',
+          },
+        },
+      }),
+  );
+  return (
+    <RTLProvider>
+      <QueryParamProvider adapter={ReactRouter6Adapter}>
+        <QueryClientProvider client={queryClient}>
+          <ToastProvider position="bottom-center">
+            <ModalProvider>
+              <Global styles={createGlobalCss()} />
+              <Main />
+            </ModalProvider>
+          </ToastProvider>
+        </QueryClientProvider>
+      </QueryParamProvider>
+    </RTLProvider>
+  );
 }
 
 export default App;

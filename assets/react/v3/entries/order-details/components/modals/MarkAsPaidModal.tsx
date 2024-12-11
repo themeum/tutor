@@ -78,34 +78,34 @@ export default MarkAsPaidModal;
 
 const styles = {
   inlineFields: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+  `,
   availableMessage: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
 
-		span {
-			color: ${colorTokens.brand.blue};
-		}
-	`,
+    span {
+      color: ${colorTokens.brand.blue};
+    }
+  `,
 
   form: css`
-		width: 480px;
-	`,
+    width: 480px;
+  `,
   formContent: css`
-		padding: ${spacing[20]} ${spacing[16]};
+    padding: ${spacing[20]} ${spacing[16]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[10]};
-	`,
+  `,
   footer: css`
-		box-shadow: 0px 1px 0px 0px #E4E5E7 inset;
-		height: 56px;
-		display: flex;
-		align-items: center;
-		justify-content: end;
-		gap: ${spacing[16]};
-		padding-inline: ${spacing[16]};
-	`,
+    box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: ${spacing[16]};
+    padding-inline: ${spacing[16]};
+  `,
 };

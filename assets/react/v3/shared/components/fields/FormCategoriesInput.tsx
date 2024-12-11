@@ -276,9 +276,8 @@ const styles = {
       z-index: ${zIndex.level};
     }
 
-    ${
-      hasParent &&
-      css`
+    ${hasParent &&
+    css`
       &:before {
         content: '';
         position: absolute;
@@ -290,8 +289,7 @@ const styles = {
         background-color: ${colorTokens.stroke.divider};
         z-index: ${zIndex.level};
       }
-    `
-    }
+    `}
   `,
   addNewButton: css`
     ${styleUtils.resetButton};
@@ -328,11 +326,9 @@ const styles = {
     transition: box-shadow 0.3s ease-in-out;
     padding-inline: ${spacing[8]};
     padding-block: ${hasCategories ? spacing[4] : '0px'};
-    ${
-      isActive &&
-      css`
+    ${isActive &&
+    css`
       box-shadow: ${shadow.scrollable};
-    `
-    }
+    `}
   `,
 };

@@ -113,10 +113,9 @@ const styles = {
     z-index: ${zIndex.dropdown};
 
     &::before {
-      ${
-        arrow &&
-        !hideArrow &&
-        css`
+      ${arrow &&
+      !hideArrow &&
+      css`
         content: '';
         position: absolute;
         border: ${spacing[8]} solid transparent;
@@ -125,8 +124,7 @@ const styles = {
         ${arrow === 'right' && styles.arrowRight}
         ${arrow === 'top' && styles.arrowTop}
         ${arrow === 'bottom' && styles.arrowBottom}
-      `
-      }
+      `}
     }
   `,
   arrowLeft: css`
@@ -188,13 +186,11 @@ const styles = {
     justify-content: end;
     gap: ${spacing[10]};
 
-    ${
-      isDelete &&
-      css`
+    ${isDelete &&
+    css`
       button:last-of-type {
         color: ${colorTokens.text.error};
       }
-    `
-    }
+    `}
   `,
 };

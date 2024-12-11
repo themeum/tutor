@@ -96,11 +96,7 @@ const ModalWrapper = ({
 export default ModalWrapper;
 
 const styles = {
-  container: ({
-    maxWidth,
-  }: {
-    maxWidth?: number;
-  }) => css`
+  container: ({ maxWidth }: { maxWidth?: number }) => css`
     position: relative;
     background: ${colorTokens.background.white};
     margin: ${spacing[24]};
@@ -111,17 +107,13 @@ const styles = {
     border-radius: ${borderRadius[10]};
     overflow: hidden;
     bottom: 0;
-		z-index: ${zIndex.modal};
+    z-index: ${zIndex.modal};
 
     ${Breakpoint.smallTablet} {
       width: 90%;
     }
   `,
-  header: ({
-    hasHeaderChildren,
-  }: {
-    hasHeaderChildren: boolean;
-  }) => css`
+  header: ({ hasHeaderChildren }: { hasHeaderChildren: boolean }) => css`
     display: grid;
     grid-template-columns: ${hasHeaderChildren ? '1fr auto 1fr' : '1fr auto auto'};
     gap: ${spacing[8]};
