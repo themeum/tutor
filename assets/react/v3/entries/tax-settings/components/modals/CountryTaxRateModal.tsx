@@ -142,7 +142,7 @@ const styles = {
   modalWrapperStyle: css`
     position: relative;
     width: 100%;
-    min-width: 560px;
+    max-width: 560px;
   `,
   modalBody: css`
     display: flex;

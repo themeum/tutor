@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import Button from '@Atoms/Button';
+import SVGIcon from '@Atoms/SVGIcon';
 
 import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
 import type { ModalProps } from '@Components/modals/Modal';
 
+import config from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import config from '@Config/config';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
@@ -61,7 +61,7 @@ const ProIdentifierModal = ({
   footer = defaults.footer,
 }: ProIdentifierModalProps) => {
   return (
-    <BasicModalWrapper onClose={closeModal} entireHeader={<span css={styles.message}>{message}</span>}>
+    <BasicModalWrapper onClose={closeModal} entireHeader={<span css={styles.message}>{message}</span>} maxWidth={496}>
       <div css={styles.wrapper}>
         <Show when={title}>
           <h4 css={styles.title}>{title}</h4>
@@ -102,7 +102,6 @@ export default ProIdentifierModal;
 
 const styles = {
   wrapper: css`
-    width: 496px;
     padding: 0 ${spacing[24]} ${spacing[32]} ${spacing[24]};
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};

@@ -259,7 +259,9 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                           (hasErrors && __('Error generating course content', 'tutor')) ||
                           __('Generated course content', 'tutor')}
                       </h6>
-                      <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
+                      <Show when={contents[index].prompt}>
+                        {(prompt) => <p css={styles.subtitle}>&quot;{prompt}&quot;</p>}
+                      </Show>
                       <div css={styles.items}>
                         <Show
                           when={isLoadingItem}
@@ -511,7 +513,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             <MagicButton
               variant="primary_outline"
               onClick={() => {
-                isLoading ? cancelGeneration() : onClose();
+                if (isLoading) {
+                  cancelGeneration();
+                } else {
+                  onClose();
+                }
               }}
             >
               {isLoading ? __('Stop Generation', 'tutor') : __('Cancel', 'tutor')}
@@ -541,274 +547,268 @@ export default ContentGeneration;
 
 const styles = {
   container: css`
-		position: absolute;
-		left: 0;
-		top: 0;
-		width: 100%;
-		height: 100%;
-		display: flex;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
     justify-content: center;
     align-items: end;
-	`,
+  `,
   navigator: css`
-		display: flex;
-		align-items: center;
-		margin-left: -${spacing[16]};
-		margin-bottom: ${spacing[16]};
-	`,
+    display: flex;
+    align-items: center;
+    margin-left: -${spacing[16]};
+    margin-bottom: ${spacing[16]};
+  `,
   navigatorContent: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		
-		span {
-			${typography.caption()};
-		}
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
 
-		span:first-of-type {
-			color: ${colorTokens.text.primary};
-		}
-	`,
+    span {
+      ${typography.caption()};
+    }
+
+    span:first-of-type {
+      color: ${colorTokens.text.primary};
+    }
+  `,
   wrapper: css`
-		display: flex;
-		gap: ${spacing[28]};
-		height: calc(100vh - ${spacing[56]});
-		width: 1300px;
-		${Breakpoint.smallTablet} {
-			width: 90%;
-			gap: ${spacing[16]};
-		}
-	`,
+    display: flex;
+    gap: ${spacing[28]};
+    height: calc(100vh - ${spacing[56]});
+    width: 1300px;
+    ${Breakpoint.smallTablet} {
+      width: 90%;
+      gap: ${spacing[16]};
+    }
+  `,
   regenerateForm: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    width: 100%;
 
-		button {
-			width: auto;
-		}
-	`,
+    button {
+      width: auto;
+    }
+  `,
   formButtons: css`
-		display: flex;
-		width: 100%;
-		justify-content: end;
-		align-items: center;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    width: 100%;
+    justify-content: end;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
   leftContentWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		padding-inline: ${spacing[40]};
-		margin-top: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    padding-inline: ${spacing[40]};
+    margin-top: ${spacing[8]};
+  `,
   box: ({ deactivated, hasError, isActive }: { deactivated: boolean; hasError: boolean; isActive: boolean }) => css`
-		width: 100%;
-		border-radius: ${borderRadius[8]};
-		border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
-		padding: ${spacing[16]} ${spacing[12]};
-		display: flex;
-		gap: ${spacing[12]};
-		transition: border 0.3s ease;
+    width: 100%;
+    border-radius: ${borderRadius[8]};
+    border: 1px solid ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
+    padding: ${spacing[16]} ${spacing[12]};
+    display: flex;
+    gap: ${spacing[12]};
+    transition: border 0.3s ease;
     position: relative;
-		
-		svg {
-			flex-shrink: 0;
-		}
 
-		${
-      deactivated &&
-      css`
-			[data-check-icon] {
-				color: ${colorTokens.icon.disable.muted} !important;
-			}
-		`
+    svg {
+      flex-shrink: 0;
     }
 
-		${
-      !deactivated &&
-      css`
-			  border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
-			`
-    }
+    ${deactivated &&
+    css`
+      [data-check-icon] {
+        color: ${colorTokens.icon.disable.muted} !important;
+      }
+    `}
 
-    ${
-      isActive &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-      `
-    }
+    ${!deactivated &&
+    css`
+      border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.bg.brand};
+    `}
+
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+    `}
 
 		:hover {
-			border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
+      border-color: ${hasError ? colorTokens.stroke.danger : colorTokens.stroke.brand};
       background-color: ${!isActive && colorTokens.background.hover};
-		}
-	`,
+    }
+  `,
   boxFooter: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-		justify-content: end;
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+    justify-content: end;
 
-		button {
-			width: auto;
-		}
-	`,
+    button {
+      width: auto;
+    }
+  `,
   rightContents: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		overflow-y: auto;
-		height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    overflow-y: auto;
+    height: 100%;
     padding-right: ${spacing[20]};
     ${styleUtils.overflowYAuto};
-	`,
+  `,
   rightFooter: css`
-		margin-top: auto;
-		padding-top: ${spacing[16]};
+    margin-top: auto;
+    padding-top: ${spacing[16]};
     padding-right: ${spacing[20]};
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: ${spacing[12]};
+  `,
   subtitle: css`
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+  `,
   boxContent: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-		width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    width: 100%;
 
-		h6 {
-			${typography.body('medium')};
-			color: ${colorTokens.color.black.main};
-		}
+    h6 {
+      ${typography.body('medium')};
+      color: ${colorTokens.color.black.main};
+    }
 
-		p {
-			${typography.caption('medium')};
-			color: ${colorTokens.text.title};
-		}
-	`,
+    p {
+      ${typography.caption('medium')};
+      color: ${colorTokens.text.title};
+    }
+  `,
   items: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-		position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+    position: relative;
 
     [data-error='true'] {
-      color: ${colorTokens.icon.error}
+      color: ${colorTokens.icon.error};
     }
-	`,
+  `,
   item: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-		${styleUtils.textEllipsis};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+    ${styleUtils.textEllipsis};
 
-		svg {
-			color: ${colorTokens.stroke.success.fill70};
+    svg {
+      color: ${colorTokens.stroke.success.fill70};
 
       [data-error='true'] {
         color: ${colorTokens.icon.error};
       }
-		}
-	`,
+    }
+  `,
   section: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
 
-		& > h5 {
-			${typography.heading6('medium')};
-			color: ${colorTokens.text.primary};
-			height: 42px;
-			border-bottom: 1px solid ${colorTokens.stroke.border};
-		}
-	`,
+    & > h5 {
+      ${typography.heading6('medium')};
+      color: ${colorTokens.text.primary};
+      height: 42px;
+      border-bottom: 1px solid ${colorTokens.stroke.border};
+    }
+  `,
   content: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		
-		h6 {
-			${typography.caption()};
-			color: ${colorTokens.text.primary};
-		}
-	`,
-  left: css`
-		width: 792px;
-		background-color: ${colorTokens.background.white};
-		border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		overflow-y: auto;
-		padding-bottom: ${spacing[32]};
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
 
-		${Breakpoint.smallTablet} {
-			width: 80%;
-		}
-	`,
+    h6 {
+      ${typography.caption()};
+      color: ${colorTokens.text.primary};
+    }
+  `,
+  left: css`
+    width: 792px;
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    overflow-y: auto;
+    padding-bottom: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      width: 80%;
+    }
+  `,
   right: css`
-		width: 480px;
-		height: 100%;
-		background-color: ${colorTokens.background.white};
-		border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
-		padding: ${spacing[24]} ${spacing[0]} ${spacing[24]} ${spacing[20]};
+    width: 480px;
+    height: 100%;
+    background-color: ${colorTokens.background.white};
+    border-radius: ${borderRadius[12]} ${borderRadius[12]} 0 0;
+    padding: ${spacing[24]} ${spacing[0]} ${spacing[24]} ${spacing[20]};
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 
-		${Breakpoint.smallTablet} {
-			width: 20%;
-		}
-	`,
+    ${Breakpoint.smallTablet} {
+      width: 20%;
+    }
+  `,
   title: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-		color: ${colorTokens.icon.default};
-		z-index: ${zIndex.header};
-		min-height: 40px;	
-		padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};	
-		background-color: ${colorTokens.background.white};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+    color: ${colorTokens.icon.default};
+    z-index: ${zIndex.header};
+    min-height: 40px;
+    padding: ${spacing[40]} ${spacing[40]} ${spacing[16]} ${spacing[40]};
+    background-color: ${colorTokens.background.white};
 
     svg {
       flex-shrink: 0;
       color: ${colorTokens.text.ai.purple};
     }
 
-		& > h5 {
-			${typography.heading5('medium')};
-			${styleUtils.textEllipsis};
-			color: ${colorTokens.text.ai.purple};
-		}
-	`,
+    & > h5 {
+      ${typography.heading5('medium')};
+      ${styleUtils.textEllipsis};
+      color: ${colorTokens.text.ai.purple};
+    }
+  `,
   imageWrapper: css`
-		width: 100%;
-		height: 390px;
-		border-radius: ${borderRadius[10]};
-		overflow: hidden;
-		position: relative;
-		flex-shrink: 0;
+    width: 100%;
+    height: 390px;
+    border-radius: ${borderRadius[10]};
+    overflow: hidden;
+    position: relative;
+    flex-shrink: 0;
 
-		img {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	`,
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  `,
   errorWrapper: css`
     ${styleUtils.flexCenter('column')};
     height: 100%;
@@ -827,11 +827,7 @@ const styles = {
     color: ${colorTokens.text.error};
     margin-inline: ${spacing[96]};
   `,
-  overlayButton: ({
-    hasAnyContent,
-  }: {
-    hasAnyContent: boolean;
-  }) => css`
+  overlayButton: ({ hasAnyContent }: { hasAnyContent: boolean }) => css`
     ${styleUtils.resetButton};
     position: absolute;
     top: 0;
@@ -839,12 +835,10 @@ const styles = {
     width: 100%;
     height: 100%;
 
-    ${
-      !hasAnyContent &&
-      css`
-        cursor: default;
-      `
-    }
+    ${!hasAnyContent &&
+    css`
+      cursor: default;
+    `}
 
     :disabled {
       cursor: default;

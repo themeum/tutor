@@ -109,14 +109,12 @@ const styles = {
     flex-wrap: wrap;
     box-shadow: ${shadow.tabs};
 
-    ${
-      orientation === 'vertical' &&
-      css`
+    ${orientation === 'vertical' &&
+    css`
       flex-direction: column;
       align-items: start;
       box-shadow: none;
-    `
-    }
+    `}
   `,
   indicator: (property: ItemProperty, orientation: OrientationType) => css`
     width: ${property.width}px;
@@ -133,16 +131,14 @@ const styles = {
       right: ${property.left}px;
     }
 
-    ${
-      orientation === 'vertical' &&
-      css`
+    ${orientation === 'vertical' &&
+    css`
       width: 3px;
       height: ${property.height}px;
       top: ${property.top}px;
       bottom: auto;
       border-radius: 0 ${borderRadius[4]} ${borderRadius[4]} 0;
-    `
-    }
+    `}
   `,
   tabButton: ({ isActive, orientation }: { isActive: boolean; orientation: OrientationType }) => css`
     ${styleUtils.resetButton};
@@ -162,18 +158,15 @@ const styles = {
       color: ${colorTokens.icon.default};
     }
 
-    ${
-      orientation === 'vertical' &&
-      css`
+    ${orientation === 'vertical' &&
+    css`
       width: 100%;
       border-bottom: 1px solid ${colorTokens.stroke.border};
       justify-content: flex-start;
-    `
-    }
+    `}
 
-    ${
-      isActive &&
-      css`
+    ${isActive &&
+    css`
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.primary};
 
@@ -184,8 +177,7 @@ const styles = {
       & > svg {
         color: ${colorTokens.icon.brand};
       }
-    `
-    }
+    `}
 
     &:disabled {
       color: ${colorTokens.text.disable};
@@ -195,11 +187,11 @@ const styles = {
       }
     }
 
-    &:focus-visible { 
-			outline: 2px solid ${colorTokens.stroke.brand};
-			outline-offset: -2px;
+    &:focus-visible {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: -2px;
       border-radius: ${borderRadius[4]};
-		}
+    }
   `,
   activeBadge: css`
     display: inline-block;

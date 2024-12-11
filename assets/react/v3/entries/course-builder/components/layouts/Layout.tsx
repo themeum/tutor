@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
 
-import { colorTokens, containerMaxWidth, headerHeight } from '@Config/styles';
+import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@Config/styles';
 import Header from '@CourseBuilderComponents/layouts/header/Header';
 import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
 import {
@@ -35,7 +35,8 @@ const Layout = () => {
         keepDirty: true,
       });
     }
-  }, [courseDetailsQuery.data, form.reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [courseDetailsQuery.data]);
 
   return (
     <FormProvider {...form}>
@@ -43,13 +44,7 @@ const Layout = () => {
         <div css={styles.wrapper}>
           <Header />
           <div css={styles.contentWrapper}>
-            {/* Placeholder div for allocating the 1fr space */}
-            <div />
-
             <Outlet />
-
-            {/* Placeholder div for allocating the 1fr space */}
-            <div />
           </div>
           <Notebook />
         </div>
@@ -65,8 +60,15 @@ const styles = {
     background-color: ${colorTokens.surface.courseBuilder};
   `,
   contentWrapper: css`
-    display: grid;
-    grid-template-columns: 1fr ${containerMaxWidth}px 1fr;
+    display: flex;
+    max-width: ${containerMaxWidth}px;
+    width: 100%;
     min-height: calc(100vh - ${headerHeight}px);
+    margin: 0 auto;
+
+    ${Breakpoint.smallTablet} {
+      padding-inline: ${spacing[12]};
+      padding-bottom: ${spacing[56]};
+    }
   `,
 };

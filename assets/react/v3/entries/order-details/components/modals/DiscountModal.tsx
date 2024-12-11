@@ -59,12 +59,12 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
 
   useEffect(() => {
     form.setFocus('type');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit((values) => {
           orderDiscountMutation.mutate({
             order_id,
@@ -171,9 +171,6 @@ const styles = {
   `,
   reason: css`
     margin-top: ${spacing[12]};
-  `,
-  form: css`
-    width: 480px;
   `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};

@@ -7,7 +7,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
-import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, fontSize, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import type { FormControllerProps } from '@Utils/form';
 
@@ -108,6 +108,12 @@ const styles = {
     min-height: 32px;
     align-items: center;
     gap: ${spacing[4]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+      gap: ${spacing[4]};
+      align-items: flex-start;
+    }
   `,
   label: css`
     flex-shrink: 0;
@@ -119,6 +125,11 @@ const styles = {
     align-items: center;
     width: fit-content;
     font-size: ${fontSize[14]};
+
+    ${Breakpoint.smallMobile} {
+      gap: ${spacing[4]};
+      flex-wrap: wrap;
+    }
   `,
   link: css`
     ${typography.caption()};

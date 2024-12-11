@@ -86,9 +86,8 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           const response = await cancelOrderMutation.mutateAsync({
             order_id: order_id,
@@ -170,10 +169,6 @@ const styles = {
     strong {
       color: ${colorTokens.text.title};
     }
-  `,
-
-  form: css`
-    width: 480px;
   `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};

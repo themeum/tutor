@@ -33,9 +33,9 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { styleUtils } from '@Utils/style-utils';
 import { copyToClipboard } from '@Utils/util';
 
+import { isRTL } from '@Config/constants';
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
-import { isRTL } from '@Config/constants';
 
 interface AITextModalProps<T extends FieldValues> extends ModalProps {
   field: ControllerRenderProps<T, Path<T>>;
@@ -73,7 +73,6 @@ const AITextModal = <T extends FieldValues>({
   icon,
   closeModal,
   field,
-  fieldState,
   format = 'essay',
   characters = 250,
   is_html = false,
@@ -158,15 +157,14 @@ const AITextModal = <T extends FieldValues>({
     }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('prompt');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={closeModal} title={title} icon={icon}>
+    <BasicModalWrapper onClose={closeModal} title={title} icon={icon} maxWidth={524}>
       <form
-        css={styles.wrapper}
         onSubmit={form.handleSubmit(async (values) => {
           const response = await magicTextGenerationMutation.mutateAsync({ ...values, is_html });
 
@@ -388,9 +386,6 @@ const AITextModal = <T extends FieldValues>({
 
 export default AITextModal;
 const styles = {
-  wrapper: css`
-    width: 524px;
-  `,
   container: css`
     padding: ${spacing[20]};
     display: flex;

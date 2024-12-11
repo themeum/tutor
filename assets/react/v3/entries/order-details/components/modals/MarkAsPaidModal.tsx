@@ -32,12 +32,12 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
 
   useEffect(() => {
     form.setFocus('note');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           await markAsPaidMutation.mutateAsync({ note: values.note, order_id });
           closeModal();
@@ -78,34 +78,30 @@ export default MarkAsPaidModal;
 
 const styles = {
   inlineFields: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+  `,
   availableMessage: css`
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
 
-		span {
-			color: ${colorTokens.brand.blue};
-		}
-	`,
-
-  form: css`
-		width: 480px;
-	`,
+    span {
+      color: ${colorTokens.brand.blue};
+    }
+  `,
   formContent: css`
-		padding: ${spacing[20]} ${spacing[16]};
+    padding: ${spacing[20]} ${spacing[16]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[10]};
-	`,
+  `,
   footer: css`
-		box-shadow: 0px 1px 0px 0px #E4E5E7 inset;
-		height: 56px;
-		display: flex;
-		align-items: center;
-		justify-content: end;
-		gap: ${spacing[16]};
-		padding-inline: ${spacing[16]};
-	`,
+    box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: ${spacing[16]};
+    padding-inline: ${spacing[16]};
+  `,
 };

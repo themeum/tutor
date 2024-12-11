@@ -11,7 +11,7 @@ import StudentListTable from './StudentListTable';
 
 interface SelectStudentModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 
@@ -26,17 +26,15 @@ function SelectStudentModal({ title, closeModal, actions, form }: SelectStudentM
   }
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
-      <div css={styles.modalWrapper}>
-        <StudentListTable form={_form} />
-        <div css={styles.footer}>
-          <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
-            {__('Cancel', 'tutor')}
-          </Button>
-          <Button type="submit" size="small" variant="primary" onClick={handleApply}>
-            {__('Add', 'tutor')}
-          </Button>
-        </div>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
+      <StudentListTable form={_form} />
+      <div css={styles.footer}>
+        <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
+          {__('Cancel', 'tutor')}
+        </Button>
+        <Button type="submit" size="small" variant="primary" onClick={handleApply}>
+          {__('Add', 'tutor')}
+        </Button>
       </div>
     </BasicModalWrapper>
   );
@@ -45,9 +43,6 @@ function SelectStudentModal({ title, closeModal, actions, form }: SelectStudentM
 export default SelectStudentModal;
 
 const styles = {
-  modalWrapper: css`
-    width: 480px;
-  `,
   footer: css`
     box-shadow: 0px 1px 0px 0px #e4e5e7 inset;
     height: 56px;

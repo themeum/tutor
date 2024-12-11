@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -22,15 +23,13 @@ import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
-
 import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { noop } from '@Utils/util';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface TopicFooterProps {
   topic: CourseTopicWithCollapse;
@@ -81,7 +80,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
   return (
     <>
       <div css={styles.contentButtons}>
-        <div css={[styleUtils.display.flex(), { gap: spacing[12] }]}>
+        <div css={styles.leftButtons}>
           <Button
             variant="tertiary"
             isOutlined
@@ -214,7 +213,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
             </ProBadge>
           </Show>
         </div>
-        <div css={styles.footerButtons}>
+        <div css={styles.rightButtons}>
           <Show
             when={!isTutorPro || hasLiveAddons}
             fallback={
@@ -370,7 +369,15 @@ const styles = {
     ${styleUtils.display.flex()};
     justify-content: space-between;
   `,
-  footerButtons: css`
+  leftButtons: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[12]};
+
+    ${Breakpoint.smallMobile} {
+      flex-wrap: wrap;
+    }
+  `,
+  rightButtons: css`
     display: flex;
     align-items: center;
   `,

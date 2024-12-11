@@ -34,7 +34,7 @@ function RenderModalContent() {
 
 const AIImageModal = <T extends FieldValues>({ title, icon, closeModal, field, fieldState }: AIImageModalProps<T>) => {
   return (
-    <BasicModalWrapper onClose={closeModal} title={title} icon={icon}>
+    <BasicModalWrapper onClose={closeModal} title={title} icon={icon} maxWidth={1000}>
       <MagicImageGenerationProvider field={field} fieldState={fieldState} onCloseModal={closeModal}>
         <RenderModalContent />
       </MagicImageGenerationProvider>

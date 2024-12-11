@@ -100,7 +100,8 @@ const styles = {
   `,
   featuresWithTitle: css`
     ${styleUtils.display.flex('column')}
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     gap: ${spacing[8]};
     ${typography.body('regular')};
   `,

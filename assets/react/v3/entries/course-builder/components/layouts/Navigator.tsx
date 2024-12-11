@@ -85,8 +85,8 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
           size="small"
           onClick={handlePreviousClick}
           buttonCss={css`
-          padding: ${spacing[6]};
-        `}
+            padding: ${spacing[6]};
+          `}
           disabled={previousIndex < 0}
         >
           <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} height={18} width={18} />

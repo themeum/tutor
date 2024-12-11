@@ -67,6 +67,7 @@ const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps)
       onClose={() => closeModal({ action: 'CLOSE' })}
       title={isCurrentUserAdmin ? __('Set OpenAI API key', 'tutor') : undefined}
       entireHeader={isCurrentUserAdmin ? undefined : <>&nbsp;</>}
+      maxWidth={560}
     >
       <div
         css={styles.wrapper({
@@ -157,7 +158,6 @@ export default SetupOpenAiModal;
 
 const styles = {
   wrapper: ({ isCurrentUserAdmin }: { isCurrentUserAdmin: boolean }) => css`
-    width: 560px;
     ${styleUtils.display.flex('column')};
     gap: ${spacing[20]};
 
