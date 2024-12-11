@@ -504,7 +504,7 @@ export const useDuplicateContentMutation = (quizId?: ID) => {
     },
     onError: (error: ErrorResponse, payload) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
 

@@ -696,7 +696,7 @@ export const useDeleteQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },
