@@ -54,7 +54,7 @@ const styles = {
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
-		max-height: 90vh;
+    max-height: 90vh;
 
     ${Breakpoint.smallTablet} {
       width: 90%;

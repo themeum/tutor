@@ -109,7 +109,7 @@ const styles = {
     `}
 
     ${Breakpoint.smallTablet} {
-      width: 90%;
+      max-width: 90%;
     }
   `,
   header: ({ hasEntireHeader }: { hasEntireHeader?: boolean }) => css`
