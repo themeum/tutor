@@ -382,10 +382,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 											?>
 												<td class="type" data-title="<?php echo esc_attr( $column ); ?>">
 												<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-													<?php
-														do_action( 'tutor_before_answer_question_type', $answer->question_type );
-													if ( 'h5p' !== $answer->question_type ) {
-														?>
+													<?php ob_start(); ?>
 														<div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
 															<?php
 																echo wp_kses(
@@ -393,15 +390,13 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																	tutor_utils()->allowed_icon_tags()
 																);
 															?>
-														<span class="tooltip-txt tooltip-top">
+															<span class="tooltip-txt tooltip-top">
 														<?php
 															echo esc_html( $type['name'] ?? '' );
 														?>
-														</span>
+															</span>
 														</div>
-														<?php
-													}
-													?>
+													<?php echo wp_kses_post( apply_filters( 'tutor_attempt_answer_question_type_icon', ob_get_clean(), $answer ) ); ?>
 												</td>
 												<?php
 											break;
