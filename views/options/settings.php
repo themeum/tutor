@@ -18,7 +18,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 	<div class="tutor-admin-header is-sticky">
 		<div class="tutor-row tutor-align-center">
 			<div class="tutor-col-md-3 tutor-col-lg-4 tutor-mb-16 tutor-mb-md-0">
-				<span class="tutor-fs-5 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Settings', 'tutor' ); ?></span>
+				<span class="tutor-fs-4 tutor-fw-medium tutor-mr-16"><?php esc_html_e( 'Settings', 'tutor' ); ?></span>
 			</div>
 			<div class="tutor-col-md-5 tutor-col-xl-6 tutor-mb-24 tutor-mb-md-0">
 				<div class="tutor-options-search tutor-form-wrap">
