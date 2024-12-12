@@ -73,15 +73,23 @@ function CouponPreview() {
       <div css={styles.previewMiddle}>
         <span css={styles.leftCircle} />
         <span css={styles.rightCircle} />
-        <svg width="280" height="2" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="100%"
+          height="2"
+          viewBox="0 0 100 2"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <title>{__('Right circle icon', 'tutor')}</title>
           <path
-            d="M1 1h278"
+            d="M0 1L100 1"
             stroke={colorTokens.stroke.border}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeDasharray="7 7"
+            vectorEffect="non-scaling-stroke"
           />
         </svg>
       </div>
