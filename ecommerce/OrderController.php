@@ -1116,6 +1116,8 @@ class OrderController {
 	 * @param string $amount Refund amount.
 	 * @param string $reason Refund reason.
 	 *
+	 * @throws \Throwable If an error occurs during the refund process.
+	 *
 	 * @return void
 	 */
 	public function refund_from_payment_gateway( $order_id, $amount, $reason ) {
@@ -1129,7 +1131,7 @@ class OrderController {
 					$gateway_obj->make_refund( $refund_data );
 				}
 			} catch ( \Throwable $th ) {
-				tutor_log( $th );
+				throw $th;
 			}
 		}
 	}
