@@ -41,6 +41,7 @@ class User {
 	const COVER_PHOTO_META       = '_tutor_cover_photo';
 	const PROFILE_BIO_META       = '_tutor_profile_bio';
 	const PROFILE_JOB_TITLE_META = '_tutor_profile_job_title';
+	const TUTOR_STUDENT_META     = '_is_tutor_student';
 
 	/**
 	 * User model
@@ -158,7 +159,8 @@ class User {
 	 * @return boolean
 	 */
 	public static function is_student( $user_id = 0 ) {
-		return self::has_any_role( array( self::STUDENT ), $user_id );
+		$is_tutor_student = get_user_meta( tutor_utils()->get_user_id( $user_id ), self::TUTOR_STUDENT_META, true );
+		return $is_tutor_student ? true : false;
 	}
 
 	/**

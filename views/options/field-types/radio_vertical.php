@@ -27,8 +27,8 @@ $field_id  = sanitize_key( 'field_' . $field_key );
 						<div class="tutor-form-check">
 							<input id="radio_<?php echo esc_attr( $option_key ); ?>" type="radio" name="tutor_option[<?php echo esc_attr( $field['key'] ); ?>]" value="<?php echo esc_attr( $option_key ); ?>" <?php esc_attr( checked( $option_value, $option_key ) ); ?> class="tutor-form-check-input" />
 							<label for="radio_<?php echo esc_attr( $option_key ); ?>">
-								<?php echo esc_attr( ucwords( str_replace( '_', ' ', $option_key ) ) ); ?>
-								<p class="desc"><?php echo esc_attr( $option ); ?></p>
+								<?php echo esc_attr( $option['label'] ); ?>
+								<p class="desc"><?php echo esc_attr( $option['desc'] ); ?></p>
 							</label>
 						</div>
 					</div>

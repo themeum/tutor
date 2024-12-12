@@ -206,7 +206,8 @@ class Student {
 			'last_name'    => $last_name,
 			'display_name' => $display_name,
 		);
-		$user_id  = wp_update_user( $userdata );
+
+		$user_id = wp_update_user( $userdata );
 
 		if ( ! is_wp_error( $user_id ) ) {
 			update_user_meta( $user_id, User::PHONE_NUMBER_META, $phone_number );

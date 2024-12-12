@@ -12,7 +12,7 @@
 $user = wp_get_current_user();
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
+<div class="tutor-fs-4 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 
 <div class="tutor-dashboard-setting-social tutor-dashboard-content-inner">
 
