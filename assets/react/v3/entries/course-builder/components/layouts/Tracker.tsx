@@ -2,7 +2,6 @@ import { css } from '@emotion/react';
 import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import LoadingSpinner from '@/v3/shared/atoms/LoadingSpinner';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
@@ -15,7 +14,6 @@ import {
 } from '@CourseBuilderServices/course';
 import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { __, sprintf } from '@wordpress/i18n';
 
 const courseId = getCourseId();
 
@@ -23,20 +21,22 @@ const Tracker = () => {
   const { steps, currentIndex } = useCourseNavigator();
   const navigate = useNavigate();
   const form = useFormContext<CourseFormData>();
-  const updateCourseMutation = useUpdateCourseMutation();
+  const updateCourseMutation = useUpdateCourseMutation({
+    displaySuccessToast: false,
+  });
 
   const postTitle = form.watch('post_title');
 
-  const handleClick = async (step: Step) => {
+  const handleClick = (step: Step) => {
     if (steps[currentIndex].id === step.id) {
       return;
     }
 
-    try {
-      await form.handleSubmit(async (data) => {
+    if (form.formState.isDirty) {
+      form.handleSubmit((data) => {
         const payload = convertCourseDataToPayload(data);
 
-        await updateCourseMutation.mutateAsync({
+        updateCourseMutation.mutate({
           course_id: courseId,
           ...payload,
           post_status: determinePostStatus(
@@ -45,13 +45,9 @@ const Tracker = () => {
           ),
         });
       })();
-
-      navigate(step.path);
-    } catch (error) {
-      console.error(
-        sprintf(__('Failed to update course data before navigating to %s. %s', 'tutor'), step.label, error),
-      );
     }
+
+    navigate(step.path);
   };
 
   return (
@@ -68,12 +64,7 @@ const Tracker = () => {
             onClick={() => handleClick(step)}
             disabled={step.id !== 'basic' && !postTitle}
           >
-            <Show
-              when={!(updateCourseMutation.isPending && steps[currentIndex].id === step.id)}
-              fallback={<LoadingSpinner size={24} />}
-            >
-              <span data-element-id>{step.indicator}</span>
-            </Show>
+            <span data-element-id>{step.indicator}</span>
             <span>{step.label}</span>
             <Show when={step.indicator < 3}>
               <span data-element-indicator />

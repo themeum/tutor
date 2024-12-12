@@ -28,7 +28,9 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const navigate = useNavigate();
   const currentPath = useCurrentPath(routes);
   const form = useFormContext<CourseFormData>();
-  const updateCourseMutation = useUpdateCourseMutation();
+  const updateCourseMutation = useUpdateCourseMutation({
+    displaySuccessToast: false,
+  });
 
   const currentIndex = steps.findIndex((item) => item.path === currentPath);
   const previousIndex = Math.max(-1, currentIndex - 1);
@@ -37,12 +39,12 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const nextStep = steps[nextIndex];
   const postTitle = form.watch('post_title');
 
-  const saveCourseData = async () => {
+  const saveCourseData = () => {
     try {
-      await form.handleSubmit(async (data) => {
+      form.handleSubmit((data) => {
         const payload = convertCourseDataToPayload(data);
 
-        await updateCourseMutation.mutateAsync({
+        updateCourseMutation.mutate({
           course_id: courseId,
           ...payload,
           post_status: determinePostStatus(
@@ -77,7 +79,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
       });
     });
 
-    await saveCourseData();
+    saveCourseData();
     navigate(previousStep.path);
   };
 
@@ -102,7 +104,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
       });
     });
 
-    await saveCourseData();
+    saveCourseData();
     navigate(nextStep.path);
   };
   return (

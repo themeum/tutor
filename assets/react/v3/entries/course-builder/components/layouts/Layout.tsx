@@ -32,9 +32,9 @@ const Layout = () => {
     if (courseDetailsQuery.data) {
       form.reset(convertCourseDataToFormData(courseDetailsQuery.data), {
         keepDirtyValues: true,
-        keepDirty: true,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseDetailsQuery.data, form.reset]);
 
   return (

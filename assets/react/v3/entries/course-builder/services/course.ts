@@ -686,7 +686,11 @@ const updateCourse = (payload: CoursePayload) => {
   });
 };
 
-export const useUpdateCourseMutation = () => {
+export const useUpdateCourseMutation = ({
+  displaySuccessToast = true,
+}: {
+  displaySuccessToast?: boolean;
+} = {}) => {
   const { showToast } = useToast();
   const queryClient = useQueryClient();
 
@@ -694,7 +698,9 @@ export const useUpdateCourseMutation = () => {
     mutationFn: updateCourse,
     onSuccess: (response) => {
       if (response.data) {
-        showToast({ type: 'success', message: __(response.message, 'tutor') });
+        if (displaySuccessToast) {
+          showToast({ type: 'success', message: __(response.message, 'tutor') });
+        }
 
         queryClient.invalidateQueries({
           queryKey: ['CourseDetails', response.data],
