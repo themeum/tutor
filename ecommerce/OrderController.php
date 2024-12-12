@@ -1120,7 +1120,7 @@ class OrderController {
 	 */
 	public function refund_from_payment_gateway( $order_id, $amount, $reason ) {
 		$order = $this->model->get_order_by_id( $order_id );
-		if ( $order & ! $this->model->is_manual_payment( $order->payment_method ) ) {
+		if ( $order && ! $this->model->is_manual_payment( $order->payment_method ) ) {
 			$refund_data = $this->prepare_refund_data( $order, $amount, $reason );
 			try {
 				$payment_gateway_ref = Ecommerce::payment_gateways_with_ref( $order->payment_method );
