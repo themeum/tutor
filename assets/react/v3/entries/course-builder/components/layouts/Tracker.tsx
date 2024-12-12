@@ -1,23 +1,57 @@
-import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { type Step, useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
+import LoadingSpinner from '@/v3/shared/atoms/LoadingSpinner';
+import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
+import { typography } from '@Config/typography';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
+import { useCourseNavigator, type Step } from '@CourseBuilderContexts/CourseNavigatorContext';
+import {
+  convertCourseDataToPayload,
+  useUpdateCourseMutation,
+  type CourseFormData,
+} from '@CourseBuilderServices/course';
+import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
+import { styleUtils } from '@Utils/style-utils';
+import { __, sprintf } from '@wordpress/i18n';
+
+const courseId = getCourseId();
+
 const Tracker = () => {
-  const { steps } = useCourseNavigator();
+  const { steps, currentIndex } = useCourseNavigator();
   const navigate = useNavigate();
   const form = useFormContext<CourseFormData>();
+  const updateCourseMutation = useUpdateCourseMutation();
 
   const postTitle = form.watch('post_title');
 
   const handleClick = async (step: Step) => {
-    navigate(step.path);
+    if (steps[currentIndex].id === step.id) {
+      return;
+    }
+
+    try {
+      await form.handleSubmit(async (data) => {
+        const payload = convertCourseDataToPayload(data);
+
+        await updateCourseMutation.mutateAsync({
+          course_id: courseId,
+          ...payload,
+          post_status: determinePostStatus(
+            form.getValues('post_status') as 'trash' | 'future' | 'draft',
+            form.getValues('visibility') as 'private' | 'password_protected',
+          ),
+        });
+      })();
+
+      navigate(step.path);
+    } catch (error) {
+      console.error(
+        sprintf(__('Failed to update course data before navigating to %s. %s', 'tutor'), step.label, error),
+      );
+    }
   };
 
   return (
@@ -34,7 +68,12 @@ const Tracker = () => {
             onClick={() => handleClick(step)}
             disabled={step.id !== 'basic' && !postTitle}
           >
-            <span data-element-id>{step.indicator}</span>
+            <Show
+              when={!(updateCourseMutation.isPending && steps[currentIndex].id === step.id)}
+              fallback={<LoadingSpinner size={24} />}
+            >
+              <span data-element-id>{step.indicator}</span>
+            </Show>
             <span>{step.label}</span>
             <Show when={step.indicator < 3}>
               <span data-element-indicator />
@@ -71,20 +110,16 @@ const styles = {
       padding-left: 0;
     }
 
-    ${
-      isActive &&
-      css`
-        color: ${colorTokens.text.primary};
-      `
-    }
+    ${isActive &&
+    css`
+      color: ${colorTokens.text.primary};
+    `}
 
-    ${
-      isDisabled &&
-      css`
-        color: ${colorTokens.text.hints};
-        cursor: not-allowed;
-      `
-    }
+    ${isDisabled &&
+    css`
+      color: ${colorTokens.text.hints};
+      cursor: not-allowed;
+    `}
 
     [data-element-id] {
       ${styleUtils.display.flex()};
@@ -98,15 +133,13 @@ const styles = {
       border: 1px solid ${colorTokens.color.black[10]};
       color: ${colorTokens.text.hints};
 
-      ${
-        isActive &&
-        css`
+      ${isActive &&
+      css`
         border-color: ${colorTokens.stroke.brand};
         border-color: ${colorTokens.stroke.brand};
         background-color: ${colorTokens.design.brand};
         color: ${colorTokens.text.white};
-      `
-      }
+      `}
     }
 
     [data-element-indicator] {
