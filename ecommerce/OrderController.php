@@ -1120,19 +1120,16 @@ class OrderController {
 	 */
 	public function refund_from_payment_gateway( $order_id, $amount, $reason ) {
 		$order = $this->model->get_order_by_id( $order_id );
-		if ( $order ) {
-			if ( ! $this->model->is_manual_payment( $order->payment_method ) ) {
-
-				$refund_data = $this->prepare_refund_data( $order, $amount, $reason );
-				try {
-					$payment_gateway_ref = Ecommerce::payment_gateways_with_ref( $order->payment_method );
-					if ( $payment_gateway_ref ) {
-						$gateway_obj = Ecommerce::get_payment_gateway_object( $payment_gateway_ref['gateway_class'] );
-						$gateway_obj->make_refund( $refund_data );
-					}
-				} catch ( \Throwable $th ) {
-					tutor_log( $th );
+		if ( $order & ! $this->model->is_manual_payment( $order->payment_method ) ) {
+			$refund_data = $this->prepare_refund_data( $order, $amount, $reason );
+			try {
+				$payment_gateway_ref = Ecommerce::payment_gateways_with_ref( $order->payment_method );
+				if ( $payment_gateway_ref ) {
+					$gateway_obj = Ecommerce::get_payment_gateway_object( $payment_gateway_ref['gateway_class'] );
+					$gateway_obj->make_refund( $refund_data );
 				}
+			} catch ( \Throwable $th ) {
+				tutor_log( $th );
 			}
 		}
 	}
