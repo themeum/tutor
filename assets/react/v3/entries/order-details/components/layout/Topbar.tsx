@@ -41,7 +41,7 @@ function Topbar() {
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
+                <h4 css={styles.headerTitle}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
                 <Show when={order.payment_status}>
                   <PaymentBadge status={order.payment_status} />
                 </Show>
@@ -78,6 +78,9 @@ function Topbar() {
                   },
                 });
               }}
+              buttonCss={css`
+                flex-shrink: 0;
+              `}
             >
               {__('Cancel Order', 'tutor')}
             </Button>
@@ -97,6 +100,7 @@ const styles = {
 
     ${Breakpoint.smallMobile} {
       padding-inline: ${spacing[8]};
+      height: auto;
     }
   `,
   innerWrapper: css`
@@ -105,15 +109,29 @@ const styles = {
     justify-content: space-between;
     height: 100%;
     padding-inline: ${spacing[8]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[8]};
+      flex-direction: column;
+      gap: ${spacing[8]};
+    }
   `,
   headerContent: css`
     display: flex;
     align-items: center;
     gap: ${spacing[16]};
   `,
+  headerTitle: css`
+    ${typography.heading5()};
+
+    ${Breakpoint.smallMobile} {
+      ${typography.heading6()};
+    }
+  `,
   left: css`
     display: flex;
     gap: ${spacing[16]};
+    width: 100%;
   `,
   updateMessage: css`
     ${typography.body()};
