@@ -1,6 +1,6 @@
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
@@ -8,8 +8,8 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format, isToday, isTomorrow } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
-import EmptyPreviewTop from './EmptyPreviewTop';
 import EmptyPreviewDetail from './EmptyPreviewDetail';
+import EmptyPreviewTop from './EmptyPreviewTop';
 
 const appliesToLabel: Record<CouponAppliesTo, string> = {
   all_courses_and_bundles: __('all courses', 'tutor'),
@@ -42,8 +42,8 @@ function CouponPreview() {
         isToday(new Date(startDateTime))
           ? __('today', 'tutor')
           : isTomorrow(new Date(startDateTime))
-          ? __('tomorrow', 'tutor')
-          : format(new Date(startDateTime), DateFormats.activityDate)
+            ? __('tomorrow', 'tutor')
+            : format(new Date(startDateTime), DateFormats.activityDate)
       }`
     : '';
 
@@ -142,6 +142,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     position: sticky;
     top: 160px;
+
+    ${Breakpoint.mobile} {
+      overflow: hidden;
+    }
   `,
   previewTop: css`
     display: flex;
@@ -153,6 +157,7 @@ const styles = {
     position: relative;
     margin-block: ${spacing[16]};
     display: flex;
+    width: 100%;
   `,
   leftCircle: css`
     position: absolute;
