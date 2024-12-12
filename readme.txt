@@ -314,6 +314,14 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.1.0 - December 12, 2024
 
+New: Students can manage email notification preferences from the frontend dashboard
+New: Process refunds automatically from the order history page for Stripe and PayPal
+Update: Added consent/alert pop-up for quiz/assignment deletions
+Fix: Resolved WPML compatibility issue
+Fix: Fixed translation errors
+Fix: Fixed quiz display time inconsistency related to hour calculations
+Fix: Resolved responsive issue on the course archive page for iPad
+Fix: Fixed sidebar toggle button visibility issue on mobile devices
 
 = 3.0.2 - December 03, 2024
 
