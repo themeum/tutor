@@ -3,7 +3,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Container from '@Components/Container';
 import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
@@ -94,12 +94,17 @@ const styles = {
   wrapper: css`
     height: ${TOPBAR_HEIGHT}px;
     background: ${colorTokens.background.white};
+
+    ${Breakpoint.smallMobile} {
+      padding-inline: ${spacing[8]};
+    }
   `,
   innerWrapper: css`
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    padding-inline: ${spacing[8]};
   `,
   headerContent: css`
     display: flex;
