@@ -77,7 +77,7 @@ const CourseSettings = () => {
           }
           activeTab={activeTab}
           onChange={setActiveTab}
-          orientation={!CURRENT_VIEWPORT.isAboveDesktop ? 'horizontal' : 'vertical'}
+          orientation={!CURRENT_VIEWPORT.isAboveSmallMobile ? 'horizontal' : 'vertical'}
           wrapperCss={css`
             button {
               min-width: auto;
@@ -228,7 +228,7 @@ const styles = {
     background-color: ${colorTokens.background.default};
     overflow: hidden;
 
-    ${Breakpoint.smallTablet} {
+    ${Breakpoint.smallMobile} {
       grid-template-columns: 1fr;
     }
   `,
