@@ -122,10 +122,10 @@ const styles = {
     gap: ${spacing[16]};
   `,
   headerTitle: css`
-    ${typography.heading5()};
+    ${typography.heading5('medium')};
 
     ${Breakpoint.smallMobile} {
-      ${typography.heading6()};
+      ${typography.heading6('medium')};
     }
   `,
   left: css`
