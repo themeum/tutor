@@ -5,22 +5,30 @@ import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import routes from '@CourseBuilderConfig/routes';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseFormData } from '@CourseBuilderServices/course';
+import {
+  convertCourseDataToPayload,
+  useUpdateCourseMutation,
+  type CourseFormData,
+} from '@CourseBuilderServices/course';
 import { useCurrentPath } from '@Hooks/useCurrentPath';
-import { type SerializedStyles, css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { css, type SerializedStyles } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { determinePostStatus, getCourseId } from '../../utils/utils';
 
 interface NavigatorProps {
   styleModifier?: SerializedStyles;
 }
+
+const courseId = getCourseId();
 
 const Navigator = ({ styleModifier }: NavigatorProps) => {
   const { steps, setSteps } = useCourseNavigator();
   const navigate = useNavigate();
   const currentPath = useCurrentPath(routes);
   const form = useFormContext<CourseFormData>();
+  const updateCourseMutation = useUpdateCourseMutation();
 
   const currentIndex = steps.findIndex((item) => item.path === currentPath);
   const previousIndex = Math.max(-1, currentIndex - 1);
@@ -29,7 +37,26 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
   const nextStep = steps[nextIndex];
   const postTitle = form.watch('post_title');
 
-  const handlePreviousClick = () => {
+  const saveCourseData = async () => {
+    try {
+      await form.handleSubmit(async (data) => {
+        const payload = convertCourseDataToPayload(data);
+
+        await updateCourseMutation.mutateAsync({
+          course_id: courseId,
+          ...payload,
+          post_status: determinePostStatus(
+            form.getValues('post_status') as 'trash' | 'future' | 'draft',
+            form.getValues('visibility') as 'private' | 'password_protected',
+          ),
+        });
+      })();
+    } catch (error) {
+      console.error(sprintf(__('Failed to update course data before navigating. %s', 'tutor'), error));
+    }
+  };
+
+  const handlePreviousClick = async () => {
     setSteps((previous) => {
       return previous.map((item, index) => {
         if (index === currentIndex) {
@@ -50,10 +77,11 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
       });
     });
 
+    await saveCourseData();
     navigate(previousStep.path);
   };
 
-  const handleNextClick = () => {
+  const handleNextClick = async () => {
     setSteps((previous) => {
       return previous.map((item, index) => {
         if (index === currentIndex) {
@@ -74,6 +102,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
       });
     });
 
+    await saveCourseData();
     navigate(nextStep.path);
   };
   return (
@@ -85,8 +114,8 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
           size="small"
           onClick={handlePreviousClick}
           buttonCss={css`
-          padding: ${spacing[6]};
-        `}
+            padding: ${spacing[6]};
+          `}
           disabled={previousIndex < 0}
         >
           <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} height={18} width={18} />
