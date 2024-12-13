@@ -1,6 +1,6 @@
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
@@ -8,8 +8,8 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { format, isToday, isTomorrow } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
-import EmptyPreviewTop from './EmptyPreviewTop';
 import EmptyPreviewDetail from './EmptyPreviewDetail';
+import EmptyPreviewTop from './EmptyPreviewTop';
 
 const appliesToLabel: Record<CouponAppliesTo, string> = {
   all_courses_and_bundles: __('all courses', 'tutor'),
@@ -73,15 +73,23 @@ function CouponPreview() {
       <div css={styles.previewMiddle}>
         <span css={styles.leftCircle} />
         <span css={styles.rightCircle} />
-        <svg width="280" height="2" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          width="100%"
+          height="2"
+          viewBox="0 0 100 2"
+          preserveAspectRatio="none"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <title>{__('Right circle icon', 'tutor')}</title>
           <path
-            d="M1 1h278"
+            d="M0 1L100 1"
             stroke={colorTokens.stroke.border}
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeDasharray="7 7"
+            vectorEffect="non-scaling-stroke"
           />
         </svg>
       </div>
@@ -142,6 +150,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     position: sticky;
     top: 160px;
+
+    ${Breakpoint.mobile} {
+      overflow: hidden;
+    }
   `,
   previewTop: css`
     display: flex;
@@ -153,6 +165,7 @@ const styles = {
     position: relative;
     margin-block: ${spacing[16]};
     display: flex;
+    width: 100%;
   `,
   leftCircle: css`
     position: absolute;
