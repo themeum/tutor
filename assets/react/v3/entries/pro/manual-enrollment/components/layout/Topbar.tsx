@@ -1,7 +1,7 @@
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { type Enrollment, useCreateEnrollmentMutation } from '@EnrollmentServices/enrollment';
 import { styleUtils } from '@Utils/style-utils';
@@ -70,9 +70,14 @@ const styles = {
   wrapper: css`
     height: ${TOPBAR_HEIGHT}px;
     background: ${colorTokens.background.white};
+
+    ${Breakpoint.smallMobile} {
+      padding-inline: ${spacing[8]};
+      height: auto;
+    }
   `,
   container: css`
-    max-width: 1030px;
+    max-width: 1054px;
     margin: 0 auto;
     height: 100%;
   `,
@@ -81,6 +86,13 @@ const styles = {
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    padding-inline: ${spacing[12]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[12]};
+      flex-direction: column;
+      gap: ${spacing[8]};
+    }
   `,
   headerContent: css`
     display: flex;
@@ -90,6 +102,10 @@ const styles = {
   left: css`
     display: flex;
     gap: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      width: 100%;
+    }
   `,
   right: css`
     display: flex;
