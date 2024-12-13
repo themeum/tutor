@@ -35,7 +35,7 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
         ],
         {
           shouldDirty: true,
-        }
+        },
       );
     }
   };

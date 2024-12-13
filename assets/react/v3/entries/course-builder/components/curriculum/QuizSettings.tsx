@@ -14,7 +14,7 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 
 import { Addons } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { ContentDripType } from '@CourseBuilderServices/course';
@@ -382,6 +382,10 @@ const styles = {
   questionLayoutAndOrder: css`
     ${styleUtils.display.flex()}
     gap: ${spacing[20]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+    }
   `,
   contentDripLabel: css`
     display: flex;

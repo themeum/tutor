@@ -225,9 +225,8 @@ const styles = {
     flex-direction: column;
     gap: ${spacing[4]};
 
-    ${
-      isInlineLabel &&
-      css`
+    ${isInlineLabel &&
+    css`
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -236,18 +235,15 @@ const styles = {
       > div {
         flex: 1;
       }
-    `
-    }
+    `}
   `,
   label: (isInlineLabel: boolean) => css`
     ${typography.caption()}
 
-    ${
-      isInlineLabel &&
-      css`
+    ${isInlineLabel &&
+    css`
       flex: 1;
-    `
-    }
+    `}
   `,
   inputWrapper: css`
     width: 100%;
@@ -264,12 +260,10 @@ const styles = {
     color: ${colorTokens.text.primary};
     appearance: textfield;
 
-    ${
-      !isSearchable &&
-      css`
+    ${!isSearchable &&
+    css`
       cursor: pointer;
-    `
-    }
+    `}
 
     :focus {
       outline: none;
@@ -302,16 +296,14 @@ const styles = {
         justify-content: center;
       }
 
-      ${
-        !isDisabled &&
-        css`
+      ${!isDisabled &&
+      css`
         color: ${colorTokens.text.title};
 
         &:hover {
           text-decoration: underline;
         }
-      `
-      }
+      `}
     }
   `,
   optionsWrapper: css`
@@ -347,33 +339,28 @@ const styles = {
     transition: background-color 0.3s ease-in-out;
     cursor: pointer;
 
-    ${
-      isDisabled &&
-      css`
+    ${isDisabled &&
+    css`
       pointer-events: none;
 
       > button {
         color: ${colorTokens.text.disable};
       }
-    `
-    }
+    `}
 
     &:hover {
       background-color: ${colorTokens.background.hover};
     }
 
-    ${
-      optionsStyleVariant === 'small' &&
-      css`
+    ${optionsStyleVariant === 'small' &&
+    css`
       > button {
         ${typography.caption()};
       }
-    `
-    }
+    `}
 
-    ${
-      isSelected &&
-      css`
+    ${isSelected &&
+    css`
       background-color: ${colorTokens.background.active};
       position: relative;
 
@@ -387,8 +374,7 @@ const styles = {
         background-color: ${colorTokens.brand.blue};
         border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
       }
-    `
-    }
+    `}
   `,
   optionButton: ({ fontWeight = 'inherit' }: { fontWeight: string | number }) => css`
     width: 100%;
@@ -403,12 +389,10 @@ const styles = {
     color: ${colorTokens.icon.default};
     transition: transform 0.3s ease-in-out;
 
-    ${
-      isOpen &&
-      css`
+    ${isOpen &&
+    css`
       transform: rotate(180deg);
-    `
-    }
+    `}
   `,
   optionsContainer: css`
     position: absolute;
@@ -434,11 +418,9 @@ const styles = {
     justify-content: center;
     align-items: center;
 
-    ${
-      !isVisible &&
-      css`
+    ${!isVisible &&
+    css`
       display: none;
-    `
-    }
+    `}
   `,
 };

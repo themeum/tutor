@@ -72,13 +72,7 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }
 export default FormTrueFalse;
 
 const styles = {
-  option: ({
-    isSelected,
-    isOverlay,
-  }: {
-    isSelected: boolean;
-    isOverlay: boolean;
-  }) => css`
+  option: ({ isSelected, isOverlay }: { isSelected: boolean; isOverlay: boolean }) => css`
     ${styleUtils.display.flex()};
     ${typography.caption('medium')};
     align-items: center;
@@ -110,16 +104,13 @@ const styles = {
       }
     }
 
-
-    ${
-      isSelected &&
-      css`
-        [data-check-button] {
-          opacity: 1;
-          color: ${colorTokens.bg.success};
-        }
-      `
-    }
+    ${isSelected &&
+    css`
+      [data-check-button] {
+        opacity: 1;
+        color: ${colorTokens.bg.success};
+      }
+    `}
   `,
   optionLabel: ({
     isSelected,
@@ -157,30 +148,24 @@ const styles = {
       }
     }
 
-    ${
-      isSelected &&
-      css`
-        background-color: ${colorTokens.background.success.fill40};
-        color: ${colorTokens.text.primary};
+    ${isSelected &&
+    css`
+      background-color: ${colorTokens.background.success.fill40};
+      color: ${colorTokens.text.primary};
 
-        &:hover {
-          outline: 1px solid ${colorTokens.stroke.success.fill70};
-        }
-      `
-    }
+      &:hover {
+        outline: 1px solid ${colorTokens.stroke.success.fill70};
+      }
+    `}
 
-    ${
-      isDragging &&
-      css`
-        background-color: ${colorTokens.stroke.hover};
-      `
-    }
+    ${isDragging &&
+    css`
+      background-color: ${colorTokens.stroke.hover};
+    `}
 
-    ${
-      isOverlay &&
-      css`
-        box-shadow: ${shadow.drag};
-      `
-    }
+    ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
   `,
 };

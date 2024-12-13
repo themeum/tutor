@@ -14,6 +14,7 @@ import FormFileUploader from '@Components/fields/FormFileUploader';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 
+import Certificate from '@CourseBuilderComponents/additional/Certificate';
 import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
@@ -24,8 +25,8 @@ import {
 } from '@CourseBuilderServices/course';
 
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
+import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
@@ -35,8 +36,6 @@ import { styleUtils } from '@Utils/style-utils';
 import attachmentsPro2x from '@Images/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@Images/pro-placeholders/attachments.webp';
 
-import Certificate from '../components/additional/Certificate';
-
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
 const isPrerequisiteAddonEnabled = isAddonEnabled(Addons.TUTOR_PREREQUISITES);
@@ -45,6 +44,15 @@ const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
 const Additional = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!courseId) {
+      navigate('/', {
+        replace: true,
+      });
+    }
+  }, [navigate]);
+
   const form = useFormContext<CourseFormData>();
   const queryClient = useQueryClient();
   const isCourseDetailsFetching = useIsFetching({
@@ -65,6 +73,10 @@ const Additional = () => {
     excludedIds: [String(courseId), ...prerequisiteCourseIds],
     isEnabled: !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
   });
+
+  if (!courseId) {
+    return null;
+  }
 
   if (!courseId) {
     return null;
@@ -211,7 +223,9 @@ const Additional = () => {
           </Show>
         </div>
 
-        <Navigator />
+        <Show when={CURRENT_VIEWPORT.isAboveTablet}>
+          <Navigator />
+        </Show>
       </div>
 
       <Show when={isSidebarVisible}>
@@ -258,8 +272,8 @@ const Additional = () => {
                       emptyStateImage={attachmentsPro}
                       emptyStateImage2x={attachmentsPro2x}
                       title={__(
-                        'Provide additional resources like downloadable files and reference materials.',
-                        'tutor',
+                        // prettier-ignore
+                        __( 'Provide additional resources like downloadable files and reference materials.', 'tutor'),
                       )}
                     />
                   </Show>
@@ -282,6 +296,9 @@ const Additional = () => {
           <LiveClass />
         </div>
       </Show>
+      <Show when={!CURRENT_VIEWPORT.isAboveTablet}>
+        <Navigator />
+      </Show>
     </div>
   );
 };
@@ -291,11 +308,23 @@ const styles = {
   wrapper: ({ showSidebar }: { showSidebar: boolean }) => css`
     display: grid;
     grid-template-columns: ${showSidebar ? '1fr 338px' : '1fr'};
+    width: 100%;
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+      gap: ${spacing[24]};
+    }
   `,
   leftSide: css`
     padding: ${spacing[32]} ${spacing[32]} ${spacing[32]} 0;
     ${styleUtils.display.flex('column')}
     gap: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      padding: 0;
+      padding-top: ${spacing[16]};
+      gap: ${spacing[16]};
+    }
   `,
   formWrapper: css`
     ${styleUtils.display.flex('column')}
@@ -332,6 +361,13 @@ const styles = {
     border-left: 1px solid ${colorTokens.stroke.divider};
     min-height: calc(100vh - (${headerHeight}px + ${footerHeight}px));
     gap: ${spacing[16]};
+
+    ${Breakpoint.smallTablet} {
+      padding: 0;
+      padding-top: ${spacing[24]};
+      border-left: none;
+      border-top: 1px solid ${colorTokens.stroke.divider};
+    }
   `,
   label: css`
     ${styleUtils.display.inlineFlex()}

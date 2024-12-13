@@ -82,73 +82,75 @@ export default Paginator;
 
 const styles = {
   wrapper: css`
-		display: flex;
-		justify-content: end;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: ${spacing[8]};
-		height: 36px;
-	`,
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: ${spacing[8]};
+    height: 36px;
+  `,
   pageStatus: css`
-		${typography.body()}
-		color: ${colorTokens.text.title};
-		min-width: 100px;
-	`,
+    ${typography.body()}
+    color: ${colorTokens.text.title};
+    min-width: 100px;
+  `,
   paginationInput: css`
-		outline: 0;
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius[6]};
-		margin: 0 ${spacing[8]};
-		color: ${colorTokens.text.subdued};
-		padding: 8px 12px;
-		width: 72px;
+    outline: 0;
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius[6]};
+    margin: 0 ${spacing[8]};
+    color: ${colorTokens.text.subdued};
+    padding: 8px 12px;
+    width: 72px;
 
-		/* Chrome, Safari, Edge, Opera */
-		&::-webkit-outer-spin-button,
-		&::-webkit-inner-spin-button {
-			-webkit-appearance: none;
-			margin: ${spacing[0]};
-		}
+    /* Chrome, Safari, Edge, Opera */
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: ${spacing[0]};
+    }
 
-		/* Firefox */
-		&[type='number'] {
-			-moz-appearance: textfield;
-		}
-	`,
+    /* Firefox */
+    &[type='number'] {
+      -moz-appearance: textfield;
+    }
+  `,
   pageController: css`
-		gap: ${spacing[8]};
+    gap: ${spacing[8]};
 
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		height: 100%;
-	`,
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+  `,
   paginationButton: css`
-		${styleUtils.resetButton};
-		background: ${colorTokens.background.white};
-		color: ${colorTokens.icon.default};
-		border-radius: ${borderRadius[6]};
+    ${styleUtils.resetButton};
+    background: ${colorTokens.background.white};
+    color: ${colorTokens.icon.default};
+    border-radius: ${borderRadius[6]};
 
-		height: 32px;
-		width: 32px;
-		display: grid;
-		place-items: center;
-		transition: background-color 0.2s ease-in-out, color 0.3s ease-in-out;
+    height: 32px;
+    width: 32px;
+    display: grid;
+    place-items: center;
+    transition:
+      background-color 0.2s ease-in-out,
+      color 0.3s ease-in-out;
 
-		&:hover {
-			background: ${colorTokens.background.default};
+    &:hover {
+      background: ${colorTokens.background.default};
 
-			& > svg {
-				color: ${colorTokens.icon.brand};
-			}
-		}
+      & > svg {
+        color: ${colorTokens.icon.brand};
+      }
+    }
 
-		&:disabled {
-			background: ${colorTokens.background.white};
+    &:disabled {
+      background: ${colorTokens.background.white};
 
-			& > svg {
-				color: ${colorTokens.icon.disable.default};
-			}
-		}
-	`,
+      & > svg {
+        color: ${colorTokens.icon.disable.default};
+      }
+    }
+  `,
 };

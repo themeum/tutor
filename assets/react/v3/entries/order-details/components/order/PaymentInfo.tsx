@@ -31,8 +31,8 @@ export default PaymentInfo;
 
 const styles = {
   content: css`
-		${typography.caption()};
-		color: ${colorTokens.text.subdued};
-		padding: ${spacing[16]} ${spacing[20]};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
+    padding: ${spacing[16]} ${spacing[20]};
+  `,
 };

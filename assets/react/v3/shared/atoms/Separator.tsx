@@ -15,17 +15,17 @@ export { Separator };
 
 const styles = {
   horizontal: css`
-		height: 1px;
-		width: 100%;
-	`,
+    height: 1px;
+    width: 100%;
+  `,
   vertical: css`
-		height: 100%;
-		width: 1px;
-	`,
+    height: 100%;
+    width: 1px;
+  `,
   base: css`
-		flex-shrink: 0;
-		background-color: ${colorTokens.stroke.divider};
-	`,
+    flex-shrink: 0;
+    background-color: ${colorTokens.stroke.divider};
+  `,
 };
 
 const separatorVariant = createVariation(

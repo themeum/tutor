@@ -115,33 +115,33 @@ export default CategoryListTable;
 
 const styles = {
   tableActions: css`
-		padding: ${spacing[20]};
-	`,
+    padding: ${spacing[20]};
+  `,
   tableWrapper: css`
-		max-height: calc(100vh - 350px);
-		overflow: auto;
-	`,
+    max-height: calc(100vh - 350px);
+    overflow: auto;
+  `,
   paginatorWrapper: css`
-		margin: ${spacing[20]} ${spacing[16]};
-	`,
+    margin: ${spacing[20]} ${spacing[16]};
+  `,
   checkboxWrapper: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
   courseItem: css`
-		${typography.caption()};
-		margin-left: ${spacing[4]};
-	`,
+    ${typography.caption()};
+    margin-left: ${spacing[4]};
+  `,
   thumbnail: css`
-		width: 48px;
-		height: 48px;
-		border-radius: ${borderRadius[4]};
-	`,
+    width: 48px;
+    height: 48px;
+    border-radius: ${borderRadius[4]};
+  `,
   errorMessage: css`
-		height: 100px;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	`,
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
 };

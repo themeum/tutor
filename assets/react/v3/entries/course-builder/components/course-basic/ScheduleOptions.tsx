@@ -219,10 +219,10 @@ const styles = {
     display: flex;
     gap: ${spacing[12]};
     margin-top: ${spacing[8]};
-  
+
     button {
       width: 100%;
-  
+
       span {
         justify-content: center;
       }

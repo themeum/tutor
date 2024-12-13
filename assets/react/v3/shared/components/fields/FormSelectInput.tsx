@@ -374,10 +374,9 @@ const styles = {
     justify-content: space-between;
     align-items: center;
     position: relative;
-    
-    ${
-      isAiOutline &&
-      css`
+
+    ${isAiOutline &&
+    css`
       &::before {
         content: '';
         position: absolute;
@@ -385,13 +384,14 @@ const styles = {
         background: ${colorTokens.ai.gradient_1};
         color: ${colorTokens.text.primary};
         border: 1px solid transparent;
-        -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+        -webkit-mask:
+          linear-gradient(#fff 0 0) padding-box,
+          linear-gradient(#fff 0 0);
         -webkit-mask-composite: xor;
         mask-composite: exclude;
         border-radius: 6px;
       }
-    `
-    }
+    `}
   `,
   leftIcon: css`
     position: absolute;
@@ -423,79 +423,61 @@ const styles = {
       background-color: transparent;
       background-color: ${colorTokens.background.white};
 
-      ${
-        hasLeftIcon &&
-        css`
-          padding-left: ${spacing[48]};
-        `
-      }
+      ${hasLeftIcon &&
+      css`
+        padding-left: ${spacing[48]};
+      `}
 
-      ${
-        hasDescription &&
-        css`
-          &.tutor-input-field {
-            height: 56px;
-            padding-bottom: ${spacing[24]}
-          };
-        `
-      }
+      ${hasDescription &&
+      css`
+        &.tutor-input-field {
+          height: 56px;
+          padding-bottom: ${spacing[24]};
+        }
+      `}
 
-      ${
-        hasError &&
-        css`
-          background-color: ${colorTokens.background.status.errorFail};
-        `
-      }
+      ${hasError &&
+      css`
+        background-color: ${colorTokens.background.status.errorFail};
+      `}
 
-      ${
-        isAiOutline &&
-        css`
-          position: relative;
-          border: none;
-          background: transparent;
-        `
-      }
+      ${isAiOutline &&
+      css`
+        position: relative;
+        border: none;
+        background: transparent;
+      `}
 
       :focus {
         ${styleUtils.inputFocus};
 
-        ${
-          isMagicAi &&
-          css`
-            outline-color: ${colorTokens.stroke.magicAi};
-            background-color: ${colorTokens.background.magicAi[8]};
-          `
-        }
+        ${isMagicAi &&
+        css`
+          outline-color: ${colorTokens.stroke.magicAi};
+          background-color: ${colorTokens.background.magicAi[8]};
+        `}
 
-        ${
-          hasError &&
-          css`
-            border-color: ${colorTokens.stroke.danger};
-            background-color: ${colorTokens.background.status.errorFail};
-          `
-        }
+        ${hasError &&
+        css`
+          border-color: ${colorTokens.stroke.danger};
+          background-color: ${colorTokens.background.status.errorFail};
+        `}
       }
     }
   `,
-  description: ({
-    hasLeftIcon,
-  }: {
-    hasLeftIcon: boolean;
-  }) => css`
-		${typography.small()};
-		${styleUtils.text.ellipsis(1)}
-		color: ${colorTokens.text.hints};
-		position: absolute;
-		bottom: ${spacing[8]};
-		padding-inline: calc(${spacing[16]} + 1px) ${spacing[32]};
+  description: ({ hasLeftIcon }: { hasLeftIcon: boolean }) => css`
+    ${typography.small()};
+    ${styleUtils.text.ellipsis(1)}
+    color: ${colorTokens.text.hints};
+    position: absolute;
+    bottom: ${spacing[8]};
+    padding-inline: calc(${spacing[16]} + 1px) ${spacing[32]};
 
-		${
-      hasLeftIcon &&
-      css`
-        padding-left: calc(${spacing[48]} + 1px);
-      `
-    }
-	`,
+    ${hasLeftIcon &&
+    css`
+      padding-left: calc(${spacing[48]} + 1px);
+    `}
+  `,
   listLabel: css`
     ${typography.body()};
     color: ${colorTokens.text.subdued};
@@ -517,16 +499,14 @@ const styles = {
         justify-content: center;
       }
 
-      ${
-        !isDisabled &&
-        css`
-          color: ${colorTokens.text.title};
+      ${!isDisabled &&
+      css`
+        color: ${colorTokens.text.title};
 
-          &:hover {
-            text-decoration: underline;
-          }
-        `
-      }
+        &:hover {
+          text-decoration: underline;
+        }
+      `}
     }
   `,
   optionsWrapper: css`
@@ -545,12 +525,10 @@ const styles = {
     ${styleUtils.overflowYAuto};
     scrollbar-gutter: auto;
 
-    ${
-      !removeOptionsMinWidth &&
-      css`
-        min-width: 200px;
-      `
-    }
+    ${!removeOptionsMinWidth &&
+    css`
+      min-width: 200px;
+    `}
   `,
   optionItem: ({
     isSelected = false,
@@ -571,40 +549,36 @@ const styles = {
     cursor: ${isDisabled ? 'not-allowed' : 'pointer'};
     opacity: ${isDisabled ? 0.5 : 1};
 
-    ${
-      isActive &&
-      css`
-        background-color: ${colorTokens.background.hover};
-      `
-    }
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+    `}
 
     &:hover {
       background-color: ${!isDisabled && colorTokens.background.hover};
     }
 
-    ${
-      !isDisabled &&
-      isSelected &&
-      css`
-        background-color: ${colorTokens.background.active};
-        position: relative;
+    ${!isDisabled &&
+    isSelected &&
+    css`
+      background-color: ${colorTokens.background.active};
+      position: relative;
 
-        &::before {
-          content: '';
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 3px;
-          height: 100%;
-          background-color: ${colorTokens.action.primary.default};
-          border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
-        }
-      `
-    }
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background-color: ${colorTokens.action.primary.default};
+        border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
+      }
+    `}
   `,
   label: css`
     ${styleUtils.resetButton};
-		${styleUtils.text.ellipsis(1)}
+    ${styleUtils.text.ellipsis(1)}
     width: 100%;
     height: 100%;
     display: flex;
@@ -642,8 +616,8 @@ const styles = {
     right: ${spacing[4]};
     display: flex;
     align-items: center;
-		transition: transform 0.3s ease-in-out;
-		color: ${colorTokens.icon.default};
+    transition: transform 0.3s ease-in-out;
+    color: ${colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
     padding: ${spacing[6]};
     height: 100%;
@@ -651,13 +625,11 @@ const styles = {
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
     }
-		
-		${
-      isOpen &&
-      css`
-        transform: rotate(180deg); 
-      `
-    }
+
+    ${isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   emptyState: css`
     ${styleUtils.flexCenter()};

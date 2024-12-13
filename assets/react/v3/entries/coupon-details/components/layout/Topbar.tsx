@@ -3,8 +3,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import { TutorBadge } from '@Atoms/TutorBadge';
 import Container from '@Components/Container';
 import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
@@ -17,7 +16,6 @@ import { styleUtils } from '@Utils/style-utils';
 import { makeFirstCharacterUpperCase } from '@Utils/util';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { format } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
 
 export const TOPBAR_HEIGHT = 96;
@@ -60,7 +58,7 @@ function Topbar() {
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>
+                <h4 css={styles.headerTitle}>
                   {courseId ? __('Update Coupon', 'tutor') : __('Create Coupon', 'tutor')}
                 </h4>
                 <TutorBadge variant={statusVariant[coupon.coupon_status]}>
@@ -83,11 +81,7 @@ function Topbar() {
               >
                 {() => (
                   <p css={styles.updateMessage}>
-                    {sprintf(
-                      __('Updated by %s at %s', 'tutor'),
-                      coupon.coupon_update_by,
-                      coupon.updated_at_readable
-                    )}
+                    {sprintf(__('Updated by %s at %s', 'tutor'), coupon.coupon_update_by, coupon.updated_at_readable)}
                   </p>
                 )}
               </Show>
@@ -115,33 +109,59 @@ export default Topbar;
 
 const styles = {
   wrapper: css`
-		height: ${TOPBAR_HEIGHT}px;
-		background: ${colorTokens.background.white};
-		position: sticky;
-		top: 32px;
-		z-index: ${zIndex.positive};
-	`,
+    height: ${TOPBAR_HEIGHT}px;
+    background: ${colorTokens.background.white};
+    position: sticky;
+    top: 32px;
+    z-index: ${zIndex.positive};
+
+    ${Breakpoint.mobile} {
+      position: unset;
+      padding-inline: ${spacing[8]};
+      top: 0;
+    }
+
+    ${Breakpoint.smallMobile} {
+      position: unset;
+      height: auto;
+    }
+  `,
   innerWrapper: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		height: 100%;
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding-inline: ${spacing[8]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[12]};
+      flex-direction: column;
+      gap: ${spacing[8]};
+    }
+  `,
   headerContent: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
+  headerTitle: css`
+    ${typography.heading5('medium')};
+
+    ${Breakpoint.smallMobile} {
+      ${typography.heading6('medium')};
+    }
+  `,
   left: css`
-		display: flex;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+    width: 100%;
+  `,
   right: css`
-		display: flex;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    gap: ${spacing[12]};
+  `,
   updateMessage: css`
-		${typography.body()};
-		color: ${colorTokens.text.subdued};
-	`,
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
+  `,
 };

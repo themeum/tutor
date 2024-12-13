@@ -49,9 +49,9 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
     },
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('fields.0.value');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onSubmit = (data: PaymentMethod) => {
@@ -60,8 +60,8 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
   };
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title}>
-      <form onSubmit={form.handleSubmit(onSubmit)} css={styles.contentWrapper}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} maxWidth={620}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
         <div css={styles.formBody}>
           {manualMethodFields.map((field, index) => {
             if (field.name === 'method_name') {
@@ -136,9 +136,6 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
 export default ManualPaymentModal;
 
 const styles = {
-  contentWrapper: css`
-    width: 620px;
-  `,
   formBody: css`
     display: flex;
     flex-direction: column;

@@ -77,46 +77,36 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
 export default SubscriptionPreview;
 const styles = {
   outer: css`
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
-  inner: ({
-    hasSubscriptions,
-  }: {
-    hasSubscriptions: boolean;
-  }) => css`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
+  inner: ({ hasSubscriptions }: { hasSubscriptions: boolean }) => css`
     background: ${colorTokens.background.white};
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius.card};
-		width: 100%;
-		overflow: hidden;
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius.card};
+    width: 100%;
+    overflow: hidden;
 
-    ${
-      !hasSubscriptions &&
-      css`
-        border: none;
-      `
-    }
-	`,
+    ${!hasSubscriptions &&
+    css`
+      border: none;
+    `}
+  `,
   header: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		${typography.body()};
-		color: ${colorTokens.text.title};
-	`,
-  emptyState: ({
-    hasSubscriptions,
-  }: {
-    hasSubscriptions: boolean;
-  }) => css`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    ${typography.body()};
+    color: ${colorTokens.text.title};
+  `,
+  emptyState: ({ hasSubscriptions }: { hasSubscriptions: boolean }) => css`
     padding: ${hasSubscriptions ? `${spacing[8]} ${spacing[12]}` : 0};
-		width: 100%;
-		
-		& > button {
-			width: 100%;
-		}
-	`,
+    width: 100%;
+
+    & > button {
+      width: 100%;
+    }
+  `,
 };

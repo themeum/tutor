@@ -33,7 +33,7 @@ const SuccessModal = ({
   bodyCss,
 }: SuccessModalProps) => {
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} entireHeader={<>&nbsp;</>}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} entireHeader={<>&nbsp;</>} maxWidth={408}>
       <div css={[styles.wrapper, wrapperCss]}>
         <Show when={image}>
           <img
@@ -75,7 +75,6 @@ export default SuccessModal;
 
 const styles = {
   wrapper: css`
-    width: 408px;
     ${styleUtils.display.flex('column')};
     padding: ${spacing[24]};
     gap: ${spacing[24]};

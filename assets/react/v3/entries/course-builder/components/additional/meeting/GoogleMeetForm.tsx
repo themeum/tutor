@@ -358,11 +358,9 @@ const styles = {
     gap: ${spacing[8]};
     z-index: ${zIndex.positive};
 
-    ${
-      isScrolling &&
-      css`
-        box-shadow: ${shadow.scrollable};
-      `
-    }
+    ${isScrolling &&
+    css`
+      box-shadow: ${shadow.scrollable};
+    `}
   `,
 };

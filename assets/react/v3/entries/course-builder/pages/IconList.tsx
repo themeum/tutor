@@ -52,27 +52,27 @@ export default IconList;
 
 const styles = {
   container: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[32]};
-		margin-block: 60px;
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[32]};
+    margin-block: 60px;
+  `,
   wrapper: css`
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: ${spacing[32]};
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: ${spacing[32]};
 
-		& > div {
-			display: flex;
-			flex-direction: column;
-			gap: ${spacing[8]};
-			${typography.caption()};
-			color: ${colorTokens.text.subdued};
-			align-items: center;
+    & > div {
+      display: flex;
+      flex-direction: column;
+      gap: ${spacing[8]};
+      ${typography.caption()};
+      color: ${colorTokens.text.subdued};
+      align-items: center;
 
-			svg {
-				color: ${colorTokens.icon.default};
-			}
-		}
-	`,
+      svg {
+        color: ${colorTokens.icon.default};
+      }
+    }
+  `,
 };

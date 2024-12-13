@@ -94,7 +94,7 @@ function CouponDiscount() {
               type="number"
               label={__('Discount Value', 'tutor')}
               placeholder="0"
-              content={discountType === 'flat' ? tutor_currency?.symbol ?? '$' : '%'}
+              content={discountType === 'flat' ? (tutor_currency?.symbol ?? '$') : '%'}
               contentCss={styleUtils.inputCurrencyStyle}
             />
           )}
@@ -231,69 +231,69 @@ function AppliesToItem({ image, title, subTitle, handleDeleteClick }: AppliesToI
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   discountTypeWrapper: css`
-		display: flex;
-		gap: ${spacing[20]};
-	`,
+    display: flex;
+    gap: ${spacing[20]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   addCoursesButton: css`
-		width: fit-content;
-		color: ${colorTokens.text.brand};
+    width: fit-content;
+    color: ${colorTokens.text.brand};
 
-		svg {
-			color: ${colorTokens.text.brand};
-		}
-	`,
+    svg {
+      color: ${colorTokens.text.brand};
+    }
+  `,
   price: css`
-		display: flex;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    gap: ${spacing[4]};
+  `,
   discountPrice: css`
-		text-decoration: line-through;
-	`,
+    text-decoration: line-through;
+  `,
   selectedWrapper: css`
-		border: 1px solid ${colorTokens.stroke.divider};
-		border-radius: ${borderRadius[6]};
-	`,
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius[6]};
+  `,
   selectedItem: css`
-		padding: ${spacing[12]};
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-		
-		&:not(:last-child) {
-			border-bottom: 1px solid ${colorTokens.stroke.divider};
-		}
-	`,
+    padding: ${spacing[12]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+
+    &:not(:last-child) {
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    }
+  `,
   selectedContent: css`
-		width: 100%;
-	`,
+    width: 100%;
+  `,
   selectedTitle: css`
-		${typography.small()};
-		color: ${colorTokens.text.primary};
-		margin-bottom: ${spacing[4]};
-	`,
+    ${typography.small()};
+    color: ${colorTokens.text.primary};
+    margin-bottom: ${spacing[4]};
+  `,
   selectedSubTitle: css`
-		${typography.small()};
-		color: ${colorTokens.text.hints};
-	`,
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+  `,
   selectedThumb: css`
-		height: 48px;
-	`,
+    height: 48px;
+  `,
   thumbnail: css`
-		width: 48px;
-		height: 48px;
-		border-radius: ${borderRadius[4]};
-	`,
+    width: 48px;
+    height: 48px;
+    border-radius: ${borderRadius[4]};
+  `,
   startingFrom: css`
-		color: ${colorTokens.text.hints};
-	`,
+    color: ${colorTokens.text.hints};
+  `,
 };
