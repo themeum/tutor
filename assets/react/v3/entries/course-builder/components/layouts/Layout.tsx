@@ -30,13 +30,26 @@ const Layout = () => {
 
   useEffect(() => {
     if (courseDetailsQuery.data) {
-      form.reset(convertCourseDataToFormData(courseDetailsQuery.data), {
+      const dirtyFields = Object.keys(form.formState.dirtyFields);
+      const convertedCourseData = convertCourseDataToFormData(courseDetailsQuery.data);
+      const formValues = form.getValues();
+
+      const updatedCourseData = Object.entries(convertedCourseData).reduce<Partial<CourseFormData>>(
+        (courseFormData, [key, value]) => {
+          const typedKey = key as keyof CourseFormData;
+          courseFormData[typedKey] = dirtyFields.includes(key) ? formValues[typedKey] : value;
+          return courseFormData;
+        },
+        {},
+      );
+
+      form.reset(updatedCourseData, {
         keepDirtyValues: true,
         keepDirty: true,
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [courseDetailsQuery.data]);
+  }, [courseDetailsQuery.data, form.reset]);
 
   return (
     <FormProvider {...form}>

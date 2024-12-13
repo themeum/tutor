@@ -351,7 +351,10 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         isLoading={
-          deleteContentMutation.isPending || deleteQuizMutation.isPending || deleteGoogleMeetMutation.isPending
+          deleteContentMutation.isPending ||
+          deleteQuizMutation.isPending ||
+          deleteGoogleMeetMutation.isPending ||
+          deleteZoomMeetingMutation.isPending
         }
         triggerRef={deleteRef}
         closePopover={noop}
