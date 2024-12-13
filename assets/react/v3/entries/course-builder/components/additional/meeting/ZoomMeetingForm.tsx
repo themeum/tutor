@@ -199,11 +199,11 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                   required: __('Duration is required', 'tutor'),
                 }}
                 render={(controllerProps) => (
-                  <FormInput 
+                  <FormInput
                     {...controllerProps}
                     label={__('Meeting Duration', 'tutor')}
                     placeholder={__('Duration', 'tutor')}
-                    type="number" 
+                    type="number"
                     selectOnFocus
                   />
                 )}
@@ -361,11 +361,9 @@ const styles = {
     gap: ${spacing[8]};
     z-index: ${zIndex.positive};
 
-    ${
-      isScrolling &&
-      css`
-        box-shadow: ${shadow.scrollable};
-      `
-    }
+    ${isScrolling &&
+    css`
+      box-shadow: ${shadow.scrollable};
+    `}
   `,
 };

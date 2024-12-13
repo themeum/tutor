@@ -244,7 +244,7 @@ const FormTopicPrerequisites = ({
                         </span>
                         <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
                           <span data-question-count css={typography.tiny()}>
-                            {sprintf(__('(%s questions)', 'tutor'), content.total_question)}
+                            {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
                           </span>
                         </Show>
                       </div>
@@ -326,15 +326,15 @@ const FormTopicPrerequisites = ({
                                     width={24}
                                     height={24}
                                     style={css`
-                                        color: ${icons[content.post_type].color};
-                                      `}
+                                      color: ${icons[content.post_type].color};
+                                    `}
                                   />
                                   <span css={styles.title} title={content.post_title}>
                                     {content.post_title}
                                   </span>
                                   <Show when={content.post_type === 'tutor_quiz' && content.total_question}>
                                     <span data-question-count css={typography.tiny()}>
-                                      {sprintf(__('(%s questions)', 'tutor'), content.total_question)}
+                                      {sprintf(__('(%d questions)', 'tutor'), content.total_question)}
                                     </span>
                                   </Show>
                                 </div>
@@ -459,11 +459,7 @@ const styles = {
     padding-inline: ${spacing[10]};
     margin-bottom: ${spacing[8]};
   `,
-  groupItems: ({
-    onPopover,
-  }: {
-    onPopover: boolean;
-  }) => css`
+  groupItems: ({ onPopover }: { onPopover: boolean }) => css`
     position: relative;
     width: 100%;
     padding: ${spacing[10]} ${spacing[8]};
@@ -485,27 +481,23 @@ const styles = {
       opacity: 0;
     }
 
-    ${
-      !onPopover &&
-      css`
-        box-shadow: ${shadow.card};
-      `
-    }
+    ${!onPopover &&
+    css`
+      box-shadow: ${shadow.card};
+    `}
 
     :hover {
       background-color: ${colorTokens.background.hover};
 
-      ${
-        !onPopover &&
-        css`
-          background-color: ${colorTokens.background.white};
-          border-color: ${colorTokens.stroke.default};
+      ${!onPopover &&
+      css`
+        background-color: ${colorTokens.background.white};
+        border-color: ${colorTokens.stroke.default};
 
-          [data-visually-hidden] {
-            opacity: 1;
-          }
-        `
-      }
+        [data-visually-hidden] {
+          opacity: 1;
+        }
+      `}
     }
   `,
   title: css`
@@ -515,22 +507,16 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
   `,
-  iconAndTitle: ({
-    onPopover,
-  }: {
-    onPopover: boolean;
-  }) => css`
+  iconAndTitle: ({ onPopover }: { onPopover: boolean }) => css`
     ${styleUtils.text.ellipsis(1)};
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
 
-    ${
-      onPopover &&
-      css`
-        padding-left: ${spacing[16]};
-      `
-    }
+    ${onPopover &&
+    css`
+      padding-left: ${spacing[16]};
+    `}
 
     svg {
       flex-shrink: 0;

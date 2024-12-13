@@ -52,7 +52,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
   const paymentFormFields = data.is_manual
     ? manualMethodFields
-    : payment_gateways.find((item) => item.name === data.name)?.fields ?? [];
+    : (payment_gateways.find((item) => item.name === data.name)?.fields ?? []);
 
   const installPaymentMutation = useInstallPaymentMutation();
   const removePaymentMutation = useRemovePaymentMutation();
@@ -195,7 +195,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               options={
                                 isObject(field.options)
                                   ? convertToOptions(field.options as Record<string, string>)
-                                  : field.options ?? []
+                                  : (field.options ?? [])
                               }
                               isInlineLabel
                             />
@@ -331,14 +331,12 @@ const styles = {
       }
     }
 
-    ${
-      isOverlay &&
-      css`
+    ${isOverlay &&
+    css`
       [data-card] {
         box-shadow: ${shadow.drag} !important;
       }
-    `
-    }
+    `}
   `,
   cardActions: css`
     display: flex;

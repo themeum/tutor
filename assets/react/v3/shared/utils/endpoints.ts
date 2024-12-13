@@ -14,14 +14,11 @@ const endpoints = {
   CATEGORY_LIST: 'category_list',
   CREATED_COURSE: 'tutor_create_course',
   TUTOR_INSTRUCTOR_SEARCH: 'tutor_course_instructor_search',
-  GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_course_plans',
-  SAVE_SUBSCRIPTION: 'tutor_subscription_course_plan_save',
-  DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
-  DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
-  SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
+
   TUTOR_YOUTUBE_VIDEO_DURATION: 'tutor_youtube_video_duration',
   TUTOR_UNLINK_PAGE_BUILDER: 'tutor_unlink_page_builder',
 
+  // AI CONTENT GENERATION
   GENERATE_AI_IMAGE: 'tutor_pro_generate_image',
   MAGIC_FILL_AI_IMAGE: 'tutor_pro_magic_fill_image',
   MAGIC_TEXT_GENERATION: 'tutor_pro_generate_text_content',
@@ -34,8 +31,54 @@ const endpoints = {
   SAVE_AI_GENERATED_COURSE_CONTENT: 'tutor_pro_ai_course_create',
   GENERATE_QUIZ_QUESTIONS: 'tutor_pro_generate_quiz_questions',
 
-  // Quiz
+  // SUBSCRIPTION
+  GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_course_plans',
+  SAVE_SUBSCRIPTION: 'tutor_subscription_course_plan_save',
+  DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
+  DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
+  SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
+
+  // COURSE
+  GET_COURSE_DETAILS: 'tutor_course_details',
+  UPDATE_COURSE: 'tutor_update_course',
+  GET_COURSE_LIST: 'tutor_course_list',
+
+  // WOO COMMERCE PRODUCTS
+  GET_WC_PRODUCTS: 'tutor_get_wc_products',
+  GET_WC_PRODUCT_DETAILS: 'tutor_get_wc_product',
+
+  // QUIZ
+  GET_QUIZ_DETAILS: 'tutor_quiz_details',
   SAVE_QUIZ: 'tutor_quiz_builder_save',
+  QUIZ_IMPORT_DATA: 'quiz_import_data',
+  QUIZ_EXPORT_DATA: 'quiz_export_data',
+  DELETE_QUIZ: 'tutor_quiz_delete',
+
+  // ZOOM
+  GET_ZOOM_MEETING_DETAILS: 'tutor_zoom_meeting_details',
+  SAVE_ZOOM_MEETING: 'tutor_zoom_save_meeting',
+  DELETE_ZOOM_MEETING: 'tutor_zoom_delete_meeting',
+
+  // GOOGLE MEET
+  GET_GOOGLE_MEET_DETAILS: 'tutor_google_meet_meeting_details',
+  SAVE_GOOGLE_MEET: 'tutor_google_meet_new_meeting',
+  DELETE_GOOGLE_MEET: 'tutor_google_meet_delete',
+
+  // TOPIC
+  GET_COURSE_CONTENTS: 'tutor_course_contents',
+  SAVE_TOPIC: 'tutor_save_topic',
+  DELETE_TOPIC: 'tutor_delete_topic',
+  DELETE_TOPIC_CONTENT: 'tutor_delete_lesson',
+  UPDATE_COURSE_CONTENT_ORDER: 'tutor_update_course_content_order',
+  DUPLICATE_CONTENT: 'tutor_duplicate_content',
+
+  // LESSON
+  GET_LESSON_DETAILS: 'tutor_lesson_details',
+  SAVE_LESSON: 'tutor_save_lesson',
+
+  // ASSIGNMENT
+  GET_ASSIGNMENT_DETAILS: 'tutor_assignment_details',
+  SAVE_ASSIGNMENT: 'tutor_assignment_save',
 
   // TAX SETTINGS
   GET_TAX_SETTINGS: 'tutor_get_tax_settings',
@@ -48,6 +91,17 @@ const endpoints = {
   GET_PAYMENT_GATEWAYS: 'tutor_payment_gateways',
   INSTALL_PAYMENT_GATEWAY: 'tutor_install_payment_gateway',
   REMOVE_PAYMENT_GATEWAY: 'tutor_remove_payment_gateway',
+
+  // COUPON
+  GET_COUPON_DETAILS: 'tutor_coupon_details',
+  CREATE_COUPON: 'tutor_coupon_create',
+  UPDATE_COUPON: 'tutor_coupon_update',
+  COUPON_APPLIES_TO: 'tutor_coupon_applies_to_list',
+
+  // ENROLLMENT
+  CREATE_ENROLLMENT: 'tutor_enroll_bulk_student',
+  GET_COURSE_BUNDLE_LIST: 'tutor_course_bundle_list',
+  GET_UNENROLLED_USERS: 'tutor_unenrolled_users',
 };
 
 export default endpoints;

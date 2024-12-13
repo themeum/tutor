@@ -19,7 +19,7 @@ import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptio
 
 import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats, TutorRoles } from '@Config/constants';
-import { colorTokens, headerHeight, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
@@ -81,7 +81,7 @@ const CourseBasicSidebar = () => {
 
   const userList = useUserListQuery(userSearchText);
 
-  const instructorListQuery = useInstructorListQuery(String(courseId) ?? '', isMultiInstructorEnabled);
+  const instructorListQuery = useInstructorListQuery(String(courseId), isMultiInstructorEnabled);
 
   const convertedCourseInstructors = (courseDetails?.course_instructors || []).map((instructor) => ({
     id: instructor.id,
@@ -171,7 +171,6 @@ const CourseBasicSidebar = () => {
             label={__('Intro Video', 'tutor')}
             buttonText={__('Upload Video', 'tutor')}
             infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
-            supportedFormats={['mp4', 'webm']}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
           />
         )}
@@ -276,6 +275,13 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
+
+    ${Breakpoint.smallTablet} {
+      border-left: none;
+      border-top: 1px solid ${colorTokens.stroke.divider};
+      padding-block: ${spacing[16]};
+      padding-left: 0;
+    }
   `,
   statusAndDate: css`
     ${styleUtils.display.flex('column')};

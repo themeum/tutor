@@ -11,7 +11,7 @@
 
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Billing', 'tutor' ); ?></div>
+<div class="tutor-fs-4 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'tutor' ); ?></div>
 
 <div class="tutor-dashboard-content-inner tutor-dashboard-setting-billing">
 	<div class="tutor-mb-32">

@@ -51,9 +51,7 @@ function CouponInfo() {
     <Box bordered css={styles.discountWrapper}>
       <div css={styles.couponWrapper}>
         <BoxTitle>{__('Coupon Info', 'tutor')}</BoxTitle>
-        <BoxSubtitle>
-          {__('Create a coupon code or set up automatic discounts.', 'tutor')}
-        </BoxSubtitle>
+        <BoxSubtitle>{__('Create a coupon code or set up automatic discounts.', 'tutor')}</BoxSubtitle>
       </div>
       <Controller
         name="coupon_type"
@@ -122,33 +120,33 @@ export default CouponInfo;
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   couponCodeWrapper: css`
-		position: relative;
-	`,
+    position: relative;
+  `,
   radioWrapper: css`
-		display: flex;
-		gap: ${spacing[40]};
-	`,
+    display: flex;
+    gap: ${spacing[40]};
+  `,
   generateCode: css`
-		${styleUtils.resetButton};
-		color: ${colorTokens.action.primary.default};
-		position: absolute;
-		right: ${spacing[0]};
-		top: ${spacing[0]};
+    ${styleUtils.resetButton};
+    color: ${colorTokens.action.primary.default};
+    position: absolute;
+    right: ${spacing[0]};
+    top: ${spacing[0]};
 
-		&:hover,
-		&:active,
-		&:focus {
-			color: ${colorTokens.action.primary.hover};
-		}
-	`,
+    &:hover,
+    &:active,
+    &:focus {
+      color: ${colorTokens.action.primary.hover};
+    }
+  `,
 };

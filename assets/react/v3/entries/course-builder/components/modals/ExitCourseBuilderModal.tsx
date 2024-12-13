@@ -18,6 +18,7 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
       title={__('Do you want to exit without saving?', 'tutor')}
+      maxWidth={445}
     >
       <div css={styles.wrapper}>
         <p css={styles.message}>
@@ -58,7 +59,6 @@ export default ExitCourseBuilderModal;
 
 const styles = {
   wrapper: css`
-    width: 445px;
     ${styleUtils.display.flex('column')};
   `,
   message: css`

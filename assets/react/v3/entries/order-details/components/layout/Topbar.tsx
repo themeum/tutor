@@ -3,7 +3,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Container from '@Components/Container';
 import { useModal } from '@Components/modals/Modal';
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
@@ -27,7 +27,7 @@ function Topbar() {
     if (redirectUrl) {
       window.location.href = decodeURIComponent(redirectUrl);
     } else {
-      window.location.href = `${tutorConfig.home_url}/wp-admin/admin.php?page=tutor_orders`;
+      window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_orders`;
     }
   }
 
@@ -41,7 +41,7 @@ function Topbar() {
             </button>
             <div>
               <div css={styles.headerContent}>
-                <h4 css={typography.heading5('medium')}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
+                <h4 css={styles.headerTitle}>{sprintf(__('Order #%s', 'tutor'), order.id)}</h4>
                 <Show when={order.payment_status}>
                   <PaymentBadge status={order.payment_status} />
                 </Show>
@@ -53,21 +53,13 @@ function Topbar() {
                 when={order.updated_at_readable}
                 fallback={
                   <p css={styles.updateMessage}>
-                    {sprintf(
-                      __('Created by %s at %s', 'tutor'),
-                      order.created_by,
-                      order.created_at_readable
-                    )}
+                    {sprintf(__('Created by %s at %s', 'tutor'), order.created_by, order.created_at_readable)}
                   </p>
                 }
               >
                 {(date) => (
                   <p css={styles.updateMessage}>
-                    {sprintf(
-                      __('Updated by %s at %s', 'tutor'),
-                      order.updated_by,
-                      date
-                    )}
+                    {sprintf(__('Updated by %s at %s', 'tutor'), order.updated_by, date)}
                   </p>
                 )}
               </Show>
@@ -86,6 +78,9 @@ function Topbar() {
                   },
                 });
               }}
+              buttonCss={css`
+                flex-shrink: 0;
+              `}
             >
               {__('Cancel Order', 'tutor')}
             </Button>
@@ -102,21 +97,41 @@ const styles = {
   wrapper: css`
     height: ${TOPBAR_HEIGHT}px;
     background: ${colorTokens.background.white};
+
+    ${Breakpoint.smallMobile} {
+      padding-inline: ${spacing[8]};
+      height: auto;
+    }
   `,
   innerWrapper: css`
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 100%;
+    padding-inline: ${spacing[8]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[12]};
+      flex-direction: column;
+      gap: ${spacing[8]};
+    }
   `,
   headerContent: css`
     display: flex;
     align-items: center;
     gap: ${spacing[16]};
   `,
+  headerTitle: css`
+    ${typography.heading5('medium')};
+
+    ${Breakpoint.smallMobile} {
+      ${typography.heading6('medium')};
+    }
+  `,
   left: css`
     display: flex;
     gap: ${spacing[16]};
+    width: 100%;
   `,
   updateMessage: css`
     ${typography.body()};

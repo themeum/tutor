@@ -23,8 +23,8 @@ import { type ModalProps, useModal } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import { tutorConfig } from '@Config/config';
-import { Addons, TutorRoles } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
+import { Addons, CURRENT_VIEWPORT, TutorRoles } from '@Config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { ContentDripType } from '@CourseBuilderServices/course';
@@ -208,8 +208,8 @@ const LessonModal = ({
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
       icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-      title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
-      subtitle={subtitle}
+      title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+      subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
       maxWidth={1070}
       actions={
         isFormDirty && (
@@ -241,6 +241,7 @@ const LessonModal = ({
     >
       <div css={styles.wrapper}>
         <Show when={!getLessonDetailsQuery.isLoading} fallback={<LoadingOverlay />}>
+          {/* This div is required to make the sticky work */}
           <div>
             <div css={styles.lessonInfo}>
               <Controller
@@ -282,7 +283,7 @@ const LessonModal = ({
                                 size="small"
                                 onClick={() => {
                                   window.open(
-                                    `${tutorConfig.home_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
+                                    `${tutorConfig.site_url}/wp-admin/post.php?post=${lessonId}&action=edit`,
                                     '_blank',
                                     'noopener',
                                   );
@@ -358,7 +359,6 @@ const LessonModal = ({
                   label={__('Video', 'tutor')}
                   buttonText={__('Upload Video', 'tutor')}
                   infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
-                  supportedFormats={['mp4', 'webm']}
                   onGetDuration={(duration) => {
                     form.setValue('duration.hour', duration.hours);
                     form.setValue('duration.minute', duration.minutes);
@@ -452,10 +452,10 @@ const LessonModal = ({
                         </div>
                       }
                       placeholder={__('Select Unlock Date', 'tutor')}
-                      helpText={__(
-                        'This lesson will be available from the given date. Leave empty to make it available immediately.',
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __('This lesson will be available from the given date. Leave empty to make it available immediately.', 'tutor')
+                      }
                     />
                   )}
                 />
@@ -524,19 +524,19 @@ const LessonModal = ({
                           {!isTutorPro && <ProBadge size="small" content={__('Pro', 'tutor')} />}
                         </div>
                       }
-                      helpText={__(
-                        'If checked, any user/guest can view this lesson without enrolling in the course.',
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __( 'If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
+                      }
                     />
                   )}
                 />
                 <Show when={form.watch('lesson_preview')}>
                   <div css={styles.previewInfo}>
-                    {__(
-                      'This lesson is now available for preview. Users and guests can view it without enrolling in the course.',
-                      'tutor',
-                    )}
+                    {
+                      // prettier-ignore
+                      __('This lesson is now available for preview. Users and guests can view it without enrolling in the course.', 'tutor')
+                    }
                   </div>
                 </Show>
               </div>
@@ -552,12 +552,21 @@ export default LessonModal;
 
 const styles = {
   wrapper: css`
-    width: 1070px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 338px;
     height: 100%;
+    width: 100%;
     padding-inline: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+      padding-inline: ${spacing[24]};
+    }
+
+    ${Breakpoint.mobile} {
+      padding-inline: ${spacing[16]};
+    }
   `,
   lessonInfo: css`
     padding-block: ${spacing[20]};
@@ -568,6 +577,11 @@ const styles = {
     position: sticky;
     top: 0;
     z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
+
+    ${Breakpoint.smallTablet} {
+      position: unset;
+      padding-right: 0;
+    }
   `,
   description: css`
     position: relative;
@@ -618,6 +632,11 @@ const styles = {
     gap: ${spacing[16]};
     padding-block: ${spacing[20]};
     padding-left: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      border-left: none;
+      padding-left: 0;
+    }
   `,
   durationWrapper: css`
     display: flex;

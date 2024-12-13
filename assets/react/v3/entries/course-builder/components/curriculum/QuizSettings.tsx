@@ -14,7 +14,7 @@ import FormSwitch from '@Components/fields/FormSwitch';
 import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
 
 import { Addons } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { ContentDripType } from '@CourseBuilderServices/course';
@@ -129,10 +129,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   {...controllerProps}
                   type="number"
                   label={__('Attempts Allowed', 'tutor')}
-                  helpText={__(
-                    'Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts',
-                    'tutor',
-                  )}
+                  helpText={
+                    // prettier-ignore
+                    __('Define how many times a student can retake this quiz. Setting it to "0" allows unlimited attempts', 'tutor')
+                  }
                   selectOnFocus
                 />
               )}
@@ -147,10 +147,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                 <FormSwitch
                   {...controllerProps}
                   label={__('Passing is Required', 'tutor')}
-                  helpText={__(
-                    'By enabling this option, the student must have to pass it to access the next quiz',
-                    'tutor',
-                  )}
+                  helpText={
+                    // prettier-ignore
+                    __( 'By enabling this option, the student must have to pass it to access the next quiz', 'tutor')
+                  }
                 />
               )}
             />
@@ -180,10 +180,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                   {...controllerProps}
                   type="number"
                   label={__('Max Question Allowed to Answer', 'tutor')}
-                  helpText={__(
-                    'Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included',
-                    'tutor',
-                  )}
+                  helpText={
+                    // prettier-ignore
+                    __('Set the number of quiz questions randomly from your question pool. If the set number exceeds available questions, all questions will be included', 'tutor')
+                  }
                   selectOnFocus
                 />
               )}
@@ -227,10 +227,10 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       </div>
                     }
                     placeholder={__('Select Unlock Date', 'tutor')}
-                    helpText={__(
-                      'This quiz will be available from the given date. Leave empty to make it available immediately.',
-                      'tutor',
-                    )}
+                    helpText={
+                      // prettier-ignore
+                      __('This quiz will be available from the given date. Leave empty to make it available immediately.', 'tutor')
+                    }
                   />
                 )}
               />
@@ -382,6 +382,10 @@ const styles = {
   questionLayoutAndOrder: css`
     ${styleUtils.display.flex()}
     gap: ${spacing[20]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+    }
   `,
   contentDripLabel: css`
     display: flex;

@@ -56,23 +56,19 @@ const styles = {
     gap: ${spacing[36]};
     padding: ${hasImage ? `${spacing[16]} ${spacing[20]}` : `${spacing[20]}`};
 
-    ${
-      !removeBorder &&
-      css`
-        border: 1px solid ${colorTokens.stroke.divider};
-        border-radius: ${borderRadius.card};
-        background-color: ${colorTokens.background.white};
-      `
-    }
+    ${!removeBorder &&
+    css`
+      border: 1px solid ${colorTokens.stroke.divider};
+      border-radius: ${borderRadius.card};
+      background-color: ${colorTokens.background.white};
+    `}
 
-    ${
-      size === 'small' &&
-      css`
+    ${size === 'small' &&
+    css`
       gap: ${spacing[12]};
       padding: ${hasImage ? spacing[12] : spacing[16]};
       padding-bottom: ${hasImage ? spacing[24] : undefined};
-    `
-    }
+    `}
 
     & img {
       max-width: 640px;
@@ -82,12 +78,10 @@ const styles = {
       overflow: hidden;
       object-position: center;
       object-fit: cover;
-      ${
-        size === 'small' &&
-        css`
-          max-width: 282px;
-        `
-      }
+      ${size === 'small' &&
+      css`
+        max-width: 282px;
+      `}
     }
   `,
   messageWrapper: (size: EmptyStateSize) => css`
@@ -98,36 +92,30 @@ const styles = {
     gap: ${spacing[12]};
     text-align: center;
 
-    ${
-      size === 'small' &&
-      css`
-        gap: ${spacing[8]};
-      `
-    }
+    ${size === 'small' &&
+    css`
+      gap: ${spacing[8]};
+    `}
   `,
   title: (size: EmptyStateSize) => css`
     ${typography.heading5()};
     color: ${colorTokens.text.primary};
 
-    ${
-      size === 'small' &&
-      css`
-        ${typography.caption('medium')};
-        color: ${colorTokens.text.primary};
-      `
-    }
+    ${size === 'small' &&
+    css`
+      ${typography.caption('medium')};
+      color: ${colorTokens.text.primary};
+    `}
   `,
   description: (size: EmptyStateSize) => css`
     ${typography.body()};
     color: ${colorTokens.text.hints};
 
-    ${
-      size === 'small' &&
-      css`
-        ${typography.tiny()};
-        color: ${colorTokens.text.hints};
-      `
-    }
+    ${size === 'small' &&
+    css`
+      ${typography.tiny()};
+      color: ${colorTokens.text.hints};
+    `}
   `,
   actionWrapper: (size: EmptyStateSize) => css`
     margin-top: ${spacing[20]};
@@ -136,12 +124,10 @@ const styles = {
     align-items: center;
     gap: ${spacing[12]};
 
-    ${
-      size === 'small' &&
-      css`
-        gap: ${spacing[8]};
-        margin-top: ${spacing[8]};
-      `
-    }
+    ${size === 'small' &&
+    css`
+      gap: ${spacing[8]};
+      margin-top: ${spacing[8]};
+    `}
   `,
 };

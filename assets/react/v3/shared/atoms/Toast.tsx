@@ -112,50 +112,38 @@ const styles = {
     position: fixed;
     z-index: ${zIndex.highest};
 
-    ${
-      position === 'top-left' &&
-      css`
+    ${position === 'top-left' &&
+    css`
       left: ${spacing[20]};
       top: calc(${spacing[20]} + 60px);
-    `
-    }
-    ${
-      position === 'top-right' &&
-      css`
+    `}
+    ${position === 'top-right' &&
+    css`
       right: ${spacing[20]};
       top: calc(${spacing[20]} + 60px);
-    `
-    }
-    ${
-      position === 'top-center' &&
-      css`
+    `}
+    ${position === 'top-center' &&
+    css`
       left: 50%;
       top: calc(${spacing[20]} + 60px);
       transform: translateX(-50%);
-    `
-    }
-    ${
-      position === 'bottom-left' &&
-      css`
+    `}
+    ${position === 'bottom-left' &&
+    css`
       left: ${spacing[20]};
       bottom: ${spacing[20]};
-    `
-    }
-    ${
-      position === 'bottom-right' &&
-      css`
+    `}
+    ${position === 'bottom-right' &&
+    css`
       right: ${spacing[20]};
       bottom: ${spacing[20]};
-    `
-    }
-    ${
-      position === 'bottom-center' &&
-      css`
+    `}
+    ${position === 'bottom-center' &&
+    css`
       left: 50%;
       bottom: ${spacing[20]};
       transform: translateX(-50%);
-    `
-    }
+    `}
   `,
   toastItem: (type: ToastOption['type']) => css`
     width: 100%;
@@ -171,27 +159,20 @@ const styles = {
       color: ${colorTokens.icon.white};
     }
 
-    ${
-      type === 'dark' &&
-      css`
+    ${type === 'dark' &&
+    css`
       background: ${colorTokens.color.black.main};
-    `
-    }
-    ${
-      type === 'danger' &&
-      css`
+    `}
+    ${type === 'danger' &&
+    css`
       background: ${colorTokens.design.error};
-    `
-    }
-    ${
-      type === 'success' &&
-      css`
+    `}
+    ${type === 'success' &&
+    css`
       background: ${colorTokens.design.success};
-    `
-    }
-    ${
-      type === 'warning' &&
-      css`
+    `}
+    ${type === 'warning' &&
+    css`
       background: ${colorTokens.color.warning[70]};
 
       h5 {
@@ -201,8 +182,7 @@ const styles = {
       svg > path {
         color: ${colorTokens.text.primary};
       }
-    `
-    }
+    `}
   `,
   message: css`
     ${typography.body()};

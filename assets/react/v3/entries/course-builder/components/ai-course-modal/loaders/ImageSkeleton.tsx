@@ -13,9 +13,9 @@ const ImageSkeleton = () => {
 export default ImageSkeleton;
 const styles = {
   wrapper: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-		width: 100%;
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+    width: 100%;
+  `,
 };

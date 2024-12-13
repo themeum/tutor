@@ -78,7 +78,6 @@ const FormDateInput = ({
                   inputRef.current = element;
                 }}
                 type="text"
-                readOnly
                 value={fieldValue}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -185,8 +184,10 @@ const styles = {
       --rdp-caption-font-size: ${fontSize[18]}; /* Font size for the caption labels. */
       --rdp-accent-color: ${colorTokens.action.primary.default}; /* Accent color for the background of selected days. */
       --rdp-background-color: ${colorTokens.background.hover}; /* Background color for the hovered/focused elements. */
-      --rdp-accent-color-dark: ${colorTokens.action.primary.active}; /* Accent color for the background of selected days (to use in dark-mode). */
-      --rdp-background-color-dark: ${colorTokens.action.primary.hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
+      --rdp-accent-color-dark: ${colorTokens.action.primary
+        .active}; /* Accent color for the background of selected days (to use in dark-mode). */
+      --rdp-background-color-dark: ${colorTokens.action.primary
+        .hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
       --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
       --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
       --rdp-selected-color: ${colorTokens.text.white}; /* Color of selected day text */
@@ -207,7 +208,9 @@ const styles = {
     height: 32px;
     ${styleUtils.flexCenter()};
     opacity: 0;
-    transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
     border-radius: ${borderRadius[2]};
 
     :hover {

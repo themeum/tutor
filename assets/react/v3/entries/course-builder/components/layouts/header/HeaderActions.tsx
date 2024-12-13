@@ -13,7 +13,7 @@ import { useModal } from '@Components/modals/Modal';
 import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 
 import config, { tutorConfig } from '@Config/config';
-import { DateFormats, TutorRoles } from '@Config/constants';
+import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@Config/constants';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import {
@@ -183,7 +183,7 @@ const HeaderActions = () => {
     const response = await createCourseMutation.mutateAsync({ ...payload });
 
     if (response.data) {
-      window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
+      window.location.href = `${config.TUTOR_SITE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
     }
   };
 
@@ -275,8 +275,8 @@ const HeaderActions = () => {
       ),
       onClick: () => {
         const legacyUrl = courseId
-          ? `${config.TUTOR_API_BASE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
-          : `${config.TUTOR_API_BASE_URL}/wp-admin/post-new.php?post_type=courses`;
+          ? `${config.TUTOR_SITE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
+          : `${config.TUTOR_SITE_URL}/wp-admin/post-new.php?post_type=courses`;
 
         window.open(legacyUrl, '_blank', 'noopener');
       },
@@ -326,11 +326,11 @@ const HeaderActions = () => {
     return items;
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (updateCourseMutation.isSuccess) {
       form.reset(form.getValues());
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [updateCourseMutation.isSuccess]);
 
   return (
@@ -344,8 +344,9 @@ const HeaderActions = () => {
             iconPosition="right"
             onClick={() => window.open(previewLink, '_blank', 'noopener')}
             disabled={!previewLink}
+            size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           >
-            {__('Preview', 'tutor')}
+            <Show when={CURRENT_VIEWPORT.isAboveDesktop}>{__('Preview', 'tutor')}</Show>
           </Button>
         }
       >
@@ -354,10 +355,13 @@ const HeaderActions = () => {
           icon={<SVGIcon name="upload" width={24} height={24} />}
           loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
           iconPosition="left"
-          buttonCss={css`padding-inline: ${spacing[16]};`}
+          buttonCss={css`
+            padding-inline: ${spacing[16]};
+          `}
           onClick={form.handleSubmit((data) => handleSubmit(data, 'draft'))}
+          size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
         >
-          {__('Save as Draft', 'tutor')}
+          <Show when={CURRENT_VIEWPORT.isAboveDesktop}>{__('Save as Draft', 'tutor')}</Show>
         </Button>
       </Show>
 
@@ -365,6 +369,7 @@ const HeaderActions = () => {
         when={dropdownItems().length > 1}
         fallback={
           <Button
+            size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
             loading={
               createCourseMutation.isPending ||
               (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
@@ -377,6 +382,7 @@ const HeaderActions = () => {
       >
         <DropdownButton
           text={dropdownButton().text}
+          size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           variant="primary"
           loading={
             createCourseMutation.isPending ||

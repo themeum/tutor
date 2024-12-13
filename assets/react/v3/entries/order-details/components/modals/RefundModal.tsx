@@ -1,5 +1,6 @@
-import Button from '@Atoms/Button';
+import Show from '@/v3/shared/controls/Show';
 import Alert from '@Atoms/Alert';
+import Button from '@Atoms/Button';
 import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
@@ -11,18 +12,19 @@ import { typography } from '@Config/typography';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { useRefundOrderMutation } from '@OrderServices/order';
 import { formatPrice } from '@Utils/currency';
-import { requiredRule } from '@Utils/validation';
 import { styleUtils } from '@Utils/style-utils';
+import { requiredRule } from '@Utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { Controller } from 'react-hook-form';
 import { useEffect } from 'react';
+import { Controller } from 'react-hook-form';
 
 interface RefundModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   available_amount: number;
   order_id: number;
   order_type: string;
+  payment_method: string;
 }
 
 interface FormField {
@@ -31,7 +33,15 @@ interface FormField {
   reason: string;
 }
 
-function RefundModal({ title, closeModal, actions, available_amount, order_id, order_type }: RefundModalProps) {
+function RefundModal({
+  title,
+  closeModal,
+  actions,
+  available_amount,
+  order_id,
+  order_type,
+  payment_method,
+}: RefundModalProps) {
   const refundOrderMutation = useRefundOrderMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
@@ -44,12 +54,12 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
 
   useEffect(() => {
     form.setFocus('amount');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           await refundOrderMutation.mutateAsync({ ...values, order_id });
           closeModal();
@@ -112,12 +122,14 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
             />
           )}
 
-          <Alert type="warning" icon="bulb">
-            {__(
-              "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.",
-              'tutor',
-            )}
-          </Alert>
+          <Show when={payment_method !== 'stripe' && payment_method !== 'paypal'}>
+            <Alert type="warning" icon="bulb">
+              {
+                // prettier-ignore
+                __( "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.", 'tutor')
+              }
+            </Alert>
+          </Show>
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
@@ -149,9 +161,6 @@ const styles = {
     }
   `,
 
-  form: css`
-    width: 480px;
-  `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};
     display: flex;

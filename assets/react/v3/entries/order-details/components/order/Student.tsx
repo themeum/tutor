@@ -52,24 +52,24 @@ export default Student;
 
 const styles = {
   content: css`
-		padding: ${spacing[16]} ${spacing[20]};
-	`,
+    padding: ${spacing[16]} ${spacing[20]};
+  `,
   innerContent: css`
-		margin-top: ${spacing[8]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    margin-top: ${spacing[8]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   row: css`
-		display: flex;
-		flex-direction: column;
-		${typography.caption()};
-		color: ${colorTokens.text.subdued};
+    display: flex;
+    flex-direction: column;
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
 
-		h4 {
-			font-weight: ${fontWeight.medium};
-			color: ${colorTokens.text.primary};
-			margin-bottom: ${spacing[4]};
-		}
-	`,
+    h4 {
+      font-weight: ${fontWeight.medium};
+      color: ${colorTokens.text.primary};
+      margin-bottom: ${spacing[4]};
+    }
+  `,
 };

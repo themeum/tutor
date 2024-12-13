@@ -15,7 +15,7 @@ function SelectedStudents({ form, students }: SelectedStudentsProps) {
   function removesSelectedItem(id: String) {
     form.setValue(
       'students',
-      students?.filter((item) => item.ID !== id)
+      students?.filter((item) => item.ID !== id),
     );
   }
 
