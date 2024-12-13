@@ -77,7 +77,7 @@ do_action( 'tutor_before_login_form' );
 			</label>
 		</div>
 		<a href="<?php echo esc_url( $lost_pass ); ?>" class="tutor-btn tutor-btn-ghost">
-			<?php esc_html_e( 'Forgot?', 'tutor' ); ?>
+			<?php esc_html_e( 'Forgot Password?', 'tutor' ); ?>
 		</a>
 	</div>
 
