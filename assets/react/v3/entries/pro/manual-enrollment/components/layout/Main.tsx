@@ -1,5 +1,5 @@
 import FormSelectInput from '@Components/fields/FormSelectInput';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import FormSelectCourse from '@EnrollmentComponents/FormSelectCourse';
 import FormSelectStudents from '@EnrollmentComponents/FormSelectStudents';
 import type { Enrollment } from '@EnrollmentServices/enrollment';
@@ -114,9 +114,14 @@ export default Main;
 const styles = {
   wrapper: css`
     background-color: ${colorTokens.background.default};
+    margin-left: ${spacing[20]};
+
+    ${Breakpoint.mobile} {
+      margin-left: ${spacing[12]};
+    }
   `,
   container: css`
-    max-width: 1030px;
+    max-width: 1054px;
     margin: 0 auto;
     height: 100%;
   `,
@@ -126,6 +131,11 @@ const styles = {
     display: grid;
     grid-template-columns: 255px 1fr;
     gap: ${spacing[24]};
+    padding-inline: ${spacing[12]};
+
+    ${Breakpoint.mobile} {
+      display: block;
+    }
   `,
   left: css`
     display: flex;
@@ -137,6 +147,11 @@ const styles = {
     border-left: 1px solid ${colorTokens.stroke.divider};
     padding-left: ${spacing[24]};
     padding-top: ${spacing[32]};
+
+    ${Breakpoint.mobile} {
+      border-left: none;
+      padding-left: 0;
+    }
   `,
   studentsWrapper: css`
     background-color: ${colorTokens.background.white};
