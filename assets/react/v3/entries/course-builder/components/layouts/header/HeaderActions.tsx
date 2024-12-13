@@ -183,7 +183,7 @@ const HeaderActions = () => {
     const response = await createCourseMutation.mutateAsync({ ...payload });
 
     if (response.data) {
-      window.location.href = `${config.TUTOR_API_BASE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
+      window.location.href = `${config.TUTOR_SITE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
     }
   };
 
@@ -275,8 +275,8 @@ const HeaderActions = () => {
       ),
       onClick: () => {
         const legacyUrl = courseId
-          ? `${config.TUTOR_API_BASE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
-          : `${config.TUTOR_API_BASE_URL}/wp-admin/post-new.php?post_type=courses`;
+          ? `${config.TUTOR_SITE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
+          : `${config.TUTOR_SITE_URL}/wp-admin/post-new.php?post_type=courses`;
 
         window.open(legacyUrl, '_blank', 'noopener');
       },

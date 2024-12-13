@@ -32,6 +32,7 @@ export default [
           prefer: 'type-imports',
         },
       ],
+      '@typescript-eslint/ban-ts-comment': 'off',
     },
     settings: {
       react: {

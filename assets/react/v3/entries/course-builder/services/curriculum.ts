@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import type { AxiosResponse } from 'axios';
 
 import { useToast } from '@Atoms/Toast';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
@@ -12,7 +11,7 @@ import type { ContentDripType, GoogleMeet, TutorMutationResponse, ZoomMeeting } 
 import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { type WPMedia } from '@Hooks/useWpMedia';
-import { authApiInstance, wpAjaxInstance } from '@Utils/api';
+import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import { convertToErrorMessage } from '@Utils/util';
@@ -241,9 +240,8 @@ export const convertAssignmentDataToPayload = (
 };
 
 const getCourseTopic = (courseId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<CourseTopic[]>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_course_contents',
-    course_id: courseId,
+  return wpAjaxInstance.get<CourseTopic[]>(endpoints.GET_COURSE_CONTENTS, {
+    params: { course_id: courseId },
   });
 };
 
@@ -265,10 +263,7 @@ export const useCourseTopicQuery = (courseId: ID) => {
 };
 
 const saveTopic = (payload: TopicPayload) => {
-  return authApiInstance.post<TopicPayload, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_save_topic',
-    ...payload,
-  });
+  return wpAjaxInstance.post<TutorMutationResponse<ID>>(endpoints.SAVE_TOPIC, payload);
 };
 
 export const useSaveTopicMutation = () => {
@@ -295,8 +290,7 @@ export const useSaveTopicMutation = () => {
 };
 
 const deleteTopic = (topicId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_delete_topic',
+  return wpAjaxInstance.post<string, TutorMutationResponse<number>>(endpoints.DELETE_TOPIC, {
     topic_id: topicId,
   });
 };
@@ -332,10 +326,8 @@ export const useDeleteTopicMutation = (courseId: ID) => {
 };
 
 const getLessonDetails = (lessonId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<Lesson>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_lesson_details',
-    topic_id: topicId,
-    lesson_id: lessonId,
+  return wpAjaxInstance.get<Lesson>(endpoints.GET_LESSON_DETAILS, {
+    params: { topic_id: topicId, lesson_id: lessonId },
   });
 };
 
@@ -348,10 +340,7 @@ export const useLessonDetailsQuery = (lessonId: ID, topicId: ID) => {
 };
 
 const saveLesson = (payload: LessonPayload) => {
-  return authApiInstance.post<string, AxiosResponse<TutorMutationResponse<number>>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_save_lesson',
-    ...payload,
-  });
+  return wpAjaxInstance.post<TutorMutationResponse<number>>(endpoints.SAVE_LESSON, payload);
 };
 
 export const useSaveLessonMutation = (courseId: ID) => {
@@ -382,8 +371,7 @@ export const useSaveLessonMutation = (courseId: ID) => {
 };
 
 const deleteContent = (lessonId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_delete_lesson',
+  return wpAjaxInstance.post<string, TutorMutationResponse<ID>>(endpoints.DELETE_TOPIC_CONTENT, {
     lesson_id: lessonId,
   });
 };
@@ -413,15 +401,12 @@ export const useDeleteContentMutation = () => {
 };
 
 const updateCourseContentOrder = (payload: CourseContentOrderPayload) => {
-  return authApiInstance.post<
+  return wpAjaxInstance.post<
     CourseContentOrderPayload,
     {
       success: boolean;
     }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'tutor_update_course_content_order',
-    ...payload,
-  });
+  >(endpoints.UPDATE_COURSE_CONTENT_ORDER, payload);
 };
 
 export const useUpdateCourseContentOrderMutation = () => {
@@ -436,10 +421,8 @@ export const useUpdateCourseContentOrderMutation = () => {
 };
 
 const getAssignmentDetails = (assignmentId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<Assignment>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_assignment_details',
-    topic_id: topicId,
-    assignment_id: assignmentId,
+  return wpAjaxInstance.get<Assignment>(endpoints.GET_ASSIGNMENT_DETAILS, {
+    params: { topic_id: topicId, assignment_id: assignmentId },
   });
 };
 
@@ -452,10 +435,7 @@ export const useAssignmentDetailsQuery = (assignmentId: ID, topicId: ID) => {
 };
 
 const saveAssignment = (payload: AssignmentPayload) => {
-  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_assignment_save',
-    ...payload,
-  });
+  return wpAjaxInstance.post<string, TutorMutationResponse<number>>(endpoints.SAVE_ASSIGNMENT, payload);
 };
 
 export const useSaveAssignmentMutation = (courseId: ID) => {
@@ -486,10 +466,7 @@ export const useSaveAssignmentMutation = (courseId: ID) => {
 };
 
 const duplicateContent = (payload: ContentDuplicatePayload) => {
-  return authApiInstance.post<string, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_duplicate_content',
-    ...payload,
-  });
+  return wpAjaxInstance.post<string, TutorMutationResponse<number>>(endpoints.DUPLICATE_CONTENT, payload);
 };
 
 /**
@@ -527,7 +504,7 @@ export const useDuplicateContentMutation = (quizId?: ID) => {
     },
     onError: (error: ErrorResponse, payload) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
 
@@ -541,10 +518,8 @@ export const useDuplicateContentMutation = (quizId?: ID) => {
 };
 
 const getZoomMeetingDetails = (meetingId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<ZoomMeeting>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_zoom_meeting_details',
-    meeting_id: meetingId,
-    topic_id: topicId,
+  return wpAjaxInstance.get<ZoomMeeting>(endpoints.GET_ZOOM_MEETING_DETAILS, {
+    params: { meeting_id: meetingId, topic_id: topicId },
   });
 };
 
@@ -557,10 +532,8 @@ export const useZoomMeetingDetailsQuery = (meetingId: ID, topicId: ID) => {
 };
 
 const getGoogleMeetDetails = (meetingId: ID, topicId: ID) => {
-  return authApiInstance.post<string, AxiosResponse<GoogleMeet>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_google_meet_meeting_details',
-    meeting_id: meetingId,
-    topic_id: topicId,
+  return wpAjaxInstance.get<GoogleMeet>(endpoints.GET_GOOGLE_MEET_DETAILS, {
+    params: { meeting_id: meetingId, topic_id: topicId },
   });
 };
 
@@ -573,17 +546,15 @@ export const useGoogleMeetDetailsQuery = (meetingId: ID, topicId: ID) => {
 };
 
 const getH5PLessonContents = (search: string) => {
-  return wpAjaxInstance
-    .post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
-      search_filter: search,
-    })
-    .then((response) => response.data);
+  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_LESSON_CONTENT, {
+    search_filter: search,
+  });
 };
 
 export const useGetH5PLessonContentsQuery = (search: string, contentType: ContentType) => {
   return useQuery({
     queryKey: ['H5PLessonContents', search],
-    queryFn: () => getH5PLessonContents(search),
+    queryFn: () => getH5PLessonContents(search).then((response) => response.data),
     enabled: contentType === 'lesson',
   });
 };

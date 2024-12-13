@@ -78,7 +78,6 @@ const FormDateInput = ({
                   inputRef.current = element;
                 }}
                 type="text"
-                readOnly
                 value={fieldValue}
                 onClick={(event) => {
                   event.stopPropagation();

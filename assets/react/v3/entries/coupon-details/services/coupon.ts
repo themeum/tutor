@@ -1,7 +1,7 @@
 import { useToast } from '@Atoms/Toast';
 import { tutorConfig } from '@Config/config';
 import { DateFormats } from '@Config/constants';
-import { authApiInstance } from '@Utils/api';
+import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { PaginatedParams, PaginatedResult } from '@Utils/types';
@@ -195,9 +195,10 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
 }
 
 const getCouponDetails = (couponId: number) => {
-  return authApiInstance.post<GetCouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_details',
-    id: couponId,
+  return wpAjaxInstance.get<GetCouponResponse>(endpoints.GET_COUPON_DETAILS, {
+    params: {
+      id: couponId,
+    },
   });
 };
 
@@ -216,10 +217,7 @@ interface CouponResponse {
 }
 
 const createCoupon = (payload: CouponPayload) => {
-  return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_create',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CouponPayload, CouponResponse>(endpoints.CREATE_COUPON, payload);
 };
 
 export const useCreateCouponMutation = () => {
@@ -238,10 +236,7 @@ export const useCreateCouponMutation = () => {
 };
 
 const updateCoupon = (payload: CouponPayload) => {
-  return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_update',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CouponPayload, CouponResponse>(endpoints.UPDATE_COUPON, payload);
 };
 
 export const useUpdateCouponMutation = () => {
@@ -267,9 +262,10 @@ interface GetAppliesToParam extends PaginatedParams {
 }
 
 const getAppliesToList = (params: GetAppliesToParam) => {
-  return authApiInstance.post<PaginatedResult<Course | CourseCategory>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_applies_to_list',
-    ...params,
+  return wpAjaxInstance.get<PaginatedResult<Course | CourseCategory>>(endpoints.COUPON_APPLIES_TO, {
+    params: {
+      ...params,
+    },
   });
 };
 
