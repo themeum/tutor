@@ -42,8 +42,8 @@ function CouponPreview() {
         isToday(new Date(startDateTime))
           ? __('today', 'tutor')
           : isTomorrow(new Date(startDateTime))
-          ? __('tomorrow', 'tutor')
-          : format(new Date(startDateTime), DateFormats.activityDate)
+            ? __('tomorrow', 'tutor')
+            : format(new Date(startDateTime), DateFormats.activityDate)
       }`
     : '';
 

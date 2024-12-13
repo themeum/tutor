@@ -150,131 +150,124 @@ const loader = keyframes`
 
 const styles = {
   loader: (index: number) => css`
-		border-radius: ${borderRadius[12]};
-		background: linear-gradient(73.09deg, #FF9645 18.05%, #FF6471 30.25%, #CF6EBD 55.42%, #A477D1 71.66%, #3E64DE 97.9%);
-		position: relative;
-		width: 100%;
-		height: 100%;
-		background-size: 612px 612px;
-		opacity: 0.3;
-		transition: opacity 0.5s ease;
-		animation: ${loader} 2s linear infinite;
-
-		${
-      index === 1 &&
-      css`
-			background-position: top left;
-		`
-    }
-		${
-      index === 2 &&
-      css`
-			background-position: top right;
-			animation-delay: 0.5s;
-		`
-    }
-		${
-      index === 3 &&
-      css`
-			background-position: bottom left;
-			animation-delay: 1.5s;
-		`
-    }
-		${
-      index === 4 &&
-      css`
-			background-position: bottom right;
-			animation-delay: 1s;
-		`
-    }
-	`,
-  image: ({
-    isActive,
-  }: {
-    isActive: boolean;
-  }) => css`
-		width: 100%;
+    border-radius: ${borderRadius[12]};
+    background: linear-gradient(
+      73.09deg,
+      #ff9645 18.05%,
+      #ff6471 30.25%,
+      #cf6ebd 55.42%,
+      #a477d1 71.66%,
+      #3e64de 97.9%
+    );
+    position: relative;
+    width: 100%;
     height: 100%;
-		overflow: hidden;
-		border-radius: ${borderRadius[12]};
-		position: relative;
-		outline: 2px solid transparent;
+    background-size: 612px 612px;
+    opacity: 0.3;
+    transition: opacity 0.5s ease;
+    animation: ${loader} 2s linear infinite;
+
+    ${index === 1 &&
+    css`
+      background-position: top left;
+    `}
+    ${index === 2 &&
+    css`
+      background-position: top right;
+      animation-delay: 0.5s;
+    `}
+		${index === 3 &&
+    css`
+      background-position: bottom left;
+      animation-delay: 1.5s;
+    `}
+		${index === 4 &&
+    css`
+      background-position: bottom right;
+      animation-delay: 1s;
+    `}
+  `,
+  image: ({ isActive }: { isActive: boolean }) => css`
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: ${borderRadius[12]};
+    position: relative;
+    outline: 2px solid transparent;
     outline-offset: 2px;
-		transition: border-radius 0.3s ease;
+    transition: border-radius 0.3s ease;
 
-		[data-actions] {
-			opacity: 0;
-			transition: opacity 0.3s ease;
-		}
-
-		img {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-
-    ${
-      isActive &&
-      css`
-        outline-color: ${colorTokens.stroke.brand};
-
-        [data-actions] {
-          opacity: 1;
-        }
-      `
+    [data-actions] {
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
 
-		&:hover, &:focus-within {
-			outline-color: ${colorTokens.stroke.brand};
-			[data-actions] {
-				opacity: 1;
-			}
-		}
-	`,
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    ${isActive &&
+    css`
+      outline-color: ${colorTokens.stroke.brand};
+
+      [data-actions] {
+        opacity: 1;
+      }
+    `}
+
+    &:hover, &:focus-within {
+      outline-color: ${colorTokens.stroke.brand};
+      [data-actions] {
+        opacity: 1;
+      }
+    }
+  `,
   threeDots: css`
-		position: absolute;
-		top: ${spacing[8]};
-		right: ${spacing[8]};
-		border-radius: ${borderRadius[4]};
-	`,
+    position: absolute;
+    top: ${spacing[8]};
+    right: ${spacing[8]};
+    border-radius: ${borderRadius[4]};
+  `,
   useButton: css`
-		position: absolute;
-		left: 50%;
-		bottom: ${spacing[12]};
-		transform: translateX(-50%);
+    position: absolute;
+    left: 50%;
+    bottom: ${spacing[12]};
+    transform: translateX(-50%);
 
-		button {
-			display: inline-flex;
-			align-items: center;
-			gap: ${spacing[4]};	
-		}
-	`,
+    button {
+      display: inline-flex;
+      align-items: center;
+      gap: ${spacing[4]};
+    }
+  `,
   dropdownOptions: css`
-		display: flex;
-		flex-direction: column;
-		padding-block: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    padding-block: ${spacing[8]};
+  `,
   dropdownItem: css`
-		${typography.small()};
-		${styleUtils.resetButton};
-		height: 40px;
-		display: flex;
-		gap: ${spacing[10]};
-		align-items: center;
-		transition: background-color 0.3s ease;
-		color: ${colorTokens.text.title};
-		padding-inline: ${spacing[8]};
-		cursor: pointer;
+    ${typography.small()};
+    ${styleUtils.resetButton};
+    height: 40px;
+    display: flex;
+    gap: ${spacing[10]};
+    align-items: center;
+    transition: background-color 0.3s ease;
+    color: ${colorTokens.text.title};
+    padding-inline: ${spacing[8]};
+    cursor: pointer;
 
-		svg {
-			color: ${colorTokens.icon.default};
-		}
+    svg {
+      color: ${colorTokens.icon.default};
+    }
 
-		&:hover {
-			background-color: ${colorTokens.background.hover};
-		}
-	`,
+    &:hover {
+      background-color: ${colorTokens.background.hover};
+    }
+  `,
 };

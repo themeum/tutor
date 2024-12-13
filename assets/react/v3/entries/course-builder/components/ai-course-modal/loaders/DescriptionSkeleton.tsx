@@ -29,10 +29,10 @@ const DescriptionSkeleton = () => {
 export default DescriptionSkeleton;
 const styles = {
   wrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		width: 100%;
-		margin-top: ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    width: 100%;
+    margin-top: ${spacing[16]};
+  `,
 };

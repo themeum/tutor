@@ -82,8 +82,7 @@ function editorConfig(
 
       toolbar2:
         'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown',
-      content_css:
-        `${tutorConfig.site_url}/wp-includes/css/dashicons.min.css,${tutorConfig.site_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tutorConfig.site_url}/wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css`,
+      content_css: `${tutorConfig.site_url}/wp-includes/css/dashicons.min.css,${tutorConfig.site_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tutorConfig.site_url}/wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css`,
 
       statusbar: !readOnly,
       branding: false,
@@ -315,13 +314,11 @@ const styles = {
       border-bottom-left-radius: ${borderRadius[6]};
       border-bottom-right-radius: ${borderRadius[6]};
 
-      ${
-        isFocused &&
-        !isReadOnly &&
-        css`
-          ${styleUtils.inputFocus}
-        `
-      }
+      ${isFocused &&
+      !isReadOnly &&
+      css`
+        ${styleUtils.inputFocus}
+      `}
 
       :focus-within {
         ${!isReadOnly && styleUtils.inputFocus}
@@ -337,12 +334,10 @@ const styles = {
     .quicktags-toolbar {
       border-top-left-radius: ${borderRadius[6]};
 
-      ${
-        isMinimal &&
-        css`
-          border-top-right-radius: ${borderRadius[6]};
-        `
-      }
+      ${isMinimal &&
+      css`
+        border-top-right-radius: ${borderRadius[6]};
+      `}
     }
 
     .mce-top-part::before {
@@ -363,23 +358,19 @@ const styles = {
       background-color: unset;
     }
 
-    ${
-      isMinimal &&
-      css`
-        .mce-tinymce.mce-container {
-          border: ${!isReadOnly ? `1px solid ${colorTokens.stroke.default}` : 'none'};
-          border-radius: ${borderRadius[6]};
+    ${isMinimal &&
+    css`
+      .mce-tinymce.mce-container {
+        border: ${!isReadOnly ? `1px solid ${colorTokens.stroke.default}` : 'none'};
+        border-radius: ${borderRadius[6]};
 
-          ${
-            isFocused &&
-            !isReadOnly &&
-            css`
-              ${styleUtils.inputFocus}
-            `
-          }
-        }
-      `
-    }
+        ${isFocused &&
+        !isReadOnly &&
+        css`
+          ${styleUtils.inputFocus}
+        `}
+      }
+    `}
 
     textarea {
       visibility: visible !important;

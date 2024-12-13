@@ -11,9 +11,9 @@ export default Container;
 
 const styles = {
   wrapper: css`
-		max-width: ${CONTAINER_WIDTH}px;
-		margin: 0 auto;
-		height: 100%;
-		width: 100%;
-	`,
+    max-width: ${CONTAINER_WIDTH}px;
+    margin: 0 auto;
+    height: 100%;
+    width: 100%;
+  `,
 };

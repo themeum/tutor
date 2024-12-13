@@ -328,31 +328,31 @@ export default function SubscriptionModal({
 
 const styles = {
   wrapper: css`
-		width: 1218px;
+    width: 1218px;
     height: 100%;
-	`,
+  `,
   container: css`
-		max-width: 640px;
-		width: 100%;
-		padding-block: ${spacing[40]};
+    max-width: 640px;
+    width: 100%;
+    padding-block: ${spacing[40]};
     margin-inline: auto;
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[32]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[32]};
+  `,
   header: css`
-		display: flex;
-		align-items: center;
+    display: flex;
+    align-items: center;
     justify-content: space-between;
 
-		h6 {
-			${typography.heading6('medium')};
-			color: ${colorTokens.text.primary};
-		}
-	`,
+    h6 {
+      ${typography.heading6('medium')};
+      color: ${colorTokens.text.primary};
+    }
+  `,
   content: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+  `,
 };

@@ -10,13 +10,11 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
-    ${
-      hasBorder &&
-      css`
+    ${hasBorder &&
+    css`
       box-shadow: none;
       border: 1px solid ${colorTokens.border.neutral};
-    `
-    }
+    `}
   `,
 };
 
@@ -45,24 +43,20 @@ const headerStyles = {
   wrapper: (collapsed: boolean, size: 'regular' | 'small') => css`
     padding: ${spacing[16]} ${spacing[24]};
 
-    ${
-      size === 'small' &&
-      css`
+    ${size === 'small' &&
+    css`
       padding: ${spacing[16]};
-    `
-    }
+    `}
 
     display: flex;
     flex-direction: column;
     justify-content: center;
     gap: ${spacing[4]};
 
-    ${
-      !collapsed &&
-      css`
+    ${!collapsed &&
+    css`
       border-bottom: 1px solid ${colorTokens.stroke.divider};
-    `
-    }
+    `}
   `,
   titleAndAction: css`
     display: flex;

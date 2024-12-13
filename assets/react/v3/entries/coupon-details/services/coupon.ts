@@ -172,8 +172,8 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
     discount_amount: data.discount_amount,
     applies_to: data.applies_to,
     applies_to_items: getAppliesToItemIds(data),
-    total_usage_limit: data.usage_limit_status ? data.total_usage_limit ?? '0' : '0',
-    per_user_usage_limit: data.per_user_limit_status ? data.per_user_usage_limit ?? '0' : '0',
+    total_usage_limit: data.usage_limit_status ? (data.total_usage_limit ?? '0') : '0',
+    per_user_usage_limit: data.per_user_limit_status ? (data.per_user_usage_limit ?? '0') : '0',
     ...(data.purchase_requirement && {
       purchase_requirement: data.purchase_requirement,
     }),

@@ -48,27 +48,27 @@ export default Main;
 
 const styles = {
   wrapper: css`
-		background-color: ${colorTokens.background.default};
-	`,
+    background-color: ${colorTokens.background.default};
+  `,
   content: css`
-		min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
-		width: 100%;
-		display: flex;
-		gap: ${spacing[24]};
-		margin-top: ${spacing[32]};
-	`,
+    min-height: calc(100vh - ${TOPBAR_HEIGHT}px);
+    width: 100%;
+    display: flex;
+    gap: ${spacing[24]};
+    margin-top: ${spacing[32]};
+  `,
   left: css`
-		max-width: 736px;
-		width: 100%;
-		flex-shrink: 0;
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-	`,
+    max-width: 736px;
+    width: 100%;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+  `,
   right: css`
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[24]};
-	`,
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[24]};
+  `,
 };

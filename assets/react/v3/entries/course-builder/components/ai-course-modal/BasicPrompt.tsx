@@ -87,13 +87,15 @@ const styles = {
     top: 50%;
     left: 50%;
     translate: -50% -50%;
+    max-width: 560px;
+    width: 100%;
 
     :dir(rtl) {
       translate: 50% -50%;
     }
 
     ${Breakpoint.smallTablet} {
-      max-width: 90%;
+      width: 90%;
     }
   `,
   header: css`
@@ -161,7 +163,7 @@ const styles = {
   content: css`
     background-color: ${colorTokens.background.white};
     overflow-y: auto;
-    width: 560px;
+    width: 100%;
     padding: ${spacing[12]} ${spacing[20]} ${spacing[4]} ${spacing[20]};
   `,
   footer: css`

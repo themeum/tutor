@@ -57,8 +57,8 @@ function Payment() {
       </BoxTitle>
       <div css={styles.content}>
         <Box bordered css={styleUtils.boxReset}>
-          {order.subscription_fees?.map((item) => (
-            <div css={styles.item({ action: 'regular' })}>
+          {order.subscription_fees?.map((item, idx) => (
+            <div key={idx} css={styles.item({ action: 'regular' })}>
               <div>{item.title}</div>
               <div>-</div>
               <div>{formatPrice(Number(item.value))}</div>
@@ -233,6 +233,7 @@ function Payment() {
                     available_amount: order.refunds?.length ? order.net_payment : order.total_price,
                     order_id: order.id,
                     order_type: order.order_type,
+                    payment_method: order.payment_method,
                   },
                 });
               }

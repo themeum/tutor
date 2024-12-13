@@ -193,11 +193,7 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
   `,
-  option: ({
-    isSelected,
-  }: {
-    isSelected: boolean;
-  }) => css`
+  option: ({ isSelected }: { isSelected: boolean }) => css`
     ${styleUtils.display.flex()};
     ${typography.caption('medium')};
     align-items: center;
@@ -219,22 +215,15 @@ const styles = {
       }
     }
 
-
-    ${
-      isSelected &&
-      css`
-        [data-check-icon] {
-          opacity: 1;
-          color: ${colorTokens.bg.success};
-        }
-      `
-    }
+    ${isSelected &&
+    css`
+      [data-check-icon] {
+        opacity: 1;
+        color: ${colorTokens.bg.success};
+      }
+    `}
   `,
-  optionLabel: ({
-    isSelected,
-  }: {
-    isSelected: boolean;
-  }) => css`
+  optionLabel: ({ isSelected }: { isSelected: boolean }) => css`
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
@@ -256,17 +245,15 @@ const styles = {
       }
     }
 
-    ${
-      isSelected &&
-      css`
-        background-color: ${colorTokens.background.success.fill40};
-        color: ${colorTokens.text.primary};
+    ${isSelected &&
+    css`
+      background-color: ${colorTokens.background.success.fill40};
+      color: ${colorTokens.text.primary};
 
-        &:hover {
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
-        }
-      `
-    }
+      &:hover {
+        box-shadow: 0 0 0 1px ${colorTokens.stroke.success.fill70};
+      }
+    `}
   `,
   optionDragButton: css`
     ${styleUtils.resetButton}

@@ -226,12 +226,10 @@ export const styleUtils = {
     align-items: center;
     flex-direction: row;
 
-    ${
-      direction === 'column' &&
-      css`
+    ${direction === 'column' &&
+    css`
       flex-direction: column;
-    `
-    }
+    `}
   `,
   boxReset: css`
     padding: 0;
@@ -506,13 +504,7 @@ export const styleUtils = {
       outline: 2px solid ${colorTokens.stroke.brand};
     }
   `,
-  optionCounter: ({
-    isEditing,
-    isSelected = false,
-  }: {
-    isEditing: boolean;
-    isSelected?: boolean;
-  }) => css`
+  optionCounter: ({ isEditing, isSelected = false }: { isEditing: boolean; isSelected?: boolean }) => css`
     height: ${spacing[24]};
     width: ${spacing[24]};
     border-radius: ${borderRadius.min};
@@ -520,19 +512,13 @@ export const styleUtils = {
     color: ${colorTokens.text.subdued};
     background-color: ${colorTokens.background.default};
     text-align: center;
-    ${
-      isSelected &&
-      !isEditing &&
-      css`
-        background-color: ${colorTokens.bg.white};
-      `
-    }
+    ${isSelected &&
+    !isEditing &&
+    css`
+      background-color: ${colorTokens.bg.white};
+    `}
   `,
-  optionDragButton: ({
-    isOverlay,
-  }: {
-    isOverlay: boolean;
-  }) => css`
+  optionDragButton: ({ isOverlay }: { isOverlay: boolean }) => css`
     background: none;
     border: none;
     outline: none;
@@ -555,12 +541,10 @@ export const styleUtils = {
       outline-offset: 1px;
     }
 
-    ${
-      isOverlay &&
-      css`
-        cursor: grabbing;
-      `
-    }
+    ${isOverlay &&
+    css`
+      cursor: grabbing;
+    `}
   `,
   optionInputWrapper: css`
     display: flex;
@@ -568,7 +552,8 @@ export const styleUtils = {
     width: 100%;
     gap: ${spacing[12]};
 
-    input, textarea {
+    input,
+    textarea {
       background: none;
       border: none;
       outline: none;
