@@ -32,11 +32,12 @@ const Layout = () => {
     if (courseDetailsQuery.data) {
       const dirtyFields = Object.keys(form.formState.dirtyFields);
       const convertedCourseData = convertCourseDataToFormData(courseDetailsQuery.data);
+      const formValues = form.getValues();
 
       const updatedCourseData = Object.entries(convertedCourseData).reduce<Partial<CourseFormData>>(
         (courseFormData, [key, value]) => {
           const typedKey = key as keyof CourseFormData;
-          courseFormData[typedKey] = dirtyFields.includes(key) ? form.getValues(typedKey) : value;
+          courseFormData[typedKey] = dirtyFields.includes(key) ? formValues[typedKey] : value;
           return courseFormData;
         },
         {},
