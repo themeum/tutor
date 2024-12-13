@@ -200,12 +200,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
 
-    ${
-      !removeOptionsMinWidth &&
-      css`
+    ${!removeOptionsMinWidth &&
+    css`
       min-width: 200px;
-    `
-    }
+    `}
   `,
   optionItem: css`
     min-height: 40px;

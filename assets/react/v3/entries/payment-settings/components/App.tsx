@@ -26,7 +26,7 @@ function App() {
             networkMode: 'always',
           },
         },
-      })
+      }),
   );
 
   return (

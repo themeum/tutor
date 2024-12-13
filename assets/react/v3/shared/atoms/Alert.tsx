@@ -53,11 +53,7 @@ const Alert = ({ children, type = 'warning', icon }: AlertProps) => {
 export default Alert;
 
 const styles = {
-  wrapper: ({
-    type,
-  }: {
-    type: AlertType;
-  }) => css`
+  wrapper: ({ type }: { type: AlertType }) => css`
     ${typography.caption()};
     display: flex;
     align-items: start;
@@ -69,11 +65,7 @@ const styles = {
     color: ${alertStyles.text[type]};
   `,
 
-  icon: ({
-    type,
-  }: {
-    type: AlertType;
-  }) => css`
+  icon: ({ type }: { type: AlertType }) => css`
     color: ${alertStyles.icon[type]};
     flex-shrink: 0;
   `,

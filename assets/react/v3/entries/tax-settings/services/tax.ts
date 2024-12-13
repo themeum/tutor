@@ -1,6 +1,6 @@
-import { wpAjaxInstance } from "@/v3/shared/utils/api";
-import endpoints from "@/v3/shared/utils/endpoints";
-import { useQuery } from "@tanstack/react-query";
+import { wpAjaxInstance } from '@/v3/shared/utils/api';
+import endpoints from '@/v3/shared/utils/endpoints';
+import { useQuery } from '@tanstack/react-query';
 
 export enum EUTaxRegistrationTypes {
   oneStop = 'one-stop',
@@ -52,16 +52,14 @@ export interface TaxSettings {
   charge_tax_on_shipping: boolean;
 }
 
-
 const getTaxSettings = () => {
-	// return Promise.resolve<TaxSettings>(null);
-	return wpAjaxInstance.get<TaxSettings>(endpoints.GET_TAX_SETTINGS).then(response => response.data);
-}
+  // return Promise.resolve<TaxSettings>(null);
+  return wpAjaxInstance.get<TaxSettings>(endpoints.GET_TAX_SETTINGS).then((response) => response.data);
+};
 
 export const useTaxSettingsQuery = () => {
-	return useQuery({
-		queryKey: ['TaxSettings'],
-		queryFn: getTaxSettings
-	});
-}
-
+  return useQuery({
+    queryKey: ['TaxSettings'],
+    queryFn: getTaxSettings,
+  });
+};

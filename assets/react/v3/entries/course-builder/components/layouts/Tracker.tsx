@@ -71,20 +71,16 @@ const styles = {
       padding-left: 0;
     }
 
-    ${
-      isActive &&
-      css`
-        color: ${colorTokens.text.primary};
-      `
-    }
+    ${isActive &&
+    css`
+      color: ${colorTokens.text.primary};
+    `}
 
-    ${
-      isDisabled &&
-      css`
-        color: ${colorTokens.text.hints};
-        cursor: not-allowed;
-      `
-    }
+    ${isDisabled &&
+    css`
+      color: ${colorTokens.text.hints};
+      cursor: not-allowed;
+    `}
 
     [data-element-id] {
       ${styleUtils.display.flex()};
@@ -98,15 +94,13 @@ const styles = {
       border: 1px solid ${colorTokens.color.black[10]};
       color: ${colorTokens.text.hints};
 
-      ${
-        isActive &&
-        css`
+      ${isActive &&
+      css`
         border-color: ${colorTokens.stroke.brand};
         border-color: ${colorTokens.stroke.brand};
         background-color: ${colorTokens.design.brand};
         color: ${colorTokens.text.white};
-      `
-      }
+      `}
     }
 
     [data-element-indicator] {

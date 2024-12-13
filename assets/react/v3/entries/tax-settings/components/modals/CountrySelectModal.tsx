@@ -252,9 +252,9 @@ const styles = {
     margin-left: ${spacing[32]};
   `,
   labelWrapper: css`
-		${typography.body()};
+    ${typography.body()};
     display: flex;
-		align-items: center;
+    align-items: center;
     gap: ${spacing[8]};
     width: 100%;
   `,

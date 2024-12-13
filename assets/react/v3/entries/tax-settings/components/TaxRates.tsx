@@ -36,17 +36,17 @@ export default function TaxRates() {
   const activeCountryAllStates = getCountryByCode(activeCountry ?? '')?.states ?? [];
 
   let tableData: ColumnDataType[] = activeCountry
-    ? rates
+    ? (rates
         .find((rate) => String(rate.country) === String(activeCountry))
         ?.states?.map((state) => ({
           locationId: getStateByCode(activeCountry, Number(state.id))?.id ?? '',
           rate: state?.rate,
-        })) ?? []
-    : rates?.map((countryObj) => ({
+        })) ?? [])
+    : (rates?.map((countryObj) => ({
         locationId: getCountryByCode(countryObj.country)?.numeric_code ?? '',
         rate: countryObj?.rate,
         emoji: getCountryByCode(countryObj.country)?.emoji,
-      })) ?? [];
+      })) ?? []);
 
   const isEU = isEuropeanUnion(activeCountry ?? '');
 
@@ -78,8 +78,8 @@ export default function TaxRates() {
       Header: isSingleCountry ? __('Region', 'tutor') : __('Countries', 'tutor'),
       Cell: (item) => {
         let name = activeCountry
-          ? getStateByCode(activeCountry, Number(item.locationId))?.name ?? ''
-          : getCountryByCode(`${item.locationId}`)?.name ?? '';
+          ? (getStateByCode(activeCountry, Number(item.locationId))?.name ?? '')
+          : (getCountryByCode(`${item.locationId}`)?.name ?? '');
 
         if (isSingleCountry) {
           name = getCountryByCode(`${item.locationId}`)?.name ?? '';

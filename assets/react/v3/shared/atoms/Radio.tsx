@@ -53,12 +53,10 @@ const styles = {
     cursor: pointer;
     user-select: none;
 
-    ${
-      disabled &&
-      css`
+    ${disabled &&
+    css`
       color: ${colorTokens.text.disable};
-    `
-    }
+    `}
   `,
   radio: (label = '') => css`
     position: absolute;
@@ -75,12 +73,10 @@ const styles = {
       background-color: ${colorTokens.background.white};
       border: 2px solid ${colorTokens.stroke.default};
       border-radius: 100%;
-      ${
-        label &&
-        css`
+      ${label &&
+      css`
         margin-right: ${spacing[10]};
-      `
-      }
+      `}
     }
     & + span::before {
       content: '';
@@ -99,12 +95,12 @@ const styles = {
       background-color: ${colorTokens.action.primary.default};
     }
 
-    &:focus-visible { 
-			& + span {
-				outline: 2px solid ${colorTokens.stroke.brand};
-				outline-offset: 1px;
-			}
-		}
+    &:focus-visible {
+      & + span {
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
+    }
   `,
 };
 

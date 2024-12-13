@@ -102,7 +102,7 @@ const styles = {
     justify-content: center;
     align-items: center;
     flex: 1;
-    gap: ${spacing[12]}; ;
+    gap: ${spacing[12]};
   `,
   fileInput: css`
     display: none;

@@ -210,8 +210,7 @@ const styles = {
   editButton: css`
     place-self: center end;
   `,
-  navigatorWrapper: css`
-  `,
+  navigatorWrapper: css``,
   navigator: css`
     ${styleUtils.display.flex()};
     gap: ${spacing[16]};
@@ -224,7 +223,7 @@ const styles = {
     svg {
       color: ${colorTokens.icon.default};
     }
-    
+
     :disabled {
       cursor: not-allowed;
       svg {

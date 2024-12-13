@@ -79,93 +79,93 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
 export default BasicPrompt;
 const styles = {
   container: css`
-		position: absolute;
-		background: ${colorTokens.background.white};
-		max-width: 1218px;
-		box-shadow: ${shadow.modal};
-		border-radius: ${borderRadius[10]};
-		overflow: hidden;
-		top: 50%;
-		left: 50%;
-		translate: -50% -50%;
+    position: absolute;
+    background: ${colorTokens.background.white};
+    max-width: 1218px;
+    box-shadow: ${shadow.modal};
+    border-radius: ${borderRadius[10]};
+    overflow: hidden;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
 
-		:dir(rtl) {
-			translate: 50% -50%;
-		}
-		
-		${Breakpoint.smallTablet} {
-			width: 90%;
-		}
-	`,
+    :dir(rtl) {
+      translate: 50% -50%;
+    }
+
+    ${Breakpoint.smallTablet} {
+      width: 90%;
+    }
+  `,
   header: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		width: 100%;
-		height: ${modal.BASIC_MODAL_HEADER_HEIGHT}px;
-		background: ${colorTokens.background.white};
-		border-bottom: 1px solid ${colorTokens.stroke.divider};
-		padding-inline: ${spacing[16]};
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: ${modal.BASIC_MODAL_HEADER_HEIGHT}px;
+    background: ${colorTokens.background.white};
+    border-bottom: 1px solid ${colorTokens.stroke.divider};
+    padding-inline: ${spacing[16]};
+  `,
   headerContent: css`
-		place-self: center start;
-		display: inline-flex;
-		align-items: center;
-		gap: ${spacing[12]};
-	`,
+    place-self: center start;
+    display: inline-flex;
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
   iconWithTitle: css`
-		display: inline-flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		color: ${colorTokens.icon.default};
-	`,
+    display: inline-flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    color: ${colorTokens.icon.default};
+  `,
   title: css`
-		${typography.body('medium')};
-		color: ${colorTokens.text.title};
+    ${typography.body('medium')};
+    color: ${colorTokens.text.title};
     text-transform: capitalize;
-	`,
+  `,
   subtitle: css`
-		${styleUtils.text.ellipsis(1)}
-		${typography.caption()};
-		color: ${colorTokens.text.hints};
-	`,
+    ${styleUtils.text.ellipsis(1)}
+    ${typography.caption()};
+    color: ${colorTokens.text.hints};
+  `,
   actionsWrapper: css`
-		place-self: center end;
-		display: inline-flex;
-		gap: ${spacing[16]};
-	`,
+    place-self: center end;
+    display: inline-flex;
+    gap: ${spacing[16]};
+  `,
   closeButton: css`
-		${styleUtils.resetButton};
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		width: 32px;
-		height: 32px;
-		border-radius: ${borderRadius.circle};
-		background: ${colorTokens.background.white};
+    ${styleUtils.resetButton};
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: ${borderRadius.circle};
+    background: ${colorTokens.background.white};
 
-		svg {
-			color: ${colorTokens.icon.default};
-			transition: color 0.3s ease-in-out;
-		}
+    svg {
+      color: ${colorTokens.icon.default};
+      transition: color 0.3s ease-in-out;
+    }
 
-		:hover {
-			svg {
-				color: ${colorTokens.icon.hover};
-			}
-		}
+    :hover {
+      svg {
+        color: ${colorTokens.icon.hover};
+      }
+    }
 
-		:focus {
-			box-shadow: ${shadow.focus};
-		}
-	`,
+    :focus {
+      box-shadow: ${shadow.focus};
+    }
+  `,
   content: css`
-		background-color: ${colorTokens.background.white};
-		overflow-y: auto;
-		width: 560px;
-		padding: ${spacing[12]} ${spacing[20]} ${spacing[4]} ${spacing[20]};
-	`,
+    background-color: ${colorTokens.background.white};
+    overflow-y: auto;
+    width: 560px;
+    padding: ${spacing[12]} ${spacing[20]} ${spacing[4]} ${spacing[20]};
+  `,
   footer: css`
-		padding: ${spacing[8]} ${spacing[20]} ${spacing[12]} ${spacing[20]};
-	`,
+    padding: ${spacing[8]} ${spacing[20]} ${spacing[12]} ${spacing[20]};
+  `,
 };
