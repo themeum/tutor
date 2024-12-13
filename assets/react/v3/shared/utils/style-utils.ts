@@ -8,7 +8,7 @@ export const createGlobalCss = () => css`
       padding-left: 0;
     }
 
-    #wpbody {
+    &:not(.tutor-backend-tutor-addons) #wpbody {
       background-color: ${colorTokens.background.default};
     }
   }
