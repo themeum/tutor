@@ -1,3 +1,9 @@
+import { css } from '@emotion/react';
+import { format, isValid, parseISO } from 'date-fns';
+import { useRef, useState } from 'react';
+import { DayPicker } from 'react-day-picker';
+import 'react-day-picker/dist/style.css';
+
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { DateFormats, isRTL } from '@Config/constants';
@@ -5,12 +11,6 @@ import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/st
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
 import type { FormControllerProps } from '@Utils/form';
 import { styleUtils } from '@Utils/style-utils';
-import { css } from '@emotion/react';
-import { format, isValid } from 'date-fns';
-import { useRef, useState } from 'react';
-import { DayPicker } from 'react-day-picker';
-import 'react-day-picker/dist/style.css';
-
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormDateInputProps extends FormControllerProps<string> {
@@ -42,7 +42,13 @@ const FormDateInput = ({
 }: FormDateInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const fieldValue = isValid(new Date(field.value)) ? format(new Date(field.value), dateFormat) : '';
+
+  // Use parseISO  to interpret the date string as a local date
+  const parsedDate = isValid(parseISO(field.value, dateFormat, new Date()))
+    ? parseISO(field.value, dateFormat, new Date())
+    : null;
+
+  const fieldValue = parsedDate ? format(parsedDate, dateFormat) : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -74,7 +80,6 @@ const FormDateInput = ({
                 css={[css, styles.input]}
                 ref={(element) => {
                   field.ref(element);
-                  // @ts-ignore
                   inputRef.current = element;
                 }}
                 type="text"
@@ -115,13 +120,13 @@ const FormDateInput = ({
                 <DayPicker
                   mode="single"
                   disabled={[
-                    !!disabledBefore && { before: new Date(disabledBefore) },
-                    !!disabledAfter && { after: new Date(disabledAfter) },
-                  ]}
-                  selected={isValid(new Date(field.value)) ? new Date(field.value) : undefined}
+                    disabledBefore ? { before: parseISO(disabledBefore, dateFormat, new Date()) } : undefined,
+                    disabledAfter ? { after: parseISO(disabledAfter, dateFormat, new Date()) } : undefined,
+                  ].filter(Boolean)}
+                  selected={parsedDate || undefined}
                   onSelect={(value) => {
                     if (value) {
-                      const formattedDate = format(value, DateFormats.yearMonthDay);
+                      const formattedDate = format(value, dateFormat);
 
                       field.onChange(formattedDate);
                       handleClosePortal();
@@ -134,9 +139,17 @@ const FormDateInput = ({
                   showOutsideDays
                   captionLayout="dropdown-buttons"
                   initialFocus={true}
-                  defaultMonth={isValid(new Date(field.value)) ? new Date(field.value) : new Date()}
-                  fromMonth={disabledBefore ? new Date(disabledBefore) : new Date(new Date().getFullYear() - 10, 0)}
-                  toMonth={disabledAfter ? new Date(disabledAfter) : new Date(new Date().getFullYear() + 10, 11)}
+                  defaultMonth={parsedDate || new Date()}
+                  fromMonth={
+                    disabledBefore
+                      ? parseISO(disabledBefore, dateFormat, new Date())
+                      : new Date(new Date().getFullYear() - 10, 0)
+                  }
+                  toMonth={
+                    disabledAfter
+                      ? parseISO(disabledAfter, dateFormat, new Date())
+                      : new Date(new Date().getFullYear() + 10, 11)
+                  }
                 />
               </div>
             </Portal>
