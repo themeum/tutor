@@ -17,13 +17,23 @@ import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierMod
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, containerMaxWidth, headerHeight, shadow, spacing, zIndex } from '@Config/styles';
+import {
+  borderRadius,
+  Breakpoint,
+  colorTokens,
+  containerMaxWidth,
+  headerHeight,
+  shadow,
+  spacing,
+  zIndex,
+} from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
 
+import { CURRENT_VIEWPORT } from '@Config/constants';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@Images/pro-placeholders/generate-course.webp';
@@ -92,7 +102,7 @@ const Header = () => {
         <div css={styles.titleAndTackerWrapper}>
           <div css={styles.titleAndTacker}>
             <h6 css={styles.title}>{__('Course Builder', 'tutor')}</h6>
-            <span css={styles.divider} />
+            <span css={styles.divider} data-title-divider />
             <Tracker />
           </div>
 
@@ -102,16 +112,21 @@ const Header = () => {
             <div css={styleUtils.flexCenter()}>
               <MagicButton variant="plain" css={styles.magicButton} onClick={handleAiButtonClick}>
                 <SVGIcon name="magicAiColorize" width={24} height={24} />
-                {__('Generate with AI', 'tutor')}
+                <Show when={CURRENT_VIEWPORT.isAboveTablet}>{__('Generate with AI', 'tutor')}</Show>
               </MagicButton>
             </div>
           </Show>
         </div>
 
-        <HeaderActions />
+        <Show when={CURRENT_VIEWPORT.isAboveDesktop}>
+          <HeaderActions />
+        </Show>
       </div>
 
       <div css={styles.closeButtonWrapper}>
+        <Show when={!CURRENT_VIEWPORT.isAboveDesktop}>
+          <HeaderActions />
+        </Show>
         <Tooltip delay={200} content={__('Exit', 'tutor')} placement="left">
           <button type="button" css={styles.closeButton} onClick={handleExitButtonClick}>
             <SVGIcon name="cross" width={32} height={32} />
@@ -136,6 +151,19 @@ const styles = {
     position: sticky;
     top: 0;
     z-index: ${zIndex.header};
+
+    ${Breakpoint.tablet} {
+      grid-template-columns: auto 1fr auto;
+    }
+
+    ${Breakpoint.smallMobile} {
+      height: auto;
+      padding-block: ${spacing[8]};
+      grid-template-areas:
+        'logo closeButton'
+        'container container';
+      row-gap: ${spacing[8]};
+    }
   `,
   container: css`
     max-width: ${containerMaxWidth}px;
@@ -144,6 +172,23 @@ const styles = {
     ${styleUtils.display.flex()};
     justify-content: space-between;
     align-items: center;
+
+    ${Breakpoint.tablet} {
+      [data-title-divider] {
+        margin-left: ${spacing[12]};
+      }
+    }
+
+    ${Breakpoint.smallMobile} {
+      height: auto;
+      grid-area: container;
+      order: 2;
+      justify-content: center;
+
+      [data-title-divider] {
+        display: none;
+      }
+    }
   `,
   titleAndTackerWrapper: css`
     ${styleUtils.display.flex()};
@@ -164,12 +209,26 @@ const styles = {
   title: css`
     ${typography.body('medium')};
     color: ${colorTokens.text.subdued};
+
+    ${Breakpoint.tablet} {
+      display: none;
+
+      [data-title-divider] {
+        display: none;
+      }
+    }
   `,
   closeButtonWrapper: css`
     display: flex;
     align-items: center;
     justify-content: flex-end;
     margin-right: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      grid-area: closeButton;
+      order: 1;
+      margin-right: ${spacing[8]};
+    }
   `,
   closeButton: css`
     ${styleUtils.resetButton};

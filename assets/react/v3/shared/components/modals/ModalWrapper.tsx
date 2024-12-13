@@ -99,8 +99,7 @@ const styles = {
   container: ({ maxWidth }: { maxWidth?: number }) => css`
     position: relative;
     background: ${colorTokens.background.white};
-    margin: ${spacing[24]};
-    margin-top: ${modal.MARGIN_TOP}px;
+    margin: ${modal.MARGIN_TOP}px auto ${spacing[24]};
     height: 100%;
     max-width: ${maxWidth}px;
     box-shadow: ${shadow.modal};
@@ -108,6 +107,7 @@ const styles = {
     overflow: hidden;
     bottom: 0;
     z-index: ${zIndex.modal};
+    width: 100%;
 
     ${Breakpoint.smallTablet} {
       width: 90%;

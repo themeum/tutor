@@ -7,7 +7,7 @@ import ContentGenerationContextProvider, {
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
 
-interface AICourseBuilderModalProps extends ModalProps {}
+type AICourseBuilderModalProps = ModalProps;
 
 const Component = ({ closeModal }: { closeModal: () => void }) => {
   const { currentStep } = useContentGenerationContext();

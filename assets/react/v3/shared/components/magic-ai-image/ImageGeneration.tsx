@@ -128,11 +128,12 @@ export const ImageGeneration = () => {
         message: (magicImageGenerationMutation.error as ErrorResponse).response.data.message,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [magicImageGenerationMutation.isError]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('prompt');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

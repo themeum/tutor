@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, lineHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -35,7 +35,9 @@ const Tracker = () => {
             disabled={step.id !== 'basic' && !postTitle}
           >
             <span data-element-id>{step.indicator}</span>
-            <span>{step.label}</span>
+            <span data-element-name data-isActive={step.isActive}>
+              {step.label}
+            </span>
             <Show when={step.indicator < 3}>
               <span data-element-indicator />
             </Show>
@@ -109,6 +111,12 @@ const styles = {
       border-radius: ${spacing[6]};
       background-color: ${colorTokens.stroke.default};
       margin-inline: 4px;
+    }
+
+    ${Breakpoint.smallTablet} {
+      [data-element-name]:not([data-isActive='true']) {
+        display: none;
+      }
     }
   `,
 };

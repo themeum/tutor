@@ -259,7 +259,9 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
                           (hasErrors && __('Error generating course content', 'tutor')) ||
                           __('Generated course content', 'tutor')}
                       </h6>
-                      <Show when={contents[index].prompt}>{(prompt) => <p css={styles.subtitle}>"{prompt}"</p>}</Show>
+                      <Show when={contents[index].prompt}>
+                        {(prompt) => <p css={styles.subtitle}>&quot;{prompt}&quot;</p>}
+                      </Show>
                       <div css={styles.items}>
                         <Show
                           when={isLoadingItem}
@@ -511,7 +513,11 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
             <MagicButton
               variant="primary_outline"
               onClick={() => {
-                isLoading ? cancelGeneration() : onClose();
+                if (isLoading) {
+                  cancelGeneration();
+                } else {
+                  onClose();
+                }
               }}
             >
               {isLoading ? __('Stop Generation', 'tutor') : __('Cancel', 'tutor')}

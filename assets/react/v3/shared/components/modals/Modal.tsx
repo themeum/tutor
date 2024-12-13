@@ -75,10 +75,10 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   const [state, setState] = useState<{
     modals: {
       id: string;
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       component: React.FunctionComponent<any>;
       props?: { [key: string]: unknown };
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
       closeOnEscape?: boolean;
@@ -141,7 +141,6 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     return state.modals.length > 0;
   }, [state.modals]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const currentlyOpenPopovers = document.querySelectorAll('.tutor-portal-popover');
@@ -163,6 +162,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     return () => {
       document.removeEventListener('keydown', handleKeyDown, true);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.modals.length, closeModal]);
 
   return (
@@ -178,7 +178,13 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               },
             ]}
           >
-            <AnimatedDiv style={style} hideOnOverflow={false}>
+            <AnimatedDiv
+              style={{
+                ...style,
+                width: '100%',
+              }}
+              hideOnOverflow={false}
+            >
               {React.createElement(modal.component, { ...modal.props, closeModal })}
             </AnimatedDiv>
             <div

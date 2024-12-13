@@ -78,7 +78,6 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
     };
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const rates = form.getValues('rates');
     const formattedCountries = rates.reduce((acc, rate) => {
@@ -94,6 +93,7 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
     }, {});
 
     regionStateForm.setValue('selectedCountries', formattedCountries);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -232,8 +232,8 @@ export const useCountrySelectModal = () => {
 const styles = {
   modalWrapperStyle: css`
     position: relative;
+    max-width: 560px;
     width: 100%;
-    min-width: 560px;
   `,
   modalBody: css`
     margin-bottom: ${spacing[72]};

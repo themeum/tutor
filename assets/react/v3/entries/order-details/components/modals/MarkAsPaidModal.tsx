@@ -32,12 +32,12 @@ function MarkAsPaidModal({ title, closeModal, actions, total, order_id }: MarkAs
 
   useEffect(() => {
     form.setFocus('note');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           await markAsPaidMutation.mutateAsync({ note: values.note, order_id });
           closeModal();
@@ -88,10 +88,6 @@ const styles = {
     span {
       color: ${colorTokens.brand.blue};
     }
-  `,
-
-  form: css`
-    width: 480px;
   `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};

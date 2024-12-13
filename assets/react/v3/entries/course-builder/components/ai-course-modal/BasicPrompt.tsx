@@ -27,9 +27,9 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
   const { setCurrentStep } = useContentGenerationContext();
   const { startGeneration } = useGenerateCourseContent();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('prompt');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -81,13 +81,14 @@ const styles = {
   container: css`
     position: absolute;
     background: ${colorTokens.background.white};
-    max-width: 1218px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
     top: 50%;
     left: 50%;
     translate: -50% -50%;
+    max-width: 560px;
+    width: 100%;
 
     :dir(rtl) {
       translate: 50% -50%;
@@ -162,7 +163,7 @@ const styles = {
   content: css`
     background-color: ${colorTokens.background.white};
     overflow-y: auto;
-    width: 560px;
+    width: 100%;
     padding: ${spacing[12]} ${spacing[20]} ${spacing[4]} ${spacing[20]};
   `,
   footer: css`

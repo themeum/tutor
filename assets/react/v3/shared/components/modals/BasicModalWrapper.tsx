@@ -15,10 +15,10 @@ interface BasicModalWrapperProps {
   title?: string | React.ReactNode;
   subtitle?: string;
   actions?: React.ReactNode;
-  headerChildren?: React.ReactNode;
   entireHeader?: React.ReactNode;
   fullScreen?: boolean;
   modalStyle?: SerializedStyles;
+  maxWidth?: number;
 }
 
 const BasicModalWrapper = ({
@@ -27,11 +27,11 @@ const BasicModalWrapper = ({
   title,
   subtitle,
   icon,
-  headerChildren,
   entireHeader,
   actions,
   fullScreen,
   modalStyle,
+  maxWidth = modal.BASIC_MODAL_MAX_WIDTH,
 }: BasicModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -42,7 +42,12 @@ const BasicModalWrapper = ({
   }, []);
 
   return (
-    <div css={[styles.container({ isFullScreen: fullScreen }), modalStyle]}>
+    <div
+      css={[styles.container({ isFullScreen: fullScreen }), modalStyle]}
+      style={{
+        maxWidth: `${maxWidth}px`,
+      }}
+    >
       <div
         css={styles.header({
           hasEntireHeader: !!entireHeader,
@@ -89,12 +94,12 @@ const styles = {
   container: ({ isFullScreen }: { isFullScreen?: boolean }) => css`
     position: relative;
     background: ${colorTokens.background.white};
-    max-width: 1218px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
     top: 50%;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     ${isFullScreen &&
     css`
@@ -104,7 +109,7 @@ const styles = {
     `}
 
     ${Breakpoint.smallTablet} {
-      width: 90%;
+      max-width: 90%;
     }
   `,
   header: ({ hasEntireHeader }: { hasEntireHeader?: boolean }) => css`

@@ -6,8 +6,8 @@ import { useEffect, useRef, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { LocalStorageKeys, notebook } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { CURRENT_VIEWPORT, LocalStorageKeys, notebook } from '@Config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { getFromLocalStorage, setToLocalStorage } from '@Utils/localStorage';
@@ -44,6 +44,11 @@ const Notebook = () => {
 
   const expandAnimation = useSpring({
     width: !isCollapsed ? notebook.MIN_NOTEBOOK_WIDTH : notebook.NOTEBOOK_HEADER,
+    height: CURRENT_VIEWPORT.isAboveDesktop
+      ? notebook.MIN_NOTEBOOK_HEIGHT
+      : !isCollapsed
+        ? notebook.MIN_NOTEBOOK_HEIGHT
+        : notebook.NOTEBOOK_HEADER,
     config: {
       duration: 300,
       easing: (t) => t * (2 - t),
@@ -205,7 +210,9 @@ const Notebook = () => {
     if (!isFloating) {
       wrapper.style.left = 'auto';
       wrapper.style.top = 'auto';
-      wrapper.style.height = `${notebook.MIN_NOTEBOOK_HEIGHT}px`;
+      wrapper.style.height = CURRENT_VIEWPORT.isAboveDesktop
+        ? `${notebook.MIN_NOTEBOOK_HEIGHT}px`
+        : `${notebook.NOTEBOOK_HEADER}px`;
 
       return;
     }
@@ -263,7 +270,11 @@ const Notebook = () => {
               css={[styleUtils.resetButton, styles.verticalButton]}
               onClick={() => setIsCollapsed(false)}
             >
-              {__('Notebook', 'tutor')}
+              {CURRENT_VIEWPORT.isAboveDesktop ? (
+                __('Notebook', 'tutor')
+              ) : (
+                <SVGIcon name="note" height={24} width={24} />
+              )}
             </button>
           </div>
         }
@@ -381,6 +392,10 @@ const styles = {
     transform: translate(-50%, -50%) rotate(-90deg);
     background-color: ${colorTokens.background.active};
     color: ${colorTokens.text.title};
+
+    ${Breakpoint.smallTablet} {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
   `,
   verticalButton: css`
     text-align: center;

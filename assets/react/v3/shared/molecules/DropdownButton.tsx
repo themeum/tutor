@@ -1,4 +1,4 @@
-import { type SerializedStyles, css, keyframes } from '@emotion/react';
+import { css, keyframes, type SerializedStyles } from '@emotion/react';
 import React, { useRef, useState, type MouseEvent, type ReactNode } from 'react';
 
 import type { ButtonIconPosition, ButtonSize, ButtonVariant } from '@Atoms/Button';
@@ -146,6 +146,7 @@ const DropdownButton = ({
             }),
             styles.dropdownButton({
               variant,
+              size,
               disabled: disabled || disabledDropdown,
             }),
           ]}
@@ -429,11 +430,16 @@ const styles = {
       animation: ${spin} 1.5s linear infinite;
     }
   `,
-  dropdownButton: ({ variant, disabled }: { variant: ButtonVariant; disabled: boolean }) => css`
+  dropdownButton: ({ variant, size, disabled }: { variant: ButtonVariant; size: ButtonSize; disabled: boolean }) => css`
     ${styleUtils.flexCenter()}
-    padding: ${spacing[8]};
+    padding-inline: ${spacing[8]};
     border-left: 1px solid transparent;
     border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
+
+    svg {
+      width: 24px;
+      height: 24px;
+    }
 
     ${variant === 'primary' &&
     css`
@@ -448,6 +454,26 @@ const styles = {
     ${disabled &&
     css`
       border-color: ${colorTokens.stroke.disable};
+    `}
+
+    ${size === 'large' &&
+    css`
+      padding-inline: ${spacing[12]};
+
+      svg {
+        width: 30px;
+        height: 30px;
+      }
+    `}
+
+    ${size === 'small' &&
+    css`
+      padding-inline: ${spacing[6]};
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
     `}
   `,
   dropdownWrapper: css`

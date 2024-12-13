@@ -54,12 +54,12 @@ function RefundModal({
 
   useEffect(() => {
     form.setFocus('amount');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           await refundOrderMutation.mutateAsync({ ...values, order_id });
           closeModal();
@@ -161,9 +161,6 @@ const styles = {
     }
   `,
 
-  form: css`
-    width: 480px;
-  `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};
     display: flex;
