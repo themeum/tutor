@@ -247,12 +247,10 @@ const styles = {
   sourceLine: (isErrorLine: boolean) => css`
     white-space: pre-wrap;
 
-    ${
-      isErrorLine &&
-      css`
+    ${isErrorLine &&
+    css`
       color: ${colorTokens.text.error};
-    `
-    }
+    `}
   `,
   angleRight: css`
     min-width: 20px;

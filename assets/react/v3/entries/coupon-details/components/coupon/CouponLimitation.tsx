@@ -82,26 +82,26 @@ export default CouponLimitation;
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   limitWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
   checkBoxLabel: css`
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+  `,
   limitInput: css`
-		width: fit-content;
-		margin-left: ${spacing[28]};
-	`,
+    width: fit-content;
+    margin-left: ${spacing[28]};
+  `,
 };

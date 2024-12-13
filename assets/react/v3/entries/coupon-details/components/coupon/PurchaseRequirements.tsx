@@ -90,23 +90,23 @@ export default PurchaseRequirements;
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   requirementInput: css`
-		width: 30%;
-		margin-left: ${spacing[28]};
-		margin-top: ${spacing[8]};
-	`,
+    width: 30%;
+    margin-left: ${spacing[28]};
+    margin-top: ${spacing[8]};
+  `,
   radioGroupWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
 };

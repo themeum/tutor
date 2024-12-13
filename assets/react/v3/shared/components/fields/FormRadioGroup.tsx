@@ -75,8 +75,8 @@ export default FormRadioGroup;
 
 const styles = {
   radioLegend: css`
-		margin-left: ${spacing[28]};
-		${typography.body()};
-		color: ${colorTokens.text.subdued};
-	`,
+    margin-left: ${spacing[28]};
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
+  `,
 };

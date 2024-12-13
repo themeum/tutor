@@ -111,7 +111,7 @@ const styles = {
     padding-inline: ${spacing[8]};
 
     ${Breakpoint.smallMobile} {
-      padding-block: ${spacing[8]};
+      padding-block: ${spacing[12]};
       flex-direction: column;
       gap: ${spacing[8]};
     }

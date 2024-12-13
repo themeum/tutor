@@ -139,7 +139,12 @@ const MagicFill = () => {
               >
                 {__('Revert to Original', 'tutor')}
               </MagicButton>
-              <Separator variant="vertical" css={css`min-height: 16px;`} />
+              <Separator
+                variant="vertical"
+                css={css`
+                  min-height: 16px;
+                `}
+              />
               <div css={styles.undoRedo}>
                 <MagicButton
                   variant="ghost"
@@ -243,7 +248,14 @@ const MagicFill = () => {
             )}
           />
         </div>
-        <div css={[magicAIStyles.rightFooter, css`margin-top: auto;`]}>
+        <div
+          css={[
+            magicAIStyles.rightFooter,
+            css`
+              margin-top: auto;
+            `,
+          ]}
+        >
           <div css={styles.footerButtons}>
             <MagicButton type="submit" disabled={magicFillImageMutation.isPending || !form.watch('prompt')}>
               <SVGIcon name="magicWand" width={24} height={24} />
@@ -319,94 +331,106 @@ const styles = {
       left: 0;
       width: 200px;
       height: 100%;
-      background: linear-gradient(270deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 51.13%, rgba(255, 255, 255, 0) 100%);
+      background: linear-gradient(
+        270deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.6) 51.13%,
+        rgba(255, 255, 255, 0) 100%
+      );
       animation: ${animations.walker} 1s linear infinite;
     }
   `,
   actionBar: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-	`,
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  `,
   fields: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   leftWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-		padding-block: ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+    padding-block: ${spacing[16]};
+  `,
   footerButtons: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
   footerActions: css`
-		display: flex;
-		justify-content: space-between;
-	`,
+    display: flex;
+    justify-content: space-between;
+  `,
   footerActionsLeft: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
   actions: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+  `,
   undoRedo: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[12]};
+  `,
   backButtonWrapper: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-		${typography.body('medium')};
-		color: ${colorTokens.text.title};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+    ${typography.body('medium')};
+    color: ${colorTokens.text.title};
+  `,
   backButton: css`
-		${styleUtils.resetButton};
-		width: 24px;
-		height: 24px;
-		border-radius: ${borderRadius[4]};
-		border: 1px solid ${colorTokens.stroke.default};
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	`,
+    ${styleUtils.resetButton};
+    width: 24px;
+    height: 24px;
+    border-radius: ${borderRadius[4]};
+    border: 1px solid ${colorTokens.stroke.default};
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  `,
   image: css`
-		width: 492px;
-		height: 498px;
-		position: relative;
+    width: 492px;
+    height: 498px;
+    position: relative;
 
-		img {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	`,
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  `,
   canvasWrapper: css`
-		position: relative;
-	`,
+    position: relative;
+  `,
   customCursor: (size: number) => css`
-		position: absolute;
-		width: ${size}px;
-		height: ${size}px;
-		border-radius: ${borderRadius.circle};
-		background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.4) 18.05%, rgba(255, 100, 113, 0.4) 30.25%, rgba(207, 110, 189, 0.4) 55.42%, rgba(164, 119, 209, 0.4) 71.66%, rgba(62, 100, 222, 0.4) 97.9%);
-		border: 3px solid ${colorTokens.stroke.white};
-		pointer-events: none;
-		transform: translate(-50%, -50%);
-		z-index: ${zIndex.highest};
-		display: none;
-	`,
+    position: absolute;
+    width: ${size}px;
+    height: ${size}px;
+    border-radius: ${borderRadius.circle};
+    background: linear-gradient(
+      73.09deg,
+      rgba(255, 150, 69, 0.4) 18.05%,
+      rgba(255, 100, 113, 0.4) 30.25%,
+      rgba(207, 110, 189, 0.4) 55.42%,
+      rgba(164, 119, 209, 0.4) 71.66%,
+      rgba(62, 100, 222, 0.4) 97.9%
+    );
+    border: 3px solid ${colorTokens.stroke.white};
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: ${zIndex.highest};
+    display: none;
+  `,
 };

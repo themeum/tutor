@@ -330,10 +330,10 @@ const CoursePricing = () => {
             <FormRadioGroup
               {...controllerProps}
               wrapperCss={css`
-            > div:not(:last-child) {
-              margin-bottom: ${spacing[10]};
-            }
-          `}
+                > div:not(:last-child) {
+                  margin-bottom: ${spacing[10]};
+                }
+              `}
               label={__('Purchase Options', 'tutor')}
               options={[
                 {

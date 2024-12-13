@@ -29,8 +29,8 @@ import {
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
 
-import { modal } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { CURRENT_VIEWPORT, modal } from '@Config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
@@ -204,20 +204,24 @@ const QuizModal = ({
           <ModalWrapper
             onClose={() => closeModal({ action: 'CLOSE' })}
             icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-            title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
-            subtitle={subtitle}
+            title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+            subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
+            maxWidth={1218}
             headerChildren={
               <Tabs
-                wrapperCss={css`
-                  height: ${modal.HEADER_HEIGHT}px;
-                `}
+                wrapperCss={styles.tabsWrapper}
                 activeTab={activeTab}
                 tabList={[
                   {
-                    label: __('Question Details', 'tutor'),
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Question Details', 'tutor') : '',
                     value: 'details',
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="text" width={24} height={24} /> : null,
                   },
-                  { label: __('Settings', 'tutor'), value: 'settings' },
+                  {
+                    label: CURRENT_VIEWPORT.isAboveMobile ? __('Settings', 'tutor') : '',
+                    value: 'settings',
+                    icon: !CURRENT_VIEWPORT.isAboveMobile ? <SVGIcon name="settings" width={24} height={24} /> : null,
+                  },
                 ]}
                 onChange={(tab) => setActiveTab(tab)}
               />
@@ -401,10 +405,25 @@ export default QuizModal;
 
 const styles = {
   wrapper: ({ activeTab, isH5pQuiz }: { activeTab: QuizTabs; isH5pQuiz: boolean }) => css`
-    width: 1218px;
+    width: 100%;
     display: grid;
     grid-template-columns: ${activeTab === 'details' ? (isH5pQuiz ? '513px 1fr' : '352px 1fr 280px') : '1fr'};
     height: 100%;
+
+    ${Breakpoint.smallTablet} {
+      width: 100%;
+      grid-template-columns: 1fr;
+      height: max-content;
+    }
+  `,
+  tabsWrapper: css`
+    height: ${modal.HEADER_HEIGHT}px;
+
+    ${Breakpoint.smallMobile} {
+      button {
+        min-width: auto;
+      }
+    }
   `,
   left: css`
     border-right: 1px solid ${colorTokens.stroke.divider};
@@ -417,6 +436,15 @@ const styles = {
     css`
       padding-top: ${spacing[24]};
       padding-inline: 352px 352px; // 352px is the width of the left and right side
+
+      ${Breakpoint.smallTablet} {
+        padding: ${spacing[16]} ${spacing[8]} ${spacing[24]} ${spacing[8]};
+        margin: 0 auto;
+      }
+
+      ${Breakpoint.smallMobile} {
+        padding-top: ${spacing[8]};
+      }
     `}
   `,
   right: css`

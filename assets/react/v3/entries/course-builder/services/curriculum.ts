@@ -317,7 +317,7 @@ export const useDeleteTopicMutation = (courseId: ID) => {
         queryClient.setQueryData(['Topic', courseId], (oldData: CourseTopic[]) => {
           const oldDataCopy = JSON.parse(JSON.stringify(oldData)) as CourseTopic[];
 
-          return oldDataCopy.filter((topic) => topic.id !== topicId);
+          return oldDataCopy.filter((topic) => String(topic.id) !== String(topicId));
         });
       }
     },

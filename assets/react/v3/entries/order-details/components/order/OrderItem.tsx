@@ -27,7 +27,7 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
                 {__('Plan:', 'tutor')} {item.plan_info.plan_name}
               </div>
             )}
-            
+
             {item.type === 'course-bundle' && (
               <div css={styles.bundleCount}>
                 {item.total_courses} {__('Courses', 'tutor')}
@@ -103,8 +103,8 @@ const styles = {
   `,
   badgeWrapper: css`
     display: flex;
-	align-items: center;
-	gap: ${spacing[8]};
+    align-items: center;
+    gap: ${spacing[8]};
   `,
   couponTag: css`
     ${typography.tiny()};

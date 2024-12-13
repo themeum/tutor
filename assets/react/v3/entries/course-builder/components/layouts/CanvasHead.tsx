@@ -64,12 +64,10 @@ const styles = {
     padding: 0;
     border-radius: ${borderRadius[2]};
 
-    ${
-      isRTL &&
-      css`
-        transform: rotate(180deg);
-      `
-    }
+    ${isRTL &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   title: css`
     ${typography.heading6('medium')};

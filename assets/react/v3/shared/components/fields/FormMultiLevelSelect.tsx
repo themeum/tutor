@@ -84,7 +84,7 @@ const FormMultiLevelSelect = ({
                 }}
                 autoComplete="off"
                 readOnly={true}
-                value={Array.isArray(field.value) ? '' : options.find((item) => item.id === field.value)?.name ?? ''}
+                value={Array.isArray(field.value) ? '' : (options.find((item) => item.id === field.value)?.name ?? '')}
                 placeholder={placeholder}
               />
               <button
@@ -212,12 +212,10 @@ const styles = {
     color: ${colorTokens.icon.default};
     padding: ${spacing[6]};
 
-    ${
-      isOpen &&
-      css`
-        transform: rotate(180deg);
-      `
-    }
+    ${isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   inputWrapper: css`
     position: relative;

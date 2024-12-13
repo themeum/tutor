@@ -12,8 +12,10 @@ import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
+import { CURRENT_VIEWPORT } from '@Config/constants';
+import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -135,10 +137,15 @@ const CourseBasic = () => {
 
           <CourseSettings />
         </div>
-        <Navigator styleModifier={styles.navigator} />
+        <Show when={CURRENT_VIEWPORT.isAboveTablet}>
+          <Navigator styleModifier={styles.navigator} />
+        </Show>
       </div>
 
       <CourseBasicSidebar />
+      <Show when={!CURRENT_VIEWPORT.isAboveTablet}>
+        <Navigator styleModifier={styles.navigator} />
+      </Show>
     </div>
   );
 };
@@ -150,6 +157,12 @@ const styles = {
     display: grid;
     grid-template-columns: 1fr 338px;
     gap: ${spacing[32]};
+    width: 100%;
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
   `,
   mainForm: ({ isWpEditorFullScreen }: { isWpEditorFullScreen: boolean }) => css`
     padding-block: ${spacing[32]} ${spacing[24]};
@@ -161,6 +174,11 @@ const styles = {
     css`
       z-index: ${zIndex.header + 1};
     `}
+
+    ${Breakpoint.smallTablet} {
+      padding-top: ${spacing[16]};
+      position: unset;
+    }
   `,
 
   fieldsWrapper: css`
@@ -194,6 +212,10 @@ const styles = {
   `,
   navigator: css`
     margin-top: ${spacing[40]};
+
+    ${Breakpoint.smallTablet} {
+      margin-top: 0;
+    }
   `,
   editorsButtonWrapper: css`
     display: flex;
