@@ -11,7 +11,7 @@
     const buttonId = 'tutor-frontend-builder-trigger';
     // prepare our custom link's html.
     const buttonHtml = `
-        <a id="${buttonId}" class="tutor-btn tutor-btn-primary tutor-btn-sm" href="${tutorInlineData.frontend_dashboard_url}" target="_blank">
+        <a id="${buttonId}" class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-text-nowrap" href="${tutorInlineData.frontend_dashboard_url}" target="_blank">
         ${__('Edit with Frontend Course Builder', 'tutor')}
         </a>
     `;
