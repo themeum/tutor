@@ -154,8 +154,6 @@ gulp.task('watch', function () {
 			gulp.parallel('tutor_admin', 'tutor_setup')();
 		} else if (e.history[0].includes('/frontend-dashboard/')) {
 			gulp.parallel('tutor_front_dashboard')();
-		} else if (e.history[0].includes('/course-builder/')) {
-			gulp.parallel('tutor_course_builder')();
 		} else if (e.history[0].includes('modules/')) {
 			gulp.parallel('tutor_front', 'tutor_admin', 'tutor_front_dashboard')();
 		} else {
