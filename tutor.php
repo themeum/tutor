@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 /**
- * Defined the tutor main file
+ * Constants for tutor plugin.
  */
 define( 'TUTOR_VERSION', '3.1.0' );
 define( 'TUTOR_FILE', __FILE__ );
@@ -30,12 +30,7 @@ define( 'TUTOR_FILE', __FILE__ );
 /**
  * Load tutor text domain for translation
  */
-add_action(
-	'init',
-	function () {
-		load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' );
-	}
-);
+add_action( 'init', fn () => load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' ) );
 
 if ( ! function_exists( 'tutor' ) ) {
 	/**
@@ -129,7 +124,7 @@ if ( ! function_exists( 'tutor_utils' ) ) {
 
 if ( ! function_exists( 'tutils' ) ) {
 	/**
-	 * Alis of tutor_utils()
+	 * Alias of tutor_utils()
 	 *
 	 * @since 1.3.4
 	 *
