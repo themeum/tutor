@@ -71,7 +71,6 @@ if ( ! function_exists( 'tutor' ) ) {
 			'bundle_post_type'       => apply_filters( 'tutor_bundle_post_type', 'course-bundle' ),
 			'lesson_post_type'       => apply_filters( 'tutor_lesson_post_type', 'lesson' ),
 			'instructor_role'        => apply_filters( 'tutor_instructor_role', 'tutor_instructor' ),
-			'instructor_role_name'   => apply_filters( 'tutor_instructor_role_name', __( 'Tutor Instructor', 'tutor' ) ),
 			'template_path'          => apply_filters( 'tutor_template_path', 'tutor/' ),
 			'has_pro'                => apply_filters( 'tutor_has_pro', $has_pro ),
 			// @since v2.0.6.
