@@ -138,10 +138,7 @@ if ( ! function_exists( 'tutils' ) ) {
  * Do some task during activation
  *
  * @since 1.5.2
- *
- * @since 2.6.2
- *
- * Uninstall hook registered
+ * @since 2.6.2 Uninstall hook registered
  */
 register_activation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_activate' ) );
 register_deactivation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_deactivation' ) );
@@ -157,22 +154,6 @@ if ( ! function_exists( 'tutor_lms' ) ) {
 	 */
 	function tutor_lms() {
 		return \TUTOR\Tutor::instance();
-	}
-}
-
-if ( ! function_exists( 'str_contains' ) ) {
-	/**
-	 * String helper for str contains
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $haystack haystack.
-	 * @param string $needle needle.
-	 *
-	 * @return bool
-	 */
-	function str_contains( string $haystack, string $needle ) {
-		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
 	}
 }
 
