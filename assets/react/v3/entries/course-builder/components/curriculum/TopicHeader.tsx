@@ -59,7 +59,6 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const TopicHeader = ({
   topic,
   isEdit,
-  isActive,
   listeners,
   isDragging,
   onCollapse,
@@ -102,10 +101,11 @@ const TopicHeader = ({
     });
 
     if (response.data) {
-      if (response.status_code === 201) {
-        onEdit?.(`topic-${response.data}`);
-      }
       setIsEdit(false);
+    }
+
+    if (response.status_code === 201) {
+      onEdit?.(`topic-${response.data}`);
     }
   };
 
@@ -121,11 +121,11 @@ const TopicHeader = ({
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isEdit) {
       form.setFocus('title');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
   return (

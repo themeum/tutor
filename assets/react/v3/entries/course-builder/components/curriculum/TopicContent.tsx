@@ -1,6 +1,7 @@
 import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -14,32 +15,31 @@ import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Popover from '@Molecules/Popover';
 
 import { useModal } from '@Components/modals/Modal';
+import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
-import {
-  type ContentType,
-  type ID,
-  useDeleteContentMutation,
-  useDuplicateContentMutation,
-} from '@CourseBuilderServices/curriculum';
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
 import { tutorConfig } from '@Config/config';
 import { Addons } from '@Config/constants';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import {
+  type ContentType,
+  type ID,
+  useDeleteContentMutation,
+  useDuplicateContentMutation,
+} from '@CourseBuilderServices/curriculum';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { styleUtils } from '@Utils/style-utils';
 import type { IconCollection } from '@Utils/types';
 import { noop } from '@Utils/util';
-import { useQueryClient } from '@tanstack/react-query';
 
 interface TopicContentProps {
   type: ContentType;
@@ -136,7 +136,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const editButtonRef = useRef<HTMLButtonElement>(null);
   const deleteRef = useRef<HTMLButtonElement>(null);
 
-  const icon = icons[type];
+  const { showModal } = useModal();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: content.id,
     data: {
@@ -145,13 +145,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
     animateLayoutChanges,
   });
 
+  const icon = icons[type];
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.3 : undefined,
     background: isDragging ? colorTokens.stroke.hover : undefined,
   };
-  const { showModal } = useModal();
   const duplicateContentMutation = useDuplicateContentMutation();
   const deleteContentMutation = useDeleteContentMutation();
   const deleteQuizMutation = useDeleteQuizMutation();
@@ -240,24 +240,26 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         ref={setNodeRef}
         style={style}
       >
-        <div css={styles.iconAndTitle({ isDragging: isOverlay })} {...listeners}>
-          <div data-content-icon>
-            <SVGIcon
-              name={icon.name as IconCollection}
-              width={24}
-              height={24}
-              style={css`
-                color: ${icon.color};
-              `}
-            />
-          </div>
+        <div css={styles.iconAndTitle({ isOverlay })} {...listeners}>
+          <Show when={!isDragging}>
+            <div data-content-icon>
+              <SVGIcon
+                name={icon.name}
+                width={24}
+                height={24}
+                style={css`
+                  color: ${icon.color};
+                `}
+              />
+            </div>
+          </Show>
           <div data-bar-icon>
             <SVGIcon name="bars" width={24} height={24} />
           </div>
           <p css={styles.title} onClick={handleShowModalOrPopover} onKeyDown={noop}>
             <span dangerouslySetInnerHTML={{ __html: content.title }} />
-            <Show when={(type === 'tutor_quiz' || type === 'tutor_h5p_quiz') && !!content.total_question}>
-              <span data-question-count>({sprintf(__('%s Questions', 'tutor'), content.total_question)})</span>
+            <Show when={['tutor_quiz', 'tutor_h5p_quiz'].includes(type) && !!content.total_question}>
+              <span data-question-count>({sprintf(__('%s Questions', 'tutor'), String(content.total_question))})</span>
             </Show>
           </p>
         </div>
@@ -463,7 +465,7 @@ const styles = {
       color: ${colorTokens.text.hints};
     }
   `,
-  iconAndTitle: ({ isDragging = false }) => css`
+  iconAndTitle: ({ isOverlay = false }) => css`
     display: flex;
     align-items: center;
     gap: ${spacing[8]};
@@ -473,7 +475,7 @@ const styles = {
     [data-bar-icon] {
       display: none;
     }
-    ${isDragging &&
+    ${isOverlay &&
     css`
       [data-content-icon] {
         display: none;

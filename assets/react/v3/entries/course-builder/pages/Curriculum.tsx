@@ -1,12 +1,15 @@
 import {
+  closestCenter,
+  type CollisionDetection,
   DndContext,
   type DragEndEvent,
   type DragOverEvent,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
+  pointerWithin,
+  rectIntersection,
   type UniqueIdentifier,
-  closestCorners,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
@@ -14,7 +17,7 @@ import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -47,9 +50,9 @@ import curriculumEmptyState2x from '@Images/curriculum-empty-state-2x.webp';
 import curriculumEmptyState from '@Images/curriculum-empty-state.webp';
 import TopicDragOverlay from '../components/curriculum/TopicDragOverlay';
 
-const courseId = getCourseId();
-
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
+
+const courseId = getCourseId();
 
 const Curriculum = () => {
   const navigate = useNavigate();
@@ -66,10 +69,212 @@ const Curriculum = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [topics, setTopics] = useState<CourseTopicWithCollapse[]>([]);
 
+  const isActiveSortItemTopic = activeSortId?.toString().includes('topic');
+
   const currentExpandedTopics = useRef<ID[]>([]);
+
+  const findValueOfItems = useCallback(
+    (id: UniqueIdentifier | undefined, type: string) => {
+      if (type === 'topic') {
+        return topics.find((item) => item.id === id);
+      }
+      if (type === 'content') {
+        return topics.find((topic) => topic.contents.find((content) => content.ID === id));
+      }
+    },
+    [topics],
+  );
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
+
+  const dynamicCollisionDetection: CollisionDetection = useCallback((collisionDetectionArgs) => {
+    const { active, droppableContainers } = collisionDetectionArgs;
+
+    if (!active || !droppableContainers.length) {
+      return [];
+    }
+
+    const activeId = active.id.toString();
+
+    // Use closestCenter for vertical topic sorting
+    if (activeId.includes('topic')) {
+      return closestCenter(collisionDetectionArgs);
+    }
+
+    // Use pointerWithin when dragging content over topics
+    if (activeId.includes('content')) {
+      const containers = droppableContainers.filter((container) => container.id.toString().includes('topic'));
+
+      if (containers.length) {
+        return pointerWithin(collisionDetectionArgs);
+      }
+
+      // Use closestCenter for content sorting within topics
+      return closestCenter(collisionDetectionArgs);
+    }
+
+    // Fallback to basic intersection
+    return rectIntersection(collisionDetectionArgs);
+  }, []);
+
+  const handleDragOver = useCallback(
+    (event: DragOverEvent) => {
+      const { active, over } = event;
+
+      if (!over || !active) {
+        return;
+      }
+
+      if (active.id.toString().includes('content') && over.id.toString().includes('content')) {
+        const activeTopic = findValueOfItems(active.id, 'content');
+        const overTopic = findValueOfItems(over.id, 'content');
+
+        if (!activeTopic || !overTopic || activeTopic.id === overTopic.id) {
+          return;
+        }
+
+        const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
+        const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+
+        const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
+        const overContentIndex = overTopic.contents.findIndex((content) => content.ID === over.id);
+        const newItems = [...topics];
+        const [removedItem] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
+        newItems[overTopicIndex].contents.splice(overContentIndex, 0, removedItem);
+        setTopics(newItems);
+      }
+
+      if (active.id.toString().includes('content') && over?.id.toString().includes('topic') && active.id !== over.id) {
+        const activeTopic = findValueOfItems(active.id, 'content');
+        const overTopic = findValueOfItems(over.id, 'topic');
+
+        if (!activeTopic || !overTopic || overTopic.contents.length > 0 || overTopic.isCollapsed) {
+          return;
+        }
+
+        const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
+        const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+
+        if (activeTopicIndex === overTopicIndex) {
+          return;
+        }
+
+        const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
+
+        const newItems = [...topics];
+        const [removedContent] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
+        newItems[overTopicIndex].contents.push(removedContent);
+        setTopics(newItems);
+      }
+    },
+    [topics, findValueOfItems],
+  );
+
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) {
+      setActiveSortId(null);
+      return;
+    }
+
+    let topicAfterSort: CourseTopicWithCollapse[] = [...topics];
+
+    if (
+      active.id.toString().includes('topic') &&
+      over?.id.toString().includes('topic') &&
+      active &&
+      active.id !== over.id
+    ) {
+      const activeTopicIndex = topics.findIndex((topic) => topic.id === active.id);
+      const overTopicIndex = topics.findIndex((topic) => topic.id === over.id);
+      topicAfterSort = moveTo(topicAfterSort, activeTopicIndex, overTopicIndex);
+
+      setTopics(topicAfterSort);
+    }
+
+    if (active.id.toString().includes('content') && over?.id.toString().includes('content')) {
+      const activeTopic = findValueOfItems(active.id, 'content');
+      const overTopic = findValueOfItems(over.id, 'content');
+
+      if (!activeTopic || !overTopic || overTopic.isCollapsed) {
+        return;
+      }
+
+      const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
+      const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+      const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
+      const overContentIndex = overTopic.contents.findIndex((content) => content.ID === over.id);
+
+      if (activeTopicIndex === overTopicIndex) {
+        topicAfterSort[activeTopicIndex].contents = moveTo(
+          topicAfterSort[activeTopicIndex].contents,
+          activeContentIndex,
+          overContentIndex,
+        );
+        setTopics(topicAfterSort);
+      } else {
+        const [removedContent] = topicAfterSort[activeTopicIndex].contents.splice(activeContentIndex, 1);
+        topicAfterSort[overTopicIndex].contents.splice(overContentIndex, 0, removedContent);
+        setTopics(topicAfterSort);
+      }
+    }
+
+    if (
+      active.id.toString().includes('content') &&
+      over.id.toString().includes('topic') &&
+      active &&
+      active.id !== over.id
+    ) {
+      const activeTopic = findValueOfItems(active.id, 'content');
+      const overTopic = findValueOfItems(over.id, 'topic');
+
+      if (!activeTopic || !overTopic || overTopic.isCollapsed) {
+        return;
+      }
+
+      const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
+      const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+      const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
+
+      const [removedContent] = topicAfterSort[activeTopicIndex].contents.splice(activeContentIndex, 1);
+      topicAfterSort[overTopicIndex].contents.push(removedContent);
+      setTopics(topicAfterSort);
+    }
+
+    const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] = topicAfterSort.reduce(
+      (topics, topic, topicIndex) => {
+        let contentIndex = 0;
+        topics[topicIndex] = {
+          topic_id: getIdWithoutPrefix('topic-', topic.id),
+          lesson_ids: topic.contents.reduce(
+            (contents, content) => {
+              contents[contentIndex] = getIdWithoutPrefix('content-', content.ID);
+              contentIndex++;
+
+              return contents;
+            },
+            {} as { [key: ID]: ID },
+          ),
+        };
+        return topics;
+      },
+      {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } },
+    );
+
+    updateCourseContentOrderMutation.mutate({
+      tutor_topics_lessons_sorting: convertedObject,
+      ...(active.id.toString().includes('content') && {
+        'content_parent[parent_topic_id]': courseCurriculumQuery.data?.find((item) =>
+          item.contents.find((content) => String(content.ID) === getIdWithoutPrefix('content-', over.id)),
+        )?.id,
+        'content_parent[content_id]': getIdWithoutPrefix('content-', active.id),
+      }),
+    });
+
+    setActiveSortId(null);
+  };
 
   useEffect(() => {
     if (topics.length === 0) {
@@ -169,177 +374,6 @@ const Curriculum = () => {
     return <LoadingOverlay />;
   }
 
-  const findValueOfItems = (id: UniqueIdentifier | undefined, type: string) => {
-    if (type === 'topic') {
-      return topics.find((item) => item.id === id);
-    }
-    if (type === 'content') {
-      return topics.find((topic) => topic.contents.find((content) => content.ID === id));
-    }
-  };
-
-  const handleDragOver = (event: DragOverEvent) => {
-    const { active, over } = event;
-
-    if (!over || !active) {
-      return;
-    }
-
-    if (active.id.toString().includes('content') && over.id.toString().includes('content') && active.id !== over.id) {
-      const activeTopic = findValueOfItems(active.id, 'content');
-      const overTopic = findValueOfItems(over.id, 'content');
-
-      if (!activeTopic || !overTopic) return;
-
-      const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
-      const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
-
-      if (overTopic.isCollapsed || activeTopicIndex === overTopicIndex) {
-        return;
-      }
-
-      const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
-      const overContentIndex = overTopic.contents.findIndex((content) => content.ID === over.id);
-      const newItems = [...topics];
-      const [removedItem] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
-      newItems[overTopicIndex].contents.splice(overContentIndex, 0, removedItem);
-      setTopics(newItems);
-    }
-
-    if (active.id.toString().includes('content') && over?.id.toString().includes('topic') && active.id !== over.id) {
-      const activeTopic = findValueOfItems(active.id, 'content');
-      const overTopic = findValueOfItems(over.id, 'topic');
-
-      if (!activeTopic || !overTopic || overTopic.contents.length > 0 || overTopic.isCollapsed) {
-        return;
-      }
-
-      const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
-      const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
-
-      if (activeTopicIndex === overTopicIndex) {
-        return;
-      }
-
-      const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
-
-      const newItems = [...topics];
-      const [removedContent] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
-      newItems[overTopicIndex].contents.push(removedContent);
-      setTopics(newItems);
-    }
-  };
-
-  const handleDragEnd = (event: DragEndEvent) => {
-    const { active, over } = event;
-
-    if (!over) {
-      setActiveSortId(null);
-      return;
-    }
-
-    let topicAfterSort: CourseTopicWithCollapse[] = [...topics];
-
-    if (
-      active.id.toString().includes('topic') &&
-      over?.id.toString().includes('topic') &&
-      active &&
-      active.id !== over.id
-    ) {
-      const activeTopicIndex = topics.findIndex((topic) => topic.id === active.id);
-      const overTopicIndex = topics.findIndex((topic) => topic.id === over.id);
-      topicAfterSort = moveTo(topicAfterSort, activeTopicIndex, overTopicIndex);
-
-      setTopics(topicAfterSort);
-    }
-
-    if (
-      active.id.toString().includes('content') &&
-      over?.id.toString().includes('content') &&
-      active &&
-      active.id !== over.id
-    ) {
-      const activeTopic = findValueOfItems(active.id, 'content');
-      const overTopic = findValueOfItems(over.id, 'content');
-
-      if (!activeTopic || !overTopic || overTopic.isCollapsed) {
-        return;
-      }
-
-      const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
-      const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
-      const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
-      const overContentIndex = overTopic.contents.findIndex((content) => content.ID === over.id);
-
-      if (activeTopicIndex === overTopicIndex) {
-        topicAfterSort[activeTopicIndex].contents = moveTo(
-          topicAfterSort[activeTopicIndex].contents,
-          activeContentIndex,
-          overContentIndex,
-        );
-        setTopics(topicAfterSort);
-      } else {
-        const [removedContent] = topicAfterSort[activeTopicIndex].contents.splice(activeContentIndex, 1);
-        topicAfterSort[overTopicIndex].contents.splice(overContentIndex, 0, removedContent);
-        setTopics(topicAfterSort);
-      }
-    }
-
-    if (
-      active.id.toString().includes('content') &&
-      over.id.toString().includes('topic') &&
-      active &&
-      active.id !== over.id
-    ) {
-      const activeTopic = findValueOfItems(active.id, 'content');
-      const overTopic = findValueOfItems(over.id, 'topic');
-
-      if (!activeTopic || !overTopic || overTopic.isCollapsed) {
-        return;
-      }
-
-      const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
-      const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
-      const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
-
-      const [removedContent] = topicAfterSort[activeTopicIndex].contents.splice(activeContentIndex, 1);
-      topicAfterSort[overTopicIndex].contents.push(removedContent);
-      setTopics(topicAfterSort);
-    }
-
-    const convertedObject: CourseContentOrderPayload['tutor_topics_lessons_sorting'] = topicAfterSort.reduce(
-      (topics, topic, topicIndex) => {
-        let contentIndex = 0;
-        topics[topicIndex] = {
-          topic_id: getIdWithoutPrefix('topic-', topic.id),
-          lesson_ids: topic.contents.reduce(
-            (contents, content) => {
-              contents[contentIndex] = getIdWithoutPrefix('content-', content.ID);
-              contentIndex++;
-
-              return contents;
-            },
-            {} as { [key: ID]: ID },
-          ),
-        };
-        return topics;
-      },
-      {} as { [key: ID]: { topic_id: ID; lesson_ids: { [key: ID]: ID } } },
-    );
-
-    updateCourseContentOrderMutation.mutate({
-      tutor_topics_lessons_sorting: convertedObject,
-      ...(active.id.toString().includes('content') && {
-        'content_parent[parent_topic_id]': courseCurriculumQuery.data?.find((item) =>
-          item.contents.find((content) => String(content.ID) === getIdWithoutPrefix('content-', over.id)),
-        )?.id,
-        'content_parent[content_id]': getIdWithoutPrefix('content-', active.id),
-      }),
-    });
-
-    setActiveSortId(null);
-  };
-
   const handleTopicDelete = (index: number, topicId: ID) => {
     setTopics((previous) => previous.filter((_, idx) => idx !== index));
     currentExpandedTopics.current = currentExpandedTopics.current.filter((id) => id !== topicId);
@@ -419,7 +453,7 @@ const Curriculum = () => {
             <div css={styles.topicWrapper}>
               <DndContext
                 sensors={sensors}
-                collisionDetection={closestCorners}
+                collisionDetection={dynamicCollisionDetection}
                 measuring={droppableMeasuringStrategy}
                 modifiers={[restrictToWindowEdges]}
                 onDragStart={(event) => {
@@ -431,6 +465,9 @@ const Curriculum = () => {
                 <SortableContext
                   items={topics.map((item) => ({ ...item, id: item.id }))}
                   strategy={verticalListSortingStrategy}
+                  disabled={
+                    !!activeSortItem && (!isActiveSortItemTopic || (isActiveSortItemTopic && topics.length === 1))
+                  }
                 >
                   <For each={topics}>
                     {(topic, index) => {
@@ -440,7 +477,7 @@ const Curriculum = () => {
                             key={topic.id}
                             topic={{
                               ...topic,
-                              isCollapsed: activeSortId?.toString().includes('topic') ? true : topic.isCollapsed,
+                              isCollapsed: isActiveSortItemTopic ? true : topic.isCollapsed,
                             }}
                             onDelete={() => handleTopicDelete(index, topic.id)}
                             onCollapse={(topicId) => handleTopicCollapse(topicId)}
@@ -464,7 +501,7 @@ const Curriculum = () => {
                         return (
                           <TopicDragOverlay
                             title={
-                              activeSortId?.toString().includes('topic')
+                              isActiveSortItemTopic
                                 ? (item as CourseTopicWithCollapse).title
                                 : (item as Content).post_title
                             }
