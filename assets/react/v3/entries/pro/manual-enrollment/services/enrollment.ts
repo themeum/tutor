@@ -1,9 +1,9 @@
 import { useToast } from '@Atoms/Toast';
-import { authApiInstance } from '@Utils/api';
-import { convertToErrorMessage } from '@Utils/util';
+import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import type { PaginatedParams, PaginatedResult } from '@Utils/types';
+import { convertToErrorMessage } from '@Utils/util';
 import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 
 export interface Student {
@@ -76,10 +76,7 @@ interface EnrollmentResponse {
 }
 
 const createEnrollment = (payload: EnrollmentPayload) => {
-  return authApiInstance.post<EnrollmentPayload, EnrollmentResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_enroll_bulk_student',
-    ...payload,
-  });
+  return wpAjaxInstance.post<EnrollmentPayload, EnrollmentResponse>(endpoints.CREATE_ENROLLMENT, payload);
 };
 
 export const useCreateEnrollmentMutation = () => {
@@ -97,9 +94,8 @@ export const useCreateEnrollmentMutation = () => {
 };
 
 const getCourseList = (params: PaginatedParams) => {
-  return authApiInstance.post<PaginatedResult<Course>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_course_bundle_list',
-    ...params,
+  return wpAjaxInstance.get<PaginatedResult<Course>>(endpoints.GET_COURSE_BUNDLE_LIST, {
+    params,
   });
 };
 
@@ -107,11 +103,7 @@ export const useCurseListQuery = (params: PaginatedParams) => {
   return useQuery({
     queryKey: ['CurseList', params],
     placeholderData: keepPreviousData,
-    queryFn: () => {
-      return getCourseList(params).then((res) => {
-        return res.data;
-      });
-    },
+    queryFn: () => getCourseList(params).then((response) => response.data),
   });
 };
 
@@ -119,9 +111,8 @@ interface GetStudentListParams extends PaginatedParams {
   object_id?: number;
 }
 const getStudentList = (params: GetStudentListParams) => {
-  return authApiInstance.post<PaginatedResult<Student>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_unenrolled_users',
-    ...params,
+  return wpAjaxInstance.get<PaginatedResult<Student>>(endpoints.GET_UNENROLLED_USERS, {
+    params,
   });
 };
 
@@ -129,10 +120,6 @@ export const useStudentListQuery = (params: GetStudentListParams) => {
   return useQuery({
     queryKey: ['StudentList', params],
     placeholderData: keepPreviousData,
-    queryFn: () => {
-      return getStudentList(params).then((res) => {
-        return res.data;
-      });
-    },
+    queryFn: () => getStudentList(params).then((response) => response.data),
   });
 };

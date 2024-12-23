@@ -106,72 +106,60 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
-    ${
-      hasBorder &&
-      css`
-				box-shadow: none;
-				border: 1px solid ${colorTokens.stroke.divider};
-    	`
-    }
+    ${hasBorder &&
+    css`
+      box-shadow: none;
+      border: 1px solid ${colorTokens.stroke.divider};
+    `}
   `,
   headerWrapper: (collapsed: boolean, isAlternative: boolean) => css`
-		padding: ${spacing[8]};
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: ${spacing[4]};
+    padding: ${spacing[8]};
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: ${spacing[4]};
 
-		${
-      !collapsed &&
-      css`
-				border-bottom: 1px solid ${colorTokens.stroke.divider};;
-			`
-    }
+    ${!collapsed &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
 
-    ${
-      isAlternative &&
-      css`
-        padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
-      `
-    }
-	`,
+    ${isAlternative &&
+    css`
+      padding: ${spacing[12]} ${spacing[16]} ${spacing[12]} ${spacing[24]};
+    `}
+  `,
   headerAndAction: css`
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	`,
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  `,
   header: css`
-		display: flex;
-		flex-direction: column;
-		padding: ${spacing[4]} ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    padding: ${spacing[4]} ${spacing[16]};
+  `,
   subtitle: css`
-		${typography.caption()};
-		color: ${colorTokens.text.subdued};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
+  `,
   title: css`
-		${typography.body('medium')};
-		color: ${colorTokens.text.primary};
-		display: flex;
-		align-items: center;
-	`,
-  collapseButton: ({
-    isCollapsed,
-  }: {
-    isCollapsed: boolean;
-  }) => css`
-		${styleUtils.resetButton};
-		display: flex;
-		align-items: center;
-		transition: transform 0.3s ease-in-out;
+    ${typography.body('medium')};
+    color: ${colorTokens.text.primary};
+    display: flex;
+    align-items: center;
+  `,
+  collapseButton: ({ isCollapsed }: { isCollapsed: boolean }) => css`
+    ${styleUtils.resetButton};
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
 
-		${
-      isCollapsed &&
-      css`
-			transform: rotate(180deg);
-		`
-    }
-	`,
+    ${isCollapsed &&
+    css`
+      transform: rotate(180deg);
+    `}
+  `,
   arrowUpDown: css`
     color: ${colorTokens.icon.default};
     display: flex;
@@ -179,11 +167,11 @@ const styles = {
     align-items: center;
   `,
   cardBody: css`
-		padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[24]};
-	`,
+    padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[24]};
+  `,
   actions: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+  `,
 };

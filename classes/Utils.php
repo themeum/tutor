@@ -7074,7 +7074,8 @@ class Utils {
 		} elseif ( 'all' === $status ) {
 			$status = '';
 		}
-		$status_query = "AND enrol.post_status IN ('completed', 'pending', 'approved', 'cancel', 'canceled', 'cancelled') ";
+
+		$status_query = "";
 		if ( is_array( $status ) && count( $status ) ) {
 			$in_clause    =  QueryHelper::prepare_in_clause( $status );
 			$status_query = "AND enrol.post_status IN ({$in_clause})";
@@ -7138,8 +7139,8 @@ class Utils {
 		} elseif ( 'all' === $status ) {
 			$status = '';
 		}
-		// default will return approved & cancelled status record.
-		$status_query = "AND enrol.post_status IN ('completed', 'pending', 'cancel', 'canceled', 'cancelled') ";
+
+		$status_query = "";
 		if ( is_array( $status ) && count( $status ) ) {
 			$in_clause    =  QueryHelper::prepare_in_clause( $status );
 			$status_query = "AND enrol.post_status IN ({$in_clause})";

@@ -24,13 +24,13 @@ export default SkeletonLoader;
 
 const styles = {
   wrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
   container: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[32]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[32]};
+  `,
 };

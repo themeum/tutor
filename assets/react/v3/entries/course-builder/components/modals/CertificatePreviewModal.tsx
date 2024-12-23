@@ -7,7 +7,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import type { Certificate } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
@@ -38,7 +38,6 @@ const CertificatePreviewModal = ({
 
   const nextIndex = Math.min(certificates.length, currentCertificateIndex + 1);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'ArrowLeft') {
@@ -57,6 +56,7 @@ const CertificatePreviewModal = ({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCertificateIndex, certificates]);
 
   useEffect(() => {
@@ -165,12 +165,17 @@ const styles = {
     justify-content: center;
     align-items: center;
     gap: ${spacing[16]};
+    position: relative;
   `,
   content: css`
     ${styleUtils.display.flex('column')};
     justify-content: center;
     align-items: center;
     object-fit: contain;
+    max-width: 80vw;
+    max-height: 80vh;
+    width: 100%;
+    height: 100%;
   `,
   certificateAndActions: css`
     position: relative;
@@ -180,7 +185,7 @@ const styles = {
     gap: ${spacing[20]};
   `,
   certificate: css`
-    max-height: 80dvh;
+    width: 100%;
     height: 100%;
     object-fit: contain;
   `,
@@ -191,6 +196,10 @@ const styles = {
     bottom: 0;
     ${styleUtils.display.flex('column')};
     justify-content: space-between;
+
+    ${Breakpoint.smallMobile} {
+      right: -${spacing[32]};
+    }
   `,
   actionButton: css`
     place-self: center start;
@@ -210,8 +219,7 @@ const styles = {
   editButton: css`
     place-self: center end;
   `,
-  navigatorWrapper: css`
-  `,
+  navigatorWrapper: css``,
   navigator: css`
     ${styleUtils.display.flex()};
     gap: ${spacing[16]};
@@ -224,7 +232,7 @@ const styles = {
     svg {
       color: ${colorTokens.icon.default};
     }
-    
+
     :disabled {
       cursor: not-allowed;
       svg {

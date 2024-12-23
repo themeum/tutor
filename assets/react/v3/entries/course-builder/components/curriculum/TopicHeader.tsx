@@ -358,50 +358,39 @@ const styles = {
 
     [data-toggle-collapse] {
       transition: transform 0.3s ease-in-out;
-      ${
-        !isCollapsed &&
-        css`
-          transform: rotate(180deg);
-        `
-      }
+      ${!isCollapsed &&
+      css`
+        transform: rotate(180deg);
+      `}
     }
 
-    ${
-      !isCollapsed &&
-      css`
-        border-bottom: 1px solid ${colorTokens.stroke.divider};
-      `
-    }
+    ${!isCollapsed &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
 
-    ${
-      !isEdit &&
-      css`
-        padding-bottom: 0;
-      `
-    }
+    ${!isEdit &&
+    css`
+      padding-bottom: 0;
+    `}
 
-    ${
-      !isEdit &&
-      !isDeletePopoverOpen &&
-      css`
+    ${!isEdit &&
+    !isDeletePopoverOpen &&
+    css`
       [data-visually-hidden] {
         opacity: 0;
         transition: ${!isDragging ? 'opacity 0.3s ease-in-out' : 'none'};
       }
 
-      :hover, :focus-within {
+      :hover,
+      :focus-within {
         [data-visually-hidden] {
           opacity: ${isDragging ? 0 : 1};
         }
       }
-    `
-    }
+    `}
   `,
-  headerContent: ({
-    isSaved = true,
-  }: {
-    isSaved: boolean;
-  }) => css`
+  headerContent: ({ isSaved = true }: { isSaved: boolean }) => css`
     display: grid;
     grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
@@ -418,11 +407,7 @@ const styles = {
       flex-shrink: 0;
     }
   `,
-  grabButton: ({
-    isDragging = false,
-  }: {
-    isDragging: boolean;
-  }) => css`
+  grabButton: ({ isDragging = false }: { isDragging: boolean }) => css`
     ${styleUtils.resetButton};
     ${styleUtils.flexCenter()};
     cursor: ${isDragging ? 'grabbing' : 'grab'};
@@ -441,12 +426,10 @@ const styles = {
     ${typography.body()};
     color: ${colorTokens.text.hints};
     width: 100%;
-    ${
-      !isEdit &&
-      css`
+    ${!isEdit &&
+    css`
       ${styleUtils.text.ellipsis(1)};
-    `
-    }
+    `}
   `,
   description: ({ isEdit }: { isEdit: boolean }) => css`
     ${typography.caption()};
@@ -455,19 +438,15 @@ const styles = {
     margin-left: ${spacing[24]};
     padding-bottom: ${spacing[12]};
 
-    ${
-      !isEdit &&
-      css`
-        ${styleUtils.text.ellipsis(2)};
-      `
-    }
+    ${!isEdit &&
+    css`
+      ${styleUtils.text.ellipsis(2)};
+    `}
 
-    ${
-      isEdit &&
-      css`
-        padding-right: 0;
-      `
-    }
+    ${isEdit &&
+    css`
+      padding-right: 0;
+    `}
   `,
   footer: css`
     width: 100%;

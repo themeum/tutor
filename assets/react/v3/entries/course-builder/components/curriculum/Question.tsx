@@ -211,14 +211,16 @@ const styles = {
     isDragging: boolean;
     isThreeDotsOpen: boolean;
   }) => css`
-    padding: ${spacing[10]} ${spacing[8]} ${spacing[10]}  ${spacing[28]};
+    padding: ${spacing[10]} ${spacing[8]} ${spacing[10]} ${spacing[28]};
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: ${spacing[12]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     cursor: pointer;
-    transition: border 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    transition:
+      border 0.3s ease-in-out,
+      background-color 0.3s ease-in-out;
 
     [data-three-dots] {
       opacity: 0;
@@ -232,27 +234,23 @@ const styles = {
       }
     }
 
-    ${
-      isActive &&
-      css`
-        color: ${colorTokens.text.brand};
-        background-color: ${colorTokens.background.white};
-        [data-icon-serial] {
-          border-top-right-radius: 3px;
-          border-bottom-right-radius: 3px;
-          border-color: transparent;
-        }
-      `
-    }
+    ${isActive &&
+    css`
+      color: ${colorTokens.text.brand};
+      background-color: ${colorTokens.background.white};
+      [data-icon-serial] {
+        border-top-right-radius: 3px;
+        border-bottom-right-radius: 3px;
+        border-color: transparent;
+      }
+    `}
 
-    ${
-      isThreeDotsOpen &&
-      css`
-        [data-three-dots] {
-          opacity: 1;
-        }
-      `
-    }
+    ${isThreeDotsOpen &&
+    css`
+      [data-three-dots] {
+        opacity: 1;
+      }
+    `}
 
     :hover {
       background-color: ${colorTokens.background.hover};
@@ -286,24 +284,18 @@ const styles = {
       }
     }
 
-    ${
-      isDragging &&
-      css`
-        box-shadow: ${shadow.drag};
-        background-color: ${colorTokens.background.white};
-        border-radius: ${borderRadius.card};
+    ${isDragging &&
+    css`
+      box-shadow: ${shadow.drag};
+      background-color: ${colorTokens.background.white};
+      border-radius: ${borderRadius.card};
 
-        :hover {
-          background-color: ${colorTokens.background.white};
-        }
-      `
-    }
+      :hover {
+        background-color: ${colorTokens.background.white};
+      }
+    `}
   `,
-  iconAndSerial: ({
-    isDragging = false,
-  }: {
-    isDragging: boolean;
-  }) => css`
+  iconAndSerial: ({ isDragging = false }: { isDragging: boolean }) => css`
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
@@ -321,7 +313,7 @@ const styles = {
     }
 
     [data-question-icon] {
-      flex-shrink: 0;    
+      flex-shrink: 0;
     }
 
     svg {
@@ -336,11 +328,7 @@ const styles = {
       flex-grow: 1;
     }
   `,
-  questionTitle: ({
-    isActive = false,
-  }: {
-    isActive: boolean;
-  }) => css`
+  questionTitle: ({ isActive = false }: { isActive: boolean }) => css`
     ${typography.small(isActive ? 'medium' : 'regular')};
     color: ${isActive ? colorTokens.text.brand : colorTokens.text.subdued};
     flex-grow: 1;

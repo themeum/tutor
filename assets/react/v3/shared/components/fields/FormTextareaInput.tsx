@@ -157,12 +157,10 @@ const styles = {
         ${inputCss};
       }
 
-      ${
-        enableResize &&
-        css`
-          resize: vertical;
-        `
-      }
+      ${enableResize &&
+      css`
+        resize: vertical;
+      `}
     }
   `,
 };

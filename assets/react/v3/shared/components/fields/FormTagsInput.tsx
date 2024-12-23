@@ -228,12 +228,10 @@ const styles = {
     ${styleUtils.overflowYAuto};
     scrollbar-gutter: auto;
 
-    ${
-      !removeOptionsMinWidth &&
-      css`
+    ${!removeOptionsMinWidth &&
+    css`
       min-width: 200px;
-    `
-    }
+    `}
   `,
   optionItem: css`
     min-height: 40px;

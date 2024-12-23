@@ -170,25 +170,25 @@ export function OfferSalePrice({ index }: { index: number }) {
 
 const saleStyles = {
   wrapper: css`
-		background-color: ${colorTokens.background.white};
-		padding: ${spacing[12]};
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius[8]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[20]};
-	`,
+    background-color: ${colorTokens.background.white};
+    padding: ${spacing[12]};
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius[8]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[20]};
+  `,
   inputWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-		padding: ${spacing[4]};
-		margin: -${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    padding: ${spacing[4]};
+    margin: -${spacing[4]};
+  `,
   datetimeWrapper: css`
-		label {
-			${typography.caption()};
-			color: ${colorTokens.text.title};
-		}
-	`,
+    label {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+  `,
 };

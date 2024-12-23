@@ -14,8 +14,8 @@ import FormCheckbox from '@Components/fields/FormCheckbox';
 import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
@@ -49,13 +49,14 @@ const CourseSettings = () => {
     },
   ];
 
-  isAddonEnabled(Addons.BUDDYPRESS) &&
+  if (isAddonEnabled(Addons.BUDDYPRESS)) {
     tabList.push({
       label: __('BuddyPress', 'tutor'),
       value: 'buddyPress',
       icon: <SVGIcon name="buddyPress" width={24} height={24} />,
       activeBadge: isBuddyPressEnabled,
     });
+  }
 
   const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
     label: level.label,
@@ -67,7 +68,22 @@ const CourseSettings = () => {
       <label css={typography.caption()}>{__('Options', 'tutor')}</label>
 
       <div css={styles.courseSettings}>
-        <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
+        <Tabs
+          tabList={
+            // this is a hack to only show the tab labels on screens above small mobile
+            CURRENT_VIEWPORT.isAboveSmallMobile
+              ? tabList
+              : tabList.map((tab) => ({ ...tab, label: activeTab === tab.value ? tab.label : '' }))
+          }
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          orientation={!CURRENT_VIEWPORT.isAboveSmallMobile ? 'horizontal' : 'vertical'}
+          wrapperCss={css`
+            button {
+              min-width: auto;
+            }
+          `}
+        />
 
         <div
           css={{
@@ -117,10 +133,10 @@ const CourseSettings = () => {
                     <FormInput
                       {...controllerProps}
                       label={__('Enrollment Expiration', 'tutor')}
-                      helpText={__(
-                        "Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.",
-                        'tutor',
-                      )}
+                      helpText={
+                        // prettier-ignore
+                        __("Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.", 'tutor')
+                      }
                       placeholder="0"
                       type="number"
                       isClearable
@@ -211,6 +227,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     background-color: ${colorTokens.background.default};
     overflow: hidden;
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr;
+    }
   `,
   settingsOptions: css`
     min-height: 400px;
@@ -219,6 +239,10 @@ const styles = {
     gap: ${spacing[12]};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[48]} ${spacing[32]};
     background-color: ${colorTokens.background.white};
+
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[16]};
+    }
   `,
   courseAndQna: css`
     display: flex;

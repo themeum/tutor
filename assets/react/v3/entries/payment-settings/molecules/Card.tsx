@@ -121,13 +121,11 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
-    ${
-      hasBorder &&
-      css`
+    ${hasBorder &&
+    css`
       box-shadow: none;
       border: 1px solid ${colorTokens.stroke.divider};
-    `
-    }
+    `}
   `,
   headerWrapper: (collapsed: boolean) => css`
     display: flex;
@@ -137,12 +135,10 @@ const styles = {
     padding: ${spacing[20]} ${spacing[24]};
     min-height: 72px;
 
-    ${
-      !collapsed &&
-      css`
+    ${!collapsed &&
+    css`
       border-bottom: 1px solid ${colorTokens.stroke.divider};
-    `
-    }
+    `}
   `,
   title: css`
     ${typography.body('medium')};
@@ -170,12 +166,10 @@ const styles = {
     color: ${colorTokens.icon.brand};
     transition: color 0.3s ease-in-out;
 
-    ${
-      isCollapsed &&
-      css`
+    ${isCollapsed &&
+    css`
       color: ${colorTokens.icon.default};
-    `
-    }
+    `}
   `,
   actions: css`
     display: flex;

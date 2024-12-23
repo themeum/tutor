@@ -115,13 +115,7 @@ const CertificateCard = ({
 export default CertificateCard;
 
 const styles = {
-  wrapper: ({
-    isSelected = false,
-    isLandScape = false,
-  }: {
-    isSelected: boolean;
-    isLandScape: boolean;
-  }) => css`
+  wrapper: ({ isSelected = false, isLandScape = false }: { isSelected: boolean; isLandScape: boolean }) => css`
     ${styleUtils.centeredFlex};
     background-color: ${colorTokens.surface.courseBuilder};
     max-height: ${isLandScape ? '154px' : '217px'};
@@ -138,18 +132,16 @@ const styles = {
       left: 0;
       right: 0;
       bottom: 0;
-      border-radius: ${borderRadius.card};;
+      border-radius: ${borderRadius.card};
     }
 
-    ${
-      isSelected &&
-      css`
-        [data-overlay] {
-          background: ${colorTokens.brand.blue};
-          opacity: 0.1;
-        }
-      `
-    }
+    ${isSelected &&
+    css`
+      [data-overlay] {
+        background: ${colorTokens.brand.blue};
+        opacity: 0.1;
+      }
+    `}
 
     &:hover, &:focus-within {
       border-color: ${colorTokens.stroke.brand};
@@ -162,7 +154,7 @@ const styles = {
         background: ${colorTokens.brand.blue};
         opacity: 0.1;
       }
-  }
+    }
   `,
   emptyCard: css`
     ${styleUtils.flexCenter()};
@@ -196,11 +188,7 @@ const styles = {
     border-bottom-left-radius: ${borderRadius.card};
     border-bottom-right-radius: ${borderRadius.card};
   `,
-  checkIcon: ({
-    isSelected = false,
-  }: {
-    isSelected: boolean;
-  }) => css`
+  checkIcon: ({ isSelected = false }: { isSelected: boolean }) => css`
     opacity: ${isSelected ? 1 : 0};
     position: absolute;
     top: -14px;

@@ -564,37 +564,33 @@ export default function SubscriptionItem({
 }
 
 const styles = {
-  grabber: ({
-    isFormDirty,
-  }: {
-    isFormDirty: boolean;
-  }) => css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		${typography.body()};
-		color: ${colorTokens.text.hints};
-		width: 100%;
-		min-height: 40px;
+  grabber: ({ isFormDirty }: { isFormDirty: boolean }) => css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    ${typography.body()};
+    color: ${colorTokens.text.hints};
+    width: 100%;
+    min-height: 40px;
 
-		[data-grabber] {
-			color: ${colorTokens.icon.default};
-			cursor: ${isFormDirty ? 'not-allowed' : 'grab'};
-			flex-shrink: 0;
-		}
+    [data-grabber] {
+      color: ${colorTokens.icon.default};
+      cursor: ${isFormDirty ? 'not-allowed' : 'grab'};
+      flex-shrink: 0;
+    }
 
-		span {
-			max-width: 496px;
-			width: 100%;
-			${styleUtils.textEllipsis};
-		}
-	`,
+    span {
+      max-width: 496px;
+      width: 100%;
+      ${styleUtils.textEllipsis};
+    }
+  `,
   trialWrapper: css`
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: start;
-		gap: ${spacing[8]};
-	`,
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: ${spacing[8]};
+  `,
   title: css`
     ${styleUtils.resetButton};
     display: flex;
@@ -612,22 +608,22 @@ const styles = {
     }
   `,
   titleField: css`
-		width: 100%;
-		position: relative;
+    width: 100%;
+    position: relative;
 
-		input {
-			padding-right: ${spacing[128]} !important;
-		}
-	`,
+    input {
+      padding-right: ${spacing[128]} !important;
+    }
+  `,
   titleActions: css`
-		position: absolute;
-		right: ${spacing[4]};
-		top: 50%;
-		transform: translateY(-50%);
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-	`,
+    position: absolute;
+    right: ${spacing[4]};
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+  `,
   subscription: ({
     bgLight,
     isActive,
@@ -639,10 +635,10 @@ const styles = {
     isDragging: boolean;
     isDeletePopoverOpen?: boolean;
   }) => css`
-		width: 100%;
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius.card};
-		overflow: hidden;
+    width: 100%;
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius.card};
+    overflow: hidden;
     transition: border-color 0.3s ease;
 
     [data-visually-hidden] {
@@ -650,122 +646,108 @@ const styles = {
       transition: opacity 0.3s ease;
     }
 
-		${
-      bgLight &&
-      css`
-        background-color: ${colorTokens.background.white};
-      `
-    }
+    ${bgLight &&
+    css`
+      background-color: ${colorTokens.background.white};
+    `}
 
-    ${
-      isActive &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-      `
-    }
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+    `}
 
-    ${
-      isDragging &&
-      css`
-        box-shadow: ${shadow.drag};
+    ${isDragging &&
+    css`
+      box-shadow: ${shadow.drag};
 
-        [data-grabber] {
-          cursor: grabbing;
-        }
-      `
-    }
+      [data-grabber] {
+        cursor: grabbing;
+      }
+    `}
 
     &:hover:not(:disabled) {
       [data-visually-hidden] {
         opacity: 1;
       }
     }
-	`,
+  `,
   itemWrapper: (isActive = false) => css`
-    ${
-      isActive &&
-      css`
-        background-color: ${colorTokens.background.hover};
-      `
-    }
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+    `}
   `,
   subscriptionHeader: (isActive = false) => css`
-		padding: ${spacing[12]} ${spacing[16]};
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-    ${
-      isActive &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        border-bottom: 1px solid ${colorTokens.stroke.border};
-      `
-    }
-	`,
+    padding: ${spacing[12]} ${spacing[16]};
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      border-bottom: 1px solid ${colorTokens.stroke.border};
+    `}
+  `,
   subscriptionContent: css`
-		padding: ${spacing[16]};
+    padding: ${spacing[16]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
-	`,
+  `,
   actions: (isEdit: boolean) => css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
 
-		button {
-			width: 24px;
-			height: 24px;
-			${styleUtils.resetButton};
-			color: ${colorTokens.icon.default};
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			transition: color 0.3s ease;
+    button {
+      width: 24px;
+      height: 24px;
+      ${styleUtils.resetButton};
+      color: ${colorTokens.icon.default};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s ease;
 
       :disabled {
         cursor: not-allowed;
         color: ${colorTokens.icon.disable.background};
       }
 
-			&[data-collapse-button] {
-				transition: transform 0.3s ease;
+      &[data-collapse-button] {
+        transition: transform 0.3s ease;
 
-				svg {
-					width: 20px;
-					height: 20px;
-				}
-	
-				&:hover:not(:disabled) {
-					color: ${colorTokens.icon.hover};
-				}
-	
-				${
-          isEdit &&
-          css`
-            transform: rotate(180deg);
-          `
+        svg {
+          width: 20px;
+          height: 20px;
         }
-			}
-		}
-	`,
-  collapse: (isEdit: boolean) => css`
-		transition: transform 0.3s ease;
-		svg {
-			width: 16px;
-			height: 16px;
-		}
-		${
-      isEdit &&
-      css`
-        transform: rotate(180deg);
-      `
+
+        &:hover:not(:disabled) {
+          color: ${colorTokens.icon.hover};
+        }
+
+        ${isEdit &&
+        css`
+          transform: rotate(180deg);
+        `}
+      }
     }
-	`,
+  `,
+  collapse: (isEdit: boolean) => css`
+    transition: transform 0.3s ease;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+    ${isEdit &&
+    css`
+      transform: rotate(180deg);
+    `}
+  `,
   inputGroup: css`
-		display: grid;
-		grid-template-columns: 1fr 0.7fr 1fr 1fr;
-		align-items: start;
-		gap: ${spacing[8]};
-	`,
+    display: grid;
+    grid-template-columns: 1fr 0.7fr 1fr 1fr;
+    align-items: start;
+    gap: ${spacing[8]};
+  `,
 };

@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import type { AxiosResponse } from 'axios';
 import { format, isBefore, parseISO } from 'date-fns';
 
 import { useToast } from '@Atoms/Toast';
@@ -14,7 +13,7 @@ import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { type WPMedia } from '@Hooks/useWpMedia';
 import type { Tag } from '@Services/tags';
 import type { InstructorListResponse, User } from '@Services/users';
-import { authApiInstance, wpAjaxInstance } from '@Utils/api';
+import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
 import { convertToErrorMessage, convertToGMT } from '@Utils/util';
@@ -196,11 +195,6 @@ export interface CoursePayload {
   bp_attached_group_ids: string[];
 }
 
-interface CourseDetailsPayload {
-  action: string;
-  course_id: number;
-}
-
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
 
 export interface ZoomMeeting {
@@ -359,6 +353,7 @@ export interface CourseDetailsResponse {
   bp_attached_groups: string[];
   editor_used: Editor;
   editors: Editor[];
+  total_enrolled_student: number;
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -398,25 +393,10 @@ export interface WcProduct {
   post_title: string;
 }
 
-interface GetProductsPayload {
-  action: string;
-  exclude_linked_products: boolean;
-}
-
-interface WcProductDetailsPayload {
-  action: string;
-  product_id: string;
-}
-
 interface WcProductDetailsResponse {
   name: string;
   regular_price: string;
   sale_price: string;
-}
-
-interface GetPrerequisiteCoursesPayload {
-  action: string;
-  exclude: string[];
 }
 
 export interface PrerequisiteCourses {
@@ -679,10 +659,7 @@ export const useCreateCourseMutation = () => {
 };
 
 const updateCourse = (payload: CoursePayload) => {
-  return authApiInstance.post<CoursePayload, CourseResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_update_course',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.UPDATE_COURSE, payload);
 };
 
 export const useUpdateCourseMutation = () => {
@@ -711,9 +688,10 @@ export const useUpdateCourseMutation = () => {
 };
 
 const getCourseDetails = (courseId: number) => {
-  return authApiInstance.post<CourseDetailsPayload, AxiosResponse<CourseDetailsResponse>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_course_details',
-    course_id: courseId,
+  return wpAjaxInstance.get<CourseDetailsResponse>(endpoints.GET_COURSE_DETAILS, {
+    params: {
+      course_id: courseId,
+    },
   });
 };
 
@@ -729,10 +707,11 @@ export const useCourseDetailsQuery = (courseId: number) => {
 };
 
 const getWcProducts = (courseId?: string) => {
-  return authApiInstance.post<GetProductsPayload, AxiosResponse<WcProduct[]>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_get_wc_products',
-    exclude_linked_products: true,
-    ...(courseId && { course_id: courseId }),
+  return wpAjaxInstance.get<WcProduct[]>(endpoints.GET_WC_PRODUCTS, {
+    params: {
+      exclude_linked_products: true,
+      ...(courseId && { course_id: courseId }),
+    },
   });
 };
 
@@ -745,10 +724,8 @@ export const useGetWcProductsQuery = (monetizeBy: 'tutor' | 'wc' | 'edd' | undef
 };
 
 const getProductDetails = (productId: string, courseId: string) => {
-  return authApiInstance.post<WcProductDetailsPayload, AxiosResponse<WcProductDetailsResponse>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_get_wc_product',
-    product_id: productId,
-    course_id: courseId,
+  return wpAjaxInstance.get<WcProductDetailsResponse>(endpoints.GET_WC_PRODUCT_DETAILS, {
+    params: { product_id: productId, course_id: courseId },
   });
 };
 
@@ -766,13 +743,9 @@ export const useWcProductDetailsQuery = (
 };
 
 const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
-  return authApiInstance.post<GetPrerequisiteCoursesPayload, AxiosResponse<PrerequisiteCourses[]>>(
-    endpoints.ADMIN_AJAX,
-    {
-      action: 'tutor_course_list',
-      exclude: excludedCourseIds,
-    },
-  );
+  return wpAjaxInstance.get<PrerequisiteCourses[]>(endpoints.GET_COURSE_LIST, {
+    params: { exclude: excludedCourseIds },
+  });
 };
 
 export const usePrerequisiteCoursesQuery = ({
@@ -790,10 +763,7 @@ export const usePrerequisiteCoursesQuery = ({
 };
 
 const saveZoomMeeting = (payload: ZoomMeetingPayload) => {
-  return authApiInstance.post<ZoomMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_zoom_save_meeting',
-    ...payload,
-  });
+  return wpAjaxInstance.post<ZoomMeetingPayload, TutorMutationResponse<number>>(endpoints.SAVE_ZOOM_MEETING, payload);
 };
 
 export const useSaveZoomMeetingMutation = () => {
@@ -826,8 +796,7 @@ export const useSaveZoomMeetingMutation = () => {
 };
 
 const deleteZoomMeeting = (meetingId: string) => {
-  return authApiInstance.post<number, TutorDeleteResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_zoom_delete_meeting',
+  return wpAjaxInstance.post<number, TutorDeleteResponse>(endpoints.DELETE_ZOOM_MEETING, {
     meeting_id: meetingId,
   });
 };
@@ -875,10 +844,10 @@ const saveGoogleMeet = (payload: GoogleMeetMeetingPayload) => {
     meeting_attendees_enroll_students: payload.meeting_attendees_enroll_students,
     attendees: payload.attendees,
   };
-  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_google_meet_new_meeting',
-    ...convertedPayload,
-  });
+  return wpAjaxInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(
+    endpoints.SAVE_GOOGLE_MEET,
+    convertedPayload,
+  );
 };
 
 export const useSaveGoogleMeetMutation = () => {
@@ -907,8 +876,7 @@ export const useSaveGoogleMeetMutation = () => {
 };
 
 const deleteGoogleMeet = (postId: string, eventId: string) => {
-  return authApiInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_google_meet_delete',
+  return wpAjaxInstance.post<GoogleMeetMeetingPayload, TutorMutationResponse<number>>(endpoints.DELETE_GOOGLE_MEET, {
     'post-id': postId,
     'event-id': eventId,
   });

@@ -40,15 +40,15 @@ const ContentSkeleton = () => {
 export default ContentSkeleton;
 const styles = {
   wrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[16]};
-		width: 100%;
-		margin-top: ${spacing[16]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[16]};
+    width: 100%;
+    margin-top: ${spacing[16]};
+  `,
   group: css`
-		display: flex;
-		gap: ${spacing[16]};
-		align-items: center;
-	`,
+    display: flex;
+    gap: ${spacing[16]};
+    align-items: center;
+  `,
 };

@@ -159,6 +159,8 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 				</label>
 				<input class="tutor-form-control" type="text" name="tutor_profile_job_title" value="<?php echo esc_attr( get_user_meta( $user->ID, '_tutor_profile_job_title', true ) ); ?>" placeholder="<?php esc_attr_e( 'UX Designer', 'tutor' ); ?>">
 			</div>
+
+			<?php if ( ! User::is_admin() ) : ?>
 			<div class="tutor-col-12 tutor-col-sm-6 tutor-mb-32">
 				<label class="tutor-form-label tutor-color-secondary">
 					<?php esc_html_e( 'Timezone', 'tutor' ); ?>
@@ -167,6 +169,8 @@ $max_filesize   = floatval( ini_get( 'upload_max_filesize' ) ) * ( 1024 * 1024 )
 					<?php echo wp_timezone_choice( $timezone ); //phpcs:ignore ?>
 				</select>
 			</div>
+			<?php endif; ?>
+
 		</div>
 
 		<div class="tutor-row">

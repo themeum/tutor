@@ -27,7 +27,7 @@ import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
-import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import {
@@ -62,10 +62,6 @@ const Curriculum = () => {
     }
   }, [navigate]);
 
-  if (!courseId) {
-    return null;
-  }
-
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [topics, setTopics] = useState<CourseTopicWithCollapse[]>([]);
@@ -75,7 +71,6 @@ const Curriculum = () => {
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (topics.length === 0) {
       return;
@@ -103,6 +98,7 @@ const Curriculum = () => {
         return { ...item, isCollapsed: allCollapsed };
       });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCollapsed]);
 
   useEffect(() => {
@@ -164,6 +160,10 @@ const Curriculum = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  if (!courseId) {
+    return null;
+  }
 
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
@@ -530,11 +530,7 @@ const Curriculum = () => {
           </div>
         </Show>
       </div>
-      <Navigator
-        styleModifier={css`
-          margin-block: 40px;
-        `}
-      />
+      <Navigator styleModifier={styles.navigator} />
     </div>
   );
 };
@@ -544,24 +540,37 @@ export default Curriculum;
 const styles = {
   container: css`
     margin-top: ${spacing[32]};
+    width: 100%;
+
+    ${Breakpoint.smallTablet} {
+      margin-top: ${spacing[16]};
+    }
   `,
   wrapper: css`
-    max-width: ${containerMaxWidth}px;
     width: 100%;
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
+    margin: 0 auto;
   `,
   content: css`
     margin-top: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      margin-top: 0;
+    }
   `,
 
   topicWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
+    align-items: center;
   `,
   addButtonWrapper: css`
     path {
       stroke: ${colorTokens.icon.brand};
     }
+  `,
+  navigator: css`
+    margin: ${spacing[40]} auto;
   `,
 };

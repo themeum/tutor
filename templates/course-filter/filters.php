@@ -25,7 +25,7 @@ $reset_link        = remove_query_arg( $supported_filters, get_pagenum_link() );
 ?>
 
 <form class="tutor-course-filter-form tutor-form">
-	<div class="tutor-mb-16 tutor-d-block tutor-d-lg-none tutor-text-right">
+	<div class="tutor-mb-16 tutor-d-block tutor-d-xl-none tutor-text-right">
 		<a href="#" class="tutor-iconic-btn tutor-mr-n8" tutor-hide-course-filter><span class="tutor-icon-times" area-hidden="true"></span></a>
 	</div>
 

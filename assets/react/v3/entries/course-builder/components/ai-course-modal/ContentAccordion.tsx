@@ -29,7 +29,11 @@ const icons: Record<'lesson' | 'quiz' | 'assignment', ReactNode> = {
 const AccordionItem = ({
   data,
   setIsActive,
-}: { isActive: boolean; setIsActive: () => void; data: AccordionItemData }) => {
+}: {
+  isActive: boolean;
+  setIsActive: () => void;
+  data: AccordionItemData;
+}) => {
   const { currentLoading } = useContentGenerationContext();
   const isLoading = currentLoading.content && data.contents.length === 0;
 
@@ -46,7 +50,9 @@ const AccordionItem = ({
     <div
       onClick={data.contents.length ? setIsActive : noop}
       onKeyDown={noop}
-      css={css`cursor: ${data.contents.length ? 'pointer' : 'default'};`}
+      css={css`
+        cursor: ${data.contents.length ? 'pointer' : 'default'};
+      `}
     >
       <div css={styles.title}>
         <div
@@ -65,7 +71,11 @@ const AccordionItem = ({
         when={data.contents.length > 0 && !isLoading}
         fallback={
           <Show when={isLoading}>
-            <div css={css`margin-top: ${spacing[16]};`}>
+            <div
+              css={css`
+                margin-top: ${spacing[16]};
+              `}
+            >
               <TopicContentSkeleton />
             </div>
           </Show>
@@ -138,74 +148,64 @@ export default ContentAccordion;
 
 const styles = {
   wrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[24]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[24]};
+  `,
   content: (isActive: boolean) => css`
-		margin-left: ${spacing[32]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
+    margin-left: ${spacing[32]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
 
-		${
-      isActive &&
-      css`
-        margin-top: ${spacing[16]};
-      `
-    };
-		
-	`,
+    ${isActive &&
+    css`
+      margin-top: ${spacing[16]};
+    `};
+  `,
   contentItem: css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
 
-		[data-lesson-icon] {
-			color: ${colorTokens.icon.subdued};
-		}
-		[data-assignment-icon] {
-			color: ${colorTokens.icon.processing};
-		}
-		[data-quiz-icon] {
-			color: ${colorTokens.design.warning};
-		}
-	`,
-  titleAndIcon: ({
-    isActive,
-  }: {
-    isActive: boolean;
-  }) => css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-    
+    [data-lesson-icon] {
+      color: ${colorTokens.icon.subdued};
+    }
+    [data-assignment-icon] {
+      color: ${colorTokens.icon.processing};
+    }
+    [data-quiz-icon] {
+      color: ${colorTokens.design.warning};
+    }
+  `,
+  titleAndIcon: ({ isActive }: { isActive: boolean }) => css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+
     svg {
       transition: transform 0.3s ease-in-out;
     }
 
-    ${
-      isActive &&
-      css`
-        svg {
-          transform: rotate(180deg);
-        }
-      `
-    };
-	`,
+    ${isActive &&
+    css`
+      svg {
+        transform: rotate(180deg);
+      }
+    `};
+  `,
   title: css`
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-		p {
-			${typography.body('medium')};
-			color: ${colorTokens.text.subdued};
-		}
+    p {
+      ${typography.body('medium')};
+      color: ${colorTokens.text.subdued};
+    }
 
-		& > p {
-			${typography.caption()};
-			
-		}
-	`,
+    & > p {
+      ${typography.caption()};
+    }
+  `,
 };

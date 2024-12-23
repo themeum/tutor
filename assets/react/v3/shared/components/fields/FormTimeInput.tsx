@@ -246,7 +246,9 @@ const styles = {
     height: 32px;
     ${styleUtils.flexCenter()};
     opacity: 0;
-    transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
     border-radius: ${borderRadius[2]};
 
     :hover {

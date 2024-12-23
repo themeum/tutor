@@ -5,7 +5,6 @@ import type { ErrorResponse } from '@Utils/form';
 import type { Prettify } from '@Utils/types';
 import { convertToErrorMessage } from '@Utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { __ } from '@wordpress/i18n';
 
 interface OrderSummary {
   id: number;
@@ -127,6 +126,12 @@ export interface Order {
   subscription_fees?: SubscriptionFees[];
 }
 
+interface Response {
+  data: unknown;
+  message: string;
+  status_code: number;
+}
+
 const getOrderDetails = (orderId: number) => {
   return wpAjaxInstance
     .get<Order>(endpoints.ORDER_DETAILS, { params: { order_id: orderId } })
@@ -142,7 +147,7 @@ export const useOrderDetailsQuery = (orderId: number) => {
 };
 
 const postAdminComment = (params: { order_id: number; comment: string }) => {
-  return wpAjaxInstance.post(endpoints.ADMIN_COMMENT, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ADMIN_COMMENT, params);
 };
 
 export const useAdminCommentMutation = () => {
@@ -150,9 +155,9 @@ export const useAdminCommentMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: postAdminComment,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Comment added successfully.') });
+      showToast({ type: 'success', message: response.message });
     },
     onError: (error) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
@@ -161,7 +166,7 @@ export const useAdminCommentMutation = () => {
 };
 
 const markAsPaid = (params: { order_id: number; note: string }) => {
-  return wpAjaxInstance.post(endpoints.ORDER_MARK_AS_PAID, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ORDER_MARK_AS_PAID, params);
 };
 
 export const useMarkAsPaidMutation = () => {
@@ -169,9 +174,9 @@ export const useMarkAsPaidMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: markAsPaid,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Order marked as paid', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
     onError: (error) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
@@ -180,7 +185,7 @@ export const useMarkAsPaidMutation = () => {
 };
 
 const refundOrder = (params: { order_id: number; reason: string; is_remove_enrolment: boolean }) => {
-  return wpAjaxInstance.post(endpoints.ORDER_REFUND, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ORDER_REFUND, params);
 };
 
 export const useRefundOrderMutation = () => {
@@ -189,9 +194,9 @@ export const useRefundOrderMutation = () => {
 
   return useMutation({
     mutationFn: refundOrder,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Order refunded successfully', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
@@ -206,7 +211,7 @@ interface DiscountPayload {
   discount_reason: string;
 }
 const addOrderDiscount = (payload: DiscountPayload) => {
-  return wpAjaxInstance.post(endpoints.ADD_ORDER_DISCOUNT, payload);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ADD_ORDER_DISCOUNT, payload);
 };
 
 export const useOrderDiscountMutation = () => {
@@ -214,9 +219,9 @@ export const useOrderDiscountMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: addOrderDiscount,
-    onSuccess() {
+    onSuccess(response) {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Discount added successfully.', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
     onError(error) {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
@@ -225,7 +230,7 @@ export const useOrderDiscountMutation = () => {
 };
 
 const cancelOrder = (params: { order_id: number; cancel_reason: string }) => {
-  return wpAjaxInstance.post(endpoints.ORDER_CANCEL, params);
+  return wpAjaxInstance.post<unknown, Response>(endpoints.ORDER_CANCEL, params);
 };
 
 export const useCancelOrderMutation = () => {
@@ -233,9 +238,9 @@ export const useCancelOrderMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: cancelOrder,
-    onSuccess: () => {
+    onSuccess: (response) => {
       queryClient.invalidateQueries({ queryKey: ['OrderDetails'] });
-      showToast({ type: 'success', message: __('Order cancelled successfully.', 'tutor') });
+      showToast({ type: 'success', message: response.message });
     },
     onError: (error) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });

@@ -345,13 +345,7 @@ const styles = {
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
   `,
-  courseCard: ({
-    onPopover = false,
-    isActive = false,
-  }: {
-    onPopover: boolean;
-    isActive?: boolean;
-  }) => css`
+  courseCard: ({ onPopover = false, isActive = false }: { onPopover: boolean; isActive?: boolean }) => css`
     ${styleUtils.resetButton};
     width: 100%;
     cursor: ${onPopover ? 'pointer' : 'default'};
@@ -368,25 +362,21 @@ const styles = {
       opacity: 0;
     }
 
-    ${
-      isActive &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        border-color: ${colorTokens.stroke.default};
-      `
-    }
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      border-color: ${colorTokens.stroke.default};
+    `}
 
     &:hover {
       background-color: ${colorTokens.background.hover};
 
-      ${
-        !onPopover &&
-        css`
-          background-color: ${colorTokens.background.white};
-          border-color: ${colorTokens.stroke.default};
-        `
-      }
-      
+      ${!onPopover &&
+      css`
+        background-color: ${colorTokens.background.white};
+        border-color: ${colorTokens.stroke.default};
+      `}
+
       [data-visually-hidden] {
         opacity: 1;
       }
