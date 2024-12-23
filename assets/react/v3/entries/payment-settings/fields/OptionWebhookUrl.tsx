@@ -1,4 +1,5 @@
-import { copyToClipboard } from '@/v3/shared/utils/util';
+import { CURRENT_VIEWPORT } from '@Config/constants';
+import { copyToClipboard } from '@Utils/util';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import { useToast } from '@Atoms/Toast';
@@ -53,7 +54,7 @@ const OptionWebhookUrl = ({
       loading={loading}
       placeholder={placeholder}
       helpText={helpText}
-      isInlineLabel
+      isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
     >
       {() => {
         return (
