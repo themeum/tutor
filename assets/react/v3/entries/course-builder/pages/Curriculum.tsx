@@ -27,6 +27,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
+import TopicDragOverlay from '@CourseBuilderComponents/curriculum/TopicDragOverlay';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
@@ -48,7 +49,6 @@ import { moveTo, nanoid } from '@Utils/util';
 
 import curriculumEmptyState2x from '@Images/curriculum-empty-state-2x.webp';
 import curriculumEmptyState from '@Images/curriculum-empty-state.webp';
-import TopicDragOverlay from '../components/curriculum/TopicDragOverlay';
 
 export type CourseTopicWithCollapse = CourseTopic & { isCollapsed: boolean; isSaved: boolean };
 
@@ -72,6 +72,7 @@ const Curriculum = () => {
   const isActiveSortItemTopic = activeSortId?.toString().includes('topic');
 
   const currentExpandedTopics = useRef<ID[]>([]);
+  const isUpdatingTopics = useRef(false);
 
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
@@ -126,46 +127,66 @@ const Curriculum = () => {
         return;
       }
 
-      if (active.id.toString().includes('content') && over.id.toString().includes('content')) {
-        const activeTopic = findValueOfItems(active.id, 'content');
-        const overTopic = findValueOfItems(over.id, 'content');
-
-        if (!activeTopic || !overTopic || activeTopic.id === overTopic.id) {
-          return;
-        }
-
-        const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
-        const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
-
-        const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
-        const overContentIndex = overTopic.contents.findIndex((content) => content.ID === over.id);
-        const newItems = [...topics];
-        const [removedItem] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
-        newItems[overTopicIndex].contents.splice(overContentIndex, 0, removedItem);
-        setTopics(newItems);
+      if (isUpdatingTopics.current) {
+        return;
       }
 
-      if (active.id.toString().includes('content') && over?.id.toString().includes('topic') && active.id !== over.id) {
-        const activeTopic = findValueOfItems(active.id, 'content');
-        const overTopic = findValueOfItems(over.id, 'topic');
+      try {
+        if (active.id.toString().includes('content') && over.id.toString().includes('content')) {
+          const activeTopic = findValueOfItems(active.id, 'content');
+          const overTopic = findValueOfItems(over.id, 'content');
 
-        if (!activeTopic || !overTopic || overTopic.contents.length > 0 || overTopic.isCollapsed) {
-          return;
+          if (!activeTopic || !overTopic || activeTopic.id === overTopic.id) {
+            return;
+          }
+
+          isUpdatingTopics.current = true;
+
+          const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
+          const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+
+          const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
+          const overContentIndex = overTopic.contents.findIndex((content) => content.ID === over.id);
+          const newItems = [...topics];
+          const [removedItem] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
+          newItems[overTopicIndex].contents.splice(overContentIndex, 0, removedItem);
+          setTopics(newItems);
         }
+      } finally {
+        isUpdatingTopics.current = false;
+      }
 
-        const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
-        const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+      try {
+        if (
+          active.id.toString().includes('content') &&
+          over?.id.toString().includes('topic') &&
+          active.id !== over.id
+        ) {
+          const activeTopic = findValueOfItems(active.id, 'content');
+          const overTopic = findValueOfItems(over.id, 'topic');
 
-        if (activeTopicIndex === overTopicIndex) {
-          return;
+          if (!activeTopic || !overTopic || overTopic.contents.length > 0 || overTopic.isCollapsed) {
+            return;
+          }
+
+          const activeTopicIndex = topics.findIndex((topic) => topic.id === activeTopic.id);
+          const overTopicIndex = topics.findIndex((topic) => topic.id === overTopic.id);
+
+          if (activeTopicIndex === overTopicIndex) {
+            return;
+          }
+
+          isUpdatingTopics.current = true;
+
+          const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
+
+          const newItems = [...topics];
+          const [removedContent] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
+          newItems[overTopicIndex].contents.push(removedContent);
+          setTopics(newItems);
         }
-
-        const activeContentIndex = activeTopic.contents.findIndex((content) => content.ID === active.id);
-
-        const newItems = [...topics];
-        const [removedContent] = newItems[activeTopicIndex].contents.splice(activeContentIndex, 1);
-        newItems[overTopicIndex].contents.push(removedContent);
-        setTopics(newItems);
+      } finally {
+        isUpdatingTopics.current = false;
       }
     },
     [topics, findValueOfItems],
@@ -452,6 +473,7 @@ const Curriculum = () => {
           >
             <div css={styles.topicWrapper}>
               <DndContext
+                autoScroll
                 sensors={sensors}
                 collisionDetection={dynamicCollisionDetection}
                 measuring={droppableMeasuringStrategy}
