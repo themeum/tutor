@@ -73,6 +73,9 @@ const Curriculum = () => {
 
   const currentExpandedTopics = useRef<ID[]>([]);
 
+  const courseCurriculumQuery = useCourseTopicQuery(courseId);
+  const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
+
   const findValueOfItems = useCallback(
     (id: UniqueIdentifier | undefined, type: string) => {
       if (type === 'topic') {
@@ -84,9 +87,6 @@ const Curriculum = () => {
     },
     [topics],
   );
-
-  const courseCurriculumQuery = useCourseTopicQuery(courseId);
-  const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
 
   const dynamicCollisionDetection: CollisionDetection = useCallback((collisionDetectionArgs) => {
     const { active, droppableContainers } = collisionDetectionArgs;
