@@ -17,7 +17,7 @@ import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { useModal } from '@Components/modals/Modal';
 import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
 
-import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { animateLayoutChanges } from '@Utils/dndkit';
@@ -37,6 +37,7 @@ import {
   useInstallPaymentMutation,
   useRemovePaymentMutation,
 } from '../services/payment';
+import { CURRENT_VIEWPORT } from '@/v3/shared/config/constants';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -82,11 +83,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     .getValues(`payment_methods.${paymentIndex}.fields`)
     .some((field) => !['icon', 'webhook_url'].includes(field.name) && !field.value);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (hasEmptyFields) {
       form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasEmptyFields]);
 
   return (
@@ -197,7 +198,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                                   ? convertToOptions(field.options as Record<string, string>)
                                   : (field.options ?? [])
                               }
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                             />
                           );
 
@@ -208,7 +209,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               type="password"
                               isPassword
                               label={field.label}
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                             />
                           );
 
@@ -250,7 +251,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                             <FormInput
                               {...controllerProps}
                               label={field.label}
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                               onChange={(value) => {
                                 if (data.is_manual) {
                                   form.setValue(`payment_methods.${paymentIndex}.label`, String(value));
@@ -381,6 +382,9 @@ const styles = {
     input[type='text'],
     input[type='password'] {
       min-width: 350px;
+      ${Breakpoint.mobile} {
+        min-width: 250px;
+      }
     }
   `,
   dragButton: ({ isOverlay }: { isOverlay: boolean }) => css`
