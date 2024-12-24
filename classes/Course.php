@@ -1017,7 +1017,7 @@ class Course extends Tutor_Base {
 		}
 
 		$this->json_response(
-			__( 'Course update successfully', 'tutor' ),
+			__( 'Course updated successfully.', 'tutor' ),
 			$update_id,
 			HttpHelper::STATUS_OK
 		);
@@ -1308,6 +1308,8 @@ class Course extends Tutor_Base {
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
 			'instructor_can_publish_course',
+			'instructor_can_change_author',
+			'instructor_can_modify_instructors',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
