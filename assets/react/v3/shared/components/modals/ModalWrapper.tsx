@@ -130,6 +130,10 @@ const styles = {
     align-items: center;
     gap: ${spacing[12]};
     padding-left: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[16]};
+    }
   `,
   headerChildren: css`
     place-self: center center;
@@ -157,6 +161,10 @@ const styles = {
     display: inline-flex;
     gap: ${spacing[16]};
     padding-right: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-right: ${spacing[16]};
+    }
   `,
   closeButton: css`
     ${styleUtils.resetButton};

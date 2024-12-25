@@ -17,7 +17,7 @@ import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
@@ -56,7 +56,6 @@ export default function SubscriptionItem({
   id,
   toggleCollapse,
   bgLight = false,
-  onDiscard,
   isExpanded,
   isOverlay = false,
 }: SubscriptionItemProps) {
@@ -77,7 +76,6 @@ export default function SubscriptionItem({
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isExpanded) {
       const timeoutId = setTimeout(() => {
@@ -94,6 +92,7 @@ export default function SubscriptionItem({
         clearTimeout(timeoutId);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpanded]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -119,10 +118,12 @@ export default function SubscriptionItem({
       if (response.data) {
         setIsDeletePopoverOpen(false);
 
-        isExpanded && toggleCollapse(subscription.id);
+        if (isExpanded) {
+          toggleCollapse(subscription.id);
+        }
       }
     } catch (error) {
-      // handle error
+      console.error(error);
     }
   };
 
@@ -143,7 +144,7 @@ export default function SubscriptionItem({
     (node: HTMLFormElement) => {
       if (node) {
         setNodeRef(node);
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (wrapperRef as any).current = node;
       }
     },
@@ -184,7 +185,6 @@ export default function SubscriptionItem({
     ],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(subscriptionRef.current)) {
       collapseAnimate.start({
@@ -192,6 +192,7 @@ export default function SubscriptionItem({
         opacity: isExpanded ? 1 : 0,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     chargeEnrolmentFee,
     // enableTrial,
@@ -666,6 +667,12 @@ const styles = {
     `}
 
     &:hover:not(:disabled) {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       [data-visually-hidden] {
         opacity: 1;
       }

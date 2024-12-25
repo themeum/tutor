@@ -13,7 +13,7 @@ import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -294,6 +294,14 @@ const styles = {
         background-color: ${colorTokens.background.white};
       }
     `}
+
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[8]} ${spacing[8]} ${spacing[8]} ${spacing[8]};
+
+      [data-three-dots] {
+        opacity: 1;
+      }
+    }
   `,
   iconAndSerial: ({ isDragging = false }: { isDragging: boolean }) => css`
     display: grid;

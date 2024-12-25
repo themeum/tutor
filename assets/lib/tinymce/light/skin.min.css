@@ -85,3 +85,12 @@ div.mce-toolbar-grp>div{
 .mce-toolbar .mce-first:has([aria-haspopup]) {
   padding-left: 6px;
 }
+
+@media (max-width: 480px) {
+  .mce-toolbar .mce-btn-group {
+    padding-block: 2px;
+  }
+  .mce-toolbar .mce-btn-group .mce-btn {
+    margin: 0;
+  }
+}

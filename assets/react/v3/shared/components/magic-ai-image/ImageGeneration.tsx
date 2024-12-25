@@ -120,7 +120,6 @@ export const ImageGeneration = () => {
   const isDisabledButton = !styleValue || !promptValue;
   const hasGeneratedImage = images.some(isDefined);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (magicImageGenerationMutation.isError) {
       showToast({
@@ -173,6 +172,8 @@ export const ImageGeneration = () => {
         } catch (error) {
           setImageLoading([false, false, false, false]);
           setShowEmptyState(true);
+
+          console.error(error);
         }
       })}
     >
@@ -248,11 +249,17 @@ export const ImageGeneration = () => {
 const styles = {
   images: css`
     display: grid;
-    grid-template-columns: repeat(2, minmax(300px, 1fr));
-    grid-template-rows: repeat(2, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    grid-template-rows: repeat(2, minmax(150px, 1fr));
     gap: ${spacing[12]};
     align-self: start;
-    margin-block: ${spacing[24]};
+    padding: ${spacing[24]};
+    width: 100%;
+    height: 100%;
+
+    > div {
+      aspect-ratio: 1 / 1;
+    }
   `,
   fields: css`
     display: flex;
