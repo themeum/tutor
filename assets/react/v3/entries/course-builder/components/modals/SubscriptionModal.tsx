@@ -25,7 +25,8 @@ import ModalWrapper from '@Components/modals/ModalWrapper';
 import { SubscriptionEmptyState } from '@CourseBuilderComponents/subscription/SubscriptionEmptyState';
 import SubscriptionItem from '@CourseBuilderComponents/subscription/SubscriptionItem';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { CURRENT_VIEWPORT } from '@/v3/shared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -185,7 +186,7 @@ export default function SubscriptionModal({
       <ModalWrapper
         onClose={() => closeModal({ action: 'CLOSE' })}
         icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-        title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
+        title={isFormDirty ? (CURRENT_VIEWPORT.isAboveMobile ? __('Unsaved Changes', 'tutor') : '') : title}
         subtitle={isFormDirty ? title?.toString() : subtitle}
         maxWidth={1218}
         actions={
@@ -339,6 +340,11 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[32]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[24]};
+      padding-inline: ${spacing[8]};
+    }
   `,
   header: css`
     display: flex;

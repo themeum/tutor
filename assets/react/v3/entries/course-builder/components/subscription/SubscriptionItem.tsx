@@ -756,5 +756,9 @@ const styles = {
     grid-template-columns: 1fr 0.7fr 1fr 1fr;
     align-items: start;
     gap: ${spacing[8]};
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr;
+    }
   `,
 };
