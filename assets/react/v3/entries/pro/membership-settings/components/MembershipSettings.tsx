@@ -7,8 +7,13 @@ import { spacing } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { type MembershipSettings, useMembershipSettingsQuery } from '../services/memberships';
 import EmptyState from '../molecules/EmptyState';
+import { useModal } from '@/v3/shared/components/modals/Modal';
+import SubscriptionModal from './modals/SubscriptionModal';
+import SVGIcon from '@/v3/shared/atoms/SVGIcon';
+import { __ } from '@wordpress/i18n';
 
 function MembershipSettings() {
+  const { showModal } = useModal();
   const form = useFormWithGlobalError<MembershipSettings>({
     defaultValues: {
       memberships: [],
@@ -43,7 +48,23 @@ function MembershipSettings() {
 
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <Show when={memberships.length} fallback={<EmptyState onActionClick={() => console.log('here!')} />}>
+      <Show
+        when={memberships.length}
+        fallback={
+          <EmptyState
+            onActionClick={() => {
+              showModal({
+                component: SubscriptionModal,
+                props: {
+                  title: __('Create Membership', 'tutor'),
+                  icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
+                },
+                depthIndex: 9999,
+              });
+            }}
+          />
+        }
+      >
         <FormProvider {...form}>Membership list</FormProvider>
       </Show>
 
