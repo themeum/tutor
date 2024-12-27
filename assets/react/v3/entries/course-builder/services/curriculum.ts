@@ -263,7 +263,7 @@ export const useCourseTopicQuery = (courseId: ID) => {
 };
 
 const saveTopic = (payload: TopicPayload) => {
-  return wpAjaxInstance.post<TutorMutationResponse<ID>>(endpoints.SAVE_TOPIC, payload);
+  return wpAjaxInstance.post<TopicPayload, TutorMutationResponse<ID>>(endpoints.SAVE_TOPIC, payload);
 };
 
 export const useSaveTopicMutation = () => {

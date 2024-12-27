@@ -71,6 +71,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
                     event.stopPropagation();
                     setIsEditing(true);
                   }}
+                  data-visually-hidden
                 >
                   <SVGIcon name="edit" width={24} height={24} />
                 </button>

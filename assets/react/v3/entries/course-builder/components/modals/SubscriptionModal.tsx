@@ -25,7 +25,8 @@ import ModalWrapper from '@Components/modals/ModalWrapper';
 import { SubscriptionEmptyState } from '@CourseBuilderComponents/subscription/SubscriptionEmptyState';
 import SubscriptionItem from '@CourseBuilderComponents/subscription/SubscriptionItem';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { CURRENT_VIEWPORT } from '@/v3/shared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -102,7 +103,6 @@ export default function SubscriptionModal({
       ? subscriptionFields.findIndex((item) => !item.isSaved)
       : form.formState.dirtyFields.subscriptions?.findIndex((item) => isDefined(item));
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!courseSubscriptions) {
       return;
@@ -127,6 +127,7 @@ export default function SubscriptionModal({
     form.reset({
       subscriptions: subscriptions,
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [courseSubscriptions, isSubscriptionListLoading]);
 
   const handleSaveSubscription = async (values: SubscriptionFormDataWithSaved) => {
@@ -170,13 +171,13 @@ export default function SubscriptionModal({
     }),
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (createEmptySubscriptionOnMount) {
       const newId = nanoid();
       appendSubscription({ ...defaultSubscriptionFormData, id: newId, isSaved: false });
       setExpandedSubscriptionId(newId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -184,17 +185,16 @@ export default function SubscriptionModal({
       <ModalWrapper
         onClose={() => closeModal({ action: 'CLOSE' })}
         icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-        title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
+        title={isFormDirty ? (CURRENT_VIEWPORT.isAboveMobile ? __('Unsaved Changes', 'tutor') : '') : title}
         subtitle={isFormDirty ? title?.toString() : subtitle}
+        maxWidth={1218}
         actions={
           isFormDirty && (
             <>
               <Button
                 variant="text"
                 size="small"
-                onClick={() => {
-                  activeSubscription ? form.reset() : closeModal({ action: 'CLOSE' });
-                }}
+                onClick={() => (activeSubscription ? form.reset() : closeModal({ action: 'CLOSE' }))}
               >
                 {activeSubscription?.isSaved ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
               </Button>
@@ -328,7 +328,7 @@ export default function SubscriptionModal({
 
 const styles = {
   wrapper: css`
-    width: 1218px;
+    width: 100%;
     height: 100%;
   `,
   container: css`
@@ -339,6 +339,11 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[32]};
+
+    ${Breakpoint.smallMobile} {
+      padding-block: ${spacing[24]};
+      padding-inline: ${spacing[8]};
+    }
   `,
   header: css`
     display: flex;

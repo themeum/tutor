@@ -18,14 +18,14 @@ import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFa
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
+  calculateQuizDataStatus,
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionType,
-  calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
 import { usePrevious } from '@Hooks/usePrevious';
 import { styleUtils } from '@Utils/style-utils';
@@ -203,12 +203,20 @@ const styles = {
         opacity: 1;
       }
     }
+
+    ${Breakpoint.smallMobile} {
+      padding-right: ${spacing[8]};
+    }
   `,
   questionWithIndex: css`
     ${styleUtils.display.flex('row')};
     align-items: flex-start;
     padding-left: ${spacing[40]};
     gap: ${spacing[4]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   questionIndex: css`
     margin-top: ${spacing[10]};
@@ -232,6 +240,10 @@ const styles = {
   `,
   questionAnswer: css`
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   emptyState: css`
     ${styleUtils.flexCenter('column')};
