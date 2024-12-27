@@ -1,15 +1,56 @@
-import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@/v3/shared/config/styles';
-import { typography } from '@/v3/shared/config/typography';
-import { styleUtils } from '@/v3/shared/utils/style-utils';
 import { css } from '@emotion/react';
-import CourseSelection from './CourseSelection';
+import { Controller, useFormContext } from 'react-hook-form';
+
+import FormEditableAlias from '@/v3/shared/components/fields/FormEditableAlias';
+import { tutorConfig } from '@/v3/shared/config/config';
+import CourseSelection from '@BundleBuilderComponents/course-bundle/CourseSelection';
+import { type CourseBundle } from '@BundleBuilderServices/bundle';
+import FormInput from '@Components/fields/FormInput';
+import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
+import { typography } from '@Config/typography';
+import { styleUtils } from '@Utils/style-utils';
+import { __ } from '@wordpress/i18n';
 
 const CourseBundleContainer = () => {
+  const form = useFormContext<CourseBundle>();
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
+  const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
+
   return (
     <div css={styles.wrapper}>
       <div css={styles.mainForm({ isWpEditorFullScreen: true })}>
         <div css={styles.fieldsWrapper}>
-          <div css={styles.titleAndSlug}>{/* Title and Slug */}</div>
+          <div css={styles.titleAndSlug}>
+            <Controller
+              name="post_title"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormInput
+                  {...controllerProps}
+                  label={__('Title', 'tutor')}
+                  placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
+                  isClearable
+                  selectOnFocus
+                  generateWithAi={!isTutorPro || isOpenAiEnabled}
+                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  onChange={(value) => {
+                    if (postStatus === 'draft' && !hasAliasChanged) {
+                      form.setValue('post_name', convertToSlug(String(value)), {
+                        shouldValidate: true,
+                        shouldDirty: true,
+                      });
+                    }
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="post_name"
+              control={form.control}
+              render={(controllerProps) => <FormEditableAlias {...controllerProps} label={__('Course URL', 'tutor')} />}
+            />
+          </div>
 
           {/* WP Editor */}
           <CourseSelection />
