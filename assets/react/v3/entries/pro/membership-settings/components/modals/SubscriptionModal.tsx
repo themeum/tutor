@@ -23,7 +23,7 @@ import Show from '@/v3/shared/controls/Show';
 import FormTimeInput from '@/v3/shared/components/fields/FormTimeInput';
 import FormDateInput from '@/v3/shared/components/fields/FormDateInput';
 import FormSwitch from '@/v3/shared/components/fields/FormSwitch';
-import FormIconsAndFeatures from '../fields/FormIconsAndFeatures';
+import IconsAndFeatures from '../IconsAndFeatures';
 const { tutor_currency } = tutorConfig;
 
 interface SubscriptionModalProps extends ModalProps {
@@ -97,7 +97,15 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
             >
               {__('Cancel', 'tutor')}
             </Button>
-            <Button variant="primary" size="small">
+            <Button
+              variant="primary"
+              size="small"
+              onClick={() => {
+                form.handleSubmit((data) => {
+                  console.log(data);
+                })();
+              }}
+            >
               {__('Save', 'tutor')}
             </Button>
           </>
@@ -235,13 +243,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
               )}
             />
 
-            <Controller
-              control={form.control}
-              name="features"
-              render={(controllerProps) => (
-                <FormIconsAndFeatures {...controllerProps} label={__('Icons & Features', 'tutor')} />
-              )}
-            />
+            <IconsAndFeatures />
 
             <Controller
               control={form.control}
