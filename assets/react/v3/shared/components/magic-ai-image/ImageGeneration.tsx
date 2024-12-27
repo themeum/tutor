@@ -169,11 +169,9 @@ export const ImageGeneration = () => {
                 });
             }),
           );
-        } catch (error) {
+        } catch {
           setImageLoading([false, false, false, false]);
           setShowEmptyState(true);
-
-          console.error(error);
         }
       })}
     >

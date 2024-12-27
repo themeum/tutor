@@ -155,9 +155,8 @@ export default function SubscriptionModal({
       return () => {
         clearTimeout(timeoutId);
       };
-    } catch (error) {
+    } catch {
       form.reset();
-      console.error(error);
     }
   };
 
