@@ -23,6 +23,7 @@ import Show from '@/v3/shared/controls/Show';
 import FormTimeInput from '@/v3/shared/components/fields/FormTimeInput';
 import FormDateInput from '@/v3/shared/components/fields/FormDateInput';
 import FormSwitch from '@/v3/shared/components/fields/FormSwitch';
+import FormIconsAndFeatures from '../fields/FormIconsAndFeatures';
 const { tutor_currency } = tutorConfig;
 
 interface SubscriptionModalProps extends ModalProps {
@@ -34,7 +35,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
     defaultValues: {
       plan_name: '',
       short_description: '',
-      description: '',
+      features: [],
       categories: [],
       payment_type: '',
       plan_type: '',
@@ -56,7 +57,6 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
       provide_certificate: false,
       is_featured: false,
     },
-    mode: 'onChange',
   });
 
   const isFormDirty = form.formState.isDirty;
@@ -232,6 +232,14 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
               name={`categories`}
               render={(controllerProps) => (
                 <FormSelectInput {...controllerProps} label={__('Select Categories', 'tutor')} options={[]} />
+              )}
+            />
+
+            <Controller
+              control={form.control}
+              name="features"
+              render={(controllerProps) => (
+                <FormIconsAndFeatures {...controllerProps} label={__('Icons & Features', 'tutor')} />
               )}
             />
 
