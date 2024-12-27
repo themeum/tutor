@@ -7,7 +7,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
 import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -261,9 +261,7 @@ const FormCoursePrerequisites = ({
                               setSearchText('');
                             }}
                             onMouseOver={() => setActiveIndex(index)}
-                            onMouseLeave={() => {
-                              index !== activeIndex && setActiveIndex(-1);
-                            }}
+                            onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
                             onFocus={() => setActiveIndex(index)}
                             aria-selected={activeIndex === index}
                           >
@@ -377,6 +375,12 @@ const styles = {
         border-color: ${colorTokens.stroke.default};
       `}
 
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       [data-visually-hidden] {
         opacity: 1;
       }

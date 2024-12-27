@@ -11,11 +11,11 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
+import { calculateQuizDataStatus, QuizDataStatus, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
 import useWPMedia from '@Hooks/useWpMedia';
 import { animateLayoutChanges } from '@Utils/dndkit';
 import type { FormControllerProps } from '@Utils/form';
@@ -406,10 +406,16 @@ const styles = {
       background-color: ${colorTokens.stroke.hover};
     `}
 
-      ${isOverlay &&
+    ${isOverlay &&
     css`
       box-shadow: ${shadow.drag};
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
   `,
   optionHeader: css`
     display: grid;

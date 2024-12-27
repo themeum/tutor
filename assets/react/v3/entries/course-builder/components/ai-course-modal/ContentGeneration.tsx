@@ -132,12 +132,12 @@ const ContentGeneration = ({ onClose }: { onClose: () => void }) => {
     boxRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, [currentLoading, currentErrors]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isCreateNewCourse) {
       formRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
       form.setFocus('prompt');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCreateNewCourse]);
 
   const isLoading = getObjectValues(currentLoading).some((item) => item);
@@ -580,9 +580,12 @@ const styles = {
     gap: ${spacing[28]};
     height: calc(100vh - ${spacing[56]});
     width: 1300px;
+
     ${Breakpoint.smallTablet} {
       width: 90%;
       gap: ${spacing[16]};
+      flex-wrap: wrap-reverse;
+      ${styleUtils.overflowYAuto};
     }
   `,
   regenerateForm: css`
@@ -754,7 +757,7 @@ const styles = {
     padding-bottom: ${spacing[32]};
 
     ${Breakpoint.smallTablet} {
-      width: 80%;
+      width: 100%;
     }
   `,
   right: css`
@@ -768,7 +771,8 @@ const styles = {
     justify-content: space-between;
 
     ${Breakpoint.smallTablet} {
-      width: 20%;
+      width: 100%;
+      border-radius: ${borderRadius[12]};
     }
   `,
   title: css`

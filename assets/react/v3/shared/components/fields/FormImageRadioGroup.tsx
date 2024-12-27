@@ -54,6 +54,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[4]};
+    align-items: center;
     width: 100%;
     cursor: pointer;
 

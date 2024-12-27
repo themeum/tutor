@@ -6,7 +6,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -242,6 +242,12 @@ const styles = {
     &:focus-within {
       background: ${colorTokens.background.hover};
 
+      button {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       button {
         opacity: 1;
       }

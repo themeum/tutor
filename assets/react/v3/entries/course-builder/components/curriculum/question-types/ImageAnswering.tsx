@@ -20,7 +20,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 
 import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
@@ -208,6 +208,10 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   addOptionButton: css`
     color: ${colorTokens.text.brand};

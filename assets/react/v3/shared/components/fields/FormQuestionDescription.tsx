@@ -114,7 +114,7 @@ const FormQuestionDescription = ({
         </Show>
         <Show when={!isEdit}>
           <div
-            onClick={(e) => {
+            onClick={() => {
               if (!isEdit && !disabled) {
                 setIsEdit(true);
               }

@@ -22,7 +22,7 @@ import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
 import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
@@ -263,6 +263,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
               arrowPosition="auto"
               hideArrow
               closeOnEscape={false}
+              size={CURRENT_VIEWPORT.isAboveMobile ? 'medium' : 'small'}
             >
               <Show when={!isTutorPro || isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION)}>
                 <ThreeDots.Option
@@ -331,6 +332,8 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <GoogleMeetForm
           topicId={topicId}
@@ -347,6 +350,8 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <ZoomMeetingForm
           topicId={topicId}
