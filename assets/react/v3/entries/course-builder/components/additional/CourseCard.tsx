@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 
 import { styleUtils } from '@Utils/style-utils';
@@ -52,6 +52,12 @@ const styles = {
 
     &:hover {
       border-color: ${colorTokens.stroke.default};
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       [data-visually-hidden] {
         opacity: 1;
       }

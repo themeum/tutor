@@ -8,7 +8,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
 import Popover from '@Molecules/Popover';
 
-import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 
@@ -218,6 +218,12 @@ const styles = {
       }
       .date-time {
         background: none;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
       }
     }
   `,

@@ -242,7 +242,11 @@ const QuizModal = ({
                     }}
                     ref={cancelRef}
                   >
-                    {quizId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+                    {quizId
+                      ? CURRENT_VIEWPORT.isAboveSmallMobile
+                        ? __('Discard Changes', 'tutor')
+                        : __('Discard', 'tutor')
+                      : __('Cancel', 'tutor')}
                   </Button>
                   <Show
                     when={activeTab === 'settings' || quizId}
@@ -369,7 +373,7 @@ const QuizModal = ({
               title={__('Your quiz has unsaved changes. If you cancel, you will lose your progress.', 'tutor')}
               message={__('Are you sure you want to continue?', 'tutor')}
               animationType={AnimationType.slideUp}
-              arrow="top"
+              arrow={CURRENT_VIEWPORT.isAboveMobile ? 'top' : 'absoluteCenter'}
               positionModifier={{ top: -50, left: quizId ? 88 : activeTab === 'settings' ? 30 : 26 }}
               hideArrow
               confirmButton={{
@@ -458,6 +462,10 @@ const styles = {
     color: ${colorTokens.text.subdued};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[16]} ${spacing[28]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
+
+    ${Breakpoint.smallTablet} {
+      padding: ${spacing[8]};
+    }
   `,
   quizNameWithButton: css`
     display: inline-flex;
@@ -478,6 +486,12 @@ const styles = {
     :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       border-radius: ${borderRadius[6]};
+      button {
+        display: block;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       button {
         display: block;
       }
