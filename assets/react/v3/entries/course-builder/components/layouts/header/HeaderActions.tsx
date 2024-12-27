@@ -43,6 +43,8 @@ const HeaderActions = () => {
   const scheduleDate = useWatch({ name: 'schedule_date' });
   const scheduleTime = useWatch({ name: 'schedule_time' });
 
+  console.log(isScheduleEnabled, scheduleDate, scheduleTime);
+
   const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(postStatus);
 
   const createCourseMutation = useCreateCourseMutation();
@@ -197,7 +199,8 @@ const HeaderActions = () => {
     } else if (
       !courseId ||
       postStatus === 'pending' ||
-      (postStatus === 'draft' && !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)))
+      (postStatus === 'draft' &&
+        (!isScheduleEnabled || !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`))))
     ) {
       text = __('Publish', 'tutor');
       action = 'publish';
