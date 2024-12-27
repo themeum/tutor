@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 
 import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
@@ -17,7 +17,7 @@ import { noop } from '@Utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 import { tutorConfig } from '@Config/config';
-import { TutorRoles, isRTL } from '@Config/constants';
+import { isRTL, TutorRoles } from '@Config/constants';
 import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
 import profileImage from '@Images/profile-photo.png';
 import type { User } from '@Services/users';
@@ -338,9 +338,7 @@ const FormSelectUser = ({
                         css={styles.optionItem}
                         data-active={activeIndex === index}
                         onMouseOver={() => setActiveIndex(index)}
-                        onMouseLeave={() => {
-                          index !== activeIndex && setActiveIndex(-1);
-                        }}
+                        onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
                         ref={activeIndex === index ? activeItemRef : null}
                         onFocus={() => setActiveIndex(index)}
                       >
@@ -462,6 +460,12 @@ const styles = {
     &:hover {
       border-color: ${colorTokens.stroke.divider};
 
+      [data-instructor-delete-button] {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       [data-instructor-delete-button] {
         opacity: 1;
       }
