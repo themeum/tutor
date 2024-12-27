@@ -13,7 +13,7 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
 import { tutorConfig } from '@Config/config';
 import { CURRENT_VIEWPORT } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
+import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import {
@@ -216,35 +216,6 @@ const styles = {
     ${Breakpoint.smallTablet} {
       margin-top: 0;
     }
-  `,
-  editorsButtonWrapper: css`
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: ${spacing[10]};
-    gap: ${spacing[8]};
-
-    * {
-      flex-shrink: 0;
-      margin-right: ${spacing[8]};
-    }
-  `,
-  descriptionWrapper: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[6]};
-  `,
-  descriptionLabel: css`
-    ${typography.body('medium')};
-    color: ${colorTokens.text.title};
-  `,
-  editorWrapper: css`
-    position: relative;
-  `,
-  editorOverlay: css`
-    height: 360px;
-    ${styleUtils.flexCenter()};
-    background-color: ${colorTokens.bg.gray20};
-    border-radius: ${borderRadius.card};
   `,
   statusAndDate: css`
     ${styleUtils.display.flex('column')};
