@@ -8,7 +8,7 @@ import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { type MembershipSettings, useMembershipSettingsQuery } from '../services/memberships';
 import EmptyState from '../molecules/EmptyState';
 import { useModal } from '@/v3/shared/components/modals/Modal';
-import SubscriptionModal from './modals/SubscriptionModal';
+import MembershipModal from './modals/MembershipModal';
 import SVGIcon from '@/v3/shared/atoms/SVGIcon';
 import { __ } from '@wordpress/i18n';
 import MembershipList from './MembershipList';
@@ -47,7 +47,7 @@ function MembershipSettings() {
 
   function handleNewMembershipClick() {
     showModal({
-      component: SubscriptionModal,
+      component: MembershipModal,
       props: {
         title: __('Create Membership', 'tutor'),
         icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,

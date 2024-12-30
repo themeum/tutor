@@ -1,6 +1,6 @@
 import Button from '@/v3/shared/atoms/Button';
 import { type MembershipPlan } from '../services/memberships';
-import SubscriptionModal from './modals/SubscriptionModal';
+import MembershipModal from './modals/MembershipModal';
 import { __ } from '@wordpress/i18n';
 import SVGIcon from '@/v3/shared/atoms/SVGIcon';
 import { useModal } from '@/v3/shared/components/modals/Modal';
@@ -18,7 +18,7 @@ export default function MembershipItem({ data }: MembershipItemProps) {
       <Button
         onClick={() => {
           showModal({
-            component: SubscriptionModal,
+            component: MembershipModal,
             props: {
               title: __('Update Membership', 'tutor'),
               icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,

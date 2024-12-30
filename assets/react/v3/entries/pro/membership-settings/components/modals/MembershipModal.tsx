@@ -36,12 +36,12 @@ import { useEffect } from 'react';
 import FormRadioGroup from '@/v3/shared/components/fields/FormRadioGroup';
 const { tutor_currency } = tutorConfig;
 
-interface SubscriptionModalProps extends ModalProps {
+interface MembershipModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   plan?: MembershipPlan;
 }
 
-export default function SubscriptionModal({ title, subtitle, icon, plan, closeModal }: SubscriptionModalProps) {
+export default function MembershipModal({ title, subtitle, icon, plan, closeModal }: MembershipModalProps) {
   const form = useFormWithGlobalError({
     defaultValues: plan ? convertPlanToFormData(plan) : defaultValues,
   });
