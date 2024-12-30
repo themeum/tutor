@@ -50,7 +50,6 @@ class WooCommerce extends Tutor_Base {
 
 		add_filter( 'product_type_options', array( $this, 'add_tutor_type_in_wc_product' ) );
 
-		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ), 10, 2 );
 		add_action( 'save_post_product', array( $this, 'save_wc_product_meta' ) );
 
@@ -348,28 +347,6 @@ class WooCommerce extends Tutor_Base {
 	 */
 	public function save_course_meta( $post_ID, $post ) {
 		do_action( 'save_tutor_course', $post_ID, $post );
-	}
-
-	/**
-	 * Register meta box
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function register_meta_box() {
-		tutor_meta_box_wrapper( 'tutor-attach-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
-	}
-
-	/**
-	 * Meta box view
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function course_add_product_metabox() {
-		include tutor()->path . 'views/metabox/course-add-product-metabox.php';
 	}
 
 	/**
