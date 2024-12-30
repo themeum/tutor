@@ -102,6 +102,11 @@ const endpoints = {
   CREATE_ENROLLMENT: 'tutor_enroll_bulk_student',
   GET_COURSE_BUNDLE_LIST: 'tutor_course_bundle_list',
   GET_UNENROLLED_USERS: 'tutor_unenrolled_users',
+
+  // MEMBERSHIP
+  GET_MEMBERSHIP_PLANS: 'tutor_membership_plans',
+  SAVE_MEMBERSHIP_PLAN: 'tutor_membership_plan_save',
+  DELETE_MEMBERSHIP_PLAN: 'tutor_membership_plan_delete',
 };
 
 export default endpoints;

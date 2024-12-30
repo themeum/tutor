@@ -11,12 +11,13 @@ import { useModal } from '@/v3/shared/components/modals/Modal';
 import SubscriptionModal from './modals/SubscriptionModal';
 import SVGIcon from '@/v3/shared/atoms/SVGIcon';
 import { __ } from '@wordpress/i18n';
+import MembershipList from './MembershipList';
 
 function MembershipSettings() {
   const { showModal } = useModal();
   const form = useFormWithGlobalError<MembershipSettings>({
     defaultValues: {
-      memberships: [],
+      plans: [],
     },
   });
 
@@ -24,9 +25,7 @@ function MembershipSettings() {
 
   const membershipSettingsQuery = useMembershipSettingsQuery();
 
-  const memberships = membershipSettingsQuery.data?.memberships?.length
-    ? membershipSettingsQuery.data.memberships
-    : form.getValues('memberships');
+  const memberships = membershipSettingsQuery.data?.length ? membershipSettingsQuery.data : form.getValues('plans');
 
   const formData = form.watch();
 
@@ -38,7 +37,7 @@ function MembershipSettings() {
 
   useEffect(() => {
     if (membershipSettingsQuery.data) {
-      reset(membershipSettingsQuery.data);
+      reset({ plans: membershipSettingsQuery.data });
     }
   }, [reset, membershipSettingsQuery.data]);
 
@@ -46,29 +45,26 @@ function MembershipSettings() {
     return <LoadingSection />;
   }
 
+  function handleNewMembershipClick() {
+    showModal({
+      component: SubscriptionModal,
+      props: {
+        title: __('Create Membership', 'tutor'),
+        icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
+      },
+      depthIndex: 9999,
+    });
+  }
+
   return (
     <div css={styles.wrapper} data-isdirty={form.formState.isDirty ? 'true' : undefined}>
-      <Show
-        when={memberships.length}
-        fallback={
-          <EmptyState
-            onActionClick={() => {
-              showModal({
-                component: SubscriptionModal,
-                props: {
-                  title: __('Create Membership', 'tutor'),
-                  icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
-                },
-                depthIndex: 9999,
-              });
-            }}
-          />
-        }
-      >
-        <FormProvider {...form}>Membership list</FormProvider>
+      <Show when={memberships.length} fallback={<EmptyState onActionClick={handleNewMembershipClick} />}>
+        <FormProvider {...form}>
+          <MembershipList onNewMembershipClick={handleNewMembershipClick} />
+        </FormProvider>
       </Show>
 
-      <input type="hidden" name="tutor_option[subscription_memberships]" value={JSON.stringify(formData)} />
+      <input type="hidden" name="tutor_option[membership_settings]" value={JSON.stringify(formData)} />
     </div>
   );
 }

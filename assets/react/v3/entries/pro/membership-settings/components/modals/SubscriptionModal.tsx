@@ -24,47 +24,55 @@ import FormTimeInput from '@/v3/shared/components/fields/FormTimeInput';
 import FormDateInput from '@/v3/shared/components/fields/FormDateInput';
 import FormSwitch from '@/v3/shared/components/fields/FormSwitch';
 import IconsAndFeatures from '../IconsAndFeatures';
+import { CURRENT_VIEWPORT } from '@/v3/shared/config/constants';
+import {
+  convertFormDataToPayload,
+  convertPlanToFormData,
+  defaultValues,
+  type MembershipPlan,
+  useSaveMembershipPlanMutation,
+} from '../../services/memberships';
+import { useEffect } from 'react';
+import FormRadioGroup from '@/v3/shared/components/fields/FormRadioGroup';
 const { tutor_currency } = tutorConfig;
 
 interface SubscriptionModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  plan?: MembershipPlan;
 }
 
-export default function SubscriptionModal({ title, subtitle, icon, closeModal }: SubscriptionModalProps) {
+export default function SubscriptionModal({ title, subtitle, icon, plan, closeModal }: SubscriptionModalProps) {
   const form = useFormWithGlobalError({
-    defaultValues: {
-      plan_name: '',
-      short_description: '',
-      features: [],
-      categories: [],
-      payment_type: '',
-      plan_type: '',
-      recurring_value: '',
-      recurring_interval: '',
-      recurring_limit: '',
-      regular_price: '',
-      offer_sale_price: false,
-      sale_price: '',
-      schedule_sale_price: false,
-      sale_price_from: '',
-      sale_price_from_date: '',
-      sale_price_from_time: '',
-      sale_price_to: '',
-      sale_price_to_date: '',
-      sale_price_to_time: '',
-      charge_enrollment_fee: false,
-      enrollment_fee: '',
-      provide_certificate: false,
-      is_featured: false,
-    },
+    defaultValues: plan ? convertPlanToFormData(plan) : defaultValues,
   });
+
+  const saveMembershipPlanMutation = useSaveMembershipPlanMutation();
+
+  useEffect(() => {
+    console.log({ plan });
+    if (plan) {
+      form.reset(convertPlanToFormData(plan));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [plan]);
+
+  function handleSubmit() {
+    form.handleSubmit(async (data) => {
+      const payload = convertFormDataToPayload(data);
+      const response = await saveMembershipPlanMutation.mutateAsync(payload);
+      if (response.status_code === 200 || response.status_code === 201) {
+        closeModal({ action: 'CONFIRM' });
+      }
+    })();
+  }
 
   const isFormDirty = form.formState.isDirty;
 
   const chargeEnrolmentFee = form.watch('charge_enrollment_fee');
   const hasSale = form.watch('offer_sale_price');
-  const regularPrice = form.watch(`regular_price`);
-  const hasScheduledSale = !!form.watch(`schedule_sale_price`);
+  const regularPrice = form.watch('regular_price');
+  const hasScheduledSale = !!form.watch('schedule_sale_price');
+  const isFeatured = !!form.watch('is_featured');
 
   const lifetimePresets = [3, 6, 9, 12];
   const lifetimeOptions = [
@@ -76,6 +84,12 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
       label: __('Until cancelled', 'tutor'),
       value: 'Until cancelled',
     },
+  ];
+
+  const planType = form.watch('plan_type');
+  const planTypeOptions = [
+    { label: __('Full Site', 'tutor'), value: 'full_site' },
+    { label: __('Specific Categories', 'tutor'), value: 'category' },
   ];
 
   return (
@@ -100,11 +114,8 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
             <Button
               variant="primary"
               size="small"
-              onClick={() => {
-                form.handleSubmit((data) => {
-                  console.log(data);
-                })();
-              }}
+              onClick={handleSubmit}
+              loading={saveMembershipPlanMutation.isPending}
             >
               {__('Save', 'tutor')}
             </Button>
@@ -192,7 +203,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                 render={(controllerProps) => (
                   <FormSelectInput
                     {...controllerProps}
-                    label={<div>&nbsp;</div>}
+                    label={CURRENT_VIEWPORT.isAboveMobile ? <div>&nbsp;</div> : __('Recurring Options', 'tutor')}
                     options={[
                       { label: __('Day(s)', 'tutor'), value: 'day' },
                       { label: __('Week(s)', 'tutor'), value: 'week' },
@@ -237,11 +248,26 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
 
             <Controller
               control={form.control}
-              name={`categories`}
+              name="plan_type"
               render={(controllerProps) => (
-                <FormSelectInput {...controllerProps} label={__('Select Categories', 'tutor')} options={[]} />
+                <FormRadioGroup
+                  {...controllerProps}
+                  label={__('Membership Type', 'tutor')}
+                  options={planTypeOptions}
+                  wrapperCss={styles.planTypeWrapper}
+                />
               )}
             />
+
+            <Show when={planType === 'category'}>
+              <Controller
+                control={form.control}
+                name={`categories`}
+                render={(controllerProps) => (
+                  <FormSelectInput {...controllerProps} label={__('Select Categories', 'tutor')} options={[]} />
+                )}
+              />
+            </Show>
 
             <IconsAndFeatures />
 
@@ -282,7 +308,7 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
 
             <Controller
               control={form.control}
-              name={`provide_certificate`}
+              name={`do_not_provide_certificate`}
               render={(controllerProps) => (
                 <FormCheckbox {...controllerProps} label={__('Do not provide certificate', 'tutor')} />
               )}
@@ -295,6 +321,14 @@ export default function SubscriptionModal({ title, subtitle, icon, closeModal }:
                 <FormCheckbox {...controllerProps} label={__('Mark as featured', 'tutor')} />
               )}
             />
+
+            <Show when={isFeatured}>
+              <Controller
+                control={form.control}
+                name="featured_text"
+                render={(controllerProps) => <FormInput {...controllerProps} label={__('Feature Text', 'tutor')} />}
+              />
+            </Show>
 
             <div css={styles.salePriceWrapper}>
               <div>
@@ -493,11 +527,19 @@ const styles = {
     grid-template-columns: 1fr 0.7fr 1fr 1fr;
     align-items: start;
     gap: ${spacing[8]};
+
+    ${Breakpoint.mobile} {
+      grid-template-columns: 1fr;
+    }
   `,
   datetimeWrapper: css`
     label {
       ${typography.caption()};
       color: ${colorTokens.text.title};
     }
+  `,
+  planTypeWrapper: css`
+    display: flex;
+    gap: ${spacing[8]};
   `,
 };

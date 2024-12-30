@@ -31,8 +31,11 @@ export default function IconsAndFeatures() {
   return (
     <div css={styles.wrapper}>
       <div css={styles.header}>
-        <label>{__('Icons & Features', 'tutor')}</label>
-        <Button variant="text" onClick={() => append({ id: nanoid(), icon: featureIcons.tickCircleFill, content: '' })}>
+        <label>{__('Features', 'tutor')}</label>
+        <Button
+          variant="text"
+          onClick={() => append({ id: nanoid(), icon: featureIcons.tick_circle_fill, content: '' })}
+        >
           <SVGIcon name="plus" width={24} height={24} />
         </Button>
       </div>

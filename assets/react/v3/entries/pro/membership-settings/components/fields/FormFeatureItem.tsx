@@ -15,7 +15,7 @@ import { isRTL } from '@/v3/shared/config/constants';
 import { __ } from '@wordpress/i18n';
 import { useSortable } from '@dnd-kit/sortable';
 
-interface Feature {
+export interface Feature {
   id: string;
   icon: string;
   content: string;
@@ -44,7 +44,7 @@ export default function FormFeatureItem({ id, field, fieldState, handleDeleteCli
   };
 
   function handleIconChange(icon: keyof typeof featureIcons) {
-    field.onChange({ ...field.value, icon: featureIcons[icon] });
+    field.onChange({ ...field.value, icon: icon });
   }
 
   function handleContentChange(content: string) {
@@ -66,7 +66,7 @@ export default function FormFeatureItem({ id, field, fieldState, handleDeleteCli
                   type="button"
                   css={styles.iconSelector}
                   onClick={() => setIsOpen(!isOpen)}
-                  dangerouslySetInnerHTML={{ __html: field.value.icon }}
+                  dangerouslySetInnerHTML={{ __html: featureIcons[field.value.icon as keyof typeof featureIcons] }}
                 />
                 <input
                   {...inputProps}
