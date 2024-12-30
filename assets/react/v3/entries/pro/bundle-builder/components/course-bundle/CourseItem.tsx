@@ -3,23 +3,41 @@ import { css } from '@emotion/react';
 import SVGIcon from '@Atoms/SVGIcon';
 
 import { type Course } from '@BundleBuilderServices/bundle';
-import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 
 interface CourseItemProps {
   course: Course;
   index: number;
   onRemove: () => void;
+  isOverlay?: boolean;
 }
 
-const CourseItem = ({ course, index, onRemove }: CourseItemProps) => {
+const CourseItem = ({ course, index, onRemove, isOverlay }: CourseItemProps) => {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: course.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.3 : 1,
+    background: isDragging ? colorTokens.stroke.hover : undefined,
+  };
+
   return (
-    <div css={styles.wrapper}>
+    <div
+      {...attributes}
+      ref={setNodeRef}
+      style={style}
+      css={styles.wrapper({
+        isOverlay,
+      })}
+    >
       <div css={styles.left}>
-        <button data-drag-button css={styleUtils.resetButton}>
+        <button {...listeners} data-drag-button css={styleUtils.resetButton}>
           <SVGIcon name="dragVertical" width={24} height={24} />
         </button>
         <span data-index>{index}</span>
@@ -35,17 +53,14 @@ const CourseItem = ({ course, index, onRemove }: CourseItemProps) => {
           when={course.sale_price}
           fallback={
             <span data-price css={styles.price({ hasSalePrice: false })}>
-              {tutorConfig.tutor_currency.symbol}
               {course.regular_price}
             </span>
           }
         >
           <span data-price css={styles.price({ hasSalePrice: true })}>
-            {tutorConfig.tutor_currency.symbol}
             {course.regular_price}
           </span>
           <span data-price css={styles.price({ hasSalePrice: false })}>
-            {tutorConfig.tutor_currency.symbol}
             {course.sale_price}
           </span>
         </Show>
@@ -79,6 +94,8 @@ const styles = {
     ${isOverlay &&
     css`
       box-shadow: ${shadow.drag};
+      border-bottom: none;
+      border-radius: ${borderRadius.card};
       cursor: grabbing;
     `}
 

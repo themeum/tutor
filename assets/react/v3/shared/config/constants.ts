@@ -1,3 +1,5 @@
+import { __ } from '@wordpress/i18n';
+
 import { DesktopBreakpoint, MobileBreakpoint, SmallMobileBreakpoint, TabletBreakpoint } from '@Config/styles';
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -11,6 +13,7 @@ export const ALIAS_CATEGORY_ROUTE_PREFIX = '/category';
 export const ALIAS_TAG_ROUTE_PREFIX = '/tag';
 
 export const isRTL = document.dir === 'rtl';
+export const WP_ADMIN_BAR_HEIGHT = '32px';
 export const currentWindowWidth = window.innerWidth;
 export const CURRENT_VIEWPORT = {
   isAboveDesktop: currentWindowWidth >= DesktopBreakpoint,
@@ -94,3 +97,18 @@ export const VideoRegex = {
   EXTERNAL_URL: /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/,
   SHORTCODE: /^\[.*\]$/,
 };
+
+export const visibilityStatusOptions = [
+  {
+    label: __('Public', 'tutor'),
+    value: 'publish',
+  },
+  {
+    label: __('Password Protected', 'tutor'),
+    value: 'password_protected',
+  },
+  {
+    label: __('Private', 'tutor'),
+    value: 'private',
+  },
+];

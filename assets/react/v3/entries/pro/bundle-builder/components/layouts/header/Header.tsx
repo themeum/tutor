@@ -6,8 +6,8 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { useModal } from '@Components/modals/Modal';
-import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
-import Logo from '@CourseBuilderComponents/layouts/header/Logo';
+import HeaderActions from '@BundleBuilderComponents/layouts/header/HeaderActions';
+import Logo from '@BundleBuilderComponents/layouts/header/Logo';
 import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBuilderModal';
 
 import { tutorConfig } from '@Config/config';
@@ -25,11 +25,11 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-import { type CourseBundle } from '@BundleBuilderServices/bundle';
-import { CURRENT_VIEWPORT } from '@Config/constants';
+import { type BundleFormData } from '@BundleBuilderServices/bundle';
+import { CURRENT_VIEWPORT, WP_ADMIN_BAR_HEIGHT } from '@Config/constants';
 
 const Header = () => {
-  const form = useFormContext<CourseBundle>();
+  const form = useFormContext<BundleFormData>();
   const { showModal } = useModal();
 
   const isFormDirty = form.formState.isDirty;
@@ -88,7 +88,7 @@ const styles = {
     grid-template-columns: 1fr ${containerMaxWidth}px 1fr;
     align-items: center;
     position: sticky;
-    top: 0;
+    top: ${WP_ADMIN_BAR_HEIGHT};
     z-index: ${zIndex.header};
 
     ${Breakpoint.tablet} {

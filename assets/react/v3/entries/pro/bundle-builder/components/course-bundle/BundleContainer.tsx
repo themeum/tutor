@@ -1,24 +1,41 @@
 import { css } from '@emotion/react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
 import FormEditableAlias from '@/v3/shared/components/fields/FormEditableAlias';
+import FormTextareaInput from '@/v3/shared/components/fields/FormTextareaInput';
+import FormWPEditor from '@/v3/shared/components/fields/FormWPEditor';
 import { tutorConfig } from '@/v3/shared/config/config';
 import CourseSelection from '@BundleBuilderComponents/course-bundle/CourseSelection';
-import { type CourseBundle } from '@BundleBuilderServices/bundle';
+import { type BundleFormData } from '@BundleBuilderServices/bundle';
 import FormInput from '@Components/fields/FormInput';
-import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { useIsFetching } from '@tanstack/react-query';
 import { styleUtils } from '@Utils/style-utils';
 import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
+import { getBundleId } from '../../utils/utils';
+import BundleSidebar from './BundleSidebar';
 
-const CourseBundleContainer = () => {
-  const form = useFormContext<CourseBundle>();
+const bundleId = getBundleId();
+let hasAliasChanged = false;
+
+const BundleContainer = () => {
+  const form = useFormContext<BundleFormData>();
+  const [isWpEditorFullScreen, setIsWpEditorFullScreen] = useState(false);
+  const isBundleDetailsQueryFetching = useIsFetching({
+    queryKey: ['CourseBundle', bundleId],
+  });
+
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
 
+  const postStatus = form.watch('post_status');
+
   return (
     <div css={styles.wrapper}>
-      <div css={styles.mainForm({ isWpEditorFullScreen: true })}>
+      <div css={styles.mainForm({ isWpEditorFullScreen })}>
         <div css={styles.fieldsWrapper}>
           <div css={styles.titleAndSlug}>
             <Controller
@@ -32,7 +49,7 @@ const CourseBundleContainer = () => {
                   isClearable
                   selectOnFocus
                   generateWithAi={!isTutorPro || isOpenAiEnabled}
-                  loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                  loading={!!isBundleDetailsQueryFetching && !controllerProps.field.value}
                   onChange={(value) => {
                     if (postStatus === 'draft' && !hasAliasChanged) {
                       form.setValue('post_name', convertToSlug(String(value)), {
@@ -48,33 +65,59 @@ const CourseBundleContainer = () => {
             <Controller
               name="post_name"
               control={form.control}
-              render={(controllerProps) => <FormEditableAlias {...controllerProps} label={__('Course URL', 'tutor')} />}
+              render={(controllerProps) => (
+                <FormEditableAlias
+                  {...controllerProps}
+                  label={__('Course URL', 'tutor')}
+                  baseURL={tutorConfig.site_url}
+                  onChange={() => (hasAliasChanged = true)}
+                />
+              )}
             />
           </div>
 
-          {/* WP Editor */}
+          <Controller
+            name="post_content"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormWPEditor
+                {...controllerProps}
+                label={__('Description', 'tutor')}
+                loading={!!isBundleDetailsQueryFetching && !controllerProps.field.value}
+                max_height={280}
+                generateWithAi={!isTutorPro || isOpenAiEnabled}
+                onFullScreenChange={(isFullScreen) => {
+                  setIsWpEditorFullScreen(isFullScreen);
+                }}
+              />
+            )}
+          />
+
           <CourseSelection />
 
-          <div css={styles.sidebar}>
-            {/* Visibility */}
-
-            {/* Password */}
-
-            {/* Schedule */}
-
-            {/* Featured Image */}
-
-            {/* Course Price Section */}
-
-            {/* Ribbon Select */}
+          <div css={styles.additionalFields}>
+            <Controller
+              name="course_benefits"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormTextareaInput
+                  {...controllerProps}
+                  label={__('What Will I Learn?', 'tutor')}
+                  placeholder={__('Define the key takeaways from this course (list one benefit per line)', 'tutor')}
+                  rows={2}
+                  enableResize
+                />
+              )}
+            />
           </div>
         </div>
       </div>
+      <BundleSidebar />
     </div>
   );
 };
 
-export default CourseBundleContainer;
+export default BundleContainer;
 
 const styles = {
   wrapper: css`
@@ -141,5 +184,11 @@ const styles = {
   updatedOn: css`
     ${typography.caption()};
     color: ${colorTokens.text.hints};
+  `,
+  additionalFields: css`
+    padding: ${spacing[12]} ${spacing[20]};
+    background-color: ${colorTokens.background.white};
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius.card};
   `,
 };

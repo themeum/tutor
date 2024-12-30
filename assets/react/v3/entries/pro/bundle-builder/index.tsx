@@ -6,7 +6,7 @@ import ErrorBoundary from '@Components/ErrorBoundary';
 
 import App from '@BundleBuilderComponents/App';
 
-const root = ReactDOM.createRoot(document.getElementById('tutor-frontend-course-builder') as HTMLElement);
+const root = ReactDOM.createRoot(document.getElementById('tutor-course-bundle-builder-root') as HTMLElement);
 
 root.render(
   <React.StrictMode>

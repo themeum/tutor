@@ -1,17 +1,16 @@
 import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { type Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
+import coursePlaceholder from '@Images/course-placeholder.png';
 import Paginator from '@Molecules/Paginator';
 import Table, { type Column } from '@Molecules/Table';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import SearchField from './SearchField';
-import coursePlaceholder from '@Images/course-placeholder.png';
-import Show from '@Controls/Show';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
@@ -183,6 +182,8 @@ const styles = {
     width: 48px;
     height: 48px;
     border-radius: ${borderRadius[4]};
+    object-fit: cover;
+    object-position: center;
   `,
   priceWrapper: css`
     text-align: right;

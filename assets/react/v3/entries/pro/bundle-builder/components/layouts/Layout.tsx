@@ -1,61 +1,45 @@
 import { css } from '@emotion/react';
 import { FormProvider } from 'react-hook-form';
 
-import CourseBundleContainer from '@BundleBuilderComponents/course-bundle/CourseBundleContainer';
-import CourseSelection from '@BundleBuilderComponents/course-bundle/CourseSelection';
+import BundleContainer from '@/v3/entries/pro/bundle-builder/components/course-bundle/BundleContainer';
 import Header from '@BundleBuilderComponents/layouts/header/Header';
-import { type CourseBundle } from '@BundleBuilderServices/bundle';
+import {
+  convertBundleToFormData,
+  defaultCourseBundleData,
+  useGetBundleDetails,
+  type BundleFormData,
+} from '@BundleBuilderServices/bundle';
 import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@Config/styles';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useEffect } from 'react';
+import { getBundleId } from '../../utils/utils';
 
-const mockData = [
-  {
-    id: 1,
-    title: 'Tutor LMS For Beginners Part II: Progress Your Webflow Skills With This Course',
-    image: 'https://placehold.co/600x400',
-    is_purchasable: true,
-    regular_price: '100',
-    sale_price: null,
-    course_duration: '1 hour',
-    last_updated: '2021-09-01',
-    total_enrolled: 100,
-  },
-  {
-    id: 2,
-    title: 'Tutor LMS For Beginners Part II: Progress Your Webflow Skills With This Course',
-    image: 'https://placehold.co/600x400',
-    is_purchasable: true,
-    regular_price: '200',
-    sale_price: '150',
-    course_duration: '2 hours',
-    last_updated: '2021-09-02',
-    total_enrolled: 200,
-  },
-  {
-    id: 3,
-    title: 'Course 3',
-    image: 'https://placehold.co/600x400',
-    is_purchasable: true,
-    regular_price: '300',
-    sale_price: null,
-    course_duration: '3 hours',
-    last_updated: '2021-09-03',
-    total_enrolled: 300,
-  },
-];
+const bundleId = getBundleId();
 
 const Layout = () => {
-  const form = useFormWithGlobalError<CourseBundle>({
-    defaultValues: {
-      courses: mockData,
-    },
+  const form = useFormWithGlobalError<BundleFormData>({
+    defaultValues: defaultCourseBundleData,
+    shouldFocusError: true,
   });
+  const getCourseBundleDetailsQuery = useGetBundleDetails(bundleId);
+
+  useEffect(() => {
+    if (getCourseBundleDetailsQuery.data) {
+      const convertedCourseBundleData = convertBundleToFormData(getCourseBundleDetailsQuery.data);
+      form.reset(convertedCourseBundleData, {
+        keepDirtyValues: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getCourseBundleDetailsQuery.data]);
+
   return (
     <FormProvider {...form}>
       <div css={styles.wrapper}>
         <Header />
-        <CourseBundleContainer />
-        <CourseSelection />
+        <div css={styles.contentWrapper}>
+          <BundleContainer />
+        </div>
       </div>
     </FormProvider>
   );

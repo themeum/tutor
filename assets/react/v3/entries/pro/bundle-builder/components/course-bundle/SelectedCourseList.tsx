@@ -13,7 +13,7 @@ import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrate
 import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import CourseItem from '@/v3/entries/pro/bundle-builder/components/course-bundle/CourseItem';
+import CourseItem from '@BundleBuilderComponents/course-bundle/CourseItem';
 import { type Course } from '@BundleBuilderServices/bundle';
 
 import For from '@Controls/For';
@@ -23,7 +23,7 @@ import { noop } from '@Utils/util';
 
 interface SelectedCourseListProps {
   courses: Course[];
-  onRemove: () => void;
+  onRemove: (index: number) => void;
   onSort: (activeIndex: number, overIndex: number) => void;
 }
 
@@ -45,41 +45,43 @@ const SelectedCourseList = ({ courses, onRemove, onSort }: SelectedCourseListPro
     }),
   );
   return (
-    <>
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCorners}
-        measuring={droppableMeasuringStrategy}
-        modifiers={[restrictToWindowEdges]}
-        onDragStart={(event) => {
-          setActiveSortId(event.active.id);
-        }}
-        onDragEnd={(event) => {
-          const { active, over } = event;
+    <DndContext
+      sensors={sensors}
+      collisionDetection={closestCorners}
+      measuring={droppableMeasuringStrategy}
+      modifiers={[restrictToWindowEdges]}
+      onDragStart={(event) => {
+        setActiveSortId(event.active.id);
+      }}
+      onDragEnd={(event) => {
+        const { active, over } = event;
 
-          if (!over || active.id === over.id) {
-            setActiveSortId(null);
-            return;
-          }
+        if (!over || active.id === over.id) {
+          setActiveSortId(null);
+          return;
+        }
 
-          const activeIndex = courses.findIndex((course) => course.id === active.id);
-          const overIndex = courses.findIndex((course) => course.id === over.id);
-          onSort(activeIndex, overIndex);
-        }}
-      >
-        <SortableContext items={courses} strategy={verticalListSortingStrategy}>
-          <For each={courses}>
-            {(item, index) => <CourseItem course={item} index={index + 1} onRemove={() => onRemove()} />}
-          </For>
-        </SortableContext>
-        {createPortal(
-          <DragOverlay>
-            <Show when={activeSortItem}>{(course) => <CourseItem course={course} index={0} onRemove={noop} />}</Show>
-          </DragOverlay>,
-          document.body,
-        )}
-      </DndContext>
-    </>
+        const activeIndex = courses.findIndex((course) => course.id === active.id);
+        const overIndex = courses.findIndex((course) => course.id === over.id);
+        onSort(activeIndex, overIndex);
+      }}
+    >
+      <SortableContext items={courses} strategy={verticalListSortingStrategy}>
+        <For each={courses}>
+          {(item, index) => (
+            <CourseItem key={item.id} course={item} index={index + 1} onRemove={() => onRemove(index)} />
+          )}
+        </For>
+      </SortableContext>
+      {createPortal(
+        <DragOverlay>
+          <Show when={activeSortItem}>
+            {(course) => <CourseItem course={course} index={0} onRemove={noop} isOverlay />}
+          </Show>
+        </DragOverlay>,
+        document.body,
+      )}
+    </DndContext>
   );
 };
 

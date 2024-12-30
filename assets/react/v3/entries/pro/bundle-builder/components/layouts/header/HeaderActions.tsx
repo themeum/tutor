@@ -3,7 +3,6 @@ import { __ } from '@wordpress/i18n';
 import { format, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
 
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
@@ -12,29 +11,28 @@ import DropdownButton from '@Molecules/DropdownButton';
 import { useModal } from '@Components/modals/Modal';
 import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 
+import {
+  convertBundleFormDataToPayload,
+  useSaveCourseBundle,
+  type BundleFormData,
+} from '@BundleBuilderServices/bundle';
 import config, { tutorConfig } from '@Config/config';
 import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@Config/constants';
 import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
-import {
-  type CourseFormData,
-  type PostStatus,
-  convertCourseDataToPayload,
-  useCreateCourseMutation,
-  useUpdateCourseMutation,
-} from '@CourseBuilderServices/course';
-import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
+import { type PostStatus } from '@CourseBuilderServices/course';
+import { determinePostStatus } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
 import { convertToGMT, noop } from '@Utils/util';
 
 import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
 import reviewSubmitted from '@Images/review-submitted.webp';
+import { getBundleId } from '../../../utils/utils';
 
-const courseId = getCourseId();
+const bundleId = getBundleId();
 
 const HeaderActions = () => {
-  const form = useFormContext<CourseFormData>();
-  const navigate = useNavigate();
+  const form = useFormContext<BundleFormData>();
   const { showModal } = useModal();
   const postStatus = useWatch({ name: 'post_status' });
   const postVisibility = useWatch({ name: 'visibility' });
@@ -45,81 +43,27 @@ const HeaderActions = () => {
 
   const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(postStatus);
 
-  const createCourseMutation = useCreateCourseMutation();
-  const updateCourseMutation = useUpdateCourseMutation();
+  // const createCourseMutation = useCreateCourseMutation();
+  const saveCourseBundleMutation = useSaveCourseBundle();
 
   const isPostDateDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
-  const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
   const isAllowedToPublishCourse = tutorConfig.settings?.instructor_can_publish_course === 'on';
 
-  const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
-    const triggerAndFocus = (field: keyof CourseFormData) => {
-      Promise.resolve().then(() => {
-        form.trigger(field, { shouldFocus: true });
-      });
-    };
-
-    const navigateToBasicsWithError = () => {
-      navigate('/basics', { state: { isError: true } });
-    };
-
-    if (
-      data.isScheduleEnabled &&
-      (!data.schedule_date ||
-        !data.schedule_time ||
-        !isBefore(new Date(), new Date(`${data.schedule_date} ${data.schedule_time}`)))
-    ) {
-      navigateToBasicsWithError();
-      form.setValue('showScheduleForm', true, { shouldDirty: true });
-      if (!data.schedule_date) {
-        triggerAndFocus('schedule_date');
-        return;
-      }
-      if (!data.schedule_time) {
-        triggerAndFocus('schedule_time');
-        return;
-      }
-    }
-
-    if (data.course_price_type === 'paid') {
-      if (!data.course_product_id && tutorConfig.settings?.monetize_by === 'edd') {
-        navigateToBasicsWithError();
-        triggerAndFocus('course_product_id');
-        return;
-      }
-
-      if (
-        (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && data.course_product_id !== '-1') ||
-        tutorConfig.settings?.monetize_by === 'tutor'
-      ) {
-        if (data.course_price === '' || Number(data.course_price) <= 0) {
-          navigateToBasicsWithError();
-          triggerAndFocus('course_price');
-          return;
-        }
-
-        if (data.course_sale_price && Number(data.course_sale_price) >= Number(data.course_price)) {
-          navigateToBasicsWithError();
-          triggerAndFocus('course_sale_price');
-          return;
-        }
-      }
-    }
-
-    const payload = convertCourseDataToPayload(data);
+  const handleSubmit = async (data: BundleFormData, postStatus: PostStatus) => {
+    const payload = convertBundleFormDataToPayload(data);
     setLocalPostStatus(postStatus);
 
-    if (courseId) {
+    if (bundleId) {
       const determinedPostStatus = determinePostStatus(postStatus, postVisibility);
 
-      const response = await updateCourseMutation.mutateAsync({
-        course_id: Number(courseId),
+      const response = await saveCourseBundleMutation.mutateAsync({
         ...payload,
+        ...(bundleId ? { bundle_id: bundleId } : {}),
         post_status: determinedPostStatus,
         ...(!data.isScheduleEnabled
           ? {
@@ -180,11 +124,11 @@ const HeaderActions = () => {
       return;
     }
 
-    const response = await createCourseMutation.mutateAsync({ ...payload });
+    // const response = await createCourseMutation.mutateAsync({ ...payload });
 
-    if (response.data) {
-      window.location.href = `${config.TUTOR_SITE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
-    }
+    // if (response.data) {
+    //   window.location.href = `${config.TUTOR_SITE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
+    // }
   };
 
   const dropdownButton = () => {
@@ -195,9 +139,10 @@ const HeaderActions = () => {
       text = __('Submit', 'tutor');
       action = 'pending';
     } else if (
-      !courseId ||
+      !bundleId ||
       postStatus === 'pending' ||
-      (postStatus === 'draft' && !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)))
+      (postStatus === 'draft' &&
+        (!isScheduleEnabled || !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`))))
     ) {
       text = __('Publish', 'tutor');
       action = 'publish';
@@ -231,7 +176,7 @@ const HeaderActions = () => {
         </div>
       ),
       onClick:
-        !courseId || (postStatus === 'draft' && courseId) ? () => window.open(previewLink, '_blank', 'noopener') : noop,
+        !bundleId || (postStatus === 'draft' && bundleId) ? () => window.open(previewLink, '_blank', 'noopener') : noop,
       isDanger: false,
     };
 
@@ -274,8 +219,8 @@ const HeaderActions = () => {
         </div>
       ),
       onClick: () => {
-        const legacyUrl = courseId
-          ? `${config.TUTOR_SITE_URL}/wp-admin/post.php?post=${courseId}&action=edit`
+        const legacyUrl = bundleId
+          ? `${config.TUTOR_SITE_URL}/wp-admin/post.php?post=${bundleId}&action=edit`
           : `${config.TUTOR_SITE_URL}/wp-admin/post-new.php?post_type=courses`;
 
         window.open(legacyUrl, '_blank', 'noopener');
@@ -307,7 +252,7 @@ const HeaderActions = () => {
       items.unshift(publishImmediatelyItem);
     }
 
-    if (courseId && postStatus !== 'draft') {
+    if (bundleId && postStatus !== 'draft') {
       items.pop();
 
       if (isAdmin || isAllowedToPublishCourse) {
@@ -327,11 +272,11 @@ const HeaderActions = () => {
   };
 
   useEffect(() => {
-    if (updateCourseMutation.isSuccess) {
+    if (saveCourseBundleMutation.isSuccess) {
       form.reset(form.getValues());
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [updateCourseMutation.isSuccess]);
+  }, [saveCourseBundleMutation.isSuccess]);
 
   return (
     <div css={styles.headerRight}>
@@ -353,7 +298,7 @@ const HeaderActions = () => {
         <Button
           variant="secondary"
           icon={<SVGIcon name="upload" width={24} height={24} />}
-          loading={localPostStatus === 'draft' && updateCourseMutation.isPending}
+          loading={localPostStatus === 'draft' && saveCourseBundleMutation.isPending}
           iconPosition="left"
           buttonCss={css`
             padding-inline: ${spacing[16]};
@@ -370,10 +315,10 @@ const HeaderActions = () => {
         fallback={
           <Button
             size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
-            loading={
-              createCourseMutation.isPending ||
-              (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
-            }
+            // loading={
+            //   createCourseMutation.isPending ||
+            //   (['publish', 'future', 'pending'].includes(localPostStatus) && saveCourseBundleMutation.isPending)
+            // }
             onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
           >
             {dropdownButton().text}
@@ -384,10 +329,10 @@ const HeaderActions = () => {
           text={dropdownButton().text}
           size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           variant="primary"
-          loading={
-            createCourseMutation.isPending ||
-            (['publish', 'future', 'pending'].includes(localPostStatus) && updateCourseMutation.isPending)
-          }
+          // loading={
+          //   createCourseMutation.isPending ||
+          //   (['publish', 'future', 'pending'].includes(localPostStatus) && saveCourseBundleMutation.isPending)
+          // }
           onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
           dropdownMaxWidth={
             isScheduleEnabled && isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)) ? '190px' : '164px'

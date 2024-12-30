@@ -3,7 +3,7 @@ import { __ } from '@wordpress/i18n';
 
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
@@ -41,7 +41,9 @@ const SelectionOverview = () => {
           <Show when={value} key={key}>
             <div css={styles.overviewItem}>
               <SVGIcon name={iconMap[key as keyof typeof iconMap]} width={32} height={32} />
-              <span>{value}</span>
+              <Show when={value && typeof value !== 'boolean'}>
+                <span>{value}</span>
+              </Show>
               <span>{contentMap[key as keyof typeof contentMap]}</span>
             </div>
           </Show>
@@ -70,14 +72,15 @@ const styles = {
     ${styleUtils.display.flex()};
     gap: ${spacing[8]};
     align-items: center;
+    ${typography.caption()};
 
     svg {
       color: ${colorTokens.icon.default};
       flex-shrink: 0;
     }
 
-    span:first-of-type {
-      ${typography.body('semiBold')};
+    span:first-of-type:not(:only-of-type) {
+      font-weight: ${fontWeight.semiBold};
       flex-shrink: 0;
     }
   `,

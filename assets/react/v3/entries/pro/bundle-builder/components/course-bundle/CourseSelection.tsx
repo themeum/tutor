@@ -16,14 +16,16 @@ import CourseSelectionHeader from '@/v3/entries/pro/bundle-builder/components/co
 import SelectedCourseList from '@/v3/entries/pro/bundle-builder/components/course-bundle/SelectedCourseList';
 import SelectionOverview from '@/v3/entries/pro/bundle-builder/components/course-bundle/SelectionOverview';
 import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
-import { type CourseBundle } from '@BundleBuilderServices/bundle';
+import { BundleFormData } from '@BundleBuilderServices/bundle';
 
 import bundleEmptyState from '@Images/bundle-empty-state.webp';
+import { priceWithOutCurrencySymbol } from '../../utils/utils';
 
 const CourseSelection = () => {
-  const form = useFormContext<CourseBundle>();
+  const form = useFormContext<BundleFormData>();
   const { showModal } = useModal();
   const {
+    fields: selectedCourses,
     append: addCourse,
     remove: removeCourse,
     move: moveCourse,
@@ -32,14 +34,15 @@ const CourseSelection = () => {
     name: 'courses',
   });
 
-  const mockData = form.watch('courses') || [];
+  const bundlePrice = priceWithOutCurrencySymbol(form.watch('bundle_price'));
+  const bundleSalePrice = priceWithOutCurrencySymbol(form.watch('bundle_sale_price'));
 
   return (
     <div css={styles.wrapper}>
       <label css={typography.caption()}>{__('Courses', 'tutor')}</label>
       <Box css={styles.boxWrapper}>
         <Show
-          when={mockData.length > 0}
+          when={selectedCourses.length > 0}
           fallback={
             <div css={styles.emptyState}>
               <img src={bundleEmptyState} alt={__('Empty State', 'tutor')} />
@@ -66,9 +69,59 @@ const CourseSelection = () => {
             </div>
           }
         >
-          <CourseSelectionHeader onAddCourses={addCourse} />
+          <CourseSelectionHeader
+            onAddCourses={(course) => {
+              addCourse(course);
 
-          <SelectedCourseList courses={mockData} onRemove={removeCourse} onSort={moveCourse} />
+              form.setValue('bundle_price', String(bundlePrice + priceWithOutCurrencySymbol(course.regular_price)), {
+                shouldValidate: true,
+                shouldDirty: true,
+              });
+
+              form.setValue(
+                'bundle_sale_price',
+                String(bundleSalePrice + priceWithOutCurrencySymbol(course.sale_price || '0')),
+                {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                },
+              );
+            }}
+          />
+
+          <SelectedCourseList
+            courses={selectedCourses}
+            onRemove={(index) => {
+              removeCourse(index);
+              const updatedCourses = selectedCourses.filter((_, i) => i !== index);
+              const atOneHasSalePrice = updatedCourses.some((course) => course.sale_price);
+
+              const removedCourse = selectedCourses[index];
+              form.setValue(
+                'bundle_price',
+                String(bundlePrice - priceWithOutCurrencySymbol(removedCourse.regular_price)),
+                {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                },
+              );
+
+              form.setValue(
+                'bundle_sale_price',
+                atOneHasSalePrice
+                  ? String(
+                      bundleSalePrice -
+                        priceWithOutCurrencySymbol(removedCourse.sale_price || removedCourse.regular_price),
+                    )
+                  : '',
+                {
+                  shouldValidate: true,
+                  shouldDirty: true,
+                },
+              );
+            }}
+            onSort={moveCourse}
+          />
 
           <SelectionOverview />
         </Show>
@@ -86,6 +139,7 @@ const styles = {
   `,
   boxWrapper: css`
     padding-inline: 0;
+    border: 1px solid ${colorTokens.stroke.divider};
   `,
   emptyState: css`
     ${styleUtils.display.flex('column')};
@@ -105,10 +159,10 @@ const styles = {
     }
   `,
   addCourseButton: css`
-    border: 1px solid ${colorTokens.stroke.border};
+    outline: 1px solid ${colorTokens.stroke.border};
 
     &:hover {
-      border: 1px solid ${colorTokens.stroke.border};
+      outline: 1px solid ${colorTokens.stroke.border};
     }
   `,
 };

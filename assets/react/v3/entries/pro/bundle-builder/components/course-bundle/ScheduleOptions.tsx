@@ -15,12 +15,12 @@ import { DateFormats } from '@Config/constants';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@Utils/style-utils';
 import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
+import { type BundleFormData } from '../../services/bundle';
 
 const ScheduleOptions = () => {
-  const form = useFormContext<CourseFormData>();
+  const form = useFormContext<BundleFormData>();
   const postDate = useWatch({ name: 'post_date' });
   const scheduleDate = useWatch({ name: 'schedule_date' }) ?? '';
   const scheduleTime = useWatch({ name: 'schedule_time' }) ?? format(addHours(new Date(), 1), DateFormats.hoursMinutes);
@@ -69,11 +69,11 @@ const ScheduleOptions = () => {
     );
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isScheduleEnabled && showForm) {
       form.setFocus('schedule_date');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showForm, isScheduleEnabled]);
 
   return (

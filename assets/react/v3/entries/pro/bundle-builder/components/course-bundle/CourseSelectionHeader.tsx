@@ -71,10 +71,10 @@ const styles = {
     gap: ${spacing[8]};
   `,
   addCourseButton: css`
-    border: 1px solid ${colorTokens.stroke.border};
+    outline: 1px solid ${colorTokens.stroke.border};
 
     &:hover {
-      border: 1px solid ${colorTokens.stroke.border};
+      outline: 1px solid ${colorTokens.stroke.border};
     }
   `,
 };
