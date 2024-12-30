@@ -37,7 +37,11 @@ function MembershipSettings() {
 
   useEffect(() => {
     if (membershipSettingsQuery.data) {
-      reset({ plans: membershipSettingsQuery.data });
+      const updatedPlans = membershipSettingsQuery.data?.map((item) => ({
+        ...item,
+        is_enabled: !!Number(item.is_enabled),
+      }));
+      reset({ plans: updatedPlans });
     }
   }, [reset, membershipSettingsQuery.data]);
 
@@ -64,7 +68,14 @@ function MembershipSettings() {
         </FormProvider>
       </Show>
 
-      <input type="hidden" name="tutor_option[membership_settings]" value={JSON.stringify(formData)} />
+      <input
+        type="hidden"
+        name="tutor_option[membership_settings]"
+        value={JSON.stringify({
+          ...formData,
+          plans: formData.plans.map(({ id, plan_name, is_enabled }) => ({ id, plan_name, is_enabled })),
+        })}
+      />
     </div>
   );
 }

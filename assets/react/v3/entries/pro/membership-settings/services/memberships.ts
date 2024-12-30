@@ -11,7 +11,7 @@ import { type Feature } from '../components/fields/FormFeatureItem';
 
 export interface MembershipPlan {
   id: string;
-  is_enabled: '0' | '1';
+  is_enabled: boolean;
   plan_name: string | null;
   plan_order: string;
   plan_type: 'full_site' | 'category';
