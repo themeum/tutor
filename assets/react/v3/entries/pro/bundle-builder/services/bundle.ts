@@ -1,10 +1,11 @@
-import { useToast } from '@/v3/shared/atoms/Toast';
-import { DateFormats } from '@/v3/shared/config/constants';
-import { type WPMedia } from '@/v3/shared/hooks/useWpMedia';
-import { type ErrorResponse } from '@/v3/shared/utils/form';
-import { convertToErrorMessage } from '@/v3/shared/utils/util';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { format, isBefore, parseISO } from 'date-fns';
+
+import { useToast } from '@Atoms/Toast';
+import { DateFormats } from '@Config/constants';
+import { type WPMedia } from '@Hooks/useWpMedia';
+import { type ErrorResponse } from '@Utils/form';
+import { convertToErrorMessage } from '@Utils/util';
 
 export interface Course {
   id: number;

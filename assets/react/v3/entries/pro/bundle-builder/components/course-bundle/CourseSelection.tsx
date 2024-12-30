@@ -12,11 +12,11 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-import CourseSelectionHeader from '@/v3/entries/pro/bundle-builder/components/course-bundle/CourseSelectionHeader';
-import SelectedCourseList from '@/v3/entries/pro/bundle-builder/components/course-bundle/SelectedCourseList';
-import SelectionOverview from '@/v3/entries/pro/bundle-builder/components/course-bundle/SelectionOverview';
+import CourseSelectionHeader from '@BundleBuilderComponents/course-bundle/CourseSelectionHeader';
+import SelectedCourseList from '@BundleBuilderComponents/course-bundle/SelectedCourseList';
+import SelectionOverview from '@BundleBuilderComponents/course-bundle/SelectionOverview';
 import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
-import { BundleFormData } from '@BundleBuilderServices/bundle';
+import { type BundleFormData } from '@BundleBuilderServices/bundle';
 
 import bundleEmptyState from '@Images/bundle-empty-state.webp';
 import { priceWithOutCurrencySymbol } from '../../utils/utils';
