@@ -20,7 +20,7 @@ import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 import FormMatching from '@Components/fields/quiz/FormMatching';
 
-import { colorTokens, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, spacing } from '@Config/styles';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
@@ -212,6 +212,10 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   addOptionButton: css`
     color: ${colorTokens.text.brand};

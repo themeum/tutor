@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { FormControllerProps } from '@Utils/form';
@@ -71,12 +71,12 @@ const FormQuestionTitle = ({
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(inputRef.current)) {
       inputRef.current.focus();
       setPreviousValue(inputValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, inputRef.current]);
 
   return (
@@ -246,6 +246,12 @@ const styles = {
       border: 1px solid ${colorTokens.stroke.default};
       cursor: default;
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-action-buttons] {
+        opacity: 1;
+      }
+    }
   `,
   inputContainer: (isClearable: boolean) => css`
     position: relative;

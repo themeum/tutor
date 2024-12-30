@@ -16,7 +16,7 @@ import FormInput from '@Components/fields/FormInput';
 
 import FormTextareaInput from '@Components/fields/FormTextareaInput';
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
@@ -59,7 +59,6 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const TopicHeader = ({
   topic,
   isEdit,
-  isActive,
   listeners,
   isDragging,
   onCollapse,
@@ -102,10 +101,11 @@ const TopicHeader = ({
     });
 
     if (response.data) {
-      if (response.status_code === 201) {
-        onEdit?.(`topic-${response.data}`);
-      }
       setIsEdit(false);
+    }
+
+    if (response.status_code === 201) {
+      onEdit?.(`topic-${response.data}`);
     }
   };
 
@@ -121,11 +121,11 @@ const TopicHeader = ({
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isEdit) {
       form.setFocus('title');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
   return (
@@ -389,6 +389,12 @@ const styles = {
         }
       }
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
   `,
   headerContent: ({ isSaved = true }: { isSaved: boolean }) => css`
     display: grid;

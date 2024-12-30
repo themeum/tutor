@@ -16,7 +16,7 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 
 import config, { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
 import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
@@ -170,6 +170,8 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <ZoomMeetingForm
           data={null}
@@ -185,6 +187,8 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <GoogleMeetForm
           data={null}
