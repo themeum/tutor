@@ -73,6 +73,7 @@ export default function MembershipItem({ data, index }: MembershipItemProps) {
       </button>
 
       <div css={styles.content}>
+        {/* @TODO: The icon will change */}
         <SVGIcon name="tagOutline" width={32} height={32} />
         <div css={styles.planInfo}>
           <h5 css={styles.planTitle}>
