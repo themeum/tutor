@@ -24,7 +24,9 @@ class CourseModel {
 	 *
 	 * @var string
 	 */
-	const POST_TYPE = 'courses';
+	const POST_TYPE       = 'courses';
+	const COURSE_CATEGORY = 'course-category';
+	const COURSE_TAG      = 'course-tag';
 
 	const STATUS_PUBLISH    = 'publish';
 	const STATUS_DRAFT      = 'draft';
@@ -625,7 +627,7 @@ class CourseModel {
 			'posts_per_page' => -1,
 			'offset'         => 0,
 			'post_status'    => 'publish',
-			'meta_query' => array(
+			'meta_query'     => array(
 				'relation' => 'AND',
 				array(
 					'key'     => Course::COURSE_PRICE_TYPE_META,
