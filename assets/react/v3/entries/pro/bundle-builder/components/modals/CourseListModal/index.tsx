@@ -5,20 +5,25 @@ import CourseListTable from './CourseListTable';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  onAddCourse?: (course: Course) => void;
+  onAddCourses?: (course: Course[]) => void;
+  selectedCourseIds: number[];
 }
 
-function CourseListModal({ title, closeModal, actions, onAddCourse }: CourseListModalProps) {
-  function handleSelect(item: Course) {
-    if (onAddCourse) {
-      onAddCourse(item);
+function CourseListModal({ title, closeModal, actions, onAddCourses, selectedCourseIds }: CourseListModalProps) {
+  const handleSelect = (items: Course[]) => {
+    if (onAddCourses) {
+      onAddCourses(items);
     }
     closeModal({ action: 'CONFIRM' });
-  }
+  };
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={720}>
-      <CourseListTable onSelectClick={handleSelect} />
+      <CourseListTable
+        onAdd={handleSelect}
+        onCancel={() => closeModal({ action: 'CLOSE' })}
+        selectedCourseIds={selectedCourseIds}
+      />
     </BasicModalWrapper>
   );
 }

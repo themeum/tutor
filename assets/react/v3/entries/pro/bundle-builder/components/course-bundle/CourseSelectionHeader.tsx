@@ -11,10 +11,11 @@ import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 
 interface CourseSelectionHeaderProps {
-  onAddCourses: (course: Course) => void;
+  onAddCourses: (course: Course[]) => void;
+  selectedCourseIds: number[];
 }
 
-const CourseSelectionHeader = ({ onAddCourses }: CourseSelectionHeaderProps) => {
+const CourseSelectionHeader = ({ onAddCourses, selectedCourseIds }: CourseSelectionHeaderProps) => {
   const { showModal } = useModal();
 
   return (
@@ -42,9 +43,8 @@ const CourseSelectionHeader = ({ onAddCourses }: CourseSelectionHeaderProps) => 
             component: CourseListModal,
             props: {
               title: __('Add Courses', 'tutor'),
-              onAddCourse: (course) => {
-                onAddCourses(course);
-              },
+              onAddCourses: onAddCourses,
+              selectedCourseIds: selectedCourseIds,
             },
           });
         }}

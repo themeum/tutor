@@ -16,9 +16,10 @@ import CourseSelectionHeader from '@BundleBuilderComponents/course-bundle/Course
 import SelectedCourseList from '@BundleBuilderComponents/course-bundle/SelectedCourseList';
 import SelectionOverview from '@BundleBuilderComponents/course-bundle/SelectionOverview';
 import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
-import { type BundleFormData } from '@BundleBuilderServices/bundle';
+import { type BundleFormData, type Course } from '@BundleBuilderServices/bundle';
 
 import bundleEmptyState from '@Images/bundle-empty-state.webp';
+import { useMemo } from 'react';
 import { priceWithOutCurrencySymbol } from '../../utils/utils';
 
 const CourseSelection = () => {
@@ -32,10 +33,70 @@ const CourseSelection = () => {
   } = useFieldArray({
     control: form.control,
     name: 'courses',
+    keyName: '_id',
   });
 
   const bundlePrice = priceWithOutCurrencySymbol(form.watch('bundle_price'));
   const bundleSalePrice = priceWithOutCurrencySymbol(form.watch('bundle_sale_price'));
+  const selectedCourseIds = useMemo(() => selectedCourses.map((course) => course.id), [selectedCourses]);
+
+  const handleAddCourses = (courses: Course[]) => {
+    for (const course of courses) {
+      addCourse(course);
+    }
+
+    const containsSalePriceCourse = courses.some((course) => course.sale_price);
+
+    form.setValue(
+      'bundle_price',
+      String(
+        bundlePrice +
+          courses.reduce((totalPrice, course) => totalPrice + priceWithOutCurrencySymbol(course.regular_price), 0),
+      ),
+      {
+        shouldDirty: true,
+      },
+    );
+
+    form.setValue(
+      'bundle_sale_price',
+      containsSalePriceCourse
+        ? String(
+            bundleSalePrice +
+              courses.reduce(
+                (totalSalePrice, course) =>
+                  totalSalePrice + priceWithOutCurrencySymbol(course.sale_price || course.regular_price),
+                0,
+              ),
+          )
+        : '',
+      {
+        shouldDirty: true,
+      },
+    );
+  };
+
+  const handleRemoveCourse = (index: number) => {
+    removeCourse(index);
+    const updatedCourses = selectedCourses.filter((_, i) => i !== index);
+    const atOneHasSalePrice = updatedCourses.some((course) => course.sale_price);
+
+    const removedCourse = selectedCourses[index];
+    form.setValue('bundle_price', String(bundlePrice - priceWithOutCurrencySymbol(removedCourse.regular_price)), {
+      shouldDirty: true,
+    });
+
+    form.setValue(
+      'bundle_sale_price',
+      atOneHasSalePrice
+        ? String(bundleSalePrice - priceWithOutCurrencySymbol(removedCourse.sale_price || removedCourse.regular_price))
+        : '',
+      {
+        shouldValidate: true,
+        shouldDirty: true,
+      },
+    );
+  };
 
   return (
     <div css={styles.wrapper}>
@@ -57,9 +118,8 @@ const CourseSelection = () => {
                     component: CourseListModal,
                     props: {
                       title: __('Add Courses', 'tutor'),
-                      onAddCourse: (course) => {
-                        addCourse(course);
-                      },
+                      onAddCourses: handleAddCourses,
+                      selectedCourseIds: selectedCourseIds,
                     },
                   });
                 }}
@@ -69,59 +129,9 @@ const CourseSelection = () => {
             </div>
           }
         >
-          <CourseSelectionHeader
-            onAddCourses={(course) => {
-              addCourse(course);
+          <CourseSelectionHeader onAddCourses={handleAddCourses} selectedCourseIds={selectedCourseIds} />
 
-              form.setValue('bundle_price', String(bundlePrice + priceWithOutCurrencySymbol(course.regular_price)), {
-                shouldValidate: true,
-                shouldDirty: true,
-              });
-
-              form.setValue(
-                'bundle_sale_price',
-                String(bundleSalePrice + priceWithOutCurrencySymbol(course.sale_price || '0')),
-                {
-                  shouldValidate: true,
-                  shouldDirty: true,
-                },
-              );
-            }}
-          />
-
-          <SelectedCourseList
-            courses={selectedCourses}
-            onRemove={(index) => {
-              removeCourse(index);
-              const updatedCourses = selectedCourses.filter((_, i) => i !== index);
-              const atOneHasSalePrice = updatedCourses.some((course) => course.sale_price);
-
-              const removedCourse = selectedCourses[index];
-              form.setValue(
-                'bundle_price',
-                String(bundlePrice - priceWithOutCurrencySymbol(removedCourse.regular_price)),
-                {
-                  shouldValidate: true,
-                  shouldDirty: true,
-                },
-              );
-
-              form.setValue(
-                'bundle_sale_price',
-                atOneHasSalePrice
-                  ? String(
-                      bundleSalePrice -
-                        priceWithOutCurrencySymbol(removedCourse.sale_price || removedCourse.regular_price),
-                    )
-                  : '',
-                {
-                  shouldValidate: true,
-                  shouldDirty: true,
-                },
-              );
-            }}
-            onSort={moveCourse}
-          />
+          <SelectedCourseList courses={selectedCourses} onRemove={handleRemoveCourse} onSort={moveCourse} />
 
           <SelectionOverview />
         </Show>

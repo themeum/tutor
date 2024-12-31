@@ -6,6 +6,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import LoadingSpinner from '@Atoms/LoadingSpinner';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 import ConfirmationPopover from '@Molecules/ConfirmationPopover';
@@ -20,12 +21,9 @@ import { tutorConfig } from '@Config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import {
-  useDeleteCourseSubscriptionMutation,
-  useDuplicateCourseSubscriptionMutation,
-} from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
+import { useDeleteCourseSubscriptionMutation, useDuplicateCourseSubscriptionMutation } from '@Services/subscription';
 
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
@@ -33,10 +31,9 @@ import { isDefined } from '@Utils/types';
 import { noop } from '@Utils/util';
 import { requiredRule } from '@Utils/validation';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
-import type { ID } from '@CourseBuilderServices/curriculum';
-import { OfferSalePrice } from './OfferSalePrice';
+import type { SubscriptionFormDataWithSaved } from '@Components/modals/SubscriptionModal';
+import { OfferSalePrice } from '@Components/subscription/OfferSalePrice';
+import type { ID } from '@Utils/types';
 
 interface SubscriptionItemProps {
   id: ID;
