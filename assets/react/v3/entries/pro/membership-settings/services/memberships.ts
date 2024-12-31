@@ -9,13 +9,20 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { type Feature } from '../components/fields/FormFeatureItem';
 
+export interface Category {
+  id: number;
+  title: string;
+  image: string;
+  total_courses: string;
+}
+
 export interface MembershipPlan {
   id: string;
   is_enabled: boolean;
   plan_name: string | null;
   plan_order: string;
   plan_type: 'full_site' | 'category';
-  categories: number[];
+  categories: Category[];
   payment_type: string;
   short_description: string | null;
   description: string | null;
@@ -42,7 +49,7 @@ export interface MembershipFormData {
   plan_type: 'full_site' | 'category';
   short_description: string;
   features: Feature[];
-  categories: number[];
+  categories: Category[];
   recurring_value: string;
   recurring_interval: string;
   recurring_limit: string;
@@ -149,7 +156,7 @@ export const convertFormDataToPayload = (formData: MembershipFormData): Membersh
     short_description: formData.short_description,
     description: JSON.stringify(formData.features),
     plan_type: formData.plan_type,
-    ...(formData.plan_type === 'category' && { cat_ids: formData.categories }),
+    ...(formData.plan_type === 'category' && { cat_ids: formData.categories.map((item) => item.id) }),
     regular_price: formData.regular_price,
     recurring_value: formData.recurring_value,
     recurring_interval: formData.recurring_interval,

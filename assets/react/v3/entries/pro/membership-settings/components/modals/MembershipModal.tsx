@@ -5,7 +5,7 @@ import { Controller, FormProvider } from 'react-hook-form';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import type { ModalProps } from '@Components/modals/Modal';
+import { type ModalProps } from '@Components/modals/Modal';
 import ModalWrapper from '@Components/modals/ModalWrapper';
 
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
@@ -34,6 +34,7 @@ import {
 } from '../../services/memberships';
 import { useEffect } from 'react';
 import FormRadioGroup from '@/v3/shared/components/fields/FormRadioGroup';
+import Categories from '../Categories';
 const { tutor_currency } = tutorConfig;
 
 interface MembershipModalProps extends ModalProps {
@@ -259,13 +260,7 @@ export default function MembershipModal({ title, subtitle, icon, plan, closeModa
             />
 
             <Show when={planType === 'category'}>
-              <Controller
-                control={form.control}
-                name={`categories`}
-                render={(controllerProps) => (
-                  <FormSelectInput {...controllerProps} label={__('Select Categories', 'tutor')} options={[]} />
-                )}
-              />
+              <Categories form={form} />
             </Show>
 
             <IconsAndFeatures />

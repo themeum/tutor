@@ -1,5 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import { HashRouter } from 'react-router-dom';
 
 import ErrorBoundary from '@Components/ErrorBoundary';
 import App from './components/App';
@@ -9,9 +10,11 @@ if (element) {
   const root = createRoot(element as HTMLElement);
   root.render(
     <React.StrictMode>
-      <ErrorBoundary>
-        <App />
-      </ErrorBoundary>
+      <HashRouter>
+        <ErrorBoundary>
+          <App />
+        </ErrorBoundary>
+      </HashRouter>
     </React.StrictMode>,
   );
 } else {

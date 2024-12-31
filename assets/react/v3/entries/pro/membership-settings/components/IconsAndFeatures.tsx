@@ -6,7 +6,6 @@ import For from '@/v3/shared/controls/For';
 import Show from '@/v3/shared/controls/Show';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { featureIcons } from '../config/constants';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 import FormFeatureItem from './fields/FormFeatureItem';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
@@ -32,10 +31,7 @@ export default function IconsAndFeatures() {
     <div css={styles.wrapper}>
       <div css={styles.header}>
         <label>{__('Features', 'tutor')}</label>
-        <Button
-          variant="text"
-          onClick={() => append({ id: nanoid(), icon: featureIcons.tick_circle_fill, content: '' })}
-        >
+        <Button variant="text" onClick={() => append({ id: nanoid(), icon: 'tick_circle_fill', content: '' })}>
           <SVGIcon name="plus" width={24} height={24} />
         </Button>
       </div>
