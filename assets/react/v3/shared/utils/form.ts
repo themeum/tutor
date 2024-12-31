@@ -119,6 +119,8 @@ export const submitHandler = <T extends AnyObject>(
   };
 };
 
+// @TODO: need to properly test this function before merging
+// if this comment is still here, it means this function is not tested
 export const convertToFormData = (values: AnyObject, method: Method) => {
   const formData = new FormData();
 
