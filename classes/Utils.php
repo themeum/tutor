@@ -6722,7 +6722,7 @@ class Utils {
 	 */
 	public function get_course_categories( $parent = 0, $custom_args = array() ) {
 		$default_args = array(
-			'taxonomy'   => 'course-category',
+			'taxonomy'   => CourseModel::COURSE_CATEGORY,
 			'hide_empty' => false,
 		);
 
@@ -6790,7 +6790,7 @@ class Utils {
 		$args = apply_filters(
 			'tutor_get_course_categories_terms_args',
 			array(
-				'taxonomy'   => 'course-category',
+				'taxonomy'   => CourseModel::COURSE_CATEGORY,
 				'parent'     => $parent_id,
 				'hide_empty' => false,
 			)

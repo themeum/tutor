@@ -48,7 +48,7 @@ if ( isset( $data ) ) : ?>
 				<?php
 				$courses    = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 				$terms_arg  = array(
-					'taxonomy' => 'course-category',
+					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'orderby'  => 'term_id',
 					'order'    => 'DESC',
 				);

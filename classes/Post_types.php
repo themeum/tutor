@@ -11,6 +11,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -120,7 +122,7 @@ class Post_types {
 			'has_archive'        => true,
 			'hierarchical'       => false,
 			'menu_position'      => null,
-			'taxonomies'         => array( 'course-category', 'course-tag' ),
+			'taxonomies'         => array( CourseModel::COURSE_CATEGORY, CourseModel::COURSE_TAG ),
 			'supports'           => array( 'title', 'editor', 'thumbnail', 'excerpt', 'author' ),
 			'show_in_rest'       => true,
 

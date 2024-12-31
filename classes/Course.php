@@ -424,7 +424,7 @@ class Course extends Tutor_Base {
 			$category_names = array();
 
 			foreach ( $params['course_categories'] as $category_id ) {
-				$term = get_term( $category_id, 'course-category' );
+				$term = get_term( $category_id, CourseModel::COURSE_CATEGORY );
 
 				if ( ! is_wp_error( $term ) && $term ) {
 					$category_names[] = $term->name;
@@ -432,9 +432,9 @@ class Course extends Tutor_Base {
 			}
 
 			// Set category names on the post.
-			wp_set_object_terms( $post_id, $category_names, 'course-category' );
+			wp_set_object_terms( $post_id, $category_names, CourseModel::COURSE_CATEGORY );
 		} else {
-			wp_set_object_terms( $post_id, array(), 'course-category' );
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_CATEGORY );
 		}
 
 		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
@@ -1194,7 +1194,7 @@ class Course extends Tutor_Base {
 			'editor_used'              => tutor_utils()->get_editor_used( $course_id ),
 			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
-			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
+			'course_categories'        => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
 			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
 			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
 			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
