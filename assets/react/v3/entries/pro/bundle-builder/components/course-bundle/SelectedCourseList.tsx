@@ -1,5 +1,5 @@
 import {
-  closestCorners,
+  closestCenter,
   DndContext,
   DragOverlay,
   KeyboardSensor,
@@ -44,10 +44,11 @@ const SelectedCourseList = ({ courses, onRemove, onSort }: SelectedCourseListPro
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
   return (
     <DndContext
       sensors={sensors}
-      collisionDetection={closestCorners}
+      collisionDetection={closestCenter}
       measuring={droppableMeasuringStrategy}
       modifiers={[restrictToWindowEdges]}
       onDragStart={(event) => {
