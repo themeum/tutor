@@ -1,4 +1,4 @@
-import { type MembershipSettings, type MembershipPlan } from '../services/memberships';
+import { type MembershipSettings, type MembershipPlan, useDeleteMembershipPlanMutation } from '../services/memberships';
 import MembershipModal from './modals/MembershipModal';
 import { __ } from '@wordpress/i18n';
 import SVGIcon from '@/v3/shared/atoms/SVGIcon';
@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { animateLayoutChanges } from '@/v3/shared/utils/dndkit';
 import { CSS } from '@dnd-kit/utilities';
+import StaticConfirmationModal from '@/v3/shared/components/modals/StaticConfirmationModal';
 
 interface MembershipItemProps {
   data: MembershipPlan;
@@ -29,6 +30,8 @@ export default function MembershipItem({ data, index }: MembershipItemProps) {
     animateLayoutChanges,
   });
 
+  const deleteMembershipPlanMutation = useDeleteMembershipPlanMutation();
+
   const style = {
     transform: CSS.Transform.toString(transform ? { ...transform, scaleX: 1, scaleY: 1 } : null),
     transition,
@@ -40,6 +43,7 @@ export default function MembershipItem({ data, index }: MembershipItemProps) {
       <button type="button" {...attributes} {...listeners} css={styles.dragButton} data-drag-button>
         <SVGIcon name="dragVertical" width={24} height={24} />
       </button>
+
       <div css={styles.content}>
         <SVGIcon name="tagOutline" width={32} height={32} />
         <div css={styles.planInfo}>
@@ -49,6 +53,7 @@ export default function MembershipItem({ data, index }: MembershipItemProps) {
           <p css={styles.planFeatures}>Renews every month | Certificate available | Length</p>
         </div>
       </div>
+
       <div css={styles.actions}>
         <Controller
           control={form.control}
@@ -83,8 +88,19 @@ export default function MembershipItem({ data, index }: MembershipItemProps) {
             text={__('Delete', 'tutor')}
             icon={<SVGIcon name="delete" width={24} height={24} />}
             isTrash={true}
-            onClick={() => {
-              console.log('Delete!');
+            onClick={async () => {
+              const { action } = await showModal({
+                component: StaticConfirmationModal,
+                props: {
+                  title: __('Are you sure to delete this?', 'tutor'),
+                  icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
+                },
+                depthIndex: 9999,
+              });
+
+              if (action === 'CONFIRM') {
+                deleteMembershipPlanMutation.mutate(data.id);
+              }
             }}
             onClosePopover={() => setIsOpen(false)}
           />

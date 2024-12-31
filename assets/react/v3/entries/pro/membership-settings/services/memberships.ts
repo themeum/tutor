@@ -207,3 +207,31 @@ export const useSaveMembershipPlanMutation = () => {
     },
   });
 };
+
+const deleteMembershipPlan = (id: string) => {
+  return wpAjaxInstance.post<string, TutorMutationResponse<string>>(endpoints.DELETE_MEMBERSHIP_PLAN, { id });
+};
+
+export const useDeleteMembershipPlanMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: deleteMembershipPlan,
+    onSuccess: (response) => {
+      if (response.status_code === 200) {
+        showToast({
+          message: response.message,
+          type: 'success',
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['MembershipSettings'],
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
+  });
+};
