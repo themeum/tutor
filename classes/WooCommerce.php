@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use WC_Order;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -113,6 +115,52 @@ class WooCommerce extends Tutor_Base {
 		add_action( 'delete_post', array( $this, 'clear_course_linked_product' ) );
 
 		add_action( 'before_woocommerce_init', array( $this, 'declare_tutor_compatibility_with_hpos' ) );
+
+		add_action( 'woocommerce_order_after_calculate_totals', array( $this, 'add_coupon_to_order' ), 10, 2 );
+	}
+
+	/**
+	 * Add manual coupon discount to wc order items.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param bool   $taxes whether to consider the taxes.
+	 * @param object $order the order object.
+	 *
+	 * @return void
+	 */
+	public function add_coupon_to_order( $taxes, $order ) {
+		global $wpdb;
+		$earning_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT earning_id FROM {$wpdb->prefix}tutor_earnings WHERE order_id=%d",
+				$order->get_id()
+			)
+		);
+
+		if ( $earning_id ) {
+			$items = $order->get_items();
+			foreach ( $items as $item ) {
+
+				$item = new \WC_Order_Item_Product( $item );
+
+				$product_id    = $item->get_product_id();
+				$if_has_course = tutor_utils()->product_belongs_with_course( $product_id );
+				if ( $if_has_course ) {
+					$course_id    = $if_has_course->post_id;
+					$user_id      = get_post_field( 'post_author', $course_id );
+					$order_status = "wc-{$order->get_status()}";
+					$total_price  = $item->get_total();
+
+					list( $admin_amount, $instructor_amount ) = array_values( tutor_split_amounts( $total_price ) );
+
+					$earnings     = Earnings::get_instance();
+					$earning_data = apply_filters( 'tutor_new_earning_data', $earnings->prepare_earning_data( $total_price, $course_id, $order->get_id(), $order_status, $admin_amount, $instructor_amount ) );
+
+					$wpdb->update( $wpdb->prefix . 'tutor_earnings', $earning_data, array( 'earning_id' => $earning_id ) );
+				}
+			}
+		}
 	}
 
 	/**
