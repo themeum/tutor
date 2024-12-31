@@ -10,7 +10,6 @@
 
 namespace TUTOR;
 
-use WC_Order;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
