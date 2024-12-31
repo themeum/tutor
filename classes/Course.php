@@ -441,7 +441,7 @@ class Course extends Tutor_Base {
 			$tag_names = array();
 
 			foreach ( $params['course_tags'] as $tag_id ) {
-				$term = get_term( $tag_id, 'course-tag' );
+				$term = get_term( $tag_id, CourseModel::COURSE_TAG );
 
 				if ( ! is_wp_error( $term ) && $term ) {
 					$tag_names[] = $term->name;
@@ -449,9 +449,9 @@ class Course extends Tutor_Base {
 			}
 
 			// Set tag names on the post.
-			wp_set_object_terms( $post_id, $tag_names, 'course-tag' );
+			wp_set_object_terms( $post_id, $tag_names, CourseModel::COURSE_TAG );
 		} else {
-			wp_set_object_terms( $post_id, array(), 'course-tag' );
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_TAG );
 		}
 	}
 
@@ -1195,7 +1195,7 @@ class Course extends Tutor_Base {
 			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
 			'course_categories'        => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
-			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
+			'course_tags'              => wp_get_post_terms( $course_id, CourseModel::COURSE_TAG ),
 			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
 			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
 

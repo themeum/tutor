@@ -365,7 +365,7 @@ class Admin {
 		if ( CourseModel::COURSE_CATEGORY === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type;
 		}
-		if ( 'course-tag' === $taxonomy ) {
+		if ( CourseModel::COURSE_TAG === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type;
 		}
 

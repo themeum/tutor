@@ -6761,7 +6761,7 @@ class Utils {
 		$args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
-				'taxonomy'   => 'course-tag',
+				'taxonomy'   => CourseModel::COURSE_TAG,
 				'hide_empty' => false,
 			)
 		);
