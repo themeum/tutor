@@ -24,8 +24,6 @@ export default function MembershipList({ onNewMembershipClick }: MembershipListP
     keyName: '_id',
   });
 
-  console.log(fields);
-
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {

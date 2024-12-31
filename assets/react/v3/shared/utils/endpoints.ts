@@ -106,6 +106,7 @@ const endpoints = {
   // MEMBERSHIP
   GET_MEMBERSHIP_PLANS: 'tutor_membership_plans',
   SAVE_MEMBERSHIP_PLAN: 'tutor_membership_plan_save',
+  DUPLICATE_MEMBERSHIP_PLAN: 'tutor_membership_plan_duplicate',
   DELETE_MEMBERSHIP_PLAN: 'tutor_membership_plan_delete',
 };
 

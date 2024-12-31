@@ -49,7 +49,6 @@ export default function MembershipModal({ title, subtitle, icon, plan, closeModa
   const saveMembershipPlanMutation = useSaveMembershipPlanMutation();
 
   useEffect(() => {
-    console.log({ plan });
     if (plan) {
       form.reset(convertPlanToFormData(plan));
     }

@@ -208,6 +208,34 @@ export const useSaveMembershipPlanMutation = () => {
   });
 };
 
+const duplicateMembershipPlan = (id: string) => {
+  return wpAjaxInstance.post<string, TutorMutationResponse<string>>(endpoints.DUPLICATE_MEMBERSHIP_PLAN, { id });
+};
+
+export const useDuplicateMembershipPlanMutation = () => {
+  const queryClient = useQueryClient();
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: duplicateMembershipPlan,
+    onSuccess: (response) => {
+      if (response.status_code === 201) {
+        showToast({
+          message: response.message,
+          type: 'success',
+        });
+
+        queryClient.invalidateQueries({
+          queryKey: ['MembershipSettings'],
+        });
+      }
+    },
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
+  });
+};
+
 const deleteMembershipPlan = (id: string) => {
   return wpAjaxInstance.post<string, TutorMutationResponse<string>>(endpoints.DELETE_MEMBERSHIP_PLAN, { id });
 };
