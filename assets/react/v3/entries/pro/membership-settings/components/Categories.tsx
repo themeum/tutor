@@ -1,6 +1,5 @@
 import Show from '@/v3/shared/controls/Show';
 import { type MembershipFormData } from '../services/memberships';
-import { type FormWithGlobalErrorType } from '@/v3/shared/hooks/useFormWithGlobalError';
 import For from '@/v3/shared/controls/For';
 import CategoryItem from './CategoryItem';
 import { __, sprintf } from '@wordpress/i18n';
@@ -10,9 +9,10 @@ import Button from '@/v3/shared/atoms/Button';
 import CourseCategorySelectModal from '@/v3/shared/components/modals/CourseCategorySelectModal';
 import { css } from '@emotion/react';
 import { borderRadius, colorTokens } from '@/v3/shared/config/styles';
+import { type UseFormReturn } from 'react-hook-form';
 
 interface CategoriesProps {
-  form: FormWithGlobalErrorType<MembershipFormData>;
+  form: UseFormReturn<MembershipFormData>;
 }
 
 export default function Categories({ form }: CategoriesProps) {
