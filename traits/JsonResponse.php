@@ -38,6 +38,17 @@ trait JsonResponse {
 	}
 
 	/**
+	 * JSON response for bad request
+	 *
+	 * @param string $message message.
+	 *
+	 * @return void
+	 */
+	public function response_bad_request( string $message = null ) {
+		$this->json_response( $message ?? __( 'Bad request', 'tutor' ), null, 400 );
+	}
+
+	/**
 	 * Response JSON success message.
 	 *
 	 * @param string $message success message.

@@ -197,7 +197,8 @@ const HeaderActions = () => {
     } else if (
       !courseId ||
       postStatus === 'pending' ||
-      (postStatus === 'draft' && !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)))
+      (postStatus === 'draft' &&
+        (!isScheduleEnabled || !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`))))
     ) {
       text = __('Publish', 'tutor');
       action = 'publish';
