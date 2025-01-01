@@ -15,11 +15,11 @@ import { styleUtils } from '@Utils/style-utils';
 import CourseSelectionHeader from '@BundleBuilderComponents/course-bundle/CourseSelectionHeader';
 import SelectedCourseList from '@BundleBuilderComponents/course-bundle/SelectedCourseList';
 import SelectionOverview from '@BundleBuilderComponents/course-bundle/SelectionOverview';
-import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
-import { type BundleFormData, type Course } from '@BundleBuilderServices/bundle';
+import { type BundleFormData } from '@BundleBuilderServices/bundle';
 
+import CourseCategorySelectModal from '@/v3/shared/components/modals/CourseCategorySelectModal';
 import bundleEmptyState from '@Images/bundle-empty-state.webp';
-import { useMemo } from 'react';
+import { useEffect } from 'react';
 import { priceWithOutCurrencySymbol } from '../../utils/utils';
 
 const CourseSelection = () => {
@@ -27,7 +27,6 @@ const CourseSelection = () => {
   const { showModal } = useModal();
   const {
     fields: selectedCourses,
-    append: addCourse,
     remove: removeCourse,
     move: moveCourse,
   } = useFieldArray({
@@ -38,43 +37,6 @@ const CourseSelection = () => {
 
   const bundlePrice = priceWithOutCurrencySymbol(form.watch('bundle_price'));
   const bundleSalePrice = priceWithOutCurrencySymbol(form.watch('bundle_sale_price'));
-  const selectedCourseIds = useMemo(() => selectedCourses.map((course) => course.id), [selectedCourses]);
-
-  const handleAddCourses = (courses: Course[]) => {
-    for (const course of courses) {
-      addCourse(course);
-    }
-
-    const containsSalePriceCourse = courses.some((course) => course.sale_price);
-
-    form.setValue(
-      'bundle_price',
-      String(
-        bundlePrice +
-          courses.reduce((totalPrice, course) => totalPrice + priceWithOutCurrencySymbol(course.regular_price), 0),
-      ),
-      {
-        shouldDirty: true,
-      },
-    );
-
-    form.setValue(
-      'bundle_sale_price',
-      containsSalePriceCourse
-        ? String(
-            bundleSalePrice +
-              courses.reduce(
-                (totalSalePrice, course) =>
-                  totalSalePrice + priceWithOutCurrencySymbol(course.sale_price || course.regular_price),
-                0,
-              ),
-          )
-        : '',
-      {
-        shouldDirty: true,
-      },
-    );
-  };
 
   const handleRemoveCourse = (index: number) => {
     removeCourse(index);
@@ -98,6 +60,49 @@ const CourseSelection = () => {
     );
   };
 
+  useEffect(() => {
+    if (selectedCourses.length === 0) {
+      form.setValue('bundle_price', '0', {
+        shouldDirty: true,
+      });
+      form.setValue('bundle_sale_price', '', {
+        shouldDirty: true,
+      });
+    }
+
+    const containsSalePriceCourse = selectedCourses.some((course) => course.sale_price);
+
+    form.setValue(
+      'bundle_price',
+      String(
+        selectedCourses.reduce(
+          (totalPrice, course) => totalPrice + priceWithOutCurrencySymbol(course.regular_price),
+          0,
+        ),
+      ),
+      {
+        shouldDirty: true,
+      },
+    );
+
+    form.setValue(
+      'bundle_sale_price',
+      containsSalePriceCourse
+        ? String(
+            selectedCourses.reduce(
+              (totalSalePrice, course) =>
+                totalSalePrice + priceWithOutCurrencySymbol(course.sale_price || course.regular_price),
+              0,
+            ),
+          )
+        : '',
+      {
+        shouldDirty: true,
+      },
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedCourses.length]);
+
   return (
     <div css={styles.wrapper}>
       <label css={typography.caption()}>{__('Courses', 'tutor')}</label>
@@ -115,11 +120,11 @@ const CourseSelection = () => {
                 css={styles.addCourseButton}
                 onClick={() => {
                   showModal({
-                    component: CourseListModal,
+                    component: CourseCategorySelectModal,
                     props: {
                       title: __('Add Courses', 'tutor'),
-                      onAddCourses: handleAddCourses,
-                      selectedCourseIds: selectedCourseIds,
+                      form,
+                      type: 'courses',
                     },
                   });
                 }}
@@ -129,7 +134,7 @@ const CourseSelection = () => {
             </div>
           }
         >
-          <CourseSelectionHeader onAddCourses={handleAddCourses} selectedCourseIds={selectedCourseIds} />
+          <CourseSelectionHeader />
 
           <SelectedCourseList courses={selectedCourses} onRemove={handleRemoveCourse} onSort={moveCourse} />
 

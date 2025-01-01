@@ -4,19 +4,16 @@ import { __, sprintf } from '@wordpress/i18n';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
-import { type Course } from '@BundleBuilderServices/bundle';
+import CourseCategorySelectModal from '@/v3/shared/components/modals/CourseCategorySelectModal';
+import { type BundleFormData } from '@BundleBuilderServices/bundle';
 import { useModal } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import { useFormContext } from 'react-hook-form';
 
-interface CourseSelectionHeaderProps {
-  onAddCourses: (course: Course[]) => void;
-  selectedCourseIds: number[];
-}
-
-const CourseSelectionHeader = ({ onAddCourses, selectedCourseIds }: CourseSelectionHeaderProps) => {
+const CourseSelectionHeader = () => {
   const { showModal } = useModal();
+  const form = useFormContext<BundleFormData>();
 
   return (
     <div css={styles.wrapper}>
@@ -40,11 +37,11 @@ const CourseSelectionHeader = ({ onAddCourses, selectedCourseIds }: CourseSelect
         buttonCss={styles.addCourseButton}
         onClick={() => {
           showModal({
-            component: CourseListModal,
+            component: CourseCategorySelectModal,
             props: {
               title: __('Add Courses', 'tutor'),
-              onAddCourses: onAddCourses,
-              selectedCourseIds: selectedCourseIds,
+              form,
+              type: 'courses',
             },
           });
         }}
