@@ -73,8 +73,7 @@ export default function MembershipItem({ data, index }: MembershipItemProps) {
       </button>
 
       <div css={styles.content}>
-        {/* @TODO: The icon will change */}
-        <SVGIcon name="tagOutline" width={32} height={32} />
+        <SVGIcon name="priceTag" width={32} height={32} />
         <div css={styles.planInfo}>
           <h5 css={styles.planTitle}>
             <strong>{data.plan_name}</strong>
@@ -213,6 +212,10 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[12]};
+
+    svg {
+      color: ${colorTokens.icon.default};
+    }
   `,
   planInfo: css`
     display: flex;
