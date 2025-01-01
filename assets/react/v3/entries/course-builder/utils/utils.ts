@@ -182,12 +182,17 @@ export const determinePostStatus = (postStatus: PostStatus, postVisibility: 'pri
   return postStatus;
 };
 
-export const convertToSlug = (value: string) => {
+export const convertToSlug = (value: string): string => {
+  const allowedRangesRegex =
+    /[a-z0-9\s-]|[\u00A0-\u00FF]|[\u0100-\u017F]|[\u0180-\u024F]|[\u0370-\u03FF]|[\u0400-\u04FF]|[\u0980-\u09FF]/gi;
+
   return value
+    .normalize('NFKD') // Normalize accented characters into base forms + diacritics
+    .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
+    .replace(allowedRangesRegex, '') // Retain letters and combining marks
+    .replace(/-+/g, '-') // Replace multiple dashes with a single one
+    .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
 };
 
 export const getIdWithoutPrefix = (prefix: string, id: ID) => {
