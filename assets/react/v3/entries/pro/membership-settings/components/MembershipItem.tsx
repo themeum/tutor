@@ -117,7 +117,7 @@ export default function MembershipItem({ data, index }: MembershipItemProps) {
       <div css={styles.actions}>
         <Controller
           control={form.control}
-          name={`plans.${index}.is_enabled`}
+          name={`plans.${index}.is_enabled` as 'plans.0.is_enabled'}
           render={(controllerProps) => <FormSwitch {...controllerProps} />}
         />
         <ThreeDots
