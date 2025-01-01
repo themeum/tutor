@@ -999,6 +999,18 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		/**
+		 * Restriction added for instructors to change author
+		 *
+		 * @since 3.2.0
+		 */
+		$course                        = get_post( $course_id );
+		$is_modified_course_author     = $course->post_author !== $params['post_author'];
+		$can_instructors_change_author = (bool) tutor_utils()->get_option( 'instructor_can_change_author' );
+		if ( $is_modified_course_author && User::is_instructor() && ! $can_instructors_change_author ) {
+			$this->json_response( __( 'You don\'t have permission to change author.', 'tutor' ), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+		}
+
 		$params['ID'] = $course_id;
 		$update_id    = wp_update_post( $params, true );
 		if ( is_wp_error( $update_id ) ) {
