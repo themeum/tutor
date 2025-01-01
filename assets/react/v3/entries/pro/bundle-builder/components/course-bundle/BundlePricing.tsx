@@ -46,6 +46,7 @@ const BundlePricing = () => {
           render={(controllerProps) => (
             <FormInputWithContent
               {...controllerProps}
+              disabled
               label={__('Regular Price', 'tutor')}
               content={tutor_currency?.symbol || '$'}
               placeholder={__('0', 'tutor')}

@@ -119,13 +119,12 @@ export const submitHandler = <T extends AnyObject>(
   };
 };
 
-// @TODO: need to properly test this function before merging
-// if this comment is still here, it means this function is not tested
 export const convertToFormData = (values: AnyObject, method: Method) => {
   const formData = new FormData();
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const appendValue = (key: string, value: any) => {
+  for (const key of Object.keys(values)) {
+    const value = values[key];
+
     if (Array.isArray(value)) {
       value.forEach((item, index) => {
         if (isFileOrBlob(item) || isString(item)) {
@@ -133,29 +132,26 @@ export const convertToFormData = (values: AnyObject, method: Method) => {
         } else if (isBoolean(item) || isNumber(item)) {
           formData.append(`${key}[${index}]`, item.toString());
         } else if (typeof item === 'object' && item !== null) {
-          Object.entries(item).forEach(([k, v]) => {
-            appendValue(`${key}[${index}][${k}]`, v);
-          });
+          formData.append(`${key}[${index}]`, JSON.stringify(item));
         } else {
           formData.append(`${key}[${index}]`, item);
         }
       });
-    } else if (typeof value === 'object' && value !== null && !isFileOrBlob(value)) {
-      Object.entries(value).forEach(([k, v]) => {
-        appendValue(`${key}[${k}]`, v);
-      });
-    } else if (isFileOrBlob(value) || isString(value)) {
-      formData.append(key, value);
-    } else if (isBoolean(value)) {
-      formData.append(key, value.toString());
-    } else if (isNumber(value)) {
-      formData.append(key, `${value}`);
     } else {
-      formData.append(key, value);
+      if (isFileOrBlob(value) || isString(value)) {
+        formData.append(key, value);
+      } else if (isBoolean(value)) {
+        formData.append(key, value.toString());
+      } else if (isNumber(value)) {
+        formData.append(key, `${value}`);
+      } else if (typeof value === 'object' && value !== null) {
+        formData.append(key, JSON.stringify(value));
+      } else {
+        formData.append(key, value);
+      }
     }
-  };
+  }
 
-  Object.entries(values).forEach(([key, value]) => appendValue(key, value));
   formData.append('_method', method.toUpperCase());
 
   return formData;
