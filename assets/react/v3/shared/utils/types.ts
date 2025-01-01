@@ -119,3 +119,9 @@ export interface WPResponse<T> {
 }
 
 export type ID = number | string;
+
+export interface TutorMutationResponse<T> {
+  data: T;
+  message: string;
+  status_code: number;
+}

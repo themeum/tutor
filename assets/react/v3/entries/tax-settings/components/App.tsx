@@ -1,6 +1,6 @@
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 
 import ToastProvider from '@Atoms/Toast';
 
@@ -8,7 +8,8 @@ import RTLProvider from '@Components/RTLProvider';
 import { ModalProvider } from '@Components/modals/Modal';
 
 import { createGlobalCss } from '@Utils/style-utils';
-import TaxSettingsPage from './TaxSettings';
+import { LoadingSection } from '@/v3/shared/atoms/LoadingSpinner';
+const TaxSettingsPage = lazy(() => import('./TaxSettings'));
 
 function App() {
   const [queryClient] = useState(
@@ -34,7 +35,9 @@ function App() {
         <ToastProvider position="bottom-right">
           <ModalProvider>
             <Global styles={createGlobalCss()} />
-            <TaxSettingsPage />
+            <Suspense fallback={<LoadingSection />}>
+              <TaxSettingsPage />
+            </Suspense>
           </ModalProvider>
         </ToastProvider>
       </QueryClientProvider>
