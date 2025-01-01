@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { lazy, Suspense, useState } from 'react';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { QueryParamProvider } from 'use-query-params';
@@ -10,7 +10,8 @@ import RTLProvider from '@Components/RTLProvider';
 import { ModalProvider } from '@Components/modals/Modal';
 
 import { createGlobalCss } from '@Utils/style-utils';
-import MembershipSettings from './MembershipSettings';
+import { LoadingSection } from '@/v3/shared/atoms/LoadingSpinner';
+const MembershipSettings = lazy(() => import('./MembershipSettings'));
 
 function App() {
   const [queryClient] = useState(
@@ -37,7 +38,9 @@ function App() {
           <ToastProvider position="bottom-right">
             <ModalProvider>
               <Global styles={createGlobalCss()} />
-              <MembershipSettings />
+              <Suspense fallback={<LoadingSection />}>
+                <MembershipSettings />
+              </Suspense>
             </ModalProvider>
           </ToastProvider>
         </QueryClientProvider>
