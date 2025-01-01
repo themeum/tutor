@@ -21,7 +21,7 @@ export interface Course {
 }
 
 interface GetCourseCategoryParam extends PaginatedParams {
-  type: 'specific_courses' | 'specific_bundles' | 'specific_category';
+  applies_to: 'specific_courses' | 'specific_bundles' | 'specific_category';
 }
 
 const getCourseCategoryList = (params: GetCourseCategoryParam) => {

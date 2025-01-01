@@ -24,7 +24,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
     updateQueryParams: false,
   });
   const categoryListQuery = useCourseCategoryQuery({
-    type: 'specific_category',
+    applies_to: 'specific_category',
     offset,
     limit: itemsPerPage,
     filter: pageInfo.filter,

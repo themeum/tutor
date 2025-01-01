@@ -25,7 +25,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
     updateQueryParams: false,
   });
   const courseListQuery = useCourseCategoryQuery({
-    type: type === 'courses' ? 'specific_courses' : 'specific_bundles',
+    applies_to: type === 'courses' ? 'specific_courses' : 'specific_bundles',
     offset,
     limit: itemsPerPage,
     filter: pageInfo.filter,
