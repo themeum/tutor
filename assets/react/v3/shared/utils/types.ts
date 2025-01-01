@@ -6,7 +6,7 @@ export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certi
 
 export type IconCollection = keyof typeof collection;
 
-export const localHasOwnProperty = <T extends {}>(obj: T, key: PropertyKey): key is keyof T => {
+export const localHasOwnProperty = <T extends object>(obj: T, key: PropertyKey): key is keyof T => {
   return key in obj;
 };
 
@@ -116,4 +116,10 @@ export interface WPResponse<T> {
   data: T;
   message: string;
   status_code: AxiosResponse['status'];
+}
+
+export interface TutorMutationResponse<T> {
+  data: T;
+  message: string;
+  status_code: number;
 }
