@@ -188,9 +188,11 @@ export const convertToSlug = (value: string): string => {
     .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
     .toLowerCase()
     .replace(
+      // eslint-disable-next-line no-misleading-character-class
       /[^a-z0-9\u0020-\u007F\u00A0-\u00FF\u0100-\u017F\u0180-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u0900-\u097F\u0E00-\u0E7F\u0B80-\u0BFF\u10A0-\u10FF\u0530-\u058F\u0980-\u09FF\u4E00-\u9FFF\u3000-\u303F\uAC00-\uD7AF\s-]/g,
       '',
     ) // Retain letters and combining marks
+    .replace(/\s+/g, '-') // Replace spaces with dashes
     .replace(/-+/g, '-') // Replace multiple dashes with a single one
     .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
 };
