@@ -3,7 +3,7 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 
 import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
@@ -18,7 +18,7 @@ interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   isOverlay?: boolean;
 }
 
-const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }: FormTrueFalseProps) => {
+const FormTrueFalse = ({ field, onCheckCorrectAnswer, isOverlay = false }: FormTrueFalseProps) => {
   const { activeQuestionId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
@@ -167,5 +167,11 @@ const styles = {
     css`
       box-shadow: ${shadow.drag};
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
   `,
 };

@@ -7,7 +7,7 @@ import SVGIcon from '@Atoms/SVGIcon';
 import EmptyState from '@Molecules/EmptyState';
 
 import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import For from '@Controls/For';
 import Show from '@Controls/Show';
@@ -219,7 +219,7 @@ const FormTopicPrerequisites = ({
             >
               <div css={styles.courseList}>
                 <For each={selectedOptions}>
-                  {(content, index) => (
+                  {(content) => (
                     <div
                       key={content.ID}
                       css={styles.groupItems({
@@ -498,6 +498,12 @@ const styles = {
           opacity: 1;
         }
       `}
+    }
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
   `,
   title: css`

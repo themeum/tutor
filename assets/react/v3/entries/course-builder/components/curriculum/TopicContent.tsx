@@ -26,8 +26,8 @@ import {
 } from '@CourseBuilderServices/curriculum';
 
 import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
@@ -334,6 +334,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
@@ -451,6 +453,12 @@ const styles = {
         opacity: 1;
       }
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-actions] {
+        opacity: 1;
+      }
+    }
   `,
   title: css`
     ${typography.caption()};
@@ -459,6 +467,13 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
     cursor: pointer;
+
+    span {
+      &:first-of-type {
+        ${styleUtils.text.ellipsis(2)}
+      }
+    }
+
     [data-question-count] {
       color: ${colorTokens.text.hints};
     }

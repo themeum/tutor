@@ -8,7 +8,9 @@ export const magicAIStyles = {
     grid-template-columns: 1fr 330px;
 
     ${Breakpoint.tablet} {
-      width: 90%;
+      min-width: auto;
+      grid-template-columns: 1fr;
+      width: 100%;
     }
   `,
   left: css`

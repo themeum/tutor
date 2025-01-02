@@ -12,15 +12,15 @@ import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
 import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
+  calculateQuizDataStatus,
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
-  calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
 import useWPMedia from '@Hooks/useWpMedia';
 import { animateLayoutChanges } from '@Utils/dndkit';
@@ -176,7 +176,11 @@ const FormMultipleChoiceAndOrdering = ({
           }
         }}
       >
-        <div css={styles.optionHeader}>
+        <div
+          css={styles.optionHeader({
+            isEditing,
+          })}
+        >
           <div css={styles.optionCounterAndButton}>
             <div css={styleUtils.optionCounter({ isSelected: !!Number(inputValue.is_correct), isEditing })}>
               {String.fromCharCode(65 + index)}
@@ -456,6 +460,12 @@ const styles = {
         `}
       }
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-check-button] {
+        opacity: 1;
+      }
+    }
   `,
   optionLabel: ({
     isSelected,
@@ -506,19 +516,25 @@ const styles = {
       }
     `}
 
-      ${isDragging &&
+    ${isDragging &&
     css`
       background-color: ${colorTokens.stroke.hover};
     `}
 
-      ${isOverlay &&
+    ${isOverlay &&
     css`
       box-shadow: ${shadow.drag};
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
   `,
-  optionHeader: css`
+  optionHeader: ({ isEditing = false }) => css`
     display: grid;
-    grid-template-columns: 1fr auto 1fr;
+    grid-template-columns: ${!isEditing ? '1fr auto 1fr' : '1fr'};
     align-items: center;
 
     &:focus-within {

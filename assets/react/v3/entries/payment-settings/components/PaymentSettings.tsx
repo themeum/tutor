@@ -10,7 +10,7 @@ import { useModal } from '@Components/modals/Modal';
 
 import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
 import { tutorConfig } from '@Config/config';
-import { colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
+import { Breakpoint, colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
@@ -35,15 +35,14 @@ const TaxSettingsPage = () => {
   const { reset } = form;
   const formData = form.watch();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
       form.reset(form.getValues(), { keepValues: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.formState.isDirty]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (payment_settings) {
       const methods = convertPaymentMethods(payment_settings.payment_methods, payment_gateways);
@@ -53,6 +52,7 @@ const TaxSettingsPage = () => {
         payment_methods: methods,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reset, payment_settings]);
 
   return (
@@ -199,6 +199,10 @@ const styles = {
   buttonWrapper: css`
     display: flex;
     gap: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+    }
   `,
   noPaymentMethod: css`
     ${typography.caption()};

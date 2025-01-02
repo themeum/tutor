@@ -137,7 +137,7 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 <div class="tutor-dashboard-content-inner">
 	<?php
 	$user_id           = get_current_user_id();
-	$enrolled_course   = tutor_utils()->get_enrolled_courses_by_user();
+	$enrolled_course   = tutor_utils()->get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
 	$total_students    = tutor_utils()->get_total_students_by_instructor( $user_id );
 	$my_courses        = CourseModel::get_courses_by_instructor( $user_id, CourseModel::STATUS_PUBLISH );
