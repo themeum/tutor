@@ -79,6 +79,7 @@ const styles = {
     padding: ${spacing[16]} ${spacing[20]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
     gap: ${spacing[28]};
+    background-color: ${colorTokens.background.white};
 
     [data-drag-button] {
       cursor: grab;
@@ -96,6 +97,7 @@ const styles = {
       box-shadow: ${shadow.drag};
       border-bottom: none;
       border-radius: ${borderRadius.card};
+      background-color: ${colorTokens.background.hover};
       cursor: grabbing;
     `}
 
