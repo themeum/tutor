@@ -1001,7 +1001,7 @@ class Course extends Tutor_Base {
 
 		$is_error = apply_filters( 'tutor_is_error_before_course_update', false, $params );
 		if ( is_wp_error( $is_error ) ) {
-			$this->json_response( $is_error->get_error_message(), null, HttpHelper::STATUS_INTERNAL_SERVER_ERROR );
+			$this->response_bad_request( $is_error->get_error_message() );
 		}
 
 		$params['ID'] = $course_id;
