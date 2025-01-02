@@ -999,6 +999,11 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		$is_error = apply_filters( 'tutor_is_error_before_course_update', false, $params );
+		if ( is_wp_error( $is_error ) ) {
+			$this->response_bad_request( $is_error->get_error_message() );
+		}
+
 		$params['ID'] = $course_id;
 		$update_id    = wp_update_post( $params, true );
 		if ( is_wp_error( $update_id ) ) {
@@ -1017,7 +1022,7 @@ class Course extends Tutor_Base {
 		}
 
 		$this->json_response(
-			__( 'Course update successfully', 'tutor' ),
+			__( 'Course updated successfully.', 'tutor' ),
 			$update_id,
 			HttpHelper::STATUS_OK
 		);
@@ -1308,6 +1313,8 @@ class Course extends Tutor_Base {
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
 			'instructor_can_publish_course',
+			'instructor_can_change_author',
+			'instructor_can_modify_instructors',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
