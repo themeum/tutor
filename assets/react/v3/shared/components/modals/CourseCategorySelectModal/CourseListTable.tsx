@@ -1,17 +1,19 @@
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import type { UseFormReturn } from 'react-hook-form';
+
 import Checkbox from '@Atoms/CheckBox';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
+import Paginator from '@Molecules/Paginator';
+import Table, { type Column } from '@Molecules/Table';
+
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
-import Paginator from '@Molecules/Paginator';
-import Table, { type Column } from '@Molecules/Table';
-import { css } from '@emotion/react';
+import { type Course, useCourseCategoryQuery } from '@Services/course_category';
 
 import coursePlaceholder from '@Images/course-placeholder.png';
-import { __, sprintf } from '@wordpress/i18n';
-import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
-import { type Course, useCourseCategoryQuery } from '@/v3/shared/services/course_category';
 
 interface CourseListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
