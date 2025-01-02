@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -204,7 +206,7 @@ class Shortcode {
 			if ( ! empty( $category_ids ) ) {
 				$a['tax_query'] = array(
 					array(
-						'taxonomy' => 'course-category',
+						'taxonomy' => CourseModel::COURSE_CATEGORY,
 						'field'    => 'term_id',
 						'terms'    => $category_ids,
 						'operator' => 'IN',
@@ -221,7 +223,7 @@ class Shortcode {
 			if ( ! empty( $category_names ) ) {
 				$a['tax_query'] = array(
 					array(
-						'taxonomy' => 'course-category',
+						'taxonomy' => CourseModel::COURSE_CATEGORY,
 						'field'    => 'name',
 						'terms'    => $category_names,
 						'operator' => 'IN',
@@ -346,7 +348,7 @@ class Shortcode {
 
 		if ( $show_filter ) {
 			$limit           = 8;
-			$course_taxonomy = 'course-category';
+			$course_taxonomy = CourseModel::COURSE_CATEGORY;
 			$course_cats     = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT
@@ -411,7 +413,7 @@ class Shortcode {
 		tutor_utils()->checking_nonce();
 		$term_id         = Input::post( 'term_id', 0, Input::TYPE_INT );
 		$limit           = 8;
-		$course_taxonomy = 'course-category';
+		$course_taxonomy = CourseModel::COURSE_CATEGORY;
 
 		$remaining_categories = $wpdb->get_var(
 			$wpdb->prepare(

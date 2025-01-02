@@ -13,6 +13,7 @@ namespace TUTOR;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -340,7 +341,7 @@ class Admin {
 	 */
 	public function parent_menu_active( $parent_file ) {
 		$taxonomy = Input::get( 'taxonomy' );
-		if ( 'course-category' === $taxonomy || 'course-tag' === $taxonomy ) {
+		if ( CourseModel::COURSE_CATEGORY === $taxonomy || CourseModel::COURSE_TAG === $taxonomy ) {
 			return 'tutor';
 		}
 
@@ -361,10 +362,10 @@ class Admin {
 		$taxonomy         = Input::get( 'taxonomy' );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( 'course-category' === $taxonomy ) {
+		if ( CourseModel::COURSE_CATEGORY === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type;
 		}
-		if ( 'course-tag' === $taxonomy ) {
+		if ( CourseModel::COURSE_TAG === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type;
 		}
 

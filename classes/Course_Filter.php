@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -334,7 +336,7 @@ class Course_Filter {
 	 * @return string customized term link
 	 */
 	public static function filter_course_category_term_link( string $termlink, \WP_Term $term, string $taxonomy ) {
-		if ( 'course-category' === $taxonomy ) {
+		if ( CourseModel::COURSE_CATEGORY === $taxonomy ) {
 			$termlink = add_query_arg( 'tutor-course-filter-category', $term->term_id, $termlink );
 
 		}

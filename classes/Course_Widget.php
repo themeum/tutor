@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -100,7 +102,7 @@ class Course_Widget extends \WP_Widget {
 
 			$a['tax_query'] = array(
 				array(
-					'taxonomy' => 'course-category',
+					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'field'    => 'term_id',
 					'terms'    => $category,
 					'operator' => 'IN',

@@ -653,7 +653,7 @@ class CouponController extends BaseController {
 
 			$total_arg = array(
 				'fields'     => 'ids',
-				'taxonomy'   => 'course-category',
+				'taxonomy'   => CourseModel::COURSE_CATEGORY,
 				'hide_empty' => true,
 			);
 
