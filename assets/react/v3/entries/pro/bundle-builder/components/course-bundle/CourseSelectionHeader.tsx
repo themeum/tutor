@@ -4,16 +4,34 @@ import { __, sprintf } from '@wordpress/i18n';
 import Button from '@Atoms/Button';
 import SVGIcon from '@Atoms/SVGIcon';
 
-import CourseCategorySelectModal from '@/v3/shared/components/modals/CourseCategorySelectModal';
-import { type BundleFormData } from '@BundleBuilderServices/bundle';
+import { useAddCourseToBundleMutation, type BundleFormData, type Course } from '@BundleBuilderServices/bundle';
 import { useModal } from '@Components/modals/Modal';
 import { colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import { useFormContext } from 'react-hook-form';
+import { getBundleId } from '../../utils/utils';
+import CourseListModal from '../modals/CourseListModal';
+
+const bundleId = getBundleId();
 
 const CourseSelectionHeader = () => {
   const { showModal } = useModal();
   const form = useFormContext<BundleFormData>();
+  const selectedCourses = form.watch('courses');
+
+  const addOrRemoveCourseMutation = useAddCourseToBundleMutation();
+
+  const handleAddCourse = async (course: Course) => {
+    const response = await addOrRemoveCourseMutation.mutateAsync({
+      ID: bundleId,
+      course_id: course.id,
+      user_action: 'add_course',
+    });
+
+    if (response.data) {
+      form.setValue('courses', [...selectedCourses, course]);
+    }
+  };
 
   return (
     <div css={styles.wrapper}>
@@ -37,11 +55,14 @@ const CourseSelectionHeader = () => {
         buttonCss={styles.addCourseButton}
         onClick={() => {
           showModal({
-            component: CourseCategorySelectModal,
+            component: CourseListModal,
             props: {
               title: __('Add Courses', 'tutor'),
-              form,
-              type: 'courses',
+              onSelect: (course) => {
+                form.setValue('courses', [...selectedCourses, course]);
+                handleAddCourse(course);
+              },
+              selectedCourseIds: selectedCourses.map((course) => course.id),
             },
           });
         }}

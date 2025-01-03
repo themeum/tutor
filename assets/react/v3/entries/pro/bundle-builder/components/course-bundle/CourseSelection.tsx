@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { Box } from '@Atoms/Box';
@@ -15,12 +16,15 @@ import { styleUtils } from '@Utils/style-utils';
 import CourseSelectionHeader from '@BundleBuilderComponents/course-bundle/CourseSelectionHeader';
 import SelectedCourseList from '@BundleBuilderComponents/course-bundle/SelectedCourseList';
 import SelectionOverview from '@BundleBuilderComponents/course-bundle/SelectionOverview';
-import { type BundleFormData } from '@BundleBuilderServices/bundle';
 
-import CourseCategorySelectModal from '@/v3/shared/components/modals/CourseCategorySelectModal';
+import { LoadingSection } from '@/v3/shared/atoms/LoadingSpinner';
+import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
+import { useAddCourseToBundleMutation, type BundleFormData, type Course } from '@BundleBuilderServices/bundle';
+import { getBundleId, priceWithOutCurrencySymbol } from '@BundleBuilderUtils/utils';
 import bundleEmptyState from '@Images/bundle-empty-state.webp';
-import { useEffect } from 'react';
-import { priceWithOutCurrencySymbol } from '../../utils/utils';
+import { useIsFetching } from '@tanstack/react-query';
+
+const bundleId = getBundleId();
 
 const CourseSelection = () => {
   const form = useFormContext<BundleFormData>();
@@ -35,37 +39,68 @@ const CourseSelection = () => {
     keyName: '_id',
   });
 
-  const bundlePrice = priceWithOutCurrencySymbol(form.watch('bundle_price'));
-  const bundleSalePrice = priceWithOutCurrencySymbol(form.watch('bundle_sale_price'));
+  const addOrRemoveCourseMutation = useAddCourseToBundleMutation();
+  const isBundleDetailsFetching = useIsFetching({
+    queryKey: ['CourseBundle', bundleId],
+  });
 
-  const handleRemoveCourse = (index: number) => {
+  const bundlePrice = priceWithOutCurrencySymbol(form.watch('regular_price'));
+  const bundleSalePrice = priceWithOutCurrencySymbol(form.watch('sale_price'));
+
+  const handleAddCourse = async (course: Course) => {
+    const response = await addOrRemoveCourseMutation.mutateAsync({
+      ID: bundleId,
+      course_id: course.id,
+      user_action: 'add_course',
+    });
+
+    if (response.data) {
+      form.setValue('courses', [...selectedCourses, course]);
+    }
+  };
+
+  const handleRemoveCourse = async (index: number) => {
     removeCourse(index);
     const updatedCourses = selectedCourses.filter((_, i) => i !== index);
     const atOneHasSalePrice = updatedCourses.some((course) => course.sale_price);
 
     const removedCourse = selectedCourses[index];
-    form.setValue('bundle_price', String(bundlePrice - priceWithOutCurrencySymbol(removedCourse.regular_price)), {
-      shouldDirty: true,
+    if (!removedCourse) {
+      return;
+    }
+
+    const response = await addOrRemoveCourseMutation.mutateAsync({
+      ID: bundleId,
+      course_id: removedCourse.id,
+      user_action: 'remove_course',
     });
 
-    form.setValue(
-      'bundle_sale_price',
-      atOneHasSalePrice
-        ? String(bundleSalePrice - priceWithOutCurrencySymbol(removedCourse.sale_price || removedCourse.regular_price))
-        : '',
-      {
-        shouldValidate: true,
+    if (response.data) {
+      form.setValue('regular_price', String(bundlePrice - priceWithOutCurrencySymbol(removedCourse.regular_price)), {
         shouldDirty: true,
-      },
-    );
+      });
+
+      form.setValue(
+        'sale_price',
+        atOneHasSalePrice
+          ? String(
+              bundleSalePrice - priceWithOutCurrencySymbol(removedCourse.sale_price || removedCourse.regular_price),
+            )
+          : '',
+        {
+          shouldValidate: true,
+          shouldDirty: true,
+        },
+      );
+    }
   };
 
   useEffect(() => {
     if (selectedCourses.length === 0) {
-      form.setValue('bundle_price', '0', {
+      form.setValue('regular_price', '0', {
         shouldDirty: true,
       });
-      form.setValue('bundle_sale_price', '', {
+      form.setValue('sale_price', '', {
         shouldDirty: true,
       });
     }
@@ -73,7 +108,7 @@ const CourseSelection = () => {
     const containsSalePriceCourse = selectedCourses.some((course) => course.sale_price);
 
     form.setValue(
-      'bundle_price',
+      'regular_price',
       String(
         selectedCourses.reduce(
           (totalPrice, course) => totalPrice + priceWithOutCurrencySymbol(course.regular_price),
@@ -86,7 +121,7 @@ const CourseSelection = () => {
     );
 
     form.setValue(
-      'bundle_sale_price',
+      'sale_price',
       containsSalePriceCourse
         ? String(
             selectedCourses.reduce(
@@ -107,38 +142,40 @@ const CourseSelection = () => {
     <div css={styles.wrapper}>
       <label css={typography.caption()}>{__('Courses', 'tutor')}</label>
       <Box css={styles.boxWrapper}>
-        <Show
-          when={selectedCourses.length > 0}
-          fallback={
-            <div css={styles.emptyState}>
-              <img src={bundleEmptyState} alt={__('Empty State', 'tutor')} />
-              <p>{__('No Courses Added Yet', 'tutor')}</p>
-              <Button
-                variant="secondary"
-                isOutlined
-                icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
-                css={styles.addCourseButton}
-                onClick={() => {
-                  showModal({
-                    component: CourseCategorySelectModal,
-                    props: {
-                      title: __('Add Courses', 'tutor'),
-                      form,
-                      type: 'courses',
-                    },
-                  });
-                }}
-              >
-                {__('Add Courses', 'tutor')}
-              </Button>
-            </div>
-          }
-        >
-          <CourseSelectionHeader />
+        <Show when={!isBundleDetailsFetching} fallback={<LoadingSection />}>
+          <Show
+            when={selectedCourses.length > 0}
+            fallback={
+              <div css={styles.emptyState}>
+                <img src={bundleEmptyState} alt={__('Empty State', 'tutor')} />
+                <p>{__('No Courses Added Yet', 'tutor')}</p>
+                <Button
+                  variant="secondary"
+                  isOutlined
+                  icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
+                  css={styles.addCourseButton}
+                  onClick={() => {
+                    showModal({
+                      component: CourseListModal,
+                      props: {
+                        title: __('Add Courses', 'tutor'),
+                        onSelect: handleAddCourse,
+                        selectedCourseIds: selectedCourses.map((course) => course.id),
+                      },
+                    });
+                  }}
+                >
+                  {__('Add Courses', 'tutor')}
+                </Button>
+              </div>
+            }
+          >
+            <CourseSelectionHeader />
 
-          <SelectedCourseList courses={selectedCourses} onRemove={handleRemoveCourse} onSort={moveCourse} />
+            <SelectedCourseList courses={selectedCourses} onRemove={handleRemoveCourse} onSort={moveCourse} />
 
-          <SelectionOverview />
+            <SelectionOverview />
+          </Show>
         </Show>
       </Box>
     </div>

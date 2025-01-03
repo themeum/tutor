@@ -4,6 +4,6 @@ export const getBundleId = () => {
   return Number(bundleId);
 };
 
-export const priceWithOutCurrencySymbol = (price: string) => {
+export const priceWithOutCurrencySymbol = (price: string = '') => {
   return Number(price.replace(/[^0-9.]/g, '')) || 0;
 };

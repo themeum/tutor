@@ -6,6 +6,7 @@ import { useToast } from '@Atoms/Toast';
 import type { UserOption } from '@Components/fields/FormSelectUser';
 import type { CourseVideo } from '@Components/fields/FormVideoInput';
 
+import { type TutorCategory } from '@/v3/shared/utils/types';
 import { tutorConfig } from '@Config/config';
 import { Addons, DateFormats } from '@Config/constants';
 import type { ID } from '@CourseBuilderServices/curriculum';
@@ -277,18 +278,7 @@ export interface CourseDetailsResponse {
   page_template: string;
   post_category: unknown[];
   tags_input: unknown[];
-  course_categories: {
-    term_id: number;
-    name: string;
-    slug: string;
-    term_group: number;
-    term_taxonomy_id: number;
-    taxonomy: string;
-    description: string;
-    parent: number;
-    count: number;
-    filter: string;
-  }[];
+  course_categories: TutorCategory[];
   course_tags: {
     term_id: number;
     name: string;

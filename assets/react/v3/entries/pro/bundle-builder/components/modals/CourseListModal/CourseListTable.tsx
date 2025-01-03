@@ -1,30 +1,25 @@
-import Checkbox from '@/v3/shared/atoms/CheckBox';
 import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { type Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import coursePlaceholder from '@Images/course-placeholder.png';
 import Paginator from '@Molecules/Paginator';
 import Table, { type Column } from '@Molecules/Table';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { useState } from 'react';
+import { type Course, useCurseListQuery } from '../../../services/bundle';
 import SearchField from './SearchField';
 
 interface CourseListTableProps {
-  onAdd: (items: Course[]) => void;
-  onCancel: () => void;
-  selectedCourseIds: number[];
+  onSelectClick: (item: Course) => void;
 }
 
-const CourseListTable = ({ onAdd, onCancel, selectedCourseIds = [] }: CourseListTableProps) => {
+const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
-  const [selectedCourses, setSelectedCourses] = useState<Course[]>([]);
 
   const courseListQuery = useCurseListQuery({
     offset,
@@ -32,53 +27,7 @@ const CourseListTable = ({ onAdd, onCancel, selectedCourseIds = [] }: CourseList
     filter: pageInfo.filter,
   });
 
-  const courses = courseListQuery.data?.results;
-
   const columns: Column<Course>[] = [
-    {
-      Header: (
-        <div data-index css={styles.tableLabel}>
-          {courses?.length ? (
-            <Checkbox
-              onChange={(isChecked) => {
-                if (isChecked) {
-                  setSelectedCourses(courses?.filter((item) => !selectedCourseIds.includes(item.id)) || []);
-                } else {
-                  setSelectedCourses([]);
-                }
-              }}
-              checked={
-                selectedCourses.length ===
-                (courses?.filter((item) => !selectedCourseIds.includes(item.id)) || []).length
-              }
-              isIndeterminate={
-                selectedCourses.length > 0 &&
-                selectedCourses.length < (courses?.filter((item) => !selectedCourseIds.includes(item.id)) || []).length
-              }
-            />
-          ) : (
-            '#'
-          )}
-        </div>
-      ),
-      Cell: (item) => {
-        return (
-          <div css={typography.caption()}>
-            <Checkbox
-              onChange={(isChecked) => {
-                if (isChecked) {
-                  setSelectedCourses([...selectedCourses, item]);
-                } else {
-                  setSelectedCourses(selectedCourses.filter((course) => course.id !== item.id));
-                }
-              }}
-              checked={selectedCourseIds.includes(Number(item.id)) || selectedCourses.includes(item)}
-              disabled={selectedCourseIds.includes(Number(item.id))}
-            />
-          </div>
-        );
-      },
-    },
     {
       Header: <div css={styles.tableLabel}>{__('Name', 'tutor')}</div>,
       Cell: (item) => {
@@ -106,7 +55,12 @@ const CourseListTable = ({ onAdd, onCancel, selectedCourseIds = [] }: CourseList
       Cell: (item) => {
         return (
           <div css={styles.priceWrapper}>
-            <div css={styles.price}>
+            <div data-button>
+              <Button size="small" onClick={() => onSelectClick(item)}>
+                {__('Select', 'tutor')}
+              </Button>
+            </div>
+            <div css={styles.price} data-price>
               <Show when={item.is_purchasable} fallback={__('Free', 'tutor')}>
                 <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
                 {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
@@ -162,26 +116,6 @@ const CourseListTable = ({ onAdd, onCancel, selectedCourseIds = [] }: CourseList
           itemsPerPage={itemsPerPage}
         />
       </div>
-
-      <Show when={courseListQuery.data.results?.length}>
-        <div css={styles.footer}>
-          <Button size="small" variant="text" onClick={() => onCancel()}>
-            {__('Cancel', 'tutor')}
-          </Button>
-          <Button
-            type="submit"
-            size="small"
-            variant="primary"
-            onClick={() => {
-              onAdd(selectedCourses);
-              onCancel();
-            }}
-            disabled={!selectedCourses.length}
-          >
-            {__('Add', 'tutor')}
-          </Button>
-        </div>
-      </Show>
     </>
   );
 };
@@ -275,14 +209,5 @@ const styles = {
     display: flex;
     align-items: center;
     justify-content: center;
-  `,
-  footer: css`
-    box-shadow: ${shadow.dividerTop};
-    height: 56px;
-    display: flex;
-    align-items: center;
-    justify-content: end;
-    gap: ${spacing[16]};
-    padding-inline: ${spacing[16]};
   `,
 };

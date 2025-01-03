@@ -115,6 +115,9 @@
 			"@BundleBuilderServices/*": [
 				"assets/react/v3/entries/pro/bundle-builder/services/*"
 			],
+			"@BundleBuilderUtils/*": [
+				"assets/react/v3/entries/pro/bundle-builder/utils/*"
+			],
 		}
 	},
 	"include": [

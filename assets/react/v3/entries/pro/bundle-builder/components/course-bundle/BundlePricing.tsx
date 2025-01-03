@@ -14,15 +14,14 @@ import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
 import { getBundleId } from '../../utils/utils';
 
-const courseId = getBundleId();
+const bundleId = getBundleId();
 
 const BundlePricing = () => {
   const form = useFormContext<BundleFormData>();
   const isCourseDetailsFetching = useIsFetching({
-    queryKey: ['CourseDetails', courseId],
+    queryKey: ['CourseBundle', bundleId],
   });
 
   const { tutor_currency } = tutorConfig;
@@ -31,18 +30,8 @@ const BundlePricing = () => {
     <>
       <div css={styles.coursePriceWrapper}>
         <Controller
-          name="bundle_price"
+          name="regular_price"
           control={form.control}
-          rules={{
-            ...requiredRule(),
-            validate: (value) => {
-              if (Number(value) <= 0) {
-                return __('Price must be greater than 0', 'tutor');
-              }
-
-              return true;
-            },
-          }}
           render={(controllerProps) => (
             <FormInputWithContent
               {...controllerProps}
@@ -58,7 +47,7 @@ const BundlePricing = () => {
           )}
         />
         <Controller
-          name="bundle_sale_price"
+          name="sale_price"
           control={form.control}
           rules={{
             validate: (value) => {
@@ -66,7 +55,7 @@ const BundlePricing = () => {
                 return true;
               }
 
-              const regularPrice = form.getValues('bundle_price');
+              const regularPrice = form.getValues('regular_price');
               if (Number(value) >= Number(regularPrice)) {
                 return __('Sale price must be less than regular price', 'tutor');
               }
@@ -90,7 +79,7 @@ const BundlePricing = () => {
       </div>
 
       <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.monetize_by === 'tutor'}>
-        <SubscriptionPreview courseId={courseId} />
+        <SubscriptionPreview courseId={bundleId} />
 
         <Controller
           name="course_selling_option"

@@ -1,35 +1,34 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import SVGIcon from '@Atoms/SVGIcon';
-
+import SVGIcon from '@/v3/shared/atoms/SVGIcon';
+import Show from '@/v3/shared/controls/Show';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { type BundleFormData } from '../../services/bundle';
 
 const SelectionOverview = () => {
-  const overviewData = {
-    duration: '3',
-    quiz: 5,
-    video: 10,
-    certificate: true,
-    attachments: 2,
-  };
+  const form = useFormContext<BundleFormData>();
+  const overview = useWatch({
+    control: form.control,
+    name: 'overview',
+  });
 
   const iconMap = {
-    duration: 'clock',
-    quiz: 'questionCircle',
-    video: 'videoCamera',
-    attachments: 'download',
+    total_video_duration: 'clock',
+    total_quizzes: 'questionCircle',
+    total_video_contents: 'videoCamera',
+    total_resources: 'download',
     certificate: 'certificate',
   } as const;
 
   const contentMap = {
-    duration: __('Minutes Total Duration', 'tutor'),
-    quiz: __('Quiz Papers', 'tutor'),
-    video: __('Video Content', 'tutor'),
-    attachments: __('Downloadable Resources', 'tutor'),
+    total_video_duration: __('Minutes Total Duration', 'tutor'),
+    total_quizzes: __('Quiz Papers', 'tutor'),
+    total_video_contents: __('Video Content', 'tutor'),
+    total_resources: __('Downloadable Resources', 'tutor'),
     certificate: __('Certification of completion', 'tutor'),
   } as const;
 
@@ -37,8 +36,24 @@ const SelectionOverview = () => {
     <div css={styles.wrapper}>
       <div css={styles.title}>{__('Selection Overview', 'tutor')}</div>
       <div css={styles.overview}>
-        {Object.entries(overviewData).map(([key, value]) => (
-          <Show when={value} key={key}>
+        {Object.keys(iconMap).map((key) => {
+          const value = overview[key as keyof typeof overview];
+          return (
+            <Show when={value} key={key}>
+              <div css={styles.overviewItem}>
+                <SVGIcon name={iconMap[key as keyof typeof iconMap]} width={32} height={32} />
+                <Show when={value && typeof value !== 'boolean'}>
+                  <span>{value}</span>
+                </Show>
+                <span>{contentMap[key as keyof typeof contentMap]}</span>
+              </div>
+            </Show>
+          );
+        })}
+
+        {/* @TODO: need an efficient way */}
+        {/* {Object.entries(overview).map(([key, value]) => (
+          <Show when={isDefined(value)} key={key}>
             <div css={styles.overviewItem}>
               <SVGIcon name={iconMap[key as keyof typeof iconMap]} width={32} height={32} />
               <Show when={value && typeof value !== 'boolean'}>
@@ -47,7 +62,7 @@ const SelectionOverview = () => {
               <span>{contentMap[key as keyof typeof contentMap]}</span>
             </div>
           </Show>
-        ))}
+        ))} */}
       </div>
     </div>
   );

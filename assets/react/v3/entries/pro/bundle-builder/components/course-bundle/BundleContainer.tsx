@@ -1,4 +1,7 @@
 import { css } from '@emotion/react';
+import { useIsFetching } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
+import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
@@ -6,17 +9,14 @@ import FormEditableAlias from '@/v3/shared/components/fields/FormEditableAlias';
 import FormTextareaInput from '@/v3/shared/components/fields/FormTextareaInput';
 import FormWPEditor from '@/v3/shared/components/fields/FormWPEditor';
 import { tutorConfig } from '@/v3/shared/config/config';
+import BundleSidebar from '@BundleBuilderComponents/course-bundle/BundleSidebar';
 import CourseSelection from '@BundleBuilderComponents/course-bundle/CourseSelection';
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
+import { getBundleId } from '@BundleBuilderUtils/utils';
 import FormInput from '@Components/fields/FormInput';
 import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
 import { typography } from '@Config/typography';
-import { useIsFetching } from '@tanstack/react-query';
 import { styleUtils } from '@Utils/style-utils';
-import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
-import { getBundleId } from '../../utils/utils';
-import BundleSidebar from './BundleSidebar';
 
 const bundleId = getBundleId();
 let hasAliasChanged = false;

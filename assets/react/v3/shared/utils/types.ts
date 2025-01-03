@@ -125,3 +125,26 @@ export interface TutorMutationResponse<T> {
   message: string;
   status_code: number;
 }
+
+export interface WPUser {
+  user_id: number;
+  display_name: string;
+  user_email: string;
+  avatar_url: string;
+}
+
+export type WPPostStatus = 'publish' | 'private' | 'draft' | 'future' | 'pending' | 'trash';
+export type TutorSellingOption = 'subscription' | 'one_time' | 'both';
+
+export interface TutorCategory {
+  term_id: number;
+  name: string;
+  slug: string;
+  term_group: number;
+  term_taxonomy_id: number;
+  taxonomy: string;
+  description: string;
+  parent: number;
+  count: number;
+  filter: string;
+}

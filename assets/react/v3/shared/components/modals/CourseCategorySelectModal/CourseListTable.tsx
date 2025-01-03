@@ -12,7 +12,6 @@ import { typography } from '@Config/typography';
 import { usePaginatedTable } from '@Hooks/usePaginatedTable';
 import { type Course, useCourseCategoryQuery } from '@Services/course_category';
 
-import { type Course, useCourseCategoryQuery } from '@/v3/shared/services/course_category';
 import coursePlaceholder from '@Images/course-placeholder.png';
 import SearchField from './SearchField';
 

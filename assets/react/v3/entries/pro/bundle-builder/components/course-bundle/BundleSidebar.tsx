@@ -119,7 +119,7 @@ const BundleSidebar = () => {
       <BundlePricing />
 
       <Controller
-        name="ribbon"
+        name="ribbon_type"
         control={form.control}
         render={(controllerProps) => (
           <FormSelectInput

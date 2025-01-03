@@ -63,7 +63,7 @@ const HeaderActions = () => {
 
       const response = await saveCourseBundleMutation.mutateAsync({
         ...payload,
-        ...(bundleId ? { bundle_id: bundleId } : {}),
+        ...(bundleId ? { ID: bundleId } : {}),
         post_status: determinedPostStatus,
         ...(!data.isScheduleEnabled
           ? {
@@ -113,13 +113,13 @@ const HeaderActions = () => {
         });
       }
 
-      if (
-        isInstructor &&
-        tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
-        ['publish', 'future'].includes(determinedPostStatus)
-      ) {
-        window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
-      }
+      // if (
+      //   isInstructor &&
+      //   tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
+      //   ['publish', 'future'].includes(determinedPostStatus)
+      // ) {
+      //   window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
+      // }
 
       return;
     }
@@ -315,10 +315,7 @@ const HeaderActions = () => {
         fallback={
           <Button
             size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
-            // loading={
-            //   createCourseMutation.isPending ||
-            //   (['publish', 'future', 'pending'].includes(localPostStatus) && saveCourseBundleMutation.isPending)
-            // }
+            loading={['publish', 'future', 'pending'].includes(localPostStatus) && saveCourseBundleMutation.isPending}
             onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
           >
             {dropdownButton().text}
@@ -329,10 +326,7 @@ const HeaderActions = () => {
           text={dropdownButton().text}
           size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           variant="primary"
-          // loading={
-          //   createCourseMutation.isPending ||
-          //   (['publish', 'future', 'pending'].includes(localPostStatus) && saveCourseBundleMutation.isPending)
-          // }
+          loading={['publish', 'future', 'pending'].includes(localPostStatus) && saveCourseBundleMutation.isPending}
           onClick={form.handleSubmit((data) => handleSubmit(data, dropdownButton().action))}
           dropdownMaxWidth={
             isScheduleEnabled && isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)) ? '190px' : '164px'
