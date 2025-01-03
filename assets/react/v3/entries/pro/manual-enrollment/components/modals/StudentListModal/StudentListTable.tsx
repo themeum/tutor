@@ -56,7 +56,7 @@ const StudentListTable = ({ form }: StudentListTableProps) => {
       Header: fetchedStudents.length ? (
         <Checkbox
           onChange={toggleSelection}
-          checked={handleAllIsChecked()}
+          checked={studentListQuery.isLoading ? false : handleAllIsChecked()}
           label={__('Name', 'tutor')}
           labelCss={styles.checkboxLabel}
         />
