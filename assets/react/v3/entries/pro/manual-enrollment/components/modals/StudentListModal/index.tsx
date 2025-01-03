@@ -5,7 +5,7 @@ import { spacing } from '@Config/styles';
 import type { Enrollment } from '@EnrollmentServices/enrollment';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import StudentListTable from './StudentListTable';
 
@@ -19,14 +19,20 @@ function SelectStudentModal({ title, closeModal, actions, form }: SelectStudentM
   const _form = useFormWithGlobalError<Enrollment>({
     defaultValues: form.getValues(),
   });
+  const selectedStudents = _form.watch('students') || [];
 
   function handleApply() {
-    form.setValue('students', _form.getValues('students'), { shouldValidate: true });
+    form.setValue('students', selectedStudents, { shouldValidate: true });
     closeModal({ action: 'CONFIRM' });
   }
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
+    <BasicModalWrapper
+      onClose={() => closeModal({ action: 'CLOSE' })}
+      title={selectedStudents.length ? sprintf(__('%d Selected', 'tutor'), selectedStudents.length) : title}
+      actions={actions}
+      maxWidth={480}
+    >
       <StudentListTable form={_form} />
       <div css={styles.footer}>
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>

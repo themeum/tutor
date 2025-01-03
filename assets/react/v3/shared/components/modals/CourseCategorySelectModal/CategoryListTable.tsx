@@ -7,11 +7,11 @@ import Paginator from '@Molecules/Paginator';
 import Table, { type Column } from '@Molecules/Table';
 import { css } from '@emotion/react';
 
+import { useCourseCategoryQuery, type Category } from '@/v3/shared/services/course_category';
 import coursePlaceholder from '@Images/course-placeholder.png';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
-import { useCourseCategoryQuery, type Category } from '@/v3/shared/services/course_category';
 
 interface CategoryListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,7 +19,7 @@ interface CategoryListTableProps {
 }
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
-  const categoryList: Category[] = form.watch('categories') ?? [];
+  const selectedCategories: Category[] = form.watch('categories') ?? [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
@@ -29,22 +29,34 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
     limit: itemsPerPage,
     filter: pageInfo.filter,
   });
+  const fetchedCategories = (categoryListQuery.data?.results ?? []) as Category[];
 
   function toggleSelection(isChecked = false) {
-    form.setValue('categories', isChecked ? (categoryListQuery.data?.results as Category[]) : []);
+    const selectedCategoryIds = selectedCategories.map((category) => category.id);
+    const fetchedCategoryIds = fetchedCategories.map((category) => category.id);
+
+    if (isChecked) {
+      const newCategories = fetchedCategories.filter((category) => !selectedCategoryIds.includes(category.id));
+      form.setValue('categories', [...selectedCategories, ...newCategories]);
+      return;
+    }
+
+    const newCategories = selectedCategories.filter((category) => !fetchedCategoryIds.includes(category.id));
+    form.setValue('categories', newCategories);
   }
 
   function handleAllIsChecked() {
-    return (
-      categoryList.length === categoryListQuery.data?.results.length &&
-      categoryList?.every((item) => categoryListQuery.data?.results?.map((result) => result.id).includes(item.id))
-    );
+    return fetchedCategories.every((category) => selectedCategories.map((course) => course.id).includes(category.id));
   }
 
   const columns: Column<Category>[] = [
     {
       Header: categoryListQuery.data?.results.length ? (
-        <Checkbox onChange={toggleSelection} checked={handleAllIsChecked()} label={__('Category', 'tutor')} />
+        <Checkbox
+          onChange={toggleSelection}
+          checked={categoryListQuery.isLoading || categoryListQuery.isRefetching ? false : handleAllIsChecked()}
+          label={__('Category', 'tutor')}
+        />
       ) : (
         __('Category', 'tutor')
       ),
@@ -53,8 +65,8 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const filteredItems = categoryList.filter((category) => category.id !== item.id);
-                const isNewItem = filteredItems?.length === categoryList.length;
+                const filteredItems = selectedCategories.filter((category) => category.id !== item.id);
+                const isNewItem = filteredItems?.length === selectedCategories.length;
 
                 if (isNewItem) {
                   form.setValue('categories', [...filteredItems, item]);
@@ -62,7 +74,7 @@ const CategoryListTable = ({ form }: CategoryListTableProps) => {
                   form.setValue('categories', filteredItems);
                 }
               }}
-              checked={categoryList.map((category) => category.id).includes(item.id)}
+              checked={selectedCategories.map((category) => category.id).includes(item.id)}
             />
             <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('category item', 'tutor')} />
             <div css={styles.courseItem}>
