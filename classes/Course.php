@@ -2209,15 +2209,15 @@ class Course extends Tutor_Base {
 					update_post_meta( $product_id, '_virtual', 'yes' );
 					update_post_meta( $product_id, '_tutor_product', 'yes' );
 
-					$course_post_thumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
-					if ( $course_post_thumbnail ) {
-						set_post_thumbnail( $product_id, $course_post_thumbnail );
-					}
-
 					// Set course regular & sale price.
 					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
 					update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 				}
+			}
+
+			$course_post_thumbnail = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
+			if ( $product_id && $course_post_thumbnail ) {
+				set_post_thumbnail( $product_id, $course_post_thumbnail );
 			}
 		} elseif ( 'edd' === $monetize_by ) {
 
