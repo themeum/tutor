@@ -8,12 +8,13 @@ import FormImageInput from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 
+import For from '@/v3/shared/controls/For';
 import BundlePricing from '@BundleBuilderComponents/course-bundle/BundlePricing';
 import ScheduleOptions from '@BundleBuilderComponents/course-bundle/ScheduleOptions';
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
 import { tutorConfig } from '@Config/config';
 import { DateFormats, visibilityStatusOptions } from '@Config/constants';
-import { Breakpoint, colorTokens, headerHeight, spacing } from '@Config/styles';
+import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
@@ -131,6 +132,36 @@ const BundleSidebar = () => {
           />
         )}
       />
+
+      <div css={styles.labelWithContent}>
+        <label>{__('Categories')}</label>
+        <div css={styles.categoriesWrapper}>
+          <For each={form.getValues('categories')}>
+            {(category, index) => (
+              <div key={index} css={styles.category}>
+                {category.name}
+              </div>
+            )}
+          </For>
+        </div>
+      </div>
+
+      <div css={styles.labelWithContent}>
+        <label>{__('Instructors')}</label>
+        <div css={styles.instructorsWrapper}>
+          <For each={form.getValues('instructors')}>
+            {(instructor) => (
+              <div key={instructor.user_id} css={styles.instructor}>
+                <img src={instructor.avatar_url} alt={instructor.display_name} />
+                <div>
+                  <div data-name="instructor-name">{instructor.display_name}</div>
+                  <div data-name="instructor-email">{instructor.user_email}</div>
+                </div>
+              </div>
+            )}
+          </For>
+        </div>
+      </div>
     </div>
   );
 };
@@ -163,13 +194,60 @@ const styles = {
     color: ${colorTokens.text.hints};
   `,
   priceRadioGroup: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: center;
     gap: ${spacing[36]};
   `,
   coursePriceWrapper: css`
-    display: flex;
+    ${styleUtils.display.flex()};
     align-items: flex-start;
     gap: ${spacing[16]};
+  `,
+  labelWithContent: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[4]};
+
+    label {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+  `,
+  categoriesWrapper: css`
+    ${styleUtils.display.flex()};
+    gap: ${spacing[8]};
+  `,
+  category: css`
+    padding: ${spacing[4]} ${spacing[8]};
+    border-radius: ${borderRadius[24]};
+    background-color: ${colorTokens.surface.wordpress};
+    ${typography.small()};
+    color: ${colorTokens.text.title};
+  `,
+  instructorsWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
+  `,
+  instructor: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    gap: ${spacing[10]};
+    padding: ${spacing[8]} ${spacing[12]};
+    border-radius: ${borderRadius[4]};
+    background-color: ${colorTokens.background.white};
+
+    img {
+      width: 40px;
+      height: 40px;
+      border-radius: ${borderRadius.circle};
+    }
+
+    [data-name='instructor-name'] {
+      ${typography.caption('medium')};
+    }
+
+    [data-name='instructor-email'] {
+      ${typography.small()};
+      color: ${colorTokens.text.subdued};
+    }
   `,
 };

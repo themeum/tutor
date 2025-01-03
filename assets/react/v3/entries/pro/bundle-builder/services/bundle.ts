@@ -130,14 +130,14 @@ export const defaultCourseBundleData: BundleFormData = {
     url: '',
     title: '',
   },
-  ribbon_type: 'none',
+  ribbon_type: 'in_percentage',
   schedule_date: '',
   schedule_time: '',
   showScheduleForm: false,
   isScheduleEnabled: false,
   regular_price: '',
   sale_price: '',
-  course_selling_option: 'both',
+  course_selling_option: 'one_time',
   courses: [],
   overview: {
     total_courses: 0,
@@ -174,7 +174,7 @@ export const convertBundleToFormData = (courseBundle: Bundle): BundleFormData =>
       return 'publish';
     })(),
     thumbnail: courseBundle.thumbnail,
-    ribbon_type: courseBundle.ribbon_type,
+    ribbon_type: courseBundle.ribbon_type ?? 'in_percentage',
     isScheduleEnabled: isBefore(new Date(), new Date(courseBundle.post_date)),
     showScheduleForm: !isBefore(new Date(), new Date(courseBundle.post_date)),
     schedule_date: !isBefore(parseISO(courseBundle.post_date), new Date())
@@ -185,7 +185,7 @@ export const convertBundleToFormData = (courseBundle: Bundle): BundleFormData =>
       : '',
     regular_price: courseBundle.regular_price ?? '',
     sale_price: courseBundle.sale_price ?? '',
-    course_selling_option: courseBundle.course_selling_option ?? 'both',
+    course_selling_option: courseBundle.course_selling_option ?? 'one_time',
     courses: courseBundle.details.courses ?? [],
     overview: courseBundle.details.overview ?? defaultCourseBundleData.overview,
     categories: courseBundle.details.categories ?? [],
@@ -280,6 +280,7 @@ interface AddCourseToBundlePayload {
 const addCourseToBundle = async (payload: AddCourseToBundlePayload) => {
   return (
     wpAjaxInstance
+      // @TODO: Fix the type of TutorMutationResponse
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .post<TutorMutationResponse<any>>(endpoints.ADD_COURSE_TO_BUNDLE, payload)
       .then((response) => response.data)
