@@ -122,16 +122,16 @@ class WooCommerce extends Tutor_Base {
 
 	/**
 	 * Update woocommerce product thumbnail after course thumbnail update.
-	 * 
+	 *
 	 * @since 3.0.0
 	 *
 	 * @param int $post_id the course id.
 	 * @param int $thumbnail_id the thumbnail id.
-	 * 
+	 *
 	 * @return void
 	 */
 	public function update_course_product_thumbnail( $post_id, $thumbnail_id ) {
-		$product_id = get_post_meta( $post_id, Course::COURSE_PRODUCT_ID_META , true );
+		$product_id = get_post_meta( $post_id, Course::COURSE_PRODUCT_ID_META, true );
 		if ( $product_id ) {
 			set_post_thumbnail( $product_id, $thumbnail_id );
 		}
