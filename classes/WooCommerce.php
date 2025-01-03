@@ -116,25 +116,6 @@ class WooCommerce extends Tutor_Base {
 		add_action( 'before_woocommerce_init', array( $this, 'declare_tutor_compatibility_with_hpos' ) );
 
 		add_action( 'woocommerce_order_after_calculate_totals', array( $this, 'add_coupon_to_order' ), 10, 2 );
-
-		add_action( 'tutor_after_set_course_thumbnail', array( $this, 'update_course_product_thumbnail' ), 10, 2 );
-	}
-
-	/**
-	 * Update woocommerce product thumbnail after course thumbnail update.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @param int $post_id the course id.
-	 * @param int $thumbnail_id the thumbnail id.
-	 *
-	 * @return void
-	 */
-	public function update_course_product_thumbnail( $post_id, $thumbnail_id ) {
-		$product_id = get_post_meta( $post_id, Course::COURSE_PRODUCT_ID_META, true );
-		if ( $product_id ) {
-			set_post_thumbnail( $product_id, $thumbnail_id );
-		}
 	}
 
 	/**

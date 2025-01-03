@@ -1017,7 +1017,6 @@ class Course extends Tutor_Base {
 		$thumbnail_id = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
 		if ( $thumbnail_id ) {
 			set_post_thumbnail( $update_id, $thumbnail_id );
-			do_action( 'tutor_after_set_course_thumbnail', $update_id, $thumbnail_id );
 		} else {
 			delete_post_meta( $update_id, '_thumbnail_id' );
 		}
@@ -2210,7 +2209,7 @@ class Course extends Tutor_Base {
 					update_post_meta( $product_id, '_virtual', 'yes' );
 					update_post_meta( $product_id, '_tutor_product', 'yes' );
 
-					$course_post_thumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
+					$course_post_thumbnail = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
 					if ( $course_post_thumbnail ) {
 						set_post_thumbnail( $product_id, $course_post_thumbnail );
 					}
