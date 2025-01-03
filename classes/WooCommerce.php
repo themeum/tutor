@@ -116,7 +116,7 @@ class WooCommerce extends Tutor_Base {
 		add_action( 'before_woocommerce_init', array( $this, 'declare_tutor_compatibility_with_hpos' ) );
 
 		add_action( 'woocommerce_order_after_calculate_totals', array( $this, 'add_coupon_to_order' ), 10, 2 );
-		
+
 		add_action( 'tutor_after_set_course_thumbnail', array( $this, 'update_course_product_thumbnail' ), 10, 2 );
 	}
 
