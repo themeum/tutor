@@ -7,11 +7,11 @@ import Paginator from '@Molecules/Paginator';
 import Table, { type Column } from '@Molecules/Table';
 import { css } from '@emotion/react';
 
+import { type Course, useCourseCategoryQuery } from '@/v3/shared/services/course_category';
 import coursePlaceholder from '@Images/course-placeholder.png';
 import { __, sprintf } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
-import { type Course, useCourseCategoryQuery } from '@/v3/shared/services/course_category';
 
 interface CourseListTableProps {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,7 +20,7 @@ interface CourseListTableProps {
 }
 
 const CourseListTable = ({ type, form }: CourseListTableProps) => {
-  const courseList: Course[] = form.watch(type) || [];
+  const selectedCourses: Course[] = form.watch(type) || [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
@@ -30,16 +30,24 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
     limit: itemsPerPage,
     filter: pageInfo.filter,
   });
+  const fetchedCourses = (courseListQuery.data?.results ?? []) as Course[];
 
   function toggleSelection(isChecked = false) {
-    form.setValue(type, isChecked ? (courseListQuery.data?.results as Course[]) : []);
+    const selectedCourseIds = selectedCourses.map((course) => course.id);
+    const fetchedCourseIds = fetchedCourses.map((course) => course.id);
+
+    if (isChecked) {
+      const newCourses = fetchedCourses.filter((course) => !selectedCourseIds.includes(course.id));
+      form.setValue(type, [...selectedCourses, ...newCourses]);
+      return;
+    }
+
+    const newCourses = selectedCourses.filter((course) => !fetchedCourseIds.includes(course.id));
+    form.setValue(type, newCourses);
   }
 
   function handleAllIsChecked() {
-    return (
-      courseList.length === courseListQuery.data?.results.length &&
-      courseList?.every((item) => courseListQuery.data?.results?.map((result) => result.id).includes(item.id))
-    );
+    return fetchedCourses.every((course) => selectedCourses.map((course) => course.id).includes(course.id));
   }
 
   const columns: Column<Course>[] = [
@@ -47,7 +55,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
       Header: courseListQuery.data?.results.length ? (
         <Checkbox
           onChange={toggleSelection}
-          checked={handleAllIsChecked()}
+          checked={courseListQuery.isLoading || courseListQuery.isRefetching ? false : handleAllIsChecked()}
           label={type === 'courses' ? __('Courses', 'tutor') : __('Bundles', 'tutor')}
           labelCss={styles.checkboxLabel}
         />
@@ -59,8 +67,8 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const filteredItems = courseList.filter((course) => course.id !== item.id);
-                const isNewItem = filteredItems?.length === courseList.length;
+                const filteredItems = selectedCourses.filter((course) => course.id !== item.id);
+                const isNewItem = filteredItems?.length === selectedCourses.length;
 
                 if (isNewItem) {
                   form.setValue(type, [...filteredItems, item]);
@@ -68,7 +76,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
                   form.setValue(type, filteredItems);
                 }
               }}
-              checked={courseList.map((course) => course.id).includes(item.id)}
+              checked={selectedCourses.map((course) => course.id).includes(item.id)}
             />
             <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('course item', 'tutor')} />
             <div css={styles.courseItem}>
