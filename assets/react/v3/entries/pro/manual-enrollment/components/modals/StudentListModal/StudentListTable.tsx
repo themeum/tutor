@@ -1,3 +1,4 @@
+import { styleUtils } from '@/v3/shared/utils/style-utils';
 import Checkbox from '@Atoms/CheckBox';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
@@ -144,7 +145,7 @@ const styles = {
   `,
   tableWrapper: css`
     max-height: calc(100vh - 350px);
-    overflow: auto;
+    ${styleUtils.overflowYAuto};
   `,
   paginatorWrapper: css`
     margin: ${spacing[20]} ${spacing[16]};
