@@ -5,7 +5,7 @@ import { spacing } from '@Config/styles';
 import Show from '@Controls/Show';
 import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import CategoryListTable from './CategoryListTable';
 import CourseListTable from './CourseListTable';
@@ -22,13 +22,22 @@ function CourseCategorySelectModal({ title, closeModal, actions, form, type }: C
     defaultValues: form.getValues(),
   });
 
+  const selectedItems = _form.watch(type) || [];
+
   function handleApply() {
-    form.setValue(type, _form.getValues(type));
+    form.setValue(type, selectedItems, {
+      shouldDirty: true,
+    });
     closeModal({ action: 'CONFIRM' });
   }
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={720}>
+    <BasicModalWrapper
+      onClose={() => closeModal({ action: 'CLOSE' })}
+      title={selectedItems.length ? sprintf(__('%d Selected', 'tutor'), selectedItems.length) : title}
+      actions={actions}
+      maxWidth={720}
+    >
       <Show
         when={type === 'categories'}
         fallback={<CourseListTable form={_form} type={type === 'bundles' ? 'bundles' : 'courses'} />}

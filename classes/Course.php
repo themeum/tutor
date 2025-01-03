@@ -424,7 +424,7 @@ class Course extends Tutor_Base {
 			$category_names = array();
 
 			foreach ( $params['course_categories'] as $category_id ) {
-				$term = get_term( $category_id, 'course-category' );
+				$term = get_term( $category_id, CourseModel::COURSE_CATEGORY );
 
 				if ( ! is_wp_error( $term ) && $term ) {
 					$category_names[] = $term->name;
@@ -432,16 +432,16 @@ class Course extends Tutor_Base {
 			}
 
 			// Set category names on the post.
-			wp_set_object_terms( $post_id, $category_names, 'course-category' );
+			wp_set_object_terms( $post_id, $category_names, CourseModel::COURSE_CATEGORY );
 		} else {
-			wp_set_object_terms( $post_id, array(), 'course-category' );
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_CATEGORY );
 		}
 
 		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
 			$tag_names = array();
 
 			foreach ( $params['course_tags'] as $tag_id ) {
-				$term = get_term( $tag_id, 'course-tag' );
+				$term = get_term( $tag_id, CourseModel::COURSE_TAG );
 
 				if ( ! is_wp_error( $term ) && $term ) {
 					$tag_names[] = $term->name;
@@ -449,9 +449,9 @@ class Course extends Tutor_Base {
 			}
 
 			// Set tag names on the post.
-			wp_set_object_terms( $post_id, $tag_names, 'course-tag' );
+			wp_set_object_terms( $post_id, $tag_names, CourseModel::COURSE_TAG );
 		} else {
-			wp_set_object_terms( $post_id, array(), 'course-tag' );
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_TAG );
 		}
 	}
 
@@ -999,6 +999,11 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		$is_error = apply_filters( 'tutor_is_error_before_course_update', false, $params );
+		if ( is_wp_error( $is_error ) ) {
+			$this->response_bad_request( $is_error->get_error_message() );
+		}
+
 		$params['ID'] = $course_id;
 		$update_id    = wp_update_post( $params, true );
 		if ( is_wp_error( $update_id ) ) {
@@ -1017,7 +1022,7 @@ class Course extends Tutor_Base {
 		}
 
 		$this->json_response(
-			__( 'Course update successfully', 'tutor' ),
+			__( 'Course updated successfully.', 'tutor' ),
 			$update_id,
 			HttpHelper::STATUS_OK
 		);
@@ -1194,8 +1199,8 @@ class Course extends Tutor_Base {
 			'editor_used'              => tutor_utils()->get_editor_used( $course_id ),
 			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
-			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
-			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
+			'course_categories'        => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
+			'course_tags'              => wp_get_post_terms( $course_id, CourseModel::COURSE_TAG ),
 			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
 			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
 
@@ -1308,6 +1313,8 @@ class Course extends Tutor_Base {
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
 			'instructor_can_publish_course',
+			'instructor_can_change_author',
+			'instructor_can_modify_instructors',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );

@@ -14,6 +14,7 @@ use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Ecommerce\Settings;
+use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -344,7 +345,7 @@ class Assets {
 
 		if ( is_admin() ) {
 			$taxonomy = Input::get( 'taxonomy' );
-			if ( 'course-category' === $taxonomy || 'course-tag' === $taxonomy ) {
+			if ( CourseModel::COURSE_CATEGORY === $taxonomy || CourseModel::COURSE_TAG === $taxonomy ) {
 				$localize_data['open_tutor_admin_menu'] = true;
 			}
 		} else {

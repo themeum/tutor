@@ -13,6 +13,7 @@ namespace TUTOR;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Helpers\HttpHelper;
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 use Tutor\Traits\JsonResponse;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -152,6 +153,7 @@ class Admin {
 
 		if ( $enable_course_marketplace ) {
 			add_submenu_page( 'tutor', __( 'Instructors', 'tutor' ), __( 'Instructors', 'tutor' ), 'manage_tutor', Instructors_List::INSTRUCTOR_LIST_PAGE, array( $this, 'tutor_instructors' ) );
+			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
 		}
 
 		add_submenu_page( 'tutor', __( 'Announcements', 'tutor' ), __( 'Announcements', 'tutor' ), 'manage_tutor_instructor', 'tutor_announcements', array( $this, 'tutor_announcements' ) );
@@ -159,10 +161,6 @@ class Admin {
 		add_submenu_page( 'tutor', __( 'Q&A', 'tutor' ), __( 'Q&A ', 'tutor' ) . $unanswered_bubble, 'manage_tutor_instructor', Question_Answers_List::QUESTION_ANSWER_PAGE, array( $this, 'question_answer' ) );
 
 		add_submenu_page( 'tutor', __( 'Quiz Attempts', 'tutor' ), __( 'Quiz Attempts', 'tutor' ), 'manage_tutor_instructor', Quiz_Attempts_List::QUIZ_ATTEMPT_PAGE, array( $this, 'quiz_attempts' ) );
-
-		if ( $enable_course_marketplace ) {
-			add_submenu_page( 'tutor', __( 'Withdraw Requests', 'tutor' ), __( 'Withdraw Requests', 'tutor' ), 'manage_tutor', Withdraw_Requests_List::WITHDRAW_REQUEST_LIST_PAGE, array( $this, 'withdraw_requests' ) );
-		}
 
 		add_submenu_page( 'tutor', __( 'Addons', 'tutor' ), __( 'Addons', 'tutor' ), 'manage_tutor', 'tutor-addons', array( $this, 'enable_disable_addons' ) );
 
@@ -340,7 +338,7 @@ class Admin {
 	 */
 	public function parent_menu_active( $parent_file ) {
 		$taxonomy = Input::get( 'taxonomy' );
-		if ( 'course-category' === $taxonomy || 'course-tag' === $taxonomy ) {
+		if ( CourseModel::COURSE_CATEGORY === $taxonomy || CourseModel::COURSE_TAG === $taxonomy ) {
 			return 'tutor';
 		}
 
@@ -361,10 +359,10 @@ class Admin {
 		$taxonomy         = Input::get( 'taxonomy' );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( 'course-category' === $taxonomy ) {
+		if ( CourseModel::COURSE_CATEGORY === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type;
 		}
-		if ( 'course-tag' === $taxonomy ) {
+		if ( CourseModel::COURSE_TAG === $taxonomy ) {
 			return 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type;
 		}
 
