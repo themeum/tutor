@@ -47,6 +47,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const certificatesData = courseDetails?.course_certificates_templates ?? [];
+  const defaultTemplates = certificatesData.filter((certificate) => certificate.is_default);
 
   const form = useFormContext<CourseFormData>();
   const currentCertificateKey = form.watch('tutor_course_certificate_template');
@@ -69,6 +70,10 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (defaultTemplates.length === 0) {
+      setActiveCertificateTab('custom_certificates');
+    }
+
     if (currentCertificateKey === 'none') {
       setSelectedCertificate(currentCertificateKey);
       return;
@@ -129,12 +134,14 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
     <Show when={isTutorPro && isCertificateAddonEnabled} fallback={<CertificateEmptyState />}>
       <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
-          <Tabs
-            wrapperCss={styles.tabsWrapper}
-            tabList={certificateTabs}
-            activeTab={activeCertificateTab}
-            onChange={handleTabChange}
-          />
+          <Show when={defaultTemplates.length > 0} fallback="Certificates">
+            <Tabs
+              wrapperCss={styles.tabsWrapper}
+              tabList={certificateTabs}
+              activeTab={activeCertificateTab}
+              onChange={handleTabChange}
+            />
+          </Show>
           <div css={styles.orientation}>
             <Show when={hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab}>
               <Tooltip delay={200} content={__('Landscape', 'tutor')}>
@@ -184,7 +191,12 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
             isSidebarVisible,
           })}
         >
-          <Show when={activeCertificateTab === 'templates'}>
+          <Show
+            when={
+              (defaultTemplates.length === 0 && filteredCertificatesData.length > 0) ||
+              activeCertificateTab === 'templates'
+            }
+          >
             <CertificateCard
               selectedCertificate={selectedCertificate}
               onSelectCertificate={handleCertificateSelection}
