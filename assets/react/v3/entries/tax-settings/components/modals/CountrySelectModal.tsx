@@ -1,8 +1,8 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
-import { colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import { colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 

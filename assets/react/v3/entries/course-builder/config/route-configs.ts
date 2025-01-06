@@ -1,4 +1,4 @@
-import { defineRoute } from '@Config/route-configs';
+import { defineRoute } from '@TutorShared/config/route-configs';
 
 export const CourseBuilderRouteConfigs = {
   Home: defineRoute('/'),

@@ -1,10 +1,10 @@
-import Button from '@Atoms/Button';
-import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-import { useModal } from '@Components/modals/Modal';
+import Button from '@TutorShared/atoms/Button';
+import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import CourseCard from '@EnrollmentComponents/CourseCard';
 import CourseListModal from '@EnrollmentComponents/modals/CourseListModal';
 import type { Course, Enrollment } from '@EnrollmentServices/enrollment';
-import type { FormControllerProps } from '@Utils/form';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';

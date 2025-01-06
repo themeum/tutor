@@ -1,4 +1,4 @@
-import { localHasOwnProperty } from '@Utils/types';
+import { localHasOwnProperty } from '@TutorShared/utils/types';
 
 const errorToMessage = {
   error_unexpected: 'msg_error_unexpected',

@@ -1,4 +1,4 @@
-import RouteSuspense from '@Components/RouteSuspense';
+import RouteSuspense from '@TutorShared/components/RouteSuspense';
 import Layout from '@CourseBuilderComponents/layouts/Layout';
 import React from 'react';
 import { Navigate, type RouteObject } from 'react-router-dom';

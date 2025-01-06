@@ -2,13 +2,13 @@ import { css } from '@emotion/react';
 import type { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 
 type CanvasHeadProps = {
   title: string;

@@ -1,9 +1,9 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useDebounce } from '@Hooks/useDebounce';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import FormFieldWrapper from './FormFieldWrapper';

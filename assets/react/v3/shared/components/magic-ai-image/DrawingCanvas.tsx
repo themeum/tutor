@@ -1,5 +1,5 @@
-import { borderRadius, colorTokens, zIndex } from '@Config/styles';
-import { calculateCartesianDistance, drawPath, getCanvas } from '@Utils/magic-ai';
+import { borderRadius, colorTokens, zIndex } from '@TutorShared/config/styles';
+import { calculateCartesianDistance, drawPath, getCanvas } from '@TutorShared/utils/magic-ai';
 import { css } from '@emotion/react';
 import React, { type MouseEvent, useEffect, useRef, useState } from 'react';
 

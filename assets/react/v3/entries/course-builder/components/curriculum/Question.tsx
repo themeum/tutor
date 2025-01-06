@@ -5,21 +5,21 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import ThreeDots from '@Molecules/ThreeDots';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection } from '@TutorShared/utils/types';
 
 interface QuestionProps {
   question: QuizQuestion;

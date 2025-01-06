@@ -1,5 +1,5 @@
-import { borderRadius, colorTokens } from '@Config/styles';
-import { isNumber } from '@Utils/types';
+import { borderRadius, colorTokens } from '@TutorShared/config/styles';
+import { isNumber } from '@TutorShared/utils/types';
 import { css, keyframes } from '@emotion/react';
 import { forwardRef } from 'react';
 

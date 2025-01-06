@@ -18,18 +18,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import EmptyState from '@Molecules/EmptyState';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import {
   type Content,
   type CourseContentOrderPayload,
@@ -39,12 +39,12 @@ import {
   useUpdateCourseContentOrderMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
+import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { moveTo, nanoid } from '@TutorShared/utils/util';
 
-import curriculumEmptyState2x from '@Images/curriculum-empty-state-2x.webp';
-import curriculumEmptyState from '@Images/curriculum-empty-state.webp';
+import curriculumEmptyState2x from '@SharedImages/curriculum-empty-state-2x.webp';
+import curriculumEmptyState from '@SharedImages/curriculum-empty-state.webp';
 import TopicDragOverlay from '../components/curriculum/TopicDragOverlay';
 
 const courseId = getCourseId();

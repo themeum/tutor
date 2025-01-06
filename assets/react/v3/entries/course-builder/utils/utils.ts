@@ -1,8 +1,8 @@
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
-import { tutorConfig } from '@Config/config';
-import { type Addons, VideoRegex } from '@Config/constants';
+import { tutorConfig } from '@TutorShared/config/config';
+import { type Addons, VideoRegex } from '@TutorShared/config/constants';
 import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
 import type { PostStatus } from '@CourseBuilderServices/course';
 import type { ID } from '@CourseBuilderServices/curriculum';

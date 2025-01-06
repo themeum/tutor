@@ -4,16 +4,16 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
-import { useModal } from '@Components/modals/Modal';
-import Show from '@Controls/Show';
+import Button from '@TutorShared/atoms/Button';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import Show from '@TutorShared/controls/Show';
 
-import { useFileUploader } from '@Molecules/FileUploader';
-import Popover from '@Molecules/Popover';
-import ThreeDots from '@Molecules/ThreeDots';
+import { useFileUploader } from '@TutorShared/molecules/FileUploader';
+import Popover from '@TutorShared/molecules/Popover';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
 
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
@@ -21,15 +21,15 @@ import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useImportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 interface TopicFooterProps {
   topic: CourseTopicWithCollapse;

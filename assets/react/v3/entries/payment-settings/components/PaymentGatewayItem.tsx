@@ -1,13 +1,13 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import Show from '@Controls/Show';
-import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Show from '@TutorShared/controls/Show';
+import { borderRadius, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import { PaymentGateway, PaymentSettings, useInstallPaymentMutation } from '../services/payment';
 import { __ } from '@wordpress/i18n';
 import Badge from '../atoms/Badge';
-import { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
+import { FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 
 interface PaymentGatewayItemProps {
   data: PaymentGateway;

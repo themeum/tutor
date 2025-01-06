@@ -1,10 +1,10 @@
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { css } from '@emotion/react';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import Show from '@Controls/Show';
-import { spacing } from '@Config/styles';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import Show from '@TutorShared/controls/Show';
+import { spacing } from '@TutorShared/config/styles';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type MembershipSettings, useMembershipSettingsQuery } from '../services/memberships';
 import EmptyState from '../molecules/EmptyState';
 import { useModal } from '@/v3/shared/components/modals/Modal';

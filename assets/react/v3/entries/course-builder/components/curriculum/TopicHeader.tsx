@@ -5,20 +5,20 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import Button from '@TutorShared/atoms/Button';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 
-import FormInput from '@Components/fields/FormInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
 
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { tutorConfig } from '@Config/config';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import {
   type ID,
@@ -27,13 +27,13 @@ import {
   useSaveTopicMutation,
 } from '@CourseBuilderServices/curriculum';
 
-import { AnimationType } from '@Hooks/useAnimation';
-import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useCollapseExpandAnimation } from '@TutorShared/hooks/useCollapseExpandAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 interface TopicHeaderProps {
   topic: CourseTopicWithCollapse;

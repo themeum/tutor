@@ -1,5 +1,5 @@
-import { colorTokens, shadow, spacing } from '@Config/styles';
-import { nanoid } from '@Utils/util';
+import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { nanoid } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
 

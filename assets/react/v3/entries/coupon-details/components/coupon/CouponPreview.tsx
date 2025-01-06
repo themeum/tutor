@@ -1,8 +1,8 @@
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';

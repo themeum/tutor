@@ -1,4 +1,4 @@
-import type collection from '@Config/icon-list';
+import type collection from '@TutorShared/config/icon-list';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
 

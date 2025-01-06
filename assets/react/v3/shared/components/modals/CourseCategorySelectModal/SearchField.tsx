@@ -1,8 +1,8 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import { useDebounce } from '@Hooks/useDebounce';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import type { Filter } from '@Hooks/usePaginatedTable';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import type { Filter } from '@TutorShared/hooks/usePaginatedTable';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';

@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
 
-import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@Config/styles';
+import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@TutorShared/config/styles';
 import Header from '@CourseBuilderComponents/layouts/header/Header';
 import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
 import {
@@ -13,7 +13,7 @@ import {
   useCourseDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
 import Notebook from './Notebook';
 

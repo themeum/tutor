@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button, { type ButtonVariant } from '@Atoms/Button';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { colorTokens, fontSize, lineHeight, shadow, spacing } from '@Config/styles';
+import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { colorTokens, fontSize, lineHeight, shadow, spacing } from '@TutorShared/config/styles';
 
 interface StaticConfirmationModalProps extends ModalProps {
   description?: React.ReactNode | string;

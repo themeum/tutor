@@ -4,29 +4,29 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
-import FormVideoInput, { type CourseVideo } from '@Components/fields/FormVideoInput';
-import FormWPEditor from '@Components/fields/FormWPEditor';
-import { type ModalProps, useModal } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
+import FormVideoInput, { type CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
+import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_VIEWPORT, TutorRoles } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT, TutorRoles } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
@@ -37,11 +37,11 @@ import {
 } from '@CourseBuilderServices/curriculum';
 import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { type WPMedia } from '@Hooks/useWpMedia';
-import { styleUtils } from '@Utils/style-utils';
-import { normalizeLineEndings } from '@Utils/util';
-import { maxLimitRule } from '@Utils/validation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { normalizeLineEndings } from '@TutorShared/utils/util';
+import { maxLimitRule } from '@TutorShared/utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 
 interface LessonModalProps extends ModalProps {

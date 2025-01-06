@@ -2,7 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
-import ErrorBoundary from '@Components/ErrorBoundary';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import App from './components/App';
 
 const element = document.getElementById('tutor-membership-settings');

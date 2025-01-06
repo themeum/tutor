@@ -1,4 +1,4 @@
-import { TutorBadge, type Variant } from '@Atoms/TutorBadge';
+import { TutorBadge, type Variant } from '@TutorShared/atoms/TutorBadge';
 import type { OrderStatus } from '@OrderServices/order';
 import { __ } from '@wordpress/i18n';
 

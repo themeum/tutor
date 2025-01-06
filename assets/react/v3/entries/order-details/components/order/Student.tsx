@@ -1,11 +1,11 @@
-import { Avatar } from '@Atoms/Avatar';
-import { Box, BoxTitle } from '@Atoms/Box';
-import { colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { Avatar } from '@TutorShared/atoms/Avatar';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useOrderContext } from '@OrderContexts/order-context';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 

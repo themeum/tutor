@@ -1,4 +1,4 @@
-import { DesktopBreakpoint, MobileBreakpoint, SmallMobileBreakpoint, TabletBreakpoint } from '@Config/styles';
+import { DesktopBreakpoint, MobileBreakpoint, SmallMobileBreakpoint, TabletBreakpoint } from '@TutorShared/config/styles';
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024;
 export const VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/gif'];

@@ -6,34 +6,34 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
-import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import {
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { noop } from '@Utils/util';
-import { requiredRule } from '@Utils/validation';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
+import { requiredRule } from '@TutorShared/utils/validation';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { OfferSalePrice } from './OfferSalePrice';

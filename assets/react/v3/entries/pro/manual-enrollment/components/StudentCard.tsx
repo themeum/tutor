@@ -1,10 +1,10 @@
-import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
-import SVGIcon from '@Atoms/SVGIcon';
-import Button from '@Atoms/Button';
-import profilePlaceholder from '@Images/profile-photo.png';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import profilePlaceholder from '@SharedImages/profile-photo.png';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { __ } from '@wordpress/i18n';
 
 interface StudentCardProps {

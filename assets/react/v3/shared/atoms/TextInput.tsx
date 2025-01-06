@@ -1,9 +1,9 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import { parseNumberOnly } from '@Utils/util';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { parseNumberOnly } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type FocusEvent, type KeyboardEvent, useEffect, useId, useRef } from 'react';
 

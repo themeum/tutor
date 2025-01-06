@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 
-import Container from '@Components/Container';
+import Container from '@TutorShared/components/Container';
 import Activities from '@OrderComponents/order/Activities';
 import Notes from '@OrderComponents/order/Notes';
 import Payment from '@OrderComponents/order/Payment';
@@ -9,9 +9,9 @@ import Student from '@OrderComponents/order/Student';
 import Summary from '@OrderComponents/order/Summary';
 import { OrderProvider } from '@OrderContexts/order-context';
 
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { isDefined } from '@Utils/types';
-import { getQueryParam } from '@Utils/url';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { isDefined } from '@TutorShared/utils/types';
+import { getQueryParam } from '@TutorShared/utils/url';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
 
 function Main() {

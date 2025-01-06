@@ -5,15 +5,15 @@ import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -22,9 +22,9 @@ import {
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { requiredRule } from '@Utils/validation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 

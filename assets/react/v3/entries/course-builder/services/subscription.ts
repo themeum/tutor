@@ -1,9 +1,9 @@
-import { useToast } from '@Atoms/Toast';
-import { DateFormats } from '@Config/constants';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@Utils/util';
+import { useToast } from '@TutorShared/atoms/Toast';
+import { DateFormats } from '@TutorShared/config/constants';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
 import { format } from 'date-fns';

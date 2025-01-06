@@ -1,7 +1,7 @@
-import Container from '@Components/Container';
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
+import Container from '@TutorShared/components/Container';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 
-import { DateFormats } from '@Config/constants';
+import { DateFormats } from '@TutorShared/config/constants';
 import CouponDiscount from '@CouponComponents/coupon/CouponDiscount';
 import CouponInfo from '@CouponComponents/coupon/CouponInfo';
 import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
@@ -15,8 +15,8 @@ import {
   couponInitialValue,
   useCouponDetailsQuery,
 } from '@CouponServices/coupon';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { convertGMTtoLocalDate } from '@Utils/util';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { convertGMTtoLocalDate } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
 import { useEffect } from 'react';

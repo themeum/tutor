@@ -1,6 +1,6 @@
-import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
-import { AnimatedDiv } from '@Hooks/useAnimation';
-import type { AnyObject } from '@Utils/form';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
+import { AnimatedDiv } from '@TutorShared/hooks/useAnimation';
+import type { AnyObject } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 import { useSpring } from '@react-spring/web';
 import Tippy from '@tippyjs/react/headless';
