@@ -4,7 +4,7 @@ import { borderRadius, Breakpoint, colorTokens, lineHeight, spacing } from '@/v3
 import { typography } from '@/v3/shared/config/typography';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import bannerImage from '@Images/free-addons-banner.webp';
+import bannerImage from '@SharedImages/free-addons-banner.webp';
 import config from '@/v3/shared/config/config';
 
 function FreeBanner() {

@@ -1,6 +1,6 @@
-import endpoints from '@Utils/endpoints';
-import { wpAjaxInstance } from '@Utils/api';
-import { tutorConfig } from '@Config/config';
+import endpoints from '@TutorShared/utils/endpoints';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import { tutorConfig } from '@TutorShared/config/config';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { convertToErrorMessage } from '@/v3/shared/utils/util';
 import { type ErrorResponse } from '@/v3/shared/utils/form';

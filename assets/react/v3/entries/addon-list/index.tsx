@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { HashRouter } from 'react-router-dom';
 
-import ErrorBoundary from '@Components/ErrorBoundary';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import App from '@AddonList/components/App';
 
 const root = ReactDOM.createRoot(document.getElementById('tutor-addon-list-wrapper') as HTMLElement);

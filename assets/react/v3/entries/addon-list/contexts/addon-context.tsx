@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { type Addon, useAddonListQuery } from '../services/addons';
-import { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@TutorShared/config/config';
 
 interface AddonContextType {
   addons: Addon[];
