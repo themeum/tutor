@@ -100,7 +100,7 @@ const TextInput = ({
 
         {variant === 'search' && (
           <span css={styles.searchIcon}>
-            <SVGIcon name="search" width={20} height={20} />
+            <SVGIcon name="search" width={24} height={24} />
           </span>
         )}
 
@@ -188,10 +188,12 @@ const styles = {
   `,
   rightIconButton: css`
     position: absolute;
-    right: 0;
-    top: 0;
+    right: ${spacing[4]};
+    top: ${spacing[4]};
+
     button {
-      padding: ${spacing[8]};
+      padding: ${spacing[4]};
+      border-radius: ${borderRadius[2]};
     }
   `,
   searchIcon: css`
