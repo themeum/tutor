@@ -8,8 +8,8 @@ import SVGIcon from '@Atoms/SVGIcon';
 import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
 import AITextModal from '@Components/modals/AITextModal';
 import { useModal } from '@Components/modals/Modal';
-import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import ProIdentifierModal from '@Components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@Components/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@Config/config';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -82,6 +82,7 @@ const FormInput = ({
 }: FormInputProps) => {
   const [fieldType, setFieldType] = useState<typeof type>(type);
   const { showModal } = useModal();
+  const ref = useRef<HTMLInputElement>(null);
 
   let inputValue = field.value ?? '';
   let characterCount:
@@ -160,7 +161,6 @@ const FormInput = ({
       isMagicAi={isMagicAi}
     >
       {(inputProps) => {
-        const ref = useRef<HTMLInputElement>(null);
         return (
           <>
             <div css={styles.container(isClearable || isPassword)}>
