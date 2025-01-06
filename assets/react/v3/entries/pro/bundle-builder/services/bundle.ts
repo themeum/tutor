@@ -1,4 +1,4 @@
-import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { format, isBefore, parseISO } from 'date-fns';
 
 import { wpAjaxInstance } from '@/v3/shared/utils/api';
@@ -278,24 +278,32 @@ interface AddCourseToBundlePayload {
 }
 
 const addCourseToBundle = async (payload: AddCourseToBundlePayload) => {
-  return (
-    wpAjaxInstance
-      // @TODO: Fix the type of TutorMutationResponse
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .post<TutorMutationResponse<any>>(endpoints.ADD_COURSE_TO_BUNDLE, payload)
-      .then((response) => response.data)
+  return wpAjaxInstance.post<AddCourseToBundlePayload, TutorMutationResponse<Pick<Bundle, 'details'>>>(
+    endpoints.ADD_COURSE_TO_BUNDLE,
+    payload,
   );
 };
 
 export const useAddCourseToBundleMutation = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: addCourseToBundle,
-    onSuccess: (response) => {
+    onSuccess: (response, payload) => {
       showToast({
         message: response.message,
         type: 'success',
+      });
+
+      queryClient.setQueryData(['CourseBundle', payload.ID], (oldData: Bundle) => {
+        return {
+          ...oldData,
+          details: {
+            ...oldData.details,
+            ...response.data,
+          },
+        };
       });
     },
     onError: (error: ErrorResponse) => {
