@@ -1,3 +1,4 @@
+import { useDndContext } from '@dnd-kit/core';
 import {
   type AnimateLayoutChanges,
   SortableContext,
@@ -15,10 +16,9 @@ import TopicHeader from '@CourseBuilderComponents/curriculum//TopicHeader';
 import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
-import For from '@Controls/For';
-
-import Show from '@/v3/shared/controls/Show';
 import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import For from '@Controls/For';
+import Show from '@Controls/Show';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { styleUtils } from '@Utils/style-utils';
 import { isDefined } from '@Utils/types';
@@ -37,7 +37,7 @@ interface TopicProps {
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
-const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay = false }: TopicProps) => {
+const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false }: TopicProps) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(!topic.isSaved);
 
@@ -57,7 +57,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     [topic.contents.length],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
       if (isDefined(wrapperRef.current) && !wrapperRef.current.contains(event.target as HTMLDivElement)) {
@@ -70,6 +69,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     return () => document.removeEventListener('click', handleOutsideClick);
   }, [isEdit]);
 
+  const { active: activeDragItem } = useDndContext();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: topic.id,
     data: {
@@ -82,7 +82,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     (node: HTMLDivElement) => {
       if (node) {
         setNodeRef(node);
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (wrapperRef as any).current = node;
       }
     },
@@ -96,7 +96,6 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     background: isDragging ? colorTokens.stroke.hover : undefined,
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(topicRef.current)) {
       collapseAnimate.start({
@@ -104,12 +103,13 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
         opacity: !topic.isCollapsed ? 1 : 0,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic.isCollapsed, topic.contents.length]);
 
   return (
     <div
       {...(topic.isSaved ? attributes : {})}
-      css={styles.wrapper({ isActive: isActive || isEdit, isOverlay })}
+      css={styles.wrapper({ isActive: isActive || isEdit, isOverlay, disableHover: !!activeDragItem })}
       onClick={() => setIsActive(true)}
       onKeyDown={noop}
       tabIndex={-1}
@@ -141,6 +141,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
             <SortableContext
               items={topic.contents.map((item) => ({ ...item, id: item.ID }))}
               strategy={verticalListSortingStrategy}
+              disabled={topic.isCollapsed}
             >
               <div>
                 <For each={topic.contents}>
@@ -173,7 +174,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
 export default Topic;
 
 const styles = {
-  wrapper: ({ isActive = false, isOverlay = false }) => css`
+  wrapper: ({ isActive = false, isOverlay = false, disableHover = false }) => css`
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
     transition:
@@ -189,7 +190,7 @@ const styles = {
     `}
 
     :hover {
-      background-color: ${colorTokens.background.hover};
+      background-color: ${!disableHover ? colorTokens.background.hover : ''};
     }
 
     ${isOverlay &&

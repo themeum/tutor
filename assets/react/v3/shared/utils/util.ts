@@ -258,7 +258,8 @@ export const parseNumberOnly = (value: string, allowNegative?: boolean) => {
     .replace(/(\..*)\./g, '$1');
 };
 
-export const throttle = <T extends (args: MouseEvent) => void>(func: T, limit: number) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const throttle = <T extends (...args: any[]) => void>(func: T, limit: number) => {
   let inThrottle = false;
 
   return function (this: ThisParameterType<T>, ...args: Parameters<T>) {
