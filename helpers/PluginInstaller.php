@@ -13,7 +13,7 @@ namespace Tutor\Helpers;
 /**
  * PluginInstaller class.
  *
- * @since 3.0.0
+ * @since 3.2.0
  */
 class PluginInstaller {
 
@@ -111,7 +111,7 @@ class PluginInstaller {
 			);
 		}
 
-		$message = $response->error ?? 'An error occurred while fetching the plugin download link.';
+		$message = $response->error ?? __( 'An error occurred while fetching the plugin download link.', 'tutor-pro' );
 
 		return array(
 			'success' => false,
