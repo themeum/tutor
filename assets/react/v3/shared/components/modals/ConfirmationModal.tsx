@@ -1,5 +1,5 @@
-import Button from '@Atoms/Button';
-import { colorTokens, spacing } from '@Config/styles';
+import Button from '@TutorShared/atoms/Button';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 import { __ } from '@wordpress/i18n';

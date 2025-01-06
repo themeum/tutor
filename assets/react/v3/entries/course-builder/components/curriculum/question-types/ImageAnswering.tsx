@@ -16,15 +16,15 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
+import FormImageAnswering from '@TutorShared/components/fields/quiz/FormImageAnswering';
 
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid, noop } from '@Utils/util';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 import Button from '@/v3/shared/atoms/Button';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';

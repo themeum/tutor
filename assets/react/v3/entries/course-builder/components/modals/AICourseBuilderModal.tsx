@@ -1,4 +1,4 @@
-import type { ModalProps } from '@Components/modals/Modal';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import BasicPrompt from '@CourseBuilderComponents/ai-course-modal/BasicPrompt';
 import ContentGeneration from '@CourseBuilderComponents/ai-course-modal/ContentGeneration';
 import ContentGenerationContextProvider, {

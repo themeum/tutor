@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { isDefined } from '@Utils/types';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { isDefined } from '@TutorShared/utils/types';
 
 type EmptyStateSize = 'small' | 'medium';
 

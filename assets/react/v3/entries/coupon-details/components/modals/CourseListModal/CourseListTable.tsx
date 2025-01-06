@@ -1,14 +1,14 @@
-import Checkbox from '@Atoms/CheckBox';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { usePaginatedTable } from '@Hooks/usePaginatedTable';
-import Paginator from '@Molecules/Paginator';
-import Table, { type Column } from '@Molecules/Table';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { css } from '@emotion/react';
 
 import { type Coupon, type Course, useAppliesToQuery } from '@CouponServices/coupon';
-import coursePlaceholder from '@Images/course-placeholder.png';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import { __, sprintf } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';

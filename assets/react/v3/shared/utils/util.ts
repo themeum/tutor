@@ -1,5 +1,5 @@
-import collection from '@Config/icon-list';
-import type { Category, CategoryWithChildren } from '@Services/category';
+import collection from '@TutorShared/config/icon-list';
+import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import { __ } from '@wordpress/i18n';
 import {
   addMinutes,
@@ -18,7 +18,7 @@ import {
 import type { DateRange } from 'react-day-picker';
 import { v4 as uuidv4 } from 'uuid';
 
-import { DateFormats } from '@Config/constants';
+import { DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from './form';
 import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
 

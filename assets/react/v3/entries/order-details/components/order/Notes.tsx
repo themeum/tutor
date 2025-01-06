@@ -1,8 +1,8 @@
-import { Box, BoxTitle } from '@Atoms/Box';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { useOrderContext } from '@OrderContexts/order-context';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 

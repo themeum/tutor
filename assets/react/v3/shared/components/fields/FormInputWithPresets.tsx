@@ -1,16 +1,16 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection, Option } from '@Utils/types';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection, Option } from '@TutorShared/utils/types';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

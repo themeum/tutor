@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import type React from 'react';
 
-import { colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
-import { isDefined } from '@Utils/types';
+import { colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { isDefined } from '@TutorShared/utils/types';
 
 import SVGIcon from './SVGIcon';
 

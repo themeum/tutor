@@ -3,14 +3,14 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { FormProvider } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { type ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
+import { type ModalProps } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { Breakpoint, spacing } from '@Config/styles';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
   convertFormDataToPayload,
   convertPlanToFormData,

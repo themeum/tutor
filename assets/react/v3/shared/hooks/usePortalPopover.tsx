@@ -2,11 +2,11 @@ import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useModal } from '@Components/modals/Modal';
-import { zIndex } from '@Config/styles';
-import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { zIndex } from '@TutorShared/config/styles';
+import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 enum ArrowPosition {
   left = 'left',

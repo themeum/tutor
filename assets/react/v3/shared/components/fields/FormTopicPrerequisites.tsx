@@ -2,24 +2,24 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import EmptyState from '@Molecules/EmptyState';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import type { Content, CourseTopic, ID } from '@CourseBuilderServices/curriculum';
-import { useDebounce } from '@Hooks/useDebounce';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
-import notFound2x from '@Images/not-found-2x.webp';
-import notFound from '@Images/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
+import notFound from '@SharedImages/not-found.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

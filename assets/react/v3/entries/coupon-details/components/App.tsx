@@ -1,7 +1,7 @@
-import ToastProvider from '@Atoms/Toast';
-import { ModalProvider } from '@Components/modals/Modal';
-import RTLProvider from '@Components/RTLProvider';
-import { createGlobalCss } from '@Utils/style-utils';
+import ToastProvider from '@TutorShared/atoms/Toast';
+import { ModalProvider } from '@TutorShared/components/modals/Modal';
+import RTLProvider from '@TutorShared/components/RTLProvider';
+import { createGlobalCss } from '@TutorShared/utils/style-utils';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';

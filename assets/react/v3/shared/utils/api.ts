@@ -1,6 +1,6 @@
 import axios, { type AxiosRequestHeaders, type Method } from 'axios';
 
-import config, { tutorConfig } from '@Config/config';
+import config, { tutorConfig } from '@TutorShared/config/config';
 
 import * as querystring from 'querystring';
 

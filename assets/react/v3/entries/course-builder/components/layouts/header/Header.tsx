@@ -3,11 +3,11 @@ import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import MagicButton from '@TutorShared/atoms/MagicButton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import { useModal } from '@Components/modals/Modal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
 import Logo from '@CourseBuilderComponents/layouts/header/Logo';
 import Tracker from '@CourseBuilderComponents/layouts/Tracker';
@@ -16,7 +16,7 @@ import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBu
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@TutorShared/config/config';
 import {
   borderRadius,
   Breakpoint,
@@ -26,17 +26,17 @@ import {
   shadow,
   spacing,
   zIndex,
-} from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+} from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { CURRENT_VIEWPORT } from '@Config/constants';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
-import generateCourse from '@Images/pro-placeholders/generate-course.webp';
+import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@SharedImages/pro-placeholders/generate-course.webp';
 
 const courseId = getCourseId();
 

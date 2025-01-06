@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import SVGIcon from '@Atoms/SVGIcon';
-import Button from '@Atoms/Button';
-import { borderRadius, colorTokens, lineHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import emptyStateImage from '@Images/membership-empty-state.webp';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import { borderRadius, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import emptyStateImage from '@SharedImages/membership-empty-state.webp';
 
 interface EmptyStateProps {
   onActionClick: () => void;

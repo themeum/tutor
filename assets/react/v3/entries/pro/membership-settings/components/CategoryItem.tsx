@@ -4,7 +4,7 @@ import { borderRadius, colorTokens, spacing } from '@/v3/shared/config/styles';
 import { typography } from '@/v3/shared/config/typography';
 import { css } from '@emotion/react';
 import { type ReactNode } from 'react';
-import coursePlaceholder from '@Images/course-placeholder.png';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 
 interface CategoryItemProps {
   image: string;

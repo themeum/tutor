@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, Breakpoint, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface CourseCardProps {
   id: number;

@@ -2,13 +2,13 @@ import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import FormInput from '@/v3/shared/components/fields/FormInput';
 import FormInputWithContent from '@/v3/shared/components/fields/FormInputWithContent';
 import { styleUtils } from '@/v3/shared/utils/style-utils';
 import FormSelectInput from '@/v3/shared/components/fields/FormSelectInput';
-import { requiredRule } from '@Utils/validation';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { tutorConfig } from '@/v3/shared/config/config';
 import FormInputWithPresets from '@/v3/shared/components/fields/FormInputWithPresets';
 import FormCheckbox from '@/v3/shared/components/fields/FormCheckbox';

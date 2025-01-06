@@ -2,19 +2,19 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { type IconCollection, type Option, isDefined } from '@Utils/types';
-import { noop } from '@Utils/util';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type IconCollection, type Option, isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

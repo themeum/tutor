@@ -1,6 +1,6 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 
 interface EmptyImageCardProps {

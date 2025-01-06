@@ -1,19 +1,19 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { TutorBadge } from '@Atoms/TutorBadge';
-import Container from '@Components/Container';
-import { tutorConfig } from '@Config/config';
-import { Breakpoint, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
+import Container from '@TutorShared/components/Container';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import {
   type Coupon,
   convertFormDataToPayload,
   useCreateCouponMutation,
   useUpdateCouponMutation,
 } from '@CouponServices/coupon';
-import { styleUtils } from '@Utils/style-utils';
-import { makeFirstCharacterUpperCase } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { makeFirstCharacterUpperCase } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';

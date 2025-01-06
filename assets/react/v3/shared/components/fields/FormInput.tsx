@@ -2,25 +2,25 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-import AITextModal from '@Components/modals/AITextModal';
-import { useModal } from '@Components/modals/Modal';
-import ProIdentifierModal from '@Components/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@Components/modals/SetupOpenAiModal';
+import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
+import AITextModal from '@TutorShared/components/modals/AITextModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { parseNumberOnly } from '@Utils/util';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { parseNumberOnly } from '@TutorShared/utils/util';
 
-import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
-import generateText from '@Images/pro-placeholders/generate-text.webp';
+import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
+import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;

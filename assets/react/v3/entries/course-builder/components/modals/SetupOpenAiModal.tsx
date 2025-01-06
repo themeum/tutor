@@ -3,22 +3,22 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
 
-import FormInput from '@Components/fields/FormInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 
-import config, { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { TutorRoles } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useSaveOpenAiSettingsMutation } from '@CourseBuilderServices/course';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 interface SetupOpenAiModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

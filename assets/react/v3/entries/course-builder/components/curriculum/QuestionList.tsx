@@ -17,20 +17,20 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Popover from '@Molecules/Popover';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { useModal } from '@Components/modals/Modal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
 
-import { tutorConfig } from '@Config/config';
-import { CURRENT_VIEWPORT } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   type H5PContent,
@@ -40,10 +40,10 @@ import {
   type QuizQuestionType,
 } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
-import { nanoid, noop } from '@Utils/util';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection } from '@TutorShared/utils/types';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
   label: string;

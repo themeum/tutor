@@ -1,4 +1,4 @@
-import { borderRadius, lineHeight, shadow } from '@Config/styles';
+import { borderRadius, lineHeight, shadow } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import React, { type ReactNode } from 'react';
 

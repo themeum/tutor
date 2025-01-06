@@ -1,4 +1,4 @@
-import useWindowDimensions from '@Hooks/useWindowDimensions';
+import useWindowDimensions from '@TutorShared/hooks/useWindowDimensions';
 
 const useMedia = (dimensions: number) => {
   const { innerWidth } = useWindowDimensions();
