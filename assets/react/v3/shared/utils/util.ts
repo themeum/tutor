@@ -1,5 +1,5 @@
-import collection from '@Config/icon-list';
-import type { Category, CategoryWithChildren } from '@Services/category';
+import collection from '@TutorShared/config/icon-list';
+import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import { __ } from '@wordpress/i18n';
 import {
   addMinutes,
@@ -18,7 +18,7 @@ import {
 import type { DateRange } from 'react-day-picker';
 import { v4 as uuidv4 } from 'uuid';
 
-import { DateFormats } from '@Config/constants';
+import { DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from './form';
 import { type IconCollection, type PaginatedParams, isDefined, isObject } from './types';
 
@@ -89,7 +89,9 @@ export const moveTo = <T>(arr: T[], fromIndex: number, toIndex: number) => {
     }
 
     const [item] = newArr.splice(mutatingFromIndex, 1);
-    item && newArr.splice(mutatingToIndex, 0, item);
+    if (item) {
+      newArr.splice(mutatingToIndex, 0, item);
+    }
   }
 
   return newArr;
@@ -290,17 +292,17 @@ export const formatSeconds = (seconds: number) => {
 
   return `${hours}:${minutes}:${remainingSeconds} hrs`;
 };
-export const getObjectKeys = <T extends {}>(object: T) => {
+export const getObjectKeys = <T extends object>(object: T) => {
   if (!isDefined(object) || !isObject(object)) {
     return [] as (keyof T)[];
   }
   return Object.keys(object) as (keyof T)[];
 };
 
-export const getObjectValues = <T extends {}, K extends keyof T = keyof T>(object: T): T[K][] => {
+export const getObjectValues = <T extends object, K extends keyof T = keyof T>(object: T): T[K][] => {
   return Object.values(object);
 };
-export const getObjectEntries = <T extends {}, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
+export const getObjectEntries = <T extends object, K extends keyof T = keyof T>(object: T): [K, T[K]][] => {
   return Object.entries(object) as [K, T[K]][];
 };
 

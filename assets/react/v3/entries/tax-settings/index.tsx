@@ -1,7 +1,7 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
-import ErrorBoundary from '@Components/ErrorBoundary';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import App from './components/App';
 
 const root = createRoot(document.getElementById('ecommerce_tax') as HTMLElement);
@@ -11,5 +11,5 @@ root.render(
     <ErrorBoundary>
       <App />
     </ErrorBoundary>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

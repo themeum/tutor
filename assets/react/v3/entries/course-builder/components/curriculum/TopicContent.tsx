@@ -5,15 +5,15 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Popover from '@Molecules/Popover';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { useModal } from '@Components/modals/Modal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
@@ -25,20 +25,20 @@ import {
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
-import { noop } from '@Utils/util';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 import { useQueryClient } from '@tanstack/react-query';
 
 interface TopicContentProps {
@@ -77,8 +77,20 @@ const icons = {
   },
 } as const;
 
+const confirmationMessages = {
+  tutor_assignments:
+    // prettier-ignore
+    __('Are you sure you want to delete this assignment? All existing assignment submissions will be permanently deleted.', 'tutor'),
+  tutor_quiz:
+    // prettier-ignore
+    __('Are you sure you want to delete this quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
+  tutor_h5p_quiz:
+    // prettier-ignore
+    __( 'Are you sure you want to delete this interactive quiz? All existing quiz attempts will be permanently deleted.', 'tutor'),
+} as const;
+
 const modalComponent: {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key in Exclude<ContentType, 'tutor_zoom_meeting' | 'tutor-google-meet'>]: React.FunctionComponent<any>;
 } = {
   lesson: LessonModal,
@@ -235,8 +247,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
               width={24}
               height={24}
               style={css`
-								color: ${icon.color};
-							`}
+                color: ${icon.color};
+              `}
             />
           </div>
           <div data-bar-icon>
@@ -322,6 +334,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
@@ -339,13 +353,19 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
       <ConfirmationPopover
         isOpen={isDeletePopoverOpen}
         isLoading={
-          deleteContentMutation.isPending || deleteQuizMutation.isPending || deleteGoogleMeetMutation.isPending
+          deleteContentMutation.isPending ||
+          deleteQuizMutation.isPending ||
+          deleteGoogleMeetMutation.isPending ||
+          deleteZoomMeetingMutation.isPending
         }
         triggerRef={deleteRef}
         closePopover={noop}
         maxWidth="258px"
         title={sprintf(__('Delete "%s"', 'tutor'), content.title)}
-        message={__('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')}
+        message={
+          confirmationMessages[type as keyof typeof confirmationMessages] ||
+          __('Are you sure you want to delete this content from your course? This cannot be undone.', 'tutor')
+        }
         animationType={AnimationType.slideUp}
         arrow="auto"
         hideArrow
@@ -391,7 +411,8 @@ const styles = {
       height: 24px;
     }
 
-    :hover, :focus-within {
+    :hover,
+    :focus-within {
       border-color: ${colorTokens.stroke.border};
       background-color: ${colorTokens.background.white};
 
@@ -407,34 +428,36 @@ const styles = {
       }
     }
 
-    ${
-      isMeetingSelected &&
-      css`
-        border-color: ${colorTokens.stroke.border};
-        background-color: ${colorTokens.background.white};
-        [data-content-icon] {
-          display: flex;
-        }
-        [data-bar-icon] {
-          display: none;
-        }
-        [data-actions] {
-          opacity: 1;
-        }
-      `
-    }
+    ${isMeetingSelected &&
+    css`
+      border-color: ${colorTokens.stroke.border};
+      background-color: ${colorTokens.background.white};
+      [data-content-icon] {
+        display: flex;
+      }
+      [data-bar-icon] {
+        display: none;
+      }
+      [data-actions] {
+        opacity: 1;
+      }
+    `}
 
-    ${
-      isOverlay &&
-      css`
-        box-shadow: ${shadow.drag};
-        border-color: ${colorTokens.stroke.border};
-        background-color: ${colorTokens.background.white};
+    ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+      border-color: ${colorTokens.stroke.border};
+      background-color: ${colorTokens.background.white};
 
-        [data-actions] {
-          opacity: 1;
-        }
-      `
+      [data-actions] {
+        opacity: 1;
+      }
+    `}
+
+    ${Breakpoint.smallTablet} {
+      [data-actions] {
+        opacity: 1;
+      }
     }
   `,
   title: css`
@@ -444,6 +467,13 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
     cursor: pointer;
+
+    span {
+      &:first-of-type {
+        ${styleUtils.text.ellipsis(2)}
+      }
+    }
+
     [data-question-count] {
       color: ${colorTokens.text.hints};
     }
@@ -458,9 +488,8 @@ const styles = {
     [data-bar-icon] {
       display: none;
     }
-    ${
-      isDragging &&
-      css`
+    ${isDragging &&
+    css`
       [data-content-icon] {
         display: none;
       }
@@ -468,8 +497,7 @@ const styles = {
         display: block;
       }
       cursor: grabbing;
-    `
-    }
+    `}
   `,
   actions: css`
     display: flex;

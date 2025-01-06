@@ -1,10 +1,10 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import coursePlaceholder from '@Images/course-placeholder.png';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import type { OrderSummaryItem } from '@OrderServices/order';
-import { formatPrice } from '@Utils/currency';
+import { formatPrice } from '@TutorShared/utils/currency';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import React from 'react';
@@ -27,7 +27,7 @@ export const OrderItem = React.forwardRef<HTMLDivElement, OrderItemProps>(({ cla
                 {__('Plan:', 'tutor')} {item.plan_info.plan_name}
               </div>
             )}
-            
+
             {item.type === 'course-bundle' && (
               <div css={styles.bundleCount}>
                 {item.total_courses} {__('Courses', 'tutor')}
@@ -103,8 +103,8 @@ const styles = {
   `,
   badgeWrapper: css`
     display: flex;
-	align-items: center;
-	gap: ${spacing[8]};
+    align-items: center;
+    gap: ${spacing[8]};
   `,
   couponTag: css`
     ${typography.tiny()};

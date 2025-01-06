@@ -1,6 +1,6 @@
-import { TutorRoles } from '@Config/constants';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
+import { TutorRoles } from '@TutorShared/config/constants';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
 import { useQuery } from '@tanstack/react-query';
 
 export interface User {

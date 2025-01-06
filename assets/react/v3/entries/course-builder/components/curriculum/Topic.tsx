@@ -15,14 +15,14 @@ import TopicHeader from '@CourseBuilderComponents/curriculum//TopicHeader';
 import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
-import For from '@Controls/For';
+import For from '@TutorShared/controls/For';
 
 import Show from '@/v3/shared/controls/Show';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import type { ID } from '@CourseBuilderServices/curriculum';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { noop } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 
 interface TopicProps {
   topic: CourseTopicWithCollapse;
@@ -176,28 +176,26 @@ const styles = {
   wrapper: ({ isActive = false, isOverlay = false }) => css`
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
-    transition: background-color 0.3s ease-in-out, border-color 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      border-color 0.3s ease-in-out;
     background-color: ${colorTokens.bg.white};
     width: 100%;
 
-    ${
-      isActive &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-        background-color: ${colorTokens.background.hover};
-      `
-    }
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+      background-color: ${colorTokens.background.hover};
+    `}
 
     :hover {
       background-color: ${colorTokens.background.hover};
     }
 
-    ${
-      isOverlay &&
-      css`
+    ${isOverlay &&
+    css`
       box-shadow: ${shadow.drag};
-    `
-    }
+    `}
   `,
   content: css`
     padding: ${spacing[16]};

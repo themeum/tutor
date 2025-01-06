@@ -1,6 +1,6 @@
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
-import { typography } from '@Config/typography';
+import { typography } from '@TutorShared/config/typography';
 import StudentCard from './StudentCard';
 import { Enrollment, Student } from '@EnrollmentServices/enrollment';
 import { UseFormReturn } from 'react-hook-form';
@@ -15,7 +15,7 @@ function SelectedStudents({ form, students }: SelectedStudentsProps) {
   function removesSelectedItem(id: String) {
     form.setValue(
       'students',
-      students?.filter((item) => item.ID !== id)
+      students?.filter((item) => item.ID !== id),
     );
   }
 

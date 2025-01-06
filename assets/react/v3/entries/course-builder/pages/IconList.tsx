@@ -1,13 +1,13 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import Container from '@Components/Container';
-import FormInput from '@Components/fields/FormInput';
-import collection from '@Config/icon-list';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import { useDebounce } from '@Hooks/useDebounce';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { getObjectEntries } from '@Utils/util';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Container from '@TutorShared/components/Container';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import collection from '@TutorShared/config/icon-list';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { getObjectEntries } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
@@ -52,27 +52,27 @@ export default IconList;
 
 const styles = {
   container: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[32]};
-		margin-block: 60px;
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[32]};
+    margin-block: 60px;
+  `,
   wrapper: css`
-		display: grid;
-		grid-template-columns: repeat(4, 1fr);
-		gap: ${spacing[32]};
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: ${spacing[32]};
 
-		& > div {
-			display: flex;
-			flex-direction: column;
-			gap: ${spacing[8]};
-			${typography.caption()};
-			color: ${colorTokens.text.subdued};
-			align-items: center;
+    & > div {
+      display: flex;
+      flex-direction: column;
+      gap: ${spacing[8]};
+      ${typography.caption()};
+      color: ${colorTokens.text.subdued};
+      align-items: center;
 
-			svg {
-				color: ${colorTokens.icon.default};
-			}
-		}
-	`,
+      svg {
+        color: ${colorTokens.icon.default};
+      }
+    }
+  `,
 };

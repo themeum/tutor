@@ -16,23 +16,23 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormMultipleChoiceAndOrdering from '@Components/fields/quiz/FormMultipleChoiceAndOrdering';
+import FormMultipleChoiceAndOrdering from '@TutorShared/components/fields/quiz/FormMultipleChoiceAndOrdering';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { colorTokens, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import {
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid, noop } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 const MultipleChoiceAndOrdering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -253,34 +253,22 @@ const MultipleChoiceAndOrdering = () => {
 export default MultipleChoiceAndOrdering;
 
 const styles = {
-  optionWrapper: ({
-    isOrdering,
-  }: {
-    isOrdering: boolean;
-  }) => css`
-      ${styleUtils.display.flex('column')};
-      gap: ${spacing[12]};
-      
-      ${
-        isOrdering &&
-        css`
-          padding-left: ${spacing[40]};
-        `
-      }
-    `,
-  addOptionButtonWrapper: ({
-    isOrdering,
-  }: {
-    isOrdering: boolean;
-  }) => css`
+  optionWrapper: ({ isOrdering }: { isOrdering: boolean }) => css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[12]};
+
+    ${isOrdering &&
+    css`
+      padding-left: ${spacing[40]};
+    `}
+  `,
+  addOptionButtonWrapper: ({ isOrdering }: { isOrdering: boolean }) => css`
     margin-left: ${spacing[48]};
 
-    ${
-      isOrdering &&
-      css`
-        margin-left: ${spacing[8]};
-      `
-    }
+    ${isOrdering &&
+    css`
+      margin-left: ${spacing[8]};
+    `}
   `,
   addOptionButton: css`
     color: ${colorTokens.text.brand};

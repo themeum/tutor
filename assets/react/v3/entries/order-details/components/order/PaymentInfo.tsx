@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
-import { Box, BoxTitle } from '@Atoms/Box';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 
 import Show from '@/v3/shared/controls/Show';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { useOrderContext } from '@OrderContexts/order-context';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const PaymentInfo = () => {
   const {
@@ -31,8 +31,8 @@ export default PaymentInfo;
 
 const styles = {
   content: css`
-		${typography.caption()};
-		color: ${colorTokens.text.subdued};
-		padding: ${spacing[16]} ${spacing[20]};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
+    padding: ${spacing[16]} ${spacing[20]};
+  `,
 };

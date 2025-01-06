@@ -5,29 +5,29 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import ImageInput from '@Atoms/ImageInput';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import Button from '@TutorShared/atoms/Button';
+import ImageInput from '@TutorShared/atoms/ImageInput';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
+  calculateQuizDataStatus,
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
-  calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import useWPMedia from '@Hooks/useWpMedia';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { noop } from '@Utils/util';
+import useWPMedia from '@TutorShared/hooks/useWpMedia';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 
 interface FormMatchingProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -459,10 +459,16 @@ const styles = {
       background-color: ${colorTokens.stroke.hover};
     `}
 
-      ${isOverlay &&
+    ${isOverlay &&
     css`
       box-shadow: ${shadow.drag};
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
   `,
   optionHeader: css`
     display: grid;

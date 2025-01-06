@@ -1,5 +1,5 @@
-import type { PromiseResolvePayload } from '@Components/modals/Modal';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import type { PromiseResolvePayload } from '@TutorShared/components/modals/Modal';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { __ } from '@wordpress/i18n';
 import React, { useCallback, useContext, useState } from 'react';
 import {
@@ -55,7 +55,7 @@ export const inspirationPrompts = [
   __('A bold and minimalistic design with striking colors', 'tutor'),
 ];
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const ImageContext = React.createContext<ImageContextType<any> | null>(null);
 
 export const useMagicImageGeneration = () => {

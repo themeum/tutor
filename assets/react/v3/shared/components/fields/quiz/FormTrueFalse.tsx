@@ -2,15 +2,15 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizQuestionOption } from '@CourseBuilderServices/quiz';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid } from '@TutorShared/utils/util';
 
 interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -18,7 +18,7 @@ interface FormTrueFalseProps extends FormControllerProps<QuizQuestionOption> {
   isOverlay?: boolean;
 }
 
-const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }: FormTrueFalseProps) => {
+const FormTrueFalse = ({ field, onCheckCorrectAnswer, isOverlay = false }: FormTrueFalseProps) => {
   const { activeQuestionId } = useQuizModalContext();
 
   const inputValue = field.value ?? {
@@ -72,13 +72,7 @@ const FormTrueFalse = ({ index, field, onCheckCorrectAnswer, isOverlay = false }
 export default FormTrueFalse;
 
 const styles = {
-  option: ({
-    isSelected,
-    isOverlay,
-  }: {
-    isSelected: boolean;
-    isOverlay: boolean;
-  }) => css`
+  option: ({ isSelected, isOverlay }: { isSelected: boolean; isOverlay: boolean }) => css`
     ${styleUtils.display.flex()};
     ${typography.caption('medium')};
     align-items: center;
@@ -110,16 +104,13 @@ const styles = {
       }
     }
 
-
-    ${
-      isSelected &&
-      css`
-        [data-check-button] {
-          opacity: 1;
-          color: ${colorTokens.bg.success};
-        }
-      `
-    }
+    ${isSelected &&
+    css`
+      [data-check-button] {
+        opacity: 1;
+        color: ${colorTokens.bg.success};
+      }
+    `}
   `,
   optionLabel: ({
     isSelected,
@@ -157,30 +148,30 @@ const styles = {
       }
     }
 
-    ${
-      isSelected &&
-      css`
-        background-color: ${colorTokens.background.success.fill40};
-        color: ${colorTokens.text.primary};
+    ${isSelected &&
+    css`
+      background-color: ${colorTokens.background.success.fill40};
+      color: ${colorTokens.text.primary};
 
-        &:hover {
-          outline: 1px solid ${colorTokens.stroke.success.fill70};
-        }
-      `
-    }
+      &:hover {
+        outline: 1px solid ${colorTokens.stroke.success.fill70};
+      }
+    `}
 
-    ${
-      isDragging &&
-      css`
-        background-color: ${colorTokens.stroke.hover};
-      `
-    }
+    ${isDragging &&
+    css`
+      background-color: ${colorTokens.stroke.hover};
+    `}
 
-    ${
-      isOverlay &&
-      css`
-        box-shadow: ${shadow.drag};
-      `
+    ${isOverlay &&
+    css`
+      box-shadow: ${shadow.drag};
+    `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
   `,
 };

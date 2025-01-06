@@ -1,7 +1,7 @@
-import Container from '@Components/Container';
-import { colorTokens, spacing } from '@Config/styles';
+import Container from '@TutorShared/components/Container';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 
-import { DateFormats } from '@Config/constants';
+import { DateFormats } from '@TutorShared/config/constants';
 import CouponDiscount from '@CouponComponents/coupon/CouponDiscount';
 import CouponInfo from '@CouponComponents/coupon/CouponInfo';
 import CouponUsageLimitation from '@CouponComponents/coupon/CouponLimitation';
@@ -15,13 +15,13 @@ import {
   couponInitialValue,
   useCouponDetailsQuery,
 } from '@CouponServices/coupon';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { convertGMTtoLocalDate } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
-import { convertGMTtoLocalDate } from '@Utils/util';
 
 function Main() {
   const params = new URLSearchParams(window.location.search);
@@ -86,7 +86,7 @@ function Main() {
               <PurchaseRequirements />
               <CouponValidity />
             </div>
-            <div css={styles.right}>
+            <div>
               <CouponPreview />
             </div>
           </div>
@@ -101,6 +101,11 @@ export default Main;
 const styles = {
   wrapper: css`
     background-color: ${colorTokens.background.default};
+    margin-left: ${spacing[20]};
+
+    ${Breakpoint.mobile} {
+      margin-left: ${spacing[12]};
+    }
   `,
 
   content: css`
@@ -110,11 +115,20 @@ const styles = {
     grid-template-columns: 1fr 342px;
     gap: ${spacing[36]};
     margin-top: ${spacing[32]};
+    padding-inline: ${spacing[8]};
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr 280px;
+    }
+
+    ${Breakpoint.mobile} {
+      grid-template-columns: 1fr;
+    }
   `,
   left: css`
+    width: 100%;
     display: flex;
     flex-direction: column;
     gap: ${spacing[16]};
   `,
-  right: css``,
 };

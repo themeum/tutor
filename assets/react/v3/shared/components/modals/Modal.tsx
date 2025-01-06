@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import React, { useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-import { colorTokens, zIndex } from '@Config/styles';
-import { AnimatedDiv, AnimationType, useAnimation } from '@Hooks/useAnimation';
-import { nanoid, noop } from '@Utils/util';
+import { colorTokens, zIndex } from '@TutorShared/config/styles';
+import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 const styles = {
   backdrop: ({ magicAi = false }: { magicAi?: boolean }) => css`
@@ -13,14 +13,19 @@ const styles = {
     inset: 0;
     z-index: ${zIndex.negative};
 
-    ${
-      magicAi &&
-      css`
-      background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.4) 18.05%, rgba(255, 100, 113, 0.4) 30.25%, rgba(207, 110, 189, 0.4) 55.42%, rgba(164, 119, 209, 0.4) 71.66%, rgba(62, 100, 222, 0.4) 97.9%);
+    ${magicAi &&
+    css`
+      background: linear-gradient(
+        73.09deg,
+        rgba(255, 150, 69, 0.4) 18.05%,
+        rgba(255, 100, 113, 0.4) 30.25%,
+        rgba(207, 110, 189, 0.4) 55.42%,
+        rgba(164, 119, 209, 0.4) 71.66%,
+        rgba(62, 100, 222, 0.4) 97.9%
+      );
       opacity: 1;
-      backdrop-filter: blur(10px); 
-    `
-    }
+      backdrop-filter: blur(10px);
+    `}
   `,
   container: css`
     z-index: ${zIndex.highest};
@@ -70,10 +75,10 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   const [state, setState] = useState<{
     modals: {
       id: string;
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       component: React.FunctionComponent<any>;
       props?: { [key: string]: unknown };
-      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       resolve: (data: PromiseResolvePayload<any>) => void;
       closeOnOutsideClick: boolean;
       closeOnEscape?: boolean;
@@ -136,7 +141,6 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     return state.modals.length > 0;
   }, [state.modals]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const currentlyOpenPopovers = document.querySelectorAll('.tutor-portal-popover');
@@ -158,6 +162,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     return () => {
       document.removeEventListener('keydown', handleKeyDown, true);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state.modals.length, closeModal]);
 
   return (
@@ -173,7 +178,13 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               },
             ]}
           >
-            <AnimatedDiv style={style} hideOnOverflow={false}>
+            <AnimatedDiv
+              style={{
+                ...style,
+                width: '100%',
+              }}
+              hideOnOverflow={false}
+            >
               {React.createElement(modal.component, { ...modal.props, closeModal })}
             </AnimatedDiv>
             <div

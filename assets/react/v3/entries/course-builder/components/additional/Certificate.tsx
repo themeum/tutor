@@ -4,38 +4,45 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import Tabs from '@Molecules/Tabs';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import Tabs from '@TutorShared/molecules/Tabs';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import notFound2x from '@Images/not-found-2x.webp';
-import notFound from '@Images/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
+import notFound from '@SharedImages/not-found.webp';
 
 import CertificateEmptyState from './CertificateEmptyState';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
 
+interface CertificateProps {
+  isSidebarVisible: boolean;
+}
+
 const certificateTabs: { label: string; value: CertificateTabValue }[] = [
   { label: __('Templates', 'tutor'), value: 'templates' },
-  { label: __('Custom Certificates', 'tutor'), value: 'custom_certificates' },
+  {
+    label: __(`Custom ${CURRENT_VIEWPORT.isAboveSmallMobile ? ' Certificates' : ''}`, 'tutor'),
+    value: 'custom_certificates',
+  },
 ];
 
 const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isCertificateAddonEnabled = isAddonEnabled(Addons.TUTOR_CERTIFICATE);
 
-const Certificate = () => {
+const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   const queryClient = useQueryClient();
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
@@ -77,6 +84,7 @@ const Certificate = () => {
       setActiveCertificateTab(newCertificate.is_default ? 'templates' : 'custom_certificates');
       setSelectedCertificate(newCertificate.key);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentCertificateKey, certificatesData]);
 
   const filteredCertificatesData = certificatesData.filter(
@@ -121,7 +129,12 @@ const Certificate = () => {
     <Show when={isTutorPro && isCertificateAddonEnabled} fallback={<CertificateEmptyState />}>
       <Show when={isCertificateAddonEnabled}>
         <div css={styles.tabs}>
-          <Tabs tabList={certificateTabs} activeTab={activeCertificateTab} onChange={handleTabChange} />
+          <Tabs
+            wrapperCss={styles.tabsWrapper}
+            tabList={certificateTabs}
+            activeTab={activeCertificateTab}
+            onChange={handleTabChange}
+          />
           <div css={styles.orientation}>
             <Show when={hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab}>
               <Tooltip delay={200} content={__('Landscape', 'tutor')}>
@@ -168,6 +181,7 @@ const Certificate = () => {
           css={styles.certificateWrapper({
             hasCertificates: filteredCertificatesData.length > 0,
             activeCertificateTab,
+            isSidebarVisible,
           })}
         >
           <Show when={activeCertificateTab === 'templates'}>
@@ -237,25 +251,34 @@ const styles = {
   tabs: css`
     position: relative;
   `,
+  tabsWrapper: css`
+    button {
+      min-width: auto;
+    }
+  `,
   certificateWrapper: ({
     hasCertificates,
     activeCertificateTab,
+    isSidebarVisible,
   }: {
     hasCertificates: boolean;
     activeCertificateTab: CertificateTabValue;
+    isSidebarVisible: boolean;
   }) => css`
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(${isSidebarVisible ? 3 : 4}, 1fr);
     gap: ${spacing[16]};
     padding-top: ${spacing[12]};
 
-    ${
-      !hasCertificates &&
-      activeCertificateTab !== 'templates' &&
-      css`
-        grid-template-columns: 1fr;
-        place-items: center;
-      `
+    ${!hasCertificates &&
+    activeCertificateTab !== 'templates' &&
+    css`
+      grid-template-columns: 1fr;
+      place-items: center;
+    `}
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr 1fr;
     }
   `,
   orientation: css`
@@ -266,11 +289,7 @@ const styles = {
     right: 0;
     bottom: ${spacing[4]};
   `,
-  orientationButton: ({
-    isActive,
-  }: {
-    isActive: boolean;
-  }) => css`
+  orientationButton: ({ isActive }: { isActive: boolean }) => css`
     display: inline-flex;
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
@@ -285,11 +304,7 @@ const styles = {
     ${styleUtils.display.flex('column')}
     gap: ${spacing[20]};
   `,
-  placeholderImage: ({
-    notFound,
-  }: {
-    notFound?: boolean;
-  }) => css`
+  placeholderImage: ({ notFound }: { notFound?: boolean }) => css`
     max-width: 100%;
     width: 100%;
     height: ${notFound ? '189px' : '312px;'};

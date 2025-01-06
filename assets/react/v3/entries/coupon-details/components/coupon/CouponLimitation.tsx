@@ -1,11 +1,11 @@
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormInput from '@Components/fields/FormInput';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { Coupon } from '@CouponServices/coupon';
-import { requiredRule } from '@Utils/validation';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
@@ -82,26 +82,26 @@ export default CouponLimitation;
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   limitWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[8]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[8]};
+  `,
   checkBoxLabel: css`
-		${typography.caption()};
-		color: ${colorTokens.text.title};
-	`,
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+  `,
   limitInput: css`
-		width: fit-content;
-		margin-left: ${spacing[28]};
-	`,
+    width: fit-content;
+    margin-left: ${spacing[28]};
+  `,
 };

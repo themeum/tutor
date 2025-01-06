@@ -1,19 +1,16 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import addonDisabled2x from '@Images/addon-disabled-2x.webp';
-import addonDisabled from '@Images/addon-disabled.webp';
-import prerequisites2x from '@Images/pro-placeholders/prerequisites-2x.webp';
-import prerequisites from '@Images/pro-placeholders/prerequisites.webp';
+import prerequisites2x from '@SharedImages/pro-placeholders/prerequisites-2x.webp';
+import prerequisites from '@SharedImages/pro-placeholders/prerequisites.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
@@ -22,20 +19,14 @@ const CoursePrerequisitesEmptyState = () => {
     <div css={styles.emptyState}>
       <img
         css={styles.placeholderImage}
-        src={!isTutorPro ? prerequisites : addonDisabled}
-        srcSet={
-          !isTutorPro ? `${prerequisites} 1x, ${prerequisites2x} 2x` : `${addonDisabled} 1x, ${addonDisabled2x} 2x`
-        }
+        src={prerequisites}
+        srcSet={`${prerequisites} 1x, ${prerequisites2x} 2x`}
         alt={__('Pro Placeholder', 'tutor')}
       />
 
       <div css={styles.featureAndActionWrapper}>
         <div css={styles.featuresWithTitle}>
-          <div css={isTutorPro && styleUtils.text.align.center}>
-            {!isTutorPro
-              ? __('Guide Students with Course Prerequisites', 'tutor')
-              : __('Activate the “Prerequisites” addon to use this feature.', 'tutor')}
-          </div>
+          <div>{__('Guide Students with Course Prerequisites', 'tutor')}</div>
           <Show when={!isTutorPro}>
             <div css={styles.features}>
               <div css={styles.feature}>
@@ -54,21 +45,6 @@ const CoursePrerequisitesEmptyState = () => {
           </Show>
         </div>
       </div>
-
-      <Show when={isTutorPro}>
-        <div css={styles.actionsButton}>
-          <Button
-            size="small"
-            variant="secondary"
-            icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-            onClick={() => {
-              window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-            }}
-          >
-            {__('Enable Prerequisites Addon', 'tutor')}
-          </Button>
-        </div>
-      </Show>
     </div>
   );
 };

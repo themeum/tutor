@@ -3,11 +3,11 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Alert from '@Atoms/Alert';
+import Alert from '@TutorShared/atoms/Alert';
 
-import FormAnswerExplanation from '@Components/fields/FormAnswerExplanation';
-import FormQuestionDescription from '@Components/fields/FormQuestionDescription';
-import FormQuestionTitle from '@Components/fields/FormQuestionTitle';
+import FormAnswerExplanation from '@TutorShared/components/fields/FormAnswerExplanation';
+import FormQuestionDescription from '@TutorShared/components/fields/FormQuestionDescription';
+import FormQuestionTitle from '@TutorShared/components/fields/FormQuestionTitle';
 
 import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
@@ -17,21 +17,21 @@ import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/questio
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import {
+  calculateQuizDataStatus,
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionType,
-  calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { usePrevious } from '@Hooks/usePrevious';
-import { styleUtils } from '@Utils/style-utils';
+import { usePrevious } from '@TutorShared/hooks/usePrevious';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import emptyStateImage2x from '@Images/quiz-empty-state-2x.webp';
-import emptyStateImage from '@Images/quiz-empty-state.webp';
+import emptyStateImage2x from '@SharedImages/quiz-empty-state-2x.webp';
+import emptyStateImage from '@SharedImages/quiz-empty-state.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
@@ -203,12 +203,20 @@ const styles = {
         opacity: 1;
       }
     }
+
+    ${Breakpoint.smallMobile} {
+      padding-right: ${spacing[8]};
+    }
   `,
   questionWithIndex: css`
     ${styleUtils.display.flex('row')};
     align-items: flex-start;
     padding-left: ${spacing[40]};
     gap: ${spacing[4]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   questionIndex: css`
     margin-top: ${spacing[10]};
@@ -232,6 +240,10 @@ const styles = {
   `,
   questionAnswer: css`
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   emptyState: css`
     ${styleUtils.flexCenter('column')};

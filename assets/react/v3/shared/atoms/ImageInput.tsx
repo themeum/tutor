@@ -2,14 +2,14 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { rgba } from 'polished';
 
-import type { ButtonSize } from '@Atoms/Button';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import type { ButtonSize } from '@TutorShared/atoms/Button';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { type WPMedia } from '@Hooks/useWpMedia';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 
 import { LoadingOverlay } from './LoadingSpinner';
 

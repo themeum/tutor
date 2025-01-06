@@ -6,34 +6,34 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
-import FormSelectInput from '@Components/fields/FormSelectInput';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import {
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
 } from '@CourseBuilderServices/subscription';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { noop } from '@Utils/util';
-import { requiredRule } from '@Utils/validation';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
+import { requiredRule } from '@TutorShared/utils/validation';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { OfferSalePrice } from './OfferSalePrice';
@@ -56,7 +56,6 @@ export default function SubscriptionItem({
   id,
   toggleCollapse,
   bgLight = false,
-  onDiscard,
   isExpanded,
   isOverlay = false,
 }: SubscriptionItemProps) {
@@ -77,7 +76,6 @@ export default function SubscriptionItem({
   const [isDeletePopoverOpen, setIsDeletePopoverOpen] = useState(false);
   const [isActive, setIsActive] = useState(false);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isExpanded) {
       const timeoutId = setTimeout(() => {
@@ -94,6 +92,7 @@ export default function SubscriptionItem({
         clearTimeout(timeoutId);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isExpanded]);
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
@@ -119,10 +118,12 @@ export default function SubscriptionItem({
       if (response.data) {
         setIsDeletePopoverOpen(false);
 
-        isExpanded && toggleCollapse(subscription.id);
+        if (isExpanded) {
+          toggleCollapse(subscription.id);
+        }
       }
     } catch (error) {
-      // handle error
+      console.error(error);
     }
   };
 
@@ -143,7 +144,7 @@ export default function SubscriptionItem({
     (node: HTMLFormElement) => {
       if (node) {
         setNodeRef(node);
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (wrapperRef as any).current = node;
       }
     },
@@ -184,7 +185,6 @@ export default function SubscriptionItem({
     ],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(subscriptionRef.current)) {
       collapseAnimate.start({
@@ -192,6 +192,7 @@ export default function SubscriptionItem({
         opacity: isExpanded ? 1 : 0,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     chargeEnrolmentFee,
     // enableTrial,
@@ -564,37 +565,33 @@ export default function SubscriptionItem({
 }
 
 const styles = {
-  grabber: ({
-    isFormDirty,
-  }: {
-    isFormDirty: boolean;
-  }) => css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
-		${typography.body()};
-		color: ${colorTokens.text.hints};
-		width: 100%;
-		min-height: 40px;
+  grabber: ({ isFormDirty }: { isFormDirty: boolean }) => css`
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
+    ${typography.body()};
+    color: ${colorTokens.text.hints};
+    width: 100%;
+    min-height: 40px;
 
-		[data-grabber] {
-			color: ${colorTokens.icon.default};
-			cursor: ${isFormDirty ? 'not-allowed' : 'grab'};
-			flex-shrink: 0;
-		}
+    [data-grabber] {
+      color: ${colorTokens.icon.default};
+      cursor: ${isFormDirty ? 'not-allowed' : 'grab'};
+      flex-shrink: 0;
+    }
 
-		span {
-			max-width: 496px;
-			width: 100%;
-			${styleUtils.textEllipsis};
-		}
-	`,
+    span {
+      max-width: 496px;
+      width: 100%;
+      ${styleUtils.textEllipsis};
+    }
+  `,
   trialWrapper: css`
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		align-items: start;
-		gap: ${spacing[8]};
-	`,
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: ${spacing[8]};
+  `,
   title: css`
     ${styleUtils.resetButton};
     display: flex;
@@ -612,22 +609,22 @@ const styles = {
     }
   `,
   titleField: css`
-		width: 100%;
-		position: relative;
+    width: 100%;
+    position: relative;
 
-		input {
-			padding-right: ${spacing[128]} !important;
-		}
-	`,
+    input {
+      padding-right: ${spacing[128]} !important;
+    }
+  `,
   titleActions: css`
-		position: absolute;
-		right: ${spacing[4]};
-		top: 50%;
-		transform: translateY(-50%);
-		display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
-	`,
+    position: absolute;
+    right: ${spacing[4]};
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    gap: ${spacing[8]};
+  `,
   subscription: ({
     bgLight,
     isActive,
@@ -639,10 +636,10 @@ const styles = {
     isDragging: boolean;
     isDeletePopoverOpen?: boolean;
   }) => css`
-		width: 100%;
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius.card};
-		overflow: hidden;
+    width: 100%;
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius.card};
+    overflow: hidden;
     transition: border-color 0.3s ease;
 
     [data-visually-hidden] {
@@ -650,122 +647,118 @@ const styles = {
       transition: opacity 0.3s ease;
     }
 
-		${
-      bgLight &&
-      css`
-        background-color: ${colorTokens.background.white};
-      `
-    }
+    ${bgLight &&
+    css`
+      background-color: ${colorTokens.background.white};
+    `}
 
-    ${
-      isActive &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-      `
-    }
+    ${isActive &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+    `}
 
-    ${
-      isDragging &&
-      css`
-        box-shadow: ${shadow.drag};
+    ${isDragging &&
+    css`
+      box-shadow: ${shadow.drag};
 
-        [data-grabber] {
-          cursor: grabbing;
-        }
-      `
-    }
+      [data-grabber] {
+        cursor: grabbing;
+      }
+    `}
 
     &:hover:not(:disabled) {
       [data-visually-hidden] {
         opacity: 1;
       }
     }
-	`,
-  itemWrapper: (isActive = false) => css`
-    ${
-      isActive &&
-      css`
-        background-color: ${colorTokens.background.hover};
-      `
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
   `,
+  itemWrapper: (isActive = false) => css`
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+    `}
+  `,
   subscriptionHeader: (isActive = false) => css`
-		padding: ${spacing[12]} ${spacing[16]};
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-    ${
-      isActive &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        border-bottom: 1px solid ${colorTokens.stroke.border};
-      `
-    }
-	`,
+    padding: ${spacing[12]} ${spacing[16]};
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      border-bottom: 1px solid ${colorTokens.stroke.border};
+    `}
+  `,
   subscriptionContent: css`
-		padding: ${spacing[16]};
+    padding: ${spacing[16]};
     display: flex;
     flex-direction: column;
     gap: ${spacing[12]};
-	`,
+  `,
   actions: (isEdit: boolean) => css`
-		display: flex;
-		align-items: center;
-		gap: ${spacing[4]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[4]};
 
-		button {
-			width: 24px;
-			height: 24px;
-			${styleUtils.resetButton};
-			color: ${colorTokens.icon.default};
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			transition: color 0.3s ease;
+    button {
+      width: 24px;
+      height: 24px;
+      ${styleUtils.resetButton};
+      color: ${colorTokens.icon.default};
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.3s ease;
 
       :disabled {
         cursor: not-allowed;
         color: ${colorTokens.icon.disable.background};
       }
 
-			&[data-collapse-button] {
-				transition: transform 0.3s ease;
+      &[data-collapse-button] {
+        transition: transform 0.3s ease;
 
-				svg {
-					width: 20px;
-					height: 20px;
-				}
-	
-				&:hover:not(:disabled) {
-					color: ${colorTokens.icon.hover};
-				}
-	
-				${
-          isEdit &&
-          css`
-            transform: rotate(180deg);
-          `
+        svg {
+          width: 20px;
+          height: 20px;
         }
-			}
-		}
-	`,
-  collapse: (isEdit: boolean) => css`
-		transition: transform 0.3s ease;
-		svg {
-			width: 16px;
-			height: 16px;
-		}
-		${
-      isEdit &&
-      css`
-        transform: rotate(180deg);
-      `
+
+        &:hover:not(:disabled) {
+          color: ${colorTokens.icon.hover};
+        }
+
+        ${isEdit &&
+        css`
+          transform: rotate(180deg);
+        `}
+      }
     }
-	`,
+  `,
+  collapse: (isEdit: boolean) => css`
+    transition: transform 0.3s ease;
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+    ${isEdit &&
+    css`
+      transform: rotate(180deg);
+    `}
+  `,
   inputGroup: css`
-		display: grid;
-		grid-template-columns: 1fr 0.7fr 1fr 1fr;
-		align-items: start;
-		gap: ${spacing[8]};
-	`,
+    display: grid;
+    grid-template-columns: 1fr 0.7fr 1fr 1fr;
+    align-items: start;
+    gap: ${spacing[8]};
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr;
+    }
+  `,
 };

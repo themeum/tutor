@@ -1,20 +1,20 @@
-import Button from '@Atoms/Button';
-import Checkbox from '@Atoms/CheckBox';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { type CategoryWithChildren, useCategoryListQuery, useCreateCategoryMutation } from '@Services/category';
-import type { FormControllerProps } from '@Utils/form';
-import { generateTree, getCategoryLeftBarHeight } from '@Utils/util';
+import Button from '@TutorShared/atoms/Button';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { type CategoryWithChildren, useCategoryListQuery, useCreateCategoryMutation } from '@TutorShared/services/category';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { produce } from 'immer';
 import { useEffect, useState } from 'react';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { isRTL } from '@Config/constants';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
-import { styleUtils } from '@Utils/style-utils';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import { isRTL } from '@TutorShared/config/constants';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { __ } from '@wordpress/i18n';
 import { Controller, type FieldValues } from 'react-hook-form';
 import Show from '../../controls/Show';
@@ -276,9 +276,8 @@ const styles = {
       z-index: ${zIndex.level};
     }
 
-    ${
-      hasParent &&
-      css`
+    ${hasParent &&
+    css`
       &:before {
         content: '';
         position: absolute;
@@ -290,8 +289,7 @@ const styles = {
         background-color: ${colorTokens.stroke.divider};
         z-index: ${zIndex.level};
       }
-    `
-    }
+    `}
   `,
   addNewButton: css`
     ${styleUtils.resetButton};
@@ -328,11 +326,9 @@ const styles = {
     transition: box-shadow 0.3s ease-in-out;
     padding-inline: ${spacing[8]};
     padding-block: ${hasCategories ? spacing[4] : '0px'};
-    ${
-      isActive &&
-      css`
+    ${isActive &&
+    css`
       box-shadow: ${shadow.scrollable};
-    `
-    }
+    `}
   `,
 };

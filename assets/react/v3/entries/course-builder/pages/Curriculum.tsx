@@ -18,18 +18,18 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useNavigate } from 'react-router-dom';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import EmptyState from '@Molecules/EmptyState';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
 import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
-import { colorTokens, containerMaxWidth, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import {
   type Content,
   type CourseContentOrderPayload,
@@ -39,12 +39,12 @@ import {
   useUpdateCourseContentOrderMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { moveTo, nanoid } from '@Utils/util';
+import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { moveTo, nanoid } from '@TutorShared/utils/util';
 
-import curriculumEmptyState2x from '@Images/curriculum-empty-state-2x.webp';
-import curriculumEmptyState from '@Images/curriculum-empty-state.webp';
+import curriculumEmptyState2x from '@SharedImages/curriculum-empty-state-2x.webp';
+import curriculumEmptyState from '@SharedImages/curriculum-empty-state.webp';
 import TopicDragOverlay from '../components/curriculum/TopicDragOverlay';
 
 const courseId = getCourseId();
@@ -62,10 +62,6 @@ const Curriculum = () => {
     }
   }, [navigate]);
 
-  if (!courseId) {
-    return null;
-  }
-
   const [allCollapsed, setAllCollapsed] = useState(true);
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
   const [topics, setTopics] = useState<CourseTopicWithCollapse[]>([]);
@@ -75,7 +71,6 @@ const Curriculum = () => {
   const courseCurriculumQuery = useCourseTopicQuery(courseId);
   const updateCourseContentOrderMutation = useUpdateCourseContentOrderMutation();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (topics.length === 0) {
       return;
@@ -103,6 +98,7 @@ const Curriculum = () => {
         return { ...item, isCollapsed: allCollapsed };
       });
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allCollapsed]);
 
   useEffect(() => {
@@ -164,6 +160,10 @@ const Curriculum = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     }),
   );
+
+  if (!courseId) {
+    return null;
+  }
 
   if (courseCurriculumQuery.isLoading) {
     return <LoadingOverlay />;
@@ -379,7 +379,11 @@ const Curriculum = () => {
 
         <div css={styles.content}>
           <Show
-            when={!courseCurriculumQuery.isLoading && topics.length > 0}
+            when={
+              !courseCurriculumQuery.isLoading &&
+              courseCurriculumQuery.data &&
+              (courseCurriculumQuery.data.length > 0 || topics.length > 0)
+            }
             fallback={
               <EmptyState
                 emptyStateImage={curriculumEmptyState}
@@ -526,11 +530,7 @@ const Curriculum = () => {
           </div>
         </Show>
       </div>
-      <Navigator
-        styleModifier={css`
-          margin-block: 40px;
-        `}
-      />
+      <Navigator styleModifier={styles.navigator} />
     </div>
   );
 };
@@ -540,24 +540,37 @@ export default Curriculum;
 const styles = {
   container: css`
     margin-top: ${spacing[32]};
+    width: 100%;
+
+    ${Breakpoint.smallTablet} {
+      margin-top: ${spacing[16]};
+    }
   `,
   wrapper: css`
-    max-width: ${containerMaxWidth}px;
     width: 100%;
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
+    margin: 0 auto;
   `,
   content: css`
     margin-top: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      margin-top: 0;
+    }
   `,
 
   topicWrapper: css`
     ${styleUtils.display.flex('column')};
     gap: ${spacing[16]};
+    align-items: center;
   `,
   addButtonWrapper: css`
     path {
       stroke: ${colorTokens.icon.brand};
     }
+  `,
+  navigator: css`
+    margin: ${spacing[40]} auto;
   `,
 };

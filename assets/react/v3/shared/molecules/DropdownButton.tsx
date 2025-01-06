@@ -1,14 +1,14 @@
-import { type SerializedStyles, css, keyframes } from '@emotion/react';
+import { css, keyframes, type SerializedStyles } from '@emotion/react';
 import React, { useRef, useState, type MouseEvent, type ReactNode } from 'react';
 
-import type { ButtonIconPosition, ButtonSize, ButtonVariant } from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import type { ButtonIconPosition, ButtonSize, ButtonVariant } from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { typography } from '@Config/typography';
+import { typography } from '@TutorShared/config/typography';
 import Popover from './Popover';
 
 interface DropdownOptionProps {
@@ -146,6 +146,7 @@ const DropdownButton = ({
             }),
             styles.dropdownButton({
               variant,
+              size,
               disabled: disabled || disabledDropdown,
             }),
           ]}
@@ -237,219 +238,186 @@ const styles = {
     transition-timing-function: ease-in-out;
     position: relative;
 
-    ${
-      size === 'large' &&
-      css`
-        padding: ${spacing[12]} ${spacing[32]};
-      `
-    }
+    ${size === 'large' &&
+    css`
+      padding: ${spacing[12]} ${spacing[32]};
+    `}
 
-    ${
-      size === 'small' &&
-      css`
+    ${size === 'small' &&
+    css`
       font-size: ${fontSize[13]};
       line-height: ${lineHeight[20]};
       padding: ${spacing[6]} ${spacing[16]};
-    `
-    }
+    `}
     
-    ${
-      variant === 'primary' &&
+    ${variant === 'primary' &&
+    css`
+      background-color: ${colorTokens.action.primary.default};
+      color: ${colorTokens.text.white};
+
+      &:hover:not(:disabled) {
+        background-color: ${colorTokens.action.primary.hover};
+      }
+
+      &:active:not(:disabled) {
+        background-color: ${colorTokens.action.primary.active};
+      }
+
+      ${disabled &&
       css`
-        background-color: ${colorTokens.action.primary.default};
-        color: ${colorTokens.text.white};
+        background-color: ${colorTokens.action.primary.disable};
+        color: ${colorTokens.text.disable};
+      `}
+    `}
 
-        &:hover:not(:disabled) {
-          background-color: ${colorTokens.action.primary.hover};
-        }
+    ${variant === 'secondary' &&
+    css`
+      background-color: ${colorTokens.action.secondary.default};
+      color: ${colorTokens.text.brand};
 
-        &:active:not(:disabled) {
-          background-color: ${colorTokens.action.primary.active};
-        }
+      &:hover:not(:disabled) {
+        background-color: ${colorTokens.action.secondary.hover};
+      }
 
-        ${
-          disabled &&
-          css`
-            background-color: ${colorTokens.action.primary.disable};
-            color: ${colorTokens.text.disable};
-          `
-        }
-      `
-    }
+      &:active:not(:disabled) {
+        background-color: ${colorTokens.action.secondary.active};
+      }
 
-    ${
-      variant === 'secondary' &&
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorTokens.action.secondary.default};
-        color: ${colorTokens.text.brand};
+        background-color: ${colorTokens.action.primary.disable};
+        color: ${colorTokens.text.disable};
+      `}
+    `}
 
-        &:hover:not(:disabled) {
-          background-color: ${colorTokens.action.secondary.hover};
-        }
+    ${variant === 'secondary' &&
+    css`
+      background-color: ${colorTokens.action.outline.default};
+      color: ${colorTokens.text.brand};
+      box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
 
-        &:active:not(:disabled) {
-          background-color: ${colorTokens.action.secondary.active};
-        }
+      &:hover:not(:disabled) {
+        background-color: ${colorTokens.action.outline.hover};
+      }
 
-        ${
-          (disabled || loading) &&
-          css`
-          background-color: ${colorTokens.action.primary.disable};
-          color: ${colorTokens.text.disable};
-        `
-        }
-      `
-    }
+      &:active:not(:disabled) {
+        background-color: ${colorTokens.action.outline.active};
+      }
 
-    ${
-      variant === 'secondary' &&
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorTokens.action.outline.default};
-        color: ${colorTokens.text.brand};
-        box-shadow: 0 0 0 1px ${colorTokens.stroke.brand};
+        color: ${colorTokens.text.disable};
+        box-shadow: 0 0 0 1px ${colorTokens.action.outline.disable};
+      `}
+    `}
 
-        &:hover:not(:disabled) {
-          background-color: ${colorTokens.action.outline.hover};
-        }
+    ${variant === 'tertiary' &&
+    css`
+      background-color: ${colorTokens.background.white};
+      color: ${colorTokens.text.subdued};
+      box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
 
-        &:active:not(:disabled) {
-          background-color: ${colorTokens.action.outline.active};
-        }
+      &:hover:not(:disabled) {
+        background-color: ${colorTokens.background.hover};
+        box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+        z-index: ${zIndex.positive};
+      }
 
-        ${
-          (disabled || loading) &&
-          css`
-          color: ${colorTokens.text.disable};
-          box-shadow: 0 0 0 1px ${colorTokens.action.outline.disable};
-        `
-        }
-      `
-    }
+      &:active:not(:disabled) {
+        background-color: ${colorTokens.background.active};
+        box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
+      }
 
-    ${
-      variant === 'tertiary' &&
+      ${(disabled || loading) &&
       css`
-        background-color: ${colorTokens.background.white};
-        color: ${colorTokens.text.subdued};
-        box-shadow: 0 0 0 1px ${colorTokens.stroke.default};
+        color: ${colorTokens.text.disable};
+        box-shadow: 0 0 0 1px ${colorTokens.action.outline.disable};
+      `}
+    `}
 
-        &:hover:not(:disabled) {
-          background-color: ${colorTokens.background.hover};
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
-          z-index: ${zIndex.positive};
-        }
+    ${variant === 'danger' &&
+    css`
+      background-color: ${colorTokens.background.status.errorFail};
+      color: ${colorTokens.text.error};
 
-        &:active:not(:disabled) {
-          background-color: ${colorTokens.background.active};
-          box-shadow: 0 0 0 1px ${colorTokens.stroke.hover};
-        }
-
-        ${
-          (disabled || loading) &&
-          css`
-          color: ${colorTokens.text.disable};
-          box-shadow: 0 0 0 1px ${colorTokens.action.outline.disable};
-        `
-        }
-      `
-    }
-
-    ${
-      variant === 'danger' &&
-      css`
+      &:hover:not(:disabled) {
         background-color: ${colorTokens.background.status.errorFail};
-        color: ${colorTokens.text.error};
+      }
 
-        &:hover:not(:disabled) {
-          background-color: ${colorTokens.background.status.errorFail};
-        }
+      &:active:not(:disabled) {
+        background-color: ${colorTokens.background.status.errorFail};
+      }
 
-        &:active:not(:disabled) {
-          background-color: ${colorTokens.background.status.errorFail};
-        }
-
-        ${
-          (disabled || loading) &&
-          css`
-          background-color: ${colorTokens.action.primary.disable};
-          color: ${colorTokens.text.disable};
-        `
-        }
-      `
-    }
-
-    ${
-      variant === 'text' &&
+      ${(disabled || loading) &&
       css`
-        background-color: transparent;
-        color: ${colorTokens.text.subdued};
-        padding: ${spacing[4]} ${spacing[8]};
+        background-color: ${colorTokens.action.primary.disable};
+        color: ${colorTokens.text.disable};
+      `}
+    `}
+
+    ${variant === 'text' &&
+    css`
+      background-color: transparent;
+      color: ${colorTokens.text.subdued};
+      padding: ${spacing[4]} ${spacing[8]};
+
+      svg {
+        color: ${colorTokens.icon.default};
+      }
+
+      &:hover:not(:disabled) {
+        text-decoration: underline;
+        color: ${colorTokens.text.primary};
 
         svg {
-          color: ${colorTokens.icon.default};
+          color: ${colorTokens.icon.brand};
         }
+      }
 
-        &:hover:not(:disabled) {
-          text-decoration: underline;
-          color: ${colorTokens.text.primary};
+      &:active:not(:disabled) {
+        color: ${colorTokens.text.title};
+      }
 
-          svg {
-            color: ${colorTokens.icon.brand};
-          }
+      &:focus:not(:disabled) {
+        color: ${colorTokens.text.title};
+        svg {
+          color: ${colorTokens.icon.brand};
         }
+      }
 
-        &:active:not(:disabled) {
-          color: ${colorTokens.text.title};
+      ${(disabled || loading) &&
+      css`
+        color: ${colorTokens.text.disable};
+
+        svg {
+          color: ${colorTokens.icon.disable};
         }
-
-        &:focus:not(:disabled) {
-          color: ${colorTokens.text.title};
-          svg {
-            color: ${colorTokens.icon.brand};
-          }
-        }
-
-        ${
-          (disabled || loading) &&
-          css`
-          color: ${colorTokens.text.disable};
-
-          svg {
-            color: ${colorTokens.icon.disable};
-          }
-        `
-        }
-    `
-    }
+      `}
+    `}
 
     :disabled {
       cursor: not-allowed;
     }
-
   `,
   buttonContent: ({ loading, disabled }: { loading: boolean; disabled: boolean }) => css`
     display: flex;
     align-items: center;
 
-    ${
-      loading &&
-      !disabled &&
-      css`
-        color: transparent;
-      `
-    }
+    ${loading &&
+    !disabled &&
+    css`
+      color: transparent;
+    `}
   `,
   buttonIcon: ({ iconPosition }: { iconPosition: ButtonIconPosition }) => css`
     display: grid;
     place-items: center;
     margin-right: ${spacing[6]};
-    ${
-      iconPosition === 'right' &&
-      css`
-        margin-right: 0;
-        margin-left: ${spacing[6]};
-      `
-    }
+    ${iconPosition === 'right' &&
+    css`
+      margin-right: 0;
+      margin-left: ${spacing[6]};
+    `}
   `,
   spinner: css`
     position: absolute;
@@ -462,32 +430,51 @@ const styles = {
       animation: ${spin} 1.5s linear infinite;
     }
   `,
-  dropdownButton: ({ variant, disabled }: { variant: ButtonVariant; disabled: boolean }) => css`
+  dropdownButton: ({ variant, size, disabled }: { variant: ButtonVariant; size: ButtonSize; disabled: boolean }) => css`
     ${styleUtils.flexCenter()}
-    padding: ${spacing[8]};
+    padding-inline: ${spacing[8]};
     border-left: 1px solid transparent;
     border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
 
-    ${
-      variant === 'primary' &&
-      css`
-        border-color: ${colorTokens.stroke.brand};
-      `
+    svg {
+      width: 24px;
+      height: 24px;
     }
 
-    ${
-      variant === 'danger' &&
-      css`
-        border-color: ${colorTokens.stroke.danger};
-      `
-    }
+    ${variant === 'primary' &&
+    css`
+      border-color: ${colorTokens.stroke.brand};
+    `}
 
-    ${
-      disabled &&
-      css`
-        border-color: ${colorTokens.stroke.disable};
-      `
-    }
+    ${variant === 'danger' &&
+    css`
+      border-color: ${colorTokens.stroke.danger};
+    `}
+
+    ${disabled &&
+    css`
+      border-color: ${colorTokens.stroke.disable};
+    `}
+
+    ${size === 'large' &&
+    css`
+      padding-inline: ${spacing[12]};
+
+      svg {
+        width: 30px;
+        height: 30px;
+      }
+    `}
+
+    ${size === 'small' &&
+    css`
+      padding-inline: ${spacing[6]};
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    `}
   `,
   dropdownWrapper: css`
     display: flex;
@@ -505,12 +492,10 @@ const styles = {
     gap: ${spacing[8]};
     border: 2px solid transparent;
 
-    ${
-      isDanger &&
-      css`
-        color: ${colorTokens.text.error};
-      `
-    }
+    ${isDanger &&
+    css`
+      color: ${colorTokens.text.error};
+    `}
 
     :hover {
       background-color: ${colorTokens.background.hover};
@@ -522,13 +507,11 @@ const styles = {
       border-color: ${colorTokens.stroke.brand};
     }
 
-    ${
-      disabled &&
-      css`
-        pointer-events: none;
-        color: ${colorTokens.text.disable};
-      `
-    }
+    ${disabled &&
+    css`
+      pointer-events: none;
+      color: ${colorTokens.text.disable};
+    `}
   `,
   dropdownOptionContent: css`
     display: flex;

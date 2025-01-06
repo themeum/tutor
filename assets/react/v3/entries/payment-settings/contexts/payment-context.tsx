@@ -1,4 +1,4 @@
-import { LoadingSection } from '@Atoms/LoadingSpinner';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { type ReactNode, createContext, useContext } from 'react';
 import {
   type PaymentGateway,

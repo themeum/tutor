@@ -4,16 +4,18 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormEditableAlias from '@Components/fields/FormEditableAlias';
-import FormInput from '@Components/fields/FormInput';
-import FormWPEditor from '@Components/fields/FormWPEditor';
+import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import CourseBasicSidebar from '@CourseBuilderComponents/course-basic/CourseBasicSidebar';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -22,8 +24,8 @@ import {
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
 import { convertToSlug, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { maxLimitRule, requiredRule } from '@Utils/validation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 let hasAliasChanged = false;
@@ -135,10 +137,15 @@ const CourseBasic = () => {
 
           <CourseSettings />
         </div>
-        <Navigator styleModifier={styles.navigator} />
+        <Show when={CURRENT_VIEWPORT.isAboveTablet}>
+          <Navigator styleModifier={styles.navigator} />
+        </Show>
       </div>
 
       <CourseBasicSidebar />
+      <Show when={!CURRENT_VIEWPORT.isAboveTablet}>
+        <Navigator styleModifier={styles.navigator} />
+      </Show>
     </div>
   );
 };
@@ -150,6 +157,12 @@ const styles = {
     display: grid;
     grid-template-columns: 1fr 338px;
     gap: ${spacing[32]};
+    width: 100%;
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
   `,
   mainForm: ({ isWpEditorFullScreen }: { isWpEditorFullScreen: boolean }) => css`
     padding-block: ${spacing[32]} ${spacing[24]};
@@ -161,6 +174,11 @@ const styles = {
     css`
       z-index: ${zIndex.header + 1};
     `}
+
+    ${Breakpoint.smallTablet} {
+      padding-top: ${spacing[16]};
+      position: unset;
+    }
   `,
 
   fieldsWrapper: css`
@@ -194,6 +212,10 @@ const styles = {
   `,
   navigator: css`
     margin-top: ${spacing[40]};
+
+    ${Breakpoint.smallTablet} {
+      margin-top: 0;
+    }
   `,
   editorsButtonWrapper: css`
     display: flex;

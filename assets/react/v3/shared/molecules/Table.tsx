@@ -1,9 +1,9 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import Skeleton from '@Atoms/Skeleton';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import { getRandom, range } from '@Utils/util';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Skeleton from '@TutorShared/atoms/Skeleton';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getRandom, range } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import type { ReactNode } from 'react';
@@ -167,8 +167,8 @@ const Table = <TableItem,>({
             css={[
               styles.td,
               css`
-								text-align: center;
-							`,
+                text-align: center;
+              `,
             ]}
           >
             No Data!
@@ -214,53 +214,47 @@ export default Table;
 
 const styles = {
   tableContainer: ({ isRounded }: { isRounded: boolean }) => css`
-		display: block;
-		width: 100%;
-		overflow-x: auto;
+    display: block;
+    width: 100%;
+    overflow-x: auto;
 
-		${
-      isRounded &&
-      css`
-			border: 1px solid ${colorTokens.stroke.divider};
-			border-radius: ${borderRadius[6]};
-		`
-    }
-	`,
+    ${isRounded &&
+    css`
+      border: 1px solid ${colorTokens.stroke.divider};
+      border-radius: ${borderRadius[6]};
+    `}
+  `,
   headerWithIcon: css`
-		${styleUtils.resetButton};
-		${typography.body()};
-		color: ${colorTokens.text.subdued};
-		display: flex;
-		gap: ${spacing[4]};
-		align-items: center;
-	`,
+    ${styleUtils.resetButton};
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
+    display: flex;
+    gap: ${spacing[4]};
+    align-items: center;
+  `,
   table: css`
-		width: 100%;
-		border-collapse: collapse;
-	`,
+    width: 100%;
+    border-collapse: collapse;
+  `,
   tableRow: ({ isBordered, isStriped }: { isBordered: boolean; isStriped: boolean }) => css`
-		${
-      isBordered &&
-      css`
-			border-bottom: 1px solid ${colorTokens.stroke.divider};
-		`
-    }
+    ${isBordered &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
 
-		${
-      isStriped &&
-      css`
-			&:nth-of-type(even) {
-				background-color: ${colorTokens.background.active};
-			}
-		`
-    }
-	`,
+    ${isStriped &&
+    css`
+      &:nth-of-type(even) {
+        background-color: ${colorTokens.background.active};
+      }
+    `}
+  `,
   th: css`
-		${typography.body()};
-		background-color: ${colorTokens.background.white};
-		color: ${colorTokens.text.primary};
-		padding: 0 ${spacing[16]};
-	`,
+    ${typography.body()};
+    background-color: ${colorTokens.background.white};
+    color: ${colorTokens.text.primary};
+    padding: 0 ${spacing[16]};
+  `,
   bodyTr: ({ colors, isSelected, isRounded }: { colors: Colors; isSelected: boolean; isRounded: boolean }) => {
     const {
       bodyRowDefault,
@@ -270,36 +264,30 @@ const styles = {
     } = colors;
 
     return css`
-			${
-        bodyRowDefault &&
-        css`
-				background-color: ${bodyRowDefault};
-			`
+      ${bodyRowDefault &&
+      css`
+        background-color: ${bodyRowDefault};
+      `}
+
+      &:hover {
+        background-color: ${isSelected && bodyRowSelectedHover ? bodyRowSelectedHover : bodyRowHover};
       }
 
-			&:hover {
-				background-color: ${isSelected && bodyRowSelectedHover ? bodyRowSelectedHover : bodyRowHover};
-			}
+      ${isSelected &&
+      css`
+        background-color: ${bodyRowSelected};
+      `}
 
-			${
-        isSelected &&
-        css`
-				background-color: ${bodyRowSelected};
-			`
-      }
-
-			${
-        isRounded &&
-        css`
-				:last-of-type {
-					border-bottom: none;
-				}
-			`
-      }
-		`;
+      ${isRounded &&
+      css`
+        :last-of-type {
+          border-bottom: none;
+        }
+      `}
+    `;
   },
   td: css`
-		${typography.body()};
-		padding: ${spacing[16]};
-	`,
+    ${typography.body()};
+    padding: ${spacing[16]};
+  `,
 };

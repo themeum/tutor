@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import ErrorBoundary from '@Components/ErrorBoundary';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 
 import App from '@EnrollmentComponents/App';
 import { HashRouter } from 'react-router-dom';
@@ -15,5 +15,5 @@ root.render(
         <App />
       </ErrorBoundary>
     </HashRouter>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

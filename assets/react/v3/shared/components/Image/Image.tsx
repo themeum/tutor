@@ -24,45 +24,35 @@ const styles = {
     margin: 0;
     position: relative;
 
-    ${
-      layout === ImageLayout.Fill &&
-      css`
+    ${layout === ImageLayout.Fill &&
+    css`
       position: absolute;
       inset: 0;
-    `
-    }
+    `}
 
-    ${
-      layout === ImageLayout.Intrinsic &&
-      css`
+    ${layout === ImageLayout.Intrinsic &&
+    css`
       max-width: 100%;
-    `
-    }
+    `}
 
-    ${
-      width &&
-      css`
+    ${width &&
+    css`
       width: ${width}px;
-    `
-    }
+    `}
 
-    ${
-      height &&
-      css`
+    ${height &&
+    css`
       height: ${height}px;
-    `
-    }
+    `}
 		
 
-    ${
-      layout === ImageLayout.Fixed &&
-      css`
+    ${layout === ImageLayout.Fixed &&
+    css`
       display: inline-block;
       position: relative;
       width: ${width}px;
       height: ${height}px;
-    `
-    }
+    `}
   `,
   image: css`
     position: absolute;

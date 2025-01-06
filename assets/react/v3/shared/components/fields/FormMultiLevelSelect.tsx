@@ -2,16 +2,16 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { Category, CategoryWithChildren } from '@Services/category';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { generateTree } from '@Utils/util';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { generateTree } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -84,7 +84,7 @@ const FormMultiLevelSelect = ({
                 }}
                 autoComplete="off"
                 readOnly={true}
-                value={Array.isArray(field.value) ? '' : options.find((item) => item.id === field.value)?.name ?? ''}
+                value={Array.isArray(field.value) ? '' : (options.find((item) => item.id === field.value)?.name ?? '')}
                 placeholder={placeholder}
               />
               <button
@@ -212,12 +212,10 @@ const styles = {
     color: ${colorTokens.icon.default};
     padding: ${spacing[6]};
 
-    ${
-      isOpen &&
-      css`
-        transform: rotate(180deg);
-      `
-    }
+    ${isOpen &&
+    css`
+      transform: rotate(180deg);
+    `}
   `,
   inputWrapper: css`
     position: relative;

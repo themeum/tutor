@@ -1,6 +1,6 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import React from 'react';
 
@@ -58,15 +58,15 @@ Badge.displayName = 'Badge';
 const styles = {
   badge: (variant: Variant) => css`
     ${typography.small('medium')};
-		display: inline-flex;
-		align-items: center;
-		border-radius: ${borderRadius[30]};
-		padding: ${spacing[4]} ${spacing[8]};
+    display: inline-flex;
+    align-items: center;
+    border-radius: ${borderRadius[30]};
+    padding: ${spacing[4]} ${spacing[8]};
     max-height: 24px;
     ${styleUtils.textEllipsis};
 
-		border: 1px solid ${badgeVariants[variant].border};
-		background-color: ${badgeVariants[variant].background};
-		color: ${badgeVariants[variant].foreground};
-	`,
+    border: 1px solid ${badgeVariants[variant].border};
+    background-color: ${badgeVariants[variant].background};
+    color: ${badgeVariants[variant].foreground};
+  `,
 };

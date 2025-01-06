@@ -5,25 +5,25 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { useModal } from '@Components/modals/Modal';
-import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
-import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import { styleUtils } from '@Utils/style-utils';
-import { isObject } from '@Utils/types';
-import { requiredRule } from '@Utils/validation';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isObject } from '@TutorShared/utils/types';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 import Badge from '../atoms/Badge';
 import { usePaymentContext } from '../contexts/payment-context';
@@ -37,6 +37,7 @@ import {
   useInstallPaymentMutation,
   useRemovePaymentMutation,
 } from '../services/payment';
+import { CURRENT_VIEWPORT } from '@/v3/shared/config/constants';
 
 interface PaymentItemProps {
   data: PaymentMethod;
@@ -52,7 +53,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
   const paymentFormFields = data.is_manual
     ? manualMethodFields
-    : payment_gateways.find((item) => item.name === data.name)?.fields ?? [];
+    : (payment_gateways.find((item) => item.name === data.name)?.fields ?? []);
 
   const installPaymentMutation = useInstallPaymentMutation();
   const removePaymentMutation = useRemovePaymentMutation();
@@ -82,11 +83,11 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     .getValues(`payment_methods.${paymentIndex}.fields`)
     .some((field) => !['icon', 'webhook_url'].includes(field.name) && !field.value);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (hasEmptyFields) {
       form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasEmptyFields]);
 
   return (
@@ -195,9 +196,9 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               options={
                                 isObject(field.options)
                                   ? convertToOptions(field.options as Record<string, string>)
-                                  : field.options ?? []
+                                  : (field.options ?? [])
                               }
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                             />
                           );
 
@@ -208,7 +209,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                               type="password"
                               isPassword
                               label={field.label}
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                             />
                           );
 
@@ -250,7 +251,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                             <FormInput
                               {...controllerProps}
                               label={field.label}
-                              isInlineLabel
+                              isInlineLabel={CURRENT_VIEWPORT.isAboveSmallMobile}
                               onChange={(value) => {
                                 if (data.is_manual) {
                                   form.setValue(`payment_methods.${paymentIndex}.label`, String(value));
@@ -331,14 +332,12 @@ const styles = {
       }
     }
 
-    ${
-      isOverlay &&
-      css`
+    ${isOverlay &&
+    css`
       [data-card] {
         box-shadow: ${shadow.drag} !important;
       }
-    `
-    }
+    `}
   `,
   cardActions: css`
     display: flex;
@@ -383,6 +382,9 @@ const styles = {
     input[type='text'],
     input[type='password'] {
       min-width: 350px;
+      ${Breakpoint.mobile} {
+        min-width: 250px;
+      }
     }
   `,
   dragButton: ({ isOverlay }: { isOverlay: boolean }) => css`

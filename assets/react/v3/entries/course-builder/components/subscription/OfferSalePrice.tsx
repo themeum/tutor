@@ -2,19 +2,19 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 const { tutor_currency } = tutorConfig;
 
@@ -170,25 +170,25 @@ export function OfferSalePrice({ index }: { index: number }) {
 
 const saleStyles = {
   wrapper: css`
-		background-color: ${colorTokens.background.white};
-		padding: ${spacing[12]};
-		border: 1px solid ${colorTokens.stroke.default};
-		border-radius: ${borderRadius[8]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[20]};
-	`,
+    background-color: ${colorTokens.background.white};
+    padding: ${spacing[12]};
+    border: 1px solid ${colorTokens.stroke.default};
+    border-radius: ${borderRadius[8]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[20]};
+  `,
   inputWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-		padding: ${spacing[4]};
-		margin: -${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+    padding: ${spacing[4]};
+    margin: -${spacing[4]};
+  `,
   datetimeWrapper: css`
-		label {
-			${typography.caption()};
-			color: ${colorTokens.text.title};
-		}
-	`,
+    label {
+      ${typography.caption()};
+      color: ${colorTokens.text.title};
+    }
+  `,
 };

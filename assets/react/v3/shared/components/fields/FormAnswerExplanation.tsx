@@ -2,14 +2,14 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Button from '@Atoms/Button';
-import FormWPEditor from '@Components/fields/FormWPEditor';
+import Button from '@TutorShared/atoms/Button';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface FormAnswerExplanationProps extends FormControllerProps<string | null> {
   label?: string;
@@ -126,46 +126,34 @@ const FormAnswerExplanation = ({
 export default FormAnswerExplanation;
 
 const styles = {
-  wrapper: ({
-    hasValue,
-  }: {
-    hasValue: boolean;
-  }) => css`
+  wrapper: ({ hasValue }: { hasValue: boolean }) => css`
     ${styleUtils.display.flex('column')}
     gap: ${spacing[10]};
     border-radius: ${borderRadius.card};
 
-    ${
-      hasValue &&
-      css`
-        background-color: ${colorTokens.color.success[30]};
-        padding: ${spacing[12]} ${spacing[24]};
+    ${hasValue &&
+    css`
+      background-color: ${colorTokens.color.success[30]};
+      padding: ${spacing[12]} ${spacing[24]};
 
-        &:hover {
-          background-color: ${colorTokens.color.success[40]};
-        }
-      `
-    }
+      &:hover {
+        background-color: ${colorTokens.color.success[40]};
+      }
+    `}
   `,
   editorWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     position: relative;
     max-height: 400px;
     overflow-y: scroll;
 
-    ${
-      isEdit &&
-      css`
-        padding-inline: 0;
-        max-height: unset;
-        overflow: unset;
-      `
-    }
+    ${isEdit &&
+    css`
+      padding-inline: 0;
+      max-height: unset;
+      overflow: unset;
+    `}
   `,
-  container: ({
-    isEdit,
-  }: {
-    isEdit: boolean;
-  }) => css`
+  container: ({ isEdit }: { isEdit: boolean }) => css`
     position: relative;
     display: flex;
     flex-direction: column;
@@ -195,30 +183,25 @@ const styles = {
       color: ${colorTokens.text.title};
     }
 
-    ${
-      isEdit &&
-      css`
+    ${isEdit &&
+    css`
       padding: 0;
-    `
-    }
+    `}
 
     &:hover {
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
       cursor: text;
 
-			[data-action-buttons] {
-				opacity: 1;
-			}
-
-      ${
-        isEdit &&
-        css`
-        background-color: transparent;
-      `
+      [data-action-buttons] {
+        opacity: 1;
       }
-      
-    };
+
+      ${isEdit &&
+      css`
+        background-color: transparent;
+      `}
+    }
   `,
   inputContainer: (enableResize: boolean) => css`
     position: relative;
@@ -231,12 +214,10 @@ const styles = {
       padding: ${spacing[8]} ${spacing[12]};
       resize: none;
 
-      ${
-        enableResize &&
-        css`
+      ${enableResize &&
+      css`
         resize: vertical;
-      `
-      }
+      `}
     }
   `,
   clearButton: css`
@@ -260,24 +241,17 @@ const styles = {
     align-items: center;
     height: 100%;
   `,
-  actionButtonWrapper: ({
-    isEdit,
-  }: {
-    isEdit: boolean;
-  }) => css`
+  actionButtonWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     display: flex;
-		justify-content: flex-end;
-		gap: ${spacing[8]};
+    justify-content: flex-end;
+    gap: ${spacing[8]};
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
 
-		${
-      isEdit &&
-      css`
-				opacity: 1;
-			`
-    }
-
+    ${isEdit &&
+    css`
+      opacity: 1;
+    `}
   `,
   answer: css`
     padding: ${spacing[12]} ${spacing[24]};

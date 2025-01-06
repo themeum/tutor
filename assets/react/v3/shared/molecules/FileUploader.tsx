@@ -1,10 +1,10 @@
-import Button, { type ButtonIconPosition, type ButtonSize, type ButtonVariant } from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { MAX_FILE_SIZE } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import { getFileExtensionFromName } from '@Utils/util';
+import Button, { type ButtonIconPosition, type ButtonSize, type ButtonVariant } from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { MAX_FILE_SIZE } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getFileExtensionFromName } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import type React from 'react';
 import { useRef } from 'react';
@@ -102,7 +102,7 @@ const styles = {
     justify-content: center;
     align-items: center;
     flex: 1;
-    gap: ${spacing[12]}; ;
+    gap: ${spacing[12]};
   `,
   fileInput: css`
     display: none;

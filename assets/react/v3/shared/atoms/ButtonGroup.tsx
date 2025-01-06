@@ -1,4 +1,4 @@
-import { borderRadius, lineHeight, shadow } from '@Config/styles';
+import { borderRadius, lineHeight, shadow } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import React, { type ReactNode } from 'react';
 
@@ -48,24 +48,19 @@ const styles = {
     display: flex;
     overflow: hidden;
 
-    ${
-      !fullWidth &&
-      css`
+    ${!fullWidth &&
+    css`
       width: fit-content;
-    `
-    }
+    `}
 
-    ${
-      gap &&
-      css`
+    ${gap &&
+    css`
       gap: ${gap}px;
-    `
-    }
+    `}
   `,
   buttonCss: (variant: ButtonVariant, gap: number | undefined, fullWidth: boolean) => css`
-    ${
-      variant === 'secondary' &&
-      css`
+    ${variant === 'secondary' &&
+    css`
       border: none;
       line-height: ${lineHeight[20]};
       box-shadow: ${shadow.combinedButton};
@@ -74,35 +69,29 @@ const styles = {
         box-shadow: ${shadow.combinedButton};
       }
 
-      ${
-        gap &&
-        css`
+      ${gap &&
+      css`
         box-shadow: ${shadow.combinedButtonExtend};
 
         &:hover {
           box-shadow: ${shadow.combinedButtonExtend};
         }
-      `
-      }
-    `
-    }
+      `}
+    `}
 
     &:last-of-type {
-      ${
-        variant === 'secondary' &&
-        css`
+      ${variant === 'secondary' &&
+      css`
         box-shadow: ${shadow.combinedButtonExtend};
 
         &:hover {
           box-shadow: ${shadow.combinedButtonExtend};
         }
-      `
-      }
+      `}
     }
 
-    ${
-      !gap &&
-      css`
+    ${!gap &&
+    css`
       border-radius: 0;
       &:first-of-type {
         border-radius: ${borderRadius[6]} 0px 0px ${borderRadius[6]};
@@ -110,22 +99,17 @@ const styles = {
       &:last-of-type {
         border-radius: 0px ${borderRadius[6]} ${borderRadius[6]} 0px;
       }
-    `
-    }
+    `}
 
-    ${
-      fullWidth &&
-      css`
+    ${fullWidth &&
+    css`
       flex: auto;
-    `
-    }
+    `}
   `,
   buttonContentCss: (fullWidth: boolean) => css`
-    ${
-      fullWidth &&
-      css`
+    ${fullWidth &&
+    css`
       justify-content: center;
-    `
-    }
+    `}
   `,
 };

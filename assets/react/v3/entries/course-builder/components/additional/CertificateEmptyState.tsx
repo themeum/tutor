@@ -1,82 +1,72 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import Show from '@Controls/Show';
-import addonDisabled2x from '@Images/addon-disabled-2x.webp';
-import addonDisabled from '@Images/addon-disabled.webp';
-import certificate2x from '@Images/pro-placeholders/certificates-2x.webp';
-import certificate from '@Images/pro-placeholders/certificates.webp';
+import certificate2x from '@SharedImages/pro-placeholders/certificates-2x.webp';
+import certificate from '@SharedImages/pro-placeholders/certificates.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const CertificateEmptyState = () => {
+  if (isTutorPro) {
+    return null;
+  }
+
   return (
     <div css={styles.emptyState}>
       <img
         css={styles.placeholderImage}
-        src={!isTutorPro ? certificate : addonDisabled}
-        srcSet={!isTutorPro ? `${certificate} 1x, ${certificate2x} 2x` : `${addonDisabled} 1x, ${addonDisabled2x} 2x`}
-        alt={!isTutorPro ? __('Pro Placeholder', 'tutor') : __('Addon Disabled', 'tutor')}
+        src={certificate}
+        srcSet={`${certificate} 1x, ${certificate2x} 2x`}
+        alt={__('Pro Placeholder', 'tutor')}
       />
 
       <div css={styles.featureAndActionWrapper}>
-        <Show when={!isTutorPro}>
-          <h5 css={styles.title}>{__('Award Students with Custom Certificates', 'tutor')}</h5>
-        </Show>
+        <h5 css={styles.title}>{__('Award Students with Custom Certificates', 'tutor')}</h5>
         <div css={styles.featuresWithTitle}>
-          <Show
-            when={!isTutorPro}
-            fallback={
-              <h6 css={typography.heading6('medium')}>
-                {__('Activate the “Certificate” addon to use this feature.', 'tutor')}
-              </h6>
+          <div>
+            {
+              // prettier-ignore
+              __( 'Celebrate success with personalized certificates. Recognize student achievements with unique designs that inspire and motivate students.', 'tutor')
             }
-          >
-            <div>
-              {
-                // prettier-ignore
-                __( 'Celebrate success with personalized certificates. Recognize student achievements with unique designs that inspire and motivate students.', 'tutor')
-              }
-            </div>
+          </div>
 
-            <div css={styles.features}>
-              <div css={styles.feature}>
-                <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
-                <span>
-                  {
-                    // prettier-ignore
-                    __('Design personalized certificates that highlight their accomplishments and boost their confidence.', 'tutor')
-                  }
-                </span>
-              </div>
-              <div css={styles.feature}>
-                <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
-                <span>
-                  {__('Inspire them with a touch of credibility and recognition tailored just for them.', 'tutor')}
-                </span>
-              </div>
+          <div css={styles.features}>
+            <div css={styles.feature}>
+              <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
+              <span>
+                {
+                  // prettier-ignore
+                  __('Design personalized certificates that highlight their accomplishments and boost their confidence.', 'tutor')
+                }
+              </span>
             </div>
-          </Show>
+            <div css={styles.feature}>
+              <SVGIcon name="materialCheck" width={20} height={20} style={styles.checkIcon} />
+              <span>
+                {__('Inspire them with a touch of credibility and recognition tailored just for them.', 'tutor')}
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div css={styles.actionsButton}>
         <Button
-          variant={!isTutorPro ? 'primary' : 'secondary'}
-          icon={<SVGIcon name={!isTutorPro ? 'crown' : 'linkExternal'} width={24} height={24} />}
+          variant={'primary'}
+          icon={<SVGIcon name={'crown'} width={24} height={24} />}
           onClick={() => {
-            window.open(!isTutorPro ? config.TUTOR_PRICING_PAGE : config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
+            window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
           }}
         >
-          {!isTutorPro ? __('Get Tutor LMS Pro', 'tutor') : __('Enable Certificate Addon', 'tutor')}
+          {__('Get Tutor LMS Pro', 'tutor')}
         </Button>
       </div>
     </div>
@@ -110,7 +100,8 @@ const styles = {
   `,
   featuresWithTitle: css`
     ${styleUtils.display.flex('column')}
-    width: 500px;
+    max-width: 500px;
+    width: 100%;
     gap: ${spacing[8]};
     ${typography.body('regular')};
   `,

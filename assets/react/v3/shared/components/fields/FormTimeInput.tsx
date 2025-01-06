@@ -1,11 +1,11 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { DateFormats, isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { DateFormats, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
 import { useEffect, useMemo, useRef, useState } from 'react';
@@ -246,7 +246,9 @@ const styles = {
     height: 32px;
     ${styleUtils.flexCenter()};
     opacity: 0;
-    transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
     border-radius: ${borderRadius[2]};
 
     :hover {

@@ -3,17 +3,17 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
+import Button from '@TutorShared/atoms/Button';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
-import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
-import { tutorConfig } from '@Config/config';
-import { colorTokens, fontSize, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, colorTokens, fontSize, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
 import { usePaymentContext } from '../contexts/payment-context';
 import { type PaymentSettings, convertPaymentMethods, initialPaymentSettings } from '../services/payment';
@@ -35,15 +35,14 @@ const TaxSettingsPage = () => {
   const { reset } = form;
   const formData = form.watch();
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
       form.reset(form.getValues(), { keepValues: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.formState.isDirty]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (payment_settings) {
       const methods = convertPaymentMethods(payment_settings.payment_methods, payment_gateways);
@@ -53,6 +52,7 @@ const TaxSettingsPage = () => {
         payment_methods: methods,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [reset, payment_settings]);
 
   return (
@@ -199,6 +199,10 @@ const styles = {
   buttonWrapper: css`
     display: flex;
     gap: ${spacing[16]};
+
+    ${Breakpoint.smallMobile} {
+      flex-direction: column;
+    }
   `,
   noPaymentMethod: css`
     ${typography.caption()};

@@ -1,8 +1,8 @@
-import ToastProvider from '@Atoms/Toast';
-import RTLProvider from '@Components/RTLProvider';
-import { ModalProvider } from '@Components/modals/Modal';
+import ToastProvider from '@TutorShared/atoms/Toast';
+import RTLProvider from '@TutorShared/components/RTLProvider';
+import { ModalProvider } from '@TutorShared/components/modals/Modal';
 import routes from '@CourseBuilderConfig/routes';
-import { createGlobalCss } from '@Utils/style-utils';
+import { createGlobalCss } from '@TutorShared/utils/style-utils';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';

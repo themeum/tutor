@@ -1,10 +1,10 @@
-import Button, { type ButtonVariant } from '@Atoms/Button';
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { AnimationType } from '@Hooks/useAnimation';
-import { Portal, type arrowPosition, usePortalPopover } from '@Hooks/usePortalPopover';
-import { styleUtils } from '@Utils/style-utils';
+import Button, { type ButtonVariant } from '@TutorShared/atoms/Button';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { Portal, type arrowPosition, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import type { ReactNode, RefObject } from 'react';
@@ -113,10 +113,9 @@ const styles = {
     z-index: ${zIndex.dropdown};
 
     &::before {
-      ${
-        arrow &&
-        !hideArrow &&
-        css`
+      ${arrow &&
+      !hideArrow &&
+      css`
         content: '';
         position: absolute;
         border: ${spacing[8]} solid transparent;
@@ -125,8 +124,7 @@ const styles = {
         ${arrow === 'right' && styles.arrowRight}
         ${arrow === 'top' && styles.arrowTop}
         ${arrow === 'bottom' && styles.arrowBottom}
-      `
-      }
+      `}
     }
   `,
   arrowLeft: css`
@@ -188,13 +186,11 @@ const styles = {
     justify-content: end;
     gap: ${spacing[10]};
 
-    ${
-      isDelete &&
-      css`
+    ${isDelete &&
+    css`
       button:last-of-type {
         color: ${colorTokens.text.error};
       }
-    `
-    }
+    `}
   `,
 };

@@ -1,25 +1,25 @@
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { useModal } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
 
-import { typography } from '@Config/typography';
+import { typography } from '@TutorShared/config/typography';
 import type { Coupon } from '@CouponServices/coupon';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import coursePlaceholder from '@Images/course-placeholder.png';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import type { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Addons } from '@Config/constants';
+import { Addons } from '@TutorShared/config/constants';
 
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
 const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);
@@ -94,7 +94,7 @@ function CouponDiscount() {
               type="number"
               label={__('Discount Value', 'tutor')}
               placeholder="0"
-              content={discountType === 'flat' ? tutor_currency?.symbol ?? '$' : '%'}
+              content={discountType === 'flat' ? (tutor_currency?.symbol ?? '$') : '%'}
               contentCss={styleUtils.inputCurrencyStyle}
             />
           )}
@@ -231,69 +231,69 @@ function AppliesToItem({ image, title, subTitle, handleDeleteClick }: AppliesToI
 
 const styles = {
   discountWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   discountTypeWrapper: css`
-		display: flex;
-		gap: ${spacing[20]};
-	`,
+    display: flex;
+    gap: ${spacing[20]};
+  `,
   couponWrapper: css`
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[4]};
+  `,
   addCoursesButton: css`
-		width: fit-content;
-		color: ${colorTokens.text.brand};
+    width: fit-content;
+    color: ${colorTokens.text.brand};
 
-		svg {
-			color: ${colorTokens.text.brand};
-		}
-	`,
+    svg {
+      color: ${colorTokens.text.brand};
+    }
+  `,
   price: css`
-		display: flex;
-		gap: ${spacing[4]};
-	`,
+    display: flex;
+    gap: ${spacing[4]};
+  `,
   discountPrice: css`
-		text-decoration: line-through;
-	`,
+    text-decoration: line-through;
+  `,
   selectedWrapper: css`
-		border: 1px solid ${colorTokens.stroke.divider};
-		border-radius: ${borderRadius[6]};
-	`,
+    border: 1px solid ${colorTokens.stroke.divider};
+    border-radius: ${borderRadius[6]};
+  `,
   selectedItem: css`
-		padding: ${spacing[12]};
-		display: flex;
-		align-items: center;
-		gap: ${spacing[16]};
-		
-		&:not(:last-child) {
-			border-bottom: 1px solid ${colorTokens.stroke.divider};
-		}
-	`,
+    padding: ${spacing[12]};
+    display: flex;
+    align-items: center;
+    gap: ${spacing[16]};
+
+    &:not(:last-child) {
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    }
+  `,
   selectedContent: css`
-		width: 100%;
-	`,
+    width: 100%;
+  `,
   selectedTitle: css`
-		${typography.small()};
-		color: ${colorTokens.text.primary};
-		margin-bottom: ${spacing[4]};
-	`,
+    ${typography.small()};
+    color: ${colorTokens.text.primary};
+    margin-bottom: ${spacing[4]};
+  `,
   selectedSubTitle: css`
-		${typography.small()};
-		color: ${colorTokens.text.hints};
-	`,
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+  `,
   selectedThumb: css`
-		height: 48px;
-	`,
+    height: 48px;
+  `,
   thumbnail: css`
-		width: 48px;
-		height: 48px;
-		border-radius: ${borderRadius[4]};
-	`,
+    width: 48px;
+    height: 48px;
+    border-radius: ${borderRadius[4]};
+  `,
   startingFrom: css`
-		color: ${colorTokens.text.hints};
-	`,
+    color: ${colorTokens.text.hints};
+  `,
 };

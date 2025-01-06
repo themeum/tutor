@@ -5582,7 +5582,7 @@ class Utils {
 	public function tutor_dashboard_url( $sub_url = '' ) {
 		$page_id = (int) $this->get_option( 'tutor_dashboard_page_id' );
 		$page_id = apply_filters( 'tutor_dashboard_page_id', $page_id );
-		return apply_filters( 'tutor_dashboard_url', trailingslashit( get_the_permalink( $page_id ) ) . $sub_url );
+		return apply_filters( 'tutor_dashboard_url', trailingslashit( get_the_permalink( $page_id ) ) . $sub_url, $sub_url );
 	}
 
 	/**
@@ -6722,7 +6722,7 @@ class Utils {
 	 */
 	public function get_course_categories( $parent = 0, $custom_args = array() ) {
 		$default_args = array(
-			'taxonomy'   => 'course-category',
+			'taxonomy'   => CourseModel::COURSE_CATEGORY,
 			'hide_empty' => false,
 		);
 
@@ -6761,7 +6761,7 @@ class Utils {
 		$args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
-				'taxonomy'   => 'course-tag',
+				'taxonomy'   => CourseModel::COURSE_TAG,
 				'hide_empty' => false,
 			)
 		);
@@ -6790,7 +6790,7 @@ class Utils {
 		$args = apply_filters(
 			'tutor_get_course_categories_terms_args',
 			array(
-				'taxonomy'   => 'course-category',
+				'taxonomy'   => CourseModel::COURSE_CATEGORY,
 				'parent'     => $parent_id,
 				'hide_empty' => false,
 			)

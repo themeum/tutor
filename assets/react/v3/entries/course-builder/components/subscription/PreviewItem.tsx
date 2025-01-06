@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { DurationUnit, SubscriptionFormData } from '@CourseBuilderServices/subscription';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {
@@ -128,26 +128,26 @@ const styles = {
     }
   `,
   item: css`
-		min-height: 48px;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		gap: ${spacing[4]};
-	`,
+    min-height: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: ${spacing[4]};
+  `,
   title: css`
-		${typography.caption('medium')};
-		color: ${colorTokens.text.primary};
+    ${typography.caption('medium')};
+    color: ${colorTokens.text.primary};
     display: flex;
     align-items: center;
-	`,
+  `,
   information: css`
-		${typography.small()};
-		color: ${colorTokens.text.hints};
-		display: flex;
-		align-items: center;
-		flex-wrap: wrap;
-		gap: ${spacing[4]};
-	`,
+    ${typography.small()};
+    color: ${colorTokens.text.hints};
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: ${spacing[4]};
+  `,
   featuredIcon: css`
     color: ${colorTokens.icon.brand};
   `,
@@ -158,8 +158,10 @@ const styles = {
     height: 24px;
     border-radius: ${borderRadius[4]};
     color: ${colorTokens.icon.default};
-    transition: color 0.3s ease, background 0.3s ease;
-    
+    transition:
+      color 0.3s ease,
+      background 0.3s ease;
+
     &:hover {
       background: ${colorTokens.action.secondary.default};
       color: ${colorTokens.icon.brand};

@@ -1,4 +1,4 @@
-import { spacing } from '@Config/styles';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 const EmptyPreviewDetail = () => {

@@ -10,9 +10,6 @@
 
 namespace Tutor;
 
-use Tutor\Ecommerce\CartController;
-use Tutor\Ecommerce\CheckoutController;
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 
@@ -717,7 +714,7 @@ class Options_V2 {
 								'label'       => __( 'Enable Marketplace', 'tutor' ),
 								'label_title' => '',
 								'default'     => 'off',
-								'desc'        => __( 'Allow multiple instructors to upload their courses.', 'tutor' ),
+								'desc'        => __( 'Allow multiple instructors to sell their courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'pagination_per_page',
@@ -735,6 +732,14 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
+								'key'         => 'enable_become_instructor_btn',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Become an Instructor Button', 'tutor' ),
+								'label_title' => '',
+								'default'     => 'off',
+								'desc'        => __( 'Enable the option to display this button on the student dashboard.', 'tutor' ),
+							),
+							array(
 								'key'         => 'instructor_can_publish_course',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Allow Instructors to Publish Courses', 'tutor' ),
@@ -749,14 +754,6 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'on',
 								'desc'        => __( 'Enable this setting to allow instructors to delete courses.', 'tutor' ),
-							),
-							array(
-								'key'         => 'enable_become_instructor_btn',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Become an Instructor Button', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Enable the option to display this button on the student dashboard.', 'tutor' ),
 							),
 						),
 					),
@@ -828,8 +825,14 @@ class Options_V2 {
 								'default'        => 'flexible',
 								'select_options' => false,
 								'options'        => array(
-									'flexible' => __( 'Students can complete courses anytime in the Flexible mode', 'tutor' ),
-									'strict'   => __( 'Students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
+									'flexible' => array(
+										'label' => __( 'Flexible', 'tutor' ),
+										'desc'  => __( 'Students can complete courses anytime in the Flexible mode', 'tutor' ),
+									),
+									'strict'   => array(
+										'label' => __( 'Strict', 'tutor' ),
+										'desc'  => __( 'Students have to complete, pass all the lessons and quizzes (if any) to mark a course as complete.', 'tutor' ),
+									),
 								),
 								'desc'           => __( 'Choose when a user can click on the <strong>“Complete Course”</strong> button', 'tutor' ),
 							),
@@ -894,9 +897,15 @@ class Options_V2 {
 								'default'        => 'auto_abandon',
 								'select_options' => false,
 								'options'        => array(
-									'auto_submit'  => __( 'The current quiz answers are submitted automatically.', 'tutor' ),
+									'auto_submit'  => array(
+										'label' => __( 'Auto Submit', 'tutor' ),
+										'desc'  => __( 'The current quiz answers are submitted automatically.', 'tutor' ),
+									),
 									// 'grace_period' => __( 'The current quiz answers are submitted by students.', 'tutor' )
-									'auto_abandon' => __( 'Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor' ),
+									'auto_abandon' => array(
+										'label' => __( 'Auto Abandon', 'tutor' ),
+										'desc'  => __( 'Attempts must be submitted before time expires, otherwise they will not be counted', 'tutor' ),
+									),
 								),
 								'desc'           => __( 'Choose which action to follow when the quiz time expires.', 'tutor' ),
 							),
@@ -1023,13 +1032,13 @@ class Options_V2 {
 									'earning_instructor_commission' => array(
 										'id'      => 'revenue-instructor',
 										'type'    => 'ratio',
-										'title'   => 'Instructor Takes',
+										'title'   => __( 'Instructor Takes', 'tutor' ),
 										'default' => 20,
 									),
 									'earning_admin_commission' => array(
 										'id'      => 'revenue-admin',
 										'type'    => 'ratio',
-										'title'   => 'Admin Takes',
+										'title'   => __( 'Admin Takes', 'tutor' ),
 										'default' => 80,
 									),
 								),
@@ -1142,10 +1151,10 @@ class Options_V2 {
 								'label'   => __( 'Column Per Row', 'tutor' ),
 								'default' => '3',
 								'options' => array(
-									'1' => 'One',
-									'2' => 'Two',
-									'3' => 'Three',
-									'4' => 'Four',
+									'1' => __( 'One', 'tutor' ),
+									'2' => __( 'Two', 'tutor' ),
+									'3' => __( 'Three', 'tutor' ),
+									'4' => __( 'Four', 'tutor' ),
 								),
 								'desc'    => __( 'Define how many columns you want to use to display courses.', 'tutor' ),
 							),
@@ -1203,25 +1212,25 @@ class Options_V2 {
 								'group_options' => array(
 									'vertical'   => array(
 										'default' => array(
-											'title' => 'Portrait',
+											'title' => __( 'Portrait', 'tutor' ),
 											'image' => 'instructor-layout/instructor-portrait.svg',
 										),
 										'cover'   => array(
-											'title' => 'Cover',
+											'title' => __( 'Cover', 'tutor' ),
 											'image' => 'instructor-layout/instructor-cover.svg',
 										),
 										'minimal' => array(
-											'title' => 'Minimal',
+											'title' => __( 'Minimal', 'tutor' ),
 											'image' => 'instructor-layout/instructor-minimal.svg',
 										),
 									),
 									'horizontal' => array(
 										'portrait-horizontal'   => array(
-											'title' => 'Portrait Horizontal',
+											'title' => __( 'Portrait Horizontal', 'tutor' ),
 											'image' => 'instructor-layout/instructor-horizontal-portrait.svg',
 										),
 										'minimal-horizontal' => array(
-											'title' => 'Minimal Horizontal',
+											'title' => __( 'Minimal Horizontal', 'tutor' ),
 											'image' => 'instructor-layout/instructor-horizontal-minimal.svg',
 										),
 									),
@@ -1235,19 +1244,19 @@ class Options_V2 {
 								'default'       => 'pp-rectangle',
 								'group_options' => array(
 									'private'      => array(
-										'title' => 'Private',
+										'title' => __( 'Private', 'tutor' ),
 										'image' => 'profile-layout/profile-private.svg',
 									),
 									'pp-circle'    => array(
-										'title' => 'Modern',
+										'title' => __( 'Modern', 'tutor' ),
 										'image' => 'profile-layout/profile-modern.svg',
 									),
 									'no-cp'        => array(
-										'title' => 'Minimal',
+										'title' => __( 'Minimal', 'tutor' ),
 										'image' => 'profile-layout/profile-minimal.svg',
 									),
 									'pp-rectangle' => array(
-										'title' => 'Classic',
+										'title' => __( 'Classic', 'tutor' ),
 										'image' => 'profile-layout/profile-classic.svg',
 									),
 								),
@@ -1260,19 +1269,19 @@ class Options_V2 {
 								'default'       => 'pp-rectangle',
 								'group_options' => array(
 									'private'      => array(
-										'title' => 'Private',
+										'title' => __( 'Private', 'tutor' ),
 										'image' => 'profile-layout/profile-private.svg',
 									),
 									'pp-circle'    => array(
-										'title' => 'Modern',
+										'title' => __( 'Modern', 'tutor' ),
 										'image' => 'profile-layout/profile-modern.svg',
 									),
 									'no-cp'        => array(
-										'title' => 'Minimal',
+										'title' => __( 'Minimal', 'tutor' ),
 										'image' => 'profile-layout/profile-minimal.svg',
 									),
 									'pp-rectangle' => array(
-										'title' => 'Classic',
+										'title' => __( 'Classic', 'tutor' ),
 										'image' => 'profile-layout/profile-classic.svg',
 									),
 								),
@@ -1443,7 +1452,7 @@ class Options_V2 {
 									/* First 4 preset_name should be same as color_fields */
 									array(
 										'key'    => 'default',
-										'label'  => 'Default',
+										'label'  => __( 'Default', 'tutor' ),
 										'colors' => array(
 											array(
 												'slug'  => 'tutor_primary_color',
@@ -1474,7 +1483,7 @@ class Options_V2 {
 									),
 									array(
 										'key'    => 'landscape',
-										'label'  => 'Landscape',
+										'label'  => __( 'Landscape', 'tutor' ),
 										'colors' => array(
 											array(
 												'slug'  => 'tutor_primary_color',
@@ -1505,7 +1514,7 @@ class Options_V2 {
 									),
 									array(
 										'key'    => 'ocean',
-										'label'  => 'Ocean',
+										'label'  => __( 'Ocean', 'tutor' ),
 										'colors' => array(
 											array(
 												'slug'  => 'tutor_primary_color',
@@ -1536,7 +1545,7 @@ class Options_V2 {
 									),
 									array(
 										'key'    => 'custom',
-										'label'  => 'Custom',
+										'label'  => __( 'Custom', 'tutor' ),
 										'colors' => array(
 											array(
 												'slug'  => 'tutor_primary_color',
@@ -1700,11 +1709,11 @@ class Options_V2 {
 								'searchable' => true,
 							),
 							array(
-								'key'     => 'lesson_video_duration_youtube_api_key',
-								'type'    => 'text',
-								'label'   => __( 'YouTube API Key', 'tutor' ),
-								'default' => '',
-								'desc'    => __(
+								'key'         => 'lesson_video_duration_youtube_api_key',
+								'type'        => 'text',
+								'label'       => __( 'YouTube API Key', 'tutor' ),
+								'default'     => '',
+								'desc'        => __(
 									'To host live videos on your platform using YouTube, enter your YouTube API key.',
 									'tutor'
 								),

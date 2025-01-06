@@ -1,4 +1,4 @@
-import type { ModalProps } from '@Components/modals/Modal';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import BasicPrompt from '@CourseBuilderComponents/ai-course-modal/BasicPrompt';
 import ContentGeneration from '@CourseBuilderComponents/ai-course-modal/ContentGeneration';
 import ContentGenerationContextProvider, {
@@ -7,7 +7,7 @@ import ContentGenerationContextProvider, {
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
 
-interface AICourseBuilderModalProps extends ModalProps {}
+type AICourseBuilderModalProps = ModalProps;
 
 const Component = ({ closeModal }: { closeModal: () => void }) => {
   const { currentStep } = useContentGenerationContext();
@@ -40,8 +40,8 @@ export default AICourseBuilderModal;
 
 const styles = {
   wrapper: css`
-		width: 100vw;
-		height: 100vh;
-		position: relative;
-	`,
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+  `,
 };

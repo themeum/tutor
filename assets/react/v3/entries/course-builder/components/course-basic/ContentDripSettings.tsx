@@ -2,15 +2,15 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
+import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 
-import config, { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 
@@ -113,6 +113,10 @@ const styles = {
     background-color: ${colorTokens.background.white};
     padding: ${spacing[16]} ${spacing[24]} ${spacing[32]} ${spacing[32]};
     min-height: 400px;
+
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[16]};
+    }
   `,
   dripTitle: css`
     ${typography.body('medium')};

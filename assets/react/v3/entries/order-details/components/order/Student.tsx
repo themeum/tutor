@@ -1,11 +1,11 @@
-import { Avatar } from '@Atoms/Avatar';
-import { Box, BoxTitle } from '@Atoms/Box';
-import { colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { Avatar } from '@TutorShared/atoms/Avatar';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useOrderContext } from '@OrderContexts/order-context';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
@@ -52,24 +52,24 @@ export default Student;
 
 const styles = {
   content: css`
-		padding: ${spacing[16]} ${spacing[20]};
-	`,
+    padding: ${spacing[16]} ${spacing[20]};
+  `,
   innerContent: css`
-		margin-top: ${spacing[8]};
-		display: flex;
-		flex-direction: column;
-		gap: ${spacing[12]};
-	`,
+    margin-top: ${spacing[8]};
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing[12]};
+  `,
   row: css`
-		display: flex;
-		flex-direction: column;
-		${typography.caption()};
-		color: ${colorTokens.text.subdued};
+    display: flex;
+    flex-direction: column;
+    ${typography.caption()};
+    color: ${colorTokens.text.subdued};
 
-		h4 {
-			font-weight: ${fontWeight.medium};
-			color: ${colorTokens.text.primary};
-			margin-bottom: ${spacing[4]};
-		}
-	`,
+    h4 {
+      font-weight: ${fontWeight.medium};
+      color: ${colorTokens.text.primary};
+      margin-bottom: ${spacing[4]};
+    }
+  `,
 };

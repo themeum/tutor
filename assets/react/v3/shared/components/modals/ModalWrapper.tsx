@@ -1,9 +1,9 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { modal } from '@Config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { modal } from '@TutorShared/config/constants';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';
@@ -96,32 +96,24 @@ const ModalWrapper = ({
 export default ModalWrapper;
 
 const styles = {
-  container: ({
-    maxWidth,
-  }: {
-    maxWidth?: number;
-  }) => css`
+  container: ({ maxWidth }: { maxWidth?: number }) => css`
     position: relative;
     background: ${colorTokens.background.white};
-    margin: ${spacing[24]};
-    margin-top: ${modal.MARGIN_TOP}px;
+    margin: ${modal.MARGIN_TOP}px auto ${spacing[24]};
     height: 100%;
     max-width: ${maxWidth}px;
     box-shadow: ${shadow.modal};
     border-radius: ${borderRadius[10]};
     overflow: hidden;
     bottom: 0;
-		z-index: ${zIndex.modal};
+    z-index: ${zIndex.modal};
+    width: 100%;
 
     ${Breakpoint.smallTablet} {
       width: 90%;
     }
   `,
-  header: ({
-    hasHeaderChildren,
-  }: {
-    hasHeaderChildren: boolean;
-  }) => css`
+  header: ({ hasHeaderChildren }: { hasHeaderChildren: boolean }) => css`
     display: grid;
     grid-template-columns: ${hasHeaderChildren ? '1fr auto 1fr' : '1fr auto auto'};
     gap: ${spacing[8]};
@@ -138,6 +130,10 @@ const styles = {
     align-items: center;
     gap: ${spacing[12]};
     padding-left: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[16]};
+    }
   `,
   headerChildren: css`
     place-self: center center;
@@ -165,6 +161,10 @@ const styles = {
     display: inline-flex;
     gap: ${spacing[16]};
     padding-right: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-right: ${spacing[16]};
+    }
   `,
   closeButton: css`
     ${styleUtils.resetButton};

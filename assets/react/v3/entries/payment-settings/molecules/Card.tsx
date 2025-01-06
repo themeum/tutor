@@ -3,15 +3,15 @@ import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useRef } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import {} from '@/v3/shared/hooks/useAnimation';
-import { isDefined } from '@Utils/types';
+import { isDefined } from '@TutorShared/utils/types';
 import Badge from '../atoms/Badge';
 
 interface CardProps {
@@ -121,13 +121,11 @@ const styles = {
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.card};
 
-    ${
-      hasBorder &&
-      css`
+    ${hasBorder &&
+    css`
       box-shadow: none;
       border: 1px solid ${colorTokens.stroke.divider};
-    `
-    }
+    `}
   `,
   headerWrapper: (collapsed: boolean) => css`
     display: flex;
@@ -137,12 +135,10 @@ const styles = {
     padding: ${spacing[20]} ${spacing[24]};
     min-height: 72px;
 
-    ${
-      !collapsed &&
-      css`
+    ${!collapsed &&
+    css`
       border-bottom: 1px solid ${colorTokens.stroke.divider};
-    `
-    }
+    `}
   `,
   title: css`
     ${typography.body('medium')};
@@ -170,12 +166,10 @@ const styles = {
     color: ${colorTokens.icon.brand};
     transition: color 0.3s ease-in-out;
 
-    ${
-      isCollapsed &&
-      css`
+    ${isCollapsed &&
+    css`
       color: ${colorTokens.icon.default};
-    `
-    }
+    `}
   `,
   actions: css`
     display: flex;

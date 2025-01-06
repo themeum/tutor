@@ -1,18 +1,19 @@
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import Show from '@/v3/shared/controls/Show';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useRefundOrderMutation } from '@OrderServices/order';
-import { formatPrice } from '@Utils/currency';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { formatPrice } from '@TutorShared/utils/currency';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
@@ -23,6 +24,7 @@ interface RefundModalProps extends ModalProps {
   available_amount: number;
   order_id: number;
   order_type: string;
+  payment_method: string;
 }
 
 interface FormField {
@@ -31,7 +33,15 @@ interface FormField {
   reason: string;
 }
 
-function RefundModal({ title, closeModal, actions, available_amount, order_id, order_type }: RefundModalProps) {
+function RefundModal({
+  title,
+  closeModal,
+  actions,
+  available_amount,
+  order_id,
+  order_type,
+  payment_method,
+}: RefundModalProps) {
   const refundOrderMutation = useRefundOrderMutation();
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
@@ -44,12 +54,12 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
 
   useEffect(() => {
     form.setFocus('amount');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           await refundOrderMutation.mutateAsync({ ...values, order_id });
           closeModal();
@@ -112,12 +122,14 @@ function RefundModal({ title, closeModal, actions, available_amount, order_id, o
             />
           )}
 
-          <Alert type="warning" icon="bulb">
-            {
-              // prettier-ignore
-              __( "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.", 'tutor')
-            }
-          </Alert>
+          <Show when={payment_method !== 'stripe' && payment_method !== 'paypal'}>
+            <Alert type="warning" icon="bulb">
+              {
+                // prettier-ignore
+                __( "Note: Refund won't be processed automatically. You are required to process the refund manually via the payment gateway.", 'tutor')
+              }
+            </Alert>
+          </Show>
         </div>
         <div css={styles.footer}>
           <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
@@ -149,9 +161,6 @@ const styles = {
     }
   `,
 
-  form: css`
-    width: 480px;
-  `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};
     display: flex;

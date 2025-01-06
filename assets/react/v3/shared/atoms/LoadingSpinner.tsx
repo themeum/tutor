@@ -1,4 +1,4 @@
-import { colorTokens } from '@Config/styles';
+import { colorTokens } from '@TutorShared/config/styles';
 import { css, keyframes } from '@emotion/react';
 
 const rotatorKeyframes = keyframes`
@@ -69,10 +69,10 @@ const styles = {
     animation: ${dashKeyframes} 1.4s linear infinite;
   `,
   spinGradient: css`
-		transition: transform;
-		transform-origin: center;
+    transition: transform;
+    transform-origin: center;
     animation: ${rotate} 1s infinite linear;
-	`,
+  `,
 };
 
 interface LoadingSpinnerProps {
@@ -122,7 +122,10 @@ export const FullscreenLoadingSpinner = () => {
   );
 };
 
-export const GradientLoadingSpinner = ({ size = 24, color = colorTokens.icon.disable.default }: LoadingSpinnerProps) => {
+export const GradientLoadingSpinner = ({
+  size = 24,
+  color = colorTokens.icon.disable.default,
+}: LoadingSpinnerProps) => {
   return (
     // biome-ignore lint/a11y/noSvgWithoutTitle: <explanation>
     <svg width={size} height={size} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

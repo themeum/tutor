@@ -2,26 +2,26 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import EmptyState from '@Molecules/EmptyState';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
-import { useDebounce } from '@Hooks/useDebounce';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 
-import notFound2x from '@Images/not-found-2x.webp';
-import notFound from '@Images/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
+import notFound from '@SharedImages/not-found.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -261,9 +261,7 @@ const FormCoursePrerequisites = ({
                               setSearchText('');
                             }}
                             onMouseOver={() => setActiveIndex(index)}
-                            onMouseLeave={() => {
-                              index !== activeIndex && setActiveIndex(-1);
-                            }}
+                            onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
                             onFocus={() => setActiveIndex(index)}
                             aria-selected={activeIndex === index}
                           >
@@ -345,13 +343,7 @@ const styles = {
     border-radius: ${borderRadius[6]};
     ${styleUtils.overflowYAuto};
   `,
-  courseCard: ({
-    onPopover = false,
-    isActive = false,
-  }: {
-    onPopover: boolean;
-    isActive?: boolean;
-  }) => css`
+  courseCard: ({ onPopover = false, isActive = false }: { onPopover: boolean; isActive?: boolean }) => css`
     ${styleUtils.resetButton};
     width: 100%;
     cursor: ${onPopover ? 'pointer' : 'default'};
@@ -368,25 +360,27 @@ const styles = {
       opacity: 0;
     }
 
-    ${
-      isActive &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        border-color: ${colorTokens.stroke.default};
-      `
-    }
+    ${isActive &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      border-color: ${colorTokens.stroke.default};
+    `}
 
     &:hover {
       background-color: ${colorTokens.background.hover};
 
-      ${
-        !onPopover &&
-        css`
-          background-color: ${colorTokens.background.white};
-          border-color: ${colorTokens.stroke.default};
-        `
+      ${!onPopover &&
+      css`
+        background-color: ${colorTokens.background.white};
+        border-color: ${colorTokens.stroke.default};
+      `}
+
+      [data-visually-hidden] {
+        opacity: 1;
       }
-      
+    }
+
+    ${Breakpoint.smallTablet} {
       [data-visually-hidden] {
         opacity: 1;
       }

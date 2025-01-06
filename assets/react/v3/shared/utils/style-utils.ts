@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, containerMaxWidth, fontFamily, fontSize, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, containerMaxWidth, fontFamily, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import { typography } from '../config/typography';
 

@@ -5,20 +5,20 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
+import Button from '@TutorShared/atoms/Button';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 
-import FormInput from '@Components/fields/FormInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
 
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import {
   type ID,
@@ -27,13 +27,13 @@ import {
   useSaveTopicMutation,
 } from '@CourseBuilderServices/curriculum';
 
-import { AnimationType } from '@Hooks/useAnimation';
-import { useCollapseExpandAnimation } from '@Hooks/useCollapseExpandAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useCollapseExpandAnimation } from '@TutorShared/hooks/useCollapseExpandAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 interface TopicHeaderProps {
   topic: CourseTopicWithCollapse;
@@ -59,7 +59,6 @@ const isTutorPro = !!tutorConfig.tutor_pro_url;
 const TopicHeader = ({
   topic,
   isEdit,
-  isActive,
   listeners,
   isDragging,
   onCollapse,
@@ -102,10 +101,11 @@ const TopicHeader = ({
     });
 
     if (response.data) {
-      if (response.status_code === 201) {
-        onEdit?.(`topic-${response.data}`);
-      }
       setIsEdit(false);
+    }
+
+    if (response.status_code === 201) {
+      onEdit?.(`topic-${response.data}`);
     }
   };
 
@@ -121,11 +121,11 @@ const TopicHeader = ({
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isEdit) {
       form.setFocus('title');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit]);
 
   return (
@@ -358,50 +358,45 @@ const styles = {
 
     [data-toggle-collapse] {
       transition: transform 0.3s ease-in-out;
-      ${
-        !isCollapsed &&
-        css`
-          transform: rotate(180deg);
-        `
-      }
+      ${!isCollapsed &&
+      css`
+        transform: rotate(180deg);
+      `}
     }
 
-    ${
-      !isCollapsed &&
-      css`
-        border-bottom: 1px solid ${colorTokens.stroke.divider};
-      `
-    }
+    ${!isCollapsed &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
 
-    ${
-      !isEdit &&
-      css`
-        padding-bottom: 0;
-      `
-    }
+    ${!isEdit &&
+    css`
+      padding-bottom: 0;
+    `}
 
-    ${
-      !isEdit &&
-      !isDeletePopoverOpen &&
-      css`
+    ${!isEdit &&
+    !isDeletePopoverOpen &&
+    css`
       [data-visually-hidden] {
         opacity: 0;
         transition: ${!isDragging ? 'opacity 0.3s ease-in-out' : 'none'};
       }
 
-      :hover, :focus-within {
+      :hover,
+      :focus-within {
         [data-visually-hidden] {
           opacity: ${isDragging ? 0 : 1};
         }
       }
-    `
+    `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
     }
   `,
-  headerContent: ({
-    isSaved = true,
-  }: {
-    isSaved: boolean;
-  }) => css`
+  headerContent: ({ isSaved = true }: { isSaved: boolean }) => css`
     display: grid;
     grid-template-columns: ${isSaved ? '1fr auto' : '1fr'};
     gap: ${spacing[12]};
@@ -418,11 +413,7 @@ const styles = {
       flex-shrink: 0;
     }
   `,
-  grabButton: ({
-    isDragging = false,
-  }: {
-    isDragging: boolean;
-  }) => css`
+  grabButton: ({ isDragging = false }: { isDragging: boolean }) => css`
     ${styleUtils.resetButton};
     ${styleUtils.flexCenter()};
     cursor: ${isDragging ? 'grabbing' : 'grab'};
@@ -441,12 +432,10 @@ const styles = {
     ${typography.body()};
     color: ${colorTokens.text.hints};
     width: 100%;
-    ${
-      !isEdit &&
-      css`
+    ${!isEdit &&
+    css`
       ${styleUtils.text.ellipsis(1)};
-    `
-    }
+    `}
   `,
   description: ({ isEdit }: { isEdit: boolean }) => css`
     ${typography.caption()};
@@ -455,19 +444,15 @@ const styles = {
     margin-left: ${spacing[24]};
     padding-bottom: ${spacing[12]};
 
-    ${
-      !isEdit &&
-      css`
-        ${styleUtils.text.ellipsis(2)};
-      `
-    }
+    ${!isEdit &&
+    css`
+      ${styleUtils.text.ellipsis(2)};
+    `}
 
-    ${
-      isEdit &&
-      css`
-        padding-right: 0;
-      `
-    }
+    ${isEdit &&
+    css`
+      padding-right: 0;
+    `}
   `,
   footer: css`
     width: 100%;

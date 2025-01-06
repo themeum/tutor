@@ -2,7 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
-import { useToast } from '@Atoms/Toast';
+import { useToast } from '@TutorShared/atoms/Toast';
 import type {
   QuizFeedbackMode,
   QuizLayoutView,
@@ -10,13 +10,13 @@ import type {
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { authApiInstance, wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import { normalizeLineEndings } from '@Utils/util';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { convertToErrorMessage, normalizeLineEndings } from '@TutorShared/utils/util';
 import type { ContentDripType, TutorMutationResponse } from './course';
 import type { ContentType, ID } from './curriculum';
 
@@ -475,7 +475,7 @@ export const convertQuizQuestionFormDataToPayloadForUpdate = (data: QuizQuestion
 };
 
 const importQuiz = (payload: ImportQuizPayload) => {
-  return authApiInstance.post<
+  return wpAjaxInstance.post<
     string,
     {
       data: {
@@ -483,10 +483,7 @@ const importQuiz = (payload: ImportQuizPayload) => {
       };
       success: boolean;
     }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'quiz_import_data',
-    ...payload,
-  });
+  >(endpoints.QUIZ_IMPORT_DATA, payload);
 };
 
 export const useImportQuizMutation = () => {
@@ -513,7 +510,7 @@ export const useImportQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },
@@ -521,7 +518,7 @@ export const useImportQuizMutation = () => {
 };
 
 const exportQuiz = (quizId: ID) => {
-  return authApiInstance.post<
+  return wpAjaxInstance.post<
     string,
     {
       data: {
@@ -530,8 +527,7 @@ const exportQuiz = (quizId: ID) => {
       };
       success: boolean;
     }
-  >(endpoints.ADMIN_AJAX, {
-    action: 'quiz_export_data',
+  >(endpoints.QUIZ_EXPORT_DATA, {
     quiz_id: quizId,
   });
 };
@@ -567,7 +563,7 @@ export const useExportQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },
@@ -575,10 +571,7 @@ export const useExportQuizMutation = () => {
 };
 
 const saveQuiz = (payload: QuizPayload) => {
-  return wpAjaxInstance.post<QuizPayload, TutorMutationResponse<QuizDetailsResponse>>(endpoints.SAVE_QUIZ, {
-    action: 'tutor_quiz_builder_save',
-    ...payload,
-  });
+  return wpAjaxInstance.post<QuizPayload, TutorMutationResponse<QuizDetailsResponse>>(endpoints.SAVE_QUIZ, payload);
 };
 
 export const useSaveQuizMutation = () => {
@@ -602,7 +595,7 @@ export const useSaveQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },
@@ -610,9 +603,8 @@ export const useSaveQuizMutation = () => {
 };
 
 const getQuizDetails = (quizId: ID) => {
-  return authApiInstance.post<ID, AxiosResponse<QuizDetailsResponse>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_details',
-    quiz_id: quizId,
+  return wpAjaxInstance.get<QuizDetailsResponse>(endpoints.GET_QUIZ_DETAILS, {
+    params: { quiz_id: quizId },
   });
 };
 
@@ -644,17 +636,15 @@ export const calculateQuizDataStatus = (dataStatus: QuizDataStatus, currentStatu
 };
 
 const getH5PQuizContents = (search: string) => {
-  return wpAjaxInstance
-    .post<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT, {
-      search_filter: search,
-    })
-    .then((response) => response.data);
+  return wpAjaxInstance.post<H5PContentResponse>(endpoints.GET_H5P_QUIZ_CONTENT, {
+    search_filter: search,
+  });
 };
 
 export const useGetH5PQuizContentsQuery = (search: string, contentType: ContentType) => {
   return useQuery({
     queryKey: ['H5PQuizContents', search],
-    queryFn: () => getH5PQuizContents(search),
+    queryFn: () => getH5PQuizContents(search).then((response) => response.data),
     enabled: contentType === 'tutor_h5p_quiz',
   });
 };
@@ -681,8 +671,7 @@ export const useGetH5PQuizContentByIdQuery = (id: ID, contentType: ContentType) 
 };
 
 const deleteQuiz = (quizId: ID) => {
-  return authApiInstance.post<string, TutorMutationResponse<ID>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_quiz_delete',
+  return wpAjaxInstance.post<string, TutorMutationResponse<ID>>(endpoints.DELETE_QUIZ, {
     quiz_id: quizId,
   });
 };
@@ -707,7 +696,7 @@ export const useDeleteQuizMutation = () => {
     },
     onError: (error: ErrorResponse) => {
       showToast({
-        message: error.response.data.message,
+        message: convertToErrorMessage(error),
         type: 'danger',
       });
     },

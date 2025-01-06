@@ -1,8 +1,8 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormInput from '@Components/fields/FormInput';
-import { colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import { colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 
@@ -78,7 +78,6 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
     };
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const rates = form.getValues('rates');
     const formattedCountries = rates.reduce((acc, rate) => {
@@ -94,6 +93,7 @@ const CountrySelectModal = ({ form, closeModal, title }: CountrySelectModalProps
     }, {});
 
     regionStateForm.setValue('selectedCountries', formattedCountries);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -232,8 +232,8 @@ export const useCountrySelectModal = () => {
 const styles = {
   modalWrapperStyle: css`
     position: relative;
+    max-width: 560px;
     width: 100%;
-    min-width: 560px;
   `,
   modalBody: css`
     margin-bottom: ${spacing[72]};
@@ -252,9 +252,9 @@ const styles = {
     margin-left: ${spacing[32]};
   `,
   labelWrapper: css`
-		${typography.body()};
+    ${typography.body()};
     display: flex;
-		align-items: center;
+    align-items: center;
     gap: ${spacing[8]};
     width: 100%;
   `,

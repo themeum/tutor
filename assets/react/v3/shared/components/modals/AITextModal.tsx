@@ -9,33 +9,39 @@ import {
   type Path,
 } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
-import Popover from '@Molecules/Popover';
+import Button from '@TutorShared/atoms/Button';
+import MagicButton from '@TutorShared/atoms/MagicButton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Popover from '@TutorShared/molecules/Popover';
 
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { OptionList } from '@Components/magic-ai-content/OptionList';
-import { PromptControls } from '@Components/magic-ai-content/PromptControls';
-import SkeletonLoader from '@Components/magic-ai-content/SkeletonLoader';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { OptionList } from '@TutorShared/components/magic-ai-content/OptionList';
+import { PromptControls } from '@TutorShared/components/magic-ai-content/PromptControls';
+import SkeletonLoader from '@TutorShared/components/magic-ai-content/SkeletonLoader';
 
-import { type ChatFormat, type ChatLanguage, type ChatTone, languageOptions, toneOptions } from '@Config/magic-ai';
-import { borderRadius, colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import {
+  type ChatFormat,
+  type ChatLanguage,
+  type ChatTone,
+  languageOptions,
+  toneOptions,
+} from '@TutorShared/config/magic-ai';
+import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import {
   type ModificationType,
   useMagicTextGenerationMutation,
   useModifyContentMutation,
 } from '@CourseBuilderServices/magic-ai';
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
-import { copyToClipboard } from '@Utils/util';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { copyToClipboard } from '@TutorShared/utils/util';
 
+import { isRTL } from '@TutorShared/config/constants';
 import BasicModalWrapper from './BasicModalWrapper';
 import type { ModalProps } from './Modal';
-import { isRTL } from '@Config/constants';
 
 interface AITextModalProps<T extends FieldValues> extends ModalProps {
   field: ControllerRenderProps<T, Path<T>>;
@@ -73,7 +79,6 @@ const AITextModal = <T extends FieldValues>({
   icon,
   closeModal,
   field,
-  fieldState,
   format = 'essay',
   characters = 250,
   is_html = false,
@@ -158,15 +163,14 @@ const AITextModal = <T extends FieldValues>({
     }
   }
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     form.setFocus('prompt');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={closeModal} title={title} icon={icon}>
+    <BasicModalWrapper onClose={closeModal} title={title} icon={icon} maxWidth={524}>
       <form
-        css={styles.wrapper}
         onSubmit={form.handleSubmit(async (values) => {
           const response = await magicTextGenerationMutation.mutateAsync({ ...values, is_html });
 
@@ -388,9 +392,6 @@ const AITextModal = <T extends FieldValues>({
 
 export default AITextModal;
 const styles = {
-  wrapper: css`
-    width: 524px;
-  `,
   container: css`
     padding: ${spacing[20]};
     display: flex;

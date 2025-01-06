@@ -2,12 +2,12 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { rgba } from 'polished';
 import React, { type MouseEvent, type ReactNode, useRef } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import Popover from './Popover';
 
@@ -133,28 +133,16 @@ ThreeDots.Option = ThreeDotsOption;
 export default ThreeDots;
 
 const styles = {
-  wrapper: ({
-    size = 'medium',
-  }: {
-    size: 'small' | 'medium';
-  }) => css`
+  wrapper: ({ size = 'medium' }: { size: 'small' | 'medium' }) => css`
     padding-block: ${spacing[8]};
     position: relative;
 
-    ${
-      size === 'small' &&
-      css`
-        padding-block: ${spacing[4]};
-      `
-    }
+    ${size === 'small' &&
+    css`
+      padding-block: ${spacing[4]};
+    `}
   `,
-  option: ({
-    isTrash = false,
-    size = 'medium',
-  }: {
-    isTrash: boolean;
-    size: 'small' | 'medium';
-  }) => css`
+  option: ({ isTrash = false, size = 'medium' }: { isTrash: boolean; size: 'small' | 'medium' }) => css`
     ${styleUtils.resetButton};
     ${typography.body()};
 
@@ -170,14 +158,12 @@ const styles = {
       flex-shrink: 0;
       color: ${colorTokens.icon.default};
     }
-    
-    ${
-      size === 'small' &&
-      css`
-        padding: ${spacing[8]} ${spacing[16]};
-        ${typography.small('medium')};
-      `
-    }
+
+    ${size === 'small' &&
+    css`
+      padding: ${spacing[8]} ${spacing[16]};
+      ${typography.small('medium')};
+    `}
 
     :hover:not(:disabled) {
       background-color: ${colorTokens.background.hover};
@@ -195,36 +181,34 @@ const styles = {
 
       svg {
         color: ${colorTokens.icon.disable.background};
-      } 
+      }
     }
 
-    ${
-      isTrash &&
-      css`
+    ${isTrash &&
+    css`
+      color: ${colorTokens.text.error};
+      svg {
+        color: ${colorTokens.icon.error};
+      }
+
+      &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
+        background-color: ${rgba(colorTokens.bg.error, 0.1)};
+
         svg {
           color: ${colorTokens.icon.error};
         }
+      }
 
-        &:hover:not(:disabled) {
-          color: ${colorTokens.text.error};
-          background-color: ${rgba(colorTokens.bg.error, 0.1)};
+      &:active {
+        color: ${colorTokens.text.error};
+        background-color: ${colorTokens.color.danger[40]};
 
-          svg {
-            color: ${colorTokens.icon.error};
-          }
+        svg {
+          color: ${colorTokens.icon.error};
         }
-
-        &:active {
-          color: ${colorTokens.text.error};
-          background-color: ${colorTokens.color.danger[40]};
-
-          svg {
-            color: ${colorTokens.icon.error};
-          }
-        }
-      `
-    }
+      }
+    `}
 
     :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
@@ -259,28 +243,24 @@ const styles = {
       outline-offset: 1px;
     }
 
-    ${
-      isOpen &&
-      css`
-        background-color: ${colorTokens.background.hover};
-        svg {
-          color: ${colorTokens.icon.brand};
-        }
-      `
-    }
+    ${isOpen &&
+    css`
+      background-color: ${colorTokens.background.hover};
+      svg {
+        color: ${colorTokens.icon.brand};
+      }
+    `}
 
-    ${
-      isInverse &&
-      css`
+    ${isInverse &&
+    css`
+      background-color: ${colorTokens.background.white};
+      :hover {
         background-color: ${colorTokens.background.white};
-        :hover {
-          background-color: ${colorTokens.background.white};
-          svg {
-            color: ${!isDisabled && colorTokens.icon.brand};
-          }
+        svg {
+          color: ${!isDisabled && colorTokens.icon.brand};
         }
-      `
-    }
+      }
+    `}
 
     :disabled {
       cursor: not-allowed;

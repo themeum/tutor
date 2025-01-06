@@ -1,6 +1,6 @@
-import Switch from '@Atoms/Switch';
-import { spacing } from '@Config/styles';
-import type { FormControllerProps } from '@Utils/form';
+import Switch from '@TutorShared/atoms/Switch';
+import { spacing } from '@TutorShared/config/styles';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
 import type { ReactNode } from 'react';

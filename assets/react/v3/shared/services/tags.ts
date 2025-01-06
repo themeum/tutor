@@ -1,9 +1,9 @@
-import { useToast } from '@Atoms/Toast';
-import { wpAuthApiInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
+import { useToast } from '@TutorShared/atoms/Toast';
+import { wpAuthApiInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { convertToErrorMessage } from '@Utils/util';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 export interface Tag {
   id: number;

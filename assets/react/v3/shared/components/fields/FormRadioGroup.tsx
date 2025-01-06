@@ -1,7 +1,7 @@
-import Radio from '@Atoms/Radio';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
+import Radio from '@TutorShared/atoms/Radio';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
 import type { ReactNode } from 'react';
@@ -75,8 +75,8 @@ export default FormRadioGroup;
 
 const styles = {
   radioLegend: css`
-		margin-left: ${spacing[28]};
-		${typography.body()};
-		color: ${colorTokens.text.subdued};
-	`,
+    margin-left: ${spacing[28]};
+    ${typography.body()};
+    color: ${colorTokens.text.subdued};
+  `,
 };

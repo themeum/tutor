@@ -829,7 +829,7 @@ class CouponModel {
 				break;
 
 			case self::APPLIES_TO_SPECIFIC_CATEGORY:
-				$course_categories = wp_get_post_terms( $object_id, 'course-category' );
+				$course_categories = wp_get_post_terms( $object_id, CourseModel::COURSE_CATEGORY );
 				if ( ! is_wp_error( $course_categories ) ) {
 					$term_ids      = array_column( $course_categories, 'term_id' );
 					$is_applicable = count( array_intersect( $applications, $term_ids ) );

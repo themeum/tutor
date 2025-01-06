@@ -1,16 +1,16 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { isDefined } from '@TutorShared/utils/types';
 
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormQuestionTitleProps extends FormControllerProps<string | null> {
@@ -71,12 +71,12 @@ const FormQuestionTitle = ({
     ...(isDefined(dataAttribute) && { [dataAttribute]: true }),
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(inputRef.current)) {
       inputRef.current.focus();
       setPreviousValue(inputValue);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, inputRef.current]);
 
   return (
@@ -198,82 +198,78 @@ const FormQuestionTitle = ({
 export default FormQuestionTitle;
 
 const styles = {
-  container: ({
-    isEdit,
-    isDisabled,
-  }: {
-    isEdit: boolean;
-    isDisabled: boolean;
-  }) => css`
+  container: ({ isEdit, isDisabled }: { isEdit: boolean; isDisabled: boolean }) => css`
     position: relative;
     display: grid;
     grid-template-columns: 1fr auto;
     align-items: center;
     gap: ${spacing[8]};
-		min-height: 50px;
+    min-height: 50px;
     height: 100%;
     width: 100%;
     cursor: text;
     padding-inline: ${spacing[8]} ${spacing[16]};
     padding-block: ${spacing[8]};
     border-radius: ${borderRadius[6]};
-		transition: box-shadow 0.15s ease-in-out;
+    transition: box-shadow 0.15s ease-in-out;
     border: 1px solid transparent;
 
-    ${
-      !isDisabled &&
-      css`
-        &:hover {
-          background-color: ${colorTokens.background.white};
-          color: ${colorTokens.text.subdued};
-
-          [data-action-buttons] {
-            opacity: ${!isDisabled ? 1 : 0};
-          }
-        };
-
-        &:focus-within {
-          ${isEdit && styleUtils.inputFocus}
-
-          [data-action-buttons] {
-            opacity: 1;
-          }
-        }
-
-        &:focus-visible {
-          outline: 2px solid ${colorTokens.stroke.brand};
-        }
-      `
-    }
-
-    ${
-      isEdit &&
-      css`
+    ${!isDisabled &&
+    css`
+      &:hover {
         background-color: ${colorTokens.background.white};
-        color: ${colorTokens.text.subdued};  
-        padding-block: ${spacing[4]};
-        border: 1px solid ${colorTokens.stroke.default};
-        cursor: default;
-      `
+        color: ${colorTokens.text.subdued};
+
+        [data-action-buttons] {
+          opacity: ${!isDisabled ? 1 : 0};
+        }
+      }
+
+      &:focus-within {
+        ${isEdit && styleUtils.inputFocus}
+
+        [data-action-buttons] {
+          opacity: 1;
+        }
+      }
+
+      &:focus-visible {
+        outline: 2px solid ${colorTokens.stroke.brand};
+      }
+    `}
+
+    ${isEdit &&
+    css`
+      background-color: ${colorTokens.background.white};
+      color: ${colorTokens.text.subdued};
+      padding-block: ${spacing[4]};
+      border: 1px solid ${colorTokens.stroke.default};
+      cursor: default;
+    `}
+
+    ${Breakpoint.smallTablet} {
+      [data-action-buttons] {
+        opacity: 1;
+      }
     }
   `,
   inputContainer: (isClearable: boolean) => css`
     position: relative;
     display: flex;
-		transition: background 0.15s ease-in-out;
+    transition: background 0.15s ease-in-out;
 
     & input {
       ${typography.heading6()}
-			color: ${colorTokens.text.primary};
-			border: none;
-			background: none;
-			padding: 0;
+      color: ${colorTokens.text.primary};
+      border: none;
+      background: none;
+      padding: 0;
       ${isClearable && `padding-right: ${spacing[36]};`};
       width: 100%;
-      
-			&.tutor-input-field {
+
+      &.tutor-input-field {
         border: none;
-				box-shadow: none;
+        box-shadow: none;
         padding-inline: 0;
 
         &:focus {
@@ -281,7 +277,7 @@ const styles = {
           box-shadow: none;
           outline: none;
         }
-			}
+      }
     }
   `,
   clearButton: css`
@@ -302,27 +298,20 @@ const styles = {
     color: ${colorTokens.text.hints};
     border-radius: ${borderRadius[6]};
   `,
-  actionButtonWrapper: ({
-    isEdit,
-  }: {
-    isEdit: boolean;
-  }) => css`
+  actionButtonWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     display: flex;
-		align-items: center;
-		gap: ${spacing[8]};
+    align-items: center;
+    gap: ${spacing[8]};
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
 
-		${
-      isEdit &&
-      css`
-				opacity: 1;
-			`
-    }
-
+    ${isEdit &&
+    css`
+      opacity: 1;
+    `}
   `,
   actionButton: css`
-		padding: 0;
-		color: ${colorTokens.icon.subdued};
-	`,
+    padding: 0;
+    color: ${colorTokens.icon.subdued};
+  `,
 };

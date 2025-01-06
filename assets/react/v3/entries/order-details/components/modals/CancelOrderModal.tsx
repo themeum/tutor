@@ -1,16 +1,16 @@
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useCancelOrderMutation } from '@OrderServices/order';
-import type { Option } from '@Utils/types';
-import { requiredRule } from '@Utils/validation';
+import type { Option } from '@TutorShared/utils/types';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
@@ -86,9 +86,8 @@ function CancelOrderModal({ title, order_id, closeModal, actions }: CancelOrderM
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit(async (values) => {
           const response = await cancelOrderMutation.mutateAsync({
             order_id: order_id,
@@ -170,10 +169,6 @@ const styles = {
     strong {
       color: ${colorTokens.text.title};
     }
-  `,
-
-  form: css`
-    width: 480px;
   `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};

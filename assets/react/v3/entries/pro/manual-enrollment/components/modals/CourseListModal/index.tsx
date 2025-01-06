@@ -1,12 +1,12 @@
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { css } from '@emotion/react';
-import { UseFormReturn } from 'react-hook-form';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { type Course, type Enrollment } from '@EnrollmentServices/enrollment';
+import { type UseFormReturn } from 'react-hook-form';
 import CourseListTable from './CourseListTable';
-import { Course, Enrollment } from '@EnrollmentServices/enrollment';
 
 interface CourseListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<Enrollment, any, undefined>;
 }
 
@@ -17,18 +17,10 @@ function CourseListModal({ title, closeModal, actions, form }: CourseListModalPr
   }
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
-      <div css={styles.modalWrapper}>
-        <CourseListTable onSelectClick={handleSelect} />
-      </div>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={720}>
+      <CourseListTable onSelectClick={handleSelect} />
     </BasicModalWrapper>
   );
 }
 
 export default CourseListModal;
-
-const styles = {
-  modalWrapper: css`
-    width: 720px;
-  `,
-};

@@ -1,5 +1,5 @@
-import { borderRadius, colorTokens, zIndex } from '@Config/styles';
-import { calculateCartesianDistance, drawPath, getCanvas } from '@Utils/magic-ai';
+import { borderRadius, colorTokens, zIndex } from '@TutorShared/config/styles';
+import { calculateCartesianDistance, drawPath, getCanvas } from '@TutorShared/utils/magic-ai';
 import { css } from '@emotion/react';
 import React, { type MouseEvent, useEffect, useRef, useState } from 'react';
 
@@ -173,18 +173,25 @@ export const DrawingCanvas = React.forwardRef<HTMLCanvasElement, CanvasProps>(
 
 const styles = {
   wrapper: css`
-		position: relative;
-	`,
+    position: relative;
+  `,
   customCursor: (size: number) => css`
-		position: absolute;
-		width: ${size}px;
-		height: ${size}px;
-		border-radius: ${borderRadius.circle};
-		background: linear-gradient(73.09deg, rgba(255, 150, 69, 0.4) 18.05%, rgba(255, 100, 113, 0.4) 30.25%, rgba(207, 110, 189, 0.4) 55.42%, rgba(164, 119, 209, 0.4) 71.66%, rgba(62, 100, 222, 0.4) 97.9%);
-		border: 3px solid ${colorTokens.stroke.white};
-		pointer-events: none;
-		transform: translate(-50%, -50%);
-		z-index: ${zIndex.highest};
-		display: none;
-	`,
+    position: absolute;
+    width: ${size}px;
+    height: ${size}px;
+    border-radius: ${borderRadius.circle};
+    background: linear-gradient(
+      73.09deg,
+      rgba(255, 150, 69, 0.4) 18.05%,
+      rgba(255, 100, 113, 0.4) 30.25%,
+      rgba(207, 110, 189, 0.4) 55.42%,
+      rgba(164, 119, 209, 0.4) 71.66%,
+      rgba(62, 100, 222, 0.4) 97.9%
+    );
+    border: 3px solid ${colorTokens.stroke.white};
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: ${zIndex.highest};
+    display: none;
+  `,
 };

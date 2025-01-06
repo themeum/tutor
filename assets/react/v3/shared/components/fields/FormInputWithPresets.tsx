@@ -1,16 +1,16 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection, Option } from '@Utils/types';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection, Option } from '@TutorShared/utils/types';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -183,33 +183,27 @@ const styles = {
     display: flex;
     align-items: center;
 
-    ${
-      !removeBorder &&
-      css`
-        border: 1px solid ${colorTokens.stroke.default};
-        border-radius: ${borderRadius[6]};
-        box-shadow: ${shadow.input};
-        background-color: ${colorTokens.background.white};
-      `
-    }
+    ${!removeBorder &&
+    css`
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius[6]};
+      box-shadow: ${shadow.input};
+      background-color: ${colorTokens.background.white};
+    `}
 
-    ${
-      hasFieldError &&
-      css`
-        border-color: ${colorTokens.stroke.danger};
-        background-color: ${colorTokens.background.status.errorFail};
-      `
-    };
+    ${hasFieldError &&
+    css`
+      border-color: ${colorTokens.stroke.danger};
+      background-color: ${colorTokens.background.status.errorFail};
+    `};
 
     &:focus-within {
       ${styleUtils.inputFocus};
 
-      ${
-        hasFieldError &&
-        css`
-          border-color: ${colorTokens.stroke.danger};
-        `
-      }
+      ${hasFieldError &&
+      css`
+        border-color: ${colorTokens.stroke.danger};
+      `}
     }
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
@@ -234,12 +228,10 @@ const styles = {
           font-size: ${fontSize[24]};
           font-weight: ${fontWeight.medium};
           height: 34px;
-          ${
-            showVerticalBar &&
-            css`
+          ${showVerticalBar &&
+          css`
               padding-${contentPosition}: ${spacing[12]};
-            `
-          };
+            `};
         `
       }
 
@@ -268,60 +260,56 @@ const styles = {
     }
   `,
   optionsWrapper: css`
-		position: absolute;
-		width: 100%;
-	`,
+    position: absolute;
+    width: 100%;
+  `,
   options: (removeOptionsMinWidth: boolean) => css`
-		z-index: ${zIndex.dropdown};
-		background-color: ${colorTokens.background.white};
-		list-style-type: none;
-		box-shadow: ${shadow.popover};
-		padding: ${spacing[4]} 0;
-		margin: 0;
-		max-height: 500px;
-		border-radius: ${borderRadius[6]};
-		${styleUtils.overflowYAuto};
+    z-index: ${zIndex.dropdown};
+    background-color: ${colorTokens.background.white};
+    list-style-type: none;
+    box-shadow: ${shadow.popover};
+    padding: ${spacing[4]} 0;
+    margin: 0;
+    max-height: 500px;
+    border-radius: ${borderRadius[6]};
+    ${styleUtils.overflowYAuto};
 
-		${
-      !removeOptionsMinWidth &&
-      css`
-				min-width: 200px;
-			`
-    }
-	`,
+    ${!removeOptionsMinWidth &&
+    css`
+      min-width: 200px;
+    `}
+  `,
   optionItem: ({ isSelected = false }: { isSelected: boolean }) => css`
-		${typography.body()};
-		min-height: 36px;
-		height: 100%;
-		width: 100%;
-		display: flex;
-		align-items: center;
-		transition: background-color 0.3s ease-in-out;
-		cursor: pointer;
+    ${typography.body()};
+    min-height: 36px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease-in-out;
+    cursor: pointer;
 
-		&:hover {
-			background-color: ${colorTokens.background.hover};
-		}
-
-		${
-      isSelected &&
-      css`
-				background-color: ${colorTokens.background.active};
-				position: relative;
-
-				&::before {
-					content: '';
-					position: absolute;
-					top: 0;
-					left: 0;
-					width: 3px;
-					height: 100%;
-					background-color: ${colorTokens.action.primary.default};
-					border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
-				}
-			`
+    &:hover {
+      background-color: ${colorTokens.background.hover};
     }
-	`,
+
+    ${isSelected &&
+    css`
+      background-color: ${colorTokens.background.active};
+      position: relative;
+
+      &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 3px;
+        height: 100%;
+        background-color: ${colorTokens.action.primary.default};
+        border-radius: 0 ${borderRadius[6]} ${borderRadius[6]} 0;
+      }
+    `}
+  `,
   inputLeftContent: (showVerticalBar: boolean, size: string) => css`
     ${typography.small()}
     ${styleUtils.flexCenter()}
@@ -330,19 +318,15 @@ const styles = {
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 
-    ${
-      size === 'large' &&
-      css`
-        ${typography.body()}
-      `
-    }
+    ${size === 'large' &&
+    css`
+      ${typography.body()}
+    `}
 
-    ${
-      showVerticalBar &&
-      css`
-        border-right: 1px solid ${colorTokens.stroke.default};
-      `
-    }
+    ${showVerticalBar &&
+    css`
+      border-right: 1px solid ${colorTokens.stroke.default};
+    `}
   `,
   inputRightContent: (showVerticalBar: boolean, size: string) => css`
     ${typography.small()}
@@ -352,18 +336,14 @@ const styles = {
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 
-    ${
-      size === 'large' &&
-      css`
-        ${typography.body()}
-      `
-    }
+    ${size === 'large' &&
+    css`
+      ${typography.body()}
+    `}
 
-    ${
-      showVerticalBar &&
-      css`
-        border-left: 1px solid ${colorTokens.stroke.default};
-      `
-    }
+    ${showVerticalBar &&
+    css`
+      border-left: 1px solid ${colorTokens.stroke.default};
+    `}
   `,
 };

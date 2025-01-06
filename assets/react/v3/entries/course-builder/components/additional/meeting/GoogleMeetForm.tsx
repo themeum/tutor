@@ -4,25 +4,25 @@ import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
 
-import Show from '@Controls/Show';
+import Show from '@TutorShared/controls/Show';
 import {
   type GoogleMeet,
   type GoogleMeetMeetingFormData,
@@ -30,9 +30,9 @@ import {
 } from '@CourseBuilderServices/course';
 import { type ID, useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
 interface GoogleMeetFormProps {
   onCancel: () => void;
@@ -358,11 +358,9 @@ const styles = {
     gap: ${spacing[8]};
     z-index: ${zIndex.positive};
 
-    ${
-      isScrolling &&
-      css`
-        box-shadow: ${shadow.scrollable};
-      `
-    }
+    ${isScrolling &&
+    css`
+      box-shadow: ${shadow.scrollable};
+    `}
   `,
 };

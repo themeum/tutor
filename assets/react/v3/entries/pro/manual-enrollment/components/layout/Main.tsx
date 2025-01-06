@@ -1,16 +1,16 @@
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import FormSelectCourse from '@EnrollmentComponents/FormSelectCourse';
 import FormSelectStudents from '@EnrollmentComponents/FormSelectStudents';
 import type { Enrollment } from '@EnrollmentServices/enrollment';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { requiredRule } from '@Utils/validation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, FormProvider } from 'react-hook-form';
 import Topbar, { TOPBAR_HEIGHT } from './Topbar';
-import { tutorConfig } from '@Config/config';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import Show from '@TutorShared/controls/Show';
 
 function Main() {
   const form = useFormWithGlobalError<Enrollment>({
@@ -114,9 +114,14 @@ export default Main;
 const styles = {
   wrapper: css`
     background-color: ${colorTokens.background.default};
+    margin-left: ${spacing[20]};
+
+    ${Breakpoint.mobile} {
+      margin-left: ${spacing[12]};
+    }
   `,
   container: css`
-    max-width: 1030px;
+    max-width: 1054px;
     margin: 0 auto;
     height: 100%;
   `,
@@ -126,6 +131,11 @@ const styles = {
     display: grid;
     grid-template-columns: 255px 1fr;
     gap: ${spacing[24]};
+    padding-inline: ${spacing[12]};
+
+    ${Breakpoint.mobile} {
+      display: block;
+    }
   `,
   left: css`
     display: flex;
@@ -137,6 +147,11 @@ const styles = {
     border-left: 1px solid ${colorTokens.stroke.divider};
     padding-left: ${spacing[24]};
     padding-top: ${spacing[32]};
+
+    ${Breakpoint.mobile} {
+      border-left: none;
+      padding-left: 0;
+    }
   `,
   studentsWrapper: css`
     background-color: ${colorTokens.background.white};

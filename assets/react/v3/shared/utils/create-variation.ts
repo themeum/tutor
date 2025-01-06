@@ -3,7 +3,7 @@ import { isDefined } from './types';
 import { getObjectKeys } from './util';
 
 type OmitUndefined<T> = T extends undefined ? never : T;
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type VariantProps<Component extends (...args: any) => any> = Omit<
   OmitUndefined<Parameters<Component>[0]>,
   'class' | 'className' | 'css'

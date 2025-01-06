@@ -1,4 +1,4 @@
-import { ITEMS_PER_PAGE } from '@Config/constants';
+import { ITEMS_PER_PAGE } from '@TutorShared/config/constants';
 import { useCallback, useState } from 'react';
 import { JsonParam, NumberParam, StringParam, createEnumParam, useQueryParams, withDefault } from 'use-query-params';
 
@@ -51,7 +51,10 @@ export const usePaginatedTable = ({ limit = ITEMS_PER_PAGE, updateQueryParams = 
   );
 
   const onPageChange = (pageNumber: number) => updatePaginationInfo({ page: pageNumber });
-  const onFilterItems = useCallback((filter: Filter) => updatePaginationInfo({ page: 1, filter }), [updatePaginationInfo]);
+  const onFilterItems = useCallback(
+    (filter: Filter) => updatePaginationInfo({ page: 1, filter }),
+    [updatePaginationInfo],
+  );
   const onColumnSort = (sortProperty: string) => {
     let sortInfo = {};
     if (sortProperty !== pageInfo.sortProperty) {

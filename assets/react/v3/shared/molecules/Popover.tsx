@@ -1,7 +1,7 @@
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { AnimationType } from '@Hooks/useAnimation';
-import { Portal, type arrowPosition, usePortalPopover } from '@Hooks/usePortalPopover';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { Portal, type arrowPosition, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { css } from '@emotion/react';
 import type React from 'react';
 import type { RefObject } from 'react';
@@ -69,20 +69,18 @@ const styles = {
     z-index: ${zIndex.dropdown};
 
     &::before {
-      ${
-        arrow &&
-        !hideArrow &&
-        css`
-          content: '';
-          position: absolute;
-          border: ${spacing[8]} solid transparent;
+      ${arrow &&
+      !hideArrow &&
+      css`
+        content: '';
+        position: absolute;
+        border: ${spacing[8]} solid transparent;
 
-          ${arrow === 'left' && styles.arrowLeft}
-          ${arrow === 'right' && styles.arrowRight}
+        ${arrow === 'left' && styles.arrowLeft}
+        ${arrow === 'right' && styles.arrowRight}
           ${arrow === 'top' && styles.arrowTop}
           ${arrow === 'bottom' && styles.arrowBottom}
-        `
-      }
+      `}
     }
   `,
   arrowLeft: css`

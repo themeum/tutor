@@ -3,19 +3,19 @@ import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { LocalStorageKeys, notebook } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { getFromLocalStorage, setToLocalStorage } from '@Utils/localStorage';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { jsonParse, throttle } from '@Utils/util';
+import { CURRENT_VIEWPORT, LocalStorageKeys, notebook } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { getFromLocalStorage, setToLocalStorage } from '@TutorShared/utils/localStorage';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { jsonParse, throttle } from '@TutorShared/utils/util';
 
-import { useResize } from '@Hooks/useResize';
+import { useResize } from '@TutorShared/hooks/useResize';
 
 interface Position {
   x: number;
@@ -44,6 +44,11 @@ const Notebook = () => {
 
   const expandAnimation = useSpring({
     width: !isCollapsed ? notebook.MIN_NOTEBOOK_WIDTH : notebook.NOTEBOOK_HEADER,
+    height: CURRENT_VIEWPORT.isAboveDesktop
+      ? notebook.MIN_NOTEBOOK_HEIGHT
+      : !isCollapsed
+        ? notebook.MIN_NOTEBOOK_HEIGHT
+        : notebook.NOTEBOOK_HEADER,
     config: {
       duration: 300,
       easing: (t) => t * (2 - t),
@@ -205,7 +210,9 @@ const Notebook = () => {
     if (!isFloating) {
       wrapper.style.left = 'auto';
       wrapper.style.top = 'auto';
-      wrapper.style.height = `${notebook.MIN_NOTEBOOK_HEIGHT}px`;
+      wrapper.style.height = CURRENT_VIEWPORT.isAboveDesktop
+        ? `${notebook.MIN_NOTEBOOK_HEIGHT}px`
+        : `${notebook.NOTEBOOK_HEADER}px`;
 
       return;
     }
@@ -263,7 +270,11 @@ const Notebook = () => {
               css={[styleUtils.resetButton, styles.verticalButton]}
               onClick={() => setIsCollapsed(false)}
             >
-              {__('Notebook', 'tutor')}
+              {CURRENT_VIEWPORT.isAboveDesktop ? (
+                __('Notebook', 'tutor')
+              ) : (
+                <SVGIcon name="note" height={24} width={24} />
+              )}
             </button>
           </div>
         }
@@ -344,46 +355,36 @@ const Notebook = () => {
 export default Notebook;
 
 const styles = {
-  wrapper: ({
-    isCollapsed,
-    isFloating,
-  }: {
-    isCollapsed: boolean;
-    isFloating: boolean;
-  }) => css`
-		position: fixed;
-		background-color: ${colorTokens.background.active};
-		bottom: 0;
-		right: 0;
-		height: ${notebook.MIN_NOTEBOOK_HEIGHT}px;
-		border-radius: ${borderRadius.card} 0 0 0;
-		transition: box-shadow background-color 0.3s ease-in-out;
-		box-shadow: ${shadow.notebook};
-		z-index: ${zIndex.notebook};
+  wrapper: ({ isCollapsed, isFloating }: { isCollapsed: boolean; isFloating: boolean }) => css`
+    position: fixed;
+    background-color: ${colorTokens.background.active};
+    bottom: 0;
+    right: 0;
+    height: ${notebook.MIN_NOTEBOOK_HEIGHT}px;
+    border-radius: ${borderRadius.card} 0 0 0;
+    transition: box-shadow background-color 0.3s ease-in-out;
+    box-shadow: ${shadow.notebook};
+    z-index: ${zIndex.notebook};
     overflow: hidden;
 
-    &:focus-within { 
-			outline: 2px solid ${colorTokens.stroke.brand};
-			outline-offset: 1px;
-		}
-		
-		${
-      !isCollapsed &&
-      css`
-				border-top-left-radius: ${borderRadius.card};
-				background-color: ${colorTokens.background.white};
-				box-shadow: ${shadow.dropList};
-			`
+    &:focus-within {
+      outline: 2px solid ${colorTokens.stroke.brand};
+      outline-offset: 1px;
     }
 
-		${
-      isFloating &&
-      css`
-				bottom: auto;
-        border-radius: ${borderRadius.card};
-			`
-    }
-	`,
+    ${!isCollapsed &&
+    css`
+      border-top-left-radius: ${borderRadius.card};
+      background-color: ${colorTokens.background.white};
+      box-shadow: ${shadow.dropList};
+    `}
+
+    ${isFloating &&
+    css`
+      bottom: auto;
+      border-radius: ${borderRadius.card};
+    `}
+  `,
   verticalTitleWrapper: css`
     position: absolute;
     top: 50%;
@@ -391,6 +392,10 @@ const styles = {
     transform: translate(-50%, -50%) rotate(-90deg);
     background-color: ${colorTokens.background.active};
     color: ${colorTokens.text.title};
+
+    ${Breakpoint.smallTablet} {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
   `,
   verticalButton: css`
     text-align: center;
@@ -398,87 +403,66 @@ const styles = {
     height: ${notebook.NOTEBOOK_HEADER}px;
     ${typography.body('bold')};
   `,
-  header: ({
-    isCollapsed,
-    isFloating,
-  }: {
-    isCollapsed: boolean;
-    isFloating: boolean;
-  }) => css`
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: ${spacing[12]} ${spacing[16]};
-		${typography.body('medium')};
+  header: ({ isCollapsed, isFloating }: { isCollapsed: boolean; isFloating: boolean }) => css`
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: ${spacing[12]} ${spacing[16]};
+    ${typography.body('medium')};
     color: transparent;
 
-    ${
-      isFloating &&
-      css`
-        cursor: grab;
-        color: ${colorTokens.text.title};
-      `
-    }
+    ${isFloating &&
+    css`
+      cursor: grab;
+      color: ${colorTokens.text.title};
+    `}
 
-		${
-      !isCollapsed &&
-      css`
-				border-bottom: 1px solid ${colorTokens.stroke.divider};
-				padding: ${spacing[8]} ${spacing[12]};
-        color: ${colorTokens.text.title};
-			`
-    }
-	`,
+    ${!isCollapsed &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+      padding: ${spacing[8]} ${spacing[12]};
+      color: ${colorTokens.text.title};
+    `}
+  `,
   actions: css`
-		display: flex;
-	`,
-  collapseButton: ({
-    isCollapsed,
-  }: {
-    isCollapsed: boolean;
-  }) => css`
-		transition: all 0.3s ease-in-out;
-	
-		${
-      !isCollapsed &&
-      css`
-				transform: rotate(180deg);
-			`
-    }
-	`,
-  notebookWrapper: css`
-	  padding-block: ${spacing[16]};
-		width: 100%;
-		height: calc(100% - ${notebook.NOTEBOOK_HEADER}px);
-		background: url('data:image/svg+xml,<svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23D9D9D9"/></svg>') repeat;
+    display: flex;
+  `,
+  collapseButton: ({ isCollapsed }: { isCollapsed: boolean }) => css`
     transition: all 0.3s ease-in-out;
-	`,
-  notebook: ({
-    isCollapsed,
-  }: {
-    isCollapsed: boolean;
-  }) => css`
+
+    ${!isCollapsed &&
+    css`
+      transform: rotate(180deg);
+    `}
+  `,
+  notebookWrapper: css`
+    padding-block: ${spacing[16]};
+    width: 100%;
+    height: calc(100% - ${notebook.NOTEBOOK_HEADER}px);
+    background: url('data:image/svg+xml,<svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg"><rect width="1" height="1" fill="%23D9D9D9"/></svg>')
+      repeat;
+    transition: all 0.3s ease-in-out;
+  `,
+  notebook: ({ isCollapsed }: { isCollapsed: boolean }) => css`
     ${styleUtils.overflowYAuto};
-		padding-inline: ${spacing[16]};
-		outline: none;
-		word-wrap: break-word;
-		height: 100%;
+    padding-inline: ${spacing[16]};
+    outline: none;
+    word-wrap: break-word;
+    height: 100%;
     white-space: pre-wrap;
 
-    ${
-      isCollapsed &&
-      css`
-        display: none;
-      `
-    }
-	`,
+    ${isCollapsed &&
+    css`
+      display: none;
+    `}
+  `,
   textFieldExpand: css`
     ${styleUtils.resetButton};
-		position: absolute;
-		bottom: ${spacing[4]};
-		right: ${spacing[4]};
-		user-select: none;
-		color: ${colorTokens.icon.hints};
-		cursor: nwse-resize;
-	`,
+    position: absolute;
+    bottom: ${spacing[4]};
+    right: ${spacing[4]};
+    user-select: none;
+    color: ${colorTokens.icon.hints};
+    cursor: nwse-resize;
+  `,
 };

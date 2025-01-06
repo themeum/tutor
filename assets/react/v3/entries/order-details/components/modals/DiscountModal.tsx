@@ -1,17 +1,17 @@
 import { styleUtils } from '@/v3/shared/utils/style-utils';
-import Button from '@Atoms/Button';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import Button from '@TutorShared/atoms/Button';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type Discount, useOrderDiscountMutation } from '@OrderServices/order';
-import { formatPrice } from '@Utils/currency';
-import { requiredRule } from '@Utils/validation';
+import { formatPrice } from '@TutorShared/utils/currency';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo } from 'react';
@@ -59,12 +59,12 @@ function DiscountModal({ title, closeModal, actions, discount, total_price, orde
 
   useEffect(() => {
     form.setFocus('type');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions}>
+    <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={480}>
       <form
-        css={styles.form}
         onSubmit={form.handleSubmit((values) => {
           orderDiscountMutation.mutate({
             order_id,
@@ -171,9 +171,6 @@ const styles = {
   `,
   reason: css`
     margin-top: ${spacing[12]};
-  `,
-  form: css`
-    width: 480px;
   `,
   formContent: css`
     padding: ${spacing[20]} ${spacing[16]};

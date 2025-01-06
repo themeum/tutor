@@ -1,18 +1,18 @@
-import { Box, BoxTitle } from '@Atoms/Box';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
-import { colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import DiscountModal from '@OrderComponents/modals/DiscountModal';
 import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
 import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
 import type { PaymentStatus } from '@OrderServices/order';
-import { calculateDiscountValue, formatPrice } from '@Utils/currency';
-import { styleUtils } from '@Utils/style-utils';
+import { calculateDiscountValue, formatPrice } from '@TutorShared/utils/currency';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { PaymentBadge } from './PaymentBadge';
@@ -57,8 +57,8 @@ function Payment() {
       </BoxTitle>
       <div css={styles.content}>
         <Box bordered css={styleUtils.boxReset}>
-          {order.subscription_fees?.map((item) => (
-            <div css={styles.item({ action: 'regular' })}>
+          {order.subscription_fees?.map((item, idx) => (
+            <div key={idx} css={styles.item({ action: 'regular' })}>
               <div>{item.title}</div>
               <div>-</div>
               <div>{formatPrice(Number(item.value))}</div>
@@ -233,6 +233,7 @@ function Payment() {
                     available_amount: order.refunds?.length ? order.net_payment : order.total_price,
                     order_id: order.id,
                     order_type: order.order_type,
+                    payment_method: order.payment_method,
                   },
                 });
               }

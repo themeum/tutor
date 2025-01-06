@@ -1,8 +1,8 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Alert from '@Atoms/Alert';
-import { spacing } from '@Config/styles';
+import Alert from '@TutorShared/atoms/Alert';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
 
 const OpenEndedAndShortAnswer = () => {
   return (
@@ -17,5 +17,9 @@ export default OpenEndedAndShortAnswer;
 const styles = {
   optionWrapper: css`
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
 };

@@ -1,11 +1,11 @@
-import { useToast } from '@Atoms/Toast';
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import { authApiInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import type { PaginatedParams, PaginatedResult } from '@Utils/types';
-import { convertToErrorMessage, convertToGMT } from '@Utils/util';
+import { useToast } from '@TutorShared/atoms/Toast';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import type { PaginatedParams, PaginatedResult } from '@TutorShared/utils/types';
+import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 export type CouponType = 'code' | 'automatic';
@@ -172,8 +172,8 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
     discount_amount: data.discount_amount,
     applies_to: data.applies_to,
     applies_to_items: getAppliesToItemIds(data),
-    total_usage_limit: data.usage_limit_status ? data.total_usage_limit ?? '0' : '0',
-    per_user_usage_limit: data.per_user_limit_status ? data.per_user_usage_limit ?? '0' : '0',
+    total_usage_limit: data.usage_limit_status ? (data.total_usage_limit ?? '0') : '0',
+    per_user_usage_limit: data.per_user_limit_status ? (data.per_user_usage_limit ?? '0') : '0',
     ...(data.purchase_requirement && {
       purchase_requirement: data.purchase_requirement,
     }),
@@ -195,9 +195,10 @@ export function convertFormDataToPayload(data: Coupon): CouponPayload {
 }
 
 const getCouponDetails = (couponId: number) => {
-  return authApiInstance.post<GetCouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_details',
-    id: couponId,
+  return wpAjaxInstance.get<GetCouponResponse>(endpoints.GET_COUPON_DETAILS, {
+    params: {
+      id: couponId,
+    },
   });
 };
 
@@ -216,10 +217,7 @@ interface CouponResponse {
 }
 
 const createCoupon = (payload: CouponPayload) => {
-  return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_create',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CouponPayload, CouponResponse>(endpoints.CREATE_COUPON, payload);
 };
 
 export const useCreateCouponMutation = () => {
@@ -238,10 +236,7 @@ export const useCreateCouponMutation = () => {
 };
 
 const updateCoupon = (payload: CouponPayload) => {
-  return authApiInstance.post<CouponPayload, CouponResponse>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_update',
-    ...payload,
-  });
+  return wpAjaxInstance.post<CouponPayload, CouponResponse>(endpoints.UPDATE_COUPON, payload);
 };
 
 export const useUpdateCouponMutation = () => {
@@ -267,9 +262,10 @@ interface GetAppliesToParam extends PaginatedParams {
 }
 
 const getAppliesToList = (params: GetAppliesToParam) => {
-  return authApiInstance.post<PaginatedResult<Course | CourseCategory>>(endpoints.ADMIN_AJAX, {
-    action: 'tutor_coupon_applies_to_list',
-    ...params,
+  return wpAjaxInstance.get<PaginatedResult<Course | CourseCategory>>(endpoints.COUPON_APPLIES_TO, {
+    params: {
+      ...params,
+    },
   });
 };
 

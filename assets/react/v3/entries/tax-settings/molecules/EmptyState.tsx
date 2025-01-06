@@ -1,7 +1,7 @@
 import Show from '@/v3/shared/controls/Show';
-import Button from '@Atoms/Button';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import Button from '@TutorShared/atoms/Button';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
@@ -57,14 +57,12 @@ const styles = {
     display: grid;
     place-items: center;
     justify-content: center;
-    ${
-      orientation === 'horizontal' &&
-      css`
+    ${orientation === 'horizontal' &&
+    css`
       grid-template-columns: 278px auto;
       gap: ${spacing[56]};
       justify-content: start;
-    `
-    }
+    `}
 
     & img {
       max-width: 272px;
@@ -78,18 +76,14 @@ const styles = {
     max-width: 432px;
     gap: ${spacing[8]};
 
-    ${
-      orientation === 'horizontal' &&
-      css`
+    ${orientation === 'horizontal' &&
+    css`
       max-width: 364px;
-    `
-    }
-    ${
-      orientation === 'vertical' &&
-      css`
+    `}
+    ${orientation === 'vertical' &&
+    css`
       text-align: center;
-    `
-    }
+    `}
   `,
   title: css`
     ${typography.heading5()};

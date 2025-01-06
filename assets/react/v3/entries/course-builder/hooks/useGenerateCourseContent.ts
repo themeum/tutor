@@ -10,11 +10,11 @@ import {
   useGenerateQuizQuestionsMutation,
 } from '@CourseBuilderServices/magic-ai';
 
-import courseGenerationPlaceholderBlue from '@Images/course-generation-placeholders/course-generation-placeholder-blue.webp';
-import courseGenerationPlaceholderGreen from '@Images/course-generation-placeholders/course-generation-placeholder-green.webp';
-import courseGenerationPlaceholderPurple from '@Images/course-generation-placeholders/course-generation-placeholder-purple.webp';
-import courseGenerationPlaceholderRed from '@Images/course-generation-placeholders/course-generation-placeholder-red.webp';
-import courseGenerationPlaceholderRust from '@Images/course-generation-placeholders/course-generation-placeholder-rust.webp';
+import courseGenerationPlaceholderBlue from '@SharedImages/course-generation-placeholders/course-generation-placeholder-blue.webp';
+import courseGenerationPlaceholderGreen from '@SharedImages/course-generation-placeholders/course-generation-placeholder-green.webp';
+import courseGenerationPlaceholderPurple from '@SharedImages/course-generation-placeholders/course-generation-placeholder-purple.webp';
+import courseGenerationPlaceholderRed from '@SharedImages/course-generation-placeholders/course-generation-placeholder-red.webp';
+import courseGenerationPlaceholderRust from '@SharedImages/course-generation-placeholders/course-generation-placeholder-rust.webp';
 
 const courseGenerationPlaceholders = [
   courseGenerationPlaceholderBlue,

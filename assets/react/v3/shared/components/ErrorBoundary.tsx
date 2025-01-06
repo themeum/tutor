@@ -1,6 +1,6 @@
-import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { AnyObject } from '@Utils/form';
+import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { AnyObject } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 import ErrorStackParser from 'error-stack-parser';
 import type React from 'react';
@@ -247,12 +247,10 @@ const styles = {
   sourceLine: (isErrorLine: boolean) => css`
     white-space: pre-wrap;
 
-    ${
-      isErrorLine &&
-      css`
+    ${isErrorLine &&
+    css`
       color: ${colorTokens.text.error};
-    `
-    }
+    `}
   `,
   angleRight: css`
     min-width: 20px;

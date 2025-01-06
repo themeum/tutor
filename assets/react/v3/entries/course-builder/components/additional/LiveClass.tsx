@@ -3,35 +3,33 @@ import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import EmptyState from '@Molecules/EmptyState';
-import Popover from '@Molecules/Popover';
+import EmptyState from '@TutorShared/molecules/EmptyState';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 
-import config, { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import addonDisabled2x from '@Images/addon-disabled-2x.webp';
-import addonDisabled from '@Images/addon-disabled.webp';
-import liveClassPro2x from '@Images/pro-placeholders/live-class-2x.webp';
-import liveClassPro from '@Images/pro-placeholders/live-class.webp';
+import liveClassPro2x from '@SharedImages/pro-placeholders/live-class-2x.webp';
+import liveClassPro from '@SharedImages/pro-placeholders/live-class.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -52,6 +50,10 @@ const LiveClass = () => {
 
   const zoomButtonRef = useRef<HTMLButtonElement>(null);
   const googleMeetButtonRef = useRef<HTMLButtonElement>(null);
+
+  if (isTutorPro && !isZoomAddonEnabled && !isGoogleMeetAddonEnabled) {
+    return null;
+  }
 
   return (
     <div css={styles.liveClass}>
@@ -83,32 +85,7 @@ const LiveClass = () => {
           />
         }
       >
-        <Show
-          when={isZoomAddonEnabled || isGoogleMeetAddonEnabled}
-          fallback={
-            <EmptyState
-              size="small"
-              removeBorder={false}
-              emptyStateImage={addonDisabled}
-              emptyStateImage2x={addonDisabled2x}
-              imageAltText={__('No live class addons found', 'tutor')}
-              title={__('Activate the Google Meet or Zoom addon to use this feature.', 'tutor')}
-              description={__('Engage students in real-time with live classes using Google Meet or Zoom.', 'tutor')}
-              actions={
-                <Button
-                  size="small"
-                  variant="secondary"
-                  onClick={() => {
-                    window.open(config.TUTOR_ADDONS_PAGE, '_blank', 'noopener');
-                  }}
-                  icon={<SVGIcon name="linkExternal" width={24} height={24} />}
-                >
-                  {__('Go to Addons', 'tutor')}
-                </Button>
-              }
-            />
-          }
-        >
+        <Show when={isZoomAddonEnabled || isGoogleMeetAddonEnabled}>
           <Show when={isZoomAddonEnabled}>
             <div
               css={styles.meetingsWrapper({
@@ -193,6 +170,8 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <ZoomMeetingForm
           data={null}
@@ -208,6 +187,8 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <GoogleMeetForm
           data={null}
@@ -239,29 +220,23 @@ const styles = {
     background-color: ${colorTokens.background.white};
     border-radius: ${borderRadius.card};
 
-    ${
-      hasMeeting &&
-      css`
-        border: 1px solid ${colorTokens.stroke.default};
-      `
-    }
+    ${hasMeeting &&
+    css`
+      border: 1px solid ${colorTokens.stroke.default};
+    `}
   `,
   meeting: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     padding: ${spacing[8]} ${spacing[8]} ${spacing[12]} ${spacing[8]};
-    ${
-      hasMeeting &&
-      css`
-        border-bottom: 1px solid ${colorTokens.stroke.divider};
-      `
-    }
+    ${hasMeeting &&
+    css`
+      border-bottom: 1px solid ${colorTokens.stroke.divider};
+    `}
   `,
   meetingsFooter: ({ hasMeeting }: { hasMeeting: boolean }) => css`
     width: 100%;
-    ${
-      hasMeeting &&
-      css`
-        padding: ${spacing[12]} ${spacing[8]};
-      `
-    }
+    ${hasMeeting &&
+    css`
+      padding: ${spacing[12]} ${spacing[8]};
+    `}
   `,
 };

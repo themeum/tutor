@@ -1,4 +1,4 @@
-import { isRTL } from '@Config/constants';
+import { isRTL } from '@TutorShared/config/constants';
 import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import type { ReactNode } from 'react';

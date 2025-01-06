@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 
-import { tutorConfig } from '@Config/config';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import LogoSvg from '@Images/logo.svg';
+import LogoSvg from '@SharedImages/logo.svg';
 
 const Logo = () => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -32,6 +32,15 @@ const styles = {
       width: auto;
       object-fit: contain;
       object-position: center;
+    }
+
+    ${Breakpoint.smallTablet} {
+      padding-left: ${spacing[24]};
+    }
+
+    ${Breakpoint.smallMobile} {
+      grid-area: logo;
+      padding-left: ${spacing[16]};
     }
   `,
 };

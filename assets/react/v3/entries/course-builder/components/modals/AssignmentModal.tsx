@@ -4,25 +4,25 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
-import FormWPEditor from '@Components/fields/FormWPEditor';
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
@@ -32,10 +32,10 @@ import {
   useSaveAssignmentMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { type WPMedia } from '@Hooks/useWpMedia';
-import { normalizeLineEndings } from '@Utils/util';
-import { maxLimitRule } from '@Utils/validation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { normalizeLineEndings } from '@TutorShared/utils/util';
+import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;
@@ -178,8 +178,8 @@ const AssignmentModal = ({
     <ModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
       icon={isFormDirty ? <SVGIcon name="warning" width={24} height={24} /> : icon}
-      title={isFormDirty ? __('Unsaved Changes', 'tutor') : title}
-      subtitle={subtitle}
+      title={isFormDirty ? (CURRENT_VIEWPORT.isAboveDesktop ? __('Unsaved Changes', 'tutor') : '') : title}
+      subtitle={CURRENT_VIEWPORT.isAboveSmallMobile ? subtitle : ''}
       maxWidth={1070}
       actions={
         isFormDirty && (
@@ -451,12 +451,21 @@ export default AssignmentModal;
 
 const styles = {
   wrapper: css`
-    width: 1070px;
     margin: 0 auto;
     display: grid;
     grid-template-columns: 1fr 338px;
+    width: 100%;
     height: 100%;
     padding-inline: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      grid-template-columns: 1fr;
+      padding-inline: ${spacing[24]};
+    }
+
+    ${Breakpoint.mobile} {
+      padding-inline: ${spacing[16]};
+    }
   `,
   assignmentInfo: css`
     padding-block: ${spacing[24]};
@@ -467,6 +476,11 @@ const styles = {
     position: sticky;
     top: 0;
     z-index: ${zIndex.positive}; // this is the hack to make the sticky work and not overlap with the editor
+
+    ${Breakpoint.smallTablet} {
+      position: unset;
+      padding-right: 0;
+    }
   `,
   rightPanel: css`
     border-left: 1px solid ${colorTokens.stroke.divider};
@@ -475,6 +489,11 @@ const styles = {
     gap: ${spacing[16]};
     padding-block: ${spacing[24]};
     padding-left: ${spacing[32]};
+
+    ${Breakpoint.smallTablet} {
+      border-left: none;
+      padding-left: 0;
+    }
   `,
   timeLimit: css`
     display: grid;

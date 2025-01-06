@@ -1,14 +1,14 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
-import emptyStateImage2x from '@Images/subscriptions-empty-state-2x.webp';
-import emptyStateImage from '@Images/subscriptions-empty-state.webp';
+import emptyStateImage2x from '@SharedImages/subscriptions-empty-state-2x.webp';
+import emptyStateImage from '@SharedImages/subscriptions-empty-state.webp';
 
 export const SubscriptionEmptyState = ({ onCreateSubscription }: { onCreateSubscription: () => void }) => {
   return (

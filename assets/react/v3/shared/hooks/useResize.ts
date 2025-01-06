@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { isDefined } from '@Utils/types';
-import { throttle } from '@Utils/util';
+import { isDefined } from '@TutorShared/utils/types';
+import { throttle } from '@TutorShared/utils/util';
 
 interface ResizeProps {
   resizeDivRef?: React.RefObject<HTMLDivElement>;

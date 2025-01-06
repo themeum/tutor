@@ -1,10 +1,10 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import type { FormControllerProps } from '@Utils/form';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import type { OptionWithImage } from '@Utils/types';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { OptionWithImage } from '@TutorShared/utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormImageRadioGroupProps<T> extends FormControllerProps<T> {
@@ -54,6 +54,7 @@ const styles = {
     display: flex;
     flex-direction: column;
     gap: ${spacing[4]};
+    align-items: center;
     width: 100%;
     cursor: pointer;
 

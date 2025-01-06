@@ -1,5 +1,5 @@
-import type { IconCollection } from '@Utils/types';
-import { getIcon } from '@Utils/util';
+import type { IconCollection } from '@TutorShared/utils/types';
+import { getIcon } from '@TutorShared/utils/util';
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { type SerializedStyles, css } from '@emotion/react';
@@ -36,11 +36,9 @@ export default SVGIcon;
 const styles = {
   svg: ({ isColorIcon = false }) => css`
     transition: filter 0.3s ease-in-out;
-    ${
-      isColorIcon &&
-      css`
+    ${isColorIcon &&
+    css`
       filter: grayscale(100%);
-    `
-    }
+    `}
   `,
 };

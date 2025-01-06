@@ -1,14 +1,17 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { DateFormats, isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
-import { format, isValid } from 'date-fns';
+import { format, isValid, parseISO } from 'date-fns';
 import { useRef, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
+
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { DateFormats, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+
 import 'react-day-picker/dist/style.css';
 
 import FormFieldWrapper from './FormFieldWrapper';
@@ -42,7 +45,9 @@ const FormDateInput = ({
 }: FormDateInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const fieldValue = isValid(new Date(field.value)) ? format(new Date(field.value), dateFormat) : '';
+  const parsedISODate = parseISO(field.value);
+  const isValidDate = isValid(new Date(field.value));
+  const fieldValue = isValidDate ? format(parsedISODate, dateFormat) : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -78,7 +83,6 @@ const FormDateInput = ({
                   inputRef.current = element;
                 }}
                 type="text"
-                readOnly
                 value={fieldValue}
                 onClick={(event) => {
                   event.stopPropagation();
@@ -116,10 +120,10 @@ const FormDateInput = ({
                 <DayPicker
                   mode="single"
                   disabled={[
-                    !!disabledBefore && { before: new Date(disabledBefore) },
-                    !!disabledAfter && { after: new Date(disabledAfter) },
+                    !!disabledBefore && { before: parseISO(disabledBefore) },
+                    !!disabledAfter && { after: parseISO(disabledAfter) },
                   ]}
-                  selected={isValid(new Date(field.value)) ? new Date(field.value) : undefined}
+                  selected={isValidDate ? parsedISODate : undefined}
                   onSelect={(value) => {
                     if (value) {
                       const formattedDate = format(value, DateFormats.yearMonthDay);
@@ -135,9 +139,9 @@ const FormDateInput = ({
                   showOutsideDays
                   captionLayout="dropdown-buttons"
                   initialFocus={true}
-                  defaultMonth={isValid(new Date(field.value)) ? new Date(field.value) : new Date()}
-                  fromMonth={disabledBefore ? new Date(disabledBefore) : new Date(new Date().getFullYear() - 10, 0)}
-                  toMonth={disabledAfter ? new Date(disabledAfter) : new Date(new Date().getFullYear() + 10, 11)}
+                  defaultMonth={isValidDate ? parsedISODate : new Date()}
+                  fromMonth={disabledBefore ? parseISO(disabledBefore) : new Date(new Date().getFullYear() - 10, 0)}
+                  toMonth={disabledAfter ? parseISO(disabledAfter) : new Date(new Date().getFullYear() + 10, 11)}
                 />
               </div>
             </Portal>
@@ -185,8 +189,10 @@ const styles = {
       --rdp-caption-font-size: ${fontSize[18]}; /* Font size for the caption labels. */
       --rdp-accent-color: ${colorTokens.action.primary.default}; /* Accent color for the background of selected days. */
       --rdp-background-color: ${colorTokens.background.hover}; /* Background color for the hovered/focused elements. */
-      --rdp-accent-color-dark: ${colorTokens.action.primary.active}; /* Accent color for the background of selected days (to use in dark-mode). */
-      --rdp-background-color-dark: ${colorTokens.action.primary.hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
+      --rdp-accent-color-dark: ${colorTokens.action.primary
+        .active}; /* Accent color for the background of selected days (to use in dark-mode). */
+      --rdp-background-color-dark: ${colorTokens.action.primary
+        .hover}; /* Background color for the hovered/focused elements (to use in dark-mode). */
       --rdp-outline: 2px solid var(--rdp-accent-color); /* Outline border for focused elements */
       --rdp-outline-selected: 3px solid var(--rdp-accent-color); /* Outline border for focused _and_ selected elements */
       --rdp-selected-color: ${colorTokens.text.white}; /* Color of selected day text */
@@ -207,7 +213,9 @@ const styles = {
     height: 32px;
     ${styleUtils.flexCenter()};
     opacity: 0;
-    transition: background-color 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition:
+      background-color 0.3s ease-in-out,
+      opacity 0.3s ease-in-out;
     border-radius: ${borderRadius[2]};
 
     :hover {

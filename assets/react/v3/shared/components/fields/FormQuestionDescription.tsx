@@ -2,12 +2,12 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Button from '@Atoms/Button';
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
+import Button from '@TutorShared/atoms/Button';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 
 import FormTextareaInput from './FormTextareaInput';
 import FormWPEditor from './FormWPEditor';
@@ -114,7 +114,7 @@ const FormQuestionDescription = ({
         </Show>
         <Show when={!isEdit}>
           <div
-            onClick={(e) => {
+            onClick={() => {
               if (!isEdit && !disabled) {
                 setIsEdit(true);
               }
@@ -143,14 +143,12 @@ const styles = {
     overflow-y: auto;
     border-radius: ${borderRadius[6]};
 
-    ${
-      isEdit &&
-      css`
-        padding-inline: 0;
-        max-height: unset;
-        overflow: unset;
-      `
-    }
+    ${isEdit &&
+    css`
+      padding-inline: 0;
+      max-height: unset;
+      overflow: unset;
+    `}
   `,
   container: ({ isEdit, isDisabled }: { isEdit: boolean; isDisabled: boolean }) => css`
     position: relative;
@@ -183,26 +181,22 @@ const styles = {
       color: ${colorTokens.text.title};
     }
 
-    ${
-      !isDisabled &&
-      css`
-          &:hover {
-          background-color: ${!isEdit && colorTokens.background.white};
-          color: ${colorTokens.text.subdued};
+    ${!isDisabled &&
+    css`
+      &:hover {
+        background-color: ${!isEdit && colorTokens.background.white};
+        color: ${colorTokens.text.subdued};
 
-          [data-action-buttons] {
-            opacity: 1;
-          }
+        [data-action-buttons] {
+          opacity: 1;
         }
-      `
-    }
+      }
+    `}
 
-    ${
-      isEdit &&
-      css`
-        padding-inline: 0;
-      `
-    }
+    ${isEdit &&
+    css`
+      padding-inline: 0;
+    `}
   `,
   placeholder: css`
     ${typography.caption()}
@@ -219,12 +213,10 @@ const styles = {
     opacity: 0;
     transition: opacity 0.15s ease-in-out;
 
-    ${
-      isEdit &&
-      css`
-        opacity: 1;
-      `
-    }
+    ${isEdit &&
+    css`
+      opacity: 1;
+    `}
   `,
   overlay: css`
     position: absolute;

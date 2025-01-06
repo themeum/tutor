@@ -4,24 +4,24 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Tabs, { type TabItem } from '@Molecules/Tabs';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 
-import FormInput from '@Components/fields/FormInput';
-import FormSwitch from '@Components/fields/FormSwitch';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import type { Option } from '@Utils/types';
+import type { Option } from '@TutorShared/utils/types';
 
 const courseId = getCourseId();
 
@@ -49,13 +49,14 @@ const CourseSettings = () => {
     },
   ];
 
-  isAddonEnabled(Addons.BUDDYPRESS) &&
+  if (isAddonEnabled(Addons.BUDDYPRESS)) {
     tabList.push({
       label: __('BuddyPress', 'tutor'),
       value: 'buddyPress',
       icon: <SVGIcon name="buddyPress" width={24} height={24} />,
       activeBadge: isBuddyPressEnabled,
     });
+  }
 
   const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
     label: level.label,
@@ -67,7 +68,22 @@ const CourseSettings = () => {
       <label css={typography.caption()}>{__('Options', 'tutor')}</label>
 
       <div css={styles.courseSettings}>
-        <Tabs tabList={tabList} activeTab={activeTab} onChange={setActiveTab} orientation="vertical" />
+        <Tabs
+          tabList={
+            // this is a hack to only show the tab labels on screens above small mobile
+            CURRENT_VIEWPORT.isAboveSmallMobile
+              ? tabList
+              : tabList.map((tab) => ({ ...tab, label: activeTab === tab.value ? tab.label : '' }))
+          }
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          orientation={!CURRENT_VIEWPORT.isAboveSmallMobile ? 'horizontal' : 'vertical'}
+          wrapperCss={css`
+            button {
+              min-width: auto;
+            }
+          `}
+        />
 
         <div
           css={{
@@ -211,6 +227,10 @@ const styles = {
     border-radius: ${borderRadius[6]};
     background-color: ${colorTokens.background.default};
     overflow: hidden;
+
+    ${Breakpoint.smallMobile} {
+      grid-template-columns: 1fr;
+    }
   `,
   settingsOptions: css`
     min-height: 400px;
@@ -219,6 +239,10 @@ const styles = {
     gap: ${spacing[12]};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[48]} ${spacing[32]};
     background-color: ${colorTokens.background.white};
+
+    ${Breakpoint.smallMobile} {
+      padding: ${spacing[16]};
+    }
   `,
   courseAndQna: css`
     display: flex;

@@ -1,11 +1,11 @@
 import { css } from '@emotion/react';
 import React from 'react';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { type VariantProps, createVariation } from '@Utils/create-variation';
-import { styleUtils } from '@Utils/style-utils';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { type VariantProps, createVariation } from '@TutorShared/utils/create-variation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import LoadingSpinner from './LoadingSpinner';
 
 interface MagicButtonProps extends React.HTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
@@ -93,26 +93,30 @@ const styles = {
     }
   `,
   outline: css`
-		position: relative;
-		&::before {
-			content: '';
-			position: absolute;
-			inset: 0;
-			background: ${colorTokens.ai.gradient_1};
-			color: ${colorTokens.text.primary};
-			border: 1px solid transparent;
-      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-      mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-			-webkit-mask-composite: xor;
-			mask-composite: exclude;
-		}
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: ${colorTokens.ai.gradient_1};
+      color: ${colorTokens.text.primary};
+      border: 1px solid transparent;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      mask:
+        linear-gradient(#fff 0 0) padding-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+    }
 
-		&:hover {
-			&::before {
-				background: ${colorTokens.ai.gradient_2};
-			}
-		}
-	`,
+    &:hover {
+      &::before {
+        background: ${colorTokens.ai.gradient_2};
+      }
+    }
+  `,
   primaryOutline: css`
     border: 1px solid ${colorTokens.brand.blue};
     color: ${colorTokens.brand.blue};
@@ -169,16 +173,16 @@ const styles = {
     true: css`
       border-radius: ${borderRadius[54]};
 
-			&::before {
-				border-radius: ${borderRadius[54]};
-			}
+      &::before {
+        border-radius: ${borderRadius[54]};
+      }
     `,
     false: css`
       border-radius: ${borderRadius[4]};
 
-			&::before {
-				border-radius: ${borderRadius[4]};
-			}
+      &::before {
+        border-radius: ${borderRadius[4]};
+      }
     `,
   },
 };

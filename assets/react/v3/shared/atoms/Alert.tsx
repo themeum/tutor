@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 
-import { borderRadius, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { IconCollection } from '@Utils/types';
+import { borderRadius, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { IconCollection } from '@TutorShared/utils/types';
 
-import Show from '@Controls/Show';
+import Show from '@TutorShared/controls/Show';
 import SVGIcon from './SVGIcon';
 
 type AlertType = 'success' | 'warning' | 'danger' | 'info' | 'primary';
@@ -53,11 +53,7 @@ const Alert = ({ children, type = 'warning', icon }: AlertProps) => {
 export default Alert;
 
 const styles = {
-  wrapper: ({
-    type,
-  }: {
-    type: AlertType;
-  }) => css`
+  wrapper: ({ type }: { type: AlertType }) => css`
     ${typography.caption()};
     display: flex;
     align-items: start;
@@ -69,11 +65,7 @@ const styles = {
     color: ${alertStyles.text[type]};
   `,
 
-  icon: ({
-    type,
-  }: {
-    type: AlertType;
-  }) => css`
+  icon: ({ type }: { type: AlertType }) => css`
     color: ${alertStyles.icon[type]};
     flex-shrink: 0;
   `,

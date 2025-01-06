@@ -1,10 +1,10 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
-import { noop } from '@Utils/util';
+import { noop } from '@TutorShared/utils/util';
 import SVGIcon from './SVGIcon';
 
 type ChipProps = {
@@ -52,29 +52,25 @@ export default Chip;
 const styles = {
   wrapper: ({ hasIcon = false, isClickable }: { hasIcon: boolean; isClickable: boolean }) => css`
     ${styleUtils.resetButton};
-    background-color: #E4E5E7;
+    background-color: #e4e5e7;
     border-radius: ${borderRadius[24]};
     padding: ${spacing[4]} ${spacing[8]};
     min-height: 24px;
     transition: background-color 0.3s ease;
 
-    ${
-      !isClickable &&
-      css`
+    ${!isClickable &&
+    css`
       cursor: inherit;
-    `
-    }
+    `}
 
-    ${
-      hasIcon &&
-      css`
+    ${hasIcon &&
+    css`
       display: flex;
       justify-content: center;
       align-items: center;
       gap: ${spacing[2]};
       padding: ${spacing[4]} ${spacing[8]} ${spacing[4]} ${spacing[12]};
-    `
-    }
+    `}
 
     :hover {
       [data-icon-wrapper] {

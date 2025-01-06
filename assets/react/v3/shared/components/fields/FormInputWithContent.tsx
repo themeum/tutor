@@ -1,10 +1,10 @@
-import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
+import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef } from 'react';
 
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithContentProps extends FormControllerProps<string | number | null | undefined> {
@@ -121,33 +121,27 @@ const styles = {
     display: flex;
     align-items: center;
 
-    ${
-      !removeBorder &&
-      css`
-        border: 1px solid ${colorTokens.stroke.default};
-        border-radius: ${borderRadius[6]};
-        box-shadow: ${shadow.input};
-        background-color: ${colorTokens.background.white};
-      `
-    }
+    ${!removeBorder &&
+    css`
+      border: 1px solid ${colorTokens.stroke.default};
+      border-radius: ${borderRadius[6]};
+      box-shadow: ${shadow.input};
+      background-color: ${colorTokens.background.white};
+    `}
 
-    ${
-      hasFieldError &&
-      css`
-        border-color: ${colorTokens.stroke.danger};
-        background-color: ${colorTokens.background.status.errorFail};
-      `
-    };
+    ${hasFieldError &&
+    css`
+      border-color: ${colorTokens.stroke.danger};
+      background-color: ${colorTokens.background.status.errorFail};
+    `};
 
     &:focus-within {
       ${styleUtils.inputFocus};
 
-      ${
-        hasFieldError &&
-        css`
+      ${hasFieldError &&
+      css`
         border-color: ${colorTokens.stroke.danger};
-      `
-      }
+      `}
     }
   `,
   input: (contentPosition: string, showVerticalBar: boolean, size: string) => css`
@@ -169,16 +163,14 @@ const styles = {
       ${
         size === 'large' &&
         css`
-        font-size: ${fontSize[24]};
-        font-weight: ${fontWeight.medium};
-        height: 34px;
-        ${
-          showVerticalBar &&
+          font-size: ${fontSize[24]};
+          font-weight: ${fontWeight.medium};
+          height: 34px;
+          ${showVerticalBar &&
           css`
             padding-${contentPosition}: ${spacing[12]};
-          `
-        };
-      `
+          `};
+        `
       }
   
       &:focus {
@@ -195,19 +187,15 @@ const styles = {
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 
-    ${
-      size === 'large' &&
-      css`
-        ${typography.body()}
-      `
-    }
+    ${size === 'large' &&
+    css`
+      ${typography.body()}
+    `}
 
-    ${
-      showVerticalBar &&
-      css`
-        border-right: 1px solid ${colorTokens.stroke.default};
-      `
-    }
+    ${showVerticalBar &&
+    css`
+      border-right: 1px solid ${colorTokens.stroke.default};
+    `}
   `,
   inputRightContent: (showVerticalBar: boolean, size: string) => css`
     ${typography.small()}
@@ -217,19 +205,15 @@ const styles = {
     color: ${colorTokens.icon.subdued};
     padding-inline: ${spacing[12]};
 
-    ${
-      size === 'large' &&
-      css`
-        ${typography.body()}
-      `
-    }
+    ${size === 'large' &&
+    css`
+      ${typography.body()}
+    `}
 
-    ${
-      showVerticalBar &&
-      css`
-        border-left: 1px solid ${colorTokens.stroke.default};
-      `
-    }
+    ${showVerticalBar &&
+    css`
+      border-left: 1px solid ${colorTokens.stroke.default};
+    `}
   `,
 };
 

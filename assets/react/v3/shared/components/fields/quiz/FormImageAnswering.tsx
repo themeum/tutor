@@ -4,24 +4,24 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import ImageInput from '@Atoms/ImageInput';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import Button from '@TutorShared/atoms/Button';
+import ImageInput from '@TutorShared/atoms/ImageInput';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, fontWeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
-import useWPMedia from '@Hooks/useWpMedia';
-import { animateLayoutChanges } from '@Utils/dndkit';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { nanoid, noop } from '@Utils/util';
+import { calculateQuizDataStatus, QuizDataStatus, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import useWPMedia from '@TutorShared/hooks/useWpMedia';
+import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
 interface FormImageAnsweringProps extends FormControllerProps<QuizQuestionOption> {
   index: number;
@@ -406,10 +406,16 @@ const styles = {
       background-color: ${colorTokens.stroke.hover};
     `}
 
-      ${isOverlay &&
+    ${isOverlay &&
     css`
       box-shadow: ${shadow.drag};
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
   `,
   optionHeader: css`
     display: grid;
