@@ -5,12 +5,14 @@ import { useFormContext } from 'react-hook-form';
 import SVGIcon from '@Atoms/SVGIcon';
 import Tooltip from '@Atoms/Tooltip';
 
-import { useModal } from '@Components/modals/Modal';
 import HeaderActions from '@BundleBuilderComponents/layouts/header/HeaderActions';
 import Logo from '@BundleBuilderComponents/layouts/header/Logo';
-import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBuilderModal';
+import LeaveWithoutSavingModal from '@Components/modals/LeaveWithoutSavingModal';
+import { useModal } from '@Components/modals/Modal';
 
+import { type BundleFormData } from '@BundleBuilderServices/bundle';
 import { tutorConfig } from '@Config/config';
+import { CURRENT_VIEWPORT, WP_ADMIN_BAR_HEIGHT } from '@Config/constants';
 import {
   borderRadius,
   Breakpoint,
@@ -25,9 +27,6 @@ import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
 
-import { type BundleFormData } from '@BundleBuilderServices/bundle';
-import { CURRENT_VIEWPORT, WP_ADMIN_BAR_HEIGHT } from '@Config/constants';
-
 const Header = () => {
   const form = useFormContext<BundleFormData>();
   const { showModal } = useModal();
@@ -37,12 +36,20 @@ const Header = () => {
   const handleExitButtonClick = () => {
     if (isFormDirty) {
       showModal({
-        component: ExitCourseBuilderModal,
+        component: LeaveWithoutSavingModal,
+        props: {
+          redirectUrl: (() => {
+            const isFormWpAdmin = window.location.href.includes('wp-admin');
+
+            return isFormWpAdmin ? tutorConfig.backend_course_list_url : tutorConfig.frontend_course_list_url;
+          })(),
+          message: __('You’re about to leave the course bundle creation process without saving your changes.', 'tutor'),
+        },
       });
     } else {
       const isFormWpAdmin = window.location.href.includes('wp-admin');
 
-      window.location.href = isFormWpAdmin ? tutorConfig.backend_course_list_url : tutorConfig.frontend_course_list_url;
+      window.location.href = isFormWpAdmin ? tutorConfig.backend_bundle_list_url : tutorConfig.frontend_bundle_list_url;
     }
   };
 

@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
+import { useFormContext, useWatch } from 'react-hook-form';
 
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
-import Show from '@/v3/shared/controls/Show';
+import SVGIcon from '@Atoms/SVGIcon';
+import { type BundleFormData } from '@BundleBuilderServices/bundle';
 import { colorTokens, fontWeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { type BundleFormData } from '../../services/bundle';
 
 const SelectionOverview = () => {
   const form = useFormContext<BundleFormData>();
@@ -25,7 +25,7 @@ const SelectionOverview = () => {
   } as const;
 
   const contentMap = {
-    total_duration: __(' Total Duration', 'tutor'),
+    total_duration: __('Minutes Total Duration', 'tutor'),
     total_quizzes: __('Quiz Papers', 'tutor'),
     total_video_contents: __('Video Content', 'tutor'),
     total_resources: __('Downloadable Resources', 'tutor'),
@@ -43,7 +43,7 @@ const SelectionOverview = () => {
               <div css={styles.overviewItem}>
                 <SVGIcon name={iconMap[key as keyof typeof iconMap]} width={32} height={32} />
                 <Show when={value && typeof value !== 'boolean'}>
-                  <span>{value}</span>
+                  <span>{key === 'total_duration' ? String(value).replace(/:\d{2}$/, '') : value}</span>
                 </Show>
                 <span>{contentMap[key as keyof typeof contentMap]}</span>
               </div>

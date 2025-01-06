@@ -43,7 +43,6 @@ const HeaderActions = () => {
 
   const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(postStatus);
 
-  // const createCourseMutation = useCreateCourseMutation();
   const saveCourseBundleMutation = useSaveCourseBundle();
 
   const isPostDateDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
@@ -98,9 +97,9 @@ const HeaderActions = () => {
                 <Button
                   onClick={() => {
                     if (window.location.href.includes('wp-admin')) {
-                      window.location.href = tutorConfig.backend_course_list_url;
+                      window.location.href = tutorConfig.backend_bundle_list_url;
                     } else {
-                      window.location.href = tutorConfig.frontend_course_list_url;
+                      window.location.href = tutorConfig.frontend_bundle_list_url;
                     }
                   }}
                   size="small"
@@ -113,51 +112,40 @@ const HeaderActions = () => {
         });
       }
 
-      // if (
-      //   isInstructor &&
-      //   tutorConfig.settings?.enable_redirect_on_course_publish_from_frontend === 'on' &&
-      //   ['publish', 'future'].includes(determinedPostStatus)
-      // ) {
-      //   window.location.href = config.TUTOR_MY_COURSES_PAGE_URL;
-      // }
-
       return;
     }
-
-    // const response = await createCourseMutation.mutateAsync({ ...payload });
-
-    // if (response.data) {
-    //   window.location.href = `${config.TUTOR_SITE_URL}/wp-admin/admin.php?page=create-course&course_id=${response.data}`;
-    // }
   };
 
-  const dropdownButton = () => {
-    let text: string;
-    let action: PostStatus;
-
+  const dropdownButton = (): {
+    text: string;
+    action: PostStatus;
+  } => {
     if (!isAllowedToPublishCourse && !isAdmin && isInstructor) {
-      text = __('Submit', 'tutor');
-      action = 'pending';
-    } else if (
-      !bundleId ||
-      postStatus === 'pending' ||
-      (postStatus === 'draft' &&
-        (!isScheduleEnabled || !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`))))
-    ) {
-      text = __('Publish', 'tutor');
-      action = 'publish';
-    } else if (isScheduleEnabled) {
-      text =
-        isPostDateDirty && !isBefore(new Date(`${scheduleDate} ${scheduleTime}`), new Date())
-          ? __('Schedule', 'tutor')
-          : __('Update', 'tutor');
-      action = 'future';
-    } else {
-      text = __('Update', 'tutor');
-      action = 'publish';
+      return { text: __('Submit', 'tutor'), action: 'pending' };
     }
 
-    return { text, action };
+    const isInFuture = isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`));
+    const isNewOrDraft = !bundleId || ['pending', 'draft'].includes(postStatus);
+
+    if (isNewOrDraft) {
+      const shouldSchedule = isPostDateDirty && isScheduleEnabled && isInFuture;
+
+      return {
+        text: shouldSchedule ? __('Schedule', 'tutor') : __('Publish', 'tutor'),
+        action: shouldSchedule ? 'future' : 'publish',
+      };
+    }
+
+    if (isScheduleEnabled) {
+      const shouldSchedule = isPostDateDirty && isInFuture;
+
+      return {
+        text: shouldSchedule ? __('Schedule', 'tutor') : __('Update', 'tutor'),
+        action: 'future',
+      };
+    }
+
+    return { text: __('Update', 'tutor'), action: 'publish' };
   };
 
   const dropdownItems = () => {

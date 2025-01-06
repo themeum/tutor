@@ -237,6 +237,8 @@ const saveCourseBundle = async (payload: BundlePayload) => {
 
 export const useSaveCourseBundle = () => {
   const { showToast } = useToast();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: saveCourseBundle,
     onSuccess: (response) => {
@@ -244,6 +246,13 @@ export const useSaveCourseBundle = () => {
         message: response.message,
         type: 'success',
       });
+
+      const bundleId = new URLSearchParams(window.location.search).get('id');
+      if (bundleId) {
+        queryClient.invalidateQueries({
+          queryKey: ['CourseBundle', parseInt(bundleId, 10)],
+        });
+      }
     },
     onError: (error: ErrorResponse) => {
       showToast({
