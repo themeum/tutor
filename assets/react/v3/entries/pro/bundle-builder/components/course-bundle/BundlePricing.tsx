@@ -79,7 +79,7 @@ const BundlePricing = () => {
       </div>
 
       <Show when={isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.monetize_by === 'tutor'}>
-        <SubscriptionPreview courseId={bundleId} />
+        <SubscriptionPreview courseId={bundleId} isBundle />
 
         <Controller
           name="course_selling_option"

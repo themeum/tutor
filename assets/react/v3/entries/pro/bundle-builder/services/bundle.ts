@@ -94,7 +94,7 @@ export interface BundleFormData {
   course_selling_option: TutorSellingOption;
   courses: Course[];
   overview: CourseBundleOverview;
-  categories: TutorCategory[];
+  categories: number[];
   instructors: WPUser[];
 }
 
@@ -188,7 +188,7 @@ export const convertBundleToFormData = (courseBundle: Bundle): BundleFormData =>
     course_selling_option: courseBundle.course_selling_option ?? 'one_time',
     courses: courseBundle.details.courses ?? [],
     overview: courseBundle.details.overview ?? defaultCourseBundleData.overview,
-    categories: courseBundle.details.categories ?? [],
+    categories: (courseBundle.details.categories ?? []).map((category) => category.term_id),
     instructors: courseBundle.details.authors ?? [],
   };
 };

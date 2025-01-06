@@ -3,13 +3,19 @@ import { __, sprintf } from '@wordpress/i18n';
 
 import SVGIcon from '@Atoms/SVGIcon';
 import { useModal } from '@Components/modals/Modal';
-import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
+import SubscriptionModal from '@Components/modals/SubscriptionModal';
 
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import type { DurationUnit, SubscriptionFormData } from '@CourseBuilderServices/subscription';
+import type { DurationUnit, SubscriptionFormData } from '@Services/subscription';
 import { styleUtils } from '@Utils/style-utils';
+
+interface PreviewItemProps {
+  courseId: number;
+  subscription: SubscriptionFormData;
+  isBundle?: boolean;
+}
 
 export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number) {
   switch (unit) {
@@ -28,7 +34,7 @@ export function formatRepeatUnit(unit: Omit<DurationUnit, 'hour'>, value: number
   }
 }
 
-export function PreviewItem({ subscription }: { subscription: SubscriptionFormData }) {
+export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemProps) {
   const { showModal } = useModal();
 
   return (
@@ -91,6 +97,8 @@ export function PreviewItem({ subscription }: { subscription: SubscriptionFormDa
               title: __('Manage Subscription Plans', 'tutor'),
               icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
               expandedSubscriptionId: subscription.id,
+              courseId,
+              isBundle,
             },
           });
         }}

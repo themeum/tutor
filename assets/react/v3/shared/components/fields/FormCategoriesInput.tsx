@@ -93,7 +93,6 @@ const FormMultiLevelInput = ({
       label={label}
       field={field}
       fieldState={fieldState}
-      disabled={disabled}
       loading={loading}
       placeholder={placeholder}
       helpText={helpText}
@@ -106,6 +105,7 @@ const FormMultiLevelInput = ({
                 {treeOptions.map((option, index) => (
                   <Branch
                     key={option.id}
+                    disabled={disabled}
                     option={option}
                     value={field.value}
                     isLastChild={index === treeOptions.length - 1}
@@ -123,14 +123,16 @@ const FormMultiLevelInput = ({
                 ))}
               </div>
 
-              <div
-                ref={triggerRef}
-                css={styles.addButtonWrapper({ isActive: isScrolling, hasCategories: treeOptions.length > 0 })}
-              >
-                <button type="button" css={styles.addNewButton} onClick={() => setIsOpen(true)}>
-                  <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
-                </button>
-              </div>
+              <Show when={!disabled}>
+                <div
+                  ref={triggerRef}
+                  css={styles.addButtonWrapper({ isActive: isScrolling, hasCategories: treeOptions.length > 0 })}
+                >
+                  <button disabled={disabled} type="button" css={styles.addNewButton} onClick={() => setIsOpen(true)}>
+                    <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
+                  </button>
+                </div>
+              </Show>
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
@@ -199,13 +201,14 @@ interface BranchProps {
   value: number | number[];
   onChange: (item: number) => void;
   isLastChild: boolean;
+  disabled?: boolean;
 }
 
 const getTotalNestedChildrenCount = (option: CategoryWithChildren): number => {
   return option.children.reduce((total, child) => total + getTotalNestedChildrenCount(child), option.children.length);
 };
 
-export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) => {
+export const Branch = ({ option, value, onChange, isLastChild, disabled }: BranchProps) => {
   const totalChildren = getTotalNestedChildrenCount(option);
   const hasChildren = totalChildren > 0;
 
@@ -224,6 +227,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
           value={value}
           onChange={onChange}
           isLastChild={idx === option.children.length - 1}
+          disabled={disabled}
         />
       );
     });
@@ -238,6 +242,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
           onChange(option.id);
         }}
         labelCss={styles.checkboxLabel}
+        disabled={disabled}
       />
 
       {renderBranches()}
@@ -302,6 +307,10 @@ const styles = {
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
+    }
+
+    &:disabled {
+      color: ${colorTokens.text.disable};
     }
   `,
   categoryFormWrapper: css`

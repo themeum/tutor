@@ -16,26 +16,25 @@ import FormInput from '@Components/fields/FormInput';
 import FormInputWithContent from '@Components/fields/FormInputWithContent';
 import FormInputWithPresets from '@Components/fields/FormInputWithPresets';
 import FormSelectInput from '@Components/fields/FormSelectInput';
+import type { SubscriptionFormDataWithSaved } from '@Components/modals/SubscriptionModal';
+import { OfferSalePrice } from '@Components/subscription/OfferSalePrice';
 
 import { tutorConfig } from '@Config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
 import Show from '@Controls/Show';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@Hooks/useAnimation';
 import { useDeleteCourseSubscriptionMutation, useDuplicateCourseSubscriptionMutation } from '@Services/subscription';
 
 import { animateLayoutChanges } from '@Utils/dndkit';
 import { styleUtils } from '@Utils/style-utils';
+import type { ID } from '@Utils/types';
 import { isDefined } from '@Utils/types';
 import { noop } from '@Utils/util';
 import { requiredRule } from '@Utils/validation';
 
-import type { SubscriptionFormDataWithSaved } from '@Components/modals/SubscriptionModal';
-import { OfferSalePrice } from '@Components/subscription/OfferSalePrice';
-import type { ID } from '@Utils/types';
-
 interface SubscriptionItemProps {
+  courseId: number;
   id: ID;
   toggleCollapse: (id: string) => void;
   bgLight?: boolean;
@@ -46,10 +45,10 @@ interface SubscriptionItemProps {
 
 const SET_FOCUS_AFTER = 100; // this is hack to fix layout shifting while animating.
 
-const courseId = getCourseId();
 const { tutor_currency } = tutorConfig;
 
 export default function SubscriptionItem({
+  courseId,
   id,
   toggleCollapse,
   bgLight = false,

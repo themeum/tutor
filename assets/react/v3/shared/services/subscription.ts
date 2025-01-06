@@ -1,22 +1,22 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
-import { format } from 'date-fns';
-
 import { useToast } from '@Atoms/Toast';
-
 import { DateFormats } from '@Config/constants';
 import { wpAjaxInstance } from '@Utils/api';
 import endpoints from '@Utils/endpoints';
 import type { ErrorResponse } from '@Utils/form';
-import { type ID, type WPResponse } from '@Utils/types';
+import { type ID, type TutorMutationResponse } from '@Utils/types';
 import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@Utils/util';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { AxiosResponse } from 'axios';
+import { format } from 'date-fns';
 
 export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
+type PlanType = 'course' | 'bundle' | 'category' | 'full_site';
+type PaymentType = 'onetime' | 'recurring';
 
 export type Subscription = {
   id: string;
-  payment_type: 'onetime' | 'recurring';
-  plan_type: 'course' | 'category' | 'full_site';
+  payment_type: PaymentType;
+  plan_type: PlanType;
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value: string;
@@ -137,8 +137,8 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
 
 export type SubscriptionPayload = {
   id?: string; // only for update
-  payment_type: 'onetime' | 'recurring';
-  plan_type: 'course' | 'category' | 'full_site';
+  payment_type: PaymentType;
+  plan_type: PlanType;
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value?: string;
@@ -169,7 +169,7 @@ export const useCourseSubscriptionsQuery = (courseId: number) => {
 };
 
 const saveCourseSubscription = (courseId: number, subscription: SubscriptionPayload) => {
-  return wpAjaxInstance.post<string, WPResponse<ID>>(endpoints.SAVE_SUBSCRIPTION, {
+  return wpAjaxInstance.post<string, TutorMutationResponse<ID>>(endpoints.SAVE_SUBSCRIPTION, {
     course_id: courseId,
     ...(subscription.id && { id: subscription.id }),
     ...subscription,
@@ -206,7 +206,7 @@ const deleteCourseSubscription = (courseId: number, subscriptionId: number) => {
       course_id: number;
       id: number;
     },
-    WPResponse<ID>
+    TutorMutationResponse<ID>
   >(endpoints.DELETE_SUBSCRIPTION, {
     course_id: courseId,
     id: subscriptionId,
@@ -244,7 +244,7 @@ const duplicateCourseSubscription = (courseId: number, subscriptionId: number) =
       course_id: number;
       id: number;
     },
-    WPResponse<ID>
+    TutorMutationResponse<ID>
   >(endpoints.DUPLICATE_SUBSCRIPTION, {
     course_id: courseId,
     id: subscriptionId,
@@ -281,7 +281,7 @@ const sortCourseSubscriptions = (courseId: number, subscriptionIds: number[]) =>
       course_id: number;
       plan_ids: number[];
     },
-    WPResponse<ID>
+    TutorMutationResponse<ID>
   >(endpoints.SORT_SUBSCRIPTION, {
     course_id: courseId,
     plan_ids: subscriptionIds,

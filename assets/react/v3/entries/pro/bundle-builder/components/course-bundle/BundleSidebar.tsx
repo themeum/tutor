@@ -1,25 +1,26 @@
 import { css } from '@emotion/react';
+import { useIsFetching } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@Atoms/SVGIcon';
+import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
 import FormImageInput from '@Components/fields/FormImageInput';
 import FormInput from '@Components/fields/FormInput';
 import FormSelectInput from '@Components/fields/FormSelectInput';
 
-import For from '@/v3/shared/controls/For';
 import BundlePricing from '@BundleBuilderComponents/course-bundle/BundlePricing';
 import ScheduleOptions from '@BundleBuilderComponents/course-bundle/ScheduleOptions';
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
+import { getBundleId } from '@BundleBuilderUtils/utils';
 import { tutorConfig } from '@Config/config';
 import { DateFormats, visibilityStatusOptions } from '@Config/constants';
 import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing } from '@Config/styles';
 import { typography } from '@Config/typography';
+import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { styleUtils } from '@Utils/style-utils';
-import { useIsFetching } from '@tanstack/react-query';
-import { getBundleId } from '../../utils/utils';
 
 const bundleId = getBundleId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -94,7 +95,7 @@ const BundleSidebar = () => {
               type="password"
               isPassword
               selectOnFocus
-              // loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+              loading={!!isBundleDetailsQueryFetching && !controllerProps.field.value}
             />
           )}
         />
@@ -112,7 +113,7 @@ const BundleSidebar = () => {
             buttonText={__('Upload Thumbnail', 'tutor')}
             infoText={sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
             generateWithAi={!isTutorPro || isOpenAiEnabled}
-            // loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+            loading={!!isBundleDetailsQueryFetching && !controllerProps.field.value}
           />
         )}
       />
@@ -128,23 +129,32 @@ const BundleSidebar = () => {
             label={__('Select ribbon to display', 'tutor')}
             placeholder={__('Select ribbon', 'tutor')}
             options={ribbonOptions}
-            // loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+            loading={!!isBundleDetailsQueryFetching && !controllerProps.field.value}
           />
         )}
       />
 
-      <div css={styles.labelWithContent}>
-        <label>{__('Categories')}</label>
-        <div css={styles.categoriesWrapper}>
-          <For each={form.getValues('categories')}>
-            {(category, index) => (
-              <div key={index} css={styles.category}>
-                {category.name}
-              </div>
-            )}
-          </For>
-        </div>
-      </div>
+      <Controller
+        name="categories"
+        control={form.control}
+        render={(controllerProps) => (
+          <FormCategoriesInput
+            {...controllerProps}
+            label={__('Categories', 'tutor')}
+            disabled
+            loading={!!isBundleDetailsQueryFetching && !controllerProps.field.value}
+            optionsWrapperStyle={css`
+              input {
+                &:disabled {
+                  svg {
+                    color: ${colorTokens.icon.brand};
+                  }
+                }
+              }
+            `}
+          />
+        )}
+      />
 
       <div css={styles.labelWithContent}>
         <label>{__('Instructors')}</label>

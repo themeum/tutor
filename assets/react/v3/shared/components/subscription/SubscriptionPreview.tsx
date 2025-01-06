@@ -14,7 +14,12 @@ import For from '@Controls/For';
 import Show from '@Controls/Show';
 import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@Services/subscription';
 
-function SubscriptionPreview({ courseId }: { courseId: number }) {
+interface SubscriptionPreviewProps {
+  courseId: number;
+  isBundle?: boolean;
+}
+
+function SubscriptionPreview({ courseId, isBundle = false }: SubscriptionPreviewProps) {
   const courseSubscriptionsQuery = useCourseSubscriptionsQuery(courseId);
   const { showModal } = useModal();
 
@@ -43,7 +48,12 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
       >
         <For each={subscriptions}>
           {(subscription, index) => (
-            <PreviewItem key={index} subscription={convertSubscriptionToFormData(subscription)} />
+            <PreviewItem
+              key={index}
+              subscription={convertSubscriptionToFormData(subscription)}
+              courseId={courseId}
+              isBundle={isBundle}
+            />
           )}
         </For>
 
@@ -62,6 +72,8 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
                   title: __('Manage Subscription Plans', 'tutor'),
                   icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
                   createEmptySubscriptionOnMount: true,
+                  courseId,
+                  isBundle,
                 },
               });
             }}
