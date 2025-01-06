@@ -183,7 +183,7 @@ export const convertBundleToFormData = (courseBundle: Bundle): BundleFormData =>
     schedule_time: !isBefore(parseISO(courseBundle.post_date), new Date())
       ? format(parseISO(courseBundle.post_date), DateFormats.hoursMinutes)
       : '',
-    regular_price: courseBundle.regular_price ?? '',
+    regular_price: courseBundle.details.subtotal_raw_price.toString(),
     sale_price: courseBundle.sale_price ?? '',
     course_selling_option: courseBundle.course_selling_option ?? 'one_time',
     courses: courseBundle.details.courses ?? [],

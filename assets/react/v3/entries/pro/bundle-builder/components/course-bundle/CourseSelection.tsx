@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useEffect } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
 import { Box } from '@Atoms/Box';
@@ -20,7 +19,7 @@ import SelectionOverview from '@BundleBuilderComponents/course-bundle/SelectionO
 import { LoadingSection } from '@/v3/shared/atoms/LoadingSpinner';
 import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
 import { useAddCourseToBundleMutation, type BundleFormData, type Course } from '@BundleBuilderServices/bundle';
-import { getBundleId, priceWithOutCurrencySymbol } from '@BundleBuilderUtils/utils';
+import { getBundleId } from '@BundleBuilderUtils/utils';
 import bundleEmptyState from '@Images/bundle-empty-state.webp';
 import { useIsFetching } from '@tanstack/react-query';
 
@@ -44,9 +43,6 @@ const CourseSelection = () => {
     queryKey: ['CourseBundle', bundleId],
   });
 
-  const bundlePrice = priceWithOutCurrencySymbol(form.watch('regular_price'));
-  const bundleSalePrice = priceWithOutCurrencySymbol(form.watch('sale_price'));
-
   const handleAddCourse = async (course: Course) => {
     const response = await addOrRemoveCourseMutation.mutateAsync({
       ID: bundleId,
@@ -61,82 +57,19 @@ const CourseSelection = () => {
 
   const handleRemoveCourse = async (index: number) => {
     removeCourse(index);
-    const updatedCourses = selectedCourses.filter((_, i) => i !== index);
-    const atOneHasSalePrice = updatedCourses.some((course) => course.sale_price);
 
     const removedCourse = selectedCourses[index];
+
     if (!removedCourse) {
       return;
     }
 
-    const response = await addOrRemoveCourseMutation.mutateAsync({
+    addOrRemoveCourseMutation.mutate({
       ID: bundleId,
       course_id: removedCourse.id,
       user_action: 'remove_course',
     });
-
-    if (response.data) {
-      form.setValue('regular_price', String(bundlePrice - priceWithOutCurrencySymbol(removedCourse.regular_price)), {
-        shouldDirty: true,
-      });
-
-      form.setValue(
-        'sale_price',
-        atOneHasSalePrice
-          ? String(
-              bundleSalePrice - priceWithOutCurrencySymbol(removedCourse.sale_price || removedCourse.regular_price),
-            )
-          : '',
-        {
-          shouldValidate: true,
-          shouldDirty: true,
-        },
-      );
-    }
   };
-
-  useEffect(() => {
-    if (selectedCourses.length === 0) {
-      form.setValue('regular_price', '0', {
-        shouldDirty: true,
-      });
-      form.setValue('sale_price', '', {
-        shouldDirty: true,
-      });
-    }
-
-    const containsSalePriceCourse = selectedCourses.some((course) => course.sale_price);
-
-    form.setValue(
-      'regular_price',
-      String(
-        selectedCourses.reduce(
-          (totalPrice, course) => totalPrice + priceWithOutCurrencySymbol(course.regular_price),
-          0,
-        ),
-      ),
-      {
-        shouldDirty: true,
-      },
-    );
-
-    form.setValue(
-      'sale_price',
-      containsSalePriceCourse
-        ? String(
-            selectedCourses.reduce(
-              (totalSalePrice, course) =>
-                totalSalePrice + priceWithOutCurrencySymbol(course.sale_price || course.regular_price),
-              0,
-            ),
-          )
-        : '',
-      {
-        shouldDirty: true,
-      },
-    );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedCourses.length]);
 
   return (
     <div css={styles.wrapper}>
