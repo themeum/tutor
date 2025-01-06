@@ -1572,29 +1572,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Course meta box (Topics)
-	 *
-	 * @since 1.0.0
-	 * @param boolean $echo display or not.
-	 * @return string
-	 */
-	public function course_meta_box( $echo = true ) {
-		$file_path = tutor()->path . 'views/metabox/course-topics.php';
-
-		if ( $echo ) {
-			/**
-			 * Use echo raise WPCS security issue
-			 * Helper wp_kses_post break content.
-			 */
-			include $file_path;
-		} else {
-			ob_start();
-			include $file_path;
-			return ob_get_clean();
-		}
-	}
-
-	/**
 	 * Save course content order
 	 *
 	 * @since 1.0.0
