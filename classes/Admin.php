@@ -276,12 +276,7 @@ class Admin {
 	 * @return void
 	 */
 	public function enable_disable_addons() {
-
-		if ( defined( 'TUTOR_PRO_VERSION' ) ) {
-			include tutor()->path . 'views/pages/enable_disable_addons.php';
-		} else {
-			include tutor()->path . 'views/pages/tutor-pro-addons.php';
-		}
+		include tutor()->path . 'views/pages/enable_disable_addons.php';
 	}
 
 	/**

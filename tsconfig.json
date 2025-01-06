@@ -39,7 +39,8 @@
 			"@CouponComponents/*": ["assets/react/v3/entries/coupon-details/components/*"],
 			"@CouponServices/*": ["assets/react/v3/entries/coupon-details/services/*"],
 			"@EnrollmentComponents/*": ["assets/react/v3/entries/pro/manual-enrollment/components/*"],
-			"@EnrollmentServices/*": ["assets/react/v3/entries/pro/manual-enrollment/services/*"]
+			"@EnrollmentServices/*": ["assets/react/v3/entries/pro/manual-enrollment/services/*"],
+			"@AddonList/*": ["assets/react/v3/entries/addon-list/*"]
 		}
 	},
 	"include": ["./assets/react/v3"],

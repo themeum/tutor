@@ -16,6 +16,7 @@ interface TooltipProps {
   hideOnClick?: boolean;
   delay?: number;
   disabled?: boolean;
+  visible?: boolean;
 }
 
 const initialStyles = { opacity: 0, transform: 'scale(0.8)' };
@@ -29,10 +30,11 @@ const Tooltip = ({
   hideOnClick,
   delay = 0,
   disabled = false,
+  visible = false,
 }: TooltipProps) => {
-  if (disabled) return children;
-
   const [props, setSpring] = useSpring(() => initialStyles);
+
+  if (disabled) return children;
 
   const onMount = () => {
     setSpring.start({
@@ -66,6 +68,7 @@ const Tooltip = ({
       delay={[delay, 100]}
       hideOnClick={hideOnClick}
       placement={placement}
+      visible={visible}
     >
       <div>{children}</div>
     </Tippy>
