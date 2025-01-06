@@ -17,7 +17,7 @@ const SelectionOverview = () => {
   });
 
   const iconMap = {
-    total_video_duration: 'clock',
+    total_duration: 'clock',
     total_quizzes: 'questionCircle',
     total_video_contents: 'videoCamera',
     total_resources: 'download',
@@ -25,7 +25,7 @@ const SelectionOverview = () => {
   } as const;
 
   const contentMap = {
-    total_video_duration: __('Minutes Total Duration', 'tutor'),
+    total_duration: __(' Total Duration', 'tutor'),
     total_quizzes: __('Quiz Papers', 'tutor'),
     total_video_contents: __('Video Content', 'tutor'),
     total_resources: __('Downloadable Resources', 'tutor'),
