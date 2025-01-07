@@ -2,18 +2,18 @@ import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { useModal } from '@Components/modals/Modal';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import CertificatePreviewModal from '@CourseBuilderComponents/modals/CertificatePreviewModal';
 
-import Show from '@Controls/Show';
+import Show from '@TutorShared/controls/Show';
 import type { Certificate, CourseDetailsResponse } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface CertificateCardProps {
   selectedCertificate: string;

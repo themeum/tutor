@@ -4,14 +4,14 @@ import { animated } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useState } from 'react';
 
-import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
+import { GradientLoadingSpinner } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { noop } from '@Utils/util';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { noop } from '@TutorShared/utils/util';
 
 import { type Topic, useContentGenerationContext } from './ContentGenerationContext';
 import TopicContentSkeleton from './loaders/TopicContentSkeleton';

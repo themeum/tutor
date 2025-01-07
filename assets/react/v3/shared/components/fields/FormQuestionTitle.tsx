@@ -1,16 +1,16 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import { useEffect, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { isDefined } from '@Utils/types';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { isDefined } from '@TutorShared/utils/types';
 
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormQuestionTitleProps extends FormControllerProps<string | null> {

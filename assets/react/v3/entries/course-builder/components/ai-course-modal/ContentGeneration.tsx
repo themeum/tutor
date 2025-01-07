@@ -3,24 +3,24 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
-import { GradientLoadingSpinner } from '@Atoms/LoadingSpinner';
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import { GradientLoadingSpinner } from '@TutorShared/atoms/LoadingSpinner';
+import MagicButton from '@TutorShared/atoms/MagicButton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
 
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { Addons, isRTL } from '@Config/constants';
-import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { Addons, isRTL } from '@TutorShared/config/constants';
+import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/magic-ai';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
-import { getObjectKeys, getObjectValues } from '@Utils/util';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getObjectKeys, getObjectValues } from '@TutorShared/utils/util';
 
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import ContentAccordion from './ContentAccordion';
@@ -29,8 +29,8 @@ import ContentSkeleton from './loaders/ContentSkeleton';
 import DescriptionSkeleton from './loaders/DescriptionSkeleton';
 import TitleSkeleton from './loaders/TitleSkeleton';
 
-import aiStudioError2x from '@Images/ai-studio-error-2x.webp';
-import aiStudioError from '@Images/ai-studio-error.webp';
+import aiStudioError2x from '@SharedImages/ai-studio-error-2x.webp';
+import aiStudioError from '@SharedImages/ai-studio-error.webp';
 
 import ImageSkeleton from './loaders/ImageSkeleton';
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 
-import ErrorBoundary from '@Components/ErrorBoundary';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import App from '@OrderComponents/App';
 
 const root = ReactDOM.createRoot(document.getElementById('tutor-order-details-root') as HTMLElement);

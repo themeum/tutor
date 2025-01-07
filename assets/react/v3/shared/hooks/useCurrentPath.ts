@@ -1,4 +1,4 @@
-import { isDefined } from '@Utils/types';
+import { isDefined } from '@TutorShared/utils/types';
 import { type RouteObject, matchRoutes, useLocation } from 'react-router-dom';
 
 export const useCurrentPath = (routes: RouteObject[]) => {

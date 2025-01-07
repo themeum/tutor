@@ -23,15 +23,8 @@
 		"paths": {
 			"@/*": ["assets/react/*"],
 			"@Assets/*": ["assets/*"],
-			"@Atoms/*": ["assets/react/v3/shared/atoms/*"],
-			"@Molecules/*": ["assets/react/v3/shared/molecules/*"],
-			"@Components/*": ["assets/react/v3/shared/components/*"],
-			"@Config/*": ["assets/react/v3/shared/config/*"],
-			"@Hooks/*": ["assets/react/v3/shared/hooks/*"],
-			"@Services/*": ["assets/react/v3/shared/services/*"],
-			"@Utils/*": ["assets/react/v3/shared/utils/*"],
-			"@Images/*": ["assets/images/*"],
-			"@Controls/*": ["assets/react/v3/shared/controls/*"],
+			"@TutorShared/*": ["assets/react/v3/shared/*"],
+			"@SharedImages/*": ["assets/react/v3/public/images/*"],
 			"@CourseBuilderComponents/*": ["assets/react/v3/entries/course-builder/components/*"],
 			"@CourseBuilderServices/*": ["assets/react/v3/entries/course-builder/services/*"],
 			"@CourseBuilderConfig/*": ["assets/react/v3/entries/course-builder/config/*"],
@@ -46,7 +39,8 @@
 			"@CouponComponents/*": ["assets/react/v3/entries/coupon-details/components/*"],
 			"@CouponServices/*": ["assets/react/v3/entries/coupon-details/services/*"],
 			"@EnrollmentComponents/*": ["assets/react/v3/entries/pro/manual-enrollment/components/*"],
-			"@EnrollmentServices/*": ["assets/react/v3/entries/pro/manual-enrollment/services/*"]
+			"@EnrollmentServices/*": ["assets/react/v3/entries/pro/manual-enrollment/services/*"],
+			"@AddonList/*": ["assets/react/v3/entries/addon-list/*"]
 		}
 	},
 	"include": ["./assets/react/v3"],

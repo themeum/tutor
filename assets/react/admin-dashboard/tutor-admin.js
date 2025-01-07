@@ -1,6 +1,4 @@
 import '../front/_select_dd_search';
-import './addons-list/addons-list-main';
-import './segments/addonlist';
 import './segments/color-preset';
 import './segments/editor_full';
 import './segments/filter';

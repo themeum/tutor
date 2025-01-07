@@ -1,7 +1,7 @@
-import AtomCheckbox from '@Atoms/CheckBox';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
+import AtomCheckbox from '@TutorShared/atoms/CheckBox';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
 import FormFieldWrapper from './FormFieldWrapper';

@@ -1,4 +1,4 @@
-import { colorTokens } from '@Config/styles';
+import { colorTokens } from '@TutorShared/config/styles';
 import { css, keyframes } from '@emotion/react';
 
 const rotatorKeyframes = keyframes`

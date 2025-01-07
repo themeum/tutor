@@ -1,5 +1,5 @@
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import { type Course, type Enrollment } from '@EnrollmentServices/enrollment';
 import { type UseFormReturn } from 'react-hook-form';
 import CourseListTable from './CourseListTable';

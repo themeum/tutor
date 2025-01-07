@@ -5,17 +5,17 @@ import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import DropdownButton from '@Molecules/DropdownButton';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import DropdownButton from '@TutorShared/molecules/DropdownButton';
 
-import { useModal } from '@Components/modals/Modal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 
-import config, { tutorConfig } from '@Config/config';
-import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@Config/constants';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@TutorShared/config/constants';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import {
   type CourseFormData,
   type PostStatus,
@@ -24,11 +24,11 @@ import {
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
 import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { convertToGMT, noop } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { convertToGMT, noop } from '@TutorShared/utils/util';
 
-import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
-import reviewSubmitted from '@Images/review-submitted.webp';
+import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
+import reviewSubmitted from '@SharedImages/review-submitted.webp';
 
 const courseId = getCourseId();
 

@@ -1,4 +1,4 @@
-import type { Option } from '@Utils/types';
+import type { Option } from '@TutorShared/utils/types';
 import { useCallback, useEffect, useState } from 'react';
 
 interface UseSelectKeyboardNavigationProps<T> {

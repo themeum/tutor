@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, containerMaxWidth, fontFamily, fontSize, shadow, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, containerMaxWidth, fontFamily, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import { typography } from '../config/typography';
 
@@ -8,7 +8,7 @@ export const createGlobalCss = () => css`
       padding-left: 0;
     }
 
-    #wpbody {
+    &:not(.tutor-backend-tutor-addons) #wpbody {
       background-color: ${colorTokens.background.default};
     }
   }

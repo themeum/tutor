@@ -1,12 +1,12 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { isRTL } from '@Config/constants';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { isRTL } from '@TutorShared/config/constants';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import routes from '@CourseBuilderConfig/routes';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
-import { useCurrentPath } from '@Hooks/useCurrentPath';
+import { useCurrentPath } from '@TutorShared/hooks/useCurrentPath';
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';

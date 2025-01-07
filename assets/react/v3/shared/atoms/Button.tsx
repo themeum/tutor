@@ -1,12 +1,12 @@
 import { type SerializedStyles, css, keyframes } from '@emotion/react';
 import React, { type ReactNode } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { type VariantProps, createVariation } from '@Utils/create-variation';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { type VariantProps, createVariation } from '@TutorShared/utils/create-variation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'tertiary' | 'danger' | 'text' | 'WP';
 export type ButtonSize = 'large' | 'regular' | 'small';

@@ -1,4 +1,4 @@
-import { Breakpoint, spacing, zIndex } from '@Config/styles';
+import { Breakpoint, spacing, zIndex } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 export const magicAIStyles = {

@@ -1,14 +1,14 @@
 import { css, keyframes, type SerializedStyles } from '@emotion/react';
 import React, { useRef, useState, type MouseEvent, type ReactNode } from 'react';
 
-import type { ButtonIconPosition, ButtonSize, ButtonVariant } from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import type { ButtonIconPosition, ButtonSize, ButtonVariant } from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, fontSize, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { typography } from '@Config/typography';
+import { typography } from '@TutorShared/config/typography';
 import Popover from './Popover';
 
 interface DropdownOptionProps {

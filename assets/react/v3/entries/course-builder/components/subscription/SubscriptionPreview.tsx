@@ -1,17 +1,17 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
 import { PreviewItem } from '@CourseBuilderComponents/subscription/PreviewItem';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@CourseBuilderServices/subscription';
 
 function SubscriptionPreview({ courseId }: { courseId: number }) {

@@ -1,7 +1,7 @@
 import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { useToast } from '@Atoms/Toast';
+import { useToast } from '@TutorShared/atoms/Toast';
 
 export interface WPMedia {
   id: number;

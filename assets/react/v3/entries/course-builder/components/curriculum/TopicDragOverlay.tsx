@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
 interface TopicDragOverlayProps {
   title: string;

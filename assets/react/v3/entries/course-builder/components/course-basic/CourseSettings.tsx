@@ -4,24 +4,24 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Tabs, { type TabItem } from '@Molecules/Tabs';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 
-import FormInput from '@Components/fields/FormInput';
-import FormSwitch from '@Components/fields/FormSwitch';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormMultiSelectInput from '@Components/fields/FormMultiSelectInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import type { Option } from '@Utils/types';
+import type { Option } from '@TutorShared/utils/types';
 
 const courseId = getCourseId();
 

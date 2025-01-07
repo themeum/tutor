@@ -1,20 +1,20 @@
 import type { SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import ImageInput from '@Atoms/ImageInput';
-import SVGIcon from '@Atoms/SVGIcon';
+import ImageInput from '@TutorShared/atoms/ImageInput';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import AIImageModal from '@Components/modals/AiImageModal';
-import { useModal } from '@Components/modals/Modal';
+import AIImageModal from '@TutorShared/components/modals/AiImageModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
 
-import { tutorConfig } from '@Config/config';
-import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
-import type { FormControllerProps } from '@Utils/form';
+import { tutorConfig } from '@TutorShared/config/config';
+import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 
-import generateImage2x from '@Images/pro-placeholders/generate-image-2x.webp';
-import generateImage from '@Images/pro-placeholders/generate-image.webp';
+import generateImage2x from '@SharedImages/pro-placeholders/generate-image-2x.webp';
+import generateImage from '@SharedImages/pro-placeholders/generate-image.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

@@ -1,6 +1,6 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { nanoid } from '@Utils/util';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { nanoid } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import React, { type ChangeEventHandler, type FocusEventHandler, type ReactNode } from 'react';
 

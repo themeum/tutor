@@ -2,14 +2,14 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Button from '@Atoms/Button';
-import FormWPEditor from '@Components/fields/FormWPEditor';
+import Button from '@TutorShared/atoms/Button';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface FormAnswerExplanationProps extends FormControllerProps<string | null> {
   label?: string;

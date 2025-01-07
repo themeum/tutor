@@ -1,5 +1,5 @@
-import type { PromiseResolvePayload } from '@Components/modals/Modal';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import type { PromiseResolvePayload } from '@TutorShared/components/modals/Modal';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { __ } from '@wordpress/i18n';
 import React, { useCallback, useContext, useState } from 'react';
 import {
