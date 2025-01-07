@@ -116,6 +116,7 @@ export interface BundlePayload {
   ribbon_type: string;
   sale_price: string;
   course_selling_option: string;
+  course_ids: number[];
 }
 
 export const defaultCourseBundleData: BundleFormData = {
@@ -222,6 +223,7 @@ export const convertBundleFormDataToPayload = (data: BundleFormData): BundlePayl
     ribbon_type: data.ribbon_type,
     sale_price: data.sale_price,
     course_selling_option: data.course_selling_option,
+    course_ids: data.courses.map((course) => course.id),
   };
 };
 
