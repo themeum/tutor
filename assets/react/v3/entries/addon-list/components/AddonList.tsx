@@ -12,10 +12,15 @@ import EmptyState from './EmptyState';
 function AddonList() {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const { addons, searchTerm } = useAddonContext();
-  const activeAddons = addons.filter((addon) => !!addon.is_enabled);
-  const availableAddons = addons.filter((addon) => !addon.is_enabled);
 
-  if (searchTerm.length && addons.length === 0) {
+  const addonsList = addons.filter((addon) => {
+    return addon.name.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
+  const activeAddons = addonsList.filter((addon) => !!addon.is_enabled);
+  const availableAddons = addonsList.filter((addon) => !addon.is_enabled);
+
+  if (searchTerm.length && addonsList.length === 0) {
     return <EmptyState />;
   }
 

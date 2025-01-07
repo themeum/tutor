@@ -29,6 +29,9 @@ interface AddonListResponse {
 
 interface Response {
   success: boolean;
+  data?: {
+    message?: string;
+  };
 }
 
 interface AddonPayload {

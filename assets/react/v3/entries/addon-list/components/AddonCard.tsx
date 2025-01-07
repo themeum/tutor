@@ -48,7 +48,7 @@ function AddonCard({ addon }: { addon: Addon }) {
       ]);
     } else {
       setIsChecked(!checked);
-      showToast({ type: 'danger', message: __('Something went wrong!', 'tutor') });
+      showToast({ type: 'danger', message: response.data?.message ?? __('Something went wrong!', 'tutor') });
     }
   };
 
