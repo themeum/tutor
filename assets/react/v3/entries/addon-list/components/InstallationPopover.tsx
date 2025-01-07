@@ -1,7 +1,7 @@
-import Button from '@/v3/shared/atoms/Button';
-import { borderRadius, colorTokens, shadow, spacing } from '@/v3/shared/config/styles';
-import { typography } from '@/v3/shared/config/typography';
-import For from '@/v3/shared/controls/For';
+import Button from '@TutorShared/atoms/Button';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 

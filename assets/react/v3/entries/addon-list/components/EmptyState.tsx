@@ -1,5 +1,5 @@
-import { spacing } from '@/v3/shared/config/styles';
-import { typography } from '@/v3/shared/config/typography';
+import { spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import emptyStateBanner from '@SharedImages/addons-empty-state.webp';
 import { __ } from '@wordpress/i18n';

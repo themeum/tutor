@@ -2,9 +2,9 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import { tutorConfig } from '@TutorShared/config/config';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { convertToErrorMessage } from '@/v3/shared/utils/util';
-import { type ErrorResponse } from '@/v3/shared/utils/form';
-import { useToast } from '@/v3/shared/atoms/Toast';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { type ErrorResponse } from '@TutorShared/utils/form';
+import { useToast } from '@TutorShared/atoms/Toast';
 
 export interface Addon {
   name: string;

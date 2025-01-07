@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
 import { useEnableDisableAddon, type Addon } from '../services/addons';
-import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@/v3/shared/config/styles';
-import Switch from '@/v3/shared/atoms/Switch';
-import { tutorConfig } from '@/v3/shared/config/config';
-import Show from '@/v3/shared/controls/Show';
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
-import Tooltip from '@/v3/shared/atoms/Tooltip';
+import { borderRadius, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@TutorShared/config/styles';
+import Switch from '@TutorShared/atoms/Switch';
+import { tutorConfig } from '@TutorShared/config/config';
+import Show from '@TutorShared/controls/Show';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { useAddonContext } from '../contexts/addon-context';
-import { useToast } from '@/v3/shared/atoms/Toast';
+import { useToast } from '@TutorShared/atoms/Toast';
 
 function AddonCard({ addon }: { addon: Addon }) {
   const isTutorPro = !!tutorConfig.tutor_pro_url;

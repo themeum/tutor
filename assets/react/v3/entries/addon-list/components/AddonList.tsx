@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { useAddonContext } from '../contexts/addon-context';
 import AddonCard from './AddonCard';
-import { spacing } from '@/v3/shared/config/styles';
-import { typography } from '@/v3/shared/config/typography';
+import { spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { __ } from '@wordpress/i18n';
-import Show from '@/v3/shared/controls/Show';
+import Show from '@TutorShared/controls/Show';
 import FreeBanner from './FreeBanner';
-import { tutorConfig } from '@/v3/shared/config/config';
+import { tutorConfig } from '@TutorShared/config/config';
 import EmptyState from './EmptyState';
 
 function AddonList() {
