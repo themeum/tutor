@@ -36,7 +36,7 @@ const CourseSelectionHeader = () => {
   return (
     <div css={styles.wrapper}>
       <div css={styles.left}>
-        <div css={typography.body('medium')}>{sprintf(__('%d Courses selected', 'tutor'), 3)}</div>
+        <div css={typography.body('medium')}>{sprintf(__('%d Courses selected', 'tutor'), selectedCourses.length)}</div>
 
         {/* @TODO: need remove/comment-out before pushing
         <Controller
