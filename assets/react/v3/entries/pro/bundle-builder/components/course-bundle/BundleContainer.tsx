@@ -69,7 +69,7 @@ const BundleContainer = () => {
                 <FormEditableAlias
                   {...controllerProps}
                   label={__('Course URL', 'tutor')}
-                  baseURL={tutorConfig.site_url}
+                  baseURL={`${tutorConfig.home_url}/course-bundle`}
                   onChange={() => (hasAliasChanged = true)}
                 />
               )}

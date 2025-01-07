@@ -1,3 +1,5 @@
+import SVGIcon from '@/v3/shared/atoms/SVGIcon';
+import { styleUtils } from '@/v3/shared/utils/style-utils';
 import Button from '@Atoms/Button';
 import { LoadingSection } from '@Atoms/LoadingSpinner';
 import { borderRadius, colorTokens, spacing } from '@Config/styles';
@@ -14,9 +16,10 @@ import SearchField from './SearchField';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;
+  selectedCourseIds: number[];
 }
 
-const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
+const CourseListTable = ({ onSelectClick, selectedCourseIds }: CourseListTableProps) => {
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
@@ -31,20 +34,25 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
     {
       Header: <div css={styles.tableLabel}>{__('Name', 'tutor')}</div>,
       Cell: (item) => {
+        const isSelected = selectedCourseIds.includes(item.id);
+
         return (
           <div css={styles.courseItemWrapper}>
             <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('Course item', 'tutor')} />
-            <div css={styles.courseContent}>
+            <div>
               {item.total_course && (
                 <div css={styles.bundleBadge}>{sprintf(__('%d Course Bundle', 'tutor'), item.total_course)}</div>
               )}
-              {/* {item.plan_start_price && (
+              {item.plan_start_price && (
                 <div css={styles.subscriptionBadge}>
                   <SVGIcon name="dollar-recurring" width={16} height={16} />
                   {__('Subscription', 'tutor')}
                 </div>
-              )} */}
-              <div css={styles.title}>{item.title}</div>
+              )}
+              <div css={styles.title({ isSelected })}>
+                {item.title}
+                {isSelected && <span css={styles.selectedBadge}>{__('Already Selected', 'tutor')}</span>}
+              </div>
             </div>
           </div>
         );
@@ -53,14 +61,18 @@ const CourseListTable = ({ onSelectClick }: CourseListTableProps) => {
     {
       Header: <div css={styles.tablePriceLabel}>{__('Price', 'tutor')}</div>,
       Cell: (item) => {
+        const isSelected = selectedCourseIds.includes(item.id);
+
         return (
           <div css={styles.priceWrapper}>
-            <div data-button>
-              <Button size="small" onClick={() => onSelectClick(item)}>
-                {__('Select', 'tutor')}
-              </Button>
-            </div>
-            <div css={styles.price} data-price>
+            <Show when={!isSelected}>
+              <div data-button>
+                <Button size="small" onClick={() => onSelectClick(item)}>
+                  {__('Select', 'tutor')}
+                </Button>
+              </div>
+            </Show>
+            <div css={styles.price} data-price={!isSelected}>
               <Show when={item.is_purchasable} fallback={__('Free', 'tutor')}>
                 <span>{item.sale_price ? item.sale_price : item.regular_price}</span>
                 {item.sale_price && <span css={styles.discountPrice}>{item.regular_price}</span>}
@@ -141,7 +153,7 @@ const styles = {
         [data-button] {
           display: block;
         }
-        [data-price] {
+        [data-price='true'] {
           display: none;
         }
       }
@@ -155,7 +167,6 @@ const styles = {
     align-items: center;
     gap: ${spacing[16]};
   `,
-  courseContent: css``,
   bundleBadge: css`
     ${typography.tiny()};
     display: inline-block;
@@ -174,9 +185,24 @@ const styles = {
     color: ${colorTokens.text.white};
     border-radius: ${borderRadius[40]};
   `,
-  title: css`
+  selectedBadge: css`
+    margin-left: ${spacing[4]};
+    ${typography.tiny()};
+    padding: ${spacing[4]} ${spacing[8]};
+    background-color: ${colorTokens.background.disable};
+    color: ${colorTokens.text.title};
+    border-radius: ${borderRadius[2]};
+  `,
+  title: ({ isSelected = false }) => css`
     ${typography.caption()};
     color: ${colorTokens.text.primary};
+    ${styleUtils.text.ellipsis(2)};
+    text-wrap: pretty;
+
+    ${isSelected &&
+    css`
+      color: ${colorTokens.text.disable};
+    `}
   `,
   thumbnail: css`
     width: 48px;

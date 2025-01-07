@@ -17,7 +17,7 @@ function CourseListModal({ title, closeModal, actions, onSelect, selectedCourseI
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={720}>
-      <CourseListTable onSelectClick={handleSelect} />
+      <CourseListTable onSelectClick={handleSelect} selectedCourseIds={selectedCourseIds} />
     </BasicModalWrapper>
   );
 }
