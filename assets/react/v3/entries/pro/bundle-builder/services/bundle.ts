@@ -209,7 +209,7 @@ export const convertBundleFormDataToPayload = (data: BundleFormData): BundlePayl
     post_password: data.visibility === 'password_protected' ? data.post_password : '',
     post_modified: data.post_modified,
     course_benefits: data.course_benefits,
-    thumbnail_id: data.thumbnail?.id ?? null,
+    thumbnail_id: data.thumbnail?.id ?? '',
     ribbon_type: data.ribbon_type,
     sale_price: data.sale_price,
     course_selling_option: data.course_selling_option,
