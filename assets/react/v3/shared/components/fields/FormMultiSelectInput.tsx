@@ -2,19 +2,19 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import Checkbox from '@Atoms/CheckBox';
-import Chip from '@Atoms/Chip';
-import { isRTL } from '@Config/constants';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { useDebounce } from '@Hooks/useDebounce';
-import type { Option } from '@Utils/types';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import Chip from '@TutorShared/atoms/Chip';
+import { isRTL } from '@TutorShared/config/constants';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import type { Option } from '@TutorShared/utils/types';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

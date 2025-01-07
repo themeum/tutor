@@ -2,12 +2,12 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext, useWatch } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
-import { colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const SelectionOverview = () => {
   const form = useFormContext<BundleFormData>();

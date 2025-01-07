@@ -17,20 +17,20 @@ import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { FormProvider, useFieldArray } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
-import { SubscriptionEmptyState } from '@Components/subscription/SubscriptionEmptyState';
-import SubscriptionItem from '@Components/subscription/SubscriptionItem';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
+import { SubscriptionEmptyState } from '@TutorShared/components/subscription/SubscriptionEmptyState';
+import SubscriptionItem from '@TutorShared/components/subscription/SubscriptionItem';
 
-import { CURRENT_VIEWPORT } from '@Config/constants';
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
   type Subscription,
   type SubscriptionFormData,
@@ -39,10 +39,10 @@ import {
   defaultSubscriptionFormData,
   useSaveCourseSubscriptionMutation,
   useSortCourseSubscriptionsMutation,
-} from '@Services/subscription';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { isDefined } from '@Utils/types';
-import { moveTo, nanoid, noop } from '@Utils/util';
+} from '@TutorShared/services/subscription';
+import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
+import { isDefined } from '@TutorShared/utils/types';
+import { moveTo, nanoid, noop } from '@TutorShared/utils/util';
 
 interface SubscriptionModalProps extends ModalProps {
   courseId: number;

@@ -2,17 +2,17 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
 import HeaderActions from '@BundleBuilderComponents/layouts/header/HeaderActions';
 import Logo from '@BundleBuilderComponents/layouts/header/Logo';
-import LeaveWithoutSavingModal from '@Components/modals/LeaveWithoutSavingModal';
-import { useModal } from '@Components/modals/Modal';
+import LeaveWithoutSavingModal from '@TutorShared/components/modals/LeaveWithoutSavingModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
-import { tutorConfig } from '@Config/config';
-import { CURRENT_VIEWPORT, WP_ADMIN_BAR_HEIGHT } from '@Config/constants';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT, WP_ADMIN_BAR_HEIGHT } from '@TutorShared/config/constants';
 import {
   borderRadius,
   Breakpoint,
@@ -22,10 +22,10 @@ import {
   shadow,
   spacing,
   zIndex,
-} from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+} from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const Header = () => {
   const form = useFormContext<BundleFormData>();

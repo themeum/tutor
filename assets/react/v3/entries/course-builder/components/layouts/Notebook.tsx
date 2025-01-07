@@ -3,19 +3,19 @@ import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { CURRENT_VIEWPORT, LocalStorageKeys, notebook } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { getFromLocalStorage, setToLocalStorage } from '@Utils/localStorage';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { jsonParse, throttle } from '@Utils/util';
+import { CURRENT_VIEWPORT, LocalStorageKeys, notebook } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { getFromLocalStorage, setToLocalStorage } from '@TutorShared/utils/localStorage';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { jsonParse, throttle } from '@TutorShared/utils/util';
 
-import { useResize } from '@Hooks/useResize';
+import { useResize } from '@TutorShared/hooks/useResize';
 
 interface Position {
   x: number;

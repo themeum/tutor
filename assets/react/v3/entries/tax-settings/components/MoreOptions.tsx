@@ -1,14 +1,14 @@
-import { useModal } from '@Components/modals/Modal';
-import { spacing, zIndex } from '@Config/styles';
-import ThreeDots from '@Molecules/ThreeDots';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { spacing, zIndex } from '@TutorShared/config/styles';
+import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import type { TaxSettings } from '../services/tax';
 import type { ColumnDataType } from './TaxRates';
-import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
-import { AnimationType } from '@Hooks/useAnimation';
+import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 
 interface MoreOptionsProps {
   data: ColumnDataType;

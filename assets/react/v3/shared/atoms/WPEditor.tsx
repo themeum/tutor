@@ -2,11 +2,11 @@ import { css } from '@emotion/react';
 import { __, _x } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { tutorConfig } from '@Config/config';
-import { CURRENT_VIEWPORT } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid } from '@Utils/util';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid } from '@TutorShared/utils/util';
 
 interface WPEditorProps {
   value: string;

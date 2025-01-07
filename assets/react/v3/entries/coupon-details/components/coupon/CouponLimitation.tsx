@@ -1,11 +1,11 @@
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormInput from '@Components/fields/FormInput';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { Coupon } from '@CouponServices/coupon';
-import { requiredRule } from '@Utils/validation';
+import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';

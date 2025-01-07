@@ -4,23 +4,23 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import Tabs from '@Molecules/Tabs';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import Tabs from '@TutorShared/molecules/Tabs';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import CertificateCard from '@CourseBuilderComponents/additional/CertificateCard';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import notFound2x from '@Images/not-found-2x.webp';
-import notFound from '@Images/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
+import notFound from '@SharedImages/not-found.webp';
 
 import CertificateEmptyState from './CertificateEmptyState';
 

@@ -1,4 +1,4 @@
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import { type ReactNode, Suspense } from 'react';
 
 type RouteSuspenseProps = {

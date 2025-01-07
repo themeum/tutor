@@ -1,10 +1,10 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { tutorConfig } from '@Config/config';
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { type Enrollment, useCreateEnrollmentMutation } from '@EnrollmentServices/enrollment';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';

@@ -1,13 +1,13 @@
-import { CURRENT_VIEWPORT } from '@Config/constants';
-import { copyToClipboard } from '@Utils/util';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
-import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { copyToClipboard } from '@TutorShared/utils/util';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
+import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 

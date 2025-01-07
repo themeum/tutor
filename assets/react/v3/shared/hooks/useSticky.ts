@@ -1,4 +1,4 @@
-import { headerHeight } from '@Config/styles';
+import { headerHeight } from '@TutorShared/config/styles';
 import { useEffect, useRef, useState } from 'react';
 
 export const useSticky = (stickyGap = 0) => {

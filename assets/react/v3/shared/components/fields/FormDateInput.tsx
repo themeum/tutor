@@ -3,14 +3,14 @@ import { format, isValid, parseISO } from 'date-fns';
 import { useRef, useState } from 'react';
 import { DayPicker } from 'react-day-picker';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { DateFormats, isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@Config/styles';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import { DateFormats, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import 'react-day-picker/dist/style.css';
 

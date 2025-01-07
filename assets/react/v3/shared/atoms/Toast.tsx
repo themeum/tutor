@@ -2,11 +2,11 @@ import { css } from '@emotion/react';
 import { useTransition } from '@react-spring/web';
 import React, { type ReactNode, useCallback, useContext, useState } from 'react';
 
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { AnimatedDiv } from '@Hooks/useAnimation';
-import { isBoolean } from '@Utils/types';
-import { nanoid } from '@Utils/util';
+import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { AnimatedDiv } from '@TutorShared/hooks/useAnimation';
+import { isBoolean } from '@TutorShared/utils/types';
+import { nanoid } from '@TutorShared/utils/util';
 
 import Button from './Button';
 import SVGIcon from './SVGIcon';

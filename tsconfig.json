@@ -36,32 +36,11 @@
 			"@Assets/*": [
 				"assets/*"
 			],
-			"@Atoms/*": [
-				"assets/react/v3/shared/atoms/*"
+			"@TutorShared/*": [
+				"assets/react/v3/shared/*"
 			],
-			"@Molecules/*": [
-				"assets/react/v3/shared/molecules/*"
-			],
-			"@Components/*": [
-				"assets/react/v3/shared/components/*"
-			],
-			"@Config/*": [
-				"assets/react/v3/shared/config/*"
-			],
-			"@Hooks/*": [
-				"assets/react/v3/shared/hooks/*"
-			],
-			"@Services/*": [
-				"assets/react/v3/shared/services/*"
-			],
-			"@Utils/*": [
-				"assets/react/v3/shared/utils/*"
-			],
-			"@Images/*": [
-				"assets/images/*"
-			],
-			"@Controls/*": [
-				"assets/react/v3/shared/controls/*"
+			"@SharedImages/*": [
+				"assets/react/v3/public/images/*"
 			],
 			"@CourseBuilderComponents/*": [
 				"assets/react/v3/entries/course-builder/components/*"
@@ -108,7 +87,9 @@
 			"@EnrollmentServices/*": [
 				"assets/react/v3/entries/pro/manual-enrollment/services/*"
 			],
-			// Course Bundle
+			"@AddonList/*": [
+				"assets/react/v3/entries/addon-list/*"
+			],
 			"@BundleBuilderComponents/*": [
 				"assets/react/v3/entries/pro/bundle-builder/components/*"
 			],

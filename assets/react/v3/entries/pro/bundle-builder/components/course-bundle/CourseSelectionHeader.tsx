@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import { useAddCourseToBundleMutation, type BundleFormData, type Course } from '@BundleBuilderServices/bundle';
-import { useModal } from '@Components/modals/Modal';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { useFormContext } from 'react-hook-form';
 import { getBundleId } from '../../utils/utils';
 import CourseListModal from '../modals/CourseListModal';

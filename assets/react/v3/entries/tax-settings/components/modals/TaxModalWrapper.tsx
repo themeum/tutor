@@ -1,7 +1,7 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';

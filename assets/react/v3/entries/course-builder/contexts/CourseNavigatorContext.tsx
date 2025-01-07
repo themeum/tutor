@@ -6,9 +6,9 @@ import {
   useCourseDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useCurrentPath } from '@Hooks/useCurrentPath';
-import { isDefined } from '@Utils/types';
-import { noop } from '@Utils/util';
+import { useCurrentPath } from '@TutorShared/hooks/useCurrentPath';
+import { isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 import { __ } from '@wordpress/i18n';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 

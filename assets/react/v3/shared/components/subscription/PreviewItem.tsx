@@ -1,15 +1,15 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
-import SubscriptionModal from '@Components/modals/SubscriptionModal';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { DurationUnit, SubscriptionFormData } from '@Services/subscription';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { DurationUnit, SubscriptionFormData } from '@TutorShared/services/subscription';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface PreviewItemProps {
   courseId: number;

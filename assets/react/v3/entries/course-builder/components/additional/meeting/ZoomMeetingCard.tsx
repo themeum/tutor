@@ -3,21 +3,21 @@ import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Popover from '@Molecules/Popover';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { borderRadius, Breakpoint, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 
-import { DateFormats } from '@Config/constants';
+import { DateFormats } from '@TutorShared/config/constants';
 import { type ZoomMeeting, useDeleteZoomMeetingMutation } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 import ZoomMeetingForm from './ZoomMeetingForm';
 
 interface ZoomMeetingCardProps {

@@ -2,19 +2,19 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 const { tutor_currency } = tutorConfig;
 

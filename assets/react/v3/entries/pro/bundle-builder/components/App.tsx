@@ -1,14 +1,14 @@
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useState } from 'react';
-
-import Layout from '@/v3/entries/pro/bundle-builder/components/layouts/Layout';
-import ToastProvider from '@Atoms/Toast';
-import RTLProvider from '@Components/RTLProvider';
-import { ModalProvider } from '@Components/modals/Modal';
-import { createGlobalCss } from '@Utils/style-utils';
 import { QueryParamProvider } from 'use-query-params';
 import { ReactRouter6Adapter } from 'use-query-params/adapters/react-router-6';
+
+import Layout from '@/v3/entries/pro/bundle-builder/components/layouts/Layout';
+import ToastProvider from '@TutorShared/atoms/Toast';
+import RTLProvider from '@TutorShared/components/RTLProvider';
+import { ModalProvider } from '@TutorShared/components/modals/Modal';
+import { createGlobalCss } from '@TutorShared/utils/style-utils';
 
 const App = () => {
   const [queryClient] = useState(

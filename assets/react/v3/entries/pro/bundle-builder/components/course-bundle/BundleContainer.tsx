@@ -13,10 +13,10 @@ import BundleSidebar from '@BundleBuilderComponents/course-bundle/BundleSidebar'
 import CourseSelection from '@BundleBuilderComponents/course-bundle/CourseSelection';
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
 import { getBundleId } from '@BundleBuilderUtils/utils';
-import FormInput from '@Components/fields/FormInput';
-import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const bundleId = getBundleId();
 let hasAliasChanged = false;

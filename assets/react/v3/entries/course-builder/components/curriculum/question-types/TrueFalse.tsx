@@ -15,21 +15,21 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import FormTrueFalse from '@Components/fields/quiz/FormTrueFalse';
+import FormTrueFalse from '@TutorShared/components/fields/quiz/FormTrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import {
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 const TrueFalse = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);

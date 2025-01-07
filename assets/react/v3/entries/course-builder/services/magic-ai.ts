@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { useToast } from '@Atoms/Toast';
-import type { StyleType } from '@Components/magic-ai-image/ImageContext';
+import { useToast } from '@TutorShared/atoms/Toast';
+import type { StyleType } from '@TutorShared/components/magic-ai-image/ImageContext';
 
-import type { ChatFormat, ChatLanguage, ChatTone } from '@Config/magic-ai';
+import type { ChatFormat, ChatLanguage, ChatTone } from '@TutorShared/config/magic-ai';
 import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import type { Prettify, WPResponse } from '@Utils/types';
-import { convertToErrorMessage } from '@Utils/util';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import type { Prettify, WPResponse } from '@TutorShared/utils/types';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ImagePayload {
   prompt: string;

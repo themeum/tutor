@@ -4,18 +4,13 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormEditableAlias from '@Components/fields/FormEditableAlias';
-import FormInput from '@Components/fields/FormInput';
-import FormWPEditor from '@Components/fields/FormWPEditor';
 import CourseBasicSidebar from '@CourseBuilderComponents/course-basic/CourseBasicSidebar';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
-import { tutorConfig } from '@Config/config';
-import { CURRENT_VIEWPORT } from '@Config/constants';
-import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -24,8 +19,13 @@ import {
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
 import { convertToSlug, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { maxLimitRule, requiredRule } from '@Utils/validation';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 let hasAliasChanged = false;

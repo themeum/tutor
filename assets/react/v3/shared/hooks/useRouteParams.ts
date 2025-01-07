@@ -1,4 +1,4 @@
-import type { RouteConfig } from '@Config/route-configs';
+import type { RouteConfig } from '@TutorShared/config/route-configs';
 import { useParams } from 'react-router-dom';
 
 export const useRouteParams = <T extends (typeof RouteConfig)[keyof typeof RouteConfig]>(routeConfig: T) => {

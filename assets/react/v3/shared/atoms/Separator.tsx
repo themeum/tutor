@@ -1,5 +1,5 @@
-import { colorTokens } from '@Config/styles';
-import { type VariantProps, createVariation } from '@Utils/create-variation';
+import { colorTokens } from '@TutorShared/config/styles';
+import { type VariantProps, createVariation } from '@TutorShared/utils/create-variation';
 import { css } from '@emotion/react';
 import React from 'react';
 

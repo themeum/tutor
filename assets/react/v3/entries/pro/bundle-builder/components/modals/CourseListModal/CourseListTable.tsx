@@ -1,17 +1,17 @@
 import SVGIcon from '@/v3/shared/atoms/SVGIcon';
 import { styleUtils } from '@/v3/shared/utils/style-utils';
-import Button from '@Atoms/Button';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { usePaginatedTable } from '@Hooks/usePaginatedTable';
-import coursePlaceholder from '@Images/course-placeholder.png';
-import Paginator from '@Molecules/Paginator';
-import Table, { type Column } from '@Molecules/Table';
+import { type Course, useCurseListQuery } from '@BundleBuilderServices/bundle';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { type Course, useCurseListQuery } from '../../../services/bundle';
 import SearchField from './SearchField';
 
 interface CourseListTableProps {

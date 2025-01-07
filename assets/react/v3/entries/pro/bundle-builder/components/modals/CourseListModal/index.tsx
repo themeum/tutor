@@ -1,6 +1,6 @@
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
 import { type Course } from '@EnrollmentServices/enrollment';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import CourseListTable from './CourseListTable';
 
 interface CourseListModalProps extends ModalProps {

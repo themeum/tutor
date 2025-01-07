@@ -4,23 +4,23 @@ import { __, sprintf } from '@wordpress/i18n';
 import { format } from 'date-fns';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormCategoriesInput from '@TutorShared/components/fields/FormCategoriesInput';
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
 import BundlePricing from '@BundleBuilderComponents/course-bundle/BundlePricing';
 import ScheduleOptions from '@BundleBuilderComponents/course-bundle/ScheduleOptions';
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
 import { getBundleId } from '@BundleBuilderUtils/utils';
-import { tutorConfig } from '@Config/config';
-import { DateFormats, visibilityStatusOptions } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats, visibilityStatusOptions } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const bundleId = getBundleId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;

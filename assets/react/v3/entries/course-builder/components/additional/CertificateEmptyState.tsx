@@ -1,16 +1,16 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import config, { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import certificate2x from '@Images/pro-placeholders/certificates-2x.webp';
-import certificate from '@Images/pro-placeholders/certificates.webp';
+import certificate2x from '@SharedImages/pro-placeholders/certificates-2x.webp';
+import certificate from '@SharedImages/pro-placeholders/certificates.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 

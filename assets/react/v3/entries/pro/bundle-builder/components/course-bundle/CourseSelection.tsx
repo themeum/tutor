@@ -2,15 +2,15 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 
-import { Box } from '@Atoms/Box';
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
+import { Box } from '@TutorShared/atoms/Box';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import CourseSelectionHeader from '@BundleBuilderComponents/course-bundle/CourseSelectionHeader';
 import SelectedCourseList from '@BundleBuilderComponents/course-bundle/SelectedCourseList';
@@ -20,7 +20,7 @@ import { LoadingSection } from '@/v3/shared/atoms/LoadingSpinner';
 import CourseListModal from '@BundleBuilderComponents/modals/CourseListModal';
 import { useAddCourseToBundleMutation, type BundleFormData, type Course } from '@BundleBuilderServices/bundle';
 import { getBundleId } from '@BundleBuilderUtils/utils';
-import bundleEmptyState from '@Images/bundle-empty-state.webp';
+import bundleEmptyState from '@SharedImages/bundle-empty-state.webp';
 import { useIsFetching } from '@tanstack/react-query';
 
 const bundleId = getBundleId();

@@ -4,16 +4,16 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import ImageInput from '@Atoms/ImageInput';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import ImageInput from '@TutorShared/atoms/ImageInput';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import config, { tutorConfig } from '@Config/config';
-import { VideoRegex, isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { VideoRegex, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { type TutorMutationResponse, useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
   convertYouTubeDurationToSeconds,
@@ -22,13 +22,13 @@ import {
   getExternalVideoDuration,
   getVimeoVideoDuration,
 } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { requiredRule } from '@Utils/validation';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 import type { IconCollection } from '../../utils/types';
 import FormFieldWrapper from './FormFieldWrapper';

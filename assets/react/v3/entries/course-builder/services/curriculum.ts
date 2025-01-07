@@ -1,20 +1,20 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 
-import { useToast } from '@Atoms/Toast';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
+import { useToast } from '@TutorShared/atoms/Toast';
+import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 import type { AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
 import type { LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 
-import { Addons } from '@Config/constants';
+import { Addons } from '@TutorShared/config/constants';
 import type { ContentDripType, GoogleMeet, TutorMutationResponse, ZoomMeeting } from '@CourseBuilderServices/course';
 import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { type WPMedia } from '@Hooks/useWpMedia';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import { convertToErrorMessage } from '@Utils/util';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 export type ID = string | number;
 

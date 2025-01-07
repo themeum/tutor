@@ -16,10 +16,10 @@ import { createPortal } from 'react-dom';
 import CourseItem from '@BundleBuilderComponents/course-bundle/CourseItem';
 import { type Course } from '@BundleBuilderServices/bundle';
 
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { droppableMeasuringStrategy } from '@Utils/dndkit';
-import { noop } from '@Utils/util';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
+import { noop } from '@TutorShared/utils/util';
 
 interface SelectedCourseListProps {
   courses: Course[];

@@ -1,18 +1,18 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useModal } from '@Components/modals/Modal';
-import SubscriptionModal from '@Components/modals/SubscriptionModal';
-import { PreviewItem } from '@Components/subscription/PreviewItem';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
+import { PreviewItem } from '@TutorShared/components/subscription/PreviewItem';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@Services/subscription';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@TutorShared/services/subscription';
 
 interface SubscriptionPreviewProps {
   courseId: number;

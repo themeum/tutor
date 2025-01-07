@@ -6,26 +6,26 @@ import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import {} from 'react-router-dom';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSelectUser, { type UserOption } from '@Components/fields/FormSelectUser';
-import FormTagsInput from '@Components/fields/FormTagsInput';
-import FormVideoInput from '@Components/fields/FormVideoInput';
+import FormCategoriesInput from '@TutorShared/components/fields/FormCategoriesInput';
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSelectUser, { type UserOption } from '@TutorShared/components/fields/FormSelectUser';
+import FormTagsInput from '@TutorShared/components/fields/FormTagsInput';
+import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, DateFormats, TutorRoles } from '@Config/constants';
-import { Breakpoint, colorTokens, headerHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, DateFormats, TutorRoles } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, headerHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useInstructorListQuery, useUserListQuery } from '@Services/users';
-import { styleUtils } from '@Utils/style-utils';
+import { useInstructorListQuery, useUserListQuery } from '@TutorShared/services/users';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import CoursePricing from './CoursePricing';
 
 const courseId = getCourseId();

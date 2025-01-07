@@ -1,8 +1,8 @@
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import type { GenerateTextFieldProps } from '@Components/modals/AITextModal';
-import { formatOptions, languageOptions, toneOptions } from '@Config/magic-ai';
-import { spacing } from '@Config/styles';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import type { GenerateTextFieldProps } from '@TutorShared/components/modals/AITextModal';
+import { formatOptions, languageOptions, toneOptions } from '@TutorShared/config/magic-ai';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, type UseFormReturn } from 'react-hook-form';

@@ -4,19 +4,19 @@ import { addHours, format, isBefore, isSameMinute, isValid, parseISO, startOfDay
 import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
-import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
+import { DateFormats } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 import { type BundleFormData } from '../../services/bundle';
 
 const ScheduleOptions = () => {

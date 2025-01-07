@@ -2,22 +2,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore, parseISO } from 'date-fns';
 
-import { useToast } from '@Atoms/Toast';
-import type { UserOption } from '@Components/fields/FormSelectUser';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
+import { useToast } from '@TutorShared/atoms/Toast';
+import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
+import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
 import { type TutorCategory } from '@/v3/shared/utils/types';
-import { tutorConfig } from '@Config/config';
-import { Addons, DateFormats } from '@Config/constants';
 import type { ID } from '@CourseBuilderServices/curriculum';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { type WPMedia } from '@Hooks/useWpMedia';
-import type { Tag } from '@Services/tags';
-import type { InstructorListResponse, User } from '@Services/users';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import { convertToErrorMessage, convertToGMT } from '@Utils/util';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, DateFormats } from '@TutorShared/config/constants';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import type { Tag } from '@TutorShared/services/tags';
+import type { InstructorListResponse, User } from '@TutorShared/services/users';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
 

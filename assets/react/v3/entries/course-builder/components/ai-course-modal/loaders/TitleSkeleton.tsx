@@ -1,5 +1,5 @@
-import Skeleton from '@Atoms/Skeleton';
-import { spacing } from '@Config/styles';
+import Skeleton from '@TutorShared/atoms/Skeleton';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 const TitleSkeleton = () => {

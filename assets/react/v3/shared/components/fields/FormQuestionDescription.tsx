@@ -2,12 +2,12 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Button from '@Atoms/Button';
-import { tutorConfig } from '@Config/config';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import type { FormControllerProps } from '@Utils/form';
+import Button from '@TutorShared/atoms/Button';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 
 import FormTextareaInput from './FormTextareaInput';
 import FormWPEditor from './FormWPEditor';

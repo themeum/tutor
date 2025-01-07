@@ -3,17 +3,17 @@ import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import SubscriptionPreview from '@Components/subscription/SubscriptionPreview';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 
 import { type BundleFormData } from '@BundleBuilderServices/bundle';
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { getBundleId } from '../../utils/utils';
 
 const bundleId = getBundleId();

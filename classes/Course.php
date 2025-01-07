@@ -1572,29 +1572,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Course meta box (Topics)
-	 *
-	 * @since 1.0.0
-	 * @param boolean $echo display or not.
-	 * @return string
-	 */
-	public function course_meta_box( $echo = true ) {
-		$file_path = tutor()->path . 'views/metabox/course-topics.php';
-
-		if ( $echo ) {
-			/**
-			 * Use echo raise WPCS security issue
-			 * Helper wp_kses_post break content.
-			 */
-			include $file_path;
-		} else {
-			ob_start();
-			include $file_path;
-			return ob_get_clean();
-		}
-	}
-
-	/**
 	 * Save course content order
 	 *
 	 * @since 1.0.0
@@ -2209,15 +2186,15 @@ class Course extends Tutor_Base {
 					update_post_meta( $product_id, '_virtual', 'yes' );
 					update_post_meta( $product_id, '_tutor_product', 'yes' );
 
-					$course_post_thumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
-					if ( $course_post_thumbnail ) {
-						set_post_thumbnail( $product_id, $course_post_thumbnail );
-					}
-
 					// Set course regular & sale price.
 					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
 					update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 				}
+			}
+
+			$course_post_thumbnail = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
+			if ( $product_id && $course_post_thumbnail ) {
+				set_post_thumbnail( $product_id, $course_post_thumbnail );
 			}
 		} elseif ( 'edd' === $monetize_by ) {
 

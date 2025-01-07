@@ -1,4 +1,4 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { css, keyframes } from '@emotion/react';
 import React from 'react';
 

@@ -4,25 +4,25 @@ import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import type { Column } from '@Molecules/Table';
-import Table from '@Molecules/Table';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import type { Column } from '@TutorShared/molecules/Table';
+import Table from '@TutorShared/molecules/Table';
 
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
-import Checkbox from '@Atoms/CheckBox';
-import { DateFormats } from '@Config/constants';
-import { colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import { DateFormats } from '@TutorShared/config/constants';
+import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { type ContentType, type ID, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
 import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
-import { useDebounce } from '@Hooks/useDebounce';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { styleUtils } from '@Utils/style-utils';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface H5PContentListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

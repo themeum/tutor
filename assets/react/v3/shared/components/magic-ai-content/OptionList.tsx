@@ -1,8 +1,8 @@
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import { styleUtils } from '@Utils/style-utils';
-import type { Option } from '@Utils/types';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { Option } from '@TutorShared/utils/types';
 import { css } from '@emotion/react';
 
 export const OptionList = <T,>({ options, onChange }: { options: Option<T>[]; onChange: (value: T) => void }) => {

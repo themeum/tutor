@@ -3,10 +3,10 @@ import { format, isBefore, parseISO } from 'date-fns';
 
 import { wpAjaxInstance } from '@/v3/shared/utils/api';
 import endpoints from '@/v3/shared/utils/endpoints';
-import { useToast } from '@Atoms/Toast';
-import { DateFormats } from '@Config/constants';
-import { type WPMedia } from '@Hooks/useWpMedia';
-import { type ErrorResponse } from '@Utils/form';
+import { useToast } from '@TutorShared/atoms/Toast';
+import { DateFormats } from '@TutorShared/config/constants';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type ErrorResponse } from '@TutorShared/utils/form';
 import {
   type PaginatedParams,
   type PaginatedResult,
@@ -15,8 +15,8 @@ import {
   type TutorSellingOption,
   type WPPostStatus,
   type WPUser,
-} from '@Utils/types';
-import { convertToErrorMessage, convertToGMT } from '@Utils/util';
+} from '@TutorShared/utils/types';
+import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 
 export type CourseBundleRibbonType = 'in_percentage' | 'in_amount' | 'none';
 interface CourseBundleOverview {
@@ -58,10 +58,12 @@ export interface Bundle {
   guid: string;
   ribbon_type: CourseBundleRibbonType;
   course_benefits: string;
-  thumbnail: WPMedia;
+  thumbnail: string;
+  thumbnail_id: number;
   regular_price: string;
   sale_price: string;
   course_selling_option: TutorSellingOption;
+  preview_link: string;
   details: {
     overview: CourseBundleOverview;
     authors: WPUser[];
@@ -92,6 +94,7 @@ export interface BundleFormData {
   regular_price: string;
   sale_price: string;
   course_selling_option: TutorSellingOption;
+  preview_link: string;
   courses: Course[];
   overview: CourseBundleOverview;
   categories: number[];
@@ -138,6 +141,7 @@ export const defaultCourseBundleData: BundleFormData = {
   regular_price: '',
   sale_price: '',
   course_selling_option: 'one_time',
+  preview_link: '',
   courses: [],
   overview: {
     total_courses: 0,
@@ -173,7 +177,11 @@ export const convertBundleToFormData = (courseBundle: Bundle): BundleFormData =>
       }
       return 'publish';
     })(),
-    thumbnail: courseBundle.thumbnail,
+    thumbnail: {
+      id: courseBundle.thumbnail_id,
+      url: courseBundle.thumbnail,
+      title: '',
+    },
     ribbon_type: courseBundle.ribbon_type ?? 'in_percentage',
     isScheduleEnabled: isBefore(new Date(), new Date(courseBundle.post_date)),
     showScheduleForm: !isBefore(new Date(), new Date(courseBundle.post_date)),
@@ -186,6 +194,7 @@ export const convertBundleToFormData = (courseBundle: Bundle): BundleFormData =>
     regular_price: courseBundle.details.subtotal_raw_price.toString(),
     sale_price: courseBundle.sale_price ?? '',
     course_selling_option: courseBundle.course_selling_option ?? 'one_time',
+    preview_link: courseBundle.preview_link ?? '',
     courses: courseBundle.details.courses ?? [],
     overview: courseBundle.details.overview ?? defaultCourseBundleData.overview,
     categories: (courseBundle.details.categories ?? []).map((category) => category.term_id),

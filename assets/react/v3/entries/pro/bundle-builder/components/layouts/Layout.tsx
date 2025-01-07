@@ -9,8 +9,8 @@ import {
   useGetBundleDetails,
   type BundleFormData,
 } from '@BundleBuilderServices/bundle';
-import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@Config/styles';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@TutorShared/config/styles';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useEffect } from 'react';
 import { getBundleId } from '../../utils/utils';
 

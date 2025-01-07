@@ -3,15 +3,15 @@ import { animated, useSpring } from '@react-spring/web';
 import { __ } from '@wordpress/i18n';
 import { type ReactNode, useEffect, useRef } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import {} from '@/v3/shared/hooks/useAnimation';
-import { isDefined } from '@Utils/types';
+import { isDefined } from '@TutorShared/utils/types';
 import Badge from '../atoms/Badge';
 
 interface CardProps {

@@ -1,4 +1,4 @@
-import { LoadingSection } from '@Atoms/LoadingSpinner';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { type Order, useOrderDetailsQuery } from '@OrderServices/order';
 import React from 'react';
 

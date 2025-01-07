@@ -92,6 +92,10 @@ const endpoints = {
   INSTALL_PAYMENT_GATEWAY: 'tutor_install_payment_gateway',
   REMOVE_PAYMENT_GATEWAY: 'tutor_remove_payment_gateway',
 
+  // ADDON LIST
+  GET_ADDON_LIST: 'tutor_get_all_addons',
+  ADDON_ENABLE_DISABLE: 'addon_enable_disable',
+
   // COUPON
   GET_COUPON_DETAILS: 'tutor_coupon_details',
   CREATE_COUPON: 'tutor_coupon_create',

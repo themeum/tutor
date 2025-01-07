@@ -1,12 +1,12 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
+import Button from '@TutorShared/atoms/Button';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 interface LeaveWithoutSavingModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

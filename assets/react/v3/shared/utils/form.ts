@@ -1,5 +1,5 @@
-import type { FormWithGlobalErrorType } from '@Hooks/useFormWithGlobalError';
-import { isFileOrBlob } from '@Utils/util';
+import type { FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
+import { isFileOrBlob } from '@TutorShared/utils/util';
 import type { AxiosResponse, Method } from 'axios';
 import type { FocusEvent } from 'react';
 import type { ControllerFieldState, Path } from 'react-hook-form';

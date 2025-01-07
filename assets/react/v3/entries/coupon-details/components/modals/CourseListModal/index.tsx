@@ -1,10 +1,10 @@
-import Button from '@Atoms/Button';
-import BasicModalWrapper from '@Components/modals/BasicModalWrapper';
-import type { ModalProps } from '@Components/modals/Modal';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
+import Button from '@TutorShared/atoms/Button';
+import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import type { Coupon } from '@CouponServices/coupon';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';

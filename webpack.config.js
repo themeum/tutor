@@ -51,8 +51,8 @@ module.exports = (env, options) => {
     config.optimization = {
       splitChunks: {
         cacheGroups: {
-          commons: {
-            test: /[\\/]node_modules[\\/]/,
+          shared: {
+            test: /[\\/]assets[\\/]react[\\/]v3[\\/]shared[\\/]/,
             name: 'tutor-shared.min',
             chunks: 'all',
           },
@@ -87,7 +87,8 @@ module.exports = (env, options) => {
         'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
         'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
         'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
-        'tutor-membership-settings.min': './assets/react/v3/entries/pro/membership-settings/index.tsx',
+        'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
+        'tutor-addon-list.min': './assets/react/v3/entries/addon-list/index.tsx',
       },
       clean: true,
     },
@@ -131,15 +132,8 @@ module.exports = (env, options) => {
           alias: {
             '@': path.resolve(__dirname, './assets/react/'),
             '@Assets': path.resolve(__dirname, './assets/'),
-            '@Atoms': path.resolve(__dirname, './assets/react/v3/shared/atoms/'),
-            '@Molecules': path.resolve(__dirname, './assets/react/v3/shared/molecules/'),
-            '@Components': path.resolve(__dirname, './assets/react/v3/shared/components/'),
-            '@Config': path.resolve(__dirname, './assets/react/v3/shared/config/'),
-            '@Hooks': path.resolve(__dirname, './assets/react/v3/shared/hooks/'),
-            '@Services': path.resolve(__dirname, './assets/react/v3/shared/services/'),
-            '@Utils': path.resolve(__dirname, './assets/react/v3/shared/utils/'),
-            '@Images': path.resolve(__dirname, './assets/react/v3/public/images'),
-            '@Controls': path.resolve(__dirname, './assets/react/v3/shared/controls/'),
+            '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
+            '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
             '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
             '@CourseBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/course-builder/services/'),
             '@CourseBuilderConfig': path.resolve(__dirname, './assets/react/v3/entries/course-builder/config/'),
@@ -157,11 +151,12 @@ module.exports = (env, options) => {
               './assets/react/v3/entries/pro/manual-enrollment/components/',
             ),
             '@EnrollmentServices': path.resolve(__dirname, './assets/react/v3/entries/pro/manual-enrollment/services/'),
+            '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
 
             // Course Bundle
             '@BundleBuilderComponents': path.resolve(
               __dirname,
-              './assets/react/v3/entries/pro/bundle-builder/components/',
+              './assets/react/v3/entries/pro//bundle-builder/components/',
             ),
             '@BundleBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/pro/bundle-builder/services/'),
             '@BundleBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/pro/bundle-builder/utils/'),

@@ -1,6 +1,6 @@
-import { colorTokens, spacing } from '@Config/styles';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
-import { typography } from '@Config/typography';
+import { typography } from '@TutorShared/config/typography';
 import StudentCard from './StudentCard';
 import { Enrollment, Student } from '@EnrollmentServices/enrollment';
 import { UseFormReturn } from 'react-hook-form';
