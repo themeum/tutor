@@ -89,7 +89,6 @@ module.exports = (env, options) => {
 				'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
 				'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
 				'tutor-addon-list.min': './assets/react/v3/entries/addon-list/index.tsx',
-				'tutor-membership-settings.min': './assets/react/v3/entries/pro/membership-settings/index.tsx',
 			},
 			clean: true,
 		},
