@@ -105,7 +105,7 @@ class Admin {
 
 		$pro_text = '';
 		if ( $has_pro ) {
-			$pro_text = ' ' . __( 'Pro', 'tutor' );
+			$pro_text = ' ' . apply_filters( 'tutor_pro_flag', __( 'Pro', 'tutor' ) );
 		}
 
 		$enable_course_marketplace = (bool) tutor_utils()->get_option( 'enable_course_marketplace' );
