@@ -15,7 +15,7 @@ import type { InstructorListResponse, User } from '@TutorShared/services/users';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { type ID, type TutorCategory, type WPPostStatus } from '@TutorShared/utils/types';
+import { type ID, type TutorCategory, type TutorMutationResponse, type WPPostStatus } from '@TutorShared/utils/types';
 import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
@@ -617,12 +617,6 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
 const createCourse = (payload: CoursePayload) => {
   return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.CREATED_COURSE, payload);
 };
-
-export interface TutorMutationResponse<T> {
-  data: T;
-  message: string;
-  status_code: number;
-}
 
 interface TutorDeleteResponse {
   data: {

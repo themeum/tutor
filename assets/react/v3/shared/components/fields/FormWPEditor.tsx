@@ -14,19 +14,19 @@ import WPEditor from '@TutorShared/atoms/WPEditor';
 
 import AITextModal from '@TutorShared/components/modals/AITextModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
+import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
+import type { CourseFormData, Editor } from '@CourseBuilderServices/course';
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import type { CourseFormData, Editor, TutorMutationResponse } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
+import type { IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';

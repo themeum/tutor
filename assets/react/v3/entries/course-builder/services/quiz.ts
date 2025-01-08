@@ -18,8 +18,8 @@ import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertToErrorMessage, normalizeLineEndings } from '@TutorShared/utils/util';
 
-import { type ID } from '@TutorShared/utils/types';
-import type { ContentDripType, TutorMutationResponse } from './course';
+import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import type { ContentDripType } from './course';
 import type { ContentType } from './curriculum';
 
 export const QuizDataStatus = {
