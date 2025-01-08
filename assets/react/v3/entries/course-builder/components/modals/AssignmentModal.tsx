@@ -25,7 +25,7 @@ import {
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
 } from '@CourseBuilderServices/curriculum';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
@@ -34,7 +34,7 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type ID } from '@TutorShared/utils/types';
-import { normalizeLineEndings } from '@TutorShared/utils/util';
+import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {

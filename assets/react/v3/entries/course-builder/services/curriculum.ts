@@ -8,14 +8,13 @@ import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput'
 
 import type { ContentDripType, GoogleMeet, ZoomMeeting } from '@CourseBuilderServices/course';
 import type { H5PContentResponse } from '@CourseBuilderServices/quiz';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { Addons } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
-import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { convertToErrorMessage, isAddonEnabled } from '@TutorShared/utils/util';
 
 export type ContentType =
   | 'tutor-google-meet'

@@ -13,15 +13,16 @@ import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 
-import { Addons } from '@TutorShared/config/constants';
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import Show from '@TutorShared/controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { Addons } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 
 const courseId = getCourseId();
 

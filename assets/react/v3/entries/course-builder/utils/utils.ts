@@ -4,19 +4,13 @@ import type { UseFormReturn } from 'react-hook-form';
 import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
 import { tutorConfig } from '@TutorShared/config/config';
-import { type Addons, VideoRegex } from '@TutorShared/config/constants';
+import { VideoRegex } from '@TutorShared/config/constants';
 import { type ID } from '@TutorShared/utils/types';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get('course_id');
   return Number(courseId);
-};
-
-type Addon = `${Addons}`;
-
-export const isAddonEnabled = (addon: Addon) => {
-  return !!tutorConfig.addons_data.find((item) => item.base_name === addon)?.is_enabled;
 };
 
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {

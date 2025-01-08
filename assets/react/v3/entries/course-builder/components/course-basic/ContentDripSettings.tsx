@@ -7,12 +7,12 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 
 const ContentDripSettings = () => {
   const form = useFormContext<CourseFormData>();

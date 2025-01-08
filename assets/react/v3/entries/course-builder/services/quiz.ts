@@ -10,13 +10,12 @@ import type {
 } from '@CourseBuilderComponents/modals/QuizModal';
 import { useToast } from '@TutorShared/atoms/Toast';
 
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { convertToErrorMessage, normalizeLineEndings } from '@TutorShared/utils/util';
+import { convertToErrorMessage, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 
 import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
 import type { ContentDripType } from './course';

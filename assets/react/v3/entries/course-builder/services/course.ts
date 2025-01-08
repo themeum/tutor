@@ -6,7 +6,6 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
@@ -16,7 +15,7 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { type ID, type TutorCategory, type TutorMutationResponse, type WPPostStatus } from '@TutorShared/utils/types';
-import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
+import { convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
 

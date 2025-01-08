@@ -16,7 +16,7 @@ import {
   useGetWcProductsQuery,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
@@ -24,6 +24,7 @@ import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
