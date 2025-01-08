@@ -68,7 +68,14 @@ class QueryHelper {
 		$query = $wpdb->prepare( "UPDATE {$table} {$set_clause} WHERE {$where_clause} AND 1 = %d", 1 );
 
 		// phpcs:ignore
-		return $wpdb->query( $query ) ? true : false;
+		$wpdb->query( $query );
+
+		if ( $wpdb->last_error ) {
+			error_log( $wpdb->last_error );
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
