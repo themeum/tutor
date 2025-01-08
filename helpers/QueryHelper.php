@@ -18,26 +18,21 @@ class QueryHelper {
 	/**
 	 * Insert data in the table
 	 *
+	 * @since 2.0.7
+	 * @since 3.2.0 sanitize_mapping param added to override sanitize function to specific keys.
+	 *
 	 * @param string $table  table name.
 	 * @param array  $data | data to insert in the table.
+	 * @param array  $sanitize_mapping sanitize mapping.
 	 *
-	 * @return int, inserted id.
-	 *
-	 * @since v2.0.7
-	 *
-	 * @since 3.0.0
+	 * @return int inserted id.
 	 *
 	 * @throws \Exception Database error if occur.
 	 */
-	public static function insert( string $table, array $data ): int {
+	public static function insert( string $table, array $data, array $sanitize_mapping = array() ): int {
 		global $wpdb;
-		// Sanitize text field.
-		$data = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$data
-		);
+
+		$data = \TUTOR\Input::sanitize_array( $data, $sanitize_mapping );
 
 		$insert = $wpdb->insert(
 			$table,
