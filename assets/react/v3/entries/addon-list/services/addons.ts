@@ -2,9 +2,9 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import { tutorConfig } from '@TutorShared/config/config';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { convertToErrorMessage } from '@/v3/shared/utils/util';
-import { type ErrorResponse } from '@/v3/shared/utils/form';
-import { useToast } from '@/v3/shared/atoms/Toast';
+import { convertToErrorMessage } from '@TutorShared/utils/util';
+import { type ErrorResponse } from '@TutorShared/utils/form';
+import { useToast } from '@TutorShared/atoms/Toast';
 
 export interface Addon {
   name: string;
@@ -19,6 +19,8 @@ export interface Addon {
   required_message?: string;
   thumb_url?: string;
   plugins_required?: string[];
+  depend_plugins: Record<string, string>[];
+  required_pro_plugin?: boolean;
   is_new?: boolean;
 }
 
@@ -29,6 +31,9 @@ interface AddonListResponse {
 
 interface Response {
   success: boolean;
+  data?: {
+    message?: string;
+  };
 }
 
 interface AddonPayload {
@@ -58,6 +63,36 @@ export const useEnableDisableAddon = () => {
 
   return useMutation({
     mutationFn: addonEnableDisable,
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
+  });
+};
+
+interface InstallPluginPayload {
+  plugin_slug: string;
+}
+
+interface InstallPluginResponse {
+  data: string;
+  message: string;
+  status_code: number;
+}
+
+const installPlugin = (payload: InstallPluginPayload) => {
+  return wpAjaxInstance.post<InstallPluginPayload, InstallPluginResponse>(endpoints.TUTOR_INSTALL_PLUGIN, {
+    ...payload,
+  });
+};
+
+export const useInstallPlugin = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: installPlugin,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: response.message });
+    },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },

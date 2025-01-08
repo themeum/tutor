@@ -1,11 +1,11 @@
-import Button from '@/v3/shared/atoms/Button';
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
-import { borderRadius, Breakpoint, colorTokens, lineHeight, spacing } from '@/v3/shared/config/styles';
-import { typography } from '@/v3/shared/config/typography';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, Breakpoint, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import bannerImage from '@SharedImages/free-addons-banner.webp';
-import config from '@/v3/shared/config/config';
+import config from '@TutorShared/config/config';
 
 function FreeBanner() {
   return (
