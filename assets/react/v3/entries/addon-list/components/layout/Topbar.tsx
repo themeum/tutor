@@ -2,9 +2,9 @@ import { css } from '@emotion/react';
 import { Breakpoint, colorTokens, fontSize, fontWeight, lineHeight, spacing } from '@TutorShared/config/styles';
 import { useAddonContext } from '../../contexts/addon-context';
 import Container from './Container';
-import SVGIcon from '@/v3/shared/atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { __ } from '@wordpress/i18n';
-import TextInput from '@/v3/shared/atoms/TextInput';
+import TextInput from '@TutorShared/atoms/TextInput';
 
 export const TOPBAR_HEIGHT = 80;
 

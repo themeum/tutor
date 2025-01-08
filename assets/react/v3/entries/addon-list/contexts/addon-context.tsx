@@ -42,10 +42,8 @@ export const AddonProvider = ({ children }: { children: React.ReactNode }) => {
       baseAddons = tutorConfig.addons_data;
     }
 
-    const filteredAddons = baseAddons.filter((addon) => addon.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
-    setAddonList(filteredAddons);
-  }, [addonListQuery.data, addonListQuery.isLoading, isTutorPro, searchTerm]);
+    setAddonList(baseAddons);
+  }, [addonListQuery.data, addonListQuery.isLoading, isTutorPro]);
 
   if (addonListQuery.isLoading) {
     return <LoadingSection />;

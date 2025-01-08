@@ -1,4 +1,4 @@
-import { spacing } from '@/v3/shared/config/styles';
+import { spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
