@@ -5,7 +5,7 @@ import For from '@TutorShared/controls/For';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useInstallPlugin, type Addon } from '../services/addons';
-import Show from '@/v3/shared/controls/Show';
+import Show from '@TutorShared/controls/Show';
 import woocommerceFavicon from '@SharedImages/woocommerce-favicon.webp';
 
 interface Plugin {
