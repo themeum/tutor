@@ -54,44 +54,26 @@ class QueryHelper {
 	/**
 	 * Update data
 	 *
+	 * @since 2.0.7
+	 * @since 3.2.0 IN clause support added.
+	 *
 	 * @param string $table  table name.
 	 * @param array  $data | data to update in the table.
 	 * @param array  $where | condition array.
 	 *
-	 * @return bool, true on success false on failure
-	 *
-	 * @since v2.0.7
+	 * @return bool  true on success false on failure
 	 */
 	public static function update( string $table, array $data, array $where ): bool {
 		global $wpdb;
-		// Sanitize text field.
-		$data = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$data
-		);
 
-		$where = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$where
-		);
+		$set_clause   = self::prepare_set_clause( $data );
+		$where_clause = self::build_where_clause( $where );
 
-		$wpdb->update(
-			$table,
-			$data,
-			$where
-		);
+		// phpcs:ignore
+		$query = $wpdb->prepare( "UPDATE {$table} {$set_clause} WHERE {$where_clause} AND 1 = %d", 1 );
 
-		if ( $wpdb->last_error ) {
-			error_log( $wpdb->last_error );
-
-			return false;
-		}
-
-		return true;
+		// phpcs:ignore
+		return $wpdb->query( $query ) ? true : false;
 	}
 
 	/**
