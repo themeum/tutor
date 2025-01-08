@@ -1,4 +1,3 @@
-import { fetchImageUrlAsBase64 } from '@/v3/shared/utils/util';
 import {
   type Topic,
   useContentGenerationContext,
@@ -9,6 +8,7 @@ import {
   useGenerateCourseTopicNamesMutation,
   useGenerateQuizQuestionsMutation,
 } from '@CourseBuilderServices/magic-ai';
+import { fetchImageUrlAsBase64 } from '@TutorShared/utils/util';
 
 import courseGenerationPlaceholderBlue from '@SharedImages/course-generation-placeholders/course-generation-placeholder-blue.webp';
 import courseGenerationPlaceholderGreen from '@SharedImages/course-generation-placeholders/course-generation-placeholder-green.webp';

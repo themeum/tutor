@@ -17,7 +17,16 @@ import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput'
 import { useModal } from '@TutorShared/components/modals/Modal';
 import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
-import { borderRadius, Breakpoint, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import {
+  borderRadius,
+  Breakpoint,
+  colorTokens,
+  fontWeight,
+  lineHeight,
+  shadow,
+  spacing,
+  zIndex,
+} from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
@@ -25,6 +34,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isObject } from '@TutorShared/utils/types';
 import { requiredRule } from '@TutorShared/utils/validation';
 
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import Badge from '../atoms/Badge';
 import { usePaymentContext } from '../contexts/payment-context';
 import OptionWebhookUrl from '../fields/OptionWebhookUrl';
@@ -37,7 +47,6 @@ import {
   useInstallPaymentMutation,
   useRemovePaymentMutation,
 } from '../services/payment';
-import { CURRENT_VIEWPORT } from '@/v3/shared/config/constants';
 
 interface PaymentItemProps {
   data: PaymentMethod;

@@ -26,9 +26,9 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
-import Button from '@/v3/shared/atoms/Button';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { QuizDataStatus, type QuizForm, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import Button from '@TutorShared/atoms/Button';
 
 const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);

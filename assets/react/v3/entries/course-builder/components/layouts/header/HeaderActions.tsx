@@ -9,8 +9,8 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import DropdownButton from '@TutorShared/molecules/DropdownButton';
 
-import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
+import SuccessModal from '@TutorShared/components/modals/SuccessModal';
 
 import {
   type CourseFormData,
@@ -24,9 +24,9 @@ import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@TutorShared/config/c
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type WPPostStatus } from '@TutorShared/utils/types';
 import { convertToGMT, determinePostStatus, noop } from '@TutorShared/utils/util';
 
-import { type WPPostStatus } from '@/v3/shared/utils/types';
 import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
 import reviewSubmitted from '@SharedImages/review-submitted.webp';
 

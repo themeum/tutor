@@ -7,8 +7,8 @@ import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
-import { LoadingSection } from '@/v3/shared/atoms/LoadingSpinner';
 const TaxSettingsPage = lazy(() => import('./TaxSettings'));
 
 function App() {

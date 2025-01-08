@@ -6,16 +6,16 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { css } from '@emotion/react';
 import { Controller, type UseFormReturn } from 'react-hook-form';
 
-import { type ModalProps, useModal } from '@/v3/shared/components/modals/Modal';
-import { typography } from '@/v3/shared/config/typography';
-import For from '@/v3/shared/controls/For';
-import Show from '@/v3/shared/controls/Show';
+import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import {
   euCountryCode,
   getCountryByCode,
   getCountryListAsOptions,
   getStatesByCountryAsOptions,
-} from '@/v3/shared/utils/countries';
+} from '@TutorShared/utils/countries';
 import { __, sprintf } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import TaxCheckbox from '../../atoms/TaxCheckbox';

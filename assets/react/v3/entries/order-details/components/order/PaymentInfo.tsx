@@ -3,10 +3,10 @@ import { __, sprintf } from '@wordpress/i18n';
 
 import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 
-import Show from '@/v3/shared/controls/Show';
+import { useOrderContext } from '@OrderContexts/order-context';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { useOrderContext } from '@OrderContexts/order-context';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const PaymentInfo = () => {

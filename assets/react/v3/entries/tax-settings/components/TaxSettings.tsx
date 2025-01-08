@@ -1,12 +1,12 @@
-import Show from '@/v3/shared/controls/Show';
-import { getCountryByCode } from '@/v3/shared/utils/countries';
+import taxBanner from '@SharedImages/tax-banner.png';
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import taxBanner from '@SharedImages/tax-banner.png';
+import { getCountryByCode } from '@TutorShared/utils/countries';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';

@@ -1,4 +1,4 @@
-import { styleUtils } from '@/v3/shared/utils/style-utils';
+import { type Discount, useOrderDiscountMutation } from '@OrderServices/order';
 import Button from '@TutorShared/atoms/Button';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
@@ -9,8 +9,8 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { type Discount, useOrderDiscountMutation } from '@OrderServices/order';
 import { formatPrice } from '@TutorShared/utils/currency';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';

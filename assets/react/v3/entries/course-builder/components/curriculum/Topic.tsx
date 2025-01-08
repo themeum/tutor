@@ -15,13 +15,11 @@ import TopicHeader from '@CourseBuilderComponents/curriculum//TopicHeader';
 import TopicContent from '@CourseBuilderComponents/curriculum/TopicContent';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 
-import For from '@TutorShared/controls/For';
-
-import Show from '@/v3/shared/controls/Show';
 import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
-import type { ID } from '@CourseBuilderServices/curriculum';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isDefined } from '@TutorShared/utils/types';
+import { type ID, isDefined } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 interface TopicProps {
@@ -37,7 +35,7 @@ interface TopicProps {
 const animateLayoutChanges: AnimateLayoutChanges = (args) =>
   defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
-const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay = false }: TopicProps) => {
+const Topic = ({ topic, onDelete, onCopy, onCollapse, onEdit, isOverlay = false }: TopicProps) => {
   const [isActive, setIsActive] = useState(false);
   const [isEdit, setIsEdit] = useState(!topic.isSaved);
 
@@ -82,7 +80,7 @@ const Topic = ({ topic, onDelete, onCopy, onSort, onCollapse, onEdit, isOverlay 
     (node: HTMLDivElement) => {
       if (node) {
         setNodeRef(node);
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (wrapperRef as any).current = node;
       }
     },
