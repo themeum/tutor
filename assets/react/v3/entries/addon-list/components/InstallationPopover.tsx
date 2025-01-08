@@ -39,7 +39,7 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
     <div css={styles.wrapper}>
       <p css={styles.content}>
         {addon.required_pro_plugin
-          ? __('Install the Following Plugin(s) to Enable This Addon.', 'tutor')
+          ? __('Install the following plugin(s) to enable this addon.', 'tutor')
           : sprintf(__("The following plugin will be installed upon activating the '%s'.", 'tutor'), addon.name)}
       </p>
 
