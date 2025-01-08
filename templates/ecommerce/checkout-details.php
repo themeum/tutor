@@ -85,8 +85,10 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					<?php } ?>
 					<div class="tutor-checkout-course-content">
 						<div class="tutor-d-flex tutor-flex-column tutor-gap-1">
-							<div class="tutor-checkout-course-thumb-title">
+							<div class="<?php echo esc_attr( $plan_info->is_membership_plan ? '' : 'tutor-checkout-course-thumb-title' ); ?>">
+								<?php if ( ! $plan_info->is_membership_plan ) { ?>
 								<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php echo esc_attr( $plan_title ); ?>" />
+								<?php } ?>
 								<h6 class="tutor-checkout-course-title">
 									<a href="<?php echo esc_url( $plan_url ); ?>"> <?php echo esc_html( $plan_title ); ?></a>
 								</h6>
