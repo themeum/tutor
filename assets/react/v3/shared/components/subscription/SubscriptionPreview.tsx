@@ -36,9 +36,7 @@ function SubscriptionPreview({ courseId, isBundle = false }: SubscriptionPreview
   return (
     <div css={styles.outer}>
       <Show when={subscriptions.length > 0}>
-        <div css={styles.header}>
-          <p>{__('Subscriptions', 'tutor')}</p>
-        </div>
+        <div css={styles.header}>{__('Subscriptions', 'tutor')}</div>
       </Show>
 
       <div
