@@ -15,8 +15,8 @@ import WPEditor from '@TutorShared/atoms/WPEditor';
 import AITextModal from '@TutorShared/components/modals/AITextModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
-import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';

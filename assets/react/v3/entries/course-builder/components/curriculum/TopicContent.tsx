@@ -13,31 +13,30 @@ import Tooltip from '@TutorShared/atoms/Tooltip';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 import Popover from '@TutorShared/molecules/Popover';
 
-import { useModal } from '@TutorShared/components/modals/Modal';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import {
   type ContentType,
-  type ID,
   useDeleteContentMutation,
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
 import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
+import type { IconCollection, ID } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 import { useQueryClient } from '@tanstack/react-query';
 

@@ -90,15 +90,6 @@
 			"@AddonList/*": [
 				"assets/react/v3/entries/addon-list/*"
 			],
-			"@BundleBuilderComponents/*": [
-				"assets/react/v3/entries/pro/bundle-builder/components/*"
-			],
-			"@BundleBuilderServices/*": [
-				"assets/react/v3/entries/pro/bundle-builder/services/*"
-			],
-			"@BundleBuilderUtils/*": [
-				"assets/react/v3/entries/pro/bundle-builder/utils/*"
-			],
 		}
 	},
 	"include": [

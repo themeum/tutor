@@ -6,8 +6,6 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-import { type TutorCategory } from '@/v3/shared/utils/types';
-import type { ID } from '@CourseBuilderServices/curriculum';
 import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
@@ -17,6 +15,7 @@ import type { InstructorListResponse, User } from '@TutorShared/services/users';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
+import { type ID, type TutorCategory, type WPPostStatus } from '@TutorShared/utils/types';
 import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
@@ -31,14 +30,13 @@ export type ContentDripType =
   | '';
 export type PricingType = 'free' | 'paid';
 export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
-export type PostStatus = 'publish' | 'private' | 'draft' | 'future' | 'pending' | 'trash';
 
 export interface CourseFormData {
   post_date: string;
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: PostStatus;
+  post_status: WPPostStatus;
   visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;

@@ -3,12 +3,12 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
+import { type ID } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type { AxiosResponse } from 'axios';
 import { format } from 'date-fns';
 import type { TutorMutationResponse } from './course';
-import type { ID } from './curriculum';
 
 export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
 

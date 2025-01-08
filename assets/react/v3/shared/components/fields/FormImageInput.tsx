@@ -6,8 +6,8 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import AIImageModal from '@TutorShared/components/modals/AiImageModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';

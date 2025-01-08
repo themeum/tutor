@@ -2,23 +2,25 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 
-import { useToast } from '@TutorShared/atoms/Toast';
 import type {
   QuizFeedbackMode,
   QuizLayoutView,
   QuizQuestionsOrder,
   QuizTimeLimit,
 } from '@CourseBuilderComponents/modals/QuizModal';
+import { useToast } from '@TutorShared/atoms/Toast';
 
+import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons } from '@TutorShared/config/constants';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { convertToErrorMessage, normalizeLineEndings } from '@TutorShared/utils/util';
+
+import { type ID } from '@TutorShared/utils/types';
 import type { ContentDripType, TutorMutationResponse } from './course';
-import type { ContentType, ID } from './curriculum';
+import type { ContentType } from './curriculum';
 
 export const QuizDataStatus = {
   NEW: 'new',

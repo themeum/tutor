@@ -18,13 +18,14 @@ import {
   useUnlinkPageBuilder,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
-import { convertToSlug, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { determinePostStatus, convertToSlug } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();

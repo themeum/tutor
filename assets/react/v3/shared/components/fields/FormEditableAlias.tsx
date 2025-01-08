@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
 import { borderRadius, Breakpoint, colorTokens, fontSize, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { convertToSlug } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

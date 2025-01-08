@@ -99,13 +99,6 @@ module.exports = (env, options) => {
       },
       clean: true,
     },
-    {
-      dest_path: '../tutor-pro/addons/course-bundle/assets/js/builder',
-      src_files: {
-        'bundle-builder.min': './assets/react/v3/entries/pro/bundle-builder/index.tsx',
-      },
-      clean: true,
-    },
   ];
 
   const configEditors = [];
@@ -152,14 +145,6 @@ module.exports = (env, options) => {
             ),
             '@EnrollmentServices': path.resolve(__dirname, './assets/react/v3/entries/pro/manual-enrollment/services/'),
             '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
-
-            // Course Bundle
-            '@BundleBuilderComponents': path.resolve(
-              __dirname,
-              './assets/react/v3/entries/pro//bundle-builder/components/',
-            ),
-            '@BundleBuilderServices': path.resolve(__dirname, './assets/react/v3/entries/pro/bundle-builder/services/'),
-            '@BundleBuilderUtils': path.resolve(__dirname, './assets/react/v3/entries/pro/bundle-builder/utils/'),
           },
         },
       }),

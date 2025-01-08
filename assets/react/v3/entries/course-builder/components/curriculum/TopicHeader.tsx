@@ -14,18 +14,17 @@ import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
 
 import FormInput from '@TutorShared/components/fields/FormInput';
 
+import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
+import {
+  useDeleteTopicMutation,
+  useDuplicateContentMutation,
+  useSaveTopicMutation,
+} from '@CourseBuilderServices/curriculum';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
-import {
-  type ID,
-  useDeleteTopicMutation,
-  useDuplicateContentMutation,
-  useSaveTopicMutation,
-} from '@CourseBuilderServices/curriculum';
 
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useCollapseExpandAnimation } from '@TutorShared/hooks/useCollapseExpandAnimation';
@@ -33,6 +32,7 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 interface TopicHeaderProps {
