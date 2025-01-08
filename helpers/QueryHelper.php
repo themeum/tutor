@@ -18,26 +18,21 @@ class QueryHelper {
 	/**
 	 * Insert data in the table
 	 *
+	 * @since 2.0.7
+	 * @since 3.2.0 sanitize_mapping param added to override sanitize function to specific keys.
+	 *
 	 * @param string $table  table name.
 	 * @param array  $data | data to insert in the table.
+	 * @param array  $sanitize_mapping sanitize mapping.
 	 *
-	 * @return int, inserted id.
-	 *
-	 * @since v2.0.7
-	 *
-	 * @since 3.0.0
+	 * @return int inserted id.
 	 *
 	 * @throws \Exception Database error if occur.
 	 */
-	public static function insert( string $table, array $data ): int {
+	public static function insert( string $table, array $data, array $sanitize_mapping = array() ): int {
 		global $wpdb;
-		// Sanitize text field.
-		$data = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$data
-		);
+
+		$data = \TUTOR\Input::sanitize_array( $data, $sanitize_mapping );
 
 		$insert = $wpdb->insert(
 			$table,
@@ -54,40 +49,29 @@ class QueryHelper {
 	/**
 	 * Update data
 	 *
+	 * @since 2.0.7
+	 * @since 3.2.0 IN clause support added.
+	 *
 	 * @param string $table  table name.
 	 * @param array  $data | data to update in the table.
 	 * @param array  $where | condition array.
 	 *
-	 * @return bool, true on success false on failure
-	 *
-	 * @since v2.0.7
+	 * @return bool  true on success false on failure
 	 */
 	public static function update( string $table, array $data, array $where ): bool {
 		global $wpdb;
-		// Sanitize text field.
-		$data = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$data
-		);
 
-		$where = array_map(
-			function ( $value ) {
-				return sanitize_text_field( $value );
-			},
-			$where
-		);
+		$set_clause   = self::prepare_set_clause( $data );
+		$where_clause = self::build_where_clause( $where );
 
-		$wpdb->update(
-			$table,
-			$data,
-			$where
-		);
+		// phpcs:ignore
+		$query = $wpdb->prepare( "UPDATE {$table} {$set_clause} WHERE {$where_clause} AND 1 = %d", 1 );
+
+		// phpcs:ignore
+		$wpdb->query( $query );
 
 		if ( $wpdb->last_error ) {
 			error_log( $wpdb->last_error );
-
 			return false;
 		}
 
