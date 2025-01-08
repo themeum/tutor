@@ -19,6 +19,8 @@ export interface Addon {
   required_message?: string;
   thumb_url?: string;
   plugins_required?: string[];
+  depend_plugins: Record<string, string>[];
+  required_pro_plugin?: boolean;
   is_new?: boolean;
 }
 
@@ -61,6 +63,36 @@ export const useEnableDisableAddon = () => {
 
   return useMutation({
     mutationFn: addonEnableDisable,
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
+  });
+};
+
+interface InstallPluginPayload {
+  plugin_slug: string;
+}
+
+interface InstallPluginResponse {
+  data: string;
+  message: string;
+  status_code: number;
+}
+
+const installPlugin = (payload: InstallPluginPayload) => {
+  return wpAjaxInstance.post<InstallPluginPayload, InstallPluginResponse>(endpoints.TUTOR_INSTALL_PLUGIN, {
+    ...payload,
+  });
+};
+
+export const useInstallPlugin = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: installPlugin,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: response.message });
+    },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },

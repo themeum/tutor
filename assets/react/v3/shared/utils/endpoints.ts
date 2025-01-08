@@ -96,6 +96,9 @@ const endpoints = {
   GET_ADDON_LIST: 'tutor_get_all_addons',
   ADDON_ENABLE_DISABLE: 'addon_enable_disable',
 
+  // INSTALL PLUGIN
+  TUTOR_INSTALL_PLUGIN: 'tutor_install_plugin',
+
   // COUPON
   GET_COUPON_DETAILS: 'tutor_coupon_details',
   CREATE_COUPON: 'tutor_coupon_create',
