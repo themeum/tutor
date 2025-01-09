@@ -123,7 +123,6 @@ module.exports = (env, options) => {
                         os: false,
                     },
                     alias: {
-                        '@Assets': path.resolve(__dirname, './assets/'),
                         '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
                         '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
                         '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
