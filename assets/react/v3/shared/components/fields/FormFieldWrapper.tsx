@@ -213,6 +213,7 @@ const styles = {
       padding: ${spacing[8]} ${spacing[16]};
       color: ${colorTokens.text.title};
       appearance: textfield;
+      ${typography.body('regular')};
 
       &:not(textarea) {
         height: 40px;
