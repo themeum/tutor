@@ -9,8 +9,8 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 
-import FormTextareaInput from './FormTextareaInput';
-import FormWPEditor from './FormWPEditor';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
 interface FormQuestionDescriptionProps extends FormControllerProps<string | null> {
   label?: string;

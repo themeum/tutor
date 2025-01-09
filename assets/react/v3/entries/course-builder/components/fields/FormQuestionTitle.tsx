@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
 
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -11,7 +12,6 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { isDefined } from '@TutorShared/utils/types';
 
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormQuestionTitleProps extends FormControllerProps<string | null> {
   maxLimit?: number;

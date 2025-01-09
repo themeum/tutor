@@ -18,7 +18,7 @@ import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormImageAnswering from '@TutorShared/components/fields/quiz/FormImageAnswering';
+import FormImageAnswering from '@CourseBuilderComponents/fields/quiz/FormImageAnswering';
 
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import For from '@TutorShared/controls/For';
