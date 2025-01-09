@@ -1,13 +1,13 @@
 import {
-  type Topic,
-  useContentGenerationContext,
-} from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
-import {
   useGenerateCourseContentMutation,
   useGenerateCourseTopicContentMutation,
   useGenerateCourseTopicNamesMutation,
   useGenerateQuizQuestionsMutation,
-} from '@CourseBuilderServices/magic-ai';
+} from '@TutorShared/services/magic-ai';
+import {
+  type Topic,
+  useContentGenerationContext,
+} from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
 import { fetchImageUrlAsBase64 } from '@TutorShared/utils/util';
 
 import courseGenerationPlaceholderBlue from '@SharedImages/course-generation-placeholders/course-generation-placeholder-blue.webp';

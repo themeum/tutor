@@ -10,7 +10,7 @@ import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 
-import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/magic-ai';
+import { useSaveAIGeneratedCourseContentMutation } from '@TutorShared/services/magic-ai';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import { Addons, isRTL } from '@TutorShared/config/constants';

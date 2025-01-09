@@ -15,7 +15,7 @@ import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useSaveOpenAiSettingsMutation } from '@CourseBuilderServices/course';
+import { useSaveOpenAiSettingsMutation } from '@TutorShared/services/magic-ai';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';

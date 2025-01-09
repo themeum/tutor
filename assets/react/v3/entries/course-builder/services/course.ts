@@ -886,32 +886,6 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
   });
 };
 
-const saveOpenAiSettingsKey = (payload: { chatgpt_api_key: string; chatgpt_enable: 1 | 0 }) => {
-  return wpAjaxInstance.post<
-    {
-      chatgpt_api_key: string;
-      chatgpt_enable: 'on' | 'off';
-    },
-    TutorMutationResponse<null>
-  >(endpoints.OPEN_AI_SAVE_SETTINGS, {
-    ...payload,
-  });
-};
-
-export const useSaveOpenAiSettingsMutation = () => {
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: saveOpenAiSettingsKey,
-    onSuccess: (response) => {
-      showToast({ type: 'success', message: __(response.message, 'tutor') });
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: convertToErrorMessage(error) });
-    },
-  });
-};
-
 const getYouTubeVideoDuration = (videoId: string) => {
   return wpAjaxInstance.post<
     { videoId: string },
