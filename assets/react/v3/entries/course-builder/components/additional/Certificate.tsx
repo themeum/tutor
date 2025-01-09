@@ -26,17 +26,14 @@ import CertificateEmptyState from './CertificateEmptyState';
 
 type CertificateTabValue = 'templates' | 'custom_certificates';
 
+interface CertificateTabItem {
+  label: string;
+  value: CertificateTabValue;
+}
+
 interface CertificateProps {
   isSidebarVisible: boolean;
 }
-
-const certificateTabs: { label: string; value: CertificateTabValue }[] = [
-  { label: __('Templates', 'tutor'), value: 'templates' },
-  {
-    label: __(`Custom ${CURRENT_VIEWPORT.isAboveSmallMobile ? ' Certificates' : ''}`, 'tutor'),
-    value: 'custom_certificates',
-  },
-];
 
 const courseId = getCourseId();
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -47,6 +44,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const certificatesData = courseDetails?.course_certificates_templates ?? [];
+  const defaultTemplates = certificatesData.filter((certificate) => certificate.is_default);
 
   const form = useFormContext<CourseFormData>();
   const currentCertificateKey = form.watch('tutor_course_certificate_template');
@@ -55,28 +53,36 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   const [activeOrientation, setActiveOrientation] = useState<'landscape' | 'portrait'>('landscape');
   const [selectedCertificate, setSelectedCertificate] = useState(currentCertificateKey);
 
-  const hasLandScapeCertificatesForActiveTab = certificatesData.some(
+  const landScapeCertificates = certificatesData.some(
     (certificate) =>
       certificate.orientation === 'landscape' &&
       (activeCertificateTab === 'templates' ? certificate.is_default : !certificate.is_default),
   );
 
-  const hasPortraitCertificatesForActiveTab = certificatesData.some(
+  const portraitCertificates = certificatesData.some(
     (certificate) =>
       certificate.orientation === 'portrait' &&
       (activeCertificateTab === 'templates' ? certificate.is_default : !certificate.is_default),
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
+    if (certificatesData.length) {
+      if (defaultTemplates.length === 0) {
+        setActiveCertificateTab('custom_certificates');
+      }
+
+      const landScapeCertificates = certificatesData.some((certificate) => certificate.orientation === 'landscape');
+      if (!landScapeCertificates && activeOrientation === 'landscape') {
+        setActiveOrientation('portrait');
+      }
+    }
+
     if (currentCertificateKey === 'none') {
       setSelectedCertificate(currentCertificateKey);
       return;
     }
 
-    const newCertificate = certificatesData.find(
-      (certificate) => certificate.key === (currentCertificateKey || 'default'),
-    );
+    const newCertificate = certificatesData.find((certificate) => certificate.key === currentCertificateKey);
     if (newCertificate) {
       if (activeOrientation !== newCertificate.orientation) {
         setActiveOrientation(newCertificate.orientation);
@@ -96,23 +102,23 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
   const handleTabChange = (tab: CertificateTabValue) => {
     setActiveCertificateTab(tab);
 
-    const hasLandScapeCertificatesForSelectedTab = certificatesData.some(
+    const landScapeCertificates = certificatesData.some(
       (certificate) =>
         certificate.orientation === 'landscape' &&
         (tab === 'templates' ? certificate.is_default : !certificate.is_default),
     );
 
-    const hasPortraitCertificatesForSelectedTab = certificatesData.some(
+    const portraitCertificates = certificatesData.some(
       (certificate) =>
         certificate.orientation === 'portrait' &&
         (tab === 'templates' ? certificate.is_default : !certificate.is_default),
     );
 
     setActiveOrientation((previousOrientation) => {
-      if (hasLandScapeCertificatesForSelectedTab && hasPortraitCertificatesForSelectedTab) {
+      if ((landScapeCertificates && portraitCertificates) || (!landScapeCertificates && !portraitCertificates)) {
         return previousOrientation;
       }
-      return hasLandScapeCertificatesForSelectedTab ? 'landscape' : 'portrait';
+      return landScapeCertificates ? 'landscape' : 'portrait';
     });
   };
 
@@ -125,6 +131,16 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
     setSelectedCertificate(certificateKey);
   };
 
+  const certificateTabs: CertificateTabItem[] = [
+    ...(defaultTemplates.length
+      ? ([{ label: __('Templates', 'tutor'), value: 'templates' }] as CertificateTabItem[])
+      : []),
+    {
+      label: __(`Custom ${CURRENT_VIEWPORT.isAboveSmallMobile ? ' Certificates' : ''}`, 'tutor'),
+      value: 'custom_certificates',
+    },
+  ];
+
   return (
     <Show when={isTutorPro && isCertificateAddonEnabled} fallback={<CertificateEmptyState />}>
       <Show when={isCertificateAddonEnabled}>
@@ -136,7 +152,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
             onChange={handleTabChange}
           />
           <div css={styles.orientation}>
-            <Show when={hasLandScapeCertificatesForActiveTab && hasPortraitCertificatesForActiveTab}>
+            <Show when={landScapeCertificates && portraitCertificates}>
               <Tooltip delay={200} content={__('Landscape', 'tutor')}>
                 <button
                   type="button"
@@ -180,11 +196,12 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
         <div
           css={styles.certificateWrapper({
             hasCertificates: filteredCertificatesData.length > 0,
-            activeCertificateTab,
             isSidebarVisible,
           })}
         >
-          <Show when={activeCertificateTab === 'templates'}>
+          <Show
+            when={certificatesData.length && (defaultTemplates.length === 0 || activeCertificateTab === 'templates')}
+          >
             <CertificateCard
               selectedCertificate={selectedCertificate}
               onSelectCertificate={handleCertificateSelection}
@@ -202,29 +219,27 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
           <Show
             when={filteredCertificatesData.length > 0}
             fallback={
-              <Show when={activeCertificateTab === 'custom_certificates'}>
-                <div css={styles.emptyState}>
-                  <img
-                    css={styles.placeholderImage({
-                      notFound: true,
-                    })}
-                    src={notFound}
-                    srcSet={`${notFound} 1x, ${notFound2x} 2x`}
-                    alt={__('Not Found', 'tutor')}
-                  />
+              <div css={styles.emptyState}>
+                <img
+                  css={styles.placeholderImage({
+                    notFound: true,
+                  })}
+                  src={notFound}
+                  srcSet={`${notFound} 1x, ${notFound2x} 2x`}
+                  alt={__('Not Found', 'tutor')}
+                />
 
-                  <div css={styles.featureAndActionWrapper}>
-                    <p
-                      css={css`
-                        ${typography.body('medium')}
-                        color: ${colorTokens.text.subdued};
-                      `}
-                    >
-                      {__('You didn’t create any certificate yet!', 'tutor')}
-                    </p>
-                  </div>
+                <div css={styles.featureAndActionWrapper}>
+                  <p
+                    css={css`
+                      ${typography.body('medium')}
+                      color: ${colorTokens.text.subdued};
+                    `}
+                  >
+                    {__('You didn’t create any certificate yet!', 'tutor')}
+                  </p>
                 </div>
-              </Show>
+              </div>
             }
           >
             <For each={filteredCertificatesData}>
@@ -258,11 +273,9 @@ const styles = {
   `,
   certificateWrapper: ({
     hasCertificates,
-    activeCertificateTab,
     isSidebarVisible,
   }: {
     hasCertificates: boolean;
-    activeCertificateTab: CertificateTabValue;
     isSidebarVisible: boolean;
   }) => css`
     display: grid;
@@ -271,7 +284,6 @@ const styles = {
     padding-top: ${spacing[12]};
 
     ${!hasCertificates &&
-    activeCertificateTab !== 'templates' &&
     css`
       grid-template-columns: 1fr;
       place-items: center;
