@@ -8,6 +8,7 @@ import {} from 'react-router-dom';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 import FormCategoriesInput from '@TutorShared/components/fields/FormCategoriesInput';
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
@@ -15,17 +16,18 @@ import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSelectUser, { type UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import FormTagsInput from '@TutorShared/components/fields/FormTagsInput';
 import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
-import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
 
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats, TutorRoles } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, headerHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useInstructorListQuery, useUserListQuery } from '@TutorShared/services/users';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
+
 import CoursePricing from './CoursePricing';
 
 const courseId = getCourseId();

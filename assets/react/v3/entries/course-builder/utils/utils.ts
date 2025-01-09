@@ -1,23 +1,16 @@
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { type Addons, VideoRegex } from '@TutorShared/config/constants';
 import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
-import type { PostStatus } from '@CourseBuilderServices/course';
-import type { ID } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
+import { tutorConfig } from '@TutorShared/config/config';
+import { VideoRegex } from '@TutorShared/config/constants';
+import { type ID } from '@TutorShared/utils/types';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get('course_id');
   return Number(courseId);
-};
-
-type Addon = `${Addons}`;
-
-export const isAddonEnabled = (addon: Addon) => {
-  return !!tutorConfig.addons_data.find((item) => item.base_name === addon)?.is_enabled;
 };
 
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
@@ -160,41 +153,6 @@ export const validateQuizQuestion = (
   }
 
   return true;
-};
-
-export const determinePostStatus = (postStatus: PostStatus, postVisibility: 'private' | 'password_protected') => {
-  if (postStatus === 'trash') {
-    return 'trash';
-  }
-
-  if (postVisibility === 'private') {
-    return 'private';
-  }
-
-  if (postStatus === 'future') {
-    return 'future';
-  }
-
-  if (postVisibility === 'password_protected' && postStatus !== 'draft') {
-    return 'publish';
-  }
-
-  return postStatus;
-};
-
-export const convertToSlug = (value: string): string => {
-  return value
-    .normalize('NFKD') // Normalize accented characters into base forms + diacritics
-    .replace(/[\u0300-\u036f]/g, '') // Remove combining diacritical marks
-    .toLowerCase()
-    .replace(
-      // eslint-disable-next-line no-misleading-character-class
-      /[^a-z0-9\u0020-\u007F\u00A0-\u00FF\u0100-\u017F\u0180-\u024F\u0370-\u03FF\u0400-\u04FF\u0590-\u05FF\u0600-\u06FF\u0750-\u077F\u0900-\u097F\u0E00-\u0E7F\u0B80-\u0BFF\u10A0-\u10FF\u0530-\u058F\u0980-\u09FF\u4E00-\u9FFF\u3000-\u303F\uAC00-\uD7AF\s-]/g,
-      '',
-    ) // Retain letters and combining marks
-    .replace(/\s+/g, '-') // Replace spaces with dashes
-    .replace(/-+/g, '-') // Replace multiple dashes with a single one
-    .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
 };
 
 export const getIdWithoutPrefix = (prefix: string, id: ID) => {

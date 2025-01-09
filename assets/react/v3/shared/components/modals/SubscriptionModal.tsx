@@ -22,14 +22,15 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
-import { SubscriptionEmptyState } from '@CourseBuilderComponents/subscription/SubscriptionEmptyState';
-import SubscriptionItem from '@CourseBuilderComponents/subscription/SubscriptionItem';
+import { SubscriptionEmptyState } from '@TutorShared/components/subscription/SubscriptionEmptyState';
+import SubscriptionItem from '@TutorShared/components/subscription/SubscriptionItem';
 
-import { CURRENT_VIEWPORT } from '@/v3/shared/config/constants';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
   type Subscription,
   type SubscriptionFormData,
@@ -38,14 +39,14 @@ import {
   defaultSubscriptionFormData,
   useSaveCourseSubscriptionMutation,
   useSortCourseSubscriptionsMutation,
-} from '@CourseBuilderServices/subscription';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+} from '@TutorShared/services/subscription';
 import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
 import { isDefined } from '@TutorShared/utils/types';
 import { moveTo, nanoid, noop } from '@TutorShared/utils/util';
 
 interface SubscriptionModalProps extends ModalProps {
+  courseId: number;
+  isBundle?: boolean;
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
   expandedSubscriptionId?: string;
   createEmptySubscriptionOnMount?: boolean;
@@ -53,9 +54,9 @@ interface SubscriptionModalProps extends ModalProps {
 
 export type SubscriptionFormDataWithSaved = SubscriptionFormData & { isSaved: boolean };
 
-const courseId = getCourseId();
-
 export default function SubscriptionModal({
+  courseId,
+  isBundle = false,
   title,
   subtitle,
   icon,
@@ -144,6 +145,7 @@ export default function SubscriptionModal({
           ...values,
           id: values.isSaved ? values.id : '0',
           assign_id: String(courseId),
+          plan_type: isBundle ? 'bundle' : 'course',
         });
         const response = await saveSubscriptionMutation.mutateAsync(payload);
 
@@ -267,6 +269,7 @@ export default function SubscriptionModal({
                           <SubscriptionItem
                             key={subscription.id}
                             id={subscription.id}
+                            courseId={courseId}
                             toggleCollapse={(id) => {
                               setExpandedSubscriptionId((previous) => (previous === id ? '' : id));
                             }}
@@ -290,6 +293,7 @@ export default function SubscriptionModal({
                           return (
                             <SubscriptionItem
                               id={id}
+                              courseId={courseId}
                               toggleCollapse={noop}
                               bgLight
                               onDiscard={noop}

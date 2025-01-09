@@ -6,9 +6,9 @@ import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput'
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useMagicFillImageMutation, useStoreAIGeneratedImageMutation } from '@CourseBuilderServices/magic-ai';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useMagicFillImageMutation, useStoreAIGeneratedImageMutation } from '@TutorShared/services/magic-ai';
 import { downloadBase64Image, getCanvas, getImageData } from '@TutorShared/utils/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { nanoid } from '@TutorShared/utils/util';

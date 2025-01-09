@@ -7,9 +7,9 @@ import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
 
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
 import { PaymentProvider } from '../contexts/payment-context';
-import { LoadingSection } from '@/v3/shared/atoms/LoadingSpinner';
 const PaymentSettings = lazy(() => import('./PaymentSettings'));
 
 function App() {

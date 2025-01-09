@@ -19,7 +19,7 @@ export interface FormControllerProps<ValueType> {
 }
 
 export interface AnyObject {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [x: string]: any;
 }
 

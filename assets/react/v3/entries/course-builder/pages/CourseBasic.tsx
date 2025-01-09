@@ -4,18 +4,13 @@ import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias';
-import FormInput from '@TutorShared/components/fields/FormInput';
-import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import CourseBasicSidebar from '@CourseBuilderComponents/course-basic/CourseBasicSidebar';
 import CourseSettings from '@CourseBuilderComponents/course-basic/CourseSettings';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
+import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -23,8 +18,14 @@ import {
   useUnlinkPageBuilder,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
-import { convertToSlug, determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { determinePostStatus, convertToSlug } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
@@ -216,35 +217,6 @@ const styles = {
     ${Breakpoint.smallTablet} {
       margin-top: 0;
     }
-  `,
-  editorsButtonWrapper: css`
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: ${spacing[10]};
-    gap: ${spacing[8]};
-
-    * {
-      flex-shrink: 0;
-      margin-right: ${spacing[8]};
-    }
-  `,
-  descriptionWrapper: css`
-    ${styleUtils.display.flex('column')};
-    gap: ${spacing[6]};
-  `,
-  descriptionLabel: css`
-    ${typography.body('medium')};
-    color: ${colorTokens.text.title};
-  `,
-  editorWrapper: css`
-    position: relative;
-  `,
-  editorOverlay: css`
-    height: 360px;
-    ${styleUtils.flexCenter()};
-    background-color: ${colorTokens.bg.gray20};
-    border-radius: ${borderRadius.card};
   `,
   statusAndDate: css`
     ${styleUtils.display.flex('column')};

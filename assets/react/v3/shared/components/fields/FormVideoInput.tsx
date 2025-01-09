@@ -9,12 +9,7 @@ import ImageInput from '@TutorShared/atoms/ImageInput';
 import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import config, { tutorConfig } from '@TutorShared/config/config';
-import { VideoRegex, isRTL } from '@TutorShared/config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
-import { type TutorMutationResponse, useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
+import { useGetYouTubeVideoDuration } from '@CourseBuilderServices/course';
 import {
   convertYouTubeDurationToSeconds,
   covertSecondsToHMS,
@@ -22,15 +17,20 @@ import {
   getExternalVideoDuration,
   getVimeoVideoDuration,
 } from '@CourseBuilderUtils/utils';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { VideoRegex, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
 import { requiredRule } from '@TutorShared/utils/validation';
 
-import type { IconCollection } from '../../utils/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';

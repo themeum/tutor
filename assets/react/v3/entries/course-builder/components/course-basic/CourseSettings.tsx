@@ -10,6 +10,9 @@ import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
+import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
@@ -18,10 +21,8 @@ import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import type { Option } from '@TutorShared/utils/types';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 
 const courseId = getCourseId();
 

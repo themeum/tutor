@@ -5,16 +5,21 @@ import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import SubscriptionModal from '@CourseBuilderComponents/modals/SubscriptionModal';
-import { PreviewItem } from '@CourseBuilderComponents/subscription/PreviewItem';
+import SubscriptionModal from '@TutorShared/components/modals/SubscriptionModal';
+import { PreviewItem } from '@TutorShared/components/subscription/PreviewItem';
 
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@CourseBuilderServices/subscription';
+import { convertSubscriptionToFormData, useCourseSubscriptionsQuery } from '@TutorShared/services/subscription';
 
-function SubscriptionPreview({ courseId }: { courseId: number }) {
+interface SubscriptionPreviewProps {
+  courseId: number;
+  isBundle?: boolean;
+}
+
+function SubscriptionPreview({ courseId, isBundle = false }: SubscriptionPreviewProps) {
   const courseSubscriptionsQuery = useCourseSubscriptionsQuery(courseId);
   const { showModal } = useModal();
 
@@ -31,9 +36,7 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
   return (
     <div css={styles.outer}>
       <Show when={subscriptions.length > 0}>
-        <div css={styles.header}>
-          <p>{__('Subscriptions', 'tutor')}</p>
-        </div>
+        <div css={styles.header}>{__('Subscriptions', 'tutor')}</div>
       </Show>
 
       <div
@@ -43,7 +46,12 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
       >
         <For each={subscriptions}>
           {(subscription, index) => (
-            <PreviewItem key={index} subscription={convertSubscriptionToFormData(subscription)} />
+            <PreviewItem
+              key={index}
+              subscription={convertSubscriptionToFormData(subscription)}
+              courseId={courseId}
+              isBundle={isBundle}
+            />
           )}
         </For>
 
@@ -62,6 +70,8 @@ function SubscriptionPreview({ courseId }: { courseId: number }) {
                   title: __('Manage Subscription Plans', 'tutor'),
                   icon: <SVGIcon name="dollar-recurring" width={24} height={24} />,
                   createEmptySubscriptionOnMount: true,
+                  courseId,
+                  isBundle,
                 },
               });
             }}

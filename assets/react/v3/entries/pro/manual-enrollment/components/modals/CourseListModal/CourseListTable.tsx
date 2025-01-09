@@ -1,17 +1,16 @@
+import { type Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import Button from '@TutorShared/atoms/Button';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { type Course, useCurseListQuery } from '@EnrollmentServices/enrollment';
+import Show from '@TutorShared/controls/Show';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
 import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import SearchField from './SearchField';
-import coursePlaceholder from '@SharedImages/course-placeholder.png';
-import Show from '@TutorShared/controls/Show';
 
 interface CourseListTableProps {
   onSelectClick: (item: Course) => void;

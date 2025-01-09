@@ -1,16 +1,18 @@
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import type { UseFormReturn } from 'react-hook-form';
+
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
+
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
-import Paginator from '@TutorShared/molecules/Paginator';
-import Table, { type Column } from '@TutorShared/molecules/Table';
-import { css } from '@emotion/react';
-
 import { type Course, useCourseCategoryQuery } from '@TutorShared/services/course_category';
+
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
-import { __, sprintf } from '@wordpress/i18n';
-import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 
 interface CourseListTableProps {

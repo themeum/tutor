@@ -1,5 +1,5 @@
-import { wpAjaxInstance } from '@/v3/shared/utils/api';
-import endpoints from '@/v3/shared/utils/endpoints';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
 import { useQuery } from '@tanstack/react-query';
 
 export enum EUTaxRegistrationTypes {

@@ -8,11 +8,11 @@ import FormInputWithContent from '@TutorShared/components/fields/FormInputWithCo
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
+import type { SubscriptionFormDataWithSaved } from '@TutorShared/components/modals/SubscriptionModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
 

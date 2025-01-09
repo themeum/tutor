@@ -115,6 +115,11 @@ const endpoints = {
   SAVE_MEMBERSHIP_PLAN: 'tutor_membership_plan_save',
   DUPLICATE_MEMBERSHIP_PLAN: 'tutor_membership_plan_duplicate',
   DELETE_MEMBERSHIP_PLAN: 'tutor_membership_plan_delete',
+
+  // COURSE BUNDLE
+  GET_BUNDLE_DETAILS: 'tutor_get_course_bundle_data',
+  UPDATE_BUNDLE: 'tutor_create_course_bundle',
+  ADD_COURSE_TO_BUNDLE: 'tutor_add_course_to_bundle',
 };
 
 export default endpoints;

@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
 
-import type { QuizContent } from '@CourseBuilderServices/magic-ai';
+import type { QuizContent } from '@TutorShared/services/magic-ai';
 import { isDefined } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 

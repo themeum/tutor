@@ -16,16 +16,16 @@ import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@T
 import { typography } from '@TutorShared/config/typography';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
+import { type ZoomMeeting, type ZoomMeetingFormData, useSaveZoomMeetingMutation } from '@CourseBuilderServices/course';
+import { useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import Show from '@TutorShared/controls/Show';
-import { type ZoomMeeting, type ZoomMeetingFormData, useSaveZoomMeetingMutation } from '@CourseBuilderServices/course';
-import { type ID, useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isDefined } from '@TutorShared/utils/types';
+import { type ID, isDefined } from '@TutorShared/utils/types';
 import { invalidTimeRule } from '@TutorShared/utils/validation';
 
 interface ZoomMeetingFormProps {
@@ -100,7 +100,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(currentMeeting)) {
       meetingForm.reset({
@@ -124,6 +123,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMeeting]);
 
   return (
