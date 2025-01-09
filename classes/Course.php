@@ -1313,8 +1313,8 @@ class Course extends Tutor_Base {
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
 			'instructor_can_publish_course',
-			'instructor_can_change_author',
-			'instructor_can_modify_instructors',
+			'instructor_can_change_course_author',
+			'instructor_can_manage_co_instructors',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
