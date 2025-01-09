@@ -13,16 +13,17 @@ import FormInputWithContent from '@TutorShared/components/fields/FormInputWithCo
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 
+import { type ContentType, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
+import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
 import Checkbox from '@TutorShared/atoms/CheckBox';
 import { DateFormats } from '@TutorShared/config/constants';
 import { colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { type ContentType, type ID, useGetH5PLessonContentsQuery } from '@CourseBuilderServices/curriculum';
-import { type H5PContent, useGetH5PQuizContentsQuery } from '@CourseBuilderServices/quiz';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
 
 interface H5PContentListModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;

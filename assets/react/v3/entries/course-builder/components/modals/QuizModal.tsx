@@ -36,11 +36,11 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
-import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
+import type { ContentType } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { isDefined } from '@TutorShared/utils/types';
+import { type ID, isDefined } from '@TutorShared/utils/types';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;

@@ -30,11 +30,9 @@ interface FormAnswerExplanationProps extends FormControllerProps<string | null> 
 
 const FormAnswerExplanation = ({
   label,
-  maxLimit,
   field,
   fieldState,
   disabled,
-  readOnly,
   loading,
   placeholder,
   helpText,
@@ -102,7 +100,7 @@ const FormAnswerExplanation = ({
           </Show>
           <Show when={!isEdit}>
             <div
-              onClick={(e) => {
+              onClick={() => {
                 if (!isEdit && !disabled) {
                   setIsEdit(true);
                 }

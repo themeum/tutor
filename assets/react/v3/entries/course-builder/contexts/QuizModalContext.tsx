@@ -2,8 +2,9 @@ import type React from 'react';
 import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
+import type { ContentType } from '@CourseBuilderServices/curriculum';
 import type { QuizForm, QuizQuestion } from '@CourseBuilderServices/quiz';
+import { type ID } from '@TutorShared/utils/types';
 
 export type QuizValidationErrorType = 'question' | 'quiz' | 'correct_option' | 'add_option' | 'save_option';
 

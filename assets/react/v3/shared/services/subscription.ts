@@ -1,21 +1,23 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import type { AxiosResponse } from 'axios';
+import { format } from 'date-fns';
+
 import { useToast } from '@TutorShared/atoms/Toast';
 import { DateFormats } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
+import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { AxiosResponse } from 'axios';
-import { format } from 'date-fns';
-import type { TutorMutationResponse } from './course';
-import type { ID } from './curriculum';
 
 export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
+type PlanType = 'course' | 'bundle' | 'category' | 'full_site';
+type PaymentType = 'onetime' | 'recurring';
 
 export type Subscription = {
   id: string;
-  payment_type: 'onetime' | 'recurring';
-  plan_type: 'course' | 'category' | 'full_site';
+  payment_type: PaymentType;
+  plan_type: PlanType;
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value: string;
@@ -136,8 +138,8 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
 
 export type SubscriptionPayload = {
   id?: string; // only for update
-  payment_type: 'onetime' | 'recurring';
-  plan_type: 'course' | 'category' | 'full_site';
+  payment_type: PaymentType;
+  plan_type: PlanType;
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value?: string;

@@ -22,16 +22,16 @@ import { typography } from '@TutorShared/config/typography';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
 
-import Show from '@TutorShared/controls/Show';
 import {
   type GoogleMeet,
   type GoogleMeetMeetingFormData,
   useSaveGoogleMeetMutation,
 } from '@CourseBuilderServices/course';
-import { type ID, useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curriculum';
+import { useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isDefined } from '@TutorShared/utils/types';
+import { type ID, isDefined } from '@TutorShared/utils/types';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
 interface GoogleMeetFormProps {
@@ -109,7 +109,6 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(currentMeeting)) {
       meetingForm.reset({
@@ -139,6 +138,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMeeting]);
 
   return (

@@ -10,17 +10,17 @@ import MagicButton from '@TutorShared/atoms/MagicButton';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 
+import { useSaveAIGeneratedCourseContentMutation } from '@TutorShared/services/magic-ai';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import { Addons, isRTL } from '@TutorShared/config/constants';
 import { Breakpoint, borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { useSaveAIGeneratedCourseContentMutation } from '@CourseBuilderServices/magic-ai';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { getObjectKeys, getObjectValues } from '@TutorShared/utils/util';
+import { getObjectKeys, getObjectValues, isAddonEnabled } from '@TutorShared/utils/util';
 
 import { useGenerateCourseContent } from '../../hooks/useGenerateCourseContent';
 import ContentAccordion from './ContentAccordion';

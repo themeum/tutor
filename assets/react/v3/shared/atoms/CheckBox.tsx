@@ -2,7 +2,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { nanoid } from '@TutorShared/utils/util';
 import { css, type SerializedStyles } from '@emotion/react';
-import React, { ReactNode, type ChangeEvent, type FocusEventHandler } from 'react';
+import React, { type ChangeEvent, type FocusEventHandler, type ReactNode } from 'react';
 
 interface CheckboxProps {
   id?: string;
@@ -39,7 +39,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
   };
 
   return (
-    <label htmlFor={id} css={[styles.container, labelCss]}>
+    <label htmlFor={id} css={[styles.container({ disabled }), labelCss]}>
       <input
         ref={ref}
         id={id}
@@ -60,13 +60,18 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
 });
 
 const styles = {
-  container: css`
+  container: ({ disabled = false }) => css`
     position: relative;
     display: flex;
     align-items: center;
     cursor: pointer;
     user-select: none;
     color: ${colorTokens.text.title};
+
+    ${disabled &&
+    css`
+      cursor: not-allowed;
+    `}
   `,
   label: css`
     ${typography.caption()};
@@ -132,6 +137,13 @@ const styles = {
         background-position: center center;
         background-color: ${colorTokens.brand.blue};
         border: 0.5px solid ${colorTokens.stroke.white};
+      }
+    `}
+
+    ${disabled &&
+    css`
+      & + span {
+        cursor: not-allowed;
       }
     `}
 

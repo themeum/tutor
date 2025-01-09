@@ -15,13 +15,13 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 
+import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import config, { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { noop } from '@TutorShared/utils/util';
+import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 import GoogleMeetForm from './meeting/GoogleMeetForm';

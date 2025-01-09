@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { convertToSlug } from '@/v3/entries/course-builder/utils/utils';
 import { borderRadius, Breakpoint, colorTokens, fontSize, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
+import { convertToSlug } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -60,6 +60,7 @@ const FormEditableAlias = ({ field, fieldState, label = '', baseURL, onChange }:
                   <div css={styles.editWrapper}>
                     <input
                       {...inputProps}
+                      className="tutor-input-field"
                       css={styles.editable}
                       type="text"
                       value={editValue}
@@ -171,19 +172,23 @@ const styles = {
     width: fit-content;
   `,
   editable: css`
-    ${typography.caption()}
-    background: ${colorTokens.background.white};
-    width: 208px;
-    height: 32px;
-    border: 1px solid ${colorTokens.stroke.default};
-    padding: ${spacing[8]} ${spacing[12]};
-    border-radius: ${borderRadius[6]};
-    margin-right: ${spacing[8]};
-    outline: none;
-    border: 1px solid ${colorTokens.stroke.default};
+    &.tutor-input-field {
+      ${typography.caption()}
+      background: ${colorTokens.background.white};
+      width: 208px;
+      height: 32px;
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: ${spacing[8]} ${spacing[12]};
+      border-radius: ${borderRadius.input};
+      margin-right: ${spacing[8]};
+      outline: none;
 
-    :focus {
-      ${styleUtils.inputFocus}
+      &:focus {
+        border-color: ${colorTokens.stroke.default};
+        box-shadow: none;
+        outline: 2px solid ${colorTokens.stroke.brand};
+        outline-offset: 1px;
+      }
     }
   `,
   saveBtn: css`

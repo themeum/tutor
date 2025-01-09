@@ -4,16 +4,17 @@ import { __ } from '@wordpress/i18n';
 import Button from '@TutorShared/atoms/Button';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 
-import { tutorConfig } from '@TutorShared/config/config';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-interface ExitCourseBuilderModalProps {
+interface LeaveWithoutSavingModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
+  redirectUrl: string;
+  message?: string;
 }
 
-const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => {
+const LeaveWithoutSavingModal = ({ closeModal, message, redirectUrl }: LeaveWithoutSavingModalProps) => {
   return (
     <BasicModalWrapper
       onClose={() => closeModal({ action: 'CLOSE' })}
@@ -22,7 +23,7 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
     >
       <div css={styles.wrapper}>
         <p css={styles.message}>
-          {__('You’re about to leave the course creation process without saving your changes.', 'tutor')}
+          {message || __('You have unsaved changes. Are you sure you want to exit without saving?', 'tutor')}
         </p>
         <div css={styles.formFooter}>
           <Button
@@ -40,11 +41,8 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
             variant="danger"
             size="small"
             onClick={() => {
-              const isFormWpAdmin = window.location.href.includes('wp-admin');
-
-              window.location.href = isFormWpAdmin
-                ? tutorConfig.backend_course_list_url
-                : tutorConfig.frontend_course_list_url;
+              closeModal({ action: 'CONFIRM' });
+              window.location.href = redirectUrl;
             }}
           >
             {__('Yes, exit without saving', 'tutor')}
@@ -55,7 +53,7 @@ const ExitCourseBuilderModal = ({ closeModal }: ExitCourseBuilderModalProps) => 
   );
 };
 
-export default ExitCourseBuilderModal;
+export default LeaveWithoutSavingModal;
 
 const styles = {
   wrapper: css`

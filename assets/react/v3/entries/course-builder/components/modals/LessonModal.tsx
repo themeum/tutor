@@ -22,25 +22,25 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, CURRENT_VIEWPORT, TutorRoles } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
-  type ID,
   convertLessonDataToPayload,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
 import type { H5PContent } from '@CourseBuilderServices/quiz';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT, TutorRoles } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { normalizeLineEndings } from '@TutorShared/utils/util';
+import { type ID } from '@TutorShared/utils/types';
+import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 

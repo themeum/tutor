@@ -8,15 +8,14 @@ import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput'
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
-import type { ID } from '@CourseBuilderServices/curriculum';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import type { Tag } from '@TutorShared/services/tags';
 import type { InstructorListResponse, User } from '@TutorShared/services/users';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
+import { type ID, type TutorCategory, type TutorMutationResponse, type WPPostStatus } from '@TutorShared/utils/types';
+import { convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -30,14 +29,13 @@ export type ContentDripType =
   | '';
 export type PricingType = 'free' | 'paid';
 export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
-export type PostStatus = 'publish' | 'private' | 'draft' | 'future' | 'pending' | 'trash';
 
 export interface CourseFormData {
   post_date: string;
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: PostStatus;
+  post_status: WPPostStatus;
   visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
@@ -277,18 +275,7 @@ export interface CourseDetailsResponse {
   page_template: string;
   post_category: unknown[];
   tags_input: unknown[];
-  course_categories: {
-    term_id: number;
-    name: string;
-    slug: string;
-    term_group: number;
-    term_taxonomy_id: number;
-    taxonomy: string;
-    description: string;
-    parent: number;
-    count: number;
-    filter: string;
-  }[];
+  course_categories: TutorCategory[];
   course_tags: {
     term_id: number;
     name: string;
@@ -630,12 +617,6 @@ const createCourse = (payload: CoursePayload) => {
   return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.CREATED_COURSE, payload);
 };
 
-export interface TutorMutationResponse<T> {
-  data: T;
-  message: string;
-  status_code: number;
-}
-
 interface TutorDeleteResponse {
   data: {
     message: string;
@@ -898,32 +879,6 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
       queryClient.invalidateQueries({
         queryKey: ['Topic', Number(courseId)],
       });
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: convertToErrorMessage(error) });
-    },
-  });
-};
-
-const saveOpenAiSettingsKey = (payload: { chatgpt_api_key: string; chatgpt_enable: 1 | 0 }) => {
-  return wpAjaxInstance.post<
-    {
-      chatgpt_api_key: string;
-      chatgpt_enable: 'on' | 'off';
-    },
-    TutorMutationResponse<null>
-  >(endpoints.OPEN_AI_SAVE_SETTINGS, {
-    ...payload,
-  });
-};
-
-export const useSaveOpenAiSettingsMutation = () => {
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: saveOpenAiSettingsKey,
-    onSuccess: (response) => {
-      showToast({ type: 'success', message: __(response.message, 'tutor') });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });

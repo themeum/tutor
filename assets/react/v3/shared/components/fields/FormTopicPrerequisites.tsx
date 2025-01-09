@@ -6,16 +6,17 @@ import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import EmptyState from '@TutorShared/molecules/EmptyState';
 
+import type { Content, CourseTopic } from '@CourseBuilderServices/curriculum';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import type { Content, CourseTopic, ID } from '@CourseBuilderServices/curriculum';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
 import notFound2x from '@SharedImages/not-found-2x.webp';

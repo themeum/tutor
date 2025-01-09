@@ -3,12 +3,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@TutorShared/atoms/Toast';
 import type { StyleType } from '@TutorShared/components/magic-ai-image/ImageContext';
 
-import type { ChatFormat, ChatLanguage, ChatTone } from '@TutorShared/config/magic-ai';
 import type { TopicContent } from '@CourseBuilderComponents/ai-course-modal/ContentGenerationContext';
+import type { ChatFormat, ChatLanguage, ChatTone } from '@TutorShared/config/magic-ai';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import type { Prettify, WPResponse } from '@TutorShared/utils/types';
+import type { Prettify, TutorMutationResponse, WPResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ImagePayload {
@@ -267,6 +267,32 @@ export const useGenerateQuizQuestionsMutation = () => {
   const { showToast } = useToast();
   return useMutation({
     mutationFn: generateQuizQuestions,
+    onError: (error: ErrorResponse) => {
+      showToast({ type: 'danger', message: convertToErrorMessage(error) });
+    },
+  });
+};
+
+const saveOpenAiSettingsKey = (payload: { chatgpt_api_key: string; chatgpt_enable: 1 | 0 }) => {
+  return wpAjaxInstance.post<
+    {
+      chatgpt_api_key: string;
+      chatgpt_enable: 'on' | 'off';
+    },
+    TutorMutationResponse<null>
+  >(endpoints.OPEN_AI_SAVE_SETTINGS, {
+    ...payload,
+  });
+};
+
+export const useSaveOpenAiSettingsMutation = () => {
+  const { showToast } = useToast();
+
+  return useMutation({
+    mutationFn: saveOpenAiSettingsKey,
+    onSuccess: (response) => {
+      showToast({ type: 'success', message: response.message });
+    },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },

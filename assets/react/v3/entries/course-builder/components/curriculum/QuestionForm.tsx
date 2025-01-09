@@ -5,9 +5,9 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 import Alert from '@TutorShared/atoms/Alert';
 
-import FormAnswerExplanation from '@TutorShared/components/fields/FormAnswerExplanation';
-import FormQuestionDescription from '@TutorShared/components/fields/FormQuestionDescription';
-import FormQuestionTitle from '@TutorShared/components/fields/FormQuestionTitle';
+import FormAnswerExplanation from '@CourseBuilderComponents/fields/FormAnswerExplanation';
+import FormQuestionDescription from '@CourseBuilderComponents/fields/FormQuestionDescription';
+import FormQuestionTitle from '@CourseBuilderComponents/fields/FormQuestionTitle';
 
 import FillInTheBlanks from '@CourseBuilderComponents/curriculum/question-types/FillinTheBlanks';
 import ImageAnswering from '@CourseBuilderComponents/curriculum/question-types/ImageAnswering';
@@ -17,16 +17,16 @@ import OpenEndedAndShortAnswer from '@CourseBuilderComponents/curriculum/questio
 import TrueFalse from '@CourseBuilderComponents/curriculum/question-types/TrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
 import {
   calculateQuizDataStatus,
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionType,
 } from '@CourseBuilderServices/quiz';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { usePrevious } from '@TutorShared/hooks/usePrevious';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 

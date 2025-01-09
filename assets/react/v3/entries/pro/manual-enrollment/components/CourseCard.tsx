@@ -1,9 +1,9 @@
-import Show from '@/v3/shared/controls/Show';
+import type { Course } from '@EnrollmentServices/enrollment';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import type { Course } from '@EnrollmentServices/enrollment';
+import Show from '@TutorShared/controls/Show';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 

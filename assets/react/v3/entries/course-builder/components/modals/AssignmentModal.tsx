@@ -18,23 +18,23 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
+import type { ContentDripType } from '@CourseBuilderServices/course';
+import {
+  type CourseTopic,
+  convertAssignmentDataToPayload,
+  useAssignmentDetailsQuery,
+  useSaveAssignmentMutation,
+} from '@CourseBuilderServices/curriculum';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { ContentDripType } from '@CourseBuilderServices/course';
-import {
-  type CourseTopic,
-  type ID,
-  convertAssignmentDataToPayload,
-  useAssignmentDetailsQuery,
-  useSaveAssignmentMutation,
-} from '@CourseBuilderServices/curriculum';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
-import { normalizeLineEndings } from '@TutorShared/utils/util';
+import { type ID } from '@TutorShared/utils/types';
+import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {

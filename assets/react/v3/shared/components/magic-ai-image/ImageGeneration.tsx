@@ -6,7 +6,7 @@ import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { useMagicImageGenerationMutation } from '@CourseBuilderServices/magic-ai';
+import { useMagicImageGenerationMutation } from '@TutorShared/services/magic-ai';
 
 import threeD from '@SharedImages/ai-types/3d.png';
 import blackAndWhite from '@SharedImages/ai-types/black-and-white.png';

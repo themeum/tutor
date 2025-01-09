@@ -1,4 +1,5 @@
-import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
+import { Box, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
@@ -7,19 +8,18 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
-import CouponSelectItemModal from '@CouponComponents/modals/CourseListModal';
 
-import { typography } from '@TutorShared/config/typography';
 import type { Coupon } from '@CouponServices/coupon';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
+import { Addons } from '@TutorShared/config/constants';
+import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 import type { ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
-import { Addons } from '@TutorShared/config/constants';
 
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
 const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);

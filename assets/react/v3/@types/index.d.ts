@@ -7,10 +7,13 @@ declare module '*.jpeg';
 declare module '*.jpg';
 
 declare global {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wp: any;
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wp: any;
     ajaxurl: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tinymce: any;
     _tutorobject: {
       ajaxurl: string;
@@ -28,7 +31,9 @@ declare global {
       enable_lesson_classic_editor: string;
       tutor_frontend_dashboard_url: string;
       backend_course_list_url: string;
+      backend_bundle_list_url: string;
       frontend_course_list_url: string;
+      frontend_bundle_list_url: string;
       wp_date_format: string;
       wp_rest_nonce: string;
       is_admin: string;

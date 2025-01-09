@@ -15,19 +15,19 @@ import { useEffect, useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-form';
 
-import FormTrueFalse from '@TutorShared/components/fields/quiz/FormTrueFalse';
+import FormTrueFalse from '@CourseBuilderComponents/fields/quiz/FormTrueFalse';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import For from '@TutorShared/controls/For';
-import Show from '@TutorShared/controls/Show';
 import {
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
@@ -80,7 +80,6 @@ const TrueFalse = () => {
     replaceOption(updatedOptions);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     const changedOptions = currentOptions.filter((option) => {
       const index = optionsFields.findIndex((item) => item.answer_id === option.answer_id);
@@ -110,6 +109,7 @@ const TrueFalse = () => {
     }
 
     form.setValue(`questions.${activeQuestionIndex}.question_answers`, updatedOptions);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentOptions]);
 
   return (

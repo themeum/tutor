@@ -27,24 +27,24 @@ import Topic from '@CourseBuilderComponents/curriculum/Topic';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 
-import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import For from '@TutorShared/controls/For';
-import Show from '@TutorShared/controls/Show';
 import {
   type Content,
   type CourseContentOrderPayload,
   type CourseTopic,
-  type ID,
   useCourseTopicQuery,
   useUpdateCourseContentOrderMutation,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { droppableMeasuringStrategy } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { moveTo, nanoid } from '@TutorShared/utils/util';
 
 import curriculumEmptyState2x from '@SharedImages/curriculum-empty-state-2x.webp';
 import curriculumEmptyState from '@SharedImages/curriculum-empty-state.webp';
+import { type ID } from '@TutorShared/utils/types';
 import TopicDragOverlay from '../components/curriculum/TopicDragOverlay';
 
 const courseId = getCourseId();

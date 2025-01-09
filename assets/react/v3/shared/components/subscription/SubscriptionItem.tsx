@@ -6,6 +6,7 @@ import { __, sprintf } from '@wordpress/i18n';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
@@ -15,30 +16,28 @@ import FormInput from '@TutorShared/components/fields/FormInput';
 import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
 import FormInputWithPresets from '@TutorShared/components/fields/FormInputWithPresets';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import type { SubscriptionFormDataWithSaved } from '@TutorShared/components/modals/SubscriptionModal';
+import { OfferSalePrice } from '@TutorShared/components/subscription/OfferSalePrice';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import {
   useDeleteCourseSubscriptionMutation,
   useDuplicateCourseSubscriptionMutation,
-} from '@CourseBuilderServices/subscription';
-import { getCourseId } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
+} from '@TutorShared/services/subscription';
 
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { ID } from '@TutorShared/utils/types';
 import { isDefined } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 
-import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
-import type { SubscriptionFormDataWithSaved } from '@CourseBuilderComponents/modals/SubscriptionModal';
-import type { ID } from '@CourseBuilderServices/curriculum';
-import { OfferSalePrice } from './OfferSalePrice';
-
 interface SubscriptionItemProps {
+  courseId: number;
   id: ID;
   toggleCollapse: (id: string) => void;
   bgLight?: boolean;
@@ -49,10 +48,10 @@ interface SubscriptionItemProps {
 
 const SET_FOCUS_AFTER = 100; // this is hack to fix layout shifting while animating.
 
-const courseId = getCourseId();
 const { tutor_currency } = tutorConfig;
 
 export default function SubscriptionItem({
+  courseId,
   id,
   toggleCollapse,
   bgLight = false,

@@ -29,13 +29,13 @@ import {
 import { borderRadius, colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import {
   type ModificationType,
   useMagicTextGenerationMutation,
   useModifyContentMutation,
-} from '@CourseBuilderServices/magic-ai';
-import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+} from '@TutorShared/services/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { copyToClipboard } from '@TutorShared/utils/util';
 

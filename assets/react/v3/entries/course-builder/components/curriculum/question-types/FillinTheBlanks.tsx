@@ -1,10 +1,10 @@
 import { css } from '@emotion/react';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import FormFillInTheBlanks from '@TutorShared/components/fields/quiz/FormFillinTheBlanks';
-import { spacing } from '@TutorShared/config/styles';
+import FormFillInTheBlanks from '@CourseBuilderComponents/fields/quiz/FormFillinTheBlanks';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
+import { spacing } from '@TutorShared/config/styles';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 const FillInTheBlanks = () => {

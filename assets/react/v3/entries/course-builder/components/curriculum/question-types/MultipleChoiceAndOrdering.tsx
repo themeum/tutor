@@ -19,18 +19,18 @@ import { Controller, useFieldArray, useFormContext, useWatch } from 'react-hook-
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormMultipleChoiceAndOrdering from '@TutorShared/components/fields/quiz/FormMultipleChoiceAndOrdering';
+import FormMultipleChoiceAndOrdering from '@CourseBuilderComponents/fields/quiz/FormMultipleChoiceAndOrdering';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import For from '@TutorShared/controls/For';
-import Show from '@TutorShared/controls/Show';
 import {
   QuizDataStatus,
   type QuizForm,
   type QuizQuestionOption,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
