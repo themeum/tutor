@@ -13,6 +13,7 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import InstallationPopover from './InstallationPopover';
 import Popover from '@TutorShared/molecules/Popover';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import SettingsPopover from './SettingsPopover';
 
 function AddonCard({ addon }: { addon: Addon }) {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -23,7 +24,7 @@ function AddonCard({ addon }: { addon: Addon }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPluginInstalled, setIsPluginInstalled] = useState(false);
 
-  const [isChecked, setIsChecked] = useState(!!addon.is_enabled);
+  const [isChecked, setIsChecked] = useState(!!addon.is_enabled && !addon.required_settings);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   const enableDisableAddon = useEnableDisableAddon();
@@ -81,27 +82,18 @@ function AddonCard({ addon }: { addon: Addon }) {
               </Tooltip>
             }
           >
-            <Show
-              when={addon.required_settings}
-              fallback={
-                <Switch
-                  size="small"
-                  checked={isChecked}
-                  onChange={(checked) => {
-                    if (addon.plugins_required?.length && !isPluginInstalled) {
-                      setIsOpen(true);
-                    } else {
-                      handleAddonChange(checked);
-                    }
-                  }}
-                  disabled={enableDisableAddon.isPending}
-                />
-              }
-            >
-              <Tooltip content={addon.required_message} visible={isTooltipVisible}>
-                <div css={styles.requiredBadge}>{__('Settings Required', 'tutor')}</div>
-              </Tooltip>
-            </Show>
+            <Switch
+              size="small"
+              checked={isChecked}
+              onChange={(checked) => {
+                if ((addon.plugins_required?.length || addon.required_settings) && !isPluginInstalled) {
+                  setIsOpen(true);
+                } else {
+                  handleAddonChange(checked);
+                }
+              }}
+              disabled={enableDisableAddon.isPending}
+            />
           </Show>
         </div>
       </div>
@@ -121,15 +113,20 @@ function AddonCard({ addon }: { addon: Addon }) {
         arrow="middle"
         hideArrow
       >
-        <InstallationPopover
-          addon={addon}
-          handleClose={() => setIsOpen(false)}
-          handleSuccess={() => {
-            setIsOpen(false);
-            handleAddonChange(true);
-            setIsPluginInstalled(true);
-          }}
-        />
+        <Show
+          when={!addon.required_settings}
+          fallback={<SettingsPopover addon={addon} handleClose={() => setIsOpen(false)} />}
+        >
+          <InstallationPopover
+            addon={addon}
+            handleClose={() => setIsOpen(false)}
+            handleSuccess={() => {
+              setIsOpen(false);
+              handleAddonChange(true);
+              setIsPluginInstalled(true);
+            }}
+          />
+        </Show>
       </Popover>
     </div>
   );
