@@ -3,7 +3,11 @@ import Checkbox from '@TutorShared/atoms/CheckBox';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import { type CategoryWithChildren, useCategoryListQuery, useCreateCategoryMutation } from '@TutorShared/services/category';
+import {
+  type CategoryWithChildren,
+  useCategoryListQuery,
+  useCreateCategoryMutation,
+} from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
@@ -12,12 +16,14 @@ import { useEffect, useState } from 'react';
 
 import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import { isRTL } from '@TutorShared/config/constants';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { __ } from '@wordpress/i18n';
 import { Controller, type FieldValues } from 'react-hook-form';
-import Show from '../../controls/Show';
+
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
@@ -53,7 +59,6 @@ const FormMultiLevelInput = ({
     shouldFocusError: true,
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isOpen) {
       const timeout = setTimeout(() => {
@@ -64,6 +69,7 @@ const FormMultiLevelInput = ({
         clearTimeout(timeout);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
@@ -102,25 +108,30 @@ const FormMultiLevelInput = ({
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
-                {treeOptions.map((option, index) => (
-                  <Branch
-                    key={option.id}
-                    disabled={disabled}
-                    option={option}
-                    value={field.value}
-                    isLastChild={index === treeOptions.length - 1}
-                    onChange={(id) => {
-                      field.onChange(
-                        produce(field.value, (draft) => {
-                          if (Array.isArray(draft)) {
-                            return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
-                          }
-                          return [id];
-                        }),
-                      );
-                    }}
-                  />
-                ))}
+                <Show
+                  when={treeOptions.length > 0}
+                  fallback={<span css={styles.notFound}>{__('No categories found.', 'tutor')}</span>}
+                >
+                  {treeOptions.map((option, index) => (
+                    <Branch
+                      key={option.id}
+                      disabled={disabled}
+                      option={option}
+                      value={field.value}
+                      isLastChild={index === treeOptions.length - 1}
+                      onChange={(id) => {
+                        field.onChange(
+                          produce(field.value, (draft) => {
+                            if (Array.isArray(draft)) {
+                              return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
+                            }
+                            return [id];
+                          }),
+                        );
+                      }}
+                    />
+                  ))}
+                </Show>
               </div>
 
               <Show when={!disabled}>
@@ -260,6 +271,13 @@ const styles = {
   categoryListWrapper: css`
     ${styleUtils.overflowYAuto};
     max-height: 208px;
+  `,
+  notFound: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    ${typography.caption('regular')};
+    padding: ${spacing[8]} ${spacing[16]};
+    color: ${colorTokens.text.hints};
   `,
   checkboxLabel: css`
     line-height: 1.88rem !important;
