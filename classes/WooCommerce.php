@@ -10,7 +10,6 @@
 
 namespace TUTOR;
 
-
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -21,6 +20,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @since 1.0.0
  */
 class WooCommerce extends Tutor_Base {
+
+
+	const TUTOR_WC_GUEST_CUSTOMER_ID = '_tutor_wc_guest_customer_id';
+	const WC_STORE_API_DRAFT_ORDER   = 'store_api_draft_order';
 
 	/**
 	 * Register hooks
@@ -116,7 +119,39 @@ class WooCommerce extends Tutor_Base {
 		add_action( 'before_woocommerce_init', array( $this, 'declare_tutor_compatibility_with_hpos' ) );
 
 		add_action( 'woocommerce_order_after_calculate_totals', array( $this, 'add_coupon_to_order' ), 10, 2 );
+
+		add_action( 'woocommerce_guest_session_to_user_id', array( $this, 'enroll_guest_user' ), 10, 2 );
 	}
+
+	/**
+	 * Enroll students to course after guest checkout.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param int $guest_customer_id the customer id of guest user.
+	 * @param int $customer_id the customer id of registered user.
+	 *
+	 * @return void
+	 */
+	public function enroll_guest_user( $guest_customer_id, $customer_id ) {
+		global $wpdb;
+		$course_ids = $wpdb->get_col(
+			$wpdb->prepare(
+				"SELECT meta_id FROM {$wpdb->postmeta} WHERE meta_key=%s AND meta_value=%s",
+				self::TUTOR_WC_GUEST_CUSTOMER_ID,
+				$guest_customer_id
+			)
+		);
+
+		$order_id = WC()->session->get( self::WC_STORE_API_DRAFT_ORDER, 0 );
+
+		if ( $course_ids && $order_id ) {
+			foreach ( $course_ids as $course_id ) {
+				tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
+			}
+		}
+	}
+
 
 	/**
 	 * Add manual coupon discount to wc order items.
@@ -656,6 +691,11 @@ class WooCommerce extends Tutor_Base {
 			 */
 			$customer_id = $order->get_customer_id();
 			$course_id   = $if_has_course->post_id;
+			if ( ! $customer_id && WC()->session->has_session() ) {
+				$guest_customer_id = WC()->session->get_customer_unique_id();
+				update_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
+				return;
+			}
 			tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
 		}
 	}
