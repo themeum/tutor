@@ -148,6 +148,8 @@ const styles = {
   title: css`
     ${typography.heading6('medium')};
     color: ${colorTokens.text.title};
+    text-transform: none;
+    letter-spacing: normal;
   `,
   subtitle: css`
     ${styleUtils.text.ellipsis(1)}

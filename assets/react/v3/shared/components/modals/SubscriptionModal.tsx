@@ -357,6 +357,8 @@ const styles = {
     h6 {
       ${typography.heading6('medium')};
       color: ${colorTokens.text.primary};
+      text-transform: none;
+      letter-spacing: normal;
     }
   `,
   content: css`
