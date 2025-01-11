@@ -112,7 +112,7 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
                 <div css={styles.progressWrapper}>
                   <div css={styles.progressContent}>
                     <span css={styles.progressStep}>
-                      {!addon.is_dependents_installed && percentage < 80
+                      {!addon.is_dependents_installed && percentage < 78
                         ? __('Installing...', 'tutor')
                         : __('Activating...', 'tutor')}
                     </span>
