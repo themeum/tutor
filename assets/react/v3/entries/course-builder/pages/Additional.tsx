@@ -18,11 +18,7 @@ import Certificate from '@CourseBuilderComponents/additional/Certificate';
 import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import {
-  type CourseDetailsResponse,
-  type CourseFormData,
-  usePrerequisiteCoursesQuery,
-} from '@CourseBuilderServices/course';
+import { type CourseDetailsResponse, type CourseFormData } from '@CourseBuilderServices/course';
 
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -37,6 +33,7 @@ import { isAddonEnabled } from '@TutorShared/utils/util';
 import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@SharedImages/pro-placeholders/attachments.webp';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { useCourseListQuery } from '@TutorShared/services/course';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
@@ -71,8 +68,11 @@ const Additional = () => {
   const prerequisiteCourseIds =
     courseDetails?.course_prerequisites?.map((prerequisite) => String(prerequisite.id)) || [];
 
-  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery({
-    excludedIds: [String(courseId), ...prerequisiteCourseIds],
+  const prerequisiteCoursesQuery = useCourseListQuery({
+    params: {
+      excludedIds: [String(courseId), ...prerequisiteCourseIds],
+      limit: -1,
+    },
     isEnabled: !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
   });
 
@@ -248,7 +248,7 @@ const Additional = () => {
                     <FormCoursePrerequisites
                       {...controllerProps}
                       placeholder={__('Search courses for prerequisites', 'tutor')}
-                      options={prerequisiteCoursesQuery.data || []}
+                      options={prerequisiteCoursesQuery.data?.results || []}
                       isSearchable
                       loading={
                         prerequisiteCoursesQuery.isLoading ||

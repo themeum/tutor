@@ -9,6 +9,7 @@ import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput'
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { Course } from '@TutorShared/services/course';
 import type { Tag } from '@TutorShared/services/tags';
 import type { InstructorListResponse, User } from '@TutorShared/services/users';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
@@ -65,7 +66,7 @@ export interface CourseFormData {
   course_product_id: string;
   course_product_name: string;
   preview_link: string;
-  course_prerequisites: PrerequisiteCourses[];
+  course_prerequisites: Course[];
   tutor_course_certificate_template: string;
   enable_tutor_bp: boolean;
   bp_attached_group_ids: string[];
@@ -386,7 +387,7 @@ interface WcProductDetailsResponse {
   sale_price: string;
 }
 
-export interface PrerequisiteCourses {
+interface PrerequisiteCourses {
   id: number;
   post_title: string;
   featured_image: string;
@@ -596,7 +597,14 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
         return instructors;
       }, [] as UserOption[]) ?? [],
     preview_link: courseDetails.preview_link ?? '',
-    course_prerequisites: courseDetails.course_prerequisites ?? [],
+    course_prerequisites: (courseDetails.course_prerequisites ?? []).map((course) => ({
+      id: course.id,
+      title: course.post_title,
+      image: course.featured_image,
+      is_purchasable: false,
+      regular_price: '',
+      sale_price: '',
+    })),
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
     enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
@@ -720,26 +728,6 @@ export const useWcProductDetailsQuery = (
     queryKey: ['WcProductDetails', productId, courseId],
     queryFn: () => getProductDetails(productId, courseId).then((res) => res.data),
     enabled: !!productId && coursePriceType === 'paid' && monetizedBy === 'wc',
-  });
-};
-
-const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
-  return wpAjaxInstance.get<PrerequisiteCourses[]>(endpoints.GET_COURSE_LIST, {
-    params: { exclude: excludedCourseIds },
-  });
-};
-
-export const usePrerequisiteCoursesQuery = ({
-  excludedIds,
-  isEnabled,
-}: {
-  excludedIds: string[];
-  isEnabled: boolean;
-}) => {
-  return useQuery({
-    queryKey: ['PrerequisiteCourses', excludedIds],
-    queryFn: () => getPrerequisiteCourses(excludedIds).then((res) => res.data),
-    enabled: isEnabled,
   });
 };
 

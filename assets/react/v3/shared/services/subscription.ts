@@ -156,33 +156,33 @@ export type SubscriptionPayload = {
   trial_interval?: DurationUnit;
 };
 
-const getCourseSubscriptions = (courseId: number) => {
+const getCourseSubscriptions = (objectId: number) => {
   return wpAjaxInstance.post<string, AxiosResponse<Subscription[]>>(endpoints.GET_SUBSCRIPTIONS_LIST, {
-    course_id: courseId,
+    object_id: objectId,
   });
 };
 
-export const useCourseSubscriptionsQuery = (courseId: number) => {
+export const useCourseSubscriptionsQuery = (objectId: number) => {
   return useQuery({
-    queryKey: ['SubscriptionsList', courseId],
-    queryFn: () => getCourseSubscriptions(courseId).then((response) => response.data),
+    queryKey: ['SubscriptionsList', objectId],
+    queryFn: () => getCourseSubscriptions(objectId).then((response) => response.data),
   });
 };
 
-const saveCourseSubscription = (courseId: number, subscription: SubscriptionPayload) => {
+const saveCourseSubscription = (objectId: number, subscription: SubscriptionPayload) => {
   return wpAjaxInstance.post<string, TutorMutationResponse<ID>>(endpoints.SAVE_SUBSCRIPTION, {
-    course_id: courseId,
+    object_id: objectId,
     ...(subscription.id && { id: subscription.id }),
     ...subscription,
   });
 };
 
-export const useSaveCourseSubscriptionMutation = (courseId: number) => {
+export const useSaveCourseSubscriptionMutation = (objectId: number) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: (subscription: SubscriptionPayload) => saveCourseSubscription(courseId, subscription),
+    mutationFn: (subscription: SubscriptionPayload) => saveCourseSubscription(objectId, subscription),
     onSuccess: (response) => {
       if (response.status_code === 200 || response.status_code === 201) {
         showToast({
@@ -191,7 +191,7 @@ export const useSaveCourseSubscriptionMutation = (courseId: number) => {
         });
 
         queryClient.invalidateQueries({
-          queryKey: ['SubscriptionsList', courseId],
+          queryKey: ['SubscriptionsList', objectId],
         });
       }
     },
@@ -201,7 +201,7 @@ export const useSaveCourseSubscriptionMutation = (courseId: number) => {
   });
 };
 
-const deleteCourseSubscription = (courseId: number, subscriptionId: number) => {
+const deleteCourseSubscription = (objectId: number, subscriptionId: number) => {
   return wpAjaxInstance.post<
     {
       course_id: number;
@@ -209,17 +209,17 @@ const deleteCourseSubscription = (courseId: number, subscriptionId: number) => {
     },
     TutorMutationResponse<ID>
   >(endpoints.DELETE_SUBSCRIPTION, {
-    course_id: courseId,
+    object_id: objectId,
     id: subscriptionId,
   });
 };
 
-export const useDeleteCourseSubscriptionMutation = (courseId: number) => {
+export const useDeleteCourseSubscriptionMutation = (objectId: number) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: (subscriptionId: number) => deleteCourseSubscription(courseId, subscriptionId),
+    mutationFn: (subscriptionId: number) => deleteCourseSubscription(objectId, subscriptionId),
     onSuccess: (response, subscriptionId) => {
       if (response.status_code === 200) {
         showToast({
@@ -227,7 +227,7 @@ export const useDeleteCourseSubscriptionMutation = (courseId: number) => {
           type: 'success',
         });
 
-        queryClient.setQueryData(['SubscriptionsList', courseId], (data: Subscription[]) => {
+        queryClient.setQueryData(['SubscriptionsList', objectId], (data: Subscription[]) => {
           return data.filter((item) => item.id !== String(subscriptionId));
         });
       }
@@ -239,7 +239,7 @@ export const useDeleteCourseSubscriptionMutation = (courseId: number) => {
   });
 };
 
-const duplicateCourseSubscription = (courseId: number, subscriptionId: number) => {
+const duplicateCourseSubscription = (objectId: number, subscriptionId: number) => {
   return wpAjaxInstance.post<
     {
       course_id: number;
@@ -247,17 +247,17 @@ const duplicateCourseSubscription = (courseId: number, subscriptionId: number) =
     },
     TutorMutationResponse<ID>
   >(endpoints.DUPLICATE_SUBSCRIPTION, {
-    course_id: courseId,
+    course_id: objectId,
     id: subscriptionId,
   });
 };
 
-export const useDuplicateCourseSubscriptionMutation = (courseId: number) => {
+export const useDuplicateCourseSubscriptionMutation = (objectId: number) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: (subscriptionId: number) => duplicateCourseSubscription(courseId, subscriptionId),
+    mutationFn: (subscriptionId: number) => duplicateCourseSubscription(objectId, subscriptionId),
     onSuccess: (response) => {
       if (response.data) {
         showToast({
@@ -266,7 +266,7 @@ export const useDuplicateCourseSubscriptionMutation = (courseId: number) => {
         });
 
         queryClient.invalidateQueries({
-          queryKey: ['SubscriptionsList', courseId],
+          queryKey: ['SubscriptionsList', objectId],
         });
       }
     },
@@ -289,21 +289,21 @@ const sortCourseSubscriptions = (courseId: number, subscriptionIds: number[]) =>
   });
 };
 
-export const useSortCourseSubscriptionsMutation = (courseId: number) => {
+export const useSortCourseSubscriptionsMutation = (objectId: number) => {
   const queryClient = useQueryClient();
   const { showToast } = useToast();
 
   return useMutation({
-    mutationFn: (subscriptionIds: number[]) => sortCourseSubscriptions(courseId, subscriptionIds),
+    mutationFn: (subscriptionIds: number[]) => sortCourseSubscriptions(objectId, subscriptionIds),
     onSuccess: (response, payload) => {
       if (response.status_code === 200) {
-        queryClient.setQueryData(['SubscriptionsList', courseId], (data: Subscription[]) => {
+        queryClient.setQueryData(['SubscriptionsList', objectId], (data: Subscription[]) => {
           const sortedIds = payload.map((id) => String(id));
 
           return data.sort((a, b) => sortedIds.indexOf(a.id) - sortedIds.indexOf(b.id));
         });
         queryClient.invalidateQueries({
-          queryKey: ['SubscriptionsList', courseId],
+          queryKey: ['SubscriptionsList', objectId],
         });
       }
     },
@@ -311,7 +311,7 @@ export const useSortCourseSubscriptionsMutation = (courseId: number) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
 
       queryClient.invalidateQueries({
-        queryKey: ['SubscriptionsList', courseId],
+        queryKey: ['SubscriptionsList', objectId],
       });
     },
   });
