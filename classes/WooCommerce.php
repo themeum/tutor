@@ -693,7 +693,7 @@ class WooCommerce extends Tutor_Base {
 			$course_id   = $if_has_course->post_id;
 			if ( ! $customer_id && WC()->session->has_session() ) {
 				$guest_customer_id = WC()->session->get_customer_unique_id();
-				update_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
+				update_post_meta( $course_id, self::TUTOR_WC_GUEST_CUSTOMER_ID, $guest_customer_id );
 				return;
 			}
 			tutor_utils()->do_enroll( $course_id, $order_id, $customer_id );
