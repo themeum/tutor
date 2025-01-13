@@ -819,6 +819,17 @@ class Course extends Tutor_Base {
 			's'              => $search_term,
 		);
 
+		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
+		if ( count( $exclude ) ) {
+			$exclude         = array_filter(
+				$exclude,
+				function( $id ) {
+					return is_numeric( $id );
+				}
+			);
+			$args['post__not_in'] = $exclude;
+		}
+
 		$courses = CourseModel::get_courses_by_args( $args );
 
 		$response = array(
