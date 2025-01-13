@@ -794,14 +794,28 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 3.2.0
+	 *
+	 * Refactor the arguments & response as per new design
+	 *
 	 * @return void
 	 */
 	public function ajax_course_list() {
 		$this->check_access();
 
+		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
+		$search_term = '';
+
+		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
+		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
+			$search_term = Input::sanitize( $filter->search );
+		}
+
 		$args = array(
-			'post_type'      => tutor()->course_post_type,
-			'posts_per_page' => -1,
+			'posts_per_page' => $limit,
+			'offset'         => $offset,
+			's'              => $search_term,
 		);
 
 		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
@@ -812,28 +826,28 @@ class Course extends Tutor_Base {
 					return is_numeric( $id );
 				}
 			);
-			$args['exclude'] = $exclude;
+			$args['post__not_in'] = $exclude;
 		}
 
-		$courses = get_posts( $args );
+		$courses = CourseModel::get_courses_by_args( $args );
 
-		$items = array();
-		foreach ( $courses as $course ) {
-			$tmp                 = new stdClass();
-			$tmp->id             = $course->ID;
-			$tmp->post_title     = $course->post_title;
-			$tmp->featured_image = get_the_post_thumbnail_url( $course->ID );
+		$response = array(
+			'results'     => array(),
+			'total_items' => 0,
+		);
 
-			if ( ! $tmp->featured_image ) {
-				$tmp->featured_image = CourseModel::get_course_preview_image_placeholder();
+		$response['total_items'] = is_a( $courses, 'WP_Query' ) ? $courses->found_posts : 0;
+
+		if ( is_a( $courses, 'WP_Query' ) && $courses->have_posts() ) {
+			$courses = $courses->get_posts();
+			foreach ( $courses as $course ) {
+				$response['results'][] = self::get_mini_info( $course );
 			}
-
-			$items[] = $tmp;
 		}
 
 		$this->json_response(
-			__( 'Course list fetched successfully', 'tutor' ),
-			$items
+			__( 'Course list retrieved successfully!', 'tutor-pro' ),
+			$response
 		);
 	}
 
