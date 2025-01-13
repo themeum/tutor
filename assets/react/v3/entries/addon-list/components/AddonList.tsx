@@ -17,8 +17,8 @@ function AddonList() {
     return addon.name.toLowerCase().includes(searchTerm.toLowerCase());
   });
 
-  const activeAddons = addonsList.filter((addon) => !!addon.is_enabled);
-  const availableAddons = addonsList.filter((addon) => !addon.is_enabled);
+  const activeAddons = addonsList.filter((addon) => !!addon.is_enabled && !addon.required_settings);
+  const availableAddons = addonsList.filter((addon) => !addon.is_enabled || addon.required_settings);
 
   if (searchTerm.length && addonsList.length === 0) {
     return <EmptyState />;

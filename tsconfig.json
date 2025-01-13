@@ -21,7 +21,6 @@
     // "types": ["@emotion/react/types/css-prop", "node"],
     "typeRoots": ["./node_modules/@types/", "./assets/react/@types"],
     "paths": {
-      "@Assets/*": ["assets/*"],
       "@TutorShared/*": ["assets/react/v3/shared/*"],
       "@SharedImages/*": ["assets/react/v3/public/images/*"],
       "@CourseBuilderComponents/*": ["assets/react/v3/entries/course-builder/components/*"],

@@ -87,7 +87,6 @@ module.exports = (env, options) => {
                 'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
                 'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
                 'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
-                'tutor-coupon.min': './assets/react/v3/entries/coupon-details/index.tsx',
                 'tutor-addon-list.min': './assets/react/v3/entries/addon-list/index.tsx',
             },
             clean: true,
@@ -123,7 +122,6 @@ module.exports = (env, options) => {
                         os: false,
                     },
                     alias: {
-                        '@Assets': path.resolve(__dirname, './assets/'),
                         '@TutorShared': path.resolve(__dirname, './assets/react/v3/shared'),
                         '@SharedImages': path.resolve(__dirname, './assets/react/v3/public/images'),
                         '@CourseBuilderComponents': path.resolve(__dirname, './assets/react/v3/entries/course-builder/components/'),
