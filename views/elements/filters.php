@@ -92,6 +92,7 @@ if ( isset( $data ) ) : ?>
 					$search        = Input::get( 'search', '' );
 					$category_slug = Input::get( 'category', '' );
 					?>
+					<?php do_action( 'tutor_data_list_before_filter_items' ); ?>
 					<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
