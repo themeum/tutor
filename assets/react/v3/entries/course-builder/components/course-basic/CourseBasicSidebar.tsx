@@ -46,8 +46,8 @@ const CourseBasicSidebar = () => {
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
-  const canInstructorChangeAuthor = tutorConfig.settings?.instructor_can_change_author !== 'off';
-  const canInstructorModifyInstructors = tutorConfig.settings?.instructor_can_modify_instructors !== 'off';
+  const canInstructorChangeCourseAuthor = tutorConfig.settings?.instructor_can_change_course_author !== 'off';
+  const canInstructorMangeCoInstructors = tutorConfig.settings?.instructor_can_manage_co_instructors !== 'off';
   const currentUserIsAuthor = String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
@@ -57,9 +57,9 @@ const CourseBasicSidebar = () => {
   const currentAuthor = form.watch('post_author');
 
   const isInstructorVisible =
-    isTutorPro && isMultiInstructorEnabled && (isAdministrator || (isInstructor && canInstructorModifyInstructors));
+    isTutorPro && isMultiInstructorEnabled && (isAdministrator || (isInstructor && canInstructorMangeCoInstructors));
 
-  const isAuthorEditable = isAdministrator || (currentUserIsAuthor && canInstructorChangeAuthor);
+  const isAuthorEditable = isAdministrator || (currentUserIsAuthor && canInstructorChangeCourseAuthor);
 
   const visibilityStatus = useWatch({
     control: form.control,
