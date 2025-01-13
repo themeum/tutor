@@ -137,7 +137,7 @@ class WooCommerce extends Tutor_Base {
 		global $wpdb;
 		$course_ids = $wpdb->get_col(
 			$wpdb->prepare(
-				"SELECT meta_id FROM {$wpdb->postmeta} WHERE meta_key=%s AND meta_value=%s",
+				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key=%s AND meta_value=%s",
 				self::TUTOR_WC_GUEST_CUSTOMER_ID,
 				$guest_customer_id
 			)

@@ -32,11 +32,11 @@ const endpoints = {
   GENERATE_QUIZ_QUESTIONS: 'tutor_pro_generate_quiz_questions',
 
   // SUBSCRIPTION
-  GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_course_plans',
-  SAVE_SUBSCRIPTION: 'tutor_subscription_course_plan_save',
-  DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
-  DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
-  SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
+  GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_plans',
+  SAVE_SUBSCRIPTION: 'tutor_subscription_plan_save',
+  DELETE_SUBSCRIPTION: 'tutor_subscription_plan_delete',
+  DUPLICATE_SUBSCRIPTION: 'tutor_subscription_plan_duplicate',
+  SORT_SUBSCRIPTION: 'tutor_subscription_plan_sort',
 
   // COURSE
   GET_COURSE_DETAILS: 'tutor_course_details',
