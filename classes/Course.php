@@ -801,8 +801,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function ajax_course_list() {
-		tutor_utils()->checking_nonce();
-		tutor_utils()->check_current_user_capability();
+		$this->check_access();
 
 		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
 		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
