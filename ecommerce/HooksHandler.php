@@ -283,7 +283,7 @@ class HooksHandler {
 	 */
 	private function is_bundle_order( $order, $object_id ) {
 		return tutor_utils()->is_addon_enabled( 'course-bundle' )
-		&& $this->order_model::TYPE_SINGLE_ORDER === $order->order_type
+		&& in_array( $order->order_type, array( $this->order_model::TYPE_SINGLE_ORDER, $this->order_model::TYPE_SUBSCRIPTION ), true )
 		&& 'course-bundle' === get_post_type( $object_id );
 	}
 
