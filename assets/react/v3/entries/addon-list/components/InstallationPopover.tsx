@@ -29,7 +29,7 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
 
   let interval: NodeJS.Timer;
 
-  async function handleActivatePlugin() {
+  const handleActivatePlugin = async () => {
     let isSuccessAll = true;
     for (const [idx, item] of Object.keys(addon.depend_plugins).entries()) {
       if (!addon.is_dependents_installed && idx === 0) {
@@ -63,7 +63,7 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
     if (addon.is_dependents_installed && isSuccessAll) {
       handleSuccess();
     }
-  }
+  };
 
   useEffect(() => {
     if (percentage === 100) {
