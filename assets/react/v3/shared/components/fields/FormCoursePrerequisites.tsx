@@ -11,7 +11,6 @@ import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
@@ -19,6 +18,7 @@ import { noop } from '@TutorShared/utils/util';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import { type Course } from '@TutorShared/services/course';
 
 import notFound2x from '@SharedImages/not-found-2x.webp';
 import notFound from '@SharedImages/not-found.webp';
@@ -28,8 +28,8 @@ import FormFieldWrapper from './FormFieldWrapper';
 type FormCoursePrerequisitesProps = {
   label?: string | React.ReactNode;
   placeholder?: string;
-  options: PrerequisiteCourses[];
-  onChange?: (selectedOption: PrerequisiteCourses[]) => void;
+  options: Course[];
+  onChange?: (selectedOption: Course[]) => void;
   handleSearchOnChange?: (searchText: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
@@ -38,7 +38,7 @@ type FormCoursePrerequisitesProps = {
   isHidden?: boolean;
   responsive?: boolean;
   helpText?: string;
-} & FormControllerProps<PrerequisiteCourses[] | null>;
+} & FormControllerProps<Course[] | null>;
 
 const FormCoursePrerequisites = ({
   field,
@@ -65,7 +65,7 @@ const FormCoursePrerequisites = ({
 
   const filteredOption = options.filter(
     (option) =>
-      option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()) &&
+      option.title.toLowerCase().includes(debouncedSearchText.toLowerCase()) &&
       !selectedIds.includes(String(option.id)),
   );
 
@@ -85,7 +85,7 @@ const FormCoursePrerequisites = ({
 
   const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
     options: filteredOption.map((option) => ({
-      label: option.post_title,
+      label: option.title,
       value: option,
     })),
     isOpen,
@@ -194,10 +194,10 @@ const FormCoursePrerequisites = ({
                       })}
                     >
                       <div css={styles.imageWrapper}>
-                        <img src={course.featured_image} alt={course.post_title} css={styles.image} />
+                        <img src={course.image} alt={course.title} css={styles.image} />
                       </div>
                       <div css={styles.cardContent}>
-                        <span css={styles.cardTitle}>{course.post_title}</span>
+                        <span css={styles.cardTitle}>{course.title}</span>
                         <p css={typography.tiny()}>{course.id}</p>
                       </div>
                       <button
@@ -266,10 +266,10 @@ const FormCoursePrerequisites = ({
                             aria-selected={activeIndex === index}
                           >
                             <div css={styles.imageWrapper}>
-                              <img src={course.featured_image} alt={course.post_title} css={styles.image} />
+                              <img src={course.image} alt={course.title} css={styles.image} />
                             </div>
                             <div css={styles.cardContent}>
-                              <span css={styles.cardTitle}>{course.post_title}</span>
+                              <span css={styles.cardTitle}>{course.title}</span>
                               <p css={typography.tiny()}>{course.id}</p>
                             </div>
                           </button>
