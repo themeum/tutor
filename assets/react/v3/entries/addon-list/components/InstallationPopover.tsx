@@ -31,7 +31,7 @@ function InstallationPopover({ addon, handleClose, handleSuccess }: Installation
 
   const handleActivatePlugin = async () => {
     let isSuccessAll = true;
-    for (const [idx, item] of Object.keys(addon.depend_plugins).entries()) {
+    for (const [idx, item] of Object.keys(addon.depend_plugins ?? []).entries()) {
       if (!addon.is_dependents_installed && idx === 0) {
         setInstallingIdx(idx);
       }
