@@ -20,7 +20,7 @@ export interface Addon {
   required_message?: string;
   thumb_url?: string;
   plugins_required?: string[];
-  depend_plugins: Record<string, string>[];
+  depend_plugins?: Record<string, string>[];
   is_dependents_installed?: boolean;
   required_pro_plugin?: boolean;
   is_new?: boolean;
