@@ -5,7 +5,6 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import { type ErrorResponse } from '@TutorShared/utils/form';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
-import { __ } from '@wordpress/i18n';
 
 export interface Addon {
   name: string;
@@ -20,7 +19,7 @@ export interface Addon {
   required_message?: string;
   thumb_url?: string;
   plugins_required?: string[];
-  depend_plugins: Record<string, string>[];
+  depend_plugins?: Record<string, string>[];
   is_dependents_installed?: boolean;
   required_pro_plugin?: boolean;
   is_new?: boolean;
@@ -66,12 +65,6 @@ export const useEnableDisableAddon = () => {
 
   return useMutation({
     mutationFn: addonEnableDisable,
-    onSuccess: (_, variables) => {
-      showToast({
-        type: 'success',
-        message: variables.checked ? __('Addon enabled successfully.') : __('Addon disabled  successfully.'),
-      });
-    },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });
     },
