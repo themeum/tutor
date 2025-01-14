@@ -57,7 +57,7 @@ function AddonCard({ addon }: { addon: Addon }) {
       ]);
       showToast({
         type: 'success',
-        message: checked ? __('Addon enabled successfully.') : __('Addon disabled  successfully.'),
+        message: checked ? __('Addon enabled successfully.', 'tutor') : __('Addon disabled  successfully.', 'tutor'),
       });
     } else {
       showToast({ type: 'danger', message: response.data?.message ?? __('Something went wrong!', 'tutor') });
