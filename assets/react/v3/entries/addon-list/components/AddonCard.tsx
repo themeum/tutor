@@ -50,11 +50,15 @@ function AddonCard({ addon }: { addon: Addon }) {
       checked: checked,
     });
 
-    if (response.success) {
+    if (response.success || typeof response === 'string') {
       setUpdatedAddons([
         ...updatedAddons.filter((item) => item.basename !== addon.basename),
         { ...addon, is_enabled: checked ? 1 : 0 },
       ]);
+      showToast({
+        type: 'success',
+        message: checked ? __('Addon enabled successfully.') : __('Addon disabled  successfully.'),
+      });
     } else {
       showToast({ type: 'danger', message: response.data?.message ?? __('Something went wrong!', 'tutor') });
     }
