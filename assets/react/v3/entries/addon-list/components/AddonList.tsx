@@ -1,13 +1,13 @@
 import { css } from '@emotion/react';
-import { useAddonContext } from '../contexts/addon-context';
-import AddonCard from './AddonCard';
+import { tutorConfig } from '@TutorShared/config/config';
 import { spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { __ } from '@wordpress/i18n';
 import Show from '@TutorShared/controls/Show';
-import FreeBanner from './FreeBanner';
-import { tutorConfig } from '@TutorShared/config/config';
+import { __ } from '@wordpress/i18n';
+import { useAddonContext } from '../contexts/addon-context';
+import AddonCard from './AddonCard';
 import EmptyState from './EmptyState';
+import FreeBanner from './FreeBanner';
 
 function AddonList() {
   const isTutorPro = !!tutorConfig.tutor_pro_url;

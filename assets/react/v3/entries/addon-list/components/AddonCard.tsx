@@ -24,23 +24,23 @@ function AddonCard({ addon }: { addon: Addon }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isPluginInstalled, setIsPluginInstalled] = useState(false);
 
-  const [isChecked, setIsChecked] = useState(!!addon.is_enabled && !addon.required_settings);
   const [isTooltipVisible, setIsTooltipVisible] = useState(false);
 
   const enableDisableAddon = useEnableDisableAddon();
 
   const handleAddonChange = async (checked: boolean) => {
-    setIsChecked(checked);
-
     const addonObject = {} as Record<string, number>;
 
     addons.forEach((item) => {
       const alreadyUpdatedItem = updatedAddons.find((updatedItem) => updatedItem.basename === item.basename);
       if (item.basename === addon.basename) {
+        // For the current addon
         addonObject[item.basename as string] = checked ? 1 : 0;
       } else if (alreadyUpdatedItem) {
+        // For the updated addon before reload
         addonObject[item.basename as string] = alreadyUpdatedItem.is_enabled ? 1 : 0;
       } else {
+        // For rest of the addons
         addonObject[item.basename as string] = item.is_enabled ? 1 : 0;
       }
     });
@@ -52,13 +52,20 @@ function AddonCard({ addon }: { addon: Addon }) {
 
     if (response.success) {
       setUpdatedAddons([
-        ...updatedAddons.filter((item) => item.base_name === addon.base_name),
+        ...updatedAddons.filter((item) => item.basename !== addon.basename),
         { ...addon, is_enabled: checked ? 1 : 0 },
       ]);
     } else {
-      setIsChecked(!checked);
       showToast({ type: 'danger', message: response.data?.message ?? __('Something went wrong!', 'tutor') });
     }
+  };
+
+  const isAddonEnabled = () => {
+    const updatedAddon = updatedAddons.find((item) => item.basename === addon.basename);
+    if (updatedAddon) {
+      return updatedAddon.is_enabled ? true : false;
+    }
+    return !!addon.is_enabled && !addon.required_settings;
   };
 
   const hasToolTip = !isTutorPro || addon.required_settings;
@@ -86,7 +93,7 @@ function AddonCard({ addon }: { addon: Addon }) {
             >
               <Switch
                 size="small"
-                checked={isChecked}
+                checked={isAddonEnabled()}
                 onChange={(checked) => {
                   if (checked && (addon.plugins_required?.length || addon.required_settings) && !isPluginInstalled) {
                     setIsOpen(true);
