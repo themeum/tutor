@@ -41,7 +41,7 @@ $monetize_by = tutor_utils()->get_option( 'monetize_by' );
 		<form class="tutor-option-form" id="tutor-option-form">
 			<input type="hidden" name="action" value="tutor_option_save">
 			<div class="tutor-row tutor-gx-lg-0">
-				<div class="tutor-col-12 tutor-col-sm-2 tutor-col-lg-3 tutor-border-right">
+				<div class="tutor-col-12 tutor-col-sm-2 tutor-col-lg-3 <?php echo esc_attr( is_rtl() ? 'tutor-border-left' : 'tutor-border-right' ); ?>">
 					<div class="tutor-pt-16 tutor-pb-40 tutor-position-sticky" style="top: 97px;">
 						<div class="tutor-pr-20">
 							<ul class="tutor-option-tabs tutor-nav tutor-nav-pills tutor-nav-v" tutor-option-tabs>
