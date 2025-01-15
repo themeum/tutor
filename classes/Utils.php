@@ -9979,13 +9979,15 @@ class Utils {
 	 * Execute bulk action for enrollment list ex: complete | cancel
 	 *
 	 * @since 2.0.3
+	 * @since 3.2.0 $trigger_hook param added.
 	 *
 	 * @param string $status hold status for updating.
 	 * @param array  $enrollment_ids ids that need to update.
+	 * @param bool   $trigger_hook optional - trigger hook or not.
 	 *
 	 * @return bool
 	 */
-	public function update_enrollments( string $status, array $enrollment_ids ): bool {
+	public function update_enrollments( string $status, array $enrollment_ids, bool $trigger_hook = true ): bool {
 		global $wpdb;
 		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
 		$status            = 'complete' === $status ? 'completed' : $status;
@@ -10001,9 +10003,11 @@ class Utils {
 			)
 		);
 
-		// Run action hook.
-		foreach ( $enrollment_ids as $id ) {
-			do_action( 'tutor_enrollment/after/' . $status, $id );
+		if ( $trigger_hook ) {
+			// Run action hook.
+			foreach ( $enrollment_ids as $id ) {
+				do_action( 'tutor_enrollment/after/' . $status, $id );
+			}
 		}
 
 		return true;
