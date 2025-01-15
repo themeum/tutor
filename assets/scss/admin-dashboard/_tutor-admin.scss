@@ -5,9 +5,17 @@
 .tutor-admin {
 	&-wrap {
 		margin-left: -20px;
+		.rtl & {
+			margin-left: 0px;
+			margin-right: -20px;
+		}
 		
 		@include breakpoint-max(782) {
 			margin-left: -10px;
+			.rtl & {
+				margin-left: 0px;
+				margin-right: -10px;
+			}
 		}
 
 		// reset

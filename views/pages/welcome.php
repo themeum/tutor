@@ -48,6 +48,11 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	margin-left: -20px;
 }
 
+.rtl .tutor-lms-welcome-page {
+	margin-left: 0px;
+	margin-right: -20px;
+}
+
 .tutor-lms-welcome-page img {
 	max-width: 100%;
 }

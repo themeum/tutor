@@ -39,7 +39,7 @@ $secondary_button_text_color  = $email_settings ? $email_settings::get_color( 's
 	--secondary-button-color: <?php echo esc_attr( $secondary_button_color ); ?>;
 	--secondary-button-hover-color: <?php echo esc_attr( $secondary_button_hover_color ); ?>;
 }
-body{padding: 0px;margin: 0px;color: #5B616F;}
+body{direction:<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;padding: 0px;margin: 0px;color: #5B616F;}
 .tutor-email-body{font-weight:400;padding: 50px 20px 50px;color: #5B616F;background-color: #EFF1F6;line-height: 26px;font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;}
 .tutor-email-body a, .tutor-email-body strong {color: <?php echo esc_html( $email_short_code_color ); ?>;font-weight:500!important;text-decoration: none;}
 .tutor-email-body a{ color: royalblue;}
