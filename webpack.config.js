@@ -88,21 +88,13 @@ module.exports = (env, options) => {
                 'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
                 'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
                 'tutor-addon-list.min': './assets/react/v3/entries/addon-list/index.tsx',
-            },
-            clean: true,
-        },
-        {
-            dest_path: '../tutor-pro/addons/enrollments/assets/js',
-            src_files: {
-                'manual-enrollment.min': './assets/react/v3/entries/pro/manual-enrollment/index.tsx',
-            },
-            clean: true,
-        },
+            }
+        }
     ];
 
     const configEditors = [];
     for (let i = 0; i < react_blueprints.length; i++) {
-        const { src_files, dest_path, clean } = react_blueprints[i];
+        const { src_files, dest_path } = react_blueprints[i];
 
         configEditors.push(
             Object.assign({}, config, {
@@ -112,7 +104,7 @@ module.exports = (env, options) => {
                     path: path.resolve(dest_path),
                     filename: '[name].js',
                     chunkFilename: 'lazy-chunks/[name].[contenthash].min.js',
-                    clean: clean,
+                    clean: true,
                 },
                 resolve: {
                     extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -136,11 +128,6 @@ module.exports = (env, options) => {
                         '@OrderContexts': path.resolve(__dirname, './assets/react/v3/entries/order-details/contexts/'),
                         '@CouponComponents': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/components/'),
                         '@CouponServices': path.resolve(__dirname, './assets/react/v3/entries/coupon-details/services/'),
-                        '@EnrollmentComponents': path.resolve(
-                            __dirname,
-                            './assets/react/v3/entries/pro/manual-enrollment/components/',
-                        ),
-                        '@EnrollmentServices': path.resolve(__dirname, './assets/react/v3/entries/pro/manual-enrollment/services/'),
                         '@AddonList': path.resolve(__dirname, './assets/react/v3/entries/addon-list/'),
                     },
                 },
