@@ -28,7 +28,13 @@ if ( ! is_user_logged_in() ) {
 	$button_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
 
-$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+$enroll_now_attrs = apply_filters( 'tutor_enroll_now_link_attrs', array(), $course_id );
+$attrs_string     = '';
+foreach ( $enroll_now_attrs as $key => $value ) {
+	$attrs_string .= sprintf( '%s="%s" ', esc_attr( $key ), esc_attr( $value ) );
+}
+
+$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '" ' . trim( $attrs_string ) . '>' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
 $free_html  = $enroll_btn;
 
 if ( tutor_utils()->is_course_purchasable() ) {

@@ -315,7 +315,7 @@ class HooksHandler {
 				 * @since 3.2.0
 				 */
 				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $object_id );
-				if ( $plan_info && $plan_info->is_membership_plan ) {
+				if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
 					continue;
 				}
 			}
