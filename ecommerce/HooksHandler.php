@@ -308,6 +308,16 @@ class HooksHandler {
 			$object_id = $item->id; // It could be course/bundle/plan id.
 			if ( $this->order_model::TYPE_SINGLE_ORDER !== $order->order_type ) {
 				$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+
+				/**
+				 * Do not process enrollment for membership plan.
+				 *
+				 * @since 3.2.0
+				 */
+				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $object_id );
+				if ( $plan_info && $plan_info->is_membership_plan ) {
+					continue;
+				}
 			}
 
 			$has_enrollment = tutor_utils()->is_enrolled( $object_id, $student_id, false );
