@@ -993,7 +993,7 @@ class Options_V2 {
 						),
 					),
 					'block_woocommerce'     => array(
-						'label'      => __( 'Woocommerce', 'tutor' ),
+						'label'      => __( 'WooCommerce', 'tutor' ),
 						'slug'       => 'woocommerce',
 						'block_type' => 'uniform',
 						'fields'     => array(

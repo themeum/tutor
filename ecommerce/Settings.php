@@ -105,7 +105,7 @@ class Settings {
 					array(
 						'key'            => OptionKeys::CURRENCY_CODE,
 						'type'           => 'select',
-						'label'          => __( 'Currency Symbol', 'tutor' ),
+						'label'          => __( 'Currency', 'tutor' ),
 						'select_options' => false,
 						'options'        => self::get_currency_options(),
 						'default'        => 'USD',
