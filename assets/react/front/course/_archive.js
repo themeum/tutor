@@ -218,6 +218,11 @@ window.jQuery(document).ready($ => {
                 {action: 'tutor_course_enrollment'},
                 {course_id: target.dataset.courseId}
             ];
+
+            if (target.dataset.subscriptionEnrollment) {
+                formFields.push({ tutor_subscription_enrollment: true })
+            }
+
             const formData = tutorFormData(formFields);
 
             target.classList.add('is-loading');
