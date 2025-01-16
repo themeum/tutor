@@ -484,11 +484,16 @@ class OrderModel {
 				'table' => "{$wpdb->prefix}posts AS p",
 				'on'    => 'p.ID = oi.item_id',
 			),
+			array(
+				'type'  => 'LEFT',
+				'table' => "{$wpdb->prefix}tutor_subscription_plans AS sp",
+				'on'    => 'sp.id = oi.item_id',
+			),
 		);
 
 		$where = array( 'order_id' => $order_id );
 
-		$select_columns = array( 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type' );
+		$select_columns = array( 'oi.item_id AS id', 'oi.regular_price', 'oi.sale_price', 'oi.discount_price', 'oi.coupon_code', 'p.post_title AS title', 'p.post_type AS type', 'sp.plan_name AS plan_name', 'sp.plan_type as plan_type' );
 
 		$courses_data = QueryHelper::get_joined_data( $primary_table, $joining_tables, $select_columns, $where, array(), 'id', 0, 0 );
 		$courses      = $courses_data['results'];
