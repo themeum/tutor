@@ -15,7 +15,6 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use Tutor\Models\OrderModel;
-use TutorPro\Subscription\Models\PlanModel;
 
 // Global variables.
 $user_id     = get_current_user_id();
@@ -104,7 +103,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 						<?php esc_html_e( 'Order ID', 'tutor' ); ?>
 					</th>
 					<th width="30%">
-						<?php esc_html_e( 'Name', 'tutor' ); ?>
+						<?php esc_html_e( 'Course Name', 'tutor' ); ?>
 					</th>
 					<th>
 						<?php esc_html_e( 'Date', 'tutor' ); ?>
@@ -139,20 +138,15 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 								<td>
 									<div class="tutor-fs-7">
 									<?php
-									$items                  = ( new OrderModel() )->get_order_items_by_id( $order->id );
-									$purchase_history_title = '';
+									$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 									foreach ( $items as $item ) {
 										$course_id = $item->id;
-										if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type ) {
-											$course_id              = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
-											$is_course_plan         = $item->plan_type && ! in_array( $item->plan_type, PlanModel::get_membership_plan_types(), true );
-											$purchase_history_title = $is_course_plan ? get_the_title( $course_id ) : $item->plan_name;
-										} else {
-											$purchase_history_title = get_the_title( $course_id );
+										if ( OrderModel::TYPE_SUBSCRIPTION ) {
+											$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 										}
 										?>
 										<li>
-										<?php echo esc_html( $purchase_history_title ); ?>
+										<?php echo esc_html( get_the_title( $course_id ) ); ?>
 										</li>
 										<?php
 									}
