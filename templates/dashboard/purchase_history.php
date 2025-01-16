@@ -127,7 +127,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 						if ( is_array( $orders ) && count( $orders ) ) :
 							?>
 							<?php
-							foreach ( $orders as $order ) :
+							foreach ( $orders as $order ) : //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 								?>
 								<tr>
 								<td>
@@ -141,15 +141,15 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 									foreach ( $items as $item ) {
 										$course_id    = $item->id;
-										$object_title = '';
+										$object_title = get_the_title( $course_id );
 										if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type ) {
 											$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 											$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $course_id );
 											if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
 												$object_title = $plan_info->plan_name;
+											} else {
+												$object_title = get_the_title( $course_id );
 											}
-										} else {
-											$object_title = get_the_title( $course_id );
 										}
 
 										?>
