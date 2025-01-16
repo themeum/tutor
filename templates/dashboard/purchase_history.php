@@ -144,7 +144,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 										$object_title = get_the_title( $course_id );
 										if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type ) {
 											$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
-											$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $object_id );
+											$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $item->id );
 											if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
 												$object_title = $plan_info->plan_name;
 											} else {
