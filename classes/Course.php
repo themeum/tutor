@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use stdClass;
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\ValidationHelper;
 use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
@@ -268,6 +268,13 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
+
+		/**
+		 * Add a filter to override the default sanitization of slugs(post_name) in WordPress.
+		 *
+		 * @since 3.2.0
+		 */
+		add_filter( 'sanitize_title', array( $this, 'tutor_sanitize_slug' ) );
 	}
 
 	/**
@@ -373,10 +380,8 @@ class Course extends Tutor_Base {
 
 			if ( '' === $video_source ) {
 				$errors['video_source'] = __( 'Video source is required', 'tutor' );
-			} else {
-				if ( ! $this->is_valid_video_source_type( $video_source ) ) {
+			} elseif ( ! $this->is_valid_video_source_type( $video_source ) ) {
 					$errors['video_source'] = __( 'Invalid video source', 'tutor' );
-				}
 			}
 		}
 	}
@@ -822,7 +827,7 @@ class Course extends Tutor_Base {
 		if ( count( $exclude ) ) {
 			$exclude         = array_filter(
 				$exclude,
-				function( $id ) {
+				function ( $id ) {
 					return is_numeric( $id );
 				}
 			);
@@ -1684,37 +1689,29 @@ class Course extends Tutor_Base {
 			if ( ! empty( $_POST['course_benefits'] ) ) {
 				$course_benefits = Input::post( 'course_benefits', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_benefits', $course_benefits );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_benefits' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_requirements'] ) ) {
 				$requirements = Input::post( 'course_requirements', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_requirements', $requirements );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_requirements' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_target_audience'] ) ) {
 				$target_audience = Input::post( 'course_target_audience', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_target_audience', $target_audience );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_target_audience' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_material_includes'] ) ) {
 				$material_includes = Input::post( 'course_material_includes', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_material_includes', $material_includes );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_material_includes' );
-				}
 			}
 			//phpcs:enable WordPress.Security.NonceVerification.Missing
 		}
@@ -1738,10 +1735,8 @@ class Course extends Tutor_Base {
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_video' );
-				}
 			}
 		}
 
@@ -3025,4 +3020,17 @@ class Course extends Tutor_Base {
 		return $args;
 	}
 
+
+	/**
+	 * Sanitizes a slug by decoding URL-encoded characters.
+	 *
+	 * @param string $slug The URL-encoded slug to be sanitized.
+	 *
+	 * @return string The sanitized slug with decoded characters.
+	 *
+	 * @since 3.2.0
+	 */
+	public function tutor_sanitize_slug( $slug ) {
+		return urldecode( $slug );
+	}
 }
