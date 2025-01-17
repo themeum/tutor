@@ -328,6 +328,7 @@ class HooksHandler {
 					if ( $this->is_bundle_order( $order, $object_id ) ) {
 						if ( 'completed' === $enrollment_status ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
+							do_action( 'tutor_order_enrolled', $order, $has_enrollment->ID );
 						} else {
 							BundleModel::disenroll_from_bundle_courses( $object_id, $student_id );
 						}
