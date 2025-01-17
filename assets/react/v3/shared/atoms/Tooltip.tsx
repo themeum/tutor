@@ -30,7 +30,7 @@ const Tooltip = ({
   hideOnClick,
   delay = 0,
   disabled = false,
-  visible = false,
+  visible,
 }: TooltipProps) => {
   const [props, setSpring] = useSpring(() => initialStyles);
 
