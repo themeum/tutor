@@ -170,7 +170,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									</span>
 								</div>
 								<div class="tutor-iconic-btn-group tutor-mr-n8">
-									<a href="<?php echo esc_url( tutor_utils()->course_edit_link( $post->ID ) ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
+									<a href="<?php echo esc_url( tutor_utils()->course_edit_link( $post->ID, tutor()->has_pro ? 'frontend' : 'backend' ) ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
 										<i class="tutor-icon-edit" area-hidden="true"></i>
 									</a>
 									<div class="tutor-dropdown-parent">
