@@ -862,7 +862,7 @@ class CouponModel {
 		foreach ( $item_ids as $item_id ) {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-				$plan_info = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				$plan_info = apply_filters( 'tutor_get_plan_info', null, $item_id );
 				if ( $plan_info ) {
 					$course_price->regular_price = $plan_info->regular_price;
 					$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;

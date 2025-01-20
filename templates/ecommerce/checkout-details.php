@@ -26,7 +26,7 @@ $total_count         = $courses['total_count'];
 $course_list         = $courses['results'];
 
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );
-$plan_info = apply_filters( 'tutor_checkout_plan_info', new stdClass(), $plan_id );
+$plan_info = apply_filters( 'tutor_get_plan_info', new stdClass(), $plan_id );
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
