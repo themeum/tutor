@@ -5827,19 +5827,19 @@ class Utils {
 			'facebook' => array(
 				'share_class' => 's_facebook',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-facebook"></i>',
-				'text'        => __( 'Facebook', 'tutor' ),
+				'text'        => '',
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-twitter"></i>',
-				'text'        => __( 'Twitter', 'tutor' ),
-				'color'       => '#4CA0EB',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-x-twitter"></i>',
+				'text'        => '',
+				'color'       => '#000000',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-linkedin"></i>',
-				'text'        => __( 'Linkedin', 'tutor' ),
+				'text'        => '',
 				'color'       => '#3967B6',
 			),
 		);
