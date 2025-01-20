@@ -145,6 +145,8 @@ class Admin {
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
 
+		add_submenu_page( 'tutor', __( 'Templates', 'tutor' ), __( 'Templates', 'tutor' ), 'manage_tutor', 'tutor-templates', array( $this, 'tutor_templates' ) );
+
 		add_submenu_page( 'tutor', __( 'Categories', 'tutor' ), __( 'Categories', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-category&post_type=' . $course_post_type, null );
 
 		add_submenu_page( 'tutor', __( 'Tags', 'tutor' ), __( 'Tags', 'tutor' ), 'manage_tutor', 'edit-tags.php?taxonomy=course-tag&post_type=' . $course_post_type, null );
@@ -175,6 +177,15 @@ class Admin {
 		if ( ! $has_pro ) {
 			add_submenu_page( 'tutor', __( 'Upgrade to Pro', 'tutor' ), sprintf( '<span class="tutor-get-pro-text">%s</span>', __( 'Upgrade to Pro', 'tutor' ) ), 'manage_options', 'tutor-get-pro', array( $this, 'tutor_get_pro' ) );
 		}
+	}
+
+	/**
+	 * Tutor template description
+	 *
+	 * @return void
+	 */
+	public function tutor_templates() {
+		include tutor()->path . 'views/templates/templates.php';
 	}
 
 	/**
