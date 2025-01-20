@@ -183,7 +183,7 @@ class CheckoutController {
 			$item_name    = get_the_title( $item_id );
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-				$plan_info = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				$plan_info = apply_filters( 'tutor_get_plan_info', null, $item_id );
 				if ( $plan_info ) {
 					$item_name                   = $plan_info->plan_name;
 					$course_price->regular_price = $plan_info->regular_price;
@@ -567,7 +567,7 @@ class CheckoutController {
 
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
 				$plan_id   = $item_id;
-				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $plan_id );
+				$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $plan_id );
 				$item_name = $plan_info->plan_name ?? '';
 
 				$items[] = array(
