@@ -34,6 +34,9 @@ export interface PaymentSettings {
 }
 
 export const getWebhookUrl = (gateway: string) => {
+  if (gateway === 'authorizenet') {
+    return `${tutorConfig.home_url}/wp-json/tutor/v1/ecommerce-webhook/${gateway}`;
+  }
   return `${tutorConfig.home_url}/wp-json/tutor/v1/ecommerce-webhook?payment_method=${gateway}`;
 };
 
