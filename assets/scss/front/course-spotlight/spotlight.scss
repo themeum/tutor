@@ -6,6 +6,10 @@
 		}
 	}
 
+	.tutor-lesson-wrapper iframe {
+		max-width: 100%;
+	}
+
 	.tutor-exercise-files {
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);

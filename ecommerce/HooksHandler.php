@@ -314,7 +314,7 @@ class HooksHandler {
 				 *
 				 * @since 3.2.0
 				 */
-				$plan_info = apply_filters( 'tutor_checkout_plan_info', new \stdClass(), $object_id );
+				$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $object_id );
 				if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
 					continue;
 				}
@@ -328,6 +328,7 @@ class HooksHandler {
 					if ( $this->is_bundle_order( $order, $object_id ) ) {
 						if ( 'completed' === $enrollment_status ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
+							do_action( 'tutor_order_enrolled', $order, $has_enrollment->ID );
 						} else {
 							BundleModel::disenroll_from_bundle_courses( $object_id, $student_id );
 						}
