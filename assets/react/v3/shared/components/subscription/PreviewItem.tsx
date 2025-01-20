@@ -76,7 +76,7 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
                 <>
                   <span>•</span>
                   <span>
-                    {subscription.recurring_limit.toString().padStart(2, '0')} {__('Times', 'tutor')}
+                    {subscription.recurring_limit.toString().padStart(2, '0')} {__('Billing Cycles', 'tutor')}
                   </span>
                 </>
               }
