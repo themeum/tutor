@@ -1,19 +1,19 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useState } from 'react';
 
-import Checkbox from '@Atoms/CheckBox';
-import Chip from '@Atoms/Chip';
-import { isRTL } from '@Config/constants';
-import Show from '@Controls/Show';
-import { useDebounce } from '@Hooks/useDebounce';
-import { type Tag, useCreateTagMutation, useTagListQuery } from '@Services/tags';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import Chip from '@TutorShared/atoms/Chip';
+import { isRTL } from '@TutorShared/config/constants';
+import Show from '@TutorShared/controls/Show';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

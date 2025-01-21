@@ -1,4 +1,4 @@
-import { isDefined } from '@Utils/types';
+import { isDefined } from '@TutorShared/utils/types';
 import { useEffect, useRef, useState } from 'react';
 
 type Args = IntersectionObserverInit & {

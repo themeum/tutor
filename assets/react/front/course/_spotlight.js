@@ -156,7 +156,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
 				const distanceFromTop = clientY;
 
 				scrollDirection = 0;
-				
+
 				if (distanceFromBottom < scrollThreshold) {
 					scrollDirection = calculateScrollSpeed(scrollThreshold, distanceFromBottom, maxScrollSpeed);
 				} else if (distanceFromTop < scrollThreshold) {
@@ -194,6 +194,17 @@ document.addEventListener('DOMContentLoaded', (event) => {
 					newInput.type = 'text';
 					newInput.setAttribute('value', input.value);
 					newInput.setAttribute('name', inputName);
+
+					/**
+					 * Selecting a correct option after an incorrect fails in mobile issue fixed.
+					 * 
+					 * @since 3.2.0
+					 */
+					const dropZoneInput = dropZone.querySelector('input');
+					if (dropZoneInput) {
+						dropZoneInput.remove();
+					}
+
 					dropZone.appendChild(newInput);
 					const copyContent = copiedDragElement.querySelector('.tutor-dragging-text-conent').textContent;
 					dropZone.querySelector('.tutor-dragging-text-conent').textContent = copyContent;

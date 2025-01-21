@@ -16,19 +16,19 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Controller, useFieldArray, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormImageAnswering from '@Components/fields/quiz/FormImageAnswering';
+import FormImageAnswering from '@CourseBuilderComponents/fields/quiz/FormImageAnswering';
 
-import { colorTokens, spacing } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
-import { nanoid, noop } from '@Utils/util';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { nanoid, noop } from '@TutorShared/utils/util';
 
-import Button from '@/v3/shared/atoms/Button';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import { QuizDataStatus, type QuizForm, type QuizQuestionOption } from '@CourseBuilderServices/quiz';
+import Button from '@TutorShared/atoms/Button';
 
 const ImageAnswering = () => {
   const [activeSortId, setActiveSortId] = useState<UniqueIdentifier | null>(null);
@@ -208,6 +208,10 @@ const styles = {
     ${styleUtils.display.flex('column')};
     gap: ${spacing[12]};
     padding-left: ${spacing[40]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[8]};
+    }
   `,
   addOptionButton: css`
     color: ${colorTokens.text.brand};

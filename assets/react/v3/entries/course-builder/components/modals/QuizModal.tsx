@@ -3,18 +3,18 @@ import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 import { Controller, FormProvider } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import { useToast } from '@Atoms/Toast';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
 
-import FormInput from '@Components/fields/FormInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Tabs from '@Molecules/Tabs';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Tabs from '@TutorShared/molecules/Tabs';
 
 import QuestionConditions from '@CourseBuilderComponents/curriculum/QuestionConditions';
 import QuestionForm from '@CourseBuilderComponents/curriculum/QuestionForm';
@@ -29,18 +29,18 @@ import {
   useSaveQuizMutation,
 } from '@CourseBuilderServices/quiz';
 
-import { CURRENT_VIEWPORT, modal } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import { CURRENT_VIEWPORT, modal } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import type { ContentDripType } from '@CourseBuilderServices/course';
-import type { ContentType, ID } from '@CourseBuilderServices/curriculum';
+import type { ContentType } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { isDefined } from '@Utils/types';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type ID, isDefined } from '@TutorShared/utils/types';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;
@@ -242,7 +242,11 @@ const QuizModal = ({
                     }}
                     ref={cancelRef}
                   >
-                    {quizId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
+                    {quizId
+                      ? CURRENT_VIEWPORT.isAboveSmallMobile
+                        ? __('Discard Changes', 'tutor')
+                        : __('Discard', 'tutor')
+                      : __('Cancel', 'tutor')}
                   </Button>
                   <Show
                     when={activeTab === 'settings' || quizId}
@@ -369,7 +373,7 @@ const QuizModal = ({
               title={__('Your quiz has unsaved changes. If you cancel, you will lose your progress.', 'tutor')}
               message={__('Are you sure you want to continue?', 'tutor')}
               animationType={AnimationType.slideUp}
-              arrow="top"
+              arrow={CURRENT_VIEWPORT.isAboveMobile ? 'top' : 'absoluteCenter'}
               positionModifier={{ top: -50, left: quizId ? 88 : activeTab === 'settings' ? 30 : 26 }}
               hideArrow
               confirmButton={{
@@ -458,6 +462,10 @@ const styles = {
     color: ${colorTokens.text.subdued};
     padding: ${spacing[16]} ${spacing[32]} ${spacing[16]} ${spacing[28]};
     border-bottom: 1px solid ${colorTokens.stroke.divider};
+
+    ${Breakpoint.smallTablet} {
+      padding: ${spacing[8]};
+    }
   `,
   quizNameWithButton: css`
     display: inline-flex;
@@ -478,6 +486,12 @@ const styles = {
     :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       border-radius: ${borderRadius[6]};
+      button {
+        display: block;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       button {
         display: block;
       }

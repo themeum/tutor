@@ -4,35 +4,35 @@ import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 
-import FormCheckbox from '@Components/fields/FormCheckbox';
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
 
-import Show from '@Controls/Show';
 import {
   type GoogleMeet,
   type GoogleMeetMeetingFormData,
   useSaveGoogleMeetMutation,
 } from '@CourseBuilderServices/course';
-import { type ID, useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curriculum';
+import { useGoogleMeetDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { invalidDateRule, invalidTimeRule } from '@Utils/validation';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID, isDefined } from '@TutorShared/utils/types';
+import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
 interface GoogleMeetFormProps {
   onCancel: () => void;
@@ -109,7 +109,6 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(currentMeeting)) {
       meetingForm.reset({
@@ -139,6 +138,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMeeting]);
 
   return (

@@ -1,6 +1,6 @@
-import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
-import { AnimatedDiv } from '@Hooks/useAnimation';
-import type { AnyObject } from '@Utils/form';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
+import { AnimatedDiv } from '@TutorShared/hooks/useAnimation';
+import type { AnyObject } from '@TutorShared/utils/form';
 import { css } from '@emotion/react';
 import { useSpring } from '@react-spring/web';
 import Tippy from '@tippyjs/react/headless';
@@ -16,6 +16,7 @@ interface TooltipProps {
   hideOnClick?: boolean;
   delay?: number;
   disabled?: boolean;
+  visible?: boolean;
 }
 
 const initialStyles = { opacity: 0, transform: 'scale(0.8)' };
@@ -29,10 +30,11 @@ const Tooltip = ({
   hideOnClick,
   delay = 0,
   disabled = false,
+  visible,
 }: TooltipProps) => {
-  if (disabled) return children;
-
   const [props, setSpring] = useSpring(() => initialStyles);
+
+  if (disabled) return children;
 
   const onMount = () => {
     setSpring.start({
@@ -66,6 +68,7 @@ const Tooltip = ({
       delay={[delay, 100]}
       hideOnClick={hideOnClick}
       placement={placement}
+      visible={visible}
     >
       <div>{children}</div>
     </Tippy>

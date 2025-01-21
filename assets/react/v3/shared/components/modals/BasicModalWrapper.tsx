@@ -1,9 +1,9 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { modal } from '@Config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { modal } from '@TutorShared/config/constants';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type SerializedStyles, css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';
@@ -109,7 +109,7 @@ const styles = {
     `}
 
     ${Breakpoint.smallTablet} {
-      max-width: 90%;
+      width: 90%;
     }
   `,
   header: ({ hasEntireHeader }: { hasEntireHeader?: boolean }) => css`

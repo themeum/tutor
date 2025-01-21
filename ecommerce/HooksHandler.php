@@ -283,7 +283,7 @@ class HooksHandler {
 	 */
 	private function is_bundle_order( $order, $object_id ) {
 		return tutor_utils()->is_addon_enabled( 'course-bundle' )
-		&& $this->order_model::TYPE_SINGLE_ORDER === $order->order_type
+		&& in_array( $order->order_type, array( $this->order_model::TYPE_SINGLE_ORDER, $this->order_model::TYPE_SUBSCRIPTION ), true )
 		&& 'course-bundle' === get_post_type( $object_id );
 	}
 
@@ -308,6 +308,16 @@ class HooksHandler {
 			$object_id = $item->id; // It could be course/bundle/plan id.
 			if ( $this->order_model::TYPE_SINGLE_ORDER !== $order->order_type ) {
 				$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+
+				/**
+				 * Do not process enrollment for membership plan.
+				 *
+				 * @since 3.2.0
+				 */
+				$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $object_id );
+				if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
+					continue;
+				}
 			}
 
 			$has_enrollment = tutor_utils()->is_enrolled( $object_id, $student_id, false );
@@ -315,7 +325,7 @@ class HooksHandler {
 				// Update enrollment status based on order status.
 				$update = tutor_utils()->update_enrollments( $enrollment_status, array( $has_enrollment->ID ) );
 				if ( $update ) {
-					if ( $this->is_bundle_order( $order, $object_id ) ) {
+					if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 						if ( 'completed' === $enrollment_status ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 						} else {
@@ -326,7 +336,7 @@ class HooksHandler {
 					/**
 					 * For subscription, renewal no need to update order id.
 					 */
-					if ( $this->order_model::TYPE_SINGLE_ORDER === $order->order_type ) {
+					if ( $this->order_model->is_single_order( $order ) ) {
 						update_post_meta( $has_enrollment->ID, '_tutor_enrolled_by_order_id', $order_id );
 
 						/**
@@ -355,21 +365,19 @@ class HooksHandler {
 							do_action( 'tutor_after_enrolled', $object_id, $student_id, $has_enrollment->ID );
 						}
 					}
+
+					if ( 'completed' === $enrollment_status ) {
+						do_action( 'tutor_order_enrolled', $order, $has_enrollment->ID );
+					}
 				}
 			} else {
 				if ( $order->order_status === $this->order_model::ORDER_COMPLETED ) {
 					// Insert enrollment.
-					add_filter(
-						'tutor_enroll_data',
-						function( $enroll_data ) {
-							$enroll_data['post_status'] = 'completed';
-							return $enroll_data;
-						}
-					);
+					add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 					$enrollment_id = tutor_utils()->do_enroll( $object_id, $order_id, $student_id );
 					if ( $enrollment_id ) {
-						if ( $this->is_bundle_order( $order, $object_id ) ) {
+						if ( $this->is_bundle_order( $order, $object_id ) && $this->order_model->is_single_order( $order ) ) {
 							BundleModel::enroll_to_bundle_courses( $object_id, $student_id );
 						}
 						update_post_meta( $enrollment_id, '_tutor_enrolled_by_order_id', $order_id );

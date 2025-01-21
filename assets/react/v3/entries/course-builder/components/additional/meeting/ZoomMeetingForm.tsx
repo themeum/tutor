@@ -4,29 +4,29 @@ import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInput from '@Components/fields/FormInput';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import FormTimeInput from '@Components/fields/FormTimeInput';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
-import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import { tutorConfig } from '@Config/config';
-import { DateFormats } from '@Config/constants';
-import Show from '@Controls/Show';
 import { type ZoomMeeting, type ZoomMeetingFormData, useSaveZoomMeetingMutation } from '@CourseBuilderServices/course';
-import { type ID, useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
+import { useZoomMeetingDetailsQuery } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { invalidTimeRule } from '@Utils/validation';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats } from '@TutorShared/config/constants';
+import Show from '@TutorShared/controls/Show';
+import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type ID, isDefined } from '@TutorShared/utils/types';
+import { invalidTimeRule } from '@TutorShared/utils/validation';
 
 interface ZoomMeetingFormProps {
   onCancel: () => void;
@@ -100,7 +100,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(currentMeeting)) {
       meetingForm.reset({
@@ -124,6 +123,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
     return () => {
       clearTimeout(timeoutId);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMeeting]);
 
   return (

@@ -4,38 +4,38 @@ import { __ } from '@wordpress/i18n';
 import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
-import Button from '@Atoms/Button';
-import { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import FormInput from '@Components/fields/FormInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
-import FormWPEditor from '@Components/fields/FormWPEditor';
-import type { ModalProps } from '@Components/modals/Modal';
-import ModalWrapper from '@Components/modals/ModalWrapper';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
+import type { ModalProps } from '@TutorShared/components/modals/Modal';
+import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
-  type ID,
   convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
 } from '@CourseBuilderServices/curriculum';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { type WPMedia } from '@Hooks/useWpMedia';
-import { normalizeLineEndings } from '@Utils/util';
-import { maxLimitRule } from '@Utils/validation';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type ID } from '@TutorShared/utils/types';
+import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {
   assignmentId?: ID;

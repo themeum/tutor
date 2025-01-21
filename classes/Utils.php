@@ -5582,7 +5582,7 @@ class Utils {
 	public function tutor_dashboard_url( $sub_url = '' ) {
 		$page_id = (int) $this->get_option( 'tutor_dashboard_page_id' );
 		$page_id = apply_filters( 'tutor_dashboard_page_id', $page_id );
-		return apply_filters( 'tutor_dashboard_url', trailingslashit( get_the_permalink( $page_id ) ) . $sub_url );
+		return apply_filters( 'tutor_dashboard_url', trailingslashit( get_the_permalink( $page_id ) ) . $sub_url, $sub_url );
 	}
 
 	/**
@@ -5827,19 +5827,19 @@ class Utils {
 			'facebook' => array(
 				'share_class' => 's_facebook',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-facebook"></i>',
-				'text'        => __( 'Facebook', 'tutor' ),
+				'text'        => '',
 				'color'       => '#3877EA',
 			),
 			'twitter'  => array(
 				'share_class' => 's_twitter',
-				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-twitter"></i>',
-				'text'        => __( 'Twitter', 'tutor' ),
-				'color'       => '#4CA0EB',
+				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-x-twitter"></i>',
+				'text'        => '',
+				'color'       => '#000000',
 			),
 			'linkedin' => array(
 				'share_class' => 's_linkedin',
 				'icon_html'   => '<i class="tutor-valign-middle tutor-icon-brand-linkedin"></i>',
-				'text'        => __( 'Linkedin', 'tutor' ),
+				'text'        => '',
 				'color'       => '#3967B6',
 			),
 		);
@@ -6722,7 +6722,7 @@ class Utils {
 	 */
 	public function get_course_categories( $parent = 0, $custom_args = array() ) {
 		$default_args = array(
-			'taxonomy'   => 'course-category',
+			'taxonomy'   => CourseModel::COURSE_CATEGORY,
 			'hide_empty' => false,
 		);
 
@@ -6761,7 +6761,7 @@ class Utils {
 		$args = apply_filters(
 			'tutor_get_course_tags_args',
 			array(
-				'taxonomy'   => 'course-tag',
+				'taxonomy'   => CourseModel::COURSE_TAG,
 				'hide_empty' => false,
 			)
 		);
@@ -6790,7 +6790,7 @@ class Utils {
 		$args = apply_filters(
 			'tutor_get_course_categories_terms_args',
 			array(
-				'taxonomy'   => 'course-category',
+				'taxonomy'   => CourseModel::COURSE_CATEGORY,
 				'parent'     => $parent_id,
 				'hide_empty' => false,
 			)
@@ -9979,13 +9979,15 @@ class Utils {
 	 * Execute bulk action for enrollment list ex: complete | cancel
 	 *
 	 * @since 2.0.3
+	 * @since 3.2.0 $trigger_hook param added.
 	 *
 	 * @param string $status hold status for updating.
 	 * @param array  $enrollment_ids ids that need to update.
+	 * @param bool   $trigger_hook optional - trigger hook or not.
 	 *
 	 * @return bool
 	 */
-	public function update_enrollments( string $status, array $enrollment_ids ): bool {
+	public function update_enrollments( string $status, array $enrollment_ids, bool $trigger_hook = true ): bool {
 		global $wpdb;
 		$enrollment_ids_in = QueryHelper::prepare_in_clause( $enrollment_ids );
 		$status            = 'complete' === $status ? 'completed' : $status;
@@ -10001,9 +10003,11 @@ class Utils {
 			)
 		);
 
-		// Run action hook.
-		foreach ( $enrollment_ids as $id ) {
-			do_action( 'tutor_enrollment/after/' . $status, $id );
+		if ( $trigger_hook ) {
+			// Run action hook.
+			foreach ( $enrollment_ids as $id ) {
+				do_action( 'tutor_enrollment/after/' . $status, $id );
+			}
 		}
 
 		return true;

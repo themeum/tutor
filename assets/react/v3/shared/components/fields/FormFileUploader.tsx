@@ -1,19 +1,19 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormFieldWrapper from '@Components/fields/FormFieldWrapper';
+import FormFieldWrapper from '@TutorShared/components/fields/FormFieldWrapper';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import useWPMedia, { type WPMedia } from '@Hooks/useWpMedia';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection } from '@TutorShared/utils/types';
 
 export type WpMediaDetails = {
   id: number;
@@ -242,6 +242,12 @@ const styles = {
     &:focus-within {
       background: ${colorTokens.background.hover};
 
+      button {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       button {
         opacity: 1;
       }

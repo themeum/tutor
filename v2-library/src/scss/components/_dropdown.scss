@@ -2,7 +2,6 @@
     list-style: none;
     padding: 0;
     position: absolute;
-    right: 0;
     top: calc(100% - 4px);
     padding: 8px 0px;
     background-color: var(--tutor-color-white);
@@ -11,6 +10,12 @@
     border-radius: 4px;
     display: none;
     z-index: 1025;
+
+    @if ($is-rtl) {
+        left: 0;
+    } @else {
+        right: 0;
+    }
 
     > li {
         padding: 0;

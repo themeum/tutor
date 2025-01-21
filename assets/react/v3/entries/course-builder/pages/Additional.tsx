@@ -5,36 +5,35 @@ import { useEffect } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, BoxSubtitle, BoxTitle } from '@Atoms/Box';
-import ProBadge from '@Atoms/ProBadge';
-import EmptyState from '@Molecules/EmptyState';
+import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
-import FormCoursePrerequisites from '@Components/fields/FormCoursePrerequisites';
-import FormFileUploader from '@Components/fields/FormFileUploader';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
+import FormCoursePrerequisites from '@TutorShared/components/fields/FormCoursePrerequisites';
+import FormFileUploader from '@TutorShared/components/fields/FormFileUploader';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 
 import Certificate from '@CourseBuilderComponents/additional/Certificate';
 import CoursePrerequisitesEmptyState from '@CourseBuilderComponents/additional/CoursePrerequisitesEmptyState';
 import LiveClass from '@CourseBuilderComponents/additional/LiveClass';
 import CanvasHead from '@CourseBuilderComponents/layouts/CanvasHead';
-import {
-  type CourseDetailsResponse,
-  type CourseFormData,
-  usePrerequisiteCoursesQuery,
-} from '@CourseBuilderServices/course';
+import { type CourseDetailsResponse, type CourseFormData } from '@CourseBuilderServices/course';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, CURRENT_VIEWPORT } from '@Config/constants';
-import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import Navigator from '@CourseBuilderComponents/layouts/Navigator';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 
-import attachmentsPro2x from '@Images/pro-placeholders/attachments-2x.webp';
-import attachmentsPro from '@Images/pro-placeholders/attachments.webp';
+import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
+import attachmentsPro from '@SharedImages/pro-placeholders/attachments.webp';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { useCourseListQuery } from '@TutorShared/services/course';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();
@@ -69,8 +68,11 @@ const Additional = () => {
   const prerequisiteCourseIds =
     courseDetails?.course_prerequisites?.map((prerequisite) => String(prerequisite.id)) || [];
 
-  const prerequisiteCoursesQuery = usePrerequisiteCoursesQuery({
-    excludedIds: [String(courseId), ...prerequisiteCourseIds],
+  const prerequisiteCoursesQuery = useCourseListQuery({
+    params: {
+      excludedIds: [String(courseId), ...prerequisiteCourseIds],
+      limit: -1,
+    },
     isEnabled: !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,
   });
 
@@ -218,7 +220,9 @@ const Additional = () => {
                   <BoxSubtitle>{__('Select a certificate to award your learners.', 'tutor')}</BoxSubtitle>
                 </Show>
               </div>
-              <Certificate isSidebarVisible={isSidebarVisible} />
+              <Show when={!isCourseDetailsFetching} fallback={<LoadingSection />}>
+                <Certificate isSidebarVisible={isSidebarVisible} />
+              </Show>
             </Box>
           </Show>
         </div>
@@ -244,7 +248,7 @@ const Additional = () => {
                     <FormCoursePrerequisites
                       {...controllerProps}
                       placeholder={__('Search courses for prerequisites', 'tutor')}
-                      options={prerequisiteCoursesQuery.data || []}
+                      options={prerequisiteCoursesQuery.data?.results || []}
                       isSearchable
                       loading={
                         prerequisiteCoursesQuery.isLoading ||

@@ -1,5 +1,5 @@
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { ReactNode } from 'react';
 

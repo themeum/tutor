@@ -1,26 +1,26 @@
-import Checkbox from '@Atoms/CheckBox';
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { usePaginatedTable } from '@Hooks/usePaginatedTable';
-import Paginator from '@Molecules/Paginator';
-import Table, { type Column } from '@Molecules/Table';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { usePaginatedTable } from '@TutorShared/hooks/usePaginatedTable';
+import Paginator from '@TutorShared/molecules/Paginator';
+import Table, { type Column } from '@TutorShared/molecules/Table';
 import { css } from '@emotion/react';
 
 import { type Coupon, type Course, useAppliesToQuery } from '@CouponServices/coupon';
-import coursePlaceholder from '@Images/course-placeholder.png';
+import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import { __, sprintf } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
 
 interface CourseListTableProps {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<Coupon, any, undefined>;
   type: 'bundles' | 'courses';
 }
 
 const CourseListTable = ({ type, form }: CourseListTableProps) => {
-  const courseList = form.watch(type) || [];
+  const selectedCourses = form.watch(type) || [];
   const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
     updateQueryParams: false,
   });
@@ -31,15 +31,24 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
     filter: pageInfo.filter,
   });
 
+  const fetchedCourses = (courseListQuery.data?.results ?? []) as Course[];
+
   function toggleSelection(isChecked = false) {
-    form.setValue(type, isChecked ? (courseListQuery.data?.results as Course[]) : []);
+    const selectedCourseIds = selectedCourses.map((course) => course.id);
+    const fetchedCourseIds = fetchedCourses.map((course) => course.id);
+
+    if (isChecked) {
+      const newCourses = fetchedCourses.filter((course) => !selectedCourseIds.includes(course.id));
+      form.setValue(type, [...selectedCourses, ...newCourses]);
+      return;
+    }
+
+    const newCourses = selectedCourses.filter((course) => !fetchedCourseIds.includes(course.id));
+    form.setValue(type, newCourses);
   }
 
   function handleAllIsChecked() {
-    return (
-      courseList.length === courseListQuery.data?.results.length &&
-      courseList?.every((item) => courseListQuery.data?.results?.map((result) => result.id).includes(item.id))
-    );
+    return fetchedCourses.every((course) => selectedCourses.map((course) => course.id).includes(course.id));
   }
 
   const columns: Column<Course>[] = [
@@ -47,7 +56,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
       Header: courseListQuery.data?.results.length ? (
         <Checkbox
           onChange={toggleSelection}
-          checked={handleAllIsChecked()}
+          checked={courseListQuery.isLoading || courseListQuery.isRefetching ? false : handleAllIsChecked()}
           label={type === 'courses' ? __('Courses', 'tutor') : __('Bundles', 'tutor')}
           labelCss={styles.checkboxLabel}
         />
@@ -59,8 +68,8 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
           <div css={styles.checkboxWrapper}>
             <Checkbox
               onChange={() => {
-                const filteredItems = courseList.filter((course) => course.id !== item.id);
-                const isNewItem = filteredItems?.length === courseList.length;
+                const filteredItems = selectedCourses.filter((course) => course.id !== item.id);
+                const isNewItem = filteredItems?.length === selectedCourses.length;
 
                 if (isNewItem) {
                   form.setValue(type, [...filteredItems, item]);
@@ -68,7 +77,7 @@ const CourseListTable = ({ type, form }: CourseListTableProps) => {
                   form.setValue(type, filteredItems);
                 }
               }}
-              checked={courseList.map((course) => course.id).includes(item.id)}
+              checked={selectedCourses.map((course) => course.id).includes(item.id)}
             />
             <img src={item.image || coursePlaceholder} css={styles.thumbnail} alt={__('course item', 'tutor')} />
             <div css={styles.courseItem}>
@@ -159,6 +168,8 @@ const styles = {
     width: 48px;
     height: 48px;
     border-radius: ${borderRadius[4]};
+    object-fit: cover;
+    object-position: center;
   `,
   checkboxLabel: css`
     ${typography.body()};

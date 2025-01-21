@@ -1,4 +1,12 @@
-import { borderRadius, colorTokens, containerMaxWidth, fontFamily, fontSize, shadow, spacing } from '@Config/styles';
+import {
+  borderRadius,
+  colorTokens,
+  containerMaxWidth,
+  fontFamily,
+  fontSize,
+  shadow,
+  spacing,
+} from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import { typography } from '../config/typography';
 
@@ -8,7 +16,7 @@ export const createGlobalCss = () => css`
       padding-left: 0;
     }
 
-    #wpbody {
+    &:not(.tutor-backend-tutor-addons) #wpbody {
       background-color: ${colorTokens.background.default};
     }
   }
@@ -50,6 +58,15 @@ export const createGlobalCss = () => css`
 
   a {
     background-color: transparent;
+
+    &:hover {
+      color: inherit;
+    }
+  }
+
+  li {
+    list-style: none;
+    margin: 0;
   }
 
   abbr[title] {

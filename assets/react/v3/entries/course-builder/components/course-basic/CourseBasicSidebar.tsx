@@ -6,26 +6,28 @@ import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import {} from 'react-router-dom';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import FormCategoriesInput from '@Components/fields/FormCategoriesInput';
-import FormImageInput from '@Components/fields/FormImageInput';
-import FormInput from '@Components/fields/FormInput';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSelectUser, { type UserOption } from '@Components/fields/FormSelectUser';
-import FormTagsInput from '@Components/fields/FormTagsInput';
-import FormVideoInput from '@Components/fields/FormVideoInput';
 import ScheduleOptions from '@CourseBuilderComponents/course-basic/ScheduleOptions';
+import FormCategoriesInput from '@TutorShared/components/fields/FormCategoriesInput';
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSelectUser, { type UserOption } from '@TutorShared/components/fields/FormSelectUser';
+import FormTagsInput from '@TutorShared/components/fields/FormTagsInput';
+import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, DateFormats, TutorRoles } from '@Config/constants';
-import { Breakpoint, colorTokens, headerHeight, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { useInstructorListQuery, useUserListQuery } from '@Services/users';
-import { styleUtils } from '@Utils/style-utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, DateFormats, TutorRoles } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, headerHeight, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useInstructorListQuery, useUserListQuery } from '@TutorShared/services/users';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
+
 import CoursePricing from './CoursePricing';
 
 const courseId = getCourseId();
@@ -44,20 +46,20 @@ const CourseBasicSidebar = () => {
   const isMultiInstructorEnabled = isAddonEnabled(Addons.TUTOR_MULTI_INSTRUCTORS);
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
+  const canInstructorChangeCourseAuthor = tutorConfig.settings?.instructor_can_change_course_author !== 'off';
+  const canInstructorMangeCoInstructors = tutorConfig.settings?.instructor_can_manage_co_instructors !== 'off';
+  const currentUserIsAuthor = String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
   const isAdministrator = currentUser.roles.includes(TutorRoles.ADMINISTRATOR);
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
   );
 
   const currentAuthor = form.watch('post_author');
-  const isInstructorVisible =
-    isTutorPro &&
-    isMultiInstructorEnabled &&
-    tutorConfig.settings?.enable_course_marketplace === 'on' &&
-    (isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '') || isInstructor);
 
-  const isAuthorEditable =
-    isAdministrator || String(currentUser.data.id) === String(courseDetails?.post_author.ID || '');
+  const isInstructorVisible =
+    isTutorPro && isMultiInstructorEnabled && (isAdministrator || (isInstructor && canInstructorMangeCoInstructors));
+
+  const isAuthorEditable = isAdministrator || (currentUserIsAuthor && canInstructorChangeCourseAuthor);
 
   const visibilityStatus = useWatch({
     control: form.control,

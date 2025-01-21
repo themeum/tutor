@@ -103,7 +103,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 						<?php esc_html_e( 'Order ID', 'tutor' ); ?>
 					</th>
 					<th width="30%">
-						<?php esc_html_e( 'Course Name', 'tutor' ); ?>
+						<?php esc_html_e( 'Name', 'tutor' ); ?>
 					</th>
 					<th>
 						<?php esc_html_e( 'Date', 'tutor' ); ?>
@@ -127,7 +127,7 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 						if ( is_array( $orders ) && count( $orders ) ) :
 							?>
 							<?php
-							foreach ( $orders as $order ) :
+							foreach ( $orders as $order ) : //phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 								?>
 								<tr>
 								<td>
@@ -140,13 +140,21 @@ if ( Ecommerce::MONETIZE_BY === $monetize_by ) {
 									<?php
 									$items = ( new OrderModel() )->get_order_items_by_id( $order->id );
 									foreach ( $items as $item ) {
-										$course_id = $item->id;
-										if ( OrderModel::TYPE_SUBSCRIPTION ) {
-											$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+										$course_id    = $item->id; // For single order course, bundle.
+										$object_title = get_the_title( $course_id );
+										if ( OrderModel::TYPE_SINGLE_ORDER !== $order->order_type ) {
+											$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
+											$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $item->id );
+											if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
+												$object_title = $plan_info->plan_name;
+											} else {
+												$object_title = get_the_title( $object_id );
+											}
 										}
+
 										?>
 										<li>
-										<?php echo esc_html( get_the_title( $course_id ) ); ?>
+										<?php echo esc_html( $object_title ); ?>
 										</li>
 										<?php
 									}

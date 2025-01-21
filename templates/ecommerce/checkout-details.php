@@ -26,7 +26,7 @@ $total_count         = $courses['total_count'];
 $course_list         = $courses['results'];
 
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );
-$plan_info = apply_filters( 'tutor_checkout_plan_info', new stdClass(), $plan_id );
+$plan_info = apply_filters( 'tutor_get_plan_info', new stdClass(), $plan_id );
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
@@ -56,9 +56,8 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					$enrollment_fee  = floatval( $plan_info->enrollment_fee );
 					$show_coupon_box = $plan_info->in_sale_price ? false : true;
 
-					$plan_course_id        = apply_filters( 'tutor_subscription_course_by_plan', $plan_id );
-					$plan_course           = get_post( $plan_course_id );
-					$plan_course_thumbnail = get_tutor_course_thumbnail_src( 'post-thumbnail', $plan_course_id );
+					$plan_course_id = apply_filters( 'tutor_subscription_course_by_plan', $plan_id );
+					$plan_course    = get_post( $plan_course_id );
 
 					/**
 					 * Plan item details.
@@ -67,19 +66,31 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					$item = $checkout_data->items[0];
 
 					array_push( $object_ids, $plan_info->id );
+
+					$plan_url = get_the_permalink( $plan_course );
+					if ( $plan_info->is_membership_plan ) {
+						$plan_url = $plan_info->pricing_page_url;
+					}
+
+					$thumbnail_url = get_tutor_course_thumbnail_src( 'post-thumbnail', $plan_course_id );
+					$plan_title    = $plan_info->is_membership_plan ? $plan_info->plan_name : $plan_course->post_title;
+
+					$badge_label = $item->item_name;
 					?>
 				<div class="tutor-checkout-course-item">
+					<?php if ( ! $plan_info->is_membership_plan ) { ?>
 					<div class="tutor-checkout-course-plan-badge">
-						<?php echo esc_html( $item->item_name ); ?>
+						<?php echo esc_html( $badge_label ); ?>
 					</div>
+					<?php } ?>
 					<div class="tutor-checkout-course-content">
 						<div class="tutor-d-flex tutor-flex-column tutor-gap-1">
-							<div class="tutor-checkout-course-thumb-title">
-								<img src="<?php echo esc_url( $plan_course_thumbnail ); ?>" alt="<?php echo esc_attr( $plan_course->post_title ); ?>" />
+							<div class="<?php echo esc_attr( $plan_info->is_membership_plan ? '' : 'tutor-checkout-course-thumb-title' ); ?>">
+								<?php if ( ! $plan_info->is_membership_plan ) { ?>
+								<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php echo esc_attr( $plan_title ); ?>" />
+								<?php } ?>
 								<h6 class="tutor-checkout-course-title">
-									<a href="<?php echo esc_url( get_the_permalink( $plan_course ) ); ?>">
-										<?php echo esc_html( $plan_course->post_title ); ?>
-									</a>
+									<a href="<?php echo esc_url( $plan_url ); ?>"> <?php echo esc_html( $plan_title ); ?></a>
 								</h6>
 							</div>
 							<?php if ( $item->is_coupon_applied ) : ?>

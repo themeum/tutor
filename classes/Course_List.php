@@ -256,7 +256,7 @@ class Course_List {
 		if ( '' !== $category_slug ) {
 			$args['tax_query'] = array(
 				array(
-					'taxonomy' => 'course-category',
+					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'field'    => 'slug',
 					'terms'    => $category_slug,
 				),

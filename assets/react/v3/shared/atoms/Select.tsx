@@ -1,16 +1,16 @@
-import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { useDebounce } from '@Hooks/useDebounce';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { styleUtils } from '@Utils/style-utils';
-import type { Option } from '@Utils/types';
-import { nanoid, noop } from '@Utils/util';
+import { borderRadius, colorTokens, fontSize, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { Option } from '@TutorShared/utils/types';
+import { nanoid, noop } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useMemo, useState } from 'react';
 
-import { isRTL } from '@Config/constants';
-import useIntersectionObserver from '@Hooks/useIntersectionObserver';
+import { isRTL } from '@TutorShared/config/constants';
+import useIntersectionObserver from '@TutorShared/hooks/useIntersectionObserver';
 import Button from './Button';
 import LoadingSpinner from './LoadingSpinner';
 import SVGIcon from './SVGIcon';

@@ -1,4 +1,4 @@
-import type collection from '@Config/icon-list';
+import type collection from '@TutorShared/config/icon-list';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
 
@@ -6,7 +6,7 @@ export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certi
 
 export type IconCollection = keyof typeof collection;
 
-export const localHasOwnProperty = <T extends {}>(obj: T, key: PropertyKey): key is keyof T => {
+export const localHasOwnProperty = <T extends object>(obj: T, key: PropertyKey): key is keyof T => {
   return key in obj;
 };
 
@@ -116,4 +116,35 @@ export interface WPResponse<T> {
   data: T;
   message: string;
   status_code: AxiosResponse['status'];
+}
+
+export type ID = number | string;
+
+export interface TutorMutationResponse<T> {
+  data: T;
+  message: string;
+  status_code: number;
+}
+
+export interface WPUser {
+  user_id: number;
+  display_name: string;
+  user_email: string;
+  avatar_url: string;
+}
+
+export type WPPostStatus = 'publish' | 'private' | 'draft' | 'future' | 'pending' | 'trash';
+export type TutorSellingOption = 'subscription' | 'one_time' | 'both';
+
+export interface TutorCategory {
+  term_id: number;
+  name: string;
+  slug: string;
+  term_group: number;
+  term_taxonomy_id: number;
+  taxonomy: string;
+  description: string;
+  parent: number;
+  count: number;
+  filter: string;
 }

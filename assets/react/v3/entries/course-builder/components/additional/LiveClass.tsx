@@ -3,33 +3,33 @@ import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 
-import Button from '@Atoms/Button';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
+import Button from '@TutorShared/atoms/Button';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import EmptyState from '@Molecules/EmptyState';
-import Popover from '@Molecules/Popover';
+import EmptyState from '@TutorShared/molecules/EmptyState';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 
-import config, { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
 import type { CourseDetailsResponse, GoogleMeet, MeetingType, ZoomMeeting } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 import GoogleMeetMeetingCard from './meeting/GoogleMeetCard';
 import GoogleMeetForm from './meeting/GoogleMeetForm';
 import ZoomMeetingCard from './meeting/ZoomMeetingCard';
 import ZoomMeetingForm from './meeting/ZoomMeetingForm';
 
-import liveClassPro2x from '@Images/pro-placeholders/live-class-2x.webp';
-import liveClassPro from '@Images/pro-placeholders/live-class.webp';
+import liveClassPro2x from '@SharedImages/pro-placeholders/live-class-2x.webp';
+import liveClassPro from '@SharedImages/pro-placeholders/live-class.webp';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const isZoomAddonEnabled = isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION);
@@ -170,6 +170,8 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <ZoomMeetingForm
           data={null}
@@ -185,6 +187,8 @@ const LiveClass = () => {
         closePopover={noop}
         animationType={AnimationType.slideUp}
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <GoogleMeetForm
           data={null}

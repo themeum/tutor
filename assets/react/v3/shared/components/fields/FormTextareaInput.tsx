@@ -1,6 +1,6 @@
-import { spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
+import { spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
 import { useLayoutEffect, useRef } from 'react';

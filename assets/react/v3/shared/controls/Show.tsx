@@ -1,4 +1,4 @@
-import { isDefined } from '@Utils/types';
+import { isDefined } from '@TutorShared/utils/types';
 import type { ReactNode } from 'react';
 
 export type Accessor<T> = () => T;

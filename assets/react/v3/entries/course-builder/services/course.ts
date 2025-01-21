@@ -2,21 +2,21 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore, parseISO } from 'date-fns';
 
-import { useToast } from '@Atoms/Toast';
-import type { UserOption } from '@Components/fields/FormSelectUser';
-import type { CourseVideo } from '@Components/fields/FormVideoInput';
+import { useToast } from '@TutorShared/atoms/Toast';
+import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
+import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-import { tutorConfig } from '@Config/config';
-import { Addons, DateFormats } from '@Config/constants';
-import type { ID } from '@CourseBuilderServices/curriculum';
-import { isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { type WPMedia } from '@Hooks/useWpMedia';
-import type { Tag } from '@Services/tags';
-import type { InstructorListResponse, User } from '@Services/users';
-import { wpAjaxInstance } from '@Utils/api';
-import endpoints from '@Utils/endpoints';
-import type { ErrorResponse } from '@Utils/form';
-import { convertToErrorMessage, convertToGMT } from '@Utils/util';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, DateFormats } from '@TutorShared/config/constants';
+import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { Course } from '@TutorShared/services/course';
+import type { Tag } from '@TutorShared/services/tags';
+import type { InstructorListResponse, User } from '@TutorShared/services/users';
+import { wpAjaxInstance } from '@TutorShared/utils/api';
+import endpoints from '@TutorShared/utils/endpoints';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { type ID, type TutorCategory, type TutorMutationResponse, type WPPostStatus } from '@TutorShared/utils/types';
+import { convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -30,14 +30,13 @@ export type ContentDripType =
   | '';
 export type PricingType = 'free' | 'paid';
 export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
-export type PostStatus = 'publish' | 'private' | 'draft' | 'future' | 'pending' | 'trash';
 
 export interface CourseFormData {
   post_date: string;
   post_title: string;
   post_name: string;
   post_content: string;
-  post_status: PostStatus;
+  post_status: WPPostStatus;
   visibility: 'publish' | 'private' | 'password_protected';
   post_password: string;
   post_author: User | null;
@@ -67,7 +66,7 @@ export interface CourseFormData {
   course_product_id: string;
   course_product_name: string;
   preview_link: string;
-  course_prerequisites: PrerequisiteCourses[];
+  course_prerequisites: Course[];
   tutor_course_certificate_template: string;
   enable_tutor_bp: boolean;
   bp_attached_group_ids: string[];
@@ -277,18 +276,7 @@ export interface CourseDetailsResponse {
   page_template: string;
   post_category: unknown[];
   tags_input: unknown[];
-  course_categories: {
-    term_id: number;
-    name: string;
-    slug: string;
-    term_group: number;
-    term_taxonomy_id: number;
-    taxonomy: string;
-    description: string;
-    parent: number;
-    count: number;
-    filter: string;
-  }[];
+  course_categories: TutorCategory[];
   course_tags: {
     term_id: number;
     name: string;
@@ -399,7 +387,7 @@ interface WcProductDetailsResponse {
   sale_price: string;
 }
 
-export interface PrerequisiteCourses {
+interface PrerequisiteCourses {
   id: number;
   post_title: string;
   featured_image: string;
@@ -609,7 +597,14 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
         return instructors;
       }, [] as UserOption[]) ?? [],
     preview_link: courseDetails.preview_link ?? '',
-    course_prerequisites: courseDetails.course_prerequisites ?? [],
+    course_prerequisites: (courseDetails.course_prerequisites ?? []).map((course) => ({
+      id: course.id,
+      title: course.post_title,
+      image: course.featured_image,
+      is_purchasable: false,
+      regular_price: '',
+      sale_price: '',
+    })),
     tutor_course_certificate_template: courseDetails.course_certificate_template ?? '',
     course_attachments: courseDetails.course_attachments ?? [],
     enable_tutor_bp: !!(isAddonEnabled(Addons.BUDDYPRESS) && courseDetails.course_settings.enable_tutor_bp === 1),
@@ -629,12 +624,6 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
 const createCourse = (payload: CoursePayload) => {
   return wpAjaxInstance.post<CoursePayload, CourseResponse>(endpoints.CREATED_COURSE, payload);
 };
-
-export interface TutorMutationResponse<T> {
-  data: T;
-  message: string;
-  status_code: number;
-}
 
 interface TutorDeleteResponse {
   data: {
@@ -739,26 +728,6 @@ export const useWcProductDetailsQuery = (
     queryKey: ['WcProductDetails', productId, courseId],
     queryFn: () => getProductDetails(productId, courseId).then((res) => res.data),
     enabled: !!productId && coursePriceType === 'paid' && monetizedBy === 'wc',
-  });
-};
-
-const getPrerequisiteCourses = (excludedCourseIds: string[]) => {
-  return wpAjaxInstance.get<PrerequisiteCourses[]>(endpoints.GET_COURSE_LIST, {
-    params: { exclude: excludedCourseIds },
-  });
-};
-
-export const usePrerequisiteCoursesQuery = ({
-  excludedIds,
-  isEnabled,
-}: {
-  excludedIds: string[];
-  isEnabled: boolean;
-}) => {
-  return useQuery({
-    queryKey: ['PrerequisiteCourses', excludedIds],
-    queryFn: () => getPrerequisiteCourses(excludedIds).then((res) => res.data),
-    enabled: isEnabled,
   });
 };
 
@@ -898,32 +867,6 @@ export const useDeleteGoogleMeetMutation = (courseId: ID, payload: GoogleMeetMee
       queryClient.invalidateQueries({
         queryKey: ['Topic', Number(courseId)],
       });
-    },
-    onError: (error: ErrorResponse) => {
-      showToast({ type: 'danger', message: convertToErrorMessage(error) });
-    },
-  });
-};
-
-const saveOpenAiSettingsKey = (payload: { chatgpt_api_key: string; chatgpt_enable: 1 | 0 }) => {
-  return wpAjaxInstance.post<
-    {
-      chatgpt_api_key: string;
-      chatgpt_enable: 'on' | 'off';
-    },
-    TutorMutationResponse<null>
-  >(endpoints.OPEN_AI_SAVE_SETTINGS, {
-    ...payload,
-  });
-};
-
-export const useSaveOpenAiSettingsMutation = () => {
-  const { showToast } = useToast();
-
-  return useMutation({
-    mutationFn: saveOpenAiSettingsKey,
-    onSuccess: (response) => {
-      showToast({ type: 'success', message: __(response.message, 'tutor') });
     },
     onError: (error: ErrorResponse) => {
       showToast({ type: 'danger', message: convertToErrorMessage(error) });

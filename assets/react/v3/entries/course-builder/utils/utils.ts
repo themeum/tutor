@@ -1,23 +1,16 @@
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 
-import { tutorConfig } from '@Config/config';
-import { type Addons, VideoRegex } from '@Config/constants';
 import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
-import type { PostStatus } from '@CourseBuilderServices/course';
-import type { ID } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
+import { tutorConfig } from '@TutorShared/config/config';
+import { VideoRegex } from '@TutorShared/config/constants';
+import { type ID } from '@TutorShared/utils/types';
 
 export const getCourseId = () => {
   const params = new URLSearchParams(window.location.search);
   const courseId = params.get('course_id');
   return Number(courseId);
-};
-
-type Addon = `${Addons}`;
-
-export const isAddonEnabled = (addon: Addon) => {
-  return !!tutorConfig.addons_data.find((item) => item.base_name === addon)?.is_enabled;
 };
 
 export async function getVimeoVideoDuration(videoUrl: string): Promise<number | null> {
@@ -160,34 +153,6 @@ export const validateQuizQuestion = (
   }
 
   return true;
-};
-
-export const determinePostStatus = (postStatus: PostStatus, postVisibility: 'private' | 'password_protected') => {
-  if (postStatus === 'trash') {
-    return 'trash';
-  }
-
-  if (postVisibility === 'private') {
-    return 'private';
-  }
-
-  if (postStatus === 'future') {
-    return 'future';
-  }
-
-  if (postVisibility === 'password_protected' && postStatus !== 'draft') {
-    return 'publish';
-  }
-
-  return postStatus;
-};
-
-export const convertToSlug = (value: string) => {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-+|-+$/g, '');
 };
 
 export const getIdWithoutPrefix = (prefix: string, id: ID) => {

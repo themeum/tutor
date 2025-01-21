@@ -48,6 +48,11 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 	margin-left: -20px;
 }
 
+.rtl .tutor-lms-welcome-page {
+	margin-left: 0px;
+	margin-right: -20px;
+}
+
 .tutor-lms-welcome-page img {
 	max-width: 100%;
 }
@@ -196,10 +201,10 @@ $image_url = 'https://tutorlms.com/wp-content/uploads/2024/11';
 							<div class="tutor-col-md-6">
 								<div class="">
 									<h3 class="tutor-section-title">
-										<?php esc_html_e( 'Subscriptions', 'tutor' ); ?>
+										<?php esc_html_e( 'Subscriptions & Memberships', 'tutor' ); ?>
 									</h3>
 									<p class="tutor-section-description">
-										<?php esc_html_e( 'Create a recurring revenue stream with a robust subscription system. Effortlessly handle billing, and renewals, while offering flexible pricing tiers—whether monthly or yearly.', 'tutor' ); ?>
+										<?php esc_html_e( 'Create a recurring revenue stream with a robust subscriptions and memberships system. Provide course-specific or full-site access with customizable pricing tiers.', 'tutor' ); ?>
 									</p>
 								</div>
 							</div>

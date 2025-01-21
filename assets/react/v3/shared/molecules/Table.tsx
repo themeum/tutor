@@ -1,9 +1,9 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import Skeleton from '@Atoms/Skeleton';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
-import { getRandom, range } from '@Utils/util';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Skeleton from '@TutorShared/atoms/Skeleton';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getRandom, range } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { EmotionJSX } from '@emotion/react/types/jsx-namespace';
 import type { ReactNode } from 'react';

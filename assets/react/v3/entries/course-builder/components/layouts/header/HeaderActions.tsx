@@ -5,30 +5,30 @@ import { useEffect, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import DropdownButton from '@Molecules/DropdownButton';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import DropdownButton from '@TutorShared/molecules/DropdownButton';
 
-import { useModal } from '@Components/modals/Modal';
-import SuccessModal from '@CourseBuilderComponents/modals/SuccessModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import SuccessModal from '@TutorShared/components/modals/SuccessModal';
 
-import config, { tutorConfig } from '@Config/config';
-import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@Config/constants';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import {
   type CourseFormData,
-  type PostStatus,
   convertCourseDataToPayload,
   useCreateCourseMutation,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
-import { determinePostStatus, getCourseId } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { convertToGMT, noop } from '@Utils/util';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import config, { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@TutorShared/config/constants';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type WPPostStatus } from '@TutorShared/utils/types';
+import { convertToGMT, determinePostStatus, noop } from '@TutorShared/utils/util';
 
-import reviewSubmitted2x from '@Images/review-submitted-2x.webp';
-import reviewSubmitted from '@Images/review-submitted.webp';
+import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
+import reviewSubmitted from '@SharedImages/review-submitted.webp';
 
 const courseId = getCourseId();
 
@@ -43,7 +43,7 @@ const HeaderActions = () => {
   const scheduleDate = useWatch({ name: 'schedule_date' });
   const scheduleTime = useWatch({ name: 'schedule_time' });
 
-  const [localPostStatus, setLocalPostStatus] = useState<PostStatus>(postStatus);
+  const [localPostStatus, setLocalPostStatus] = useState<WPPostStatus>(postStatus);
 
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
@@ -57,7 +57,7 @@ const HeaderActions = () => {
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
   const isAllowedToPublishCourse = tutorConfig.settings?.instructor_can_publish_course === 'on';
 
-  const handleSubmit = async (data: CourseFormData, postStatus: PostStatus) => {
+  const handleSubmit = async (data: CourseFormData, postStatus: WPPostStatus) => {
     const triggerAndFocus = (field: keyof CourseFormData) => {
       Promise.resolve().then(() => {
         form.trigger(field, { shouldFocus: true });
@@ -187,32 +187,36 @@ const HeaderActions = () => {
     }
   };
 
-  const dropdownButton = () => {
-    let text: string;
-    let action: PostStatus;
-
+  const dropdownButton = (): {
+    text: string;
+    action: WPPostStatus;
+  } => {
     if (!isAllowedToPublishCourse && !isAdmin && isInstructor) {
-      text = __('Submit', 'tutor');
-      action = 'pending';
-    } else if (
-      !courseId ||
-      postStatus === 'pending' ||
-      (postStatus === 'draft' && !isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`)))
-    ) {
-      text = __('Publish', 'tutor');
-      action = 'publish';
-    } else if (isScheduleEnabled) {
-      text =
-        isPostDateDirty && !isBefore(new Date(`${scheduleDate} ${scheduleTime}`), new Date())
-          ? __('Schedule', 'tutor')
-          : __('Update', 'tutor');
-      action = 'future';
-    } else {
-      text = __('Update', 'tutor');
-      action = 'publish';
+      return { text: __('Submit', 'tutor'), action: 'pending' };
     }
 
-    return { text, action };
+    const isInFuture = isBefore(new Date(), new Date(`${scheduleDate} ${scheduleTime}`));
+    const isNewOrDraft = !courseId || ['pending', 'draft'].includes(postStatus);
+
+    if (isNewOrDraft) {
+      const shouldSchedule = isPostDateDirty && isScheduleEnabled && isInFuture;
+
+      return {
+        text: shouldSchedule ? __('Schedule', 'tutor') : __('Publish', 'tutor'),
+        action: shouldSchedule ? 'future' : 'publish',
+      };
+    }
+
+    if (isScheduleEnabled) {
+      const shouldSchedule = isPostDateDirty && isInFuture;
+
+      return {
+        text: shouldSchedule ? __('Schedule', 'tutor') : __('Update', 'tutor'),
+        action: 'future',
+      };
+    }
+
+    return { text: __('Update', 'tutor'), action: 'publish' };
   };
 
   const dropdownItems = () => {

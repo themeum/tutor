@@ -1,27 +1,28 @@
-import FormInput from '@Components/fields/FormInput';
+import FormInput from '@TutorShared/components/fields/FormInput';
 import { css } from '@emotion/react';
 import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import Card from '@Molecules/Card';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Card from '@TutorShared/molecules/Card';
 
-import FormDateInput from '@Components/fields/FormDateInput';
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import FormSwitch from '@Components/fields/FormSwitch';
-import FormTopicPrerequisites from '@Components/fields/FormTopicPrerequisites';
+import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 
-import { Addons } from '@Config/constants';
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import { Addons } from '@TutorShared/config/constants';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 
 const courseId = getCourseId();
 

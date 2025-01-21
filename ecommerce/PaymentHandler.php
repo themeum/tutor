@@ -12,12 +12,14 @@ namespace Tutor\Ecommerce;
 
 use TUTOR\Input;
 use WP_REST_Server;
+use WP_REST_Request;
 
 /**
  * Payment handler class.
  */
 class PaymentHandler {
 
+	const AUTHORIZENET = 'authorizenet';
 	/**
 	 * Register hooks
 	 *
@@ -45,6 +47,17 @@ class PaymentHandler {
 				'permission_callback' => '__return_true', // Allows public access to the route.
 			)
 		);
+
+		// Register route for authorizenet.
+		register_rest_route(
+			'tutor/v1',
+			'/ecommerce-webhook/authorizenet',
+			array(
+				'methods'             => WP_REST_Server::ALLMETHODS,
+				'callback'            => array( $this, 'handle_ecommerce_webhook' ),
+				'permission_callback' => '__return_true', // Allows public access to the route.
+			)
+		);
 	}
 
 	/**
@@ -52,9 +65,11 @@ class PaymentHandler {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @param WP_REST_Request $request The request object.
+	 *
 	 * @return void
 	 */
-	public function handle_ecommerce_webhook() {
+	public function handle_ecommerce_webhook( WP_REST_Request $request ) {
 		$webhook_data = (object) array(
 			'get'    => $_GET,
 			'post'   => $_POST,
@@ -62,7 +77,9 @@ class PaymentHandler {
 			'stream' => file_get_contents( 'php://input' ),
 		);
 
-		$payment_method   = Input::get( 'payment_method', 'paypal' );
+		$route          = $request->get_route() ?? null;
+		$payment_method = ! is_null( $route ) && strpos( $route, self::AUTHORIZENET ) ? self::AUTHORIZENET : Input::get( 'payment_method', 'paypal' );
+
 		$payment_gateways = apply_filters( 'tutor_gateways_with_class', Ecommerce::payment_gateways_with_ref(), $payment_method );
 
 		$payment_gateway_class = isset( $payment_gateways[ $payment_method ] )
@@ -105,7 +122,7 @@ class PaymentHandler {
 			// Modify the page title.
 			add_filter(
 				'document_title_parts',
-				function( $title ) use ( $placement_status ) {
+				function ( $title ) use ( $placement_status ) {
 					$site_title = get_bloginfo( 'name' );
 
 					if ( 'success' === $placement_status ) {

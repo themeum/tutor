@@ -6,6 +6,10 @@
 			background-repeat: no-repeat;
 			background-size: 50%;
             background-position:right 25px center;
+			
+			.rtl & {
+				background-position:left 25px center;
+			}
 		}
 
 		h4 {

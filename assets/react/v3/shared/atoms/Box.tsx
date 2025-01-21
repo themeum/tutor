@@ -1,22 +1,25 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { css } from '@emotion/react';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { css, type SerializedStyles } from '@emotion/react';
 import React from 'react';
 import SVGIcon from './SVGIcon';
 import Tooltip from './Tooltip';
 
 interface BoxProps extends React.HTMLAttributes<HTMLDivElement> {
   bordered?: boolean;
+  wrapperCss?: SerializedStyles;
 }
 
-export const Box = React.forwardRef<HTMLDivElement, BoxProps>(({ children, className, bordered = false }, ref) => {
-  return (
-    <div ref={ref} className={className} css={styles.wrapper(bordered)}>
-      {children}
-    </div>
-  );
-});
+export const Box = React.forwardRef<HTMLDivElement, BoxProps>(
+  ({ children, className, bordered = false, wrapperCss }, ref) => {
+    return (
+      <div ref={ref} className={className} css={[styles.wrapper(bordered), wrapperCss]}>
+        {children}
+      </div>
+    );
+  },
+);
 
 Box.displayName = 'Box';
 

@@ -1,12 +1,12 @@
-import { zIndex } from '@Config/styles';
-import { styleUtils } from '@Utils/style-utils';
 import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
-import { useModal } from '@Components/modals/Modal';
-import { noop } from '@Utils/util';
-import { AnimatedDiv, AnimationType, useAnimation } from './useAnimation';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { zIndex } from '@TutorShared/config/styles';
+import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
 enum ArrowPosition {
   left = 'left',
@@ -15,6 +15,7 @@ enum ArrowPosition {
   bottom = 'bottom',
   middle = 'middle',
   auto = 'auto',
+  absoluteCenter = 'absoluteCenter',
 }
 export type arrowPosition = `${ArrowPosition}`;
 interface PopoverHookArgs<T> {
@@ -27,7 +28,7 @@ interface PopoverHookArgs<T> {
     top: number;
     left: number;
   };
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dependencies?: any[];
 }
 
@@ -117,6 +118,10 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
         top: heightDifference < 0 ? 0 : heightDifference / 2,
         left: Math.floor(triggerRect.left - popoverWidth / 2 + triggerRect.width / 2),
       },
+      absoluteCenter: {
+        top: Math.floor(viewPortHeight / 2 - popoverHeight / 2),
+        left: Math.floor(viewPortWidth / 2 - popoverWidth / 2),
+      },
     };
 
     const arrowPositions = {
@@ -125,6 +130,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
       left: positions.right,
       right: positions.left,
       middle: positions.middle,
+      absoluteCenter: positions.absoluteCenter,
     };
 
     if (arrow !== ArrowPosition.auto) {
@@ -156,6 +162,7 @@ export const usePortalPopover = <T extends HTMLElement, D extends HTMLElement>({
     }
 
     setPosition({ ...calculatedPosition, arrowPlacement });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [triggerRef, popoverRef, triggerWidth, isOpen, gap, arrow, isDropdown, ...dependencies]);
 
   return { position, triggerWidth, triggerRef, popoverRef };
@@ -204,6 +211,7 @@ export const Portal = ({
 
       document.removeEventListener('keydown', handleKeyDown, true);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, hasModalOnStack]);
 
   const { transitions } = useAnimation({

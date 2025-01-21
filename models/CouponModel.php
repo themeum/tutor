@@ -829,7 +829,7 @@ class CouponModel {
 				break;
 
 			case self::APPLIES_TO_SPECIFIC_CATEGORY:
-				$course_categories = wp_get_post_terms( $object_id, 'course-category' );
+				$course_categories = wp_get_post_terms( $object_id, CourseModel::COURSE_CATEGORY );
 				if ( ! is_wp_error( $course_categories ) ) {
 					$term_ids      = array_column( $course_categories, 'term_id' );
 					$is_applicable = count( array_intersect( $applications, $term_ids ) );
@@ -862,7 +862,7 @@ class CouponModel {
 		foreach ( $item_ids as $item_id ) {
 			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 			if ( OrderModel::TYPE_SINGLE_ORDER !== $order_type ) {
-				$plan_info = apply_filters( 'tutor_checkout_plan_info', null, $item_id );
+				$plan_info = apply_filters( 'tutor_get_plan_info', null, $item_id );
 				if ( $plan_info ) {
 					$course_price->regular_price = $plan_info->regular_price;
 					$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;

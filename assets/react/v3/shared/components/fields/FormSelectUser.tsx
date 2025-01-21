@@ -2,25 +2,25 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
-import SVGIcon from '@Atoms/SVGIcon';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { borderRadius, colorTokens, lineHeight, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
+import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
 
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import Show from '@Controls/Show';
-import { useDebounce } from '@Hooks/useDebounce';
-import { noop } from '@Utils/util';
+import Show from '@TutorShared/controls/Show';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { noop } from '@TutorShared/utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
-import { tutorConfig } from '@Config/config';
-import { TutorRoles, isRTL } from '@Config/constants';
-import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
-import profileImage from '@Images/profile-photo.png';
-import type { User } from '@Services/users';
+import { tutorConfig } from '@TutorShared/config/config';
+import { isRTL, TutorRoles } from '@TutorShared/config/constants';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import profileImage from '@SharedImages/profile-photo.png';
+import type { User } from '@TutorShared/services/users';
 
 export interface UserOption extends User {
   isRemoveAble?: boolean;
@@ -338,9 +338,7 @@ const FormSelectUser = ({
                         css={styles.optionItem}
                         data-active={activeIndex === index}
                         onMouseOver={() => setActiveIndex(index)}
-                        onMouseLeave={() => {
-                          index !== activeIndex && setActiveIndex(-1);
-                        }}
+                        onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
                         ref={activeIndex === index ? activeItemRef : null}
                         onFocus={() => setActiveIndex(index)}
                       >
@@ -462,6 +460,12 @@ const styles = {
     &:hover {
       border-color: ${colorTokens.stroke.divider};
 
+      [data-instructor-delete-button] {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       [data-instructor-delete-button] {
         opacity: 1;
       }

@@ -32,11 +32,11 @@ const endpoints = {
   GENERATE_QUIZ_QUESTIONS: 'tutor_pro_generate_quiz_questions',
 
   // SUBSCRIPTION
-  GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_course_plans',
-  SAVE_SUBSCRIPTION: 'tutor_subscription_course_plan_save',
-  DELETE_SUBSCRIPTION: 'tutor_subscription_course_plan_delete',
-  DUPLICATE_SUBSCRIPTION: 'tutor_subscription_course_plan_duplicate',
-  SORT_SUBSCRIPTION: 'tutor_subscription_course_plan_sort',
+  GET_SUBSCRIPTIONS_LIST: 'tutor_subscription_plans',
+  SAVE_SUBSCRIPTION: 'tutor_subscription_plan_save',
+  DELETE_SUBSCRIPTION: 'tutor_subscription_plan_delete',
+  DUPLICATE_SUBSCRIPTION: 'tutor_subscription_plan_duplicate',
+  SORT_SUBSCRIPTION: 'tutor_subscription_plan_sort',
 
   // COURSE
   GET_COURSE_DETAILS: 'tutor_course_details',
@@ -92,6 +92,13 @@ const endpoints = {
   INSTALL_PAYMENT_GATEWAY: 'tutor_install_payment_gateway',
   REMOVE_PAYMENT_GATEWAY: 'tutor_remove_payment_gateway',
 
+  // ADDON LIST
+  GET_ADDON_LIST: 'tutor_get_all_addons',
+  ADDON_ENABLE_DISABLE: 'addon_enable_disable',
+
+  // INSTALL PLUGIN
+  TUTOR_INSTALL_PLUGIN: 'tutor_install_plugin',
+
   // COUPON
   GET_COUPON_DETAILS: 'tutor_coupon_details',
   CREATE_COUPON: 'tutor_coupon_create',
@@ -102,6 +109,17 @@ const endpoints = {
   CREATE_ENROLLMENT: 'tutor_enroll_bulk_student',
   GET_COURSE_BUNDLE_LIST: 'tutor_course_bundle_list',
   GET_UNENROLLED_USERS: 'tutor_unenrolled_users',
+
+  // MEMBERSHIP
+  GET_MEMBERSHIP_PLANS: 'tutor_membership_plans',
+  SAVE_MEMBERSHIP_PLAN: 'tutor_membership_plan_save',
+  DUPLICATE_MEMBERSHIP_PLAN: 'tutor_membership_plan_duplicate',
+  DELETE_MEMBERSHIP_PLAN: 'tutor_membership_plan_delete',
+
+  // COURSE BUNDLE
+  GET_BUNDLE_DETAILS: 'tutor_get_course_bundle_data',
+  UPDATE_BUNDLE: 'tutor_create_course_bundle',
+  ADD_COURSE_TO_BUNDLE: 'tutor_add_course_to_bundle',
 };
 
 export default endpoints;

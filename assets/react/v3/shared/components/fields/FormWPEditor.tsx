@@ -5,31 +5,31 @@ import type React from 'react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import Alert from '@Atoms/Alert';
-import Button from '@Atoms/Button';
-import LoadingSpinner, { LoadingOverlay } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
-import WPEditor from '@Atoms/WPEditor';
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
+import LoadingSpinner, { LoadingOverlay } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
+import WPEditor from '@TutorShared/atoms/WPEditor';
 
-import AITextModal from '@Components/modals/AITextModal';
-import { useModal } from '@Components/modals/Modal';
-import StaticConfirmationModal from '@Components/modals/StaticConfirmationModal';
-import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import AITextModal from '@TutorShared/components/modals/AITextModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
+import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
-import { tutorConfig } from '@Config/config';
-import { TutorRoles } from '@Config/constants';
-import { borderRadius, colorTokens, spacing, zIndex } from '@Config/styles';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import type { CourseFormData, Editor, TutorMutationResponse } from '@CourseBuilderServices/course';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
+import type { CourseFormData, Editor } from '@CourseBuilderServices/course';
+import { tutorConfig } from '@TutorShared/config/config';
+import { TutorRoles } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
 
-import generateText2x from '@Images/pro-placeholders/generate-text-2x.webp';
-import generateText from '@Images/pro-placeholders/generate-text.webp';
+import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
+import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 

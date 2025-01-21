@@ -1,4 +1,4 @@
-import { tutorConfig } from '@Config/config';
+import { tutorConfig } from '@TutorShared/config/config';
 
 export const createPriceFormatter = ({
   locale,

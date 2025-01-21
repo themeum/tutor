@@ -1,9 +1,9 @@
-import SVGIcon from '@Atoms/SVGIcon';
-import { modal } from '@Config/constants';
-import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { styleUtils } from '@Utils/style-utils';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { modal } from '@TutorShared/config/constants';
+import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';
@@ -130,6 +130,10 @@ const styles = {
     align-items: center;
     gap: ${spacing[12]};
     padding-left: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-left: ${spacing[16]};
+    }
   `,
   headerChildren: css`
     place-self: center center;
@@ -144,6 +148,8 @@ const styles = {
   title: css`
     ${typography.heading6('medium')};
     color: ${colorTokens.text.title};
+    text-transform: none;
+    letter-spacing: normal;
   `,
   subtitle: css`
     ${styleUtils.text.ellipsis(1)}
@@ -157,6 +163,10 @@ const styles = {
     display: inline-flex;
     gap: ${spacing[16]};
     padding-right: ${spacing[24]};
+
+    ${Breakpoint.smallMobile} {
+      padding-right: ${spacing[16]};
+    }
   `,
   closeButton: css`
     ${styleUtils.resetButton};

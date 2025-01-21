@@ -1,10 +1,10 @@
-import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import type { FormControllerProps } from '@Utils/form';
+import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef } from 'react';
 
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithContentProps extends FormControllerProps<string | number | null | undefined> {

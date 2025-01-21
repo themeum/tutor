@@ -54,8 +54,12 @@ class Tools {
 			$page_id    = tutor_utils()->array_get( 'page_id', $page );
 
 			$page_content = '';
-			if ( $option_key === 'tutor_login_page' ) {
+			if ( 'tutor_login_page' === $option_key ) {
 				$page_content = '[tutor_login]';
+			}
+
+			if ( 'membership_pricing_page_id' === $option_key ) {
+				$page_content = '[tutor_membership_pricing]';
 			}
 
 			if ( ! $visible ) {

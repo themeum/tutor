@@ -1,16 +1,16 @@
-import Button from '@Atoms/Button';
-import SVGIcon from '@Atoms/SVGIcon';
-import Container from '@Components/Container';
-import { useModal } from '@Components/modals/Modal';
-import { tutorConfig } from '@Config/config';
-import { Breakpoint, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Container from '@TutorShared/components/Container';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import CancelOrderModal from '@OrderComponents/modals/CancelOrderModal';
 import { OrderBadge } from '@OrderComponents/order/OrderBadge';
 import { PaymentBadge } from '@OrderComponents/order/PaymentBadge';
 import { useOrderContext } from '@OrderContexts/order-context';
-import { styleUtils } from '@Utils/style-utils';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
 

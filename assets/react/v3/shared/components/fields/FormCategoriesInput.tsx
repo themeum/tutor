@@ -1,23 +1,29 @@
-import Button from '@Atoms/Button';
-import Checkbox from '@Atoms/CheckBox';
-import SVGIcon from '@Atoms/SVGIcon';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { type CategoryWithChildren, useCategoryListQuery, useCreateCategoryMutation } from '@Services/category';
-import type { FormControllerProps } from '@Utils/form';
-import { generateTree, getCategoryLeftBarHeight } from '@Utils/util';
+import Button from '@TutorShared/atoms/Button';
+import Checkbox from '@TutorShared/atoms/CheckBox';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import {
+  type CategoryWithChildren,
+  useCategoryListQuery,
+  useCreateCategoryMutation,
+} from '@TutorShared/services/category';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { produce } from 'immer';
 import { useEffect, useState } from 'react';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import { isRTL } from '@Config/constants';
-import { useFormWithGlobalError } from '@Hooks/useFormWithGlobalError';
-import { useIsScrolling } from '@Hooks/useIsScrolling';
-import { styleUtils } from '@Utils/style-utils';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import { isRTL } from '@TutorShared/config/constants';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { __ } from '@wordpress/i18n';
 import { Controller, type FieldValues } from 'react-hook-form';
-import Show from '../../controls/Show';
+
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
@@ -53,7 +59,6 @@ const FormMultiLevelInput = ({
     shouldFocusError: true,
   });
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isOpen) {
       const timeout = setTimeout(() => {
@@ -64,6 +69,7 @@ const FormMultiLevelInput = ({
         clearTimeout(timeout);
       };
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
@@ -93,7 +99,6 @@ const FormMultiLevelInput = ({
       label={label}
       field={field}
       fieldState={fieldState}
-      disabled={disabled}
       loading={loading}
       placeholder={placeholder}
       helpText={helpText}
@@ -103,34 +108,42 @@ const FormMultiLevelInput = ({
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
-                {treeOptions.map((option, index) => (
-                  <Branch
-                    key={option.id}
-                    option={option}
-                    value={field.value}
-                    isLastChild={index === treeOptions.length - 1}
-                    onChange={(id) => {
-                      field.onChange(
-                        produce(field.value, (draft) => {
-                          if (Array.isArray(draft)) {
-                            return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
-                          }
-                          return [id];
-                        }),
-                      );
-                    }}
-                  />
-                ))}
+                <Show
+                  when={treeOptions.length > 0}
+                  fallback={<span css={styles.notFound}>{__('No categories found.', 'tutor')}</span>}
+                >
+                  {treeOptions.map((option, index) => (
+                    <Branch
+                      key={option.id}
+                      disabled={disabled}
+                      option={option}
+                      value={field.value}
+                      isLastChild={index === treeOptions.length - 1}
+                      onChange={(id) => {
+                        field.onChange(
+                          produce(field.value, (draft) => {
+                            if (Array.isArray(draft)) {
+                              return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
+                            }
+                            return [id];
+                          }),
+                        );
+                      }}
+                    />
+                  ))}
+                </Show>
               </div>
 
-              <div
-                ref={triggerRef}
-                css={styles.addButtonWrapper({ isActive: isScrolling, hasCategories: treeOptions.length > 0 })}
-              >
-                <button type="button" css={styles.addNewButton} onClick={() => setIsOpen(true)}>
-                  <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
-                </button>
-              </div>
+              <Show when={!disabled}>
+                <div
+                  ref={triggerRef}
+                  css={styles.addButtonWrapper({ isActive: isScrolling, hasCategories: treeOptions.length > 0 })}
+                >
+                  <button disabled={disabled} type="button" css={styles.addNewButton} onClick={() => setIsOpen(true)}>
+                    <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
+                  </button>
+                </div>
+              </Show>
             </div>
 
             <Portal isOpen={isOpen} onClickOutside={() => setIsOpen(false)} onEscape={() => setIsOpen(false)}>
@@ -199,13 +212,14 @@ interface BranchProps {
   value: number | number[];
   onChange: (item: number) => void;
   isLastChild: boolean;
+  disabled?: boolean;
 }
 
 const getTotalNestedChildrenCount = (option: CategoryWithChildren): number => {
   return option.children.reduce((total, child) => total + getTotalNestedChildrenCount(child), option.children.length);
 };
 
-export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) => {
+export const Branch = ({ option, value, onChange, isLastChild, disabled }: BranchProps) => {
   const totalChildren = getTotalNestedChildrenCount(option);
   const hasChildren = totalChildren > 0;
 
@@ -224,6 +238,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
           value={value}
           onChange={onChange}
           isLastChild={idx === option.children.length - 1}
+          disabled={disabled}
         />
       );
     });
@@ -238,6 +253,7 @@ export const Branch = ({ option, value, onChange, isLastChild }: BranchProps) =>
           onChange(option.id);
         }}
         labelCss={styles.checkboxLabel}
+        disabled={disabled}
       />
 
       {renderBranches()}
@@ -255,6 +271,13 @@ const styles = {
   categoryListWrapper: css`
     ${styleUtils.overflowYAuto};
     max-height: 208px;
+  `,
+  notFound: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    ${typography.caption('regular')};
+    padding: ${spacing[8]} ${spacing[16]};
+    color: ${colorTokens.text.hints};
   `,
   checkboxLabel: css`
     line-height: 1.88rem !important;
@@ -302,6 +325,10 @@ const styles = {
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
+    }
+
+    &:disabled {
+      color: ${colorTokens.text.disable};
     }
   `,
   categoryFormWrapper: css`

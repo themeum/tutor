@@ -3,20 +3,21 @@ import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import MagicButton from '@TutorShared/atoms/MagicButton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import { useModal } from '@Components/modals/Modal';
 import HeaderActions from '@CourseBuilderComponents/layouts/header/HeaderActions';
 import Logo from '@CourseBuilderComponents/layouts/header/Logo';
 import Tracker from '@CourseBuilderComponents/layouts/Tracker';
 import AICourseBuilderModal from '@CourseBuilderComponents/modals/AICourseBuilderModal';
-import ExitCourseBuilderModal from '@CourseBuilderComponents/modals/ExitCourseBuilderModal';
-import ProIdentifierModal from '@CourseBuilderComponents/modals/ProIdentifierModal';
-import SetupOpenAiModal from '@CourseBuilderComponents/modals/SetupOpenAiModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
+import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
+import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
-import { tutorConfig } from '@Config/config';
+import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
+import { tutorConfig } from '@TutorShared/config/config';
 import {
   borderRadius,
   Breakpoint,
@@ -26,17 +27,16 @@ import {
   shadow,
   spacing,
   zIndex,
-} from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
-import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
-import { styleUtils } from '@Utils/style-utils';
+} from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import { CURRENT_VIEWPORT } from '@Config/constants';
 import { getCourseId } from '@CourseBuilderUtils/utils';
-import generateCourse2x from '@Images/pro-placeholders/generate-course-2x.webp';
-import generateCourse from '@Images/pro-placeholders/generate-course.webp';
+import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
+import generateCourse from '@SharedImages/pro-placeholders/generate-course.webp';
+import LeaveWithoutSavingModal from '@TutorShared/components/modals/LeaveWithoutSavingModal';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 
 const courseId = getCourseId();
 
@@ -85,7 +85,15 @@ const Header = () => {
   const handleExitButtonClick = () => {
     if (isFormDirty) {
       showModal({
-        component: ExitCourseBuilderModal,
+        component: LeaveWithoutSavingModal,
+        props: {
+          message: __('You’re about to leave the course creation process without saving your changes.', 'tutor'),
+          redirectUrl: (() => {
+            const isFormWpAdmin = window.location.href.includes('wp-admin');
+
+            return isFormWpAdmin ? tutorConfig.backend_course_list_url : tutorConfig.frontend_course_list_url;
+          })(),
+        },
       });
     } else {
       const isFormWpAdmin = window.location.href.includes('wp-admin');

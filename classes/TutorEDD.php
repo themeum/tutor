@@ -36,7 +36,6 @@ class TutorEDD extends Tutor_Base {
 			return;
 		}
 
-		add_action( 'add_meta_boxes', array( $this, 'register_meta_box' ) );
 		add_action( 'save_post_' . $this->course_post_type, array( $this, 'save_course_meta' ) );
 
 		/**
@@ -94,28 +93,6 @@ class TutorEDD extends Tutor_Base {
 			$arr['edd'] = __( 'Easy Digital Downloads', 'tutor' );
 		}
 		return $arr;
-	}
-
-	/**
-	 * Register meta box
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function register_meta_box() {
-		tutor_meta_box_wrapper( 'tutor-attached-edd-product', __( 'Add Product', 'tutor' ), array( $this, 'course_add_product_metabox' ), $this->course_post_type, 'advanced', 'high', 'tutor-admin-post-meta' );
-	}
-
-	/**
-	 * MetaBox for Lesson Modal Edit Mode
-	 *
-	 * @since 1.0.0
-	 *
-	 * @return void
-	 */
-	public function course_add_product_metabox() {
-		include tutor()->path . 'views/metabox/course-add-edd-product-metabox.php';
 	}
 
 	/**

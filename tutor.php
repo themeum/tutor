@@ -1,10 +1,10 @@
 <?php
 /**
  * Plugin Name: Tutor LMS
- * Plugin URI: https://www.themeum.com/product/tutor-lms/
+ * Plugin URI: https://tutorlms.com
  * Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
  * Author: Themeum
- * Version: 3.1.0
+ * Version: 3.2.0
  * Author URI: https://themeum.com
  * Requires PHP: 7.4
  * Requires at least: 5.3
@@ -22,20 +22,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/vendor/autoload.php';
 
 /**
- * Defined the tutor main file
+ * Constants for tutor plugin.
  */
-define( 'TUTOR_VERSION', '3.1.0' );
+define( 'TUTOR_VERSION', '3.2.0' );
 define( 'TUTOR_FILE', __FILE__ );
 
 /**
  * Load tutor text domain for translation
  */
-add_action(
-	'init',
-	function () {
-		load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' );
-	}
-);
+add_action( 'init', fn () => load_plugin_textdomain( 'tutor', false, basename( dirname( __FILE__ ) ) . '/languages' ) );
 
 if ( ! function_exists( 'tutor' ) ) {
 	/**
@@ -76,7 +71,6 @@ if ( ! function_exists( 'tutor' ) ) {
 			'bundle_post_type'       => apply_filters( 'tutor_bundle_post_type', 'course-bundle' ),
 			'lesson_post_type'       => apply_filters( 'tutor_lesson_post_type', 'lesson' ),
 			'instructor_role'        => apply_filters( 'tutor_instructor_role', 'tutor_instructor' ),
-			'instructor_role_name'   => apply_filters( 'tutor_instructor_role_name', __( 'Tutor Instructor', 'tutor' ) ),
 			'template_path'          => apply_filters( 'tutor_template_path', 'tutor/' ),
 			'has_pro'                => apply_filters( 'tutor_has_pro', $has_pro ),
 			// @since v2.0.6.
@@ -129,7 +123,7 @@ if ( ! function_exists( 'tutor_utils' ) ) {
 
 if ( ! function_exists( 'tutils' ) ) {
 	/**
-	 * Alis of tutor_utils()
+	 * Alias of tutor_utils()
 	 *
 	 * @since 1.3.4
 	 *
@@ -144,10 +138,7 @@ if ( ! function_exists( 'tutils' ) ) {
  * Do some task during activation
  *
  * @since 1.5.2
- *
- * @since 2.6.2
- *
- * Uninstall hook registered
+ * @since 2.6.2 Uninstall hook registered
  */
 register_activation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_activate' ) );
 register_deactivation_hook( TUTOR_FILE, array( '\TUTOR\Tutor', 'tutor_deactivation' ) );
@@ -163,22 +154,6 @@ if ( ! function_exists( 'tutor_lms' ) ) {
 	 */
 	function tutor_lms() {
 		return \TUTOR\Tutor::instance();
-	}
-}
-
-if ( ! function_exists( 'str_contains' ) ) {
-	/**
-	 * String helper for str contains
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param string $haystack haystack.
-	 * @param string $needle needle.
-	 *
-	 * @return bool
-	 */
-	function str_contains( string $haystack, string $needle ) {
-		return empty( $needle ) || strpos( $haystack, $needle ) !== false;
 	}
 }
 

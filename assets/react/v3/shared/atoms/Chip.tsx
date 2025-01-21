@@ -1,10 +1,10 @@
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import { styleUtils } from '@Utils/style-utils';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
-import { noop } from '@Utils/util';
+import { noop } from '@TutorShared/utils/util';
 import SVGIcon from './SVGIcon';
 
 type ChipProps = {

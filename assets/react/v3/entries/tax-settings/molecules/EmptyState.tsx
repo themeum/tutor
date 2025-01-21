@@ -1,7 +1,7 @@
-import Show from '@/v3/shared/controls/Show';
-import Button from '@Atoms/Button';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
+import Button from '@TutorShared/atoms/Button';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { type SerializedStyles, css } from '@emotion/react';
 import type { ReactNode } from 'react';
 

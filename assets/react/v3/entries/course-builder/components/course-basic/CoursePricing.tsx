@@ -5,15 +5,10 @@ import { useEffect } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-import FormInputWithContent from '@Components/fields/FormInputWithContent';
-import FormRadioGroup from '@Components/fields/FormRadioGroup';
-import FormSelectInput from '@Components/fields/FormSelectInput';
-import SubscriptionPreview from '@CourseBuilderComponents/subscription/SubscriptionPreview';
+import FormInputWithContent from '@TutorShared/components/fields/FormInputWithContent';
+import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
+import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { spacing } from '@Config/styles';
-import Show from '@Controls/Show';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -21,10 +16,16 @@ import {
   useGetWcProductsQuery,
   useWcProductDetailsQuery,
 } from '@CourseBuilderServices/course';
-import { getCourseId, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { styleUtils } from '@Utils/style-utils';
-import { isDefined } from '@Utils/types';
-import { requiredRule } from '@Utils/validation';
+import { getCourseId } from '@CourseBuilderUtils/utils';
+import SubscriptionPreview from '@TutorShared/components/subscription/SubscriptionPreview';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
+import { spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isDefined } from '@TutorShared/utils/types';
+import { isAddonEnabled } from '@TutorShared/utils/util';
+import { requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 
@@ -104,7 +105,6 @@ const CoursePricing = () => {
     return uniqueProducts;
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (wcProductsQuery.isSuccess && wcProductsQuery.data) {
       const { course_pricing } = courseDetails || {};
@@ -120,9 +120,9 @@ const CoursePricing = () => {
         });
       }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wcProductsQuery.data]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (!tutorConfig.edd_products || !tutorConfig.edd_products.length) {
       return;
@@ -140,9 +140,9 @@ const CoursePricing = () => {
         shouldValidate: true,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tutorConfig.edd_products]);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (tutorConfig.settings?.monetize_by !== 'wc') {
       return;
@@ -174,6 +174,7 @@ const CoursePricing = () => {
     if (!isCourseSalePriceDirty) {
       form.setValue('course_sale_price', '0');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [wcProductDetailsQuery.data]);
 
   return (

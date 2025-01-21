@@ -1,30 +1,30 @@
-import MagicButton from '@Atoms/MagicButton';
-import SVGIcon from '@Atoms/SVGIcon';
-import FormImageRadioGroup from '@Components/fields/FormImageRadioGroup';
-import FormTextareaInput from '@Components/fields/FormTextareaInput';
-import { borderRadius, colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { useMagicImageGenerationMutation } from '@CourseBuilderServices/magic-ai';
+import MagicButton from '@TutorShared/atoms/MagicButton';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import FormImageRadioGroup from '@TutorShared/components/fields/FormImageRadioGroup';
+import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { useMagicImageGenerationMutation } from '@TutorShared/services/magic-ai';
 
-import threeD from '@Images/ai-types/3d.png';
-import blackAndWhite from '@Images/ai-types/black-and-white.png';
-import concept from '@Images/ai-types/concept.png';
-import dreamy from '@Images/ai-types/dreamy.png';
-import filmic from '@Images/ai-types/filmic.png';
-import illustration from '@Images/ai-types/illustration.png';
-import neon from '@Images/ai-types/neon.png';
-import none from '@Images/ai-types/none.jpg';
-import painting from '@Images/ai-types/painting.png';
-import photo from '@Images/ai-types/photo.png';
-import retro from '@Images/ai-types/retro.png';
-import sketch from '@Images/ai-types/sketch.png';
+import threeD from '@SharedImages/ai-types/3d.png';
+import blackAndWhite from '@SharedImages/ai-types/black-and-white.png';
+import concept from '@SharedImages/ai-types/concept.png';
+import dreamy from '@SharedImages/ai-types/dreamy.png';
+import filmic from '@SharedImages/ai-types/filmic.png';
+import illustration from '@SharedImages/ai-types/illustration.png';
+import neon from '@SharedImages/ai-types/neon.png';
+import none from '@SharedImages/ai-types/none.jpg';
+import painting from '@SharedImages/ai-types/painting.png';
+import photo from '@SharedImages/ai-types/photo.png';
+import retro from '@SharedImages/ai-types/retro.png';
+import sketch from '@SharedImages/ai-types/sketch.png';
 
-import { useToast } from '@Atoms/Toast';
-import type { ErrorResponse } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { type OptionWithImage, isDefined } from '@Utils/types';
+import { useToast } from '@TutorShared/atoms/Toast';
+import type { ErrorResponse } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { type OptionWithImage, isDefined } from '@TutorShared/utils/types';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useState } from 'react';
@@ -120,7 +120,6 @@ export const ImageGeneration = () => {
   const isDisabledButton = !styleValue || !promptValue;
   const hasGeneratedImage = images.some(isDefined);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (magicImageGenerationMutation.isError) {
       showToast({
@@ -170,7 +169,7 @@ export const ImageGeneration = () => {
                 });
             }),
           );
-        } catch (error) {
+        } catch {
           setImageLoading([false, false, false, false]);
           setShowEmptyState(true);
         }
@@ -248,11 +247,17 @@ export const ImageGeneration = () => {
 const styles = {
   images: css`
     display: grid;
-    grid-template-columns: repeat(2, minmax(300px, 1fr));
-    grid-template-rows: repeat(2, minmax(300px, 1fr));
+    grid-template-columns: repeat(2, minmax(150px, 1fr));
+    grid-template-rows: repeat(2, minmax(150px, 1fr));
     gap: ${spacing[12]};
     align-self: start;
-    margin-block: ${spacing[24]};
+    padding: ${spacing[24]};
+    width: 100%;
+    height: 100%;
+
+    > div {
+      aspect-ratio: 1 / 1;
+    }
   `,
   fields: css`
     display: flex;

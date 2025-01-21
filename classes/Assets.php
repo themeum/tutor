@@ -14,6 +14,7 @@ use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
 use Tutor\Ecommerce\Settings;
+use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -231,9 +232,14 @@ class Assets {
 			// @since 3.0.0 add tax react app on the settings page.
 			if ( 'tutor_settings' === $page && ! Input::has( 'edit' ) ) {
 				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
-				wp_enqueue_script( 'tutor-tax-settings.min', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
-				wp_enqueue_script( 'tutor-payment-settings.min', tutor()->url . 'assets/js/tutor-payment-settings.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-tax-settings', tutor()->url . 'assets/js/tutor-tax-settings.min.js', array( 'tutor-shared' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-payment-settings', tutor()->url . 'assets/js/tutor-payment-settings.min.js', array( 'tutor-shared' ), TUTOR_VERSION, true );
 			}
+		}
+
+		if ( 'tutor-addons' === $page ) {
+			wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
 		}
 	}
 
@@ -339,7 +345,7 @@ class Assets {
 
 		if ( is_admin() ) {
 			$taxonomy = Input::get( 'taxonomy' );
-			if ( 'course-category' === $taxonomy || 'course-tag' === $taxonomy ) {
+			if ( CourseModel::COURSE_CATEGORY === $taxonomy || CourseModel::COURSE_TAG === $taxonomy ) {
 				$localize_data['open_tutor_admin_menu'] = true;
 			}
 		} else {
@@ -591,9 +597,6 @@ class Assets {
 	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-order-details', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-tax-settings', 'tutor', tutor()->path . 'languages/' );
-		wp_set_script_translations( 'tutor-coupon', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**

@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Input;
+use Tutor\Models\CourseModel;
 
 $courses = \TUTOR\Tutor::instance()->course_list;
 
@@ -115,7 +116,7 @@ if ( '' !== $search_filter ) {
 if ( '' !== $category_slug ) {
 	$args['tax_query'] = array(
 		array(
-			'taxonomy' => 'course-category',
+			'taxonomy' => CourseModel::COURSE_CATEGORY,
 			'field'    => 'slug',
 			'terms'    => $category_slug,
 		),
@@ -279,7 +280,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									<td>
 										<span class="tutor-fw-normal tutor-fs-7">
 											<?php
-												$terms = wp_get_post_terms( $post->ID, 'course-category' );
+												$terms = wp_get_post_terms( $post->ID, CourseModel::COURSE_CATEGORY );
 											if ( count( $terms ) ) {
 												echo esc_html( implode( ', ', array_column( $terms, 'name' ) ) . '&nbsp;' );
 											} else {

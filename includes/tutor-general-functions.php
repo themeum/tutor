@@ -248,7 +248,7 @@ if ( ! function_exists( '_generate_tags_dropdown_option' ) ) {
 
 		foreach ( $tags as $tag ) {
 
-			$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
+			$has_in_term = has_term( $tag->term_id, CourseModel::COURSE_TAG, $post_ID );
 
 			$output .= '<option value="' . esc_attr( $tag->name ) . '" ' . selected( $has_in_term, true, false ) . '>' . esc_html( $tag->name ) . '</option>';
 
@@ -377,7 +377,7 @@ if ( ! function_exists( '__tutor_generate_tags_checkbox' ) ) {
 		if ( tutor_utils()->count( $tags ) ) {
 			$output .= '<ul class="tax-input-course-tag">';
 			foreach ( $tags as $tag ) {
-				$has_in_term = has_term( $tag->term_id, 'course-tag', $post_ID );
+				$has_in_term = has_term( $tag->term_id, CourseModel::COURSE_TAG, $post_ID );
 
 				$output .= '<li class="tax-input-course-tag-item tax-input-course-tag-item-' . $tag->term_id . '"><label class="course-tag-checkbox"> <input type="checkbox" name="' . $input_name . '" value="' . $tag->term_id . '" ' . checked( $has_in_term, true, false ) . ' /> <span>' . $tag->name . '</span> </label>';
 
@@ -1728,4 +1728,22 @@ if ( ! function_exists( 'tutor_split_amounts' ) ) {
 		);
 	}
 }
+
+if ( ! function_exists( 'tutor_is_local_env' ) ) {
+	/**
+	 * Check if the current environment is local.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @return bool True if the current environment is local, false otherwise.
+	 */
+	function tutor_is_local_env() {
+		$site_url = site_url();
+		return (
+			strpos( $site_url, '.local' ) !== false ||
+			strpos( $site_url, 'localhost' ) !== false
+		);
+	}
+}
+
 

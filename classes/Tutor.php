@@ -11,6 +11,7 @@
 namespace TUTOR;
 
 use Tutor\Ecommerce\Ecommerce;
+use Tutor\Models\CourseModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1374,15 +1375,15 @@ final class Tutor {
 			if ( is_array( $tutor_posts ) && count( $tutor_posts ) ) {
 				foreach ( $tutor_posts as $post_id ) {
 					// Delete categories.
-					$terms = wp_get_object_terms( $post_id, 'course-category' );
+					$terms = wp_get_object_terms( $post_id, CourseModel::COURSE_CATEGORY );
 					foreach ( $terms as $term ) {
-						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-category' );
+						wp_remove_object_terms( $post_id, array( $term->term_id ), CourseModel::COURSE_CATEGORY );
 					}
 
 					// Delete tags if available.
-					$terms = wp_get_object_terms( $post_id, 'course-tag' );
+					$terms = wp_get_object_terms( $post_id, CourseModel::COURSE_TAG );
 					foreach ( $terms as $term ) {
-						wp_remove_object_terms( $post_id, array( $term->term_id ), 'course-tag' );
+						wp_remove_object_terms( $post_id, array( $term->term_id ), CourseModel::COURSE_TAG );
 					}
 
 					// Delete All Meta.

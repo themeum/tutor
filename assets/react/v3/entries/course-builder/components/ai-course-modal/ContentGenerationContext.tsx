@@ -1,8 +1,8 @@
 import React, { useCallback, useContext, useMemo, useRef, useState, type ReactNode } from 'react';
 
-import type { QuizContent } from '@CourseBuilderServices/magic-ai';
-import { isDefined } from '@Utils/types';
-import { noop } from '@Utils/util';
+import type { QuizContent } from '@TutorShared/services/magic-ai';
+import { isDefined } from '@TutorShared/utils/types';
+import { noop } from '@TutorShared/utils/util';
 
 export type CourseContentStep = 'prompt' | 'generation';
 

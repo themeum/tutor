@@ -17,11 +17,11 @@ import { useMemo, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFormContext } from 'react-hook-form';
 
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import { moveTo } from '@Utils/util';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import { moveTo } from '@TutorShared/utils/util';
 
 import type { PaymentSettings } from '../services/payment';
 import PaymentItem from './PaymentItem';

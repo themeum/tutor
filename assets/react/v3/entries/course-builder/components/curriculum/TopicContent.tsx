@@ -1,45 +1,44 @@
 import { type AnimateLayoutChanges, defaultAnimateLayoutChanges, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import LoadingSpinner from '@Atoms/LoadingSpinner';
-import ProBadge from '@Atoms/ProBadge';
-import SVGIcon from '@Atoms/SVGIcon';
-import Tooltip from '@Atoms/Tooltip';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import ConfirmationPopover from '@Molecules/ConfirmationPopover';
-import Popover from '@Molecules/Popover';
+import ConfirmationPopover from '@TutorShared/molecules/ConfirmationPopover';
+import Popover from '@TutorShared/molecules/Popover';
 
-import { useModal } from '@Components/modals/Modal';
 import ZoomMeetingForm from '@CourseBuilderComponents/additional/meeting/ZoomMeetingForm';
 import AssignmentModal from '@CourseBuilderComponents/modals/AssignmentModal';
 import LessonModal from '@CourseBuilderComponents/modals/LessonModal';
 import QuizModal from '@CourseBuilderComponents/modals/QuizModal';
 import {
   type ContentType,
-  type ID,
   useDeleteContentMutation,
   useDuplicateContentMutation,
 } from '@CourseBuilderServices/curriculum';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
-import { tutorConfig } from '@Config/config';
-import { Addons } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
-import { getCourseId, getIdWithoutPrefix, isAddonEnabled } from '@CourseBuilderUtils/utils';
-import { AnimationType } from '@Hooks/useAnimation';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
-import { noop } from '@Utils/util';
-import { useQueryClient } from '@tanstack/react-query';
+import { getCourseId, getIdWithoutPrefix } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection, ID } from '@TutorShared/utils/types';
+import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicContentProps {
   type: ContentType;
@@ -334,6 +333,8 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
         closePopover={noop}
         maxWidth="306px"
         closeOnEscape={false}
+        arrow={CURRENT_VIEWPORT.isAboveMobile ? 'auto' : 'absoluteCenter'}
+        hideArrow
       >
         <Show when={meetingType === 'tutor_zoom_meeting'}>
           <ZoomMeetingForm
@@ -451,6 +452,12 @@ const styles = {
         opacity: 1;
       }
     `}
+
+    ${Breakpoint.smallTablet} {
+      [data-actions] {
+        opacity: 1;
+      }
+    }
   `,
   title: css`
     ${typography.caption()};
@@ -459,6 +466,13 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
     cursor: pointer;
+
+    span {
+      &:first-of-type {
+        ${styleUtils.text.ellipsis(2)}
+      }
+    }
+
     [data-question-count] {
       color: ${colorTokens.text.hints};
     }

@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use stdClass;
-use Tutor\Ecommerce\Ecommerce;
-use Tutor\Helpers\HttpHelper;
-use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
+use Tutor\Helpers\HttpHelper;
 use Tutor\Models\CourseModel;
+use Tutor\Ecommerce\Ecommerce;
 use Tutor\Traits\JsonResponse;
+use Tutor\Helpers\ValidationHelper;
 use TutorPro\CourseBundle\Models\BundleModel;
 
 /**
@@ -268,6 +268,13 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
+
+		/**
+		 * Add a filter to override the default sanitization of slugs(post_name) in WordPress.
+		 *
+		 * @since 3.2.0
+		 */
+		add_filter( 'sanitize_title', array( $this, 'tutor_sanitize_slug' ) );
 	}
 
 	/**
@@ -373,10 +380,8 @@ class Course extends Tutor_Base {
 
 			if ( '' === $video_source ) {
 				$errors['video_source'] = __( 'Video source is required', 'tutor' );
-			} else {
-				if ( ! $this->is_valid_video_source_type( $video_source ) ) {
+			} elseif ( ! $this->is_valid_video_source_type( $video_source ) ) {
 					$errors['video_source'] = __( 'Invalid video source', 'tutor' );
-				}
 			}
 		}
 	}
@@ -424,7 +429,7 @@ class Course extends Tutor_Base {
 			$category_names = array();
 
 			foreach ( $params['course_categories'] as $category_id ) {
-				$term = get_term( $category_id, 'course-category' );
+				$term = get_term( $category_id, CourseModel::COURSE_CATEGORY );
 
 				if ( ! is_wp_error( $term ) && $term ) {
 					$category_names[] = $term->name;
@@ -432,16 +437,16 @@ class Course extends Tutor_Base {
 			}
 
 			// Set category names on the post.
-			wp_set_object_terms( $post_id, $category_names, 'course-category' );
+			wp_set_object_terms( $post_id, $category_names, CourseModel::COURSE_CATEGORY );
 		} else {
-			wp_set_object_terms( $post_id, array(), 'course-category' );
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_CATEGORY );
 		}
 
 		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
 			$tag_names = array();
 
 			foreach ( $params['course_tags'] as $tag_id ) {
-				$term = get_term( $tag_id, 'course-tag' );
+				$term = get_term( $tag_id, CourseModel::COURSE_TAG );
 
 				if ( ! is_wp_error( $term ) && $term ) {
 					$tag_names[] = $term->name;
@@ -449,9 +454,9 @@ class Course extends Tutor_Base {
 			}
 
 			// Set tag names on the post.
-			wp_set_object_terms( $post_id, $tag_names, 'course-tag' );
+			wp_set_object_terms( $post_id, $tag_names, CourseModel::COURSE_TAG );
 		} else {
-			wp_set_object_terms( $post_id, array(), 'course-tag' );
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_TAG );
 		}
 	}
 
@@ -794,46 +799,60 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 3.2.0
+	 *
+	 * Refactor the arguments & response as per new design
+	 *
 	 * @return void
 	 */
 	public function ajax_course_list() {
 		$this->check_access();
 
+		$limit       = Input::post( 'limit', 10, Input::TYPE_INT );
+		$offset      = Input::post( 'offset', 0, Input::TYPE_INT );
+		$search_term = '';
+
+		$filter = json_decode( wp_unslash( $_POST['filter'] ) ); //phpcs:ignore --sanitized already
+		if ( ! empty( $filter ) && property_exists( $filter, 'search' ) ) {
+			$search_term = Input::sanitize( $filter->search );
+		}
+
 		$args = array(
-			'post_type'      => tutor()->course_post_type,
-			'posts_per_page' => -1,
+			'posts_per_page' => $limit,
+			'offset'         => $offset,
+			's'              => $search_term,
 		);
 
 		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
 		if ( count( $exclude ) ) {
 			$exclude         = array_filter(
 				$exclude,
-				function( $id ) {
+				function ( $id ) {
 					return is_numeric( $id );
 				}
 			);
-			$args['exclude'] = $exclude;
+			$args['post__not_in'] = $exclude;
 		}
 
-		$courses = get_posts( $args );
+		$courses = CourseModel::get_courses_by_args( $args );
 
-		$items = array();
-		foreach ( $courses as $course ) {
-			$tmp                 = new stdClass();
-			$tmp->id             = $course->ID;
-			$tmp->post_title     = $course->post_title;
-			$tmp->featured_image = get_the_post_thumbnail_url( $course->ID );
+		$response = array(
+			'results'     => array(),
+			'total_items' => 0,
+		);
 
-			if ( ! $tmp->featured_image ) {
-				$tmp->featured_image = CourseModel::get_course_preview_image_placeholder();
+		$response['total_items'] = is_a( $courses, 'WP_Query' ) ? $courses->found_posts : 0;
+
+		if ( is_a( $courses, 'WP_Query' ) && $courses->have_posts() ) {
+			$courses = $courses->get_posts();
+			foreach ( $courses as $course ) {
+				$response['results'][] = self::get_mini_info( $course );
 			}
-
-			$items[] = $tmp;
 		}
 
 		$this->json_response(
-			__( 'Course list fetched successfully', 'tutor' ),
-			$items
+			__( 'Course list retrieved successfully!', 'tutor-pro' ),
+			$response
 		);
 	}
 
@@ -999,6 +1018,11 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		$is_error = apply_filters( 'tutor_is_error_before_course_update', false, $params );
+		if ( is_wp_error( $is_error ) ) {
+			$this->response_bad_request( $is_error->get_error_message() );
+		}
+
 		$params['ID'] = $course_id;
 		$update_id    = wp_update_post( $params, true );
 		if ( is_wp_error( $update_id ) ) {
@@ -1017,7 +1041,7 @@ class Course extends Tutor_Base {
 		}
 
 		$this->json_response(
-			__( 'Course update successfully', 'tutor' ),
+			__( 'Course updated successfully.', 'tutor' ),
 			$update_id,
 			HttpHelper::STATUS_OK
 		);
@@ -1194,8 +1218,8 @@ class Course extends Tutor_Base {
 			'editor_used'              => tutor_utils()->get_editor_used( $course_id ),
 			'preview_link'             => get_preview_post_link( $course_id ),
 			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
-			'course_categories'        => wp_get_post_terms( $course_id, 'course-category' ),
-			'course_tags'              => wp_get_post_terms( $course_id, 'course-tag' ),
+			'course_categories'        => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
+			'course_tags'              => wp_get_post_terms( $course_id, CourseModel::COURSE_TAG ),
 			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
 			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
 
@@ -1308,6 +1332,8 @@ class Course extends Tutor_Base {
 			'hide_admin_bar_for_users',
 			'enable_redirect_on_course_publish_from_frontend',
 			'instructor_can_publish_course',
+			'instructor_can_change_course_author',
+			'instructor_can_manage_co_instructors',
 		);
 
 		$full_settings                       = get_option( 'tutor_option', array() );
@@ -1565,29 +1591,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Course meta box (Topics)
-	 *
-	 * @since 1.0.0
-	 * @param boolean $echo display or not.
-	 * @return string
-	 */
-	public function course_meta_box( $echo = true ) {
-		$file_path = tutor()->path . 'views/metabox/course-topics.php';
-
-		if ( $echo ) {
-			/**
-			 * Use echo raise WPCS security issue
-			 * Helper wp_kses_post break content.
-			 */
-			include $file_path;
-		} else {
-			ob_start();
-			include $file_path;
-			return ob_get_clean();
-		}
-	}
-
-	/**
 	 * Save course content order
 	 *
 	 * @since 1.0.0
@@ -1686,37 +1689,29 @@ class Course extends Tutor_Base {
 			if ( ! empty( $_POST['course_benefits'] ) ) {
 				$course_benefits = Input::post( 'course_benefits', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_benefits', $course_benefits );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_benefits' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_requirements'] ) ) {
 				$requirements = Input::post( 'course_requirements', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_requirements', $requirements );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_requirements' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_target_audience'] ) ) {
 				$target_audience = Input::post( 'course_target_audience', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_target_audience', $target_audience );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_target_audience' );
-				}
 			}
 
 			if ( ! empty( $_POST['course_material_includes'] ) ) {
 				$material_includes = Input::post( 'course_material_includes', '', Input::TYPE_KSES_POST );
 				update_post_meta( $post_ID, '_tutor_course_material_includes', $material_includes );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_tutor_course_material_includes' );
-				}
 			}
 			//phpcs:enable WordPress.Security.NonceVerification.Missing
 		}
@@ -1740,10 +1735,8 @@ class Course extends Tutor_Base {
 			$video_source = tutor_utils()->array_get( 'source', $video );
 			if ( -1 !== $video_source ) {
 				update_post_meta( $post_ID, '_video', $video );
-			} else {
-				if ( ! tutor_is_rest() ) {
+			} elseif ( ! tutor_is_rest() ) {
 					delete_post_meta( $post_ID, '_video' );
-				}
 			}
 		}
 
@@ -2202,15 +2195,15 @@ class Course extends Tutor_Base {
 					update_post_meta( $product_id, '_virtual', 'yes' );
 					update_post_meta( $product_id, '_tutor_product', 'yes' );
 
-					$course_post_thumbnail = get_post_meta( $post_ID, '_thumbnail_id', true );
-					if ( $course_post_thumbnail ) {
-						set_post_thumbnail( $product_id, $course_post_thumbnail );
-					}
-
 					// Set course regular & sale price.
 					update_post_meta( $post_ID, self::COURSE_PRICE_META, $product_obj->get_regular_price() );
 					update_post_meta( $post_ID, self::COURSE_SALE_PRICE_META, $product_obj->get_sale_price() );
 				}
+			}
+
+			$course_post_thumbnail = Input::post( 'thumbnail_id', 0, Input::TYPE_INT );
+			if ( $product_id && $course_post_thumbnail ) {
+				set_post_thumbnail( $product_id, $course_post_thumbnail );
 			}
 		} elseif ( 'edd' === $monetize_by ) {
 
@@ -3027,4 +3020,17 @@ class Course extends Tutor_Base {
 		return $args;
 	}
 
+
+	/**
+	 * Sanitizes a slug by decoding URL-encoded characters.
+	 *
+	 * @param string $slug The URL-encoded slug to be sanitized.
+	 *
+	 * @return string The sanitized slug with decoded characters.
+	 *
+	 * @since 3.2.0
+	 */
+	public function tutor_sanitize_slug( $slug ) {
+		return urldecode( $slug );
+	}
 }

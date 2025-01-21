@@ -1,4 +1,4 @@
-import { Breakpoint, spacing, zIndex } from '@Config/styles';
+import { Breakpoint, spacing, zIndex } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 
 export const magicAIStyles = {
@@ -8,7 +8,9 @@ export const magicAIStyles = {
     grid-template-columns: 1fr 330px;
 
     ${Breakpoint.tablet} {
-      width: 90%;
+      min-width: auto;
+      grid-template-columns: 1fr;
+      width: 100%;
     }
   `,
   left: css`

@@ -10,9 +10,6 @@
 
 namespace Tutor;
 
-use Tutor\Ecommerce\CartController;
-use Tutor\Ecommerce\CheckoutController;
-use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\OptionKeys;
 use TUTOR\Input;
 
@@ -717,7 +714,7 @@ class Options_V2 {
 								'label'       => __( 'Enable Marketplace', 'tutor' ),
 								'label_title' => '',
 								'default'     => 'off',
-								'desc'        => __( 'Allow multiple instructors to upload their courses.', 'tutor' ),
+								'desc'        => __( 'Allow multiple instructors to sell their courses.', 'tutor' ),
 							),
 							array(
 								'key'         => 'pagination_per_page',
@@ -735,6 +732,14 @@ class Options_V2 {
 						'block_type' => 'uniform',
 						'fields'     => array(
 							array(
+								'key'         => 'enable_become_instructor_btn',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Become an Instructor Button', 'tutor' ),
+								'label_title' => '',
+								'default'     => 'off',
+								'desc'        => __( 'Enable the option to display this button on the student dashboard.', 'tutor' ),
+							),
+							array(
 								'key'         => 'instructor_can_publish_course',
 								'type'        => 'toggle_switch',
 								'label'       => __( 'Allow Instructors to Publish Courses', 'tutor' ),
@@ -749,14 +754,6 @@ class Options_V2 {
 								'label_title' => '',
 								'default'     => 'on',
 								'desc'        => __( 'Enable this setting to allow instructors to delete courses.', 'tutor' ),
-							),
-							array(
-								'key'         => 'enable_become_instructor_btn',
-								'type'        => 'toggle_switch',
-								'label'       => __( 'Become an Instructor Button', 'tutor' ),
-								'label_title' => '',
-								'default'     => 'off',
-								'desc'        => __( 'Enable the option to display this button on the student dashboard.', 'tutor' ),
 							),
 						),
 					),
@@ -996,7 +993,7 @@ class Options_V2 {
 						),
 					),
 					'block_woocommerce'     => array(
-						'label'      => __( 'Woocommerce', 'tutor' ),
+						'label'      => __( 'WooCommerce', 'tutor' ),
 						'slug'       => 'woocommerce',
 						'block_type' => 'uniform',
 						'fields'     => array(
@@ -1712,11 +1709,11 @@ class Options_V2 {
 								'searchable' => true,
 							),
 							array(
-								'key'     => 'lesson_video_duration_youtube_api_key',
-								'type'    => 'text',
-								'label'   => __( 'YouTube API Key', 'tutor' ),
-								'default' => '',
-								'desc'    => __(
+								'key'         => 'lesson_video_duration_youtube_api_key',
+								'type'        => 'text',
+								'label'       => __( 'YouTube API Key', 'tutor' ),
+								'default'     => '',
+								'desc'        => __(
 									'To host live videos on your platform using YouTube, enter your YouTube API key.',
 									'tutor'
 								),

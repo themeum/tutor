@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type {};
 
 declare module '*.png';
@@ -6,13 +7,13 @@ declare module '*.jpeg';
 declare module '*.jpg';
 
 declare global {
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const wp: any;
   interface Window {
-    // biome-ignore lint/suspicious/noExplicitAny: <Allow explicit any for this>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     wp: any;
     ajaxurl: string;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     tinymce: any;
     _tutorobject: {
       ajaxurl: string;
@@ -30,7 +31,9 @@ declare global {
       enable_lesson_classic_editor: string;
       tutor_frontend_dashboard_url: string;
       backend_course_list_url: string;
+      backend_bundle_list_url: string;
       frontend_course_list_url: string;
+      frontend_bundle_list_url: string;
       wp_date_format: string;
       wp_rest_nonce: string;
       is_admin: string;
@@ -102,6 +105,8 @@ declare global {
         enrollment_expiry_enabled: 'on' | 'off';
         enable_q_and_a_on_course: 'on' | 'off';
         instructor_can_delete_course: 'on' | 'off';
+        instructor_can_change_course_author: 'on' | 'off';
+        instructor_can_manage_co_instructors: 'on' | 'off';
         chatgpt_enable: 'on' | 'off';
         course_builder_logo_url: string | false;
         chatgpt_key_exist: boolean;

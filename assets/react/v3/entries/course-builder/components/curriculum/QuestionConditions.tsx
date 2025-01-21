@@ -2,13 +2,13 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { Controller, useFormContext } from 'react-hook-form';
 
-import FormInput from '@Components/fields/FormInput';
-import FormSwitch from '@Components/fields/FormSwitch';
+import FormInput from '@TutorShared/components/fields/FormInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
-import SVGIcon from '@Atoms/SVGIcon';
-import { colorTokens, spacing } from '@Config/styles';
-import { typography } from '@Config/typography';
-import Show from '@Controls/Show';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   QuizDataStatus,
@@ -16,8 +16,8 @@ import {
   type QuizQuestionType,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
-import { styleUtils } from '@Utils/style-utils';
-import type { IconCollection } from '@Utils/types';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import type { IconCollection } from '@TutorShared/utils/types';
 
 const questionTypes = {
   true_false: {

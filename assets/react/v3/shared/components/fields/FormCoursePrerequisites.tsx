@@ -2,34 +2,34 @@ import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useEffect, useRef, useState } from 'react';
 
-import { LoadingSection } from '@Atoms/LoadingSpinner';
-import SVGIcon from '@Atoms/SVGIcon';
-import EmptyState from '@Molecules/EmptyState';
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import EmptyState from '@TutorShared/molecules/EmptyState';
 
-import { isRTL } from '@Config/constants';
-import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@Config/styles';
-import { typography } from '@Config/typography';
-import For from '@Controls/For';
-import Show from '@Controls/Show';
-import type { PrerequisiteCourses } from '@CourseBuilderServices/course';
-import type { FormControllerProps } from '@Utils/form';
-import { styleUtils } from '@Utils/style-utils';
-import { noop } from '@Utils/util';
+import { isRTL } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 
-import { useDebounce } from '@Hooks/useDebounce';
-import { Portal, usePortalPopover } from '@Hooks/usePortalPopover';
-import { useSelectKeyboardNavigation } from '@Hooks/useSelectKeyboardNavigation';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import { type Course } from '@TutorShared/services/course';
 
-import notFound2x from '@Images/not-found-2x.webp';
-import notFound from '@Images/not-found.webp';
+import notFound2x from '@SharedImages/not-found-2x.webp';
+import notFound from '@SharedImages/not-found.webp';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormCoursePrerequisitesProps = {
   label?: string | React.ReactNode;
   placeholder?: string;
-  options: PrerequisiteCourses[];
-  onChange?: (selectedOption: PrerequisiteCourses[]) => void;
+  options: Course[];
+  onChange?: (selectedOption: Course[]) => void;
   handleSearchOnChange?: (searchText: string) => void;
   disabled?: boolean;
   readOnly?: boolean;
@@ -38,7 +38,7 @@ type FormCoursePrerequisitesProps = {
   isHidden?: boolean;
   responsive?: boolean;
   helpText?: string;
-} & FormControllerProps<PrerequisiteCourses[] | null>;
+} & FormControllerProps<Course[] | null>;
 
 const FormCoursePrerequisites = ({
   field,
@@ -65,7 +65,7 @@ const FormCoursePrerequisites = ({
 
   const filteredOption = options.filter(
     (option) =>
-      option.post_title.toLowerCase().includes(debouncedSearchText.toLowerCase()) &&
+      option.title.toLowerCase().includes(debouncedSearchText.toLowerCase()) &&
       !selectedIds.includes(String(option.id)),
   );
 
@@ -85,7 +85,7 @@ const FormCoursePrerequisites = ({
 
   const { activeIndex, setActiveIndex } = useSelectKeyboardNavigation({
     options: filteredOption.map((option) => ({
-      label: option.post_title,
+      label: option.title,
       value: option,
     })),
     isOpen,
@@ -194,10 +194,10 @@ const FormCoursePrerequisites = ({
                       })}
                     >
                       <div css={styles.imageWrapper}>
-                        <img src={course.featured_image} alt={course.post_title} css={styles.image} />
+                        <img src={course.image} alt={course.title} css={styles.image} />
                       </div>
                       <div css={styles.cardContent}>
-                        <span css={styles.cardTitle}>{course.post_title}</span>
+                        <span css={styles.cardTitle}>{course.title}</span>
                         <p css={typography.tiny()}>{course.id}</p>
                       </div>
                       <button
@@ -261,17 +261,15 @@ const FormCoursePrerequisites = ({
                               setSearchText('');
                             }}
                             onMouseOver={() => setActiveIndex(index)}
-                            onMouseLeave={() => {
-                              index !== activeIndex && setActiveIndex(-1);
-                            }}
+                            onMouseLeave={() => index !== activeIndex && setActiveIndex(-1)}
                             onFocus={() => setActiveIndex(index)}
                             aria-selected={activeIndex === index}
                           >
                             <div css={styles.imageWrapper}>
-                              <img src={course.featured_image} alt={course.post_title} css={styles.image} />
+                              <img src={course.image} alt={course.title} css={styles.image} />
                             </div>
                             <div css={styles.cardContent}>
-                              <span css={styles.cardTitle}>{course.post_title}</span>
+                              <span css={styles.cardTitle}>{course.title}</span>
                               <p css={typography.tiny()}>{course.id}</p>
                             </div>
                           </button>
@@ -377,6 +375,12 @@ const styles = {
         border-color: ${colorTokens.stroke.default};
       `}
 
+      [data-visually-hidden] {
+        opacity: 1;
+      }
+    }
+
+    ${Breakpoint.smallTablet} {
       [data-visually-hidden] {
         opacity: 1;
       }

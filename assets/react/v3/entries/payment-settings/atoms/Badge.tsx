@@ -1,5 +1,5 @@
-import Show from '@Controls/Show';
-import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@Config/styles';
+import Show from '@TutorShared/controls/Show';
+import { borderRadius, colorTokens, fontSize, lineHeight, spacing } from '@TutorShared/config/styles';
 import { css } from '@emotion/react';
 import type { ReactNode } from 'react';
 
