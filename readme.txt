@@ -314,7 +314,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.2.1 - January 21, 2024
 
-Fix: Resolved the "Page not found" issue.
+Fix: Resolved the "Page not found" issue for multilingual courses.
 
 = 3.2.0 - January 20, 2024
 
