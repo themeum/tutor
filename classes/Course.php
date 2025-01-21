@@ -269,12 +269,6 @@ class Course extends Tutor_Base {
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 
-		/**
-		 * Add a filter to override the default sanitization of slugs(post_name) in WordPress.
-		 *
-		 * @since 3.2.0
-		 */
-		add_filter( 'sanitize_title', array( $this, 'tutor_sanitize_slug' ) );
 	}
 
 	/**
@@ -3018,19 +3012,5 @@ class Course extends Tutor_Base {
 		}
 
 		return $args;
-	}
-
-
-	/**
-	 * Sanitizes a slug by decoding URL-encoded characters.
-	 *
-	 * @param string $slug The URL-encoded slug to be sanitized.
-	 *
-	 * @return string The sanitized slug with decoded characters.
-	 *
-	 * @since 3.2.0
-	 */
-	public function tutor_sanitize_slug( $slug ) {
-		return urldecode( $slug );
 	}
 }
