@@ -1204,7 +1204,11 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		$course  = get_post( $course_id, ARRAY_A );
+		$course = get_post( $course_id, ARRAY_A );
+		if ( $course ) {
+			$course['post_name'] = urldecode( $course['post_name'] );
+		}
+
 		$editors = tutor_utils()->get_editor_list( $course_id );
 
 		$data = array(
