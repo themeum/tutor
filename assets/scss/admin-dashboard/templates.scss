@@ -49,15 +49,13 @@ button.tutor-template-import-btn {
 	cursor: pointer;
 	border-radius: 6px;
 	background-color: #3e64de;
-	display: none;
-
-	&:hover {
-		background-color: #1c42bb;
-	}
 }
 
 .tutor-templates-demo-import {
 	background: #f1f1f1;
+	// padding: 0px 20px 0px 0px;
+	max-width: 1200px;
+	margin: 0 auto;
 	// padding: 40px 40px 40px 20px;
 	// max-width: 1170px;
 	// margin: 0 auto;
@@ -163,22 +161,6 @@ button.tutor-template-import-btn {
 
 			&:hover {
 				box-shadow: 0px 6px 20px 0px #1c31681a;
-
-				button.tutor-template-import-btn {
-					display: block;
-					position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(-50%, -50%);
-				}
-
-				.tutorowl-single-template-inner {
-					.tutorowl-template-preview-img {
-						img {
-							filter: blur(1px);
-						}
-					}
-				}
 			}
 
 			.tutorowl-single-template-inner {
@@ -194,11 +176,10 @@ button.tutor-template-import-btn {
 			.tutorowl-single-template-footer {
 				display: flex;
 				justify-content: space-between;
-				gap: 10px;
+				gap: 0px;
 				align-items: center;
 
 				.tutorowl-template-name {
-					margin-left: 8px;
 					font-family: SF Pro Display;
 					font-size: 16px;
 					font-weight: 500;
@@ -285,18 +266,22 @@ button.tutor-template-import-btn {
 	}
 
 	.tutorowl-modal-content {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
 		z-index: 1;
-		max-width: 700px;
-		min-width: 320px;
-		// height: 350px;
-		background: #ffffff;
-		box-shadow: 0px 0px 1px rgba(9, 30, 66, 0.31), 0px 4px 8px rgba(9, 30, 66, 0.25);
+		width: 550px;
+		background: #fff;
+		box-shadow: 0px 0px 1px rgba(9, 30, 66, .31), 0px 4px 8px rgba(9, 30, 66, .25);
 		border-radius: 10px;
 		padding: 30px;
 		gap: 20px;
+		display: grid;
+		grid-template-columns: 205px 1fr;
+
+		.tutorowl-modal-img {
+			img {
+				width: 100%;
+				border-radius: 12px;
+			}
+		}
 
 		.tutorowl-modal-head {
 			margin-bottom: 10px;
@@ -305,11 +290,14 @@ button.tutor-template-import-btn {
 		.tutorowl-import-item-wrapper {
 			display: flex;
 			flex-direction: column;
-			gap: 15px;
+			gap: 4px;
 
 			.tutorowl-import-item {
 				display: flex;
 				gap: 10px;
+				background: #F6F8FD;
+				padding: 12px 8px;
+				border-radius: 6px;
 
 				.title {
 					margin-top: -3px;
@@ -318,9 +306,10 @@ button.tutor-template-import-btn {
 		}
 
 		.tutorowl-modal-footer {
-			display: grid;
-			grid-template-columns: 1fr 2fr;
-			gap: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: end;
+			gap: 5px;
 
 			button {
 				margin-top: 10px;
@@ -452,9 +441,9 @@ button.tutor-template-import-btn {
 
 .tutorowl-installation-progress-wrapper {
 	display: flex;
-	align-items: center;
+	flex-direction: column;
 	margin-bottom: 15px;
-	gap: 15px;
+	gap: 4px;
 }
 
 .tutorowl-installation-progress-wrapper .progress {

@@ -436,6 +436,7 @@ final class Tutor {
 	 */
 	private $permalink;
 
+
 	/**
 	 * Run the TUTOR
 	 *
@@ -546,6 +547,13 @@ final class Tutor {
 		$this->instructor_list = new Instructors_List();
 		$this->course_embed    = new Course_Embed();
 		$this->rest_auth       = new RestAuth();
+
+		/**
+		 * New Template Importer.
+		 *
+		 * @since 3.2.0
+		 */
+		new TemplateImporter();
 
 		/**
 		 * New Course Builder.
