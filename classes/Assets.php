@@ -10,6 +10,7 @@
 
 namespace TUTOR;
 
+use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\CouponController;
 use Tutor\Ecommerce\OptionKeys;
 use Tutor\Ecommerce\OrderController;
@@ -96,6 +97,32 @@ class Assets {
 		 * @since v2.0.5
 		 */
 		add_action( 'enqueue_block_editor_assets', __CLASS__ . '::add_frontend_editor_button' );
+	}
+
+	/**
+	 * Get build number
+	 *
+	 * @since 3.3.0
+	 *
+	 * @return string
+	 */
+	public static function get_build_number() {
+		$cache_key    = 'tutor_build_number';
+		$build_number = TutorCache::get( $cache_key );
+
+		if ( false === $build_number ) {
+			try {
+				$assetsData   = file_get_contents( tutor()->path . 'assets/assets.json' );
+				$assetsData   = json_decode( $assetsData, true );
+				$build_number = $assetsData['buildNumber'] ?? TUTOR_VERSION;
+			} catch ( \Exception $e ) {
+				$build_number = TUTOR_VERSION;
+			}
+
+			TutorCache::set( $cache_key, $build_number );
+		}
+
+		return $build_number;
 	}
 
 	/**
