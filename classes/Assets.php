@@ -182,6 +182,7 @@ class Assets {
 		$tutor_settings = Options_V2::get_only( $required_options );
 
 		return array(
+			'build_number'                 => self::get_build_number(),
 			'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
 			'home_url'                     => rtrim( get_home_url(), '/' ),
 			'site_url'                     => rtrim( get_site_url(), '/' ),
