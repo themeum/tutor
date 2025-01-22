@@ -211,7 +211,7 @@ export default function SubscriptionItem({
     })),
     {
       label: __('Until cancelled', 'tutor'),
-      value: 'Until cancelled',
+      value: __('Until cancelled', 'tutor'),
     },
   ];
 
@@ -403,7 +403,7 @@ export default function SubscriptionItem({
                 rules={{
                   ...requiredRule(),
                   validate: (value) => {
-                    if (value === 'Until cancelled') {
+                    if (value === __('Until cancelled', 'tutor')) {
                       return true;
                     }
 
