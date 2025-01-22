@@ -112,9 +112,9 @@ class Assets {
 
 		if ( false === $build_number ) {
 			try {
-				$assetsData   = file_get_contents( tutor()->path . 'assets/assets.json' );
-				$assetsData   = json_decode( $assetsData, true );
-				$build_number = $assetsData['buildNumber'] ?? TUTOR_VERSION;
+				$assets_data  = file_get_contents( tutor()->path . 'assets/assets.json' );
+				$assets_data  = json_decode( $assets_data, true );
+				$build_number = $assets_data['buildNumber'] ?? TUTOR_VERSION;
 			} catch ( \Exception $e ) {
 				$build_number = TUTOR_VERSION;
 			}
