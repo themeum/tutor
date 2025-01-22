@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.2.0
+Stable tag: 3.2.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -312,27 +312,31 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
+= 3.2.1 - January 21, 2024
+
+Fix: Resolved the "Page not found" issue for multilingual courses.
+
 = 3.2.0 - January 20, 2024
 
-New: Added Membership support (Phase 1) in the Native Subscription system.
-New: Redesigned the Native Subscription and introduced Subscriptions for Course Bundles.
-New: Integrated Authorize.net payment gateway.
-New: Added re-subscription option upon cancellation or expiration.
+New: Added Membership support (Phase 1) in the Native Subscription system. (Pro)
+New: Redesigned the Native Subscription and introduced Subscriptions for Course Bundles. (Pro)
+New: Integrated Authorize.net payment gateway. (Pro)
+New: Added re-subscription option upon cancellation or expiration. (Pro)
 New: Added a setting to allow or restrict instructors from changing course authors.
 Update: Added Support for Internationalised Characters when converting slug.
-Update: Implemented a licensing system with OAuth authentication.
+Update: Implemented a licensing system with OAuth authentication. (Pro)
 Update: Redesigned the Addon page and included a plugin installation feature.
 Update: Improved responsive design for the course builder.
-Update: Email templates now support RTL (Right-to-Left) languages.
+Update: Email templates now support RTL (Right-to-Left) languages. (Pro)
 Fix: Resolved issue with Gutenberg WooCommerce checkout page not enrolling users after guest checkout.
-Fix: Adjusted instructor earnings calculation to account for discounted prices when WooCommerce coupons are applied.
-Fix: Corrected access issue where students retained course access after subscription expiration in Paid Membership Pro.
-Fix: Fixed error message for H5P quiz ID in Tutor quiz descriptions.
+Fix: Adjusted instructor earnings calculation to account for discounted prices when WooCommerce coupons are applied. (Pro)
+Fix: Corrected access issue where students retained course access after subscription expiration in Paid Membership Pro. (Pro)
+Fix: Fixed error message for H5P quiz ID in Tutor quiz descriptions. (Pro)
 Fix: Resolved PHP warning in legacy mode on the course builder.
-Fix: Fixed WPML course duplication issue in the new course builder.
-Fix: The Tutor report graph now displays correctly after translation with Loco Translate.
-Fix: Email verification links are now correctly encoded.
-Fix: Fixed enrollment counter not updating for private courses in the student dashboard.
+Fix: Fixed WPML course duplication issue in the new course builder. (Pro)
+Fix: The Tutor report graph now displays correctly after translation with Loco Translate. (Pro)
+Fix: Email verification links are now correctly encoded. (Pro)
+Fix: Fixed enrollment counter not updating for private courses in the student dashboard. (Pro)
 Fix: Resolved issue with course thumbnails not being added to WooCommerce products.
 
 = 3.1.0 - December 12, 2024
