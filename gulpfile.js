@@ -30,6 +30,19 @@ var onError = function (err) {
 	this.emit('end');
 };
 
+/**
+ * Assets build number generate.
+ *
+ * @since 3.3.0
+ */
+try {
+	const assetsFile = 'assets/assets.json';
+	const data = fs.readFileSync(assetsFile, 'utf8');
+	const jsonData = JSON.parse(data);
+	jsonData.buildNumber = +new Date();
+	fs.writeFileSync(assetsFile, JSON.stringify(jsonData, null, 2), 'utf8');
+} catch (err) { }
+
 var scss_blueprints = {
 	tutor_front: { src: 'assets/scss/front/index.scss', mode: 'expanded', destination: 'tutor-front.min.css' },
 
