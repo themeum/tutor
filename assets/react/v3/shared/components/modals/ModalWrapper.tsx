@@ -7,6 +7,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import type React from 'react';
 import { useEffect } from 'react';
+import FocusTrap from '../FocusTrap';
 
 interface ModalWrapperProps {
   children: React.ReactNode;
@@ -40,56 +41,58 @@ const ModalWrapper = ({
   }, []);
 
   return (
-    <div
-      css={styles.container({
-        maxWidth,
-      })}
-    >
+    <FocusTrap>
       <div
-        css={styles.header({
-          hasHeaderChildren: !!headerChildren,
+        css={styles.container({
+          maxWidth,
         })}
       >
-        <Show
-          when={entireHeader}
-          fallback={
-            <>
-              <div css={styles.headerContent}>
-                <div css={styles.iconWithTitle}>
-                  <Show when={icon}>{icon}</Show>
-                  <Show when={title}>
-                    <h6 css={styles.title} title={typeof title === 'string' ? title : ''}>
-                      {title}
-                    </h6>
+        <div
+          css={styles.header({
+            hasHeaderChildren: !!headerChildren,
+          })}
+        >
+          <Show
+            when={entireHeader}
+            fallback={
+              <>
+                <div css={styles.headerContent}>
+                  <div css={styles.iconWithTitle}>
+                    <Show when={icon}>{icon}</Show>
+                    <Show when={title}>
+                      <h6 css={styles.title} title={typeof title === 'string' ? title : ''}>
+                        {title}
+                      </h6>
+                    </Show>
+                  </div>
+                  <Show when={subtitle}>
+                    <span css={styles.subtitle}>{subtitle}</span>
                   </Show>
                 </div>
-                <Show when={subtitle}>
-                  <span css={styles.subtitle}>{subtitle}</span>
-                </Show>
-              </div>
-              <div css={styles.headerChildren}>
-                <Show when={headerChildren}>{headerChildren}</Show>
-              </div>
-              <div css={styles.actionsWrapper}>
-                <Show
-                  when={actions}
-                  fallback={
-                    <button type="button" css={styles.closeButton} onClick={onClose}>
-                      <SVGIcon name="times" width={14} height={14} />
-                    </button>
-                  }
-                >
-                  {actions}
-                </Show>
-              </div>
-            </>
-          }
-        >
-          {entireHeader}
-        </Show>
+                <div css={styles.headerChildren}>
+                  <Show when={headerChildren}>{headerChildren}</Show>
+                </div>
+                <div css={styles.actionsWrapper}>
+                  <Show
+                    when={actions}
+                    fallback={
+                      <button type="button" css={styles.closeButton} onClick={onClose}>
+                        <SVGIcon name="times" width={14} height={14} />
+                      </button>
+                    }
+                  >
+                    {actions}
+                  </Show>
+                </div>
+              </>
+            }
+          >
+            {entireHeader}
+          </Show>
+        </div>
+        <div css={styles.content}>{children}</div>
       </div>
-      <div css={styles.content}>{children}</div>
-    </div>
+    </FocusTrap>
   );
 };
 
