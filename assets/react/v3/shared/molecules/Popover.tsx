@@ -1,4 +1,3 @@
-import FocusTrap from '@TutorShared/components/FocusTrap';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
@@ -46,21 +45,19 @@ const Popover = <T extends HTMLElement>({
       animationType={animationType}
       onEscape={closeOnEscape ? closePopover : undefined}
     >
-      <FocusTrap>
-        <div
-          css={[
-            styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
-            {
-              [isRTL ? 'right' : 'left']: position.left,
-              top: position.top,
-              maxWidth: maxWidth ?? triggerWidth,
-            },
-          ]}
-          ref={popoverRef}
-        >
-          <div css={styles.content}>{children}</div>
-        </div>
-      </FocusTrap>
+      <div
+        css={[
+          styles.wrapper(arrow ? position.arrowPlacement : undefined, hideArrow),
+          {
+            [isRTL ? 'right' : 'left']: position.left,
+            top: position.top,
+            maxWidth: maxWidth ?? triggerWidth,
+          },
+        ]}
+        ref={popoverRef}
+      >
+        <div css={styles.content}>{children}</div>
+      </div>
     </Portal>
   );
 };

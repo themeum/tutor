@@ -1,53 +1,67 @@
-import { Children, cloneElement, useEffect, useRef, type ReactNode } from 'react';
+import { Children, cloneElement, useEffect, useRef, type ReactElement, type ReactNode } from 'react';
 
-interface FocusTrapProps {
-  children: ReactNode;
-}
-
-const FocusTrap = ({ children }: FocusTrapProps) => {
+const FocusTrap = ({ children }: { children: ReactNode }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const allFocusable = () =>
-      containerRef.current?.querySelectorAll<HTMLElement>(
-        'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])',
-      ) || [];
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
 
-    const focusableElements = () => Array.from(allFocusable()).filter((el) => !el.hasAttribute('disabled'));
+    const getFocusableElements = () => {
+      const focusableSelectors = 'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])';
+      return Array.from(container.querySelectorAll(focusableSelectors)).filter(
+        (el) => !el.hasAttribute('disabled') && !(el as HTMLElement).hidden,
+      ) as HTMLElement[];
+    };
 
-    const handleTab = (event: KeyboardEvent) => {
-      const elements = Array.from(focusableElements());
-      const firstElement = elements[0];
-      const lastElement = elements[elements.length - 1];
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Check if this is the topmost trap
+      const allTraps = document.querySelectorAll('[data-focus-trap="true"]');
+      const isTopTrap = allTraps.length > 0 && Array.from(allTraps)[allTraps.length - 1] === container;
 
-      if (event.key === 'Tab' && elements.length) {
-        if (event.shiftKey && document.activeElement === firstElement) {
-          event.preventDefault();
-          lastElement?.focus();
-        } else if (!event.shiftKey && document.activeElement === lastElement) {
-          event.preventDefault();
-          firstElement?.focus();
-        }
+      if (!isTopTrap || event.key !== 'Tab') {
+        return;
+      }
+
+      const focusableElements = getFocusableElements();
+      if (focusableElements.length === 0) {
+        return;
+      }
+
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      const activeElement = document.activeElement;
+
+      if (!container.contains(activeElement)) {
+        event.preventDefault();
+        firstElement.focus();
+        return;
+      }
+
+      if (event.shiftKey && activeElement === firstElement) {
+        event.preventDefault();
+        lastElement.focus();
+      } else if (!event.shiftKey && activeElement === lastElement) {
+        event.preventDefault();
+        firstElement.focus();
       }
     };
 
-    const handleFocusOut = (event: FocusEvent) => {
-      const elements = focusableElements();
-      if (!containerRef.current?.contains(event.target as Node)) {
-        elements[0]?.focus();
-      }
-    };
-
-    document.addEventListener('keydown', handleTab);
-    document.addEventListener('focusin', handleFocusOut);
+    document.addEventListener('keydown', handleKeyDown, true);
 
     return () => {
-      document.removeEventListener('keydown', handleTab);
-      document.removeEventListener('focusin', handleFocusOut);
+      document.removeEventListener('keydown', handleKeyDown, true);
     };
   }, []);
 
-  return cloneElement(Children.only(children) as React.ReactElement, { ref: containerRef });
+  return cloneElement(Children.only(children) as ReactElement, {
+    ref: containerRef,
+    'data-focus-trap': 'true',
+    tabIndex: -1,
+  });
 };
 
 export default FocusTrap;
