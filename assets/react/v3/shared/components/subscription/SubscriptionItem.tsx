@@ -418,7 +418,7 @@ export default function SubscriptionItem({
                     {...controllerProps}
                     label={__('Billing Cycles', 'tutor')}
                     placeholder={__('Select or type times to renewing the plan', 'tutor')}
-                    content={controllerProps.field.value !== 'Until cancelled' && __('Times', 'tutor')}
+                    content={controllerProps.field.value !== __('Until cancelled', 'tutor') && __('Times', 'tutor')}
                     contentPosition="right"
                     type="number"
                     presetOptions={lifetimeOptions}
