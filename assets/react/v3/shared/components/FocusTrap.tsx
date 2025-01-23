@@ -12,16 +12,17 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
     const getFocusableElements = () => {
       const focusableSelectors = 'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])';
       return Array.from(container.querySelectorAll(focusableSelectors)).filter(
-        (el) => !el.hasAttribute('disabled') && !(el as HTMLElement).hidden,
+        (focusableElement) => !focusableElement.hasAttribute('disabled') && !(focusableElement as HTMLElement).hidden,
       ) as HTMLElement[];
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
       // Check if this is the topmost trap
-      const allTraps = document.querySelectorAll('[data-focus-trap="true"]');
-      const isTopTrap = allTraps.length > 0 && Array.from(allTraps)[allTraps.length - 1] === container;
+      const allFocusTraps = document.querySelectorAll('[data-focus-trap="true"]');
+      const isTopmostFocusTrap =
+        allFocusTraps.length > 0 && Array.from(allFocusTraps)[allFocusTraps.length - 1] === container;
 
-      if (!isTopTrap || event.key !== 'Tab') {
+      if (!isTopmostFocusTrap || event.key !== 'Tab') {
         return;
       }
 
