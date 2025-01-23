@@ -1,35 +1,39 @@
 
 document.addEventListener('DOMContentLoaded', function () {
-
 	const { __ } = wp.i18n;
-
 	const installationWrapper = document.querySelector('.tutorowl-installation-progress-wrapper');
 	const successWrapper = document.querySelector('.tutorowl-success-block-wrapper');
 	const modalFooter = document.querySelector('.tutorowl-modal-footer');
 	const modalWrapper = document.getElementById('tutorowl-import-modal-wrapper');
-	// const modalOverlay = document.querySelector('.tutorowl-modal-wrapper-overlay');
+	const modalOverlay = document.querySelector('.tutorowl-modal-wrapper-overlay');
 	const modalContent = document.querySelector('.tutorowl-modal-content');
 	const importBtns = document.querySelectorAll('.tutor-template-import-btn');
 	const importNowBtn = document.querySelector('.tutor-template-import-now-btn');
 	const importCancelBtn = document.getElementById('tutorowl-import-cancel-btn');
 	const modalHead = document.querySelector('.tutorowl-modal-head');
 	const modalHeading = document.querySelector('.tutorowl-modal-head h5');
+	const modalImg = document.querySelector('.tutorowl-modal-img img');
+	const modalTitle = document.querySelector('.tutorowl-modal-head-subtitle');
+	const importedTemplateName = document.querySelector('.tutorowl-imported-template-name');
 	// const dangerBlock = document.querySelector('.tutorowl-danger-block');
 	let isModalClosable = true;
 	let templateId = null;
 
-	[...importBtns].forEach((item) => {
+	[...importBtns]?.forEach((item) => {
 		item.addEventListener('click', (event) => {
 			templateId = item.dataset.template;
 			modalWrapper.style.display = 'flex';
 			const singleItem = item.closest('.tutorowl-single-template');
 			const templateName = singleItem.querySelector('.tutorowl-template-name span');
+			const templateImg = singleItem.querySelector('.tutorowl-template-preview-img img');
+			modalImg?.setAttribute('src', templateImg.src);
+			importedTemplateName.innerText = templateName.innerText + ' Template Successfully Imported!';
 			modalHeading.innerText = templateName.innerText + ' Template';
 		});
 	});
 
-	// modalOverlay.addEventListener('click', modalDisable);
-	importCancelBtn.addEventListener('click', modalDisable);
+	modalOverlay?.addEventListener('click', modalDisable);
+	importCancelBtn?.addEventListener('click', modalDisable);
 
 	function modalDisable() {
 		if (isModalClosable) {
@@ -42,12 +46,12 @@ document.addEventListener('DOMContentLoaded', function () {
 	const importItemSpinner = document.querySelectorAll('.tutorowl-import-item .svg-spinner');
 	const svgCircle = document.querySelectorAll('.tutorowl-import-item .svg-circle');
 	const svgSpinner = document.querySelectorAll('.tutorowl-import-item .svg-spinner');
-	const progressBar = document.querySelector('.progress-status');
+	const progressBar = document.querySelector('.tutorowl-progress-status');
 	const progressNumberDiv = document.querySelector('.percentage-number');
 	const contentDetails = document.getElementById('tutorowl-content-details');
 	const plugins_array = ['tutorowl', 'droip'];
 
-	importNowBtn.addEventListener('click', plugin_installation);
+	importNowBtn?.addEventListener('click', plugin_installation);
 	let progressBarInitialWidth = 0;
 	let progressNumber = 0;
 	async function plugin_installation() {
@@ -60,8 +64,12 @@ document.addEventListener('DOMContentLoaded', function () {
 		// dangerBlock.innerText = '';
 		// dangerBlock.style.display = 'none';
 
+		// installationWrapper.style.display = 'flex';
+		modalContent?.classList.add('tutorowl-template-importing');
+		// modalTitle.style.display = 'none';
 		importNowBtn.setAttribute('disabled', 'disabled');
 		importNowBtn.innerText = 'Importing';
+
 		for (let i = 0; i < plugins_array.length; i++) {
 			importItemSpinner[i].classList.add('active');
 			let data = new FormData();
@@ -74,15 +82,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				method: 'POST',
 				body: data,
 			});
-			// if (!response.ok) {
-			// 	console.log('Network error! plz try again!');
-			// 	break;
-			// }
 			let res = await response.json();
-
-			// if (res?.status_code !== 200) {
-			// 	tutor_toast(__('Error', 'tutor'), __(`${res?.message}`, 'tutor'), 'error');
-			// }
 
 			if (res.success) {
 				progressUpgrader();
@@ -176,31 +176,38 @@ document.addEventListener('DOMContentLoaded', function () {
 	};
 
 	const successModal = () => {
+		modalContent?.classList.remove('tutorowl-template-importing');
+		modalContent?.classList.add('tutorowl-template-imported');
+
 		svgSpinner[svgSpinner.length - 1].style.display = 'none';
 		svgCircle[svgCircle.length - 1].style.display = 'block';
-		installationWrapper.style.display = 'none';
-		successWrapper.style.display = 'flex';
-		modalFooter.style.display = 'none';
-		pluginInstallationDone = true;
+		// installationWrapper.style.display = 'none';
+		// successWrapper.style.display = 'flex';
+		// modalFooter.style.display = 'none';
 		importNowBtn.removeAttribute('disabled');
-		importNowBtn.innerText = 'Import Now';
+		// importNowBtn.innerText = 'Import Now';
+		pluginInstallationDone = true;
 		isModalClosable = true;
+		importNowBtn.innerText = 'Import';
 	};
 
 	const resetModal = () => {
+		modalContent?.classList.remove('tutorowl-template-importing');
+		modalContent?.classList.remove('tutorowl-template-imported');
+		importNowBtn.innerText = 'Import';
 		progressBarInitialWidth = 0;
 		progressNumber = 0;
 		progressNumberDiv.innerText = `0%`;
 		progressBar.style.width = `0%`;
-		installationWrapper.style.display = 'flex';
-		successWrapper.style.display = 'none';
-		modalFooter.style.display = 'flex';
+		// installationWrapper.style.display = 'flex';
+		// successWrapper.style.display = 'none';
+		// modalFooter.style.display = 'flex';
 		// dangerBlock.innerText = '';
 		// dangerBlock.style.display = 'none';
 		pluginInstallationDone = false;
-		importNowBtn.removeAttribute('disabled');
-		importNowBtn.innerText = 'Import Now';
 		isModalClosable = true;
+		importNowBtn.removeAttribute('disabled');
+		// importNowBtn.innerText = 'Import Now';
 		importItemSpinner.forEach((spinner) => {
 			spinner.classList.remove('active');
 			spinner.style.display = 'block';
@@ -211,11 +218,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	};
 
 	const retryImportDomUpdate = (message = 'Something went wrong!!, plz try again!') => {
+		modalContent?.classList.remove('tutorowl-template-importing');
+		modalContent?.classList.remove('tutorowl-template-imported');
+		importNowBtn.innerText = 'Import';
 		isModalClosable = true;
 		importNowBtn.removeAttribute('disabled');
-		importNowBtn.innerText = 'Import Now';
-		// dangerBlock.innerText = message;
-		// dangerBlock.style.display = 'block';
+		// importNowBtn.innerText = 'Import Now';
+		// // dangerBlock.innerText = message;
+		// // dangerBlock.style.display = 'block';
 		importItemSpinner.forEach((item) => {
 			if (item.classList.contains('active')) {
 				item.classList.remove('active');

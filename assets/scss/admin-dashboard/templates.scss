@@ -2,38 +2,6 @@ body {
 	background-color: #f1f1f1;
 }
 
-//.demo-importer-ui
-// .btn {
-// 	text-decoration: none;
-// 	text-transform: capitalize;
-// 	outline: none;
-// 	border: none;
-// 	color: #464646;
-// 	padding: 8px 17px;
-// 	border-radius: 3px;
-// 	transition: 0.2s linear;
-// 	font-weight: 500;
-// 	font-size: 14px;
-// 	letter-spacing: 0.3px;
-// 	cursor: pointer;
-// }
-// .btn-primary {
-// 	color: #ffffff;
-// 	background: #1973aa;
-// 	box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px rgba(0, 0, 0, 0.1);
-// 	&:hover {
-// 		color: #fff;
-// 	}
-// 	&:disabled {
-// 		opacity: 0.8;
-// 	}
-// }
-// .btn-light {
-// 	border: 1px solid #ddd;
-// 	background: #ffffff;
-// 	box-shadow: 0px 1px 0px rgba(0, 0, 0, 0.03), 0px 1px 1px rgba(0, 0, 0, 0.1);
-// }
-
 button.tutor-template-import-btn {
 	text-decoration: none;
 	outline: none;
@@ -56,180 +24,177 @@ button.tutor-template-import-btn {
 	// padding: 0px 20px 0px 0px;
 	max-width: 1200px;
 	margin: 0 auto;
-	// padding: 40px 40px 40px 20px;
-	// max-width: 1170px;
-	// margin: 0 auto;
 
-	.tutorowl-demo-importer-wrapper {
-		.tutorowl-demo-importer-top {
-			display: flex;
-			justify-content: space-between;
-			flex-wrap: wrap;
-			gap: 30px;
-			margin-bottom: 27px;
-			padding: 20px 0px;
-			border-bottom: 1px solid #e0e2ea;
+}
 
-			.tutorowl-demo-importer-top-left {
-				display: flex;
+.tutorowl-demo-importer-wrapper {}
 
-				.tutorowl-top-left-icon {
-					width: 40px;
+.tutorowl-demo-importer-top {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 30px;
+	margin-bottom: 27px;
+	padding: 20px 0px;
+	border-bottom: 1px solid #e0e2ea;
 
-					svg {
-						// width: 40px;
-					}
-				}
+	.tutorowl-demo-importer-top-left {
+		display: flex;
+
+		.tutorowl-top-left-icon {
+			width: 40px;
+
+			svg {
+				// width: 40px;
 			}
+		}
+	}
 
-			.tutorowl-top-left-heading {
-				font-family: 'SF Pro';
-				font-size: 20px;
-				font-weight: 510;
-				line-height: 28px;
-				text-align: left;
-				text-underline-position: from-font;
-				text-decoration-skip-ink: none;
+	.tutorowl-top-left-heading {
+		font-family: 'SF Pro';
+		font-size: 20px;
+		font-weight: 510;
+		line-height: 28px;
+		text-align: left;
+		text-underline-position: from-font;
+		text-decoration-skip-ink: none;
+	}
+
+	.tutorowl-top-left-text {
+		font-family: SF Pro Display;
+		font-size: 15px;
+		font-weight: 400;
+		line-height: 24px;
+		text-align: left;
+		text-underline-position: from-font;
+		text-decoration-skip-ink: none;
+		margin-top: 2px;
+	}
+
+	.tutorowl-demo-importer-top-right {
+		.tutorowl-template-search-wrapper {
+			position: relative;
+
+			svg.tutorowl-template-search-icon {
+				position: absolute;
+				left: 10px;
+				top: 50%;
+				transform: translateY(-50%);
 			}
+		}
 
-			.tutorowl-top-left-text {
-				//styleName: text/thin/caption-15px;
-				font-family: SF Pro Display;
-				font-size: 15px;
+		input {
+			width: 300px;
+			height: 40px;
+			padding: 8px 8px 8px 30px;
+			gap: 4px;
+			border-radius: 6px;
+			border: 1px solid #c3c5cb;
+			opacity: 0px;
+
+			&::placeholder {
+				font-family: 'SF Pro Display';
+				color: #5b616f;
+				font-size: 16px;
 				font-weight: 400;
 				line-height: 24px;
 				text-align: left;
 				text-underline-position: from-font;
 				text-decoration-skip-ink: none;
-				margin-top: 2px;
-			}
-
-			.tutorowl-demo-importer-top-right {
-				.tutorowl-template-search-wrapper {
-					position: relative;
-
-					svg.tutorowl-template-search-icon {
-						position: absolute;
-						left: 10px;
-						top: 50%;
-						transform: translateY(-50%);
-					}
-				}
-
-				input {
-					width: 300px;
-					height: 40px;
-					padding: 8px 8px 8px 30px;
-					gap: 4px;
-					border-radius: 6px;
-					border: 1px solid #c3c5cb;
-					opacity: 0px;
-
-					&::placeholder {
-						font-family: 'SF Pro Display';
-						color: #5b616f;
-						font-size: 16px;
-						font-weight: 400;
-						line-height: 24px;
-						text-align: left;
-						text-underline-position: from-font;
-						text-decoration-skip-ink: none;
-					}
-				}
 			}
 		}
 	}
+}
 
-	img {
-		width: 100%;
-	}
+img {
+	width: 100%;
+}
 
-	.tutorowl-demo-importer-list {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(374px, 1fr));
-		gap: 24px;
+.tutorowl-demo-importer-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(374px, 1fr));
+	gap: 24px;
 
-		.tutorowl-single-template {
+	.tutorowl-single-template {
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 12px;
+		border-radius: 6px;
+		border: 1px solid #e0e2ea;
+		background: white;
+
+		&:hover {
+			box-shadow: 0px 6px 20px 0px #1c31681a;
+		}
+
+		.tutorowl-single-template-inner {
+			position: relative;
+
+			.tutorowl-template-preview-img {
+				img {
+					border-radius: 6px;
+				}
+			}
+		}
+
+		.tutorowl-single-template-footer {
 			display: flex;
-			flex-direction: column;
 			justify-content: space-between;
-			gap: 8px;
-			padding: 12px;
-			border-radius: 6px;
-			border: 1px solid #e0e2ea;
-			background: white;
+			gap: 0px;
+			align-items: center;
 
-			&:hover {
-				box-shadow: 0px 6px 20px 0px #1c31681a;
-			}
+			.tutorowl-template-name {
+				font-family: SF Pro Display;
+				font-size: 16px;
+				font-weight: 500;
+				line-height: 26px;
 
-			.tutorowl-single-template-inner {
-				position: relative;
-
-				.tutorowl-template-preview-img {
-					img {
-						border-radius: 6px;
-					}
-				}
-			}
-
-			.tutorowl-single-template-footer {
-				display: flex;
-				justify-content: space-between;
-				gap: 0px;
-				align-items: center;
-
-				.tutorowl-template-name {
-					font-family: SF Pro Display;
-					font-size: 16px;
+				.tutorowl-template-badge {
+					display: inline-block;
+					// width: 42px;
+					height: 20px;
+					padding: 0px 8px 0px 8px;
+					gap: 5.45px;
+					border-radius: 5.45px;
+					opacity: 0px;
+					background: #ffb505;
+					font-family: 'SF Pro Display';
+					color: #212327;
+					font-size: 13px;
 					font-weight: 500;
-					line-height: 26px;
-
-					.tutorowl-template-badge {
-						display: inline-block;
-						// width: 42px;
-						height: 20px;
-						padding: 0px 8px 0px 8px;
-						gap: 5.45px;
-						border-radius: 5.45px;
-						opacity: 0px;
-						background: #ffb505;
-						font-family: 'SF Pro Display';
-						color: #212327;
-						font-size: 13px;
-						font-weight: 500;
-						line-height: 21px;
-						text-align: center;
-						text-transform: uppercase;
-						margin-left: 4px;
-					}
+					line-height: 21px;
+					text-align: center;
+					text-transform: uppercase;
+					margin-left: 4px;
 				}
+			}
 
-				a.tutorowl-template-preview {
-					display: flex;
+			a.tutorowl-template-preview {
+				display: flex;
 
-					&:hover {
-						svg {
-							path {
-								fill: #3e64de;
-							}
+				&:hover {
+					svg {
+						path {
+							fill: #3e64de;
 						}
 					}
 				}
 			}
 		}
+	}
 
-		.tutorowl-template-actions {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			gap: 15px;
-			padding: 13px;
-			background: white;
-			border-radius: 0 0 3px 3px;
-			position: relative;
-			margin-top: -3px;
-		}
+	.tutorowl-template-actions {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		gap: 15px;
+		padding: 13px;
+		background: white;
+		border-radius: 0 0 3px 3px;
+		position: relative;
+		margin-top: -3px;
 	}
 }
 
@@ -268,23 +233,56 @@ button.tutor-template-import-btn {
 	.tutorowl-modal-content {
 		z-index: 1;
 		width: 550px;
+		min-height: 330px;
 		background: #fff;
 		box-shadow: 0px 0px 1px rgba(9, 30, 66, .31), 0px 4px 8px rgba(9, 30, 66, .25);
 		border-radius: 10px;
 		padding: 30px;
-		gap: 20px;
+		gap: 32px;
 		display: grid;
 		grid-template-columns: 205px 1fr;
+		position: relative;
 
 		.tutorowl-modal-img {
+			position: relative;
+
 			img {
 				width: 100%;
 				border-radius: 12px;
+				position: relative;
+				border: 2px solid #E0E2EA;
+			}
+
+			.tutorowl-circle {
+				width: 25px;
+				height: 25px;
+				background-color: #22A848;
+				border-radius: 50%;
+				position: absolute;
+				top: -13px;
+				left: -13px;
+				display: none;
+			}
+
+			.tutorowl-checkmark {
+				width: 12px;
+				height: 7px;
+				border: solid #fff;
+				border-width: 0px 0px 2px 2px;
+				transform: rotate(316deg);
+				position: absolute;
+				top: 44%;
+				left: 51%;
+				transform: translate(-50%, -50%) rotate(316deg);
 			}
 		}
 
 		.tutorowl-modal-head {
-			margin-bottom: 10px;
+			// margin-bottom: 10px;
+		}
+
+		.tutorowl-modal-head-subtitle {
+			margin: 8px 0px 15px;
 		}
 
 		.tutorowl-import-item-wrapper {
@@ -315,6 +313,44 @@ button.tutor-template-import-btn {
 				margin-top: 10px;
 			}
 		}
+
+		&.tutorowl-template-importing {
+			.tutorowl-installation-progress-wrapper {
+				display: flex;
+			}
+
+			.tutorowl-modal-head-subtitle {
+				display: none;
+			}
+		}
+
+		&.tutorowl-template-imported {
+
+			.tutorowl-modal-img {
+				img {
+					border: 2px solid #22A848;
+				}
+			}
+
+			.tutorowl-circle {
+				display: block;
+			}
+
+			.tutorowl-installation-progress-wrapper,
+			.tutorowl-import-item,
+			.tutorowl-modal-head,
+			.tutorowl-modal-footer {
+				display: none;
+			}
+
+			.tutorowl-success-block-wrapper {
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				height: 100%;
+				align-items: end;
+			}
+		}
 	}
 }
 
@@ -341,32 +377,21 @@ button.tutor-template-import-btn {
 
 .tutorowl-success-block-wrapper {
 	display: none;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: center;
-	padding: 20px;
-	background: #cbe9d5;
 	border-radius: 6px;
-	margin-bottom: 15px;
 	animation: fadeIn 0.4s linear;
 
-	.tutorowl-success-block {
-		a.btn-primary {
-			margin-top: 10px;
-			display: inline-block;
+	a.btn-primary {
+		margin-top: 10px;
+		display: inline-block;
 
-			&:focus {
-				color: white;
-				box-shadow: 0 0 0 0px #2271b1;
-				outline: 0px solid transparent;
-			}
+		&:focus {
+			color: white;
+			box-shadow: 0 0 0 0px #2271b1;
+			outline: 0px solid transparent;
 		}
 	}
 
 	.tutorowl-success-heading {
-		display: flex;
-		align-items: center;
-		justify-content: flex-start;
 		margin-left: -4px;
 
 		>svg {
@@ -375,9 +400,12 @@ button.tutor-template-import-btn {
 
 		h3 {
 			margin-left: 10px;
-			color: #075a2a;
+			font-family: SF Pro Display;
 			font-size: 20px;
 			font-weight: 500;
+			line-height: 28px;
+			text-align: left;
+			color: rgba(33, 35, 39, 1);
 		}
 	}
 }
@@ -440,13 +468,14 @@ button.tutor-template-import-btn {
 }
 
 .tutorowl-installation-progress-wrapper {
-	display: flex;
+	display: none;
 	flex-direction: column;
 	margin-bottom: 15px;
+	margin-top: 8px;
 	gap: 4px;
 }
 
-.tutorowl-installation-progress-wrapper .progress {
+.tutorowl-installation-progress-wrapper .tutorowl-progress {
 	position: relative;
 	overflow: hidden;
 	box-shadow: inset 0px 0px 2px 1px rgba(0, 0, 0, 0.05);
@@ -457,7 +486,7 @@ button.tutor-template-import-btn {
 	margin-bottom: 0;
 }
 
-.tutorowl-installation-progress-wrapper .progress-status {
+.tutorowl-installation-progress-wrapper .tutorowl-progress-status {
 	border-radius: 20px;
 	color: #fff;
 	display: flex;

@@ -22,10 +22,6 @@ class TemplateImporter {
 	 * Register default hooks and actions for WordPress
 	 */
 	public function __construct() {
-
-		$tutils = tutor();
-		$path   = tutor()->path;
-
 		add_action( 'wp_ajax_install_plugins', array( $this, 'install_plugins' ) );
 		add_action( 'wp_ajax_import_droip_template', array( $this, 'import_droip_template' ) );
 		add_action( 'wp_ajax_process_droip_template', array( $this, 'process_droip_template' ) );
@@ -56,11 +52,11 @@ class TemplateImporter {
 	 */
 	public function installing_plugin( $plugin_info ) {
 		sleep( 1 );
-		if ( 'plugin' === $plugin_info['type'] ) {
-			try {
-				if ( ! class_exists( 'WP_Upgrader' ) ) {
-					require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-				}
+		try {
+			if ( ! class_exists( 'WP_Upgrader' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
+			}
+			if ( 'plugin' === $plugin_info['type'] ) {
 				require_once ABSPATH . 'wp-admin/includes/plugin-install.php';
 
 				$is_install_plugin = $this->is_plugin_installed( $plugin_info['path'] );
@@ -77,34 +73,31 @@ class TemplateImporter {
 					return $this->response( false, 'Plugin activation error!', 'error' );
 				}
 				return $this->response( true, 'Plugin installed successfully!', 'success' );
-			} catch ( \Throwable $th ) {
-				return $this->response( false, 'Something went wrong!', 'error' );
-			}
-		}
-		if ( 'theme' === $plugin_info['type'] ) {
-			if ( ! class_exists( 'WP_Upgrader' ) ) {
-				require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
-			}
-			require_once ABSPATH . 'wp-admin/includes/theme-install.php';
 
-			$is_theme_installed = wp_get_theme( $plugin_info['base'] )->exists(); // Replace with the folder name of the theme.
+			} elseif ( 'theme' === $plugin_info['type'] ) {
+				require_once ABSPATH . 'wp-admin/includes/theme-install.php';
 
-			if ( ! $is_theme_installed ) {
-				$upgrader = new \Theme_Upgrader( new \WP_Ajax_Upgrader_Skin() );
+				$is_theme_installed = wp_get_theme( $plugin_info['base'] )->exists(); // Replace with the folder name of the theme.
 
-				$installed = $upgrader->install( $plugin_info['src'] ); // Provide the URL to the theme zip file.
-				if ( is_wp_error( $installed ) ) {
-					return $this->response( false, 'Theme installation error!', 'error' );
+				if ( ! $is_theme_installed ) {
+					$upgrader = new \Theme_Upgrader( new \WP_Ajax_Upgrader_Skin() );
+
+					$installed = $upgrader->install( $plugin_info['src'] ); // Provide the URL to the theme zip file.
+					if ( is_wp_error( $installed ) ) {
+						return $this->response( false, 'Theme installation error!', 'error' );
+					}
 				}
+
+				switch_theme( $plugin_info['base'] ); // Replace with the folder name of the theme.
+
+				if ( wp_get_theme()->get_stylesheet() !== $plugin_info['base'] ) {
+					return $this->response( false, 'Theme activation error!', 'error' );
+				}
+
+				return $this->response( true, 'Theme installed and activated successfully.', 'success' );
 			}
-
-			switch_theme( $plugin_info['base'] ); // Replace with the folder name of the theme.
-
-			if ( wp_get_theme()->get_stylesheet() !== $plugin_info['base'] ) {
-				return $this->response( false, 'Theme activation error!', 'error' );
-			}
-
-			return $this->response( true, 'Theme installed and activated successfully.', 'success' );
+		} catch ( \Throwable $th ) {
+			return $this->response( false, 'Something went wrong!', 'error' );
 		}
 	}
 
