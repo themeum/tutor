@@ -71,7 +71,7 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
 
           <Show when={subscription.payment_type !== 'onetime'}>
             <Show
-              when={subscription.recurring_limit === 'Until cancelled'}
+              when={subscription.recurring_limit === __('Until cancelled', 'tutor')}
               fallback={
                 <>
                   <span>•</span>
