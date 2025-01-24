@@ -32,8 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	});
 
+	const importModalClose = document.querySelector('.tutorowl-import-modal-close');
+
 	modalOverlay?.addEventListener('click', modalDisable);
 	importCancelBtn?.addEventListener('click', modalDisable);
+	importModalClose?.addEventListener('click', modalDisable);
 
 	function modalDisable() {
 		if (isModalClosable) {
@@ -49,6 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	const progressBar = document.querySelector('.tutorowl-progress-status');
 	const progressNumberDiv = document.querySelector('.percentage-number');
 	const contentDetails = document.getElementById('tutorowl-content-details');
+	const importContentTitle = document.querySelector('.tutorowl-import-item-content-title');
 	const plugins_array = ['tutorowl', 'droip'];
 
 	importNowBtn?.addEventListener('click', plugin_installation);
@@ -68,9 +72,11 @@ document.addEventListener('DOMContentLoaded', function () {
 		modalContent?.classList.add('tutorowl-template-importing');
 		// modalTitle.style.display = 'none';
 		importNowBtn.setAttribute('disabled', 'disabled');
+		importCancelBtn.setAttribute('disabled', 'disabled');
 		importNowBtn.innerText = 'Importing';
 
 		for (let i = 0; i < plugins_array.length; i++) {
+			// for (let i = 0; i < 100; i++) {
 			importItemSpinner[i].classList.add('active');
 			let data = new FormData();
 			data.append('action', 'install_plugins');
@@ -89,7 +95,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				svgSpinner[i].style.display = 'none';
 				svgCircle[i].style.display = 'block';
 				pluginInstallationDone = true;
-				tutor_toast(__('Success', 'tutor'), __(`${res?.message}`, 'tutor'), 'success');
+				// tutor_toast(__('Success', 'tutor'), __(`${res?.message}`, 'tutor'), 'success');
 			} else {
 				tutor_toast(__('Error', 'tutor'), __(`${res?.message}`, 'tutor'), 'error');
 				retryImportDomUpdate();
@@ -103,7 +109,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				const templateImportResponse = await importContent();
 				const importRes = await templateImportResponse.json();
 				if (templateImportResponse.ok && importRes.success) {
-					contentDetails.innerHTML = `Downloading <span style="color: #5FAC23; font-weight: 600;">assets...</span>`;
+					importContentTitle.innerHTML = `Importing <span style="color: #5FAC23; font-weight: 600;">assets...</span>`;
 					processImportedTemplate();
 				} else {
 					if ('License missing' == importRes.message) {
@@ -127,7 +133,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		// importFormData.append('nonce_value', _tutorobject.nonce_value);
 		importFormData.append('_tutor_nonce', _tutorobject._tutor_nonce);
 		importFormData.append('template_id', templateId);
-		console.log('fetch template id ', templateId);
 		let response = await fetch(_tutorobject.ajaxurl, {
 			method: 'POST',
 			body: importFormData,
@@ -146,19 +151,18 @@ document.addEventListener('DOMContentLoaded', function () {
 		})
 			.then((res) => res.json()) // Parse response as JSON
 			.then((res) => {
-				console.log('ProcessImportedTemplate Success');
 				if (res.success) {
 					let data = res.success;
 					if (data.status === 'importing') {
 						if (data.queue.length) {
-							contentDetails.innerHTML = `Downloading <span style="color: #5FAC23; font-weight: 600;"> ${data.queue[0]}... </span>`;
+							importContentTitle.innerHTML = `Importing <span style="color: #5FAC23; font-weight: 600;"> ${data.queue[0]}... </span>`;
 						}
 						setTimeout(() => {
 							processImportedTemplate();
 						}, 10);
 					} else if (data.status === 'done') {
 						console.log('import done!');
-						contentDetails.innerHTML = ``;
+						importContentTitle.innerHTML = ``;
 						progressUpgrader();
 						setTimeout(() => {
 							successModal();
@@ -178,22 +182,23 @@ document.addEventListener('DOMContentLoaded', function () {
 	const successModal = () => {
 		modalContent?.classList.remove('tutorowl-template-importing');
 		modalContent?.classList.add('tutorowl-template-imported');
-
 		svgSpinner[svgSpinner.length - 1].style.display = 'none';
 		svgCircle[svgCircle.length - 1].style.display = 'block';
 		// installationWrapper.style.display = 'none';
 		// successWrapper.style.display = 'flex';
 		// modalFooter.style.display = 'none';
 		importNowBtn.removeAttribute('disabled');
-		// importNowBtn.innerText = 'Import Now';
+		importCancelBtn.setAttribute('disabled', 'disabled');
 		pluginInstallationDone = true;
 		isModalClosable = true;
 		importNowBtn.innerText = 'Import';
+		importContentTitle.innerText = 'Contents';
 	};
 
 	const resetModal = () => {
 		modalContent?.classList.remove('tutorowl-template-importing');
 		modalContent?.classList.remove('tutorowl-template-imported');
+		importContentTitle.innerText = 'Contents';
 		importNowBtn.innerText = 'Import';
 		progressBarInitialWidth = 0;
 		progressNumber = 0;
@@ -207,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		pluginInstallationDone = false;
 		isModalClosable = true;
 		importNowBtn.removeAttribute('disabled');
-		// importNowBtn.innerText = 'Import Now';
+		importCancelBtn.setAttribute('disabled', 'disabled');
 		importItemSpinner.forEach((spinner) => {
 			spinner.classList.remove('active');
 			spinner.style.display = 'block';
@@ -220,9 +225,11 @@ document.addEventListener('DOMContentLoaded', function () {
 	const retryImportDomUpdate = (message = 'Something went wrong!!, plz try again!') => {
 		modalContent?.classList.remove('tutorowl-template-importing');
 		modalContent?.classList.remove('tutorowl-template-imported');
+		importContentTitle.innerText = 'Contents';
 		importNowBtn.innerText = 'Import';
 		isModalClosable = true;
 		importNowBtn.removeAttribute('disabled');
+		importCancelBtn.setAttribute('disabled', 'disabled');
 		// importNowBtn.innerText = 'Import Now';
 		// // dangerBlock.innerText = message;
 		// // dangerBlock.style.display = 'block';

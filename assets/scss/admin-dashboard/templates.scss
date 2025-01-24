@@ -292,14 +292,17 @@ img {
 
 			.tutorowl-import-item {
 				display: flex;
+				align-items: center;
 				gap: 10px;
 				background: #F6F8FD;
 				padding: 12px 8px;
 				border-radius: 6px;
 
-				.title {
-					margin-top: -3px;
+				.tutorowl-import-item-title {
+					// margin-top: -3px;
 				}
+
+				.tutorowl-import-item-content-title {}
 			}
 		}
 
@@ -349,6 +352,21 @@ img {
 				justify-content: space-between;
 				height: 100%;
 				align-items: end;
+			}
+		}
+
+		.tutorowl-import-modal-close {
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			cursor: pointer;
+
+			&:hover {
+				svg {
+					path {
+						fill: #000000;
+					}
+				}
 			}
 		}
 	}
@@ -434,6 +452,8 @@ img {
 }
 
 .tutorowl-import-item {
+	position: relative;
+
 	svg {
 		width: 15px;
 		height: 15px;
@@ -442,8 +462,10 @@ img {
 	}
 
 	.svg-spinner {
-		fill: #ddd;
-		background: #ddd;
+		// fill: #ddd;
+		// background: #ddd;
+		fill: #22a848;
+		// border: 1.5px solid #22a848;
 
 		.path {}
 	}
@@ -453,17 +475,51 @@ img {
 			background: none;
 			fill: none;
 			stroke-width: 5;
+			position: relative;
 
 			.path {
-				stroke: #60ac23;
+				stroke: #22a848;
 				stroke-linecap: round;
 				animation: dash 1.5s ease-in-out infinite;
 			}
 		}
 	}
 
+	.svg-spinner-inner {
+		position: absolute;
+		top: 14px;
+		left: 8px;
+		width: 15px;
+		height: 15px;
+
+		.path {
+			stroke: #ddd;
+			stroke-width: 5px;
+		}
+	}
+
 	svg.svg-circle {
+		width: 15px;
+		height: 15px;
+		position: relative;
+		z-index: 1;
 		display: none;
+	}
+}
+
+.progress-circle {
+	animation: progress 2s ease-out repeat;
+}
+
+@keyframes progress {
+	from {
+		stroke-dashoffset: 283;
+		/* Full circle hidden */
+	}
+
+	to {
+		stroke-dashoffset: 0;
+		/* Full circle revealed */
 	}
 }
 
@@ -479,7 +535,7 @@ img {
 	position: relative;
 	overflow: hidden;
 	box-shadow: inset 0px 0px 2px 1px rgba(0, 0, 0, 0.05);
-	background: #e3e7ec;
+	background: rgba(0, 0, 0, 0.10);
 	height: 8px;
 	border-radius: 5px;
 	width: 100%;
@@ -496,7 +552,7 @@ img {
 	height: 100%;
 	width: 0;
 	transition: 0.2s linear;
-	background: #1973aa;
+	background: #239C46;
 }
 
 .tutorowl-danger-block {
