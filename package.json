@@ -1,6 +1,7 @@
 {
   "name": "tutor",
   "description": "<img src='.github/tutor-github.png' alt='TutorLMS' width='100%'>",
+  "version": "3.2.1",
   "main": "index.js",
   "engines": {
     "npm": ">=6.14.14",

@@ -3,6 +3,8 @@ const TerserPlugin = require('terser-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 
+const version = require('./package.json').version;
+
 module.exports = (env, options) => {
     const mode = options.mode || 'development';
 
@@ -103,7 +105,7 @@ module.exports = (env, options) => {
                 output: {
                     path: path.resolve(dest_path),
                     filename: '[name].js',
-                    chunkFilename: 'lazy-chunks/[name].[contenthash].min.js',
+                    chunkFilename: `lazy-chunks/[name].[contenthash].min.js?v=${version}`,
                     clean: true,
                 },
                 resolve: {
