@@ -356,21 +356,7 @@ const CoursePricing = () => {
           name="course_selling_option"
           control={form.control}
           render={(controllerProps) => (
-            <FormSelectInput
-              {...controllerProps}
-              label={__('Purchase Options', 'tutor')}
-              options={purchaseOptions}
-              onChange={(selectedOption) => {
-                if (
-                  ['subscription', 'membership'].includes(selectedOption.value) &&
-                  (!isDefined(courseDetails.course_pricing.price) || Number(courseDetails.course_pricing.price) === 0)
-                ) {
-                  form.setValue('course_price', '1', {
-                    shouldValidate: true,
-                  });
-                }
-              }}
-            />
+            <FormSelectInput {...controllerProps} label={__('Purchase Options', 'tutor')} options={purchaseOptions} />
           )}
         />
       </Show>
