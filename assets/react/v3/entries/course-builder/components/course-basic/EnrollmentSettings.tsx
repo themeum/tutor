@@ -84,7 +84,11 @@ const EnrollmentSettings = () => {
         />
       </Show>
 
-      <div css={styles.enrollmentPeriod}>
+      <div
+        css={styles.enrollmentPeriod({
+          isEnrollmentPeriodEnabled,
+        })}
+      >
         <Controller
           name="isEnrollmentPeriodEnabled"
           control={form.control}
@@ -266,8 +270,8 @@ const styles = {
       padding: ${spacing[16]};
     }
   `,
-  enrollmentPeriod: css`
-    padding: ${spacing[12]} ${spacing[12]} ${spacing[16]} ${spacing[12]};
+  enrollmentPeriod: ({ isEnrollmentPeriodEnabled = false }) => css`
+    padding: ${spacing[12]} ${spacing[12]} ${isEnrollmentPeriodEnabled ? spacing[16] : spacing[12]} ${spacing[12]};
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
     gap: ${spacing[8]};
