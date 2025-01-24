@@ -9,7 +9,7 @@ import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput'
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
-import { Course } from '@TutorShared/services/course';
+import { type Course } from '@TutorShared/services/course';
 import type { Tag } from '@TutorShared/services/tags';
 import type { InstructorListResponse, User } from '@TutorShared/services/users';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
@@ -29,7 +29,7 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingType = 'free' | 'paid';
-export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
+export type CourseSellingOption = 'subscription' | 'one_time' | 'both' | 'membership' | 'all';
 
 export interface CourseFormData {
   post_date: string;
