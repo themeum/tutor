@@ -60,7 +60,7 @@ class Course extends Tutor_Base {
 	 */
 	const SELLING_OPTION_ONE_TIME     = 'one_time';
 	const SELLING_OPTION_SUBSCRIPTION = 'subscription';
-	const SELLING_OPTION_BOTH         = 'both'; // onetime and subscription
+	const SELLING_OPTION_BOTH         = 'both'; // onetime and subscription.
 	const SELLING_OPTION_MEMBERSHIP   = 'membership';
 	const SELLING_OPTION_ALL          = 'all';
 
