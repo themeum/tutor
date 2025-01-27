@@ -231,7 +231,7 @@ class CartModel {
 			'item.id'
 		);
 
-		return (bool) $cart_data['total_count'];
+		return apply_filters( 'tutor_is_course_exists_in_cart', (bool) $cart_data['total_count'], $course_id );
 	}
 
 	/**
