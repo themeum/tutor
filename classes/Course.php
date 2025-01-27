@@ -60,21 +60,9 @@ class Course extends Tutor_Base {
 	 */
 	const SELLING_OPTION_ONE_TIME     = 'one_time';
 	const SELLING_OPTION_SUBSCRIPTION = 'subscription';
-
-	/**
-	 * Both selling options for onetime and subscription
-	 *
-	 * @since 3.0.0
-	 */
-	const SELLING_OPTION_BOTH = 'both';
-
-	/**
-	 * Selling option for membership only
-	 *
-	 * @since 3.3.0
-	 */
-	const SELLING_OPTION_MEMBERSHIP = 'membership';
-	const SELLING_OPTION_ALL        = 'all';
+	const SELLING_OPTION_BOTH         = 'both'; // onetime and subscription
+	const SELLING_OPTION_MEMBERSHIP   = 'membership';
+	const SELLING_OPTION_ALL          = 'all';
 
 
 	/**
