@@ -28,7 +28,7 @@ const EnrollmentSettings = () => {
   });
   const isEnrollmentPeriodEnabled = useWatch({
     control: form.control,
-    name: 'isEnrollmentPeriodEnabled',
+    name: 'is_enrollment_period_enabled',
   });
   const enrollmentStartsDate = useWatch({
     control: form.control,
@@ -90,7 +90,7 @@ const EnrollmentSettings = () => {
         })}
       >
         <Controller
-          name="isEnrollmentPeriodEnabled"
+          name="is_enrollment_period_enabled"
           control={form.control}
           render={(controllerProps) => (
             <FormSwitch

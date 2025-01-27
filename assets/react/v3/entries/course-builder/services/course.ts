@@ -78,7 +78,7 @@ export interface CourseFormData {
   enable_coming_soon: boolean;
   coming_soon_thumbnail: WPMedia | null;
   enable_curriculum_preview: boolean; // Only when coming-soon is enabled
-  isEnrollmentPeriodEnabled: boolean;
+  is_enrollment_period_enabled: boolean;
   enrollment_starts_date: string;
   enrollment_starts_time: string;
   enrollment_ends_date: string;
@@ -153,7 +153,7 @@ export const courseDefaultData: CourseFormData = {
   enable_coming_soon: false,
   coming_soon_thumbnail: null,
   enable_curriculum_preview: false,
-  isEnrollmentPeriodEnabled: false,
+  is_enrollment_period_enabled: false,
   enrollment_starts_date: '',
   enrollment_starts_time: '',
   enrollment_ends_date: '',
@@ -541,7 +541,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
       coming_soon_thumbnail_id: data.coming_soon_thumbnail?.id ?? -1,
       enable_curriculum_preview: data.enable_curriculum_preview,
     }),
-    ...(data.isEnrollmentPeriodEnabled && {
+    ...(data.is_enrollment_period_enabled && {
       enrollment_starts_at: format(
         new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
         DateFormats.yearMonthDayHourMinuteSecond24H,
@@ -666,7 +666,7 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       url: courseDetails.coming_soon_thumbnail,
     },
     enable_curriculum_preview: courseDetails.enable_curriculum_preview ?? false,
-    isEnrollmentPeriodEnabled: !!courseDetails.enrollment_starts_at || !!courseDetails.enrollment_ends_at,
+    is_enrollment_period_enabled: !!courseDetails.enrollment_starts_at || !!courseDetails.enrollment_ends_at,
     enrollment_starts_date: isValid(new Date(courseDetails.enrollment_starts_at))
       ? format(parseISO(courseDetails.enrollment_starts_at), DateFormats.yearMonthDay)
       : '',
