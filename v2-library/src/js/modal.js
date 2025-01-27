@@ -46,7 +46,6 @@ document.addEventListener('click', (e) => {
 		tutorBtns.forEach((btn) => {
 			btn.classList.remove('is-loading');
 			btn.classList.remove('tutor-static-loader');
-			btn.removeAttribute('disabled');
 		});
 		document.body.classList.remove("tutor-modal-open");
 	}
