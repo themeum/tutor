@@ -54,12 +54,14 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   onFullScreenChange?: (isFullScreen: boolean) => void;
   min_height?: number;
   max_height?: number;
+  form?: unknown;
 }
 
 interface CustomEditorOverlayProps {
   editorUsed: Editor;
   onCustomEditorButtonClick?: (editor: Editor) => Promise<void>;
   onBackToWPEditorClick?: (builder: string) => Promise<TutorMutationResponse<null>>;
+  editorForm?: unknown;
 }
 
 const customEditorIcons: { [key: string]: IconCollection } = {
@@ -76,8 +78,9 @@ const CustomEditorOverlay = ({
   editorUsed,
   onBackToWPEditorClick,
   onCustomEditorButtonClick,
+  editorForm,
 }: CustomEditorOverlayProps) => {
-  const form = useFormContext<CourseFormData>();
+  const form = useFormContext<CourseFormData>() ?? editorForm;
   const { showModal } = useModal();
   const [loadingButton, setLoadingButton] = useState('');
 
@@ -112,7 +115,7 @@ const CustomEditorOverlay = ({
               try {
                 setLoadingButton('back_to');
                 await onBackToWPEditorClick?.(editorUsed.name);
-                form.setValue('editor_used', { name: 'classic', label: __('Classic Editor', 'tutor'), link: '' });
+                form?.setValue('editor_used', { name: 'classic', label: __('Classic Editor', 'tutor'), link: '' });
               } catch (error) {
                 console.error(error);
               } finally {
@@ -175,6 +178,7 @@ const FormWPEditor = ({
   onFullScreenChange,
   min_height,
   max_height,
+  form,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
@@ -298,6 +302,7 @@ const FormWPEditor = ({
                 editorUsed={editorUsed}
                 onBackToWPEditorClick={onBackToWPEditorClick}
                 onCustomEditorButtonClick={onCustomEditorButtonClick}
+                editorForm={form}
               />
             </Show>
             <WPEditor
