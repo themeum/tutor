@@ -10,7 +10,7 @@
 
 use TUTOR\TemplateImporter;
 
-$template_list = ( new TemplateImporter() )::get_template_list();
+$template_list = TemplateImporter::get_template_list();
 
 ?>
 <div class="tutor-templates-demo-import">
@@ -52,8 +52,8 @@ $template_list = ( new TemplateImporter() )::get_template_list();
 								<span><?php echo esc_html( $template->name ); ?></span>
 								<span class="tutorowl-template-badge"> <?php esc_html_e( 'Pro', 'tutor' ); ?> </span>
 							</div>
-							<div class="tutor-d-flex tutor-align-center">
-								<a class="tutor-btn tutor-fs-6 tutor-color-secondary" href="<?php echo esc_url( '#', 'tutor' ); ?>">
+							<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+								<a class="tutor-btn tutor-btn-sm tutor-fs-6 tutor-color-secondary" href="<?php echo esc_url( '#', 'tutor' ); ?>">
 									<?php esc_html_e( 'Preview', 'tutor' ); ?>
 								</a>
 								<button data-template="<?php echo esc_attr( $key ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-import-btn">
@@ -94,8 +94,8 @@ $template_list = ( new TemplateImporter() )::get_template_list();
 			<div class="tutorowl-import-item-wrapper">
 				<div class="tutorowl-installation-progress-wrapper">
 					<div class="tutor-d-flex tutor-justify-between">
-						<div class="percentage-text"> <?php esc_html_e( 'Progress', 'tutor' ); ?> </div>
-						<div class="percentage-number">0%</div>
+						<div class="tutorowl-import-percentage-text"> <?php esc_html_e( 'Progress', 'tutor' ); ?> </div>
+						<div class="tutorowl-import-percentage-number">0%</div>
 					</div>
 					<div class="tutorowl-progress">
 						<div class="tutorowl-progress-status"></div>
@@ -161,10 +161,10 @@ $template_list = ( new TemplateImporter() )::get_template_list();
 			<div class="tutorowl-success-block-wrapper">
 				<div class="tutorowl-success-heading">
 					<h3 class="tutorowl-imported-template-name"></h3>
-					<p><?php esc_html_e( 'Bingo! Your site is ready. Explore it now and see how everything looks!', 'tutor' ); ?></p>
+					<div class="tutor-fs-7 tutor-color-subdued d-block tutor-mt-8"><?php esc_html_e( 'Bingo! Your site is ready. Explore it now and see how everything looks!', 'tutor' ); ?></div>
 				</div>
 				<div>
-					<button id="tutorowl-import-later-btn" class="tutor-btn tutor-fs-6 tutor-color-secondary">
+					<button id="tutorowl-visit-later-btn" class="tutor-btn tutor-btn-sm tutor-fs-6 tutor-color-secondary">
 						<?php esc_html_e( 'Later', 'tutor' ); ?>
 					</button>
 					<a href="<?php echo esc_url( home_url() ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm view-site-now"

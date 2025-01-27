@@ -8,7 +8,7 @@
 namespace TUTOR;
 
 use Droip\ExportImport\TemplateImport;
-
+use Tutor\Traits\JsonResponse;
 use TutorLMSDroip\Helper;
 
 defined( 'ABSPATH' ) || exit;
@@ -17,14 +17,27 @@ defined( 'ABSPATH' ) || exit;
  * Ajax class
  */
 class TemplateImporter {
+	use JsonResponse;
 
 	/**
 	 * Register default hooks and actions for WordPress
 	 */
 	public function __construct() {
+		add_action( 'wp_ajax_tutor_template_list', array( $this, 'tutor_template_list' ) );
 		add_action( 'wp_ajax_install_plugins', array( $this, 'install_plugins' ) );
 		add_action( 'wp_ajax_import_droip_template', array( $this, 'import_droip_template' ) );
 		add_action( 'wp_ajax_process_droip_template', array( $this, 'process_droip_template' ) );
+	}
+
+	/**
+	 * AJAX callback to install a plugin.
+	 */
+	public function tutor_template_list() {
+		$template_list = self::get_template_list();
+		ob_start();
+		require_once tutor()->path . 'views/templates/_templates-list.php';
+		$contents = ob_get_clean();
+		$this->json_response( 'Successfully fetched!', $contents );
 	}
 
 	/**
@@ -77,18 +90,18 @@ class TemplateImporter {
 			} elseif ( 'theme' === $plugin_info['type'] ) {
 				require_once ABSPATH . 'wp-admin/includes/theme-install.php';
 
-				$is_theme_installed = wp_get_theme( $plugin_info['base'] )->exists(); // Replace with the folder name of the theme.
+				$is_theme_installed = wp_get_theme( $plugin_info['base'] )->exists();
 
 				if ( ! $is_theme_installed ) {
 					$upgrader = new \Theme_Upgrader( new \WP_Ajax_Upgrader_Skin() );
 
-					$installed = $upgrader->install( $plugin_info['src'] ); // Provide the URL to the theme zip file.
+					$installed = $upgrader->install( $plugin_info['src'] );
 					if ( is_wp_error( $installed ) ) {
 						return $this->response( false, 'Theme installation error!', 'error' );
 					}
 				}
 
-				switch_theme( $plugin_info['base'] ); // Replace with the folder name of the theme.
+				switch_theme( $plugin_info['base'] );
 
 				if ( wp_get_theme()->get_stylesheet() !== $plugin_info['base'] ) {
 					return $this->response( false, 'Theme activation error!', 'error' );

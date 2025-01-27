@@ -241,6 +241,10 @@ class Assets {
 			wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
 		}
+
+		if ( 'tutor-templates' === $page ) {
+			wp_enqueue_script( 'tutor-template-import', tutor()->url . 'assets/js/tutor-template-import.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+		}
 	}
 
 	/**

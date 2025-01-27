@@ -2,6 +2,10 @@ body {
 	background-color: #f1f1f1;
 }
 
+body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
+	font-family: SF Pro Display;
+}
+
 button.tutor-template-import-btn {
 	text-decoration: none;
 	outline: none;
@@ -283,6 +287,7 @@ img {
 
 		.tutorowl-modal-head-subtitle {
 			margin: 8px 0px 15px;
+			line-height: 1.3em;
 		}
 
 		.tutorowl-import-item-wrapper {
@@ -514,21 +519,33 @@ img {
 @keyframes progress {
 	from {
 		stroke-dashoffset: 283;
-		/* Full circle hidden */
 	}
 
 	to {
 		stroke-dashoffset: 0;
-		/* Full circle revealed */
 	}
 }
 
 .tutorowl-installation-progress-wrapper {
 	display: none;
 	flex-direction: column;
-	margin-bottom: 15px;
+	margin-bottom: 13px;
 	margin-top: 8px;
-	gap: 4px;
+	// gap: 2px;
+
+	.tutorowl-import-percentage-number {
+		width: 32px;
+		height: 20px;
+		padding: 2px 4px 2px 4px;
+		border-radius: 12px;
+		background: #ECFDF3;
+		font-family: SF Pro Display;
+		font-size: 11px;
+		font-weight: 700;
+		line-height: 16px;
+		text-align: center;
+		margin-bottom: 4px;
+	}
 }
 
 .tutorowl-installation-progress-wrapper .tutorowl-progress {
