@@ -155,6 +155,14 @@ class CheckoutController {
 	public function ajax_get_checkout_html() {
 		tutor_utils()->check_nonce();
 
+		// Keep billing country & state in global scope.
+		if ( isset( $_POST['billing_country'] ) ) {
+			$GLOBALS['billing_country'] = Input::post( 'billing_country' );
+		}
+		if ( isset( $_POST['billing_state'] ) ) {
+			$GLOBALS['billing_state'] = Input::post( 'billing_state' );
+		}
+
 		ob_start();
 		tutor_load_template( 'ecommerce/checkout-details' );
 		$content = ob_get_clean();

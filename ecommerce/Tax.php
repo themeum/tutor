@@ -217,8 +217,16 @@ class Tax {
 	 *
 	 * @return float tax rate value.
 	 */
-	public static function get_country_state_tax_rate( $country, $state = null ) {
+	public static function get_country_state_tax_rate( $country = null, $state = null ) {
 		$zero_tax = 0.0;
+
+		if ( empty( $country ) ) {
+			$country = $GLOBALS['billing_country'] ?? '';
+		}
+
+		if ( empty( $state ) ) {
+			$state = $GLOBALS['billing_state'] ?? '';
+		}
 
 		if ( empty( $country ) ) {
 			return $zero_tax;
