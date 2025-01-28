@@ -184,7 +184,7 @@ window.jQuery(document).ready(($) => {
 		};
 
 		this.error_alert = function () {
-			tutor_toast('Error', 'Maximum file size exceeded!', 'error');
+			tutor_toast(__('Error', 'tutor'), __('Maximum file size exceeded!', 'tutor'), 'error');
 			// alert('Something Went Wrong.');
 		};
 
@@ -244,7 +244,7 @@ window.jQuery(document).ready(($) => {
 
 		if (data.phone_number && !data.phone_number.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im)) {
 			phone.classList.add('invalid');
-			tutor_toast('Invalid', 'Invalid phone number', 'error');
+			tutor_toast(__('Invalid', 'tutor'), __('Invalid phone number', 'tutor'), 'error');
 			phone.focus();
 			return false;
 		} else {
@@ -264,9 +264,9 @@ window.jQuery(document).ready(($) => {
 				let { success } = resp;
 
 				if (success) {
-					window.tutor_toast('Success', get_response_message(resp), 'success');
+					window.tutor_toast(__('Success', 'tutor'), get_response_message(resp), 'success');
 				} else {
-					window.tutor_toast('Error', get_response_message(resp), 'error');
+					window.tutor_toast(__('Error', 'tutor'), get_response_message(resp), 'error');
 				}
 			},
 			complete: () => {

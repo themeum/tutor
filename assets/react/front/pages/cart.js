@@ -92,7 +92,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.addEventListener('click', (e) => {
 		if (e.target.classList.contains('tutor-cart-page-not-configured')) {
 			e.preventDefault();
-			tutor_toast('Error!', 'Cart page is not configured.', 'error');
+			tutor_toast(__('Error!', 'tutor'), __('Cart page is not configured.', 'tutor'), 'error');
 		}
 	});
 
@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	document.addEventListener('click', (e) => {
 		if (e.target.classList.contains('tutor-checkout-page-not-configured')) {
 			e.preventDefault();
-			tutor_toast('Error!', 'Checkout page is not configured.', 'error');
+			tutor_toast(__('Error!', 'tutor'), __('Checkout page is not configured.', 'tutor'), 'error');
 		}
 	});
 });

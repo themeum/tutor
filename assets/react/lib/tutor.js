@@ -246,7 +246,7 @@ jQuery(document).ready(function($) {
 					return;
 				}
 
-				tutor_toast('Error!', message, 'error');
+				tutor_toast(__('Error!', 'tutor'), message, 'error');
 			},
 			complete: function() {
 				$that.removeClass('is-loading');

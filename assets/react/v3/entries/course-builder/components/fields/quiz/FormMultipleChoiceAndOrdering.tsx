@@ -11,10 +11,6 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   calculateQuizDataStatus,
@@ -22,6 +18,10 @@ import {
   type QuizForm,
   type QuizQuestionOption,
 } from '@CourseBuilderServices/quiz';
+import { tutorConfig } from '@TutorShared/config/config';
+import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import useWPMedia from '@TutorShared/hooks/useWpMedia';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import type { FormControllerProps } from '@TutorShared/utils/form';
@@ -295,7 +295,7 @@ const FormMultipleChoiceAndOrdering = ({
                   value={{
                     id: Number(inputValue.image_id),
                     url: inputValue.image_url || '',
-                    title: 'Image',
+                    title: __('Image', 'tutor'),
                   }}
                   buttonText={__('Upload Image', 'tutor')}
                   infoText={__('Size: 700x430 pixels', 'tutor')}
