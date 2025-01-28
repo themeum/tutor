@@ -156,7 +156,7 @@ const FormTimeInput = ({
                           }}
                           onMouseOver={() => setActiveIndex(index)}
                           onMouseLeave={() => {
-                            index !== activeIndex && setActiveIndex(-1);
+                            return index !== activeIndex && setActiveIndex(-1);
                           }}
                           onFocus={() => setActiveIndex(index)}
                         >

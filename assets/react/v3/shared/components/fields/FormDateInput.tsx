@@ -1,16 +1,18 @@
 import { css } from '@emotion/react';
 import { format, isValid, parseISO } from 'date-fns';
 import { useRef, useState } from 'react';
-import { DayPicker } from 'react-day-picker';
+import { DayPicker, type Formatters } from 'react-day-picker';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, shadow, spacing } from '@TutorShared/config/styles';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { convertWordPressLocaleToDateFns } from '@TutorShared/utils/util';
 
 import 'react-day-picker/dist/style.css';
 
@@ -27,6 +29,70 @@ interface FormDateInputProps extends FormControllerProps<string> {
   isClearable?: boolean;
   onChange?: (value: string) => void;
   dateFormat?: string;
+}
+
+const NUMBERING_SYSTEMS: Record<string, string> = {
+  ar: 'arab', // Arabic numerals
+  fa: 'arabext', // Extended Arabic-Indic
+  bn: 'beng', // Bengali
+  hi: 'deva', // Devanagari
+  mr: 'deva', // Devanagari
+  ne: 'deva', // Devanagari
+  pa: 'guru', // Gurmukhi
+  gu: 'gujr', // Gujarati
+  or: 'orya', // Oriya
+  ta: 'taml', // Tamil
+  te: 'telu', // Telugu
+  kn: 'knda', // Kannada
+  ml: 'mlym', // Malayalam
+  th: 'thai', // Thai
+  lo: 'laoo', // Lao
+  km: 'khmr', // Khmer
+  my: 'mymr', // Myanmar
+  si: 'sinh', // Sinhala
+  bo: 'tibt', // Tibetan
+  dz: 'tibt', // Tibetan
+};
+
+const getNumberingSystem = (wpLocale: string): string | undefined => {
+  const [language] = wpLocale.toLowerCase().split('_');
+  return NUMBERING_SYSTEMS[language];
+};
+
+// Create a locale string with numbering system extension
+const getNumberingLocale = (wpLocale: string): string => {
+  const numberingSystem = getNumberingSystem(wpLocale);
+  const baseLocale = wpLocale.replace('_', '-');
+  return numberingSystem ? `${baseLocale}-u-nu-${numberingSystem}` : baseLocale;
+};
+
+// Format numbers according to WordPress locale
+
+// Create DayPicker formatters based on WordPress locale
+export function createFormatters(wpLocale: string): Formatters {
+  const dateFnsLocale = convertWordPressLocaleToDateFns(wpLocale);
+  const numberingLocale = getNumberingLocale(wpLocale);
+
+  const formatNumber = (value: number, options?: Intl.NumberFormatOptions) =>
+    value.toLocaleString(numberingLocale, options);
+
+  return {
+    formatDay: (day) => formatNumber(day.getDate()),
+    formatWeekNumber: (weekNumber) => formatNumber(weekNumber),
+    formatMonthCaption: (date, options) => {
+      const m = format(date, 'LLLL', { ...options, locale: dateFnsLocale });
+      return `${m}`;
+    },
+    formatCaption: (date, options) => {
+      const m = format(date, 'LLLL', { ...options, locale: dateFnsLocale });
+      return `${m}`;
+    },
+    formatWeekdayName: (weekday) => format(weekday, 'EEEEEE', { locale: dateFnsLocale }),
+    formatYearCaption: (date) =>
+      formatNumber(date.getFullYear(), {
+        useGrouping: false,
+      }),
+  };
 }
 
 const FormDateInput = ({
@@ -58,6 +124,8 @@ const FormDateInput = ({
     setIsOpen(false);
     inputRef.current?.focus();
   };
+
+  const locale = convertWordPressLocaleToDateFns(tutorConfig.local);
 
   return (
     <FormFieldWrapper
@@ -118,7 +186,9 @@ const FormDateInput = ({
                 ref={popoverRef}
               >
                 <DayPicker
+                  dir={isRTL ? 'rtl' : 'ltr'}
                   mode="single"
+                  formatters={createFormatters(tutorConfig.local)}
                   disabled={[
                     !!disabledBefore && { before: parseISO(disabledBefore) },
                     !!disabledAfter && { after: parseISO(disabledAfter) },
@@ -136,6 +206,7 @@ const FormDateInput = ({
                       }
                     }
                   }}
+                  locale={locale}
                   showOutsideDays
                   captionLayout="dropdown-buttons"
                   initialFocus={true}
