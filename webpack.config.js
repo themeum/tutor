@@ -1,9 +1,17 @@
 const path = require('node:path');
+const fs = require('fs');
 const TerserPlugin = require('terser-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const webpack = require('webpack');
 
-const version = require('./package.json').version;
+let version = "";
+
+try {
+    const data = fs.readFileSync('tutor.php', 'utf8');
+    version = data.match(/Version:\s*([\d.]+(?:-[a-zA-Z0-9]+)?)/i)?.[1] || '';
+} catch (err) {
+    console.log(err);
+}
 
 module.exports = (env, options) => {
     const mode = options.mode || 'development';
