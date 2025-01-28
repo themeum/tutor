@@ -396,7 +396,7 @@ class CheckoutController {
 		$order_data = null;
 
 		$billing_model   = new BillingModel();
-		$current_user_id = get_current_user_id();
+		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
@@ -487,6 +487,14 @@ class CheckoutController {
 		);
 
 		if ( empty( $errors ) ) {
+			if ( ! is_user_logged_in() ) {
+				$current_user_id = apply_filters( 'tutor_guest_user_id', $current_user_id, $current_user_id, $order_data );
+				if ( is_wp_error( $current_user_id ) ) {
+					array_push( $errors, $current_user_id->get_error_message() );
+					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_SUCCESS, $order_data['id'], $current_user_id->get_error_message() );
+				}
+			}
+
 			$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {
