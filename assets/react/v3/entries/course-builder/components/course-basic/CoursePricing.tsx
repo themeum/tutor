@@ -218,6 +218,22 @@ const CoursePricing = () => {
         )}
       />
 
+      <Show
+        when={
+          isAddonEnabled(Addons.SUBSCRIPTION) &&
+          tutorConfig.settings?.monetize_by === 'tutor' &&
+          coursePriceType === 'paid'
+        }
+      >
+        <Controller
+          name="course_selling_option"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormSelectInput {...controllerProps} label={__('Purchase Options', 'tutor')} options={purchaseOptions} />
+          )}
+        />
+      </Show>
+
       <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'wc'}>
         <Controller
           name="course_product_id"
@@ -352,13 +368,6 @@ const CoursePricing = () => {
         <Show when={!['one_time', 'membership'].includes(selectedPurchaseOption)}>
           <SubscriptionPreview courseId={courseId} />
         </Show>
-        <Controller
-          name="course_selling_option"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormSelectInput {...controllerProps} label={__('Purchase Options', 'tutor')} options={purchaseOptions} />
-          )}
-        />
       </Show>
     </>
   );

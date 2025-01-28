@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { format, isBefore, parseISO } from 'date-fns';
+import { format, isBefore, isValid, parseISO } from 'date-fns';
 
 import { useToast } from '@TutorShared/atoms/Toast';
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
@@ -75,6 +75,15 @@ export interface CourseFormData {
   showScheduleForm: boolean;
   schedule_date: string;
   schedule_time: string;
+  enable_coming_soon: boolean;
+  coming_soon_thumbnail: WPMedia | null;
+  enable_curriculum_preview: boolean; // Only when coming-soon is enabled
+  is_enrollment_period_enabled: boolean;
+  enrollment_starts_date: string;
+  enrollment_starts_time: string;
+  enrollment_ends_date: string;
+  enrollment_ends_time: string;
+  pause_enrollment: boolean;
 }
 
 export const courseDefaultData: CourseFormData = {
@@ -141,6 +150,15 @@ export const courseDefaultData: CourseFormData = {
   showScheduleForm: false,
   schedule_date: '',
   schedule_time: '',
+  enable_coming_soon: false,
+  coming_soon_thumbnail: null,
+  enable_curriculum_preview: false,
+  is_enrollment_period_enabled: false,
+  enrollment_starts_date: '',
+  enrollment_starts_time: '',
+  enrollment_ends_date: '',
+  enrollment_ends_time: '',
+  pause_enrollment: false,
 };
 
 export interface CoursePayload {
@@ -192,6 +210,14 @@ export interface CoursePayload {
   'video[source_embedded]'?: string;
   tutor_attachments: number[];
   bp_attached_group_ids: string[];
+
+  // when course is scheduled
+  enable_coming_soon?: boolean;
+  coming_soon_thumbnail_id?: number;
+  enable_curriculum_preview?: boolean;
+  enrollment_starts_at?: string; // yyyy-mm-dd hh:mm:ss (24H)
+  enrollment_ends_at?: string; // yyyy-mm-dd hh:mm:ss (24H)
+  pause_enrollment?: boolean;
 }
 
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
@@ -304,7 +330,6 @@ export interface CourseDetailsResponse {
   course_requirements: string;
   course_target_audience: string;
   course_material_includes: string;
-  course_sale_price: string;
   course_settings: {
     maximum_students: number;
     content_drip_type: ContentDripType;
@@ -312,7 +337,6 @@ export interface CourseDetailsResponse {
     enrollment_expiry: number;
     enable_tutor_bp: 1 | 0;
   };
-  step_completion_status: Record<CourseBuilderSteps, boolean>;
   course_pricing: {
     price: string;
     product_id: string;
@@ -330,18 +354,19 @@ export interface CourseDetailsResponse {
   zoom_users: {
     [key: string]: string;
   };
-  zoom_timezones: {
-    [key: string]: string;
-  };
   zoom_meetings: ZoomMeeting[];
-  google_meet_timezones: {
-    [key: string]: string;
-  };
   google_meet_meetings: GoogleMeet[];
   bp_attached_groups: string[];
   editor_used: Editor;
   editors: Editor[];
   total_enrolled_student: number;
+  enable_coming_soon: boolean;
+  coming_soon_thumbnail: string;
+  coming_soon_thumbnail_id: number;
+  enable_curriculum_preview: boolean;
+  enrollment_starts_at: string;
+  enrollment_ends_at: string;
+  pause_enrollment: boolean;
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -511,6 +536,22 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
       : {}),
     tutor_attachments: (data.course_attachments || []).map((item) => item.id) ?? [],
     bp_attached_group_ids: data.bp_attached_group_ids,
+    ...(isBefore(new Date(), new Date(data.post_date)) && {
+      enable_coming_soon: data.enable_coming_soon,
+      coming_soon_thumbnail_id: data.coming_soon_thumbnail?.id ?? -1,
+      enable_curriculum_preview: data.enable_curriculum_preview,
+    }),
+    ...(data.is_enrollment_period_enabled && {
+      enrollment_starts_at: format(
+        new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
+        DateFormats.yearMonthDayHourMinuteSecond24H,
+      ),
+      enrollment_ends_at: format(
+        new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
+        DateFormats.yearMonthDayHourMinuteSecond24H,
+      ),
+    }),
+    pause_enrollment: data.pause_enrollment,
   };
 };
 
@@ -618,6 +659,27 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     schedule_time: !isBefore(parseISO(courseDetails.post_date), new Date())
       ? format(parseISO(courseDetails.post_date), DateFormats.hoursMinutes)
       : '',
+    enable_coming_soon: courseDetails.enable_coming_soon ?? false,
+    coming_soon_thumbnail: {
+      id: Number(courseDetails.coming_soon_thumbnail_id),
+      title: '',
+      url: courseDetails.coming_soon_thumbnail,
+    },
+    enable_curriculum_preview: courseDetails.enable_curriculum_preview ?? false,
+    is_enrollment_period_enabled: !!courseDetails.enrollment_starts_at || !!courseDetails.enrollment_ends_at,
+    enrollment_starts_date: isValid(new Date(courseDetails.enrollment_starts_at))
+      ? format(parseISO(courseDetails.enrollment_starts_at), DateFormats.yearMonthDay)
+      : '',
+    enrollment_starts_time: isValid(new Date(courseDetails.enrollment_starts_at))
+      ? format(parseISO(courseDetails.enrollment_starts_at), DateFormats.hoursMinutes)
+      : '',
+    enrollment_ends_date: isValid(new Date(courseDetails.enrollment_ends_at))
+      ? format(parseISO(courseDetails.enrollment_ends_at), DateFormats.yearMonthDay)
+      : '',
+    enrollment_ends_time: isValid(new Date(courseDetails.enrollment_ends_at))
+      ? format(parseISO(courseDetails.enrollment_ends_at), DateFormats.hoursMinutes)
+      : '',
+    pause_enrollment: courseDetails.pause_enrollment ?? false,
   };
 };
 
