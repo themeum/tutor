@@ -13,10 +13,11 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import SuccessModal from '@TutorShared/components/modals/SuccessModal';
 
 import {
-  type CourseFormData,
   convertCourseDataToPayload,
   useCreateCourseMutation,
   useUpdateCourseMutation,
+  type CourseDetailsResponse,
+  type CourseFormData,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import config, { tutorConfig } from '@TutorShared/config/config';
@@ -24,11 +25,12 @@ import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@TutorShared/config/c
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type WPPostStatus } from '@TutorShared/utils/types';
+import { isDefined, type WPPostStatus } from '@TutorShared/utils/types';
 import { convertToGMT, determinePostStatus, noop } from '@TutorShared/utils/util';
 
 import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
 import reviewSubmitted from '@SharedImages/review-submitted.webp';
+import { useQueryClient } from '@tanstack/react-query';
 
 const courseId = getCourseId();
 
@@ -45,9 +47,11 @@ const HeaderActions = () => {
 
   const [localPostStatus, setLocalPostStatus] = useState<WPPostStatus>(postStatus);
 
+  const queryClient = useQueryClient();
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
 
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const isPostDateDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -130,6 +134,10 @@ const HeaderActions = () => {
         ...(data.isScheduleEnabled && {
           edit_date: true,
         }),
+        ...(['subscription', 'membership'].includes(data.course_selling_option) &&
+          (!isDefined(courseDetails.course_pricing.price) || Number(courseDetails.course_pricing.price) === 0) && {
+            course_price: 1,
+          }),
       });
 
       if (!response.data) {

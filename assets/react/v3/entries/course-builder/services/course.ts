@@ -29,7 +29,7 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingType = 'free' | 'paid';
-export type CourseSellingOption = 'subscription' | 'one_time' | 'both';
+export type CourseSellingOption = 'subscription' | 'one_time' | 'both' | 'membership' | 'all';
 
 export interface CourseFormData {
   post_date: string;
