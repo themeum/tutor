@@ -151,14 +151,7 @@ const EnrollmentSettings = () => {
                   <label htmlFor="enrollment_ends_at">
                     <span>{__('End Date', 'tutor')}</span>
 
-                    <Button
-                      variant="text"
-                      size="small"
-                      onClick={() => setShowEndDate(false)}
-                      css={css`
-                        margin-left: auto;
-                      `}
-                    >
+                    <Button variant="text" size="small" onClick={() => setShowEndDate(false)} css={styles.removeButton}>
                       {__('Remove', 'tutor')}
                     </Button>
                   </label>
@@ -293,5 +286,9 @@ const styles = {
       ${typography.caption()};
       color: ${colorTokens.text.title};
     }
+  `,
+  removeButton: css`
+    margin-left: auto;
+    padding: 0;
   `,
 };
