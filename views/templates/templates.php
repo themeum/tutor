@@ -57,7 +57,7 @@ $template_list = get_template_list();
 						<div class="tutorowl-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
 							<div class="tutorowl-template-name tutor-fs-6 tutor-fw-medium">
 								<span><?php echo esc_html( $template->name ); ?></span>
-								<span class="tutorowl-template-badge"> <?php esc_html_e( 'Pro', 'tutor' ); ?> </span>
+								<!-- <span class="tutorowl-template-badge"> <?php esc_html_e( 'Pro', 'tutor' ); ?> </span> -->
 							</div>
 							<div class="tutor-d-flex tutor-align-center tutor-gap-1">
 								<a class="tutor-btn tutor-btn-sm tutor-fs-6 tutor-color-secondary" href="<?php echo esc_url( '#', 'tutor' ); ?>">
