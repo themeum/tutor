@@ -395,7 +395,7 @@ jQuery.fn.serializeObject = function() {
  * 
  * @since 1.0.0
  */
-window.tutor_toast = function( title, description, type, autoClose = true ) {
+window.tutor_toast = function( title, description, type, autoClose = true ) {	
 	if ( ! jQuery('.tutor-toast-parent').length ) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
 	}
@@ -407,7 +407,7 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 	let icon = 	type == 'success' ? 'tutor-icon-circle-mark-line'
 				: type == 'error' ? 'tutor-icon-circle-times-line' : 'tutor-icon-circle-info-o';
 	
-	let hasDescription = ( description !== undefined && description !== null && description.trim() !== '' )
+	let hasDescription = ( description !== undefined && description !== null && String(description).trim() !== '' )
 
 	let content = jQuery(`
 		<div class="tutor-notification tutor-is-${alert} tutor-mb-16">
