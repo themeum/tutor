@@ -53,7 +53,7 @@ const CourseBasicSidebar = () => {
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
   );
-  const isMembershipOnlyMode = tutorConfig.settings?.membership_only_mode === 'on';
+  const isMembershipOnlyMode = isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.membership_only_mode;
 
   const currentAuthor = form.watch('post_author');
 
