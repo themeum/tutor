@@ -53,6 +53,7 @@ const CourseBasicSidebar = () => {
   const isInstructor = (courseDetails?.course_instructors || []).find(
     (instructor) => String(instructor.id) === String(currentUser.data.id),
   );
+  const isMembershipOnlyMode = tutorConfig.settings?.membership_only_mode === 'on';
 
   const currentAuthor = form.watch('post_author');
 
@@ -178,7 +179,9 @@ const CourseBasicSidebar = () => {
         )}
       />
 
-      <CoursePricing />
+      <Show when={!isMembershipOnlyMode}>
+        <CoursePricing />
+      </Show>
 
       <Controller
         name="course_categories"
