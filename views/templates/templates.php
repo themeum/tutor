@@ -5,26 +5,33 @@
  * @package Tutor
  * @author Tutor <support@themeum.com>
  * @link https://tutor.com
- * @since 3.0.2
+ * @since 3.2.0
  */
 
-use TUTOR\TemplateImporter;
+/**
+ * Get Template list.
+ */
+function get_template_list() {
+	$template_response = file_get_contents( TEMPLATE_LIST_ENDPOINT );
+	$templates         = json_decode( $template_response, true );
+	return $templates;
+}
 
-$template_list = TemplateImporter::get_template_list();
+$template_list = get_template_list();
 
 ?>
 <div class="tutor-templates-demo-import">
 	<div class="tutorowl-demo-importer-wrapper">
-		<div class="tutorowl-demo-importer-top tutor-d-flex tutor-justify-between tutor-pr-24 tutor-my-24">
+		<div class="tutorowl-demo-importer-top tutor-d-flex tutor-flex-wrap tutor-justify-between tutor-gap-4 tutor-pb-20 tutor-my-24">
 			<div class="tutorowl-demo-importer-top-left tutor-d-flex tutor-gap-1">
 				<div class="tutorowl-top-left-icon">
 					<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.667 11.666v10.667a4 4 0 0 0 4 4h5.666M3.667 11.667v-2a4 4 0 0 1 4-4h16.666a4 4 0 0 1 4 4v2m-24.666 0h9.666m0 14.666h11a4 4 0 0 0 4-4V11.667m-15 14.666V11.667m15 0h-15" stroke="#4B505C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
 				</div>
 				<div>
-					<div class="tutorowl-top-left-heading">
+					<div class="tutorowl-top-left-heading tutor-fs-5 tutor-fw-medium">
 						<?php esc_html_e( 'Templates', 'tutor' ); ?>
 					</div>
-					<div class="tutorowl-top-left-text"><?php esc_html_e( 'Leverage the collection of magnificent Tutor starter themes to make a jumpstart.', 'tutor' ); ?></div>
+					<div class="tutorowl-top-left-text tutor-fs-6 tutor-fw-regular"><?php esc_html_e( 'Leverage the collection of magnificent Tutor starter themes to make a jumpstart.', 'tutor' ); ?></div>
 				</div>
 			</div>
 			<div class="tutorowl-demo-importer-top-right">
@@ -41,14 +48,14 @@ $template_list = TemplateImporter::get_template_list();
 				foreach ( $template_list as $key => $template ) {
 					$template = (object) $template;
 					?>
-					<li class="tutorowl-single-template">
+					<li class="tutorowl-single-template tutor-d-flex tutor-flex-column tutor-justify-between tutor-gap-1 tutor-p-12">
 						<div class="tutorowl-single-template-inner">
 							<div class="tutorowl-template-preview-img">
 								<img src="<?php echo esc_url( $template->preview_image ); ?>" loading="lazy" alt="icon">
 							</div>
 						</div>
-						<div class="tutorowl-single-template-footer">
-							<div class="tutorowl-template-name">
+						<div class="tutorowl-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
+							<div class="tutorowl-template-name tutor-fs-6 tutor-fw-medium">
 								<span><?php echo esc_html( $template->name ); ?></span>
 								<span class="tutorowl-template-badge"> <?php esc_html_e( 'Pro', 'tutor' ); ?> </span>
 							</div>
@@ -56,10 +63,7 @@ $template_list = TemplateImporter::get_template_list();
 								<a class="tutor-btn tutor-btn-sm tutor-fs-6 tutor-color-secondary" href="<?php echo esc_url( '#', 'tutor' ); ?>">
 									<?php esc_html_e( 'Preview', 'tutor' ); ?>
 								</a>
-								<button data-template="<?php echo esc_attr( $key ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-sm tutor-template-import-btn">
-									<i class="tutor-icon-import tutor-mr-8"></i>	
-									<?php esc_html_e( 'Import', 'tutor' ); ?>
-								</button>
+								<?php do_action( 'template_import_btn', $key ); ?>
 							</div>
 						</div>
 					</li>
@@ -92,7 +96,7 @@ $template_list = TemplateImporter::get_template_list();
 				</div>
 			</div>
 			<div class="tutorowl-import-item-wrapper">
-				<div class="tutorowl-installation-progress-wrapper">
+				<div class="tutorowl-installation-progress-wrapper tutor-mt-8">
 					<div class="tutor-d-flex tutor-justify-between">
 						<div class="tutorowl-import-percentage-text"> <?php esc_html_e( 'Progress', 'tutor' ); ?> </div>
 						<div class="tutorowl-import-percentage-number">0%</div>
@@ -148,7 +152,7 @@ $template_list = TemplateImporter::get_template_list();
 				</div>
 				<div id="tutorowl-content-details"></div>
 			</div>
-			<div class="tutorowl-modal-footer">
+			<div class="tutorowl-modal-footer tutor-align-center tutor-justify-end tutor-gap-1 tutor-mt-8">
 				<button id="tutorowl-import-cancel-btn" class="tutor-btn tutor-btn-sm tutor-fs-6 tutor-color-secondary">
 					<?php esc_html_e( 'Cancel', 'tutor' ); ?>
 				</button>
@@ -159,8 +163,8 @@ $template_list = TemplateImporter::get_template_list();
 			</div>
 
 			<div class="tutorowl-success-block-wrapper">
-				<div class="tutorowl-success-heading">
-					<h3 class="tutorowl-imported-template-name"></h3>
+				<div class="tutorowl-success-heading tutor-ml-4">
+					<h3 class="tutorowl-imported-template-name tutor-fs-5 tutor-fw-medium"></h3>
 					<div class="tutor-fs-7 tutor-color-subdued d-block tutor-mt-8"><?php esc_html_e( 'Bingo! Your site is ready. Explore it now and see how everything looks!', 'tutor' ); ?></div>
 				</div>
 				<div>

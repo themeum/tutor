@@ -549,13 +549,6 @@ final class Tutor {
 		$this->rest_auth       = new RestAuth();
 
 		/**
-		 * New Template Importer.
-		 *
-		 * @since 3.2.0
-		 */
-		new TemplateImporter();
-
-		/**
 		 * New Course Builder.
 		 *
 		 * @since 3.0.0

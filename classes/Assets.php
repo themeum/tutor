@@ -243,7 +243,7 @@ class Assets {
 		}
 
 		if ( 'tutor-templates' === $page ) {
-			wp_enqueue_script( 'tutor-template-import', tutor()->url . 'assets/js/tutor-template-import.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
 		}
 	}
 

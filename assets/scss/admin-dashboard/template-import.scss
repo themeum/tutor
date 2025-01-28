@@ -6,72 +6,28 @@ body.tutor-backend-tutor-templates.tutor-lms-pro_page_tutor-templates {
 	font-family: SF Pro Display;
 }
 
-button.tutor-template-import-btn {
-	text-decoration: none;
-	outline: none;
-	border: none;
-	color: #fff;
-	padding: 6px 14px;
-	transition: 0.2s linear;
-	font-family: SF Pro Display;
-	font-weight: 500;
-	font-size: 13px;
-	line-height: 20px;
-	letter-spacing: 0.3px;
-	cursor: pointer;
-	border-radius: 6px;
-	background-color: #3e64de;
-}
-
 .tutor-templates-demo-import {
 	background: #f1f1f1;
-	// padding: 0px 20px 0px 0px;
 	max-width: 1200px;
 	margin: 0 auto;
-
 }
 
-.tutorowl-demo-importer-wrapper {}
-
 .tutorowl-demo-importer-top {
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	gap: 30px;
-	margin-bottom: 27px;
-	padding: 20px 0px;
 	border-bottom: 1px solid #e0e2ea;
 
 	.tutorowl-demo-importer-top-left {
-		display: flex;
 
 		.tutorowl-top-left-icon {
 			width: 40px;
-
-			svg {
-				// width: 40px;
-			}
 		}
 	}
 
 	.tutorowl-top-left-heading {
-		font-family: 'SF Pro';
-		font-size: 20px;
-		font-weight: 510;
 		line-height: 28px;
-		text-align: left;
-		text-underline-position: from-font;
-		text-decoration-skip-ink: none;
 	}
 
 	.tutorowl-top-left-text {
-		font-family: SF Pro Display;
-		font-size: 15px;
-		font-weight: 400;
 		line-height: 24px;
-		text-align: left;
-		text-underline-position: from-font;
-		text-decoration-skip-ink: none;
 		margin-top: 2px;
 	}
 
@@ -97,14 +53,11 @@ button.tutor-template-import-btn {
 			opacity: 0px;
 
 			&::placeholder {
-				font-family: 'SF Pro Display';
 				color: #5b616f;
 				font-size: 16px;
 				font-weight: 400;
 				line-height: 24px;
 				text-align: left;
-				text-underline-position: from-font;
-				text-decoration-skip-ink: none;
 			}
 		}
 	}
@@ -120,11 +73,6 @@ img {
 	gap: 24px;
 
 	.tutorowl-single-template {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-between;
-		gap: 8px;
-		padding: 12px;
 		border-radius: 6px;
 		border: 1px solid #e0e2ea;
 		background: white;
@@ -144,27 +92,18 @@ img {
 		}
 
 		.tutorowl-single-template-footer {
-			display: flex;
-			justify-content: space-between;
-			gap: 0px;
-			align-items: center;
 
 			.tutorowl-template-name {
-				font-family: SF Pro Display;
-				font-size: 16px;
-				font-weight: 500;
 				line-height: 26px;
 
 				.tutorowl-template-badge {
 					display: inline-block;
-					// width: 42px;
 					height: 20px;
 					padding: 0px 8px 0px 8px;
 					gap: 5.45px;
 					border-radius: 5.45px;
 					opacity: 0px;
 					background: #ffb505;
-					font-family: 'SF Pro Display';
 					color: #212327;
 					font-size: 13px;
 					font-weight: 500;
@@ -187,18 +126,6 @@ img {
 				}
 			}
 		}
-	}
-
-	.tutorowl-template-actions {
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		gap: 15px;
-		padding: 13px;
-		background: white;
-		border-radius: 0 0 3px 3px;
-		position: relative;
-		margin-top: -3px;
 	}
 }
 
@@ -281,10 +208,6 @@ img {
 			}
 		}
 
-		.tutorowl-modal-head {
-			// margin-bottom: 10px;
-		}
-
 		.tutorowl-modal-head-subtitle {
 			margin: 8px 0px 15px;
 			line-height: 1.3em;
@@ -302,23 +225,6 @@ img {
 				background: #F6F8FD;
 				padding: 12px 8px;
 				border-radius: 6px;
-
-				.tutorowl-import-item-title {
-					// margin-top: -3px;
-				}
-
-				.tutorowl-import-item-content-title {}
-			}
-		}
-
-		.tutorowl-modal-footer {
-			display: flex;
-			align-items: center;
-			justify-content: end;
-			gap: 5px;
-
-			button {
-				margin-top: 10px;
 			}
 		}
 
@@ -330,6 +236,10 @@ img {
 			.tutorowl-modal-head-subtitle {
 				display: none;
 			}
+		}
+
+		.tutorowl-modal-footer {
+			display: flex;
 		}
 
 		&.tutorowl-template-imported {
@@ -377,45 +287,12 @@ img {
 	}
 }
 
-.heading {
-	display: flex;
-	flex-direction: column;
-	align-items: flex-start;
-	justify-content: center;
-	padding: 20px;
-	background: #cbe9d5;
-	border-radius: 6px;
-	margin: 15px;
-	margin-bottom: 30px;
-	animation: fadeIn 0.4s linear;
-
-	p {
-		color: #075a2a;
-		text-align: left;
-		padding-left: 50px;
-		margin-left: 8px;
-		font-weight: 300;
-	}
-}
-
 .tutorowl-success-block-wrapper {
 	display: none;
 	border-radius: 6px;
 	animation: fadeIn 0.4s linear;
 
-	a.btn-primary {
-		margin-top: 10px;
-		display: inline-block;
-
-		&:focus {
-			color: white;
-			box-shadow: 0 0 0 0px #2271b1;
-			outline: 0px solid transparent;
-		}
-	}
-
 	.tutorowl-success-heading {
-		margin-left: -4px;
 
 		>svg {
 			margin-right: 4px;
@@ -423,11 +300,7 @@ img {
 
 		h3 {
 			margin-left: 10px;
-			font-family: SF Pro Display;
-			font-size: 20px;
-			font-weight: 500;
 			line-height: 28px;
-			text-align: left;
 			color: rgba(33, 35, 39, 1);
 		}
 	}
@@ -462,17 +335,11 @@ img {
 	svg {
 		width: 15px;
 		height: 15px;
-		// border: 1px solid #60ac23;
 		border-radius: 50%;
 	}
 
 	.svg-spinner {
-		// fill: #ddd;
-		// background: #ddd;
 		fill: #22a848;
-		// border: 1.5px solid #22a848;
-
-		.path {}
 	}
 
 	.svg-spinner {
@@ -530,8 +397,6 @@ img {
 	display: none;
 	flex-direction: column;
 	margin-bottom: 13px;
-	margin-top: 8px;
-	// gap: 2px;
 
 	.tutorowl-import-percentage-number {
 		width: 32px;
@@ -539,7 +404,6 @@ img {
 		padding: 2px 4px 2px 4px;
 		border-radius: 12px;
 		background: #ECFDF3;
-		font-family: SF Pro Display;
 		font-size: 11px;
 		font-weight: 700;
 		line-height: 16px;
@@ -562,9 +426,6 @@ img {
 .tutorowl-installation-progress-wrapper .tutorowl-progress-status {
 	border-radius: 20px;
 	color: #fff;
-	display: flex;
-	align-items: center;
-	justify-content: center;
 	position: absolute;
 	height: 100%;
 	width: 0;

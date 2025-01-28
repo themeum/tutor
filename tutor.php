@@ -37,8 +37,7 @@ define(
 			'slug'  => 'tutorowl',
 			'path'  => 'tutor-owl/index.php',
 			'title' => esc_html__( 'Tutor Owl', 'tutor' ),
-			// 'src'   => 'https://downloads.wordpress.org/plugin/tutor.3.0.2.zip',
-			'src'   => 'https://github.com/nur-alam/owl/raw/refs/heads/main/files/tutor-owl.zip',
+			'src'   => 'https://github.com/nur-alam/owl/raw/refs/heads/main/files/tutor-owl-1.0.0.zip',
 			'type'  => 'theme',
 		),
 		'droip'    => array(

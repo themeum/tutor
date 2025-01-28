@@ -88,7 +88,6 @@ module.exports = (env, options) => {
                 'tutor-tax-settings.min': './assets/react/v3/entries/tax-settings/index.tsx',
                 'tutor-payment-settings.min': './assets/react/v3/entries/payment-settings/index.tsx',
                 'tutor-addon-list.min': './assets/react/v3/entries/addon-list/index.tsx',
-                'tutor-template-import.min': './assets/react/admin-dashboard/template-import.js',
             }
         }
     ];
