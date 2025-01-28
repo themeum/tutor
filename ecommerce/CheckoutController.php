@@ -97,6 +97,7 @@ class CheckoutController {
 			add_action( 'tutor_action_tutor_pay_incomplete_order', array( $this, 'pay_incomplete_order' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 			add_action( 'wp_ajax_tutor_get_checkout_html', array( $this, 'ajax_get_checkout_html' ) );
+			add_action( 'wp_ajax_nopriv_tutor_get_checkout_html', array( $this, 'ajax_get_checkout_html' ) );
 		}
 	}
 

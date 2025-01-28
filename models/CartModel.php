@@ -141,7 +141,8 @@ class CartModel {
 		$courses     = $get_cart['courses'];
 		$total_count = $courses['total_count'];
 
-		return (int) $total_count > 0;
+		$has = (int) $total_count > 0;
+		return apply_filters( 'tutor_is_cart_empty', $has );
 	}
 
 	/**
