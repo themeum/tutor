@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -391,6 +392,7 @@ class CheckoutController {
 	 */
 	public function pay_now() {
 		tutor_utils()->check_nonce();
+		global $wpdb;
 
 		$errors     = array();
 		$order_data = null;
@@ -488,10 +490,21 @@ class CheckoutController {
 
 		if ( empty( $errors ) ) {
 			if ( ! is_user_logged_in() ) {
-				$current_user_id = apply_filters( 'tutor_guest_user_id', $current_user_id, $current_user_id, $order_data );
-				if ( is_wp_error( $current_user_id ) ) {
-					array_push( $errors, $current_user_id->get_error_message() );
-					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_SUCCESS, $order_data['id'], $current_user_id->get_error_message() );
+				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
+				if ( is_wp_error( $guest_user ) ) {
+					// Delete the billing info if user registration failed.
+					QueryHelper::delete( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $current_user_id ) );
+
+					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
+					set_transient(
+						self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id,
+						array(
+							'message' => $guest_user->get_error_message(),
+						)
+					);
+					return;
+				} else {
+					$current_user_id = $guest_user;
 				}
 			}
 
