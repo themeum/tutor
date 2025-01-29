@@ -9,10 +9,12 @@ import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 import { tutorConfig } from '@TutorShared/config/config';
+import { Addons } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { isAddonEnabled } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule, requiredRule } from '@TutorShared/utils/validation';
 import { __ } from '@wordpress/i18n';
 import { isBefore } from 'date-fns';
@@ -44,6 +46,8 @@ const EnrollmentSettings = () => {
   });
   const [showEndDate, setShowEndDate] = useState(false);
 
+  const isMembershipOnlyMode = isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.membership_only_mode;
+
   return (
     <div css={styles.wrapper}>
       <Controller
@@ -62,7 +66,7 @@ const EnrollmentSettings = () => {
           />
         )}
       />
-      <Show when={tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
+      <Show when={!isMembershipOnlyMode && tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
         <Controller
           name="enrollment_expiry"
           control={form.control}
