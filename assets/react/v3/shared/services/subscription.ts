@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
 import type { AxiosResponse } from 'axios';
 import { format } from 'date-fns';
 
@@ -63,7 +64,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   sale_price_from_time: '',
   sale_price_to_date: '',
   sale_price_to_time: '',
-  recurring_limit: 'Until cancelled',
+  recurring_limit: __('Until cancelled', 'tutor'),
   do_not_provide_certificate: false,
   enrollment_fee: '0',
   trial_value: '1',
@@ -85,7 +86,8 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
     recurring_interval: subscription.recurring_interval ?? 'month',
     is_featured: !!Number(subscription.is_featured),
     regular_price: subscription.regular_price ?? '0',
-    recurring_limit: subscription.recurring_limit === '0' ? 'Until cancelled' : subscription.recurring_limit || '',
+    recurring_limit:
+      subscription.recurring_limit === '0' ? __('Until cancelled', 'tutor') : subscription.recurring_limit || '',
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
@@ -122,7 +124,7 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
       recurring_interval: formData.recurring_interval,
     }),
     regular_price: formData.regular_price,
-    recurring_limit: formData.recurring_limit === 'Until cancelled' ? '0' : formData.recurring_limit,
+    recurring_limit: formData.recurring_limit === __('Until cancelled', 'tutor') ? '0' : formData.recurring_limit,
     is_featured: formData.is_featured ? '1' : '0',
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
     ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),

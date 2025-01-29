@@ -1,18 +1,15 @@
+import bannerImage from '@SharedImages/free-addons-banner.png';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { borderRadius, Breakpoint, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
+import config from '@TutorShared/config/config';
+import { colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import bannerImage from '@SharedImages/free-addons-banner.webp';
-import config from '@TutorShared/config/config';
 
 function FreeBanner() {
   return (
     <div css={styles.wrapper}>
-      <div css={styles.image}>
-        <img src={bannerImage} alt={__('Get all addons banner', 'tutor')} />
-      </div>
       <div css={styles.content}>
         <h6 css={styles.title}>{__('Get All of Add-Ons for a Single Price', 'tutor')}</h6>
         <p css={styles.paragraph}>
@@ -22,12 +19,15 @@ function FreeBanner() {
           }
         </p>
         <Button
+          variant="secondary"
+          size="large"
+          buttonCss={styles.button}
           icon={<SVGIcon name="crown" width={24} height={24} />}
           onClick={() => {
             window.open(config.TUTOR_PRICING_PAGE, '_blank', 'noopener');
           }}
         >
-          {__('Get Tutor LMS Pro', 'tutor')}
+          {__('Upgrade to Pro', 'tutor')}
         </Button>
       </div>
     </div>
@@ -38,43 +38,33 @@ export default FreeBanner;
 
 const styles = {
   wrapper: css`
-    background-color: ${colorTokens.background.white};
-    border-radius: ${spacing[6]};
-    padding: ${spacing[32]};
+    background-image: url(${bannerImage});
+    background-size: cover;
+    background-position: center;
+    border-radius: ${spacing[12]};
+    padding: 82px ${spacing[32]};
     margin-bottom: ${spacing[32]};
-
-    display: flex;
-    align-items: center;
-    gap: ${spacing[32]};
-
-    ${Breakpoint.mobile} {
-      flex-direction: column;
-      padding: ${spacing[24]};
-    }
-  `,
-  image: css`
-    img {
-      width: 100%;
-      max-width: 235px;
-      border-radius: ${borderRadius[6]};
-
-      ${Breakpoint.mobile} {
-        max-width: 100%;
-      }
-    }
   `,
   content: css`
-    max-width: 510px;
+    max-width: 550px;
+    margin: 0 auto;
+    text-align: center;
   `,
   title: css`
-    ${typography.heading6('semiBold')};
-    line-height: ${lineHeight[28]};
-    margin-bottom: ${spacing[8]};
+    ${typography.heading4('bold')};
+    color: ${colorTokens.text.white};
+    margin-bottom: ${spacing[12]};
   `,
   paragraph: css`
-    ${typography.caption('regular')};
-    line-height: ${lineHeight[22]};
-    color: ${colorTokens.text.subdued};
-    margin-bottom: ${spacing[20]};
+    ${typography.body('regular')};
+    line-height: ${lineHeight[24]};
+    color: ${colorTokens.text.white};
+    margin-bottom: ${spacing[48]};
+  `,
+  button: css`
+    width: 394px;
+    max-width: 100%;
+    height: 56px;
+    color: ${colorTokens.color.black.main};
   `,
 };

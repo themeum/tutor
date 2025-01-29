@@ -192,6 +192,7 @@ const styles = {
     }
   `,
   saveBtn: css`
+    flex-shrink: 0;
     margin-right: ${spacing[8]};
   `,
   cancelButton: css`

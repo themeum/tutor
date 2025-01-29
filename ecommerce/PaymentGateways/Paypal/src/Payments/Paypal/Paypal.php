@@ -201,7 +201,7 @@ class Paypal extends BasePayment
     {
         $returnData = [
             'currency_code' => $data->currency->code,
-            'value'         => (string) $data->total_price,
+            'value'         => number_format($data->total_price, 2, '.', ''),
         ];
 
         $extraCharges = [
@@ -216,7 +216,7 @@ class Paypal extends BasePayment
             if (isset($data->$key) && !empty($data->$key)) {
                 $returnData['breakdown'][$value] = [
                     'currency_code' => $data->currency->code,
-                    'value'         => (string) $data->$key,
+                    'value'         => number_format($data->$key, 2, '.', ''),
                 ];
             }
         });
@@ -630,7 +630,8 @@ class Paypal extends BasePayment
         $items = array_map(function ($item) use ($currency, $data) {
 
             $price = is_null($item['discounted_price']) ? $item['regular_price'] : $item['discounted_price'];
-
+            $price = number_format($price, 2, '.', '');
+            
             $data->subtotal += $price * (int) $item['quantity'];
 
             return [
@@ -639,7 +640,7 @@ class Paypal extends BasePayment
                 'image_url'     => isset($item['image']) && $item['image'] ? Path::clean($item['image']) : null,
                 'unit_amount'   => [
                     'currency_code' => $currency,
-                    'value'         => (string) $price,
+                    'value'         => $price,
                 ],
             ];
         }, (array) $data->items);
@@ -867,7 +868,7 @@ class Paypal extends BasePayment
     {
         return [
             'currency_code' => $data->currency->code,
-            'value' => (string) $data->total_amount,
+            'value'         => number_format($data->total_amount, 2, '.', ''),
         ];
     }
 
@@ -891,11 +892,11 @@ class Paypal extends BasePayment
         $this->refundLink = $this->getUrl($paymentPayload->purchase_units[0]->payments->captures[0]->links, 'refund');
 
         return [
-            'custom_id' => (string) $data->order_id,
+            'custom_id'     => (string) $data->order_id,
             'note_to_payer' => $data->reason,
-            'amount' => (object) [
+            'amount'        => (object) [
                 'currency_code' => $data->currency->code,
-                'value' => $data->amount,
+                'value'         => number_format($data->amount, 2, '.', ''),
             ],
         ];
     }

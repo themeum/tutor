@@ -262,7 +262,7 @@ $login_url    = tutor_utils()->get_option( 'enable_tutor_native_login', null, tr
 							<input type="hidden" name="tutor_course_id" value="<?php echo esc_attr( get_the_ID() ); ?>">
 							<input type="hidden" name="tutor_course_action" value="_tutor_course_enroll_now">
 							<button type="submit" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block tutor-mt-24 tutor-enroll-course-button tutor-static-loader">
-								<?php esc_html_e( 'Enroll now', 'tutor' ); ?>
+								<?php esc_html_e( 'Enroll Now', 'tutor' ); ?>
 							</button>
 						</form>
 					</div>

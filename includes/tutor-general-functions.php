@@ -1729,3 +1729,21 @@ if ( ! function_exists( 'tutor_split_amounts' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_is_local_env' ) ) {
+	/**
+	 * Check if the current environment is local.
+	 *
+	 * @since 3.2.0
+	 *
+	 * @return bool True if the current environment is local, false otherwise.
+	 */
+	function tutor_is_local_env() {
+		$site_url = site_url();
+		return (
+			strpos( $site_url, '.local' ) !== false ||
+			strpos( $site_url, 'localhost' ) !== false
+		);
+	}
+}
+
+

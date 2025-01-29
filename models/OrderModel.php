@@ -418,6 +418,20 @@ class OrderModel {
 	}
 
 	/**
+	 * Check order is single order
+	 *
+	 * @since 3.2.0
+	 *
+	 * @param int|object $order order id or object.
+	 *
+	 * @return boolean
+	 */
+	public static function is_single_order( $order ) {
+		$order = self::get_order( $order );
+		return $order && self::TYPE_SINGLE_ORDER === $order->order_type;
+	}
+
+	/**
 	 * Mark order Unpaid to Paid.
 	 *
 	 * @since 3.0.0
