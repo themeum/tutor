@@ -1,7 +1,7 @@
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { keepPreviousData, useMutation, useQuery } from '@tanstack/react-query';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
-import { type PaginatedParams, type PaginatedResult } from '@TutorShared/utils/types';
+import { type PaginatedParams, type PaginatedResult, type TutorMutationResponse } from '@TutorShared/utils/types';
 
 export interface Course {
   id: number;
@@ -34,5 +34,26 @@ export const useCourseListQuery = ({ params, isEnabled }: { params: CourseListPa
       }).then((res) => res.data),
     placeholderData: keepPreviousData,
     enabled: isEnabled,
+  });
+};
+
+interface UnlinkPageBuilderPayload {
+  courseId: number;
+  builder: string;
+}
+
+const unlinkPageBuilder = ({ courseId, builder }: UnlinkPageBuilderPayload) => {
+  return wpAjaxInstance.post<UnlinkPageBuilderPayload, TutorMutationResponse<null>>(
+    endpoints.TUTOR_UNLINK_PAGE_BUILDER,
+    {
+      course_id: courseId,
+      builder: builder,
+    },
+  );
+};
+
+export const useUnlinkPageBuilderMutation = () => {
+  return useMutation({
+    mutationFn: unlinkPageBuilder,
   });
 };
