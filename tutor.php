@@ -27,30 +27,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 define( 'TUTOR_VERSION', '3.2.0' );
 define( 'TUTOR_FILE', __FILE__ );
 
-define( 'TEMPLATE_LIST_ENDPOINT', __DIR__ . '/views/templates/droip-layouts.json' );
-
-define(
-	'REQUIRED_PLUGINS',
-	array(
-		'tutorowl' => array(
-			'base'  => 'tutor-owl',
-			'slug'  => 'tutorowl',
-			'path'  => 'tutor-owl/index.php',
-			'title' => esc_html__( 'Tutor Owl', 'tutor' ),
-			'src'   => 'https://github.com/nur-alam/owl/raw/refs/heads/main/files/tutor-owl-1.0.0.zip',
-			'type'  => 'theme',
-		),
-		'droip'    => array(
-			'base'  => 'droip',
-			'slug'  => 'droip',
-			'path'  => 'droip/droip.php',
-			'title' => esc_html__( 'Droip', 'tutor' ),
-			'src'   => 'https://github.com/nur-alam/Graph-Theory/raw/refs/heads/main/droip.zip',
-			'type'  => 'plugin',
-		),
-	)
-);
-
 /**
  * Load tutor text domain for translation
  */
