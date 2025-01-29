@@ -55,6 +55,13 @@ var scss_blueprints = {
 		mode: 'expanded',
 		destination: 'tutor-frontend-dashboard.min.css',
 	},
+
+	tutor_import: {
+		src: 'assets/scss/admin-dashboard/template-import.scss',
+		mode: 'expanded',
+		destination: 'tutor-template-import.min.css'
+	},
+
 };
 
 var task_keys = Object.keys(scss_blueprints);
