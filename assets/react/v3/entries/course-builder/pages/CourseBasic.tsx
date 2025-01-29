@@ -25,7 +25,7 @@ import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorSh
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { determinePostStatus, convertToSlug } from '@TutorShared/utils/util';
+import { convertToSlug, determinePostStatus } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
@@ -123,11 +123,20 @@ const CourseBasic = () => {
                     });
                   })();
                 }}
-                onBackToWPEditorClick={(builder: string) => {
-                  return unlinkPageBuilder.mutateAsync({
-                    courseId: courseId,
-                    builder: builder,
-                  });
+                onBackToWPEditorClick={async (builder: string) => {
+                  return unlinkPageBuilder
+                    .mutateAsync({
+                      courseId: courseId,
+                      builder: builder,
+                    })
+                    .then((response) => {
+                      form.setValue('editor_used', {
+                        name: 'classic',
+                        label: __('Classic Editor', 'tutor'),
+                        link: '',
+                      });
+                      return response;
+                    });
                 }}
                 onFullScreenChange={(isFullScreen) => {
                   setIsWpEditorFullScreen(isFullScreen);
