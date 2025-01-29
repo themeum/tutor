@@ -496,10 +496,13 @@ class CheckoutController {
 					QueryHelper::delete( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $current_user_id ) );
 
 					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
+
+					// translators: wp error message.
+					$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
 					set_transient(
 						self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id,
 						array(
-							'message' => $guest_user->get_error_message(),
+							'message' => $error_msg,
 						)
 					);
 					return;

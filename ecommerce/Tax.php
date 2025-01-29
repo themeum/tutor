@@ -221,11 +221,11 @@ class Tax {
 		$zero_tax = 0.0;
 
 		if ( empty( $country ) ) {
-			$country = $GLOBALS['billing_country'] ?? '';
+			$country = isset( $GLOBALS['billing_country'] ) ? $GLOBALS['billing_country'] : null;
 		}
 
 		if ( empty( $state ) ) {
-			$state = $GLOBALS['billing_state'] ?? '';
+			$state = isset( $GLOBALS['billing_state'] ) ? $GLOBALS['billing_state'] : null;
 		}
 
 		if ( empty( $country ) ) {
