@@ -78,12 +78,12 @@ const CoursePricing = () => {
         ];
   const purchaseOptions = [
     {
-      label: __('Subscription only', 'tutor'),
-      value: 'subscription',
-    },
-    {
       label: __('One-time purchase only', 'tutor'),
       value: 'one_time',
+    },
+    {
+      label: __('Subscription only', 'tutor'),
+      value: 'subscription',
     },
     {
       label: __('Subscription & one-time purchase', 'tutor'),
