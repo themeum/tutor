@@ -220,13 +220,8 @@ class Tax {
 	public static function get_country_state_tax_rate( $country = null, $state = null ) {
 		$zero_tax = 0.0;
 
-		if ( empty( $country ) ) {
-			$country = isset( $GLOBALS['billing_country'] ) ? $GLOBALS['billing_country'] : null;
-		}
-
-		if ( empty( $state ) ) {
-			$state = isset( $GLOBALS['billing_state'] ) ? $GLOBALS['billing_state'] : null;
-		}
+		$country = apply_filters( 'tutor_ecommerce_tax_country', $country );
+		$state   = apply_filters( 'tutor_ecommerce_tax_state', $state );
 
 		if ( empty( $country ) ) {
 			return $zero_tax;
