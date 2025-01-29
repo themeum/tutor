@@ -12,7 +12,7 @@ import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { convertWordPressLocaleToDateFns, getNumberingLocale } from '@TutorShared/utils/util';
+import { convertWordPressLocaleToDateFns } from '@TutorShared/utils/util';
 
 import 'react-day-picker/style.css';
 
@@ -32,27 +32,16 @@ interface FormDateInputProps extends FormControllerProps<string> {
 }
 
 // Create DayPicker formatters based on WordPress locale
-export function createFormatters(wpLocale: string): Partial<Formatters> {
+const createFormatters = (wpLocale: string): Partial<Formatters> => {
   const dateFnsLocale = convertWordPressLocaleToDateFns(wpLocale);
-  const numberingLocale = getNumberingLocale(wpLocale);
-
-  const formatNumber = (value: number, options?: Intl.NumberFormatOptions) =>
-    value.toLocaleString(numberingLocale, options);
 
   return {
-    formatDay: (day) => formatNumber(day.getDate()),
-    formatWeekNumber: (weekNumber) => formatNumber(weekNumber),
     formatMonthDropdown: (date, options) => format(date, 'LLLL', { ...options, locale: dateFnsLocale }),
     formatMonthCaption: (date, options) => format(date, 'LLLL', { ...options, locale: dateFnsLocale }),
     formatCaption: (date, options) => format(date, 'LLLL', { ...options, locale: dateFnsLocale }),
     formatWeekdayName: (weekday) => format(weekday, 'EEEEEE', { locale: dateFnsLocale }),
-    formatYearDropdown: (date) => formatNumber(date.getFullYear(), { useGrouping: false }),
-    formatYearCaption: (date) =>
-      formatNumber(date.getFullYear(), {
-        useGrouping: false,
-      }),
   };
-}
+};
 
 const FormDateInput = ({
   label,
