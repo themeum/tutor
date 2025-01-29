@@ -884,24 +884,3 @@ export const useGetYouTubeVideoDuration = () => {
     mutationFn: getYouTubeVideoDuration,
   });
 };
-
-interface UnlinkPageBuilderPayload {
-  courseId: number;
-  builder: string;
-}
-
-const unlinkPageBuilder = ({ courseId, builder }: UnlinkPageBuilderPayload) => {
-  return wpAjaxInstance.post<UnlinkPageBuilderPayload, TutorMutationResponse<null>>(
-    endpoints.TUTOR_UNLINK_PAGE_BUILDER,
-    {
-      course_id: courseId,
-      builder: builder,
-    },
-  );
-};
-
-export const useUnlinkPageBuilder = () => {
-  return useMutation({
-    mutationFn: unlinkPageBuilder,
-  });
-};
