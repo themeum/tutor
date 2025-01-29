@@ -473,10 +473,13 @@ class CheckoutController {
 			);
 		}
 
-		$args = array(
-			'payment_method'  => $payment_method,
-			'coupon_amount'   => $checkout_data->coupon_discount,
-			'discount_amount' => $checkout_data->sale_discount,
+		$args = apply_filters(
+			'tutor_order_create_args',
+			array(
+				'payment_method'  => $payment_method,
+				'coupon_amount'   => $checkout_data->coupon_discount,
+				'discount_amount' => $checkout_data->sale_discount,
+			)
 		);
 
 		if ( empty( $errors ) ) {
