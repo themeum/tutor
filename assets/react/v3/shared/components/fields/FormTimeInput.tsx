@@ -1,16 +1,20 @@
-import Button from '@TutorShared/atoms/Button';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { DateFormats, isRTL } from '@TutorShared/config/constants';
-import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import type { FormControllerProps } from '@TutorShared/utils/form';
-import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { eachMinuteOfInterval, format, setHours, setMinutes } from 'date-fns';
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { useSelectKeyboardNavigation } from '../../hooks/useSelectKeyboardNavigation';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { tutorConfig } from '@TutorShared/config/config';
+import { DateFormats, isRTL } from '@TutorShared/config/constants';
+import { borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+import type { FormControllerProps } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
+import { getNumberingLocale } from '@TutorShared/utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTimeInputProps extends FormControllerProps<string> {
@@ -52,6 +56,8 @@ const FormTimeInput = ({
 
     return range.map((date) => format(date, DateFormats.hoursMinutes));
   }, [interval]);
+  const formatNumber = (value: number, options?: Intl.NumberFormatOptions) =>
+    value.toLocaleString(getNumberingLocale(tutorConfig.local), options);
 
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -160,7 +166,14 @@ const FormTimeInput = ({
                           }}
                           onFocus={() => setActiveIndex(index)}
                         >
-                          {option}
+                          {(() => {
+                            const [time, period] = option.split(' ');
+                            const [hours, minutes] = time.split(':');
+                            const formattedHours = formatNumber(parseInt(hours), { minimumIntegerDigits: 2 });
+                            const formattedMinutes = formatNumber(parseInt(minutes), { minimumIntegerDigits: 2 });
+
+                            return `${formattedHours}:${formattedMinutes} ${period}`;
+                          })()}
                         </button>
                       </li>
                     );

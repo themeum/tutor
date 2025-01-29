@@ -463,3 +463,38 @@ export const convertWordPressLocaleToDateFns = (wpLocale: string): (typeof dateF
   // Fallback to 'enUS' if no matches are found
   return dateFnsLocales.enUS;
 };
+
+export const getNumberingSystem = (wpLocale: string): string | undefined => {
+  const NUMBERING_SYSTEMS: Record<string, string> = {
+    ar: 'arab', // Arabic numerals
+    fa: 'arabext', // Extended Arabic-Indic
+    bn: 'beng', // Bengali
+    hi: 'deva', // Devanagari
+    mr: 'deva', // Devanagari
+    ne: 'deva', // Devanagari
+    pa: 'guru', // Gurmukhi
+    gu: 'gujr', // Gujarati
+    or: 'orya', // Oriya
+    ta: 'taml', // Tamil
+    te: 'telu', // Telugu
+    kn: 'knda', // Kannada
+    ml: 'mlym', // Malayalam
+    th: 'thai', // Thai
+    lo: 'laoo', // Lao
+    km: 'khmr', // Khmer
+    my: 'mymr', // Myanmar
+    si: 'sinh', // Sinhala
+    bo: 'tibt', // Tibetan
+    dz: 'tibt', // Tibetan
+  };
+
+  const [language] = wpLocale.toLowerCase().split('_');
+  return NUMBERING_SYSTEMS[language];
+};
+
+// Create a locale string with numbering system extension
+export const getNumberingLocale = (wpLocale: string): string => {
+  const numberingSystem = getNumberingSystem(wpLocale);
+  const baseLocale = wpLocale.replace('_', '-');
+  return numberingSystem ? `${baseLocale}-u-nu-${numberingSystem}` : baseLocale;
+};
