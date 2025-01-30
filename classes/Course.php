@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use PO;
 use stdClass;
 use TUTOR\Input;
 use Tutor\Helpers\HttpHelper;
