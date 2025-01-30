@@ -43,19 +43,6 @@ const createFormatters = (wpLocale: string): Partial<Formatters> => {
   };
 };
 
-const normalizeDateString = (date: string): string => {
-  const parts = date.split('-');
-  if (parts.length !== 3) {
-    return date;
-  }
-
-  const year = parts[0];
-  const month = parts[1].padStart(2, '0');
-  const day = parts[2].padStart(2, '0');
-
-  return `${year}-${month}-${day}`;
-};
-
 const FormDateInput = ({
   label,
   field,
@@ -72,8 +59,8 @@ const FormDateInput = ({
 }: FormDateInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const parsedISODate = parseISO(normalizeDateString(field.value));
   const isValidDate = isValid(new Date(field.value));
+  const parsedISODate = isValidDate ? parseISO(format(new Date(field.value), DateFormats.yearMonthDay)) : new Date();
   const fieldValue = isValidDate ? format(parsedISODate, dateFormat) : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
