@@ -148,3 +148,9 @@ export interface TutorCategory {
   count: number;
   filter: string;
 }
+
+export interface Editor {
+  label: string;
+  link: string;
+  name: string;
+}
