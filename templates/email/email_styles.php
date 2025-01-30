@@ -140,7 +140,7 @@ body{direction:<?php echo is_rtl() ? 'rtl' : 'ltr'; ?>;padding: 0px;margin: 0px;
 	font-size: 13px;
 }
 
-@media only screen and (max-width: 576px) {
+@media only screen and (max-width: 480px) {
 	.tutor-email-body{padding: 15px}
 	.tutor-email-wrapper{margin:0;max-width: 100%;}
 	.tutor-email-header{padding: 20px 24px;}
