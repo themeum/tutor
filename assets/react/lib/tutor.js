@@ -489,6 +489,8 @@ createNewCourseButtons.forEach((button) => {
 	button.addEventListener('click', async (e) => {
 		e.preventDefault();
 		const { __ } = wp.i18n;
+		const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
+		
 		try {
 			// For wp-admin bar quick create.
 			if (e.target.classList.contains('ab-item')) {
@@ -502,7 +504,6 @@ createNewCourseButtons.forEach((button) => {
 			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
 			const post = await ajaxHandler(formData);
 
-			const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
 			const { status_code, data, message } = await post.json();
 			if (status_code === 201) {
 				window.location = data;

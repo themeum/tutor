@@ -781,6 +781,8 @@ class Course extends Tutor_Base {
 
 		$link = add_query_arg( array( 'course_id' => $course_id ), $link );
 
+		do_action( 'tutor_draft_course_created', $course_id );
+
 		$this->json_response(
 			__( 'Draft course created', 'tutor' ),
 			$link,
