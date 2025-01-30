@@ -158,7 +158,7 @@ gulp.task('watch', function () {
 		if (e.history[0].includes('/front/')) {
 			gulp.parallel('tutor_front')();
 		} else if (e.history[0].includes('/admin-dashboard/')) {
-			gulp.parallel('tutor_admin', 'tutor_setup')();
+			gulp.parallel('tutor_admin', 'tutor_setup', 'tutor_import')();
 		} else if (e.history[0].includes('/frontend-dashboard/')) {
 			gulp.parallel('tutor_front_dashboard')();
 		} else if (e.history[0].includes('modules/')) {
