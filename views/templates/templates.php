@@ -5,7 +5,7 @@
  * @package Tutor
  * @author Tutor <support@themeum.com>
  * @link https://tutor.com
- * @since 3.2.2
+ * @since 3.3.3
  */
 
 ?>
@@ -142,5 +142,12 @@
 				<path d="M6.68576 7.5991C6.43775 7.34767 6.43775 6.94001 6.68576 6.68858C6.93377 6.43714 7.33588 6.43714 7.58389 6.68858L11.9998 11.1654L16.4156 6.6886C16.6636 6.43716 17.0657 6.43716 17.3137 6.68859C17.5617 6.94003 17.5617 7.34768 17.3137 7.59912L12.8979 12.0759L17.1639 16.4008C17.4119 16.6523 17.4119 17.0599 17.1639 17.3114C16.9159 17.5628 16.5138 17.5628 16.2657 17.3114L11.9998 12.9865L7.73374 17.3114C7.48573 17.5628 7.08363 17.5628 6.83562 17.3114C6.58761 17.0599 6.58761 16.6523 6.83562 16.4009L11.1016 12.0759L6.68576 7.5991Z" fill="#9197A8"/>
 			</svg>
 		</div>
+	</div>
+</div>
+
+<div class="template-live-preview-modal">
+	<div class="template-live-preview-frame">
+		<span class="live-preview-close-modal">&times;</span>
+		<iframe id="template-preview-iframe" src="" frameborder="0"></iframe>
 	</div>
 </div>

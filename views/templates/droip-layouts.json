@@ -5,7 +5,7 @@
 		"builder_type": "droip",
 		"src": "https://github.com/nur-alam/owl/raw/refs/heads/main/files/business-template.zip",
 		"preview_image": "https://raw.githubusercontent.com/nur-alam/owl/refs/heads/main/files/beatlab-template-preview-img.jpg",
-		"preview_url": ""
+		"preview_url": "https://preview.tutorlms.com/marketplace/"
 	},
 	{
 		"ID": 2,
@@ -13,7 +13,7 @@
 		"builder_type": "droip",
 		"src": "https://github.com/nur-alam/owl/raw/refs/heads/main/files/photography-templates.zip",
 		"preview_image": "https://raw.githubusercontent.com/nur-alam/owl/refs/heads/main/files/edumax-template-preview-img.png",
-		"preview_url": ""
+		"preview_url": "https://preview.tutorlms.com/singlecourse/"
 	},
 	{
 		"ID": 3,
@@ -21,7 +21,7 @@
 		"builder_type": "droip",
 		"src": "https://github.com/nur-alam/owl/raw/refs/heads/main/files/photography-templates.zip",
 		"preview_image": "https://raw.githubusercontent.com/nur-alam/owl/refs/heads/main/files/beatlab-template-preview-img.jpg",
-		"preview_url": ""
+		"preview_url": "https://preview.tutorlms.com/university/"
 	},
 	{
 		"ID": 4,
@@ -29,7 +29,7 @@
 		"builder_type": "droip",
 		"src": "https://github.com/nur-alam/owl/raw/refs/heads/main/files/photography-templates.zip",
 		"preview_image": "https://raw.githubusercontent.com/nur-alam/owl/refs/heads/main/files/edumax-template-preview-img.png",
-		"preview_url": ""
+		"preview_url": "https://preview.tutorlms.com/marketplace/"
 	},
 	{
 		"ID": 5,
@@ -37,6 +37,6 @@
 		"builder_type": "droip",
 		"src": "https://github.com/nur-alam/owl/raw/refs/heads/main/files/photography-templates.zip",
 		"preview_image": "https://raw.githubusercontent.com/nur-alam/owl/refs/heads/main/files/beatlab-template-preview-img.jpg",
-		"preview_url": ""
+		"preview_url": "https://preview.tutorlms.com/university/"
 	}
 ]
