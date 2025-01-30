@@ -25,6 +25,7 @@ export interface PaymentMethod {
   support_subscription: boolean;
   update_available?: boolean;
   is_installable?: boolean;
+  is_installed?: boolean;
   is_manual?: boolean;
   fields: PaymentField[];
 }

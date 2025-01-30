@@ -118,7 +118,7 @@ const TaxSettingsPage = () => {
                     });
                   }}
                 >
-                  {__('Add new gateway', 'tutor')}
+                  {__('Add New Gateway', 'tutor')}
                 </Button>
               }
             >
@@ -130,7 +130,7 @@ const TaxSettingsPage = () => {
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled
                 >
-                  {__('Add new gateway', 'tutor')}
+                  {__('Add New Gateway', 'tutor')}
                 </Button>
               </ProBadge>
             </Show>
@@ -151,7 +151,7 @@ const TaxSettingsPage = () => {
                 });
               }}
             >
-              {__('Add manual payment', 'tutor')}
+              {__('Add Manual Payment', 'tutor')}
             </Button>
           </div>
         </div>
