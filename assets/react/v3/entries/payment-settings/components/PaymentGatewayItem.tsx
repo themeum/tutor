@@ -1,13 +1,13 @@
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import Show from '@TutorShared/controls/Show';
 import { borderRadius, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
-import { PaymentGateway, PaymentSettings, useInstallPaymentMutation } from '../services/payment';
 import { __ } from '@wordpress/i18n';
 import Badge from '../atoms/Badge';
-import { FormWithGlobalErrorType } from '@TutorShared/hooks/useFormWithGlobalError';
+import { PaymentGateway, PaymentSettings, useInstallPaymentMutation } from '../services/payment';
 
 interface PaymentGatewayItemProps {
   data: PaymentGateway;
@@ -30,7 +30,7 @@ const PaymentGatewayItem = ({ data, onInstallSuccess, form }: PaymentGatewayItem
       form.setValue(
         'payment_methods',
         [
-          ...form.getValues('payment_methods'),
+          ...form.getValues('payment_methods') ?? [],
           { ...data, fields: data.fields.map(({ name, value }) => ({ name, value })) },
         ],
         {

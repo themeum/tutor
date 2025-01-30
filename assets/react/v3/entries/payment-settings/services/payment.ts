@@ -30,7 +30,7 @@ export interface PaymentMethod {
 }
 
 export interface PaymentSettings {
-  payment_methods: PaymentMethod[];
+  payment_methods?: PaymentMethod[];
 }
 
 export const getWebhookUrl = (gateway: string) => {
@@ -76,7 +76,13 @@ export const convertPaymentMethods = (methods: PaymentMethod[], gateways: Paymen
   // Update methods with data from gateways api
   const updatedMethods = methods.map((method) => {
     const gateway = gatewayMap.get(method.name);
-    return gateway ? { ...gateway, is_active: method.is_active, fields: method.fields } : method;
+    return gateway
+      ? {
+          ...gateway,
+          is_active: method.is_active,
+          fields: [...method.fields, ...gateway.fields.filter((i) => !method.fields.find((j) => j.name === i.name))],
+        }
+      : method;
   });
 
   // Add any new methods from installed gateways that are not already in methods

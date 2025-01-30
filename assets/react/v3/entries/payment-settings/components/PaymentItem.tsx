@@ -294,7 +294,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                   if (data.is_manual) {
                     form.setValue(
                       'payment_methods',
-                      form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
+                      (form.getValues('payment_methods') ?? []).filter((_, index) => index !== paymentIndex),
                       {
                         shouldDirty: true,
                       },
@@ -307,7 +307,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
                     if (response.status_code === 200) {
                       form.setValue(
                         'payment_methods',
-                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
+                        (form.getValues('payment_methods') ?? []).filter((_, index) => index !== paymentIndex),
                       );
 
                       // Save settings
