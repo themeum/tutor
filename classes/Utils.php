@@ -2582,19 +2582,20 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 2.6.0 Return enrolled id
 	 *
-	 * @param int $course_id course id.
-	 * @param int $order_id order id.
-	 * @param int $user_id user id.
+	 * @param int  $course_id course id.
+	 * @param int  $order_id order id.
+	 * @param int  $user_id user id.
+	 * @param bool $fire_hook fire hook.
 	 *
 	 * @return int enrolled id
 	 */
-	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0 ) {
+	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
 		$enrolled_id = 0;
 		if ( ! $course_id ) {
 			return $enrolled_id;
 		}
 
-		do_action( 'tutor_before_enroll', $course_id );
+		$fire_hook ? do_action( 'tutor_before_enroll', $course_id ) : null;
 		$user_id = $this->get_user_id( $user_id );
 		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );
 
@@ -2628,7 +2629,7 @@ class Utils {
 		if ( $is_enrolled ) {
 
 			// Run this hook for both of pending and completed enrollment.
-			do_action( 'tutor_after_enroll', $course_id, $is_enrolled );
+			$fire_hook ? do_action( 'tutor_after_enroll', $course_id, $is_enrolled ) : null;
 
 			// Mark Current User as Students with user meta data.
 			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
@@ -2654,7 +2655,7 @@ class Utils {
 			$enrolled_id = $is_enrolled;
 
 			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
-			if ( 'completed' === $enroll_data['post_status'] ) {
+			if ( $fire_hook && 'completed' === $enroll_data['post_status'] ) {
 				do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
 			}
 		}
