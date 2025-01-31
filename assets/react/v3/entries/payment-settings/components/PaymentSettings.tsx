@@ -35,17 +35,24 @@ const TaxSettingsPage = () => {
   const { reset } = form;
   const formData = form.watch();
 
+  const tutorOptionSaved = () => {
+    reset(form.getValues());
+  };
+
+  useEffect(() => {
+    window.addEventListener('tutor_option_saved', tutorOptionSaved);
+    return () => window.removeEventListener('tutor_option_saved', tutorOptionSaved);
+  }, []);
+
   useEffect(() => {
     if (form.formState.isDirty) {
       document.getElementById('save_tutor_option')?.removeAttribute('disabled');
-      form.reset(form.getValues(), { keepValues: true });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.formState.isDirty]);
 
   useEffect(() => {
     if (payment_settings) {
-      const methods = convertPaymentMethods(payment_settings.payment_methods, payment_gateways);
+      const methods = convertPaymentMethods(payment_settings.payment_methods ?? [], payment_gateways);
 
       reset({
         ...payment_settings,
@@ -111,7 +118,7 @@ const TaxSettingsPage = () => {
                     });
                   }}
                 >
-                  {__('Add new gateway', 'tutor')}
+                  {__('Add New Gateway', 'tutor')}
                 </Button>
               }
             >
@@ -123,7 +130,7 @@ const TaxSettingsPage = () => {
                   icon={<SVGIcon name="plus" width={24} height={24} />}
                   disabled
                 >
-                  {__('Add new gateway', 'tutor')}
+                  {__('Add New Gateway', 'tutor')}
                 </Button>
               </ProBadge>
             </Show>
@@ -144,7 +151,7 @@ const TaxSettingsPage = () => {
                 });
               }}
             >
-              {__('Add manual payment', 'tutor')}
+              {__('Add Manual Payment', 'tutor')}
             </Button>
           </div>
         </div>
