@@ -185,7 +185,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</th>
 							<th width="10%">
-								<?php esc_html_e( 'Price', 'tutor' ); ?>
+								<?php
+								$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
+								echo esc_html( $membership_only_mode ? __( 'Plan', 'tutor-pro' ) : __( 'Price', 'tutor-pro' ) );
+								?>
 							</th>
 							<th class="tutor-table-rows-sorting" width="15%">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
