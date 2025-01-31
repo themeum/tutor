@@ -2581,6 +2581,7 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 * @since 2.6.0 Return enrolled id
+	 * @since 3.3.0 Added $fire_hook parameter.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $order_id order id.
