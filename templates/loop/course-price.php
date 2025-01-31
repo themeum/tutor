@@ -11,8 +11,9 @@
 
 ?>
 <?php
-$course_id    = get_the_ID();
-$monetization = tutor_utils()->get_option( 'monetize_by' );
+$course_id          = get_the_ID();
+$password_protected = post_password_required( $course_id );
+$monetization       = tutor_utils()->get_option( 'monetize_by' );
 /**
  * If Monetization is PMPRO then ignore ajax enrolment
  * to avoid Paid course enrollment without payment.
@@ -23,7 +24,7 @@ $monetization = tutor_utils()->get_option( 'monetize_by' );
  *
  * @since v2.1.2
  */
-$button_class = 'pmpro' === $monetization ? ' ' : ' tutor-course-list-enroll';
+$button_class = 'pmpro' === $monetization || $password_protected ? ' ' : ' tutor-course-list-enroll';
 if ( ! is_user_logged_in() ) {
 	$button_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
