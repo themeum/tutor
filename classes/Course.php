@@ -280,7 +280,7 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function handle_password_submit() {
-		if ( Input::has( 'post_password' ) ) {
+		if ( Input::has( 'post_password' ) && Input::has( 'course_id' ) ) {
 			$course_id         = Input::post( 'course_id', 0, Input::TYPE_NUMERIC );
 			$password_required = post_password_required( $course_id );
 			if ( $password_required ) {
