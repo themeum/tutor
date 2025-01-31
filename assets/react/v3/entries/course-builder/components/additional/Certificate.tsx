@@ -137,7 +137,7 @@ const Certificate = ({ isSidebarVisible }: CertificateProps) => {
       ? ([{ label: __('Templates', 'tutor'), value: 'templates' }] as CertificateTabItem[])
       : []),
     {
-      label: __(`Custom ${CURRENT_VIEWPORT.isAboveSmallMobile ? ' Certificates' : ''}`, 'tutor'),
+      label: CURRENT_VIEWPORT.isAboveSmallMobile ? __('Custom Certificates', 'tutor') : __('Certificates', 'tutor'),
       value: 'custom_certificates',
     },
   ];

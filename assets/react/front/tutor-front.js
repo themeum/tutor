@@ -1,14 +1,14 @@
 import '../admin-dashboard/segments/lib';
+import sprintf from '../helper/sprintf';
+import './_select_dd_search';
 import './course/index';
 import './dashboard';
 import './dashboard/export-csv';
-import './pages/course-landing';
-import './pages/instructor-list-filter';
+import './pages/billing';
 import './pages/cart';
 import './pages/checkout';
-import './_select_dd_search';
-import sprintf from '../helper/sprintf';
-import './pages/billing';
+import './pages/course-landing';
+import './pages/instructor-list-filter';
 
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
@@ -489,7 +489,7 @@ jQuery(document).ready(function($) {
 				},
 				success: function(data) {
 					if (data.success) {
-						tutor_toast('Success!', data.data.msg, 'success');
+						tutor_toast(__('Success!', 'tutor'), data.data.msg, 'success');
 					}
 				},
 				complete: function() {
@@ -548,7 +548,7 @@ jQuery(document).ready(function($) {
 						location.reload();
 					}, 500);
 				} else {
-					tutor_toast('Error', data.data.msg, 'error');
+					tutor_toast(__('Error', 'tutor'), data.data.msg, 'error');
 					Msg =
 						'<div class="tutor-error-msg inline-image-text is-inline-block">\
                             <img src="' +

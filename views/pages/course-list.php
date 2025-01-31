@@ -325,10 +325,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									<td>
 										<div class="tutor-fw-normal">
 											<div class="tutor-fs-7 tutor-mb-4">
-												<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
+												<?php echo esc_html( tutor_i18n_get_formated_date( $post->post_date, get_option( 'date_format' ) ) ); ?>
 											</div>
 											<div class="tutor-fs-8 tutor-color-muted">
-												<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
+												<?php echo esc_html( tutor_i18n_get_formated_date( $post->post_date, get_option( 'time_format' ) ) ); ?>
 											</div>
 										</div>
 									</td>
