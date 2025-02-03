@@ -1,7 +1,8 @@
+import routes from '@CourseBuilderConfig/routes';
+import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
 import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
-import routes from '@CourseBuilderConfig/routes';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -33,8 +34,10 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <ToastProvider position="bottom-center">
           <ModalProvider>
-            <Global styles={createGlobalCss()} />
-            {routers}
+            <CourseBuilderSlotProvider>
+              <Global styles={createGlobalCss()} />
+              {routers}
+            </CourseBuilderSlotProvider>
           </ModalProvider>
         </ToastProvider>
       </QueryClientProvider>

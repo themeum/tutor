@@ -6,6 +6,7 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
+import { InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
@@ -467,7 +468,7 @@ interface GoogleMeetMeetingDeletePayload {
   'event-id': string;
 }
 
-export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
+export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: string[]): CoursePayload => {
   return {
     ...(data.isScheduleEnabled && {
       post_date: format(
@@ -552,10 +553,18 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
       ),
     }),
     pause_enrollment: data.pause_enrollment,
+    ...Object.fromEntries(
+      slot_fields.map((key) => {
+        return [key, data[key as keyof CourseFormData]];
+      }),
+    ),
   };
 };
 
-export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
+export const convertCourseDataToFormData = (
+  courseDetails: CourseDetailsResponse,
+  slot_fields: string[],
+): CourseFormData => {
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -680,6 +689,11 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       ? format(parseISO(courseDetails.enrollment_ends_at), DateFormats.hoursMinutes)
       : '',
     pause_enrollment: courseDetails.pause_enrollment ?? false,
+    ...Object.fromEntries(
+      slot_fields.map((key) => {
+        return [key, courseDetails[key as keyof CourseDetailsResponse]];
+      }),
+    ),
   };
 };
 
@@ -972,4 +986,14 @@ export const useUnlinkPageBuilder = () => {
   return useMutation({
     mutationFn: unlinkPageBuilder,
   });
+};
+
+export const findSlotFields = (fields: Record<string, InjectedField[]>) => {
+  const slot_fields: string[] = [];
+  Object.keys(fields).forEach((i) => {
+    fields[i].forEach((j) => {
+      slot_fields.push(j.name);
+    });
+  });
+  return slot_fields;
 };
