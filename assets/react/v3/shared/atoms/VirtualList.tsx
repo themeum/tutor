@@ -1,3 +1,4 @@
+import { css } from '@emotion/react';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -5,7 +6,7 @@ interface VirtualListProps<T> {
   items: T[];
   height: number;
   itemHeight: number;
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T, index: number, style: React.CSSProperties) => React.ReactNode;
 }
 
 const DEFAULT_ITEM_HEIGHT = 40;
@@ -68,7 +69,7 @@ const VirtualList = <T,>({ items, height, itemHeight = DEFAULT_ITEM_HEIGHT, rend
   return (
     <div
       ref={containerRef}
-      css={styleUtils.overflowYAuto}
+      css={styles.wrapper}
       style={{
         height,
         width: '100%',
@@ -78,17 +79,14 @@ const VirtualList = <T,>({ items, height, itemHeight = DEFAULT_ITEM_HEIGHT, rend
     >
       <div style={{ height: totalHeight, position: 'relative' }}>
         {visibleItems.map((item, index) => (
-          <div
-            key={startIndex + index}
-            style={{
+          <React.Fragment key={startIndex + index}>
+            {renderItem(item, startIndex + index, {
               position: 'absolute',
               top: (startIndex + index) * itemHeight,
               height: itemHeight,
               width: '100%',
-            }}
-          >
-            {renderItem(item, startIndex + index)}
-          </div>
+            })}
+          </React.Fragment>
         ))}
       </div>
     </div>
@@ -96,3 +94,10 @@ const VirtualList = <T,>({ items, height, itemHeight = DEFAULT_ITEM_HEIGHT, rend
 };
 
 export default VirtualList;
+
+const styles = {
+  wrapper: css`
+    ${styleUtils.overflowYAuto}
+    scrollbar-gutter: auto;
+  `,
+};
