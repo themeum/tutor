@@ -8,7 +8,10 @@ interface VirtualListProps<T> {
   renderItem: (item: T, index: number) => React.ReactNode;
 }
 
-const VirtualList = <T,>({ items, height, itemHeight = 40, renderItem }: VirtualListProps<T>) => {
+const DEFAULT_ITEM_HEIGHT = 40;
+const DEFAULT_BUFFER = 8;
+
+const VirtualList = <T,>({ items, height, itemHeight = DEFAULT_ITEM_HEIGHT, renderItem }: VirtualListProps<T>) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [scrollTop, setScrollTop] = useState(0);
   const scrollingTimeoutRef = useRef<number>();
@@ -41,7 +44,7 @@ const VirtualList = <T,>({ items, height, itemHeight = 40, renderItem }: Virtual
   }, []);
 
   const { visibleItems, startIndex, totalHeight } = useMemo(() => {
-    const buffer = 8;
+    const buffer = DEFAULT_BUFFER;
     const startIdx = Math.max(0, Math.floor(scrollTop / itemHeight) - buffer);
     const visibleCount = Math.ceil(height / itemHeight) + buffer * 2;
     const endIdx = Math.min(startIdx + visibleCount, items.length);
@@ -68,6 +71,7 @@ const VirtualList = <T,>({ items, height, itemHeight = 40, renderItem }: Virtual
       css={styleUtils.overflowYAuto}
       style={{
         height,
+        width: '100%',
         position: 'relative',
       }}
       onScroll={handleScroll}
