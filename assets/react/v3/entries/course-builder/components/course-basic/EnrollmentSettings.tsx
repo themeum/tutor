@@ -9,7 +9,7 @@ import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons } from '@TutorShared/config/constants';
+import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -24,13 +24,14 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 const courseId = getCourseId();
 
 const EnrollmentSettings = () => {
+  const isTutorPro = !!tutorConfig.tutor_pro_url;
   const form = useFormContext<CourseFormData>();
   const isCourseDetailsLoading = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
   const isEnrollmentPeriodEnabled = useWatch({
     control: form.control,
-    name: 'is_enrollment_period_enabled',
+    name: 'course_enrollment_period',
   });
   const enrollmentStartsDate = useWatch({
     control: form.control,
@@ -47,6 +48,7 @@ const EnrollmentSettings = () => {
   const [showEndDate, setShowEndDate] = useState(false);
 
   const isMembershipOnlyMode = isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.membership_only_mode;
+  const isEnrollmentAddonEnabled = isAddonEnabled(Addons.ENROLLMENT);
 
   return (
     <div css={styles.wrapper}>
@@ -66,147 +68,75 @@ const EnrollmentSettings = () => {
           />
         )}
       />
-      <Show when={!isMembershipOnlyMode && tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
-        <Controller
-          name="enrollment_expiry"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormInput
-              {...controllerProps}
-              label={__('Enrollment Expiration', 'tutor')}
-              helpText={
-                // prettier-ignore
-                __("Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.", 'tutor')
-              }
-              placeholder="0"
-              type="number"
-              isClearable
-              selectOnFocus
-              loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-            />
-          )}
-        />
-      </Show>
 
-      <div
-        css={styles.enrollmentPeriod({
-          isEnrollmentPeriodEnabled,
-        })}
-      >
-        <Controller
-          name="is_enrollment_period_enabled"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormSwitch
-              {...controllerProps}
-              label={__('Course Enrollment Period', 'tutor')}
-              loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-            />
-          )}
-        />
+      <Show when={isTutorPro}>
+        <Show when={!isMembershipOnlyMode && tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
+          <Controller
+            name="enrollment_expiry"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormInput
+                {...controllerProps}
+                label={__('Enrollment Expiration', 'tutor')}
+                helpText={
+                  // prettier-ignore
+                  __("Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.", 'tutor')
+                }
+                placeholder="0"
+                type="number"
+                isClearable
+                selectOnFocus
+                loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+              />
+            )}
+          />
+        </Show>
 
-        <Show when={isEnrollmentPeriodEnabled}>
-          <div css={styles.enrollmentDateWrapper}>
-            <div css={styles.enrollmentDate}>
-              <label htmlFor="enrollment_starts_at">{__('Start Date', 'tutor')}</label>
-              <div id="enrollment_starts_at" css={styleUtils.dateAndTimeWrapper}>
-                <Controller
-                  name="enrollment_starts_date"
-                  control={form.control}
-                  rules={{
-                    ...requiredRule,
-                    validate: {
-                      invalidDate: invalidDateRule,
-                    },
-                  }}
-                  render={(controllerProps) => (
-                    <FormDateInput
-                      {...controllerProps}
-                      loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                      placeholder={__('Start Date', 'tutor')}
-                      dateFormat="MMM dd, yyyy"
-                    />
-                  )}
+        <Show when={isEnrollmentAddonEnabled}>
+          <div css={styles.enrollmentPeriod({ isEnabled: isEnrollmentPeriodEnabled })}>
+            <Controller
+              name="course_enrollment_period"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Course Enrollment Period', 'tutor')}
+                  loading={!!isCourseDetailsLoading && !controllerProps.field.value}
                 />
-                <Controller
-                  name="enrollment_starts_time"
-                  control={form.control}
-                  rules={{
-                    ...requiredRule,
-                    validate: {
-                      invalidTime: invalidTimeRule,
-                    },
-                  }}
-                  render={(controllerProps) => (
-                    <FormTimeInput
-                      {...controllerProps}
-                      loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                      placeholder={__('hh:mm a', 'tutor')}
-                    />
-                  )}
-                />
-              </div>
-            </div>
+              )}
+            />
 
-            <Show
-              when={!showEndDate}
-              fallback={
+            <Show when={isEnrollmentPeriodEnabled}>
+              <div css={styles.enrollmentDateWrapper}>
                 <div css={styles.enrollmentDate}>
-                  <label htmlFor="enrollment_ends_at">
-                    <span>{__('End Date', 'tutor')}</span>
-
-                    <Button variant="text" size="small" onClick={() => setShowEndDate(false)} css={styles.removeButton}>
-                      {__('Remove', 'tutor')}
-                    </Button>
-                  </label>
-                  <div id="enrollment_ends_at" css={styleUtils.dateAndTimeWrapper}>
+                  <label htmlFor="enrollment_starts_at">{__('Start Date', 'tutor')}</label>
+                  <div id="enrollment_starts_at" css={styleUtils.dateAndTimeWrapper}>
                     <Controller
-                      name="enrollment_ends_date"
+                      name="enrollment_starts_date"
                       control={form.control}
                       rules={{
                         ...requiredRule,
                         validate: {
                           invalidDate: invalidDateRule,
-                          checkEndDate: (value) => {
-                            if (isBefore(new Date(value), new Date(enrollmentStartsDate))) {
-                              return __('End date should be after the start date', 'tutor');
-                            }
-                          },
                         },
-                        deps: ['enrollment_starts_date'],
                       }}
                       render={(controllerProps) => (
                         <FormDateInput
                           {...controllerProps}
                           loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                          placeholder={__('End Date', 'tutor')}
-                          disabledBefore={enrollmentStartsDate}
-                          dateFormat="MMM dd, yyyy"
+                          placeholder={__('Start Date', 'tutor')}
+                          dateFormat={DateFormats.monthDayYear}
                         />
                       )}
                     />
                     <Controller
-                      name="enrollment_ends_time"
+                      name="enrollment_starts_time"
                       control={form.control}
                       rules={{
                         ...requiredRule,
                         validate: {
                           invalidTime: invalidTimeRule,
-                          checkEndTime: (value) => {
-                            if (
-                              enrollmentStartsDate &&
-                              enrollmentEndDate &&
-                              enrollmentStartTime &&
-                              !isBefore(
-                                new Date(`${enrollmentStartsDate} ${enrollmentStartTime}`),
-                                new Date(`${enrollmentEndDate} ${value}`),
-                              )
-                            ) {
-                              return __('End time should be after the start time', 'tutor');
-                            }
-                          },
                         },
-                        deps: ['enrollment_start_date', 'enrollment_starts_time', 'enrollment_ends_date'],
                       }}
                       render={(controllerProps) => (
                         <FormTimeInput
@@ -218,37 +148,119 @@ const EnrollmentSettings = () => {
                     />
                   </div>
                 </div>
-              }
-            >
-              <div>
-                <Button
-                  variant="secondary"
-                  size="small"
-                  onClick={() => setShowEndDate(true)}
-                  disabled={!!isCourseDetailsLoading || !enrollmentStartsDate || !enrollmentStartTime}
+
+                <Show
+                  when={showEndDate || enrollmentEndDate}
+                  fallback={
+                    <div>
+                      <Button
+                        variant="secondary"
+                        size="small"
+                        onClick={() => setShowEndDate(true)}
+                        disabled={!!isCourseDetailsLoading || !enrollmentStartsDate || !enrollmentStartTime}
+                      >
+                        {__('Add End Date', 'tutor')}
+                      </Button>
+                    </div>
+                  }
                 >
-                  {__('Add End Date', 'tutor')}
-                </Button>
+                  <div css={styles.enrollmentDate}>
+                    <label htmlFor="enrollment_ends_at">
+                      <span>{__('End Date', 'tutor')}</span>
+
+                      <Button
+                        variant="text"
+                        size="small"
+                        onClick={() => {
+                          setShowEndDate(false);
+                          form.setValue('enrollment_ends_date', '');
+                          form.setValue('enrollment_ends_time', '');
+                        }}
+                        css={styles.removeButton}
+                      >
+                        {__('Remove', 'tutor')}
+                      </Button>
+                    </label>
+                    <div id="enrollment_ends_at" css={styleUtils.dateAndTimeWrapper}>
+                      <Controller
+                        name="enrollment_ends_date"
+                        control={form.control}
+                        rules={{
+                          ...requiredRule,
+                          validate: {
+                            invalidDate: invalidDateRule,
+                            checkEndDate: (value) => {
+                              if (isBefore(new Date(value), new Date(enrollmentStartsDate))) {
+                                return __('End date should be after the start date', 'tutor');
+                              }
+                            },
+                          },
+                          deps: ['enrollment_starts_date'],
+                        }}
+                        render={(controllerProps) => (
+                          <FormDateInput
+                            {...controllerProps}
+                            loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                            placeholder={__('End Date', 'tutor')}
+                            disabledBefore={enrollmentStartsDate}
+                            dateFormat={DateFormats.monthDayYear}
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="enrollment_ends_time"
+                        control={form.control}
+                        rules={{
+                          ...requiredRule,
+                          validate: {
+                            invalidTime: invalidTimeRule,
+                            checkEndTime: (value) => {
+                              if (
+                                enrollmentStartsDate &&
+                                enrollmentEndDate &&
+                                enrollmentStartTime &&
+                                !isBefore(
+                                  new Date(`${enrollmentStartsDate} ${enrollmentStartTime}`),
+                                  new Date(`${enrollmentEndDate} ${value}`),
+                                )
+                              ) {
+                                return __('End time should be after the start time', 'tutor');
+                              }
+                            },
+                          },
+                          deps: ['enrollment_starts_date', 'enrollment_starts_time', 'enrollment_ends_date'],
+                        }}
+                        render={(controllerProps) => (
+                          <FormTimeInput
+                            {...controllerProps}
+                            loading={!!isCourseDetailsLoading && !controllerProps.field.value}
+                            placeholder={__('hh:mm a', 'tutor')}
+                          />
+                        )}
+                      />
+                    </div>
+                  </div>
+                </Show>
               </div>
             </Show>
           </div>
-        </Show>
-      </div>
 
-      <Controller
-        name="pause_enrollment"
-        control={form.control}
-        render={(controllerProps) => (
-          <FormCheckbox
-            {...controllerProps}
-            label={__('Pause Enrollment', 'tutor')}
-            description={
-              // prettier-ignore
-              __('If you pause enrolment, students will no longer be able to enroll in the course.', 'tutor')
-            }
+          <Controller
+            name="pause_enrollment"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormCheckbox
+                {...controllerProps}
+                label={__('Pause Enrollment', 'tutor')}
+                description={
+                  // prettier-ignore
+                  __('If you pause enrolment, students will no longer be able to enroll in the course.', 'tutor')
+                }
+              />
+            )}
           />
-        )}
-      />
+        </Show>
+      </Show>
     </div>
   );
 };
@@ -267,12 +279,16 @@ const styles = {
       padding: ${spacing[16]};
     }
   `,
-  enrollmentPeriod: ({ isEnrollmentPeriodEnabled = false }) => css`
-    padding: ${spacing[12]} ${spacing[12]} ${isEnrollmentPeriodEnabled ? spacing[16] : spacing[12]} ${spacing[12]};
+  enrollmentPeriod: ({ isEnabled = false }) => css`
+    padding: ${spacing[12]};
     border: 1px solid ${colorTokens.stroke.default};
     border-radius: ${borderRadius[8]};
-    gap: ${spacing[8]};
     background-color: ${colorTokens.bg.white};
+
+    ${isEnabled &&
+    css`
+      padding-bottom: ${spacing[16]};
+    `}
   `,
   enrollmentDateWrapper: css`
     ${styleUtils.display.flex('column')};

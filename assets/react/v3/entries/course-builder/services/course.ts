@@ -78,7 +78,7 @@ export interface CourseFormData {
   enable_coming_soon: boolean;
   coming_soon_thumbnail: WPMedia | null;
   enable_curriculum_preview: boolean; // Only when coming-soon is enabled
-  is_enrollment_period_enabled: boolean;
+  course_enrollment_period: boolean;
   enrollment_starts_date: string;
   enrollment_starts_time: string;
   enrollment_ends_date: string;
@@ -153,7 +153,7 @@ export const courseDefaultData: CourseFormData = {
   enable_coming_soon: false,
   coming_soon_thumbnail: null,
   enable_curriculum_preview: false,
-  is_enrollment_period_enabled: false,
+  course_enrollment_period: false,
   enrollment_starts_date: '',
   enrollment_starts_time: '',
   enrollment_ends_date: '',
@@ -215,9 +215,10 @@ export interface CoursePayload {
   enable_coming_soon?: boolean;
   coming_soon_thumbnail_id?: number;
   enable_curriculum_preview?: boolean;
-  enrollment_starts_at?: string; // yyyy-mm-dd hh:mm:ss (24H)
-  enrollment_ends_at?: string; // yyyy-mm-dd hh:mm:ss (24H)
-  pause_enrollment?: boolean;
+  'course_settings[course_enrollment_period]'?: string;
+  'course_settings[enrollment_starts_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
+  'course_settings[enrollment_ends_at]'?: string; // yyyy-mm-dd hh:mm:ss (24H)
+  'course_settings[pause_enrollment]'?: string;
 }
 
 export type CourseBuilderSteps = 'basic' | 'curriculum' | 'additional';
@@ -336,6 +337,10 @@ export interface CourseDetailsResponse {
     enable_content_drip: number;
     enrollment_expiry: number;
     enable_tutor_bp: 1 | 0;
+    course_enrollment_period: string;
+    enrollment_starts_at: string;
+    enrollment_ends_at: string;
+    pause_enrollment: string;
   };
   course_pricing: {
     price: string;
@@ -364,9 +369,6 @@ export interface CourseDetailsResponse {
   coming_soon_thumbnail: string;
   coming_soon_thumbnail_id: number;
   enable_curriculum_preview: boolean;
-  enrollment_starts_at: string;
-  enrollment_ends_at: string;
-  pause_enrollment: boolean;
 }
 
 export type MeetingType = 'zoom' | 'google_meet';
@@ -541,17 +543,24 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
       coming_soon_thumbnail_id: data.coming_soon_thumbnail?.id ?? -1,
       enable_curriculum_preview: data.enable_curriculum_preview,
     }),
-    ...(data.is_enrollment_period_enabled && {
-      enrollment_starts_at: format(
-        new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
-        DateFormats.yearMonthDayHourMinuteSecond24H,
-      ),
-      enrollment_ends_at: format(
-        new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
-        DateFormats.yearMonthDayHourMinuteSecond24H,
-      ),
-    }),
-    pause_enrollment: data.pause_enrollment,
+    'course_settings[course_enrollment_period]': data.course_enrollment_period ? 'yes' : 'no',
+    'course_settings[enrollment_starts_at]': isValid(
+      new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
+    )
+      ? format(
+          new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
+          DateFormats.yearMonthDayHourMinuteSecond24H,
+        )
+      : '',
+    'course_settings[enrollment_ends_at]': isValid(
+      new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
+    )
+      ? format(
+          new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
+          DateFormats.yearMonthDayHourMinuteSecond24H,
+        )
+      : '',
+    'course_settings[pause_enrollment]': data.pause_enrollment ? 'yes' : 'no',
   };
 };
 
@@ -666,20 +675,20 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       url: courseDetails.coming_soon_thumbnail,
     },
     enable_curriculum_preview: courseDetails.enable_curriculum_preview ?? false,
-    is_enrollment_period_enabled: !!courseDetails.enrollment_starts_at || !!courseDetails.enrollment_ends_at,
-    enrollment_starts_date: isValid(new Date(courseDetails.enrollment_starts_at))
-      ? format(parseISO(courseDetails.enrollment_starts_at), DateFormats.yearMonthDay)
+    course_enrollment_period: courseDetails.course_settings.course_enrollment_period === 'yes',
+    enrollment_starts_date: isValid(new Date(courseDetails.course_settings.enrollment_starts_at))
+      ? format(parseISO(courseDetails.course_settings.enrollment_starts_at), DateFormats.yearMonthDay)
       : '',
-    enrollment_starts_time: isValid(new Date(courseDetails.enrollment_starts_at))
-      ? format(parseISO(courseDetails.enrollment_starts_at), DateFormats.hoursMinutes)
+    enrollment_starts_time: isValid(new Date(courseDetails.course_settings.enrollment_starts_at))
+      ? format(parseISO(courseDetails.course_settings.enrollment_starts_at), DateFormats.hoursMinutes)
       : '',
-    enrollment_ends_date: isValid(new Date(courseDetails.enrollment_ends_at))
-      ? format(parseISO(courseDetails.enrollment_ends_at), DateFormats.yearMonthDay)
+    enrollment_ends_date: isValid(new Date(courseDetails.course_settings.enrollment_ends_at))
+      ? format(parseISO(courseDetails.course_settings.enrollment_ends_at), DateFormats.yearMonthDay)
       : '',
-    enrollment_ends_time: isValid(new Date(courseDetails.enrollment_ends_at))
-      ? format(parseISO(courseDetails.enrollment_ends_at), DateFormats.hoursMinutes)
+    enrollment_ends_time: isValid(new Date(courseDetails.course_settings.enrollment_ends_at))
+      ? format(parseISO(courseDetails.course_settings.enrollment_ends_at), DateFormats.hoursMinutes)
       : '',
-    pause_enrollment: courseDetails.pause_enrollment ?? false,
+    pause_enrollment: courseDetails.course_settings.pause_enrollment === 'yes',
   };
 };
 
