@@ -16,7 +16,7 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import { type ID, type TutorCategory, type TutorMutationResponse, type WPPostStatus } from '@TutorShared/utils/types';
-import { convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
+import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -547,7 +547,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     'course_settings[enrollment_starts_at]': isValid(
       new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
     )
-      ? format(
+      ? convertToGMT(
           new Date(`${data.enrollment_starts_date} ${data.enrollment_starts_time}`),
           DateFormats.yearMonthDayHourMinuteSecond24H,
         )
@@ -555,7 +555,7 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
     'course_settings[enrollment_ends_at]': isValid(
       new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
     )
-      ? format(
+      ? convertToGMT(
           new Date(`${data.enrollment_ends_date} ${data.enrollment_ends_time}`),
           DateFormats.yearMonthDayHourMinuteSecond24H,
         )
@@ -677,16 +677,16 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
     enable_curriculum_preview: courseDetails.enable_curriculum_preview ?? false,
     course_enrollment_period: courseDetails.course_settings.course_enrollment_period === 'yes',
     enrollment_starts_date: isValid(new Date(courseDetails.course_settings.enrollment_starts_at))
-      ? format(parseISO(courseDetails.course_settings.enrollment_starts_at), DateFormats.yearMonthDay)
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_starts_at), DateFormats.yearMonthDay)
       : '',
     enrollment_starts_time: isValid(new Date(courseDetails.course_settings.enrollment_starts_at))
-      ? format(parseISO(courseDetails.course_settings.enrollment_starts_at), DateFormats.hoursMinutes)
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_starts_at), DateFormats.hoursMinutes)
       : '',
     enrollment_ends_date: isValid(new Date(courseDetails.course_settings.enrollment_ends_at))
-      ? format(parseISO(courseDetails.course_settings.enrollment_ends_at), DateFormats.yearMonthDay)
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_ends_at), DateFormats.yearMonthDay)
       : '',
     enrollment_ends_time: isValid(new Date(courseDetails.course_settings.enrollment_ends_at))
-      ? format(parseISO(courseDetails.course_settings.enrollment_ends_at), DateFormats.hoursMinutes)
+      ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_ends_at), DateFormats.hoursMinutes)
       : '',
     pause_enrollment: courseDetails.course_settings.pause_enrollment === 'yes',
   };
