@@ -9,12 +9,11 @@
  * @since 1.4.3
  */
 
-$course_id                = get_the_ID();
-$is_logged_in             = is_user_logged_in();
-$enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
-$required_loggedin_class  = '';
+$course_id               = get_the_ID();
+$is_logged_in            = is_user_logged_in();
+$required_loggedin_class = '';
 
-if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
+if ( ! $is_logged_in ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
 
