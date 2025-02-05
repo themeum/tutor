@@ -312,9 +312,17 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.2.2 - February 03, 2025
+= 3.2.2 - February 05, 2025
 
-Changelog coming soon...
+Update: Added missing translations in both the free and pro versions.
+Update: Improved email template compatibility with WPML. (Pro)
+Fix: Resolved special character display issues in Stripe payments. (Pro)
+Fix: Fixed the "Edit with Elementor" button for Course Bundles. (Pro)
+Fix: Resolved the Zoom meetings auto-activation issue. (Pro)
+Fix: Fixed enrollment issues for password-protected courses.
+Fix: Resolved REST API errors in Tutor LMS Pro. (Pro)
+Fix: Fixed Google Meet authorization issues for instructors. (Pro)
+Fix: Fixed an issue where removed payment methods were still appearing as installed.
 
 = 3.2.1 - January 21, 2024
 
