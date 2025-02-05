@@ -212,6 +212,8 @@ class Tax {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 3.3.0 Country param is optional
+	 *
 	 * @param string $country   the country code for which the tax rate needs to be found.
 	 * @param string $state state name.
 	 *

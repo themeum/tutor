@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Update checkout data.
          * 
-         * @since 3.0.0
+         * @since 3.3.0
          * 
          * @param {string} couponCode coupon code.
          * @param {string} billingCountry Billing country.
