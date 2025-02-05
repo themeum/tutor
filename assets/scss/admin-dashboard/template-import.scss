@@ -416,7 +416,7 @@ img {
 	background: #239C46;
 }
 
-// template preview
+// template preview scss
 .template-live-preview-modal {
 	display: none;
 	position: fixed;
@@ -430,22 +430,86 @@ img {
 }
 
 .template-live-preview-frame {
-	height: 100%;
 	width: 100%;
-	box-shadow: 0px -4px 40px 20px #1C31681A;
+	height: 100vh;
+	// box-shadow: 0px -4px 40px 20px #1C31681A;
+	position: relative;
+}
+
+.template-preview-frame-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	position: absolute;
+	top: -60px;
+	width: 100%;
+
+	// margin-bottom: 20px;
+	h3 {
+		margin: 0;
+	}
+
+	ul {
+		display: flex;
+		gap: 20px;
+
+		i {
+			font-size: 20px;
+			cursor: pointer;
+			color: #33333360;
+		}
+
+		li {
+			&.active {
+				i {
+					color: #3e64de;
+				}
+			}
+		}
+	}
 }
 
 .live-preview-close-modal {
-	position: absolute;
-	top: 10px;
-	right: 20px;
-	font-size: 30px;
+	font-size: 20px;
 	cursor: pointer;
 	color: #333;
 	z-index: 1000;
 }
 
-#template-preview-iframe {
+.template-preview-iframe-wrapper {
+	box-shadow: 0px -4px 40px 20px rgba(28, 49, 104, .1019607843);
 	width: 100%;
 	height: 100%;
+	margin: 0 auto;
+
+	#template-preview-iframe {
+		width: 100%;
+		height: 100%;
+	}
 }
+
+
+.device-selector {
+	margin-bottom: 16px;
+	display: flex;
+	gap: 10px;
+	justify-content: center;
+}
+
+.device-btn {
+	padding: 8px 16px;
+	border: 1px solid #ccc;
+	background-color: #f0f0f0;
+	cursor: pointer;
+	border-radius: 4px;
+	transition: all 0.3s;
+}
+
+.device-btn:hover {
+	background-color: #e0e0e0;
+}
+
+// iframe {
+// 	width: 100%;
+// 	height: 100vh;
+// }

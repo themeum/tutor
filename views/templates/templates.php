@@ -145,7 +145,23 @@
 
 <div class="template-live-preview-modal">
 	<div class="template-live-preview-frame">
-		<span class="live-preview-close-modal">&times;</span>
-		<iframe id="template-preview-iframe" src="" frameborder="0"></iframe>
+		<div class="template-preview-frame-header">
+			<h3 class="preview-modal-template-name"></h3>
+			<ul class="template-preview-device-switcher">
+				<li class="active" data-device="desktop" data-width="100%" data-height="100%">
+					<i class="tutor-icon-laptop"></i>
+				</li>
+				<li class="" data-device="tablet" data-width="768px" data-height="1024px">
+					<i class="tutor-icon-tablet"></i>
+				</li>
+				<li class="" data-device="phone" data-width="375px" data-height="667px">
+					<i class="tutor-icon-mobile"></i>
+				</li>
+			</ul>
+			<span class="live-preview-close-modal"><i class="tutor-icon-times"></i></span>
+		</div>
+		<div class="template-preview-iframe-wrapper">
+			<iframe id="template-preview-iframe" src="" frameborder="0"></iframe>
+		</div>
 	</div>
 </div>

@@ -1,32 +1,67 @@
 document.addEventListener('DOMContentLoaded', function () {
-	// template preview
+	// template preview variables
 	const templatesDemoImportRoot = document.querySelector(".tutor-templates-demo-import");
 	const previewButtons = document.querySelectorAll(".open-template-live-preview");
 	const livePreviewModal = document.querySelector(".template-live-preview-modal");
+	const iframeWrapper = document.querySelector(".template-preview-iframe-wrapper");
 	const iframe = document.getElementById("template-preview-iframe");
 	const livePreviewCloseModal = document.querySelector(".live-preview-close-modal");
+	const deviceSwitchers = document.querySelectorAll(".template-preview-device-switcher li");
+	const previewTemplateName = document.querySelector(".preview-modal-template-name");
 
 	if (templatesDemoImportRoot) {
+		// Open live preview modal
 		templatesDemoImportRoot.addEventListener('click', (event) => {
 			if (event.target && event.target.matches('.open-template-live-preview')) {
 				let previewBtn = event.target;
 				const url = previewBtn.getAttribute("data-url");
+				const singleTemplate = previewBtn.closest(".tutorowl-single-template");
+				const templateName = singleTemplate.querySelector('.tutorowl-template-name span');
+				previewTemplateName.innerText = templateName.innerText;
 				iframe.src = url;
 				livePreviewModal.style.display = "flex";
 			}
 		});
 
+		// Close live preview modal
 		livePreviewCloseModal?.addEventListener("click", function () {
-			livePreviewModal.style.display = "none";
-			iframe.src = "";
+			resetPreviewModal();
 		});
 
 		// Close modal when clicking outside content
 		livePreviewModal?.addEventListener("click", function (event) {
 			if (event.target === livePreviewModal) {
-				livePreviewModal.style.display = "none";
-				iframe.src = "";
+				resetPreviewModal();
 			}
 		});
+
+		// Device switcher
+		deviceSwitchers.forEach((deviceSwitcher) => {
+			deviceSwitcher.addEventListener("click", function () {
+				removeActiveClassFromDeviceList(deviceSwitchers);
+				deviceSwitcher.classList.add("active");
+				let width = this.getAttribute("data-width");
+				let height = this.getAttribute("data-height");
+				iframeWrapper.style.width = width;
+				iframeWrapper.style.height = height;
+			});
+		});
+
+		// Reset preview modal
+		function resetPreviewModal() {
+			livePreviewModal.style.display = "none";
+			iframe.src = "";
+			iframeWrapper.style.width = "100%";
+			iframeWrapper.style.height = "100%";
+			removeActiveClassFromDeviceList(deviceSwitchers);
+			deviceSwitchers[0].classList.add("active");
+		}
+
+		// Remove active class from device list
+		function removeActiveClassFromDeviceList(deviceSwitchers) {
+			deviceSwitchers.forEach((deviceSwitcher) => {
+				deviceSwitcher.classList.remove("active");
+			});
+		}
 	}
 });
