@@ -22,7 +22,9 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import CourseBuilderSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
+import { type ContentDripType, findSlotFields } from '@CourseBuilderServices/course';
 import {
   type CourseTopic,
   convertLessonDataToPayload,
@@ -98,6 +100,8 @@ const LessonModal = ({
   const { data: lessonDetails, isLoading } = getLessonDetailsQuery;
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
+  const { fields } = useCourseBuilderSlot();
+
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
       title: '',
@@ -146,6 +150,10 @@ const LessonModal = ({
           after_xdays_of_enroll: lessonDetails?.content_drip_settings?.after_xdays_of_enroll || '',
           prerequisites: lessonDetails?.content_drip_settings?.prerequisites || [],
         },
+        // @TODO: need to check this after the API is updated
+        // ...Object.entries(
+        //   findSlotFields(fields.Curriculum.Lesson).map(([key, value]) => [key, lessonDetails[key] || value]),
+        // ),
       });
     }
 
@@ -166,7 +174,13 @@ const LessonModal = ({
   }, [lessonDetails, isLoading]);
 
   const onSubmit = async (data: LessonForm) => {
-    const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
+    const payload = convertLessonDataToPayload(
+      data,
+      lessonId,
+      topicId,
+      contentDripType,
+      findSlotFields(fields.Curriculum.Lesson),
+    );
     const response = await saveLessonMutation.mutateAsync(payload);
 
     if (response.data) {
@@ -331,6 +345,8 @@ const LessonModal = ({
                   </button>
                 </Show>
               </div>
+
+              <CourseBuilderSlot section="Curriculum.Lesson.after_description" form={form} />
             </div>
           </div>
 
@@ -541,6 +557,8 @@ const LessonModal = ({
                 </Show>
               </div>
             </Show>
+
+            <CourseBuilderSlot section="Curriculum.Lesson.bottom_of_sidebar" form={form} />
           </div>
         </Show>
       </div>

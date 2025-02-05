@@ -26,6 +26,12 @@ import {
 import { useModal } from '@TutorShared/components/modals/Modal';
 
 import GoogleMeetForm from '@CourseBuilderComponents/additional/meeting/GoogleMeetForm';
+import {
+  type CourseBuilderData,
+  type InjectedContent,
+  type InjectedField,
+  useCourseBuilderSlot,
+} from '@CourseBuilderContexts/CourseBuilderSlotProvider';
 import type { CourseTopicWithCollapse } from '@CourseBuilderPages/Curriculum';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { useDeleteQuizMutation, useExportQuizMutation } from '@CourseBuilderServices/quiz';
@@ -126,6 +132,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const topicId = getIdWithoutPrefix('topic-', topic.id);
   const contentId = getIdWithoutPrefix('content-', content.id);
 
+  const { fields, contents } = useCourseBuilderSlot();
   const queryClient = useQueryClient();
   const courseDetails = queryClient.getQueryData(['CourseDetails', Number(courseId)]) as CourseDetailsResponse;
   const form = useFormContext<CourseFormData>();
@@ -158,23 +165,49 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const deleteZoomMeetingMutation = useDeleteContentMutation();
   const exportQuizMutation = useExportQuizMutation();
 
+  const thirdPartyFields: {
+    [key in Exclude<
+      ContentType,
+      'tutor_zoom_meeting' | 'tutor-google-meet'
+    >]: CourseBuilderData<InjectedField>['Curriculum']['Lesson' | 'Assignment' | 'Quiz'];
+  } = {
+    lesson: fields.Curriculum.Lesson,
+    tutor_assignments: fields.Curriculum.Assignment,
+    tutor_quiz: fields.Curriculum.Quiz,
+    tutor_h5p_quiz: fields.Curriculum.Quiz,
+  };
+
+  const thirdPartyContents: {
+    [key in Exclude<
+      ContentType,
+      'tutor_zoom_meeting' | 'tutor-google-meet'
+    >]: CourseBuilderData<InjectedContent>['Curriculum']['Lesson' | 'Assignment' | 'Quiz'];
+  } = {
+    lesson: contents.Curriculum.Lesson,
+    tutor_assignments: contents.Curriculum.Assignment,
+    tutor_quiz: contents.Curriculum.Quiz,
+    tutor_h5p_quiz: contents.Curriculum.Quiz,
+  };
+
   const handleShowModalOrPopover = () => {
-    const isContentType = type as keyof typeof modalComponent;
-    if (modalComponent[isContentType]) {
+    const contentType = type as keyof typeof modalComponent;
+    if (modalComponent[contentType]) {
       showModal({
-        component: modalComponent[isContentType],
+        component: modalComponent[contentType],
         props: {
           contentDripType: form.watch('contentDripType'),
           topicId: topicId,
           lessonId: contentId,
           assignmentId: contentId,
           quizId: contentId,
-          title: modalTitle[isContentType],
+          title: modalTitle[contentType],
           subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
-          icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
+          icon: <SVGIcon name={modalIcon[contentType]} height={24} width={24} />,
           ...(type === 'tutor_h5p_quiz' && {
             contentType: 'tutor_h5p_quiz',
           }),
+          thirdPartyFields: thirdPartyFields[contentType],
+          thirdPartyContents: thirdPartyContents[contentType],
         },
         closeOnEscape: !['tutor_quiz', 'tutor_h5p_quiz'].includes(type),
       });

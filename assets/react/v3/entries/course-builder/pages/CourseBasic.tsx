@@ -18,6 +18,7 @@ import {
   type CourseFormData,
   convertCourseDataToPayload,
   findSlotFields,
+  // findSlotFields,
   useUnlinkPageBuilder,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
@@ -100,8 +101,6 @@ const CourseBasic = () => {
             />
           </div>
 
-          <CourseBuilderSlot section="before_description" form={form} />
-
           <Controller
             name="post_content"
             control={form.control}
@@ -117,8 +116,7 @@ const CourseBasic = () => {
                 editors={courseDetails?.editors}
                 onCustomEditorButtonClick={() => {
                   return form.handleSubmit((data) => {
-                    const payload = convertCourseDataToPayload(data, findSlotFields(fields));
-
+                    const payload = convertCourseDataToPayload(data, findSlotFields(fields.Basic, fields.Additional));
                     return updateCourseMutation.mutateAsync({
                       course_id: courseId,
                       ...payload,
@@ -142,11 +140,11 @@ const CourseBasic = () => {
             )}
           />
 
-          <CourseBuilderSlot section="after_description" form={form} />
+          <CourseBuilderSlot section="Basic.after_description" form={form} />
 
           <CourseSettings />
 
-          <CourseBuilderSlot section="after_settings" form={form} />
+          <CourseBuilderSlot section="Basic.after_settings" form={form} />
         </div>
         <Show when={CURRENT_VIEWPORT.isAboveTablet}>
           <Navigator styleModifier={styles.navigator} />

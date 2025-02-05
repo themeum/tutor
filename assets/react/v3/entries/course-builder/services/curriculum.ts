@@ -168,6 +168,7 @@ export const convertLessonDataToPayload = (
   lessonId: ID,
   topicId: ID,
   contentDripType: ContentDripType,
+  slotFields: string[],
 ): LessonPayload => {
   return {
     ...(lessonId && { lesson_id: lessonId }),
@@ -200,6 +201,11 @@ export const convertLessonDataToPayload = (
       contentDripType === 'after_finishing_prerequisites' && {
         'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
       }),
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, data[key as keyof LessonForm] || ''];
+      }),
+    ),
   };
 };
 
@@ -208,6 +214,7 @@ export const convertAssignmentDataToPayload = (
   assignmentId: ID,
   topicId: ID,
   contentDripType: ContentDripType,
+  slotFields: string[],
 ): AssignmentPayload => {
   return {
     ...(assignmentId && { assignment_id: assignmentId }),
@@ -234,6 +241,11 @@ export const convertAssignmentDataToPayload = (
       contentDripType === 'after_finishing_prerequisites' && {
         'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
       }),
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, data[key as keyof AssignmentForm] || ''];
+      }),
+    ),
   };
 };
 

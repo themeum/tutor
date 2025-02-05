@@ -18,12 +18,14 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
+import { findSlotFields, type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type CourseTopic,
   convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
+  type CourseTopic,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
@@ -94,6 +96,7 @@ const AssignmentModal = ({
   subtitle,
   contentDripType,
 }: AssignmentModalProps) => {
+  const { fields } = useCourseBuilderSlot();
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const getAssignmentDetailsQuery = useAssignmentDetailsQuery(assignmentId, topicId);
@@ -166,7 +169,13 @@ const AssignmentModal = ({
   }, [assignmentDetails]);
 
   const onSubmit = async (data: AssignmentForm) => {
-    const payload = convertAssignmentDataToPayload(data, assignmentId, topicId, contentDripType);
+    const payload = convertAssignmentDataToPayload(
+      data,
+      assignmentId,
+      topicId,
+      contentDripType,
+      findSlotFields(fields.Curriculum.Assignment),
+    );
     const response = await saveAssignmentMutation.mutateAsync(payload);
 
     if (response.status_code === 200 || response.status_code === 201) {
@@ -244,6 +253,8 @@ const AssignmentModal = ({
                   />
                 )}
               />
+
+              <CourseBuilderInjectionSlot section="Curriculum.Assignment.after_description" form={form} />
             </div>
           </div>
 
@@ -440,6 +451,8 @@ const AssignmentModal = ({
                 />
               )}
             />
+
+            <CourseBuilderInjectionSlot section="Curriculum.Assignment.bottom_of_sidebar" form={form} />
           </div>
         </Show>
       </div>

@@ -148,3 +148,27 @@ export interface TutorCategory {
   count: number;
   filter: string;
 }
+
+export type InjectionSlots = {
+  Basic: 'after_description' | 'after_settings';
+  Curriculum: {
+    Lesson: 'after_description' | 'bottom_of_sidebar';
+    Quiz: 'after_question_description' | 'bottom_of_settings';
+    Assignment: 'after_description' | 'bottom_of_sidebar';
+  };
+  Additional: 'after_certificates' | 'bottom_of_sidebar';
+};
+
+export type SectionStructure = {
+  [K in keyof InjectionSlots]: K extends 'Curriculum'
+    ? { [C in keyof InjectionSlots[K]]: `${C & string}.${InjectionSlots[K][C] & string}` }
+    : `${K}.${InjectionSlots[K] & string}`;
+};
+
+type Path<T> = T extends object
+  ? {
+      [K in keyof T]: T[K] extends object ? `${string & K}.${Path<T[K]> & string}` : T[K];
+    }[keyof T]
+  : never;
+
+export type SectionPath = Path<SectionStructure>;

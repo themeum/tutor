@@ -6,7 +6,7 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-import { InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
+import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
@@ -563,7 +563,7 @@ export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: st
 
 export const convertCourseDataToFormData = (
   courseDetails: CourseDetailsResponse,
-  slot_fields: string[],
+  slotFields: string[],
 ): CourseFormData => {
   return {
     post_date: courseDetails.post_date,
@@ -690,7 +690,7 @@ export const convertCourseDataToFormData = (
       : '',
     pause_enrollment: courseDetails.pause_enrollment ?? false,
     ...Object.fromEntries(
-      slot_fields.map((key) => {
+      slotFields.map((key) => {
         return [key, courseDetails[key as keyof CourseDetailsResponse]];
       }),
     ),
@@ -988,12 +988,17 @@ export const useUnlinkPageBuilder = () => {
   });
 };
 
-export const findSlotFields = (fields: Record<string, InjectedField[]>) => {
-  const slot_fields: string[] = [];
-  Object.keys(fields).forEach((i) => {
-    fields[i].forEach((j) => {
-      slot_fields.push(j.name);
+export const findSlotFields = (...fields: Record<string, InjectedField[]>[]) => {
+  const slotFields: string[] = [];
+  fields.forEach((field) => {
+    Object.keys(field).forEach((i) => {
+      field[i].forEach((j) => {
+        slotFields.push(j.name);
+      });
     });
   });
-  return slot_fields;
+
+  console.log(slotFields);
+
+  return slotFields;
 };

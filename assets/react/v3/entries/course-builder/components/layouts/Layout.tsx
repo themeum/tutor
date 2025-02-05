@@ -34,7 +34,10 @@ const Layout = () => {
   useEffect(() => {
     if (courseDetailsQuery.data) {
       const dirtyFields = Object.keys(form.formState.dirtyFields);
-      const convertedCourseData = convertCourseDataToFormData(courseDetailsQuery.data, findSlotFields(fields));
+      const convertedCourseData = convertCourseDataToFormData(
+        courseDetailsQuery.data,
+        findSlotFields(fields.Basic, fields.Additional),
+      );
       const formValues = form.getValues();
 
       const updatedCourseData = Object.entries(convertedCourseData).reduce<Partial<CourseFormData>>(

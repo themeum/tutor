@@ -118,7 +118,7 @@ const HeaderActions = () => {
       }
     }
 
-    const payload = convertCourseDataToPayload(data, findSlotFields(fields));
+    const payload = convertCourseDataToPayload(data, findSlotFields(fields.Basic));
     setLocalPostStatus(postStatus);
 
     if (courseId) {
