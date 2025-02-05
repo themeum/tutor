@@ -8,16 +8,9 @@
  * @since 3.3.3
  */
 
-/**
- * Get Template list.
- */
-function get_template_list() {
-	$template_response = file_get_contents( tutor()->path . '/views/templates/droip-layouts.json' );
-	$templates         = json_decode( $template_response, true );
-	return $templates;
-}
+use Tutor\Helpers\TemplateHelper;
 
-$template_list = get_template_list();
+$template_list = TemplateHelper::get_template_list();
 
 $i = 0;
 if ( ! empty( $template_list ) ) {
@@ -32,7 +25,7 @@ if ( ! empty( $template_list ) ) {
 			</div>
 			<div class="tutorowl-single-template-footer tutor-d-flex tutor-align-center tutor-justify-between">
 				<div class="tutorowl-template-name tutor-fs-6 tutor-fw-medium">
-					<span><?php echo esc_html( $template->name ); ?></span>
+					<span><?php echo esc_html( $template->label ); ?></span>
 					<!-- <span class="tutorowl-template-badge"> <?php esc_html_e( 'Pro', 'tutor' ); ?> </span> -->
 				</div>
 				<div class="tutor-d-flex tutor-align-center tutor-gap-1">
