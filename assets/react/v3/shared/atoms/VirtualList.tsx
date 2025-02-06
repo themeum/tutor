@@ -21,6 +21,12 @@ const VirtualList = <T,>({ items, height, itemHeight = DEFAULT_ITEM_HEIGHT, rend
     if (containerRef.current) {
       setScrollTop(containerRef.current.scrollTop);
     }
+
+    return () => {
+      if (scrollingTimeoutRef.current) {
+        cancelAnimationFrame(scrollingTimeoutRef.current);
+      }
+    };
   }, []);
 
   const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
@@ -34,14 +40,6 @@ const VirtualList = <T,>({ items, height, itemHeight = DEFAULT_ITEM_HEIGHT, rend
     scrollingTimeoutRef.current = requestAnimationFrame(() => {
       setScrollTop(target.scrollTop);
     });
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (scrollingTimeoutRef.current) {
-        cancelAnimationFrame(scrollingTimeoutRef.current);
-      }
-    };
   }, []);
 
   const { visibleItems, startIndex, totalHeight } = useMemo(() => {
