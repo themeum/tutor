@@ -227,9 +227,7 @@ const Additional = () => {
             </Box>
           </Show>
 
-          <Box bordered>
-            <CourseBuilderInjectionSlot section="Additional.after_certificates" form={form} />
-          </Box>
+          <CourseBuilderInjectionSlot section="Additional.after_certificates" form={form} />
         </div>
 
         <Show when={CURRENT_VIEWPORT.isAboveTablet}>
