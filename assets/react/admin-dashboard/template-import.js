@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		// Hide loading indicator when iframe is fully loaded
 		iframe.addEventListener('load', function () {
-			loadingIndicator.style.display = "none"; // Hide loading indicator
+			loadingIndicator.style.display = "none";
 		});
 
 		// Close live preview modal

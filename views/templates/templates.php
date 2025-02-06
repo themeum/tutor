@@ -163,16 +163,6 @@
 		<div class="template-preview-iframe-wrapper">
 			<iframe id="template-preview-iframe" src="" frameborder="0"></iframe>
 			<div class="loading-indicator" style="display: none;">Loading...</div>
-			<style>
-				.loading-indicator {
-					font-size: 40px;
-					position: absolute;
-					top: 50%;
-					left: 50%;
-					margin: 0 auto;
-					transform: translate(-40%, -50%);
-				}
-			</style>
 		</div>
 	</div>
 </div>

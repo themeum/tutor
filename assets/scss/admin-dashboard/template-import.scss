@@ -496,20 +496,11 @@ img {
 	justify-content: center;
 }
 
-.device-btn {
-	padding: 8px 16px;
-	border: 1px solid #ccc;
-	background-color: #f0f0f0;
-	cursor: pointer;
-	border-radius: 4px;
-	transition: all 0.3s;
+.loading-indicator {
+	font-size: 40px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin: 0 auto;
+	transform: translate(-40%, -50%);
 }
-
-.device-btn:hover {
-	background-color: #e0e0e0;
-}
-
-// iframe {
-// 	width: 100%;
-// 	height: 100vh;
-// }
