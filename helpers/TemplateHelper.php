@@ -20,6 +20,20 @@ class TemplateHelper {
 	use JsonResponse;
 
 	/**
+	 * Template list endpoint.
+	 *
+	 * @var string
+	 */
+	public static $template_list_endpoint = 'https://tutorlms.com/wp-json/themeum-products/v1/tutor/theme-templates';
+
+	/**
+	 * Template download endpoint.
+	 *
+	 * @var string
+	 */
+	public static $template_download_endpoint = 'https://tutorlms.com/wp-json/themeum-products/v1/tutor/theme-template-download';
+
+	/**
 	 * Get Template list.
 	 *
 	 * @throws \Exception If there is an error fetching or decoding the templates.
@@ -27,7 +41,7 @@ class TemplateHelper {
 	public static function get_template_list() {
 		try {
 			$response             = wp_remote_get(
-				TEMPLATE_LIST_ENDPOINT,
+				self::$template_list_endpoint,
 				array(
 					'headers' => array(
 						'Secret-Key' => 't344d5d71sae7dcb546b8cf55e594808',
@@ -47,7 +61,6 @@ class TemplateHelper {
 			}
 			return $template_list['body_response'];
 		} catch ( \Exception $e ) {
-			error_log( $e->getMessage() );
 			return array();
 		}
 	}
@@ -58,24 +71,22 @@ class TemplateHelper {
 	 * @param string $template_id The ID of the template to download.
 	 */
 	public static function get_template_download_url( $template_id ) {
-		$tutor_license_info = get_option( 'tutor_license_info' );
-		$website_url        = get_site_url();
-		$args               = array(
-			'body'    => json_encode(
-				array(
-					'slug'        => $template_id,
-					'website_url' => $website_url,
-					'license_key' => $tutor_license_info['license_key'] ?? '',
-				)
+		$template_download_endpoint = 'https://tutorlms.com/wp-json/themeum-products/v1/tutor/theme-template-download';
+		$tutor_license_info         = get_option( 'tutor_license_info' );
+		$website_url                = get_site_url();
+		$args                       = array(
+			'body'    => array(
+				'slug'        => $template_id,
+				'website_url' => $website_url,
+				'license_key' => $tutor_license_info['license_key'] ?? '',
 			),
 			'headers' => array(
-				'Content-Type' => 'application/json',
-				'Secret-Key'   => 't344d5d71sae7dcb546b8cf55e594808',
+				'Secret-Key' => 't344d5d71sae7dcb546b8cf55e594808',
 			),
 		);
-		$response           = wp_remote_post( TEMPLATES_DOWNLOAD_ENDPOINT, $args );
-		$response_body      = wp_remote_retrieve_body( $response );
-		$data               = json_decode( $response_body, true );
+		$response                   = wp_remote_post( self::$template_download_endpoint, $args );
+		$response_body              = wp_remote_retrieve_body( $response );
+		$data                       = json_decode( $response_body, true );
 		if ( is_wp_error( $response ) ) {
 			self::json_response( $data['response'], null, 400 );
 		}
