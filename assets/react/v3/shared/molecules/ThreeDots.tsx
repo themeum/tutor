@@ -1,5 +1,5 @@
 import { type SerializedStyles, css } from '@emotion/react';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 import React, { type MouseEvent, type ReactNode, useRef } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
@@ -193,6 +193,7 @@ const styles = {
 
       &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
+        background-color: ${colorTokens.bg.error};
         background-color: ${rgba(colorTokens.bg.error, 0.1)};
 
         svg {
