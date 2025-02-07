@@ -997,8 +997,5 @@ export const findSlotFields = (...fields: Record<string, InjectedField[]>[]) => 
       });
     });
   });
-
-  console.log(slotFields);
-
   return slotFields;
 };
