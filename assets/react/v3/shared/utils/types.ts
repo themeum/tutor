@@ -1,6 +1,7 @@
 import type collection from '@TutorShared/config/icon-list';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
+import { RegisterOptions } from 'react-hook-form';
 
 export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
 
@@ -172,3 +173,20 @@ type Path<T> = T extends object
   : never;
 
 export type SectionPath = Path<SectionStructure>;
+
+type FieldType = 'text' | 'textarea' | 'select' | 'radio';
+
+export interface InjectedField {
+  name: string;
+  type: FieldType;
+  options?: Array<{ label: string; value: string }>;
+  label?: string;
+  placeholder?: string;
+  rules?: Exclude<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>;
+  priority?: number;
+}
+
+export interface InjectedContent {
+  component: ReactNode;
+  priority?: number;
+}

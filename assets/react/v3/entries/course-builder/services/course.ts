@@ -6,7 +6,6 @@ import { useToast } from '@TutorShared/atoms/Toast';
 import type { UserOption } from '@TutorShared/components/fields/FormSelectUser';
 import type { CourseVideo } from '@TutorShared/components/fields/FormVideoInput';
 
-import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
@@ -986,16 +985,4 @@ export const useUnlinkPageBuilder = () => {
   return useMutation({
     mutationFn: unlinkPageBuilder,
   });
-};
-
-export const findSlotFields = (...fields: Record<string, InjectedField[]>[]) => {
-  const slotFields: string[] = [];
-  fields.forEach((field) => {
-    Object.keys(field).forEach((i) => {
-      field[i].forEach((j) => {
-        slotFields.push(j.name);
-      });
-    });
-  });
-  return slotFields;
 };

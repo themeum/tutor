@@ -1,25 +1,8 @@
-import { type InjectionSlots, type SectionPath } from '@TutorShared/utils/types';
+import { InjectedContent, InjectedField, type InjectionSlots, type SectionPath } from '@TutorShared/utils/types';
 import { produce } from 'immer';
 import React, { createContext, type ReactNode, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { type RegisterOptions } from 'react-hook-form';
 
-type FieldType = 'text' | 'textarea' | 'select' | 'radio';
 type CurriculumType = 'Lesson' | 'Quiz' | 'Assignment';
-
-export interface InjectedField {
-  name: string;
-  type: FieldType;
-  options?: Array<{ label: string; value: string }>;
-  label?: string;
-  placeholder?: string;
-  rules?: Exclude<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>;
-  priority?: number;
-}
-
-export interface InjectedContent {
-  component: ReactNode;
-  priority?: number;
-}
 
 type SectionData<T> = Record<string, T[]>;
 interface CurriculumData<T> {
@@ -137,7 +120,6 @@ const CourseBuilderSlotContext = createContext<CourseBuilderContextType>({
 });
 
 export const CourseBuilderSlotProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  // const [state, setState] = useState<CourseBuilderState>(createInitialState());
   const [fields, setFields] = useState<CourseBuilderData<InjectedField>>(defaultCourseBuilderState.fields);
   const [contents, setContents] = useState<CourseBuilderData<InjectedContent>>(defaultCourseBuilderState.contents);
 

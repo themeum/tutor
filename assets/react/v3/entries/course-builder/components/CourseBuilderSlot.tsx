@@ -1,9 +1,5 @@
-import {
-  type InjectedContent,
-  type InjectedField,
-  useCourseBuilderSlot,
-} from '@CourseBuilderContexts/CourseBuilderSlotProvider';
-import { type SectionPath } from '@TutorShared/utils/types';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { InjectedContent, InjectedField, type SectionPath } from '@TutorShared/utils/types';
 import React from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 import ContentRenderer from './ContentRenderer';
@@ -11,15 +7,15 @@ import FieldRenderer from './FieldRenderer';
 
 const CourseBuilderInjectionSlot: React.FC<{
   section: SectionPath;
+  namePrefix?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any>;
-}> = ({ section, form }) => {
+}> = ({ section, namePrefix, form }) => {
   const { fields, contents } = useCourseBuilderSlot();
   const getNestedFields = (): InjectedField[] => {
     const parts = section.split('.');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let current: any = fields;
-
     for (const part of parts) {
       if (!current[part]) return [];
       current = current[part];
@@ -42,7 +38,12 @@ const CourseBuilderInjectionSlot: React.FC<{
   return (
     <>
       {getNestedFields().map((props: InjectedField) => (
-        <FieldRenderer key={props.name} form={form} {...props} />
+        <FieldRenderer
+          key={props.name}
+          form={form}
+          {...props}
+          name={namePrefix ? `${namePrefix}${props.name}` : props.name}
+        />
       ))}
       {getNestedContent().map(({ component }, index) => (
         <ContentRenderer key={index} component={component} />

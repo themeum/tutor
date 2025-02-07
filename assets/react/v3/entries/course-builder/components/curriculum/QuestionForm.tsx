@@ -148,7 +148,11 @@ const QuestionForm = () => {
             />
           </Show>
 
-          <CourseBuilderInjectionSlot section="Curriculum.Quiz.after_question_description" form={form} />
+          <CourseBuilderInjectionSlot
+            section="Curriculum.Quiz.after_question_description"
+            namePrefix={`questions.${activeQuestionIndex}.`}
+            form={form}
+          />
         </div>
       </div>
 

@@ -23,11 +23,12 @@ import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal'
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
 import CourseBuilderSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
-import { type ContentDripType, findSlotFields } from '@CourseBuilderServices/course';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type CourseTopic,
   convertLessonDataToPayload,
+  type CourseTopic,
+  Lesson,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -42,7 +43,7 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ID } from '@TutorShared/utils/types';
-import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 
@@ -150,10 +151,9 @@ const LessonModal = ({
           after_xdays_of_enroll: lessonDetails?.content_drip_settings?.after_xdays_of_enroll || '',
           prerequisites: lessonDetails?.content_drip_settings?.prerequisites || [],
         },
-        // @TODO: need to check this after the API is updated
-        // ...Object.entries(
-        //   findSlotFields(fields.Curriculum.Lesson).map(([key, value]) => [key, lessonDetails[key] || value]),
-        // ),
+        ...Object.fromEntries(
+          findSlotFields({ fields: fields.Curriculum.Lesson }).map((key) => [key, lessonDetails[key as keyof Lesson]]),
+        ),
       });
     }
 
@@ -179,7 +179,7 @@ const LessonModal = ({
       lessonId,
       topicId,
       contentDripType,
-      findSlotFields(fields.Curriculum.Lesson),
+      findSlotFields({ fields: fields.Curriculum.Lesson }),
     );
     const response = await saveLessonMutation.mutateAsync(payload);
 

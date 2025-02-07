@@ -19,9 +19,10 @@ import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
 import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
-import { findSlotFields, type ContentDripType } from '@CourseBuilderServices/course';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
+  Assignment,
   convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
@@ -36,7 +37,7 @@ import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { type ID } from '@TutorShared/utils/types';
-import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 
 interface AssignmentModalProps extends ModalProps {
@@ -151,6 +152,12 @@ const AssignmentModal = ({
             after_xdays_of_enroll: assignmentDetails?.content_drip_settings?.after_xdays_of_enroll || '',
             prerequisites: assignmentDetails?.content_drip_settings?.prerequisites || [],
           },
+          ...Object.fromEntries(
+            findSlotFields({ fields: fields.Curriculum.Lesson }).map((key) => [
+              key,
+              assignmentDetails[key as keyof Assignment],
+            ]),
+          ),
         },
         {
           keepDirty: false,
@@ -174,7 +181,7 @@ const AssignmentModal = ({
       assignmentId,
       topicId,
       contentDripType,
-      findSlotFields(fields.Curriculum.Assignment),
+      findSlotFields({ fields: fields.Curriculum.Assignment }),
     );
     const response = await saveAssignmentMutation.mutateAsync(payload);
 

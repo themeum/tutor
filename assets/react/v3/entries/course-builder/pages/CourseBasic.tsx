@@ -12,13 +12,11 @@ import FormInput from '@TutorShared/components/fields/FormInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
 import CourseBuilderSlot from '@CourseBuilderComponents/CourseBuilderSlot';
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
   convertCourseDataToPayload,
-  findSlotFields,
-  // findSlotFields,
   useUnlinkPageBuilder,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
@@ -29,7 +27,7 @@ import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorSh
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { convertToSlug, determinePostStatus } from '@TutorShared/utils/util';
+import { convertToSlug, determinePostStatus, findSlotFields } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
@@ -116,7 +114,10 @@ const CourseBasic = () => {
                 editors={courseDetails?.editors}
                 onCustomEditorButtonClick={() => {
                   return form.handleSubmit((data) => {
-                    const payload = convertCourseDataToPayload(data, findSlotFields(fields.Basic, fields.Additional));
+                    const payload = convertCourseDataToPayload(
+                      data,
+                      findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
+                    );
                     return updateCourseMutation.mutateAsync({
                       course_id: courseId,
                       ...payload,

@@ -23,6 +23,7 @@ import { type Addons, DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
   type IconCollection,
+  InjectedField,
   type PaginatedParams,
   type WPPostStatus,
   isDefined,
@@ -430,4 +431,23 @@ export const convertToSlug = (value: string): string => {
     .replace(/\s+/g, '-') // Replace spaces with dashes
     .replace(/-+/g, '-') // Replace multiple dashes with a single one
     .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
+};
+
+export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedField[]>; fieldKey?: string }[]) => {
+  const slotFields: string[] = [];
+  fieldArgs.forEach((arg) => {
+    if (arg.fieldKey) {
+      arg.fields[arg.fieldKey].forEach((i) => {
+        slotFields.push(i.name);
+      });
+    } else {
+      Object.keys(arg.fields).forEach((i) => {
+        arg.fields[i].forEach((j) => {
+          slotFields.push(j.name);
+        });
+      });
+    }
+  });
+
+  return slotFields;
 };

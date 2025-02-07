@@ -1,5 +1,5 @@
 import routes from '@CourseBuilderConfig/routes';
-import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
+import { CourseBuilderSlotProvider } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';

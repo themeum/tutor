@@ -9,14 +9,14 @@ import {
   type CourseFormData,
   convertCourseDataToFormData,
   courseDefaultData,
-  findSlotFields,
   useCourseDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
-import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotProvider';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { findSlotFields } from '@TutorShared/utils/util';
 import Notebook from './Notebook';
 
 const Layout = () => {
@@ -36,7 +36,7 @@ const Layout = () => {
       const dirtyFields = Object.keys(form.formState.dirtyFields);
       const convertedCourseData = convertCourseDataToFormData(
         courseDetailsQuery.data,
-        findSlotFields(fields.Basic, fields.Additional),
+        findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
       );
       const formValues = form.getValues();
 
