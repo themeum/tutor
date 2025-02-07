@@ -194,9 +194,6 @@ const QuizModal = ({
       findSlotFields({ fields: fields.Curriculum.Quiz, fieldKey: 'bottom_of_settings' }),
     );
 
-    console.log(payload);
-    return;
-
     const response = await saveQuizMutation.mutateAsync(payload);
 
     if (response.data) {
