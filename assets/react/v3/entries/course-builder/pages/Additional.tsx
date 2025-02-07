@@ -30,7 +30,7 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
-import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { default as CourseBuilderInjectionSlot, default as CourseBuilderSlot } from '@CourseBuilderComponents/CourseBuilderSlot';
 import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@SharedImages/pro-placeholders/attachments.webp';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
@@ -301,6 +301,8 @@ const Additional = () => {
             </div>
           </Show>
           <LiveClass />
+
+          <CourseBuilderSlot section="Additional.bottom_of_sidebar" form={form} />
         </div>
       </Show>
       <Show when={!CURRENT_VIEWPORT.isAboveTablet}>
