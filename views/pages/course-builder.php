@@ -21,6 +21,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title><?php esc_html_e( 'Tutor Course Builder', 'tutor' ); ?></title>
 	<?php wp_print_styles(); ?>
+
+	<style>
+		.mce-notification-error {
+			display: none;
+		}
+	</style>
 </head>
 <body data-tutor-context="<?php echo is_admin() ? 'backend' : 'frontend'; ?>">
 	<div id="tutor-course-builder"></div>
