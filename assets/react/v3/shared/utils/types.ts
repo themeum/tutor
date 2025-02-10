@@ -190,3 +190,9 @@ export interface InjectedContent {
   component: ReactNode;
   priority?: number;
 }
+
+export interface Editor {
+  label: string;
+  link: string;
+  name: string;
+}

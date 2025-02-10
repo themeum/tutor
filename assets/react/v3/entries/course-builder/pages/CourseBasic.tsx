@@ -17,7 +17,6 @@ import {
   type CourseDetailsResponse,
   type CourseFormData,
   convertCourseDataToPayload,
-  useUnlinkPageBuilder,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -26,6 +25,7 @@ import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { useUnlinkPageBuilderMutation } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { convertToSlug, determinePostStatus, findSlotFields } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
@@ -41,7 +41,7 @@ const CourseBasic = () => {
     queryKey: ['CourseDetails', courseId],
   });
   const updateCourseMutation = useUpdateCourseMutation();
-  const unlinkPageBuilder = useUnlinkPageBuilder();
+  const unlinkPageBuilder = useUnlinkPageBuilderMutation();
 
   const [isWpEditorFullScreen, setIsWpEditorFullScreen] = useState(false);
 
@@ -128,11 +128,20 @@ const CourseBasic = () => {
                     });
                   })();
                 }}
-                onBackToWPEditorClick={(builder: string) => {
-                  return unlinkPageBuilder.mutateAsync({
-                    courseId: courseId,
-                    builder: builder,
-                  });
+                onBackToWPEditorClick={async (builder: string) => {
+                  return unlinkPageBuilder
+                    .mutateAsync({
+                      courseId: courseId,
+                      builder: builder,
+                    })
+                    .then((response) => {
+                      form.setValue('editor_used', {
+                        name: 'classic',
+                        label: __('Classic Editor', 'tutor'),
+                        link: '',
+                      });
+                      return response;
+                    });
                 }}
                 onFullScreenChange={(isFullScreen) => {
                   setIsWpEditorFullScreen(isFullScreen);

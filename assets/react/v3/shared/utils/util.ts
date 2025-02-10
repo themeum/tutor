@@ -15,6 +15,7 @@ import {
   subMonths,
   subYears,
 } from 'date-fns';
+import * as dateFnsLocales from 'date-fns/locale';
 import type { DateRange } from 'react-day-picker';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -450,4 +451,35 @@ export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedFi
   });
 
   return slotFields;
+}
+
+type DateFnsLocaleKey = keyof typeof dateFnsLocales;
+
+export const convertWordPressLocaleToDateFns = (wpLocale: string): (typeof dateFnsLocales)[DateFnsLocaleKey] => {
+  // Convert WordPress locale to camelCase (e.g., 'en_US' → 'enUS')
+  const camelCaseKey = wpLocale
+    .split('_')
+    .map((part, index) => {
+      if (index === 0) {
+        return part.toLowerCase();
+      }
+      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
+    })
+    .join('') as DateFnsLocaleKey;
+
+  // Check if the camelCase key exists in date-fns locales
+  if (Object.prototype.hasOwnProperty.call(dateFnsLocales, camelCaseKey)) {
+    return dateFnsLocales[camelCaseKey];
+  }
+
+  // Extract base language (e.g., 'en' from 'en_US')
+  const baseLanguage = wpLocale.split('_')[0].toLowerCase() as DateFnsLocaleKey;
+
+  // Check if the base language exists as a locale
+  if (Object.prototype.hasOwnProperty.call(dateFnsLocales, baseLanguage)) {
+    return dateFnsLocales[baseLanguage];
+  }
+
+  // Fallback to 'enUS' if no matches are found
+  return dateFnsLocales.enUS;
 };

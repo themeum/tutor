@@ -58,14 +58,21 @@ type ModalContextType = {
     closeOnEscape?: boolean;
     isMagicAi?: boolean;
     depthIndex?: number;
+    id?: string;
   }): Promise<NonNullable<Parameters<P['closeModal']>[0]> | PromiseResolvePayload<'CLOSE'>>;
   closeModal(data?: PromiseResolvePayload): void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  updateModal<C extends React.FunctionComponent<any>>(
+    id: string,
+    newProps: Partial<Omit<React.ComponentProps<C>, 'closeModal'>>,
+  ): void;
   hasModalOnStack?: boolean;
 };
 
 const ModalContext = React.createContext<ModalContextType>({
   showModal: () => Promise.resolve({ action: 'CLOSE' as const }),
   closeModal: noop,
+  updateModal: noop,
   hasModalOnStack: false,
 });
 
@@ -97,6 +104,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       closeOnEscape = true,
       isMagicAi = false,
       depthIndex = zIndex.modal,
+      id,
     }) => {
       return new Promise((resolve) => {
         setState((previousState) => ({
@@ -109,7 +117,7 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
               resolve,
               closeOnOutsideClick,
               closeOnEscape,
-              id: nanoid(),
+              id: id || nanoid(),
               depthIndex,
               isMagicAi,
             },
@@ -131,7 +139,27 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
     });
   }, []);
 
+  const updateModal = useCallback<ModalContextType['updateModal']>((id, newProps) => {
+    setState((prevState) => {
+      const modalIndex = prevState.modals.findIndex((modal) => modal.id === id);
+      if (modalIndex === -1) return prevState;
+
+      const updatedModals = [...prevState.modals];
+      const modal = updatedModals[modalIndex];
+      updatedModals[modalIndex] = {
+        ...modal,
+        props: {
+          ...modal.props,
+          ...newProps,
+        },
+      };
+
+      return { ...prevState, modals: updatedModals };
+    });
+  }, []);
+
   const { transitions } = useAnimation({
+    keys: (modal) => modal.id,
     data: state.modals,
     animationType: AnimationType.slideUp,
     animationDuration: 250,
@@ -154,7 +182,6 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
       }
     };
 
-    // Use capture phase to ensure this event is caught even when input is focused
     if (state.modals.length > 0) {
       document.addEventListener('keydown', handleKeyDown, true);
     }
@@ -166,15 +193,16 @@ export const ModalProvider: React.FunctionComponent<{ children: ReactNode }> = (
   }, [state.modals.length, closeModal]);
 
   return (
-    <ModalContext.Provider value={{ showModal, closeModal, hasModalOnStack }}>
+    <ModalContext.Provider value={{ showModal, closeModal, updateModal, hasModalOnStack }}>
       {children}
-      {transitions((style, modal) => {
+      {transitions((style, modal, _, index) => {
         return (
           <div
+            key={modal.id}
             css={[
               styles.container,
               {
-                zIndex: modal.depthIndex,
+                zIndex: modal.depthIndex || zIndex.modal + index,
               },
             ]}
           >
