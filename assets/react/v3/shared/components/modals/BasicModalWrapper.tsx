@@ -19,6 +19,7 @@ interface BasicModalWrapperProps {
   fullScreen?: boolean;
   modalStyle?: SerializedStyles;
   maxWidth?: number;
+  isCloseAble?: boolean;
 }
 
 const BasicModalWrapper = ({
@@ -32,6 +33,7 @@ const BasicModalWrapper = ({
   fullScreen,
   modalStyle,
   maxWidth = modal.BASIC_MODAL_MAX_WIDTH,
+  isCloseAble = true,
 }: BasicModalWrapperProps) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -66,22 +68,24 @@ const BasicModalWrapper = ({
             </Show>
           </div>
         </Show>
-        <div
-          css={styles.actionsWrapper({
-            hasEntireHeader: !!entireHeader,
-          })}
-        >
-          <Show
-            when={actions}
-            fallback={
-              <button type="button" css={styles.closeButton} onClick={onClose}>
-                <SVGIcon name="timesThin" width={24} height={24} />
-              </button>
-            }
+        <Show when={isCloseAble}>
+          <div
+            css={styles.actionsWrapper({
+              hasEntireHeader: !!entireHeader,
+            })}
           >
-            {actions}
-          </Show>
-        </div>
+            <Show
+              when={actions}
+              fallback={
+                <button type="button" css={styles.closeButton} onClick={onClose}>
+                  <SVGIcon name="timesThin" width={24} height={24} />
+                </button>
+              }
+            >
+              {actions}
+            </Show>
+          </div>
+        </Show>
       </div>
       <div css={styles.content({ isFullScreen: fullScreen })}>{children}</div>
     </div>
