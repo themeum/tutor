@@ -193,7 +193,6 @@ const styles = {
 
       &:hover:not(:disabled) {
         color: ${colorTokens.text.error};
-        background-color: ${colorTokens.bg.error};
         background-color: ${rgba(colorTokens.bg.error, 0.1)};
 
         svg {
