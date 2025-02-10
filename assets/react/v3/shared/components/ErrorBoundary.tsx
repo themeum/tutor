@@ -1,7 +1,11 @@
+import Alert from '@TutorShared/atoms/Alert';
+import Button from '@TutorShared/atoms/Button';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { AnyObject } from '@TutorShared/utils/form';
+import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import ErrorStackParser from 'error-stack-parser';
 import type React from 'react';
 import { Component, type ErrorInfo } from 'react';
@@ -66,7 +70,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
       position: { line: null, column: null, startLine: null, source: '' },
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     (SourceMapConsumer as AnyObject).initialize({
       'lib/mappings.wasm': 'https://unpkg.com/source-map@0.7.3/lib/mappings.wasm',
     });
@@ -109,7 +112,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             const endLineNumber = Math.min(lines.length - 1, (line || 0) + 4);
 
             const sourceCode = lines.slice(startLineNumber, endLineNumber + 1);
-            const sourcePath = position.source?.slice(position.source.indexOf('src'));
+            const sourcePath = position.source?.split('/').pop();
 
             this.setState({
               source: sourceCode,
@@ -179,40 +182,68 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     );
   }
 
-  render() {
-    if (this.state.hasError) {
-      const { error, position, stack } = this.state;
+  renderProductionError() {
+    return (
+      <div css={styles.container({ inProduction: true })}>
+        <div css={styleUtils.flexCenter('column')}>
+          <Alert type="danger" icon="warning">
+            {__('Something went wrong! Please try again later.', 'tutor')}
+          </Alert>
 
-      return (
-        <div css={styles.container}>
-          <div css={styles.wrapper}>
-            <div css={styles.scrollWrapper}>
-              <div css={styles.indicator} />
-              <h2 css={styles.errorHeading}>Unhandled Runtime Error</h2>
-              <p css={styles.errorMessage}>{error?.toString() || 'Something Went Wrong!'}</p>
+          <div css={styles.instructions}>
+            <h6 css={typography.heading6()}>{__('Try the following:', 'tutor')}</h6>
+            <ul>
+              <li>{__('Reload the page', 'tutor')}</li>
+              <li>{__('Clear your browser cache', 'tutor')}</li>
+              <li>{__('Try again later', 'tutor')}</li>
+              <li>{__('Contact support if the issue persists.', 'tutor')}</li>
+            </ul>
+          </div>
 
-              {this.renderErrorSource()}
+          <Button variant="primary" size="small" onClick={() => window.location.reload()}>
+            {__('Reload', 'tutor')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
-              <div css={styles.callStackWrapper}>
-                <h4 css={styles.callStack}>Call Stack</h4>
+  renderDevelopmentError() {
+    const { error, position, stack } = this.state;
 
-                {stack.map((info, index) => {
-                  return (
-                    <div key={index} css={styles.stackItem}>
-                      <h6 css={styles.functionName}>
-                        {info.functionName || getFilenameFromPath(position.source || '')}
-                      </h6>
-                      <p css={styles.filePath}>
-                        {cleanPath(getRelativePath(info.fileName || ''))} ({info.lineNumber}:{info.columnNumber})
-                      </p>
-                    </div>
-                  );
-                })}
-              </div>
+    return (
+      <div css={styles.container({ inProduction: false })}>
+        <div css={styles.wrapper}>
+          <div css={styles.scrollWrapper}>
+            <div css={styles.indicator} />
+            <h2 css={styles.errorHeading}>Unhandled Runtime Error</h2>
+            <p css={styles.errorMessage}>{error?.toString() || 'Something Went Wrong!'}</p>
+
+            {this.renderErrorSource()}
+
+            <div css={styles.callStackWrapper}>
+              <h4 css={styles.callStack}>Call Stack</h4>
+
+              {stack.map((info, index) => {
+                return (
+                  <div key={index} css={styles.stackItem}>
+                    <h6 css={styles.functionName}>{info.functionName || getFilenameFromPath(position.source || '')}</h6>
+                    <p css={styles.filePath}>
+                      {cleanPath(getRelativePath(info.fileName || ''))} ({info.lineNumber}:{info.columnNumber})
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
-      );
+      </div>
+    );
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return process.env.NODE_ENV === 'production' ? this.renderProductionError() : this.renderDevelopmentError();
     }
 
     return this.props.children;
@@ -222,7 +253,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 export default ErrorBoundary;
 
 const styles = {
-  container: css`
+  container: ({ inProduction = false }) => css`
     * {
       box-sizing: border-box;
       padding: 0;
@@ -230,10 +261,21 @@ const styles = {
     }
 
     width: 100%;
-    height: 100vh;
+    height: ${inProduction ? 'auto' : '100vh'};
     display: flex;
     justify-content: center;
     align-items: center;
+  `,
+  instructions: css`
+    margin-block: ${spacing[24]};
+    text-align: left;
+    width: 100%;
+
+    ul {
+      margin-top: ${spacing[8]};
+      padding-left: ${spacing[24]};
+      ${typography.body('regular')};
+    }
   `,
   sourceLinesWrapper: css`
     display: flex;
