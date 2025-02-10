@@ -11,7 +11,7 @@ const RouteSuspense = ({ component }: RouteSuspenseProps) => {
   const { pathname } = useLocation();
   return (
     <ErrorBoundary key={pathname}>
-      <Suspense fallback={<LoadingOverlay />}>{component}</Suspense>;
+      <Suspense fallback={<LoadingOverlay />}>{component}</Suspense>
     </ErrorBoundary>
   );
 };
