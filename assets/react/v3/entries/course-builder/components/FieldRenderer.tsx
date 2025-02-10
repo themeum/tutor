@@ -13,12 +13,12 @@ import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
 import { type FormControllerProps } from '@TutorShared/utils/form';
 import { type Option } from '@TutorShared/utils/types';
-import React from 'react';
 import { Controller, type RegisterOptions, type UseFormReturn } from 'react-hook-form';
 
 interface FieldRendererProps {
   name: string;
   label?: string;
+  buttonText?: string;
   helpText?: string;
   infoText?: string;
   placeholder?: string;
@@ -29,9 +29,10 @@ interface FieldRendererProps {
   form: UseFormReturn;
 }
 
-const FieldRenderer: React.FC<FieldRendererProps> = ({
+const FieldRenderer = ({
   name,
   label,
+  buttonText,
   helpText,
   infoText,
   placeholder,
@@ -40,13 +41,27 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
   defaultValue,
   rules,
   form,
-}) => {
+}: FieldRendererProps) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const renderField = (controllerProps: FormControllerProps<any>) => {
     const field = (() => {
       switch (type) {
         case 'text':
           return <FormInput {...controllerProps} label={label} placeholder={placeholder} helpText={helpText} />;
+        case 'number':
+          return (
+            <FormInput {...controllerProps} type="number" label={label} placeholder={placeholder} helpText={helpText} />
+          );
+        case 'password':
+          return (
+            <FormInput
+              {...controllerProps}
+              type="password"
+              label={label}
+              placeholder={placeholder}
+              helpText={helpText}
+            />
+          );
         case 'textarea':
           return <FormTextareaInput {...controllerProps} label={label} placeholder={placeholder} helpText={helpText} />;
         case 'select':
@@ -70,11 +85,27 @@ const FieldRenderer: React.FC<FieldRendererProps> = ({
         case 'time':
           return <FormTimeInput {...controllerProps} label={label} placeholder={placeholder} helpText={helpText} />;
         case 'image':
-          return <FormImageInput {...controllerProps} label={label} helpText={helpText} infoText={infoText} />;
+          return (
+            <FormImageInput
+              {...controllerProps}
+              label={label}
+              buttonText={buttonText}
+              helpText={helpText}
+              infoText={infoText}
+            />
+          );
         case 'video':
-          return <FormVideoInput {...controllerProps} label={label} helpText={helpText} infoText={infoText} />;
+          return (
+            <FormVideoInput
+              {...controllerProps}
+              label={label}
+              buttonText={buttonText}
+              helpText={helpText}
+              infoText={infoText}
+            />
+          );
         case 'uploader':
-          return <FormFileUploader {...controllerProps} label={label} helpText={helpText} />;
+          return <FormFileUploader {...controllerProps} label={label} buttonText={buttonText} helpText={helpText} />;
         default:
           return <Alert type="danger">Unsupported field type: {type}</Alert>;
       }

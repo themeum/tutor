@@ -1,16 +1,17 @@
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { InjectedContent, InjectedField, type SectionPath } from '@TutorShared/utils/types';
-import React from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 import ContentRenderer from './ContentRenderer';
 import FieldRenderer from './FieldRenderer';
 
-const CourseBuilderInjectionSlot: React.FC<{
+interface CourseBuilderInjectionSlotProps {
   section: SectionPath;
   namePrefix?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<any>;
-}> = ({ section, namePrefix, form }) => {
+}
+
+const CourseBuilderInjectionSlot = ({ section, namePrefix, form }: CourseBuilderInjectionSlotProps) => {
   const { fields, contents } = useCourseBuilderSlot();
   const getNestedFields = (): InjectedField[] => {
     const parts = section.split('.');

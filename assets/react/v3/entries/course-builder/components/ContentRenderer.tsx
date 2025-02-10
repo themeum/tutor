@@ -1,9 +1,11 @@
 import ComponentErrorBoundary from '@TutorShared/components/ComponentErrorBoundary';
 import React from 'react';
 
-const ContentRenderer: React.FC<{
+interface ContentRendererProps {
   component: React.ReactNode;
-}> = ({ component }) => {
+}
+
+const ContentRenderer = ({ component }: ContentRendererProps) => {
   return <ComponentErrorBoundary componentName={'content'}>{component}</ComponentErrorBoundary>;
 };
 

@@ -174,7 +174,20 @@ type Path<T> = T extends object
 
 export type SectionPath = Path<SectionStructure>;
 
-type FieldType = 'text' | 'textarea' | 'select' | 'radio';
+type FieldType =
+  | 'text'
+  | 'number'
+  | 'password'
+  | 'textarea'
+  | 'select'
+  | 'radio'
+  | 'checkbox'
+  | 'switch'
+  | 'date'
+  | 'time'
+  | 'image'
+  | 'video'
+  | 'uploader';
 
 export interface InjectedField {
   name: string;
