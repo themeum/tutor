@@ -71,7 +71,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     };
 
     (SourceMapConsumer as AnyObject).initialize({
-      'lib/mappings.wasm': 'https://unpkg.com/source-map@0.7.3/lib/mappings.wasm',
+      'lib/mappings.wasm': 'https://unpkg.com/source-map@0.7.4/lib/mappings.wasm',
     });
   }
 
