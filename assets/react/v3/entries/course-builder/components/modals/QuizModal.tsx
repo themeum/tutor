@@ -190,8 +190,11 @@ const QuizModal = ({
       topicId,
       contentDripType,
       courseId,
-      findSlotFields({ fields: fields.Curriculum.Quiz, fieldKey: 'after_question_description' }),
-      findSlotFields({ fields: fields.Curriculum.Quiz, fieldKey: 'bottom_of_settings' }),
+      findSlotFields(
+        { fields: fields.Curriculum.Quiz, slotKey: 'after_question_description' },
+        { fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_question_sidebar' },
+      ),
+      findSlotFields({ fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_settings' }),
     );
 
     const response = await saveQuizMutation.mutateAsync(payload);

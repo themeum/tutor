@@ -30,6 +30,7 @@ const defaultCourseBuilderState = {
       },
       Quiz: {
         after_question_description: [],
+        bottom_of_question_sidebar: [],
         bottom_of_settings: [],
       },
       Assignment: {
@@ -54,6 +55,7 @@ const defaultCourseBuilderState = {
       },
       Quiz: {
         after_question_description: [],
+        bottom_of_question_sidebar: [],
         bottom_of_settings: [],
       },
       Assignment: {

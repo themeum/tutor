@@ -434,11 +434,11 @@ export const convertToSlug = (value: string): string => {
     .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
 };
 
-export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedField[]>; fieldKey?: string }[]) => {
+export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedField[]>; slotKey?: string }[]) => {
   const slotFields: string[] = [];
   fieldArgs.forEach((arg) => {
-    if (arg.fieldKey) {
-      arg.fields[arg.fieldKey].forEach((i) => {
+    if (arg.slotKey) {
+      arg.fields[arg.slotKey].forEach((i) => {
         slotFields.push(i.name);
       });
     } else {

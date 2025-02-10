@@ -5,10 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   QuizDataStatus,
@@ -16,6 +13,10 @@ import {
   type QuizQuestionType,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { IconCollection } from '@TutorShared/utils/types';
 
@@ -249,6 +250,12 @@ const QuestionConditions = () => {
                 }}
               />
             )}
+          />
+
+          <CourseBuilderInjectionSlot
+            section="Curriculum.Quiz.bottom_of_question_sidebar"
+            namePrefix={`questions.${activeQuestionIndex}.`}
+            form={form}
           />
         </div>
       </div>

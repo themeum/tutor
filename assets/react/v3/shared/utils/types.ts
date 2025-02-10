@@ -154,7 +154,7 @@ export type InjectionSlots = {
   Basic: 'after_description' | 'after_settings';
   Curriculum: {
     Lesson: 'after_description' | 'bottom_of_sidebar';
-    Quiz: 'after_question_description' | 'bottom_of_settings';
+    Quiz: 'after_question_description' | 'bottom_of_question_sidebar' | 'bottom_of_settings';
     Assignment: 'after_description' | 'bottom_of_sidebar';
   };
   Additional: 'after_certificates' | 'bottom_of_sidebar';
