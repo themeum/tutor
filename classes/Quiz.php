@@ -1133,7 +1133,7 @@ class Quiz {
 
 		$data = QuizModel::get_quiz_details( $quiz_id );
 
-		$data = apply_filters( 'tutor_quiz_details_response', (array) $data, $quiz_id );
+		$data = apply_filters( 'tutor_quiz_details_response', $data, $quiz_id );
 
 		$this->json_response(
 			__( 'Quiz data fetched successfully', 'tutor' ),
