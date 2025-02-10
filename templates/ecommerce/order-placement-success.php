@@ -23,7 +23,7 @@ $order_id;
 			<?php esc_html_e( 'Order Confirmed', 'tutor' ); ?>
 		</h2>
 		<p class="tutor-fs-6 tutor-color-secondary">
-			<?php esc_html_e( 'You will receive an order confirmation email shortly', 'tutor' ); ?>
+			<?php echo esc_html( apply_filters( 'tutor_order_placement_success_message', __( 'You will receive an order confirmation email shortly', 'tutor' ), $order_id, $order_status ) ); ?>
 		</p>
 		</div>
 

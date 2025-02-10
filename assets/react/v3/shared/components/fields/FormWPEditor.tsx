@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 import type React from 'react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
