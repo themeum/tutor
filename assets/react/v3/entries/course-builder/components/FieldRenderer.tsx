@@ -11,8 +11,9 @@ import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
+import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import { type FormControllerProps } from '@TutorShared/utils/form';
-import { type Option } from '@TutorShared/utils/types';
+import { FieldType, type Option } from '@TutorShared/utils/types';
 import { Controller, type RegisterOptions, type UseFormReturn } from 'react-hook-form';
 
 interface FieldRendererProps {
@@ -22,7 +23,7 @@ interface FieldRendererProps {
   helpText?: string;
   infoText?: string;
   placeholder?: string;
-  type: string;
+  type: FieldType;
   options?: Option<string | number>[];
   defaultValue?: unknown;
   rules?: Exclude<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>;
@@ -106,6 +107,8 @@ const FieldRenderer = ({
           );
         case 'uploader':
           return <FormFileUploader {...controllerProps} label={label} buttonText={buttonText} helpText={helpText} />;
+        case 'WPEditor':
+          return <FormWPEditor {...controllerProps} label={label} placeholder={placeholder} helpText={helpText} />
         default:
           return <Alert type="danger">Unsupported field type: {type}</Alert>;
       }

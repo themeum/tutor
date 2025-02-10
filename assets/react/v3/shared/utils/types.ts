@@ -174,7 +174,7 @@ type Path<T> = T extends object
 
 export type SectionPath = Path<SectionStructure>;
 
-type FieldType =
+export type FieldType =
   | 'text'
   | 'number'
   | 'password'
@@ -187,7 +187,8 @@ type FieldType =
   | 'time'
   | 'image'
   | 'video'
-  | 'uploader';
+  | 'uploader'
+  | 'WPEditor';
 
 export interface InjectedField {
   name: string;
