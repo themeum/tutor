@@ -72,7 +72,10 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 		<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-mt-24 tutor-btn-lg tutor-btn-block <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
 			<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 		</a>
-	<?php } else { ?>
+		<?php
+	} else {
+			ob_start();
+		?>
 	<div class="tutor-mt-24">
 		<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
 			<span class="tutor-icon-cart-line tutor-mr-8"></span>
@@ -80,4 +83,5 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 		</button>
 	</div>
 		<?php
+			echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), $course_id ); //phpcs:ignore --already filtered
 	}

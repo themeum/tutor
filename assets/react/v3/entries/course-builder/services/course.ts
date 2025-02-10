@@ -16,6 +16,7 @@ import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
+  type Editor,
   type ID,
   type Prettify,
   type TutorCategory,
@@ -263,12 +264,6 @@ export interface GoogleMeet {
     timezone: string;
     meet_link: string;
   };
-}
-
-export interface Editor {
-  label: string;
-  link: string;
-  name: string;
 }
 
 export interface CourseDetailsResponse {
@@ -966,26 +961,5 @@ const getYouTubeVideoDuration = (videoId: string) => {
 export const useGetYouTubeVideoDuration = () => {
   return useMutation({
     mutationFn: getYouTubeVideoDuration,
-  });
-};
-
-interface UnlinkPageBuilderPayload {
-  courseId: number;
-  builder: string;
-}
-
-const unlinkPageBuilder = ({ courseId, builder }: UnlinkPageBuilderPayload) => {
-  return wpAjaxInstance.post<UnlinkPageBuilderPayload, TutorMutationResponse<null>>(
-    endpoints.TUTOR_UNLINK_PAGE_BUILDER,
-    {
-      course_id: courseId,
-      builder: builder,
-    },
-  );
-};
-
-export const useUnlinkPageBuilder = () => {
-  return useMutation({
-    mutationFn: unlinkPageBuilder,
   });
 };

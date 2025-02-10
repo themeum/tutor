@@ -1,9 +1,8 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 import type React from 'react';
 import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 import Alert from '@TutorShared/atoms/Alert';
 import Button from '@TutorShared/atoms/Button';
@@ -18,7 +17,6 @@ import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModa
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
-import type { CourseFormData, Editor } from '@CourseBuilderServices/course';
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
@@ -26,7 +24,7 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
+import type { Editor, IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
@@ -77,7 +75,6 @@ const CustomEditorOverlay = ({
   onBackToWPEditorClick,
   onCustomEditorButtonClick,
 }: CustomEditorOverlayProps) => {
-  const form = useFormContext<CourseFormData>();
   const { showModal } = useModal();
   const [loadingButton, setLoadingButton] = useState('');
 
@@ -112,7 +109,6 @@ const CustomEditorOverlay = ({
               try {
                 setLoadingButton('back_to');
                 await onBackToWPEditorClick?.(editorUsed.name);
-                form.setValue('editor_used', { name: 'classic', label: __('Classic Editor', 'tutor'), link: '' });
               } catch (error) {
                 console.error(error);
               } finally {

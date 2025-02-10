@@ -1,6 +1,5 @@
 import { ITEMS_PER_PAGE } from '@TutorShared/config/constants';
 import { useCallback, useState } from 'react';
-import { JsonParam, NumberParam, StringParam, createEnumParam, useQueryParams, withDefault } from 'use-query-params';
 
 type FilterKey =
   | 'search'
@@ -20,34 +19,21 @@ interface PaginationInfo {
 }
 export type PaginationProperties = ReturnType<typeof usePaginatedTable>;
 
-const SortDirectionEnumParam = createEnumParam(['asc', 'desc']);
-
-export const usePaginatedTable = ({ limit = ITEMS_PER_PAGE, updateQueryParams = true } = {}) => {
-  const [query, setQuery] = useQueryParams({
-    page: withDefault(NumberParam, 1),
-    sortProperty: withDefault(StringParam, ''),
-    sortDirection: withDefault(SortDirectionEnumParam, undefined),
-    filter: withDefault<Filter, Filter>(JsonParam, {} as Filter),
-  });
+export const usePaginatedTable = ({ limit = ITEMS_PER_PAGE } = {}) => {
   const [paginationInfo, setPaginationInfo] = useState<PaginationInfo>({
     page: 1,
     sortProperty: '',
     sortDirection: undefined,
     filter: {},
   });
-  const pageInfo = updateQueryParams ? query : paginationInfo;
+  const pageInfo = paginationInfo;
   const offset = limit * Math.max(0, pageInfo.page - 1);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const updatePaginationInfo = useCallback(
     (params: Partial<PaginationInfo>) => {
-      if (updateQueryParams) {
-        setQuery({ ...params });
-      } else {
-        setPaginationInfo((prevPageInfo) => ({ ...prevPageInfo, ...params }));
-      }
+      setPaginationInfo((prevPageInfo) => ({ ...prevPageInfo, ...params }));
     },
-    [setQuery, setPaginationInfo, updateQueryParams],
+    [setPaginationInfo],
   );
 
   const onPageChange = (pageNumber: number) => updatePaginationInfo({ page: pageNumber });

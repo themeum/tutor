@@ -65,10 +65,10 @@ window.jQuery(document).ready(function($) {
 					}
 
 					let { message = __('Something Went Wrong!', 'tutor') } = data.data || {};
-					tutor_toast('Error!', message, 'error');
+					tutor_toast(__('Error!', 'tutor'), message, 'error');
 				},
 				error: function() {
-					tutor_toast('Error!', __('Something Went Wrong!', 'tutor'), 'error');
+					tutor_toast(__('Error!', 'tutor'), __('Something Went Wrong!', 'tutor'), 'error');
 				},
 				complete: function() {
 					$that

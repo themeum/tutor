@@ -1,16 +1,14 @@
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 
 import ToastProvider from '@TutorShared/atoms/Toast';
-
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { ModalProvider } from '@TutorShared/components/modals/Modal';
-
-import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
+
 import { PaymentProvider } from '../contexts/payment-context';
-const PaymentSettings = lazy(() => import('./PaymentSettings'));
+import PaymentSettings from './PaymentSettings';
 
 function App() {
   const [queryClient] = useState(
@@ -37,9 +35,7 @@ function App() {
           <PaymentProvider>
             <ModalProvider>
               <Global styles={createGlobalCss()} />
-              <Suspense fallback={<LoadingSection />}>
-                <PaymentSettings />
-              </Suspense>
+              <PaymentSettings />
             </ModalProvider>
           </PaymentProvider>
         </ToastProvider>

@@ -270,7 +270,25 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
+		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
 
+	}
+
+	/**
+	 * Handle password protected course and bundle form submission.
+	 *
+	 * @sine 3.2.1
+	 *
+	 * @return void
+	 */
+	public function handle_password_submit() {
+		if ( Input::has( 'post_password' ) && Input::has( 'course_id' ) ) {
+			$course_id         = Input::post( 'course_id', 0, Input::TYPE_NUMERIC );
+			$password_required = post_password_required( $course_id );
+			if ( $password_required ) {
+				set_transient( 'tutor_post_password_error', __( 'Invalid password', 'tutor' ) );
+			}
+		}
 	}
 
 	/**
@@ -784,6 +802,8 @@ class Course extends Tutor_Base {
 		}
 
 		$link = add_query_arg( array( 'course_id' => $course_id ), $link );
+
+		do_action( 'tutor_draft_course_created', $course_id );
 
 		$this->json_response(
 			__( 'Draft course created', 'tutor' ),
@@ -2816,6 +2836,10 @@ class Course extends Tutor_Base {
 		$user_id   = get_current_user_id();
 
 		if ( $course_id ) {
+			$password_protected = post_password_required( $course_id );
+			if ( $password_protected ) {
+				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
+			}
 			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );

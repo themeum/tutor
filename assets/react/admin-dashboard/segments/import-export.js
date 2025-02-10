@@ -161,6 +161,7 @@ const reset_default_options = () => {
 };
 
 const reset_all_settings_xhttp = (modalOpener, modalElement) => {
+	const { __ } = wp.i18n;
 	var formData = new FormData();
 	formData.append('action', 'tutor_option_default_save');
 	formData.append(_tutorobject.nonce_key, _tutorobject._tutor_nonce);
@@ -171,7 +172,8 @@ const reset_all_settings_xhttp = (modalOpener, modalElement) => {
 		if (xhttp.readyState === 4) {
 			setTimeout(function() {
 				modalElement.classList.remove('tutor-is-active');
-				tutor_toast('Success', 'Reset all settings to default successfully!', 'success');
+				document.body.classList.remove("tutor-modal-open");
+				tutor_toast(__('Success', 'tutor'), __('Reset all settings to default successfully!', 'tutor'), 'success');
 			}, 200);
 		}
 	};
@@ -187,10 +189,11 @@ const import_history_data = () => {
 };
 
 const import_history_data_xhttp = (modalOpener, modalElement) => {
+	const { __ } = wp.i18n;
 	var fileElem = document.querySelector('#drag-drop-input');
 	var files = fileElem.files;
 	if (files.length <= 0) {
-		tutor_toast('Failed', 'Please add a correctly formated json file', 'error');
+		tutor_toast(__('Failed', 'tutor'), __('Please add a correctly formatted json file', 'tutor'), 'error');
 		return false;
 	}
 	var fr = new FileReader();
@@ -208,13 +211,14 @@ const import_history_data_xhttp = (modalOpener, modalElement) => {
 		xhttp.onreadystatechange = function() {
 			if (xhttp.readyState === 4) {
 				modalElement.classList.remove('tutor-is-active');
+				document.body.classList.remove("tutor-modal-open");
 				let historyData = JSON.parse(xhttp.response);
 				historyData = historyData.data;
 				tutor_option_history_load(Object.entries(historyData));
 				delete_history_data();
 				// import_history_data();
 				setTimeout(function() {
-					tutor_toast('Success', 'Data imported successfully!', 'success');
+					tutor_toast(__('Success', 'tutor'), __('Data imported successfully!', 'tutor'), 'success');
 					fileElem.parentNode.parentNode.querySelector('.file-info').innerText = '';
 					fileElem.value = '';
 				}, 200);
@@ -296,6 +300,7 @@ const modal_opener_single_settings = () => {
 };
 
 const apply_settings_xhttp_request = (modelOpener, modalElement) => {
+	const { __ } = wp.i18n;
 	let apply_id = modelOpener.dataset.id;
 	var formData = new FormData();
 	formData.append('action', 'tutor_apply_settings');
@@ -310,7 +315,8 @@ const apply_settings_xhttp_request = (modelOpener, modalElement) => {
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState === 4) {
 			modalElement.classList.remove('tutor-is-active');
-			tutor_toast('Success', 'Applied settings successfully!', 'success');
+			document.body.classList.remove("tutor-modal-open");
+			tutor_toast(__('Success', 'tutor'), __('Applied settings successfully!', 'tutor'), 'success');
 		}
 	};
 };
@@ -327,6 +333,7 @@ const delete_history_data = () => {
 };
 
 const delete_settings_xhttp_request = (modelOpener, modalElement) => {
+	const { __ } = wp.i18n;
 	let delete_id = modelOpener.dataset.id;
 	var formData = new FormData();
 	formData.append('action', 'tutor_delete_single_settings');
@@ -340,14 +347,14 @@ const delete_settings_xhttp_request = (modelOpener, modalElement) => {
 	xhttp.onreadystatechange = function() {
 		if (xhttp.readyState === 4) {
 			modalElement.classList.remove('tutor-is-active');
+			document.body.classList.remove("tutor-modal-open");
 			let historyData = JSON.parse(xhttp.response);
 			historyData = historyData.data;
 			tutor_option_history_load(Object.entries(historyData));
 			delete_history_data();
 
 			setTimeout(function () {
-				document.body.style.overflow = 'auto';
-				tutor_toast('Success', 'Data deleted successfully!', 'success');
+				tutor_toast(__('Success', 'tutor'), __('Data deleted successfully!', 'tutor'), 'success');
 			}, 200);
 		}
 	};

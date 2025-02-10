@@ -122,8 +122,8 @@
 						);
 					}
 
-					
-					$question_description = wp_unslash( $question->question_description );
+
+					$question_description = apply_filters( 'tutor_filter_quiz_question_description', wp_unslash( $question->question_description ) );
 					if ( $question_description ) {
 						$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
 						if ( tutor()->has_pro ) {

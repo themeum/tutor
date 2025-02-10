@@ -55,7 +55,7 @@ const ManualPaymentModal = ({ closeModal, title, paymentForm }: ManualPaymentMod
   }, []);
 
   const onSubmit = (data: PaymentMethod) => {
-    paymentForm.setValue('payment_methods', [...paymentForm.getValues('payment_methods'), data]);
+    paymentForm.setValue('payment_methods', [...paymentForm.getValues('payment_methods') ?? [], data]);
     closeModal({ action: 'CONFIRM' });
   };
 

@@ -28,7 +28,7 @@ export const discountRule = (): object => ({
 
 export const invalidDateRule = (value?: string): string | undefined => {
   if (!isValid(new Date(value || ''))) {
-    return 'Invalid date entered!';
+    return __('Invalid date entered!', 'tutor');
   }
 
   return undefined;
@@ -48,7 +48,7 @@ export const invalidTimeRule = (value?: string): string | undefined => {
     return undefined;
   }
 
-  const message = 'Invalid time entered!';
+  const message = __('Invalid time entered!', 'tutor');
 
   const [hours, minutesAndMeridian] = value.split(':');
 

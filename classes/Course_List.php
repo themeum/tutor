@@ -323,12 +323,7 @@ class Course_List {
 
 		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
 
-		$update_status ? wp_send_json_success() : wp_send_json_error(
-			array(
-				'message' => 'Could not update course status',
-				'tutor',
-			)
-		);
+		$update_status ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not update course status', 'tutor' ) ) );
 
 		exit;
 	}

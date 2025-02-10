@@ -7,8 +7,8 @@ import Paginator from '@TutorShared/molecules/Paginator';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 import { css } from '@emotion/react';
 
-import { useCourseCategoryQuery, type Category } from '@TutorShared/services/course_category';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
+import { useCourseCategoryQuery, type Category } from '@TutorShared/services/course_category';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import SearchField from './SearchField';
@@ -20,9 +20,7 @@ interface CategoryListTableProps {
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
   const selectedCategories: Category[] = form.watch('categories') ?? [];
-  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
-    updateQueryParams: false,
-  });
+  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
   const categoryListQuery = useCourseCategoryQuery({
     applies_to: 'specific_category',
     offset,
