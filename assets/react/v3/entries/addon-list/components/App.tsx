@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { Global } from '@emotion/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import ToastProvider from '@TutorShared/atoms/Toast';
 import RTLProvider from '@TutorShared/components/RTLProvider';
 import { createGlobalCss } from '@TutorShared/utils/style-utils';
+import { useState } from 'react';
 import Main from './layout/Main';
 
 function App() {

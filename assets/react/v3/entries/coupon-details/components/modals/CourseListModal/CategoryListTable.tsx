@@ -20,9 +20,7 @@ interface CategoryListTableProps {
 
 const CategoryListTable = ({ form }: CategoryListTableProps) => {
   const selectedCategories = form.watch('categories') ?? [];
-  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
-    updateQueryParams: false,
-  });
+  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
   const categoryListQuery = useAppliesToQuery({
     applies_to: 'specific_category',
     offset,
