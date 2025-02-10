@@ -72,6 +72,8 @@ if ( $product ) {
 			</button>
 		</form>
 		<?php
+		ob_start();
+		echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), get_the_ID() ); //phpcs:ignore
 	}
 } else {
 	?>
