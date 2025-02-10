@@ -27,6 +27,7 @@ const modalResetOpen = () => {
 }
 
 const resetConfirmation = () => {
+	const { __, sprintf } = wp.i18n;
 	const resetDefaultBtn = document.querySelectorAll('.reset_to_default');
 	resetDefaultBtn.forEach((resetBtn, index) => {
 		resetBtn.onclick = (event) => {
@@ -181,7 +182,7 @@ const resetConfirmation = () => {
 							}
 						});
 						setTimeout(() => {
-							tutor_toast('Reset Successful', 'All modified settings of ' + resetTitle + ' have been changed to default.', 'success');
+							tutor_toast(__('Reset Successful', 'tutor'), sprintf(__('All modified settings of %s have been changed to default.', 'tutor'), resetTitle), 'success');
 							if(document.getElementById('save_tutor_option')){
 								document.getElementById('save_tutor_option').disabled = false;
 							}

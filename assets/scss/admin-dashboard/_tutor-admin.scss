@@ -1785,6 +1785,6 @@ h2.tutor-page-heading {
     line-height: 15px;
 }
 
-a:has(> span.tutor-create-course ) {
-	display: none!important;
+.wp-submenu li a[href="admin.php?page=create-course"] {
+    display: none!important;
 }

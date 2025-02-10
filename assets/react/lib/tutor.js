@@ -248,7 +248,7 @@ jQuery(document).ready(function($) {
 					return;
 				}
 
-				tutor_toast('Error!', message, 'error');
+				tutor_toast(__('Error!', 'tutor'), message, 'error');
 			},
 			complete: function() {
 				$that.removeClass('is-loading');
@@ -397,7 +397,7 @@ jQuery.fn.serializeObject = function() {
  * 
  * @since 1.0.0
  */
-window.tutor_toast = function( title, description, type, autoClose = true ) {
+window.tutor_toast = function( title, description, type, autoClose = true ) {	
 	if ( ! jQuery('.tutor-toast-parent').length ) {
 		jQuery('body').append('<div class="tutor-toast-parent tutor-toast-right"></div>');
 	}
@@ -409,7 +409,7 @@ window.tutor_toast = function( title, description, type, autoClose = true ) {
 	let icon = 	type == 'success' ? 'tutor-icon-circle-mark-line'
 				: type == 'error' ? 'tutor-icon-circle-times-line' : 'tutor-icon-circle-info-o';
 	
-	let hasDescription = ( description !== undefined && description !== null && description.trim() !== '' )
+	let hasDescription = ( description !== undefined && description !== null && String(description).trim() !== '' )
 
 	let content = jQuery(`
 		<div class="tutor-notification tutor-is-${alert} tutor-mb-16">
@@ -491,6 +491,8 @@ createNewCourseButtons.forEach((button) => {
 	button.addEventListener('click', async (e) => {
 		e.preventDefault();
 		const { __ } = wp.i18n;
+		const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
+		
 		try {
 			// For wp-admin bar quick create.
 			if (e.target.classList.contains('ab-item')) {
@@ -504,7 +506,6 @@ createNewCourseButtons.forEach((button) => {
 			const formData = tutorFormData([{ action: 'tutor_create_new_draft_course', from_dashboard: from_dashboard }]);
 			const post = await ajaxHandler(formData);
 
-			const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
 			const { status_code, data, message } = await post.json();
 			if (status_code === 201) {
 				window.location = data;

@@ -678,15 +678,15 @@ class Admin {
 		$course_id        = Input::get( 'post', 0, Input::TYPE_INT );
 		$course_post_type = tutor()->course_post_type;
 
-		if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
-			return $admin_bar;
-		}
-
 		if ( $admin_bar->get_node( 'new-courses' ) ) {
 			$args                = $admin_bar->get_node( 'new-courses' );
 			$args->href          = '#';
 			$args->meta['class'] = 'tutor-create-new-course';
 			$admin_bar->add_node( $args );
+		}
+
+		if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id ) ) {
+			return $admin_bar;
 		}
 
 		if (

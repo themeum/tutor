@@ -99,22 +99,101 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [hasEmptyFields]);
 
+  const handleRemovePayment = async () => {
+    const { action } = await showModal({
+      component: StaticConfirmationModal,
+      props: {
+        title: sprintf(__('Remove %s', 'tutor'), data.label),
+        description: __('Are you sure you want to remove this payment method?', 'tutor'),
+      },
+      depthIndex: zIndex.highest,
+    });
+
+    if (action === 'CONFIRM') {
+      if (data.is_manual) {
+        form.setValue(
+          'payment_methods',
+          (form.getValues('payment_methods') ?? []).filter((_, index) => index !== paymentIndex),
+          {
+            shouldDirty: true,
+          },
+        );
+      } else {
+        const response = await removePaymentMutation.mutateAsync({
+          slug: data.name,
+        });
+
+        if (response.status_code === 200) {
+          form.setValue(
+            'payment_methods',
+            (form.getValues('payment_methods') ?? []).filter((_, index) => index !== paymentIndex),
+          );
+
+          // Save settings
+          setTimeout(() => {
+            document.getElementById('save_tutor_option')?.removeAttribute('disabled');
+            document.getElementById('save_tutor_option')?.click();
+          }, 100);
+        }
+      }
+    }
+  };
+
+  const paymentActionTray = (
+    <div css={styles.cardActions}>
+      <Show when={data.update_available}>
+        <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
+          {__('Update available', 'tutor')}
+        </Badge>
+        <Button
+          variant="text"
+          size="small"
+          icon={<SVGIcon name="update" width={24} height={24} />}
+          onClick={async () => {
+            const response = await installPaymentMutation.mutateAsync({
+              slug: data.name,
+              action_type: 'upgrade',
+            });
+
+            if (response.status_code === 200) {
+              form.setValue(`payment_methods.${paymentIndex}.update_available`, false, { shouldDirty: true });
+            }
+          }}
+          loading={installPaymentMutation.isPending}
+        >
+          {__('Update now', 'tutor')}
+        </Button>
+      </Show>
+      <Show when={!data.is_installed}>
+        <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
+          {__('Plugin not installed', 'tutor')}
+        </Badge>
+      </Show>
+      <Controller
+        name={`payment_methods.${paymentIndex}.is_active`}
+        control={form.control}
+        render={(controllerProps) => (
+          <FormSwitch
+            {...controllerProps}
+            disabled={!data.is_installed}
+            onChange={async (value) => {
+              const isValid = await form.trigger(`payment_methods.${paymentIndex}.fields`);
+
+              if (value && !isValid) {
+                form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
+                setIsCollapsed(false);
+                return;
+              }
+            }}
+          />
+        )}
+      />
+    </div>
+  );
+
   return (
-    <div
-      {...attributes}
-      css={styles.wrapper({
-        isOverlay,
-      })}
-      ref={setNodeRef}
-    >
-      <button
-        {...listeners}
-        type="button"
-        css={styles.dragButton({
-          isOverlay,
-        })}
-        data-drag-button
-      >
+    <div {...attributes} css={styles.wrapper({ isOverlay })} ref={setNodeRef}>
+      <button {...listeners} type="button" css={styles.dragButton({ isOverlay })} data-drag-button>
         <SVGIcon width={24} height={24} name="dragVertical" />
       </button>
 
@@ -130,51 +209,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
         collapsed={isDragging || isCollapsed}
         dataAttribute="data-card"
         subscription={data.support_subscription}
-        actionTray={
-          <div css={styles.cardActions}>
-            <Show when={data.update_available}>
-              <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
-                {__('Update available', 'tutor')}
-              </Badge>
-              <Button
-                variant="text"
-                size="small"
-                icon={<SVGIcon name="update" width={24} height={24} />}
-                onClick={async () => {
-                  const response = await installPaymentMutation.mutateAsync({
-                    slug: data.name,
-                    action_type: 'upgrade',
-                  });
-
-                  if (response.status_code === 200) {
-                    form.setValue(`payment_methods.${paymentIndex}.update_available`, false, { shouldDirty: true });
-                  }
-                }}
-                loading={installPaymentMutation.isPending}
-              >
-                {__('Update now', 'tutor')}
-              </Button>
-            </Show>
-            <Controller
-              name={`payment_methods.${paymentIndex}.is_active`}
-              control={form.control}
-              render={(controllerProps) => (
-                <FormSwitch
-                  {...controllerProps}
-                  onChange={async (value) => {
-                    const isValid = await form.trigger(`payment_methods.${paymentIndex}.fields`);
-
-                    if (value && !isValid) {
-                      form.setValue(`payment_methods.${paymentIndex}.is_active`, false, { shouldDirty: true });
-                      setIsCollapsed(false);
-                      return;
-                    }
-                  }}
-                />
-              )}
-            />
-          </div>
-        }
+        actionTray={paymentActionTray}
       >
         <div css={styles.paymentWrapper}>
           <div css={styles.fieldWrapper}>
@@ -280,45 +315,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
               variant="danger"
               buttonCss={styles.removeButton}
               loading={removePaymentMutation.isPending}
-              onClick={async () => {
-                const { action } = await showModal({
-                  component: StaticConfirmationModal,
-                  props: {
-                    title: sprintf(__('Remove %s', 'tutor'), data.label),
-                    description: __('Are you sure you want to remove this payment method?', 'tutor'),
-                  },
-                  depthIndex: zIndex.highest,
-                });
-
-                if (action === 'CONFIRM') {
-                  if (data.is_manual) {
-                    form.setValue(
-                      'payment_methods',
-                      form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
-                      {
-                        shouldDirty: true,
-                      },
-                    );
-                  } else {
-                    const response = await removePaymentMutation.mutateAsync({
-                      slug: data.name,
-                    });
-
-                    if (response.status_code === 200) {
-                      form.setValue(
-                        'payment_methods',
-                        form.getValues('payment_methods').filter((_, index) => index !== paymentIndex),
-                      );
-
-                      // Save settings
-                      setTimeout(() => {
-                        document.getElementById('save_tutor_option')?.removeAttribute('disabled');
-                        document.getElementById('save_tutor_option')?.click();
-                      }, 100);
-                    }
-                  }
-                }
-              }}
+              onClick={handleRemovePayment}
             >
               {__('Remove', 'tutor')}
             </Button>
@@ -351,13 +348,14 @@ const styles = {
   cardActions: css`
     display: flex;
     align-items: center;
+    gap: ${spacing[8]};
 
     & > div {
       width: auto;
     }
 
     button {
-      margin-right: ${spacing[24]};
+      margin-right: ${spacing[16]};
       line-height: ${lineHeight[16]};
       color: ${colorTokens.brand.blue};
       font-weight: ${fontWeight.medium};

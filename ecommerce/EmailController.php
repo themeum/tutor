@@ -535,7 +535,7 @@ class EmailController {
 					'label'       => __( 'Order status updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_STUDENTS,
-					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
 					'subject'     => __( 'Your Order Status Has Been Updated to {order_status} ', 'tutor' ),
 					'heading'     => __( 'Your Order Status Has Been Updated to {order_status}', 'tutor' ),
 					'message'     => wp_json_encode(
@@ -568,7 +568,7 @@ class EmailController {
 					'label'       => __( 'New order placed', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_new_' . self::TO_TEACHERS,
-					'tooltip'     => 'New order emails are sent to chosen recipient(s) when a new order is received.',
+					'tooltip'     => __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'tutor' ),
 					'subject'     => __( 'A New Student Has Enrolled in Your Course! 🎉', 'tutor' ),
 					'heading'     => __( 'A New Student Has Enrolled in Your Course!', 'tutor' ),
 					'message'     => wp_json_encode(
@@ -597,7 +597,7 @@ class EmailController {
 					'label'       => __( 'Order status updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_TEACHERS,
-					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
 					'subject'     => __( 'Instructor Notice: Your Student\'s Order Status is Now {order_status}', 'tutor' ),
 					'heading'     => __( 'Instructor Notice: Your Student\'s Order Status is Now {order_status}', 'tutor' ),
 					'message'     => wp_json_encode(
@@ -653,7 +653,7 @@ class EmailController {
 					'label'       => __( 'Order status updated', 'tutor' ),
 					'default'     => 'on',
 					'template'    => 'order_updated_' . self::TO_ADMIN,
-					'tooltip'     => 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.',
+					'tooltip'     => __( 'Order status update emails are sent to chosen recipient(s) whenever a order status updated.', 'tutor' ),
 					'subject'     => __( 'An Order\'s Status Has Been Updated to {order_status}', 'tutor' ),
 					'heading'     => __( 'An Order\'s Status Has Been Updated to {order_status}', 'tutor' ),
 					'message'     => wp_json_encode(
