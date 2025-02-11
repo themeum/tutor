@@ -164,7 +164,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
           {__('Update now', 'tutor')}
         </Button>
       </Show>
-      <Show when={!data.is_installed}>
+      <Show when={!data.is_manual && !data.is_installed}>
         <Badge variant="warning" icon={<SVGIcon name="warning" width={24} height={24} />}>
           {__('Plugin not installed', 'tutor')}
         </Badge>
@@ -175,7 +175,6 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
         render={(controllerProps) => (
           <FormSwitch
             {...controllerProps}
-            disabled={!data.is_installed}
             onChange={async (value) => {
               const isValid = await form.trigger(`payment_methods.${paymentIndex}.fields`);
 
