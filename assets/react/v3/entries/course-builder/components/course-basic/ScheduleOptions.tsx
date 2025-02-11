@@ -5,18 +5,23 @@ import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
 const ScheduleOptions = () => {
@@ -26,6 +31,7 @@ const ScheduleOptions = () => {
   const scheduleTime = useWatch({ name: 'schedule_time' }) ?? format(addHours(new Date(), 1), DateFormats.hoursMinutes);
   const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' }) ?? false;
   const showForm = useWatch({ name: 'showScheduleForm' }) ?? false;
+  const isComingSoonEnabled = useWatch({ name: 'enable_coming_soon' }) ?? false;
 
   const [previousPostDate, setPreviousPostDate] = useState(
     scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
@@ -69,11 +75,11 @@ const ScheduleOptions = () => {
     );
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isScheduleEnabled && showForm) {
       form.setFocus('schedule_date');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showForm, isScheduleEnabled]);
 
   return (
@@ -146,6 +152,45 @@ const ScheduleOptions = () => {
               )}
             />
           </div>
+
+          <Controller
+            name="enable_coming_soon"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormCheckbox
+                {...controllerProps}
+                label={__('Show coming soon in course list & details page', 'tutor')}
+                labelCss={styles.checkboxStartAlign}
+              />
+            )}
+          />
+
+          <Show when={isComingSoonEnabled}>
+            <Controller
+              name="coming_soon_thumbnail"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormImageInput
+                  {...controllerProps}
+                  label={__('Coming Soon Thumbnail', 'tutor')}
+                  buttonText={__('Upload Thumbnail', 'tutor')}
+                  infoText={sprintf(
+                    __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                    tutorConfig.max_upload_size,
+                  )}
+                />
+              )}
+            />
+
+            <Controller
+              name="enable_curriculum_preview"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCheckbox {...controllerProps} label={__('Preview Course Curriculum', 'tutor')} />
+              )}
+            />
+          </Show>
+
           <div css={styles.scheduleButtonsWrapper}>
             <Button
               variant="tertiary"
@@ -195,6 +240,8 @@ const ScheduleOptions = () => {
             <div css={styles.scheduleInfo}>
               {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
             </div>
+
+            <ImageInput value={form.watch('coming_soon_thumbnail')} uploadHandler={noop} clearHandler={noop} disabled />
           </Show>
         </div>
       )}
@@ -213,6 +260,8 @@ const styles = {
     background-color: ${colorTokens.bg.white};
   `,
   formWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
     margin-top: ${spacing[16]};
   `,
   scheduleButtonsWrapper: css`
@@ -254,5 +303,11 @@ const styles = {
     padding: ${spacing[8]};
     border-radius: ${borderRadius[4]};
     text-align: center;
+  `,
+  checkboxStartAlign: css`
+    span:first-of-type {
+      align-self: flex-start;
+      margin-top: ${spacing[4]};
+    }
   `,
 };

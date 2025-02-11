@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+$course_id  = get_the_ID();
 $product_id = tutor_utils()->get_course_product_id();
 $product    = wc_get_product( $product_id );
 
@@ -82,6 +83,7 @@ if ( isset( $args['attributes']['aria-label'] ) ) {
 				),
 				$product,
 				$args
-			)
+			),
+			$course_id
 		);
 

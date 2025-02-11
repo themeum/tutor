@@ -1,4 +1,4 @@
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 
 export const headerHeight = 64;
 export const sidebarWidth = 355;

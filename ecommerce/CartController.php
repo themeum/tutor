@@ -144,7 +144,7 @@ class CartController {
 	 */
 	public function get_cart_items() {
 		$user_id = tutils()->get_user_id();
-		return $this->model->get_cart_items( $user_id );
+		return apply_filters( 'tutor_cart_items', $this->model->get_cart_items( $user_id ), $user_id );
 	}
 
 	/**

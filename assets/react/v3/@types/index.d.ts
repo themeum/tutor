@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export type {};
 
 declare module '*.png';
@@ -114,6 +113,7 @@ declare global {
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
         instructor_can_publish_course: 'on' | 'off';
         youtube_api_key_exist: boolean;
+        membership_only_mode: boolean;
       };
       tutor_currency: {
         symbol: string;

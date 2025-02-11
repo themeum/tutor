@@ -60,7 +60,9 @@ class Course extends Tutor_Base {
 	 */
 	const SELLING_OPTION_ONE_TIME     = 'one_time';
 	const SELLING_OPTION_SUBSCRIPTION = 'subscription';
-	const SELLING_OPTION_BOTH         = 'both';
+	const SELLING_OPTION_BOTH         = 'both'; // onetime and subscription.
+	const SELLING_OPTION_MEMBERSHIP   = 'membership';
+	const SELLING_OPTION_ALL          = 'all';
 
 
 	/**
@@ -360,6 +362,8 @@ class Course extends Tutor_Base {
 			self::SELLING_OPTION_ONE_TIME,
 			self::SELLING_OPTION_SUBSCRIPTION,
 			self::SELLING_OPTION_BOTH,
+			self::SELLING_OPTION_MEMBERSHIP,
+			self::SELLING_OPTION_ALL,
 		);
 	}
 
@@ -839,7 +843,7 @@ class Course extends Tutor_Base {
 
 		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
 		if ( count( $exclude ) ) {
-			$exclude         = array_filter(
+			$exclude              = array_filter(
 				$exclude,
 				function ( $id ) {
 					return is_numeric( $id );

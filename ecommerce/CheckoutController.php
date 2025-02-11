@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -382,12 +383,13 @@ class CheckoutController {
 	 */
 	public function pay_now() {
 		tutor_utils()->check_nonce();
+		global $wpdb;
 
 		$errors     = array();
 		$order_data = null;
 
 		$billing_model   = new BillingModel();
-		$current_user_id = get_current_user_id();
+		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
@@ -471,13 +473,38 @@ class CheckoutController {
 			);
 		}
 
-		$args = array(
-			'payment_method'  => $payment_method,
-			'coupon_amount'   => $checkout_data->coupon_discount,
-			'discount_amount' => $checkout_data->sale_discount,
+		$args = apply_filters(
+			'tutor_order_create_args',
+			array(
+				'payment_method'  => $payment_method,
+				'coupon_amount'   => $checkout_data->coupon_discount,
+				'discount_amount' => $checkout_data->sale_discount,
+			)
 		);
 
 		if ( empty( $errors ) ) {
+			if ( ! is_user_logged_in() ) {
+				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
+				if ( is_wp_error( $guest_user ) ) {
+					// Delete the billing info if user registration failed.
+					QueryHelper::delete( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $current_user_id ) );
+
+					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
+
+					// translators: wp error message.
+					$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
+					set_transient(
+						self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id,
+						array(
+							'message' => $error_msg,
+						)
+					);
+					return;
+				} else {
+					$current_user_id = $guest_user;
+				}
+			}
+
 			$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {

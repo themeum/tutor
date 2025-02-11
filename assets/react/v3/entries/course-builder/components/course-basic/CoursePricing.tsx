@@ -46,6 +46,10 @@ const CoursePricing = () => {
     control: form.control,
     name: 'course_product_id',
   });
+  const selectedPurchaseOption = useWatch({
+    control: form.control,
+    name: 'course_selling_option',
+  });
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
 
@@ -72,6 +76,28 @@ const CoursePricing = () => {
             value: 'free',
           },
         ];
+  const purchaseOptions = [
+    {
+      label: __('One-time purchase only', 'tutor'),
+      value: 'one_time',
+    },
+    {
+      label: __('Subscription only', 'tutor'),
+      value: 'subscription',
+    },
+    {
+      label: __('Subscription & one-time purchase', 'tutor'),
+      value: 'both',
+    },
+    {
+      label: __('Membership only', 'tutor'),
+      value: 'membership',
+    },
+    {
+      label: __('All', 'tutor'),
+      value: 'all',
+    },
+  ];
 
   const wcProductsQuery = useGetWcProductsQuery(tutorConfig.settings?.monetize_by, courseId ? String(courseId) : '');
   const wcProductDetailsQuery = useWcProductDetailsQuery(
@@ -192,6 +218,22 @@ const CoursePricing = () => {
         )}
       />
 
+      <Show
+        when={
+          isAddonEnabled(Addons.SUBSCRIPTION) &&
+          tutorConfig.settings?.monetize_by === 'tutor' &&
+          coursePriceType === 'paid'
+        }
+      >
+        <Controller
+          name="course_selling_option"
+          control={form.control}
+          render={(controllerProps) => (
+            <FormSelectInput {...controllerProps} label={__('Purchase Options', 'tutor')} options={purchaseOptions} />
+          )}
+        />
+      </Show>
+
       <Show when={coursePriceType === 'paid' && tutorConfig.settings?.monetize_by === 'wc'}>
         <Controller
           name="course_product_id"
@@ -251,6 +293,7 @@ const CoursePricing = () => {
       <Show
         when={
           coursePriceType === 'paid' &&
+          !['subscription', 'membership'].includes(selectedPurchaseOption) &&
           (tutorConfig.settings?.monetize_by === 'tutor' ||
             (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && courseProductId !== '-1'))
         }
@@ -322,37 +365,9 @@ const CoursePricing = () => {
           coursePriceType === 'paid'
         }
       >
-        <SubscriptionPreview courseId={courseId} />
-
-        <Controller
-          name="course_selling_option"
-          control={form.control}
-          render={(controllerProps) => (
-            <FormRadioGroup
-              {...controllerProps}
-              wrapperCss={css`
-                > div:not(:last-child) {
-                  margin-bottom: ${spacing[10]};
-                }
-              `}
-              label={__('Purchase Options', 'tutor')}
-              options={[
-                {
-                  label: __('Subscription only', 'tutor'),
-                  value: 'subscription',
-                },
-                {
-                  label: __('One-time purchase only', 'tutor'),
-                  value: 'one_time',
-                },
-                {
-                  label: __('Subscription & one-time purchase', 'tutor'),
-                  value: 'both',
-                },
-              ]}
-            />
-          )}
-        />
+        <Show when={!['one_time', 'membership'].includes(selectedPurchaseOption)}>
+          <SubscriptionPreview courseId={courseId} />
+        </Show>
       </Show>
     </>
   );

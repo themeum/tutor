@@ -132,11 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Update checkout data.
          * 
-         * @since 3.0.0
+         * @since 3.3.0
          * 
          * @param {string} couponCode coupon code.
+         * @param {string} billingCountry Billing country.
+         * @param {string} billingState Billing state.
          */
-        async function updateCheckoutData(couponCode) {
+        async function updateCheckoutData(couponCode, billingCountry = null, billingState = null) {
             const url = new URL(window.location.href);
             const plan = url.searchParams.get('plan');
 
@@ -144,6 +146,8 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
             formData.set('action', 'tutor_get_checkout_html');
             formData.set('coupon_code', couponCode);
+            formData.set('billing_country', billingCountry);
+            formData.set('billing_state', billingState);
 
             if (plan) {
                 formData.set('plan', plan);
@@ -198,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_country', country);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
 
                 toggleSpinner(e.target, 'hide');
             }
@@ -218,7 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_state', state);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
 
                 toggleSpinner(e.target, 'hide');
             }

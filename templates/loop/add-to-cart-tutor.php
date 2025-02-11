@@ -21,7 +21,7 @@ $user_id   = get_current_user_id();
 $is_course_in_user_cart = CartModel::is_course_in_user_cart( $user_id, $course_id );
 $cart_page_url          = CartController::get_page_url();
 
-$conditional_class = is_user_logged_in() ? 'tutor-native-add-to-cart' : 'tutor-open-login-modal';
+$conditional_class = apply_filters( 'tutor_native_add_to_cart_btn_class', is_user_logged_in() ? 'tutor-native-add-to-cart' : 'tutor-open-login-modal' );
 
 ob_start();
 
