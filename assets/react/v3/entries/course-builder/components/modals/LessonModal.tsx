@@ -22,7 +22,7 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import CourseBuilderSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
@@ -346,7 +346,7 @@ const LessonModal = ({
                 </Show>
               </div>
 
-              <CourseBuilderSlot section="Curriculum.Lesson.after_description" form={form} />
+              <CourseBuilderInjectionSlot section="Curriculum.Lesson.after_description" form={form} />
             </div>
           </div>
 
@@ -558,7 +558,7 @@ const LessonModal = ({
               </div>
             </Show>
 
-            <CourseBuilderSlot section="Curriculum.Lesson.bottom_of_sidebar" form={form} />
+            <CourseBuilderInjectionSlot section="Curriculum.Lesson.bottom_of_sidebar" form={form} />
           </div>
         </Show>
       </div>

@@ -11,7 +11,7 @@ import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias'
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
-import CourseBuilderSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import {
   type CourseDetailsResponse,
@@ -150,11 +150,11 @@ const CourseBasic = () => {
             )}
           />
 
-          <CourseBuilderSlot section="Basic.after_description" form={form} />
+          <CourseBuilderInjectionSlot section="Basic.after_description" form={form} />
 
           <CourseSettings />
 
-          <CourseBuilderSlot section="Basic.after_settings" form={form} />
+          <CourseBuilderInjectionSlot section="Basic.after_settings" form={form} />
         </div>
         <Show when={CURRENT_VIEWPORT.isAboveTablet}>
           <Navigator styleModifier={styles.navigator} />
