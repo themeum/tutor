@@ -2,6 +2,7 @@ import { css } from '@emotion/react';
 import { type ReactNode, type RefObject, useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
+import FocusTrap from '@TutorShared/components/FocusTrap';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import { zIndex } from '@TutorShared/config/styles';
 import { AnimatedDiv, AnimationType, useAnimation } from '@TutorShared/hooks/useAnimation';
@@ -223,17 +224,19 @@ export const Portal = ({
     if (openState) {
       return createPortal(
         <AnimatedDiv css={styles.wrapper} style={style}>
-          <div className="tutor-portal-popover" role="presentation">
-            <div
-              css={styles.backdrop}
-              onKeyUp={noop}
-              onClick={(event) => {
-                event.stopPropagation();
-                onClickOutside?.();
-              }}
-            />
-            {children}
-          </div>
+          <FocusTrap>
+            <div className="tutor-portal-popover" role="presentation">
+              <div
+                css={styles.backdrop}
+                onKeyUp={noop}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  onClickOutside?.();
+                }}
+              />
+              {children}
+            </div>
+          </FocusTrap>
         </AnimatedDiv>,
         document.body,
       );

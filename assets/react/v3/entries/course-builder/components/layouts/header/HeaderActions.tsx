@@ -26,8 +26,9 @@ import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined, type WPPostStatus } from '@TutorShared/utils/types';
-import { convertToGMT, determinePostStatus, noop } from '@TutorShared/utils/util';
+import { convertToGMT, determinePostStatus, findSlotFields, noop } from '@TutorShared/utils/util';
 
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
 import reviewSubmitted from '@SharedImages/review-submitted.webp';
 import { useQueryClient } from '@tanstack/react-query';
@@ -35,6 +36,7 @@ import { useQueryClient } from '@tanstack/react-query';
 const courseId = getCourseId();
 
 const HeaderActions = () => {
+  const { fields } = useCourseBuilderSlot();
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
   const { showModal } = useModal();
@@ -115,7 +117,10 @@ const HeaderActions = () => {
       }
     }
 
-    const payload = convertCourseDataToPayload(data);
+    const payload = convertCourseDataToPayload(
+      data,
+      findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
+    );
     setLocalPostStatus(postStatus);
 
     if (courseId) {
