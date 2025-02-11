@@ -196,12 +196,12 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             <h5 css={typography.heading5('medium')}>{__('Oops! Something went wrong', 'tutor')}</h5>
 
             <div css={styles.instructions}>
-              <p>{__('Doing one of the following things could help:', 'tutor')}</p>
+              <p>{__('Try the following steps to resolve the issue:', 'tutor')}</p>
               <ul>
-                <li>{__('Try to refresh the page', 'tutor')}</li>
-                <li>{__('Clear your browser cache', 'tutor')}</li>
+                <li>{__('Refresh the page.', 'tutor')}</li>
+                <li>{__('Clear your browser cache.', 'tutor')}</li>
                 <Show when={tutorConfig.tutor_pro_url}>
-                  <li>{__('Ensure that the Free and Pro plugins are on the same version.', 'tutor')}</li>
+                  <li>{__('Ensure the Free and Pro plugins are on the same version.', 'tutor')}</li>
                 </Show>
               </ul>
             </div>
@@ -218,9 +218,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               </Button>
             </div>
             <div css={styles.support}>
-              <span>{__('Still having trouble? ', 'tutor')}</span>
-              <span>{__('Contact our ', 'tutor')}</span>
+              <span>{__('Still having trouble?', 'tutor')}</span>
+              <span>{__('Contact', 'tutor')}</span>
               <a href={config.TUTOR_SUPPORT_PAGE_URL}>{__('Support')}</a>
+              <span>{__('for assistance.', 'tutor')}</span>
             </div>
           </div>
         </div>
@@ -338,6 +339,8 @@ const styles = {
     margin-top: ${spacing[20]};
   `,
   support: css`
+    ${styleUtils.display.flex('row')};
+    gap: ${spacing[4]};
     ${typography.caption()};
     color: ${colorTokens.text.title};
 
