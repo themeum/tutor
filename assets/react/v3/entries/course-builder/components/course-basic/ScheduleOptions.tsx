@@ -32,6 +32,7 @@ const ScheduleOptions = () => {
   const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' }) ?? false;
   const showForm = useWatch({ name: 'showScheduleForm' }) ?? false;
   const isComingSoonEnabled = useWatch({ name: 'enable_coming_soon' }) ?? false;
+  const comingSoonThumbnail = useWatch({ name: 'coming_soon_thumbnail' });
 
   const [previousPostDate, setPreviousPostDate] = useState(
     scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
@@ -218,7 +219,9 @@ const ScheduleOptions = () => {
       {isScheduleEnabled && !showForm && (
         <div css={styles.scheduleInfoWrapper}>
           <div css={styles.scheduledFor}>
-            <div css={styles.scheduleLabel}>{__('Scheduled for', 'tutor')}</div>
+            <div css={styles.scheduleLabel}>
+              {!isComingSoonEnabled ? __('Scheduled for', 'tutor') : __('Scheduled with coming soon', 'tutor')}
+            </div>
             <div css={styles.scheduleInfoButtons}>
               <button type="button" css={styleUtils.actionButton} onClick={handleDelete}>
                 <SVGIcon name="delete" width={24} height={24} />
@@ -241,7 +244,9 @@ const ScheduleOptions = () => {
               {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
             </div>
 
-            <ImageInput value={form.watch('coming_soon_thumbnail')} uploadHandler={noop} clearHandler={noop} disabled />
+            <Show when={comingSoonThumbnail?.url}>
+              <ImageInput value={comingSoonThumbnail} uploadHandler={noop} clearHandler={noop} disabled />
+            </Show>
           </Show>
         </div>
       )}

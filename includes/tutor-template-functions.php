@@ -541,9 +541,9 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
 	function get_tutor_course_thumbnail( $size = 'post-thumbnail', $url = false ) {
 		$post_id           = get_the_ID();
 		$size              = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
-		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
-		$placeHolderUrl    = tutor()->url . 'assets/images/placeholder.svg';
-		$thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url( $post_thumbnail_id, $size ) : $placeHolderUrl;
+		$post_thumbnail_id = (int) apply_filters( 'tutor_course_thumbnail_id', get_post_thumbnail_id( $post_id ), $post_id );
+		$placeholder_url   = tutor()->url . 'assets/images/placeholder.svg';
+		$thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url( $post_thumbnail_id, $size ) : apply_filters( 'tutor_course_thumbnail_placeholder', $placeholder_url, $post_id );
 
 		if ( $url ) {
 			return $thumb_url;
@@ -569,7 +569,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 	 */
 	function get_tutor_course_thumbnail_src( $size = 'post-thumbnail', $id = 0 ) {
 		$post_id           = $id ? $id : get_the_ID();
-		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
+		$post_thumbnail_id = (int) apply_filters( 'tutor_course_thumbnail_id', get_post_thumbnail_id( $post_id ), $post_id );
 
 		if ( $post_thumbnail_id ) {
 			$size = apply_filters( 'tutor_course_thumbnail_size', $size, $post_id );
@@ -1047,8 +1047,9 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 		$course_post_type = tutor()->course_post_type;
 		$queryCourse      = new WP_Query(
 			array(
-				'p'         => $course_id,
-				'post_type' => $course_post_type,
+				'p'           => $course_id,
+				'post_type'   => $course_post_type,
+				'post_status' => array( 'publish', 'future' ),
 			)
 		);
 
