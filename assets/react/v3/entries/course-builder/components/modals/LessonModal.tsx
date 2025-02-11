@@ -22,10 +22,13 @@ import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 import { type ModalProps, useModal } from '@TutorShared/components/modals/Modal';
 import ModalWrapper from '@TutorShared/components/modals/ModalWrapper';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  type CourseTopic,
   convertLessonDataToPayload,
+  type CourseTopic,
+  Lesson,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -40,7 +43,7 @@ import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalErro
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ID } from '@TutorShared/utils/types';
-import { isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
+import { findSlotFields, isAddonEnabled, normalizeLineEndings } from '@TutorShared/utils/util';
 import { maxLimitRule } from '@TutorShared/utils/validation';
 import H5PContentListModal from './H5PContentListModal';
 
@@ -98,6 +101,8 @@ const LessonModal = ({
   const { data: lessonDetails, isLoading } = getLessonDetailsQuery;
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
+  const { fields } = useCourseBuilderSlot();
+
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
       title: '',
@@ -146,6 +151,9 @@ const LessonModal = ({
           after_xdays_of_enroll: lessonDetails?.content_drip_settings?.after_xdays_of_enroll || '',
           prerequisites: lessonDetails?.content_drip_settings?.prerequisites || [],
         },
+        ...Object.fromEntries(
+          findSlotFields({ fields: fields.Curriculum.Lesson }).map((key) => [key, lessonDetails[key as keyof Lesson]]),
+        ),
       });
     }
 
@@ -166,7 +174,13 @@ const LessonModal = ({
   }, [lessonDetails, isLoading]);
 
   const onSubmit = async (data: LessonForm) => {
-    const payload = convertLessonDataToPayload(data, lessonId, topicId, contentDripType);
+    const payload = convertLessonDataToPayload(
+      data,
+      lessonId,
+      topicId,
+      contentDripType,
+      findSlotFields({ fields: fields.Curriculum.Lesson }),
+    );
     const response = await saveLessonMutation.mutateAsync(payload);
 
     if (response.data) {
@@ -331,6 +345,8 @@ const LessonModal = ({
                   </button>
                 </Show>
               </div>
+
+              <CourseBuilderInjectionSlot section="Curriculum.Lesson.after_description" form={form} />
             </div>
           </div>
 
@@ -541,6 +557,8 @@ const LessonModal = ({
                 </Show>
               </div>
             </Show>
+
+            <CourseBuilderInjectionSlot section="Curriculum.Lesson.bottom_of_sidebar" form={form} />
           </div>
         </Show>
       </div>

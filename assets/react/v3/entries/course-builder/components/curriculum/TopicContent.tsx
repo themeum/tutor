@@ -159,19 +159,19 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
   const exportQuizMutation = useExportQuizMutation();
 
   const handleShowModalOrPopover = () => {
-    const isContentType = type as keyof typeof modalComponent;
-    if (modalComponent[isContentType]) {
+    const contentType = type as keyof typeof modalComponent;
+    if (modalComponent[contentType]) {
       showModal({
-        component: modalComponent[isContentType],
+        component: modalComponent[contentType],
         props: {
           contentDripType: form.watch('contentDripType'),
           topicId: topicId,
           lessonId: contentId,
           assignmentId: contentId,
           quizId: contentId,
-          title: modalTitle[isContentType],
+          title: modalTitle[contentType],
           subtitle: sprintf(__('Topic: %s', 'tutor'), topic.title),
-          icon: <SVGIcon name={modalIcon[isContentType]} height={24} width={24} />,
+          icon: <SVGIcon name={modalIcon[contentType]} height={24} width={24} />,
           ...(type === 'tutor_h5p_quiz' && {
             contentType: 'tutor_h5p_quiz',
           }),

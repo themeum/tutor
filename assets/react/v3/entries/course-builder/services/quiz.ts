@@ -207,7 +207,7 @@ export interface H5PContentResponse {
   output: H5PContent[];
 }
 
-export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizForm => {
+export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFields: string[]): QuizForm => {
   const calculateQuizDataStatus = (answer: QuizQuestionOption) => {
     if (answer.image_url) {
       return answer.answer_view_format === 'text_image' ? QuizDataStatus.NO_CHANGE : QuizDataStatus.UPDATE;
@@ -332,6 +332,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse): QuizFo
     questions: (quiz.questions || []).map((question) => convertedQuestion(question)),
     deleted_question_ids: [],
     deleted_answer_ids: [],
+    ...Object.fromEntries(slotFields.map((key) => [key, quiz[key as keyof QuizDetailsResponse]])),
   };
 };
 
@@ -340,6 +341,8 @@ export const convertQuizFormDataToPayload = (
   topicId: ID,
   contentDripType: ContentDripType,
   courseId: ID,
+  questionsSlotFields: string[],
+  settingsSlotFields: string[],
 ): QuizPayload => {
   return {
     course_id: courseId,
@@ -440,6 +443,7 @@ export const convertQuizFormDataToPayload = (
                 answer_order: answer.answer_order,
               }) as QuizQuestionOption,
           ),
+          ...Object.fromEntries(questionsSlotFields.map((key) => [key, question[key as keyof QuizQuestion]])),
         };
       }),
     },
@@ -458,6 +462,7 @@ export const convertQuizFormDataToPayload = (
       contentDripType === 'after_finishing_prerequisites' && {
         'content_drip_settings[prerequisites]': formData.quiz_option.content_drip_settings.prerequisites,
       }),
+    ...Object.fromEntries(settingsSlotFields.map((key) => [key, formData[key as keyof QuizForm]])),
   };
 };
 
