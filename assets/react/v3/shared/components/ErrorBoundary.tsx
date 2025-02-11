@@ -260,7 +260,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      return process.env.NODE_ENV !== 'production' ? this.renderProductionError() : this.renderDevelopmentError();
+      return process.env.NODE_ENV === 'production' ? this.renderProductionError() : this.renderDevelopmentError();
     }
 
     return this.props.children;
