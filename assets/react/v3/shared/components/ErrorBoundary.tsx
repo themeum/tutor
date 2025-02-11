@@ -1,4 +1,4 @@
-import config from '@TutorShared/config/config';
+import config, { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { AnyObject } from '@TutorShared/utils/form';
@@ -14,6 +14,7 @@ import productionError2x from '@SharedImages/production-error-2x.webp';
 import productionError from '@SharedImages/production-error.webp';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import Show from '@TutorShared/controls/Show';
 
 const errorDisplayWindowWidth = 960;
 
@@ -199,7 +200,9 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
               <ul>
                 <li>{__('Try to refresh the page', 'tutor')}</li>
                 <li>{__('Clear your browser cache', 'tutor')}</li>
-                <li>{__('Check if you have the correct permissions to access this content', 'tutor')}</li>
+                <Show when={tutorConfig.tutor_pro_url}>
+                  <li>{__('Ensure that the Free and Pro plugins are on the same version.', 'tutor')}</li>
+                </Show>
               </ul>
             </div>
           </div>
