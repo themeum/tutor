@@ -1,5 +1,4 @@
-import Alert from '@TutorShared/atoms/Alert';
-import Button from '@TutorShared/atoms/Button';
+import config from '@TutorShared/config/config';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import type { AnyObject } from '@TutorShared/utils/form';
@@ -10,6 +9,11 @@ import ErrorStackParser from 'error-stack-parser';
 import type React from 'react';
 import { Component, type ErrorInfo } from 'react';
 import { SourceMapConsumer } from 'source-map';
+
+import productionError2x from '@SharedImages/production-error-2x.webp';
+import productionError from '@SharedImages/production-error.webp';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
 const errorDisplayWindowWidth = 960;
 
@@ -185,24 +189,37 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   renderProductionError() {
     return (
       <div css={styles.container({ inProduction: true })}>
-        <div css={styleUtils.flexCenter('column')}>
-          <Alert type="danger" icon="warning">
-            {__('Something went wrong! Please try again later.', 'tutor')}
-          </Alert>
+        <div css={styles.productionErrorWrapper}>
+          <div css={styles.productionErrorHeader}>
+            <img src={productionError} srcSet={`${productionError2x} 2x`} alt={__('Error', 'tutor')} />
+            <h5 css={typography.heading5('medium')}>{__('Oops! Something went wrong', 'tutor')}</h5>
 
-          <div css={styles.instructions}>
-            <h6 css={typography.heading6()}>{__('Try the following:', 'tutor')}</h6>
-            <ul>
-              <li>{__('Reload the page', 'tutor')}</li>
-              <li>{__('Clear your browser cache', 'tutor')}</li>
-              <li>{__('Try again later', 'tutor')}</li>
-              <li>{__('Contact support if the issue persists.', 'tutor')}</li>
-            </ul>
+            <div css={styles.instructions}>
+              <p>{__('Doing one of the following things could help:', 'tutor')}</p>
+              <ul>
+                <li>{__('Try to refresh the page', 'tutor')}</li>
+                <li>{__('Clear your browser cache', 'tutor')}</li>
+                <li>{__('Check if you have the correct permissions to access this content', 'tutor')}</li>
+              </ul>
+            </div>
           </div>
 
-          <Button variant="primary" size="small" onClick={() => window.location.reload()}>
-            {__('Reload', 'tutor')}
-          </Button>
+          <div css={styles.productionFooter}>
+            <div>
+              <Button
+                variant="secondary"
+                icon={<SVGIcon name="refresh" height={24} width={24} />}
+                onClick={() => window.location.reload()}
+              >
+                {__('Reload', 'tutor')}
+              </Button>
+            </div>
+            <div css={styles.support}>
+              <span>{__('Still having trouble? ', 'tutor')}</span>
+              <span>{__('Contact our ', 'tutor')}</span>
+              <a href={config.TUTOR_SUPPORT_PAGE_URL}>{__('Support')}</a>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -243,7 +260,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
 
   render() {
     if (this.state.hasError) {
-      return process.env.NODE_ENV === 'production' ? this.renderProductionError() : this.renderDevelopmentError();
+      return process.env.NODE_ENV !== 'production' ? this.renderProductionError() : this.renderDevelopmentError();
     }
 
     return this.props.children;
@@ -266,15 +283,64 @@ const styles = {
     justify-content: center;
     align-items: center;
   `,
-  instructions: css`
-    margin-block: ${spacing[24]};
-    text-align: left;
+
+  productionErrorWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[20]};
+    max-width: 500px;
     width: 100%;
+  `,
+  productionErrorHeader: css`
+    ${styleUtils.display.flex('column')};
+    align-items: center;
+    padding: ${spacing[32]};
+    background: ${colorTokens.background.white};
+    border-radius: ${borderRadius[12]};
+    box-shadow: 0px -4px 0px 0px #ff0000;
+    gap: ${spacing[16]};
+
+    img {
+      height: 104px;
+      width: 101px;
+      object-position: center;
+      object-fit: contain;
+    }
+  `,
+  instructions: css`
+    width: 100%;
+    max-width: 333px;
+    p {
+      width: 100%;
+      ${typography.caption()};
+      margin-bottom: ${spacing[4]};
+    }
 
     ul {
-      margin-top: ${spacing[8]};
-      padding-left: ${spacing[24]};
-      ${typography.body('regular')};
+      padding-left: ${spacing[16]};
+      li {
+        ${typography.caption()};
+        color: ${colorTokens.text.title};
+        list-style: unset;
+
+        &::marker {
+          color: ${colorTokens.icon.default};
+        }
+      }
+    }
+  `,
+  productionFooter: css`
+    ${styleUtils.display.flex('column')};
+    align-items: center;
+    gap: ${spacing[12]};
+    margin-top: ${spacing[20]};
+  `,
+  support: css`
+    ${typography.caption()};
+    color: ${colorTokens.text.title};
+
+    a {
+      color: ${colorTokens.text.brand};
+      text-decoration: none;
     }
   `,
   sourceLinesWrapper: css`
