@@ -1,22 +1,7 @@
 import collection from '@TutorShared/config/icon-list';
 import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import { __ } from '@wordpress/i18n';
-import {
-  addMinutes,
-  differenceInDays,
-  endOfMonth,
-  endOfYear,
-  format,
-  isSameDay,
-  isToday,
-  isYesterday,
-  startOfMonth,
-  startOfYear,
-  subMonths,
-  subYears,
-} from 'date-fns';
-import * as dateFnsLocales from 'date-fns/locale';
-import type { DateRange } from 'react-day-picker';
+import { addMinutes, format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -172,50 +157,6 @@ export const mapInBetween = (
   expectedMax: number,
 ) => {
   return ((value - originalMin) * (expectedMax - expectedMin)) / (originalMax - originalMin) + expectedMin;
-};
-
-export const getActiveDateRange = (range: DateRange | undefined) => {
-  if (!range || !range.from) {
-    return;
-  }
-
-  if (isToday(range.from) && !range.to) {
-    return 'today';
-  }
-
-  if (isYesterday(range.from) && !range.to) {
-    return 'yesterday';
-  }
-
-  if (range.to) {
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 6) {
-      return 'last_seven_days';
-    }
-
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 29) {
-      return 'last_thirty_days';
-    }
-
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 89) {
-      return 'last_ninety_days';
-    }
-
-    if (
-      isSameDay(startOfMonth(subMonths(new Date(), 1)), range.from) &&
-      isSameDay(endOfMonth(subMonths(new Date(), 1)), range.to)
-    ) {
-      return 'last_month';
-    }
-
-    if (
-      isSameDay(startOfYear(subYears(new Date(), 1)), range.from) &&
-      isSameDay(endOfYear(subYears(new Date(), 1)), range.to)
-    ) {
-      return 'last_year';
-    }
-
-    return;
-  }
 };
 
 export const extractIdOnly = <T extends { id: number }>(data: T[]) => {
@@ -431,35 +372,4 @@ export const convertToSlug = (value: string): string => {
     .replace(/\s+/g, '-') // Replace spaces with dashes
     .replace(/-+/g, '-') // Replace multiple dashes with a single one
     .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
-};
-
-type DateFnsLocaleKey = keyof typeof dateFnsLocales;
-
-export const convertWordPressLocaleToDateFns = (wpLocale: string): (typeof dateFnsLocales)[DateFnsLocaleKey] => {
-  // Convert WordPress locale to camelCase (e.g., 'en_US' → 'enUS')
-  const camelCaseKey = wpLocale
-    .split('_')
-    .map((part, index) => {
-      if (index === 0) {
-        return part.toLowerCase();
-      }
-      return part.charAt(0).toUpperCase() + part.slice(1).toLowerCase();
-    })
-    .join('') as DateFnsLocaleKey;
-
-  // Check if the camelCase key exists in date-fns locales
-  if (Object.prototype.hasOwnProperty.call(dateFnsLocales, camelCaseKey)) {
-    return dateFnsLocales[camelCaseKey];
-  }
-
-  // Extract base language (e.g., 'en' from 'en_US')
-  const baseLanguage = wpLocale.split('_')[0].toLowerCase() as DateFnsLocaleKey;
-
-  // Check if the base language exists as a locale
-  if (Object.prototype.hasOwnProperty.call(dateFnsLocales, baseLanguage)) {
-    return dateFnsLocales[baseLanguage];
-  }
-
-  // Fallback to 'enUS' if no matches are found
-  return dateFnsLocales.enUS;
 };
