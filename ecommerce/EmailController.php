@@ -258,10 +258,10 @@ class EmailController {
 	 *
 	 * @param string $to_key to key like email_to_students, email_to_teachers, email_to_admin.
 	 * @param string $trigger_key trigger name.
-	 * 
+	 *
 	 * @since 3.2.3
 	 *
-	 * @param int $recipient the receiver id.
+	 * @param int    $recipient the receiver id.
 	 *
 	 * @return array
 	 */
