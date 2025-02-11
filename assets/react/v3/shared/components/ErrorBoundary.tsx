@@ -303,6 +303,10 @@ const styles = {
     box-shadow: 0px -4px 0px 0px #ff0000;
     gap: ${spacing[16]};
 
+    h5 {
+      text-align: center;
+    }
+
     img {
       height: 104px;
       width: 101px;
@@ -339,7 +343,9 @@ const styles = {
     gap: ${spacing[12]};
   `,
   support: css`
-    ${styleUtils.display.flex('row')};
+    ${styleUtils.flexCenter('row')};
+    text-align: center;
+    flex-wrap: wrap;
     gap: ${spacing[4]};
     ${typography.caption()};
     color: ${colorTokens.text.title};
