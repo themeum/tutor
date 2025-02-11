@@ -220,7 +220,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
             <div css={styles.support}>
               <span>{__('Still having trouble?', 'tutor')}</span>
               <span>{__('Contact', 'tutor')}</span>
-              <a href={config.TUTOR_SUPPORT_PAGE_URL}>{__('Support')}</a>
+              <a href={config.TUTOR_SUPPORT_PAGE_URL}>{__('Support', 'tutor')}</a>
               <span>{__('for assistance.', 'tutor')}</span>
             </div>
           </div>
@@ -325,6 +325,7 @@ const styles = {
         ${typography.caption()};
         color: ${colorTokens.text.title};
         list-style: unset;
+        margin-bottom: ${spacing[2]};
 
         &::marker {
           color: ${colorTokens.icon.default};
@@ -336,7 +337,6 @@ const styles = {
     ${styleUtils.display.flex('column')};
     align-items: center;
     gap: ${spacing[12]};
-    margin-top: ${spacing[20]};
   `,
   support: css`
     ${styleUtils.display.flex('row')};
