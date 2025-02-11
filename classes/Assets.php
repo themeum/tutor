@@ -225,8 +225,8 @@ class Assets {
 			}
 
 			if ( CouponController::PAGE_SLUG === $page && in_array( $action, $allowed_actions, true ) ) {
-				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
-				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-date', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+				wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-coupon.min.js', array( 'tutor-shared' ), TUTOR_VERSION, true );
 			}
 
 			// @since 3.0.0 add tax react app on the settings page.
@@ -314,7 +314,7 @@ class Assets {
 		 * @since 1.9.0
 		 */
 		wp_enqueue_style( 'tutor-frontend', tutor()->url . 'assets/css/tutor-front.min.css', array(), TUTOR_VERSION );
-		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.min.js', array( 'jquery', 'wp-i18n' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-frontend', tutor()->url . 'assets/js/tutor-front.min.js', array( 'jquery', 'wp-i18n', 'wp-date' ), TUTOR_VERSION, true );
 
 		/**
 		 * Load frontend dashboard style
