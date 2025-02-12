@@ -314,9 +314,9 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.2.3 - February 12, 2025
 
-Update: WPML translation improved
-Update: User experience improved on the settings page to find out any setting
-Fix: Paypal payment method not showing on the checkout page in some cases
+Update: Improved WPML translation support.
+Update: Enhanced search functionality on the settings page.
+Fix: Resolved the issue where PayPal was not appearing during checkout.
 
 = 3.2.2 - February 05, 2025
 
