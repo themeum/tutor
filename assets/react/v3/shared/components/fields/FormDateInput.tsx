@@ -269,6 +269,10 @@ const styles = {
           outline: 2px solid var(--rdp-accent-color);
           outline-offset: 2px;
         }
+
+        &:not(.rdp-outside) {
+          color: var(--rdp-selected-color);
+        }
       }
     }
 
