@@ -259,10 +259,14 @@ class EmailController {
 	 * @param string $to_key to key like email_to_students, email_to_teachers, email_to_admin.
 	 * @param string $trigger_key trigger name.
 	 *
+	 * @since 3.2.3
+	 *
+	 * @param int    $recipient the receiver id.
+	 *
 	 * @return array
 	 */
-	public function get_option_data( $to_key, $trigger_key ) {
-		$email_data   = get_option( 'email_template_data' );
+	public function get_option_data( $to_key, $trigger_key, $recipient ) {
+		$email_data   = apply_filters( 'tutor_pro_user_email_template_option', get_option( 'email_template_data' ), $recipient );
 		$default_data = $this->get_email_data();
 
 		return isset( $email_data[ $to_key ][ $trigger_key ] ) ? $email_data[ $to_key ][ $trigger_key ] : $default_data[ $to_key ][ $trigger_key ];
@@ -388,10 +392,9 @@ class EmailController {
 	 * @return void
 	 */
 	private function send_email_to( $recipient_type, $email_type, $recipients, $order_id ) {
-		$site_url    = get_bloginfo( 'url' );
-		$site_name   = get_bloginfo( 'name' );
-		$option_data = $this->get_option_data( $recipient_type, $email_type );
 
+		$site_url   = get_bloginfo( 'url' );
+		$site_name  = get_bloginfo( 'name' );
 		$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 		$recipients = array_unique( $recipients );
 		foreach ( $recipients as $recipient ) {
@@ -416,9 +419,10 @@ class EmailController {
 				}
 			}
 
-			$user_data = get_userdata( $recipient );
-			$header    = 'Content-Type: ' . $this->get_content_type() . "\r\n";
-			$header    = apply_filters( 'new_order_email_header', $header );
+			$user_data   = get_userdata( $recipient );
+			$option_data = $this->get_option_data( $recipient_type, $email_type, $recipient );
+			$header      = 'Content-Type: ' . $this->get_content_type() . "\r\n";
+			$header      = apply_filters( 'new_order_email_header', $header );
 
 			$replacable['{testing_email_notice}'] = '';
 			$replacable['{user_name}']            = tutor_utils()->get_user_name( $user_data );
