@@ -49,26 +49,34 @@ window.jQuery(document).ready($ => {
      * 
      * @since v.3.3.0
      */
-    const utcDateTimes = document.querySelectorAll('.tutor-utc-date-time');
-    if (utcDateTimes.length > 0 && wp.date) {
+    function convertUTCTime() {
+      const utcDateTimes = document.querySelectorAll('.tutor-utc-date-time');
+      if (utcDateTimes.length > 0 && wp.date) {
         const settings = wp.date.getSettings();
         const dateFormat = settings.formats.date;
         const timeFormat = settings.formats.time;
         const format = `${dateFormat}, ${timeFormat}`;
 
         utcDateTimes.forEach((utcDateTime) => {
-            try {
-                const textContent = utcDateTime.textContent.trim();
-                const localDateTime = new Date(`${textContent} UTC`);
+          try {
+            const textContent = utcDateTime.textContent.trim();
+            const localDateTime = new Date(`${textContent} UTC`);
 
-                if (!isNaN(localDateTime)) {
-                    utcDateTime.textContent = wp.date.dateI18n(format, localDateTime);
-                } else {
-                    console.warn(`Invalid UTC date: "${textContent}"`);
-                }
-            } catch (error) {
-                console.log(error);
+            if (!isNaN(localDateTime)) {
+              utcDateTime.textContent = wp.date.dateI18n(format, localDateTime);
+            } else {
+              console.warn(`Invalid UTC date: "${textContent}"`);
             }
+          } catch (error) {
+            console.log(error);
+          }
         });
+      }
     }
+
+    convertUTCTime();
+
+    document.addEventListener( 'tutor_course_list_refreshed', () => {
+        convertUTCTime();
+    })
 });
