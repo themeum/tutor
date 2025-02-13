@@ -281,9 +281,84 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_course_thumbnail_id', array( $this, 'set_coming_soon_thumbnail' ), 10, 2 );
 		add_filter( 'tutor_course_thumbnail_placeholder', array( $this, 'set_coming_soon_placeholder' ), 11, 2 );
 		add_action( 'pre_get_posts', array( $this, 'get_coming_soon_details' ) );
-		add_filter( 'tutor_add_to_cart_btn', array( $this, 'set_entry_box_coming_soon_button' ), 10, 2 );
 		add_filter( 'tutor_get_course_topics', array( $this, 'show_course_curriculum' ) );
 		add_filter( 'tutor_course_filter_args', array( $this, 'show_filtered_coming_soon_courses' ) );
+		add_action( 'tutor_course/single/entry/after', array( $this, 'set_entry_box_coming_soon_button' ), 10, 1 );
+		add_action( 'tutor_course_loop_footer_bottom', array( $this, 'show_course_coming_soon' ) );
+		add_filter( 'tutor_add_to_cart_btn', array( $this, 'remove_coming_soon_add_to_cart' ), 10, 2 );
+		add_filter( 'tutor_course_loop_add_to_cart_button', array( $this, 'remove_coming_soon_add_to_cart' ), 10, 2 );
+	}
+
+	/**
+	 * Remove add to cart button when course coming soon.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param string $button the button content.
+	 * @param int    $course_id the course id.
+	 *
+	 * @return string
+	 */
+	public function remove_coming_soon_add_to_cart( $button, $course_id ) {
+		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
+
+		if ( $course_coming_soon ) {
+			$button = '';
+		}
+
+		return $button;
+	}
+
+	/**
+	 * Show coming soon on course list.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param int $course_id the course id.
+	 *
+	 * @return void
+	 */
+	public function show_course_coming_soon( $course_id ) {
+		$course             = get_post( $course_id );
+		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
+
+		if ( $course_coming_soon ) {
+			echo '<div class="tutor-coming-soon-wrapper">
+				<span class="tutor-icon-book-open-line tutor-color-black"></span>
+				<div class="tutor-fw-medium">
+				'
+				. __( 'Course available on ', 'tutor' ) .
+				'<span class="tutor-utc-date-time tutor-color-success">' . esc_html( $course->post_date_gmt ) . '</span>' .
+				'
+				</div>
+			</div>';
+		}
+	}
+
+	/**
+	 * Set coming soon for single course entry box.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param int $course_id the course id.
+	 *
+	 * @return void
+	 */
+	public function set_entry_box_coming_soon_button( $course_id ) {
+		$course             = get_post( $course_id );
+		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
+
+		if ( $course_coming_soon ) {
+			echo '<div class="tutor-coming-soon-wrapper entry-box-wrapper">
+				<span class="tutor-icon-book-open-line tutor-color-black"></span>
+				<div class="tutor-fw-medium">
+				'
+				. __( 'Course available on ', 'tutor' ) .
+				'<span class="tutor-utc-date-time tutor-color-primary">' . esc_html( $course->post_date_gmt ) . '</span>' .
+				'
+				</div>
+			</div>';
+		}
 	}
 
 	/**
@@ -353,36 +428,6 @@ class Course extends Tutor_Base {
 		}
 
 		return $topics;
-	}
-
-	/**
-	 * Restrict enrollment in course entry box for single course.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param string $button the enrollment button html.
-	 * @param int    $course_id the course id.
-	 *
-	 * @return string
-	 */
-	public function set_entry_box_coming_soon_button( $button, $course_id ) {
-		$course             = get_post( $course_id );
-		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
-		$available_date     = tutor_get_formated_date( get_option( 'date_format' ), $course->post_date ) . ', ' . tutor_get_formated_date( get_option( 'time_format' ), $course->post_date );
-
-		if ( $course_coming_soon ) {
-			$button = '<div class="tutor-d-flex tutor-flex-row tutor-align-center tutor-justify-center tutor-coming-soon-btn tutor-gap-1">
-				<span class="tutor-icon-book-open-o tutor-fs-4 tutor-color-black"></span>
-				<div class="tutor-fw-medium">
-				'
-				. __( 'Course available on ', 'tutor' ) .
-				'<span class="tutor-utc-date-time tutor-color-primary">' . esc_html( $available_date ) . '</span>' .
-				'
-				</div>
-			</div>';
-		}
-
-		return $button;
 	}
 
 	/**
@@ -1799,32 +1844,19 @@ class Course extends Tutor_Base {
 	 * Restrict new student entry
 	 *
 	 * @since 1.0.0
+	 * @param mixed $content content.
 	 *
 	 * @since 3.3.0
 	 *
-	 * @param mixed $content content.
 	 * @param int   $course_id the course id.
 	 *
 	 * @return mixed
 	 */
 	public function restrict_new_student_entry( $content, $course_id ) {
-
-		$course             = get_post( $course_id );
-		$is_purchasable     = tutor_utils()->is_course_purchasable( $course_id );
 		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
-		$available_date     = tutor_get_formated_date( get_option( 'date_format' ), $course->post_date ) . ', ' . tutor_get_formated_date( get_option( 'time_format' ), $course->post_date );
-		$btn_class          = $is_purchasable ? 'tutor-add-to-cart-coming-soon-btn' : 'tutor-coming-soon-btn';
-		$icon_size          = $is_purchasable ? 'tutor-fs-5' : 'tutor-fs-4';
+
 		if ( $course_coming_soon ) {
-			return '<div class="tutor-d-flex tutor-flex-row tutor-align-center tutor-justify-center ' . $btn_class . ' tutor-gap-1">
-				<span class="tutor-icon-book-open-o ' . $icon_size . ' tutor-color-black"></span>
-				<div class="tutor-fw-medium">
-				'
-				. __( 'Course available on ', 'tutor' ) .
-				'<span class="tutor-utc-date-time tutor-color-success">' . esc_html( $available_date ) . '</span>' .
-				'
-				</div>
-			</div>';
+			$content = '';
 		}
 
 		if ( ! tutor_utils()->is_course_fully_booked() ) {
