@@ -327,7 +327,7 @@ class Course extends Tutor_Base {
 				<span class="tutor-icon-book-open-line tutor-color-black"></span>
 				<div class="tutor-fw-medium">
 				'
-				. esc_html_e( 'Course available on ', 'tutor' ) .
+				. esc_html__( 'Course available on ', 'tutor' ) .
 				'<span class="tutor-utc-date-time tutor-color-success">' . esc_html( $course->post_date_gmt ) . '</span>' .
 				'
 				</div>
@@ -353,7 +353,7 @@ class Course extends Tutor_Base {
 				<span class="tutor-icon-book-open-line tutor-color-black"></span>
 				<div class="tutor-fw-medium">
 				'
-				. esc_html_e( 'Course available on ', 'tutor' ) .
+				. esc_html__( 'Course available on ', 'tutor' ) .
 				'<span class="tutor-utc-date-time tutor-color-primary">' . esc_html( $course->post_date_gmt ) . '</span>' .
 				'
 				</div>
