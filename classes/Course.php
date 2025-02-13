@@ -2064,7 +2064,7 @@ class Course extends Tutor_Base {
 		} elseif ( ! tutor_is_rest() ) {
 			delete_post_meta( $post_ID, '_tutor_course_coming_soon_thumbnail_id' );
 		}
-		
+
 		if ( ! empty( $_POST['enable_curriculum_preview'] ) ) {
 			$enable_curriculum_preview = Input::post( 'enable_curriculum_preview', 0 );
 			update_post_meta( $post_ID, '_tutor_course_enable_curriculum_preview', $enable_curriculum_preview );
