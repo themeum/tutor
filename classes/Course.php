@@ -2049,6 +2049,8 @@ class Course extends Tutor_Base {
 			}
 		}
 
+		//phpcs:disable WordPress.Security.NonceVerification.Missing
+		// Course coming soon.
 		if ( ! empty( $_POST['enable_coming_soon'] ) ) {
 			update_post_meta( $post_ID, '_tutor_course_enable_coming_soon', $_POST['enable_coming_soon'] );
 		} elseif ( ! tutor_is_rest() ) {
@@ -2066,6 +2068,7 @@ class Course extends Tutor_Base {
 		} elseif ( ! tutor_is_rest() ) {
 			delete_post_meta( $post_ID, '_tutor_course_enable_curriculum_preview' );
 		}
+		//phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		/**
 		 * Adding author to instructor automatically
