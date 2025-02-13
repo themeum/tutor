@@ -2049,26 +2049,30 @@ class Course extends Tutor_Base {
 			}
 		}
 
-		//phpcs:disable WordPress.Security.NonceVerification.Missing
 		// Course coming soon.
 		if ( ! empty( $_POST['enable_coming_soon'] ) ) {
+			//phpcs:disable WordPress.Security.NonceVerification.Missing
 			update_post_meta( $post_ID, '_tutor_course_enable_coming_soon', $_POST['enable_coming_soon'] );
+		    //phpcs:enable WordPress.Security.NonceVerification.Missing
 		} elseif ( ! tutor_is_rest() ) {
 			delete_post_meta( $post_ID, '_tutor_course_enable_coming_soon' );
 		}
 
 		if ( ! empty( $_POST['coming_soon_thumbnail_id'] ) ) {
+			//phpcs:disable WordPress.Security.NonceVerification.Missing
 			update_post_meta( $post_ID, '_tutor_course_coming_soon_thumbnail_id', $_POST['coming_soon_thumbnail_id'] );
+		    //phpcs:enable WordPress.Security.NonceVerification.Missing
 		} elseif ( ! tutor_is_rest() ) {
 			delete_post_meta( $post_ID, '_tutor_course_coming_soon_thumbnail_id' );
 		}
 
 		if ( ! empty( $_POST['enable_curriculum_preview'] ) ) {
+			//phpcs:disable WordPress.Security.NonceVerification.Missing
 			update_post_meta( $post_ID, '_tutor_course_enable_curriculum_preview', $_POST['enable_curriculum_preview'] );
+		    //phpcs:enable WordPress.Security.NonceVerification.Missing
 		} elseif ( ! tutor_is_rest() ) {
 			delete_post_meta( $post_ID, '_tutor_course_enable_curriculum_preview' );
 		}
-		//phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		/**
 		 * Adding author to instructor automatically
