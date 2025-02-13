@@ -321,18 +321,24 @@ class Course extends Tutor_Base {
 	public function show_course_coming_soon( $course_id ) {
 		$course             = get_post( $course_id );
 		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
+		$content            = '';
 
 		if ( $course_coming_soon ) {
-			echo '<div class="tutor-coming-soon-wrapper">
+			ob_start();
+			?>
+			<div class="tutor-coming-soon-wrapper">
 				<span class="tutor-icon-book-open-line tutor-color-black"></span>
 				<div class="tutor-fw-medium">
-				'
-				. esc_html__( 'Course available on ', 'tutor' ) .
-				'<span class="tutor-utc-date-time tutor-color-success">' . esc_html( $course->post_date_gmt ) . '</span>' .
-				'
+			<?php esc_html_e( 'Course available on ', 'tutor' ); ?>
+					<span class="tutor-utc-date-time tutor-color-success">
+			<?php echo esc_html( $course->post_date_gmt ); ?>			
+					</span>
 				</div>
-			</div>';
+			</div>
+			<?php
+			$content = ob_get_clean();
 		}
+		echo wp_kses_post( $content );
 	}
 
 	/**
@@ -347,18 +353,24 @@ class Course extends Tutor_Base {
 	public function set_entry_box_coming_soon_button( $course_id ) {
 		$course             = get_post( $course_id );
 		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
+		$content            = '';
 
 		if ( $course_coming_soon ) {
-			echo '<div class="tutor-coming-soon-wrapper entry-box-wrapper">
+			ob_start();
+			?>
+			<div class="tutor-coming-soon-wrapper entry-box-wrapper">
 				<span class="tutor-icon-book-open-line tutor-color-black"></span>
 				<div class="tutor-fw-medium">
-				'
-				. esc_html__( 'Course available on ', 'tutor' ) .
-				'<span class="tutor-utc-date-time tutor-color-primary">' . esc_html( $course->post_date_gmt ) . '</span>' .
-				'
+			<?php esc_html_e( 'Course available on ', 'tutor' ); ?>
+					<span class="tutor-utc-date-time tutor-color-primary">
+			<?php echo esc_html( $course->post_date_gmt ); ?>
+					</span>
 				</div>
-			</div>';
+			</div>
+			<?php
+			$content = ob_get_clean();
 		}
+		echo wp_kses_post( $content );
 	}
 
 	/**
