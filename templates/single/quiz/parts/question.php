@@ -90,7 +90,7 @@
 					$question_type = $question->question_type;
 
 					$rand_choice = false;
-					if ( 'matching' !== $question_type ) { // Note: Randomize will be done in specific template.
+					if ( 'matching' !== $question_type && 'image_matching' !== $question_type ) { // Note: Randomize will be done in specific template.
 						$question_settings = maybe_unserialize( $question->question_settings );
 						if ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] ) {
 							$rand_choice = true;
