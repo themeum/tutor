@@ -35,12 +35,14 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
-import type { ContentDripType } from '@CourseBuilderServices/course';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type ContentDripType } from '@CourseBuilderServices/course';
 import type { ContentType } from '@CourseBuilderServices/curriculum';
 import { getCourseId, validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { type ID, isDefined } from '@TutorShared/utils/types';
+import { findSlotFields } from '@TutorShared/utils/util';
 
 interface QuizModalProps extends ModalProps {
   quizId?: ID;
@@ -69,6 +71,7 @@ const QuizModal = ({
   contentDripType,
   contentType,
 }: QuizModalProps) => {
+  const { fields } = useCourseBuilderSlot();
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<QuizTabs>('details');
   const [isEdit, setIsEdit] = useState(!isDefined(quizId));
@@ -133,7 +136,10 @@ const QuizModal = ({
       return;
     }
 
-    const convertedData = convertQuizResponseToFormData(getQuizDetailsQuery.data);
+    const convertedData = convertQuizResponseToFormData(
+      getQuizDetailsQuery.data,
+      findSlotFields({ fields: fields.Curriculum.Quiz }),
+    );
 
     form.reset(convertedData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -179,7 +185,17 @@ const QuizModal = ({
     }
 
     setIsEdit(false);
-    const payload = convertQuizFormDataToPayload(data, topicId, contentDripType, courseId);
+    const payload = convertQuizFormDataToPayload(
+      data,
+      topicId,
+      contentDripType,
+      courseId,
+      findSlotFields(
+        { fields: fields.Curriculum.Quiz, slotKey: 'after_question_description' },
+        { fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_question_sidebar' },
+      ),
+      findSlotFields({ fields: fields.Curriculum.Quiz, slotKey: 'bottom_of_settings' }),
+    );
 
     const response = await saveQuizMutation.mutateAsync(payload);
 

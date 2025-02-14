@@ -13,6 +13,7 @@ import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTopicPrerequisites from '@TutorShared/components/fields/FormTopicPrerequisites';
 
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { ContentDripType } from '@CourseBuilderServices/course';
 import type { CourseTopic } from '@CourseBuilderServices/curriculum';
@@ -360,6 +361,8 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
           </Show>
         </div>
       </Card>
+
+      <CourseBuilderInjectionSlot section="Curriculum.Quiz.bottom_of_settings" form={form} />
     </div>
   );
 };

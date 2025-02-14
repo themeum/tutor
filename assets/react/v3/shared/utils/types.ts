@@ -1,6 +1,7 @@
 import type collection from '@TutorShared/config/icon-list';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
+import { RegisterOptions } from 'react-hook-form';
 
 export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
 
@@ -147,6 +148,61 @@ export interface TutorCategory {
   parent: number;
   count: number;
   filter: string;
+}
+
+export type InjectionSlots = {
+  Basic: 'after_description' | 'after_settings';
+  Curriculum: {
+    Lesson: 'after_description' | 'bottom_of_sidebar';
+    Quiz: 'after_question_description' | 'bottom_of_question_sidebar' | 'bottom_of_settings';
+    Assignment: 'after_description' | 'bottom_of_sidebar';
+  };
+  Additional: 'after_certificates' | 'bottom_of_sidebar';
+};
+
+export type SectionStructure = {
+  [K in keyof InjectionSlots]: K extends 'Curriculum'
+    ? { [C in keyof InjectionSlots[K]]: `${C & string}.${InjectionSlots[K][C] & string}` }
+    : `${K}.${InjectionSlots[K] & string}`;
+};
+
+type Path<T> = T extends object
+  ? {
+      [K in keyof T]: T[K] extends object ? `${string & K}.${Path<T[K]> & string}` : T[K];
+    }[keyof T]
+  : never;
+
+export type SectionPath = Path<SectionStructure>;
+
+export type FieldType =
+  | 'text'
+  | 'number'
+  | 'password'
+  | 'textarea'
+  | 'select'
+  | 'radio'
+  | 'checkbox'
+  | 'switch'
+  | 'date'
+  | 'time'
+  | 'image'
+  | 'video'
+  | 'uploader'
+  | 'WPEditor';
+
+export interface InjectedField {
+  name: string;
+  type: FieldType;
+  options?: Array<{ label: string; value: string }>;
+  label?: string;
+  placeholder?: string;
+  rules?: Exclude<RegisterOptions, 'valueAsNumber' | 'valueAsDate' | 'setValueAs'>;
+  priority?: number;
+}
+
+export interface InjectedContent {
+  component: ReactNode;
+  priority?: number;
 }
 
 export interface Editor {

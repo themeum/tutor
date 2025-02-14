@@ -78,7 +78,6 @@ export const QuizModalContextProvider = ({
 
   const activeQuestionIndex = questions.findIndex((question) => question.question_id === activeQuestionId);
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (questions.length === 0) {
       setActiveQuestionId('');
@@ -95,6 +94,7 @@ export const QuizModalContextProvider = ({
     }
 
     previousQuestions.current = questions;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions.length]);
 
   useEffect(() => {

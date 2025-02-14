@@ -11,6 +11,8 @@ import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias'
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -25,13 +27,14 @@ import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useUnlinkPageBuilderMutation } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { convertToSlug, determinePostStatus } from '@TutorShared/utils/util';
+import { convertToSlug, determinePostStatus, findSlotFields } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 let hasAliasChanged = false;
 
 const CourseBasic = () => {
+  const { fields } = useCourseBuilderSlot();
   const form = useFormContext<CourseFormData>();
   const queryClient = useQueryClient();
   const isCourseDetailsFetching = useIsFetching({
@@ -111,8 +114,10 @@ const CourseBasic = () => {
                 editors={courseDetails?.editors}
                 onCustomEditorButtonClick={() => {
                   return form.handleSubmit((data) => {
-                    const payload = convertCourseDataToPayload(data);
-
+                    const payload = convertCourseDataToPayload(
+                      data,
+                      findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
+                    );
                     return updateCourseMutation.mutateAsync({
                       course_id: courseId,
                       ...payload,
@@ -145,7 +150,11 @@ const CourseBasic = () => {
             )}
           />
 
+          <CourseBuilderInjectionSlot section="Basic.after_description" form={form} />
+
           <CourseSettings />
+
+          <CourseBuilderInjectionSlot section="Basic.after_settings" form={form} />
         </div>
         <Show when={CURRENT_VIEWPORT.isAboveTablet}>
           <Navigator styleModifier={styles.navigator} />

@@ -463,7 +463,7 @@ interface GoogleMeetMeetingDeletePayload {
   'event-id': string;
 }
 
-export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload => {
+export const convertCourseDataToPayload = (data: CourseFormData, slot_fields: string[]): CoursePayload => {
   return {
     ...(data.isScheduleEnabled && {
       post_date: format(
@@ -555,10 +555,18 @@ export const convertCourseDataToPayload = (data: CourseFormData): CoursePayload 
         )
       : '',
     'course_settings[pause_enrollment]': data.pause_enrollment ? 'yes' : 'no',
+    ...Object.fromEntries(
+      slot_fields.map((key) => {
+        return [key, data[key as keyof CourseFormData]];
+      }),
+    ),
   };
 };
 
-export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse): CourseFormData => {
+export const convertCourseDataToFormData = (
+  courseDetails: CourseDetailsResponse,
+  slotFields: string[],
+): CourseFormData => {
   return {
     post_date: courseDetails.post_date,
     post_title: courseDetails.post_title,
@@ -683,6 +691,11 @@ export const convertCourseDataToFormData = (courseDetails: CourseDetailsResponse
       ? format(convertGMTtoLocalDate(courseDetails.course_settings.enrollment_ends_at), DateFormats.hoursMinutes)
       : '',
     pause_enrollment: courseDetails.course_settings.pause_enrollment === 'yes',
+    ...Object.fromEntries(
+      slotFields.map((key) => {
+        return [key, courseDetails[key as keyof CourseDetailsResponse]];
+      }),
+    ),
   };
 };
 
