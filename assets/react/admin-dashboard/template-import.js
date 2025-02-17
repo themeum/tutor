@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', function () {
 	const previewTemplateName = document.querySelector(".preview-modal-template-name");
 	const loadingIndicator = document.querySelector(".loading-indicator"); // Add this line
 
-
 	if (templatesDemoImportRoot) {
 		// Open live preview modal
 		templatesDemoImportRoot.addEventListener('click', (event) => {

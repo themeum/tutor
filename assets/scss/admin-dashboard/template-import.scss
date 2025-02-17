@@ -441,10 +441,9 @@ img {
 	justify-content: space-between;
 	align-items: center;
 	position: absolute;
-	top: -60px;
+	top: -45px;
 	width: 100%;
 
-	// margin-bottom: 20px;
 	h3 {
 		margin: 0;
 	}
@@ -452,6 +451,7 @@ img {
 	ul {
 		display: flex;
 		gap: 20px;
+		margin: 0;
 
 		i {
 			font-size: 20px;
@@ -460,6 +460,8 @@ img {
 		}
 
 		li {
+			margin: 0;
+
 			&.active {
 				i {
 					color: #3e64de;
