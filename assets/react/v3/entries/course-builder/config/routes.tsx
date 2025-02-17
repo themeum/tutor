@@ -41,7 +41,7 @@ const routes: RouteObject[] = [
   },
   {
     path: '*',
-    element: <Navigate to={CourseBuilderRouteConfigs.CourseBasics.template} replace />,
+    element: <Navigate to={CourseBuilderRouteConfigs.Home.template} replace />,
   },
 ];
 
