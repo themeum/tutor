@@ -28,6 +28,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined, type WPPostStatus } from '@TutorShared/utils/types';
 import { convertToGMT, determinePostStatus, findSlotFields, noop } from '@TutorShared/utils/util';
 
+import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
 import reviewSubmitted from '@SharedImages/review-submitted.webp';
@@ -71,7 +72,7 @@ const HeaderActions = () => {
     };
 
     const navigateToBasicsWithError = () => {
-      navigate('/basics', { state: { isError: true } });
+      navigate(CourseBuilderRouteConfigs.CourseBasics.buildLink(), { state: { isError: true } });
     };
 
     if (
@@ -101,7 +102,8 @@ const HeaderActions = () => {
 
       if (
         (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && data.course_product_id !== '-1') ||
-        tutorConfig.settings?.monetize_by === 'tutor'
+        (tutorConfig.settings?.monetize_by === 'tutor' &&
+          !['membership', 'subscription'].includes(data.course_selling_option))
       ) {
         if (data.course_price === '' || Number(data.course_price) <= 0) {
           navigateToBasicsWithError();
