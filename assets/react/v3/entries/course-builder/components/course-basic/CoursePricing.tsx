@@ -76,6 +76,7 @@ const CoursePricing = () => {
             value: 'free',
           },
         ];
+
   const purchaseOptions = [
     {
       label: __('One-time purchase only', 'tutor'),
