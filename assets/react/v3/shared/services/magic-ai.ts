@@ -8,7 +8,7 @@ import type { ChatFormat, ChatLanguage, ChatTone } from '@TutorShared/config/mag
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import type { Prettify, TutorMutationResponse, WPResponse } from '@TutorShared/utils/types';
+import type { Prettify, TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 interface ImagePayload {
@@ -22,7 +22,7 @@ interface ImageResponse {
 }
 
 const generateImage = (payload: ImagePayload) => {
-  return wpAjaxInstance.post<ImagePayload, WPResponse<ImageResponse>>(endpoints.GENERATE_AI_IMAGE, payload);
+  return wpAjaxInstance.post<ImagePayload, TutorMutationResponse<ImageResponse>>(endpoints.GENERATE_AI_IMAGE, payload);
 };
 
 export const useMagicImageGenerationMutation = () => {
@@ -37,7 +37,7 @@ interface FillPayload {
 }
 const magicFillImage = (payload: FillPayload) => {
   return wpAjaxInstance
-    .post<FillPayload, WPResponse<ImageResponse>>(endpoints.MAGIC_FILL_AI_IMAGE, payload)
+    .post<FillPayload, TutorMutationResponse<ImageResponse>>(endpoints.MAGIC_FILL_AI_IMAGE, payload)
     .then((response) => response.data.data[0].b64_json);
 };
 
@@ -61,7 +61,10 @@ interface TextGenerationPayload {
 }
 
 const generateText = (payload: TextGenerationPayload) => {
-  return wpAjaxInstance.post<TextGenerationPayload, WPResponse<string>>(endpoints.MAGIC_TEXT_GENERATION, payload);
+  return wpAjaxInstance.post<TextGenerationPayload, TutorMutationResponse<string>>(
+    endpoints.MAGIC_TEXT_GENERATION,
+    payload,
+  );
 };
 
 export const useMagicTextGenerationMutation = () => {
@@ -97,7 +100,10 @@ interface GeneralPayload extends ModifyPayloadBase {
 export type ModificationPayload = Prettify<TranslationPayload | ChangeTonePayload | GeneralPayload>;
 
 const modifyContent = (payload: ModificationPayload) => {
-  return wpAjaxInstance.post<ModificationPayload, WPResponse<string>>(endpoints.MAGIC_AI_MODIFY_CONTENT, payload);
+  return wpAjaxInstance.post<ModificationPayload, TutorMutationResponse<string>>(
+    endpoints.MAGIC_AI_MODIFY_CONTENT,
+    payload,
+  );
 };
 
 export const useModifyContentMutation = () => {
@@ -115,7 +121,7 @@ interface UseImagePayload {
 }
 
 const storeImage = (payload: UseImagePayload) => {
-  return wpAjaxInstance.post<UseImagePayload, WPResponse<{ id: number; url: string; title: string }>>(
+  return wpAjaxInstance.post<UseImagePayload, TutorMutationResponse<{ id: number; url: string; title: string }>>(
     endpoints.USE_AI_GENERATED_IMAGE,
     payload,
   );
@@ -150,9 +156,13 @@ const generateCourseContent = (
     signal?: AbortSignal;
   },
 ) => {
-  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<string>>(endpoints.GENERATE_COURSE_CONTENT, payload, {
-    signal: payload.signal,
-  });
+  return wpAjaxInstance.post<CourseGenerationPayload, TutorMutationResponse<string>>(
+    endpoints.GENERATE_COURSE_CONTENT,
+    payload,
+    {
+      signal: payload.signal,
+    },
+  );
 };
 
 export const useGenerateCourseContentMutation = (type: ContentType) => {
@@ -172,7 +182,7 @@ interface CourseTopicPayload {
 }
 
 const generateCourseTopicNames = (payload: CourseTopicPayload & { signal?: AbortSignal }) => {
-  return wpAjaxInstance.post<CourseGenerationPayload, WPResponse<{ title: string }[]>>(
+  return wpAjaxInstance.post<CourseGenerationPayload, TutorMutationResponse<{ title: string }[]>>(
     endpoints.GENERATE_COURSE_CONTENT,
     payload,
     {
@@ -198,13 +208,12 @@ interface TopicContentPayload {
 }
 
 const generateCourseTopicContent = (payload: TopicContentPayload & { signal?: AbortSignal }) => {
-  return wpAjaxInstance.post<TopicContentPayload, WPResponse<{ topic_contents: TopicContent[]; index: number }>>(
-    endpoints.GENERATE_COURSE_TOPIC_CONTENT,
-    payload,
-    {
-      signal: payload.signal,
-    },
-  );
+  return wpAjaxInstance.post<
+    TopicContentPayload,
+    TutorMutationResponse<{ topic_contents: TopicContent[]; index: number }>
+  >(endpoints.GENERATE_COURSE_TOPIC_CONTENT, payload, {
+    signal: payload.signal,
+  });
 };
 
 export const useGenerateCourseTopicContentMutation = () => {
@@ -254,7 +263,7 @@ export interface QuizContent {
 }
 
 const generateQuizQuestions = (payload: QuizQuestionsPayload & { signal?: AbortSignal }) => {
-  return wpAjaxInstance.post<QuizQuestionsPayload, WPResponse<QuizContent[]>>(
+  return wpAjaxInstance.post<QuizQuestionsPayload, TutorMutationResponse<QuizContent[]>>(
     endpoints.GENERATE_QUIZ_QUESTIONS,
     payload,
     {
