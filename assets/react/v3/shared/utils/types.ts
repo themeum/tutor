@@ -1,7 +1,7 @@
 import type collection from '@TutorShared/config/icon-list';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
-import { RegisterOptions } from 'react-hook-form';
+import type { RegisterOptions } from 'react-hook-form';
 
 export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
 
@@ -113,18 +113,12 @@ export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
 
-export interface WPResponse<T> {
-  data: T;
-  message: string;
-  status_code: AxiosResponse['status'];
-}
-
 export type ID = number | string;
 
 export interface TutorMutationResponse<T> {
   data: T;
   message: string;
-  status_code: number;
+  status_code: AxiosResponse['status'];
 }
 
 export interface WPUser {
