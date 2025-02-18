@@ -146,8 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
             formData.set('action', 'tutor_get_checkout_html');
             formData.set('coupon_code', couponCode);
-            formData.set('billing_country', billingCountry);
-            formData.set('billing_state', billingState);
+            if (billingCountry) {
+                formData.set('billing_country', billingCountry);
+            }
+            
+            if (billingState) {
+                formData.set('billing_state', billingState);
+            }
 
             if (plan) {
                 formData.set('plan', plan);
