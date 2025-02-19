@@ -24,6 +24,8 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
   const postDate = useWatch({ name: 'post_date' });
@@ -48,6 +50,7 @@ const ScheduleOptions = () => {
 
   const handleCancel = () => {
     const isPreviousDateInFuture = isBefore(new Date(postDate), new Date());
+
     form.setValue(
       'schedule_date',
       isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.yearMonthDay) : '',
@@ -154,42 +157,44 @@ const ScheduleOptions = () => {
             />
           </div>
 
-          <Controller
-            name="enable_coming_soon"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormCheckbox
-                {...controllerProps}
-                label={__('Show coming soon in course list & details page', 'tutor')}
-                labelCss={styles.checkboxStartAlign}
-              />
-            )}
-          />
-
-          <Show when={isComingSoonEnabled}>
+          <Show when={isTutorPro}>
             <Controller
-              name="coming_soon_thumbnail"
+              name="enable_coming_soon"
               control={form.control}
               render={(controllerProps) => (
-                <FormImageInput
+                <FormCheckbox
                   {...controllerProps}
-                  label={__('Coming Soon Thumbnail', 'tutor')}
-                  buttonText={__('Upload Thumbnail', 'tutor')}
-                  infoText={sprintf(
-                    __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
-                    tutorConfig.max_upload_size,
-                  )}
+                  label={__('Show coming soon in course list & details page', 'tutor')}
+                  labelCss={styles.checkboxStartAlign}
                 />
               )}
             />
 
-            <Controller
-              name="enable_curriculum_preview"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Preview Course Curriculum', 'tutor')} />
-              )}
-            />
+            <Show when={isComingSoonEnabled}>
+              <Controller
+                name="coming_soon_thumbnail"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormImageInput
+                    {...controllerProps}
+                    label={__('Coming Soon Thumbnail', 'tutor')}
+                    buttonText={__('Upload Thumbnail', 'tutor')}
+                    infoText={sprintf(
+                      __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                      tutorConfig.max_upload_size,
+                    )}
+                  />
+                )}
+              />
+
+              <Controller
+                name="enable_curriculum_preview"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Preview Course Curriculum', 'tutor')} />
+                )}
+              />
+            </Show>
           </Show>
 
           <div css={styles.scheduleButtonsWrapper}>
