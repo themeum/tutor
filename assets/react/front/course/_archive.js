@@ -185,7 +185,7 @@ window.jQuery(document).ready($ => {
                 }
 
                 content_container.html(r.data.html).find('nav').css('display', 'flex');
-                document.dispatchEvent(tutor_course_list_refreshed_event);
+                window.dispatchEvent(new Event(_tutorobject.content_change_event));
             }
         });
     };
