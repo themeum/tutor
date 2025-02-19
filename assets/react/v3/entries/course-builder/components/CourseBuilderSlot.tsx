@@ -1,5 +1,5 @@
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
-import { InjectedContent, InjectedField, type SectionPath } from '@TutorShared/utils/types';
+import { type InjectedContent, type InjectedField, type SectionPath } from '@TutorShared/utils/types';
 import { type UseFormReturn } from 'react-hook-form';
 import ContentRenderer from './ContentRenderer';
 import FieldRenderer from './FieldRenderer';

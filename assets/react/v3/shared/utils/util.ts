@@ -9,7 +9,7 @@ import { type Addons, DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
   type IconCollection,
-  InjectedField,
+  type InjectedField,
   type PaginatedParams,
   type WPPostStatus,
   isDefined,
@@ -392,4 +392,4 @@ export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedFi
   });
 
   return slotFields;
-}
+};

@@ -184,6 +184,7 @@ const FormWPEditor = ({
   );
 
   const hasAvailableCustomEditors = hasCustomEditorSupport && filteredEditors.length > 0;
+  const isOverlayVisible = hasAvailableCustomEditors && editorUsed.name !== 'classic';
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -288,8 +289,8 @@ const FormWPEditor = ({
         }
 
         return (
-          <div css={styles.wrapper}>
-            <Show when={hasCustomEditorSupport && editorUsed.name !== 'classic'}>
+          <div css={styles.wrapper({ isOverlayVisible })}>
+            <Show when={isOverlayVisible}>
               <CustomEditorOverlay
                 editorUsed={editorUsed}
                 onBackToWPEditorClick={onBackToWPEditorClick}
@@ -321,8 +322,14 @@ const FormWPEditor = ({
 export default FormWPEditor;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ isOverlayVisible = false }) => css`
     position: relative;
+
+    ${isOverlayVisible &&
+    css`
+      overflow: hidden;
+      border-radius: ${borderRadius[6]};
+    `}
   `,
   editorLabel: css`
     display: flex;
