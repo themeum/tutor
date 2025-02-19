@@ -1046,10 +1046,12 @@ if ( ! function_exists( 'tutor_course_lead_info' ) ) {
 		$course_id        = get_the_ID();
 		$course_post_type = tutor()->course_post_type;
 		$queryCourse      = new WP_Query(
-			array(
-				'p'           => $course_id,
-				'post_type'   => $course_post_type,
-				'post_status' => array( 'publish', 'future' ),
+			apply_filters(
+				'tutor_course_lead_info_args',
+				array(
+					'p'           => $course_id,
+					'post_type'   => $course_post_type,
+				)
 			)
 		);
 

@@ -1469,26 +1469,3 @@ table.course-single-gradebooks a {
 .list-item-button .edd-has-js.edd-no-js {
 	display: none !important;
 }
-
-/**
-* Coming soon block
-*/
-.tutor-coming-soon-wrapper{
-	background-color: rgba(244, 249, 253, 1);
-	color: rgba(91, 97, 111, 1);
-	font-size: 13px;
-	line-height: 16px;
-	border-radius: 4px;
-	font-weight: 500;
-	padding: 4px 25px 4px 21px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 8px;
-}
-
-
-.tutor-coming-soon-wrapper.entry-box-wrapper {
-	padding: 7px 23px 7px 24px;
-
-}

@@ -194,7 +194,7 @@ class Course extends Tutor_Base {
 		 *
 		 * @since v1.9.0
 		 */
-		add_filter( 'tutor_course_restrict_new_entry', array( $this, 'restrict_new_student_entry' ), 10, 2 );
+		add_filter( 'tutor_course_restrict_new_entry', array( $this, 'restrict_new_student_entry' ) );
 
 		/**
 		 * Reset course progress on retake
@@ -271,268 +271,6 @@ class Course extends Tutor_Base {
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
-
-		/**
-		 * Coming soon hooks
-		 *
-		 * @since 3.3.0
-		 */
-		add_action( 'future_to_publish', array( $this, 'handle_schedule_post_published' ) );
-		add_filter( 'tutor_course_thumbnail_id', array( $this, 'set_coming_soon_thumbnail' ), 10, 2 );
-		add_filter( 'tutor_course_thumbnail_placeholder', array( $this, 'set_coming_soon_placeholder' ), 11, 2 );
-		add_action( 'pre_get_posts', array( $this, 'get_coming_soon_details' ) );
-		add_filter( 'tutor_get_course_topics', array( $this, 'show_course_curriculum' ) );
-		add_filter( 'tutor_course_filter_args', array( $this, 'show_filtered_coming_soon_courses' ) );
-		add_action( 'tutor_course/single/entry/after', array( $this, 'set_entry_box_coming_soon_button' ), 10, 1 );
-		add_action( 'tutor_course_loop_footer_bottom', array( $this, 'show_course_coming_soon' ) );
-		add_filter( 'tutor_add_to_cart_btn', array( $this, 'remove_coming_soon_add_to_cart' ), 10, 2 );
-		add_filter( 'tutor_course_loop_add_to_cart_button', array( $this, 'remove_coming_soon_add_to_cart' ), 10, 2 );
-	}
-
-	/**
-	 * Remove add to cart button when course coming soon.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param string $button the button content.
-	 * @param int    $course_id the course id.
-	 *
-	 * @return string
-	 */
-	public function remove_coming_soon_add_to_cart( $button, $course_id ) {
-		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
-
-		if ( $course_coming_soon ) {
-			$button = '';
-		}
-
-		return $button;
-	}
-
-	/**
-	 * Show coming soon on course list.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param int $course_id the course id.
-	 *
-	 * @return void
-	 */
-	public function show_course_coming_soon( $course_id ) {
-		$course             = get_post( $course_id );
-		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
-		$content            = '';
-
-		if ( $course_coming_soon ) {
-			ob_start();
-			?>
-			<div class="tutor-coming-soon-wrapper">
-				<span class="tutor-icon-book-open-line tutor-color-black"></span>
-				<div class="tutor-fw-medium">
-			<?php esc_html_e( 'Course available on ', 'tutor' ); ?>
-					<span class="tutor-utc-date-time tutor-color-success">
-			<?php echo esc_html( $course->post_date_gmt ); ?>			
-					</span>
-				</div>
-			</div>
-			<?php
-			$content = ob_get_clean();
-		}
-		echo wp_kses_post( $content );
-	}
-
-	/**
-	 * Set coming soon for single course entry box.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param int $course_id the course id.
-	 *
-	 * @return void
-	 */
-	public function set_entry_box_coming_soon_button( $course_id ) {
-		$course             = get_post( $course_id );
-		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
-		$content            = '';
-
-		if ( $course_coming_soon ) {
-			ob_start();
-			?>
-			<div class="tutor-coming-soon-wrapper entry-box-wrapper">
-				<span class="tutor-icon-book-open-line tutor-color-black"></span>
-				<div class="tutor-fw-medium">
-			<?php esc_html_e( 'Course available on ', 'tutor' ); ?>
-					<span class="tutor-utc-date-time tutor-color-primary">
-			<?php echo esc_html( $course->post_date_gmt ); ?>
-					</span>
-				</div>
-			</div>
-			<?php
-			$content = ob_get_clean();
-		}
-		echo wp_kses_post( $content );
-	}
-
-	/**
-	 * Show coming soon course for course list filter.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param array $args array of filter arguments.
-	 *
-	 * @return array
-	 */
-	public function show_filtered_coming_soon_courses( $args ) {
-		if ( isset( $args['post_status'] ) ) {
-			$args['post_status'] = array( 'publish', 'future' );
-		}
-
-		if ( isset( $args['meta_query'] ) ) {
-			array_push(
-				$args['meta_query'],
-				array(
-					'relation' => 'OR',
-					array(
-						'key'     => '_tutor_course_enable_coming_soon',
-						'value'   => '1',
-						'compare' => '=',
-					),
-					array(
-						'key'     => '_tutor_course_enable_coming_soon',
-						'compare' => 'NOT EXISTS',
-					),
-				),
-			);
-		} else {
-			$args['meta_query'] = array(
-				'relation' => 'OR',
-				array(
-					'key'     => '_tutor_course_enable_coming_soon',
-					'value'   => '1',
-					'compare' => '=',
-				),
-				array(
-					'key'     => '_tutor_course_enable_coming_soon',
-					'compare' => 'NOT EXISTS',
-				),
-			);
-		}
-
-		return $args;
-	}
-
-	/**
-	 * Show course curriculum on coming soon courses.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param \WP_Query $topics the topics of the course.
-	 *
-	 * @return \WP_Query
-	 */
-	public function show_course_curriculum( $topics ) {
-		$course_id          = get_the_ID();
-		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
-		$course_curriculum  = (bool) get_post_meta( $course_id, '_tutor_course_enable_curriculum_preview', true );
-
-		if ( $course_coming_soon && ! $course_curriculum ) {
-			return new \WP_Query();
-		}
-
-		return $topics;
-	}
-
-	/**
-	 * Show coming soon course details for students.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param \WP_Query $query the query object.
-	 *
-	 * @return void
-	 */
-	public function get_coming_soon_details( $query ) {
-
-		$post_type   = Input::get( 'post_type' );
-		$post_id     = Input::get( 'p' );
-		$course_type = isset( $post_type ) && ( tutor()->course_post_type === $post_type || tutor()->bundle_post_type === $post_type );
-		$coming_soon = isset( $post_id ) && (bool) get_post_meta( $post_id, '_tutor_course_enable_coming_soon', true );
-
-		if ( $coming_soon && $course_type ) {
-			$query->set( 'post_status', array( 'publish', 'future' ) );
-		}
-	}
-
-	/**
-	 * Set default image for coming soon courses.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param string $placeholder_url the default image url.
-	 * @param int    $post_id the post id.
-	 *
-	 * @return string
-	 */
-	public function set_coming_soon_placeholder( $placeholder_url, $post_id ) {
-
-		$enable_coming_soon      = (bool) get_post_meta( $post_id, '_tutor_course_enable_coming_soon', true );
-		$coming_soon_placeholder = tutor()->url . 'assets/images/coming-soon.svg';
-
-		if ( $enable_coming_soon ) {
-			$placeholder_url = $coming_soon_placeholder;
-		}
-
-		return $placeholder_url;
-	}
-
-	/**
-	 * Set coming soon thumbnail if provided and replace course thumbnail.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param int $thumbnail_id the thumbnail id.
-	 * @param int $post_id the post id.
-	 *
-	 * @return int
-	 */
-	public function set_coming_soon_thumbnail( $thumbnail_id, $post_id ) {
-
-		$enable_coming_soon   = (bool) get_post_meta( $post_id, '_tutor_course_enable_coming_soon', true );
-		$coming_soon_thumb_id = (int) get_post_meta( $post_id, '_tutor_course_coming_soon_thumbnail_id', true );
-
-		if ( $enable_coming_soon ) {
-			if ( $coming_soon_thumb_id ) {
-				$thumbnail_id = $coming_soon_thumb_id;
-			} else {
-				$thumbnail_id = 0;
-			}
-		}
-
-		return $thumbnail_id;
-	}
-
-	/**
-	 * Handle scheduled course publish.
-	 *
-	 * @since 3.3.0
-	 *
-	 * @param object $course the course object.
-	 *
-	 * @return void
-	 */
-	public function handle_schedule_post_published( $course ) {
-		if ( tutor()->course_post_type !== $course->post_type ) {
-			return;
-		}
-
-		$enable_coming_soon = (bool) get_post_meta( $course->ID, '_tutor_course_enable_coming_soon', true );
-
-		if ( $enable_coming_soon ) {
-
-			delete_post_meta( $course->ID, '_tutor_course_enable_coming_soon' );
-			delete_post_meta( $course->ID, '_tutor_course_coming_soon_thumbnail_id' );
-			delete_post_meta( $course->ID, '_tutor_course_enable_curriculum_preview' );
-		}
 	}
 
 	/**
@@ -959,17 +697,7 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_id, '_tutor_is_public_course', $params['is_public_course'] ?? 'no' );
 		update_post_meta( $post_id, '_tutor_course_level', $params['course_level'] );
 
-		if ( isset( $params['enable_coming_soon'] ) ) {
-			update_post_meta( $post_id, '_tutor_course_enable_coming_soon', $params['enable_coming_soon'] );
-		}
-
-		if ( isset( $params['coming_soon_thumbnail_id'] ) ) {
-			update_post_meta( $post_id, '_tutor_course_coming_soon_thumbnail_id', $params['coming_soon_thumbnail_id'] );
-		}
-
-		if ( isset( $params['enable_curriculum_preview'] ) ) {
-			update_post_meta( $post_id, '_tutor_course_enable_curriculum_preview', $params['enable_curriculum_preview'] );
-		}
+		do_action( 'tutor_after_prepare_update_post_meta', $post_id, $params );
 	}
 
 	/**
@@ -1509,32 +1237,28 @@ class Course extends Tutor_Base {
 		$editors = tutor_utils()->get_editor_list( $course_id );
 
 		$data = array(
-			'editors'                   => array_values( $editors ),
-			'editor_used'               => tutor_utils()->get_editor_used( $course_id ),
-			'preview_link'              => get_preview_post_link( $course_id ),
-			'post_author'               => tutor_utils()->get_tutor_user( $course['post_author'] ),
-			'course_categories'         => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
-			'course_tags'               => wp_get_post_terms( $course_id, CourseModel::COURSE_TAG ),
-			'thumbnail_id'              => get_post_meta( $course_id, '_thumbnail_id', true ),
-			'thumbnail'                 => get_the_post_thumbnail_url( $course_id ),
+			'editors'                  => array_values( $editors ),
+			'editor_used'              => tutor_utils()->get_editor_used( $course_id ),
+			'preview_link'             => get_preview_post_link( $course_id ),
+			'post_author'              => tutor_utils()->get_tutor_user( $course['post_author'] ),
+			'course_categories'        => wp_get_post_terms( $course_id, CourseModel::COURSE_CATEGORY ),
+			'course_tags'              => wp_get_post_terms( $course_id, CourseModel::COURSE_TAG ),
+			'thumbnail_id'             => get_post_meta( $course_id, '_thumbnail_id', true ),
+			'thumbnail'                => get_the_post_thumbnail_url( $course_id ),
 
-			'enable_qna'                => get_post_meta( $course_id, '_tutor_enable_qa', true ),
-			'is_public_course'          => get_post_meta( $course_id, '_tutor_is_public_course', true ),
-			'course_level'              => get_post_meta( $course_id, '_tutor_course_level', true ),
-			'video'                     => $video_intro,
-			'course_duration'           => get_post_meta( $course_id, '_course_duration', true ),
-			'course_benefits'           => get_post_meta( $course_id, '_tutor_course_benefits', true ),
-			'course_requirements'       => get_post_meta( $course_id, '_tutor_course_requirements', true ),
-			'course_target_audience'    => get_post_meta( $course_id, '_tutor_course_target_audience', true ),
-			'course_material_includes'  => get_post_meta( $course_id, '_tutor_course_material_includes', true ),
-			'enable_coming_soon'        => get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true ),
-			'coming_soon_thumbnail'     => wp_get_attachment_image_url( get_post_meta( $course_id, '_tutor_course_coming_soon_thumbnail_id', true ), 'post-thumbnail' ),
-			'coming_soon_thumbnail_id'  => get_post_meta( $course_id, '_tutor_course_coming_soon_thumbnail_id', true ),
-			'enable_curriculum_preview' => get_post_meta( $course_id, '_tutor_course_enable_curriculum_preview', true ),
-			'monetize_by'               => $monetize_by,
-			'course_pricing'            => $course_pricing,
-			'course_settings'           => get_post_meta( $course_id, '_tutor_course_settings', true ),
-			'step_completion_status'    => array(
+			'enable_qna'               => get_post_meta( $course_id, '_tutor_enable_qa', true ),
+			'is_public_course'         => get_post_meta( $course_id, '_tutor_is_public_course', true ),
+			'course_level'             => get_post_meta( $course_id, '_tutor_course_level', true ),
+			'video'                    => $video_intro,
+			'course_duration'          => get_post_meta( $course_id, '_course_duration', true ),
+			'course_benefits'          => get_post_meta( $course_id, '_tutor_course_benefits', true ),
+			'course_requirements'      => get_post_meta( $course_id, '_tutor_course_requirements', true ),
+			'course_target_audience'   => get_post_meta( $course_id, '_tutor_course_target_audience', true ),
+			'course_material_includes' => get_post_meta( $course_id, '_tutor_course_material_includes', true ),
+			'monetize_by'              => $monetize_by,
+			'course_pricing'           => $course_pricing,
+			'course_settings'          => get_post_meta( $course_id, '_tutor_course_settings', true ),
+			'step_completion_status'   => array(
 				'basic'       => true,
 				'curriculum'  => false,
 				'additional'  => false,
@@ -1858,18 +1582,9 @@ class Course extends Tutor_Base {
 	 * @since 1.0.0
 	 * @param mixed $content content.
 	 *
-	 * @since 3.3.0
-	 *
-	 * @param int   $course_id the course id.
-	 *
 	 * @return mixed
 	 */
-	public function restrict_new_student_entry( $content, $course_id ) {
-		$course_coming_soon = (bool) get_post_meta( $course_id, '_tutor_course_enable_coming_soon', true );
-
-		if ( $course_coming_soon ) {
-			$content = '';
-		}
+	public function restrict_new_student_entry( $content ) {
 
 		if ( ! tutor_utils()->is_course_fully_booked() ) {
 			// No restriction if not fully booked.
@@ -2048,30 +1763,6 @@ class Course extends Tutor_Base {
 					delete_post_meta( $post_ID, '_video' );
 			}
 		}
-
-		// Course coming soon.
-		//phpcs:disable WordPress.Security.NonceVerification.Missing
-		if ( ! empty( $_POST['enable_coming_soon'] ) ) {
-			$enable_coming_soon = Input::post( 'enable_coming_soon', 0 );
-			update_post_meta( $post_ID, '_tutor_course_enable_coming_soon', $enable_coming_soon );
-		} elseif ( ! tutor_is_rest() ) {
-			delete_post_meta( $post_ID, '_tutor_course_enable_coming_soon' );
-		}
-
-		if ( ! empty( $_POST['coming_soon_thumbnail_id'] ) ) {
-			$coming_soon_thumbnail_id = Input::post( 'coming_soon_thumbnail_id', 0 );
-			update_post_meta( $post_ID, '_tutor_course_coming_soon_thumbnail_id', $coming_soon_thumbnail_id );
-		} elseif ( ! tutor_is_rest() ) {
-			delete_post_meta( $post_ID, '_tutor_course_coming_soon_thumbnail_id' );
-		}
-
-		if ( ! empty( $_POST['enable_curriculum_preview'] ) ) {
-			$enable_curriculum_preview = Input::post( 'enable_curriculum_preview', 0 );
-			update_post_meta( $post_ID, '_tutor_course_enable_curriculum_preview', $enable_curriculum_preview );
-		} elseif ( ! tutor_is_rest() ) {
-			delete_post_meta( $post_ID, '_tutor_course_enable_curriculum_preview' );
-		}
-		//phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		/**
 		 * Adding author to instructor automatically
