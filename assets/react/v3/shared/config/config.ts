@@ -11,6 +11,7 @@ const config = {
   TUTOR_ADDONS_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor-addons`,
   CHATGPT_PLATFORM_URL: 'https://platform.openai.com/account/api-keys',
   TUTOR_MY_COURSES_PAGE_URL: `${tutorConfig.tutor_frontend_dashboard_url}/my-courses`,
+  TUTOR_SUPPORT_PAGE_URL: 'https://tutorlms.com/support',
 };
 
 export default config;

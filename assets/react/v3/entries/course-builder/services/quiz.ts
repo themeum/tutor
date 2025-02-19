@@ -69,7 +69,7 @@ export interface QuizQuestion {
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: boolean;
-    randomize_options: boolean;
+    randomize_question: boolean;
     question_mark: number;
     show_question_mark: boolean;
     has_multiple_correct_answer: boolean;
@@ -88,7 +88,7 @@ interface QuizQuestionsForPayload extends Omit<QuizQuestion, 'question_settings'
   question_settings: {
     question_type: QuizQuestionType;
     answer_required: '0' | '1';
-    randomize_options: '0' | '1';
+    randomize_question: '0' | '1';
     question_mark: number;
     show_question_mark: '0' | '1';
     has_multiple_correct_answer?: '0' | '1';
@@ -220,7 +220,7 @@ export const convertQuizResponseToFormData = (quiz: QuizDetailsResponse, slotFie
     if (question.question_settings) {
       question.question_settings.answer_required = !!Number(question.question_settings.answer_required);
       question.question_settings.show_question_mark = !!Number(question.question_settings.show_question_mark);
-      question.question_settings.randomize_options = !!Number(question.question_settings.randomize_options);
+      question.question_settings.randomize_question = !!Number(question.question_settings.randomize_question);
     }
     question.question_answers = question.question_answers.map((answer) => ({
       ...answer,
@@ -412,7 +412,7 @@ export const convertQuizFormDataToPayload = (
             answer_required: question.question_settings.answer_required ? '1' : '0',
             question_mark: question.question_settings.question_mark,
             question_type: question.question_type as QuizQuestionType,
-            randomize_options: question.question_settings.randomize_options ? '1' : '0',
+            randomize_question: question.question_settings.randomize_question ? '1' : '0',
             show_question_mark: question.question_settings.show_question_mark ? '1' : '0',
             ...(question.question_type === 'multiple_choice' && {
               has_multiple_correct_answer: question.question_settings.has_multiple_correct_answer ? '1' : '0',

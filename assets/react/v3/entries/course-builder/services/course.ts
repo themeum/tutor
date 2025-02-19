@@ -15,8 +15,16 @@ import type { InstructorListResponse, User } from '@TutorShared/services/users';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
+import {
+  type Editor,
+  type ID,
+  type Prettify,
+  type TutorCategory,
+  type TutorMutationResponse,
+  type TutorSellingOption,
+  type WPPostStatus,
+} from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT, isAddonEnabled } from '@TutorShared/utils/util';
-import type { Editor, ID, TutorCategory, TutorMutationResponse, WPPostStatus } from '@TutorShared/utils/types';
 
 const currentUser = tutorConfig.current_user.data;
 
@@ -29,7 +37,7 @@ export type ContentDripType =
   | 'after_finishing_prerequisites'
   | '';
 export type PricingType = 'free' | 'paid';
-export type CourseSellingOption = 'subscription' | 'one_time' | 'both' | 'membership' | 'all';
+type CourseSellingOption = Prettify<TutorSellingOption | 'membership' | 'all'>;
 
 export interface CourseFormData {
   post_date: string;

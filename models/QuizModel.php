@@ -612,10 +612,7 @@ class QuizModel {
 		}
 
 		$order = ' answer_order ASC ';
-		if ( 'ordering' === $question->question_type ) {
-			$order = ' RAND() ';
-		}
-
+		
 		if ( $rand ) {
 			$order = ' RAND() ';
 		}

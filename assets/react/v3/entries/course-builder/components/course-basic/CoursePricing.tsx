@@ -9,6 +9,7 @@ import FormInputWithContent from '@TutorShared/components/fields/FormInputWithCo
 import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 
+import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
@@ -76,6 +77,7 @@ const CoursePricing = () => {
             value: 'free',
           },
         ];
+
   const purchaseOptions = [
     {
       label: __('One-time purchase only', 'tutor'),
@@ -176,7 +178,7 @@ const CoursePricing = () => {
 
     if (wcProductDetailsQuery.isSuccess && wcProductDetailsQuery.data) {
       if (state?.isError) {
-        navigate('/basics', { state: { isError: false } });
+        navigate(CourseBuilderRouteConfigs.CourseBasics.buildLink(), { state: { isError: false } });
         return;
       }
 

@@ -3,7 +3,9 @@ import type React from 'react';
 import { useEffect } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
 import FocusTrap from '@TutorShared/components/FocusTrap';
+
 import { modal } from '@TutorShared/config/constants';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -91,7 +93,9 @@ const BasicModalWrapper = ({
             </Show>
           </div>
         </div>
-        <div css={styles.content({ isFullScreen: fullScreen })}>{children}</div>
+        <div css={styles.content({ isFullScreen: fullScreen })}>
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </div>
       </div>
     </FocusTrap>
   );

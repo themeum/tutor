@@ -1,13 +1,16 @@
+import { css } from '@emotion/react';
+import type React from 'react';
+import { useEffect } from 'react';
+
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
+import FocusTrap from '@TutorShared/components/FocusTrap';
+
 import { modal } from '@TutorShared/config/constants';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { css } from '@emotion/react';
-import type React from 'react';
-import { useEffect } from 'react';
-import FocusTrap from '../FocusTrap';
 
 interface ModalWrapperProps {
   children: React.ReactNode;
@@ -90,7 +93,9 @@ const ModalWrapper = ({
             {entireHeader}
           </Show>
         </div>
-        <div css={styles.content}>{children}</div>
+        <div css={styles.content}>
+          <ErrorBoundary>{children}</ErrorBoundary>
+        </div>
       </div>
     </FocusTrap>
   );
