@@ -7,13 +7,19 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+
+    if (!container) {
+      return;
+    }
 
     previousActiveElementRef.current = document.activeElement as HTMLElement;
 
     const isElementVisible = (element: HTMLElement): boolean => {
-      if (!element || !element.isConnected) return false;
+      if (!element || !element.isConnected) {
+        return false;
+      }
       const style = getComputedStyle(element);
+
       return (
         style.display !== 'none' && style.visibility !== 'hidden' && !element.hidden && element.offsetParent !== null
       );
@@ -21,6 +27,7 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
 
     const getFocusableElements = (): HTMLElement[] => {
       const selector = 'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])';
+
       return Array.from(container.querySelectorAll(selector)).filter((el): el is HTMLElement => {
         return !el.hasAttribute('disabled') && isElementVisible(el as HTMLElement);
       });
@@ -28,6 +35,7 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
 
     const isTopmostTrap = () => {
       const traps = document.querySelectorAll('[data-focus-trap="true"]');
+
       return traps.length > 0 && traps[traps.length - 1] === container;
     };
 
@@ -47,18 +55,26 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
 
       if (validElement) {
         validElement.focus();
-      } else if (focusable.length > 0) {
-        focusable[0].focus();
-      } else {
-        container.focus();
+        return;
       }
+
+      if (focusable.length > 0) {
+        focusable[0].focus();
+        return;
+      }
+
+      container.focus();
     };
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (!isTopmostTrap() || event.key !== 'Tab') return;
+      if (!isTopmostTrap() || event.key !== 'Tab') {
+        return;
+      }
 
       const focusable = getFocusableElements();
-      if (focusable.length === 0) return;
+      if (focusable.length === 0) {
+        return;
+      }
 
       const first = focusable[0];
       const last = focusable[focusable.length - 1];
@@ -73,14 +89,20 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
       if (event.shiftKey && active === first) {
         event.preventDefault();
         last.focus();
-      } else if (!event.shiftKey && active === last) {
+        return;
+      }
+
+      if (!event.shiftKey && active === last) {
         event.preventDefault();
         first.focus();
+        return;
       }
     };
 
     const handleFocusIn = (event: FocusEvent) => {
-      if (!isTopmostTrap()) return;
+      if (!isTopmostTrap()) {
+        return;
+      }
 
       const target = event.target as HTMLElement;
       const isValidFocus = container.contains(target) && isElementVisible(target);
@@ -98,16 +120,24 @@ const FocusTrap = ({ children }: { children: ReactNode }) => {
     };
 
     const handleFocusOut = (event: FocusEvent) => {
-      if (!isTopmostTrap()) return;
+      if (!isTopmostTrap()) {
+        return;
+      }
 
       const target = event.relatedTarget as HTMLElement;
-      if (container.contains(target)) return;
+      if (container.contains(target)) {
+        return;
+      }
 
       const focusable = getFocusableElements();
-      if (focusable.length === 0) return;
+      if (focusable.length === 0) {
+        return;
+      }
 
       for (const eachHistory of focusedHistoryRef.current) {
-        if (eachHistory === target) return;
+        if (eachHistory === target) {
+          return;
+        }
         tryFocusElement(focusable);
       }
     };
