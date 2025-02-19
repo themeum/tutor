@@ -146,8 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
             formData.set('action', 'tutor_get_checkout_html');
             formData.set('coupon_code', couponCode);
-            formData.set('billing_country', billingCountry);
-            formData.set('billing_state', billingState);
+            if (billingCountry) {
+                formData.set('billing_country', billingCountry);
+            }
+            
+            if (billingState) {
+                formData.set('billing_state', billingState);
+            }
 
             if (plan) {
                 formData.set('plan', plan);
@@ -193,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown_billing_country?.addEventListener('change', async (e) => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = e.target.value;
-            const coupon_code = input_coupon_code?.value;
+            const coupon_code = input_coupon_code?.value? input_coupon_code.value : '';
 
             if (country) {
                 toggleSpinner(e.target, 'show');
@@ -212,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = dropdown_billing_country.value;
             const state = e.target.value;
-            const coupon_code = input_coupon_code?.value;
+            const coupon_code = input_coupon_code?.value? input_coupon_code.value : '';
 
             if (state) {
                 toggleSpinner(e.target, 'show');

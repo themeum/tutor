@@ -226,6 +226,14 @@ const styles = {
       margin: ${spacing[16]};
     }
 
+    .rdp-month_grid {
+      margin: 0px;
+    }
+
+    .rdp-day {
+      padding: 0px;
+    }
+
     .rdp-nav {
       --rdp-accent-color: ${colorTokens.text.primary};
 
@@ -268,6 +276,10 @@ const styles = {
         &:focus-visible {
           outline: 2px solid var(--rdp-accent-color);
           outline-offset: 2px;
+        }
+
+        &:not(.rdp-outside) {
+          color: var(--rdp-selected-color);
         }
       }
     }

@@ -278,6 +278,8 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 3.3.0 is_coupon_applicable check added
+	 *
 	 * @param int|array $item_ids Required, course ids or plan id.
 	 * @param string    $order_type order type.
 	 * @param string    $coupon_code coupon code.
@@ -310,12 +312,24 @@ class CheckoutController {
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {
-				$coupon            = $selected_coupon;
-				$is_coupon_applied = true;
+				$coupon = $selected_coupon;
 			}
 		}
 
 		list($items, $plan_info) = $this->prepare_items( $item_ids, $order_type, $coupon );
+
+		// Iterate with each item and check if coupon is applicable @since 3.3.0.
+		$is_coupon_applicable = false;
+		if ( $coupon ) {
+			foreach ( $items as $item ) {
+				if ( ! $is_coupon_applicable ) {
+					$is_coupon_applicable = $this->coupon_model->is_coupon_applicable( $coupon, $item['item_id'] );
+				}
+			}
+			if ( $is_coupon_applicable ) {
+				$is_coupon_applied = true;
+			}
+		}
 
 		if ( $is_coupon_applied ) {
 			$items        = $this->calculate_discount( $items, $coupon->discount_type, $coupon->discount_amount );

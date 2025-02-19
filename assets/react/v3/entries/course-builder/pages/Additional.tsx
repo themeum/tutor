@@ -30,8 +30,8 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
-
 import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@SharedImages/pro-placeholders/attachments.webp';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
@@ -48,7 +48,7 @@ const Additional = () => {
 
   useEffect(() => {
     if (!courseId) {
-      navigate('/', {
+      navigate(CourseBuilderRouteConfigs.Home.buildLink(), {
         replace: true,
       });
     }
@@ -59,12 +59,6 @@ const Additional = () => {
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
-
-  useEffect(() => {
-    if (!courseId) {
-      navigate('/', { replace: true });
-    }
-  }, [navigate]);
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const prerequisiteCourseIds =

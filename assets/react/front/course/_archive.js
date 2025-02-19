@@ -99,6 +99,7 @@ window.jQuery(document).ready($ => {
     var content_container = $('[tutor-course-list-container]');
     var archive_meta = $('.tutor-courses-wrap').data('tutor_courses_meta') || {};
     var filter_modifier = {};
+    const tutor_course_list_refreshed_event = new Event( 'tutor_course_list_refreshed' );
 
     // Sidebar checkbox value change
     course_filter_container.on('submit', function(e) {
@@ -184,6 +185,7 @@ window.jQuery(document).ready($ => {
                 }
 
                 content_container.html(r.data.html).find('nav').css('display', 'flex');
+                document.dispatchEvent(tutor_course_list_refreshed_event);
             }
         });
     };

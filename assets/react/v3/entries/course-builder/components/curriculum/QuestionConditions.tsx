@@ -59,14 +59,15 @@ const questionTypes = {
   },
 };
 
+type QuestionTypes = Omit<QuizQuestionType, 'single_choice' | 'image_matching'>;
+
+const supportRandomize: QuestionTypes[] = ['multiple_choice', 'matching', 'image_answering', 'ordering'];
+
 const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as Omit<
-    QuizQuestionType,
-    'single_choice' | 'image_matching'
-  >;
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as QuestionTypes;
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   if (!activeQuestionId) {
@@ -179,26 +180,28 @@ const QuestionConditions = () => {
             )}
           />
 
-          <Controller
-            control={form.control}
-            name={
-              `questions.${activeQuestionIndex}.question_settings.randomize_options` as 'questions.0.question_settings.randomize_options'
-            }
-            render={(controllerProps) => (
-              <FormSwitch
-                {...controllerProps}
-                label={__('Randomize Choice', 'tutor')}
-                onChange={() => {
-                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
-                    form.setValue(
-                      `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                    );
-                  }
-                }}
-              />
-            )}
-          />
+          <Show when={supportRandomize.includes(activeQuestionType)}>
+            <Controller
+              control={form.control}
+              name={
+                `questions.${activeQuestionIndex}.question_settings.randomize_question` as 'questions.0.question_settings.randomize_question'
+              }
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Randomize Choice', 'tutor')}
+                  onChange={() => {
+                    if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
+                      form.setValue(
+                        `questions.${activeQuestionIndex}._data_status`,
+                        calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                      );
+                    }
+                  }}
+                />
+              )}
+            />
+          </Show>
 
           <Controller
             control={form.control}

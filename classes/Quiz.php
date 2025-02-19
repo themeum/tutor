@@ -196,7 +196,7 @@ class Quiz {
 			'question_type'      => $type,
 			'question_mark'      => 1,
 			'answer_required'    => 0,
-			'randomize_options'  => 0,
+			'randomize_question' => 0,
 			'show_question_mark' => 0,
 		);
 
