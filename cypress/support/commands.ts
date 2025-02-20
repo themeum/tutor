@@ -1,56 +1,61 @@
 import { type Addon } from '@TutorShared/utils/util';
 
-declare namespace Cypress {
-  interface Chainable {
-    getByInputName(dataTestAttribute: string): Chainable<JQuery<HTMLElement>>;
-    setTinyMceContent(selector: string, content: string): Chainable<JQuery<HTMLElement>>;
-    loginAsAdmin(): Chainable<JQuery<HTMLElement>>;
-    loginAsInstructor(): Chainable<JQuery<HTMLElement>>;
-    loginAsStudent(): Chainable<JQuery<HTMLElement>>;
-    performBulkAction(option: string): Chainable<JQuery<HTMLElement>>;
-    performBulkActionOnSelectedElement(option: string): Chainable<JQuery<HTMLElement>>;
-    filterByCategory(): Chainable<JQuery<HTMLElement>>;
-    checkSorting(order: string, formSelector: string, itemSelector: string): Chainable<JQuery<HTMLElement>>;
-    filterElements(
-      filterFormSelector: string,
-      dropdownSelector: string,
-      dropdownOptionSelector: string,
-      dropdownTextSelector: string,
-      elementTitleSelector: string
-    ): Chainable<JQuery<HTMLElement>>;
-    filterElementsByDate(filterFormSelector: string, elementDateSelector: string): Chainable<JQuery<HTMLElement>>;
-    search(
-      searchInputSelector: string,
-      searchQuery: string,
-      courseLinkSelector: string,
-      submitButtonSelector: string,
-      submitWithButton: boolean
-    ): Chainable<JQuery<HTMLElement>>;
-    selectPageFromDropdownAndSaveChanges(
-      commonSelector: string,
-      saveButtonSelector: string,
-      apiFieldOption: string,
-      dataValueAttribute: string
-    ): Chainable<JQuery<HTMLElement>>;
-    toggle(inputName: string, fieldId: string): Chainable<JQuery<HTMLElement>>;
-    isEnrolled(): Chainable<JQuery<HTMLElement>>;
-    handleCourseStart(): Chainable<JQuery<HTMLElement>>;
-    completeLesson(): Chainable<JQuery<HTMLElement>>;
-    handleNextButton(): Chainable<JQuery<HTMLElement>>;
-    handleAssignment(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
-    handleQuiz(): Chainable<JQuery<HTMLElement>>;
-    handleMeetingLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
-    handleZoomLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
-    completeCourse(): Chainable<JQuery<HTMLElement>>;
-    submitCourseReview(): Chainable<JQuery<HTMLElement>>;
-    viewCertificate(): Chainable<JQuery<HTMLElement>>;
-    login: () => Chainable<void>;
-    setWPeditorContent: (content: string) => Chainable<void>;
-    getSelectInput: (name: string, value: string) => Chainable<void>;
-    setWPMedia: (label: string, buttonText: string, replaceButtonText: string) => Chainable<void>;
-    selectWPMedia: () => Chainable<void>;
-    isAddonEnabled: (addon: Addon) => Chainable<boolean>;
-    doesElementExist: (selector: string) => Chainable<boolean>;
+/* eslint-disable @typescript-eslint/no-namespace */
+export {};
+
+declare global {
+  namespace Cypress {
+    interface Chainable {
+      getByInputName(dataTestAttribute: string): Chainable<JQuery<HTMLElement>>;
+      setTinyMceContent(selector: string, content: string): Chainable<JQuery<HTMLElement>>;
+      loginAsAdmin(): Chainable<JQuery<HTMLElement>>;
+      loginAsInstructor(): Chainable<JQuery<HTMLElement>>;
+      loginAsStudent(): Chainable<JQuery<HTMLElement>>;
+      performBulkAction(option: string): Chainable<JQuery<HTMLElement>>;
+      performBulkActionOnSelectedElement(option: string): Chainable<JQuery<HTMLElement>>;
+      filterByCategory(): Chainable<JQuery<HTMLElement>>;
+      checkSorting(order: string, formSelector: string, itemSelector: string): Chainable<JQuery<HTMLElement>>;
+      filterElements(
+        filterFormSelector: string,
+        dropdownSelector: string,
+        dropdownOptionSelector: string,
+        dropdownTextSelector: string,
+        elementTitleSelector: string,
+      ): Chainable<JQuery<HTMLElement>>;
+      filterElementsByDate(filterFormSelector: string, elementDateSelector: string): Chainable<JQuery<HTMLElement>>;
+      search(
+        searchInputSelector: string,
+        searchQuery: string,
+        courseLinkSelector: string,
+        submitButtonSelector: string,
+        submitWithButton: boolean,
+      ): Chainable<JQuery<HTMLElement>>;
+      selectPageFromDropdownAndSaveChanges(
+        commonSelector: string,
+        saveButtonSelector: string,
+        apiFieldOption: string,
+        dataValueAttribute: string,
+      ): Chainable<JQuery<HTMLElement>>;
+      toggle(inputName: string, fieldId: string): Chainable<JQuery<HTMLElement>>;
+      isEnrolled(): Chainable<JQuery<HTMLElement>>;
+      handleCourseStart(): Chainable<JQuery<HTMLElement>>;
+      completeLesson(): Chainable<JQuery<HTMLElement>>;
+      handleNextButton(): Chainable<JQuery<HTMLElement>>;
+      handleAssignment(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
+      handleQuiz(): Chainable<JQuery<HTMLElement>>;
+      handleMeetingLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
+      handleZoomLesson(isLastItem: boolean): Chainable<JQuery<HTMLElement>>;
+      completeCourse(): Chainable<JQuery<HTMLElement>>;
+      submitCourseReview(): Chainable<JQuery<HTMLElement>>;
+      viewCertificate(): Chainable<JQuery<HTMLElement>>;
+      login: () => Chainable<void>;
+      setWPeditorContent: (content: string) => Chainable<void>;
+      getSelectInput: (name: string, value: string) => Chainable<void>;
+      setWPMedia: (label: string, buttonText: string, replaceButtonText: string) => Chainable<void>;
+      selectWPMedia: () => Chainable<void>;
+      isAddonEnabled: (addon: Addon) => Chainable<boolean>;
+      doesElementExist: (selector: string) => Chainable<boolean>;
+    }
   }
 }
 
@@ -63,54 +68,35 @@ Cypress.Commands.add('setTinyMceContent', (selector, content) => {
   cy.window().should('have.property', 'tinymce');
 
   // wait for the editor to be rendered
-  cy.get(selector)
-    .find('textarea')
-    .as('editorTextarea')
-    .should('exist');
+  cy.get(selector).find('textarea').as('editorTextarea').should('exist');
 
   // set the content for the editor by its dynamic id
   cy.window().then((win) =>
     cy.get('@editorTextarea').then((element) => {
       const editorId = element.attr('id');
-      const editorInstance = (win as any).tinymce.EditorManager.get().filter((editor) => editor.id === editorId)[0];
-      editorInstance.setContent(content);
-    })
+      const editorInstance = win.tinymce.EditorManager.get().filter((editor) => editor.id === editorId)[0];
+      editorInstance.setContent();
+    }),
   );
 });
 
 Cypress.Commands.add('loginAsAdmin', () => {
   cy.wait(500);
-  cy.getByInputName('log')
-    .clear()
-    .type(Cypress.env('admin_username'));
-  cy.getByInputName('pwd')
-    .clear()
-    .type(Cypress.env('admin_password'));
+  cy.getByInputName('log').clear().type(Cypress.env('admin_username'));
+  cy.getByInputName('pwd').clear().type(Cypress.env('admin_password'));
   cy.get('form#loginform').submit();
 });
 
 Cypress.Commands.add('loginAsInstructor', () => {
-  cy.getByInputName('log')
-    .clear()
-    .type(Cypress.env('instructor_username'));
-  cy.getByInputName('pwd')
-    .clear()
-    .type(Cypress.env('instructor_password'));
-  cy.get('#tutor-login-form button')
-    .contains('Sign In')
-    .click();
+  cy.getByInputName('log').clear().type(Cypress.env('instructor_username'));
+  cy.getByInputName('pwd').clear().type(Cypress.env('instructor_password'));
+  cy.get('#tutor-login-form button').contains('Sign In').click();
 });
 
 Cypress.Commands.add('loginAsStudent', () => {
-  cy.getByInputName('log')
-    .clear()
-    .type(Cypress.env('student_username'));
-  cy.getByInputName('pwd')
-    .clear()
-    .type(Cypress.env('student_password'));
-  cy.get('#tutor-login-form button')
-    .contains('Sign In')
-    .click();
+  cy.getByInputName('log').clear().type(Cypress.env('student_username'));
+  cy.getByInputName('pwd').clear().type(Cypress.env('student_password'));
+  cy.get('#tutor-login-form button').contains('Sign In').click();
 });
 
 Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
@@ -134,9 +120,7 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
         cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
         cy.get(`span[tutor-dropdown-item][data-key=${option}]`).click();
 
-        cy.get('#tutor-admin-bulk-action-btn')
-          .contains('Apply')
-          .click();
+        cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
         cy.get('#tutor-confirm-bulk-action').click();
 
         cy.get('@randomCheckbox')
@@ -178,12 +162,8 @@ Cypress.Commands.add('performBulkAction', (option) => {
         .then((text) => {
           const expectedValue = text.trim();
           cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).click();
-          cy.get('#tutor-admin-bulk-action-btn')
-            .contains('Apply')
-            .click();
-          cy.get('#tutor-confirm-bulk-action')
-            .contains("Yes, I'am Sure")
-            .click();
+          cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
+          cy.get('#tutor-confirm-bulk-action').contains("Yes, I'am Sure").click();
 
           if (option === 'trash') {
             cy.contains('No Data Available in this Section');
@@ -247,9 +227,7 @@ Cypress.Commands.add(
               const randomIndex = Cypress._.random(1, $options.length - 3);
               const $randomOption = Cypress.$($options[randomIndex]);
               const selectedOptionText = $randomOption.text().trim();
-              cy.wrap($randomOption)
-                .find(dropdownTextSelector)
-                .click();
+              cy.wrap($randomOption).find(dropdownTextSelector).click();
               console.log(`drop `, selectedOptionText);
               cy.get('body').then(($body) => {
                 if (
@@ -273,22 +251,16 @@ Cypress.Commands.add(
           });
       }
     });
-  }
+  },
 );
 
 Cypress.Commands.add('filterElementsByDate', (filterFormSelector, elementDateSelector) => {
   cy.get(filterFormSelector).click();
   cy.get('.dropdown-years').click();
-  cy.get('.dropdown-years>.dropdown-list')
-    .contains('2024')
-    .click();
+  cy.get('.dropdown-years>.dropdown-list').contains('2024').click();
   cy.get('.dropdown-months > .dropdown-label').click();
-  cy.get('.dropdown-months > .dropdown-list>li')
-    .contains('June')
-    .click();
-  cy.get('.react-datepicker__day--011')
-    .contains('11')
-    .click();
+  cy.get('.dropdown-months > .dropdown-list>li').contains('June').click();
+  cy.get('.react-datepicker__day--011').contains('11').click();
   cy.get('body').then(($body) => {
     if (
       $body.text().includes('No Data Found from your Search/Filter') ||
@@ -309,9 +281,7 @@ Cypress.Commands.add('filterElementsByDate', (filterFormSelector, elementDateSel
 });
 
 Cypress.Commands.add('filterByCategory', () => {
-  cy.get('.tutor-js-form-select')
-    .eq(1)
-    .click();
+  cy.get('.tutor-js-form-select').eq(1).click();
   cy.get('.tutor-form-select-options')
     .eq(1)
     .then(() => {
@@ -319,9 +289,7 @@ Cypress.Commands.add('filterByCategory', () => {
         .then(($options) => {
           const randomIndex = Cypress._.random(6, $options.length - 3);
           const $randomOption = Cypress.$($options[randomIndex]);
-          cy.wrap($randomOption)
-            .find('span[tutor-dropdown-item]')
-            .click();
+          cy.wrap($randomOption).find('span[tutor-dropdown-item]').click();
         })
         .then(() => {
           cy.get('body').then(($body) => {
@@ -390,7 +358,7 @@ Cypress.Commands.add(
           });
       }
     });
-  }
+  },
 );
 
 Cypress.Commands.add(
@@ -403,7 +371,7 @@ Cypress.Commands.add(
     });
     cy.get(`${commonSelector} > .tutor-option-field-input > .tutor-js-form-select`).click();
     cy.get(
-      `${commonSelector} > .tutor-option-field-input > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > .tutor-form-select-option`
+      `${commonSelector} > .tutor-option-field-input > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > .tutor-form-select-option`,
     ).then((options) => {
       const randomIndex = Math.floor(Math.random() * options.length);
       cy.wrap(options[randomIndex]).click();
@@ -422,7 +390,7 @@ Cypress.Commands.add(
           });
         });
     });
-  }
+  },
 );
 
 Cypress.Commands.add('toggle', (inputName, fieldId) => {
@@ -466,23 +434,15 @@ Cypress.Commands.add('isEnrolled', () => {
 Cypress.Commands.add('handleCourseStart', () => {
   cy.get('body').then(($body) => {
     if ($body.text().includes('Retake This Course')) {
-      cy.get('button')
-        .contains('Retake This Course')
-        .click();
-      cy.get('button')
-        .contains('Reset Data')
-        .click();
+      cy.get('button').contains('Retake This Course').click();
+      cy.get('button').contains('Reset Data').click();
       cy.wait('@ajaxRequest').then((interception) => {
         expect(interception.response.body.success).to.equal(true);
       });
     } else if ($body.text().includes('Continue Learning')) {
-      cy.get('a')
-        .contains('Continue Learning')
-        .click();
+      cy.get('a').contains('Continue Learning').click();
     } else if ($body.text().includes('Start Learning')) {
-      cy.get('a')
-        .contains('Start Learning')
-        .click();
+      cy.get('a').contains('Start Learning').click();
     }
   });
 });
@@ -490,9 +450,7 @@ Cypress.Commands.add('handleCourseStart', () => {
 Cypress.Commands.add('completeLesson', () => {
   cy.get('body').then(($body) => {
     if ($body.text().includes('Mark as Complete')) {
-      cy.get('button')
-        .contains('Mark as Complete')
-        .click();
+      cy.get('button').contains('Mark as Complete').click();
       cy.wait(1000);
       cy.get('body').should('not.contain', 'Mark as Complete');
     }
@@ -505,9 +463,7 @@ Cypress.Commands.add('handleNextButton', () => {
     .parent()
     .then(($element) => {
       if ($element.attr('disabled')) {
-        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times')
-          .parent()
-          .click();
+        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times').parent().click();
       } else {
         cy.wrap($element).click();
       }
@@ -520,9 +476,7 @@ Cypress.Commands.add('handleAssignment', (isLastItem) => {
     if (
       bodyText.includes('You have missed the submission deadline. Please contact the instructor for more information.')
     ) {
-      cy.get('.tutor-btn-ghost')
-        .contains('Skip To Next')
-        .click();
+      cy.get('.tutor-btn-ghost').contains('Skip To Next').click();
       return;
     }
 
@@ -544,13 +498,9 @@ Cypress.Commands.add('handleAssignment', (isLastItem) => {
     }
     cy.get('body').then(($body) => {
       if ($body.text().includes('Continue Lesson')) {
-        cy.get('a')
-          .contains('Continue Lesson')
-          .click();
+        cy.get('a').contains('Continue Lesson').click();
       } else if (isLastItem) {
-        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times')
-          .parent()
-          .click();
+        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times').parent().click();
       }
     });
   });
@@ -568,9 +518,7 @@ Cypress.Commands.add('handleQuiz', () => {
     ) {
       cy.get('.quiz-attempt-single-question').each(($question, $index) => {
         if ($question.find('textarea').length) {
-          cy.wrap($question)
-            .find('textarea')
-            .type('Sample answer for text area question.');
+          cy.wrap($question).find('textarea').type('Sample answer for text area question.');
         }
         if ($question.find('input[type=text]').length) {
           cy.wrap($question)
@@ -580,15 +528,9 @@ Cypress.Commands.add('handleQuiz', () => {
             });
         }
         if ($question.find('#tutor-quiz-single-multiple-choice').length) {
-          cy.wrap($question)
-            .find('.tutor-quiz-answer-single')
-            .eq(0)
-            .find('input')
-            .click();
+          cy.wrap($question).find('.tutor-quiz-answer-single').eq(0).find('input').click();
         }
-        cy.get('button.tutor-quiz-next-btn-all')
-          .eq($index)
-          .click();
+        cy.get('button.tutor-quiz-next-btn-all').eq($index).click();
       });
     }
     cy.get('a')
@@ -596,9 +538,7 @@ Cypress.Commands.add('handleQuiz', () => {
       .parent()
       .then(($element) => {
         if ($element.attr('disabled')) {
-          cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times')
-            .parent()
-            .click();
+          cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times').parent().click();
         } else {
           cy.wrap($element).click();
         }
@@ -609,19 +549,12 @@ Cypress.Commands.add('handleQuiz', () => {
 Cypress.Commands.add('handleMeetingLesson', (isLastItem) => {
   cy.get('body').then(($body) => {
     if ($body.text().includes('Mark as Complete')) {
-      cy.get('button')
-        .contains('Mark as Complete')
-        .click();
+      cy.get('button').contains('Mark as Complete').click();
     } else {
       if (isLastItem) {
-        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times')
-          .parent()
-          .click();
+        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times').parent().click();
       } else {
-        cy.get('.tutor-course-topic-item')
-          .children('a')
-          .first()
-          .click({ force: true });
+        cy.get('.tutor-course-topic-item').children('a').first().click({ force: true });
       }
     }
   });
@@ -630,18 +563,12 @@ Cypress.Commands.add('handleMeetingLesson', (isLastItem) => {
 Cypress.Commands.add('handleZoomLesson', (isLastItem) => {
   cy.get('body').then(($body) => {
     if ($body.text().includes('Mark as Complete')) {
-      cy.get('button')
-        .contains('Mark as Complete')
-        .click();
+      cy.get('button').contains('Mark as Complete').click();
     } else {
       if (isLastItem) {
-        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times')
-          .parent()
-          .click();
+        cy.get('.tutor-course-topic-single-header a.tutor-iconic-btn span.tutor-icon-times').parent().click();
       } else {
-        cy.get('.tutor-course-topic-item')
-          .children('a')
-          .click({ force: true });
+        cy.get('.tutor-course-topic-item').children('a').click({ force: true });
       }
     }
   });
@@ -650,9 +577,7 @@ Cypress.Commands.add('handleZoomLesson', (isLastItem) => {
 Cypress.Commands.add('completeCourse', () => {
   cy.get('body').then(($body) => {
     if ($body.text().includes('Complete Course')) {
-      cy.get('button')
-        .contains('Complete Course')
-        .click();
+      cy.get('button').contains('Complete Course').click();
     }
   });
 });
@@ -660,11 +585,9 @@ Cypress.Commands.add('completeCourse', () => {
 Cypress.Commands.add('submitCourseReview', () => {
   cy.get('body').then(($body) => {
     if ($body.text().includes('How would you rate this course?')) {
-      cy.get('.tutor-modal-content .tutor-icon-star-line')
-        .eq(4)
-        .click();
+      cy.get('.tutor-modal-content .tutor-icon-star-line').eq(4).click();
       cy.get('.tutor-modal-content textarea[name=review]').type(
-        "Just completed a course on TutorLMS, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals."
+        "Just completed a course on TutorLMS, and it's fantastic! The content is top-notch, instructors are experts in the field, and the real-world examples make learning a breeze. The interactive quizzes and discussions keep you engaged, and the user-friendly interface enhances the overall experience. The flexibility to learn at your own pace is a game-changer for busy professionals.",
       );
       cy.get('.tutor-d-flex > .tutor_submit_review_btn').click();
       cy.wait('@ajaxRequest').then((interception) => {
@@ -678,9 +601,7 @@ Cypress.Commands.add('submitCourseReview', () => {
 Cypress.Commands.add('viewCertificate', () => {
   cy.get('body').then(($body) => {
     if ($body.text().includes('View Certificate')) {
-      cy.get('a')
-        .contains('View Certificate')
-        .click();
+      cy.get('a').contains('View Certificate').click();
       cy.url().should('include', 'tutor-certificate');
       cy.wait(5000);
     }
@@ -692,15 +613,11 @@ Cypress.Commands.add('login', () => {
 
   cy.on('uncaught:exception', () => false);
 
-  cy.get('#user_login')
-    .should('be.visible')
-    .type(Cypress.env('username'));
-  cy.get('#user_pass')
-    .should('be.visible')
-    .type(Cypress.env('password'));
+  cy.get('#user_login').should('be.visible').type(Cypress.env('admin_username'));
+  cy.get('#user_pass').should('be.visible').type(Cypress.env('admin_password'));
 
-  cy.get('#user_login').should('have.value', Cypress.env('username'));
-  cy.get('#user_pass').should('have.value', Cypress.env('password'));
+  cy.get('#user_login').should('have.value', Cypress.env('admin_username'));
+  cy.get('#user_pass').should('have.value', Cypress.env('admin_password'));
 
   cy.get('#wp-submit').click();
 
@@ -709,37 +626,31 @@ Cypress.Commands.add('login', () => {
 
 Cypress.Commands.add('setWPeditorContent', (content: string) => {
   cy.window({
-    timeout: 1000
+    timeout: 1000,
   }).then((win) => {
     const editorId = win.tinymce.activeEditor.id;
     win.tinymce.activeEditor.setContent('');
     cy.get(`#${editorId}_ifr`).then(($iframe) => {
       const doc = $iframe.contents();
       const body = doc.find('body > p');
-      cy.wrap(body)
-        .scrollIntoView()
-        .type(content);
+      cy.wrap(body).scrollIntoView().type(content);
     });
   });
 });
 
 Cypress.Commands.add('getSelectInput', (name: string, value: string) => {
-  cy.get(`input[name="${name}"]`)
-    .should('be.visible')
-    .click({ timeout: 150 });
+  cy.get(`input[name="${name}"]`).should('be.visible').click({ timeout: 150 });
   cy.get('.tutor-portal-popover')
     .should('be.visible')
     .within(() => {
-      cy.get('li')
-        .contains(value)
-        .click();
+      cy.get('li').contains(value).click();
     });
 });
 
 Cypress.Commands.add('isAddonEnabled', (addon: Addon) => {
   return cy.window().then((win) => {
     const isEnabled = !!win._tutorobject.addons_data.find(
-      (item: { base_name: string; is_enabled: boolean }) => item.base_name === addon
+      (item: { base_name: string; is_enabled: boolean }) => item.base_name === addon,
     )?.is_enabled;
     return cy.wrap(isEnabled);
   });
@@ -753,9 +664,7 @@ Cypress.Commands.add('setWPMedia', (label: string, buttonText: string, replaceBu
         .next()
         .within(() => {
           cy.get('[data-cy="media-preview"] > img').should('be.visible');
-          cy.get('[data-cy="replace-media"]')
-            .contains(replaceButtonText)
-            .click();
+          cy.get('[data-cy="replace-media"]').contains(replaceButtonText).click();
         });
       cy.selectWPMedia();
       return;

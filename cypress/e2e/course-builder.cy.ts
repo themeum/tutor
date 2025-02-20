@@ -16,7 +16,8 @@ describe('Course Builder', () => {
 
   beforeEach(() => {
     cy.session('tutor-login', () => {
-      cy.login();
+      cy.visit('/wp-login.php');
+      cy.loginAsAdmin();
     });
 
     // Navigate to course if ID exists, else prepare for creation
