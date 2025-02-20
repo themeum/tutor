@@ -89,6 +89,10 @@ class Quiz_Attempts_List {
 	public function get_quiz_attempts_stat() {
 		global $wpdb;
 
+		if ( wp_doing_ajax() ) {
+			tutor_utils()->checking_nonce();
+		}
+
 		/**
 		 * Parse `passing_grade` value from `attempt_info` serialized data.
 		 *
@@ -139,8 +143,7 @@ class Quiz_Attempts_List {
 				$select_stmt = "SELECT COUNT( DISTINCT attempt_id)
 								FROM {$wpdb->prefix}tutor_quiz_attempts quiz_attempts
 								INNER JOIN {$wpdb->posts} quiz ON quiz_attempts.quiz_id = quiz.ID
-								INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans  
-										ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
+								-- INNER JOIN {$wpdb->prefix}tutor_quiz_attempt_answers AS ans ON quiz_attempts.attempt_id = ans.quiz_attempt_id";
 
 				$count_obj->pass = (int) $wpdb->get_var(
 					$wpdb->prepare(
@@ -202,7 +205,7 @@ class Quiz_Attempts_List {
 	 * @return array
 	 */
 	public function tabs_key_value( $user_id, $course_id, $date, $search ): array {
-		$url   = get_pagenum_link();
+		$url   = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link());
 		$stats = $this->get_quiz_attempts_stat();
 
 		$tabs = array(
@@ -263,7 +266,7 @@ class Quiz_Attempts_List {
 		tutor_utils()->checking_nonce();
 
 		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
+		if ( ! User::has_any_role( array( User::ADMIN, User::INSTRUCTOR ) ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 
@@ -275,6 +278,17 @@ class Quiz_Attempts_List {
 				return (int) trim( $id );
 			},
 			$bulk_ids
+		);
+
+		// prevent instructor to remove quiz attempt from admin.
+		$bulk_ids = array_filter(
+			$bulk_ids,
+			function ( $attempt_id ) {
+				$attempt   = tutor_utils()->get_attempt( $attempt_id );
+				$user_id   = get_current_user_id();
+				$course_id = $attempt && is_object( $attempt ) ? $attempt->course_id : 0;
+				return $course_id && tutor_utils()->can_user_edit_course( $user_id, $course_id );
+			}
 		);
 
 		switch ( $bulk_action ) {

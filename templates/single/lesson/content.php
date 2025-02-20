@@ -47,7 +47,7 @@ if ( $best_watch_time > 0 ) {
 	$json_data['best_watch_time'] = $best_watch_time;
 }
 
-$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open();
+$is_comment_enabled = tutor_utils()->get_option( 'enable_comment_for_lesson' ) && comments_open() && is_user_logged_in();
 
 ?>
 
@@ -161,6 +161,7 @@ tutor_load_template(
 							<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'About Lesson', 'tutor' ); ?>
 							</div>
+							<?php do_action( 'tutor_lesson_before_the_content', $post, $course_id ); ?>
 							<div class="tutor-fs-6 tutor-color-secondary tutor-lesson-wrapper">
 								<?php the_content(); ?>
 							</div>

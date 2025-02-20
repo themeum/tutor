@@ -58,7 +58,18 @@ readyState_complete(() => {
                 if (loadingSpinner) {
                     document.getElementById(dataTab).querySelector('.loading-spinner').remove();
                 }
-            
+
+                // Update certificate pagination on tab change
+                if (dataTab === 'tutor_certificate') {
+                    const paginationLinks = document.querySelectorAll('#tutor-settings-tab-certificate_list .tutor-pagination a');
+
+                    paginationLinks.forEach((link) => {
+                        const url = new URL(link.href);
+                        url.searchParams.set('tab_page', dataTab); // Update the 'tab_page' parameter
+                        link.href = url.toString();
+                    });
+                }
+
             }
 
         });

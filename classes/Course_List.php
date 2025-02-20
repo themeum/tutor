@@ -94,6 +94,18 @@ class Course_List {
 		if ( 'trash' !== $active_tab ) {
 			array_push( $actions, $this->bulk_action_trash() );
 		}
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			$can_trash_post = tutor_utils()->get_option( 'instructor_can_delete_course' ) && current_user_can( 'edit_tutor_course' );
+			if ( ! $can_trash_post ) {
+				$actions = array_filter(
+					$actions,
+					function ( $val ) {
+						return 'trash' !== $val['value'];
+					}
+				);
+			}
+		}
 		return apply_filters( 'tutor_course_bulk_actions', $actions );
 	}
 
@@ -110,7 +122,7 @@ class Course_List {
 	 * @since v2.0.0
 	 */
 	public function tabs_key_value( $category_slug, $course_id, $date, $search ): array {
-		$url = get_pagenum_link();
+		$url = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 
 		$all       = self::count_course( 'all', $category_slug, $course_id, $date, $search );
 		$mine      = self::count_course( 'mine', $category_slug, $course_id, $date, $search );
@@ -171,6 +183,9 @@ class Course_List {
 				'url'   => $url . '&data=trash',
 			),
 		);
+		if ( ! tutor_utils()->get_option( 'instructor_can_delete_course' ) && ! current_user_can( 'administrator' ) ) {
+			unset( $tabs[7] );
+		}
 		return apply_filters( 'tutor_course_tabs', $tabs );
 	}
 
@@ -241,7 +256,7 @@ class Course_List {
 		if ( '' !== $category_slug ) {
 			$args['tax_query'] = array(
 				array(
-					'taxonomy' => 'course-category',
+					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'field'    => 'slug',
 					'terms'    => $category_slug,
 				),
@@ -264,13 +279,22 @@ class Course_List {
 
 		tutor_utils()->checking_nonce();
 
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+			if ( current_user_can( 'edit_tutor_course' ) ) {
+				$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
+
+				if ( 'publish' === $action && ! $can_publish_course ) {
+					wp_send_json_error( tutor_utils()->error_message() );
+				}
+			} else {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+		}
+
 		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
@@ -299,12 +323,7 @@ class Course_List {
 
 		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
 
-		$update_status ? wp_send_json_success() : wp_send_json_error(
-			array(
-				'message' => 'Could not update course status',
-				'tutor',
-			)
-		);
+		$update_status ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not update course status', 'tutor' ) ) );
 
 		exit;
 	}
@@ -318,14 +337,36 @@ class Course_List {
 	public static function tutor_change_course_status() {
 		tutor_utils()->checking_nonce();
 
-		// Check if user is privileged.
-		if ( ! current_user_can( 'administrator' ) ) {
-			wp_send_json_error( tutor_utils()->error_message() );
-		}
-
 		$status = Input::post( 'status' );
 		$id     = Input::post( 'id' );
 		$course = get_post( $id );
+
+		// Check if user is privileged.
+		if ( ! current_user_can( 'administrator' ) ) {
+
+			if ( ! tutor_utils()->can_user_edit_course( get_current_user_id(), $course->ID ) ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+
+			$can_delete_course  = tutor_utils()->get_option( 'instructor_can_delete_course' );
+			$can_publish_course = tutor_utils()->get_option( 'instructor_can_publish_course' );
+
+			if ( 'publish' === $status && ! $can_publish_course ) {
+				wp_send_json_error( tutor_utils()->error_message() );
+			}
+
+			if ( 'trash' === $status && $can_delete_course ) {
+				$args       = array(
+					'ID'          => $id,
+					'post_status' => $status,
+				);
+				$trash_post = wp_update_post( $args );
+
+				if ( $trash_post ) {
+					wp_send_json_success( __( 'Course trashed successfully', 'tutor' ) );
+				}
+			}
+		}
 
 		if ( CourseModel::POST_TYPE !== $course->post_type ) {
 			wp_send_json_error( tutor_utils()->error_message() );

@@ -42,8 +42,7 @@
 					pickerView.forEach((toPicker) => {
 						let pickerInput = toPicker.dataset.key;
 						if (pickerInput == presetKey) {
-							toPicker.querySelector('input').value = presetColor;
-							toPicker.querySelector('.picker-value').innerHTML = presetColor;
+							toPicker.querySelectorAll('input').forEach((input) => input.value = presetColor);
 
 							toPicker.style.borderColor = presetColor;
 							toPicker.style.boxShadow = `inset 0 0 0 1px ${presetColor}`;
@@ -65,7 +64,7 @@
 		);
 
 		// listening picker input events
-		picker.addEventListener('input', function(e) {
+		picker.addEventListener('input', function (e) {
 			const presetColors =
 				customPresetEl && customPresetEl.querySelectorAll('.header span');
 			const presetItem =
@@ -84,7 +83,7 @@
 					});
 					presetItem.checked = true;
 				});
-		}
+			}
 		});
 	};
 	// listening color pickers input event
@@ -95,7 +94,7 @@
 	}
 	if (colorPickerTextInputs) {
 		colorPickerTextInputs.forEach((picker) => {
-			picker.addEventListener('input', function(e) {
+			picker.addEventListener('input', function (e) {
 				if (e.target.value.length === 7) {
 					picker.previousElementSibling.value = e.target.value;
 					picker.previousElementSibling.dispatchEvent(new Event('input', { bubbles: true }));

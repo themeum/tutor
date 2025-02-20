@@ -25,7 +25,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 ?>
 
 <?php if ( is_array( $attempt_list ) && count( $attempt_list ) ) : ?>
-	<div class="tutor-table-responsive tutor-my-24">
+	<div class="tutor-table-responsive tutor-table-mobile tutor-my-24">
 		<table class="tutor-table tutor-table-quiz-attempts">
 			<thead>
 				<tr>
@@ -97,7 +97,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								continue;
 							}
 							?>
-							<td>
+							<td data-title="<?php echo esc_attr( $column ); ?>">
 								<?php if ( 'checkbox' == $key ) : ?>
 									<div class="tutor-d-flex">
 										<input id="tutor-admin-list-<?php echo esc_attr( $attempt->attempt_id ); ?>" type="checkbox" class="tutor-form-check-input tutor-bulk-checkbox" name="tutor-bulk-checkbox-all" value="<?php echo esc_attr( $attempt->attempt_id ); ?>" />
@@ -143,13 +143,13 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 								<?php elseif ( 'question' == $key ) : ?>
 									<?php echo esc_html( count( $answers ) ); ?>
 								<?php elseif ( 'total_marks' == $key ) : ?>
-									<?php echo esc_html( round( $attempt->total_marks ) ); ?>
+									<?php echo esc_html( isset( $attempt->total_marks ) ? round( $attempt->total_marks ) : '0' ); ?>
 								<?php elseif ( 'correct_answer' == $key ) : ?>
 									<?php echo esc_html( $correct ); ?>
 								<?php elseif ( 'incorrect_answer' == $key ) : ?>
 									<?php echo esc_html( $incorrect ); ?>
 								<?php elseif ( 'earned_marks' == $key ) : ?>
-									<?php echo esc_html( round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' ); ?>
+									<?php echo esc_html( isset( $attempt->earned_marks ) ? round( $attempt->earned_marks ) . ' (' . $earned_percentage . '%)' : '0 (0%)' ); ?>
 								<?php elseif ( 'result' == $key ) : ?>
 									<?php
 									if ( $has_pending ) {
@@ -162,8 +162,11 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 									?>
 								<?php elseif ( 'details' == $key ) : ?>
 									<?php
-										$url   = add_query_arg( array( 'view_quiz_attempt_id' => $attempt->attempt_id ), tutor()->current_url );
-										$style = '';
+										$url_args  = array( 'view_quiz_attempt_id' => $attempt->attempt_id );
+										$admin_url = add_query_arg( $url_args, admin_url( 'admin.php?page=tutor_quiz_attempts' ) );
+										$front_url = add_query_arg( $url_args, tutor()->current_url );
+										$url       = is_admin() ? $admin_url : $front_url;
+										$style     = '';
 									?>
 									<div class="tutor-d-inline-flex tutor-align-center" style="<?php echo esc_attr( ! is_admin() ? $style : '' ); ?>">
 										<a href="<?php echo esc_url( $url ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">

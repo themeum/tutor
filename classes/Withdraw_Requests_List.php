@@ -66,7 +66,7 @@ class Withdraw_Requests_List {
 		$pending  = self::tabs_data( 'pending', $date, $search );
 		$rejected = self::tabs_data( 'rejected', $date, $search );
 
-		$url  = get_pagenum_link();
+		$url  = apply_filters( 'tutor_data_tab_base_url', get_pagenum_link() );
 		$tabs = array(
 			array(
 				'key'   => 'all',
@@ -88,7 +88,7 @@ class Withdraw_Requests_List {
 			),
 			array(
 				'key'   => 'rejected',
-				'title' => __( 'Rejected', 'tutor-pro' ),
+				'title' => __( 'Rejected', 'tutor' ),
 				'value' => $rejected,
 				'url'   => $url . '&data=rejected',
 			),

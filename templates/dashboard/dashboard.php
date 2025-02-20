@@ -133,11 +133,11 @@ if ( tutor_utils()->get_option( 'enable_profile_completion' ) ) {
 }
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24 tutor-dashboard-title"><?php esc_html_e( 'Dashboard', 'tutor' ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-text-capitalize tutor-mb-24 tutor-dashboard-title"><?php esc_html_e( 'Dashboard', 'tutor' ); ?></div>
 <div class="tutor-dashboard-content-inner">
 	<?php
 	$user_id           = get_current_user_id();
-	$enrolled_course   = tutor_utils()->get_enrolled_courses_by_user();
+	$enrolled_course   = tutor_utils()->get_enrolled_courses_by_user( $user_id, array( 'private', 'publish' ) );
 	$completed_courses = tutor_utils()->get_completed_courses_ids_by_user();
 	$total_students    = tutor_utils()->get_total_students_by_instructor( $user_id );
 	$my_courses        = CourseModel::get_courses_by_instructor( $user_id, CourseModel::STATUS_PUBLISH );
@@ -252,7 +252,7 @@ $courses_in_progress = tutor_utils()->get_active_courses_by_user( get_current_us
 
 <?php if ( $courses_in_progress && $courses_in_progress->have_posts() ) : ?>
 	<div class="tutor-frontend-dashboard-course-progress">
-		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-capitalize-text tutor-mb-24">
+		<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-text-capitalize tutor-mb-24">
 			<?php esc_html_e( 'In Progress Courses', 'tutor' ); ?>
 		</div>
 		<?php

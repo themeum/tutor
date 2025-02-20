@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "name": "themeum/tutor",
+  "description": "Paypal Payment Gateway Integration with Tutor LMS",
+  "type": "library",
+  "license": "MIT",
+  "autoload": {
+    "psr-4": {
+      "Ollyo\\PaymentHub\\": "src/"
+    }
+  },
+  "require": {
+    "guzzlehttp/guzzle": "^7.9.2",
+    "brick/money": "0.7"
+  }
+}

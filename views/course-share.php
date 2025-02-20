@@ -37,8 +37,11 @@ $share_config = array(
 				<div class="tutor-fs-7 tutor-color-secondary tutor-mb-12">
 					<?php esc_html_e( 'Page Link', 'tutor' ); ?>
 				</div>
-				<div class="tutor-mb-32">
+				<div class="tutor-mb-32 tutor-position-relative">
 					<input class="tutor-form-control" value="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>" />
+					<button class="tutor-btn tutro-btn-icon tutor-copy-text tutor-position-absolute tutor-bg-white" style="right: 2px; top: 2px;" data-text="<?php echo esc_attr( get_permalink( get_the_ID() ) ); ?>">
+						<span class="icon tutor-icon-copy"></span>
+					</button>
 				</div>
 				<div>
 					<div class="tutor-color-black tutor-fs-6 tutor-fw-medium tutor-mb-16">

@@ -8,6 +8,8 @@
  * @since 1.0.0
  */
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -650,7 +652,7 @@ if ( ! function_exists( 'tutor_course_loop_price' ) ) {
 				tutor_load_template( 'loop.course-price' );
 			}
 		}
-		echo apply_filters( 'tutor_course_loop_price', ob_get_clean() ); //phpcs:ignore -- already escaped inside template file
+		echo apply_filters( 'tutor_course_loop_price', ob_get_clean(), $course_id ); //phpcs:ignore -- already escaped inside template file
 	}
 }
 
@@ -1390,7 +1392,7 @@ if ( ! function_exists( 'get_tutor_course_categories' ) ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
 		}
-		$terms = get_the_terms( $course_id, 'course-category' );
+		$terms = get_the_terms( $course_id, CourseModel::COURSE_CATEGORY );
 
 		return $terms;
 	}
@@ -1409,7 +1411,7 @@ if ( ! function_exists( 'get_tutor_course_tags' ) ) {
 		if ( ! $course_id ) {
 			$course_id = get_the_ID();
 		}
-		$terms = get_the_terms( $course_id, 'course-tag' );
+		$terms = get_the_terms( $course_id, CourseModel::COURSE_TAG );
 
 		return $terms;
 	}

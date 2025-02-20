@@ -13,7 +13,7 @@ $field_key     = $field['key'];
 $default       = isset( $field['default'] ) ? $field['default'] : false;
 $value         = $this->get( $field_key, $default );
 $field_id      = esc_attr( 'field_' . $field_key );
-$placeholder   = isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : esc_attr( $field['desc'] );
+$placeholder   = isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : esc_attr( $field['desc'] ?? '' );
 $field_classes = isset( $field['field_classes'] ) ? $field['field_classes'] : '';
 $field_style   = isset( $field['field_style'] ) ? 'style="' . $field['field_style'] . '"' : '';
 $max_length    = isset( $field['maxlength'] ) ? (int) $field['maxlength'] : 0;

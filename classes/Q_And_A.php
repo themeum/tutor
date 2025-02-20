@@ -228,10 +228,9 @@ class Q_And_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_ID IN(%s)
+						WHERE {$wpdb->comments}.comment_ID IN ($question_ids)
 							AND 1 = %d
 					",
-					$question_ids,
 					1
 				)
 			);
@@ -240,10 +239,9 @@ class Q_And_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->comments}
-						WHERE {$wpdb->comments}.comment_parent IN(%s)
+						WHERE {$wpdb->comments}.comment_parent IN ($question_ids)
 							AND 1 = %d
 					",
-					$question_ids,
 					1
 				)
 			);
@@ -252,10 +250,9 @@ class Q_And_A {
 				$wpdb->prepare(
 					"DELETE
 						FROM {$wpdb->commentmeta} 
-						WHERE {$wpdb->commentmeta}.comment_id IN(%s)
+						WHERE {$wpdb->commentmeta}.comment_id IN ($question_ids)
 							AND 1 = %d
 					",
-					$question_ids,
 					1
 				)
 			);

@@ -53,7 +53,7 @@ function tutor_announcement_modal( $id, $title, $courses, $announcement = null )
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Select Course', 'tutor' ); ?>
 						</label>
-						<select class="tutor-form-select" name="tutor_announcement_course" required>
+						<select class="tutor-form-select" name="tutor_announcement_course" required data-searchable>
 							<?php if ( $courses ) : ?>
 								<?php foreach ( $courses as $course ) : ?>
 									<option value="<?php echo esc_attr( $course->ID ); ?>" <?php selected( $course_id, $course->ID ); ?>>
@@ -377,5 +377,5 @@ $courses = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() 
 
 
 <?php
-	tutor_announcement_modal( 'tutor_announcement_new', __( 'Create Announcement' ), $courses );
+	tutor_announcement_modal( 'tutor_announcement_new', __( 'Create Announcement', 'tutor' ), $courses );
 ?>

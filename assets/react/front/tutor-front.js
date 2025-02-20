@@ -1,11 +1,15 @@
 import '../admin-dashboard/segments/lib';
+import sprintf from '../helper/sprintf';
+import './_select_dd_search';
 import './course/index';
 import './dashboard';
 import './dashboard/export-csv';
+import './pages/billing';
+import './pages/cart';
+import './pages/checkout';
 import './pages/course-landing';
 import './pages/instructor-list-filter';
-import './_select_dd_search';
-import sprintf from '../helper/sprintf';
+
 /**
  * Codes from this file should be decentralized according to relavent file/folder structure.
  * It's a legacy file.
@@ -166,7 +170,7 @@ jQuery(document).ready(function($) {
 					const instance = event.detail.plyr;
 					const { best_watch_time = 0 } = video_data || {};
 					if (_tutorobject.tutor_pro_url && best_watch_time > 0) {
-						var previous_duration = Math.round(best_watch_time);
+						var previous_duration = Math.floor(best_watch_time);
 						var previousTimeSetter = setTimeout(function(){
 							if (player.playing !== true && player.currentTime !== previous_duration) {
 								if (instance.provider === 'youtube') {
@@ -485,7 +489,7 @@ jQuery(document).ready(function($) {
 				},
 				success: function(data) {
 					if (data.success) {
-						tutor_toast('Success!', data.data.msg, 'success');
+						tutor_toast(__('Success!', 'tutor'), data.data.msg, 'success');
 					}
 				},
 				complete: function() {
@@ -544,7 +548,7 @@ jQuery(document).ready(function($) {
 						location.reload();
 					}, 500);
 				} else {
-					tutor_toast('Error', data.data.msg, 'error');
+					tutor_toast(__('Error', 'tutor'), data.data.msg, 'error');
 					Msg =
 						'<div class="tutor-error-msg inline-image-text is-inline-block">\
                             <img src="' +

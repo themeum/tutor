@@ -46,7 +46,7 @@ $paginated_courses_list = $full_courses_list_array[ $active_tab ];
 
 ?>
 
-<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16 tutor-capitalize-text"><?php echo esc_html( $page_tabs[ $active_tab ] ); ?></div>
+<div class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-16 tutor-text-capitalize"><?php echo esc_html( $page_tabs[ $active_tab ] ); ?></div>
 <div class="tutor-dashboard-content-inner enrolled-courses">
 	<div class="tutor-mb-32">
 		<ul class="tutor-nav" tutor-priority-nav>

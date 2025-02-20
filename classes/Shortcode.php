@@ -10,6 +10,8 @@
 
 namespace TUTOR;
 
+use Tutor\Models\CourseModel;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -50,6 +52,9 @@ class Shortcode {
 		add_shortcode( 'tutor_instructor_list', array( $this, 'tutor_instructor_list' ) );
 		add_action( 'wp_ajax_load_filtered_instructor', array( $this, 'load_filtered_instructor' ) );
 		add_action( 'wp_ajax_nopriv_load_filtered_instructor', array( $this, 'load_filtered_instructor' ) );
+
+		add_shortcode( 'tutor_cart', array( $this, 'tutor_cart_page' ) );
+		add_shortcode( 'tutor_checkout', array( $this, 'tutor_checkout_page' ) );
 
 		/**
 		 * Load more categories
@@ -104,7 +109,7 @@ class Shortcode {
 			 *
 			 * @since 2.1.3
 			 */
-			$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
+			$login_url   = tutor_utils()->get_option( 'enable_tutor_native_login', null, true, true ) ? '' : wp_login_url( tutor()->current_url );
 			$signin_link = '<a data-login_url="' . esc_url( $login_url ) . '" href="#" class="tutor-open-login-modal">' . __( 'Sign-In', 'tutor' ) . '</a>';
 			/* translators: %s is anchor link for signin */
 			echo sprintf( __( 'Please %s to view this page', 'tutor' ), $signin_link ); //phpcs:ignore
@@ -156,14 +161,28 @@ class Shortcode {
 			$atts
 		);
 
+		$supported_filters         = tutor_utils()->get_option( 'supported_course_filters', array() );
+		$course_filter_category    = array();
+		$course_filter_exclude_ids = array();
+		$course_filter_post_ids    = array();
+
 		if ( ! empty( $a['id'] ) ) {
 			$ids           = (array) explode( ',', $a['id'] );
 			$a['post__in'] = $ids;
+
+			if ( is_array( $ids ) && count( $ids ) && ! wp_doing_ajax() ) {
+				$_GET['tutor-course-filter-post-ids'] = $ids;
+				$course_filter_post_ids               = $ids;
+			}
 		}
 
 		if ( ! empty( $a['exclude_ids'] ) ) {
 			$exclude_ids       = (array) explode( ',', $a['exclude_ids'] );
 			$a['post__not_in'] = $exclude_ids;
+			if ( is_array( $exclude_ids ) && count( $exclude_ids ) && ! wp_doing_ajax() ) {
+				$_GET['tutor-course-filter-exclude-ids'] = $exclude_ids;
+				$course_filter_exclude_ids               = $exclude_ids;
+			}
 		}
 		if ( ! empty( $a['category'] ) ) {
 			$category = (array) explode( ',', $a['category'] );
@@ -187,18 +206,24 @@ class Shortcode {
 			if ( ! empty( $category_ids ) ) {
 				$a['tax_query'] = array(
 					array(
-						'taxonomy' => 'course-category',
+						'taxonomy' => CourseModel::COURSE_CATEGORY,
 						'field'    => 'term_id',
 						'terms'    => $category_ids,
 						'operator' => 'IN',
 					),
 				);
+
+				if ( is_array( $category_ids ) && count( $category_ids ) && ! wp_doing_ajax() ) {
+					$_GET['tutor-course-filter-category'] = $category_ids;
+					$course_filter_category               = $category_ids;
+					unset( $supported_filters['category'] );
+				}
 			}
 
 			if ( ! empty( $category_names ) ) {
 				$a['tax_query'] = array(
 					array(
-						'taxonomy' => 'course-category',
+						'taxonomy' => CourseModel::COURSE_CATEGORY,
 						'field'    => 'name',
 						'terms'    => $category_names,
 						'operator' => 'IN',
@@ -229,14 +254,17 @@ class Shortcode {
 			tutor_load_template(
 				'archive-course-init',
 				array(
-					'course_filter'     => isset( $atts['course_filter'] ) && 'on' === $atts['course_filter'],
-					'supported_filters' => tutor_utils()->get_option( 'supported_course_filters', array() ),
-					'loop_content_only' => false,
-					'column_per_row'    => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
-					'course_per_page'   => $a['posts_per_page'],
-					'show_pagination'   => isset( $atts['show_pagination'] ) && 'on' === $atts['show_pagination'],
-					'the_query'         => $the_query,
-					'current_page'      => isset( $get['current_page'] ) ? (int) $get['current_page'] : 1,
+					'course_filter'             => isset( $atts['course_filter'] ) && 'on' === $atts['course_filter'],
+					'supported_filters'         => $supported_filters,
+					'loop_content_only'         => false,
+					'column_per_row'            => isset( $atts['column_per_row'] ) ? $atts['column_per_row'] : null,
+					'course_per_page'           => $a['posts_per_page'],
+					'show_pagination'           => isset( $atts['show_pagination'] ) && 'on' === $atts['show_pagination'],
+					'the_query'                 => $the_query,
+					'current_page'              => isset( $get['current_page'] ) ? (int) $get['current_page'] : 1,
+					'course_filter_category'    => ! empty( $course_filter_category ) ? json_encode( $course_filter_category ) : null,
+					'course_filter_exclude_ids' => ! empty( $course_filter_exclude_ids ) ? json_encode( $course_filter_exclude_ids ) : null,
+					'course_filter_post_ids'    => ! empty( $course_filter_post_ids ) ? json_encode( $course_filter_post_ids ) : null,
 				)
 			);
 		} else {
@@ -320,7 +348,7 @@ class Shortcode {
 
 		if ( $show_filter ) {
 			$limit           = 8;
-			$course_taxonomy = 'course-category';
+			$course_taxonomy = CourseModel::COURSE_CATEGORY;
 			$course_cats     = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT
@@ -385,7 +413,7 @@ class Shortcode {
 		tutor_utils()->checking_nonce();
 		$term_id         = Input::post( 'term_id', 0, Input::TYPE_INT );
 		$limit           = 8;
-		$course_taxonomy = 'course-category';
+		$course_taxonomy = CourseModel::COURSE_CATEGORY;
 
 		$remaining_categories = $wpdb->get_var(
 			$wpdb->prepare(
@@ -460,5 +488,31 @@ class Shortcode {
 		tutor_load_template( 'shortcode.tutor-instructor', $data );
 		wp_send_json_success( array( 'html' => ob_get_clean() ) );
 		exit;
+	}
+
+	/**
+	 * Tutor Cart Shortcode
+	 *
+	 * @since v.3.0.0
+	 *
+	 * @return mixed
+	 */
+	public function tutor_cart_page() {
+		ob_start();
+		tutor_load_template( 'ecommerce.cart' );
+		return apply_filters( 'tutor_ecommerce/cart', ob_get_clean() );
+	}
+
+	/**
+	 * Tutor Checkout Shortcode
+	 *
+	 * @since v.3.0.0
+	 *
+	 * @return mixed
+	 */
+	public function tutor_checkout_page() {
+		ob_start();
+		tutor_load_template( 'ecommerce.checkout' );
+		return apply_filters( 'tutor_ecommerce/checkout', ob_get_clean() );
 	}
 }

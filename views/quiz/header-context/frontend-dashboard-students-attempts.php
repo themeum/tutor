@@ -26,11 +26,11 @@ if ( ! empty( $back_url ) ) : ?>
 </div>
 
 <div class="tutor-mb-32 tutor-fs-7 tutor-color-secondary">
-	<div class="tutor-d-flex">
-		<div class="tutor-mr-16">
+	<div class="tutor-d-flex tutor-flex-column tutor-flex-sm-row tutor-gap-1 tutor-gap-sm-2">
+		<div>
 			<?php esc_html_e( 'Student', 'tutor' ); ?>: <span class="tutor-color-black"><strong><?php echo esc_html( $student_name ); ?></strong></span>
 		</div>
-		<div class="tutor-mr-16">
+		<div>
 			<?php esc_html_e( 'Quiz Time', 'tutor' ); ?>: <span class="tutor-color-black"><strong><?php echo esc_html( $quiz_time ); ?></strong></span>
 		</div>
 		<div>

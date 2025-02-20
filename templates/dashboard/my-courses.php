@@ -39,7 +39,11 @@ $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
 
-$results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
+$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
+$show_course_delete = true;
+if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
+	$show_course_delete = false;
+}
 ?>
 
 <div class="tutor-dashboard-my-courses">
@@ -91,7 +95,7 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 					$course_students    = tutor_utils()->count_enrolled_users_by_course();
 					$is_main_instructor = CourseModel::is_main_instructor( $post->ID );
 					?>
-	
+
 					<div id="<?php echo esc_attr( $row_id ); ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
 						<a href="<?php echo esc_url( get_the_permalink() ); ?>" class="tutor-d-block">
 							<div class="tutor-ratio tutor-ratio-16x9">
@@ -155,11 +159,14 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 							<div class="tutor-d-flex tutor-align-center tutor-justify-between">
 								<div class="tutor-d-flex tutor-align-center">
 									<span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
-										<?php esc_html_e( 'Price:', 'tutor' ); ?>
+										<?php
+										$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
+										echo esc_html( $membership_only_mode ? __( 'Plan:', 'tutor-pro' ) : '' );
+										?>
 									</span>
 									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 										<?php
-											$price = tutor_utils()->get_course_price();
+										$price = tutor_utils()->get_course_price();
 										if ( null === $price ) {
 											esc_html_e( 'Free', 'tutor' );
 										} else {
@@ -169,7 +176,7 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 									</span>
 								</div>
 								<div class="tutor-iconic-btn-group tutor-mr-n8">
-									<a href="<?php echo esc_url( tutor_utils()->course_edit_link( $post->ID ) ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
+									<a href="<?php echo esc_url( tutor_utils()->course_edit_link( $post->ID, tutor()->has_pro ? 'frontend' : 'backend' ) ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
 										<i class="tutor-icon-edit" area-hidden="true"></i>
 									</a>
 									<div class="tutor-dropdown-parent">
@@ -177,9 +184,9 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 											<span class="tutor-icon-kebab-menu" area-hidden="true"></span>
 										</button>
 										<div id="table-dashboard-course-list-<?php echo esc_attr( $post->ID ); ?>" class="tutor-dropdown tutor-dropdown-dark tutor-text-left">
-											
+
 											<!-- Submit Action -->
-											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_DRAFT ) ) ) : ?>
+											<?php if ( tutor()->has_pro && in_array( $post->post_status, array( CourseModel::STATUS_DRAFT ), true ) ) : ?>
 												<?php
 												$params = http_build_query(
 													array(
@@ -263,10 +270,12 @@ $results = CourseModel::get_courses_by_instructor( $current_user_id, $status, $o
 											
 											<!-- Delete Action -->
 											<?php if ( $is_main_instructor && in_array( $post->post_status, array( CourseModel::STATUS_PUBLISH, CourseModel::STATUS_DRAFT ) ) ) : ?>
-											<a href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-dropdown-item tutor-admin-course-delete">
-												<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
-												<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
-											</a>
+												<?php if ( $show_course_delete ) : ?>
+												<a href="#" data-tutor-modal-target="<?php echo esc_attr( $id_string_delete ); ?>" class="tutor-dropdown-item tutor-admin-course-delete">
+													<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
+													<span><?php esc_html_e( 'Delete', 'tutor' ); ?></span>
+												</a>
+												<?php endif; ?>
 											<?php endif; ?>
 											<!-- # Delete Action -->
 

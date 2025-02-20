@@ -5,10 +5,23 @@
 .tutor-admin {
 	&-wrap {
 		margin-left: -20px;
-		// background-color: #E9EAED;
+		.rtl & {
+			margin-left: 0px;
+			margin-right: -20px;
+		}
+		
+		@include breakpoint-max(782) {
+			margin-left: -10px;
+			.rtl & {
+				margin-left: 0px;
+				margin-right: -10px;
+			}
+		}
 
 		// reset
-		* {
+		*,
+		::after,
+		::before {
 			box-sizing: border-box;
 		}
 
@@ -39,11 +52,10 @@
 
 	&-container {
 		max-width: 1160px;
-		min-width: 760px;
 		margin-left: auto;
 		margin-right: auto;
-		padding-left: 30px;
-		padding-right: 30px;
+		padding-left: 20px;
+		padding-right: 20px;
 
 		&-sm {
 			max-width: 760px;
@@ -514,29 +526,6 @@ a.addon-buynow-link {
 	display: inline-block;
 }
 
-/**
-  Add-ons list
-   */
-
-.tutor-addons-list {
-	background-color: #fff;
-	min-height: 500px;
-	padding: 20px;
-}
-
-.tutor-addons-list .plugin-icon {
-	height: 120px !important;
-	width: auto !important;
-}
-
-.tutor-addons-list .plugin-card .desc {
-	margin-right: 0;
-}
-
-.tutor-addons-list .plugin-card .name {
-	margin-right: 50px;
-}
-
 /* RTL Style for name and desc */
 
 .tutor-lms-pro_page_tutor-addons.rtl .plugin-card .desc,
@@ -982,7 +971,7 @@ a:has(> span.tutor-get-pro-text ) {
 	}
 }
 
-span.tutor-addons-text{
+.tutor-text-orange {
 	color: orange;
 }
 
@@ -1794,4 +1783,8 @@ h2.tutor-page-heading {
     font-size: 11px;
     display: inline-block;
     line-height: 15px;
+}
+
+.wp-submenu li a[href="admin.php?page=create-course"] {
+    display: none!important;
 }

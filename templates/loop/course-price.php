@@ -11,8 +11,9 @@
 
 ?>
 <?php
-$course_id    = get_the_ID();
-$monetization = tutor_utils()->get_option( 'monetize_by' );
+$course_id          = get_the_ID();
+$password_protected = post_password_required( $course_id );
+$monetization       = tutor_utils()->get_option( 'monetize_by' );
 /**
  * If Monetization is PMPRO then ignore ajax enrolment
  * to avoid Paid course enrollment without payment.
@@ -23,22 +24,28 @@ $monetization = tutor_utils()->get_option( 'monetize_by' );
  *
  * @since v2.1.2
  */
-$button_class = 'pmpro' === $monetization ? ' ' : ' tutor-course-list-enroll';
+$button_class = 'pmpro' === $monetization || $password_protected ? ' ' : ' tutor-course-list-enroll';
 if ( ! is_user_logged_in() ) {
 	$button_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
 
-$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+$enroll_now_attrs = apply_filters( 'tutor_enroll_now_link_attrs', array(), $course_id );
+$attrs_string     = '';
+foreach ( $enroll_now_attrs as $key => $value ) {
+	$attrs_string .= sprintf( '%s="%s" ', esc_attr( $key ), esc_attr( $value ) );
+}
+
+$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '" ' . trim( $attrs_string ) . '>' . __( 'Enroll Course', 'tutor' ) . '</a>', $course_id ) . '</div>';
 $free_html  = $enroll_btn;
 
 if ( tutor_utils()->is_course_purchasable() ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
 
 	$product_id = tutor_utils()->get_course_product_id( $course_id );
-	$product    = wc_get_product( $product_id );
+	$product    = function_exists( 'wc_get_product' ) ? wc_get_product( $product_id ) : 0;
 
-	$total_enrolled   = tutor_utils()->count_enrolled_users_by_course( $course_id );
-	$maximum_students = tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
+	$total_enrolled   = (int) tutor_utils()->count_enrolled_users_by_course( $course_id );
+	$maximum_students = (int) tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
 
 	if ( 0 != $maximum_students && $total_enrolled != $maximum_students ) {
 		$total_booked = 100 / $maximum_students * $total_enrolled;
@@ -62,7 +69,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
                 </div>
                 <div class="tutor-course-booking-availability tutor-mt-16">
                     <button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">' .
-					apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' 
+					apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id ) . ' 
                     </button>
                 </div>';
 	}
@@ -76,7 +83,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 
 	if ( $product && 0 == $maximum_students ) {
 		$price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $product->get_price_html() . ' </span></div>';
-		$cart_html  = '<div class="list-item-button"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
+		$cart_html  = '<div class="list-item-button"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id ) . ' </div></div>';
 		echo wp_kses_post( $price_html );
 		echo wp_kses_post( $cart_html );
 	}

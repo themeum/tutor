@@ -126,8 +126,8 @@ if ( isset( $the_query ) ) {
 	?>
 
 <div class="tutor-wrap tutor-wrap-parent tutor-courses-wrap tutor-container course-archive-page" data-tutor_courses_meta="<?php echo esc_attr( json_encode( $GLOBALS['tutor_course_archive_arg'] ) ); ?>">
-	<?php if ( $has_course_filters && in_array( 'search', $supported_filters_keys ) ) : ?>
-		<div class="tutor-d-block tutor-d-lg-none tutor-mb-32">
+	<?php if ( $has_course_filters ) : ?>
+		<div class="tutor-d-block tutor-d-xl-none tutor-mb-32">
 			<div class="tutor-d-flex tutor-align-center tutor-justify-between">
 				<span class="tutor-fs-3 tutor-fw-medium tutor-color-black"><?php esc_html_e( 'Courses', 'tutor' ); ?></span>
 				<a href="#" class="tutor-iconic-btn tutor-iconic-btn-secondary tutor-iconic-btn-md" tutor-toggle-course-filter><span class="tutor-icon-slider-vertical"></span></a>
@@ -139,7 +139,7 @@ if ( isset( $the_query ) ) {
 		<?php if ( $has_course_filters ) : ?>
 			<div class="tutor-col-3 tutor-course-filter-container">
 				<div class="tutor-course-filter" tutor-course-filter>
-					<?php tutor_load_template( 'course-filter.filters' ); ?>
+					<?php tutor_load_template( 'course-filter.filters', array( 'supported_filters' => $supported_filters ) ); ?>
 				</div>
 			</div>
 
@@ -167,6 +167,17 @@ if ( isset( $the_query ) ) {
 		<?php endif; ?>
 	</div>
 </div>
+<?php if ( isset( $course_filter_category ) ) : ?>
+<input type="hidden" id="course_filter_categories" value="<?php echo esc_html( $course_filter_category ); ?>"></input>
+<?php endif; ?>
+
+<?php if ( isset( $course_filter_exclude_ids ) ) : ?>
+<input type="hidden" id="course_filter_exclude_ids" value="<?php echo esc_html( $course_filter_exclude_ids ); ?>"></input>
+<?php endif; ?>
+
+<?php if ( isset( $course_filter_post_ids ) ) : ?>
+<input type="hidden" id="course_filter_post_ids" value="<?php echo esc_html( $course_filter_post_ids ); ?>"></input>
+<?php endif; ?>
 
 <?php
 if ( ! is_user_logged_in() ) {

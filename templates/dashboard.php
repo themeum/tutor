@@ -37,12 +37,12 @@ $user                      = get_user_by( 'ID', $user_id );
 $enable_profile_completion = tutor_utils()->get_option( 'enable_profile_completion' );
 $is_instructor             = tutor_utils()->is_instructor();
 
-// URLS
+// URLS.
 $current_url  = tutor()->current_url;
 $footer_url_1 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? 'my-courses' : '' ) );
 $footer_url_2 = trailingslashit( tutor_utils()->tutor_dashboard_url( $is_instructor ? 'question-answer' : 'my-quiz-attempts' ) );
 
-// Footer links
+// Footer links.
 $footer_links = array(
 	array(
 		'title'      => $is_instructor ? __( 'My Courses', 'tutor' ) : __( 'Dashboard', 'tutor' ),
@@ -66,17 +66,13 @@ $footer_links = array(
 
 do_action( 'tutor_dashboard/before/wrap' );
 ?>
-
 <div class="tutor-wrap tutor-wrap-parent tutor-dashboard tutor-frontend-dashboard tutor-dashboard-student tutor-pb-80">
 	<div class="tutor-container">
 		<div class="tutor-row tutor-d-flex tutor-justify-between tutor-frontend-dashboard-header">
 			<div class="tutor-header-left-side tutor-dashboard-header tutor-col-md-6 tutor-d-flex tutor-align-center" style="border: none;">
 				<div class="tutor-dashboard-header-avatar">
 					<?php
-					echo wp_kses(
-						tutor_utils()->get_tutor_avatar( $user_id, 'xl' ),
-						tutor_utils()->allowed_avatar_tags()
-					);
+					tutor_utils()->get_tutor_avatar( $user_id, 'xl', true )
 					?>
 				</div>
 
@@ -143,20 +139,20 @@ do_action( 'tutor_dashboard/before/wrap' );
 							?>
 							<?php do_action( 'tutor_course_create_button' ); ?>
 							<?php else : ?>
-							<a href="<?php echo esc_url( admin_url( "post-new.php?post_type=$course_type" ) ); ?>" class="tutor-btn tutor-btn-outline-primary">
+							<a href="#" class="tutor-btn tutor-btn-outline-primary tutor-create-new-course">
 								<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i>
 								<?php esc_html_e( 'Create a New Course', 'tutor' ); ?>
 							</a>
 					<?php endif; ?>
 						<?php
-					} elseif ( 'pending' == $instructor_status ) {
+					} elseif ( 'pending' === $instructor_status ) {
 						$on = get_user_meta( $user->ID, '_is_tutor_instructor', true );
-						$on = date( 'd F, Y', $on );
+						$on = gmdate( 'd F, Y', $on );
 						echo '<span style="' . esc_attr( $info_message_style ) . '">
                                     <i class="dashicons dashicons-info tutor-color-warning" style=" ' . esc_attr( $info_style ) . '"></i>',
 						esc_html__( 'Your Application is pending as of', 'tutor' ), ' <b>', esc_html( $on ), '</b>',
 						'</span>';
-					} elseif ( $rejected_on || $instructor_status !== 'blocked' ) {
+					} elseif ( $rejected_on || 'blocked' !== $instructor_status ) {
 						echo $become_button; //phpcs:ignore --data escaped above
 					}
 					?>
@@ -192,11 +188,11 @@ do_action( 'tutor_dashboard/before/wrap' );
 							if ( $menu_icon_name ) {
 								$menu_icon = "<span class='{$menu_icon_name} tutor-dashboard-menu-item-icon'></span>";
 							}
-							// Add new menu item property "url" for custom link
+							// Add new menu item property "url" for custom link.
 							if ( isset( $dashboard_page['url'] ) ) {
 								$menu_link = $dashboard_page['url'];
 							}
-							if ( isset( $dashboard_page['type'] ) && $dashboard_page['type'] == 'separator' ) {
+							if ( isset( $dashboard_page['type'] ) && 'separator' === $dashboard_page['type'] ) {
 								$separator = true;
 							}
 						}
@@ -262,7 +258,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							include_once $from_other_location;
 						}
 
-						do_action( 'tutor_load_dashboard_template_before', $dashboard_page_name );
+						do_action( 'tutor_load_dashboard_template_after', $dashboard_page_name );
 					} else {
 						tutor_load_template( 'dashboard.dashboard' );
 					}
@@ -274,10 +270,10 @@ do_action( 'tutor_dashboard/before/wrap' );
 	<div id="tutor-dashboard-footer-mobile">
 		<div class="tutor-container">
 			<div class="tutor-row">
-				<?php foreach ( $footer_links as $link ) : ?>
-					<a class="tutor-col-4 <?php echo $link['is_active'] ? 'active' : ''; ?>" href="<?php echo esc_url( $link['url'] ); ?>">
-						<i class="<?php echo esc_attr( $link['icon_class'] ); ?>"></i>
-						<span><?php echo esc_html( $link['title'] ); ?></span>
+				<?php foreach ( $footer_links as $link_item ) : ?>
+					<a class="tutor-col-4 <?php echo $link_item['is_active'] ? 'active' : ''; ?>" href="<?php echo esc_url( $link_item['url'] ); ?>">
+						<i class="<?php echo esc_attr( $link_item['icon_class'] ); ?>"></i>
+						<span><?php echo esc_html( $link_item['title'] ); ?></span>
 					</a>
 				<?php endforeach; ?>
 			</div>

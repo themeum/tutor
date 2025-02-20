@@ -83,7 +83,7 @@ class Gutenberg {
 		if ( 'widgets.php' !== $pagenow ) {
 			wp_register_script(
 				'tutor-student-registration-block',
-				tutor()->url . 'assets/js/lib/gutenberg_blocks.js',
+				tutor()->url . 'assets/lib/gutenberg_blocks.js',
 				array( 'wp-blocks', 'wp-i18n', 'wp-element', 'wp-components', 'wp-editor' ),
 				TUTOR_VERSION
 			);

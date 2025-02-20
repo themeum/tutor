@@ -66,33 +66,34 @@
 			$previous_question = $question_i > 1 ? $questions[ $question_i - 1 ] : false;
 			?>
 				<div id="quiz-attempt-single-question-<?php echo esc_attr( $question->question_id ); ?>" 
-					 class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo esc_attr( $question_i ); ?>" 
-					 style="display: <?php echo esc_attr( $style_display ); ?> ;" 
-					 <?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-" . esc_attr( $next_question->question_id ) . "'" : ''; ?> 
-					 data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>"  
-					 data-question_index="<?php echo esc_attr( $question_i ); ?>">
+					class="quiz-attempt-single-question quiz-attempt-single-question-<?php echo esc_attr( $question_i ); ?>" 
+					style="display: <?php echo esc_attr( $style_display ); ?> ;" 
+					<?php echo $next_question ? "data-next-question-id='#quiz-attempt-single-question-" . esc_attr( $next_question->question_id ) . "'" : ''; ?> 
+					<?php echo 'h5p' === $question->question_type ? 'data-h5p-quiz-content-id=' . esc_attr( $question->question_description ) : ''; ?>
+					data-quiz-feedback-mode="<?php echo esc_attr( $feedback_mode ); ?>"  
+					data-question_index="<?php echo esc_attr( $question_i ); ?>">
 
 					<div class="quiz-question tutor-mt-44 tutor-mr-md-100">
 					<?php
-						$input_markup = "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
-						echo wp_kses(
-							$input_markup,
-							array(
-								'input' => array(
-									'type'  => true,
-									'name'  => true,
-									'value' => true,
-								),
-							)
-						);
+					$input_markup = "<input type='hidden' name='attempt[{$is_started_quiz->attempt_id}][quiz_question_ids][]' value='{$question->question_id}' />";
+					echo wp_kses(
+						$input_markup,
+						array(
+							'input' => array(
+								'type'  => true,
+								'name'  => true,
+								'value' => true,
+							),
+						)
+					);
 
-						$question_type = $question->question_type;
+					$question_type = $question->question_type;
 
-						$rand_choice = false;
-					if ( 'single_choice' == $question_type || 'multiple_choice' == $question_type ) {
-						$choice = maybe_unserialize( $question->question_settings );
-						if ( isset( $choice['randomize_question'] ) ) {
-							$rand_choice = 1 == $choice['randomize_question'] ? true : false;
+					$rand_choice = false;
+					if ( 'matching' !== $question_type && 'image_matching' !== $question_type ) { // Note: Randomize will be done in specific template.
+						$question_settings = maybe_unserialize( $question->question_settings );
+						if ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] ) {
+							$rand_choice = true;
 						}
 					}
 
@@ -121,7 +122,8 @@
 						);
 					}
 
-					$question_description = wp_unslash( $question->question_description );
+
+					$question_description = apply_filters( 'tutor_filter_quiz_question_description', wp_unslash( $question->question_description ) );
 					if ( $question_description ) {
 						$markup = "<div class='matching-quiz-question-desc'><span class='tutor-fs-7 tutor-color-secondary'>{$question_description}</span></div>";
 						if ( tutor()->has_pro ) {
@@ -130,6 +132,7 @@
 							echo wp_kses_post( $markup );
 						}
 					}
+
 					?>
 					</div>
 					<!-- Quiz Answer -->
@@ -153,7 +156,12 @@
 
 					// Matching.
 					if ( 'matching' === $question_type ) {
-						require 'matching.php';
+						$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
+						if ( $is_image_matching ) {
+							require 'image-matching.php';
+						} else {
+							require 'matching.php';
+						}
 					}
 
 					// Image Matching.
@@ -175,10 +183,12 @@
 					if ( 'short_answer' === $question_type ) {
 						require 'short-answer.php';
 					}
+
+					do_action( 'tutor_require_question_answer_file', $question_type, $is_started_quiz, $question );
 					?>
 
-					<div class="answer-help-block"></div>
-					
+					<div class="answer-help-block tutor-mt-24"></div>
+
 					<?php if ( 'question_below_each_other' !== $question_layout_view ) : ?>
 						<div class="tutor-quiz-btn-group tutor-mt-60 tutor-d-flex">
 							<?php
@@ -193,7 +203,7 @@
 							<button disabled="disabled" type="submit" class="tutor-btn tutor-btn-primary tutor-btn-md start-quiz-btn tutor-quiz-next-btn-all <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?>">
 								<?php $next_question ? esc_html_e( 'Submit &amp; Next', 'tutor' ) : esc_html_e( 'Submit Quiz', 'tutor' ); ?>
 							</button>
-							<?php if ( ! isset( $question_settings['answer_required'] ) ) : ?>
+							<?php if ( ! isset( $question_settings['answer_required'] ) || '0' === $question_settings['answer_required'] ) : ?>
 								<span class="tutor-ml-32 tutor-btn tutor-btn-ghost tutor-btn-md tutor-next-btn <?php echo $next_question ? 'tutor-quiz-answer-next-btn' : 'tutor-quiz-submit-btn'; ?> tutor-ml-auto">
 									<?php esc_html_e( 'Skip Question', 'tutor' ); ?>
 								</span>

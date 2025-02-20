@@ -11,8 +11,14 @@
  * @since 2.0.0
  */
 
+use Tutor\Ecommerce\CouponController;
+use Tutor\Ecommerce\OrderController;
 use TUTOR\Input;
+use Tutor\Models\CouponModel;
 use Tutor\Models\CourseModel;
+use Tutor\Models\OrderModel;
+
+$current_page = Input::get( 'page', '' );
 
 if ( isset( $data ) ) : ?>
 	<div class="tutor-px-20">
@@ -42,7 +48,7 @@ if ( isset( $data ) ) : ?>
 				<?php
 				$courses    = ( current_user_can( 'administrator' ) ) ? CourseModel::get_courses() : CourseModel::get_courses_by_instructor();
 				$terms_arg  = array(
-					'taxonomy' => 'course-category',
+					'taxonomy' => CourseModel::COURSE_CATEGORY,
 					'orderby'  => 'term_id',
 					'order'    => 'DESC',
 				);
@@ -86,12 +92,13 @@ if ( isset( $data ) ) : ?>
 					$search        = Input::get( 'search', '' );
 					$category_slug = Input::get( 'category', '' );
 					?>
+					<?php do_action( 'tutor_data_list_before_filter_items' ); ?>
 					<?php if ( isset( $data['course_filter'] ) && true === $data['course_filter'] ) : ?>
 						<div class="tutor-wp-dashboard-filter-item">
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Course', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-course">
+							<select class="tutor-form-select" id="tutor-backend-filter-course" data-searchable>
 								<?php if ( count( $courses ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Courses', 'tutor' ); ?>
@@ -112,7 +119,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Category', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-category">
+							<select class="tutor-form-select" id="tutor-backend-filter-category" data-searchable>
 								<?php if ( count( $categories ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Category', 'tutor' ); ?>
@@ -126,6 +133,49 @@ if ( isset( $data ) ) : ?>
 									<option value=""><?php esc_html_e( 'No record found', 'tutor' ); ?></option>
 								<?php endif; ?>
 							</select>
+						</div>
+					<?php endif; ?>
+
+					<?php if ( OrderController::PAGE_SLUG === $current_page ) : ?>
+						<div class="tutor-wp-dashboard-filter-item">
+							<label class="tutor-form-label">
+								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
+							</label>
+							<select class="tutor-form-select" id="tutor-backend-filter-payment-status" data-search="no">
+								<option value="">
+									<?php esc_html_e( 'Select', 'tutor' ); ?>
+								</option>
+							<?php
+								$payment_status        = OrderModel::get_payment_status();
+								$filter_payment_status = Input::get( 'payment-status', '' );
+							foreach ( $payment_status as $key => $value ) :
+								?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_payment_status, $key ); ?>>
+								<?php echo esc_html( $value ); ?>
+								</option>
+							<?php endforeach; ?>
+							</select>							
+						</div>
+					<?php endif; ?>
+					<?php if ( CouponController::PAGE_SLUG === $current_page ) : ?>
+						<div class="tutor-wp-dashboard-filter-item">
+							<label class="tutor-form-label">
+								<?php esc_html_e( 'Status', 'tutor' ); ?>
+							</label>
+							<select class="tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
+								<option value="">
+									<?php esc_html_e( 'Select', 'tutor' ); ?>
+								</option>
+							<?php
+								$coupon_status        = CouponModel::get_coupon_status();
+								$filter_coupon_status = Input::get( 'coupon-status', '' );
+							foreach ( $coupon_status as $key => $value ) :
+								?>
+								<option value="<?php echo esc_attr( $key ); ?>" <?php selected( $filter_coupon_status, $key ); ?>>
+								<?php echo esc_html( $value ); ?>
+								</option>
+							<?php endforeach; ?>
+							</select>							
 						</div>
 					<?php endif; ?>
 
@@ -144,6 +194,7 @@ if ( isset( $data ) ) : ?>
 							</select>
 						</div>
 					<?php endif; ?>
+
 					<div class="tutor-wp-dashboard-filter-item">
 						<label class="tutor-form-label">
 							<?php esc_html_e( 'Date', 'tutor' ); ?>
@@ -157,7 +208,7 @@ if ( isset( $data ) ) : ?>
 							</label>
 							<div class="tutor-form-wrap">
 								<span class="tutor-form-icon"><span class="tutor-icon-search" area-hidden="true"></span></span>
-								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...' ); ?>" value="<?php echo esc_html( wp_unslash( $search ) ); ?>" />
+								<input type="search" class="tutor-form-control" id="tutor-backend-filter-search" name="search" placeholder="<?php esc_html_e( 'Search...', 'tutor' ); ?>" value="<?php echo esc_html( wp_unslash( $search ) ); ?>" />
 							</div>
 						</form>
 					</div>

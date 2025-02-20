@@ -20,6 +20,7 @@ if ( ! is_admin() && ! current_user_can( 'tutor_instructor' ) && true === $enabl
 	exit;
 }
 
+//phpcs:ignore
 extract( $data ); // $user_id, $attempt_id, $attempt_data(nullable), $context(nullable)
 
 ! isset( $attempt_data ) ? $attempt_data = tutor_utils()->get_attempt( $attempt_id ) : 0;
@@ -75,7 +76,7 @@ function tutor_render_answer_list( $answers = array(), $dump_data = false ) {
 
 				case 'text':
 					$ans_string = '<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">'
-							. esc_html( $ans->answer_title ) .
+							. esc_html( stripslashes( $ans->answer_title ) ) .
 						'</span>';
 
 					if ( isset( $ans->answer_title ) && ! isset( $ans->answer_two_gap_match ) ) {
@@ -196,13 +197,13 @@ if ( is_array( $attempt_info ) ) {
 	if ( isset( $attempt_info['time_limit'] ) ) {
 		$attempt_duration = tutor_utils()->second_to_formated_time( $attempt_info['time_limit']['time_limit_seconds'], $attempt_info['time_limit']['time_type'] );
 	}
-	if ( 'days' == $attempt_info['time_limit']['time_type'] ) {
+	if ( 'days' === $attempt_info['time_limit']['time_type'] ) {
 		$attempt_type = 'hours';
 	}
-	if ( 'hours' == $attempt_info['time_limit']['time_type'] ) {
+	if ( 'hours' === $attempt_info['time_limit']['time_type'] ) {
 		$attempt_type = 'minutes';
 	}
-	if ( 'minutes' == $attempt_info['time_limit']['time_type'] ) {
+	if ( 'minutes' === $attempt_info['time_limit']['time_type'] ) {
 		$attempt_type = 'minutes';
 	}
 
@@ -213,7 +214,7 @@ if ( is_array( $attempt_info ) ) {
 ?>
 
 <?php echo is_admin() ? '<div class="tutor-admin-body">' : ''; ?>
-<div class="tutor-table-responsive tutor-mb-32">
+<div class="tutor-table-responsive tutor-table-mobile tutor-mb-32">
 	<table class="tutor-table tutor-quiz-attempt-details">
 		<thead>
 			<tr>
@@ -226,13 +227,7 @@ if ( is_array( $attempt_info ) ) {
 		<tbody>
 			<tr>
 				<?php foreach ( $table_1_columns as $key => $column ) : ?>
-					<td style="
-					<?php
-					if ( 'date' === $key ) :
-						esc_html_e( 'min-width:180px' );
-endif;
-					?>
-					">
+					<td data-title="<?php echo esc_attr( $column ); ?>">
 						<?php if ( 'user' == $key ) : ?>
 							<div class="tutor-d-flex tutor-align-center">
 								<?php
@@ -256,21 +251,16 @@ endif;
 							</div>
 
 						<?php elseif ( 'date' == $key ) : ?>
-							<div>
-								<?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
-							</div>
-							<div>
-								<?php echo esc_html( date_i18n( get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
-							</div>
-						<?php elseif ( 'qeustion_count' == $key ) : ?>
+							<?php echo esc_html( date_i18n( get_option( 'date_format' ) . ' ' . get_option( 'time_format' ), strtotime( $attempt_data->attempt_started_at ) ) ); ?>
+						<?php elseif ( 'qeustion_count' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_questions ); ?>
-						<?php elseif ( 'quiz_time' == $key ) : ?>
+						<?php elseif ( 'quiz_time' === $key ) : ?>
 							<?php echo esc_html( $attempt_duration ); ?>
-						<?php elseif ( 'attempt_time' == $key ) : ?>
+						<?php elseif ( 'attempt_time' === $key ) : ?>
 							<?php echo esc_html( $attempt_duration_taken ); ?>
-						<?php elseif ( 'total_marks' == $key ) : ?>
+						<?php elseif ( 'total_marks' === $key ) : ?>
 							<?php echo esc_html( $attempt_data->total_marks ); ?>
-						<?php elseif ( 'pass_marks' == $key ) : ?>
+						<?php elseif ( 'pass_marks' === $key ) : ?>
 							<?php
 								$pass_marks = ( $total_marks * $passing_grade ) / 100;
 								echo esc_html( number_format_i18n( $pass_marks, 2 ) );
@@ -278,17 +268,17 @@ endif;
 								$pass_mark_percent = $passing_grade;
 								echo esc_html( ' (' . $pass_mark_percent . '%)' );
 							?>
-						<?php elseif ( 'correct_answer' == $key ) : ?>
+						<?php elseif ( 'correct_answer' === $key ) : ?>
 							<?php echo esc_html( $correct ); ?>
-						<?php elseif ( 'incorrect_answer' == $key ) : ?>
+						<?php elseif ( 'incorrect_answer' === $key ) : ?>
 							<?php echo esc_html( $incorrect ); ?>
-						<?php elseif ( 'earned_marks' == $key ) : ?>
+						<?php elseif ( 'earned_marks' === $key ) : ?>
 							<?php
 								echo esc_html( $attempt_data->earned_marks );
 								$earned_percentage = $attempt_data->earned_marks > 0 ? ( number_format( ( $attempt_data->earned_marks * 100 ) / $attempt_data->total_marks ) ) : 0;
 								echo esc_html( ' (' . $earned_percentage . '%)' );
 							?>
-						<?php elseif ( 'result' == $key ) : ?>
+						<?php elseif ( 'result' === $key ) : ?>
 							<?php
 								$ans_array   = is_array( $answers ) ? $answers : array();
 								$has_pending = count(
@@ -338,9 +328,12 @@ if ( '' !== $feedback && 'my-quiz-attempts' === $page_name ) {
 
 <?php
 if ( is_array( $answers ) && count( $answers ) ) {
-	echo 'course-single-previous-attempts' != $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
+	// Filter out not needed columns based on question type.
+	$table_2_columns = apply_filters( 'tutor_filter_attempt_answer_column', $table_2_columns, $answers );
+	$answers         = apply_filters( 'tutor_filter_attempt_answers', $answers );
+	echo 'course-single-previous-attempts' !== $context ? '<div class="tutor-fs-6 tutor-fw-medium tutor-color-black tutor-mt-24">' . esc_html__( 'Quiz Overview', 'tutor' ) . '</div>' : '';
 	?>
-		<div class="tutor-table-responsive tutor-mt-16">
+		<div class="tutor-table-responsive tutor-table-mobile tutor-mt-16">
 			<table class="tutor-table tutor-quiz-attempt-details tutor-mb-32 tutor-table-data-td-target">
 				<thead>
 					<tr>
@@ -355,9 +348,10 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					$answer_i = 0;
 				foreach ( $answers as $answer ) {
 					$answer_i++;
-					$question_type = tutor_utils()->get_question_types( $answer->question_type );
-
-					$answer_status = 'wrong';
+					$question_type          = tutor_utils()->get_question_types( $answer->question_type );
+					$question_settings = maybe_unserialize( $answer->question_settings );
+					$is_image_matching = isset( $question_settings['is_image_matching'] ) && '1' === $question_settings['is_image_matching'];
+					$answer_status      = 'wrong';
 
 					// If already correct, then show it.
 					if ( (bool) $answer->is_correct ) {
@@ -365,7 +359,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 					}
 
 					// Image answering also needs review since the answer texts are not meant to match exactly.
-					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ) ) ) {
+					elseif ( in_array( $answer->question_type, array( 'open_ended', 'short_answer', 'image_answering' ), true ) ) {
 						$answer_status = null === $answer->is_correct ? 'pending' : 'wrong';
 					}
 					?>
@@ -376,7 +370,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 									switch ( $key ) {
 										case 'no':
 											?>
-												<td class="no">
+												<td class="no" data-title="<?php echo esc_attr( $column ); ?>">
 													<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 													<?php echo esc_html( $answer_i ); ?>
 													</span>
@@ -386,26 +380,30 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 										case 'type':
 											?>
-												<td class="type">
+												<td class="type" data-title="<?php echo esc_attr( $column ); ?>">
 												<?php $type = tutor_utils()->get_question_types( $answer->question_type ); ?>
-													<div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
-													<?php
-													echo wp_kses(
-														$question_type['icon'] ?? '',
-														tutor_utils()->allowed_icon_tags()
-													);
-													?>
-														<span class="tooltip-txt tooltip-top">
-														<?php echo esc_html( $type['name'] ?? '' ); ?>
-														</span>
-													</div>
+													<?php ob_start(); ?>
+														<div class="tooltip-wrap tooltip-icon tutor-d-flex tutor-align-center">
+															<?php
+																echo wp_kses(
+																	$question_type['icon'] ?? '',
+																	tutor_utils()->allowed_icon_tags()
+																);
+															?>
+															<span class="tooltip-txt tooltip-top">
+														<?php
+															echo esc_html( $type['name'] ?? '' );
+														?>
+															</span>
+														</div>
+													<?php echo wp_kses_post( apply_filters( 'tutor_question_type_icon', ob_get_clean(), $answer ) ); ?>
 												</td>
 												<?php
 											break;
 
 										case 'questions':
 											?>
-												<td class="questions">
+												<td class="questions" data-title="<?php echo esc_attr( $column ); ?>">
 													<span class="tutor-fs-7 tutor-fw-medium tutor-d-flex tutor-align-center">
 													<?php echo esc_html( stripslashes( $answer->question_title ) ); ?>
 													</span>
@@ -415,7 +413,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 										case 'given_answer':
 											?>
-												<td class="given-answer">
+												<td class="given-answer" data-title="<?php echo esc_attr( $column ); ?>">
+												<div>
 												<?php
 													// Single choice.
 												if ( 'single_choice' === $answer->question_type ) {
@@ -471,7 +470,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													}
 												}
 
-													// Matching.
+												// Matching.
 												elseif ( 'matching' === $answer->question_type ) {
 
 													$ordering_ids           = maybe_unserialize( $answer->given_answer );
@@ -484,9 +483,16 @@ if ( is_array( $answers ) && count( $answers ) ) {
 														$provided_answer_order    = tutor_utils()->get_answer_by_id( $provided_answer_order_id );
 														if ( tutor_utils()->count( $provided_answer_order ) ) {
 															foreach ( $provided_answer_order as $provided_answer_order ) {
+																if ( $is_image_matching ) {
+																	$original_saved_answer->answer_view_format   = 'text_image';
+																	$original_saved_answer->answer_title         = $provided_answer_order->answer_title;
+																	$original_saved_answer->answer_two_gap_match = '';
+																	$answers[]                                   = $original_saved_answer;
+																} else {
+																	$original_saved_answer->answer_two_gap_match = $provided_answer_order->answer_two_gap_match;
+																	$answers[]                                   = $original_saved_answer;
+																}
 															}
-															$original_saved_answer->answer_two_gap_match = $provided_answer_order->answer_two_gap_match;
-															$answers[]                                   = $original_saved_answer;
 														}
 													}
 
@@ -508,7 +514,6 @@ if ( is_array( $answers ) && count( $answers ) ) {
 																$answers[]                                 = $original_saved_answer;
 															}
 														}
-														
 													}
 
 													tutor_render_answer_list( $answers );
@@ -531,13 +536,15 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													tutor_render_answer_list( $answers );
 												}
 												?>
+												</div>
 												</td>
 												<?php
 											break;
 
 										case 'correct_answer':
 											?>
-												<td class="correct-answer">
+												<td class="correct-answer" data-title="<?php echo esc_attr( $column ); ?>">
+												<div>
 												<?php
 												if ( ( $answer->question_type != 'open_ended' && $answer->question_type != 'short_answer' ) ) {
 
@@ -640,6 +647,16 @@ if ( is_array( $answers ) && count( $answers ) ) {
 															)
 														);
 
+														if ( $is_image_matching ) {
+															array_map(
+																function( $ans ) {
+																	$ans->answer_view_format   = 'text_image';
+																	$ans->answer_two_gap_match = '';
+																},
+																$correct_answer
+															);
+														}
+
 														tutor_render_answer_list( $correct_answer );
 													}
 
@@ -688,26 +705,31 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													}
 												}
 												?>
+												</div>
 												</td>
 												<?php
 											break;
 
 										case 'result':
 											?>
-												<td class="result">
+												<td class="result" data-title="<?php echo esc_attr( $column ); ?>">
+												<?php do_action( 'tutor_quiz_attempt_after_result_column', $answer, $answer_status ); ?>
+
 												<?php
-												switch ( $answer_status ) {
-													case 'correct':
-														echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
-														break;
+												if ( 'h5p' !== $answer->question_type ) {
+													switch ( $answer_status ) {
+														case 'correct':
+															echo '<span class="tutor-badge-label label-success">' . esc_html__( 'Correct', 'tutor' ) . '</span>';
+															break;
 
-													case 'pending':
-														echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
-														break;
+														case 'pending':
+															echo '<span class="tutor-badge-label label-warning">' . esc_html__( 'Pending', 'tutor' ) . '</span>';
+															break;
 
-													case 'wrong':
-														echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
-														break;
+														case 'wrong':
+															echo '<span class="tutor-badge-label label-danger">' . esc_html__( 'Incorrect', 'tutor' ) . '</span>';
+															break;
+													}
 												}
 												?>
 												</td>
@@ -716,7 +738,8 @@ if ( is_array( $answers ) && count( $answers ) ) {
 
 										case 'manual_review':
 											?>
-												<td class="tutor-text-center tutor-nowrap-ellipsis">
+												<td class="tutor-text-center tutor-nowrap-ellipsis" data-title="<?php echo esc_attr( $column ); ?>">
+													<div class="tutor-manual-review-wrapper">
 													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-mark-as="correct" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-mr-12 tutor-icon-rounded tutor-color-success">
 														<i class="tutor-icon-mark"></i>
 													</a>
@@ -724,13 +747,14 @@ if ( is_array( $answers ) && count( $answers ) ) {
 													<a href="javascript:;" data-back-url="<?php echo esc_url( $back_url ); ?>" data-attempt-id="<?php echo esc_attr( $attempt_id ); ?>" data-attempt-answer-id="<?php echo esc_attr( $answer->attempt_answer_id ); ?>" data-mark-as="incorrect" data-context="<?php echo esc_attr( $context ); ?>" title="<?php esc_attr_e( 'Mark as In correct', 'tutor' ); ?>" class="quiz-manual-review-action tutor-icon-rounded tutor-color-danger">
 														<i class="tutor-icon-times"></i>
 													</a>
+													</div>
 												</td>
 												<?php
 									}
 									?>
 								<?php endforeach; ?>
 							</tr>
-							
+
 							<?php do_action( 'tutor_quiz_attempt_details_loop_after_row', $answer, $answer_status ); ?>
 
 							<?php
@@ -740,6 +764,7 @@ if ( is_array( $answers ) && count( $answers ) ) {
 			</table>
 		</div>
 		<?php
+		do_action( 'tutor_quiz_attempt_details_loop_after' );
 }
 ?>
 
