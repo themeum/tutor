@@ -92,36 +92,12 @@ describe('Course Builder', () => {
       cy.get('input[name="contentDripType"]').first().parent('label').click();
     }
 
-    // cy.get('input[name="isScheduleEnabled"]').should('be.visible').check();
-    cy.get('button')
-      .contains('Upload Thumbnail')
-      .click()
-      .then(() => {
-        cy.get('.media-modal')
-          .should('be.visible')
-          .within(() => {
-            cy.get('.spinner.is-active', {
-              timeout: 10000,
-            }).should('not.exist');
+    cy.setWPMedia('Featured Image', 'Upload Thumbnail', 'Replace Image');
 
-            cy.wait(5000);
+    cy.get('[data-cy="course-builder-submit-button"]').click();
 
-            // if no image is uploaded, upload one else select one
-            cy.get('.attachment')
-              .its('length')
-              .then((length) => {
-                if (length === 0) {
-                  cy.get('.media-button-select').click();
-                } else {
-                  cy.get('.attachment')
-                    .first()
-                    .click()
-                    .then(() => {
-                      cy.get('.media-button-select').click();
-                    });
-                }
-              });
-          });
-      });
+    cy.wait(1000);
+
+    cy.get("[data-cy='tutor-toast']").should('be.visible').contains('Course updated successfully');
   });
 });

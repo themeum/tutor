@@ -43,8 +43,8 @@ Cypress.Commands.add('login', () => {
 
   cy.on('uncaught:exception', () => false);
 
-  cy.get('#user_login').type(Cypress.env('username'));
-  cy.get('#user_pass').type(Cypress.env('password'));
+  cy.get('#user_login').should('be.visible').type(Cypress.env('username'));
+  cy.get('#user_pass').should('be.visible').type(Cypress.env('password'));
 
   cy.get('#user_login').should('have.value', Cypress.env('username'));
   cy.get('#user_pass').should('have.value', Cypress.env('password'));
@@ -59,10 +59,11 @@ Cypress.Commands.add('setWPeditorContent', (content: string) => {
     timeout: 1000,
   }).then((win) => {
     const editorId = win.tinymce.activeEditor.id;
+    win.tinymce.activeEditor.setContent('');
     cy.get(`#${editorId}_ifr`).then(($iframe) => {
       const doc = $iframe.contents();
       const body = doc.find('body > p');
-      cy.wrap(body).type(content);
+      cy.wrap(body).scrollIntoView().type(content);
     });
   });
 });
@@ -85,13 +86,66 @@ Cypress.Commands.add('isAddonEnabled', (addon: Addon) => {
   });
 });
 
+Cypress.Commands.add('setWPMedia', (label: string, buttonText: string, replaceButtonText: string) => {
+  cy.doesElementExist('[data-cy="media-preview"]').then((exists) => {
+    if (exists) {
+      cy.contains('label', label)
+        .parent()
+        .next()
+        .within(() => {
+          cy.get('[data-cy="media-preview"] > img').should('be.visible');
+          cy.get('[data-cy="replace-media"]').contains(replaceButtonText).click();
+        });
+      cy.selectWPMedia();
+      return;
+    }
+
+    cy.get('[data-cy="upload-media"]')
+      .contains(buttonText)
+      .should('be.visible')
+      .click()
+      .then(() => {
+        cy.selectWPMedia();
+      });
+  });
+});
+
+Cypress.Commands.add('selectWPMedia', () => {
+  cy.get('.media-modal')
+    .should('be.visible')
+    .within(() => {
+      cy.get('.spinner.is-active', { timeout: 10000 }).should('not.exist');
+      cy.get('.attachment')
+        .its('length')
+        .then((length) => {
+          if (length === 0) {
+            cy.get('.media-button-select').click();
+          } else {
+            cy.get('.attachment')
+              .last()
+              .click()
+              .then(() => {
+                cy.get('.media-button-select').click();
+              });
+          }
+        });
+    });
+});
+
+Cypress.Commands.add('doesElementExist', (selector) => {
+  return cy.get('body').then(($body) => $body.find(selector).length > 0);
+});
+
 declare global {
   namespace Cypress {
     interface Chainable {
-      login(): Chainable<void>;
-      setWPeditorContent(content: string): Chainable<void>;
-      getSelectInput(name: string, value: string): Chainable<void>;
-      isAddonEnabled(addon: Addon): Chainable<boolean>;
+      login: () => Chainable<void>;
+      setWPeditorContent: (content: string) => Chainable<void>;
+      getSelectInput: (name: string, value: string) => Chainable<void>;
+      setWPMedia: (label: string, buttonText: string, replaceButtonText: string) => Chainable<void>;
+      selectWPMedia: () => Chainable<void>;
+      isAddonEnabled: (addon: Addon) => Chainable<boolean>;
+      doesElementExist: (selector: string) => Chainable<boolean>;
     }
   }
 }

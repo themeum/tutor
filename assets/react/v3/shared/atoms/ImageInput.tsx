@@ -95,7 +95,13 @@ const ImageInput = ({
             }}
           >
             <SVGIcon name="addImage" width={32} height={32} />
-            <Button disabled={disabled} size={sizeMap[size]} variant="secondary" buttonContentCss={styles.buttonText}>
+            <Button
+              disabled={disabled}
+              size={sizeMap[size]}
+              variant="secondary"
+              buttonContentCss={styles.buttonText}
+              data-cy="upload-media"
+            >
               {buttonText}
             </Button>
             <Show when={infoText}>
@@ -114,6 +120,7 @@ const ImageInput = ({
                 }),
                 previewImageCss,
               ]}
+              data-cy="media-preview"
             >
               <img src={url} alt={value?.title} css={styles.imagePreview} />
               <div css={[styles.hoverPreview, overlayCss]} data-hover-buttons-wrapper>
@@ -128,6 +135,7 @@ const ImageInput = ({
                     event.stopPropagation();
                     uploadHandler();
                   }}
+                  data-cy="replace-media"
                 >
                   {replaceButtonText || __('Replace Image', 'tutor')}
                 </Button>
@@ -140,6 +148,7 @@ const ImageInput = ({
                       event.stopPropagation();
                       clearHandler();
                     }}
+                    data-cy="clear-media"
                   >
                     {__('Remove', 'tutor')}
                   </Button>

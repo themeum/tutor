@@ -388,6 +388,7 @@ const HeaderActions = () => {
         when={dropdownItems().length > 1}
         fallback={
           <Button
+            data-cy="course-builder-submit-button"
             size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
             loading={
               createCourseMutation.isPending ||
@@ -400,6 +401,7 @@ const HeaderActions = () => {
         }
       >
         <DropdownButton
+          data-cy="course-builder-submit-button"
           text={dropdownButton().text}
           size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           variant="primary"
