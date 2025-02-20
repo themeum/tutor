@@ -33,7 +33,7 @@ if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course
 $has_video = apply_filters( 'tutor_course_has_video', tutor_utils()->has_video_in_single(), $course_id );
 ?>
 
-<?php do_action( 'tutor_course/single/before/wrap'); ?>
+<?php do_action( 'tutor_course/single/before/wrap' ); ?>
 <div <?php tutor_post_class( 'tutor-full-width-course-top tutor-course-top-info tutor-page-wrap tutor-wrap-parent' ); ?>>
 	<div class="tutor-course-details-page tutor-container">
 		<?php ( isset( $is_enrolled ) && $is_enrolled ) ? tutor_course_enrolled_lead_info() : tutor_course_lead_info(); ?>
