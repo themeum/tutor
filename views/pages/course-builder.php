@@ -17,23 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
 <head>
-	<meta charset="UTF-8">
+	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title><?php esc_html_e( 'Tutor Course Builder', 'tutor' ); ?></title>
-	<?php wp_print_styles(); ?>
 
-	<style>
-		.mce-notification-error {
-			display: none;
-		}
-	</style>
+	<title><?php esc_html_e( 'Tutor Course Builder', 'tutor' ); ?></title>
+
+	<?php wp_head(); ?>
 </head>
-<body data-tutor-context="<?php echo is_admin() ? 'backend' : 'frontend'; ?>">
+<body <?php body_class(); ?>>
 	<div id="tutor-course-builder"></div>
-	<?php
-		do_action( 'tutor_course_builder_footer' );
-		wp_print_footer_scripts();
-	?>
+	<?php do_action( 'tutor_course_builder_footer' ); ?>
+	<?php wp_footer(); ?>
 </body>
 </html>
-
