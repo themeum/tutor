@@ -20,8 +20,6 @@ describe('Course Builder', () => {
       cy.loginAsAdmin();
     });
 
-    // Navigate to course if ID exists, else prepare for creation
-    cy.on('uncaught:exception', () => false);
     if (courseId) {
       cy.visit(`/wp-admin/admin.php?page=create-course&course_id=${courseId}`);
       cy.get('h6').should('have.text', 'Course Builder'); // Ensure page loads
@@ -46,7 +44,7 @@ describe('Course Builder', () => {
   //   cy.get('h6').should('have.text', 'Course Builder');
   // });
 
-  it('1. edit a course', () => {
+  it('1. open a course in course builder', () => {
     cy.get('.wp-menu-name').contains('Tutor LMS').click();
 
     cy.get('table.table-dashboard-course-list tbody tr')
@@ -71,8 +69,8 @@ describe('Course Builder', () => {
     // Ensure courseId is set from previous test
     cy.wrap(courseId).should('be.a', 'string').and('not.be.empty');
 
-    cy.get('input[name="post_title"]').should('be.visible').type(courseData.post_title);
-    cy.setWPeditorContent(courseData.post_content);
+    cy.getByInputName('post_title').type(courseData.post_title);
+    cy.setTinyMceContent('[data-cy=tutor-tinymce]', courseData.post_content);
 
     cy.get('label')
       .contains('Options')
@@ -81,7 +79,7 @@ describe('Course Builder', () => {
         cy.get('button[role="tab"]').contains('General').click();
       });
     cy.getSelectInput('course_level', 'Beginner');
-    cy.get('input[name="is_public_course"]').should('be.visible').check();
+    cy.getByInputName('is_public_course').check();
 
     if (cy.isAddonEnabled(Addons.CONTENT_DRIP)) {
       cy.get('label')

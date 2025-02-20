@@ -60,7 +60,7 @@ declare global {
 }
 
 Cypress.Commands.add('getByInputName', (selector) => {
-  return cy.get(`input[name="${selector}"]`);
+  return cy.get(`input[name="${selector}"]`).should('be.visible');
 });
 
 Cypress.Commands.add('setTinyMceContent', (selector, content) => {
@@ -68,14 +68,21 @@ Cypress.Commands.add('setTinyMceContent', (selector, content) => {
   cy.window().should('have.property', 'tinymce');
 
   // wait for the editor to be rendered
-  cy.get(selector).find('textarea').as('editorTextarea').should('exist');
+  cy.get(selector).as('editorTextarea').should('exist');
 
   // set the content for the editor by its dynamic id
   cy.window().then((win) =>
     cy.get('@editorTextarea').then((element) => {
       const editorId = element.attr('id');
-      const editorInstance = win.tinymce.EditorManager.get().filter((editor) => editor.id === editorId)[0];
-      editorInstance.setContent();
+      const editorInstance = win.tinymce.EditorManager.get().filter(
+        (editor: { id: string }) => editor.id === editorId,
+      )[0];
+      editorInstance.setContent('');
+      cy.get(`#${editorId}_ifr`).then(($iframe) => {
+        const doc = $iframe.contents();
+        const body = doc.find('body > p');
+        cy.wrap(body).scrollIntoView().type(content);
+      });
     }),
   );
 });
@@ -608,36 +615,6 @@ Cypress.Commands.add('viewCertificate', () => {
   });
 });
 
-Cypress.Commands.add('login', () => {
-  cy.visit('/wp-login.php');
-
-  cy.on('uncaught:exception', () => false);
-
-  cy.get('#user_login').should('be.visible').type(Cypress.env('admin_username'));
-  cy.get('#user_pass').should('be.visible').type(Cypress.env('admin_password'));
-
-  cy.get('#user_login').should('have.value', Cypress.env('admin_username'));
-  cy.get('#user_pass').should('have.value', Cypress.env('admin_password'));
-
-  cy.get('#wp-submit').click();
-
-  cy.url().should('include', '/wp-admin');
-});
-
-Cypress.Commands.add('setWPeditorContent', (content: string) => {
-  cy.window({
-    timeout: 1000,
-  }).then((win) => {
-    const editorId = win.tinymce.activeEditor.id;
-    win.tinymce.activeEditor.setContent('');
-    cy.get(`#${editorId}_ifr`).then(($iframe) => {
-      const doc = $iframe.contents();
-      const body = doc.find('body > p');
-      cy.wrap(body).scrollIntoView().type(content);
-    });
-  });
-});
-
 Cypress.Commands.add('getSelectInput', (name: string, value: string) => {
   cy.get(`input[name="${name}"]`).should('be.visible').click({ timeout: 150 });
   cy.get('.tutor-portal-popover')
@@ -649,9 +626,7 @@ Cypress.Commands.add('getSelectInput', (name: string, value: string) => {
 
 Cypress.Commands.add('isAddonEnabled', (addon: Addon) => {
   return cy.window().then((win) => {
-    const isEnabled = !!win._tutorobject.addons_data.find(
-      (item: { base_name: string; is_enabled: boolean }) => item.base_name === addon,
-    )?.is_enabled;
+    const isEnabled = !!win._tutorobject.addons_data.find((item) => item.base_name === addon)?.is_enabled;
     return cy.wrap(isEnabled);
   });
 });
@@ -684,19 +659,34 @@ Cypress.Commands.add('selectWPMedia', () => {
   cy.get('.media-modal')
     .should('be.visible')
     .within(() => {
+      cy.get('#menu-item-browse').click();
       cy.get('.spinner.is-active', { timeout: 10000 }).should('not.exist');
       cy.get('.attachment')
         .its('length')
         .then((length) => {
           if (length === 0) {
-            cy.get('.media-button-select').click();
+            // @TODO: Add a way to upload media
+            // cy.get('.media-button-select').click();
           } else {
-            cy.get('.attachment')
-              .last()
-              .click()
-              .then(() => {
-                cy.get('.media-button-select').click();
-              });
+            // check if the media is already selected
+            cy.get('.attachment.selected').then(($selectedMedia) => {
+              if ($selectedMedia.length > 0) {
+                cy.get('.attachment')
+                  .not('.selected')
+                  .eq(Cypress._.random(0, length - 1))
+                  .click()
+                  .then(() => {
+                    cy.get('.media-button-select').click();
+                  });
+              } else {
+                cy.get('.attachment')
+                  .last()
+                  .click()
+                  .then(() => {
+                    cy.get('.media-button-select').click();
+                  });
+              }
+            });
           }
         });
     });
