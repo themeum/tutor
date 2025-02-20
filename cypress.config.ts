@@ -1,4 +1,5 @@
 import { defineConfig } from 'cypress';
+
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -8,7 +9,7 @@ export default defineConfig({
   e2e: {
     setupNodeEvents(on, config) {
       // implement node event listeners here
-    },
+    }
   },
   viewportHeight: 900,
   viewportWidth: 1400,
@@ -25,6 +26,6 @@ export default defineConfig({
     instructor_password: process.env.CYPRESS_instructor_password,
     instructor_zoom_account_id: process.env.CYPRESS_instructor_zoom_account_id,
     instructor_zoom_client_id: process.env.CYPRESS_instructor_zoom_client_id,
-    instructor_zoom_client_secret: process.env.CYPRESS_instructor_zoom_client_secret,
-  },
+    instructor_zoom_client_secret: process.env.CYPRESS_instructor_zoom_client_secret
+  }
 });

@@ -354,7 +354,7 @@ export const determinePostStatus = (postStatus: WPPostStatus, postVisibility: 'p
   return postStatus;
 };
 
-type Addon = `${Addons}`;
+export type Addon = `${Addons}`;
 
 export const isAddonEnabled = (addon: Addon) => {
   return !!tutorConfig.addons_data.find((item) => item.base_name === addon)?.is_enabled;

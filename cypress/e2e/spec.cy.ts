@@ -1,13 +1,17 @@
 describe('My First Test', () => {
-  it ('clicks the link "type"', () => {
-    cy.visit('https://example.cypress.io')
+  it('Gets, types and asserts', () => {
+    cy.visit('https://example.cypress.io');
 
-    cy.contains('type').click()
+    cy.contains('type').click();
 
-    cy.url().should('include', '/commands/actions')
+    // Should be on a new URL which
+    // includes '/commands/actions'
+    cy.url().should('include', '/commands/actions');
 
-    cy.get('.action-email').type('fake@gmail.com')
+    // Get an input, type into it
+    cy.get('.action-email').type('fake@email.com');
 
-    cy.get('.action-email').should('have.value', 'fake@gmail.com')
-  })
-})
+    //  Verify that the value has been updated
+    cy.get('.action-email').should('have.value', 'fake@email.com');
+  });
+});

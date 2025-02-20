@@ -82,7 +82,7 @@ const ToastProvider = ({ children, position = 'bottom-right' }: { children: Reac
       <div css={styles.toastWrapper(position)}>
         {transitions((style, toast) => {
           return (
-            <AnimatedDiv style={style} key={toast.id} css={styles.toastItem(toast.type)}>
+            <AnimatedDiv data-cy="tutor-toast" style={style} key={toast.id} css={styles.toastItem(toast.type)}>
               <h5 css={styles.message}>{toast.message}</h5>
 
               <Button
