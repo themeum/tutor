@@ -271,13 +271,12 @@ class Course extends Tutor_Base {
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
 		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
-
 	}
 
 	/**
 	 * Handle password protected course and bundle form submission.
 	 *
-	 * @sine 3.2.1
+	 * @since 3.2.1
 	 *
 	 * @return void
 	 */
@@ -697,6 +696,8 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_id, '_tutor_enable_qa', $params['enable_qna'] ?? 'yes' );
 		update_post_meta( $post_id, '_tutor_is_public_course', $params['is_public_course'] ?? 'no' );
 		update_post_meta( $post_id, '_tutor_course_level', $params['course_level'] );
+
+		do_action( 'tutor_after_prepare_update_post_meta', $post_id, $params );
 	}
 
 	/**
@@ -1580,6 +1581,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.0.0
 	 * @param mixed $content content.
+	 *
 	 * @return mixed
 	 */
 	public function restrict_new_student_entry( $content ) {
