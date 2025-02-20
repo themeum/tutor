@@ -23,23 +23,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<title><?php esc_html_e( 'Tutor Course Builder', 'tutor' ); ?></title>
 
 	<?php wp_head(); ?>
-
-	<style>
-		#adminmenumain,
-		#wpfooter {
-			display: none !important;
-		}
-		#wpcontent {
-			margin: 0 !important;
-		}
-		#wpbody-content {
-			padding-bottom: 0px !important;
-			float: none;
-		}
-		.notice {
-			display: none;
-		}
-	</style>
 </head>
 <body <?php body_class(); ?>>
 	<div id="tutor-course-builder"></div>

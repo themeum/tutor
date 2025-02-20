@@ -1431,6 +1431,17 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function load_course_builder_view() {
+		/**
+		 * Hide admin menu and footer.
+		 *
+		 * @since 3.3.0
+		 */
+		echo '<style>
+			#adminmenumain, #wpfooter, .notice { display: none !important; }
+			#wpcontent { margin: 0 !important; padding: 0 !important; }
+			#wpbody-content { padding-bottom: 0px !important; float: none; }
+		</style>';
+
 		do_action( 'tutor_before_course_builder_load' );
 		include_once tutor()->path . 'views/pages/course-builder.php';
 		do_action( 'tutor_after_course_builder_load' );
