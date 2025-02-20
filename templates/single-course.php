@@ -30,7 +30,7 @@ if ( ! is_user_logged_in() && ! $is_public && $student_must_login_to_view_course
 	tutor_utils()->tutor_custom_footer();
 	return;
 }
-$has_video = apply_filters( 'tutor_course_has_video', tutor_utils()->has_video_in_single() );
+$has_video = apply_filters( 'tutor_course_has_video', tutor_utils()->has_video_in_single(), $course_id );
 ?>
 
 <?php do_action( 'tutor_course/single/before/wrap'); ?>
