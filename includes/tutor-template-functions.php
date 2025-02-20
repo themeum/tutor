@@ -544,7 +544,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail' ) ) {
 		$post_thumbnail_id = (int) get_post_thumbnail_id( $post_id );
 		$placeholder_url   = tutor()->url . 'assets/images/placeholder.svg';
 		$thumb_url         = $post_thumbnail_id ? wp_get_attachment_image_url( $post_thumbnail_id, $size ) : $placeholder_url;
-		$thumb_url         = apply_filters( 'tutor_course_thumb_url', $thumb_url, $post_id, $size );
+		$thumb_url         = apply_filters( 'tutor_course_thumb_url', $thumb_url, $post_id, $size, $post_thumbnail_id );
 
 		if ( $url ) {
 			return $thumb_url;
@@ -580,7 +580,7 @@ if ( ! function_exists( 'get_tutor_course_thumbnail_src' ) ) {
 			$src             = apply_filters( 'tutor_course_thumbnail_placeholder', $placeholder_url, $post_id );
 		}
 
-		$src = apply_filters( 'tutor_course_thumb_url', $src, $post_id, $size );
+		$src = apply_filters( 'tutor_course_thumb_url', $src, $post_id, $size, $post_thumbnail_id );
 
 		return $src;
 	}
