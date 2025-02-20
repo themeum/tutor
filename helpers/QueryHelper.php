@@ -867,4 +867,33 @@ class QueryHelper {
 		return $period_clause;
 	}
 
+	/**
+	 * Generates a SQL subscription clause based on the subscription type.
+	 * 
+	 * @since 3.3.0
+	 *
+	 * @param string $subscription_type The type of subscription.
+	 * @param string $column The column name to be used in the SQL query.
+	 *
+	 * @return string The generated SQL condition to filter the subscription type.
+	 */
+	public static function get_subscription_clause( $subscription_type, $column )
+	{
+		$subscription_query = '';
+
+		if ( ! empty( $subscription_type ) ) {
+
+			$valid_subscription_types = [
+				'course_subscription' => " AND $column = 'course' ",
+				'bundle_subscription' => " AND $column = 'bundle' ",
+				'membership' 		  => " AND $column IN ('full_site', 'category') ",
+			];
+
+			if ( isset( $valid_subscription_types[$subscription_type] ) ) {	
+				$subscription_query = $valid_subscription_types[$subscription_type];
+			}
+		}
+
+		return $subscription_query;
+	}
 }
