@@ -76,7 +76,7 @@ window.jQuery(document).ready($ => {
 
     convertUTCTime();
 
-    document.addEventListener( 'tutor_course_list_refreshed', () => {
+    window.addEventListener( 'tutor_content_changed_event', () => {
         convertUTCTime();
     })
 });

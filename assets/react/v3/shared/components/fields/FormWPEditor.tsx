@@ -52,6 +52,8 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   onFullScreenChange?: (isFullScreen: boolean) => void;
   min_height?: number;
   max_height?: number;
+  toolbar1?: string;
+  toolbar2?: string;
 }
 
 interface CustomEditorOverlayProps {
@@ -171,6 +173,8 @@ const FormWPEditor = ({
   onFullScreenChange,
   min_height,
   max_height,
+  toolbar1,
+  toolbar2,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
@@ -311,6 +315,8 @@ const FormWPEditor = ({
               readonly={readOnly}
               min_height={min_height}
               max_height={max_height}
+              toolbar1={toolbar1}
+              toolbar2={toolbar2}
             />
           </div>
         );

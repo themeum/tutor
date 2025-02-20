@@ -8349,7 +8349,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
-		return $this->has_user_role( array( 'administrator', 'editor' ) ) || $this->is_instructor_of_this_course( $user_id, $course_id );
+		return current_user_can( 'edit_post', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
 	}
 
 
