@@ -5,6 +5,7 @@ const {__} = wp.i18n;
 const tutor_filters = [
     'keyword',
     'course_order',
+    'tutor-course-filter-type',
     'tutor-course-filter-level',
     'tutor-course-filter-tag',
     'tutor-course-filter-category',
