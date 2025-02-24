@@ -34,6 +34,9 @@ const ScheduleOptions = () => {
   const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' }) ?? false;
   const showForm = useWatch({ name: 'showScheduleForm' }) ?? false;
   const isComingSoonEnabled = useWatch({ name: 'enable_coming_soon' }) ?? false;
+  const isEnrollmentPeriodEnabled = useWatch({ name: 'course_enrollment_period' }) ?? false;
+  const enrollmentStartDate = useWatch({ name: 'enrollment_starts_date' }) ?? '';
+  const enrollmentStartTime = useWatch({ name: 'enrollment_starts_time' }) ?? '';
   const comingSoonThumbnail = useWatch({ name: 'coming_soon_thumbnail' });
 
   const [previousPostDate, setPreviousPostDate] = useState(
@@ -41,6 +44,8 @@ const ScheduleOptions = () => {
       ? format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H)
       : '',
   );
+
+  const enrollmentStartDateTime = new Date(`${enrollmentStartDate} ${enrollmentStartTime}`);
 
   const handleDelete = () => {
     form.setValue('schedule_date', '', { shouldDirty: true });
@@ -121,7 +126,18 @@ const ScheduleOptions = () => {
                     }
                     return true;
                   },
+                  isBeforeEnrollmentStartDate: (value) => {
+                    if (
+                      isEnrollmentPeriodEnabled &&
+                      isBefore(enrollmentStartDateTime, new Date(`${value} ${scheduleTime}`))
+                    ) {
+                      return __('Schedule date should be before enrollment start date.', 'tutor');
+                    }
+
+                    return true;
+                  },
                 },
+                deps: ['enrollment_starts_date', 'enrollment_starts_time', 'schedule_time'],
               }}
               render={(controllerProps) => (
                 <FormDateInput
@@ -144,12 +160,23 @@ const ScheduleOptions = () => {
                 validate: {
                   invalidTimeRule: invalidTimeRule,
                   futureDate: (value) => {
-                    if (isBefore(new Date(`${form.watch('schedule_date')} ${value}`), new Date())) {
+                    if (isBefore(new Date(`${scheduleDate} ${value}`), new Date())) {
                       return __('Schedule time should be in the future.', 'tutor');
                     }
                     return true;
                   },
+                  isBeforeEnrollmentStartDate: (value) => {
+                    if (
+                      isEnrollmentPeriodEnabled &&
+                      isBefore(enrollmentStartDateTime, new Date(`${scheduleDate} ${value}`))
+                    ) {
+                      return __('Schedule time should be before enrollment start date.', 'tutor');
+                    }
+
+                    return true;
+                  },
                 },
+                deps: ['schedule_date', 'enrollment_starts_date', 'enrollment_starts_time'],
               }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
