@@ -246,12 +246,8 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 3.0.0
 		 */
-		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
-		add_action( 'tutor_course_builder_footer', array( $this, 'load_wp_link_modal' ) );
-		add_action( 'admin_menu', array( $this, 'load_media_scripts' ) );
-		add_action( 'init', array( $this, 'load_media_scripts' ) );
 
 		/**
 		 * Ajax list
@@ -1330,7 +1326,7 @@ class Course extends Tutor_Base {
 		wp_enqueue_editor();
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-date', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-date', 'wp-i18n', 'wp-element', 'wp-api' ), TUTOR_VERSION, true );
 		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'tutor-shared' ), TUTOR_VERSION, true );
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
@@ -1429,19 +1425,6 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Load wp editor modal
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public function load_wp_link_modal() {
-		if ( is_admin() ) {
-			include_once tutor()->path . 'views/modal/wp-editor-link.php';
-		}
-	}
-
-	/**
 	 * Load view for course builder.
 	 *
 	 * @since 3.0.0
@@ -1449,10 +1432,20 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function load_course_builder_view() {
+		/**
+		 * Hide admin menu and footer.
+		 *
+		 * @since 3.3.0
+		 */
+		echo '<style>
+			#adminmenumain, #wpfooter, .notice { display: none !important; }
+			#wpcontent { margin: 0 !important; padding: 0 !important; }
+			#wpbody-content { padding-bottom: 0px !important; float: none; }
+		</style>';
+
 		do_action( 'tutor_before_course_builder_load' );
 		include_once tutor()->path . 'views/pages/course-builder.php';
 		do_action( 'tutor_after_course_builder_load' );
-		exit( 0 );
 	}
 
 	/**
@@ -2912,45 +2905,6 @@ class Course extends Tutor_Base {
 		$product_obj->set_sold_individually( true );
 
 		return $product_obj->save();
-	}
-
-	/**
-	 * Load media scripts
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public static function load_media_scripts() {
-		// Add style on the head tag.
-		$screen_reader_text_style = '
-			.screen-reader-text
-			{
-				position: absolute;
-				top: -10000em;
-				width: 1px;
-				height: 1px;
-				margin: -1px;
-				padding: 0;
-				overflow: hidden;
-				clip: rect(0,0,0,0);
-				border: 0;
-			}
-		';
-
-		wp_add_inline_style(
-			'media-views',
-			$screen_reader_text_style
-		);
-
-		add_action(
-			'wp_print_footer_scripts',
-			function () {
-				if ( function_exists( 'wp_print_media_templates' ) ) {
-					wp_print_media_templates();
-				}
-			}
-		);
 	}
 
 	/**
