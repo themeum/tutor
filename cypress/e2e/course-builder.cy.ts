@@ -2,6 +2,7 @@
 import { type CourseFormData } from '@CourseBuilderServices/course';
 import { faker } from '@faker-js/faker';
 import { Addons } from '@TutorShared/config/constants';
+import { backendUrls } from 'cypress/config/page-urls';
 
 describe('Course Builder', () => {
   let courseData: CourseFormData;
@@ -16,7 +17,7 @@ describe('Course Builder', () => {
 
   beforeEach(() => {
     cy.session('tutor-login', () => {
-      cy.visit('/wp-login.php');
+      cy.visit(backendUrls.LOGIN);
       cy.loginAsAdmin();
     });
 
