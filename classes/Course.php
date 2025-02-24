@@ -408,14 +408,14 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function validate_scheduled_course( $params, &$errors ) {
-		if( isset( $params['post_status'] ) && isset( $params['course_settings'] ) ) {
+		if ( isset( $params['post_status'] ) && isset( $params['course_settings'] ) ) {
 			if ( 'future' !== $params['post_status'] ) {
 				return;
 			}
 
 			$course_settings = $params['course_settings'];
 
-			if ( ! empty( $course_settings['enrollment_starts_at'] ) ) {
+			if ( isset( $course_settings['enrollment_starts_at'] ) && ! empty( $course_settings['enrollment_starts_at'] ) ) {
 				$enrollment_start = strtotime( $course_settings['enrollment_starts_at'] );
 				$scheduled_date   = strtotime( $params['post_date'] );
 
@@ -1035,7 +1035,7 @@ class Course extends Tutor_Base {
 
 		$this->prepare_course_settings( $params );
 
-		// Validate scheduled courses
+		// Validate scheduled courses.
 		$this->validate_scheduled_course( $params, $errors );
 
 		$this->setup_course_price( $params );
