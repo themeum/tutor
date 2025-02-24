@@ -1,13 +1,19 @@
-import { type CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
+import { __ } from '@wordpress/i18n';
+import { isBefore } from 'date-fns';
+import { useState } from 'react';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
+
 import Button from '@TutorShared/atoms/Button';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
+
+import { type CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -16,10 +22,6 @@ import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule, requiredRule } from '@TutorShared/utils/validation';
-import { __ } from '@wordpress/i18n';
-import { isBefore } from 'date-fns';
-import { useState } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const courseId = getCourseId();
 
@@ -45,10 +47,23 @@ const EnrollmentSettings = () => {
     control: form.control,
     name: 'enrollment_ends_date',
   });
+  const isScheduleEnabled = useWatch({
+    control: form.control,
+    name: 'isScheduleEnabled',
+  });
+  const scheduleDate = useWatch({
+    control: form.control,
+    name: 'schedule_date',
+  });
+  const scheduleTime = useWatch({
+    control: form.control,
+    name: 'schedule_time',
+  });
   const [showEndDate, setShowEndDate] = useState(false);
 
   const isMembershipOnlyMode = isAddonEnabled(Addons.SUBSCRIPTION) && tutorConfig.settings?.membership_only_mode;
   const isEnrollmentAddonEnabled = isAddonEnabled(Addons.ENROLLMENT);
+  const scheduleDateTime = new Date(`${scheduleDate} ${scheduleTime}`);
 
   return (
     <div css={styles.wrapper}>
@@ -117,7 +132,13 @@ const EnrollmentSettings = () => {
                       ...requiredRule,
                       validate: {
                         invalidDate: invalidDateRule,
+                        isAfterScheduleDate: (value) => {
+                          if (isScheduleEnabled && scheduleDateTime && isBefore(new Date(value), scheduleDateTime)) {
+                            return __('Start date should be after the schedule date', 'tutor');
+                          }
+                        },
                       },
+                      deps: ['schedule_date', 'schedule_time', 'enrollment_ends_date', 'enrollment_ends_time'],
                     }}
                     render={(controllerProps) => (
                       <FormDateInput
@@ -135,7 +156,17 @@ const EnrollmentSettings = () => {
                       ...requiredRule,
                       validate: {
                         invalidTime: invalidTimeRule,
+                        isAfterScheduleTime: (value) => {
+                          if (
+                            isScheduleEnabled &&
+                            scheduleDateTime &&
+                            isBefore(new Date(`${enrollmentStartsDate} ${value}`), scheduleDateTime)
+                          ) {
+                            return __('Start time should be after the schedule time', 'tutor');
+                          }
+                        },
                       },
+                      deps: ['schedule_date', 'schedule_time', 'enrollment_starts_date', 'enrollment_ends_date'],
                     }}
                     render={(controllerProps) => (
                       <FormTimeInput
@@ -194,7 +225,7 @@ const EnrollmentSettings = () => {
                             }
                           },
                         },
-                        deps: ['enrollment_starts_date'],
+                        deps: ['enrollment_starts_date', 'enrollment_starts_time'],
                       }}
                       render={(controllerProps) => (
                         <FormDateInput
