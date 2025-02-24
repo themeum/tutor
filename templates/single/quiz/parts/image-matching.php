@@ -15,7 +15,12 @@
 	class="quiz-question-ans-choice-area tutor-mt-40 question-type-<?php echo esc_attr( $question_type ); ?> <?php echo $answer_required ? 'quiz-answer-required' : ''; ?> ">
 	<div class="matching-quiz-question-desc tutor-draggable tutor-mb-44">
 		<?php
-			$rand_answers = \Tutor\Models\QuizModel::get_answers_by_quiz_question( $question->question_id, true );
+		$rand_choice       = false;
+		$question_settings = maybe_unserialize( $question->question_settings );
+		if ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] ) {
+			$rand_choice = true;
+		}
+		$rand_answers = \Tutor\Models\QuizModel::get_answers_by_quiz_question( $question->question_id, $rand_choice );
 		foreach ( $rand_answers as $rand_answer ) {
 			?>
 		<div class="tutor-quiz-border-box" draggable="true">

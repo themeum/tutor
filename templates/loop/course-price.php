@@ -35,7 +35,7 @@ foreach ( $enroll_now_attrs as $key => $value ) {
 	$attrs_string .= sprintf( '%s="%s" ', esc_attr( $key ), esc_attr( $value ) );
 }
 
-$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '" ' . trim( $attrs_string ) . '>' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '" ' . trim( $attrs_string ) . '>' . __( 'Enroll Course', 'tutor' ) . '</a>', $course_id ) . '</div>';
 $free_html  = $enroll_btn;
 
 if ( tutor_utils()->is_course_purchasable() ) {
@@ -69,7 +69,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
                 </div>
                 <div class="tutor-course-booking-availability tutor-mt-16">
                     <button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block">' .
-					apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' 
+					apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id ) . ' 
                     </button>
                 </div>';
 	}
@@ -83,7 +83,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 
 	if ( $product && 0 == $maximum_students ) {
 		$price_html = '<div class="tutor-d-flex tutor-align-center tutor-justify-between"><div class="list-item-price tutor-d-flex tutor-align-center"> <span class="price tutor-fs-6 tutor-fw-bold tutor-color-black">' . $product->get_price_html() . ' </span></div>';
-		$cart_html  = '<div class="list-item-button"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) . ' </div></div>';
+		$cart_html  = '<div class="list-item-button"> ' . apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id ) . ' </div></div>';
 		echo wp_kses_post( $price_html );
 		echo wp_kses_post( $cart_html );
 	}

@@ -5,10 +5,7 @@ import { Controller, useFormContext } from 'react-hook-form';
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   QuizDataStatus,
@@ -16,6 +13,10 @@ import {
   type QuizQuestionType,
   calculateQuizDataStatus,
 } from '@CourseBuilderServices/quiz';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { IconCollection } from '@TutorShared/utils/types';
 
@@ -58,14 +59,15 @@ const questionTypes = {
   },
 };
 
+type QuestionTypes = Omit<QuizQuestionType, 'single_choice' | 'image_matching'>;
+
+const supportRandomize: QuestionTypes[] = ['multiple_choice', 'matching', 'image_answering', 'ordering'];
+
 const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();
   const form = useFormContext<QuizForm>();
 
-  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as Omit<
-    QuizQuestionType,
-    'single_choice' | 'image_matching'
-  >;
+  const activeQuestionType = form.watch(`questions.${activeQuestionIndex}.question_type`) as QuestionTypes;
   const activeDataStatus = form.watch(`questions.${activeQuestionIndex}._data_status`);
 
   if (!activeQuestionId) {
@@ -178,26 +180,28 @@ const QuestionConditions = () => {
             )}
           />
 
-          <Controller
-            control={form.control}
-            name={
-              `questions.${activeQuestionIndex}.question_settings.randomize_options` as 'questions.0.question_settings.randomize_options'
-            }
-            render={(controllerProps) => (
-              <FormSwitch
-                {...controllerProps}
-                label={__('Randomize Choice', 'tutor')}
-                onChange={() => {
-                  if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
-                    form.setValue(
-                      `questions.${activeQuestionIndex}._data_status`,
-                      calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
-                    );
-                  }
-                }}
-              />
-            )}
-          />
+          <Show when={supportRandomize.includes(activeQuestionType)}>
+            <Controller
+              control={form.control}
+              name={
+                `questions.${activeQuestionIndex}.question_settings.randomize_question` as 'questions.0.question_settings.randomize_question'
+              }
+              render={(controllerProps) => (
+                <FormSwitch
+                  {...controllerProps}
+                  label={__('Randomize Choice', 'tutor')}
+                  onChange={() => {
+                    if (calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE)) {
+                      form.setValue(
+                        `questions.${activeQuestionIndex}._data_status`,
+                        calculateQuizDataStatus(activeDataStatus, QuizDataStatus.UPDATE) as QuizDataStatus,
+                      );
+                    }
+                  }}
+                />
+              )}
+            />
+          </Show>
 
           <Controller
             control={form.control}
@@ -249,6 +253,12 @@ const QuestionConditions = () => {
                 }}
               />
             )}
+          />
+
+          <CourseBuilderInjectionSlot
+            section="Curriculum.Quiz.bottom_of_question_sidebar"
+            namePrefix={`questions.${activeQuestionIndex}.`}
+            form={form}
           />
         </div>
       </div>

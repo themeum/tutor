@@ -21,9 +21,7 @@ interface CourseListTableProps {
 
 const CourseListTable = ({ type, form }: CourseListTableProps) => {
   const selectedCourses = form.watch(type) || [];
-  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable({
-    updateQueryParams: false,
-  });
+  const { pageInfo, onPageChange, itemsPerPage, offset, onFilterItems } = usePaginatedTable();
   const courseListQuery = useAppliesToQuery({
     applies_to: type === 'courses' ? 'specific_courses' : 'specific_bundles',
     offset,

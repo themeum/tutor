@@ -7,15 +7,15 @@ import { Controller, useFormContext } from 'react-hook-form';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tabs, { type TabItem } from '@TutorShared/molecules/Tabs';
 
-import FormInput from '@TutorShared/components/fields/FormInput';
-import FormSwitch from '@TutorShared/components/fields/FormSwitch';
-
-import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
-import type { CourseFormData } from '@CourseBuilderServices/course';
-import { getCourseId } from '@CourseBuilderUtils/utils';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormMultiSelectInput from '@TutorShared/components/fields/FormMultiSelectInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
+import FormSwitch from '@TutorShared/components/fields/FormSwitch';
+
+import ContentDripSettings from '@CourseBuilderComponents/course-basic/ContentDripSettings';
+import EnrollmentSettings from '@CourseBuilderComponents/course-basic/EnrollmentSettings';
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -47,6 +47,11 @@ const CourseSettings = () => {
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: !!isContentDripActive,
+    },
+    {
+      label: __('Enrollment', 'tutor'),
+      value: 'enrollment',
+      icon: <SVGIcon name="update" width={24} height={24} />,
     },
   ];
 
@@ -94,23 +99,6 @@ const CourseSettings = () => {
           {activeTab === 'general' && (
             <div css={styles.settingsOptions}>
               <Controller
-                name="maximum_students"
-                control={form.control}
-                render={(controllerProps) => (
-                  <FormInput
-                    {...controllerProps}
-                    label={__('Maximum Student', 'tutor')}
-                    helpText={__('Number of students that can enrol in this course. Set 0 for no limits.', 'tutor')}
-                    placeholder="0"
-                    type="number"
-                    isClearable
-                    selectOnFocus
-                    loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                  />
-                )}
-              />
-
-              <Controller
                 name="course_level"
                 control={form.control}
                 render={(controllerProps) => (
@@ -125,28 +113,6 @@ const CourseSettings = () => {
                   />
                 )}
               />
-
-              <Show when={tutorConfig.settings?.enrollment_expiry_enabled === 'on'}>
-                <Controller
-                  name="enrollment_expiry"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInput
-                      {...controllerProps}
-                      label={__('Enrollment Expiration', 'tutor')}
-                      helpText={
-                        // prettier-ignore
-                        __("Student's enrollment will be removed after this number of days. Set 0 for lifetime enrollment.", 'tutor')
-                      }
-                      placeholder="0"
-                      type="number"
-                      isClearable
-                      selectOnFocus
-                      loading={!!isCourseDetailsLoading && !controllerProps.field.value}
-                    />
-                  )}
-                />
-              </Show>
 
               <div css={styles.courseAndQna}>
                 <Controller
@@ -181,6 +147,8 @@ const CourseSettings = () => {
           )}
 
           {activeTab === 'content_drip' && <ContentDripSettings />}
+
+          {activeTab === 'enrollment' && <EnrollmentSettings />}
 
           {activeTab === 'buddyPress' && (
             <div css={styles.settingsOptions}>

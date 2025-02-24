@@ -24,6 +24,7 @@ interface AnimationProps<T> {
   maxOpacity?: number;
   easing?: EasingFunction;
   debounceMeasure?: boolean;
+  keys?: (item: T) => string | number;
 }
 
 const MEASURE_DELAY_TIME = 100;
@@ -37,6 +38,7 @@ export const useAnimation = <T,>({
   maxOpacity = 1,
   easing = easings.easeInOutQuad,
   debounceMeasure = false,
+  keys,
 }: AnimationProps<T>) => {
   const isTriggered = Array.isArray(data) ? data.length > 0 : !!data;
   const [ref, position] = useMeasure({ debounce: debounceMeasure ? animationDuration + MEASURE_DELAY_TIME : 0 });
@@ -96,6 +98,11 @@ export const useAnimation = <T,>({
   }
 
   const transitions = useTransition(data, {
+    keys:
+      keys ||
+      ((item) => {
+        return item as unknown as string;
+      }),
     from: {
       opacity: minOpacity,
       ...coordinates,
@@ -130,7 +137,6 @@ export const useAnimation = <T,>({
 export const AnimatedDiv = ({
   children,
   style,
-  css,
   hideOnOverflow = true,
   ...props
 }: {

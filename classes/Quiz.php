@@ -196,7 +196,7 @@ class Quiz {
 			'question_type'      => $type,
 			'question_mark'      => 1,
 			'answer_required'    => 0,
-			'randomize_options'  => 0,
+			'randomize_question' => 0,
 			'show_question_mark' => 0,
 		);
 
@@ -1132,6 +1132,8 @@ class Quiz {
 		}
 
 		$data = QuizModel::get_quiz_details( $quiz_id );
+
+		$data = apply_filters( 'tutor_quiz_details_response', $data, $quiz_id );
 
 		$this->json_response(
 			__( 'Quiz data fetched successfully', 'tutor' ),

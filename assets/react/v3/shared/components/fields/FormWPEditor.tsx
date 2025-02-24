@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 import type React from 'react';
 import { useState } from 'react';
 
@@ -52,6 +52,8 @@ interface FormWPEditorProps extends FormControllerProps<string | null> {
   onFullScreenChange?: (isFullScreen: boolean) => void;
   min_height?: number;
   max_height?: number;
+  toolbar1?: string;
+  toolbar2?: string;
 }
 
 interface CustomEditorOverlayProps {
@@ -171,6 +173,8 @@ const FormWPEditor = ({
   onFullScreenChange,
   min_height,
   max_height,
+  toolbar1,
+  toolbar2,
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
@@ -184,6 +188,7 @@ const FormWPEditor = ({
   );
 
   const hasAvailableCustomEditors = hasCustomEditorSupport && filteredEditors.length > 0;
+  const isOverlayVisible = hasAvailableCustomEditors && editorUsed.name !== 'classic';
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -288,8 +293,8 @@ const FormWPEditor = ({
         }
 
         return (
-          <div css={styles.wrapper}>
-            <Show when={hasCustomEditorSupport && editorUsed.name !== 'classic'}>
+          <div css={styles.wrapper({ isOverlayVisible })}>
+            <Show when={isOverlayVisible}>
               <CustomEditorOverlay
                 editorUsed={editorUsed}
                 onBackToWPEditorClick={onBackToWPEditorClick}
@@ -310,6 +315,8 @@ const FormWPEditor = ({
               readonly={readOnly}
               min_height={min_height}
               max_height={max_height}
+              toolbar1={toolbar1}
+              toolbar2={toolbar2}
             />
           </div>
         );
@@ -321,8 +328,14 @@ const FormWPEditor = ({
 export default FormWPEditor;
 
 const styles = {
-  wrapper: css`
+  wrapper: ({ isOverlayVisible = false }) => css`
     position: relative;
+
+    ${isOverlayVisible &&
+    css`
+      overflow: hidden;
+      border-radius: ${borderRadius[6]};
+    `}
   `,
   editorLabel: css`
     display: flex;

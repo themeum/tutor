@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $is_enrolled;
 
-$topics      = tutor_utils()->get_topics();
+$topics      = apply_filters( 'tutor_get_course_topics', tutor_utils()->get_topics() );
 $course_id   = get_the_ID();
 $index       = 0;
 

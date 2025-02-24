@@ -2,6 +2,9 @@ import '../../../v2-library/src/js/main';
 import ajaxHandler from '../admin-dashboard/segments/filter';
 import tutorFormData from "../helper/tutor-formdata";
 
+const { __ } = wp.i18n;
+window.defaultErrorMessage = __( 'Something went wrong', 'tutor' );
+
 window.tutor_get_nonce_data = function(send_key_value) {
 	var nonce_data = window._tutorobject || {};
 	var nonce_key = nonce_data.nonce_key || '';
@@ -15,7 +18,6 @@ window.tutor_get_nonce_data = function(send_key_value) {
 };
 
 window.tutor_popup = function($, icon) {
-	const { __ } = wp.i18n;
 	var $this = this;
 	var element;
 

@@ -9,16 +9,15 @@
  * @since 1.4.3
  */
 
-$course_id                = get_the_ID();
-$is_logged_in             = is_user_logged_in();
-$enable_guest_course_cart = tutor_utils()->get_option( 'enable_guest_course_cart' );
-$required_loggedin_class  = '';
+$course_id               = get_the_ID();
+$is_logged_in            = is_user_logged_in();
+$required_loggedin_class = '';
 
-if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
+if ( ! $is_logged_in ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
 
-$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $required_loggedin_class . '">' . __( 'Enroll Course', 'tutor' ) . '</a>' ) . '</div>';
+$enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $required_loggedin_class . '">' . __( 'Enroll Course', 'tutor' ) . '</a>', $course_id ) . '</div>';
 $free_html  = $enroll_btn;
 
 
@@ -43,7 +42,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 						</span>
 					</div>
 					<div class="list-item-button"> 
-						<?php echo wp_kses_post( apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) ); ?>
+						<?php echo wp_kses_post( apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id ) ); ?>
 					</div>
 				</div>
 			<?php
@@ -68,7 +67,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 				</div>
 			</div>
 			<div class="tutor-course-booking-availability tutor-mt-16"> 
-				<?php echo wp_kses_post( apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn ) ); ?>
+				<?php echo wp_kses_post( apply_filters( 'tutor_course_restrict_new_entry', $enroll_btn, $course_id ) ); ?>
 			</div>
 			<?php
 		} elseif ( $maximum_students > 0 && $maximum_students === $total_enrolled ) {

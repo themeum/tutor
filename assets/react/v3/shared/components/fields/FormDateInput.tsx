@@ -6,13 +6,11 @@ import { DayPicker, type Formatters } from 'react-day-picker';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
-import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontSize, fontWeight, shadow, spacing } from '@TutorShared/config/styles';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { convertWordPressLocaleToDateFns } from '@TutorShared/utils/util';
 
 import 'react-day-picker/style.css';
 
@@ -32,14 +30,18 @@ interface FormDateInputProps extends FormControllerProps<string> {
 }
 
 // Create DayPicker formatters based on WordPress locale
-const createFormatters = (wpLocale: string): Partial<Formatters> => {
-  const dateFnsLocale = convertWordPressLocaleToDateFns(wpLocale);
+const createFormatters = (): Partial<Formatters> | undefined => {
+  if (!wp.date) {
+    return;
+  }
+
+  const { format } = wp.date;
 
   return {
-    formatMonthDropdown: (date, options) => format(date, 'LLLL', { ...options, locale: dateFnsLocale }),
-    formatMonthCaption: (date, options) => format(date, 'LLLL', { ...options, locale: dateFnsLocale }),
-    formatCaption: (date, options) => format(date, 'LLLL', { ...options, locale: dateFnsLocale }),
-    formatWeekdayName: (weekday) => format(weekday, 'EEEEEE', { locale: dateFnsLocale }),
+    formatMonthDropdown: (date) => format('F', date),
+    formatMonthCaption: (date) => format('F', date),
+    formatCaption: (date) => format('F', date),
+    formatWeekdayName: (date) => format('D', date),
   };
 };
 
@@ -72,8 +74,6 @@ const FormDateInput = ({
     setIsOpen(false);
     inputRef.current?.focus();
   };
-
-  const locale = convertWordPressLocaleToDateFns(tutorConfig.local);
 
   return (
     <FormFieldWrapper
@@ -136,7 +136,7 @@ const FormDateInput = ({
                 <DayPicker
                   dir={isRTL ? 'rtl' : 'ltr'}
                   mode="single"
-                  formatters={createFormatters(tutorConfig.local)}
+                  formatters={createFormatters()}
                   disabled={[
                     !!disabledBefore && { before: parseISO(disabledBefore) },
                     !!disabledAfter && { after: parseISO(disabledAfter) },
@@ -154,7 +154,6 @@ const FormDateInput = ({
                       }
                     }
                   }}
-                  locale={locale}
                   showOutsideDays
                   captionLayout="dropdown"
                   autoFocus
@@ -227,6 +226,14 @@ const styles = {
       margin: ${spacing[16]};
     }
 
+    .rdp-month_grid {
+      margin: 0px;
+    }
+
+    .rdp-day {
+      padding: 0px;
+    }
+
     .rdp-nav {
       --rdp-accent-color: ${colorTokens.text.primary};
 
@@ -269,6 +276,10 @@ const styles = {
         &:focus-visible {
           outline: 2px solid var(--rdp-accent-color);
           outline-offset: 2px;
+        }
+
+        &:not(.rdp-outside) {
+          color: var(--rdp-selected-color);
         }
       }
     }

@@ -193,6 +193,21 @@
 .tutor-border-top-light {
 	border-top: 1px solid #E0E2EA;
 }
+.tutor-divider {	
+	border: 1px solid $border-color-secondary;
+}
+.tutor-divider-left {
+	border-left: 1px solid $border-color-secondary;
+}
+.tutor-divider-right {
+	border-right: 1px solid $border-color-secondary;
+}
+.tutor-divider-top {
+	border-top: 1px solid $border-color-secondary;
+}
+.tutor-divider-bottom {
+	border-bottom: 1px solid $border-color-secondary;
+}
 
 // radius
 $radius: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 30, 40, 50;

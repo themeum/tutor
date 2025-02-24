@@ -5,6 +5,7 @@ const {__} = wp.i18n;
 const tutor_filters = [
     'keyword',
     'course_order',
+    'tutor-course-filter-type',
     'tutor-course-filter-level',
     'tutor-course-filter-tag',
     'tutor-course-filter-category',
@@ -184,6 +185,7 @@ window.jQuery(document).ready($ => {
                 }
 
                 content_container.html(r.data.html).find('nav').css('display', 'flex');
+                window.dispatchEvent(new Event(_tutorobject.content_change_event));
             }
         });
     };
