@@ -398,6 +398,35 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Validate scheduled courses
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param array $params array of params.
+	 * @param array $errors array of errors.
+	 *
+	 * @return void
+	 */
+	public function validate_scheduled_course( $params, &$errors ) {
+		if( isset( $params['post_status'] ) && isset( $params['course_settings'] ) ) {
+			if ( 'future' !== $params['post_status'] ) {
+				return;
+			}
+
+			$course_settings = $params['course_settings'];
+
+			if ( ! empty( $course_settings['enrollment_starts_at'] ) ) {
+				$enrollment_start = strtotime( $course_settings['enrollment_starts_at'] );
+				$scheduled_date   = strtotime( $params['post_date'] );
+
+				if ( $enrollment_start < $scheduled_date ) {
+					$errors['scheduled_course'] = __( 'The enrollment start date cannot be earlier than the course start date', 'tutor' );
+				}
+			}
+		}
+	}
+
+	/**
 	 * Prepare course categories & tags
 	 *
 	 * @since 3.0.0
@@ -1005,6 +1034,10 @@ class Course extends Tutor_Base {
 		$this->prepare_course_cats_tags( $params, $errors );
 
 		$this->prepare_course_settings( $params );
+
+		// Validate scheduled courses
+		$this->validate_scheduled_course( $params, $errors );
+
 		$this->setup_course_price( $params );
 
 		if ( ! empty( $errors ) ) {
