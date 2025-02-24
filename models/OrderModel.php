@@ -12,9 +12,9 @@ namespace Tutor\Models;
 
 use Exception;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Ecommerce\OrderActivitiesController;
-use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\DateTimeHelper;
+use Tutor\Ecommerce\OrderActivitiesController;
 
 /**
  * OrderModel Class
@@ -870,15 +870,13 @@ class OrderModel {
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
-		} else {
-			if ( $time_period ) {
-				if ( 'today' === $time_period ) {
-					$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
-				} elseif ( 'monthly' === $time_period ) {
-					$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
-				} else {
-					$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
-				}
+		} elseif ( $time_period ) {
+			if ( 'today' === $time_period ) {
+				$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
+			} elseif ( 'monthly' === $time_period ) {
+				$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
+			} else {
+				$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
 			}
 		}
 
@@ -1121,10 +1119,8 @@ class OrderModel {
 			if ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
-		} else {
-			if ( $user_id ) {
+		} elseif ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
-			}
 		}
 
 		// Refund query logic remains the same.
@@ -1646,12 +1642,10 @@ class OrderModel {
 						}
 					}
 				}
-			} else {
-				if ( tutor_utils()->count( $order_items ) ) {
+			} elseif ( tutor_utils()->count( $order_items ) ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-					if ( tutor_utils()->is_enrolled( $course_id ) ) {
-						$is_enrolled_any_course = true;
-					}
+				if ( tutor_utils()->is_enrolled( $course_id ) ) {
+					$is_enrolled_any_course = true;
 				}
 			}
 		}
@@ -1689,21 +1683,58 @@ class OrderModel {
 	 * @return void
 	 */
 	public static function render_pay_button( $order ) {
+
 		if ( is_numeric( $order ) ) {
 			$order = ( new self() )->get_order_by_id( $order );
 		}
 
-		if ( self::should_show_pay_btn( $order ) ) {
-			?>
+		if ( ! self::check_expiry_time( $order ) ) { ?>
+			<div class="tooltip-wrap tooltip-icon">
+				<span class="tooltip-txt tooltip-left">
+					<?php esc_html_e( 'Payment is pending due to gateway processing.', 'tutor' ); ?>
+				</span>
+			</div>
+		
+		<?php } elseif ( self::should_show_pay_btn( $order ) ) { ?>
+			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
 				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
 				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+				
 				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
 					<?php esc_html_e( 'Pay', 'tutor' ); ?>
-				</button>
+				</button>				
 			</form>
 			<?php
 		}
+	}
+
+	/**
+	 * Checks if the Repay Order-Time expired based on stored expiry time.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param object $order The order object containing order details.
+	 *
+	 * @return bool Returns true if the order is expired or expiry time is not set, otherwise false.
+	 */
+	private static function check_expiry_time( $order ) {
+
+		$current_time = DateTimeHelper::now()->to_timestamp();
+		$meta_key     = "tutor_order_id_$order->id";
+		$meta_value   = get_user_meta( get_current_user_id(), $meta_key, false );
+		$expiry_time  = ! empty( $meta_value ) ? json_decode( $meta_value[0] )->expiry_time : null;
+
+		if ( ! is_null( $expiry_time ) && $expiry_time < $current_time ) {
+			delete_user_meta( get_current_user_id(), $meta_key );
+			return true;
+		}
+
+		if ( ! is_null( $expiry_time ) && $expiry_time > $current_time ) {
+			return false;
+		}
+
+		return true;
 	}
 }
