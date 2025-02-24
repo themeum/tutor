@@ -117,7 +117,7 @@ class Course_Filter {
 			'orderby'        => $order_by,
 			'order'          => $order,
 			'tax_query'      => array(
-				'relation' => 'OR',
+				'relation' => 'AND',
 			),
 		);
 
