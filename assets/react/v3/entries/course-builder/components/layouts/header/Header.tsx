@@ -48,7 +48,7 @@ const Header = () => {
 
   const totalEnrolledStudents = (queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse)
     ?.total_enrolled_student;
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
