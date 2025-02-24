@@ -89,7 +89,7 @@ tutor_alert(
 			?>
 			<?php
 			foreach ( $tutor_options as $key => $option_data ) :
-				$datetype_class = 'saved' === $option_data['datatype'] ? ' label-primary' : ' label-refund';
+				$datetype_class = 'saved' === $option_data['datatype'] ? ' label-primary' : ' label-default';
 				?>
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">
