@@ -45,6 +45,8 @@ const ScheduleOptions = () => {
       : '',
   );
 
+  const enrollmentStartDateTime = new Date(`${enrollmentStartDate} ${enrollmentStartTime}`);
+
   const handleDelete = () => {
     form.setValue('schedule_date', '', { shouldDirty: true });
     form.setValue('schedule_time', '', { shouldDirty: true });
@@ -125,8 +127,6 @@ const ScheduleOptions = () => {
                     return true;
                   },
                   isBeforeEnrollmentStartDate: (value) => {
-                    const enrollmentStartDateTime = new Date(`${enrollmentStartDate} ${enrollmentStartTime}`);
-
                     if (
                       isEnrollmentPeriodEnabled &&
                       isBefore(enrollmentStartDateTime, new Date(`${value} ${scheduleTime}`))
@@ -166,8 +166,6 @@ const ScheduleOptions = () => {
                     return true;
                   },
                   isBeforeEnrollmentStartDate: (value) => {
-                    const enrollmentStartDateTime = new Date(`${enrollmentStartDate} ${enrollmentStartTime}`);
-
                     if (
                       isEnrollmentPeriodEnabled &&
                       isBefore(enrollmentStartDateTime, new Date(`${scheduleDate} ${value}`))
