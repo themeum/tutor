@@ -28,7 +28,7 @@ import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
   convertLessonDataToPayload,
   type CourseTopic,
-  Lesson,
+  type Lesson,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -126,7 +126,7 @@ const LessonModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
   useEffect(() => {
     if (lessonDetails && !isLoading) {

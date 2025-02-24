@@ -112,7 +112,7 @@ const QuizModal = ({
     shouldFocusError: true,
   });
 
-  const isFormDirty = !!Object.values(form.formState.dirtyFields).some((isFieldDirty) => isFieldDirty);
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {

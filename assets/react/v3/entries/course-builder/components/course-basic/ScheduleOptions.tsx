@@ -24,6 +24,8 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
+const isTutorPro = !!tutorConfig.tutor_pro_url;
+
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
   const postDate = useWatch({ name: 'post_date' });
@@ -32,12 +34,18 @@ const ScheduleOptions = () => {
   const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' }) ?? false;
   const showForm = useWatch({ name: 'showScheduleForm' }) ?? false;
   const isComingSoonEnabled = useWatch({ name: 'enable_coming_soon' }) ?? false;
+  const isEnrollmentPeriodEnabled = useWatch({ name: 'course_enrollment_period' }) ?? false;
+  const enrollmentStartDate = useWatch({ name: 'enrollment_starts_date' }) ?? '';
+  const enrollmentStartTime = useWatch({ name: 'enrollment_starts_time' }) ?? '';
+  const comingSoonThumbnail = useWatch({ name: 'coming_soon_thumbnail' });
 
   const [previousPostDate, setPreviousPostDate] = useState(
     scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
       ? format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H)
       : '',
   );
+
+  const enrollmentStartDateTime = new Date(`${enrollmentStartDate} ${enrollmentStartTime}`);
 
   const handleDelete = () => {
     form.setValue('schedule_date', '', { shouldDirty: true });
@@ -47,6 +55,7 @@ const ScheduleOptions = () => {
 
   const handleCancel = () => {
     const isPreviousDateInFuture = isBefore(new Date(postDate), new Date());
+
     form.setValue(
       'schedule_date',
       isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.yearMonthDay) : '',
@@ -117,7 +126,18 @@ const ScheduleOptions = () => {
                     }
                     return true;
                   },
+                  isBeforeEnrollmentStartDate: (value) => {
+                    if (
+                      isEnrollmentPeriodEnabled &&
+                      isBefore(enrollmentStartDateTime, new Date(`${value} ${scheduleTime}`))
+                    ) {
+                      return __('Schedule date should be before enrollment start date.', 'tutor');
+                    }
+
+                    return true;
+                  },
                 },
+                deps: ['enrollment_starts_date', 'enrollment_starts_time', 'schedule_time'],
               }}
               render={(controllerProps) => (
                 <FormDateInput
@@ -140,12 +160,23 @@ const ScheduleOptions = () => {
                 validate: {
                   invalidTimeRule: invalidTimeRule,
                   futureDate: (value) => {
-                    if (isBefore(new Date(`${form.watch('schedule_date')} ${value}`), new Date())) {
+                    if (isBefore(new Date(`${scheduleDate} ${value}`), new Date())) {
                       return __('Schedule time should be in the future.', 'tutor');
                     }
                     return true;
                   },
+                  isBeforeEnrollmentStartDate: (value) => {
+                    if (
+                      isEnrollmentPeriodEnabled &&
+                      isBefore(enrollmentStartDateTime, new Date(`${scheduleDate} ${value}`))
+                    ) {
+                      return __('Schedule time should be before enrollment start date.', 'tutor');
+                    }
+
+                    return true;
+                  },
                 },
+                deps: ['schedule_date', 'enrollment_starts_date', 'enrollment_starts_time'],
               }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
@@ -153,42 +184,44 @@ const ScheduleOptions = () => {
             />
           </div>
 
-          <Controller
-            name="enable_coming_soon"
-            control={form.control}
-            render={(controllerProps) => (
-              <FormCheckbox
-                {...controllerProps}
-                label={__('Show coming soon in course list & details page', 'tutor')}
-                labelCss={styles.checkboxStartAlign}
-              />
-            )}
-          />
-
-          <Show when={isComingSoonEnabled}>
+          <Show when={isTutorPro}>
             <Controller
-              name="coming_soon_thumbnail"
+              name="enable_coming_soon"
               control={form.control}
               render={(controllerProps) => (
-                <FormImageInput
+                <FormCheckbox
                   {...controllerProps}
-                  label={__('Coming Soon Thumbnail', 'tutor')}
-                  buttonText={__('Upload Thumbnail', 'tutor')}
-                  infoText={sprintf(
-                    __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
-                    tutorConfig.max_upload_size,
-                  )}
+                  label={__('Show coming soon in course list & details page', 'tutor')}
+                  labelCss={styles.checkboxStartAlign}
                 />
               )}
             />
 
-            <Controller
-              name="enable_curriculum_preview"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Preview Course Curriculum', 'tutor')} />
-              )}
-            />
+            <Show when={isComingSoonEnabled}>
+              <Controller
+                name="coming_soon_thumbnail"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormImageInput
+                    {...controllerProps}
+                    label={__('Coming Soon Thumbnail', 'tutor')}
+                    buttonText={__('Upload Thumbnail', 'tutor')}
+                    infoText={sprintf(
+                      __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                      tutorConfig.max_upload_size,
+                    )}
+                  />
+                )}
+              />
+
+              <Controller
+                name="enable_curriculum_preview"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Preview Course Curriculum', 'tutor')} />
+                )}
+              />
+            </Show>
           </Show>
 
           <div css={styles.scheduleButtonsWrapper}>
@@ -218,7 +251,9 @@ const ScheduleOptions = () => {
       {isScheduleEnabled && !showForm && (
         <div css={styles.scheduleInfoWrapper}>
           <div css={styles.scheduledFor}>
-            <div css={styles.scheduleLabel}>{__('Scheduled for', 'tutor')}</div>
+            <div css={styles.scheduleLabel}>
+              {!isComingSoonEnabled ? __('Scheduled for', 'tutor') : __('Scheduled with coming soon', 'tutor')}
+            </div>
             <div css={styles.scheduleInfoButtons}>
               <button type="button" css={styleUtils.actionButton} onClick={handleDelete}>
                 <SVGIcon name="delete" width={24} height={24} />
@@ -241,7 +276,9 @@ const ScheduleOptions = () => {
               {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
             </div>
 
-            <ImageInput value={form.watch('coming_soon_thumbnail')} uploadHandler={noop} clearHandler={noop} disabled />
+            <Show when={comingSoonThumbnail?.url}>
+              <ImageInput value={comingSoonThumbnail} uploadHandler={noop} clearHandler={noop} disabled />
+            </Show>
           </Show>
         </div>
       )}

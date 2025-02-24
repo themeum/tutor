@@ -22,10 +22,10 @@ import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSl
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  Assignment,
   convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
+  type Assignment,
   type CourseTopic,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -130,7 +130,7 @@ const AssignmentModal = ({
     mode: 'onChange',
   });
 
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
 
   useEffect(() => {
     if (assignmentDetails) {
