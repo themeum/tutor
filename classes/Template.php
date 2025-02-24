@@ -123,6 +123,7 @@ class Template extends Tutor_Base {
 			if ( ( $post_type === $this->course_post_type || ! empty( $course_category ) ) ) {
 				$query->set( 'posts_per_page', $courses_per_page );
 				$query->set( 'post_type', apply_filters( 'tutor_course_archive_post_types', array( $this->course_post_type ) ) );
+				$query = apply_filters( 'tutor_limit_course_archive_list_filter', $query );
 
 				$course_filter = 'newest_first';
 				if ( ! empty( Input::get( 'tutor_course_filter', '' ) ) ) {
