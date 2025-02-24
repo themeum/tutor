@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import { CustomInput } from '../CustomInput';
 
-// Formatiing String to Date
+// Formatting String to Date
 function stringToDate(_date, _format, _delimiter) {
 	const formatLowerCase = _format.toLowerCase();
 	const formatItems = formatLowerCase.split(_delimiter);
@@ -37,7 +37,7 @@ const urlPrams = (type, val, date = null) => {
 
 const TutorDatepicker = (data) => {
 	let isPreviousDateAllowed = data?.input_name !== 'meeting_date';
-	if (data.disablePastDate) {
+	if (data.disable_past_date) {
 		isPreviousDateAllowed = false;
 	}
 	const dateFormat = window._tutorobject
