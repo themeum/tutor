@@ -85,7 +85,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
           size="small"
           onClick={handlePreviousClick}
           buttonCss={css`
-            padding: ${spacing[6]};
+            padding: ${spacing[4]};
             svg {
               color: ${colorTokens.icon.default};
             }
@@ -103,6 +103,7 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
           size="small"
           onClick={handleNextClick}
           buttonCss={css`
+            padding: ${spacing[4]} ${spacing[4]} ${spacing[4]} ${spacing[12]};
             svg {
               color: ${colorTokens.icon.default};
             }
@@ -126,9 +127,5 @@ const styles = {
     height: 32px;
     align-items: center;
     gap: ${spacing[16]};
-
-    & > button:last-of-type {
-      padding-right: ${spacing[8]};
-    }
   `,
 };
