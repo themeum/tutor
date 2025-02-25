@@ -96,12 +96,12 @@ const collection = {
     viewBox: '0 0 24 24',
   },
   chevronLeft: {
-    icon: '<path d="M15.75 19.5 8.25 12l7.5-7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />',
-    viewBox: '0 0 24 24',
+    icon: '<path d="M25 30.5L15 20.5L25 10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    viewBox: '0 0 40 40',
   },
   chevronRight: {
-    icon: '<path d="m8.25 4.5 7.5 7.5-7.5 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />',
-    viewBox: '0 0 24 24',
+    icon: '<path d="M15 30.5L25 20.5L15 10.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    viewBox: '0 0 40 40',
   },
   listOption: {
     icon: '<path fill-rule="evenodd" clip-rule="evenodd" d="M3.889 1.5a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2h-10a1 1 0 0 1-1-1ZM3.889 7a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2h-10a1 1 0 0 1-1-1ZM3.889 12.5a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2h-10a1 1 0 0 1-1-1ZM0 1.5C0 .948.447.5.998.5h.004C1.553.5 2 .948 2 1.5s-.447 1-.998 1H.998A.999.999 0 0 1 0 1.5ZM0 7c0-.552.447-1 .998-1h.004C1.553 6 2 6.448 2 7s-.447 1-.998 1H.998A.999.999 0 0 1 0 7ZM0 12.5c0-.552.447-1 .998-1h.004c.551 0 .998.448.998 1s-.447 1-.998 1H.998a.999.999 0 0 1-.998-1Z" fill="currentColor"/>',

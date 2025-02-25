@@ -47,17 +47,16 @@ tutor_alert(
 	<div class="tutor-option-group-title tutor-mb-16">
 		<div class="tutor-fs-6 tutor-color-muted"><?php esc_html_e( 'Import Settings', 'tutor' ); ?></div>
 	</div>
-	<!-- @todo: fix the upload button -->
 	<div class="item-wrapper">
 		<div class="tutor-option-field-row tutor-d-block">
-			<div class="tutor-option-field-label">
+			<div>
 				<div class="drag-drop-zone">
 					<span class="tutor-icon-upload tutor-fs-1 tutor-color-primary"></span>
 					<div class="title"><?php esc_html_e( 'Drag &amp; Drop your JSON File here', 'tutor' ); ?> </div>
 					<div class="subtitle"><span><?php esc_html_e( 'File Format', 'tutor' ); ?>:</span> .json <br> <?php esc_html_e( 'Or', 'tutor' ); ?></div>
-					<label for="drag-drop-input" class="tutor-btn tutor-btn-primary tutor-btn-sm">
+					<label for="drag-drop-input" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-mt-8">
 						<input type="file" name="drag-drop-input" id="drag-drop-input" class="tutor-d-none">
-						<span><?php esc_html_e( 'Browse File', 'tutor' ); ?></span>
+						<span><?php esc_html_e( 'Choose From Computer', 'tutor' ); ?></span>
 					</label>
 					<span class="file-info"></span>
 				</div>
@@ -90,7 +89,7 @@ tutor_alert(
 			?>
 			<?php
 			foreach ( $tutor_options as $key => $option_data ) :
-				$datetype_class = 'saved' === $option_data['datatype'] ? ' label-primary' : ' label-refund';
+				$datetype_class = 'saved' === $option_data['datatype'] ? ' label-primary' : ' label-default';
 				?>
 				<div class="tutor-option-field-row">
 					<div class="tutor-option-field-label">

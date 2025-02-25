@@ -1,11 +1,11 @@
-import Button from '@TutorShared/atoms/Button';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { isRTL } from '@TutorShared/config/constants';
-import { spacing } from '@TutorShared/config/styles';
-import Show from '@TutorShared/controls/Show';
 import routes from '@CourseBuilderConfig/routes';
 import { useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
 import type { CourseFormData } from '@CourseBuilderServices/course';
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { isRTL } from '@TutorShared/config/constants';
+import { colorTokens, spacing } from '@TutorShared/config/styles';
+import Show from '@TutorShared/controls/Show';
 import { useCurrentPath } from '@TutorShared/hooks/useCurrentPath';
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
@@ -86,19 +86,27 @@ const Navigator = ({ styleModifier }: NavigatorProps) => {
           onClick={handlePreviousClick}
           buttonCss={css`
             padding: ${spacing[6]};
+            svg {
+              color: ${colorTokens.icon.default};
+            }
           `}
           disabled={previousIndex < 0}
         >
-          <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} height={18} width={18} />
+          <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} height={24} width={24} />
         </Button>
       </Show>
       <Show when={currentIndex < steps.length - 1 && postTitle}>
         <Button
           variant="tertiary"
-          icon={<SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} />}
+          icon={<SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} height={24} width={24} />}
           iconPosition="right"
           size="small"
           onClick={handleNextClick}
+          buttonCss={css`
+            svg {
+              color: ${colorTokens.icon.default};
+            }
+          `}
           disabled={!postTitle || nextIndex >= steps.length}
         >
           {__('Next', 'tutor')}

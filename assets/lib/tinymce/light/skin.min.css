@@ -12,10 +12,10 @@
   border-color: #577fff
 }
 .mce-toolbar .mce-btn-group {
-  padding-block: 6px;
+  padding-block: 6px !important;
 }
 .mce-toolbar .mce-btn-group .mce-btn.mce-listbox {
-  border-radius: 4px;
+  border-radius: 4px !important;
 }
 .mce-toolbar .mce-btn-group .mce-btn:hover, .mce-toolbar .mce-btn-group .mce-btn:focus, .mce-toolbar .mce-btn-group .mce-btn.mce-listbox:hover, .mce-toolbar .mce-btn-group .mce-btn.mce-listbox:focus {
   background-color: #EFF1F6;
@@ -26,7 +26,7 @@
 .mce-menu-item.mce-disabled * { color: #ddd !important; }
 .mce-edit-area { border: 0 solid #ddd; border-width: 1px !important; }
 div.mce-toolbar-grp>div{
-  padding: 0;
+  padding: 0 !important;
 }
 .mce-menu .mce-menu-item.mce-active.mce-menu-item-normal {
   background: #F1F2F3;

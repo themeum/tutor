@@ -6,10 +6,10 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
+import type { Certificate } from '@CourseBuilderServices/course';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
-import type { Certificate } from '@CourseBuilderServices/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 export interface CertificatePreviewModalProps {
@@ -173,7 +173,7 @@ const styles = {
     align-items: center;
     object-fit: contain;
     max-width: 80vw;
-    max-height: 80vh;
+    max-height: calc(100vh - 200px);
     width: 100%;
     height: 100%;
   `,
@@ -183,6 +183,7 @@ const styles = {
     justify-content: center;
     align-items: center;
     gap: ${spacing[20]};
+    height: 100%;
   `,
   certificate: css`
     width: 100%;
