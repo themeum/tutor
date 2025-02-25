@@ -870,13 +870,15 @@ class OrderModel {
 
 		if ( $start_date && $end_date ) {
 			$date_range_clause = $wpdb->prepare( 'AND DATE(created_at_gmt) BETWEEN %s AND %s', $start_date, $end_date );
-		} elseif ( $time_period ) {
-			if ( 'today' === $time_period ) {
-				$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
-			} elseif ( 'monthly' === $time_period ) {
-				$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
-			} else {
-				$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
+		} else {
+			if ( $time_period ) {
+				if ( 'today' === $time_period ) {
+					$time_period_clause = 'AND  DATE(o.created_at_gmt) = CURDATE()';
+				} elseif ( 'monthly' === $time_period ) {
+					$time_period_clause = 'AND  MONTH(o.created_at_gmt) = MONTH(CURDATE()) ';
+				} else {
+					$time_period_clause = 'AND  YEAR(o.created_at_gmt) = YEAR(CURDATE()) ';
+				}
 			}
 		}
 
@@ -1119,8 +1121,10 @@ class OrderModel {
 			if ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
-		} elseif ( $user_id ) {
+		} else {
+			if ( $user_id ) {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
+			}
 		}
 
 		// Refund query logic remains the same.
@@ -1642,10 +1646,12 @@ class OrderModel {
 						}
 					}
 				}
-			} elseif ( tutor_utils()->count( $order_items ) ) {
+			} else {
+				if ( tutor_utils()->count( $order_items ) ) {
 					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $order_items[0]->id );
-				if ( tutor_utils()->is_enrolled( $course_id ) ) {
-					$is_enrolled_any_course = true;
+					if ( tutor_utils()->is_enrolled( $course_id ) ) {
+						$is_enrolled_any_course = true;
+					}
 				}
 			}
 		}
