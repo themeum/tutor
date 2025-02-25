@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -32,7 +33,6 @@ import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
 import reviewSubmitted from '@SharedImages/review-submitted.webp';
-import { useQueryClient } from '@tanstack/react-query';
 
 const courseId = getCourseId();
 
