@@ -417,7 +417,7 @@ class Course extends Tutor_Base {
 
 			if ( isset( $course_settings['enrollment_starts_at'] ) && ! empty( $course_settings['enrollment_starts_at'] ) ) {
 				$enrollment_start = strtotime( $course_settings['enrollment_starts_at'] );
-				$scheduled_date   = strtotime( $params['post_date'] );
+				$scheduled_date   = strtotime( $params['post_date_gmt'] );
 
 				if ( $enrollment_start < $scheduled_date ) {
 					$errors['scheduled_course'] = __( 'The enrollment start date cannot be earlier than the course start date', 'tutor' );
