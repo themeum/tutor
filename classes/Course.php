@@ -1454,8 +1454,7 @@ class Course extends Tutor_Base {
 			)
 		);
 
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $data );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
+		add_filter( 'tutor_localize_data', fn( $arr ) => $data );
 	}
 
 	/**
