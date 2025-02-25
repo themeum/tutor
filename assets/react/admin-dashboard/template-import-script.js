@@ -1,7 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
 	// template preview variables
 	const templatesDemoImportRoot = document.querySelector(".tutor-templates-demo-import");
-	const previewButtons = document.querySelectorAll(".open-template-live-preview");
 	const livePreviewModal = document.querySelector(".template-live-preview-modal");
 	const iframeWrapper = document.querySelector(".template-preview-iframe-wrapper");
 	const iframe = document.getElementById("template-preview-iframe");
@@ -27,7 +26,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		// Hide loading indicator when iframe is fully loaded
 		iframe.addEventListener('load', function () {
-			loadingIndicator.style.display = "none";
+			setTimeout(() => {
+				loadingIndicator.style.display = "none";
+			}, 10);
 		});
 
 		// Close live preview modal
@@ -51,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				let height = this.getAttribute("data-height");
 				iframeWrapper.style.width = width;
 				iframeWrapper.style.height = height;
-				loadingIndicator.style.display = "block";
+				// loadingIndicator.style.display = "block";
 			});
 		});
 

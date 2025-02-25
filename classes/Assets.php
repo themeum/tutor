@@ -244,6 +244,7 @@ class Assets {
 
 		if ( 'tutor-templates' === $page ) {
 			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
+			wp_enqueue_script( 'tutor-template-import-js', tutor()->url . 'assets/js/tutor-template-import-script.min.js', array( 'wp-i18n' ), TUTOR_VERSION, true );
 		}
 	}
 

@@ -15,7 +15,6 @@ import './segments/multiple_email_input';
 import './quiz-attempts';
 import './wp-events-subscriber';
 import './segments/manage-api-keys';
-import './template-import';
 
 document.querySelectorAll('.tutor-control-button').forEach(function (button) {
 	button.addEventListener('click', function (event) {

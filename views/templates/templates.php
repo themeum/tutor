@@ -22,12 +22,12 @@
 				<div class="tutorowl-top-left-text tutor-fs-6 tutor-fw-regular"><?php esc_html_e( 'Leverage the collection of magnificent Tutor starter templates to make a jumpstart.', 'tutor' ); ?></div>
 			</div>
 		</div>
-		<!-- <div class="tutorowl-demo-importer-top-right">
-			<div class="tutorowl-template-search-wrapper">
+		<div class="tutorowl-demo-importer-top-right">
+			<!-- <div class="tutorowl-template-search-wrapper">
 				<input type="text" placeholder="Search...">
 				<svg class="tutorowl-template-search-icon" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M6.858 1.524a5.334 5.334 0 1 0 0 10.667 5.334 5.334 0 0 0 0-10.667ZM0 6.858a6.858 6.858 0 1 1 12.216 4.28l3.56 3.561a.762.762 0 1 1-1.077 1.078l-3.561-3.561A6.858 6.858 0 0 1 0 6.858Z" fill="#9197A8"/></svg>
-			</div>
-		</div> -->
+			</div> -->
+		</div>
 	</div>
 	<ul class="tutorowl-demo-importer-list">
 		<?php
@@ -162,7 +162,7 @@
 		</div>
 		<div class="template-preview-iframe-wrapper">
 			<iframe id="template-preview-iframe" src="" frameborder="0"></iframe>
-			<div class="loading-indicator" style="display: none;">Loading...</div>
+			<div class="loading-indicator" style="display: none;"><?php esc_html_e( 'Loading...', 'tutor' ); ?></div>
 		</div>
 	</div>
 </div>
