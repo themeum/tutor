@@ -52,7 +52,7 @@ declare global {
       login: () => Chainable<void>;
       setWPeditorContent: (content: string) => Chainable<void>;
       getSelectInput: (name: string, value: string) => Chainable<void>;
-      setWPMedia: (label: string, buttonText: string, replaceButtonText: string) => Chainable<void>;
+      getWPMedia: (label: string, buttonText: string, replaceButtonText: string) => Chainable<void>;
       selectWPMedia: () => Chainable<void>;
       isAddonEnabled: (addon: Addon) => Chainable<boolean>;
       doesElementExist: (selector: string) => Chainable<boolean>;
@@ -63,7 +63,7 @@ declare global {
 }
 
 Cypress.Commands.add('getByInputName', (selector) => {
-  cy.get(`input[name="${selector}"]`).then(($input) => {
+  cy.get(`input[name="${selector}"], textarea[name="${selector}"]`).then(($input) => {
     if ($input.attr('type') === 'radio') {
       cy.wrap($input).parent();
     } else {
@@ -640,7 +640,7 @@ Cypress.Commands.add('isAddonEnabled', (addon: Addon) => {
   });
 });
 
-Cypress.Commands.add('setWPMedia', (label: string, buttonText: string, replaceButtonText: string) => {
+Cypress.Commands.add('getWPMedia', (label: string, buttonText: string, replaceButtonText: string) => {
   cy.intercept('POST', `${Cypress.env('base_url')}/${backendUrls.AJAX_URL}`, (req) => {
     if (req.body.includes('query-attachments')) {
       req.alias = 'queryAttachments';

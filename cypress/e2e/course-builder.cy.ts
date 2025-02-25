@@ -17,6 +17,12 @@ describe('Course Builder', () => {
       enrollment_expiry: faker.number.int({ min: 1, max: 100 }),
       course_price: String(faker.number.int({ min: 50, max: 1000 })),
       course_sale_price: String(faker.number.int({ min: 1, max: 49 })),
+      course_benefits: faker.lorem.lines(2),
+      course_target_audience: faker.lorem.lines(2),
+      course_duration_hours: faker.number.int({ min: 1, max: 10 }),
+      course_duration_minutes: faker.number.int({ min: 1, max: 59 }),
+      course_material_includes: faker.lorem.lines(2),
+      course_requirements: faker.lorem.lines(2),
     };
   });
 
@@ -117,8 +123,8 @@ describe('Course Builder', () => {
         });
     });
 
-    cy.setWPMedia('Featured Image', 'Upload Thumbnail', 'Replace Image');
-    cy.setWPMedia('Intro Video', 'Upload Video', 'Replace Thumbnail');
+    cy.getWPMedia('Featured Image', 'Upload Thumbnail', 'Replace Image');
+    cy.getWPMedia('Intro Video', 'Upload Video', 'Replace Thumbnail');
 
     cy.getByInputName('course_price_type').contains('Paid').click();
 
@@ -130,6 +136,24 @@ describe('Course Builder', () => {
         }
       });
     });
+
+    cy.updateCourse();
+  });
+
+  it('4. fills course additional', () => {
+    cy.wait(1000);
+
+    cy.get('[data-cy=tutor-tracker]').within(() => {
+      cy.get('button').contains('Additional').click();
+    });
+
+    cy.getByInputName('course_benefits').clear().type(courseData.course_benefits);
+    cy.getByInputName('course_target_audience').clear().type(courseData.course_target_audience);
+    cy.getByInputName('course_duration_hours').clear().type(String(courseData.course_duration_hours));
+    cy.getByInputName('course_duration_minutes').clear().type(String(courseData.course_duration_minutes));
+    cy.getByInputName('course_material_includes').clear().type(courseData.course_material_includes);
+    cy.getByInputName('course_requirements').clear().type(courseData.course_requirements);
+    cy.getWPMedia('Attachments', 'Upload Attachment', '');
 
     cy.updateCourse();
   });
