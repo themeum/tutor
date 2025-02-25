@@ -140,6 +140,14 @@ describe('Course Builder', () => {
     cy.updateCourse();
   });
 
+  it('3. fills course curriculum', () => {
+    cy.wait(1000);
+
+    cy.get('[data-cy=tutor-tracker]').within(() => {
+      cy.get('button').contains('Curriculum').click();
+    });
+  });
+
   it('4. fills course additional', () => {
     cy.wait(1000);
 

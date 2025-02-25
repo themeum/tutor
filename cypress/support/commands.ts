@@ -647,19 +647,32 @@ Cypress.Commands.add('getWPMedia', (label: string, buttonText: string, replaceBu
     }
   });
 
-  cy.contains('[data-cy="form-field-wrapper"]', label)
-    .should('be.visible')
-    .within(($wrapper) => {
-      // Check if the upload button exists within the current wrapper
-      const $uploadMedia = $wrapper.find('[data-cy="upload-media"]');
-      if ($uploadMedia.length > 0) {
-        cy.wrap($uploadMedia).contains(buttonText).click();
-      } else {
-        cy.get('[data-cy="media-preview"] > img').should('be.visible');
-        cy.get('[data-cy="replace-media"]').contains(replaceButtonText).click();
-      }
-    })
-    .then(() => cy.selectWPMedia());
+  cy.get('body').then(($body) => {
+    // Check if any form-field-wrapper contains the label text
+    if (
+      $body.find('[data-cy="form-field-wrapper"]').filter((i, el) => Cypress.$(el).text().includes(label)).length > 0
+    ) {
+      cy.contains('[data-cy="form-field-wrapper"]', label)
+        .should('be.visible')
+        .within(($wrapper) => {
+          // Check if the upload button exists within the current wrapper
+          const $uploadMedia = $wrapper.find('[data-cy="upload-media"]');
+          if ($uploadMedia.length > 0) {
+            cy.wrap($uploadMedia).contains(buttonText).click();
+          } else {
+            cy.get('[data-cy="media-preview"] > img').should('be.visible');
+            cy.get('[data-cy="replace-media"]').contains(replaceButtonText).click();
+          }
+        })
+        .then(() => cy.selectWPMedia());
+    } else {
+      cy.get('[data-cy="form-field-wrapper"]')
+        .find('[data-cy="upload-media"]')
+        .contains(buttonText)
+        .click()
+        .then(() => cy.selectWPMedia());
+    }
+  });
 });
 
 Cypress.Commands.add('selectWPMedia', () => {
