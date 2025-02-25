@@ -88,6 +88,10 @@ const styles = {
   wrapper: ({ hasChildren, size = 'regular' }: { hasChildren: boolean; size?: ProBadgeSize }) => css`
     position: relative;
 
+    svg {
+      flex-shrink: 0;
+    }
+
     ${!hasChildren &&
     css`
       height: ${badgeSizes[size].height};

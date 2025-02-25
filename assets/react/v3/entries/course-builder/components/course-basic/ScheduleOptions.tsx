@@ -8,6 +8,7 @@ import Button from '@TutorShared/atoms/Button';
 import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import ProBadge from '@TutorShared/atoms/ProBadge';
 import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
 import FormImageInput from '@TutorShared/components/fields/FormImageInput';
@@ -184,19 +185,29 @@ const ScheduleOptions = () => {
             />
           </div>
 
-          <Show when={isTutorPro}>
-            <Controller
-              name="enable_coming_soon"
-              control={form.control}
-              render={(controllerProps) => (
-                <FormCheckbox
-                  {...controllerProps}
-                  label={__('Show coming soon in course list & details page', 'tutor')}
-                  labelCss={styles.checkboxStartAlign}
-                />
-              )}
-            />
+          <Controller
+            name="enable_coming_soon"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormCheckbox
+                {...controllerProps}
+                label={
+                  <div>
+                    {__('Show coming soon in course list & details page', 'tutor')}
+                    <Show when={!isTutorPro}>
+                      <div data-pro-badge>
+                        <ProBadge content={__('Pro', 'tutor')} />
+                      </div>
+                    </Show>
+                  </div>
+                }
+                disabled={!isTutorPro}
+                labelCss={styles.checkboxStartAlign}
+              />
+            )}
+          />
 
+          <Show when={isTutorPro}>
             <Show when={isComingSoonEnabled}>
               <Controller
                 name="coming_soon_thumbnail"
@@ -343,8 +354,18 @@ const styles = {
   `,
   checkboxStartAlign: css`
     span:first-of-type {
+      gap: ${spacing[4]};
       align-self: flex-start;
       margin-top: ${spacing[4]};
+    }
+
+    div:not([data-pro-badge]) {
+      ${styleUtils.display.flex('row')};
+
+      [data-pro-badge] {
+        flex-shrink: 0;
+        align-self: center !important;
+      }
     }
   `,
 };
