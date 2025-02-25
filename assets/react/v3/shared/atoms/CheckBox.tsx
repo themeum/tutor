@@ -88,7 +88,7 @@ const styles = {
     disabled: boolean;
   }) => css`
     position: absolute;
-    opacity: 0;
+    opacity: 0 !important;
     height: 0;
     width: 0;
 
@@ -144,6 +144,10 @@ const styles = {
     css`
       & + span {
         cursor: not-allowed;
+
+        &::before {
+          border-color: ${colorTokens.stroke.disable};
+        }
       }
     `}
 
