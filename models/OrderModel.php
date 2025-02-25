@@ -1689,11 +1689,16 @@ class OrderModel {
 		}
 
 		if ( ! self::check_expiry_time( $order ) ) { ?>
-			<div class="tooltip-wrap tooltip-icon">
+
+			<div class="tooltip-wrap tooltip-icon">	
 				<span class="tooltip-txt tooltip-left">
-					<?php esc_html_e( 'Payment is pending due to gateway processing.', 'tutor' ); ?>
+					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
+
+			<button disabled class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
+				<?php esc_html_e( 'Pay', 'tutor' ); ?>
+			</button>
 		
 		<?php } elseif ( self::should_show_pay_btn( $order ) ) { ?>
 			
@@ -1706,6 +1711,7 @@ class OrderModel {
 					<?php esc_html_e( 'Pay', 'tutor' ); ?>
 				</button>				
 			</form>
+			
 			<?php
 		}
 	}
