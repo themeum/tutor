@@ -1701,10 +1701,6 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-
-			<button disabled class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
-				<?php esc_html_e( 'Pay', 'tutor' ); ?>
-			</button>
 		
 		<?php } elseif ( self::should_show_pay_btn( $order ) ) { ?>
 			
