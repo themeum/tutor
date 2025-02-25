@@ -30,6 +30,7 @@ interface RefundModalProps extends ModalProps {
 interface FormField {
   amount: number;
   is_remove_enrolment: boolean;
+  is_cancel_subscription: boolean;
   reason: string;
 }
 
@@ -46,7 +47,8 @@ function RefundModal({
   const form = useFormWithGlobalError<FormField>({
     defaultValues: {
       amount: 0,
-      is_remove_enrolment: order_type !== 'single_order',
+      is_remove_enrolment: false,
+      is_cancel_subscription: false,
       reason: '',
     },
   });
@@ -119,6 +121,14 @@ function RefundModal({
               control={form.control}
               name="is_remove_enrolment"
               render={(props) => <FormCheckbox {...props} label={__('Remove the student from enrollment', 'tutor')} />}
+            />
+          )}
+
+          {(order_type === 'subscription' || order_type === 'renewal') && (
+            <Controller
+              control={form.control}
+              name="is_cancel_subscription"
+              render={(props) => <FormCheckbox {...props} label={__('Cancel the subscription', 'tutor')} />}
             />
           )}
 
