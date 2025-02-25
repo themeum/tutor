@@ -1471,7 +1471,7 @@ class Course extends Tutor_Base {
 		 * @since 3.3.0
 		 */
 		echo '<style>
-			#adminmenumain, #wpfooter, .notice { display: none !important; }
+			#adminmenumain, #wpfooter, .notice, #tutor-page-wrap { display: none !important; }
 			#wpcontent { margin: 0 !important; padding: 0 !important; }
 			#wpbody-content { padding-bottom: 0px !important; float: none; }
 		</style>';
