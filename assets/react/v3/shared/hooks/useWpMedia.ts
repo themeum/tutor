@@ -122,6 +122,12 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
 
     const wpMedia = window.wp.media(mediaOptions);
 
+    wpMedia.on('close', () => {
+      if (wpMedia.$el) {
+        wpMedia.$el.parent().parent().remove();
+      }
+    });
+
     wpMedia.on('open', () => {
       const selection = wpMedia.state().get('selection');
 

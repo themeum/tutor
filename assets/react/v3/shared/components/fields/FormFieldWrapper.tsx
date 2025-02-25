@@ -117,7 +117,7 @@ const FormFieldWrapper = <T,>({
   );
 
   return (
-    <div css={styles.container({ disabled, isHidden })}>
+    <div css={styles.container({ disabled, isHidden })} data-cy="form-field-wrapper">
       <div css={styles.inputContainer(isInlineLabel)}>
         {(label || helpText) && (
           <div css={styles.labelContainer}>

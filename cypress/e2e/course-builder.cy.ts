@@ -9,9 +9,14 @@ describe('Course Builder', () => {
   let courseId: string;
 
   before(() => {
+    // @ts-ignore
     courseData = {
       post_title: faker.lorem.sentences(1),
       post_content: faker.lorem.sentences(5),
+      maximum_students: faker.number.int({ min: 1, max: 100 }),
+      enrollment_expiry: faker.number.int({ min: 1, max: 100 }),
+      course_price: String(faker.number.int({ min: 50, max: 1000 })),
+      course_sale_price: String(faker.number.int({ min: 1, max: 49 })),
     };
   });
 
@@ -73,31 +78,59 @@ describe('Course Builder', () => {
     cy.getByInputName('post_title').type(courseData.post_title);
     cy.setTinyMceContent('[data-cy=tutor-tinymce]', courseData.post_content);
 
-    cy.get('label')
-      .contains('Options')
-      .next()
-      .within(() => {
-        cy.get('button[role="tab"]').contains('General').click();
-      });
+    cy.get('[data-cy=course-settings]').within(() => {
+      cy.get('button[role="tab"]').contains('General').click();
+    });
     cy.getSelectInput('course_level', 'Beginner');
     cy.getByInputName('is_public_course').check();
 
-    if (cy.isAddonEnabled(Addons.CONTENT_DRIP)) {
-      cy.get('label')
-        .contains('Options')
-        .next()
-        .within(() => {
-          cy.get('button[role="tab"]').contains('Content Drip').click();
+    cy.get('[data-cy=course-settings]').within(($elements) => {
+      cy.get('button[role="tab"]').contains('Content Drip').click();
+
+      cy.isAddonEnabled(Addons.CONTENT_DRIP).then((isEnabled) => {
+        if (!isEnabled) {
+          cy.wrap($elements).get('button').contains('Enable Content Drip Addon');
+          return;
+        }
+
+        cy.get('input[name="contentDripType"]').first().parent('label').click();
+      });
+    });
+
+    cy.get('[data-cy=course-settings]').within(() => {
+      cy.get('button[role="tab"]').contains('Enrollment').click();
+    });
+
+    cy.isAddonEnabled(Addons.ENROLLMENT).then((isEnabled) => {
+      if (!isEnabled) {
+        return;
+      }
+
+      cy.getByInputName('maximum_students').type(String(courseData.maximum_students));
+      cy.getByInputName('enrollment_expiry').type(String(courseData.enrollment_expiry));
+      cy.getByInputName('course_enrollment_period').check();
+      cy.getByInputName('course_enrollment_period')
+        .should('be.checked')
+        .then(() => {
+          cy.selectDate('enrollment_starts_date');
+          cy.getSelectInput('enrollment_starts_time', '12:00 AM');
         });
-      cy.get('input[name="contentDripType"]').first().parent('label').click();
-    }
+    });
 
     cy.setWPMedia('Featured Image', 'Upload Thumbnail', 'Replace Image');
+    cy.setWPMedia('Intro Video', 'Upload Video', 'Replace Thumbnail');
 
-    cy.get('[data-cy="course-builder-submit-button"]').click();
+    cy.getByInputName('course_price_type').contains('Paid').click();
 
-    cy.wait(1000);
+    cy.isAddonEnabled(Addons.SUBSCRIPTION).then((isEnabled) => {
+      cy.window().then((win) => {
+        if (win._tutorobject.settings?.monetize_by === 'tutor' && isEnabled) {
+          cy.getByInputName('course_price').type(courseData.course_price);
+          cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
+        }
+      });
+    });
 
-    cy.get("[data-cy='tutor-toast']").should('be.visible').contains('Course updated successfully');
+    cy.updateCourse();
   });
 });

@@ -10,6 +10,7 @@ export default defineConfig({
   },
   viewportHeight: 900,
   viewportWidth: 1400,
+  scrollBehavior: 'center',
   env: {
     base_url: process.env.CYPRESS_base_url,
     single_course_slug: process.env.CYPRESS_single_course_slug,

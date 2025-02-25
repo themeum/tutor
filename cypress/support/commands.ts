@@ -1,4 +1,5 @@
 import { type Addon } from '@TutorShared/utils/util';
+import { backendUrls } from 'cypress/config/page-urls';
 
 /* eslint-disable @typescript-eslint/no-namespace */
 export {};
@@ -55,12 +56,20 @@ declare global {
       selectWPMedia: () => Chainable<void>;
       isAddonEnabled: (addon: Addon) => Chainable<boolean>;
       doesElementExist: (selector: string) => Chainable<boolean>;
+      updateCourse: () => Chainable<void>;
+      selectDate: (selector: string) => Chainable<void>;
     }
   }
 }
 
 Cypress.Commands.add('getByInputName', (selector) => {
-  return cy.get(`input[name="${selector}"]`).should('be.visible');
+  cy.get(`input[name="${selector}"]`).then(($input) => {
+    if ($input.attr('type') === 'radio') {
+      cy.wrap($input).parent();
+    } else {
+      cy.wrap($input).should('be.visible');
+    }
+  });
 });
 
 Cypress.Commands.add('setTinyMceContent', (selector, content) => {
@@ -632,35 +641,35 @@ Cypress.Commands.add('isAddonEnabled', (addon: Addon) => {
 });
 
 Cypress.Commands.add('setWPMedia', (label: string, buttonText: string, replaceButtonText: string) => {
-  cy.doesElementExist('[data-cy="media-preview"]').then((exists) => {
-    if (exists) {
-      cy.contains('label', label)
-        .parent()
-        .next()
-        .within(() => {
-          cy.get('[data-cy="media-preview"] > img').should('be.visible');
-          cy.get('[data-cy="replace-media"]').contains(replaceButtonText).click();
-        });
-      cy.selectWPMedia();
-      return;
+  cy.intercept('POST', `${Cypress.env('base_url')}/${backendUrls.AJAX_URL}`, (req) => {
+    if (req.body.includes('query-attachments')) {
+      req.alias = 'queryAttachments';
     }
-
-    cy.get('[data-cy="upload-media"]')
-      .contains(buttonText)
-      .should('be.visible')
-      .click()
-      .then(() => {
-        cy.selectWPMedia();
-      });
   });
+
+  cy.contains('[data-cy="form-field-wrapper"]', label)
+    .should('be.visible')
+    .within(($wrapper) => {
+      // Check if the upload button exists within the current wrapper
+      const $uploadMedia = $wrapper.find('[data-cy="upload-media"]');
+      if ($uploadMedia.length > 0) {
+        cy.wrap($uploadMedia).contains(buttonText).click();
+      } else {
+        cy.get('[data-cy="media-preview"] > img').should('be.visible');
+        cy.get('[data-cy="replace-media"]').contains(replaceButtonText).click();
+      }
+    })
+    .then(() => cy.selectWPMedia());
 });
 
 Cypress.Commands.add('selectWPMedia', () => {
-  cy.get('.media-modal')
+  cy.wait('@queryAttachments').its('response.statusCode').should('eq', 200);
+
+  cy.get('.media-frame')
     .should('be.visible')
     .within(() => {
       cy.get('#menu-item-browse').click();
-      cy.get('.spinner.is-active', { timeout: 10000 }).should('not.exist');
+      cy.get('.spinner.is-active').should('not.exist');
       cy.get('.attachment')
         .its('length')
         .then((length) => {
@@ -668,30 +677,49 @@ Cypress.Commands.add('selectWPMedia', () => {
             // @TODO: Add a way to upload media
             // cy.get('.media-button-select').click();
           } else {
-            // check if the media is already selected
-            cy.get('.attachment.selected').then(($selectedMedia) => {
-              if ($selectedMedia.length > 0) {
-                cy.get('.attachment')
-                  .not('.selected')
-                  .eq(Cypress._.random(0, length - 1))
-                  .click()
-                  .then(() => {
-                    cy.get('.media-button-select').click();
-                  });
+            cy.get('.attachment').then(($attachments) => {
+              const selected = $attachments.filter('.selected').length;
+              if (selected === 0) {
+                cy.wrap($attachments[0]).click();
               } else {
-                cy.get('.attachment')
-                  .last()
-                  .click()
-                  .then(() => {
-                    cy.get('.media-button-select').click();
-                  });
+                const notSelected = $attachments.filter(':not(.selected)');
+                cy.wrap(notSelected[Cypress._.random(0, notSelected.length - 1)]).click();
               }
             });
           }
+        })
+        .then(() => {
+          cy.get('.media-button-select').click();
         });
     });
 });
 
 Cypress.Commands.add('doesElementExist', (selector) => {
   return cy.get('body').then(($body) => $body.find(selector).length > 0);
+});
+
+Cypress.Commands.add('updateCourse', () => {
+  cy.intercept('POST', `${Cypress.env('base_url')}/${backendUrls.AJAX_URL}`, (req) => {
+    if (req.body.includes('tutor_update_course')) {
+      req.alias = 'updateCourse';
+    }
+  });
+  cy.get('[data-cy="course-builder-submit-button"]').click();
+  cy.wait('@updateCourse').its('response.statusCode').should('eq', 200);
+
+  cy.get("[data-cy='tutor-toast']").should('be.visible').contains('Course updated successfully');
+});
+
+Cypress.Commands.add('selectDate', (selector: string) => {
+  cy.get(`input[name="${selector}"]`).click();
+  cy.get('.tutor-portal-popover')
+    .should('be.visible')
+    .within(() => {
+      cy.get('.rdp-day')
+        .not('.rdp-outside, .rdp-selected')
+        .then(($days) => {
+          const middleIndex = Math.floor($days.length / 2);
+          cy.wrap($days.eq(middleIndex)).find('.rdp-day_button').click();
+        });
+    });
 });
