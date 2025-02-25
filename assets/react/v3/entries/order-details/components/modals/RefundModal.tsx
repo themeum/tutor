@@ -48,6 +48,7 @@ function RefundModal({
     defaultValues: {
       amount: 0,
       is_remove_enrolment: false,
+      is_cancel_subscription: false,
       reason: '',
     },
   });
