@@ -1455,7 +1455,7 @@ class Course extends Tutor_Base {
 			)
 		);
 
-		add_filter( 'tutor_localize_data', fn( $arr ) => $data );
+		add_filter( 'tutor_localize_data', fn() => $data );
 	}
 
 	/**
