@@ -192,14 +192,14 @@ const ScheduleOptions = () => {
               <FormCheckbox
                 {...controllerProps}
                 label={
-                  <div>
+                  <>
                     {__('Show coming soon in course list & details page', 'tutor')}
                     <Show when={!isTutorPro}>
                       <div data-pro-badge>
-                        <ProBadge content={__('Pro', 'tutor')} />
+                        <ProBadge content={__('Pro', 'tutor')} size="small" />
                       </div>
                     </Show>
-                  </div>
+                  </>
                 }
                 disabled={!isTutorPro}
                 labelCss={styles.checkboxStartAlign}
@@ -359,13 +359,10 @@ const styles = {
       margin-top: ${spacing[4]};
     }
 
-    div:not([data-pro-badge]) {
-      ${styleUtils.display.flex('row')};
-
-      [data-pro-badge] {
-        flex-shrink: 0;
-        align-self: center !important;
-      }
+    [data-pro-badge] {
+      display: inline-flex;
+      vertical-align: middle;
+      padding-left: ${spacing[4]};
     }
   `,
 };
