@@ -1353,6 +1353,7 @@ class Course extends Tutor_Base {
 		// Fix: function print_emoji_styles is deprecated since version 6.4.0!
 		remove_action( 'wp_print_styles', 'print_emoji_styles' );
 		remove_action( 'wp_head', 'wp_admin_bar_header' );
+		add_action( 'wp_head', 'wp_enqueue_admin_bar_header_styles' );
 
 		do_action( 'tutor_course_builder_before_wp_editor_load' );
 		wp_enqueue_script( 'wp-tinymce' );
