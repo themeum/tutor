@@ -1695,7 +1695,9 @@ class OrderModel {
 			$order = ( new self() )->get_order_by_id( $order );
 		}
 
-		if ( ! self::check_expiry_time( $order ) ) { ?>
+		$show_pay_button = self::should_show_pay_btn( $order );
+
+		if ( ! self::should_active_pay_button( $order, $show_pay_button ) && $show_pay_button ) : ?>
 
 			<div class="tooltip-wrap tooltip-icon">	
 				<span class="tooltip-txt tooltip-left">
@@ -1703,7 +1705,7 @@ class OrderModel {
 				</span>
 			</div>
 		
-		<?php } elseif ( self::should_show_pay_btn( $order ) ) { ?>
+		<?php elseif ( $show_pay_button ) : ?>
 			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
@@ -1716,7 +1718,7 @@ class OrderModel {
 			</form>
 			
 			<?php
-		}
+		endif;
 	}
 
 	/**
@@ -1725,23 +1727,25 @@ class OrderModel {
 	 * @since 3.3.0
 	 *
 	 * @param object $order The order object containing order details.
+	 * @param bool   $show_pay_button Whether the pay button should be shown.
 	 *
 	 * @return bool Returns true if the order is expired or expiry time is not set, otherwise false.
 	 */
-	private static function check_expiry_time( $order ) {
+	private static function should_active_pay_button( $order, $show_pay_button ) {
 
 		$current_time = time();
 		$meta_key     = self::META_KEY_ORDER_ID . $order->id;
 		$user_id      = get_current_user_id();
 		$expiry_time  = get_user_meta( $user_id, $meta_key, true );
 
-		// If the time is expired, delete the meta key.
-		if ( ! empty( $expiry_time ) && $expiry_time < $current_time ) {
-			delete_user_meta( $user_id, $meta_key );
-			return true;
-		}
+		if ( $expiry_time ) {
 
-		if ( ! empty( $expiry_time ) && $expiry_time > $current_time ) {
+			// If the time is expired or the order is paid then delete the meta key.
+			if ( $expiry_time < $current_time || ! $show_pay_button ) {
+				delete_user_meta( $user_id, $meta_key );
+				return true;
+			}
+
 			return false;
 		}
 
