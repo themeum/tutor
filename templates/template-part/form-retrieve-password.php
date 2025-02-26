@@ -55,7 +55,7 @@ do_action( 'tutor_before_reset_password_form' ); ?>
 	<div class="tutor-form-row">
 		<div class="tutor-form-col-12">
 			<div class="tutor-form-group">
-				<button type="submit" class="tutor-btn" value="Reset password">
+				<button type="submit" class="tutor-btn tutor-btn-primary" value="Reset password">
 					<?php esc_html_e( 'Reset password', 'tutor' ); ?>
 				</button>
 			</div>
