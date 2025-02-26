@@ -417,7 +417,7 @@ class Course extends Tutor_Base {
 
 			if ( isset( $course_settings['enrollment_starts_at'] ) && ! empty( $course_settings['enrollment_starts_at'] ) ) {
 				$enrollment_start = strtotime( $course_settings['enrollment_starts_at'] );
-				$scheduled_date   = strtotime( $params['post_date'] );
+				$scheduled_date   = strtotime( $params['post_date_gmt'] );
 
 				if ( $enrollment_start < $scheduled_date ) {
 					$errors['scheduled_course'] = __( 'The enrollment start date cannot be earlier than the course start date', 'tutor' );
@@ -1352,6 +1352,8 @@ class Course extends Tutor_Base {
 	public function enqueue_course_builder_assets() {
 		// Fix: function print_emoji_styles is deprecated since version 6.4.0!
 		remove_action( 'wp_print_styles', 'print_emoji_styles' );
+		remove_action( 'wp_head', 'wp_admin_bar_header' );
+		add_action( 'wp_head', 'wp_enqueue_admin_bar_header_styles' );
 
 		do_action( 'tutor_course_builder_before_wp_editor_load' );
 		wp_enqueue_script( 'wp-tinymce' );
@@ -1453,8 +1455,7 @@ class Course extends Tutor_Base {
 			)
 		);
 
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $data );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
+		add_filter( 'tutor_localize_data', fn() => $data );
 	}
 
 	/**
@@ -1471,7 +1472,7 @@ class Course extends Tutor_Base {
 		 * @since 3.3.0
 		 */
 		echo '<style>
-			#adminmenumain, #wpfooter, .notice { display: none !important; }
+			#adminmenumain, #wpfooter, .notice, #tutor-page-wrap { display: none !important; }
 			#wpcontent { margin: 0 !important; padding: 0 !important; }
 			#wpbody-content { padding-bottom: 0px !important; float: none; }
 		</style>';

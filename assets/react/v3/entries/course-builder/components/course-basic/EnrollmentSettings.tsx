@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useIsFetching } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
-import { isBefore } from 'date-fns';
+import { isBefore, startOfDay } from 'date-fns';
 import { useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
@@ -133,7 +133,11 @@ const EnrollmentSettings = () => {
                       validate: {
                         invalidDate: invalidDateRule,
                         isAfterScheduleDate: (value) => {
-                          if (isScheduleEnabled && scheduleDateTime && isBefore(new Date(value), scheduleDateTime)) {
+                          if (
+                            isScheduleEnabled &&
+                            scheduleDateTime &&
+                            isBefore(startOfDay(new Date(value)), startOfDay(new Date(scheduleDate)))
+                          ) {
                             return __('Start date should be after the schedule date', 'tutor');
                           }
                         },
@@ -220,7 +224,7 @@ const EnrollmentSettings = () => {
                         validate: {
                           invalidDate: invalidDateRule,
                           checkEndDate: (value) => {
-                            if (isBefore(new Date(value), new Date(enrollmentStartsDate))) {
+                            if (isBefore(startOfDay(new Date(value)), startOfDay(new Date(enrollmentStartsDate)))) {
                               return __('End date should be after the start date', 'tutor');
                             }
                           },
