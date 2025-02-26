@@ -22,10 +22,10 @@ import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSl
 import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
-  Assignment,
   convertAssignmentDataToPayload,
   useAssignmentDetailsQuery,
   useSaveAssignmentMutation,
+  type Assignment,
   type CourseTopic,
 } from '@CourseBuilderServices/curriculum';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -214,6 +214,7 @@ const AssignmentModal = ({
               {assignmentId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-assignment"
               loading={saveAssignmentMutation.isPending}
               variant="primary"
               size="small"

@@ -1,5 +1,5 @@
 import { type Addon } from '@TutorShared/utils/util';
-import { backendUrls } from 'cypress/config/page-urls';
+import { type Interception } from 'cypress/types/net-stubbing';
 
 /* eslint-disable @typescript-eslint/no-namespace */
 export {};
@@ -58,9 +58,42 @@ declare global {
       doesElementExist: (selector: string) => Chainable<boolean>;
       updateCourse: () => Chainable<void>;
       selectDate: (selector: string) => Chainable<void>;
+
+      // Course builder commands
+      saveTopic(title: string, summary?: string): Chainable<void>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      saveLesson(lessonData: any): Chainable<void>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      saveAssignment(assignmentData: any): Chainable<void>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      saveQuiz(quizData: any): Chainable<void>;
+      deleteTopic(index?: number): Chainable<void>;
+      deleteContent(type: string, index?: number): Chainable<void>;
+      duplicateContent(type: string, index?: number): Chainable<void>;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      waitAfterRequest(alias: string, additionalWaitMs?: number): Chainable<Interception<any, any>>;
     }
   }
 }
+
+/**
+ * Wait for an API request to complete and then optionally wait additional time for UI to update
+ */
+Cypress.Commands.add('waitAfterRequest', (alias: string, additionalWaitMs = 500) => {
+  return cy.wait(`@${alias}`).then((interception) => {
+    // Check for successful status code
+    if (interception.response) {
+      expect(interception.response.statusCode).to.be.oneOf([200, 201]);
+    }
+
+    // Add small wait for UI to update if needed
+    if (additionalWaitMs > 0) {
+      cy.wait(additionalWaitMs);
+    }
+
+    return cy.wrap(interception);
+  });
+});
 
 Cypress.Commands.add('getByInputName', (selector) => {
   cy.get(`input[name="${selector}"], textarea[name="${selector}"]`).then(($input) => {
@@ -397,7 +430,11 @@ Cypress.Commands.add(
           cy.contains(`${saveButtonSelector}`).click({ force: true });
 
           cy.wait('@ajaxRequest').then((interception) => {
-            expect(interception.response.body.success).to.equal(true);
+            if (interception.response) {
+              expect(interception.response.body.success).to.equal(true);
+            } else {
+              throw new Error('Response is undefined');
+            }
 
             const requestBody = interception.request.body;
             const params = new URLSearchParams(requestBody);
@@ -423,7 +460,11 @@ Cypress.Commands.add('toggle', (inputName, fieldId) => {
       cy.contains('Save Changes').click({ force: true });
 
       cy.wait('@ajaxRequest').then((interception) => {
-        expect(interception.response.body.success).to.equal(true);
+        if (interception.response) {
+          expect(interception.response.body.success).to.equal(true);
+        } else {
+          throw new Error('Response is undefined');
+        }
 
         const requestBody = interception.request.body;
         const params = new URLSearchParams(requestBody);
@@ -453,7 +494,11 @@ Cypress.Commands.add('handleCourseStart', () => {
       cy.get('button').contains('Retake This Course').click();
       cy.get('button').contains('Reset Data').click();
       cy.wait('@ajaxRequest').then((interception) => {
-        expect(interception.response.body.success).to.equal(true);
+        if (interception.response) {
+          expect(interception.response.body.success).to.equal(true);
+        } else {
+          throw new Error('Response is undefined');
+        }
       });
     } else if ($body.text().includes('Continue Learning')) {
       cy.get('a').contains('Continue Learning').click();
@@ -499,7 +544,11 @@ Cypress.Commands.add('handleAssignment', (isLastItem) => {
     if (bodyText.includes('Start Assignment Submit')) {
       cy.get('#tutor_assignment_start_btn').click();
       cy.wait('@ajaxRequest').then((interception) => {
-        expect(interception.response.statusCode).to.equal(200);
+        if (interception.response) {
+          expect(interception.response.statusCode).to.equal(200);
+        } else {
+          throw new Error('Response is undefined');
+        }
       });
       cy.url().should('include', 'assignments');
       cy.setTinyMceContent('.tutor-assignment-text-area', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
@@ -607,7 +656,11 @@ Cypress.Commands.add('submitCourseReview', () => {
       );
       cy.get('.tutor-d-flex > .tutor_submit_review_btn').click();
       cy.wait('@ajaxRequest').then((interception) => {
-        expect(interception.response.body.success).to.equal(true);
+        if (interception.response) {
+          expect(interception.response.body.success).to.equal(true);
+        } else {
+          throw new Error('Response is undefined');
+        }
       });
       cy.wait(5000);
     }
@@ -641,18 +694,10 @@ Cypress.Commands.add('isAddonEnabled', (addon: Addon) => {
 });
 
 Cypress.Commands.add('getWPMedia', (label: string, buttonText: string, replaceButtonText: string) => {
-  cy.intercept('POST', `${Cypress.env('base_url')}/${backendUrls.AJAX_URL}`, (req) => {
-    if (req.body.includes('query-attachments')) {
-      req.alias = 'queryAttachments';
-    }
-  });
-
   cy.get('body').then(($body) => {
     // Check if any form-field-wrapper contains the label text
-    if (
-      $body.find('[data-cy="form-field-wrapper"]').filter((i, el) => Cypress.$(el).text().includes(label)).length > 0
-    ) {
-      cy.contains('[data-cy="form-field-wrapper"]', label)
+    if ($body.find('[data-cy=form-field-wrapper]').filter((i, el) => Cypress.$(el).text().includes(label)).length > 0) {
+      cy.contains('[data-cy=form-field-wrapper]', label)
         .should('be.visible')
         .within(($wrapper) => {
           // Check if the upload button exists within the current wrapper
@@ -660,14 +705,14 @@ Cypress.Commands.add('getWPMedia', (label: string, buttonText: string, replaceBu
           if ($uploadMedia.length > 0) {
             cy.wrap($uploadMedia).contains(buttonText).click();
           } else {
-            cy.get('[data-cy="media-preview"] > img').should('be.visible');
-            cy.get('[data-cy="replace-media"]').contains(replaceButtonText).click();
+            cy.get('[data-cy=media-preview] > img').should('be.visible');
+            cy.get('[data-cy=replace-media]').contains(replaceButtonText).click();
           }
         })
         .then(() => cy.selectWPMedia());
     } else {
-      cy.get('[data-cy="form-field-wrapper"]')
-        .find('[data-cy="upload-media"]')
+      cy.get('[data-cy=form-field-wrapper]')
+        .find('[data-cy=upload-media]')
         .contains(buttonText)
         .click()
         .then(() => cy.selectWPMedia());
@@ -712,15 +757,9 @@ Cypress.Commands.add('doesElementExist', (selector) => {
 });
 
 Cypress.Commands.add('updateCourse', () => {
-  cy.intercept('POST', `${Cypress.env('base_url')}/${backendUrls.AJAX_URL}`, (req) => {
-    if (req.body.includes('tutor_update_course')) {
-      req.alias = 'updateCourse';
-    }
-  });
-  cy.get('[data-cy="course-builder-submit-button"]').click();
-  cy.wait('@updateCourse').its('response.statusCode').should('eq', 200);
-
-  cy.get("[data-cy='tutor-toast']").should('be.visible').contains('Course updated successfully');
+  cy.get('[data-cy=course-builder-submit-button]').click();
+  cy.waitAfterRequest('updateCourse');
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Course updated successfully');
 });
 
 Cypress.Commands.add('selectDate', (selector: string) => {
@@ -735,4 +774,116 @@ Cypress.Commands.add('selectDate', (selector: string) => {
           cy.wrap($days.eq(middleIndex)).find('.rdp-day_button').click();
         });
     });
+});
+
+// Course builder commands
+Cypress.Commands.add('saveTopic', (title: string, summary?: string) => {
+  cy.getByInputName('title').clear().type(title);
+  if (summary) {
+    cy.getByInputName('summary').clear().type(summary);
+  }
+  cy.get('[data-cy=save-topic]').click();
+  cy.waitAfterRequest('saveTopic');
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Topic saved successfully');
+});
+
+Cypress.Commands.add('saveLesson', (lessonData) => {
+  cy.get('[data-cy=tutor-modal]').within(() => {
+    if (lessonData.description) {
+      cy.setTinyMceContent('[data-cy=tutor-tinymce]', lessonData.description);
+    }
+    if (lessonData.duration) {
+      if (lessonData.duration.hour) {
+        cy.getByInputName('duration.hour').clear().type(String(lessonData.duration.hour));
+      }
+      if (lessonData.duration.minute) {
+        cy.getByInputName('duration.minute').clear().type(String(lessonData.duration.minute));
+      }
+      if (lessonData.duration.second) {
+        cy.getByInputName('duration.second').clear().type(String(lessonData.duration.second));
+      }
+    }
+    cy.getByInputName('title').clear().type(lessonData.title);
+  });
+
+  cy.getWPMedia('Featured Image', 'Upload Image', 'Replace Image');
+  cy.getWPMedia('Video', 'Upload Video', 'Replace Thumbnail');
+  cy.getWPMedia('Attachments', 'Upload Attachment', '');
+
+  cy.get('[data-cy=save-lesson]').click();
+  cy.waitAfterRequest('saveLesson');
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Lesson saved successfully');
+});
+
+Cypress.Commands.add('saveAssignment', (assignmentData) => {
+  cy.get('[data-cy=tutor-modal]').within(() => {
+    cy.getByInputName('title').clear().type(assignmentData.title);
+    if (assignmentData.summary) {
+      cy.setTinyMceContent('[data-cy=tutor-tinymce]', assignmentData.summary);
+    }
+    if (assignmentData.time_duration) {
+      cy.getByInputName('time_duration.value').clear().type(assignmentData.time_duration.value);
+    }
+    if (assignmentData.total_mark) {
+      cy.getByInputName('total_mark').clear().type(String(assignmentData.total_mark));
+    }
+    if (assignmentData.pass_mark) {
+      cy.getByInputName('pass_mark').clear().type(String(assignmentData.pass_mark));
+    }
+    if (assignmentData.upload_files_limit) {
+      cy.getByInputName('upload_files_limit').clear().type(String(assignmentData.upload_files_limit));
+    }
+    if (assignmentData.upload_file_size_limit) {
+      cy.getByInputName('upload_file_size_limit').clear().type(String(assignmentData.upload_file_size_limit));
+    }
+  });
+
+  cy.getSelectInput('time_duration.time', 'Days');
+  cy.getWPMedia('Attachments', 'Upload Attachment', '');
+
+  cy.get('[data-cy=save-assignment]').click();
+  cy.waitAfterRequest('saveAssignment');
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Assignment created successfully');
+});
+
+Cypress.Commands.add('deleteTopic', (index = 0) => {
+  cy.get('[data-cy=delete-topic]').eq(index).click();
+  cy.get('.tutor-portal-popover').within(() => {
+    cy.get('[data-cy=confirm-button]').click();
+  });
+  cy.waitAfterRequest('deleteTopic');
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Topic deleted successfully');
+});
+
+Cypress.Commands.add('deleteContent', (type, index = 0) => {
+  cy.get(`[data-cy=delete-${type}]`).eq(index).click();
+  cy.get('.tutor-portal-popover').within(() => {
+    cy.get('[data-cy=confirm-button]').click();
+  });
+  cy.waitAfterRequest('deleteContent');
+  cy.waitAfterRequest('getCourseContents');
+
+  let successMessage = '';
+  switch (type) {
+    case 'lesson':
+      successMessage = 'Lesson deleted successfully';
+      break;
+    case 'tutor_assignments':
+      successMessage = 'Assignment deleted successfully';
+      break;
+    case 'tutor_quiz':
+      successMessage = 'Quiz deleted successfully';
+      break;
+    default:
+      successMessage = 'Content deleted successfully';
+  }
+
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains(successMessage);
+});
+
+Cypress.Commands.add('duplicateContent', (type, index = 0) => {
+  cy.get(`[data-cy=duplicate-${type}]`).eq(index).click();
+  cy.waitAfterRequest('duplicateContent');
+  cy.waitAfterRequest('getCourseContents');
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Duplicated successfully');
 });

@@ -28,7 +28,7 @@ import { type ContentDripType } from '@CourseBuilderServices/course';
 import {
   convertLessonDataToPayload,
   type CourseTopic,
-  Lesson,
+  type Lesson,
   useLessonDetailsQuery,
   useSaveLessonMutation,
 } from '@CourseBuilderServices/curriculum';
@@ -242,6 +242,7 @@ const LessonModal = ({
               {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-lesson"
               loading={saveLessonMutation.isPending}
               variant="primary"
               size="small"

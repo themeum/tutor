@@ -1,12 +1,17 @@
-//course-builder.cy.ts
+import { type AssignmentForm } from '@CourseBuilderComponents/modals/AssignmentModal';
+import { type LessonForm } from '@CourseBuilderComponents/modals/LessonModal';
 import { type CourseFormData } from '@CourseBuilderServices/course';
 import { faker } from '@faker-js/faker';
 import { Addons } from '@TutorShared/config/constants';
+import endpoints from '@TutorShared/utils/endpoints';
 import { backendUrls } from 'cypress/config/page-urls';
 
 describe('Course Builder', () => {
   let courseData: CourseFormData;
   let courseId: string;
+  let topicData: { title: string; summary: string };
+  let lessonData: LessonForm;
+  let assignmentData: AssignmentForm;
 
   before(() => {
     // @ts-ignore
@@ -24,9 +29,89 @@ describe('Course Builder', () => {
       course_material_includes: faker.lorem.lines(2),
       course_requirements: faker.lorem.lines(2),
     };
+
+    // @ts-ignore
+    topicData = {
+      title: faker.lorem.lines(1),
+      summary: faker.lorem.lines(2),
+    };
+
+    // @ts-ignore
+    lessonData = {
+      title: faker.lorem.lines(1),
+      description: faker.lorem.lines(3),
+      duration: {
+        hour: faker.number.int({ min: 1, max: 10 }),
+        minute: faker.number.int({ min: 1, max: 59 }),
+        second: faker.number.int({ min: 1, max: 59 }),
+      },
+    };
+
+    // @ts-ignore
+    assignmentData = {
+      title: faker.lorem.lines(1),
+      summary: faker.lorem.lines(3),
+      time_duration: {
+        value: String(faker.number.int({ min: 1, max: 10 })),
+        time: 'days',
+      },
+      total_mark: faker.number.int({ min: 50, max: 100 }),
+      pass_mark: faker.number.int({ min: 1, max: 49 }),
+      upload_files_limit: faker.number.int({ min: 1, max: 10 }),
+      upload_file_size_limit: faker.number.int({ min: 1, max: 10 }),
+    };
   });
 
   beforeEach(() => {
+    cy.intercept('POST', `${Cypress.env('base_url')}/${backendUrls.AJAX_URL}`, (req) => {
+      // Course related actions
+      if (req.body.includes(endpoints.UPDATE_COURSE)) {
+        req.alias = 'updateCourse';
+      }
+      if (req.body.includes(endpoints.GET_COURSE_CONTENTS)) {
+        req.alias = 'getCourseContents';
+      }
+
+      // Topic related actions
+      if (req.body.includes(endpoints.SAVE_TOPIC)) {
+        req.alias = 'saveTopic';
+      }
+      if (req.body.includes(endpoints.DELETE_TOPIC)) {
+        req.alias = 'deleteTopic';
+      }
+
+      // Lesson related actions
+      if (req.body.includes(endpoints.SAVE_LESSON)) {
+        req.alias = 'saveLesson';
+      }
+      if (req.body.includes(endpoints.DELETE_TOPIC_CONTENT)) {
+        req.alias = 'deleteContent';
+      }
+
+      // Assignment related actions
+      if (req.body.includes(endpoints.SAVE_ASSIGNMENT)) {
+        req.alias = 'saveAssignment';
+      }
+
+      // Duplicate content
+      if (req.body.includes(endpoints.DUPLICATE_CONTENT)) {
+        req.alias = 'duplicateContent';
+      }
+
+      // Quiz related actions
+      if (req.body.includes(endpoints.SAVE_QUIZ)) {
+        req.alias = 'saveQuiz';
+      }
+      if (req.body.includes(endpoints.DELETE_QUIZ)) {
+        req.alias = 'deleteQuiz';
+      }
+
+      // Media related actions
+      if (req.body.includes('query-attachments')) {
+        req.alias = 'queryAttachments';
+      }
+    });
+
     cy.session('tutor-login', () => {
       cy.visit(backendUrls.LOGIN);
       cy.loginAsAdmin();
@@ -40,42 +125,42 @@ describe('Course Builder', () => {
     }
   });
 
-  // it('1. creates a new course', () => {
-  //   cy.get('.wp-menu-name').contains('Tutor LMS').click();
-  //   cy.get('a.tutor-create-new-course').click();
-
-  //   // Extract courseId from URL
-  //   cy.url()
-  //     .should('include', 'course_id=')
-  //     .then((url) => {
-  //       courseId = url.split('course_id=')[1].split('&')[0];
-  //       cy.log(`Course ID: ${courseId}`);
-  //       cy.wrap(courseId).should('be.a', 'string').and('not.be.empty');
-  //     });
-
-  //   cy.get('h6').should('have.text', 'Course Builder');
-  // });
-
-  it('1. open a course in course builder', () => {
+  it('1. creates a new course', () => {
     cy.get('.wp-menu-name').contains('Tutor LMS').click();
+    cy.get('a.tutor-create-new-course').click();
 
-    cy.get('table.table-dashboard-course-list tbody tr')
-      .first()
-      .within(() => {
-        cy.get('a.tutor-table-link').first().click();
-
-        // Extract courseId from URL
-        cy.url()
-          .should('include', 'course_id=')
-          .then((url) => {
-            courseId = url.split('course_id=')[1].split('&')[0];
-            cy.log(`Course ID: ${courseId}`);
-            cy.wrap(courseId).should('be.a', 'string').and('not.be.empty');
-          });
+    // Extract courseId from URL
+    cy.url()
+      .should('include', 'course_id=')
+      .then((url) => {
+        courseId = url.split('course_id=')[1].split('&')[0];
+        cy.log(`Course ID: ${courseId}`);
+        cy.wrap(courseId).should('be.a', 'string').and('not.be.empty');
       });
 
     cy.get('h6').should('have.text', 'Course Builder');
   });
+
+  // it('1. open a course in course builder', () => {
+  //   cy.get('.wp-menu-name').contains('Tutor LMS').click();
+
+  //   cy.get('table.table-dashboard-course-list tbody tr')
+  //     .first()
+  //     .within(() => {
+  //       cy.get('a.tutor-table-link').first().click();
+
+  //       // Extract courseId from URL
+  //       cy.url()
+  //         .should('include', 'course_id=')
+  //         .then((url) => {
+  //           courseId = url.split('course_id=')[1].split('&')[0];
+  //           cy.log(`Course ID: ${courseId}`);
+  //           cy.wrap(courseId).should('be.a', 'string').and('not.be.empty');
+  //         });
+  //     });
+
+  //   cy.get('h6').should('have.text', 'Course Builder');
+  // });
 
   it('2. fills course basics', () => {
     // Ensure courseId is set from previous test
@@ -146,6 +231,37 @@ describe('Course Builder', () => {
     cy.get('[data-cy=tutor-tracker]').within(() => {
       cy.get('button').contains('Curriculum').click();
     });
+    cy.wait(1000);
+
+    cy.wait('@getCourseContents').its('response.statusCode').should('eq', 200);
+
+    cy.doesElementExist('[data-cy=edit-topic]').then((exists) => {
+      if (exists) {
+        cy.get('[data-cy=edit-topic]').first().click();
+      } else {
+        cy.get('[data-cy=add-topic]').click();
+      }
+
+      // Use the new command
+      cy.saveTopic(topicData.title, topicData.summary);
+    });
+
+    // Add lesson using new command
+    cy.get('[data-cy=add-lesson]').first().click();
+    cy.saveLesson(lessonData);
+
+    // Add assignment using new command
+    cy.get('[data-cy=add-assignment]').first().click();
+    cy.saveAssignment(assignmentData);
+
+    // Duplicate and delete using commands
+    cy.duplicateContent('lesson');
+    cy.duplicateContent('tutor_assignments');
+    cy.deleteContent('lesson');
+    cy.deleteContent('tutor_assignments');
+    cy.duplicateContent('topic');
+    cy.deleteTopic(1);
+    cy.deleteTopic(0);
   });
 
   it('4. fills course additional', () => {
