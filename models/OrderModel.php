@@ -55,8 +55,9 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const META_KEY_HISTORY = 'history';
-	const META_KEY_REFUND  = 'refund';
+	const META_KEY_HISTORY  = 'history';
+	const META_KEY_REFUND   = 'refund';
+	const META_KEY_ORDER_ID = 'tutor_order_id_';
 
 	/**
 	 * Tax type constants
@@ -1729,17 +1730,18 @@ class OrderModel {
 	 */
 	private static function check_expiry_time( $order ) {
 
-		$current_time = DateTimeHelper::now()->to_timestamp();
-		$meta_key     = "tutor_order_id_$order->id";
-		$meta_value   = get_user_meta( get_current_user_id(), $meta_key, false );
-		$expiry_time  = ! empty( $meta_value ) ? json_decode( $meta_value[0] )->expiry_time : null;
+		$current_time = time();
+		$meta_key     = self::META_KEY_ORDER_ID . $order->id;
+		$user_id      = get_current_user_id();
+		$expiry_time  = get_user_meta( $user_id, $meta_key, true );
 
-		if ( ! is_null( $expiry_time ) && $expiry_time < $current_time ) {
-			delete_user_meta( get_current_user_id(), $meta_key );
+		// If the time is expired, delete the meta key.
+		if ( ! empty( $expiry_time ) && $expiry_time < $current_time ) {
+			delete_user_meta( $user_id, $meta_key );
 			return true;
 		}
 
-		if ( ! is_null( $expiry_time ) && $expiry_time > $current_time ) {
+		if ( ! empty( $expiry_time ) && $expiry_time > $current_time ) {
 			return false;
 		}
 
