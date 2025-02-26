@@ -318,6 +318,16 @@ class HooksHandler {
 				} else {
 					$object_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order );
 				}
+
+				/**
+				 * Do not process enrollment for subscription order refund.
+				 * It will be handled by subscription controller's handle_order_refund method.
+				 *
+				 * @since 3.3.0
+				 */
+				if ( Input::has( 'is_cancel_subscription' ) ) {
+					continue;
+				}
 			}
 
 			$has_enrollment = tutor_utils()->is_enrolled( $object_id, $student_id, false );
