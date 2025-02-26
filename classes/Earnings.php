@@ -116,7 +116,12 @@ class Earnings extends Singleton {
 				$course_id = $item->id;
 
 				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
-					$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
+					$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $course_id );
+					if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
+						$course_id = null;
+					} else {
+						$course_id = apply_filters( 'tutor_subscription_course_by_plan', $item->id, $order_details );
+					}
 				}
 
 				$this->earning_data[] = $this->prepare_earning_data( $item_sold_price, $course_id, $order_id, $order_details->order_status, $admin_amount, $instructor_amount );
