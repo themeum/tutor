@@ -1309,11 +1309,11 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @since 3.0.0
+	 * @since 3.0.0  $is_complete parameter added to check with completed status
+	 *               Default value set true for backward compatibility. It set
+	 *               false then it will just check record.
 	 *
-	 * $is_complete parameter added to check with completed status
-	 * Default value set true for backward compatibility. It set
-	 * false then it will just check record.
+	 * @since 3.3.0  param $is_complete added to cache key.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $user_id user id.
@@ -1325,7 +1325,7 @@ class Utils {
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
-		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}";
+		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}_{$is_complete}";
 
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
@@ -8349,7 +8349,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
-		return $this->has_user_role( array( 'administrator', 'editor' ) ) || $this->is_instructor_of_this_course( $user_id, $course_id );
+		return current_user_can( 'edit_post', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
 	}
 
 

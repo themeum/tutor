@@ -54,7 +54,7 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
         css={[inputCss, styles.checkbox({ label: !!label, isIndeterminate, disabled })]}
       />
       <span />
-      <span css={[styles.label, labelCss]}>{label}</span>
+      <span css={[styles.label({ isDisabled: disabled }), labelCss]}>{label}</span>
     </label>
   );
 });
@@ -73,10 +73,15 @@ const styles = {
       cursor: not-allowed;
     `}
   `,
-  label: css`
+  label: ({ isDisabled = false }) => css`
     ${typography.caption()};
     margin-top: ${spacing[2]};
     color: ${colorTokens.text.title};
+
+    ${isDisabled &&
+    css`
+      color: ${colorTokens.text.disable};
+    `}
   `,
   checkbox: ({
     label,
@@ -88,7 +93,7 @@ const styles = {
     disabled: boolean;
   }) => css`
     position: absolute;
-    opacity: 0;
+    opacity: 0 !important;
     height: 0;
     width: 0;
 
@@ -144,6 +149,10 @@ const styles = {
     css`
       & + span {
         cursor: not-allowed;
+
+        &::before {
+          border-color: ${colorTokens.stroke.disable};
+        }
       }
     `}
 

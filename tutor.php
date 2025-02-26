@@ -4,11 +4,7 @@
  * Plugin URI: https://tutorlms.com
  * Description: Tutor is a complete solution for creating a Learning Management System in WordPress way. It can help you to create small to large scale online education site very conveniently. Power features like report, certificate, course preview, private file sharing make Tutor a robust plugin for any educational institutes.
  * Author: Themeum
-<<<<<<< HEAD
  * Version: 3.3.0
-=======
- * Version: 3.2.3
->>>>>>> e8ffc8f4bb22e0acead31177e73787dd4f51aad7
  * Author URI: https://themeum.com
  * Requires PHP: 7.4
  * Requires at least: 5.3

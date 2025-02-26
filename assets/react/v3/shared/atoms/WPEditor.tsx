@@ -339,6 +339,7 @@ const styles = {
     .wp-switch-editor {
       border-top-left-radius: ${borderRadius[4]};
       border-top-right-radius: ${borderRadius[4]};
+      height: auto;
     }
 
     .mce-toolbar-grp,
