@@ -127,7 +127,8 @@ class OrderActivitiesController {
 			$user_name = $current_user->display_name;
 		}
 
-		$message = empty( $user_name ) ? __( 'Order marked as paid', 'tutor' ) : __( 'Order marked as paid by ' . $user_name, 'tutor' );
+		/* translators: %s: username */
+		$message = empty( $user_name ) ? __( 'Order marked as paid', 'tutor' ) : sprintf( __( 'Order marked as paid by %s', 'tutor' ), $user_name );
 
 		$payload             = new \stdClass();
 		$payload->order_id   = $order_id;

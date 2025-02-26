@@ -433,7 +433,7 @@ class EmailController {
 				$plan                        = ( new PlanModel() )->get_plan( $order_data->items[0]->id );
 				$replacable['{course_name}'] = $plan->plan_name;
 			} else {
-				$replacable['{course_name}'] = count( $order_data->items ) > 1 ? _n( 'Course', 'Courses', count( $order_data->items ) ) : $order_data->items[0]->title;
+				$replacable['{course_name}'] = count( $order_data->items ) > 1 ? _n( 'Course', 'Courses', count( $order_data->items ), 'tutor' ) : $order_data->items[0]->title;
 			}
 
 			$replacable['{admin_order_url}'] = admin_url( 'admin.php?page=tutor_orders&action=edit&id=' . $order_id );

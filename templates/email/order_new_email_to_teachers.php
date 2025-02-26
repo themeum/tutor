@@ -30,7 +30,7 @@
 			</div>
 			<br>
 			<div class="tutor-email-buttons">
-				<a href="{site_order_url}" class="tutor-email-button"><?php esc_html_e( 'View Details', 'tutor-pro' ); ?></a>
+				<a href="{site_order_url}" class="tutor-email-button"><?php esc_html_e( 'View Details', 'tutor' ); ?></a>
 			</div>
 			<?php require TUTOR()->path . 'templates/email/email_footer.php'; ?>
 		</div>

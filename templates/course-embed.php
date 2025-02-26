@@ -121,7 +121,7 @@ $placeholder_img   = tutor()->url . 'assets/images/placeholder.svg';
 	</div>
 	<div class="tutor-card-footer">
 		<a href="<?php the_permalink(); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block " target="_parent">
-			<?php esc_html_e( 'View Details', 'tutor-pro' ); ?>
+			<?php esc_html_e( 'View Details', 'tutor' ); ?>
 		</a>
 	</div>
 </div>

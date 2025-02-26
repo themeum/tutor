@@ -319,7 +319,7 @@ class Quiz {
 					wp_send_json_error();
 				}
 			} else {
-				wp_send_json_error( __( 'Invalid quiz info' ) );
+				wp_send_json_error( __( 'Invalid quiz info', 'tutor' ) );
 			}
 		}
 		wp_send_json_error();

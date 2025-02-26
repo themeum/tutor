@@ -23,7 +23,7 @@ if ( $download->ID ) {
 		$args            = apply_filters(
 			'edd_purchase_link_defaults',
 			array(
-				'text'  => 'direct' == $button_behavior ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'easy-digital-downloads' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'easy-digital-downloads' ) ),
+				'text'  => 'direct' == $button_behavior ? edd_get_option( 'buy_now_text', __( 'Buy Now', 'tutor' ) ) : edd_get_option( 'add_to_cart_text', __( 'Purchase', 'tutor' ) ),
 				'style' => edd_get_option( 'button_style', 'button' ),
 				'color' => edd_get_option( 'checkout_color', 'blue' ),
 				'class' => 'edd-submit tutor-open-login-modal',
