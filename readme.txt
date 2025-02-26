@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.2.3
+Stable tag: 3.3.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -312,11 +312,24 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.2.3 - February 12, 2025
+= 3.3.0 - February 26, 2025
 
-Update: Improved WPML translation support. (Pro)
-Update: Enhanced search functionality on the settings page.
-Fix: Resolved the issue where PayPal was not appearing during checkout.
+New: Introduced slots in the course builder to integrate custom fields
+New: Added a setting to configure the course selling model as membership-only. (Pro)
+New: Added a course-specific selling model, allowing different courses to be sold via single purchase, course-based subscription, membership, or a combination of these. (Pro)
+New: Added an auto-renewal management control to the student dashboard. (Pro)
+New: Added analytics for subscription/membership sales in Tutor Reports. (Pro)
+New: Implemented guest checkout, enabling users to purchase courses without creating an account. (Pro)
+New: Added bulk enrollment, allowing admins to enroll users by importing data from a CSV file. (Pro)
+New: Introduced a "Coming Soon" feature in the course builder, enabling scheduled courses to be displayed with a custom thumbnail. (Pro)
+New: Added an option on the course builder to set custom enrollment start and end dates, along with the ability to pause enrollment instantly. (Pro)
+New: Integrated the 2Checkout payment gateway. (Pro)
+New: Admin can set a custom enrollment end date for a specific enrollment (Pro)
+Update: Restored the admin bar in the course builder for quick actions. (Pro)
+Fix: Resolved tag-based filtering issues on the course list page. (Pro)
+Fix: Fixed database error related to subscription table creation. (Pro)
+Fix: Fixed quiz randomization settings not working correctly.
+Fix: Addressed an issue where imported settings were not applied correctly from an exported JSON file. (Pro)
 
 = 3.2.2 - February 05, 2025
 

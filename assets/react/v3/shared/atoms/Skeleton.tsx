@@ -9,11 +9,29 @@ interface SkeletonProps extends React.HTMLAttributes<HTMLSpanElement> {
   animation?: boolean;
   isMagicAi?: boolean;
   isRound?: boolean;
+  animationDuration?: number;
 }
 
 const Skeleton = forwardRef<HTMLSpanElement, SkeletonProps>(
-  ({ width = '100%', height = 16, animation = false, isMagicAi = false, isRound = false, className }, ref) => {
-    return <span ref={ref} css={styles.skeleton(width, height, animation, isMagicAi, isRound)} className={className} />;
+  (
+    {
+      width = '100%',
+      height = 16,
+      animation = false,
+      isMagicAi = false,
+      isRound = false,
+      animationDuration = 1.6,
+      className,
+    },
+    ref,
+  ) => {
+    return (
+      <span
+        ref={ref}
+        css={styles.skeleton(width, height, animation, isMagicAi, isRound, animationDuration)}
+        className={className}
+      />
+    );
   },
 );
 
@@ -40,6 +58,7 @@ const styles = {
     animation: boolean,
     isMagicAi: boolean,
     isRound: boolean,
+    animationDuration: number,
   ) => css`
     display: block;
     width: ${isNumber(width) ? `${width}px` : width};
@@ -68,7 +87,7 @@ const styles = {
           background: linear-gradient(89.17deg, #fef4ff 0.2%, #f9d3ff 50.09%, #fef4ff 96.31%);
         `}
 
-        animation: 1.6s linear 0.5s infinite normal none running ${animations.wave};
+        animation: ${animationDuration}s linear 0.5s infinite normal none running ${animations.wave};
       }
     `}
   `,
