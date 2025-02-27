@@ -1,13 +1,13 @@
 document.addEventListener('DOMContentLoaded', function () {
 	// template preview variables
 	const templatesDemoImportRoot = document.querySelector(".tutor-templates-demo-import");
-	const livePreviewModal = document.querySelector(".template-live-preview-modal");
-	const iframeWrapper = document.querySelector(".template-preview-iframe-wrapper");
-	const iframe = document.getElementById("template-preview-iframe");
-	const livePreviewCloseModal = document.querySelector(".live-preview-close-modal");
-	const deviceSwitchers = document.querySelectorAll(".template-preview-device-switcher li");
-	const previewTemplateName = document.querySelector(".preview-modal-template-name");
-	const loadingIndicator = document.querySelector(".loading-indicator"); // Add this line
+	const livePreviewModal = document.querySelector(".tutor-template-live-preview-modal");
+	const iframeWrapper = document.querySelector(".tutor-template-preview-iframe-wrapper");
+	const iframe = document.getElementById("tutor-template-preview-iframe");
+	const livePreviewCloseModal = document.querySelector(".tutor-template-live-preview-close-modal");
+	const deviceSwitchers = document.querySelectorAll(".tutor-template-preview-device-switcher li");
+	const previewTemplateName = document.querySelector(".tutor-preview-modal-template-name");
+	const loadingIndicator = document.querySelector(".tutor-template-loading-indicator");
 
 	if (templatesDemoImportRoot) {
 		// Open live preview modal
@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
 				loadingIndicator.style.display = "block";
 				let previewBtn = event.target;
 				const url = previewBtn.getAttribute("data-url");
-				const singleTemplate = previewBtn.closest(".tutorowl-single-template");
-				const templateName = singleTemplate.querySelector('.tutorowl-template-name span');
+				const singleTemplate = previewBtn.closest(".tutor-import-single-template");
+				const templateName = singleTemplate.querySelector('.tutor-import-template-name span');
 				previewTemplateName.innerText = templateName.innerText;
 				livePreviewModal.style.display = "flex";
 				iframe.src = url;
