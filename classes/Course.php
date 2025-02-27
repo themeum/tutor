@@ -895,7 +895,7 @@ class Course extends Tutor_Base {
 		}
 
 		$this->json_response(
-			__( 'Course list retrieved successfully!', 'tutor-pro' ),
+			__( 'Course list retrieved successfully!', 'tutor' ),
 			$response
 		);
 	}
@@ -1297,7 +1297,7 @@ class Course extends Tutor_Base {
 
 		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
 
-		$this->json_response( __( 'Data retrieved successfully!' ), $data );
+		$this->json_response( __( 'Data retrieved successfully!', 'tutor' ), $data );
 	}
 
 	/**
@@ -1845,7 +1845,7 @@ class Course extends Tutor_Base {
 		if ( empty( $topic_title ) ) {
 			$errors['topic_title'] = __( 'Topic title is required!', 'tutor' );
 			$this->json_response(
-				__( 'Invalid inputs' ),
+				__( 'Invalid inputs', 'tutor' ),
 				$errors,
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);

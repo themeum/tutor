@@ -1324,12 +1324,16 @@ class OrderModel {
 			$message = '';
 
 			if ( self::ORDER_CANCELLED === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as cancelled', 'tutor' ) : sprintf( __( 'Order marked as cancelled by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_COMPLETED === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as completed', 'tutor' ) : sprintf( __( 'Order marked as completed by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_INCOMPLETE === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : sprintf( __( 'Order marked as incomplete by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_TRASH === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : sprintf( __( 'Order marked as trash by %s', 'tutor' ), $user_name );
 			}
 

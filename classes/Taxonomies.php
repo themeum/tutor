@@ -129,7 +129,7 @@ class Taxonomies {
 		?>
 
 		<tr class="form-field term-thumbnail-wrap">
-			<th scope="tutor-row" valign="top"><label><?php esc_html_e( 'Thumbnail', 'woocommerce' ); ?></label></th>
+			<th scope="tutor-row" valign="top"><label><?php esc_html_e( 'Thumbnail', 'tutor' ); ?></label></th>
 			<td>
 
 				<div class="form-field term-thumbnail-wrap">

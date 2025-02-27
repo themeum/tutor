@@ -50,7 +50,7 @@ if ( ! $submitted_assignment ) {
 			</div>
 			<div class="tutor-col-lg tutor-mt-8 tutor-mt-lg-0">
 				<a class="tutor-fw-medium tutor-color-black" href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
-					<?php esc_html_e( get_the_title( $submitted_assignment->comment_parent ) ); ?>
+					<?php echo esc_html( get_the_title( $submitted_assignment->comment_parent ) ); ?>
 				</a>
 			</div>
 		</div>
@@ -69,11 +69,11 @@ if ( ! $submitted_assignment ) {
 				<span class="tutor-color-secondary"><?php esc_html_e( 'Submitted Date', 'tutor' ); ?>:</span>
 			</div>
 			<div class="tutor-col-lg tutor-mt-8 tutor-mt-lg-0">
-				<span class="tutor-fw-medium tutor-color-black"><?php echo esc_attr(  tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date_gmt, 'j M, Y, h:i a' ) ); ?></span>
+				<span class="tutor-fw-medium tutor-color-black"><?php echo esc_attr( tutor_utils()->convert_date_into_wp_timezone( $submitted_assignment->comment_date_gmt, 'j M, Y, h:i a' ) ); ?></span>
 			</div>
 		</div>
 	</div>
-	
+
 	<div class="tutor-hr"></div>
 
 	<div class="tutor-dashboard-assignment-submitted-content tutor-mt-32 tutor-mb-16">

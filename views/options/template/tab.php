@@ -39,7 +39,7 @@ if ( count( $before ) ) {
 		<?php endforeach; ?>
 
 		<li class="tutor-nav-item tutor-nav-more tutor-d-none">
-			<a class="tutor-nav-link tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php esc_html_e( 'More', 'tutor-pro' ); ?></span> <span class="tutor-nav-more-icon tutor-icon-times"></span></a>
+			<a class="tutor-nav-link tutor-nav-more-item" href="#"><span class="tutor-mr-4"><?php esc_html_e( 'More', 'tutor' ); ?></span> <span class="tutor-nav-more-icon tutor-icon-times"></span></a>
 			<ul class="tutor-nav-more-list tutor-dropdown"></ul>
 		</li>
 	</ul>

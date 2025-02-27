@@ -286,7 +286,7 @@ class CouponController extends BaseController {
 				$list = $this->get_application_list( $applies_to, $limit, $offset, $search_term );
 				if ( $list ) {
 					$this->json_response(
-						__( 'Coupon application list retrieved successfully!' ),
+						__( 'Coupon application list retrieved successfully!', 'tutor' ),
 						$list
 					);
 				} else {
