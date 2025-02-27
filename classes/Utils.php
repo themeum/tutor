@@ -8821,7 +8821,7 @@ class Utils {
 	public function tutor_empty_state( string $title = 'No data yet!' ) {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr( $title ); ?>" width="85%" />
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php echo esc_attr( $title ); ?>" width="85%" />
 			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
 				<?php echo esc_html( $title, 'tutor' ); ?>
 			</div>
