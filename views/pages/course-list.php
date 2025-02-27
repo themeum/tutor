@@ -187,7 +187,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 							<th width="10%">
 								<?php
 								$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
-								echo esc_html( $membership_only_mode ? __( 'Plan', 'tutor-pro' ) : __( 'Price', 'tutor-pro' ) );
+								echo esc_html( $membership_only_mode ? __( 'Plan', 'tutor' ) : __( 'Price', 'tutor' ) );
 								?>
 							</th>
 							<th class="tutor-table-rows-sorting" width="15%">

@@ -51,7 +51,7 @@ $border_color  = ! empty( $data['border'] ) ? $data['border'] : '#eff1f7';
 				<?php else : ?>
 					<?php esc_html_e( 'File Support: ', 'tutor' ); ?>
 					<span class="tutor-fs-7 tutor-fw-medium">
-						<?php esc_html_x( 'jpg, .jpeg,. gif, or .png', 'tutor-supported-image-type', 'tutor' ); ?>
+						<?php echo esc_html_x( '.jpg, .jpeg,. gif, or .png', 'tutor-supported-image-type', 'tutor' ); ?>
 					</span>
 				<?php endif; ?>
 			</div>

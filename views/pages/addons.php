@@ -13,7 +13,7 @@ $page_name    = $current_page ? $current_page : 'addons';
 ?>
 
 <div class="wrap plugin-install-tab-featured tutor-addons">
-	<h1 class="wp-heading-inline"><?php esc_html_e( 'Tutor Addons' ); ?></h1>
+	<h1 class="wp-heading-inline"><?php esc_html_e( 'Tutor Addons', 'tutor' ); ?></h1>
 
 	<hr class="wp-header-end">
 

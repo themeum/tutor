@@ -63,7 +63,7 @@ window.jQuery(document).ready($ => {
             const localDateTime = new Date(`${textContent} UTC`);
 
             if (!isNaN(localDateTime)) {
-              utcDateTime.textContent = wp.date.dateI18n(format, localDateTime);
+              utcDateTime.textContent = wp.date.dateI18n(format, localDateTime, Intl.DateTimeFormat().resolvedOptions().timeZone);
             } else {
               console.warn(`Invalid UTC date: "${textContent}"`);
             }

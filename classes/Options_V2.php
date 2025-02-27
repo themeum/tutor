@@ -465,7 +465,7 @@ class Options_V2 {
 
 		if ( 'on' === $enable_sharing && ( $admin_commission + $instructor_commission ) > 100 ) {
 			$success = false;
-			$message = __( 'Total share percentage must be 100% or less' );
+			$message = __( 'Total share percentage must be 100% or less', 'tutor' );
 		}
 
 		if ( ! $success ) {

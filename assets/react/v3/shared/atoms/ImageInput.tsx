@@ -224,7 +224,7 @@ const styles = {
   imagePreview: css`
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
   `,
   hoverPreview: css`
     display: flex;
