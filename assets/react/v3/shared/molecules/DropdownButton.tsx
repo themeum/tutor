@@ -139,6 +139,7 @@ const DropdownButton = ({
           </span>
         </button>
         <button
+          data-cy="dropdown-trigger"
           ref={dropdownTriggerRef}
           type="button"
           disabled={disabled || disabledDropdown}

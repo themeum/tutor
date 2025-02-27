@@ -18,7 +18,7 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "baseUrl": ".",
-    "types": ["cypress", "node"],
+    "types": ["node"],
     "typeRoots": ["./node_modules/@types/", "./assets/react/@types"],
     "paths": {
       "@TutorShared/*": ["assets/react/v3/shared/*"],

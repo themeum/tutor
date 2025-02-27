@@ -42,6 +42,8 @@ yarn.lock
 .env
 # Ignore Cypress screenshots
 cypress/screenshots/
+# Ignore Cypress fixtures/course
+cypress/fixtures/course.json
 # Ignore specific PNG files
 **/beforeEach*.png
 launch.json

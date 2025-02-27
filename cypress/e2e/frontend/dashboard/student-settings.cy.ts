@@ -21,7 +21,7 @@ describe('Tutor Dashboard Settings', () => {
     cy.get('button').contains('Update Profile').click();
 
     cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.response.body.success).to.equal(true);
+      expect(interception.response?.body.success).to.equal(true);
     });
   });
 
@@ -36,7 +36,7 @@ describe('Tutor Dashboard Settings', () => {
     cy.get('button').contains('Reset Password').click();
 
     cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.response.body.success).to.equal(true);
+      expect(interception.response?.body.success).to.equal(true);
     });
 
     cy.loginAsStudent();
@@ -56,7 +56,7 @@ describe('Tutor Dashboard Settings', () => {
     cy.get('button').contains('Update Profile').click();
 
     cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.response.body.success).to.equal(true);
+      expect(interception.response?.body.success).to.equal(true);
     });
   });
 });

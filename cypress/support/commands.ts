@@ -212,7 +212,7 @@ Cypress.Commands.add('performBulkAction', (option) => {
           const expectedValue = text.trim();
           cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).click();
           cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
-          cy.get('#tutor-confirm-bulk-action').contains("Yes, I'am Sure").click();
+          cy.get('#tutor-confirm-bulk-action').contains("Yes, I'm sure").click();
 
           if (option === 'trash') {
             cy.contains('No Data Available in this Section');
@@ -431,7 +431,7 @@ Cypress.Commands.add(
 
           cy.wait('@ajaxRequest').then((interception) => {
             if (interception.response) {
-              expect(interception.response.body.success).to.equal(true);
+              expect(interception.response?.body.success).to.equal(true);
             } else {
               throw new Error('Response is undefined');
             }
@@ -461,7 +461,7 @@ Cypress.Commands.add('toggle', (inputName, fieldId) => {
 
       cy.wait('@ajaxRequest').then((interception) => {
         if (interception.response) {
-          expect(interception.response.body.success).to.equal(true);
+          expect(interception.response?.body.success).to.equal(true);
         } else {
           throw new Error('Response is undefined');
         }
@@ -495,7 +495,7 @@ Cypress.Commands.add('handleCourseStart', () => {
       cy.get('button').contains('Reset Data').click();
       cy.wait('@ajaxRequest').then((interception) => {
         if (interception.response) {
-          expect(interception.response.body.success).to.equal(true);
+          expect(interception.response?.body.success).to.equal(true);
         } else {
           throw new Error('Response is undefined');
         }
@@ -545,7 +545,7 @@ Cypress.Commands.add('handleAssignment', (isLastItem) => {
       cy.get('#tutor_assignment_start_btn').click();
       cy.wait('@ajaxRequest').then((interception) => {
         if (interception.response) {
-          expect(interception.response.statusCode).to.equal(200);
+          expect(interception.response?.statusCode).to.equal(200);
         } else {
           throw new Error('Response is undefined');
         }
@@ -657,7 +657,7 @@ Cypress.Commands.add('submitCourseReview', () => {
       cy.get('.tutor-d-flex > .tutor_submit_review_btn').click();
       cy.wait('@ajaxRequest').then((interception) => {
         if (interception.response) {
-          expect(interception.response.body.success).to.equal(true);
+          expect(interception.response?.body.success).to.equal(true);
         } else {
           throw new Error('Response is undefined');
         }
@@ -678,7 +678,8 @@ Cypress.Commands.add('viewCertificate', () => {
 });
 
 Cypress.Commands.add('getSelectInput', (name: string, value: string) => {
-  cy.get(`input[name="${name}"]`).should('be.visible').click({ timeout: 150 });
+  cy.get(`input[name="${name}"]`).should('be.visible').click();
+  cy.wait(500);
   cy.get('.tutor-portal-popover')
     .should('be.visible')
     .within(() => {
@@ -844,6 +845,50 @@ Cypress.Commands.add('saveAssignment', (assignmentData) => {
   cy.get('[data-cy=save-assignment]').click();
   cy.waitAfterRequest('saveAssignment');
   cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Assignment created successfully');
+});
+
+Cypress.Commands.add('saveQuiz', (quizData) => {
+  cy.doesElementExist('[data-cy=edit-quiz-title]').then((exists) => {
+    if (exists) {
+      cy.get('[data-cy=edit-quiz-title]').click();
+    }
+  });
+
+  cy.get('[data-cy=tutor-modal]').within(() => {
+    cy.getByInputName('quiz_title').clear().type(quizData.quiz_title);
+    if (quizData.summary) {
+      cy.getByInputName('quiz_description').clear().type(quizData.quiz_description);
+    }
+    cy.get('[data-cy=save-quiz-title]').click();
+
+    cy.get('[data-cy=add-question]').click();
+  });
+
+  cy.get('.tutor-portal-popover').within(() => {
+    cy.get('button').contains('True/False').click();
+  });
+
+  cy.doesElementExist('[data-cy=quiz-next').then((exists) => {
+    if (exists) {
+      cy.get('[data-cy=quiz-next').click();
+      cy.wait(500);
+      cy.getByInputName('quiz_option.time_limit.time_value')
+        .clear()
+        .type(String(quizData.quiz_option.time_limit.time_value));
+      cy.getSelectInput('quiz_option.time_limit.time_type', 'Hours');
+      cy.getByInputName('quiz_option.hide_quiz_time_display').check();
+      cy.getSelectInput('quiz_option.feedback_mode', 'Reveal Mode');
+      // cy.getByInputName('quiz_option.attempts_allowed').clear().type(String(quizData.quiz_option.attempts_allowed));
+      cy.getByInputName('quiz_option.passing_grade').clear().type(String(quizData.quiz_option.passing_grade));
+      cy.getByInputName('quiz_option.max_questions_for_answer')
+        .clear()
+        .type(String(quizData.quiz_option.max_questions_for_answer));
+    }
+  });
+
+  cy.get('[data-cy=save-quiz]').click();
+  cy.waitAfterRequest('saveQuiz');
+  cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Quiz saved successfully');
 });
 
 Cypress.Commands.add('deleteTopic', (index = 0) => {
