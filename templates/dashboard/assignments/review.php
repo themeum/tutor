@@ -50,7 +50,7 @@ if ( ! $submitted_assignment ) {
 			</div>
 			<div class="tutor-col-lg tutor-mt-8 tutor-mt-lg-0">
 				<a class="tutor-fw-medium tutor-color-black" href="<?php echo esc_url( get_the_permalink( $submitted_assignment->comment_parent ) ); ?>" target="_blank">
-					<?php get_the_title( $submitted_assignment->comment_parent ); ?>
+					<?php echo esc_html( get_the_title( $submitted_assignment->comment_parent ) ); ?>
 				</a>
 			</div>
 		</div>
