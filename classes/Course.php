@@ -398,6 +398,35 @@ class Course extends Tutor_Base {
 	}
 
 	/**
+	 * Validate scheduled courses
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param array $params array of params.
+	 * @param array $errors array of errors.
+	 *
+	 * @return void
+	 */
+	public function validate_scheduled_course( $params, &$errors ) {
+		if ( isset( $params['post_status'] ) && isset( $params['course_settings'] ) ) {
+			if ( 'future' !== $params['post_status'] ) {
+				return;
+			}
+
+			$course_settings = $params['course_settings'];
+
+			if ( isset( $course_settings['enrollment_starts_at'] ) && ! empty( $course_settings['enrollment_starts_at'] ) ) {
+				$enrollment_start = strtotime( $course_settings['enrollment_starts_at'] );
+				$scheduled_date   = strtotime( $params['post_date_gmt'] );
+
+				if ( $enrollment_start < $scheduled_date ) {
+					$errors['scheduled_course'] = __( 'The enrollment start date cannot be earlier than the course start date', 'tutor' );
+				}
+			}
+		}
+	}
+
+	/**
 	 * Prepare course categories & tags
 	 *
 	 * @since 3.0.0
@@ -866,7 +895,7 @@ class Course extends Tutor_Base {
 		}
 
 		$this->json_response(
-			__( 'Course list retrieved successfully!', 'tutor-pro' ),
+			__( 'Course list retrieved successfully!', 'tutor' ),
 			$response
 		);
 	}
@@ -1005,6 +1034,10 @@ class Course extends Tutor_Base {
 		$this->prepare_course_cats_tags( $params, $errors );
 
 		$this->prepare_course_settings( $params );
+
+		// Validate scheduled courses.
+		$this->validate_scheduled_course( $params, $errors );
+
 		$this->setup_course_price( $params );
 
 		if ( ! empty( $errors ) ) {
@@ -1264,7 +1297,7 @@ class Course extends Tutor_Base {
 
 		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
 
-		$this->json_response( __( 'Data retrieved successfully!' ), $data );
+		$this->json_response( __( 'Data retrieved successfully!', 'tutor' ), $data );
 	}
 
 	/**
@@ -1319,6 +1352,8 @@ class Course extends Tutor_Base {
 	public function enqueue_course_builder_assets() {
 		// Fix: function print_emoji_styles is deprecated since version 6.4.0!
 		remove_action( 'wp_print_styles', 'print_emoji_styles' );
+		remove_action( 'wp_head', 'wp_admin_bar_header' );
+		add_action( 'wp_head', 'wp_enqueue_admin_bar_header_styles' );
 
 		do_action( 'tutor_course_builder_before_wp_editor_load' );
 		wp_enqueue_script( 'wp-tinymce' );
@@ -1420,8 +1455,7 @@ class Course extends Tutor_Base {
 			)
 		);
 
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $data );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
+		add_filter( 'tutor_localize_data', fn() => $data );
 	}
 
 	/**
@@ -1438,7 +1472,7 @@ class Course extends Tutor_Base {
 		 * @since 3.3.0
 		 */
 		echo '<style>
-			#adminmenumain, #wpfooter, .notice { display: none !important; }
+			#adminmenumain, #wpfooter, .notice, #tutor-page-wrap { display: none !important; }
 			#wpcontent { margin: 0 !important; padding: 0 !important; }
 			#wpbody-content { padding-bottom: 0px !important; float: none; }
 		</style>';
@@ -1811,7 +1845,7 @@ class Course extends Tutor_Base {
 		if ( empty( $topic_title ) ) {
 			$errors['topic_title'] = __( 'Topic title is required!', 'tutor' );
 			$this->json_response(
-				__( 'Invalid inputs' ),
+				__( 'Invalid inputs', 'tutor' ),
 				$errors,
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);

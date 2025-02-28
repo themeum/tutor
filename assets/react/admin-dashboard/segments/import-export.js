@@ -78,7 +78,7 @@ function tutor_option_history_load(dataset) {
 			let dataKey = value[0];
 			let dataValue = value[1];
 
-			let badgeStatus = dataValue.datatype == 'saved' ? ' label-primary' : ' label-refund';
+			let badgeStatus = dataValue.datatype == 'saved' ? ' label-primary' : ' label-default';
 			output += `<div class="tutor-option-field-row">
 				<div class="tutor-option-field-label">
 					<div class="tutor-fs-7 tutor-fw-medium">${dataValue.history_date}
@@ -134,7 +134,6 @@ const export_settings_all = () => {
 
 			xhttp.onreadystatechange = function() {
 				if (xhttp.readyState === 4) {
-					console.log(JSON.parse(xhttp.response));
 					let fileName = 'tutor_options_' + time_now();
 					json_download(xhttp.response, fileName);
 				}

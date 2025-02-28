@@ -116,14 +116,14 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 									$plan_info->recurring_value > 1
 									? sprintf(
 										/* translators: %s: value, %s: name */
-										__( '/%1$s %2$s', 'tutor-pro' ),
+										__( '/%1$s %2$s', 'tutor' ),
 										$plan_info->recurring_value,
 										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
 									)
 									:
 									sprintf(
 										/* translators: %s: recurring interval */
-										__( '/%1$s', 'tutor-pro' ),
+										__( '/%1$s', 'tutor' ),
 										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
 									)
 								);

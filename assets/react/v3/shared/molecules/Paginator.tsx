@@ -63,7 +63,7 @@ const Paginator = ({ currentPage, onPageChange, totalItems, itemsPerPage }: Pagi
           onClick={() => pageChangeHandler(currentPage - 1)}
           disabled={currentPage === 1}
         >
-          <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={24} height={24} />
+          <SVGIcon name={!isRTL ? 'chevronLeft' : 'chevronRight'} width={32} height={32} />
         </button>
         <button
           type="button"
@@ -71,7 +71,7 @@ const Paginator = ({ currentPage, onPageChange, totalItems, itemsPerPage }: Pagi
           onClick={() => pageChangeHandler(currentPage + 1)}
           disabled={currentPage === totalPage}
         >
-          <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={24} height={24} />
+          <SVGIcon name={!isRTL ? 'chevronRight' : 'chevronLeft'} width={32} height={32} />
         </button>
       </div>
     </div>
@@ -136,6 +136,10 @@ const styles = {
     transition:
       background-color 0.2s ease-in-out,
       color 0.3s ease-in-out;
+
+    svg {
+      color: ${colorTokens.icon.default};
+    }
 
     &:hover {
       background: ${colorTokens.background.default};

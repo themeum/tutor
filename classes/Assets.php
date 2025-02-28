@@ -457,6 +457,7 @@ class Assets {
 		wp_localize_script( 'tutor-order-details', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-tax-settings', '_tutorobject', $localize_data );
 		wp_localize_script( 'tutor-coupon', '_tutorobject', $localize_data );
+		wp_localize_script( 'tutor-course-builder', '_tutorobject', $localize_data );
 
 		// Inline styles.
 		wp_add_inline_style( 'tutor-frontend', $this->load_color_palette() );
@@ -597,6 +598,7 @@ class Assets {
 	public function tutor_script_text_domain() {
 		wp_set_script_translations( 'tutor-frontend', 'tutor', tutor()->path . 'languages/' );
 		wp_set_script_translations( 'tutor-admin', 'tutor', tutor()->path . 'languages/' );
+		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
 	}
 
 	/**

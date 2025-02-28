@@ -234,7 +234,7 @@ class Options_V2 {
 
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$export_id          = $this->get_request_data( 'export_id' );
-		wp_send_json_success( $tutor_settings_log[ $export_id ] );
+		wp_send_json_success( $tutor_settings_log[ $export_id ]['dataset'] );
 	}
 
 	/**
@@ -398,7 +398,12 @@ class Options_V2 {
 		}
 
 		$request = $this->get_request_data( 'tutor_options' );
-		$request = json_decode( stripslashes( $request ), true );
+
+		if ( ! tutor_is_json( $request ) ) {
+			wp_send_json_error( __( 'Invalid JSON', 'tutor' ) );
+		}
+
+		$request = json_decode( $request, true );
 
 		$time = $this->get_request_data( 'time' );
 
@@ -460,7 +465,7 @@ class Options_V2 {
 
 		if ( 'on' === $enable_sharing && ( $admin_commission + $instructor_commission ) > 100 ) {
 			$success = false;
-			$message = __( 'Total share percentage must be 100% or less' );
+			$message = __( 'Total share percentage must be 100% or less', 'tutor' );
 		}
 
 		if ( ! $success ) {

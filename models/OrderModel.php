@@ -12,9 +12,9 @@ namespace Tutor\Models;
 
 use Exception;
 use Tutor\Ecommerce\Ecommerce;
-use Tutor\Ecommerce\OrderActivitiesController;
-use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\QueryHelper;
+use Tutor\Helpers\DateTimeHelper;
+use Tutor\Ecommerce\OrderActivitiesController;
 
 /**
  * OrderModel Class
@@ -55,8 +55,9 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const META_KEY_HISTORY = 'history';
-	const META_KEY_REFUND  = 'refund';
+	const META_KEY_HISTORY  = 'history';
+	const META_KEY_REFUND   = 'refund';
+	const META_KEY_ORDER_ID = 'tutor_order_id_';
 
 	/**
 	 * Tax type constants
@@ -1323,12 +1324,16 @@ class OrderModel {
 			$message = '';
 
 			if ( self::ORDER_CANCELLED === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as cancelled', 'tutor' ) : sprintf( __( 'Order marked as cancelled by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_COMPLETED === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as completed', 'tutor' ) : sprintf( __( 'Order marked as completed by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_INCOMPLETE === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as incomplete', 'tutor' ) : sprintf( __( 'Order marked as incomplete by %s', 'tutor' ), $user_name );
 			} elseif ( self::ORDER_TRASH === $data->order_status ) {
+				/* translators: %s: username */
 				$message = empty( $user_name ) ? __( 'Order marked as trash', 'tutor' ) : sprintf( __( 'Order marked as trash by %s', 'tutor' ), $user_name );
 			}
 
@@ -1689,21 +1694,65 @@ class OrderModel {
 	 * @return void
 	 */
 	public static function render_pay_button( $order ) {
+
 		if ( is_numeric( $order ) ) {
 			$order = ( new self() )->get_order_by_id( $order );
 		}
 
-		if ( self::should_show_pay_btn( $order ) ) {
-			?>
+		$show_pay_button = self::should_show_pay_btn( $order );
+
+		if ( ! self::should_active_pay_button( $order, $show_pay_button ) && $show_pay_button ) : ?>
+
+			<div class="tooltip-wrap tooltip-icon">	
+				<span class="tooltip-txt tooltip-left">
+					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
+				</span>
+			</div>
+		
+		<?php elseif ( $show_pay_button ) : ?>
+			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
 				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
 				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
+				
 				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
 					<?php esc_html_e( 'Pay', 'tutor' ); ?>
-				</button>
+				</button>				
 			</form>
+			
 			<?php
+		endif;
+	}
+
+	/**
+	 * Checks if the Repay Order-Time expired based on stored expiry time.
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param object $order The order object containing order details.
+	 * @param bool   $show_pay_button Whether the pay button should be shown.
+	 *
+	 * @return bool Returns true if the order is expired or expiry time is not set, otherwise false.
+	 */
+	private static function should_active_pay_button( $order, $show_pay_button ) {
+
+		$current_time = time();
+		$meta_key     = self::META_KEY_ORDER_ID . $order->id;
+		$user_id      = get_current_user_id();
+		$expiry_time  = get_user_meta( $user_id, $meta_key, true );
+
+		if ( $expiry_time ) {
+
+			// If the time is expired or the order is paid then delete the meta key.
+			if ( $expiry_time < $current_time || ! $show_pay_button ) {
+				delete_user_meta( $user_id, $meta_key );
+				return true;
+			}
+
+			return false;
 		}
+
+		return true;
 	}
 }

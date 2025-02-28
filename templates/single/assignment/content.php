@@ -497,7 +497,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 								$alert_template,
 								array(
 									'alert_class' => 'tutor-alert tutor-danger',
-									'message'     => __( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor_pro' ),
+									'message'     => __( 'You have missed the submission deadline. Please contact the instructor for more information.', 'tutor' ),
 									'icon'        => ' tutor-icon-circle-times-line',
 								)
 							);

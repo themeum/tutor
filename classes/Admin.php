@@ -140,7 +140,7 @@ class Admin {
 		// Ecommerce menu @since 3.0.0.
 		do_action( 'tutor_after_courses_admin_menu' );
 
-		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), __( '<span class="tutor-create-course">Create Course</span>', 'tutor' ), 'manage_tutor_instructor', 'create-course', array( new Course( false ), 'load_course_builder' ) );
+		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), '<span class="tutor-create-course">Create Course</span>', 'manage_tutor_instructor', 'create-course', array( new Course( false ), 'load_course_builder' ) );
 
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
@@ -522,7 +522,7 @@ class Admin {
 			$actions['tutor_pro_link'] =
 				'<a href="https://tutorlms.com/pricing?utm_source=tutor_plugin_action_link&utm_medium=wordpress_dashboard&utm_campaign=go_premium" target="_blank">
 					<span style="color: #ff7742; font-weight: bold;">' .
-						__( 'Upgrade to Pro', 'wp-megamenu' ) .
+						__( 'Upgrade to Pro', 'tutor' ) .
 					'</span>
 				</a>';
 		}
@@ -546,14 +546,14 @@ class Admin {
 
 		if ( tutor()->basename === $plugin_file ) {
 			$plugin_meta[] = sprintf(
-				'<a href="%s">%s</a>',
+				'<a href="%s"><strong style="color: #03bd24">%s</strong></a>',
 				esc_url( 'https://docs.themeum.com/tutor-lms/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_docs_link' ),
-				__( '<strong style="color: #03bd24">Documentation</strong>', 'tutor' )
+				esc_html__( 'Documentation', 'tutor' )
 			);
 			$plugin_meta[] = sprintf(
-				'<a href="%s">%s</a>',
+				'<a href="%s"><strong style="color: #03bd24">%s</strong></a>',
 				esc_url( 'https://www.themeum.com/contact-us/?utm_source=tutor&utm_medium=plugins_installation_list&utm_campaign=plugin_support_link' ),
-				__( '<strong style="color: #03bd24">Get Support</strong>', 'tutor' )
+				esc_html__( 'Get Support', 'tutor' )
 			);
 		}
 

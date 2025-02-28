@@ -70,19 +70,19 @@ class Withdraw_Requests_List {
 		$tabs = array(
 			array(
 				'key'   => 'all',
-				'title' => __( 'All', 'tutor-pro' ),
+				'title' => __( 'All', 'tutor' ),
 				'value' => $approved + $pending + $rejected,
 				'url'   => $url . '&data=all',
 			),
 			array(
 				'key'   => 'approved',
-				'title' => __( 'Approved', 'tutor-pro' ),
+				'title' => __( 'Approved', 'tutor' ),
 				'value' => $approved,
 				'url'   => $url . '&data=approved',
 			),
 			array(
 				'key'   => 'pending',
-				'title' => __( 'Pending', 'tutor-pro' ),
+				'title' => __( 'Pending', 'tutor' ),
 				'value' => $pending,
 				'url'   => $url . '&data=pending',
 			),

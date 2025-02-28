@@ -1309,11 +1309,11 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @since 3.0.0
+	 * @since 3.0.0  $is_complete parameter added to check with completed status
+	 *               Default value set true for backward compatibility. It set
+	 *               false then it will just check record.
 	 *
-	 * $is_complete parameter added to check with completed status
-	 * Default value set true for backward compatibility. It set
-	 * false then it will just check record.
+	 * @since 3.3.0  param $is_complete added to cache key.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $user_id user id.
@@ -1325,7 +1325,7 @@ class Utils {
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
-		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}";
+		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}_{$is_complete}";
 
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
@@ -8821,7 +8821,7 @@ class Utils {
 	public function tutor_empty_state( string $title = 'No data yet!' ) {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $title ); ?>" width="85%" />
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php echo esc_attr( $title ); ?>" width="85%" />
 			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
 				<?php echo esc_html( $title, 'tutor' ); ?>
 			</div>
@@ -8951,12 +8951,12 @@ class Utils {
 	 */
 	public function report_frequencies() {
 		$frequencies = array(
-			'alltime'     => __( 'All Time', 'tutor-pro' ),
-			'today'       => __( 'Today', 'tutor-pro' ),
-			'last30days'  => __( 'Last 30 Days', 'tutor-pro' ),
-			'last90days'  => __( 'Last 90 Days', 'tutor-pro' ),
-			'last365days' => __( 'Last 365 Days', 'tutor-pro' ),
-			'custom'      => __( 'Custom', 'tutor-pro' ),
+			'alltime'     => __( 'All Time', 'tutor' ),
+			'today'       => __( 'Today', 'tutor' ),
+			'last30days'  => __( 'Last 30 Days', 'tutor' ),
+			'last90days'  => __( 'Last 90 Days', 'tutor' ),
+			'last365days' => __( 'Last 365 Days', 'tutor' ),
+			'custom'      => __( 'Custom', 'tutor' ),
 		);
 		return $frequencies;
 	}
@@ -10397,7 +10397,8 @@ class Utils {
 		if ( false === $next_timestamp ) {
 			return null;
 		}
-
+		
+		/* translators: %s: timestamp */
 		return sprintf( __( '%s left', 'tutor' ), human_time_diff( $next_timestamp ) );
 	}
 

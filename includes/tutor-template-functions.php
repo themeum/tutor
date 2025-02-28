@@ -1606,12 +1606,12 @@ if ( ! function_exists( 'tutor_permission_denied_template' ) ) {
 		}
 
 		$args = array(
-			'headline'    => __( 'Permission Denied', 'tutor-pro' ),
-			'message'     => __( 'You don\'t have the right to edit this course', 'tutor-pro' ),
-			'description' => __( 'Please make sure you are logged in to correct account', 'tutor-pro' ),
+			'headline'    => __( 'Permission Denied', 'tutor' ),
+			'message'     => __( 'You don\'t have the right to edit this course', 'tutor' ),
+			'description' => __( 'Please make sure you are logged in to correct account', 'tutor' ),
 			'button'      => array(
 				'url'  => get_permalink( $post_id ),
-				'text' => __( 'View Course', 'tutor-pro' ),
+				'text' => __( 'View Course', 'tutor' ),
 			),
 		);
 
