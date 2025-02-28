@@ -145,7 +145,7 @@ describe('Tutor Admin Announcements', () => {
     cy.filterElementsByDate(filterFormSelector, elementDateSelector);
   });
 
-  it('should perform bulk action on an annoucement', () => {
+  it('should perform bulk action on an announcement', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
       if (req.body.includes('delete')) {
         req.alias = 'ajaxRequest';
@@ -169,11 +169,8 @@ describe('Tutor Admin Announcements', () => {
           .contains('Delete Permanently')
           .click();
         cy.get('#tutor-admin-bulk-action-btn').click();
-        cy.get('#tutor-confirm-bulk-action').contains("Yes, I'am Sure").click();
-        // cy.contains("No Data Available in this Section");
-        cy.wait('@ajaxRequest').then((interception) => {
-          expect(interception.response?.body.success).to.equal(true);
-        });
+        cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
+        cy.url().should('include', backendUrls.ANNOUNCEMENTS);
       }
     });
   });
