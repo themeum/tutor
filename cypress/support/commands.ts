@@ -97,6 +97,9 @@ Cypress.Commands.add('waitAfterRequest', (alias: string, additionalWaitMs = 500)
 
 Cypress.Commands.add('getByInputName', (selector) => {
   cy.get(`input[name="${selector}"], textarea[name="${selector}"]`).then(($input) => {
+    if ($input.length === 1) {
+      cy.wrap($input).scrollIntoView();
+    }
     if ($input.attr('type') === 'radio') {
       cy.wrap($input).parent();
     } else {
@@ -165,20 +168,21 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
         console.log(randomIndex);
         cy.wrap(checkboxesArray[randomIndex]).as('randomCheckbox');
         cy.get('@randomCheckbox').check();
-        cy.get(':nth-child(1) > :nth-child(1) > .td-checkbox > .tutor-form-check-input').check();
+        // cy.get(':nth-child(1) > :nth-child(1) > .td-checkbox > .tutor-form-check-input').check();
         cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
         cy.get(`span[tutor-dropdown-item][data-key=${option}]`).click();
 
         cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
         cy.get('#tutor-confirm-bulk-action').click();
-
+        cy.reload();
         cy.get('@randomCheckbox')
           .invoke('attr', 'value')
           .then((id) => {
+            cy.log('id', id);
             if (option === 'trash') {
-              cy.get(`.tutor-table-row-status-update[data-id="${id}"]`).should('not.exist');
+              cy.get(`select.tutor-table-row-status-update[data-id="${id}"]`).should('not.exist');
             } else {
-              cy.get(`.tutor-table-row-status-update[data-id="${id}"]`)
+              cy.get(`select.tutor-table-row-status-update[data-id="${id}"]`)
                 .invoke('attr', 'data-status')
                 .then((status) => {
                   console.log(status);
