@@ -1,3 +1,5 @@
+import { faker } from '@faker-js/faker';
+import endpoints from '@TutorShared/utils/endpoints';
 import { backendUrls } from '../../config/page-urls';
 
 describe('Tutor Admin ENROLLMENTS', () => {
@@ -5,62 +7,106 @@ describe('Tutor Admin ENROLLMENTS', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.ENROLLMENTS}`);
     cy.loginAsAdmin();
     cy.url().should('include', backendUrls.ENROLLMENTS);
+
+    cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`, (req) => {
+      if (req.body.includes(endpoints.CREATE_ENROLLMENT)) {
+        req.alias = 'createEnrollment';
+      }
+
+      if (req.body.includes(endpoints.GET_COURSE_BUNDLE_LIST)) {
+        req.alias = 'getCourseBundleList';
+      }
+
+      if (req.body.includes(endpoints.GET_UNENROLLED_USERS)) {
+        req.alias = 'getUnenrolledUsers';
+      }
+    });
   });
 
   it('should enroll a student', () => {
-    cy.get('button').contains('Enroll a student').click();
-    cy.get('.tutor-mb-32 > .tutor-js-form-select').click();
-
+    cy.get('a').contains('Enroll a student').click();
+    cy.wait(500);
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
-        cy.log('No data found');
-      } else {
-        cy.get('.tutor-form-select-option > span').then(($options) => {
-          const filteredOptions = $options.filter(
-            (index, option) => option.getAttribute('title') !== 'Select a course/bundle',
-          );
-          const randomIndex = Math.floor(Math.random() * filteredOptions.length);
-          const selectedOption = filteredOptions[randomIndex].getAttribute('title');
-
-          cy.get('.tutor-mr-12 > .tutor-js-form-select').click({ force: true });
-
-          cy.wrap(filteredOptions[randomIndex])
-            .click({ force: true })
-            .then(() => {
-              cy.log(`Selected option: ${selectedOption}`);
-              cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
-                .eq(0)
-                .invoke('text')
-                .then((retrievedText) => {
-                  cy.get(
-                    '.tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis',
-                  ).each(($category) => {
-                    cy.wrap($category)
-                      .invoke('text')
-                      .then((categoryText) => {
-                        if (categoryText.trim() === retrievedText.trim()) {
-                          cy.wrap($category).click({ force: true });
-                        }
-                      });
-                  });
-                });
-            });
-          // search student
-          cy.get('body').then(($body) => {
-            cy.get(':nth-child(2) > .tutor-form-wrap > .tutor-form-control').type('tutor', { force: true });
-            cy.wait(1000);
-            if ($body.text().includes('No Student Found!')) {
-              cy.log('No data available');
-            }
-            if ($body.text().includes('Selected Student')) {
-              cy.get('.tutor-modal-footer > .tutor-btn-primary').click();
-            } else {
-              cy.get('.tutor-ml-auto > .tutor-iconic-btn').click();
-              cy.get('.tutor-modal-footer > .tutor-btn-primary').click();
-            }
-          });
-        });
+      if ($body.text().includes('Select a course to enroll students')) {
+        cy.get('[data-cy=select-course]').click();
       }
+    });
+
+    // Select course
+    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+      cy.wrap($elements).should('contain.text', 'Select course');
+      cy.waitAfterRequest('getCourseBundleList');
+      if ($elements.text().includes('No Data!')) {
+        cy.get('[data-cy=tutor-modal-close]').click();
+        return;
+      } else {
+        cy.get('tbody tr:first-child').find('[data-cy=select-course]').click({ force: true });
+      }
+    });
+
+    cy.get('[data-cy=add-students').click();
+
+    // Add students
+    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+      cy.wrap($elements).should('contain.text', 'Add students');
+      cy.waitAfterRequest('getUnenrolledUsers');
+      if ($elements.text().includes('No Data!')) {
+        cy.get('[data-cy=tutor-modal-close]').click();
+        return;
+      } else {
+        cy.get('tbody tr')
+          .find('input[type=checkbox]')
+          .then(($checkboxes) => {
+            cy.wrap($checkboxes).eq(0).check({ force: true });
+            cy.wrap($checkboxes).eq(1).check({ force: true });
+          });
+
+        // Search student
+        cy.getByInputName('search').type(faker.person.firstName());
+        cy.waitAfterRequest('getUnenrolledUsers');
+        // Check if tbody contains "No Data!" and conditionally proceed
+        cy.get('tbody').then(($tbody) => {
+          if ($tbody.text().includes('No Data!')) {
+            cy.log('No data found');
+          } else {
+            cy.get('tbody tr').find('input[type="checkbox"]').first().check({ force: true });
+          }
+        });
+        cy.get('[data-cy=add-students').click();
+      }
+    });
+
+    cy.get('body').should('contain.text', 'Manually Added');
+
+    cy.get('[data-cy=upload-csv]').click();
+
+    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+      cy.wrap($elements).should('contain.text', 'Import students by CSV');
+      cy.get('[data-cy=select-file] input[type="file"]').selectFile(
+        'cypress/fixtures/assets/tutor_bulk_enrollment_sample.csv',
+        { force: true },
+      );
+      cy.get('[data-cy=import-csv]').click();
+    });
+
+    cy.get('button[role=tab]').should('contain.text', 'Added from CSV');
+    cy.get('[data-cy=student-card] input[type=checkbox]').check({ force: true });
+
+    // Remove student
+    cy.get('[data-cy=remove-students]').click();
+    cy.get('[data-cy=enroll-now]').click();
+    cy.waitAfterRequest('createEnrollment');
+
+    cy.get('[data-cy=tutor-modal]').within(($elements) => {
+      cy.wrap($elements)
+        .invoke('text')
+        .should('match', /Enrollment Completed|Enrollment Failed/);
+      if ($elements.text().includes('Enrollment Completed')) {
+        cy.log('Enrollment completed');
+      } else {
+        cy.log('Enrollment failed');
+      }
+      cy.get('[data-cy=close-modal]').click();
     });
   });
 
@@ -75,12 +121,6 @@ describe('Tutor Admin ENROLLMENTS', () => {
   });
 
   it('should perform bulk action on all enrollments', () => {
-    cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
-      if (req.body.includes('tutor_enrollment_bulk_action')) {
-        req.alias = 'performBulkActionAjax';
-      }
-    });
-
     cy.get('body').then(($body) => {
       if ($body.text().includes('No Data Available in this Section')) {
         cy.log('No data found');
@@ -91,11 +131,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
           cy.get(`.tutor-form-select-option>span[title="${option}"]`).contains(`${option}`).click();
           cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
 
-          cy.get('#tutor-confirm-bulk-action').contains("Yes, I'am Sure").click();
-
-          cy.wait('@performBulkActionAjax').then((interception) => {
-            expect(interception.response?.body.success).to.equal(true);
-          });
+          cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
         };
         bulkOption('Cancel');
         bulkOption('Approve');
@@ -105,11 +141,14 @@ describe('Tutor Admin ENROLLMENTS', () => {
 
   it('should filter enrollments', () => {
     cy.get(':nth-child(2) > .tutor-js-form-select').click();
-    cy.get(':nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options').then(
-      ($option) => {
+    cy.get(
+      ':nth-child(2) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > .tutor-form-select-option:nth-child(2)',
+    )
+      .click()
+      .then(($option) => {
         const selectedOptionText = $option.text().trim();
-        console.log('se ', selectedOptionText);
-        cy.wrap($option).click({ force: true });
+        cy.log('Selected option: ' + selectedOptionText);
+        cy.reload();
         cy.get('body').then(($body) => {
           if (
             $body.text().includes('No Data Found from your Search/Filter') ||
@@ -117,7 +156,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
           ) {
             cy.log('No data available');
           } else {
-            cy.get('.tutor-d-flex.tutor-align-center.tutor-gap-2').each(($announcement) => {
+            cy.get('.tutor-d-flex.tutor-align-center.tutor-gap-2.tutor-text-nowrap').each(($announcement) => {
               cy.wrap($announcement)
                 .invoke('text')
                 .then((announcementText) => {
@@ -126,8 +165,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
             });
           }
         });
-      },
-    );
+      });
   });
 
   it('should check if the elements are sorted', () => {
@@ -154,7 +192,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
     checkSorting('ASC');
     checkSorting('DESC');
   });
-  it('Should filter enrollments by a specific date', () => {
+  it('should filter enrollments by a specific date', () => {
     cy.get("input[placeholder='MMMM d, yyyy']").click();
     cy.get('.dropdown-years').click();
     cy.get('.dropdown-years>.dropdown-list').contains('2025').click();

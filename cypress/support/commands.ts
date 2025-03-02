@@ -197,6 +197,8 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
 });
 // perform publish,pending,draft,trash on all courses
 Cypress.Commands.add('performBulkAction', (option) => {
+  cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
+
   cy.get('body').then(($body) => {
     if (
       $body.text().includes('No Data Found from your Search/Filter') ||
@@ -216,10 +218,15 @@ Cypress.Commands.add('performBulkAction', (option) => {
           const expectedValue = text.trim();
           cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).click();
           cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
-          cy.get('#tutor-confirm-bulk-action').contains("Yes, I'm sure").click();
+          cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
+          cy.reload();
 
           if (option === 'trash') {
-            cy.contains('No Data Available in this Section');
+            cy.get('select.tutor-table-row-status-update')
+              .invoke('val')
+              .then((selectedValue) => {
+                expect(selectedValue).not.to.include(expectedValue.toLowerCase());
+              });
           } else {
             cy.get('select.tutor-table-row-status-update')
               .invoke('val')
