@@ -72,7 +72,7 @@ describe('Tutor Admin Tags', () => {
 
   it('should perform bulk action', () => {
     cy.get('body').then(($body) => {
-      if ($body.text().includes('No Data Available in this Section')) {
+      if ($body.text().includes('No Tags found.')) {
         cy.log('No data found');
       } else {
         cy.get("input[name='delete_tags[]']").eq(0).check();
