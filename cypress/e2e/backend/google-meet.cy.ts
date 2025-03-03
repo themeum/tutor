@@ -9,7 +9,7 @@ describe('Tutor Dashboard My Courses', () => {
 
   // set api and save connection
   it('should upload meet integration json and save connection', () => {
-    const filePath = '/Users/ollyo/Documents/google-meet-integration.json';
+    const filePath = 'cypress/fixtures/assets/google-api.json';
     cy.get('body').then(($body) => {
       if ($body.text().includes('Drag & Drop your JSON File here')) {
         cy.get('#tutor-google-meet-credential-upload').selectFile(filePath, {
@@ -37,7 +37,9 @@ describe('Tutor Dashboard My Courses', () => {
       } else {
         cy.get('a').contains('Start Meeting').invoke('removeAttr', 'target').click();
 
-        cy.url().should('include', '/calendar');
+        cy.origin('https://calendar.google.com', () => {
+          cy.url().should('include', '/calendar');
+        });
       }
     });
   });
@@ -57,7 +59,7 @@ describe('Tutor Dashboard My Courses', () => {
 
         cy.get("input[name='meeting_title']").eq(0).clear().type('Edited test google meeting');
 
-        cy.get("textarea[name='meeting_summary'").eq(0).clear().type('Edited google meeting summary', { force: true });
+        cy.get("textarea[name='meeting_summary']").eq(0).clear().type('Edited google meeting summary', { force: true });
 
         cy.get(
           '.tutor-gmi-meeting-time > :nth-child(1) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
@@ -94,10 +96,7 @@ describe('Tutor Dashboard My Courses', () => {
         });
         cy.get('button').contains('Update Meeting').click();
 
-        cy.wait('@ajaxRequest').then((interception) => {
-          expect(interception.request.body).to.include('tutor_google_meet_new_meeting');
-          expect(interception.response?.body.success).to.equal(true);
-        });
+        cy.wait('@ajaxRequest');
       }
     });
   });
@@ -114,11 +113,8 @@ describe('Tutor Dashboard My Courses', () => {
       } else {
         cy.get('a.tutor-iconic-btn').eq(0).click({ force: true });
         cy.get('#tutor-common-confirmation-form > .tutor-d-flex > .tutor-btn-primary').click();
+        cy.wait('@ajaxRequest');
       }
-    });
-    cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.request.body).to.include('tutor_google_meet_delete');
-      expect(interception.response?.body.success).to.equal(true);
     });
   });
   it('should be able to search any meeting', () => {

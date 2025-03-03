@@ -3,6 +3,7 @@ import endpoints from '@TutorShared/utils/endpoints';
 import { backendUrls } from '../../config/page-urls';
 
 describe('Tutor Admin ENROLLMENTS', () => {
+  const studentCSVPath = 'cypress/fixtures/assets/tutor_bulk_enrollment_sample.csv';
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.ENROLLMENTS}`);
     cy.loginAsAdmin();
@@ -78,14 +79,11 @@ describe('Tutor Admin ENROLLMENTS', () => {
 
     cy.get('body').should('contain.text', 'Manually Added');
 
+    // Upload students by CSV
     cy.get('[data-cy=upload-csv]').click();
-
     cy.get('[data-cy=tutor-modal]').within(($elements) => {
       cy.wrap($elements).should('contain.text', 'Import students by CSV');
-      cy.get('[data-cy=select-file] input[type="file"]').selectFile(
-        'cypress/fixtures/assets/tutor_bulk_enrollment_sample.csv',
-        { force: true },
-      );
+      cy.get('[data-cy=select-file] input[type="file"]').selectFile(studentCSVPath, { force: true });
       cy.get('[data-cy=import-csv]').click();
     });
 

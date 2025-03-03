@@ -9,7 +9,7 @@ describe('Tutor Dashboard My Courses', () => {
 
   //  set api and save connection
   it('should upload google classroom integration json and save connection', () => {
-    const filePath = '/Users/ollyo/Documents/google-classroom.json';
+    const filePath = 'cypress/fixtures/assets/google-api.json';
     cy.get('body').then(($body) => {
       if ($body.text().includes('Drag & Drop your JSON File here')) {
         cy.get('button').contains('Browse File').click();
