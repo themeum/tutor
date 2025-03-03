@@ -20,7 +20,7 @@ describe('Tutor Dashboard My Courses', () => {
         cy.get(':nth-child(3) > .tutor-nav-link').contains('Set API').click();
         //   reset credentials
         cy.get('a').contains('Reset Credential').click();
-        cy.get('button').contains("Yes, I'am Sure").click();
+        cy.get('button').contains('Yes, I’m sure').click();
       }
     });
   });
@@ -153,7 +153,7 @@ describe('Tutor Dashboard My Courses', () => {
         cy.get("button[action-tutor-dropdown='toggle']").eq(3).click();
         cy.get('a.tutor-dropdown-item').contains('Delete').click({ force: true });
         cy.get('#tutor-common-confirmation-form > .tutor-d-flex > .tutor-btn-primary')
-          .contains("Yes, I'am Sure")
+          .contains('Yes, I’m sure')
           .click();
       }
     });

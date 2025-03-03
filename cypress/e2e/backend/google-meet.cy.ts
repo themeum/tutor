@@ -21,7 +21,7 @@ describe('Tutor Dashboard My Courses', () => {
         cy.get(':nth-child(3) > .tutor-nav-link').contains('Set API').click();
         //   reset credentials
         cy.get('a').contains('Reset Credential').click();
-        cy.get('button').contains("Yes, I'am Sure").click();
+        cy.get('button').contains('Yes, I’m sure').click();
       }
     });
   });

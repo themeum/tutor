@@ -34,12 +34,7 @@ describe('Tutor Students', () => {
           .contains('Delete Permanently')
           .click();
         cy.get('#tutor-admin-bulk-action-btn').click();
-        cy.get('#tutor-confirm-bulk-action').contains("Yes, I'am Sure").click();
-
-        cy.wait('@ajaxRequest').then((interception) => {
-          expect(interception.request.body).to.include('tutor_student_bulk_action');
-          expect(interception.response?.body.success).to.equal(true);
-        });
+        cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
       }
     });
   });

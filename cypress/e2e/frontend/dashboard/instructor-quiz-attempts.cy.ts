@@ -66,7 +66,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
         cy.log('No data found');
       } else {
         cy.get('.tutor-quiz-attempt-delete').eq(0).click();
-        cy.get('.tutor-btn.tutor-btn-primary.tutor-ml-16').contains("Yes, I'am Sure").click();
+        cy.get('.tutor-btn.tutor-btn-primary.tutor-ml-16').contains('Yes, I’m sure').click();
         cy.wait('@ajaxRequest').then((interception) => {
           expect(interception.response?.body.success).to.equal(true);
         });

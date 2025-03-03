@@ -104,7 +104,7 @@ describe('Tutor Dashboard My Courses', () => {
       }
       cy.get("button[action-tutor-dropdown$='toggle']").eq(0).click();
       cy.get('a.tutor-dropdown-item').contains('Delete').click();
-      cy.get('button').contains("Yes, I'am Sure").click();
+      cy.get('button').contains('Yes, I’m sure').click();
       cy.wait('@ajaxRequest').then((interception) => {
         expect(interception.request.body).to.include('tutor_delete_review');
         expect(interception.response?.body.success).to.equal(true);
