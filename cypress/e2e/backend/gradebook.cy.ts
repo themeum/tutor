@@ -16,28 +16,9 @@ describe('Tutor Dashboard My Courses', () => {
         cy.get('.tutor-form-select-options')
           .eq(1)
           .then(() => {
-            cy.get('.tutor-form-select-option')
-              .then(() => {
-                cy.get('.tutor-form-select-options>div:nth-child(2)').eq(0).click();
-              })
-              .then(() => {
-                cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
-                  .eq(0)
-                  .invoke('text')
-                  .then((retrievedText) => {
-                    cy.get(
-                      '.tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis',
-                    ).each(($category) => {
-                      cy.wrap($category)
-                        .invoke('text')
-                        .then((categoryText) => {
-                          if (categoryText.trim() === retrievedText.trim()) {
-                            cy.wrap($category).click({ force: true });
-                          }
-                        });
-                    });
-                  });
-              });
+            cy.get('.tutor-form-select-option').then(() => {
+              cy.get('.tutor-form-select-options>div:nth-child(2)').eq(0).click();
+            });
           });
       }
     });
@@ -92,7 +73,7 @@ describe('Tutor Dashboard My Courses', () => {
     checkSorting('DESC');
   });
 
-  it('Should filter by a specific date', () => {
+  it('should filter by a specific date', () => {
     const filterFormSelector = '.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control';
     const elementDateSelector = 'tbody>tr>td:first-child';
     cy.filterElementsByDate(filterFormSelector, elementDateSelector);
