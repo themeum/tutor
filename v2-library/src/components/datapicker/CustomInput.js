@@ -5,7 +5,7 @@ export const CustomInput = React.forwardRef(
 		const { onChange, placeholder, value, id, onClick, name } = props;
 		return (
 			<div className="tutor-form-wrap">
-				<span className="tutor-form-icon tutor-form-icon-reverse">
+				<span className={`tutor-form-icon${wp.i18n?.isRTL() ? '' : ' tutor-form-icon-reverse'}`}>
 					<span className="tutor-icon-calender-line" aria-hidden={true}></span>
 				</span>
 				<input
