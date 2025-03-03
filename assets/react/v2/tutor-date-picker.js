@@ -4,12 +4,13 @@ import { createRoot } from 'react-dom/client';
 const TutorDatepicker = lazy(() => import('../../../v2-library/src/components/datapicker/TutorDatepicker'));
 
 function DatePicker() {
+    const { __ } = wp.i18n;
     const wrappers = document.querySelectorAll('.tutor-v2-date-picker');
     for (let wrapper of wrappers) {
         const { dataset = {} } = wrapper;
         const root = createRoot(wrapper);
         root.render(
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{__('Loading...', 'tutor')}</div>}>
                 <TutorDatepicker {...dataset} />
             </Suspense>
         );
