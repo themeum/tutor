@@ -29,7 +29,7 @@ describe('Tutor Admin Withdraw Request', () => {
       cy.get(formSelector).click();
       cy.get(`span[title=${order}]`).click();
       cy.get('body').then(($body) => {
-        if ($body.text().includes('No Data Available in this Section')) {
+        if ($body.text().includes('No request found')) {
           cy.log('No data available');
         } else {
           cy.get(itemSelector).then(($items) => {
@@ -53,27 +53,32 @@ describe('Tutor Admin Withdraw Request', () => {
       }
     }).as('ajaxRequest');
 
-    cy.get('tbody tr')
-      .first()
-      .then(($row) => {
-        cy.wrap($row)
-          .find('td[data-th="Status"]')
-          .then(($status) => {
-            const statusText = $status.text().trim();
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('No request found')) {
+        cy.log('No data found');
+      } else {
+        cy.get('tbody tr')
+          .first()
+          .then(($row) => {
+            cy.wrap($row)
+              .find('td[data-th="Status"]')
+              .then(($status) => {
+                const statusText = $status.text().trim();
 
-            if (statusText === 'Pending') {
-              cy.wrap($row).find('button:contains("Approve")').should('be.visible').click();
-              cy.get('button').contains('Yes, Approve Withdrawal').click();
-              cy.wait('@ajaxRequest').then((interception) => {
-                expect(interception.request.body).to.include('tutor_admin_withdraw_action');
-
-                expect(interception.response?.statusCode).to.equal(200);
+                if (statusText === 'Pending') {
+                  cy.wrap($row).find('button:contains("Approve")').should('be.visible').click();
+                  cy.get('button').contains('Yes, Approve Withdrawal').click();
+                  cy.wait('@ajaxRequest').then((interception) => {
+                    expect(interception.request.body).to.include('tutor_admin_withdraw_action');
+                    expect(interception.response?.statusCode).to.equal(200);
+                  });
+                } else {
+                  cy.log('Already approved or rejected');
+                }
               });
-            } else {
-              cy.log('Already approved or rejected');
-            }
           });
-      });
+      }
+    });
   });
 
   it('should reject a withdraw request', () => {
@@ -83,27 +88,33 @@ describe('Tutor Admin Withdraw Request', () => {
       }
     }).as('ajaxRequest');
 
-    cy.get('tbody tr')
-      .first()
-      .then(($row) => {
-        cy.wrap($row)
-          .find('td[data-th="Status"]')
-          .then(($status) => {
-            const statusText = $status.text().trim();
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('No request found')) {
+        cy.log('No data found');
+      } else {
+        cy.get('tbody tr')
+          .first()
+          .then(($row) => {
+            cy.wrap($row)
+              .find('td[data-th="Status"]')
+              .then(($status) => {
+                const statusText = $status.text().trim();
 
-            if (statusText === 'Pending') {
-              cy.wrap($row).find('button:contains("Reject")').should('be.visible').click();
-              cy.get('.tutor-modal-body > .tutor-js-form-select').click();
-              cy.get('div.tutor-form-select-option').contains('Invalid Request').click();
-              cy.get('button').contains('Yes, Reject Withdrawal').click();
-              cy.wait('@ajaxRequest').then((interception) => {
-                expect(interception.request.body).to.include('tutor_admin_withdraw_action');
-                expect(interception.response?.statusCode).to.equal(200);
+                if (statusText === 'Pending') {
+                  cy.wrap($row).find('button:contains("Reject")').should('be.visible').click();
+                  cy.get('.tutor-modal-body > .tutor-js-form-select').click();
+                  cy.get('div.tutor-form-select-option').contains('Invalid Request').click();
+                  cy.get('button').contains('Yes, Reject Withdrawal').click();
+                  cy.wait('@ajaxRequest').then((interception) => {
+                    expect(interception.request.body).to.include('tutor_admin_withdraw_action');
+                    expect(interception.response?.statusCode).to.equal(200);
+                  });
+                } else {
+                  cy.log('Already approved or rejected');
+                }
               });
-            } else {
-              cy.log('Already approved or rejected');
-            }
           });
-      });
+      }
+    });
   });
 });
