@@ -15,14 +15,14 @@ describe('Tutor Admin Question and Answers', () => {
         cy.log('No data found');
       } else {
         cy.get('.tutor-table tbody tr').eq(0).find('a').contains('Reply').click();
-        cy.setTinyMceContent('.tutor-qna-reply-editor', 'Hello there!');
+        cy.setTinyMceContent('.wp-editor-area', 'Hello there!');
         cy.get('button').contains('Reply').click();
 
         cy.wait('@ajaxRequest').then((interception) => {
           expect(interception.response?.body.success).to.equal(true);
         });
 
-        cy.get('a').contains('Back').click({ force: true });
+        cy.get('a.tutor-btn-ghost').contains('Back').click({ force: true });
       }
     });
   });
@@ -63,6 +63,8 @@ describe('Tutor Admin Question and Answers', () => {
 
   it('should delete a question', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
+
+    cy.get('a[data-keypage=archived]').contains('Archived').click();
 
     cy.get('body').then(($body) => {
       if ($body.text().includes('No Data Available in this Section')) {
