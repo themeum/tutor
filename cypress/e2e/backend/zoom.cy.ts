@@ -36,13 +36,15 @@ describe('Tutor Dashboard My Courses', () => {
         cy.log('No data available');
       } else {
         cy.get('a.tutor-btn.tutor-btn-primary').contains('Start Meeting').invoke('removeAttr', 'target').click();
-        cy.url().should('include', 'zoom.us');
+        cy.origin('https://us05web.zoom.us', () => {
+          cy.url().should('include', 'zoom.us');
+        });
       }
     });
   });
 
   it('should edit a zoom meeting', () => {
-    cy.intercept('POST', '/wordpress-tutor/wp-admin/admin-ajax.php').as('ajaxRequest');
+    cy.intercept('POST', '/wp-admin/admin-ajax.php').as('ajaxRequest');
 
     cy.get('body').then(($body) => {
       if (
@@ -94,7 +96,7 @@ describe('Tutor Dashboard My Courses', () => {
   });
 
   it('should delete a zoom meeting', () => {
-    cy.intercept('POST', '/wordpress-tutor/wp-admin/admin-ajax.php').as('ajaxRequest');
+    cy.intercept('POST', '/wp-admin/admin-ajax.php').as('ajaxRequest');
     cy.get('body').then(($body) => {
       if (
         $body.text().includes('No Data Found from your Search/Filter') ||
@@ -188,7 +190,7 @@ describe('Tutor Dashboard My Courses', () => {
         });
     });
   });
-  it('Should filter courses by a specific date', () => {
+  it('should filter courses by a specific date', () => {
     cy.get(
       ':nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
     ).click();
