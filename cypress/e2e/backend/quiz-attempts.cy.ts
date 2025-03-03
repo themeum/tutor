@@ -16,7 +16,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
       } else {
         cy.get('.tutor-table-quiz-attempts a').eq(0).click();
         cy.setTinyMceContent(
-          '.tutor-instructor-feedback-wrap',
+          '.wp-editor-area',
           "Nice work! You got it right. If not, don't worry—just a small tweak needed. Keep it up!",
         );
         cy.get('.quiz-attempt-answers-wrap button.tutor-instructor-feedback').click();
@@ -125,7 +125,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
           .contains('Delete Permanently')
           .click();
         cy.get('#tutor-admin-bulk-action-btn').click();
-        cy.get('#tutor-confirm-bulk-action').contains("Yes, I'am Sure").click();
+        cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
         cy.contains('No Data Available in this Section');
       }
     });

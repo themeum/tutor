@@ -109,7 +109,7 @@ describe('Tutor Admin Question and Answers', () => {
           .contains('Delete Permanently')
           .click();
         cy.get('#tutor-admin-bulk-action-btn').click();
-        cy.get('#tutor-confirm-bulk-action').contains("Yes, I'am Sure").click();
+        cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
         // cy.contains("No Data Available in this Section");
         cy.wait('@ajaxRequest').then((interception) => {
           expect(interception.response?.body.success).to.equal(true);
