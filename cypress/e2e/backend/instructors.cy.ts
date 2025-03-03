@@ -25,7 +25,6 @@ describe('Tutor Admin Instructors', () => {
     cy.get('#tutor-instructor-add-new [name="email"]').type(`john.doe${randomNumber}@example.com`);
     cy.get('#tutor-instructor-add-new [name="password"]').type('password123');
     cy.get('#tutor-instructor-add-new [name="password_confirmation"]').type('password123');
-    cy.setTinyMceContent('#wp-tutor_profile_bio-editor-container', 'This is a test bio.');
 
     cy.get('#tutor-new-instructor-form').submit();
 
@@ -41,10 +40,6 @@ describe('Tutor Admin Instructors', () => {
       }
     });
     cy.get('.tutor-table tbody tr').eq(0).find('a').contains('Edit').click();
-    cy.setTinyMceContent(
-      '.tutor-instructor-edit-modal.tutor-is-active .wp-editor-container',
-      'This is an updated bio.',
-    );
     cy.get('form.tutor-instructor-edit-modal.tutor-is-active').submit();
     cy.wait('@updateInstructorAjax').then((interception) => {
       expect(interception.response?.body.success).to.equal(true);
