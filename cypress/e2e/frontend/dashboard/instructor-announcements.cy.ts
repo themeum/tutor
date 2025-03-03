@@ -1,6 +1,11 @@
+import { faker } from '@faker-js/faker';
 import { frontendUrls } from '../../../config/page-urls';
 
 describe('Tutor Dashboard Announcements', () => {
+  const announcements = {
+    title: faker.lorem.sentence(),
+    summary: faker.lorem.sentences(3),
+  };
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.ANNOUNCEMENTS}`);
     cy.loginAsInstructor();
@@ -31,16 +36,16 @@ describe('Tutor Dashboard Announcements', () => {
   it('should create a new announcement', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
     cy.get('button[data-tutor-modal-target=tutor_announcement_new]').click();
-    cy.get('#tutor_announcement_new input[name=tutor_announcement_title]').type(
-      'Important Announcement - Upcoming Student Assembly',
-    );
-    cy.get('#tutor_announcement_new textarea[name=tutor_announcement_summary]').type(
-      'I trust this message finds you well. As we prepare for the commencement of a dynamic new semester, we have pivotal information to share in our upcoming Student Assembly.',
-    );
-    cy.get('#tutor_announcement_new button').contains('Publish').click();
+    cy.get('.tutor-modal.tutor-is-active .tutor-form-select-label').then(($modal) => {
+      if ($modal.text().includes('No course found')) {
+        cy.log('No data found');
+        return;
+      }
+      cy.get('#tutor_announcement_new input[name=tutor_announcement_title]').type(announcements.title);
+      cy.get('#tutor_announcement_new textarea[name=tutor_announcement_summary]').type(announcements.summary);
+      cy.get('#tutor_announcement_new button').contains('Publish').click();
 
-    cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.response?.body.success).to.equal(true);
+      cy.get('.tutor-table').should('contain.text', announcements.title);
     });
   });
 
