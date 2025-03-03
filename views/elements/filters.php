@@ -29,7 +29,7 @@ if ( isset( $data ) ) : ?>
 						<input type="hidden" name="action" value="<?php echo esc_html( $data['ajax_action'] ); ?>" />
 						<div class="tutor-d-flex">
 							<div class="tutor-mr-12">
-								<select name="bulk-action" title="Please select an action" class="tutor-form-select">
+								<select name="bulk-action" title="Please select an action" class="tutor-form-control tutor-form-select">
 									<?php foreach ( $data['bulk_actions'] as $k => $v ) : ?>
 										<option value="<?php echo esc_attr( $v['value'] ); ?>">
 											<?php echo esc_html( $v['option'] ); ?>
@@ -98,7 +98,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Course', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-course" data-searchable>
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-course" data-searchable>
 								<?php if ( count( $courses ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Courses', 'tutor' ); ?>
@@ -119,7 +119,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Category', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-category" data-searchable>
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-category" data-searchable>
 								<?php if ( count( $categories ) ) : ?>
 									<option value="">
 										<?php esc_html_e( 'All Category', 'tutor' ); ?>
@@ -141,7 +141,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Payment Status', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-payment-status" data-search="no">
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-payment-status" data-search="no">
 								<option value="">
 									<?php esc_html_e( 'Select', 'tutor' ); ?>
 								</option>
@@ -162,7 +162,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Status', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-coupon-status" data-search="no">
 								<option value="">
 									<?php esc_html_e( 'Select', 'tutor' ); ?>
 								</option>
@@ -184,7 +184,7 @@ if ( isset( $data ) ) : ?>
 							<label class="tutor-form-label">
 								<?php esc_html_e( 'Sort By', 'tutor' ); ?>
 							</label>
-							<select class="tutor-form-select" id="tutor-backend-filter-order" data-search="no">
+							<select class="tutor-form-control tutor-form-select" id="tutor-backend-filter-order" data-search="no">
 								<option value="DESC" <?php selected( $order, 'DESC', 'selected' ); ?>>
 									<?php esc_html_e( 'DESC', 'tutor' ); ?>
 								</option>
