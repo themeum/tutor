@@ -54,7 +54,11 @@
 			content: '\e93e';
 			font-family: 'tutor' !important;
 			position: absolute;
-			right: 8px;
+			@if ($is_rtl == true) {
+				left: 8px;
+            } @else {
+				right: 8px;
+            }
 			top: 50%;
 			transition: transform 200ms linear;
 			transform: translateY(-50%);
