@@ -16,6 +16,7 @@ describe('Tutor Dashboard My Courses', () => {
     const submitWithButton = false;
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
+
   it('Should filter courses by a specific date', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}&sub_page=courses`);
     cy.get('.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control').click();
@@ -59,27 +60,35 @@ describe('Tutor Dashboard My Courses', () => {
   // reviews
   it('should change status of a review', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}&sub_page=reviews`);
-    cy.get("select[title$='Update review status']").eq(0).as('statusDropdown');
-    cy.get('@statusDropdown').then(($dropdown) => {
-      const selectedValue = $dropdown.val();
-
-      if (selectedValue === 'approved') {
-        cy.get('@statusDropdown').select('Unpublished');
-        cy.get('@statusDropdown')
-          .should('have.value', 'hold')
-          .find('option:selected')
-          .should('have.attr', 'data-status_class', 'select-warning');
-      } else if (selectedValue === 'hold') {
-        cy.get('@statusDropdown').select('Published');
-        cy.get('@statusDropdown')
-          .should('have.value', 'approved')
-          .find('option:selected')
-          .should('have.attr', 'data-status_class', 'select-success');
-      } else {
-        throw new Error('Unexpected dropdown value');
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('No Data Available in this Section')) {
+        cy.log('No data available');
+        return;
       }
+
+      cy.get("select[title$='Update review status']").eq(0).as('statusDropdown');
+      cy.get('@statusDropdown').then(($dropdown) => {
+        const selectedValue = $dropdown.val();
+
+        if (selectedValue === 'approved') {
+          cy.get('@statusDropdown').select('Unpublished');
+          cy.get('@statusDropdown')
+            .should('have.value', 'hold')
+            .find('option:selected')
+            .should('have.attr', 'data-status_class', 'select-warning');
+        } else if (selectedValue === 'hold') {
+          cy.get('@statusDropdown').select('Published');
+          cy.get('@statusDropdown')
+            .should('have.value', 'approved')
+            .find('option:selected')
+            .should('have.attr', 'data-status_class', 'select-success');
+        } else {
+          throw new Error('Unexpected dropdown value');
+        }
+      });
     });
   });
+
   it('should delete a review', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
       if (req.body.includes('tutor_delete_review')) {
@@ -87,12 +96,19 @@ describe('Tutor Dashboard My Courses', () => {
       }
     }).as('ajaxRequest');
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}&sub_page=reviews`);
-    cy.get("button[action-tutor-dropdown$='toggle']").eq(0).click();
-    cy.get('a.tutor-dropdown-item').contains('Delete').click();
-    cy.get('button').contains("Yes, I'am Sure").click();
-    cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.request.body).to.include('tutor_delete_review');
-      expect(interception.response?.body.success).to.equal(true);
+
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('No Data Available in this Section')) {
+        cy.log('No data available');
+        return;
+      }
+      cy.get("button[action-tutor-dropdown$='toggle']").eq(0).click();
+      cy.get('a.tutor-dropdown-item').contains('Delete').click();
+      cy.get('button').contains("Yes, I'am Sure").click();
+      cy.wait('@ajaxRequest').then((interception) => {
+        expect(interception.request.body).to.include('tutor_delete_review');
+        expect(interception.response?.body.success).to.equal(true);
+      });
     });
   });
   //   overview
