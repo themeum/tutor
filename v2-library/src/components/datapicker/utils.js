@@ -13,7 +13,7 @@ export const monthNames = [
     'December',
 ];
 
-export const weekDayNames = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+export const weekDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 export function stringToDate(_date, _format, _delimiter) {
     const formatLowerCase = _format.toLowerCase();
