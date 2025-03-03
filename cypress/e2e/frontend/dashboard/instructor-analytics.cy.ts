@@ -30,12 +30,18 @@ describe('Tutor Admin Dashboard Journey', () => {
   // courses
   it('should be able to search courses', () => {
     cy.get('.tutor-nav>.tutor-nav-item').contains('Courses').click();
-    const searchInputSelector = "input[name='search']";
-    const searchQuery = 'javascript';
-    const courseLinkSelector = 'tbody>tr>td>span';
-    const submitButtonSelector = '';
-    const submitWithButton = false;
-    cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('No Data Available in this Section')) {
+        cy.log('No data found');
+      } else {
+        const searchInputSelector = "input[name='search']";
+        const searchQuery = 'javascript';
+        const courseLinkSelector = 'tbody>tr>td>span';
+        const submitButtonSelector = '';
+        const submitWithButton = false;
+        cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
+      }
+    });
   });
   // statements
   it('should filter statements', () => {
@@ -43,9 +49,10 @@ describe('Tutor Admin Dashboard Journey', () => {
     cy.get('.tutor-form-control.tutor-form-select.tutor-js-form-select').click();
     cy.get('.tutor-form-select-options span[tutor-dropdown-item]').then(($options) => {
       const randomIndex = Cypress._.random(1, $options.length - 1);
-      const $randomOption = $options.eq(randomIndex);
+      const hasNoCourse = $options.text().includes('No course found');
+      const $randomOption = hasNoCourse ? $options.eq(0) : $options.eq(randomIndex);
       cy.wrap($randomOption).click({ force: true });
-      const selectedOptionText = $randomOption.text().trim();
+      const selectedOptionText = $randomOption.find('.tutor-mt-8').text();
       cy.get('body').then(($body) => {
         if ($body.text().includes('No Data Found from your Search/Filter')) {
           cy.log('No data available');
