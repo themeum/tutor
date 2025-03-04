@@ -252,6 +252,7 @@ const HeaderActions = () => {
       onClick:
         !courseId || (postStatus === 'draft' && courseId) ? () => window.open(previewLink, '_blank', 'noopener') : noop,
       isDanger: false,
+      dataCy: 'preview-course',
     };
 
     const moveToTrashItem = {
@@ -270,12 +271,14 @@ const HeaderActions = () => {
         }
       },
       isDanger: true,
+      dataCy: 'move-to-trash',
     };
 
     const switchToDraftItem = {
       text: <>{__('Switch to draft', 'tutor')}</>,
       onClick: form.handleSubmit((data) => handleSubmit(data, 'draft')),
       isDanger: false,
+      dataCy: 'switch-to-draft',
     };
 
     const backToLegacyItem = {
@@ -300,6 +303,7 @@ const HeaderActions = () => {
         window.open(legacyUrl, '_blank', 'noopener');
       },
       isDanger: false,
+      dataCy: 'back-to-legacy',
     };
 
     const publishImmediatelyItem = {
@@ -314,6 +318,7 @@ const HeaderActions = () => {
         ),
       ),
       isDanger: false,
+      dataCy: 'publish-immediately',
     };
 
     const items = [previewItem];
@@ -388,6 +393,7 @@ const HeaderActions = () => {
         when={dropdownItems().length > 1}
         fallback={
           <Button
+            data-cy="course-builder-submit-button"
             size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
             loading={
               createCourseMutation.isPending ||
@@ -400,6 +406,7 @@ const HeaderActions = () => {
         }
       >
         <DropdownButton
+          data-cy="course-builder-submit-button"
           text={dropdownButton().text}
           size={CURRENT_VIEWPORT.isAboveDesktop ? 'regular' : 'small'}
           variant="primary"
@@ -414,7 +421,13 @@ const HeaderActions = () => {
           disabledDropdown={dropdownItems().length === 0}
         >
           {dropdownItems().map((item, index) => (
-            <DropdownButton.Item key={index} text={item.text} onClick={item.onClick} isDanger={item.isDanger} />
+            <DropdownButton.Item
+              key={index}
+              text={item.text}
+              onClick={item.onClick}
+              isDanger={item.isDanger}
+              data-cy={item.dataCy}
+            />
           ))}
         </DropdownButton>
       </Show>

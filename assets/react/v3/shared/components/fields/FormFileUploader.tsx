@@ -191,6 +191,7 @@ const FormFileUploader = ({
                     icon={<SVGIcon name="attach" height={24} width={24} />}
                     variant="secondary"
                     onClick={uploadHandler}
+                    data-cy="upload-media"
                   >
                     {buttonText}
                   </Button>

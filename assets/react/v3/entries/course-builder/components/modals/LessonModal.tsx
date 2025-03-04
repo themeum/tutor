@@ -242,6 +242,7 @@ const LessonModal = ({
               {lessonId ? __('Discard Changes', 'tutor') : __('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-lesson"
               loading={saveLessonMutation.isPending}
               variant="primary"
               size="small"
