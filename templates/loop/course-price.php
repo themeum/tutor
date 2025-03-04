@@ -38,7 +38,7 @@ foreach ( $enroll_now_attrs as $key => $value ) {
 $enroll_btn = '<div class="tutor-course-list-btn">' . apply_filters( 'tutor_course_restrict_new_entry', '<a href="' . get_the_permalink() . '" class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-btn-block ' . $button_class . ' " data-course-id="' . $course_id . '" ' . trim( $attrs_string ) . '>' . __( 'Enroll Course', 'tutor' ) . '</a>', $course_id ) . '</div>';
 $free_html  = $enroll_btn;
 
-if ( tutor_utils()->is_course_purchasable() ) {
+if ( tutor_utils()->is_course_purchasable() && 'wc' === $monetization ) {
 	$enroll_btn = tutor_course_loop_add_to_cart( false );
 
 	$product_id = tutor_utils()->get_course_product_id( $course_id );
@@ -47,7 +47,7 @@ if ( tutor_utils()->is_course_purchasable() ) {
 	$total_enrolled   = (int) tutor_utils()->count_enrolled_users_by_course( $course_id );
 	$maximum_students = (int) tutor_utils()->get_course_settings( $course_id, 'maximum_students' );
 
-	if ( 0 != $maximum_students && $total_enrolled != $maximum_students ) {
+	if ( $product && 0 != $maximum_students && $total_enrolled != $maximum_students ) {
 		$total_booked = 100 / $maximum_students * $total_enrolled;
 		$b_total      = $total_booked;
 		//phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
