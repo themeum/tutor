@@ -2843,7 +2843,7 @@ class Course extends Tutor_Base {
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
 		$course_id  = sanitize_text_field( $course_id );
-		$is_allowed = apply_filters( 'tutor_allow_guest_attempt_enrollment', true, $course_id );
+		$is_allowed = apply_filters( 'tutor_allow_guest_attempt_enrollment', true, $course_id, $user_id );
 
 		if ( $course_id && $is_allowed ) {
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
