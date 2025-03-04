@@ -76,8 +76,15 @@ describe('Tutor Dashboard My Bundles', () => {
     cy.waitAfterRequest('updateBundle');
     cy.get('[data-cy=tutor-toast]').should('contain.text', 'Course Bundle updated successfully');
 
-    cy.get('[data-cy=tutor-modal]').within(() => {
-      cy.get('[data-cy=back-to-course-bundles]').click();
+    cy.window().then((win) => {
+      const tutorObject = win._tutorobject;
+      if (tutorObject.settings?.instructor_can_publish_course === 'on') {
+        return;
+      } else {
+        cy.get('[data-cy=tutor-modal]').within(() => {
+          cy.get('[data-cy=back-to-course-bundles]').click();
+        });
+      }
     });
   });
 
