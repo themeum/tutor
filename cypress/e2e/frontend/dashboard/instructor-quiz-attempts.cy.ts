@@ -47,7 +47,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
         cy.get('.tutor-table-quiz-attempts a').eq(0).click();
         cy.window().scrollTo('bottom', { duration: 500, easing: 'linear' });
         cy.setTinyMceContent(
-          '.tutor-instructor-feedback-wrap',
+          '.wp-editor-area',
           "Nice work! You got it right. If not, don't worry—just a small tweak needed. Keep it up!",
         );
         cy.get('.quiz-attempt-answers-wrap button.tutor-instructor-feedback').click();
@@ -59,6 +59,7 @@ describe('Tutor Dashboard Quiz Attempts', () => {
       }
     });
   });
+
   it('should delete a quiz attempt', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
     cy.get('body').then(($body) => {
