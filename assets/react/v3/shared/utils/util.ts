@@ -1,4 +1,3 @@
-import collection from '@TutorShared/config/icon-list';
 import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import { __ } from '@wordpress/i18n';
 import { addMinutes, format } from 'date-fns';
@@ -8,12 +7,11 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { type Addons, DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
-  type IconCollection,
   type InjectedField,
   type PaginatedParams,
   type WPPostStatus,
   isDefined,
-  isObject,
+  isObject
 } from '@TutorShared/utils/types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
@@ -34,10 +32,6 @@ export const isFileOrBlob = (value: unknown): value is Blob | File => {
 
 export const getValueInArray = <T>(value: T | T[] | undefined): T[] => {
   return Array.isArray(value) ? value : value ? [value] : [];
-};
-
-export const getIcon = (name: IconCollection) => {
-  return collection[name];
 };
 
 // Generate unique id

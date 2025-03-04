@@ -1,11 +1,8 @@
-import type collection from '@TutorShared/config/icon-list';
 import type { AxiosError, AxiosResponse } from 'axios';
 import type { ReactNode } from 'react';
 import type { RegisterOptions } from 'react-hook-form';
 
 export type CourseProgressSteps = 'basic' | 'curriculum' | 'additional' | 'certificate';
-
-export type IconCollection = keyof typeof collection;
 
 export const localHasOwnProperty = <T extends object>(obj: T, key: PropertyKey): key is keyof T => {
   return key in obj;

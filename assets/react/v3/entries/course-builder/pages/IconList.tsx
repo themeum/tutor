@@ -1,17 +1,15 @@
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Container from '@TutorShared/components/Container';
 import FormInput from '@TutorShared/components/fields/FormInput';
-import collection from '@TutorShared/config/icon-list';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { getObjectEntries } from '@TutorShared/utils/util';
+import { icons } from '@TutorShared/icons/types';
 import { css } from '@emotion/react';
 import { useMemo } from 'react';
 import { Controller } from 'react-hook-form';
-const icons = getObjectEntries(collection).map(([name]) => name);
 
 const IconList = () => {
   const form = useFormWithGlobalError<{ search: string }>({ defaultValues: { search: '' } });
