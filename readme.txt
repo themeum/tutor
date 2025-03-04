@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.2.1
+Stable tag: 3.3.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,36 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.3.0 - March 03, 2025
+
+New: Introduced custom field slots in the course builder for adding custom fields.
+New: Added a setting to sell courses exclusively via membership. (Pro)
+New: Enabled course-specific selling models, allowing sales via single purchase, subscription, membership, or a combination. (Pro)
+New: Added auto-renewal controls for students to manage subscriptions. (Pro)
+New: Added membership analytics to Tutor LMS Reports. (Pro)
+New: Implemented guest checkout, allowing course purchases without an account. (Pro)
+New: Added bulk enrollment via CSV import. (Pro)
+New: Introduced "Coming Soon" courses with custom thumbnails. (Pro)
+New: Added custom enrollment dates and instant pause options. (Pro)
+New: Integrated the 2Checkout payment gateway. (Pro)
+Update: Restored the admin bar in the course builder.
+Fix: Resolved issues with tag-based filtering.
+Fix: Fixed a database error in subscription table creation. (Pro)
+Fix: Corrected quiz randomization settings.
+Fix: Fixed imported settings not applying from JSON files.
+
+= 3.2.2 - February 05, 2025
+
+Update: Added missing translations in both the free and pro versions.
+Update: Improved email template compatibility with WPML. (Pro)
+Fix: Resolved special character display issues in Stripe payments. (Pro)
+Fix: Fixed the "Edit with Elementor" button for Course Bundles. (Pro)
+Fix: Resolved the Zoom meetings auto-activation issue. (Pro)
+Fix: Fixed enrollment issues for password-protected courses.
+Fix: Resolved REST API errors in Tutor LMS Pro. (Pro)
+Fix: Fixed Google Meet authorization issues for instructors. (Pro)
+Fix: Fixed an issue where removed payment methods were still appearing as installed.
 
 = 3.2.1 - January 21, 2024
 

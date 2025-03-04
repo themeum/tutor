@@ -21,7 +21,7 @@ interface CardProps {
   noSeparator?: boolean;
   hideArrow?: boolean;
   isAlternative?: boolean;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   collapsedAnimationDependencies?: any[];
 }
 
@@ -53,7 +53,6 @@ const Card = ({
     [isCollapsed, ...(collapsedAnimationDependencies || [])],
   );
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isDefined(cardRef.current)) {
       collapseAnimate.start({
@@ -61,6 +60,7 @@ const Card = ({
         opacity: !isCollapsed ? 1 : 0,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isCollapsed, ...(collapsedAnimationDependencies || [])]);
 
   return (

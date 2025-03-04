@@ -116,14 +116,14 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 									$plan_info->recurring_value > 1
 									? sprintf(
 										/* translators: %s: value, %s: name */
-										__( '/%1$s %2$s', 'tutor-pro' ),
+										__( '/%1$s %2$s', 'tutor' ),
 										$plan_info->recurring_value,
 										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
 									)
 									:
 									sprintf(
 										/* translators: %s: recurring interval */
-										__( '/%1$s', 'tutor-pro' ),
+										__( '/%1$s', 'tutor' ),
 										$plan_info->recurring_interval . ( $plan_info->recurring_value > 1 ? 's' : '' )
 									)
 								);
@@ -257,7 +257,7 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					<?php
 					if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price ) :
 						?>
-			<div class="tutor-checkout-summary-item">
+			<div class="tutor-checkout-summary-item" data-tax-amount>
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
 				<div class="tutor-fw-bold"><?php tutor_print_formatted_price( $checkout_data->tax_amount ); ?></div>
 			</div>

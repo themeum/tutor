@@ -77,6 +77,7 @@ const BasicPrompt = ({ onClose }: BasicPromptProps) => {
 };
 
 export default BasicPrompt;
+
 const styles = {
   container: css`
     position: absolute;

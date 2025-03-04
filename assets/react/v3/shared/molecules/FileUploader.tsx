@@ -6,6 +6,7 @@ import { typography } from '@TutorShared/config/typography';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { getFileExtensionFromName } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
 import type React from 'react';
 import { useRef } from 'react';
 
@@ -42,9 +43,9 @@ export const useFileUploader = ({ acceptedTypes, onUpload, onError }: UseFileUpl
 
     for (const file of [...files]) {
       if (!acceptedTypes.includes(getFileExtensionFromName(file.name))) {
-        errorMessages.push('Invalid file type');
+        errorMessages.push(__('Invalid file type', 'tutor'));
       } else if (file.size > MAX_FILE_SIZE) {
-        errorMessages.push('Maximum upload size exceeded');
+        errorMessages.push(__('Maximum upload size exceeded', 'tutor'));
       } else {
         validFiles.push(file);
       }

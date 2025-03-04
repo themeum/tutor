@@ -219,8 +219,8 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                     {...controllerProps}
                     label={<span>&nbsp;</span>}
                     options={[
-                      { label: 'Minutes', value: 'min' },
-                      { label: 'Hours', value: 'hr' },
+                      { label: __('Minutes', 'tutor'), value: 'min' },
+                      { label: __('Hours', 'tutor'), value: 'hr' },
                     ]}
                   />
                 )}

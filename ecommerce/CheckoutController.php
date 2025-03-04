@@ -10,6 +10,7 @@
 
 namespace Tutor\Ecommerce;
 
+use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\ValidationHelper;
 use TUTOR\Input;
 use Tutor\Models\BillingModel;
@@ -277,6 +278,8 @@ class CheckoutController {
 	 *
 	 * @since 3.0.0
 	 *
+	 * @since 3.3.0 is_coupon_applicable check added
+	 *
 	 * @param int|array $item_ids Required, course ids or plan id.
 	 * @param string    $order_type order type.
 	 * @param string    $coupon_code coupon code.
@@ -309,12 +312,24 @@ class CheckoutController {
 		if ( $is_valid ) {
 			$is_meet_min_requirement = $this->coupon_model->is_coupon_requirement_meet( $item_ids, $selected_coupon, $order_type );
 			if ( $is_meet_min_requirement ) {
-				$coupon            = $selected_coupon;
-				$is_coupon_applied = true;
+				$coupon = $selected_coupon;
 			}
 		}
 
 		list($items, $plan_info) = $this->prepare_items( $item_ids, $order_type, $coupon );
+
+		// Iterate with each item and check if coupon is applicable @since 3.3.0.
+		$is_coupon_applicable = false;
+		if ( $coupon ) {
+			foreach ( $items as $item ) {
+				if ( ! $is_coupon_applicable ) {
+					$is_coupon_applicable = $this->coupon_model->is_coupon_applicable( $coupon, $item['item_id'] );
+				}
+			}
+			if ( $is_coupon_applicable ) {
+				$is_coupon_applied = true;
+			}
+		}
 
 		if ( $is_coupon_applied ) {
 			$items        = $this->calculate_discount( $items, $coupon->discount_type, $coupon->discount_amount );
@@ -382,12 +397,13 @@ class CheckoutController {
 	 */
 	public function pay_now() {
 		tutor_utils()->check_nonce();
+		global $wpdb;
 
 		$errors     = array();
 		$order_data = null;
 
 		$billing_model   = new BillingModel();
-		$current_user_id = get_current_user_id();
+		$current_user_id = is_user_logged_in() ? get_current_user_id() : wp_rand();
 		$request = Input::sanitize_array( $_POST ); //phpcs:ignore --sanitized.
 
 		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
@@ -471,13 +487,38 @@ class CheckoutController {
 			);
 		}
 
-		$args = array(
-			'payment_method'  => $payment_method,
-			'coupon_amount'   => $checkout_data->coupon_discount,
-			'discount_amount' => $checkout_data->sale_discount,
+		$args = apply_filters(
+			'tutor_order_create_args',
+			array(
+				'payment_method'  => $payment_method,
+				'coupon_amount'   => $checkout_data->coupon_discount,
+				'discount_amount' => $checkout_data->sale_discount,
+			)
 		);
 
 		if ( empty( $errors ) ) {
+			if ( ! is_user_logged_in() ) {
+				$guest_user = apply_filters( 'tutor_guest_user_id', $current_user_id, $order_data, $billing_fillable_fields );
+				if ( is_wp_error( $guest_user ) ) {
+					// Delete the billing info if user registration failed.
+					QueryHelper::delete( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $current_user_id ) );
+
+					add_filter( 'tutor_checkout_user_id', fn () => $current_user_id );
+
+					// translators: wp error message.
+					$error_msg = sprintf( esc_html_x( 'Order placement failed. %s', 'guest checkout', 'tutor' ), $guest_user->get_error_message() );
+					set_transient(
+						self::PAY_NOW_ERROR_TRANSIENT_KEY . $current_user_id,
+						array(
+							'message' => $error_msg,
+						)
+					);
+					return;
+				} else {
+					$current_user_id = $guest_user;
+				}
+			}
+
 			$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {

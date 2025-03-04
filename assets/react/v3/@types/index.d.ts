@@ -1,5 +1,46 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { type InjectedField } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { type InjectionSlots } from '@TutorShared/utils/types';
+
 export type {};
+
+interface Tutor {
+  readonly CourseBuilder: {
+    readonly Basic: {
+      readonly registerField: (section: InjectionSlots['Basic'], fields: InjectedField | InjectedField[]) => void;
+      readonly registerContent: (section: InjectionSlots['Basic'], contents: InjectedContent) => void;
+    };
+    readonly Curriculum: {
+      readonly Lesson: {
+        readonly registerField: (
+          section: InjectionSlots['Curriculum']['Lesson'],
+          fields: InjectedField | InjectedField[],
+        ) => void;
+        readonly registerContent: (section: InjectionSlots['Curriculum']['Lesson'], contents: InjectedContent) => void;
+      };
+      readonly Quiz: {
+        readonly registerField: (
+          section: InjectionSlots['Curriculum']['Quiz'],
+          fields: InjectedField | InjectedField[],
+        ) => void;
+        readonly registerContent: (section: InjectionSlots['Curriculum']['Quiz'], contents: InjectedContent) => void;
+      };
+      readonly Assignment: {
+        readonly registerField: (
+          section: InjectionSlots['Curriculum']['Assignment'],
+          fields: InjectedField | InjectedField[],
+        ) => void;
+        readonly registerContent: (
+          section: InjectionSlots['Curriculum']['Assignment'],
+          contents: InjectedContent,
+        ) => void;
+      };
+    };
+    readonly Additional: {
+      readonly registerField: (section: InjectionSlots['Additional'], fields: InjectedField | InjectedField[]) => void;
+      readonly registerContent: (section: InjectionSlots['Additional'], contents: InjectedContent) => void;
+    };
+  };
+}
 
 declare module '*.png';
 declare module '*.svg';
@@ -114,6 +155,7 @@ declare global {
         enable_redirect_on_course_publish_from_frontend: 'on' | 'off';
         instructor_can_publish_course: 'on' | 'off';
         youtube_api_key_exist: boolean;
+        membership_only_mode: boolean;
       };
       tutor_currency: {
         symbol: string;
@@ -130,5 +172,6 @@ declare global {
       root: string;
       versionString: string;
     };
+    Tutor: Tutor;
   }
 }

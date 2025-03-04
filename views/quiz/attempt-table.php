@@ -174,7 +174,7 @@ if ( 'course-single-previous-attempts' == $context && is_array( $attempt_list ) 
 											if ( $has_pending && ( 'frontend-dashboard-students-attempts' == $context || 'backend-dashboard-students-attempts' == $context ) ) {
 												esc_html_e( 'Review', 'tutor' );
 											} else {
-												esc_html_e( 'Details', 'tutor-pro' );
+												esc_html_e( 'Details', 'tutor' );
 											}
 											?>
 										</a>

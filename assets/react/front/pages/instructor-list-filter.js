@@ -39,7 +39,7 @@ jQuery(document).ready(function($) {
 				},
 				error: function() {
 					result_container.html(html_cache);
-					tutor_toast('Failed', 'Request Error', 'error');
+					tutor_toast(__('Failed', 'tutor'), __('Request Error', 'tutor'), 'error');
 				},
 			});
 		}

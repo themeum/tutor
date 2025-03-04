@@ -5,6 +5,7 @@ const {__} = wp.i18n;
 const tutor_filters = [
     'keyword',
     'course_order',
+    'tutor-course-filter-type',
     'tutor-course-filter-level',
     'tutor-course-filter-tag',
     'tutor-course-filter-category',
@@ -184,6 +185,7 @@ window.jQuery(document).ready($ => {
                 }
 
                 content_container.html(r.data.html).find('nav').css('display', 'flex');
+                window.dispatchEvent(new Event(_tutorobject.content_change_event));
             }
         });
     };
@@ -231,25 +233,24 @@ window.jQuery(document).ready($ => {
             const post = await ajaxHandler(formData);
             if (post.ok) {
                 const response = await post.json();
-                console.log(response);
                 const {success, data} = response;
                 if (success) {
                     tutor_toast(
-                        __('Success', 'tutor-pro'),
+                        __('Success', 'tutor'),
                         data,
                         'success',
                     );
                     window.location.href = target.href;
                 } else {
                     tutor_toast(
-                        __('Failed', 'tutor-pro'),
+                        __('Failed', 'tutor'),
                         data ? data : defaultErrorMsg,
                         'error',
                     );
                 }
             } else {
                 tutor_toast(
-                    __('Error', 'tutor-pro'),
+                    __('Error', 'tutor'),
                     __(defaultErrorMsg),
                     'error',
                 );

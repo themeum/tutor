@@ -105,11 +105,10 @@ $reset_link        = remove_query_arg( $supported_filters, get_pagenum_link() );
 	<?php endif; ?>
 
 	<?php
-		$is_membership = get_tutor_option( 'monetize_by' ) == 'pmpro' && tutor_utils()->has_pmpro();
-	if ( ! $is_membership && in_array( 'price_type', $supported_filters ) ) :
+	$is_pm_pro_membership       = 'pmpro' === get_tutor_option( 'monetize_by' ) && tutor_utils()->has_pmpro();
+	$tutor_membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
+	if ( ! $tutor_membership_only_mode && ! $is_pm_pro_membership && in_array( 'price_type', $supported_filters, true ) ) :
 		?>
-	
-
 		<?php
 		/**
 		 * Add action before price filter.

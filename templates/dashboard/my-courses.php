@@ -158,9 +158,15 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 						<div class="tutor-card-footer">
 							<div class="tutor-d-flex tutor-align-center tutor-justify-between">
 								<div class="tutor-d-flex tutor-align-center">
+									<span class="tutor-fs-7 tutor-fw-medium tutor-color-muted tutor-mr-4">
+										<?php
+										$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
+										echo esc_html( $membership_only_mode ? __( 'Plan:', 'tutor' ) : '' );
+										?>
+									</span>
 									<span class="tutor-fs-7 tutor-fw-medium tutor-color-black">
 										<?php
-											$price = tutor_utils()->get_course_price();
+										$price = tutor_utils()->get_course_price();
 										if ( null === $price ) {
 											esc_html_e( 'Free', 'tutor' );
 										} else {

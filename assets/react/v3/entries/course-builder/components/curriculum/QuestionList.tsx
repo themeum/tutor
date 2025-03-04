@@ -1,18 +1,18 @@
 import {
+  closestCenter,
   DndContext,
   type DragEndEvent,
   DragOverlay,
   KeyboardSensor,
   PointerSensor,
   type UniqueIdentifier,
-  closestCenter,
   useSensor,
   useSensors,
 } from '@dnd-kit/core';
 import { restrictToWindowEdges } from '@dnd-kit/modifiers';
 import { SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { css } from '@emotion/react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useFieldArray, useFormContext } from 'react-hook-form';
@@ -21,16 +21,10 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Popover from '@TutorShared/molecules/Popover';
 
-import { useModal } from '@TutorShared/components/modals/Modal';
 import Question from '@CourseBuilderComponents/curriculum/Question';
 import H5PContentListModal from '@CourseBuilderComponents/modals/H5PContentListModal';
+import { useModal } from '@TutorShared/components/modals/Modal';
 
-import { tutorConfig } from '@TutorShared/config/config';
-import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
-import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
-import { typography } from '@TutorShared/config/typography';
-import For from '@TutorShared/controls/For';
-import Show from '@TutorShared/controls/Show';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import {
   type H5PContent,
@@ -40,6 +34,12 @@ import {
   type QuizQuestionType,
 } from '@CourseBuilderServices/quiz';
 import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
+import { tutorConfig } from '@TutorShared/config/config';
+import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import For from '@TutorShared/controls/For';
+import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { IconCollection } from '@TutorShared/utils/types';
@@ -155,7 +155,8 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
     appendQuestion({
       _data_status: QuizDataStatus.NEW,
       question_id: questionId,
-      question_title: questionType === 'h5p' ? content?.title : `Question ${questionFields.length + 1}`,
+      question_title:
+        questionType === 'h5p' ? content?.title : sprintf(__('Question %d', 'tutor'), questionFields.length + 1),
       question_description: questionType === 'h5p' ? content?.id : '',
       question_type: questionType,
       question_answers:
@@ -209,7 +210,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
         answer_required: false,
         question_mark: contentType === 'tutor_h5p_quiz' ? 0 : 1,
         question_type: questionType,
-        randomize_options: false,
+        randomize_question: false,
         show_question_mark: false,
       },
     } as QuizQuestion);

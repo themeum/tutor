@@ -174,7 +174,7 @@ class CourseModel {
 			$default_args['author'] = get_current_user_id();
 		}
 
-		$args = wp_parse_args( $args, $default_args );
+		$args = wp_parse_args( $args, apply_filters( 'tutor_get_course_list_filter_args', $default_args ) );
 
 		return new \WP_Query( $args );
 	}

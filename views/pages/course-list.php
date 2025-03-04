@@ -185,7 +185,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 								<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</th>
 							<th width="10%">
-								<?php esc_html_e( 'Price', 'tutor' ); ?>
+								<?php
+								$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
+								echo esc_html( $membership_only_mode ? __( 'Plan', 'tutor' ) : __( 'Price', 'tutor' ) );
+								?>
 							</th>
 							<th class="tutor-table-rows-sorting" width="15%">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
@@ -325,10 +328,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									<td>
 										<div class="tutor-fw-normal">
 											<div class="tutor-fs-7 tutor-mb-4">
-												<?php echo esc_html( tutor_get_formated_date( get_option( 'date_format' ), $post->post_date ) ); ?>
+												<?php echo esc_html( tutor_i18n_get_formated_date( $post->post_date, get_option( 'date_format' ) ) ); ?>
 											</div>
 											<div class="tutor-fs-8 tutor-color-muted">
-												<?php echo esc_html( tutor_get_formated_date( get_option( 'time_format' ), $post->post_date ) ); ?>
+												<?php echo esc_html( tutor_i18n_get_formated_date( $post->post_date, get_option( 'time_format' ) ) ); ?>
 											</div>
 										</div>
 									</td>

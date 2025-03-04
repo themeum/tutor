@@ -16,7 +16,7 @@ use Tutor\Ecommerce\CheckoutController;
 use Tutor\Ecommerce\CartController;
 use TUTOR\Input;
 
-$user_id = get_current_user_id();
+$user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
 
 $tutor_toc_page_link     = tutor_utils()->get_toc_page_link();
 $tutor_privacy_page_link = tutor_utils()->get_privacy_page_link();

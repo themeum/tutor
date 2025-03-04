@@ -1,6 +1,6 @@
 import { type SerializedStyles, css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { rgba } from 'polished';
+import rgba from 'polished/lib/color/rgba';
 
 import type { ButtonSize } from '@TutorShared/atoms/Button';
 import Button from '@TutorShared/atoms/Button';
@@ -215,7 +215,7 @@ const styles = {
   imagePreview: css`
     height: 100%;
     width: 100%;
-    object-fit: cover;
+    object-fit: contain;
   `,
   hoverPreview: css`
     display: flex;

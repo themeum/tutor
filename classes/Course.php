@@ -60,7 +60,9 @@ class Course extends Tutor_Base {
 	 */
 	const SELLING_OPTION_ONE_TIME     = 'one_time';
 	const SELLING_OPTION_SUBSCRIPTION = 'subscription';
-	const SELLING_OPTION_BOTH         = 'both';
+	const SELLING_OPTION_BOTH         = 'both'; // onetime and subscription.
+	const SELLING_OPTION_MEMBERSHIP   = 'membership';
+	const SELLING_OPTION_ALL          = 'all';
 
 
 	/**
@@ -244,12 +246,8 @@ class Course extends Tutor_Base {
 		 *
 		 * @since 3.0.0
 		 */
-		add_action( 'admin_init', array( $this, 'load_course_builder' ) );
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
-		add_action( 'tutor_course_builder_footer', array( $this, 'load_wp_link_modal' ) );
-		add_action( 'admin_menu', array( $this, 'load_media_scripts' ) );
-		add_action( 'init', array( $this, 'load_media_scripts' ) );
 
 		/**
 		 * Ajax list
@@ -268,7 +266,24 @@ class Course extends Tutor_Base {
 		add_filter( 'tutor_user_list_args', array( $this, 'user_list_args_for_instructor' ) );
 
 		add_filter( 'template_include', array( $this, 'handle_password_protected' ) );
+		add_action( 'login_form_postpass', array( $this, 'handle_password_submit' ) );
+	}
 
+	/**
+	 * Handle password protected course and bundle form submission.
+	 *
+	 * @since 3.2.1
+	 *
+	 * @return void
+	 */
+	public function handle_password_submit() {
+		if ( Input::has( 'post_password' ) && Input::has( 'course_id' ) ) {
+			$course_id         = Input::post( 'course_id', 0, Input::TYPE_NUMERIC );
+			$password_required = post_password_required( $course_id );
+			if ( $password_required ) {
+				set_transient( 'tutor_post_password_error', __( 'Invalid password', 'tutor' ) );
+			}
+		}
 	}
 
 	/**
@@ -342,6 +357,8 @@ class Course extends Tutor_Base {
 			self::SELLING_OPTION_ONE_TIME,
 			self::SELLING_OPTION_SUBSCRIPTION,
 			self::SELLING_OPTION_BOTH,
+			self::SELLING_OPTION_MEMBERSHIP,
+			self::SELLING_OPTION_ALL,
 		);
 	}
 
@@ -376,6 +393,35 @@ class Course extends Tutor_Base {
 				$errors['video_source'] = __( 'Video source is required', 'tutor' );
 			} elseif ( ! $this->is_valid_video_source_type( $video_source ) ) {
 					$errors['video_source'] = __( 'Invalid video source', 'tutor' );
+			}
+		}
+	}
+
+	/**
+	 * Validate scheduled courses
+	 *
+	 * @since 3.3.0
+	 *
+	 * @param array $params array of params.
+	 * @param array $errors array of errors.
+	 *
+	 * @return void
+	 */
+	public function validate_scheduled_course( $params, &$errors ) {
+		if ( isset( $params['post_status'] ) && isset( $params['course_settings'] ) ) {
+			if ( 'future' !== $params['post_status'] ) {
+				return;
+			}
+
+			$course_settings = $params['course_settings'];
+
+			if ( isset( $course_settings['enrollment_starts_at'] ) && ! empty( $course_settings['enrollment_starts_at'] ) ) {
+				$enrollment_start = strtotime( $course_settings['enrollment_starts_at'] );
+				$scheduled_date   = strtotime( $params['post_date_gmt'] );
+
+				if ( $enrollment_start < $scheduled_date ) {
+					$errors['scheduled_course'] = __( 'The enrollment start date cannot be earlier than the course start date', 'tutor' );
+				}
 			}
 		}
 	}
@@ -675,6 +721,8 @@ class Course extends Tutor_Base {
 		update_post_meta( $post_id, '_tutor_enable_qa', $params['enable_qna'] ?? 'yes' );
 		update_post_meta( $post_id, '_tutor_is_public_course', $params['is_public_course'] ?? 'no' );
 		update_post_meta( $post_id, '_tutor_course_level', $params['course_level'] );
+
+		do_action( 'tutor_after_prepare_update_post_meta', $post_id, $params );
 	}
 
 	/**
@@ -781,6 +829,8 @@ class Course extends Tutor_Base {
 
 		$link = add_query_arg( array( 'course_id' => $course_id ), $link );
 
+		do_action( 'tutor_draft_course_created', $course_id );
+
 		$this->json_response(
 			__( 'Draft course created', 'tutor' ),
 			$link,
@@ -819,7 +869,7 @@ class Course extends Tutor_Base {
 
 		$exclude = Input::post( 'exclude', array(), Input::TYPE_ARRAY );
 		if ( count( $exclude ) ) {
-			$exclude         = array_filter(
+			$exclude              = array_filter(
 				$exclude,
 				function ( $id ) {
 					return is_numeric( $id );
@@ -845,7 +895,7 @@ class Course extends Tutor_Base {
 		}
 
 		$this->json_response(
-			__( 'Course list retrieved successfully!', 'tutor-pro' ),
+			__( 'Course list retrieved successfully!', 'tutor' ),
 			$response
 		);
 	}
@@ -984,6 +1034,10 @@ class Course extends Tutor_Base {
 		$this->prepare_course_cats_tags( $params, $errors );
 
 		$this->prepare_course_settings( $params );
+
+		// Validate scheduled courses.
+		$this->validate_scheduled_course( $params, $errors );
+
 		$this->setup_course_price( $params );
 
 		if ( ! empty( $errors ) ) {
@@ -1243,7 +1297,7 @@ class Course extends Tutor_Base {
 
 		$data = apply_filters( 'tutor_course_details_response', array_merge( $course, $data ) );
 
-		$this->json_response( __( 'Data retrieved successfully!' ), $data );
+		$this->json_response( __( 'Data retrieved successfully!', 'tutor' ), $data );
 	}
 
 	/**
@@ -1298,6 +1352,8 @@ class Course extends Tutor_Base {
 	public function enqueue_course_builder_assets() {
 		// Fix: function print_emoji_styles is deprecated since version 6.4.0!
 		remove_action( 'wp_print_styles', 'print_emoji_styles' );
+		remove_action( 'wp_head', 'wp_admin_bar_header' );
+		add_action( 'wp_head', 'wp_enqueue_admin_bar_header_styles' );
 
 		do_action( 'tutor_course_builder_before_wp_editor_load' );
 		wp_enqueue_script( 'wp-tinymce' );
@@ -1305,8 +1361,8 @@ class Course extends Tutor_Base {
 		wp_enqueue_editor();
 
 		wp_enqueue_media();
-		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
-		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'wp-i18n', 'wp-element', 'tutor-shared' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-date', 'wp-i18n', 'wp-element', 'wp-api' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'tutor-shared' ), TUTOR_VERSION, true );
 
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
@@ -1399,21 +1455,7 @@ class Course extends Tutor_Base {
 			)
 		);
 
-		wp_localize_script( 'tutor-course-builder', '_tutorobject', $data );
-		wp_set_script_translations( 'tutor-course-builder', 'tutor', tutor()->path . 'languages/' );
-	}
-
-	/**
-	 * Load wp editor modal
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public function load_wp_link_modal() {
-		if ( is_admin() ) {
-			include_once tutor()->path . 'views/modal/wp-editor-link.php';
-		}
+		add_filter( 'tutor_localize_data', fn() => $data );
 	}
 
 	/**
@@ -1424,10 +1466,20 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function load_course_builder_view() {
+		/**
+		 * Hide admin menu and footer.
+		 *
+		 * @since 3.3.0
+		 */
+		echo '<style>
+			#adminmenumain, #wpfooter, .notice, #tutor-page-wrap { display: none !important; }
+			#wpcontent { margin: 0 !important; padding: 0 !important; }
+			#wpbody-content { padding-bottom: 0px !important; float: none; }
+		</style>';
+
 		do_action( 'tutor_before_course_builder_load' );
 		include_once tutor()->path . 'views/pages/course-builder.php';
 		do_action( 'tutor_after_course_builder_load' );
-		exit( 0 );
 	}
 
 	/**
@@ -1556,6 +1608,7 @@ class Course extends Tutor_Base {
 	 *
 	 * @since 1.0.0
 	 * @param mixed $content content.
+	 *
 	 * @return mixed
 	 */
 	public function restrict_new_student_entry( $content ) {
@@ -1792,7 +1845,7 @@ class Course extends Tutor_Base {
 		if ( empty( $topic_title ) ) {
 			$errors['topic_title'] = __( 'Topic title is required!', 'tutor' );
 			$this->json_response(
-				__( 'Invalid inputs' ),
+				__( 'Invalid inputs', 'tutor' ),
 				$errors,
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
@@ -2812,6 +2865,10 @@ class Course extends Tutor_Base {
 		$user_id   = get_current_user_id();
 
 		if ( $course_id ) {
+			$password_protected = post_password_required( $course_id );
+			if ( $password_protected ) {
+				wp_send_json_error( __( 'This course is password protected', 'tutor' ) );
+			}
 			$enroll = tutor_utils()->do_enroll( $course_id, 0, $user_id );
 			if ( $enroll ) {
 				wp_send_json_success( __( 'Enrollment successfully done!', 'tutor' ) );
@@ -2882,45 +2939,6 @@ class Course extends Tutor_Base {
 		$product_obj->set_sold_individually( true );
 
 		return $product_obj->save();
-	}
-
-	/**
-	 * Load media scripts
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return void
-	 */
-	public static function load_media_scripts() {
-		// Add style on the head tag.
-		$screen_reader_text_style = '
-			.screen-reader-text
-			{
-				position: absolute;
-				top: -10000em;
-				width: 1px;
-				height: 1px;
-				margin: -1px;
-				padding: 0;
-				overflow: hidden;
-				clip: rect(0,0,0,0);
-				border: 0;
-			}
-		';
-
-		wp_add_inline_style(
-			'media-views',
-			$screen_reader_text_style
-		);
-
-		add_action(
-			'wp_print_footer_scripts',
-			function () {
-				if ( function_exists( 'wp_print_media_templates' ) ) {
-					wp_print_media_templates();
-				}
-			}
-		);
 	}
 
 	/**

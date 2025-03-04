@@ -5,19 +5,27 @@ import { useEffect, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
+import ImageInput from '@TutorShared/atoms/ImageInput';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import ProBadge from '@TutorShared/atoms/ProBadge';
+import FormCheckbox from '@TutorShared/components/fields/FormCheckbox';
 import FormDateInput from '@TutorShared/components/fields/FormDateInput';
+import FormImageInput from '@TutorShared/components/fields/FormImageInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
+import type { CourseFormData } from '@CourseBuilderServices/course';
+import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
+
+const isTutorPro = !!tutorConfig.tutor_pro_url;
 
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
@@ -26,12 +34,19 @@ const ScheduleOptions = () => {
   const scheduleTime = useWatch({ name: 'schedule_time' }) ?? format(addHours(new Date(), 1), DateFormats.hoursMinutes);
   const isScheduleEnabled = useWatch({ name: 'isScheduleEnabled' }) ?? false;
   const showForm = useWatch({ name: 'showScheduleForm' }) ?? false;
+  const isComingSoonEnabled = useWatch({ name: 'enable_coming_soon' }) ?? false;
+  const isEnrollmentPeriodEnabled = useWatch({ name: 'course_enrollment_period' }) ?? false;
+  const enrollmentStartDate = useWatch({ name: 'enrollment_starts_date' }) ?? '';
+  const enrollmentStartTime = useWatch({ name: 'enrollment_starts_time' }) ?? '';
+  const comingSoonThumbnail = useWatch({ name: 'coming_soon_thumbnail' });
 
   const [previousPostDate, setPreviousPostDate] = useState(
     scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
       ? format(new Date(`${scheduleDate} ${scheduleTime}`), DateFormats.yearMonthDayHourMinuteSecond24H)
       : '',
   );
+
+  const enrollmentStartDateTime = new Date(`${enrollmentStartDate} ${enrollmentStartTime}`);
 
   const handleDelete = () => {
     form.setValue('schedule_date', '', { shouldDirty: true });
@@ -41,6 +56,7 @@ const ScheduleOptions = () => {
 
   const handleCancel = () => {
     const isPreviousDateInFuture = isBefore(new Date(postDate), new Date());
+
     form.setValue(
       'schedule_date',
       isPreviousDateInFuture && previousPostDate ? format(parseISO(previousPostDate), DateFormats.yearMonthDay) : '',
@@ -69,11 +85,11 @@ const ScheduleOptions = () => {
     );
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (isScheduleEnabled && showForm) {
       form.setFocus('schedule_date');
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [showForm, isScheduleEnabled]);
 
   return (
@@ -111,7 +127,18 @@ const ScheduleOptions = () => {
                     }
                     return true;
                   },
+                  isBeforeEnrollmentStartDate: (value) => {
+                    if (
+                      isEnrollmentPeriodEnabled &&
+                      isBefore(enrollmentStartDateTime, new Date(`${value} ${scheduleTime}`))
+                    ) {
+                      return __('Schedule date should be before enrollment start date.', 'tutor');
+                    }
+
+                    return true;
+                  },
                 },
+                deps: ['enrollment_starts_date', 'enrollment_starts_time', 'schedule_time'],
               }}
               render={(controllerProps) => (
                 <FormDateInput
@@ -134,18 +161,80 @@ const ScheduleOptions = () => {
                 validate: {
                   invalidTimeRule: invalidTimeRule,
                   futureDate: (value) => {
-                    if (isBefore(new Date(`${form.watch('schedule_date')} ${value}`), new Date())) {
+                    if (isBefore(new Date(`${scheduleDate} ${value}`), new Date())) {
                       return __('Schedule time should be in the future.', 'tutor');
                     }
                     return true;
                   },
+                  isBeforeEnrollmentStartDate: (value) => {
+                    if (
+                      isEnrollmentPeriodEnabled &&
+                      isBefore(enrollmentStartDateTime, new Date(`${scheduleDate} ${value}`))
+                    ) {
+                      return __('Schedule time should be before enrollment start date.', 'tutor');
+                    }
+
+                    return true;
+                  },
                 },
+                deps: ['schedule_date', 'enrollment_starts_date', 'enrollment_starts_time'],
               }}
               render={(controllerProps) => (
                 <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
               )}
             />
           </div>
+
+          <Controller
+            name="enable_coming_soon"
+            control={form.control}
+            render={(controllerProps) => (
+              <FormCheckbox
+                {...controllerProps}
+                label={
+                  <>
+                    {__('Show coming soon in course list & details page', 'tutor')}
+                    <Show when={!isTutorPro}>
+                      <div data-pro-badge>
+                        <ProBadge content={__('Pro', 'tutor')} size="small" />
+                      </div>
+                    </Show>
+                  </>
+                }
+                disabled={!isTutorPro}
+                labelCss={styles.checkboxStartAlign}
+              />
+            )}
+          />
+
+          <Show when={isTutorPro}>
+            <Show when={isComingSoonEnabled}>
+              <Controller
+                name="coming_soon_thumbnail"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormImageInput
+                    {...controllerProps}
+                    label={__('Coming Soon Thumbnail', 'tutor')}
+                    buttonText={__('Upload Thumbnail', 'tutor')}
+                    infoText={sprintf(
+                      __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
+                      tutorConfig.max_upload_size,
+                    )}
+                  />
+                )}
+              />
+
+              <Controller
+                name="enable_curriculum_preview"
+                control={form.control}
+                render={(controllerProps) => (
+                  <FormCheckbox {...controllerProps} label={__('Preview Course Curriculum', 'tutor')} />
+                )}
+              />
+            </Show>
+          </Show>
+
           <div css={styles.scheduleButtonsWrapper}>
             <Button
               variant="tertiary"
@@ -173,7 +262,9 @@ const ScheduleOptions = () => {
       {isScheduleEnabled && !showForm && (
         <div css={styles.scheduleInfoWrapper}>
           <div css={styles.scheduledFor}>
-            <div css={styles.scheduleLabel}>{__('Scheduled for', 'tutor')}</div>
+            <div css={styles.scheduleLabel}>
+              {!isComingSoonEnabled ? __('Scheduled for', 'tutor') : __('Scheduled with coming soon', 'tutor')}
+            </div>
             <div css={styles.scheduleInfoButtons}>
               <button type="button" css={styleUtils.actionButton} onClick={handleDelete}>
                 <SVGIcon name="delete" width={24} height={24} />
@@ -195,6 +286,10 @@ const ScheduleOptions = () => {
             <div css={styles.scheduleInfo}>
               {sprintf(__('%s at %s', 'tutor'), format(parseISO(scheduleDate), DateFormats.monthDayYear), scheduleTime)}
             </div>
+
+            <Show when={comingSoonThumbnail?.url}>
+              <ImageInput value={comingSoonThumbnail} uploadHandler={noop} clearHandler={noop} disabled />
+            </Show>
           </Show>
         </div>
       )}
@@ -213,6 +308,8 @@ const styles = {
     background-color: ${colorTokens.bg.white};
   `,
   formWrapper: css`
+    ${styleUtils.display.flex('column')};
+    gap: ${spacing[8]};
     margin-top: ${spacing[16]};
   `,
   scheduleButtonsWrapper: css`
@@ -254,5 +351,18 @@ const styles = {
     padding: ${spacing[8]};
     border-radius: ${borderRadius[4]};
     text-align: center;
+  `,
+  checkboxStartAlign: css`
+    span:first-of-type {
+      gap: ${spacing[4]};
+      align-self: flex-start;
+      margin-top: ${spacing[4]};
+    }
+
+    [data-pro-badge] {
+      display: inline-flex;
+      vertical-align: middle;
+      padding-left: ${spacing[4]};
+    }
   `,
 };

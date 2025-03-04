@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { Outlet } from 'react-router-dom';
 
-import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@TutorShared/config/styles';
 import Header from '@CourseBuilderComponents/layouts/header/Header';
 import { CourseNavigatorProvider } from '@CourseBuilderContexts/CourseNavigatorContext';
 import {
@@ -13,11 +12,15 @@ import {
   useCourseDetailsQuery,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
+import { Breakpoint, colorTokens, containerMaxWidth, headerHeight, spacing } from '@TutorShared/config/styles';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
+import { findSlotFields } from '@TutorShared/utils/util';
 import Notebook from './Notebook';
 
 const Layout = () => {
+  const { fields } = useCourseBuilderSlot();
   const courseId = getCourseId();
 
   const form = useFormWithGlobalError<CourseFormData>({
@@ -31,7 +34,10 @@ const Layout = () => {
   useEffect(() => {
     if (courseDetailsQuery.data) {
       const dirtyFields = Object.keys(form.formState.dirtyFields);
-      const convertedCourseData = convertCourseDataToFormData(courseDetailsQuery.data);
+      const convertedCourseData = convertCourseDataToFormData(
+        courseDetailsQuery.data,
+        findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
+      );
       const formValues = form.getValues();
 
       const updatedCourseData = Object.entries(convertedCourseData).reduce<Partial<CourseFormData>>(

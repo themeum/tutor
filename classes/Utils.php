@@ -1309,11 +1309,11 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 *
-	 * @since 3.0.0
+	 * @since 3.0.0  $is_complete parameter added to check with completed status
+	 *               Default value set true for backward compatibility. It set
+	 *               false then it will just check record.
 	 *
-	 * $is_complete parameter added to check with completed status
-	 * Default value set true for backward compatibility. It set
-	 * false then it will just check record.
+	 * @since 3.3.0  param $is_complete added to cache key.
 	 *
 	 * @param int  $course_id course id.
 	 * @param int  $user_id user id.
@@ -1325,7 +1325,7 @@ class Utils {
 		global $wpdb;
 		$course_id = $this->get_post_id( $course_id );
 		$user_id   = $this->get_user_id( $user_id );
-		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}";
+		$cache_key = "tutor_is_enrolled_{$course_id}_{$user_id}_{$is_complete}";
 
 		do_action( 'tutor_is_enrolled_before', $course_id, $user_id );
 
@@ -2581,20 +2581,22 @@ class Utils {
 	 *
 	 * @since 1.0.0
 	 * @since 2.6.0 Return enrolled id
+	 * @since 3.3.0 Added $fire_hook parameter.
 	 *
-	 * @param int $course_id course id.
-	 * @param int $order_id order id.
-	 * @param int $user_id user id.
+	 * @param int  $course_id course id.
+	 * @param int  $order_id order id.
+	 * @param int  $user_id user id.
+	 * @param bool $fire_hook fire hook.
 	 *
 	 * @return int enrolled id
 	 */
-	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0 ) {
+	public function do_enroll( $course_id = 0, $order_id = 0, $user_id = 0, $fire_hook = true ) {
 		$enrolled_id = 0;
 		if ( ! $course_id ) {
 			return $enrolled_id;
 		}
 
-		do_action( 'tutor_before_enroll', $course_id );
+		$fire_hook ? do_action( 'tutor_before_enroll', $course_id ) : null;
 		$user_id = $this->get_user_id( $user_id );
 		$title   = __( 'Course Enrolled', 'tutor' ) . ' &ndash; ' . gmdate( get_option( 'date_format' ) ) . ' @ ' . gmdate( get_option( 'time_format' ) );
 
@@ -2628,7 +2630,7 @@ class Utils {
 		if ( $is_enrolled ) {
 
 			// Run this hook for both of pending and completed enrollment.
-			do_action( 'tutor_after_enroll', $course_id, $is_enrolled );
+			$fire_hook ? do_action( 'tutor_after_enroll', $course_id, $is_enrolled ) : null;
 
 			// Mark Current User as Students with user meta data.
 			update_user_meta( $user_id, '_is_tutor_student', tutor_time() );
@@ -2654,7 +2656,7 @@ class Utils {
 			$enrolled_id = $is_enrolled;
 
 			// Run this hook for completed enrollment regardless of payment provider and free/paid mode.
-			if ( 'completed' === $enroll_data['post_status'] ) {
+			if ( $fire_hook && 'completed' === $enroll_data['post_status'] ) {
 				do_action( 'tutor_after_enrolled', $course_id, $user_id, $enrolled_id );
 			}
 		}
@@ -8347,7 +8349,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
-		return $this->has_user_role( array( 'administrator', 'editor' ) ) || $this->is_instructor_of_this_course( $user_id, $course_id );
+		return current_user_can( 'edit_post', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
 	}
 
 
@@ -8819,7 +8821,7 @@ class Utils {
 	public function tutor_empty_state( string $title = 'No data yet!' ) {
 		?>
 		<div class="tutor-empty-state td-empty-state tutor-p-32 tutor-text-center">
-			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php esc_attr_e( $title ); ?>" width="85%" />
+			<img src="<?php echo esc_url( tutor()->url . 'assets/images/emptystate.svg' ); ?>" alt="<?php echo esc_attr( $title ); ?>" width="85%" />
 			<div class="tutor-fs-6 tutor-color-secondary tutor-text-center">
 				<?php echo esc_html( $title, 'tutor' ); ?>
 			</div>
@@ -8949,12 +8951,12 @@ class Utils {
 	 */
 	public function report_frequencies() {
 		$frequencies = array(
-			'alltime'     => __( 'All Time', 'tutor-pro' ),
-			'today'       => __( 'Today', 'tutor-pro' ),
-			'last30days'  => __( 'Last 30 Days', 'tutor-pro' ),
-			'last90days'  => __( 'Last 90 Days', 'tutor-pro' ),
-			'last365days' => __( 'Last 365 Days', 'tutor-pro' ),
-			'custom'      => __( 'Custom', 'tutor-pro' ),
+			'alltime'     => __( 'All Time', 'tutor' ),
+			'today'       => __( 'Today', 'tutor' ),
+			'last30days'  => __( 'Last 30 Days', 'tutor' ),
+			'last90days'  => __( 'Last 90 Days', 'tutor' ),
+			'last365days' => __( 'Last 365 Days', 'tutor' ),
+			'custom'      => __( 'Custom', 'tutor' ),
 		);
 		return $frequencies;
 	}
@@ -10395,7 +10397,8 @@ class Utils {
 		if ( false === $next_timestamp ) {
 			return null;
 		}
-
+		
+		/* translators: %s: timestamp */
 		return sprintf( __( '%s left', 'tutor' ), human_time_diff( $next_timestamp ) );
 	}
 

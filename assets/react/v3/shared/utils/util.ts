@@ -1,21 +1,7 @@
 import collection from '@TutorShared/config/icon-list';
 import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import { __ } from '@wordpress/i18n';
-import {
-  addMinutes,
-  differenceInDays,
-  endOfMonth,
-  endOfYear,
-  format,
-  isSameDay,
-  isToday,
-  isYesterday,
-  startOfMonth,
-  startOfYear,
-  subMonths,
-  subYears,
-} from 'date-fns';
-import type { DateRange } from 'react-day-picker';
+import { addMinutes, format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
 import { tutorConfig } from '@TutorShared/config/config';
@@ -23,6 +9,7 @@ import { type Addons, DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
   type IconCollection,
+  type InjectedField,
   type PaginatedParams,
   type WPPostStatus,
   isDefined,
@@ -171,50 +158,6 @@ export const mapInBetween = (
   expectedMax: number,
 ) => {
   return ((value - originalMin) * (expectedMax - expectedMin)) / (originalMax - originalMin) + expectedMin;
-};
-
-export const getActiveDateRange = (range: DateRange | undefined) => {
-  if (!range || !range.from) {
-    return;
-  }
-
-  if (isToday(range.from) && !range.to) {
-    return 'today';
-  }
-
-  if (isYesterday(range.from) && !range.to) {
-    return 'yesterday';
-  }
-
-  if (range.to) {
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 6) {
-      return 'last_seven_days';
-    }
-
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 29) {
-      return 'last_thirty_days';
-    }
-
-    if (isToday(range.to) && differenceInDays(range.to, range.from) === 89) {
-      return 'last_ninety_days';
-    }
-
-    if (
-      isSameDay(startOfMonth(subMonths(new Date(), 1)), range.from) &&
-      isSameDay(endOfMonth(subMonths(new Date(), 1)), range.to)
-    ) {
-      return 'last_month';
-    }
-
-    if (
-      isSameDay(startOfYear(subYears(new Date(), 1)), range.from) &&
-      isSameDay(endOfYear(subYears(new Date(), 1)), range.to)
-    ) {
-      return 'last_year';
-    }
-
-    return;
-  }
 };
 
 export const extractIdOnly = <T extends { id: number }>(data: T[]) => {
@@ -430,4 +373,23 @@ export const convertToSlug = (value: string): string => {
     .replace(/\s+/g, '-') // Replace spaces with dashes
     .replace(/-+/g, '-') // Replace multiple dashes with a single one
     .replace(/^-+|-+$/g, ''); // Trim leading and trailing dashes
+};
+
+export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedField[]>; slotKey?: string }[]) => {
+  const slotFields: string[] = [];
+  fieldArgs.forEach((arg) => {
+    if (arg.slotKey) {
+      arg.fields[arg.slotKey].forEach((i) => {
+        slotFields.push(i.name);
+      });
+    } else {
+      Object.keys(arg.fields).forEach((i) => {
+        arg.fields[i].forEach((j) => {
+          slotFields.push(j.name);
+        });
+      });
+    }
+  });
+
+  return slotFields;
 };

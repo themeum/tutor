@@ -17,6 +17,8 @@ interface WPEditorProps {
   readonly?: boolean;
   min_height?: number;
   max_height?: number;
+  toolbar1?: string;
+  toolbar2?: string;
 }
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -35,14 +37,19 @@ function editorConfig(
   min_height?: number,
   max_height?: number,
   isAboveMobile?: boolean,
+  propsToolbar1?: string,
+  propsToolbar2?: string,
 ) {
-  let toolbar1 = isMinimal
-    ? `bold italic underline | image | ${isTutorPro ? 'codesample' : ''}`
-    : `formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | wp_more ${
-        isTutorPro ? ' codesample' : ''
-      } | wp_adv`;
+  let toolbar1 =
+    propsToolbar1 ||
+    (isMinimal
+      ? `bold italic underline | image | ${isTutorPro ? 'codesample' : ''}`
+      : `formatselect bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | wp_more ${
+          isTutorPro ? ' codesample' : ''
+        } | wp_adv`);
 
   const toolbar2 =
+    propsToolbar2 ||
     'strikethrough hr | forecolor pastetext removeformat | charmap | outdent indent | undo redo | wp_help | fullscreen | tutor_button | undoRedoDropdown';
 
   toolbar1 = isAboveMobile ? toolbar1 : toolbar1.replaceAll(' | ', ' ');
@@ -63,8 +70,7 @@ function editorConfig(
       indent: false,
       relative_urls: 0,
       remove_script_host: 0,
-      plugins:
-        `charmap,colorpicker,hr,lists,image,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview${isTutorPro ? ',codesample' : ''}`,
+      plugins: `charmap,colorpicker,hr,lists,image,media,paste,tabfocus,textcolor,fullscreen,wordpress,wpautoresize,wpeditimage,wpemoji,wpgallery,wplink,wpdialogs,wptextpattern,wpview${isTutorPro ? ',codesample' : ''}`,
       skin: 'light',
       skin_url: `${tutorConfig.site_url}/wp-content/plugins/tutor/assets/lib/tinymce/light`,
       submit_patch: true,
@@ -72,7 +78,7 @@ function editorConfig(
       theme: 'modern',
       toolbar: !readOnly,
       toolbar1: toolbar1,
-      toolbar2: toolbar2,
+      toolbar2: isMinimal ? false : toolbar2,
       content_css: `${tutorConfig.site_url}/wp-includes/css/dashicons.min.css,${tutorConfig.site_url}/wp-includes/js/tinymce/skins/wordpress/wp-content.css,${tutorConfig.site_url}/wp-content/plugins/tutor/assets/lib/tinymce/light/content.min.css`,
 
       statusbar: !readOnly,
@@ -215,6 +221,8 @@ const WPEditor = ({
   readonly = false,
   min_height,
   max_height,
+  toolbar1,
+  toolbar2,
 }: WPEditorProps) => {
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const { current: editorId } = useRef(nanoid());
@@ -262,6 +270,8 @@ const WPEditor = ({
           min_height,
           max_height,
           CURRENT_VIEWPORT.isAboveMobile,
+          toolbar1,
+          toolbar2,
         ),
       );
 
@@ -329,6 +339,7 @@ const styles = {
     .wp-switch-editor {
       border-top-left-radius: ${borderRadius[4]};
       border-top-right-radius: ${borderRadius[4]};
+      height: auto;
     }
 
     .mce-toolbar-grp,

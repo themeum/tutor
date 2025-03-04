@@ -111,7 +111,7 @@ class PluginInstaller {
 			);
 		}
 
-		$message = $response->error ?? __( 'An error occurred while fetching the plugin download link.', 'tutor-pro' );
+		$message = $response->error ?? __( 'An error occurred while fetching the plugin download link.', 'tutor' );
 
 		return array(
 			'success' => false,

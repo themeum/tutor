@@ -132,11 +132,13 @@ document.addEventListener('DOMContentLoaded', () => {
         /**
          * Update checkout data.
          * 
-         * @since 3.0.0
+         * @since 3.3.0
          * 
          * @param {string} couponCode coupon code.
+         * @param {string} billingCountry Billing country.
+         * @param {string} billingState Billing state.
          */
-        async function updateCheckoutData(couponCode) {
+        async function updateCheckoutData(couponCode, billingCountry = null, billingState = null) {
             const url = new URL(window.location.href);
             const plan = url.searchParams.get('plan');
 
@@ -144,6 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
             formData.set('action', 'tutor_get_checkout_html');
             formData.set('coupon_code', couponCode);
+            if (billingCountry) {
+                formData.set('billing_country', billingCountry);
+            }
+            
+            if (billingState) {
+                formData.set('billing_state', billingState);
+            }
 
             if (plan) {
                 formData.set('plan', plan);
@@ -189,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown_billing_country?.addEventListener('change', async (e) => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = e.target.value;
-            const coupon_code = input_coupon_code?.value;
+            const coupon_code = input_coupon_code?.value? input_coupon_code.value : '';
 
             if (country) {
                 toggleSpinner(e.target, 'show');
@@ -198,7 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_country', country);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
 
                 toggleSpinner(e.target, 'hide');
             }
@@ -208,7 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = dropdown_billing_country.value;
             const state = e.target.value;
-            const coupon_code = input_coupon_code?.value;
+            const coupon_code = input_coupon_code?.value? input_coupon_code.value : '';
 
             if (state) {
                 toggleSpinner(e.target, 'show');
@@ -218,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_state', state);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
 
                 toggleSpinner(e.target, 'hide');
             }

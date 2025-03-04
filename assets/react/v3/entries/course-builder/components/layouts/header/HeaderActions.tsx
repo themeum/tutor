@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { __ } from '@wordpress/i18n';
 import { format, isBefore } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -13,10 +14,11 @@ import { useModal } from '@TutorShared/components/modals/Modal';
 import SuccessModal from '@TutorShared/components/modals/SuccessModal';
 
 import {
-  type CourseFormData,
   convertCourseDataToPayload,
   useCreateCourseMutation,
   useUpdateCourseMutation,
+  type CourseDetailsResponse,
+  type CourseFormData,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import config, { tutorConfig } from '@TutorShared/config/config';
@@ -24,15 +26,18 @@ import { CURRENT_VIEWPORT, DateFormats, TutorRoles } from '@TutorShared/config/c
 import { spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type WPPostStatus } from '@TutorShared/utils/types';
-import { convertToGMT, determinePostStatus, noop } from '@TutorShared/utils/util';
+import { isDefined, type WPPostStatus } from '@TutorShared/utils/types';
+import { convertToGMT, determinePostStatus, findSlotFields, noop } from '@TutorShared/utils/util';
 
+import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import reviewSubmitted2x from '@SharedImages/review-submitted-2x.webp';
 import reviewSubmitted from '@SharedImages/review-submitted.webp';
 
 const courseId = getCourseId();
 
 const HeaderActions = () => {
+  const { fields } = useCourseBuilderSlot();
   const form = useFormContext<CourseFormData>();
   const navigate = useNavigate();
   const { showModal } = useModal();
@@ -45,9 +50,11 @@ const HeaderActions = () => {
 
   const [localPostStatus, setLocalPostStatus] = useState<WPPostStatus>(postStatus);
 
+  const queryClient = useQueryClient();
   const createCourseMutation = useCreateCourseMutation();
   const updateCourseMutation = useUpdateCourseMutation();
 
+  const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const isPostDateDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
@@ -65,7 +72,7 @@ const HeaderActions = () => {
     };
 
     const navigateToBasicsWithError = () => {
-      navigate('/basics', { state: { isError: true } });
+      navigate(CourseBuilderRouteConfigs.CourseBasics.buildLink(), { state: { isError: true } });
     };
 
     if (
@@ -95,7 +102,8 @@ const HeaderActions = () => {
 
       if (
         (isTutorPro && tutorConfig.settings?.monetize_by === 'wc' && data.course_product_id !== '-1') ||
-        tutorConfig.settings?.monetize_by === 'tutor'
+        (tutorConfig.settings?.monetize_by === 'tutor' &&
+          !['membership', 'subscription'].includes(data.course_selling_option))
       ) {
         if (data.course_price === '' || Number(data.course_price) <= 0) {
           navigateToBasicsWithError();
@@ -111,7 +119,10 @@ const HeaderActions = () => {
       }
     }
 
-    const payload = convertCourseDataToPayload(data);
+    const payload = convertCourseDataToPayload(
+      data,
+      findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
+    );
     setLocalPostStatus(postStatus);
 
     if (courseId) {
@@ -130,6 +141,10 @@ const HeaderActions = () => {
         ...(data.isScheduleEnabled && {
           edit_date: true,
         }),
+        ...(['subscription', 'membership'].includes(data.course_selling_option) &&
+          (!isDefined(courseDetails.course_pricing.price) || Number(courseDetails.course_pricing.price) === 0) && {
+            course_price: 1,
+          }),
       });
 
       if (!response.data) {

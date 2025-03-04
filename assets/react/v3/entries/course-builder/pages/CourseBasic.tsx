@@ -11,11 +11,12 @@ import FormEditableAlias from '@TutorShared/components/fields/FormEditableAlias'
 import FormInput from '@TutorShared/components/fields/FormInput';
 import FormWPEditor from '@TutorShared/components/fields/FormWPEditor';
 
+import CourseBuilderInjectionSlot from '@CourseBuilderComponents/CourseBuilderSlot';
+import { useCourseBuilderSlot } from '@CourseBuilderContexts/CourseBuilderSlotContext';
 import {
   type CourseDetailsResponse,
   type CourseFormData,
   convertCourseDataToPayload,
-  useUnlinkPageBuilder,
   useUpdateCourseMutation,
 } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
@@ -24,21 +25,23 @@ import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, headerHeight, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { useUnlinkPageBuilderMutation } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { determinePostStatus, convertToSlug } from '@TutorShared/utils/util';
+import { convertToSlug, determinePostStatus, findSlotFields } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
 
 const courseId = getCourseId();
 let hasAliasChanged = false;
 
 const CourseBasic = () => {
+  const { fields } = useCourseBuilderSlot();
   const form = useFormContext<CourseFormData>();
   const queryClient = useQueryClient();
   const isCourseDetailsFetching = useIsFetching({
     queryKey: ['CourseDetails', courseId],
   });
   const updateCourseMutation = useUpdateCourseMutation();
-  const unlinkPageBuilder = useUnlinkPageBuilder();
+  const unlinkPageBuilder = useUnlinkPageBuilderMutation();
 
   const [isWpEditorFullScreen, setIsWpEditorFullScreen] = useState(false);
 
@@ -111,8 +114,10 @@ const CourseBasic = () => {
                 editors={courseDetails?.editors}
                 onCustomEditorButtonClick={() => {
                   return form.handleSubmit((data) => {
-                    const payload = convertCourseDataToPayload(data);
-
+                    const payload = convertCourseDataToPayload(
+                      data,
+                      findSlotFields({ fields: fields.Basic }, { fields: fields.Additional }),
+                    );
                     return updateCourseMutation.mutateAsync({
                       course_id: courseId,
                       ...payload,
@@ -123,11 +128,20 @@ const CourseBasic = () => {
                     });
                   })();
                 }}
-                onBackToWPEditorClick={(builder: string) => {
-                  return unlinkPageBuilder.mutateAsync({
-                    courseId: courseId,
-                    builder: builder,
-                  });
+                onBackToWPEditorClick={async (builder: string) => {
+                  return unlinkPageBuilder
+                    .mutateAsync({
+                      courseId: courseId,
+                      builder: builder,
+                    })
+                    .then((response) => {
+                      form.setValue('editor_used', {
+                        name: 'classic',
+                        label: __('Classic Editor', 'tutor'),
+                        link: '',
+                      });
+                      return response;
+                    });
                 }}
                 onFullScreenChange={(isFullScreen) => {
                   setIsWpEditorFullScreen(isFullScreen);
@@ -136,7 +150,11 @@ const CourseBasic = () => {
             )}
           />
 
+          <CourseBuilderInjectionSlot section="Basic.after_description" form={form} />
+
           <CourseSettings />
+
+          <CourseBuilderInjectionSlot section="Basic.after_settings" form={form} />
         </div>
         <Show when={CURRENT_VIEWPORT.isAboveTablet}>
           <Navigator styleModifier={styles.navigator} />

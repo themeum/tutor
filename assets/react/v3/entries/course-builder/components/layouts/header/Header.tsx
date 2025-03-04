@@ -36,7 +36,7 @@ import { getCourseId } from '@CourseBuilderUtils/utils';
 import generateCourse2x from '@SharedImages/pro-placeholders/generate-course-2x.webp';
 import generateCourse from '@SharedImages/pro-placeholders/generate-course.webp';
 import LeaveWithoutSavingModal from '@TutorShared/components/modals/LeaveWithoutSavingModal';
-import { CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { CURRENT_VIEWPORT, TutorRoles, WP_ADMIN_BAR_HEIGHT } from '@TutorShared/config/constants';
 
 const courseId = getCourseId();
 
@@ -48,10 +48,12 @@ const Header = () => {
 
   const totalEnrolledStudents = (queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse)
     ?.total_enrolled_student;
-  const isFormDirty = form.formState.isDirty;
+  const isFormDirty = form.formState.dirtyFields && Object.keys(form.formState.dirtyFields).length > 0;
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
+  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
 
   const handleAiButtonClick = () => {
     if (!isTutorPro) {
@@ -103,7 +105,7 @@ const Header = () => {
   };
 
   return (
-    <div css={styles.wrapper}>
+    <div css={styles.wrapper(isAdmin || hasWpAdminAccess)}>
       <Logo />
 
       <div css={styles.container}>
@@ -148,7 +150,7 @@ const Header = () => {
 export default Header;
 
 const styles = {
-  wrapper: css`
+  wrapper: (hasAdminBar: boolean) => css`
     height: ${headerHeight}px;
     width: 100%;
     background-color: ${colorTokens.surface.navbar};
@@ -157,7 +159,7 @@ const styles = {
     grid-template-columns: 1fr ${containerMaxWidth}px 1fr;
     align-items: center;
     position: sticky;
-    top: 0;
+    top: ${hasAdminBar ? WP_ADMIN_BAR_HEIGHT : '0px'};
     z-index: ${zIndex.header};
 
     ${Breakpoint.tablet} {

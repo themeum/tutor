@@ -88,10 +88,14 @@ const styles = {
   wrapper: ({ hasChildren, size = 'regular' }: { hasChildren: boolean; size?: ProBadgeSize }) => css`
     position: relative;
 
+    svg {
+      flex-shrink: 0;
+    }
+
     ${!hasChildren &&
     css`
       height: ${badgeSizes[size].height};
-      display: flex;
+      display: inline-flex;
       border-radius: ${badgeSizes[size].borderRadius};
       align-items: center;
       gap: ${badgeSizes[size].gap};
@@ -117,7 +121,7 @@ const styles = {
 
     ${!hasChildren &&
     css`
-      display: flex;
+      display: inline-flex;
       position: static;
       transform: none;
       padding: ${spacing[2]};
