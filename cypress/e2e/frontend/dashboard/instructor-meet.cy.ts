@@ -8,7 +8,7 @@ describe('Tutor Dashboard My Courses', () => {
   });
   //   set api and save connection
   it('should upload meet integration json and save connection', () => {
-    const filePath = '/Users/ollyo/Documents/google-meet-integration.json';
+    const filePath = 'cypress/fixtures/assets/google-api.json';
     cy.get('body').then(($body) => {
       if ($body.text().includes('Drag & Drop your JSON File here')) {
         cy.get('#tutor-google-meet-credential-upload').selectFile(filePath, {

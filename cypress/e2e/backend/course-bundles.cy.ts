@@ -12,6 +12,7 @@ describe('Tutor Admin Course Bundles', () => {
       course_benefits: faker.lorem.sentences(3),
     };
   });
+
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.COURSE_BUNDLES}`);
     cy.loginAsAdmin();
