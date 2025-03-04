@@ -21,7 +21,7 @@ $sort_by = \TUTOR\Input::get( 'course_order', '' );
 !-->
 <div style="text-align: right;" class="tutor-course-filter" tutor-course-filter>
 	<form style="display: inline-block;">
-		<select class="tutor-form-select" name="course_order">
+		<select class="tutor-form-control tutor-form-select" name="course_order">
 			<option value="newest_first" <?php selected( 'newest_first', $sort_by ); ?> >
 				<?php esc_html_e( 'Release Date (newest first)', 'tutor' ); ?>
 			</option>
