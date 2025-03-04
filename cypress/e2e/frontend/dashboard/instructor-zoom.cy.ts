@@ -1,10 +1,34 @@
+import { type ZoomMeetingFormData } from '@CourseBuilderServices/course';
+import { faker } from '@faker-js/faker';
+import { Addons } from '@TutorShared/config/constants';
+import endpoints from '@TutorShared/utils/endpoints';
 import { frontendUrls } from '../../../config/page-urls';
 
 describe('Tutor Dashboard My Courses', () => {
+  // @ts-ignore
+  const zoomMeetingData: ZoomMeetingFormData = {
+    meeting_name: faker.lorem.sentence(),
+    meeting_summary: faker.lorem.sentences(3),
+    meeting_duration: String(faker.number.int({ min: 1, max: 60 })),
+    meeting_time: '08:30 PM',
+    meeting_duration_unit: 'min',
+    meeting_timezone: '(GMT+6:00) Astana, Dhaka',
+    meeting_password: '1234',
+  };
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.ZOOM}`);
     cy.loginAsInstructor();
     cy.url().should('include', frontendUrls.dashboard.ZOOM);
+
+    cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+      if (req.body.includes(endpoints.GET_COURSE_DETAILS)) {
+        req.alias = 'getCourseDetails';
+      }
+
+      if (req.body.includes(endpoints.SAVE_ZOOM_MEETING)) {
+        req.alias = 'saveZoomMeeting';
+      }
+    }).as('ajaxRequest');
   });
 
   //   set api and save connection
@@ -26,52 +50,54 @@ describe('Tutor Dashboard My Courses', () => {
       expect(interception.response?.body.success).to.equal(true);
     });
   });
+
   // create new course and zoom meeting
   it('should create new course and zoom meeting', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
-    cy.get('a#tutor-create-new-course').click();
+    cy.get('a.tutor-create-new-course.tutor-dashboard-create-course').click();
     cy.url().should('include', '/create-course');
-    cy.get('input#tutor-course-create-title').type('Zoom test course');
-    cy.get('button.create-zoom-meeting-btn').click();
-    cy.get("input[data-name='meeting_title']").type('Test zoom meeting');
+    cy.waitAfterRequest('getCourseDetails');
+    cy.getByInputName('post_title').type('Zoom test course');
+    cy.get('[data-cy=tutor-tracker]').contains('Additional').click();
 
-    cy.get("textarea[data-name='meeting_summary'").type('Test zoom meeting summary', { force: true });
+    cy.wait(500);
 
-    cy.get(
-      '.tutor-mb-12 > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
-    ).click();
-    cy.get('.dropdown-years > .dropdown-label').click();
-    cy.get('.dropdown-container.dropdown-years .dropdown-list li').contains('2025').click();
-    cy.get('.dropdown-container.dropdown-months .dropdown-label').click();
-    cy.get('.dropdown-container.dropdown-months .dropdown-list li').contains('June').click();
-    // Select the desired day
-    cy.get('.react-datepicker__day').contains('11').click();
+    cy.isAddonEnabled(Addons.TUTOR_ZOOM_INTEGRATION).then((isEnabled) => {
+      if (isEnabled) {
+        cy.get('[data-cy=create-zoom-meeting]').click().wait(500);
+        cy.get('.tutor-portal-popover').within(() => {
+          cy.getByInputName('meeting_name').type(zoomMeetingData.meeting_name);
+          cy.getByInputName('meeting_duration').type(zoomMeetingData.meeting_duration);
+          cy.getByInputName('meeting_password').type(zoomMeetingData.meeting_password);
+        });
 
-    cy.get("input[data-name='meeting_duration']").type('60');
-    cy.get('input[data-name="meeting_time"]').clear().type('08:30 PM');
-    cy.get('select[data-name="meeting_duration_unit"]').select('Minutes');
-    cy.get("div[class='tutor-col-6'] div[class='tutor-form-control tutor-form-select tutor-js-form-select']").click();
-    cy.get(
-      '.meeting-modal-form-wrap > :nth-child(4) > :nth-child(1) > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(108) > .tutor-nowrap-ellipsis',
-    ).click();
-    cy.get("select[data-name='auto_recording']").select('No Recordings');
-    cy.get("input[data-name='meeting_password']").type('1234');
-    cy.get(
-      '#tutor-zoom-new-meeting > .tutor-modal-window > .tutor-modal-content > .tutor-modal-footer > .tutor-btn-primary',
-    )
-      .contains('Create Meeting')
-      .click();
-    cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.response?.body.success).to.equal(true);
+        // cy.wait(500);
+        cy.getByInputName('meeting_summary').click({ force: true }).type(zoomMeetingData.meeting_summary);
+        cy.selectDate('meeting_date');
+        cy.getSelectInput('meeting_time', '08:30 PM');
+        cy.getSelectInput('meeting_timezone', zoomMeetingData.meeting_timezone);
+        cy.get('[data-cy=save-zoom-meeting]').click();
+
+        cy.waitAfterRequest('saveZoomMeeting');
+
+        cy.get('[data-cy=tutor-toast]').should('contain.text', 'Meeting Successfully Added');
+
+        return;
+      }
+
+      cy.log('Zoom Addon is not enabled');
     });
 
-    cy.get("button[name='course_submit_btn']").contains('Publish').click();
+    cy.get('[data-cy=course-builder-submit-button]').click();
   });
 
   it('should start meeting', () => {
     cy.get('a.tutor-btn.tutor-btn-primary').contains('Start Meeting').invoke('removeAttr', 'target').click();
-    cy.url().should('include', 'zoom.us');
+    cy.origin('https://us05web.zoom.us', () => {
+      cy.url().should('include', 'zoom.us');
+    });
   });
+
   it('should edit a zoom meeting', () => {
     cy.intercept('POST', '/wordpress-tutor/wp-admin/admin-ajax.php').as('ajaxRequest');
     cy.get('body').then(($body) => {
@@ -148,10 +174,9 @@ describe('Tutor Dashboard My Courses', () => {
     // recording options
     cy.get('input#tutor_zoom_rec_none').check().should('be.checked');
     cy.get('input#tutor_zoom_rec_cloud').should('not.be.checked');
-    cy.get('input#tutor_zoom_rec_cloud').should('not.be.checked');
   });
 
-  //   help
+  // help
   it('Should make corresponding elements visible when accordion is clicked', () => {
     cy.get(':nth-child(5) > .tutor-nav-link').contains('Help').click();
     cy.get('.tutor-accordion-panel-handler-label').each(($accordion, index) => {
@@ -169,6 +194,7 @@ describe('Tutor Dashboard My Courses', () => {
     const submitWithButton = false;
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
+
   it('should filter meetings', () => {
     cy.get('.tutor-my-lg-0 > .tutor-js-form-select').click();
 
@@ -208,7 +234,8 @@ describe('Tutor Dashboard My Courses', () => {
           });
       });
   });
-  it('Should filter courses by a specific date', () => {
+
+  it('should filter courses by a specific date', () => {
     cy.get(
       ':nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
     ).click();

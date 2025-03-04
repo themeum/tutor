@@ -689,9 +689,10 @@ Cypress.Commands.add('viewCertificate', () => {
 });
 
 Cypress.Commands.add('getSelectInput', (name: string, value: string) => {
-  cy.get(`input[name="${name}"]`).should('be.visible').click();
-  cy.wait(500);
+  cy.get(`input[name="${name}"]`).scrollIntoView().should('be.visible').click();
+  cy.wait(250);
   cy.get('.tutor-portal-popover')
+    .last()
     .should('be.visible')
     .within(() => {
       cy.get('li').contains(value).click();
@@ -775,8 +776,10 @@ Cypress.Commands.add('updateCourse', () => {
 });
 
 Cypress.Commands.add('selectDate', (selector: string) => {
-  cy.get(`input[name="${selector}"]`).click();
+  cy.get(`input[name="${selector}"]`).scrollIntoView().click({ force: true });
+  cy.wait(250);
   cy.get('.tutor-portal-popover')
+    .last()
     .should('be.visible')
     .within(() => {
       cy.get('.rdp-day')

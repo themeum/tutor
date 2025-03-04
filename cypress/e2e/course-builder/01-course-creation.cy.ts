@@ -67,16 +67,27 @@ describe('Course Builder - Creation', () => {
   });
 
   it('opens an existing course', () => {
+    let courseTitle = '';
     cy.get('.wp-menu-name').contains('Tutor LMS').click();
     cy.get('table.table-dashboard-course-list tbody tr')
       .first()
       .within(() => {
-        cy.get('a.tutor-table-link').first().click();
+        cy.get('a.tutor-table-link')
+          .first()
+          .click()
+          .invoke('text')
+          .then((text) => {
+            courseTitle = text.trim();
+          });
       });
 
     cy.url().should('include', 'course_id=');
     cy.get('h6').should('have.text', 'Course Builder');
+    cy.waitAfterRequest('getCourseDetails');
 
-    cy.getByInputName('post_title').should('have.value', courseData.post_title);
+    cy.getByInputName('post_title').then(($input) => {
+      const title = $input.val();
+      cy.wrap(title).should('eq', courseTitle);
+    });
   });
 });

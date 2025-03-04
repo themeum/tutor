@@ -110,6 +110,7 @@ const LiveClass = () => {
                 })}
               >
                 <Button
+                  data-cy="create-zoom-meeting"
                   variant="secondary"
                   icon={<SVGIcon name="zoomColorize" width={24} height={24} />}
                   buttonCss={css`
