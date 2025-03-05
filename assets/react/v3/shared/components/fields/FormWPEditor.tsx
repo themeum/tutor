@@ -178,8 +178,8 @@ const FormWPEditor = ({
 }: FormWPEditorProps) => {
   const { showModal } = useModal();
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
-  const isAdmin = tutorConfig.current_user?.roles.includes(TutorRoles.ADMINISTRATOR);
-  const isInstructor = tutorConfig.current_user?.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+  const isAdmin = tutorConfig.current_user?.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user?.roles?.includes(TutorRoles.TUTOR_INSTRUCTOR);
 
   const [customEditorLoading, setCustomEditorLoading] = useState<string | null>(null);
 

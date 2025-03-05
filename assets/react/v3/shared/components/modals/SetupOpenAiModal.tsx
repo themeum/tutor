@@ -15,8 +15,8 @@ import { TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import { useSaveOpenAiSettingsMutation } from '@TutorShared/services/magic-ai';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useSaveOpenAiSettingsMutation } from '@TutorShared/services/magic-ai';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { requiredRule } from '@TutorShared/utils/validation';
 
@@ -32,7 +32,7 @@ interface OpenAiApiForm {
 }
 
 const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
-const isCurrentUserAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+const isCurrentUserAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
 
 const SetupOpenAiModal = ({ closeModal, image, image2x }: SetupOpenAiModalProps) => {
   const form = useFormWithGlobalError<OpenAiApiForm>({
