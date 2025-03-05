@@ -12,7 +12,14 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
-?>
+
+if ( is_admin() ) {
+	?>
+	<div id="tutor-course-builder"></div>
+	<?php
+	do_action( 'tutor_course_builder_footer' );
+} else {
+	?>
 
 <!DOCTYPE html>
 <html <?php language_attributes(); ?>>
@@ -30,3 +37,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php wp_footer(); ?>
 </body>
 </html>
+
+<?php } ?>
