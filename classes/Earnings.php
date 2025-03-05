@@ -97,7 +97,7 @@ class Earnings extends Singleton {
 				$item_sold_price = $order_model->get_item_sold_price( $item->id, false );
 
 				try {
-					$per_earning_refund = ( $deducted_amount * $subtotal_price ) / $order_details->total_price;
+					$per_earning_refund = ( $deducted_amount * $subtotal_price ) / $order_details->subtotal_price;
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
 					$per_earning_refund = 0;
