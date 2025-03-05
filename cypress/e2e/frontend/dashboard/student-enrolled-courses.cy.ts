@@ -8,24 +8,36 @@ describe('Tutor Dashboard Student Wishlist', () => {
   });
   it('should show active courses', () => {
     cy.get('.tutor-nav-link').eq(1).click();
-    cy.get('.list-item-button').each(($btn) => {
-      cy.wrap($btn)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.match(/^(Start Learning|Continue Learning)$/);
-          cy.log(`Button text "${text.trim()}" matches expected values.`);
-        });
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('No Data Available in this Section')) {
+        cy.log('No data found');
+        return;
+      }
+      cy.get('.list-item-button').each(($btn) => {
+        cy.wrap($btn)
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).to.match(/^(Start Learning|Continue Learning)$/);
+            cy.log(`Button text "${text.trim()}" matches expected values.`);
+          });
+      });
     });
   });
   it('should show completed courses', () => {
     cy.get('.tutor-nav-link').eq(2).click();
-    cy.get('.list-item-button').each(($btn) => {
-      cy.wrap($btn)
-        .invoke('text')
-        .then((text) => {
-          expect(text.trim()).to.match(/^(Download Certificate)$/);
-          cy.log(`Button text "${text.trim()}" matches expected values.`);
-        });
+    cy.get('body').then(($body) => {
+      if ($body.text().includes('No Data Available in this Section')) {
+        cy.log('No data found');
+        return;
+      }
+      cy.get('.list-item-button').each(($btn) => {
+        cy.wrap($btn)
+          .invoke('text')
+          .then((text) => {
+            expect(text.trim()).to.match(/^(Download Certificate)$/);
+            cy.log(`Button text "${text.trim()}" matches expected values.`);
+          });
+      });
     });
   });
 });

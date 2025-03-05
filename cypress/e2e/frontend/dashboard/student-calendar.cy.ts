@@ -12,6 +12,7 @@ describe('Tutor Dashboard Student Calendar', () => {
     cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.CALENDER}`);
     cy.url().should('include', frontendUrls.dashboard.CALENDER);
   });
+
   it('should visit all the upcoming events', () => {
     cy.wait('@calendarAjaxRequest');
     cy.get('body').then(($body) => {
@@ -24,6 +25,7 @@ describe('Tutor Dashboard Student Calendar', () => {
             .then((link) => {
               if (link) {
                 cy.visit(link);
+                cy.wait(1000);
                 cy.url().should('eq', link);
                 cy.go('back');
                 cy.wait('@calendarAjaxRequest');
