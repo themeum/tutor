@@ -578,7 +578,8 @@ const styles = {
   `,
   label: css`
     ${styleUtils.resetButton};
-    ${styleUtils.text.ellipsis(1)}
+    ${styleUtils.text.ellipsis(1)};
+    color: ${colorTokens.text.title};
     width: 100%;
     height: 100%;
     display: flex;
@@ -590,6 +591,13 @@ const styles = {
     line-height: ${lineHeight[24]};
     word-break: break-all;
     cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      color: ${colorTokens.text.title};
+    }
 
     span {
       flex-shrink: 0;
