@@ -378,6 +378,13 @@ const styles = {
       background-color: unset;
     }
 
+    ${tutorConfig.is_admin_bar_showing === '1' &&
+    css`
+      .mce-fullscreen {
+        top: 32px;
+      }
+    `}
+
     ${isMinimal &&
     css`
       .mce-tinymce.mce-container {
