@@ -15,7 +15,7 @@ describe('Tutor Dashboard Student Question and Answers', () => {
         cy.log('No data found');
       } else {
         cy.get('tbody tr').eq(0).find('a').contains('Reply').click();
-        cy.setTinyMceContent('.tutor-qna-reply-editor', 'Hello there!');
+        cy.setTinyMceContent('.wp-editor-area', 'Hello there!');
         cy.get('button').contains('Reply').click();
 
         cy.wait('@ajaxRequest').then((interception) => {
