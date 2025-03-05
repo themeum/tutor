@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.3.0
+Stable tag: 3.3.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -312,24 +312,30 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.3.0 - February 26, 2025
+= 3.3.1 - March 05, 2025
 
-New: Introduced slots in the course builder to integrate custom fields
-New: Added a setting to configure the course selling model as membership-only. (Pro)
-New: Added a course-specific selling model, allowing different courses to be sold via single purchase, course-based subscription, membership, or a combination of these. (Pro)
-New: Added an auto-renewal management control to the student dashboard. (Pro)
-New: Added analytics for subscription/membership sales in Tutor Reports. (Pro)
-New: Implemented guest checkout, enabling users to purchase courses without creating an account. (Pro)
-New: Added bulk enrollment, allowing admins to enroll users by importing data from a CSV file. (Pro)
-New: Introduced a "Coming Soon" feature in the course builder, enabling scheduled courses to be displayed with a custom thumbnail. (Pro)
-New: Added an option on the course builder to set custom enrollment start and end dates, along with the ability to pause enrollment instantly. (Pro)
+Fix: Resolved theme style conflicts with the Tutor LMS Course Builder.
+Fix: Fixed password reset email content for guest checkout. (Pro)
+Fix: Ensured accurate deduction of decimal point values from earnings.
+Fix: Fixed the issue of WooCommerce course price appearing on the listing page when monetization is set to Paid Memberships Pro.
+
+= 3.3.0 - March 03, 2025
+
+New: Introduced custom field slots in the course builder for adding custom fields.
+New: Added a setting to sell courses exclusively via membership. (Pro)
+New: Enabled course-specific selling models, allowing sales via single purchase, subscription, membership, or a combination. (Pro)
+New: Added auto-renewal controls for students to manage subscriptions. (Pro)
+New: Added membership analytics to Tutor LMS Reports. (Pro)
+New: Implemented guest checkout, allowing course purchases without an account. (Pro)
+New: Added bulk enrollment via CSV import. (Pro)
+New: Introduced "Coming Soon" courses with custom thumbnails. (Pro)
+New: Added custom enrollment dates and instant pause options. (Pro)
 New: Integrated the 2Checkout payment gateway. (Pro)
-New: Admin can set a custom enrollment end date for a specific enrollment (Pro)
-Update: Restored the admin bar in the course builder for quick actions. (Pro)
-Fix: Resolved tag-based filtering issues on the course list page. (Pro)
-Fix: Fixed database error related to subscription table creation. (Pro)
-Fix: Fixed quiz randomization settings not working correctly.
-Fix: Addressed an issue where imported settings were not applied correctly from an exported JSON file. (Pro)
+Update: Restored the admin bar in the course builder.
+Fix: Resolved issues with tag-based filtering.
+Fix: Fixed a database error in subscription table creation. (Pro)
+Fix: Corrected quiz randomization settings.
+Fix: Fixed imported settings not applying from JSON files.
 
 = 3.2.2 - February 05, 2025
 

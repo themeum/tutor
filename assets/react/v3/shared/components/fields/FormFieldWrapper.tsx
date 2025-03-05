@@ -313,6 +313,7 @@ const styles = {
   `,
   label: (isInlineLabel: boolean, replaceEntireLabel: boolean) => css`
     ${typography.caption()};
+    margin: 0px;
     width: ${replaceEntireLabel ? '100%' : 'auto'};
     color: ${colorTokens.text.title};
     display: flex;

@@ -131,6 +131,7 @@ const useWPMedia = ({ options = {}, onChange, initialFiles }: UseWPMediaParams):
     wpMedia.on('open', () => {
       const selection = wpMedia.state().get('selection');
 
+      wpMedia.$el.attr('data-focus-trap', 'true');
       selection.reset();
 
       existingFiles.forEach((file) => {

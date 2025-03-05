@@ -634,6 +634,7 @@ const styles = {
 
     :hover:not(:disabled) {
       background: ${colorTokens.background.white};
+      color: #3e64de;
     }
 
     :disabled {

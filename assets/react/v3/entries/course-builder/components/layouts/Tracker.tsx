@@ -1,9 +1,9 @@
+import { type Step, useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
+import type { CourseFormData } from '@CourseBuilderServices/course';
 import { borderRadius, Breakpoint, colorTokens, lineHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { type Step, useCourseNavigator } from '@CourseBuilderContexts/CourseNavigatorContext';
-import type { CourseFormData } from '@CourseBuilderServices/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { css } from '@emotion/react';
 import { useFormContext } from 'react-hook-form';
@@ -62,6 +62,13 @@ const styles = {
     padding: ${spacing[4]} ${spacing[0]} ${spacing[4]} ${spacing[8]};
     gap: ${spacing[8]};
     align-items: center;
+
+    &:hover,
+    &:focus {
+      background: none;
+      box-shadow: none;
+      color: ${colorTokens.text.primary};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
