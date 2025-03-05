@@ -3,7 +3,7 @@ import { frontendUrls } from '../../../config/page-urls';
 describe('Tutor Dashboard Student Reviews', () => {
   const randomNumber = Math.floor(Math.random() * 5);
   beforeEach(() => {
-    cy.visit(`${Cypress.env('base_url')}s${frontendUrls.dashboard.REVIEWS}`);
+    cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.REVIEWS}`);
     cy.loginAsStudent();
     cy.url().should('include', frontendUrls.dashboard.REVIEWS);
   });
@@ -40,7 +40,7 @@ describe('Tutor Dashboard Student Reviews', () => {
       if ($body.text().includes('No Data Available in this Section')) {
         cy.log('No data found');
       } else {
-        cy.get('.tutor-given-review-actions').eq(1).click();
+        cy.get('.tutor-given-review-actions .tutor-btn').eq(1).click();
         cy.get('.tutor-modal.tutor-is-active').find('button').contains('Yes, Delete This').click();
 
         cy.wait('@ajaxRequest').then((interception) => {
