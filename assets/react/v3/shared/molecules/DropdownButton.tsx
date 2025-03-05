@@ -484,6 +484,7 @@ const styles = {
   `,
   dropdownOption: ({ disabled, isDanger }: { disabled: boolean; isDanger: boolean }) => css`
     ${styleUtils.resetButton};
+    ${typography.body()};
     color: ${colorTokens.text.primary};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
