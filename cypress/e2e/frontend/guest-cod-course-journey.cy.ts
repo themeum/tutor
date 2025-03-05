@@ -161,7 +161,8 @@ describe('Tutor Student Paid Course Journey', () => {
       }
     });
 
-    cy.visit(`${Cypress.env('base_url')}/dashboard-2-2/enrolled-courses/`);
+    cy.visit(`${Cypress.env('base_url')}/dashboard/enrolled-courses/`);
+    cy.loginAsStudent();
     cy.get('.tutor-course-name').eq(0).click();
 
     cy.handleCourseStart();
