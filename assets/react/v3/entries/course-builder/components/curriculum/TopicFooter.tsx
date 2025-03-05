@@ -317,14 +317,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
         </div>
       </div>
 
-      <input
-        css={styleUtils.display.none}
-        type="file"
-        ref={fileInputRef}
-        onChange={handleChange}
-        multiple={false}
-        accept=".csv"
-      />
+      <input css={styles.input} type="file" ref={fileInputRef} onChange={handleChange} multiple={false} accept=".csv" />
 
       <Popover
         triggerRef={triggerGoogleMeetRef}
@@ -397,5 +390,8 @@ const styles = {
       color: ${colorTokens.text.brand};
       outline: 1px solid ${colorTokens.stroke.brand};
     }
+  `,
+  input: css`
+    display: none !important;
   `,
 };
