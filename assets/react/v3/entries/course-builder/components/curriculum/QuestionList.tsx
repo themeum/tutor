@@ -289,6 +289,7 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
       <div css={styles.questionsLabel}>
         <span>{__('Questions', 'tutor')}</span>
         <button
+          data-cy="add-question"
           ref={addButtonRef}
           type="button"
           onClick={() => {

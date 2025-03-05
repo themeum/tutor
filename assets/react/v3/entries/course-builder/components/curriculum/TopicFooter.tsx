@@ -82,6 +82,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
       <div css={styles.contentButtons}>
         <div css={styles.leftButtons}>
           <Button
+            data-cy="add-lesson"
             variant="tertiary"
             isOutlined
             size="small"
@@ -104,6 +105,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
             {__('Lesson', 'tutor')}
           </Button>
           <Button
+            data-cy="add-quiz"
             variant="tertiary"
             isOutlined
             size="small"
@@ -131,6 +133,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
             fallback={
               <Show when={isAddonEnabled(Addons.H5P_INTEGRATION)}>
                 <Button
+                  data-cy="add-interactive-quiz"
                   variant="tertiary"
                   isOutlined
                   size="small"
@@ -175,6 +178,7 @@ const TopicFooter = ({ topic }: TopicFooterProps) => {
             fallback={
               <Show when={isAddonEnabled(Addons.TUTOR_ASSIGNMENTS)}>
                 <Button
+                  data-cy="add-assignment"
                   variant="tertiary"
                   isOutlined
                   size="small"

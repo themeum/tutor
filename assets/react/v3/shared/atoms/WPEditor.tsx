@@ -305,7 +305,7 @@ const WPEditor = ({
         isReadOnly: readonly,
       })}
     >
-      <textarea ref={editorRef} id={editorId} defaultValue={value} />
+      <textarea data-cy="tutor-tinymce" ref={editorRef} id={editorId} defaultValue={value} />
     </div>
   );
 };
