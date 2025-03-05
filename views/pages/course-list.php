@@ -125,7 +125,7 @@ if ( '' !== $category_slug ) {
 
 add_filter( 'posts_search', '_tutor_search_by_title_only', 500, 2 );
 
-$the_query = new WP_Query( $args );
+$the_query = new WP_Query( apply_filters( 'tutor_admin_course_list', $args, get_current_user_id(), $active_tab ) );
 
 remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 

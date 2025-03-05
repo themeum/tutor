@@ -263,7 +263,7 @@ class Course_List {
 			);
 		}
 
-		$the_query = new \WP_Query( $args );
+		$the_query = new \WP_Query( apply_filters( 'tutor_admin_course_list', $args, $user_id, $status ) );
 
 		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
 
