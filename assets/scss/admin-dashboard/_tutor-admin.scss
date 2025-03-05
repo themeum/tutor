@@ -113,10 +113,20 @@
 		&-icon {
 			&:not(.tutor-form-icon-reverse) ~ .tutor-form-control {
 				padding-left: 40px !important;
+				
+				.rtl & {
+					padding-left: 16px !important;
+					padding-right: 40px !important;
+				}
 			}
 
 			&-reverse ~ .tutor-form-control {
 				padding-right: 40px !important;
+
+				.rtl & {
+					padding-right: 16px !important;
+					padding-left: 40px !important;
+				}
 			}
 		}
 	}
