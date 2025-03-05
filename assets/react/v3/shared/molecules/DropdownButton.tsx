@@ -229,6 +229,7 @@ const styles = {
     cursor: pointer;
     user-select: none;
     background-color: transparent;
+    color: ${colorTokens.text.primary};
     border: 0;
     padding: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]} 0 0 ${borderRadius[6]};
@@ -483,6 +484,7 @@ const styles = {
   `,
   dropdownOption: ({ disabled, isDanger }: { disabled: boolean; isDanger: boolean }) => css`
     ${styleUtils.resetButton};
+    color: ${colorTokens.text.primary};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
     transition: background-color 0.3s ease-in-out;

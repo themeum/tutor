@@ -260,6 +260,7 @@ export const styleUtils = {
     background: none;
     border: none;
     outline: none;
+    box-shadow: none;
     padding: 0;
     margin: 0;
     text-align: inherit;
