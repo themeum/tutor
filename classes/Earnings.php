@@ -156,7 +156,7 @@ class Earnings extends Singleton {
 		// Deduct predefined amount (percent or fixed).
 		if ( $enable_fees_deducting ) {
 			$fees_name   = tutor_utils()->get_option( 'fees_name', '' );
-			$fees_amount = (int) tutor_utils()->avalue_dot( 'fees_amount', $tutor_earning_fees );
+			$fees_amount = (float) tutor_utils()->avalue_dot( 'fees_amount', $tutor_earning_fees );
 			$fees_type   = tutor_utils()->avalue_dot( 'fees_type', $tutor_earning_fees );
 
 			if ( $fees_amount > 0 ) {
