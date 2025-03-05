@@ -15,7 +15,7 @@ describe('Tutor Dashboard Settings', () => {
     cy.getByInputName('phone_number').clear().type('9823458204');
     cy.getByInputName('tutor_profile_job_title').clear().type('UX/UI Designer');
     cy.setTinyMceContent(
-      '#wp-tutor_profile_bio-editor-container',
+      '.wp-editor-area',
       'Passionate UX designer with a flair for creating intuitive and visually appealing digital experiences. Adept at blending creativity with user-centric design principles to deliver impactful solutions.',
     );
     cy.get('button').contains('Update Profile').click();
