@@ -79,9 +79,11 @@ $buy_now_link = add_query_arg( array( 'buy_now_id' => $course_id ), CheckoutCont
 		<?php
 	} elseif ( $buy_now ) {
 		?>
-		<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block">
-			<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
-		</a>
+		<div class="tutor-mt-24">
+			<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block">
+				<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
+			</a>
+		</div>
 		<?php
 	} else {
 			ob_start();
