@@ -32,6 +32,7 @@ export type Subscription = {
   provide_certificate: '0' | '1';
   enrollment_fee: string;
   trial_value: string;
+  trial_fee: string;
   trial_interval: DurationUnit;
 };
 
@@ -68,6 +69,7 @@ export const defaultSubscriptionFormData: SubscriptionFormData = {
   do_not_provide_certificate: false,
   enrollment_fee: '0',
   trial_value: '1',
+  trial_fee: '0',
   trial_interval: 'day',
   charge_enrollment_fee: false,
   enable_free_trial: false,
@@ -90,6 +92,7 @@ export const convertSubscriptionToFormData = (subscription: Subscription): Subsc
       subscription.recurring_limit === '0' ? __('Until cancelled', 'tutor') : subscription.recurring_limit || '',
     enrollment_fee: subscription.enrollment_fee ?? '0',
     trial_value: subscription.trial_value ?? '0',
+    trial_fee: subscription.trial_fee ?? '0',
     trial_interval: subscription.trial_interval ?? 'day',
     sale_price: subscription.sale_price ?? '0',
     charge_enrollment_fee: !!Number(subscription.enrollment_fee),
@@ -127,7 +130,11 @@ export const convertFormDataToSubscription = (formData: SubscriptionFormData): S
     recurring_limit: formData.recurring_limit === __('Until cancelled', 'tutor') ? '0' : formData.recurring_limit,
     is_featured: formData.is_featured ? '1' : '0',
     ...(formData.charge_enrollment_fee && { enrollment_fee: formData.enrollment_fee }),
-    ...(formData.enable_free_trial && { trial_value: formData.trial_value, trial_interval: formData.trial_interval }),
+    ...(formData.enable_free_trial && {
+      trial_fee: formData.trial_fee,
+      trial_value: formData.trial_value,
+      trial_interval: formData.trial_interval,
+    }),
     sale_price: formData.offer_sale_price ? formData.sale_price : '0',
     ...(formData.schedule_sale_price && {
       sale_price_from: convertToGMT(new Date(`${formData.sale_price_from_date} ${formData.sale_price_from_time}`)),
@@ -155,6 +162,7 @@ export type SubscriptionPayload = {
   is_featured: '0' | '1';
   enrollment_fee?: string;
   trial_value?: string;
+  trial_fee?: string;
   trial_interval?: DurationUnit;
 };
 

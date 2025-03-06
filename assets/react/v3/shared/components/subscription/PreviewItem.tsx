@@ -57,17 +57,16 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
             </span>
           </Show>
 
-          {/* @TODO: will be updated after confirmation */}
-          {/* <Show when={subscription.enable_free_trial}>
-          <span>•</span>
-          <span>
-            {sprintf(
-              __('%s %s trial', 'tutor'),
-              subscription.trial_value.toString().padStart(2, '0'),
-              formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value)),
-            )}
-          </span>
-        </Show> */}
+          <Show when={subscription.enable_free_trial}>
+            <span>•</span>
+            <span>
+              {sprintf(
+                __('%s %s trial', 'tutor'),
+                subscription.trial_value.toString().padStart(2, '0'),
+                formatRepeatUnit(subscription.trial_interval, Number(subscription.trial_value)),
+              )}
+            </span>
+          </Show>
 
           <Show when={subscription.payment_type !== 'onetime'}>
             <Show

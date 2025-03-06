@@ -154,8 +154,7 @@ export default function SubscriptionItem({
   const chargeEnrolmentFee = form.watch(
     `subscriptions.${index}.charge_enrollment_fee` as `subscriptions.0.charge_enrollment_fee`,
   );
-  // @TODO: Will be added after confirmation
-  // const enableTrial = form.watch(`subscriptions.${index}.enable_free_trial` as `subscriptions.0.enable_free_trial`);
+  const enableTrial = form.watch(`subscriptions.${index}.enable_free_trial` as `subscriptions.0.enable_free_trial`);
   const isFeatured = form.watch(`subscriptions.${index}.is_featured` as `subscriptions.0.is_featured`);
   const hasSale = form.watch(`subscriptions.${index}.offer_sale_price` as `subscriptions.0.offer_sale_price`);
   const hasScheduledSale = !!form.watch(
@@ -174,7 +173,7 @@ export default function SubscriptionItem({
     },
     [
       chargeEnrolmentFee,
-      // enableTrial,
+      enableTrial,
       isFeatured,
       hasSale,
       hasScheduledSale,
@@ -194,7 +193,7 @@ export default function SubscriptionItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     chargeEnrolmentFee,
-    // enableTrial,
+    enableTrial,
     isFeatured,
     hasSale,
     hasScheduledSale,
@@ -462,17 +461,30 @@ export default function SubscriptionItem({
                 )}
               />
             </Show>
-            {/* @TODO: Will be added after confirmation */}
-            {/* <Controller
+            <Controller
               control={form.control}
               name={`subscriptions.${index}.enable_free_trial`}
-              render={(controllerProps) => (
-                <FormCheckbox {...controllerProps} label={__('Enable a free trial', 'tutor')} />
-              )}
+              render={(controllerProps) => <FormCheckbox {...controllerProps} label={__('Enable a trial', 'tutor')} />}
             />
 
             <Show when={enableTrial}>
               <div css={styles.trialWrapper}>
+                <Controller
+                  control={form.control}
+                  name={`subscriptions.${index}.trial_fee`}
+                  render={(controllerProps) => (
+                    <FormInputWithContent
+                      {...controllerProps}
+                      label={__('Trial Fee', 'tutor')}
+                      placeholder={__('Trial fee', 'tutor')}
+                      content={tutor_currency?.symbol || '$'}
+                      selectOnFocus
+                      contentCss={styleUtils.inputCurrencyStyle}
+                      type="number"
+                    />
+                  )}
+                />
+
                 <Controller
                   control={form.control}
                   name={`subscriptions.${index}.trial_value`}
@@ -488,9 +500,10 @@ export default function SubscriptionItem({
                   render={(controllerProps) => (
                     <FormInput
                       {...controllerProps}
-                      label={__('Length of free trial', 'tutor')}
+                      label={__('Length of trial', 'tutor')}
                       placeholder={__('Enter trial duration', 'tutor')}
                       selectOnFocus
+                      type="number"
                     />
                   )}
                 />
@@ -506,15 +519,12 @@ export default function SubscriptionItem({
                       options={[
                         { label: __('Hour(s)', 'tutor'), value: 'hour' },
                         { label: __('Day(s)', 'tutor'), value: 'day' },
-                        { label: __('Week(s)', 'tutor'), value: 'week' },
-                        { label: __('Month(s)', 'tutor'), value: 'month' },
-                        { label: __('Year(s)', 'tutor'), value: 'year' },
                       ]}
                     />
                   )}
                 />
               </div>
-            </Show> */}
+            </Show>
 
             <Controller
               control={form.control}
@@ -587,7 +597,7 @@ const styles = {
   `,
   trialWrapper: css`
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     align-items: start;
     gap: ${spacing[8]};
   `,
