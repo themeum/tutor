@@ -58,8 +58,8 @@ const HeaderActions = () => {
   const isPostDateDirty = form.formState.dirtyFields.schedule_date || form.formState.dirtyFields.schedule_time;
 
   const isTutorPro = !!tutorConfig.tutor_pro_url;
-  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
-  const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+  const isAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user.roles?.includes(TutorRoles.TUTOR_INSTRUCTOR);
   const hasTrashAccess = tutorConfig.settings?.instructor_can_delete_course === 'on' || isAdmin;
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
   const isAllowedToPublishCourse = tutorConfig.settings?.instructor_can_publish_course === 'on';
