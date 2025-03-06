@@ -216,7 +216,6 @@ function editorConfig(
         });
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         editor.on('BeforeExecCommand', (e: any) => {
-          console.log('BeforeExecCommand:', e.command, e.type);
           if (e.command === 'WP_Link') {
             setTimeout(() => {
               const modal = document.querySelector(
