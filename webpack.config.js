@@ -59,15 +59,6 @@ module.exports = (env, options) => {
     if ('production' === mode) {
         config.devtool = false;
         config.optimization = {
-            splitChunks: {
-                cacheGroups: {
-                    shared: {
-                        test: /[\\/]assets[\\/]react[\\/]v3[\\/]shared[\\/]/,
-                        name: 'tutor-shared.min',
-                        chunks: 'all',
-                    },
-                },
-            },
             minimize: true,
             minimizer: [
                 new TerserPlugin({
@@ -113,7 +104,7 @@ module.exports = (env, options) => {
                 output: {
                     path: path.resolve(dest_path),
                     filename: '[name].js',
-                    chunkFilename: `lazy-chunks/[name].[contenthash].min.js?v=${version}`,
+                    chunkFilename: `lazy-chunks/[name].[contenthash].min.js?ver=${version}`,
                     clean: true,
                 },
                 resolve: {
