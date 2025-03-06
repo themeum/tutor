@@ -10,6 +10,8 @@
  */
 
 use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Settings;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\CartModel;
 
@@ -39,6 +41,8 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 	$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
 	$display_price += $tax_amount;
 }
+$buy_now      = Settings::is_buy_now_enabled();
+$buy_now_link = add_query_arg( array( 'buy_now_id' => $course_id ), CheckoutController::get_page_url() );
 
 ?>
 	<div>
@@ -68,13 +72,19 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 		?>
         <?php echo apply_filters( 'tutor_after_course_details_tutor_add_to_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
 	</div>
-	<?php if ( $is_course_in_user_cart ) { ?>
+	<?php if ( $is_course_in_user_cart && ! $buy_now ) { ?>
 		<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-mt-24 tutor-btn-lg tutor-btn-block <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
 			<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 		</a>
 		<?php
+	} elseif ( $buy_now ) {
+		ob_start();
+		?>
+		<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block">
+			<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
+		</a>
+		<?php
 	} else {
-			ob_start();
 		?>
 	<div class="tutor-mt-24">
 		<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
@@ -83,5 +93,5 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 		</button>
 	</div>
 		<?php
-			echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), $course_id ); //phpcs:ignore --already filtered
 	}
+echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), $course_id ); //phpcs:ignore --already filtered
