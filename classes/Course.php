@@ -754,7 +754,7 @@ class Course extends Tutor_Base {
 		$has_access = false;
 
 		if ( $course_id ) {
-			$has_access = user_can( get_current_user_id(), 'edit_tutor_course', $course_id );
+			$has_access = tutor_utils()->can_user_edit_course( get_current_user_id(), $course_id );
 		} else {
 			$has_access = User::is_admin() || User::is_instructor();
 		}
