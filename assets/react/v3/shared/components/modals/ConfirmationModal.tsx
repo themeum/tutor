@@ -15,7 +15,6 @@ interface ConfirmationModalProps extends Omit<ModalProps, 'actions'> {
   maxWidth?: number;
 }
 
-// @TODO: Consider renaming this component to `ConfirmationModal` to make it more generic
 const ConfirmationModal = ({
   closeModal,
   title,
