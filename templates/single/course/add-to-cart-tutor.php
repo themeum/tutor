@@ -78,13 +78,13 @@ $buy_now_link = add_query_arg( array( 'buy_now_id' => $course_id ), CheckoutCont
 		</a>
 		<?php
 	} elseif ( $buy_now ) {
-		ob_start();
 		?>
 		<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block">
 			<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
 		</a>
 		<?php
 	} else {
+			ob_start();
 		?>
 	<div class="tutor-mt-24">
 		<button type="button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>" data-course-id="<?php echo esc_attr( $course_id ); ?>" data-course-single>
@@ -93,5 +93,5 @@ $buy_now_link = add_query_arg( array( 'buy_now_id' => $course_id ), CheckoutCont
 		</button>
 	</div>
 		<?php
+			echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), $course_id ); //phpcs:ignore --already filtered
 	}
-echo apply_filters( 'tutor_add_to_cart_btn', ob_get_clean(), $course_id ); //phpcs:ignore --already filtered
