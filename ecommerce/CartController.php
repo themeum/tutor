@@ -97,7 +97,7 @@ class CartController {
 	/**
 	 * Replace add to cart with buy now button on course list.
 	 *
-	 * @since 3.3.1
+	 * @since 3.4.0
 	 *
 	 * @param string $add_to_cart_btn the button content.
 	 * @param int    $course_id the course id.

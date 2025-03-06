@@ -40,7 +40,7 @@ class Settings {
 	/**
 	 * Check if buy now setting is enabled.
 	 *
-	 * @since 3.3.1
+	 * @since 3.4.0
 	 *
 	 * @return boolean
 	 */
@@ -256,7 +256,7 @@ class Settings {
 							'label'   => __( 'Enable "Buy Now" Button', 'tutor' ),
 							'default' => 'off',
 							'desc'    => __( 'Allow users to purchase courses directly without adding them to the cart.', 'tutor' ),
-						)
+						),
 					),
 				),
 			),
