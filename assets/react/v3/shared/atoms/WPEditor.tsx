@@ -86,6 +86,23 @@ function editorConfig(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setup: (editor: any) => {
         editor.on('init', () => {
+          const originalOpen = editor.windowManager.open;
+
+          editor.windowManager.open = function (args: unknown) {
+            // Open the dialog using the original method
+            const dialog = originalOpen.call(this, args);
+
+            // Add the attribute after the dialog renders
+            dialog.on('open', function () {
+              const dialogEl = dialog.getEl();
+              if (dialogEl) {
+                dialogEl.setAttribute('data-focus-trap', 'true');
+              }
+            });
+
+            return dialog;
+          };
+
           if (readOnly) {
             editor.setMode('readonly');
 
@@ -197,6 +214,20 @@ function editorConfig(
         editor.on('FullscreenStateChanged', (event: { state: boolean }) => {
           onFullScreenChange?.(event.state);
         });
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        editor.on('BeforeExecCommand', (e: any) => {
+          console.log('BeforeExecCommand:', e.command, e.type);
+          if (e.command === 'WP_Link') {
+            setTimeout(() => {
+              const modal = document.querySelector(
+                '.mce-toolbar-grp.mce-inline-toolbar-grp.mce-container.mce-panel:not([style*="display: none"])',
+              );
+              if (modal) {
+                modal.setAttribute('data-focus-trap', 'true');
+              }
+            }, 100);
+          }
+        });
       },
       wp_keep_scroll_position: false,
       wpeditimage_html5_captions: true,
@@ -233,7 +264,6 @@ const WPEditor = ({
     onChange(target.value);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   const updateEditorContent = useCallback(
     (value: string) => {
       const { tinymce } = window;
