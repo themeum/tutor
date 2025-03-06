@@ -260,6 +260,7 @@ export const styleUtils = {
     background: none;
     border: none;
     outline: none;
+    box-shadow: none;
     padding: 0;
     margin: 0;
     text-align: inherit;
@@ -464,7 +465,10 @@ export const styleUtils = {
     cursor: pointer;
     transition: color 0.3s ease-in-out;
 
-    :hover:not(:disabled) {
+    :hover:not(:disabled),
+    :focus:not(:disabled),
+    :active:not(:disabled) {
+      background: none;
       color: ${colorTokens.icon.brand};
     }
 

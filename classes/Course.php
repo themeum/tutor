@@ -248,6 +248,7 @@ class Course extends Tutor_Base {
 		 */
 		add_action( 'template_redirect', array( $this, 'load_course_builder' ) );
 		add_action( 'tutor_before_course_builder_load', array( $this, 'enqueue_course_builder_assets' ) );
+		add_filter( 'tutor_localize_data', array( $this, 'localize_course_builder_data' ) );
 
 		/**
 		 * Ajax list
@@ -1364,11 +1365,46 @@ class Course extends Tutor_Base {
 		wp_enqueue_script( 'tutor-shared', tutor()->url . 'assets/js/tutor-shared.min.js', array( 'wp-date', 'wp-i18n', 'wp-element', 'wp-api' ), TUTOR_VERSION, true );
 		wp_enqueue_script( 'tutor-course-builder', tutor()->url . 'assets/js/tutor-course-builder.min.js', array( 'tutor-shared' ), TUTOR_VERSION, true );
 
+		wp_localize_script(
+			'mce-view',
+			'mceViewL10n',
+			array(
+				'shortcodes' => ! empty( $GLOBALS['shortcode_tags'] ) ? array_keys( $GLOBALS['shortcode_tags'] ) : array(),
+			)
+		);
+	}
+
+	/**
+	 * Localize custom course builder data for _tutorobject.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param array $data the localized data.
+	 *
+	 * @return array
+	 */
+	public function localize_course_builder_data( $data ) {
+		global $pagenow;
+
+		$course_id       = Input::get( 'course_id', 0, Input::TYPE_INT );
+		$backend_builder = is_admin() && 'admin.php' === $pagenow && 'create-course' === Input::get( 'page' );
+		$backend_edit    = $backend_builder && $course_id;
+
+		$is_frontend_builder = tutor_utils()->is_tutor_frontend_dashboard( 'create-course' );
+		$frontend_edit       = $is_frontend_builder && $course_id;
+
+		if ( ! $backend_edit && ! $frontend_edit ) {
+			return $data;
+		}
+
+		/**
+		 * Prepare course builder data.
+		 */
 		$default_data = ( new Assets( false ) )->get_default_localized_data();
 
-		if ( isset( $default_data['current_user']->data ) ) {
-			$tutor_user = tutor_utils()->get_tutor_user( $default_data['current_user']->data->ID );
-			$default_data['current_user']->data->tutor_profile_photo_url = $tutor_user->tutor_profile_photo_url;
+		if ( isset( $default_data['current_user']['data']['id'] ) ) {
+			$tutor_user = tutor_utils()->get_tutor_user( $default_data['current_user']['data']['id'] );
+			$default_data['current_user']['data']['tutor_profile_photo_url'] = $tutor_user->tutor_profile_photo_url;
 		}
 
 		/**
@@ -1447,15 +1483,7 @@ class Course extends Tutor_Base {
 
 		$data = apply_filters( 'tutor_course_builder_localized_data', $data );
 
-		wp_localize_script(
-			'mce-view',
-			'mceViewL10n',
-			array(
-				'shortcodes' => ! empty( $GLOBALS['shortcode_tags'] ) ? array_keys( $GLOBALS['shortcode_tags'] ) : array(),
-			)
-		);
-
-		add_filter( 'tutor_localize_data', fn() => $data );
+		return $data;
 	}
 
 	/**
@@ -2842,8 +2870,10 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function enroll_after_login_if_attempt( int $course_id, int $user_id ) {
-		$course_id = sanitize_text_field( $course_id );
-		if ( $course_id ) {
+		$course_id  = sanitize_text_field( $course_id );
+		$is_allowed = apply_filters( 'tutor_allow_guest_attempt_enrollment', true, $course_id, $user_id );
+
+		if ( $course_id && $is_allowed ) {
 			$is_purchasable = tutor_utils()->is_course_purchasable( $course_id );
 			if ( ! $is_purchasable ) {
 				tutor_utils()->do_enroll( $course_id, $order_id = 0, $user_id );

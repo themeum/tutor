@@ -153,6 +153,15 @@ const styles = {
     min-width: 130px;
     position: relative;
     transition: color 0.3s ease-in-out;
+    border-radius: 0px;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: transparent;
+      color: ${colorTokens.text.subdued};
+      box-shadow: none;
+    }
 
     & > svg {
       color: ${colorTokens.icon.default};
@@ -163,6 +172,12 @@ const styles = {
       width: 100%;
       border-bottom: 1px solid ${colorTokens.stroke.border};
       justify-content: flex-start;
+
+      &:hover,
+      &:focus,
+      &:active {
+        border-bottom: 1px solid ${colorTokens.stroke.border};
+      }
     `}
 
     ${isActive &&

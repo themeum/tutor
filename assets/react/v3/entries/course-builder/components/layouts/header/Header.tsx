@@ -52,7 +52,7 @@ const Header = () => {
   const isTutorPro = !!tutorConfig.tutor_pro_url;
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const hasOpenAiAPIKey = tutorConfig.settings?.chatgpt_key_exist;
-  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
 
   const handleAiButtonClick = () => {

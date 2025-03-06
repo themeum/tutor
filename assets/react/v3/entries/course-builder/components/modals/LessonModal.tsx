@@ -88,8 +88,8 @@ const LessonModal = ({
   const isOpenAiEnabled = tutorConfig.settings?.chatgpt_enable === 'on';
   const isClassicEditorEnabled = tutorConfig.enable_lesson_classic_editor === '1';
   const hasWpAdminAccess = tutorConfig.settings?.hide_admin_bar_for_users === 'off';
-  const isAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
-  const isInstructor = tutorConfig.current_user.roles.includes(TutorRoles.TUTOR_INSTRUCTOR);
+  const isAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
+  const isInstructor = tutorConfig.current_user.roles?.includes(TutorRoles.TUTOR_INSTRUCTOR);
 
   const isWpEditorVisible = isClassicEditorEnabled && (isAdmin || (isInstructor && hasWpAdminAccess));
 
@@ -633,6 +633,7 @@ const styles = {
 
     :hover:not(:disabled) {
       background: ${colorTokens.background.white};
+      color: #3e64de;
     }
 
     :disabled {
