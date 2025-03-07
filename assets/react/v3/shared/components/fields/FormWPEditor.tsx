@@ -12,10 +12,10 @@ import Tooltip from '@TutorShared/atoms/Tooltip';
 import WPEditor from '@TutorShared/atoms/WPEditor';
 
 import AITextModal from '@TutorShared/components/modals/AITextModal';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
-import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';
@@ -91,7 +91,7 @@ const CustomEditorOverlay = ({
           loading={loadingButton === 'back_to'}
           onClick={async () => {
             const { action } = await showModal({
-              component: StaticConfirmationModal,
+              component: ConfirmationModal,
               props: {
                 title: __('Back to WordPress Editor', 'tutor'),
                 description: (

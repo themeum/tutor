@@ -97,6 +97,9 @@ const ScheduleOptions = () => {
       <Controller
         name="isScheduleEnabled"
         control={form.control}
+        rules={{
+          deps: ['enrollment_starts_date', 'enrollment_starts_time'],
+        }}
         render={(controllerProps) => (
           <FormSwitch
             {...controllerProps}

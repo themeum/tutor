@@ -8,7 +8,7 @@ import ProBadge from '@TutorShared/atoms/ProBadge';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useModal } from '@TutorShared/components/modals/Modal';
 
-import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, fontSize, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -72,7 +72,7 @@ const TaxSettingsPage = () => {
           icon={<SVGIcon name="rotate" width={22} height={22} />}
           onClick={async () => {
             const { action } = await showModal({
-              component: StaticConfirmationModal,
+              component: ConfirmationModal,
               props: {
                 title: __('Reset to Default Settings?', 'tutor'),
                 description:
