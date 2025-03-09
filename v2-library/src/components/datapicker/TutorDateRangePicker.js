@@ -103,7 +103,7 @@ const TutorDateRangePicker = () => {
 				onClick={handleCalendarClose}
 				dateFormat={dateFormat}
 				formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
-				calendarStartDay={wp.date?.getSettings().l10n.startOfWeek}
+				calendarStartDay={_tutorobject.start_of_week}
 				calendarContainer={ContainerWrapper}
 				renderCustomHeader={(props) => (
 					<CustomHeader

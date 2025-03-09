@@ -40,7 +40,7 @@ const TutorDateTimePicker = (data) => {
 				dateFormat="Y-M-d h:mm aa"
 				minDate={data.disable_previous ? new Date() : false}
 				formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
-				calendarStartDay={wp.date?.getSettings().l10n.startOfWeek}
+				calendarStartDay={_tutorobject.start_of_week}
 				renderCustomHeader={(props) => (
 					<CustomHeader
 						{...props}
