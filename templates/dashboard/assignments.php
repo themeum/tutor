@@ -63,7 +63,14 @@ $courses      = ( current_user_can( 'administrator' ) ) ? CourseModel::get_cours
 
 		<div class="tutor-col-6 tutor-col-lg-3">
 			<label class="tutor-form-label"><?php esc_html_e( 'Create Date', 'tutor' ); ?></label>
-			<div class="tutor-v2-date-picker"></div>
+			<div class="tutor-v2-date-picker">
+				<div class="tutor-form-wrap">
+					<span class="tutor-form-icon tutor-form-icon-reverse">
+						<span class="tutor-icon-calender-line" aria-hidden="true"></span>
+					</span>
+					<input class="tutor-form-control" placeholder="<?php esc_attr_e( 'Loading...', 'tutor' ); ?>">
+				</div>
+			</div>
 		</div>
 	</div>
 
