@@ -207,9 +207,14 @@ class OrderController {
 				$subtotal_price = $item_price->subtotal;
 				$total_price    = $item_price->total;
 
-				if ( $this->model::TYPE_SUBSCRIPTION === $order_type && $plan->enrollment_fee ) {
+				if ( $this->model::TYPE_SUBSCRIPTION === $order_type && ! $plan->trial_value && $plan->enrollment_fee ) {
 					$subtotal_price += $plan->enrollment_fee;
 					$total_price    += $plan->enrollment_fee;
+				}
+
+				if ( $this->model::TYPE_SUBSCRIPTION === $order_type && $plan->trial_value > 0 && $plan->trial_fee > 0 ) {
+					$subtotal_price += $plan->trial_fee;
+					$total_price    += $plan->trial_fee;
 				}
 			}
 		} else {
