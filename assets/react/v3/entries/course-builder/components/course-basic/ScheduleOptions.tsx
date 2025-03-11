@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { useIsFetching } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { addHours, format, isBefore, isSameMinute, isValid, parseISO, startOfDay } from 'date-fns';
 import { useEffect, useState } from 'react';
@@ -16,6 +17,7 @@ import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTimeInput from '@TutorShared/components/fields/FormTimeInput';
 
 import type { CourseFormData } from '@CourseBuilderServices/course';
+import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
@@ -26,6 +28,7 @@ import { noop } from '@TutorShared/utils/util';
 import { invalidDateRule, invalidTimeRule } from '@TutorShared/utils/validation';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
+const courseId = getCourseId();
 
 const ScheduleOptions = () => {
   const form = useFormContext<CourseFormData>();
@@ -39,6 +42,9 @@ const ScheduleOptions = () => {
   const enrollmentStartDate = useWatch({ name: 'enrollment_starts_date' }) ?? '';
   const enrollmentStartTime = useWatch({ name: 'enrollment_starts_time' }) ?? '';
   const comingSoonThumbnail = useWatch({ name: 'coming_soon_thumbnail' });
+  const isCourseDetailsFetching = useIsFetching({
+    queryKey: ['CourseDetails', courseId],
+  });
 
   const [previousPostDate, setPreviousPostDate] = useState(
     scheduleDate && scheduleTime && isValid(new Date(`${scheduleDate} ${scheduleTime}`))
@@ -103,6 +109,7 @@ const ScheduleOptions = () => {
         render={(controllerProps) => (
           <FormSwitch
             {...controllerProps}
+            loading={!!isCourseDetailsFetching}
             label={__('Schedule', 'tutor')}
             onChange={(value) => {
               if (!value && scheduleDate && scheduleTime) {
