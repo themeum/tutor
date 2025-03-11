@@ -488,14 +488,14 @@ Cypress.Commands.add('toggle', (inputName, fieldId) => {
 
 Cypress.Commands.add('isEnrolled', () => {
   cy.get('body').then(($body) => {
-    if ($body.find("button[name='add-to-cart']").length > 0) {
+    if (
+      $body.text().includes('Add to cart') ||
+      $body.text().includes('Add to Cart') ||
+      $body.text().includes('View Cart')
+    ) {
       return false;
     }
-    if ($body.find('a.tutor-woocommerce-view-cart').length > 0) {
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   });
 });
 
@@ -562,13 +562,13 @@ Cypress.Commands.add('handleAssignment', (isLastItem) => {
         }
       });
       cy.url().should('include', 'assignments');
-      cy.setTinyMceContent('.tutor-assignment-text-area', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
+      cy.setTinyMceContent('.wp-editor-area', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
       cy.get('#tutor_assignment_submit_btn').click();
       cy.get('body').should('contain.text', 'Your Assignment');
     }
 
     if (bodyText.includes('Submit Assignment')) {
-      cy.setTinyMceContent('.tutor-assignment-text-area', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
+      cy.setTinyMceContent('.wp-editor-area', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.');
       cy.get('#tutor_assignment_submit_btn').click();
       cy.get('body').should('contain.text', 'Your Assignment');
     }
@@ -603,8 +603,8 @@ Cypress.Commands.add('handleQuiz', () => {
               cy.wrap($input).type('Sample text input answer.');
             });
         }
-        if ($question.find('#tutor-quiz-single-multiple-choice').length) {
-          cy.wrap($question).find('.tutor-quiz-answer-single').eq(0).find('input').click();
+        if ($question.find('#tutor-quiz-image-multiple-choice').length) {
+          cy.wrap($question).find('.tutor-quiz-question-item').eq(0).find('input').click();
         }
         cy.get('button.tutor-quiz-next-btn-all').eq($index).click();
       });
