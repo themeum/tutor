@@ -5,12 +5,22 @@ const TutorDatepicker = lazy(() => import('../../../v2-library/src/components/da
 
 function DatePicker() {
     const { __ } = wp.i18n;
+
+    const fallbackElement = (
+        <div class="tutor-form-wrap">
+            <span class="tutor-form-icon tutor-form-icon-reverse">
+                <span class="tutor-icon-calender-line" aria-hidden="true"></span>
+            </span>
+            <input class="tutor-form-control" placeholder={__('Loading...', 'tutor')} />
+        </div>
+    );
+
     const wrappers = document.querySelectorAll('.tutor-v2-date-picker');
     for (let wrapper of wrappers) {
         const { dataset = {} } = wrapper;
         const root = createRoot(wrapper);
         root.render(
-            <Suspense fallback={<div>{__('Loading...', 'tutor')}</div>}>
+            <Suspense fallback={fallbackElement}>
                 <TutorDatepicker {...dataset} />
             </Suspense>
         );

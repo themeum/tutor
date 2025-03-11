@@ -160,6 +160,7 @@ const FormDateInput = ({
                   defaultMonth={isValidDate ? parsedISODate : new Date()}
                   startMonth={disabledBefore ? parseISO(disabledBefore) : new Date(new Date().getFullYear() - 10, 0)}
                   endMonth={disabledAfter ? parseISO(disabledAfter) : new Date(new Date().getFullYear() + 10, 11)}
+                  weekStartsOn={wp.date?.getSettings().l10n.startOfWeek}
                 />
               </div>
             </Portal>
