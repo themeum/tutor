@@ -82,8 +82,8 @@ do_action( 'tutor_course/single/before/topics' );
 										$is_locked        = ! ( $is_enrolled || $is_preview || $is_public_course );
 									?>
 									<li class="tutor-course-content-list-item">
-										<div class="tutor-d-flex tutor-align-center">
-											<span class="tutor-course-content-list-item-icon <?php echo esc_attr( $topic_content_icon ); ?> tutor-mr-12"></span>
+										<div class="tutor-d-flex">
+											<span class="tutor-course-content-list-item-icon <?php echo esc_attr( $topic_content_icon ); ?> tutor-mr-12 tutor-mt-4"></span>
 											<h5 class="tutor-course-content-list-item-title">
 												<?php
 													$lesson_title    = '';
@@ -130,7 +130,7 @@ do_action( 'tutor_course/single/before/topics' );
 											</h5>
 										</div>
 										
-										<div>
+										<div class="tutor-d-flex tutor-align-center tutor-flex-shrink-0 tutor-mt-2">
 											<span class="tutor-course-content-list-item-duration tutor-fs-7 tutor-color-muted">
 												<?php echo esc_html( $play_time ? tutor_utils()->get_optimized_duration( $play_time ) : '' ); ?>
 											</span>
