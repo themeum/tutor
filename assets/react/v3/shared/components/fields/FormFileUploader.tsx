@@ -11,9 +11,9 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
 
 export type WpMediaDetails = {
   id: number;
