@@ -639,9 +639,7 @@ class CheckoutController {
 					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : $item->discount_price,
 				);
 
-				if ( $plan_info
-					&& $plan_info->enrollment_fee > 0
-					&& ( ! $plan_info->has_trial_period || $is_trial_used ) ) {
+				if ( $plan_info && $plan_info->enrollment_fee > 0 && ( ! $plan_info->has_trial_period || $is_trial_used ) ) {
 					$enrollment_item = array(
 						'item_id'          => 'enrollment_fee',
 						'item_name'        => 'Enrollment Fee',
@@ -653,9 +651,7 @@ class CheckoutController {
 					$items[] = $enrollment_item;
 				}
 
-				if ( $plan_info
-				&& $plan_info->has_trial_period
-				&& $plan_info->trial_fee > 0 && ! $is_trial_used ) {
+				if ( $plan_info && $plan_info->trial_value > 0 && $plan_info->trial_fee > 0 && ! $is_trial_used ) {
 					$trial_fee_item = array(
 						'item_id'          => 'trial_fee',
 						'item_name'        => 'Trial Fee',
