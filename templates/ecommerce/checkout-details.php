@@ -24,9 +24,17 @@ $get_cart            = $cart_controller->get_cart_items();
 $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
 $course_list         = $courses['results'];
+$user_id             = get_current_user_id();
 
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );
-$plan_info = apply_filters( 'tutor_get_plan_info', new stdClass(), $plan_id );
+$plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
+
+$has_trial_period = $plan_info ? $plan_info->has_trial_period : false;
+$is_trial_used    = false;
+if ( $plan_info ) {
+	$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, $user_id );
+	$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
+}
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
@@ -39,10 +47,20 @@ $has_manual_coupon_code = ! empty( $coupon_code );
 $show_coupon_box        = Settings::is_coupon_usage_enabled();
 
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
-$tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
+$tax_rate                 = Tax::get_user_tax_rate( $user_id );
 ?>
 
 <div class="tutor-checkout-details">
+
+	<?php if ( $has_trial_period && $is_trial_used ) : ?>
+	<div class="tutor-alert tutor-warning">
+		<div class="tutor-alert-text">
+			<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
+			<span><?php esc_html_e( "You've used your free trial, so this offer isn't available. Subscribe to continue.", 'tutor' ); ?></span>
+		</div>
+	</div>
+	<?php endif; ?>
+
 	<div class="tutor-checkout-details-inner">
 		<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-border-bottom tutor-pb-8">
 			<?php esc_html_e( 'Order Details', 'tutor' ); ?>
@@ -64,6 +82,16 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 					 * User can purchase only one plan at a time.
 					 */
 					$item = $checkout_data->items[0];
+
+					/**
+					 * For new trial plan subscriber.
+					 * Show price zero and cross line on regular price.
+					 *
+					 * @since 3.4.0
+					 */
+					if ( $has_trial_period && ! $is_trial_used ) {
+						$item->regular_price = $plan_info->regular_price;
+					}
 
 					array_push( $object_ids, $plan_info->id );
 
@@ -92,6 +120,34 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 								<h6 class="tutor-checkout-course-title">
 									<a href="<?php echo esc_url( $plan_url ); ?>"> <?php echo esc_html( $plan_title ); ?></a>
 								</h6>
+								<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
+									<ul class="tutor-fs-8 tutor-color-muted tutor-pl-12 tutor-mt-8">
+										<li>
+										<?php
+											/* translators: %d: trial value, %s: trial interval */
+											echo esc_html( sprintf( __( '%1$d %2$s free trial.', 'tutor' ), $plan_info->trial_value, ( $plan_info->trial_value > 1 ? $plan_info->trial_interval . 's' : $plan_info->trial_interval ) ) );
+										?>
+										</li>
+										<li>
+										<?php
+											/* translators: %s: price */
+											echo esc_html( sprintf( __( 'After trial, regular plan price %s will be charged.', 'tutor' ), tutor_get_formatted_price( $plan_info->regular_price ) ) );
+										?>
+										</li>
+										<?php
+										if ( $enrollment_fee > 0 ) {
+											?>
+											<li>
+											<?php
+												/* translators: %s: price */
+												echo esc_html( sprintf( __( 'An enrollment fee of %s will also be charged.', 'tutor' ), tutor_get_formatted_price( $enrollment_fee ) ) );
+											?>
+											</li>
+											<?php
+										}
+										?>
+									</ul>
+								<?php endif; ?>
 							</div>
 							<?php if ( $item->is_coupon_applied ) : ?>
 							<div class="tutor-checkout-coupon-badge">
@@ -105,7 +161,7 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 							<div class="tutor-fw-bold">
 								<?php tutor_print_formatted_price( $item->display_price ); ?>
 							</div>
-							<?php if ( $item->sale_price || $item->discount_price ) : ?>
+							<?php if ( $item->sale_price || $item->discount_price || ( $has_trial_period && ! $is_trial_used ) ) : ?>
 							<div class="tutor-checkout-discount-price">
 								<?php tutor_print_formatted_price( $item->regular_price ); ?>
 							</div>
@@ -131,7 +187,7 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 							</div>
 						</div>
 					</div>
-					<?php if ( $enrollment_fee > 0 ) : ?>
+					<?php if ( $enrollment_fee > 0 && ( ! $has_trial_period || $is_trial_used ) ) : ?>
 						<div class="tutor-checkout-enrollment-fee">
 							<div class="tutor-fs-6 tutor-color-black">
 								<?php echo esc_html_e( 'Enrollment Fee', 'tutor' ); ?>
@@ -139,6 +195,18 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 							<div class="tutor-text-right">
 								<div class="tutor-fw-bold">
 									<?php tutor_print_formatted_price( $enrollment_fee ); ?>
+								</div>
+							</div>
+						</div>
+					<?php endif; ?>
+					<?php if ( $has_trial_period && $plan_info->trial_fee > 0 && ! $is_trial_used ) : ?>
+						<div class="tutor-checkout-enrollment-fee">
+							<div class="tutor-fs-6 tutor-color-black">
+								<?php echo esc_html_e( 'Trial Fee', 'tutor' ); ?>
+							</div>
+							<div class="tutor-text-right">
+								<div class="tutor-fw-bold">
+									<?php tutor_print_formatted_price( $plan_info->trial_fee ); ?>
 								</div>
 							</div>
 						</div>
@@ -223,7 +291,7 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 			</div>
 			<?php endif ?>
 
-					<?php if ( $show_coupon_box && ! $checkout_data->is_coupon_applied ) : ?>
+					<?php if ( ! $has_trial_period && $show_coupon_box && ! $checkout_data->is_coupon_applied ) : ?>
 			<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 				<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
 				<button type="button" id="tutor-toggle-coupon-button" class="tutor-btn tutor-btn-link">
