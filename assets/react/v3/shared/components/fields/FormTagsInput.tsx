@@ -260,8 +260,11 @@ const styles = {
     width: 100%;
     padding: ${spacing[8]};
 
+    &:focus,
+    &:active,
     &:hover {
       background-color: ${colorTokens.background.hover};
+      color: ${colorTokens.text.primary};
     }
   `,
 };

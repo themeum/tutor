@@ -347,6 +347,7 @@ export const styleUtils = {
   },
   text: {
     ellipsis: (lines = 1) => css`
+      white-space: normal;
       display: -webkit-box;
       -webkit-line-clamp: ${lines};
       -webkit-box-orient: vertical;
@@ -557,6 +558,13 @@ export const styleUtils = {
     cursor: grab;
     place-self: center center;
     border-radius: ${borderRadius[2]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
 
     :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

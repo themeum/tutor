@@ -13,9 +13,10 @@ import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { type IconCollection, type Option, isDefined } from '@TutorShared/utils/types';
+import { type Option, isDefined } from '@TutorShared/utils/types';
 import { noop } from '@TutorShared/utils/util';
 
+import { IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormSelectInputProps<T> = {
@@ -629,6 +630,13 @@ const styles = {
     border-radius: ${borderRadius[4]};
     padding: ${spacing[6]};
     height: 100%;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

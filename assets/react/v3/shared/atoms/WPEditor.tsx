@@ -345,9 +345,31 @@ const styles = {
     }
 
     .wp-switch-editor {
+      height: auto;
+      border: 1px solid #dcdcde;
+      border-radius: 0px;
       border-top-left-radius: ${borderRadius[4]};
       border-top-right-radius: ${borderRadius[4]};
-      height: auto;
+      top: 2px;
+      padding: 3px 8px 4px;
+      font-size: 13px;
+      color: #646970;
+
+      &:focus,
+      &:active,
+      &:hover {
+        background: #f0f0f1;
+        color: #646970;
+      }
+    }
+
+    .mce-btn button {
+      &:focus,
+      &:active,
+      &:hover {
+        background: none;
+        color: #50575e;
+      }
     }
 
     .mce-toolbar-grp,

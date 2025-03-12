@@ -422,6 +422,12 @@ const styles = {
       cursor: not-allowed;
     }
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
+
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;

@@ -446,6 +446,12 @@ const styles = {
     border-radius: ${borderRadius.input};
     background-color: ${colorTokens.bg.white};
 
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: ${colorTokens.bg.white};
+    }
+
     &:focus {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
@@ -502,6 +508,12 @@ const styles = {
     opacity: 0;
     transition: none;
 
+    &:hover,
+    &:focus,
+    &:active {
+      background-color: ${colorTokens.bg.white};
+    }
+
     &:focus {
       box-shadow: ${shadow.focus};
     }
@@ -553,6 +565,12 @@ const styles = {
     line-height: ${lineHeight[24]};
     word-break: break-all;
     cursor: pointer;
+
+    &:hover,
+    &:focus,
+    &:active {
+      background: none;
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
