@@ -25,6 +25,10 @@ export const frontendUrls = {
     SETTINGS: '/dashboard/settings/',
     LOGOUT: '/dashboard/logout',
   },
+  WOOCOMMERCE_CART: '/woo-cart',
+  WOOCOMMERCE_CHECKOUT: '/woo-checkout',
+  TUTOR_CART: '/cart',
+  TUTOR_CHECKOUT: '/checkout',
 };
 
 export const backendUrls = {

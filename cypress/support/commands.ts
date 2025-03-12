@@ -72,6 +72,7 @@ declare global {
       duplicateContent(type: string, index?: number): Chainable<void>;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       waitAfterRequest(alias: string, additionalWaitMs?: number): Chainable<Interception<any, any>>;
+      monetizedBy(): Chainable<string>;
     }
   }
 }
@@ -945,4 +946,10 @@ Cypress.Commands.add('duplicateContent', (type, index = 0) => {
   cy.waitAfterRequest('duplicateContent');
   cy.waitAfterRequest('getCourseContents');
   cy.get('[data-cy=tutor-toast]').should('be.visible').contains('Duplicated successfully');
+});
+
+Cypress.Commands.add('monetizedBy', () => {
+  cy.window().then((win) => {
+    return win._tutorobject.settings?.monetize_by;
+  });
 });
