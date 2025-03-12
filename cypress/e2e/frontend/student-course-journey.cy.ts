@@ -45,6 +45,8 @@ describe('Tutor Student Course Journey', () => {
         cy.get('a').contains('Start Learning').click();
       } else if ($body.text().includes('Enroll Now')) {
         cy.get('button').contains('Enroll Now').click();
+        cy.wait(500);
+        cy.get('button').contains('Start Learning').click();
       }
     });
 
@@ -96,7 +98,7 @@ describe('Tutor Student Course Journey', () => {
               cy.url().should('include', 'assignments');
 
               cy.setTinyMceContent(
-                '.tutor-assignment-text-area',
+                '.wp-editor-area',
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet purus lacinia diam pretium interdum. Nullam elementum tincidunt ipsum vel fringilla.',
               );
               cy.get('#tutor_assignment_submit_btn').click();
@@ -107,7 +109,7 @@ describe('Tutor Student Course Journey', () => {
           cy.get('body').then(($body) => {
             if ($body.text().includes('Submit Assignment')) {
               cy.setTinyMceContent(
-                '.tutor-assignment-text-area',
+                '.wp-editor-area',
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas sit amet purus lacinia diam pretium interdum. Nullam elementum tincidunt ipsum vel fringilla.',
               );
               cy.get('#tutor_assignment_submit_btn').click();
