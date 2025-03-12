@@ -16,10 +16,10 @@ import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { noop } from '@TutorShared/utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
+import profileImage from '@SharedImages/profile-photo.png';
 import { tutorConfig } from '@TutorShared/config/config';
 import { isRTL, TutorRoles } from '@TutorShared/config/constants';
 import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
-import profileImage from '@SharedImages/profile-photo.png';
 import type { User } from '@TutorShared/services/users';
 
 export interface UserOption extends User {
@@ -70,7 +70,7 @@ const FormSelectUser = ({
 }: FormSelectUserProps) => {
   const inputValue = field.value ?? (isMultiSelect ? [] : userPlaceholderData);
   const selectedIds = Array.isArray(inputValue) ? inputValue.map((item) => String(item.id)) : [String(inputValue.id)];
-  const isCurrentUserAdmin = tutorConfig.current_user.roles.includes(TutorRoles.ADMINISTRATOR);
+  const isCurrentUserAdmin = tutorConfig.current_user.roles?.includes(TutorRoles.ADMINISTRATOR);
 
   const [isOpen, setIsOpen] = useState(false);
 

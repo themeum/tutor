@@ -111,6 +111,16 @@ const EnrollmentSettings = () => {
           <Controller
             name="course_enrollment_period"
             control={form.control}
+            rules={{
+              deps: [
+                'schedule_date',
+                'schedule_time',
+                'enrollment_starts_date',
+                'enrollment_starts_time',
+                'enrollment_ends_date',
+                'enrollment_ends_time',
+              ],
+            }}
             render={(controllerProps) => (
               <FormSwitch
                 {...controllerProps}
@@ -142,7 +152,13 @@ const EnrollmentSettings = () => {
                           }
                         },
                       },
-                      deps: ['schedule_date', 'schedule_time', 'enrollment_ends_date', 'enrollment_ends_time'],
+                      deps: [
+                        'schedule_date',
+                        'schedule_time',
+                        'enrollment_starts_time',
+                        'enrollment_ends_date',
+                        'enrollment_ends_time',
+                      ],
                     }}
                     render={(controllerProps) => (
                       <FormDateInput
@@ -229,7 +245,7 @@ const EnrollmentSettings = () => {
                             }
                           },
                         },
-                        deps: ['enrollment_starts_date', 'enrollment_starts_time'],
+                        deps: ['enrollment_starts_date', 'enrollment_starts_time', 'enrollment_ends_time'],
                       }}
                       render={(controllerProps) => (
                         <FormDateInput

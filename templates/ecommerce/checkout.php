@@ -109,7 +109,7 @@ $is_checkout_page = true;
 										} else {
 											?>
 										<label class="tutor-checkout-payment-item" data-payment-type="automate">
-											<input type="radio" name="payment_method" value="<?php echo esc_attr( $name ); ?>" class="tutor-form-check-input" required>
+											<input type="radio" name="payment_method" value="<?php echo esc_attr( $name ); ?>" class="tutor-form-check-input" <?php echo count( $supported_gateways ) === 1 ? 'checked' : ''; ?> required>
 											<div class="tutor-payment-item-content">
 												<?php if ( ! empty( $icon ) ) : ?>
 												<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>

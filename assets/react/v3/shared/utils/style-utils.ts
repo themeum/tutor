@@ -497,6 +497,7 @@ export const styleUtils = {
     outline: none;
     color: ${colorTokens.icon.default};
     transition: color 0.3s ease-in-out;
+    cursor: pointer;
 
     :hover {
       color: ${colorTokens.icon.hover};

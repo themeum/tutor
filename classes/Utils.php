@@ -7567,13 +7567,15 @@ class Utils {
 	 * Is instructor of this course
 	 *
 	 * @since 1.6.4
+	 * @since 3.4.0 param $is_approved added.
 	 *
-	 * @param int $instructor_id instructor id.
-	 * @param int $course_id course id.
+	 * @param int  $instructor_id instructor id.
+	 * @param int  $course_id course id.
+	 * @param bool $is_approved is approved.
 	 *
 	 * @return bool|int
 	 */
-	public function is_instructor_of_this_course( $instructor_id = 0, $course_id = 0 ) {
+	public function is_instructor_of_this_course( $instructor_id = 0, $course_id = 0, $is_approved = true ) {
 		global $wpdb;
 
 		$instructor_id = $this->get_user_id( $instructor_id );
@@ -7583,15 +7585,19 @@ class Utils {
 			return false;
 		}
 
-		$cache_key  = "tutor_is_instructor_of_the_course_{$instructor_id}_{$course_id}";
+		$cache_key  = "tutor_is_instructor_of_the_course_{$instructor_id}_{$course_id}_{$is_approved}";
 		$instructor = TutorCache::get( $cache_key );
 
 		if ( false === $instructor ) {
+			$is_approved_clause = $is_approved ? "AND meta_key = '_tutor_instructor_status' AND meta_value = 'approved'" : '';
+
+			//phpcs:disable
 			$instructor = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT umeta_id
 				FROM   {$wpdb->usermeta}
 				WHERE  user_id = %d
+					{$is_approved_clause}
 					AND meta_key = '_tutor_instructor_course_id'
 					AND meta_value = %d
 				",
@@ -7599,6 +7605,8 @@ class Utils {
 					$course_id
 				)
 			);
+			//phpcs:enable
+
 			TutorCache::set( $cache_key, $instructor );
 		}
 
@@ -8349,7 +8357,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
-		return current_user_can( 'edit_post', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
+		return current_user_can( 'edit_tutor_course', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
 	}
 
 
