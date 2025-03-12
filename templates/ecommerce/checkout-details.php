@@ -24,7 +24,6 @@ $get_cart            = $cart_controller->get_cart_items();
 $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
 $course_list         = $courses['results'];
-$user_id             = get_current_user_id();
 
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );
 $plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
@@ -34,6 +33,14 @@ $is_trial_used    = false;
 if ( $plan_info ) {
 	$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, $user_id );
 	$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
+
+	if ( $has_trial_period && ! $is_trial_used ) {
+		$label_interval = $plan_info->trial_value > 1 ? $plan_info->trial_interval . 's' : $plan_info->trial_interval;
+		$label_interval = ucwords( $label_interval );
+
+		/* translators: %d: trial value, %s: trial interval */
+		$pay_now_btn_label = sprintf( __( 'Start %1$d-%2$s Trial', 'tutor' ), $plan_info->trial_value, $label_interval );
+	}
 }
 
 // Contains Course/Bundle/Plan ids.

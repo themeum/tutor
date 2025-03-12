@@ -20,6 +20,7 @@ $user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
 
 $tutor_toc_page_link     = tutor_utils()->get_toc_page_link();
 $tutor_privacy_page_link = tutor_utils()->get_privacy_page_link();
+$pay_now_btn_label       = __( 'Pay Now', 'tutor' );
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
@@ -178,7 +179,7 @@ $is_checkout_page = true;
 						<!-- handle errors end -->
 
 						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
-							<?php esc_html_e( 'Pay Now', 'tutor' ); ?>
+							<?php echo esc_html( $pay_now_btn_label ); ?>
 						</button>
 					</div>
 				</div>
