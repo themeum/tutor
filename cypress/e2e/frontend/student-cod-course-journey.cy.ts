@@ -1,3 +1,5 @@
+// @TODO: Need to rework
+
 describe('Tutor Student Paid Course Journey', () => {
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}/courses/${Cypress.env('cod_course_slug')}/`);
