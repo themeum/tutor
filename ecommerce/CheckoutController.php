@@ -187,8 +187,19 @@ class CheckoutController {
 				$plan_info = apply_filters( 'tutor_get_plan_info', null, $item_id );
 				if ( $plan_info ) {
 					$item_name                   = $plan_info->plan_name;
-					$course_price->regular_price = $plan_info->regular_price;
-					$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
+					$course_price->regular_price = $plan_info->has_trial_period ? 0 : $plan_info->regular_price;
+					$course_price->sale_price    = ( $plan_info->in_sale_price && ! $plan_info->has_trial_period ) ? $plan_info->sale_price : 0;
+
+					/**
+					 * User will charged regular price if trial is used.
+					 *
+					 * @since 3.4.0
+					 */
+					$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, get_current_user_id() );
+					if ( $user_subscription && $user_subscription->is_trial_used ) {
+						$course_price->regular_price = $plan_info->regular_price;
+						$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
+					}
 				}
 			}
 
@@ -289,6 +300,7 @@ class CheckoutController {
 	public function prepare_checkout_items( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER, $coupon_code = null ) {
 		$item_ids = is_array( $item_ids ) ? $item_ids : array( $item_ids );
 		$response = array();
+		$user_id  = get_current_user_id();
 
 		$coupon_type       = empty( $coupon_code ) ? 'automatic' : 'manual';
 		$is_coupon_applied = false;
@@ -356,8 +368,17 @@ class CheckoutController {
 			$sale_discount   += $sale_discount_amount;
 		}
 
-		if ( $plan_info && $plan_info->enrollment_fee > 0 ) {
+		$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, $user_id );
+		$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
+
+		// Add enrollment fee if applicable.
+		if ( $plan_info && $plan_info->enrollment_fee > 0 && ( $plan_info->trial_value < 1 || $is_trial_used ) ) {
 			$subtotal_price += $plan_info->enrollment_fee;
+		}
+
+		// Add trial fee if applicable.
+		if ( $plan_info && $plan_info->trial_value > 0 && $plan_info->trial_fee > 0 && ! $is_trial_used ) {
+			$subtotal_price += $plan_info->trial_fee;
 		}
 
 		$total_price = $subtotal_price - ( $coupon_discount + $sale_discount );
@@ -454,10 +475,6 @@ class CheckoutController {
 		if ( empty( $object_ids ) ) {
 			array_push( $errors, __( 'Invalid cart items', 'tutor' ) );
 		}
-
-		// if ( ! Ecommerce::is_payment_gateway_configured( $payment_method ) ) {
-		// array_push( $errors, Ecommerce::get_incomplete_payment_setup_error_message( $payment_method ) );
-		// }
 
 		$billing_info = $billing_model->get_info( $current_user_id );
 		if ( $billing_info ) {
@@ -608,8 +625,11 @@ class CheckoutController {
 
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
 				$plan_id   = $item_id;
-				$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $plan_id );
+				$plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
 				$item_name = $plan_info->plan_name ?? '';
+
+				$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, $order_user_id );
+				$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
 
 				$items[] = array(
 					'item_id'          => $item_id,
@@ -619,9 +639,11 @@ class CheckoutController {
 					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : $item->discount_price,
 				);
 
-				if ( $plan_info && property_exists( $plan_info, 'enrollment_fee' ) && $plan_info->enrollment_fee > 0 ) {
+				if ( $plan_info
+					&& $plan_info->enrollment_fee > 0
+					&& ( ! $plan_info->has_trial_period || $is_trial_used ) ) {
 					$enrollment_item = array(
-						'item_id'          => 0,
+						'item_id'          => 'enrollment_fee',
 						'item_name'        => 'Enrollment Fee',
 						'regular_price'    => floatval( $plan_info->enrollment_fee ),
 						'quantity'         => 1,
@@ -629,6 +651,20 @@ class CheckoutController {
 					);
 
 					$items[] = $enrollment_item;
+				}
+
+				if ( $plan_info
+				&& $plan_info->has_trial_period
+				&& $plan_info->trial_fee > 0 && ! $is_trial_used ) {
+					$trial_fee_item = array(
+						'item_id'          => 'trial_fee',
+						'item_name'        => 'Trial Fee',
+						'regular_price'    => floatval( $plan_info->trial_fee ),
+						'quantity'         => 1,
+						'discounted_price' => null,
+					);
+
+					$items[] = $trial_fee_item;
 				}
 			} else {
 				// Single order item.
