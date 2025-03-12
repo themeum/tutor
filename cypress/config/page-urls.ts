@@ -34,6 +34,7 @@ export const frontendUrls = {
 export const backendUrls = {
   LOGIN: '/wp-login.php',
   AJAX_URL: '/wp-admin/admin-ajax.php',
+  COUPONS: '/wp-admin/admin.php?page=tutor_coupons',
   COURSE_BUNDLES: '/wp-admin/admin.php?page=course-bundle',
   CATEGORIES: '/wp-admin/edit-tags.php?taxonomy=course-category&post_type=courses',
   TAGS: '/wp-admin/edit-tags.php?taxonomy=course-tag&post_type=courses',

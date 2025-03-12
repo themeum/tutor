@@ -179,7 +179,6 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
         cy.get('@randomCheckbox')
           .invoke('attr', 'value')
           .then((id) => {
-            cy.log('id', id);
             if (option === 'trash') {
               cy.get(`select.tutor-table-row-status-update[data-id="${id}"]`).should('not.exist');
             } else {
@@ -187,7 +186,6 @@ Cypress.Commands.add('performBulkActionOnSelectedElement', (option) => {
                 .invoke('attr', 'data-status')
                 .then((status) => {
                   console.log(status);
-                  console.log('option ', option);
                   expect(status).to.include(option);
                 });
             }

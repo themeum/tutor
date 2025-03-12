@@ -10,6 +10,7 @@ describe('Tutor Admin Courses', () => {
   it('should filter by category', () => {
     cy.filterByCategory();
   });
+
   it('should check if the elements are sorted', () => {
     const formSelector = ':nth-child(3) > .tutor-js-form-select';
     const itemSelector = '.tutor-d-flex.tutor-align-center.tutor-gap-2 > div > a.tutor-table-link';
@@ -34,12 +35,14 @@ describe('Tutor Admin Courses', () => {
     checkSorting('ASC');
     checkSorting('DESC');
   });
+
   it('should show warning when no course is selected', () => {
     cy.get('.tutor-form-select-label').then(() => {
       cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
     });
     cy.contains('Nothing was selected for bulk action.');
   });
+
   it('should be able to search any course', () => {
     const searchInputSelector = '#tutor-backend-filter-search';
     const searchQuery = 'js';
@@ -48,6 +51,7 @@ describe('Tutor Admin Courses', () => {
     const submitWithButton = false;
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
+
   it('should be able to duplicate a course successfully', () => {
     cy.get('body').then(($body) => {
       if ($body.text().includes('No Data Available in this Section')) {
@@ -66,6 +70,7 @@ describe('Tutor Admin Courses', () => {
       }
     });
   });
+
   it('should be able to delete a course successfully', () => {
     // admin should delete course
     cy.get('body').then(($body) => {
@@ -95,12 +100,14 @@ describe('Tutor Admin Courses', () => {
       }
     });
   });
+
   it('should perform bulk actions on one randomly selected course', () => {
     const options = ['publish', 'pending', 'draft', 'trash'];
     options.forEach((option) => {
       cy.performBulkActionOnSelectedElement(option);
     });
   });
+
   // should perform bulk action on all courses
   it('should be able to perform bulk actions on all courses', () => {
     const options = ['publish', 'pending', 'draft', 'trash'];
