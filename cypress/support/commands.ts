@@ -99,7 +99,7 @@ Cypress.Commands.add('waitAfterRequest', (alias: string, additionalWaitMs = 500)
 Cypress.Commands.add('getByInputName', (selector) => {
   cy.get(`input[name="${selector}"], textarea[name="${selector}"]`).then(($input) => {
     if ($input.length === 1) {
-      cy.wrap($input).scrollIntoView();
+      cy.wrap($input);
     }
     if ($input.attr('type') === 'radio') {
       cy.wrap($input).parent();

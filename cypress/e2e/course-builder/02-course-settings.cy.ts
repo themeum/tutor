@@ -82,7 +82,11 @@ describe('Course Builder - Settings', () => {
       }
 
       cy.getByInputName('maximum_students').type(String(courseData.maximum_students));
-      cy.getByInputName('enrollment_expiry').type(String(courseData.enrollment_expiry));
+      cy.window().then((win) => {
+        if (win._tutorobject.settings?.enrollment_expiry_enabled === 'on') {
+          cy.getByInputName('enrollment_expiry').type(String(courseData.enrollment_expiry));
+        }
+      });
       cy.getByInputName('course_enrollment_period').check();
       cy.getByInputName('course_enrollment_period')
         .should('be.checked')

@@ -107,7 +107,7 @@ describe('Tutor Admin Subscriptions', () => {
     cy.get('[data-cy="tutor-toast"]').should('contain.text', 'successfully');
   });
 
-  it.only('should delete a subscription plan', () => {
+  it('should delete a subscription plan', () => {
     cy.get('[data-cy=edit-subscription]').first().click({ force: true });
     cy.get('[data-cy=tutor-modal]').should('be.visible');
 
