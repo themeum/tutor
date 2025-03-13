@@ -7596,7 +7596,25 @@ class Utils {
 		$instructor = TutorCache::get( $cache_key );
 
 		if ( false === $instructor ) {
-			$is_approved_clause = $is_approved ? "AND meta_key = '_tutor_instructor_status' AND meta_value = 'approved'" : '';
+
+			if ( $is_approved ) {
+				$is_approved_instructor = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(umeta_id)
+						FROM   {$wpdb->usermeta}
+						WHERE  user_id = %d 
+							AND meta_key = %s 
+							AND meta_value = %s",
+						$instructor_id,
+						'_tutor_instructor_status',
+						'approved',
+					)
+				);
+
+				if ( ! $is_approved_instructor ) {
+					return false;
+				}
+			}
 
 			//phpcs:disable
 			$instructor = $wpdb->get_col(
@@ -7604,7 +7622,6 @@ class Utils {
 					"SELECT umeta_id
 				FROM   {$wpdb->usermeta}
 				WHERE  user_id = %d
-					{$is_approved_clause}
 					AND meta_key = '_tutor_instructor_course_id'
 					AND meta_value = %d
 				",
