@@ -247,6 +247,8 @@ gulp.task('copy', function () {
 			'!phpcs.xml',
 			'!phpcs.xml.dist',
 			'!./tutor-droip/**',
+			'!./cypress/**',
+			'!./cypress.config.ts',
 		])
 		.pipe(gulp.dest('build/tutor/'));
 });

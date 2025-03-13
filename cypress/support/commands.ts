@@ -688,7 +688,7 @@ Cypress.Commands.add('viewCertificate', () => {
 });
 
 Cypress.Commands.add('getSelectInput', (name: string, value: string) => {
-  cy.get(`input[name="${name}"]`).scrollIntoView().should('be.visible').click();
+  cy.get(`input[name*="${name}"]`).scrollIntoView().should('be.visible').click();
   cy.wait(250);
   cy.get('.tutor-portal-popover')
     .last()

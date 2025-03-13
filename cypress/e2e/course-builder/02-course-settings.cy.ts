@@ -108,6 +108,7 @@ describe('Course Builder - Settings', () => {
     cy.isAddonEnabled(Addons.SUBSCRIPTION).then((isEnabled) => {
       cy.window().then((win) => {
         if (win._tutorobject.settings?.monetize_by === 'tutor' && isEnabled) {
+          cy.getSelectInput('course_selling_option', 'All');
           cy.getByInputName('course_price').type(courseData.course_price);
           cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
         }
