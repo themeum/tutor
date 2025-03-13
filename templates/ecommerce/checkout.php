@@ -68,7 +68,12 @@ $is_checkout_page = true;
 							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
 						</div>
 
-						<?php $show_payment_methods = apply_filters( 'tutor_checkout_show_payment_methods', true ); ?>
+						<?php
+						$show_payment_methods = apply_filters( 'tutor_checkout_show_payment_methods', true );
+						if ( ! $show_payment_methods ) {
+							echo '<input type="hidden" name="payment_method" value="free">';
+						}
+						?>
 						<?php if ( $show_payment_methods ) : ?>
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
