@@ -34,6 +34,7 @@ export const createGlobalCss = () => css`
   body {
     margin: 0;
     font-family: ${fontFamily.sfProDisplay};
+    height: 100%;
   }
 
   main {
