@@ -84,6 +84,18 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 					$plan_course_id = apply_filters( 'tutor_subscription_course_by_plan', $plan_id );
 					$plan_course    = get_post( $plan_course_id );
 
+					$allow_trial_checkout_without_payment = (bool) tutor_utils()->get_option( 'allow_trial_checkout_without_payment' );
+					add_filter(
+						'tutor_checkout_show_payment_methods',
+						function( $bool ) use ( $allow_trial_checkout_without_payment, $has_trial_period, $is_trial_used, $checkout_data ) {
+							if ( $allow_trial_checkout_without_payment && 0 === $checkout_data->total_price && $has_trial_period && ! $is_trial_used ) {
+								return false;
+							}
+
+							return $bool;
+						}
+					);
+
 					/**
 					 * Plan item details.
 					 * User can purchase only one plan at a time.

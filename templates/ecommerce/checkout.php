@@ -21,7 +21,6 @@ $user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
 $tutor_toc_page_link     = tutor_utils()->get_toc_page_link();
 $tutor_privacy_page_link = tutor_utils()->get_privacy_page_link();
 $pay_now_btn_label       = __( 'Pay Now', 'tutor' );
-$show_payment_methods    = apply_filters( 'tutor_checkout_show_payment_methods', true );
 
 $cart_controller = new CartController();
 $get_cart        = $cart_controller->get_cart_items();
@@ -69,6 +68,7 @@ $is_checkout_page = true;
 							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
 						</div>
 
+						<?php $show_payment_methods = apply_filters( 'tutor_checkout_show_payment_methods', true ); ?>
 						<?php if ( $show_payment_methods ) : ?>
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 							<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
