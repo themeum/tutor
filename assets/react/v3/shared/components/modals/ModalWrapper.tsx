@@ -183,6 +183,12 @@ const styles = {
     border-radius: ${borderRadius.circle};
     background: ${colorTokens.background.white};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: ${colorTokens.background.white};
+    }
+
     svg {
       color: ${colorTokens.icon.default};
       transition: color 0.3s ease-in-out;

@@ -36,8 +36,9 @@ import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorSh
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection, ID } from '@TutorShared/utils/types';
+import type { ID } from '@TutorShared/utils/types';
 import { isAddonEnabled, noop } from '@TutorShared/utils/util';
 
 interface TopicContentProps {

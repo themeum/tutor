@@ -234,7 +234,7 @@ const styles = {
     padding: ${spacing[8]} ${spacing[16]};
     border-radius: ${borderRadius[6]} 0 0 ${borderRadius[6]};
     z-index: ${zIndex.level};
-    transition-property: box-shadow, background, opacity;
+    transition-property: box-shadow, background-color, opacity;
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     position: relative;
@@ -256,18 +256,30 @@ const styles = {
       background-color: ${colorTokens.action.primary.default};
       color: ${colorTokens.text.white};
 
-      &:hover:not(:disabled) {
-        background-color: ${colorTokens.action.primary.hover};
+      &:not(:disabled) {
+        &:hover,
+        &:focus {
+          background-color: ${colorTokens.action.primary.hover};
+          color: ${colorTokens.text.white};
+        }
+
+        &:active {
+          background-color: ${colorTokens.action.primary.active};
+          color: ${colorTokens.text.white};
+        }
       }
 
-      &:active:not(:disabled) {
-        background-color: ${colorTokens.action.primary.active};
-      }
-
-      ${disabled &&
+      ${(disabled || loading) &&
       css`
         background-color: ${colorTokens.action.primary.disable};
         color: ${colorTokens.text.disable};
+
+        &:hover,
+        &:focus,
+        &:active {
+          background-color: ${colorTokens.action.primary.disable};
+          color: ${colorTokens.text.disable};
+        }
       `}
     `}
 

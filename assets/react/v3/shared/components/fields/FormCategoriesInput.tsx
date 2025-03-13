@@ -322,6 +322,13 @@ const styles = {
     align-items: center;
     border-radius: ${borderRadius[2]};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.brand.blue};
+    }
+
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;
