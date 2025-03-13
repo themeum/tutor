@@ -539,15 +539,12 @@ class CheckoutController {
 			$order_data = ( new OrderController( false ) )->create_order( $current_user_id, $items, OrderModel::PAYMENT_UNPAID, $order_type, $coupon_code, $args, false );
 			if ( ! empty( $order_data ) ) {
 				if ( 'automate' === $payment_type ) {
-					$redirect_to_gateway = apply_filters( 'tutor_checkout_redirect_to_gateway', true, $order_data );
-					if ( $redirect_to_gateway ) {
-						try {
-							$payment_data = self::prepare_payment_data( $order_data );
-							$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
-						} catch ( \Throwable $th ) {
-							tutor_log( $th );
-							tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
-						}
+					try {
+						$payment_data = self::prepare_payment_data( $order_data );
+						$this->proceed_to_payment( $payment_data, $payment_method, $order_type );
+					} catch ( \Throwable $th ) {
+						tutor_log( $th );
+						tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data['id'], $th->getMessage() );
 					}
 				} else {
 					// Set alert message session.
@@ -955,6 +952,7 @@ class CheckoutController {
 			OrderModel::TYPE_SUBSCRIPTION,
 			OrderModel::TYPE_RENEWAL,
 		);
+
 		$order_types = implode( ',', $order_types );
 
 		$validation_rules = array(

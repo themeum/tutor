@@ -88,7 +88,6 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 					$skip_payment_for_trial               = $allow_trial_checkout_without_payment && 0 === $checkout_data->total_price && $has_trial_period && ! $is_trial_used;
 
 					add_filter( 'tutor_checkout_show_payment_methods', fn( $bool) => $skip_payment_for_trial ? false : $bool );
-					add_filter( 'tutor_checkout_redirect_to_gateway', fn( $bool) => $skip_payment_for_trial ? false : $bool );
 
 
 					/**
