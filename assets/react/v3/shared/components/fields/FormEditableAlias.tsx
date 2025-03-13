@@ -120,6 +120,7 @@ const styles = {
     flex-shrink: 0;
     ${typography.caption()};
     color: ${colorTokens.text.subdued};
+    margin: 0px;
   `,
   linkWrapper: css`
     display: flex;
