@@ -2407,7 +2407,7 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
 	 *
-	 * @since 3.4.0 $filters replaced with $args to override the faults.
+	 * @since 3.4.0 $filters replaced with $args to override the defaults.
 	 *
 	 * @param integer $user_id user id.
 	 * @param string  $post_status post status.
@@ -2418,8 +2418,6 @@ class Utils {
 	 * @return bool|\WP_Query
 	 */
 	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $args = array() ) {
-		global $wpdb;
-
 		$user_id    = $this->get_user_id( $user_id );
 		$course_ids = array_unique( $this->get_enrolled_courses_ids_by_user( $user_id ) );
 
