@@ -687,8 +687,12 @@ Cypress.Commands.add('viewCertificate', () => {
   });
 });
 
-Cypress.Commands.add('getSelectInput', (name: string, value: string) => {
-  cy.get(`input[name*="${name}"]`).scrollIntoView().should('be.visible').click();
+Cypress.Commands.add('getSelectInput', (name: string, value: string, eq?: number) => {
+  cy.get(`input[name*="${name}"]`)
+    .eq(eq || 0)
+    .scrollIntoView()
+    .should('be.visible')
+    .click();
   cy.wait(250);
   cy.get('.tutor-portal-popover')
     .last()

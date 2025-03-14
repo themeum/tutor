@@ -12,7 +12,7 @@ describe('Tutor Dashboard Student Order History', () => {
       if ($body.text().includes('No Data Available in this Section')) {
         cy.log('No data found');
       } else {
-        cy.get("input[placeholder=' MMMM d, yyyy -- MMMM d, yyyy ']").click();
+        cy.get("input[placeholder=' Y-M-d -- Y-M-d ']").click();
         cy.get('.react-datepicker__day.react-datepicker__day--001').eq(0).click();
         cy.get('.react-datepicker__day.react-datepicker__day--028').eq(1).click();
         cy.get('button').contains('Apply').click();
