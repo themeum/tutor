@@ -42,6 +42,7 @@ class OptionKeys {
 	const MANUAL_PAYMENT_KEY = 'tutor_manual_payments';
 	const PAYMENT_SETTINGS   = 'payment_settings';
 
+	const BUY_NOW = 'is_enable_buy_now';
 
 	/**
 	 * Get billing field options
