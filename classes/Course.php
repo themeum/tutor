@@ -416,6 +416,10 @@ class Course extends Tutor_Base {
 
 			$course_settings = $params['course_settings'];
 
+			if ( $course_settings['course_enrollment_period'] && 'no' === $course_settings['course_enrollment_period'] ) {
+				return;
+			}
+
 			if ( isset( $course_settings['enrollment_starts_at'] ) && ! empty( $course_settings['enrollment_starts_at'] ) ) {
 				$enrollment_start = strtotime( $course_settings['enrollment_starts_at'] );
 				$scheduled_date   = strtotime( $params['post_date_gmt'] );
