@@ -6,47 +6,89 @@ const couponData = {
   discountAmount: faker.number.int({ min: 1, max: 100 }),
 };
 
+const NO_DATA_MESSAGES = [
+  'No Data Found from your Search/Filter',
+  'No request found',
+  'No Data Available in this Section',
+  'No records found',
+  'No Records Found',
+];
+
 describe('Coupon Management', () => {
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.LOGIN}`);
     cy.loginAsAdmin();
-    cy.visit(`${Cypress.env('base_url')}${backendUrls.COUPONS}`);
-    cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`).as('ajaxRequest');
+
+    // Navigate to coupons page and set up ajax interceptor if monetized by tutor
+    cy.monetizedBy().then((monetizedBy) => {
+      if (monetizedBy === 'tutor') {
+        cy.visit(`${Cypress.env('base_url')}${backendUrls.COUPONS}`);
+        cy.intercept('POST', `${Cypress.env('base_url')}${backendUrls.AJAX_URL}`).as('ajaxRequest');
+      }
+    });
   });
 
+  // Custom command to check if monetization is enabled and skip if not
+  const runIfMonetized = (testFn: () => void) => {
+    cy.monetizedBy().then((monetizedBy) => {
+      if (monetizedBy !== 'tutor') {
+        cy.log('Monetization is not enabled - skipping test');
+        return;
+      }
+      testFn();
+    });
+  };
+
+  // Custom command to check if data is available
+  const ifDataAvailable = (callback: () => void) => {
+    cy.get('body').then(($body) => {
+      const bodyText = $body.text();
+      const hasNoData = NO_DATA_MESSAGES.some((message) => bodyText.includes(message));
+
+      if (hasNoData) {
+        cy.log('No data available - skipping this check');
+        return;
+      }
+
+      callback();
+    });
+  };
+
   it('should be able to create a coupon', () => {
-    cy.get('a').contains('Add New').click();
-    cy.url().should('include', '&action=add_new');
+    runIfMonetized(() => {
+      cy.get('a').contains('Add New').click();
+      cy.url().should('include', '&action=add_new');
 
-    cy.getByInputName('coupon_title').type(couponData.title);
-    cy.get('[data-cy=generate-code]').click();
-    cy.getByInputName('coupon_code').invoke('val').should('not.be.empty');
+      cy.getByInputName('coupon_title').type(couponData.title);
+      cy.get('[data-cy=generate-code]').click();
+      cy.getByInputName('coupon_code').invoke('val').should('not.be.empty');
+      cy.getByInputName('discount_amount').type(String(couponData.discountAmount));
 
-    cy.getByInputName('discount_amount').type(String(couponData.discountAmount));
+      cy.selectDate('start_date');
+      cy.getSelectInput('start_time', '12:00 AM');
 
-    cy.selectDate('start_date');
-    cy.getSelectInput('start_time', '12:00 AM');
-
-    cy.get('[data-cy=save-coupon]').click();
-    cy.waitAfterRequest('ajaxRequest');
-    cy.url().should('include', backendUrls.COUPONS);
+      cy.get('[data-cy=save-coupon]').click();
+      cy.waitAfterRequest('ajaxRequest');
+      cy.url().should('include', backendUrls.COUPONS);
+    });
   });
 
   it('should be able to edit a coupon', () => {
-    cy.get('a.tutor-btn.tutor-btn-outline-primary.tutor-btn-sm:contains("Edit")').eq(0).click();
-    cy.url().should('include', '&action=edit');
+    runIfMonetized(() => {
+      cy.get('a.tutor-btn.tutor-btn-outline-primary.tutor-btn-sm').contains('Edit').first().click();
+      cy.url().should('include', '&action=edit');
 
-    cy.get('input[name=coupon_type]').should('be.disabled');
+      cy.get('input[name=coupon_type]').should('be.disabled');
+      const newDiscountAmount = faker.number.int({ min: 1, max: 99 });
+      cy.getByInputName('discount_amount').clear().type(String(newDiscountAmount));
 
-    const newDiscountAmount = faker.number.int({ min: 1, max: 99 });
-    cy.getByInputName('discount_amount').clear().type(String(newDiscountAmount));
-
-    cy.get('[data-cy=save-coupon]').click();
-    cy.waitAfterRequest('ajaxRequest');
-    cy.url().should('include', backendUrls.COUPONS);
+      cy.get('[data-cy=save-coupon]').click();
+      cy.waitAfterRequest('ajaxRequest');
+      cy.url().should('include', backendUrls.COUPONS);
+    });
   });
 
-  it.only('should filter by category', () => {
+  it('should filter by category', () => {
     cy.get('.tutor-js-form-select').eq(1).click();
     cy.get('.tutor-form-select-options')
       .eq(1)
@@ -87,77 +129,83 @@ describe('Coupon Management', () => {
   });
 
   it('should perform bulk actions on one randomly selected coupon', () => {
-    const options = ['inactive', 'active', 'trash'];
-    options.forEach((option) => {
-      cy.get('body').then(($body) => {
-        if (
-          $body.text().includes('No Data Available in this Section') ||
-          $body.text().includes('No Data Found from your Search/Filter') ||
-          $body.text().includes('No request found') ||
-          $body.text().includes('No records found') ||
-          $body.text().includes('No Records Found')
-        ) {
-          cy.log('No data available');
-        } else {
+    runIfMonetized(() => {
+      // Test each action option
+      const options = ['inactive', 'active', 'trash'];
+
+      options.forEach((option) => {
+        ifDataAvailable(() => {
+          // Select a random checkbox
           cy.getByInputName('tutor-bulk-checkbox-all').then(($checkboxes) => {
+            if ($checkboxes.length === 0) {
+              cy.log('No checkboxes available');
+              return;
+            }
+
             const checkboxesArray = Cypress._.toArray($checkboxes);
             const randomIndex = Cypress._.random(0, checkboxesArray.length - 1);
-            cy.wrap(checkboxesArray[randomIndex]).as('randomCheckbox');
+            const randomCheckbox = checkboxesArray[randomIndex];
+
+            // Store reference and index for later verification
+            cy.wrap(randomCheckbox).as('randomCheckbox');
+            cy.wrap(randomIndex).as('randomIndex');
+
+            // Perform the bulk action
             cy.get('@randomCheckbox').check();
             cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
             cy.get(`span[tutor-dropdown-item][data-key=${option}]`).first().click();
-
             cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
             cy.get('#tutor-confirm-bulk-action').click();
+
+            // Verify the status change after reload
             cy.reload();
-            cy.get('@randomCheckbox')
-              .invoke('attr', 'value')
-              .then(() => {
-                cy.get('.tutor-badge-label')
-                  .eq(randomIndex)
-                  .invoke('text')
-                  .then((status) => {
-                    expect(status.toLowerCase()).to.include(option);
-                  });
-              });
+            cy.get('@randomIndex').then((idx) => {
+              const index = idx as unknown as number;
+              return cy
+                .get('.tutor-badge-label')
+                .eq(index)
+                .invoke('text')
+                .then((status) => {
+                  expect(status.toLowerCase()).to.include(option);
+                });
+            });
           });
-        }
+        });
       });
     });
   });
 
   it('should be able to perform bulk actions on all coupons', () => {
-    const options = ['inactive', 'active', 'trash'];
-    options.forEach((option) => {
-      cy.get('body').then(($body) => {
-        if (
-          $body.text().includes('No Data Found from your Search/Filter') ||
-          $body.text().includes('No request found') ||
-          $body.text().includes('No Data Available in this Section') ||
-          $body.text().includes('No records found') ||
-          $body.text().includes('No Records Found')
-        ) {
-          cy.log('No data available');
-        } else {
+    runIfMonetized(() => {
+      // Test each action option
+      const options = ['inactive', 'active', 'trash'];
+
+      options.forEach((option) => {
+        ifDataAvailable(() => {
+          // Select all checkboxes
           cy.get('#tutor-bulk-checkbox-all').click();
           cy.get('.tutor-mr-12 > .tutor-js-form-select').click();
 
           cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`)
+            .first()
             .invoke('text')
             .then((text) => {
               const expectedValue = text.trim();
+
               cy.get(`span[tutor-dropdown-item][data-key=${option}].tutor-nowrap-ellipsis`).first().click();
               cy.get('#tutor-admin-bulk-action-btn').contains('Apply').click();
               cy.get('#tutor-confirm-bulk-action').contains('Yes, I’m sure').click();
-              cy.reload();
 
-              cy.get('.tutor-badge-label')
-                .invoke('text')
-                .then((selectedValue) => {
-                  expect(selectedValue.toLowerCase()).to.include(expectedValue.toLowerCase());
-                });
+              cy.reload();
+              cy.get('.tutor-badge-label').each(($label) => {
+                cy.wrap($label)
+                  .invoke('text')
+                  .then((status) => {
+                    expect(status.toLowerCase()).to.include(expectedValue.toLowerCase());
+                  });
+              });
             });
-        }
+        });
       });
     });
   });
