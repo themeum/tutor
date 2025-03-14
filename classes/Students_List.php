@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use TUTOR\Backend_Page_Trait;
 use Tutor\Helpers\QueryHelper;
+use TutorPro\CourseBundle\CustomPosts\CourseBundle;
 
 /**
  * Manage student lists
@@ -121,7 +122,15 @@ class Students_List {
 	public static function delete_students( string $student_ids ): bool {
 		$student_ids = array_map( 'intval', explode( ',', $student_ids ) );
 		foreach ( $student_ids as $student_id ) {
-			$enrolled_courses = tutor_utils()->get_enrolled_courses_by_user( $student_id, 'any' );
+			$args = array(
+				'post_type' => tutor()->course_post_type,
+			);
+
+			if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
+				$args['post_type'] = array( tutor()->course_post_type, CourseBundle::POST_TYPE );
+			}
+
+			$enrolled_courses = tutor_utils()->get_enrolled_courses_by_user( $student_id, 'any', 0, -1, $args );
 			if ( is_a( $enrolled_courses, 'WP_Query' ) ) {
 				// Delete student flag.
 				delete_user_meta( $student_id, User::TUTOR_STUDENT_META, true );
