@@ -17,6 +17,7 @@ use Tutor\Models\BillingModel;
 use Tutor\Traits\JsonResponse;
 use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
+use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderModel;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -166,6 +167,29 @@ class CheckoutController {
 	}
 
 	/**
+	 * Prepare additional checkout item.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param string|int     $item_id item id.
+	 * @param string         $item_name item name.
+	 * @param int|float      $regular_price regular price.
+	 * @param integer        $quantity quantity.
+	 * @param int|float|null $discounted_price discounted price.
+	 *
+	 * @return array
+	 */
+	private static function prepare_additional_item( $item_id, $item_name, $regular_price, $quantity = 1, $discounted_price = null ) {
+		return array(
+			'item_id'          => $item_id,
+			'item_name'        => $item_name,
+			'regular_price'    => floatval( $regular_price ),
+			'quantity'         => $quantity,
+			'discounted_price' => $discounted_price,
+		);
+	}
+
+	/**
 	 * Prepare items
 	 *
 	 * @since 3.0.0
@@ -177,8 +201,9 @@ class CheckoutController {
 	 * @return array
 	 */
 	private function prepare_items( $item_ids, $order_type = OrderModel::TYPE_SINGLE_ORDER, $coupon = null ) {
-		$items     = array();
-		$plan_info = null;
+		$items            = array();
+		$plan_info        = null;
+		$additional_items = array();
 
 		foreach ( $item_ids as $item_id ) {
 			$item_name    = get_the_title( $item_id );
@@ -199,6 +224,27 @@ class CheckoutController {
 					if ( $user_subscription && $user_subscription->is_trial_used ) {
 						$course_price->regular_price = $plan_info->regular_price;
 						$course_price->sale_price    = $plan_info->in_sale_price ? $plan_info->sale_price : 0;
+					}
+
+					/**
+					 * Add additional items like enrollment fee, trial fee etc.
+					 *
+					 * @since 3.4.0
+					 */
+					if ( $plan_info->enrollment_fee > 0 && ( ! $plan_info->has_trial_period || ( $user_subscription && $user_subscription->is_trial_used ) ) ) {
+						$additional_items[ OrderModel::META_ENROLLMENT_FEE ] = self::prepare_additional_item(
+							OrderModel::META_ENROLLMENT_FEE,
+							'Enrollment Fee',
+							$plan_info->enrollment_fee
+						);
+					}
+
+					if ( $plan_info->trial_value > 0 && $plan_info->trial_fee > 0 && ! ( $user_subscription && $user_subscription->is_trial_used ) ) {
+						$additional_items[ OrderModel::META_TRIAL_FEE ] = self::prepare_additional_item(
+							OrderModel::META_TRIAL_FEE,
+							'Trial Fee',
+							$plan_info->trial_fee
+						);
 					}
 				}
 			}
@@ -227,7 +273,7 @@ class CheckoutController {
 			$items[] = $item;
 		}
 
-		return array( $items, $plan_info );
+		return array( $items, $plan_info, $additional_items );
 	}
 
 	/**
@@ -328,7 +374,7 @@ class CheckoutController {
 			}
 		}
 
-		list($items, $plan_info) = $this->prepare_items( $item_ids, $order_type, $coupon );
+		list( $items, $plan_info, $additional_items ) = $this->prepare_items( $item_ids, $order_type, $coupon );
 
 		// Iterate with each item and check if coupon is applicable @since 3.3.0.
 		$is_coupon_applicable = false;
@@ -368,17 +414,12 @@ class CheckoutController {
 			$sale_discount   += $sale_discount_amount;
 		}
 
-		$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, $user_id );
-		$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
-
-		// Add enrollment fee if applicable.
-		if ( $plan_info && $plan_info->enrollment_fee > 0 && ( $plan_info->trial_value < 1 || $is_trial_used ) ) {
-			$subtotal_price += $plan_info->enrollment_fee;
+		if ( isset( $additional_items[ OrderModel::META_ENROLLMENT_FEE ] ) ) {
+			$subtotal_price += $additional_items[ OrderModel::META_ENROLLMENT_FEE ]['regular_price'] ?? 0;
 		}
 
-		// Add trial fee if applicable.
-		if ( $plan_info && $plan_info->trial_value > 0 && $plan_info->trial_fee > 0 && ! $is_trial_used ) {
-			$subtotal_price += $plan_info->trial_fee;
+		if ( isset( $additional_items[ OrderModel::META_TRIAL_FEE ] ) ) {
+			$subtotal_price += $additional_items[ OrderModel::META_TRIAL_FEE ]['regular_price'] ?? 0;
 		}
 
 		$total_price = $subtotal_price - ( $coupon_discount + $sale_discount );
@@ -393,6 +434,7 @@ class CheckoutController {
 		// Total price should not negative.
 		$total_price = max( 0, $total_price );
 
+		$response['additional_items']  = $additional_items;
 		$response['coupon_type']       = $coupon_type;
 		$response['coupon_title']      = $coupon_title;
 		$response['is_coupon_applied'] = $is_coupon_applied;
@@ -573,6 +615,7 @@ class CheckoutController {
 	 */
 	public static function prepare_payment_data( array $order ) {
 		$site_name     = get_bloginfo( 'name' );
+		$order_id      = $order['id'];
 		$order_user_id = $order['user_id'];
 		$user_data     = get_userdata( $order_user_id );
 
@@ -628,9 +671,6 @@ class CheckoutController {
 				$plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
 				$item_name = $plan_info->plan_name ?? '';
 
-				$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, $order_user_id );
-				$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
-
 				$items[] = array(
 					'item_id'          => $item_id,
 					'item_name'        => $item_name,
@@ -639,28 +679,15 @@ class CheckoutController {
 					'discounted_price' => is_null( $item->discount_price ) || '' === $item->discount_price ? null : $item->discount_price,
 				);
 
-				if ( $plan_info && $plan_info->enrollment_fee > 0 && ( ! $plan_info->has_trial_period || $is_trial_used ) ) {
-					$enrollment_item = array(
-						'item_id'          => 'enrollment_fee',
-						'item_name'        => 'Enrollment Fee',
-						'regular_price'    => floatval( $plan_info->enrollment_fee ),
-						'quantity'         => 1,
-						'discounted_price' => null,
-					);
+				$enrollment_fee = OrderMetaModel::get_meta_value( $order_id, OrderModel::META_ENROLLMENT_FEE, true );
+				$trial_fee      = OrderMetaModel::get_meta_value( $order_id, OrderModel::META_TRIAL_FEE, true );
 
-					$items[] = $enrollment_item;
+				if ( $enrollment_fee ) {
+					$items[] = self::prepare_additional_item( OrderModel::META_ENROLLMENT_FEE, 'Enrollment Fee', $enrollment_fee );
 				}
 
-				if ( $plan_info && $plan_info->trial_value > 0 && $plan_info->trial_fee > 0 && ! $is_trial_used ) {
-					$trial_fee_item = array(
-						'item_id'          => 'trial_fee',
-						'item_name'        => 'Trial Fee',
-						'regular_price'    => floatval( $plan_info->trial_fee ),
-						'quantity'         => 1,
-						'discounted_price' => null,
-					);
-
-					$items[] = $trial_fee_item;
+				if ( $trial_fee ) {
+					$items[] = self::prepare_additional_item( OrderModel::META_ENROLLMENT_FEE, 'Trial Fee', $trial_fee );
 				}
 			} else {
 				// Single order item.
@@ -692,7 +719,7 @@ class CheckoutController {
 			'items'              => (object) $items,
 			'subtotal'           => floatval( $subtotal_price ),
 			'total_price'        => floatval( $total_price ),
-			'order_id'           => $order['id'],
+			'order_id'           => $order_id,
 			'store_name'         => $site_name,
 			'order_description'  => 'Tutor Order',
 			'tax'                => 0,
