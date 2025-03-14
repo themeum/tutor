@@ -10475,4 +10475,47 @@ class Utils {
 
 		return (object) $info;
 	}
+
+	/**
+	 * Delete enrollment record by providing the student and course id
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int $student_id Student id.
+	 * @param int $course_id Course id
+	 *
+	 * @return bool
+	 */
+	public function delete_enrollment_record( int $student_id, int $course_id ):bool {
+		global $wpdb;
+		return QueryHelper::delete(
+			$wpdb->posts,
+			array(
+				'post_author' => $student_id,
+				'post_parent' => $course_id,
+				'post_type'   => tutor()->enrollment_post_type,
+			)
+		);
+	}
+
+	/**
+	 * Delete student course comment by providing the student and course id
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int $student_id Student id.
+	 * @param int $course_id Course id
+	 *
+	 * @return bool
+	 */
+	public function delete_student_course_comment( int $student_id, int $course_id ): bool {
+		global $wpdb;
+		return QueryHelper::delete(
+			$wpdb->comments,
+			array(
+				'user_id'         => $student_id,
+				'comment_post_ID' => $course_id,
+			)
+		);
+	}
 }

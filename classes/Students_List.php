@@ -15,6 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use TUTOR\Backend_Page_Trait;
+use Tutor\Helpers\QueryHelper;
 
 /**
  * Manage student lists
@@ -113,20 +114,28 @@ class Students_List {
 	 *
 	 * @since v2.0.0
 	 *
-	 * @param string $student_ids ids that need to delete.
-	 * @param int    $reassign_id reassign to other user.
+	 * @param string $student_ids ids comma separated value.
 	 *
 	 * @return bool
 	 */
-	public static function delete_students( string $student_ids, $reassign_id = null ): bool {
-		$student_ids     = explode( ',', $student_ids );
-		$current_user_id = get_current_user_id();
+	public static function delete_students( string $student_ids ): bool {
+		$student_ids = array_map( 'intval', explode( ',', $student_ids ) );
+		foreach ( $student_ids as $student_id ) {
+			$enrolled_courses = tutor_utils()->get_enrolled_courses_by_user( $student_id, 'any' );
+			if ( is_a( $enrolled_courses, 'WP_Query' ) ) {
+				// Delete student flag.
+				delete_user_meta( $student_id, User::TUTOR_STUDENT_META, true );
 
-		foreach ( $student_ids as $id ) {
-			if ( $id !== $current_user_id ) {
-				null === $reassign_id ? wp_delete_user( $id ) : wp_delete_user( $id, $reassign_id );
+				// Delete the enrollment, course progress & comments.
+				$courses = $enrolled_courses->get_posts();
+				foreach ( $courses as $course ) {
+					tutor_utils()->delete_enrollment_record( $student_id, $course->ID );
+					tutor_utils()->delete_course_progress( $course->ID );
+					tutor_utils()->delete_student_course_comment( $student_id, $course->ID );
+				}
 			}
 		}
+
 		return true;
 	}
 }
