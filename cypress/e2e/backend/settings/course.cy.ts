@@ -13,7 +13,7 @@ describe('Tutor settings course', () => {
     cy.toggle(inputName, fieldId);
   });
 
-  it('should enable or disable course content acess', () => {
+  it('should enable or disable course content access', () => {
     const inputName = 'tutor_option[course_content_access_for_ia]';
     const fieldId = '#field_course_content_access_for_ia';
     cy.toggle(inputName, fieldId);
