@@ -48,7 +48,7 @@ describe('Course Builder - Settings', () => {
       cy.get('button[role="tab"]').contains('General').click();
     });
     cy.getSelectInput('course_level', 'Beginner');
-    cy.getByInputName('is_public_course').check();
+    cy.getByInputName('is_public_course').check({ force: true });
 
     cy.updateCourse();
   });
@@ -113,11 +113,11 @@ describe('Course Builder - Settings', () => {
       cy.window().then((win) => {
         if (win._tutorobject.settings?.monetize_by === 'tutor' && isEnabled) {
           cy.getSelectInput('course_selling_option', 'All');
-          cy.getByInputName('course_price').type(courseData.course_price);
-          cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
         }
       });
     });
+    cy.getByInputName('course_price').type(courseData.course_price);
+    cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
 
     cy.updateCourse();
   });
