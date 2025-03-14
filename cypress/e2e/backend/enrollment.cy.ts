@@ -191,7 +191,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
     checkSorting('DESC');
   });
   it('should filter enrollments by a specific date', () => {
-    cy.get("input[placeholder='MMMM d, yyyy']").click();
+    cy.get("input[placeholder='Y-M-d']").click();
     cy.get('.dropdown-years').click();
     cy.get('.dropdown-years>.dropdown-list').contains('2025').click();
     cy.get('.dropdown-months > .dropdown-label').click();
