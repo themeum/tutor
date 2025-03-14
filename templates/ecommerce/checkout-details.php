@@ -130,11 +130,17 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 								<?php if ( ! $plan_info->is_membership_plan ) { ?>
 								<img src="<?php echo esc_url( $thumbnail_url ); ?>" alt="<?php echo esc_attr( $plan_title ); ?>" />
 								<?php } ?>
+
+								<?php if ( $plan_info->is_membership_plan ) : ?>
+									<svg style="float:left; margin-right:4px" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M5.85714 20H17.8571M5.85714 16H17.8571L18.7143 7L15.2857 10L11.8571 5L8.42857 10L5 7L5.85714 16Z" stroke="#0049F8" stroke-width="1.28571" stroke-linecap="round" stroke-linejoin="round"/>
+									</svg>
+								<?php endif; ?>
 								<h6 class="tutor-checkout-course-title">
 									<a href="<?php echo esc_url( $plan_url ); ?>"> <?php echo esc_html( $plan_title ); ?></a>
 								</h6>
 								<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
-									<ul class="tutor-fs-8 tutor-color-muted tutor-pl-12 tutor-mt-8">
+									<ul class="tutor-fs-8 tutor-color-muted tutor-pl-20 tutor-mt-8">
 										<li>
 										<?php
 											/* translators: %d: trial value, %s: trial interval */
