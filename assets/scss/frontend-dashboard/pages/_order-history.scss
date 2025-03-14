@@ -59,3 +59,17 @@
 		margin: -1px;
 	}
 }
+
+.tutor-payment-gateway-modal{
+	.modal-title{
+		font-size: 20px;
+		font-weight: 500;
+		line-height: 28px;
+        text-align: left;
+	}
+    .modal-footer{
+        button{
+            padding: 12px 40px;
+        }
+    }
+}
