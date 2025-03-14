@@ -63,7 +63,7 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 	<div class="tutor-alert tutor-warning">
 		<div class="tutor-alert-text">
 			<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
-			<span><?php esc_html_e( "You've used your free trial, so this offer isn't available. Subscribe to continue.", 'tutor' ); ?></span>
+			<span><?php esc_html_e( "You've already claimed your trial. Purchase a plan now to continue your eLearning journey!", 'tutor' ); ?></span>
 		</div>
 	</div>
 	<?php endif; ?>
