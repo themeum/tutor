@@ -60,6 +60,16 @@ class OrderModel {
 	const META_KEY_ORDER_ID = 'tutor_order_id_';
 
 	/**
+	 * Order meta for subscription order.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @var string
+	 */
+	const META_ENROLLMENT_FEE = 'plan_enrollment_fee';
+	const META_TRIAL_FEE      = 'plan_trial_fee';
+
+	/**
 	 * Tax type constants
 	 *
 	 * @since 3.0.0
