@@ -17,7 +17,7 @@ describe('Tutor Dashboard My Courses', () => {
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
 
-  it('Should filter courses by a specific date', () => {
+  it('should filter courses by a specific date', () => {
     cy.visit(`${Cypress.env('base_url')}${backendUrls.REPORTS}&sub_page=courses`);
     cy.get('.react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control').click();
 
