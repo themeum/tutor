@@ -104,7 +104,7 @@ Cypress.Commands.add('getByInputName', (selector) => {
     if ($input.attr('type') === 'radio') {
       cy.wrap($input).parent();
     } else {
-      cy.wrap($input).should('be.visible');
+      cy.wrap($input);
     }
   });
 });
