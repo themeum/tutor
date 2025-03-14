@@ -271,7 +271,6 @@ const LessonModal = ({
                     label={__('Name', 'tutor')}
                     placeholder={__('Enter Lesson Name', 'tutor')}
                     generateWithAi={!isTutorPro || isOpenAiEnabled}
-                    selectOnFocus
                     isClearable
                   />
                 )}

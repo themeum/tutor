@@ -310,11 +310,7 @@ const QuizModal = ({
                               name="quiz_title"
                               rules={{ required: __('Quiz title is required', 'tutor') }}
                               render={(controllerProps) => (
-                                <FormInput
-                                  {...controllerProps}
-                                  placeholder={__('Add quiz title', 'tutor')}
-                                  selectOnFocus
-                                />
+                                <FormInput {...controllerProps} placeholder={__('Add quiz title', 'tutor')} />
                               )}
                             />
                             <Controller

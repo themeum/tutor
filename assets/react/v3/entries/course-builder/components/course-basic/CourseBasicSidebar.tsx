@@ -141,7 +141,6 @@ const CourseBasicSidebar = () => {
               placeholder={__('Enter password', 'tutor')}
               type="password"
               isPassword
-              selectOnFocus
               loading={!!isCourseDetailsFetching && !controllerProps.field.value}
             />
           )}
