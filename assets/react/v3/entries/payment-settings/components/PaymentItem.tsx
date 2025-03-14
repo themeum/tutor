@@ -14,8 +14,8 @@ import FormInput from '@TutorShared/components/fields/FormInput';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import FormSwitch from '@TutorShared/components/fields/FormSwitch';
 import FormTextareaInput from '@TutorShared/components/fields/FormTextareaInput';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
-import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
 import {
   borderRadius,
@@ -101,7 +101,7 @@ const PaymentItem = ({ data, paymentIndex, isOverlay = false }: PaymentItemProps
 
   const handleRemovePayment = async () => {
     const { action } = await showModal({
-      component: StaticConfirmationModal,
+      component: ConfirmationModal,
       props: {
         title: sprintf(__('Remove %s', 'tutor'), data.label),
         description: __('Are you sure you want to remove this payment method?', 'tutor'),

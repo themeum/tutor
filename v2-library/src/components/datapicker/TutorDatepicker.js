@@ -56,6 +56,7 @@ const TutorDatepicker = (data) => {
 				onClick={handleCalendarClose}
 				dateFormat={dateFormat}
 				formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
+				calendarStartDay={_tutorobject.start_of_week}
 				renderCustomHeader={(props) => (
 					<CustomHeader
 						{...props}

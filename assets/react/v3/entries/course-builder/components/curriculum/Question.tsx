@@ -12,14 +12,14 @@ import ThreeDots from '@TutorShared/molecules/ThreeDots';
 import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm, QuizQuestion, QuizQuestionType } from '@CourseBuilderServices/quiz';
 
+import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, Breakpoint, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
-import { validateQuizQuestion } from '@CourseBuilderUtils/utils';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { IconCollection } from '@TutorShared/icons/types';
 import { animateLayoutChanges } from '@TutorShared/utils/dndkit';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
 
 interface QuestionProps {
   question: QuizQuestion;
@@ -128,7 +128,7 @@ const Question = ({ question, index, onDuplicateQuestion, onRemoveQuestion, isOv
     >
       <div css={styles.iconAndSerial({ isDragging: isOverlay })} data-icon-serial>
         <span data-serial>{index + 1}</span>
-        <button data-drag-icon {...listeners} type="button" css={styleUtils.resetButton}>
+        <button data-drag-icon {...listeners} type="button" css={styles.dragButton}>
           <SVGIcon data-drag-icon name="dragVertical" width={24} height={24} />
         </button>
         <SVGIcon
@@ -345,5 +345,14 @@ const styles = {
     display: flex;
     align-items: center;
     gap: ${spacing[4]};
+  `,
+  dragButton: css`
+    ${styleUtils.resetButton};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
   `,
 };

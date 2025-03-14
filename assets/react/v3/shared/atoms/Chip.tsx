@@ -91,6 +91,12 @@ const styles = {
     width: 20px;
     text-align: center;
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
+
     svg {
       color: ${colorTokens.icon.default};
       transition: color 0.3s ease;

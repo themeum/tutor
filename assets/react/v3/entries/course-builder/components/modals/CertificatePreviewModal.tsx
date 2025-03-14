@@ -209,6 +209,12 @@ const styles = {
     align-items: center;
     justify-content: center;
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
+
     svg {
       color: ${colorTokens.action.secondary.default};
       transition: color 0.3s ease-in-out;

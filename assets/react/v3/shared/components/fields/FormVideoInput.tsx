@@ -28,9 +28,10 @@ import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
+import type { TutorMutationResponse } from '@TutorShared/utils/types';
 import { requiredRule } from '@TutorShared/utils/validation';
 
+import { IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -864,6 +865,13 @@ const styles = {
     border-radius: ${borderRadius[2]};
     padding: 0 ${spacing[4]};
     margin-bottom: ${spacing[8]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.brand};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

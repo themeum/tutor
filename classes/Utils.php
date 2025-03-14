@@ -3546,10 +3546,14 @@ class Utils {
 	 * @param string  $date_filter date filter.
 	 * @param string  $order_by order by.
 	 * @param string  $order order.
+	 * 
+	 * @since 3.4.0
+	 *
+	 * @param array   $post_status the post status.
 	 *
 	 * @return array
 	 */
-	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '' ): array {
+	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '', $post_status = array( 'publish' ) ): array {
 		global $wpdb;
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$limit         = sanitize_text_field( $limit );
@@ -3597,6 +3601,7 @@ class Utils {
 			$author_query = "AND course.post_author = $instructor_id";
 		}
 
+		$post_status = QueryHelper::prepare_in_clause( $post_status );
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
@@ -3606,7 +3611,7 @@ class Utils {
 					INNER  JOIN {$wpdb->users} AS user
 							ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
-					AND course.post_status = %s
+					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
 					{$author_query}
@@ -3619,7 +3624,6 @@ class Utils {
 				LIMIT %d, %d
 			",
 				$course_post_type,
-				'publish',
 				'tutor_enrolled',
 				'completed',
 				$search_query,
@@ -3639,7 +3643,7 @@ class Utils {
 					INNER  JOIN {$wpdb->users} AS user
 							ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
-					AND course.post_status = %s
+					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
@@ -3651,7 +3655,6 @@ class Utils {
 
 			",
 				$course_post_type,
-				'publish',
 				'tutor_enrolled',
 				'completed',
 				$search_query,
@@ -3672,14 +3675,19 @@ class Utils {
 	 *
 	 * @since 1.9.9
 	 *
-	 * @param int $student_id student id.
-	 * @param int $instructor_id instructor id.
+	 * @param int   $student_id student id.
+	 * @param int   $instructor_id instructor id.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array $post the post status.
 	 *
 	 * @return array
 	 */
-	public function get_courses_by_student_instructor_id( int $student_id, int $instructor_id ): array {
+	public function get_courses_by_student_instructor_id( int $student_id, int $instructor_id, $post_status = array( 'publish' ) ): array {
 		global $wpdb;
 		$course_post_type = tutor()->course_post_type;
+		$post_status      = QueryHelper::prepare_in_clause( $post_status );
 		$students         = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT course.*
@@ -3688,7 +3696,7 @@ class Utils {
 							ON enrollment.post_parent=course.ID
 				WHERE 	course.post_author = %d
 					AND course.post_type = %s
-					AND course.post_status = %s
+					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
 					AND enrollment.post_author = %d
@@ -3696,7 +3704,6 @@ class Utils {
 			",
 				$instructor_id,
 				$course_post_type,
-				'publish',
 				'tutor_enrolled',
 				'completed',
 				$student_id
@@ -7589,7 +7596,25 @@ class Utils {
 		$instructor = TutorCache::get( $cache_key );
 
 		if ( false === $instructor ) {
-			$is_approved_clause = $is_approved ? "AND meta_key = '_tutor_instructor_status' AND meta_value = 'approved'" : '';
+
+			if ( $is_approved ) {
+				$is_approved_instructor = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(umeta_id)
+						FROM   {$wpdb->usermeta}
+						WHERE  user_id = %d 
+							AND meta_key = %s 
+							AND meta_value = %s",
+						$instructor_id,
+						'_tutor_instructor_status',
+						'approved',
+					)
+				);
+
+				if ( ! $is_approved_instructor ) {
+					return false;
+				}
+			}
 
 			//phpcs:disable
 			$instructor = $wpdb->get_col(
@@ -7597,7 +7622,6 @@ class Utils {
 					"SELECT umeta_id
 				FROM   {$wpdb->usermeta}
 				WHERE  user_id = %d
-					{$is_approved_clause}
 					AND meta_key = '_tutor_instructor_course_id'
 					AND meta_value = %d
 				",

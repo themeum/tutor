@@ -236,6 +236,13 @@ const styles = {
     margin: ${spacing[4]} ${spacing[12]};
     width: 100%;
     height: 100%;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.primary};
+    }
   `,
   clearButton: css`
     position: absolute;
