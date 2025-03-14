@@ -416,7 +416,7 @@ class Course extends Tutor_Base {
 
 			$course_settings = $params['course_settings'];
 
-			if ( $course_settings['course_enrollment_period'] && $course_settings['course_enrollment_period'] === 'no' ) {
+			if ( $course_settings['course_enrollment_period'] && 'no' === $course_settings['course_enrollment_period'] ) {
 				return;
 			}
 
