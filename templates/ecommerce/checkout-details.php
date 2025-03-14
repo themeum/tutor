@@ -23,8 +23,8 @@ $checkout_controller = new CheckoutController( false );
 $get_cart            = $cart_controller->get_cart_items();
 $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
-$buy_now_id          = Input::get( 'buy_now_id', 0, INPUT::TYPE_INT );
-$course_list         = Settings::is_buy_now_enabled() && $buy_now_id ? array( get_post( $buy_now_id ) ) : $courses['results'];
+$course_id           = Input::get( 'course_id', 0, INPUT::TYPE_INT );
+$course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
 
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );
 $plan_info = apply_filters( 'tutor_get_plan_info', new stdClass(), $plan_id );

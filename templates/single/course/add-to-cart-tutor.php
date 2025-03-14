@@ -42,7 +42,7 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 	$display_price += $tax_amount;
 }
 $buy_now      = Settings::is_buy_now_enabled();
-$buy_now_link = add_query_arg( array( 'buy_now_id' => $course_id ), CheckoutController::get_page_url() );
+$buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutController::get_page_url() );
 
 ?>
 	<div>

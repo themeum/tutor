@@ -113,7 +113,7 @@ class CartController {
 		}
 
 		if ( Settings::is_buy_now_enabled() ) {
-			$checkout_page_url = add_query_arg( array( 'buy_now_id' => $course_id ), CheckoutController::get_page_url() );
+			$checkout_page_url = add_query_arg( array( 'course_id' => $course_id ), CheckoutController::get_page_url() );
 			ob_start();
 			?>
 			<a href="<?php echo esc_url( $checkout_page_url ); ?>" class="tutor-btn tutor-course-list-btn tutor-btn-outline-primary tutor-btn-block">
