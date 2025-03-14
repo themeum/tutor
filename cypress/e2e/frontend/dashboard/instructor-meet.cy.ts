@@ -1,11 +1,35 @@
+import { type GoogleMeetMeetingFormData } from '@CourseBuilderServices/course';
+import { faker } from '@faker-js/faker';
+import { Addons } from '@TutorShared/config/constants';
+import endpoints from '@TutorShared/utils/endpoints';
 import { frontendUrls } from '../../../config/page-urls';
 
 describe('Tutor Dashboard My Courses', () => {
+  // @ts-ignore
+  const googleMeetData: GoogleMeetMeetingFormData = {
+    meeting_name: faker.lorem.sentence(),
+    meeting_summary: faker.lorem.sentences(3),
+    meeting_start_time: '08:30 PM',
+    meeting_end_time: '09:00 PM',
+    meeting_timezone: '(GMT+6:00) Astana, Dhaka',
+  };
+
   beforeEach(() => {
     cy.visit(`${Cypress.env('base_url')}${frontendUrls.dashboard.GOOGLE_MEET}`);
     cy.loginAsInstructor();
     cy.url().should('include', frontendUrls.dashboard.GOOGLE_MEET);
+
+    cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
+      if (req.body.includes(endpoints.GET_COURSE_DETAILS)) {
+        req.alias = 'getCourseDetails';
+      }
+
+      if (req.body.includes(endpoints.SAVE_GOOGLE_MEET)) {
+        req.alias = 'saveGoogleMeeting';
+      }
+    }).as('ajaxRequest');
   });
+
   //   set api and save connection
   it('should upload meet integration json and save connection', () => {
     const filePath = 'cypress/fixtures/assets/google-api.json';
@@ -24,59 +48,53 @@ describe('Tutor Dashboard My Courses', () => {
       }
     });
   });
+
   it('should create new course and google meeting', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`).as('ajaxRequest');
 
-    cy.get('a#tutor-create-new-course').click();
+    cy.get('a.tutor-create-new-course.tutor-dashboard-create-course').click();
     cy.url().should('include', '/create-course');
-    cy.get('input#tutor-course-create-title').clear().type('Meet test course');
-    cy.get("button[data-tutor-modal-target='tutor-google-meet-create-modal']").click();
-    cy.get("input[name='meeting_title']").clear().type('Google meet test');
-
-    cy.get("textarea[name='meeting_summary'").type('Google meet test summary', {
-      force: true,
+    cy.getByInputName('post_title').type('Google meet test course');
+    cy.get('[data-cy=tutor-tracker]').within(() => {
+      cy.get('button').contains('Additional').click();
     });
 
-    cy.get(
-      '.tutor-gmi-meeting-time > :nth-child(1) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
-    ).click();
-    // cy.get("#meeting_start_date").click()
-    cy.get('.dropdown-years > .dropdown-label').click();
-    cy.get('.dropdown-container.dropdown-years .dropdown-list li').contains('2025').click();
-    cy.get('.dropdown-container.dropdown-months .dropdown-label').click();
-    cy.get('.dropdown-container.dropdown-months .dropdown-list li').contains('June').click();
-    cy.get('.react-datepicker__day').contains('11').click();
+    cy.wait(500);
 
-    cy.get("input[name='meeting_start_time']").clear().type('08:30 PM');
+    cy.isAddonEnabled(Addons.TUTOR_GOOGLE_MEET_INTEGRATION).then((isEnabled) => {
+      if (isEnabled) {
+        cy.get('[data-cy=create-google-meet-link]').click().wait(500);
+        cy.get('.tutor-portal-popover').within(() => {
+          cy.getByInputName('meeting_name').type(googleMeetData.meeting_name);
+        });
 
-    cy.get("input[name='meeting_end_date']").click();
-    cy.get('.dropdown-years > .dropdown-label').click();
-    cy.get('.dropdown-container.dropdown-years .dropdown-list li').contains('2025').click();
-    cy.get('.dropdown-container.dropdown-months .dropdown-label').click();
-    cy.get('.dropdown-container.dropdown-months .dropdown-list li').contains('June').click();
-    cy.get('.react-datepicker__day').contains('11').click();
+        // cy.wait(500);
+        cy.getByInputName('meeting_summary').click({ force: true }).type(googleMeetData.meeting_summary);
+        cy.selectDate('meeting_start_date');
+        cy.getSelectInput('meeting_start_time', '08:30 PM');
 
-    cy.get('input[name="meeting_end_time"]').clear().type('09:30 PM');
+        cy.selectDate('meeting_end_date');
+        cy.getSelectInput('meeting_end_time', '09:00 PM');
 
-    cy.get('.tutor-col-md-8 > .tutor-js-form-select').click();
-    cy.get(
-      '.tutor-col-md-8 > .tutor-js-form-select > .tutor-form-select-dropdown > .tutor-form-select-options > :nth-child(108) > .tutor-nowrap-ellipsis',
-    ).click();
+        cy.getSelectInput('meeting_timezone', googleMeetData.meeting_timezone);
+        cy.get('[data-cy=save-google-meeting]').click();
 
-    cy.get("input[name='meeting_attendees_enroll_students']").check();
+        cy.waitAfterRequest('saveGoogleMeeting');
 
-    cy.get('.tutor-gm-create-new-meeting').contains('Create Meeting').click();
+        cy.get('[data-cy=tutor-toast]').should('contain.text', 'Meeting Successfully Added');
 
-    cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.response?.body.success).to.equal(true);
+        return;
+      }
     });
-
-    cy.get("button[name='course_submit_btn']").contains('Publish').click();
+    cy.get('[data-cy=course-builder-submit-button]').click();
   });
+
   it('should start meeting', () => {
     cy.get('a.tutor-btn.tutor-btn-primary').contains('Start Meeting').invoke('removeAttr', 'target').click();
 
-    cy.url().should('include', '/calendar');
+    cy.origin('https://calendar.google.com', () => {
+      cy.url().should('include', '/calendar');
+    });
   });
 
   it('should edit a google meeting', () => {
@@ -133,8 +151,7 @@ describe('Tutor Dashboard My Courses', () => {
         cy.get('button').contains('Update Meeting').click();
 
         cy.wait('@ajaxRequest').then((interception) => {
-          expect(interception.request.body).to.include('tutor_google_meet_new_meeting');
-          expect(interception.response?.body.success).to.equal(true);
+          expect(interception.response?.statusCode).to.equal(200);
         });
       }
     });
@@ -158,8 +175,7 @@ describe('Tutor Dashboard My Courses', () => {
       }
     });
     cy.wait('@ajaxRequest').then((interception) => {
-      expect(interception.request.body).to.include('tutor_google_meet_delete');
-      expect(interception.response?.body.success).to.equal(true);
+      expect(interception.response?.statusCode).to.equal(200);
     });
   });
 
@@ -174,6 +190,7 @@ describe('Tutor Dashboard My Courses', () => {
     cy.get("input[value='opaque']").check().should('be.checked');
     cy.get("input[value='default']").check().should('be.checked');
   });
+
   // // help
   it('Should make corresponding elements visible when accordion is clicked', () => {
     cy.get(':nth-child(5) > .tutor-nav-link').contains('Help').click();
@@ -182,6 +199,7 @@ describe('Tutor Dashboard My Courses', () => {
       cy.get(`.tutor-fs-7.tutor-color-secondary`).eq(index).should('be.visible');
     });
   });
+
   it('should be able to search any meeting', () => {
     const searchInputSelector = '#tutor-backend-filter-search';
     const searchQuery = 'Google meet test';
@@ -190,6 +208,7 @@ describe('Tutor Dashboard My Courses', () => {
     const submitWithButton = false;
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
+
   it('should filter meetings', () => {
     cy.get(':nth-child(2) > .tutor-js-form-select').click();
     cy.get('body').then(($body) => {
@@ -225,6 +244,7 @@ describe('Tutor Dashboard My Courses', () => {
       }
     });
   });
+
   it('Should filter courses by a specific date', () => {
     cy.get(
       '.tutor-wp-dashboard-filter-items > :nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',

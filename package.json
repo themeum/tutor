@@ -17,7 +17,7 @@
     "rm-lang": "rm ./languages/tutor.pot || echo \"No tutor pot yet\"",
     "biome:check": "npx @biomejs/biome check --apply ./assets/react/v3",
     "tutor-droip": "cd tutor-droip && npm run build && cp -r dist/* ../tutor-droip",
-    "cy:open": "cypress open",
+    "cy:open": "cypress open --e2e --browser electron",
     "test": "cypress run"
   },
   "keywords": [

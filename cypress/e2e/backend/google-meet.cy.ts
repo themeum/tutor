@@ -125,6 +125,7 @@ describe('Tutor Dashboard My Courses', () => {
     const submitWithButton = false;
     cy.search(searchInputSelector, searchQuery, courseLinkSelector, submitButtonSelector, submitWithButton);
   });
+
   it('should filter meetings', () => {
     cy.get(':nth-child(2) > .tutor-js-form-select').click();
     cy.get('body').then(($body) => {
@@ -160,6 +161,7 @@ describe('Tutor Dashboard My Courses', () => {
       }
     });
   });
+
   it('Should filter courses by a specific date', () => {
     cy.get(
       '.tutor-wp-dashboard-filter-items > :nth-child(3) > .tutor-v2-date-picker > .tutor-react-datepicker > .react-datepicker-wrapper > .react-datepicker__input-container > .tutor-form-wrap > .tutor-form-control',
