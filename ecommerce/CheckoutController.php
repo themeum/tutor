@@ -19,6 +19,7 @@ use Tutor\Models\CartModel;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderModel;
+use TutorPro\Ecommerce\GuestCheckout\GuestCheckout;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -877,21 +878,26 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function restrict_checkout_page() {
-		$page_id = self::get_page_id();
-		$plan_id = Input::get( 'plan' );
-		$buy_now = Settings::is_buy_now_enabled();
+		if ( ! is_page( self::get_page_id() ) ) {
+			return;
+		}
 
-		if ( is_page( $page_id ) && ! $plan_id ) {
-			$cart_controller = new CartController();
-			$cart_model      = new CartModel();
+		$cart_page_url = CartController::get_page_url();
 
-			$user_id       = tutils()->get_user_id();
-			$has_cart_item = $cart_model->has_item_in_cart( $user_id );
+		if ( ! is_user_logged_in() && ! GuestCheckout::is_enable() ) {
+			wp_safe_redirect( $cart_page_url );
+			exit;
+		}
 
-			if ( ! $has_cart_item && ! $buy_now ) {
-				wp_safe_redirect( $cart_controller::get_page_url() );
-				exit;
-			}
+		$user_id       = tutils()->get_user_id();
+		$cart_model    = new CartModel();
+		$has_cart_item = $cart_model->has_item_in_cart( $user_id );
+		$buy_now       = Settings::is_buy_now_enabled();
+		$plan_id       = Input::get( 'plan', 0, Input::TYPE_INT );
+
+		if ( ! $has_cart_item && ! $buy_now && ! $plan_id ) {
+			wp_safe_redirect( $cart_page_url );
+			exit;
 		}
 	}
 
