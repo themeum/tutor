@@ -263,7 +263,7 @@ class Course_List {
 			);
 		}
 
-		$the_query = new \WP_Query( $args );
+		$the_query = self::course_list_query( $args, $user_id, $status );
 
 		return ! is_null( $the_query ) && isset( $the_query->found_posts ) ? $the_query->found_posts : $the_query;
 
@@ -519,5 +519,22 @@ class Course_List {
 	public static function is_public( int $course_id ): bool {
 		$is_public = get_post_meta( $course_id, '_tutor_is_public_course', true );
 		return 'yes' === $is_public ? true : false;
+	}
+
+	/**
+	 * Query for obtaining course list.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array  $args the query args.
+	 * @param int    $user_id the user id.
+	 * @param string $status the post status.
+	 *
+	 * @return \WP_Query
+	 */
+	public static function course_list_query( $args, $user_id, $status ) {
+
+		$course_list_query = new \WP_Query( apply_filters( 'tutor_admin_course_list', $args, $user_id, $status ) );
+		return $course_list_query;
 	}
 }

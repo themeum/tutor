@@ -169,6 +169,7 @@ class Assets {
 			'enable_lesson_classic_editor' => get_tutor_option( 'enable_lesson_classic_editor' ),
 			'tutor_frontend_dashboard_url' => tutor_utils()->get_tutor_dashboard_page_permalink(),
 			'wp_date_format'               => tutor_js_date_format_against_wp(),
+			'start_of_week'                => get_option( 'start_of_week', 1 ),
 			'is_admin'                     => is_admin(),
 			'is_admin_bar_showing'         => is_admin_bar_showing(),
 			'addons_data'                  => tutor_utils()->prepare_free_addons_data(),
@@ -413,7 +414,7 @@ class Assets {
 		 *
 		 * @since v2.0.0
 		 */
-		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n', 'wp-element', 'wp-date' ), TUTOR_VERSION, true );
+		wp_enqueue_script( 'tutor-script', tutor()->url . 'assets/js/tutor.min.js', array( 'jquery', 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 
 		/**
 		 * Enqueue datetime countdown scripts & styles

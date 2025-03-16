@@ -276,6 +276,13 @@ const styles = {
       color: ${colorTokens.icon.brand};
     `}
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
+
     :focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 2px;

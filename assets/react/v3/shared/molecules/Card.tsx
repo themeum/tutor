@@ -159,6 +159,13 @@ const styles = {
     css`
       transform: rotate(180deg);
     `}
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
   `,
   arrowUpDown: css`
     color: ${colorTokens.icon.default};

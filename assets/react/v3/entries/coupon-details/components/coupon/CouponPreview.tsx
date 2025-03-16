@@ -1,12 +1,12 @@
+import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
+import { css } from '@emotion/react';
 import { tutorConfig } from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
-import type { Coupon, CouponAppliesTo } from '@CouponServices/coupon';
-import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
-import { format, isToday, isTomorrow } from 'date-fns';
+import { format, isToday, isTomorrow, isValid } from 'date-fns';
 import { useFormContext } from 'react-hook-form';
 import EmptyPreviewDetail from './EmptyPreviewDetail';
 import EmptyPreviewTop from './EmptyPreviewTop';
@@ -37,7 +37,7 @@ function CouponPreview() {
   const couponUsedCount = form.watch('coupon_uses');
 
   const startDateTime = startDate && startTime ? `${startDate} ${startTime}` : '';
-  const activeFromSuffix = startDateTime
+  const activeFromSuffix = isValid(new Date(startDateTime))
     ? `${
         isToday(new Date(startDateTime))
           ? __('today', 'tutor')

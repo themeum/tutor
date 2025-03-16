@@ -1,6 +1,6 @@
 import { getMonth, getYear } from "date-fns";
 import range from 'lodash.range';
-import { monthNames } from "./utils";
+import { months } from "./utils";
 
 const CustomHeader = ({
     date,
@@ -17,7 +17,6 @@ const CustomHeader = ({
     handleCalendarClose
 }) => {
     const years = range(2000, getYear(new Date()) + 5, 1);
-    const months = wp.date?.getSettings()?.l10n?.months ?? monthNames;
 
     return (
         <div className="datepicker-header-custom">

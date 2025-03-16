@@ -1,19 +1,32 @@
-export const monthNames = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
+const { __ } = wp.i18n;
+
+export const months = [
+    __('January', 'tutor'),
+    __('February', 'tutor'),
+    __('March', 'tutor'),
+    __('April', 'tutor'),
+    __('May', 'tutor'),
+    __('June', 'tutor'),
+    __('July', 'tutor'),
+    __('August', 'tutor'),
+    __('September', 'tutor'),
+    __('October', 'tutor'),
+    __('November', 'tutor'),
+    __('December', 'tutor'),
 ];
 
+// Note: Keep exactly as it is.
 export const weekDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+export const weeks = [
+    __('Sun', 'tutor'),
+    __('Mon', 'tutor'),
+    __('Tue', 'tutor'),
+    __('Wed', 'tutor'),
+    __('Thu', 'tutor'),
+    __('Fri', 'tutor'),
+    __('Sat', 'tutor'),
+];
 
 export function stringToDate(_date, _format, _delimiter) {
     const formatLowerCase = _format.toLowerCase();
@@ -24,8 +37,8 @@ export function stringToDate(_date, _format, _delimiter) {
     const yearIndex = formatItems.indexOf('yyyy');
     let month = parseInt(dateItems[monthIndex]);
     month -= 1;
-    const formatedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
-    return formatedDate;
+    const formattedDate = new Date(dateItems[yearIndex], month, dateItems[dayIndex]);
+    return formattedDate;
 }
 
 export const urlPrams = (type, val, date = null) => {
@@ -42,9 +55,6 @@ export const urlPrams = (type, val, date = null) => {
 };
 
 export const translateWeekday = (weekday) => {
-    const settings = wp.date?.getSettings();
-    const englishWeekdays = weekDayNames;
-
-    const index = englishWeekdays.indexOf(weekday);
-    return settings?.l10n?.weekdaysShort[index] ?? weekday;
+    const index = weekDayNames.indexOf(weekday);
+    return weeks[index] ?? weekday;
 };
