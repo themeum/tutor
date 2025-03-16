@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use TUTOR\Course_List;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 
@@ -125,7 +126,7 @@ if ( '' !== $category_slug ) {
 
 add_filter( 'posts_search', '_tutor_search_by_title_only', 500, 2 );
 
-$the_query = new WP_Query( $args );
+$the_query = Course_List::course_list_query( $args, get_current_user_id(), $active_tab );
 
 remove_filter( 'posts_search', '_tutor_search_by_title_only', 500 );
 

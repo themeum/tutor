@@ -879,6 +879,7 @@ class CheckoutController {
 	public function restrict_checkout_page() {
 		$page_id = self::get_page_id();
 		$plan_id = Input::get( 'plan' );
+		$buy_now = Settings::is_buy_now_enabled();
 
 		if ( is_page( $page_id ) && ! $plan_id ) {
 			$cart_controller = new CartController();
@@ -887,7 +888,7 @@ class CheckoutController {
 			$user_id       = tutils()->get_user_id();
 			$has_cart_item = $cart_model->has_item_in_cart( $user_id );
 
-			if ( ! $has_cart_item ) {
+			if ( ! $has_cart_item && ! $buy_now ) {
 				wp_safe_redirect( $cart_controller::get_page_url() );
 				exit;
 			}
