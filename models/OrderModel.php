@@ -47,6 +47,7 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
+	const PAYMENT_MANUAL             = 'manual';
 
 	/**
 	 * Order Meta keys for history & refunds
@@ -81,14 +82,6 @@ class OrderModel {
 	const TYPE_SUBSCRIPTION = 'subscription';
 	const TYPE_RENEWAL      = 'renewal';
 
-	/**
-	 * Manual payment
-	 *
-	 * @since 3.4.0
-	 *
-	 * @var string
-	 */
-	const TUTOR_MANUAL_SUBSCRIPTION = 'manual';
 
 	/**
 	 * Transient constants
@@ -1717,7 +1710,9 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		<?php elseif ( $show_pay_button ) : ?>
+		<?php elseif ( $show_pay_button ) : 
+			ob_start();
+		?>
 			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
@@ -1730,8 +1725,8 @@ class OrderModel {
 			</form>
 			
 			<?php
+			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );
 		endif;
-		do_action( 'tutor_after_manual_subscription_pay_button', $order );
 	}
 
 	/**
