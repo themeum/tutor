@@ -24,6 +24,23 @@ $billing_country    = $billing_info->billing_country ?? '';
 $billing_state      = $billing_info->billing_state ?? '';
 $billing_city       = $billing_info->billing_city ?? '';
 
+/**
+ * Retain form data when validation errors occur during guest checkout.
+ *
+ * @since 3.4.0
+ */
+if ( ! is_user_logged_in() ) {
+	$billing_first_name = tutor_utils()->input_old( 'billing_first_name', '' );
+	$billing_last_name  = tutor_utils()->input_old( 'billing_last_name', '' );
+	$billing_email      = tutor_utils()->input_old( 'billing_email', '' );
+	$billing_phone      = tutor_utils()->input_old( 'billing_phone', '' );
+	$billing_zip_code   = tutor_utils()->input_old( 'billing_zip_code', '' );
+	$billing_address    = tutor_utils()->input_old( 'billing_address', '' );
+	$billing_country    = tutor_utils()->input_old( 'billing_country', '' );
+	$billing_state      = tutor_utils()->input_old( 'billing_state', '' );
+	$billing_city       = tutor_utils()->input_old( 'billing_city', '' );
+}
+
 $country_info = tutor_get_country_info_by_name( $billing_country );
 $states       = $country_info && isset( $country_info['states'] ) ? $country_info['states'] : array();
 ?>
