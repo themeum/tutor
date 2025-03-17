@@ -198,26 +198,27 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 					<?php endif; ?>
 					<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
 						<div class="tutor-mt-12 tutor-ml-8">
-							<div class="tutor-fs-6 tutor-color-black">
-								<?php
-									$trial_label = sprintf(
-										/* translators: %d: trial value, %s: trial interval, %s: free or not */
-										__( '%1$d-%2$s %3$sTrial', 'tutor' ),
-										$plan_info->trial_value,
-										ucwords( $plan_info->trial_value > 1 ? $plan_info->trial_interval . 's' : $plan_info->trial_interval ),
-										$plan_info->trial_fee > 0 ? '' : 'Free '
-									);
-									echo esc_html( $trial_label );
-								?>
-							</div>
-							<?php if ( $plan_info->trial_fee > 0 ) : ?>
-							<div class="tutor-text-right">
+							<div class="tutor-fs-6 tutor-color-black tutor-d-flex tutor-justify-between">
+								<div>
+									<?php
+										$trial_label = sprintf(
+											/* translators: %d: trial value, %s: trial interval, %s: free or not */
+											__( '%1$d-%2$s %3$sTrial', 'tutor' ),
+											$plan_info->trial_value,
+											ucwords( $plan_info->trial_value > 1 ? $plan_info->trial_interval . 's' : $plan_info->trial_interval ),
+											$plan_info->trial_fee > 0 ? '' : 'Free '
+										);
+										echo esc_html( $trial_label );
+									?>
+								</div>
+								<?php if ( $plan_info->trial_fee > 0 ) : ?>
 								<div class="tutor-fw-bold">
 									<?php tutor_print_formatted_price( $plan_info->trial_fee ); ?>
 								</div>
+								<?php endif; ?>
 							</div>
-							<?php endif; ?>
 						</div>
+
 						<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
 							<ul class="tutor-fs-8 tutor-color-muted tutor-pl-20 tutor-mt-8">
 								<li>
