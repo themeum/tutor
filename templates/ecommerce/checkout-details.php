@@ -16,6 +16,11 @@ use TUTOR\Input;
 use Tutor\Models\CouponModel;
 use Tutor\Models\OrderModel;
 
+/**
+ * User ID is required.
+ * Renders this view only (excluding checkout.php) when the country or state changes via AJAX.
+ */
+$user_id = apply_filters( 'tutor_checkout_user_id', get_current_user_id() );
 
 $coupon_model        = new CouponModel();
 $cart_controller     = new CartController( false );
@@ -137,37 +142,9 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 										<path d="M5.85714 20H17.8571M5.85714 16H17.8571L18.7143 7L15.2857 10L11.8571 5L8.42857 10L5 7L5.85714 16Z" stroke="#0049F8" stroke-width="1.28571" stroke-linecap="round" stroke-linejoin="round"/>
 									</svg>
 								<?php endif; ?>
-								<h6 class="tutor-checkout-course-title">
+								<h6 class="tutor-checkout-course-title tutor-d-flex">
 									<a href="<?php echo esc_url( $plan_url ); ?>"> <?php echo esc_html( $plan_title ); ?></a>
 								</h6>
-								<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
-									<ul class="tutor-fs-8 tutor-color-muted tutor-pl-20 tutor-mt-8">
-										<li>
-										<?php
-											/* translators: %d: trial value, %s: trial interval */
-											echo esc_html( sprintf( __( '%1$d %2$s free trial.', 'tutor' ), $plan_info->trial_value, ( $plan_info->trial_value > 1 ? $plan_info->trial_interval . 's' : $plan_info->trial_interval ) ) );
-										?>
-										</li>
-										<li>
-										<?php
-											/* translators: %s: price */
-											echo esc_html( sprintf( __( 'After trial, regular plan price %s will be charged.', 'tutor' ), tutor_get_formatted_price( $plan_info->regular_price ) ) );
-										?>
-										</li>
-										<?php
-										if ( $enrollment_fee > 0 ) {
-											?>
-											<li>
-											<?php
-												/* translators: %s: price */
-												echo esc_html( sprintf( __( 'An enrollment fee of %s will also be charged.', 'tutor' ), tutor_get_formatted_price( $enrollment_fee ) ) );
-											?>
-											</li>
-											<?php
-										}
-										?>
-									</ul>
-								<?php endif; ?>
 							</div>
 							<?php if ( $item->is_coupon_applied ) : ?>
 							<div class="tutor-checkout-coupon-badge">
@@ -219,17 +196,50 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 							</div>
 						</div>
 					<?php endif; ?>
-					<?php if ( $has_trial_period && $plan_info->trial_fee > 0 && ! $is_trial_used ) : ?>
-						<div class="tutor-checkout-enrollment-fee">
+					<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
+						<div class="tutor-mt-12 tutor-ml-8">
 							<div class="tutor-fs-6 tutor-color-black">
-								<?php echo esc_html_e( 'Trial Fee', 'tutor' ); ?>
+								<?php
+									$trial_label = sprintf(
+										/* translators: %d: trial value, %s: trial interval, %s: free or not */
+										__( '%1$d-%2$s %3$sTrial', 'tutor' ),
+										$plan_info->trial_value,
+										ucwords( $plan_info->trial_value > 1 ? $plan_info->trial_interval . 's' : $plan_info->trial_interval ),
+										$plan_info->trial_fee > 0 ? '' : 'Free '
+									);
+									echo esc_html( $trial_label );
+								?>
 							</div>
+							<?php if ( $plan_info->trial_fee > 0 ) : ?>
 							<div class="tutor-text-right">
 								<div class="tutor-fw-bold">
 									<?php tutor_print_formatted_price( $plan_info->trial_fee ); ?>
 								</div>
 							</div>
+							<?php endif; ?>
 						</div>
+						<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
+							<ul class="tutor-fs-8 tutor-color-muted tutor-pl-20 tutor-mt-8">
+								<li>
+								<?php
+									/* translators: %s: price */
+									echo esc_html( sprintf( __( 'After trial, regular plan price %s will be charged.', 'tutor' ), tutor_get_formatted_price( $plan_info->regular_price ) ) );
+								?>
+								</li>
+								<?php
+								if ( $enrollment_fee > 0 ) {
+									?>
+									<li>
+									<?php
+										/* translators: %s: price */
+										echo esc_html( sprintf( __( 'An enrollment fee of %s will also be charged.', 'tutor' ), tutor_get_formatted_price( $enrollment_fee ) ) );
+									?>
+									</li>
+									<?php
+								}
+								?>
+							</ul>
+						<?php endif; ?>
 					<?php endif; ?>
 				</div>
 				<!-- end subscription plan checkout item -->
