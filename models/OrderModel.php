@@ -88,7 +88,7 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const TUTOR_MANUAL_PAYMENT = 'manual';
+	const TUTOR_MANUAL_SUBSCRIPTION = 'manual subscription';
 
 	/**
 	 * Transient constants
@@ -1685,10 +1685,6 @@ class OrderModel {
 	public static function is_manual_payment( $method_name ) {
 		$payment_methods = tutor_get_manual_payment_gateways();
 
-		if ( $method_name === self::TUTOR_MANUAL_PAYMENT ) {
-			return false;
-		}
-
 		$is_manual_payment = false;
 		foreach ( $payment_methods as $payment_method ) {
 			$is_manual_payment = $payment_method->name === $method_name;
@@ -1721,12 +1717,7 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		<?php elseif ( $show_pay_button && self::TUTOR_MANUAL_PAYMENT === $order->payment_method ) : ?>		
-			<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary" data-tutor-modal-target='payment_gateway_modal' >
-				<?php esc_html_e( 'Pay', 'tutor' ); ?>
-			</button>
-			<?php do_action( 'tutor_after_show_payment_button', $order ); ?>				
-		<?php elseif ( $show_pay_button && self::TUTOR_MANUAL_PAYMENT !== $order->payment_method ) : ?>
+		<?php elseif ( $show_pay_button ) : ?>
 			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
@@ -1740,6 +1731,7 @@ class OrderModel {
 			
 			<?php
 		endif;
+		do_action( 'tutor_after_manual_subscription_pay_button', $order );
 	}
 
 	/**
