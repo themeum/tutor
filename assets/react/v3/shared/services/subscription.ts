@@ -206,7 +206,7 @@ export const useSaveCourseSubscriptionMutation = (objectId: number) => {
 const deleteCourseSubscription = (objectId: number, subscriptionId: number) => {
   return wpAjaxInstance.post<
     {
-      course_id: number;
+      object_id: number;
       id: number;
     },
     TutorMutationResponse<ID>
@@ -244,12 +244,12 @@ export const useDeleteCourseSubscriptionMutation = (objectId: number) => {
 const duplicateCourseSubscription = (objectId: number, subscriptionId: number) => {
   return wpAjaxInstance.post<
     {
-      course_id: number;
+      object_id: number;
       id: number;
     },
     TutorMutationResponse<ID>
   >(endpoints.DUPLICATE_SUBSCRIPTION, {
-    course_id: objectId,
+    object_id: objectId,
     id: subscriptionId,
   });
 };
@@ -278,15 +278,15 @@ export const useDuplicateCourseSubscriptionMutation = (objectId: number) => {
   });
 };
 
-const sortCourseSubscriptions = (courseId: number, subscriptionIds: number[]) => {
+const sortCourseSubscriptions = (objectId: number, subscriptionIds: number[]) => {
   return wpAjaxInstance.post<
     {
-      course_id: number;
+      object_id: number;
       plan_ids: number[];
     },
     TutorMutationResponse<ID>
   >(endpoints.SORT_SUBSCRIPTION, {
-    course_id: courseId,
+    object_id: objectId,
     plan_ids: subscriptionIds,
   });
 };
