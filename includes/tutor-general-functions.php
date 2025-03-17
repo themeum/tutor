@@ -1483,18 +1483,16 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 *
 		 * @since 3.0.0
 		 *
-		 * @param int $plan_id Plan id.
-		 *
 		 * @return array
 		 */
-		function tutor_get_supported_payment_gateways( int $plan_id = 0 ) {
+		function tutor_get_supported_payment_gateways( ) {
 			$payment_gateways = tutor_get_all_active_payment_gateways();
 
 			$supported_gateways = array();
 			foreach ( $payment_gateways as $gateway ) {
 				$support_subscription = $gateway['support_subscription'] ?? false;
 
-				if ( $plan_id && ! $support_subscription ) {
+				if ( ! $support_subscription ) {
 					continue;
 				}
 
