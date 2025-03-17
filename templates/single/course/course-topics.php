@@ -15,9 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 global $is_enrolled;
 
-$topics      = apply_filters( 'tutor_get_course_topics', tutor_utils()->get_topics() );
-$course_id   = get_the_ID();
-$index       = 0;
+$topics    = apply_filters( 'tutor_get_course_topics', tutor_utils()->get_topics() );
+$course_id = get_the_ID();
+$index     = 0;
 
 /**
  * $is_enrolled getting null for Addons plugin like Elementor addons
@@ -93,6 +93,11 @@ do_action( 'tutor_course/single/before/topics' );
 															'class' => true,
 														),
 														'span' => array( 'class' => true ),
+														'div' => array(
+															'class' => true,
+															'data-timer' => array(),
+															'data-timezone' => array(),
+														),
 													);
 
 													// Add zoom meeting countdown info.

@@ -5106,6 +5106,7 @@ class Utils {
 		foreach ( $questions as $question ) {
 			$question->question_title       = stripslashes( $question->question_title );
 			$question->question_description = stripslashes( $question->question_description );
+			$question->answer_explanation   = stripslashes( $question->answer_explanation );
 		}
 
 		return ( is_array( $questions ) && count( $questions ) ) ? $questions : false;
