@@ -154,15 +154,15 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 							<?php endif; ?>
 						</div>
 
-						<div class="tutor-text-right">
-							<div class="tutor-fw-bold">
-								<?php tutor_print_formatted_price( $item->display_price ); ?>
-							</div>
+						<div class="tutor-text-right tutor-d-flex tutor-align-center">
 							<?php if ( $item->sale_price || $item->discount_price || ( $has_trial_period && ! $is_trial_used ) ) : ?>
-							<div class="tutor-checkout-discount-price">
+							<div class="tutor-checkout-discount-price tutor-mr-4">
 								<?php tutor_print_formatted_price( $item->regular_price ); ?>
 							</div>
 							<?php endif; ?>
+							<div class="tutor-fw-bold">
+								<?php tutor_print_formatted_price( $item->display_price ); ?>
+							</div>
 							<div class="tutor-fs-7 tutor-color-hints">
 								<?php
 								echo esc_html(
@@ -197,9 +197,14 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 						</div>
 					<?php endif; ?>
 					<?php if ( $has_trial_period && ! $is_trial_used ) : ?>
-						<div class="tutor-mt-12 tutor-ml-8">
-							<div class="tutor-fs-6 tutor-color-black tutor-d-flex tutor-justify-between">
-								<div>
+						<div class="tutor-mt-12">
+							<div class="tutor-plan-trial-price">
+								<div class="tutor-plan-trial-icon-wrapper">
+									<svg width="16" height="17" viewBox="0 0 16 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M7.00031 10.6673C6.87168 10.6575 6.75203 10.5976 6.66698 10.5006L4.66698 8.50064C4.62242 8.40734 4.60788 8.30251 4.62537 8.20061C4.64285 8.0987 4.6915 8.00472 4.76461 7.9316C4.83772 7.85849 4.93171 7.80984 5.03361 7.79236C5.13552 7.77487 5.24034 7.78941 5.33365 7.83397L6.98031 9.48064L12.667 3.83397C12.7603 3.78941 12.8651 3.77487 12.967 3.79236C13.0689 3.80984 13.1629 3.85849 13.236 3.9316C13.3091 4.00472 13.3578 4.0987 13.3753 4.20061C13.3927 4.30251 13.3782 4.40734 13.3336 4.50064L7.33365 10.5006C7.2486 10.5976 7.12894 10.6575 7.00031 10.6673Z" fill="#22A848"/>
+										<path d="M8.00007 14.5001C6.92772 14.4984 5.87542 14.2093 4.95269 13.6629C4.02996 13.1166 3.27052 12.3329 2.75341 11.3934C2.36087 10.6932 2.11796 9.91909 2.04007 9.12012C1.91806 7.94817 2.14381 6.76624 2.68917 5.72176C3.23453 4.67728 4.07535 3.8165 5.10674 3.24678C5.80699 2.85424 6.58109 2.61134 7.38007 2.53345C8.17617 2.44856 8.98122 2.52566 9.74674 2.76012C9.81504 2.77376 9.87975 2.80153 9.93669 2.84164C9.99364 2.88175 10.0416 2.93332 10.0774 2.99304C10.1133 3.05275 10.1363 3.1193 10.1449 3.18842C10.1536 3.25754 10.1477 3.3277 10.1276 3.39441C10.1075 3.46111 10.0738 3.52289 10.0284 3.57578C9.98311 3.62867 9.92724 3.67151 9.86439 3.70155C9.80154 3.73158 9.73311 3.74816 9.66349 3.75021C9.59386 3.75226 9.52458 3.73974 9.46007 3.71345C8.81254 3.51838 8.13252 3.45491 7.46007 3.52678C6.79529 3.5943 6.15116 3.79616 5.56674 4.12012C5.00349 4.43085 4.5055 4.84735 4.10007 5.34678C3.68265 5.85555 3.37094 6.44251 3.1832 7.07326C2.99546 7.70401 2.93547 8.36589 3.00674 9.02012C3.07425 9.6849 3.27611 10.329 3.60007 10.9134C3.91081 11.4767 4.32731 11.9747 4.82674 12.3801C5.33551 12.7975 5.92246 13.1093 6.55322 13.297C7.18397 13.4847 7.84584 13.5447 8.50007 13.4734C9.16485 13.4059 9.80899 13.2041 10.3934 12.8801C10.9567 12.5694 11.4546 12.1529 11.8601 11.6534C12.2775 11.1447 12.5892 10.5577 12.7769 9.92697C12.9647 9.29622 13.0247 8.63434 12.9534 7.98012C12.9401 7.84132 12.9826 7.70294 13.0713 7.59542C13.1601 7.4879 13.2879 7.42004 13.4267 7.40678C13.5655 7.39352 13.7039 7.43594 13.8114 7.52471C13.919 7.61347 13.9868 7.74132 14.0001 7.88012C14.1215 9.05276 13.8947 10.2352 13.3481 11.2797C12.8016 12.3243 11.9594 13.1847 10.9267 13.7534C10.219 14.1621 9.43298 14.4165 8.62007 14.5001H8.00007Z" fill="#22A848"/>
+									</svg>
+
 									<?php
 										$trial_label = sprintf(
 											/* translators: %d: trial value, %s: trial interval, %s: free or not */
@@ -212,7 +217,7 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 									?>
 								</div>
 								<?php if ( $plan_info->trial_fee > 0 ) : ?>
-								<div class="tutor-fw-bold">
+								<div>
 									<?php tutor_print_formatted_price( $plan_info->trial_fee ); ?>
 								</div>
 								<?php endif; ?>
@@ -223,8 +228,18 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 							<ul class="tutor-fs-8 tutor-color-muted tutor-pl-20 tutor-mt-8">
 								<li>
 								<?php
-									/* translators: %s: price */
-									echo esc_html( sprintf( __( 'After trial, regular plan price %s will be charged.', 'tutor' ), tutor_get_formatted_price( $plan_info->regular_price ) ) );
+									echo wp_kses(
+										sprintf(
+											/* translators: %s: tag start, %s: plan price, %s: tag close */
+											__( 'After trial, regular plan price %1$s%2$s%3$s will be charged.', 'tutor' ),
+											'<strong>',
+											tutor_get_formatted_price( $plan_info->regular_price ),
+											'</strong>'
+										),
+										array(
+											'strong' => array(),
+										)
+									);
 								?>
 								</li>
 								<?php
@@ -232,8 +247,18 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 									?>
 									<li>
 									<?php
-										/* translators: %s: price */
-										echo esc_html( sprintf( __( 'An enrollment fee of %s will also be charged.', 'tutor' ), tutor_get_formatted_price( $enrollment_fee ) ) );
+										echo wp_kses(
+											sprintf(
+												/* translators: %s: tag start, %s: enrollment fee, %s: tag close */
+												__( 'An enrollment fee of %1$s%2$s%3$s will also be charged.', 'tutor' ),
+												'<strong>',
+												tutor_get_formatted_price( $enrollment_fee ),
+												'</strong>'
+											),
+											array(
+												'strong' => array(),
+											)
+										);
 									?>
 									</li>
 									<?php
