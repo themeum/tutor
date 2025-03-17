@@ -23,7 +23,7 @@ $checkout_controller = new CheckoutController( false );
 $get_cart            = $cart_controller->get_cart_items();
 $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
-$course_id           = Input::get( 'course_id', 0, INPUT::TYPE_INT );
+$course_id           = is_ajax() ? Input::post( 'course_id', 0, INPUT::TYPE_INT ) : Input::get( 'course_id', 0, INPUT::TYPE_INT );
 $course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
 
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );

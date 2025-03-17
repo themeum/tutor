@@ -139,8 +139,9 @@ document.addEventListener('DOMContentLoaded', () => {
          * @param {string} billingState Billing state.
          */
         async function updateCheckoutData(couponCode, billingCountry = null, billingState = null) {
-            const url = new URL(window.location.href);
-            const plan = url.searchParams.get('plan');
+            const url       = new URL(window.location.href);
+            const plan      = url.searchParams.get('plan');
+            const course_id = url.searchParams.get('course_id' );
 
             const formData = new FormData();
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
@@ -156,6 +157,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (plan) {
                 formData.set('plan', plan);
+            }
+
+            if(course_id){
+                formData.set('course_id', course_id);
             }
 
             const response = await ajaxHandler(formData);
