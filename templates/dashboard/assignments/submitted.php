@@ -13,6 +13,7 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 	return;
 }
 
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use TUTOR_ASSIGNMENTS\Assignments_List;
 
@@ -103,6 +104,9 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 						$not_evaluated             = '' === $given_mark;
 						$status                    = 'pending';
 						$button_text               = __( 'Evaluate', 'tutor' );
+						$date_format               = get_option( 'date_format' );
+						$time_format               = get_option( 'time_format' );
+						$deadline_date             = tutor_utils()->get_assignment_deadline_date( $assignment->comment_post_ID, $date_format . ' ' . $time_format , __( 'No Limit', 'tutor' ), $assignment->user_id, $assignment->comment_parent );
 
 						if ( ! empty( $given_mark ) || ! $not_evaluated ) {
 							$status      = (int) $given_mark >= (int) $pass_mark ? 'pass' : 'fail';
@@ -125,7 +129,7 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 								<?php echo wp_kses_post( tutor_utils()->convert_date_into_wp_timezone( $assignment->comment_date_gmt , 'j M, Y,<\b\r>h:i a' ) ); ?>
 							</td>
 							<td>
-								<?php echo esc_html( tutor_utils()->get_assignment_deadline_date( $assignment->comment_post_ID, 'j M, Y, h:i a', __( 'No Limit', 'tutor' ), $assignment->user_id, $assignment->comment_parent ) ); ?>
+								<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ), 'j M, Y, h:i a' ); ?>
 							</td>
 							<td>
 								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium">

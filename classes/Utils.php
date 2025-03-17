@@ -8190,24 +8190,21 @@ class Utils {
 		}
 
 		$deadline_date     = null;
-		$enrolled_date     = '';
 		$enrolled_date_gmt = '';
 
 		if ( $course_id && $student_id ) {
 			$enrolled_info = $this->is_enrolled( $course_id, $student_id );
 
 			if ( $enrolled_info ) {
-				$enrolled_date     = $enrolled_info->post_date;
 				$enrolled_date_gmt = $enrolled_info->post_date_gmt;
 			}
 		}
 
-		$publish_date     = get_post_field( 'post_date', $assignment_id );
 		$publish_date_gmt = get_post_field( 'post_date_gmt', $assignment_id );
 
-		$deadline_date = $enrolled_date && strtotime( $enrolled_date_gmt ) < strtotime( $publish_date_gmt ) ? $publish_date : $enrolled_date;
+		$deadline_date = strtotime( $enrolled_date_gmt ) < strtotime( $publish_date_gmt ) ? $publish_date_gmt : $enrolled_date_gmt;
 
-		$date = date_create( isset( $deadline_date ) ? $deadline_date : $publish_date );
+		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
 
 		return date_format( $date, $format );
