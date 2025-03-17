@@ -22,7 +22,7 @@ export type Subscription = {
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value: string;
-  recurring_interval: Omit<DurationUnit, 'hour'>;
+  recurring_interval: Exclude<DurationUnit, 'hour'>;
   is_featured: '0' | '1';
   regular_price: string;
   sale_price: string;
@@ -145,7 +145,7 @@ export type SubscriptionPayload = {
   assign_id: string; // course_id, category_id, or 0 for full site
   plan_name: string;
   recurring_value?: string;
-  recurring_interval?: Omit<DurationUnit, 'hour'>;
+  recurring_interval?: Exclude<DurationUnit, 'hour'>;
   regular_price: string;
   sale_price?: string;
   sale_price_from?: string; // start date
