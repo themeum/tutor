@@ -88,7 +88,7 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const TUTOR_MANUAL_SUBSCRIPTION = 'manual subscription';
+	const TUTOR_MANUAL_SUBSCRIPTION = 'manual';
 
 	/**
 	 * Transient constants
