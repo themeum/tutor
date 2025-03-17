@@ -1696,7 +1696,7 @@ if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
 			}
 		}
 
-		wp_safe_redirect( add_query_arg( $query_params, home_url() ) );
+		wp_safe_redirect( apply_filters( 'tutor_redirect_url_after_checkout', add_query_arg( $query_params, home_url() ), $status, $order_id ) );
 		exit();
 	}
 }
