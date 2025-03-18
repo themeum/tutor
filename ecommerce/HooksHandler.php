@@ -423,6 +423,7 @@ class HooksHandler {
 		if ( empty( $order_data->total_price ) ) {
 			$order_data['order_status']   = OrderModel::ORDER_COMPLETED;
 			$order_data['payment_status'] = OrderModel::PAYMENT_PAID;
+			$order_data['payment_method'] = 'free';
 		}
 		return $order_data;
 	}

@@ -67,6 +67,7 @@ $is_checkout_page = true;
 						<div class="tutor-billing-fields">
 							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
 						</div>
+						<div class="tutor-payment-method-wrapper">
 						<?php if ( ! $is_zero_price ) : ?>
 							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
 								<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
@@ -121,6 +122,7 @@ $is_checkout_page = true;
 							<input type="hidden" name="payment_method" value="free">
 							<input type="hidden" name="payment_type" value="manual">
 						<?php endif; ?>
+						</div>
 						<?php if ( null !== $tutor_toc_page_link ) : ?>
 							<div class="tutor-mb-16 <?php echo esc_attr( $is_zero_price ? 'tutor-mt-20' : '' ); ?>">
 								<div class="tutor-form-check tutor-d-flex">
