@@ -47,6 +47,7 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
+	const PAYMENT_MANUAL             = 'manual';
 
 	/**
 	 * Order Meta keys for history & refunds
@@ -81,14 +82,6 @@ class OrderModel {
 	const TYPE_SUBSCRIPTION = 'subscription';
 	const TYPE_RENEWAL      = 'renewal';
 
-	/**
-	 * Manual payment
-	 *
-	 * @since 3.4.0
-	 *
-	 * @var string
-	 */
-	const TUTOR_MANUAL_PAYMENT = 'manual';
 
 	/**
 	 * Transient constants
@@ -1685,10 +1678,6 @@ class OrderModel {
 	public static function is_manual_payment( $method_name ) {
 		$payment_methods = tutor_get_manual_payment_gateways();
 
-		if ( $method_name === self::TUTOR_MANUAL_PAYMENT ) {
-			return false;
-		}
-
 		$is_manual_payment = false;
 		foreach ( $payment_methods as $payment_method ) {
 			$is_manual_payment = $payment_method->name === $method_name;
@@ -1721,12 +1710,9 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		<?php elseif ( $show_pay_button && self::TUTOR_MANUAL_PAYMENT === $order->payment_method ) : ?>		
-			<button type="button" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary" data-tutor-modal-target='payment_gateway_modal' >
-				<?php esc_html_e( 'Pay', 'tutor' ); ?>
-			</button>
-			<?php do_action( 'tutor_after_show_payment_button', $order ); ?>				
-		<?php elseif ( $show_pay_button && self::TUTOR_MANUAL_PAYMENT !== $order->payment_method ) : ?>
+		<?php elseif ( $show_pay_button ) : 
+			ob_start();
+		?>
 			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
@@ -1739,6 +1725,7 @@ class OrderModel {
 			</form>
 			
 			<?php
+			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );
 		endif;
 	}
 

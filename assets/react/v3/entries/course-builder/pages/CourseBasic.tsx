@@ -68,7 +68,6 @@ const CourseBasic = () => {
                   label={__('Title', 'tutor')}
                   placeholder={__('ex. Learn Photoshop CS6 from scratch', 'tutor')}
                   isClearable
-                  selectOnFocus
                   generateWithAi={!isTutorPro || isOpenAiEnabled}
                   loading={!!isCourseDetailsFetching && !controllerProps.field.value}
                   onChange={(value) => {

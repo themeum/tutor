@@ -74,52 +74,42 @@ $is_checkout_page = true;
 							<div class="tutor-checkout-payment-options tutor-mb-24">
 								<input type="hidden" name="payment_type">
 								<?php
-								$payment_gateways = tutor_get_all_active_payment_gateways();
-								if ( empty( $payment_gateways ) ) {
+								$supported_gateways = $plan_id ? tutor_get_subscription_supported_payment_gateways() : tutor_get_all_active_payment_gateways();
+								if ( empty( $supported_gateways ) ) {
 									?>
-									<div class="tutor-alert tutor-warning">
-										<?php esc_html_e( 'No payment method has been configured. Please contact the site administrator.', 'tutor' ); ?>
-									</div>
-									<?php
-								} else {
-									$supported_gateways = tutor_get_supported_payment_gateways( $plan_id );
-
-									if ( empty( $supported_gateways ) ) {
-										?>
 
 										<div class="tutor-alert tutor-warning">
-											<?php esc_html_e( 'No payment method found. Please contact the site administrator.', 'tutor' ); ?>
+										<?php esc_html_e( 'No payment method found. Please contact the site administrator.', 'tutor' ); ?>
 										</div>
 										<?php
-									} else {
-										foreach ( $supported_gateways as $gateway ) {
-											list( 'is_manual' => $is_manual, 'name' => $name, 'label' => $label, 'icon' => $icon ) = $gateway;
+								} else {
+									foreach ( $supported_gateways as $gateway ) {
+										list( 'is_manual' => $is_manual, 'name' => $name, 'label' => $label, 'icon' => $icon ) = $gateway;
 
-											if ( $is_manual ) {
-												?>
+										if ( $is_manual ) {
+											?>
 											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ?? '' ); ?>">
 												<input type="radio" value="<?php echo esc_attr( $name ); ?>" name="payment_method" class="tutor-form-check-input" <?php echo count( $supported_gateways ) === 1 ? 'checked' : ''; ?>  required>
 												<div class="tutor-payment-item-content">
-													<?php if ( ! empty( $icon ) ) : ?>
+												<?php if ( ! empty( $icon ) ) : ?>
 													<img src ="<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>
 													<?php endif; ?>
-													<?php echo esc_html( $label ); ?>
+												<?php echo esc_html( $label ); ?>
 												</div>
 											</label>
 												<?php
-											} else {
-												?>
+										} else {
+											?>
 											<label class="tutor-checkout-payment-item" data-payment-type="automate">
 												<input type="radio" name="payment_method" value="<?php echo esc_attr( $name ); ?>" class="tutor-form-check-input" <?php echo count( $supported_gateways ) === 1 ? 'checked' : ''; ?> required>
 												<div class="tutor-payment-item-content">
-													<?php if ( ! empty( $icon ) ) : ?>
+												<?php if ( ! empty( $icon ) ) : ?>
 													<img src = "<?php echo esc_url( $icon ); ?>" alt="<?php echo esc_attr( $name ); ?>"/>
 													<?php endif; ?>
-													<?php echo esc_html( $label ); ?>
+												<?php echo esc_html( $label ); ?>
 												</div>
 											</label>
 												<?php
-											}
 										}
 									}
 								}
