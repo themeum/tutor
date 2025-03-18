@@ -47,7 +47,7 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 		</div>
 		<div class="assignment-info tutor-mt-12 tutor-d-flex">
 			<div class="tutor-fs-7 tutor-color-secondary">
-				<?php esc_html_e( 'Assignment submission period', 'tutor' ); ?>:
+				<?php esc_html_e( 'Assignment Submission Period', 'tutor' ); ?>:
 				<span class="tutor-fs-7 tutor-fw-medium"><?php echo esc_html( $submission_period ); ?></span>
 			</div>
 			<div class="tutor-fs-7 tutor-color-secondary tutor-ml-24">
@@ -126,10 +126,10 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 								</div>
 							</td>
 							<td>
-								<?php echo wp_kses_post( tutor_utils()->convert_date_into_wp_timezone( $assignment->comment_date_gmt , 'j M, Y,<\b\r>h:i a' ) ); ?>
+								<?php echo wp_kses_post( DateTimeHelper::get_gmt_to_user_timezone_date( $assignment->comment_date_gmt ) ); ?>
 							</td>
 							<td>
-								<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ), 'j M, Y, h:i a' ); ?>
+								<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ) ); ?>
 							</td>
 							<td>
 								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium">

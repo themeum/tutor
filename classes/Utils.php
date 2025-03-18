@@ -8164,11 +8164,10 @@ class Utils {
 	 * @param int   $assignment_id assignment id.
 	 * @param mixed $format format.
 	 * @param mixed $fallback fallback.
-	 *
-	 * @since 3.4.0
-	 *
 	 * @param int   $student_id the student id.
 	 * @param int   $course_id  the course id.
+	 *
+	 * @since 3.4.0 param $student_id and $course_id added.
 	 *
 	 * @return string|false
 	 */
