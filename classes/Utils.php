@@ -8160,14 +8160,17 @@ class Utils {
 	 * Return the assignment deadline date based on duration and assignment creation date
 	 *
 	 * @since 1.8.0
+	 * @since 3.4.0 param $student_id and $course_id added.
 	 *
 	 * @param int   $assignment_id assignment id.
 	 * @param mixed $format format.
 	 * @param mixed $fallback fallback.
+	 * @param int   $student_id the student id.
+	 * @param int   $course_id  the course id.
 	 *
 	 * @return string|false
 	 */
-	public function get_assignment_deadline_date( $assignment_id, $format = null, $fallback = null ) {
+	public function get_assignment_deadline_date( $assignment_id, $format = null, $fallback = null, $student_id = 0, $course_id = 0 ) {
 
 		! $format ? $format = 'j F, Y, g:i a' : 0;
 
@@ -8178,9 +8181,22 @@ class Utils {
 			return $fallback;
 		}
 
-		$publish_date = get_post_field( 'post_date', $assignment_id );
+		$deadline_date     = null;
+		$enrolled_date_gmt = '';
 
-		$date = date_create( $publish_date );
+		if ( $course_id && $student_id ) {
+			$enrolled_info = $this->is_enrolled( $course_id, $student_id );
+
+			if ( $enrolled_info ) {
+				$enrolled_date_gmt = $enrolled_info->post_date_gmt;
+			}
+		}
+
+		$publish_date_gmt = get_post_field( 'post_date_gmt', $assignment_id );
+
+		$deadline_date = strtotime( $enrolled_date_gmt ) < strtotime( $publish_date_gmt ) ? $publish_date_gmt : $enrolled_date_gmt;
+
+		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
 
 		return date_format( $date, $format );

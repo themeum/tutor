@@ -13,17 +13,20 @@ if ( ! defined( 'TUTOR_PRO_VERSION' ) ) {
 	return;
 }
 
+use Tutor\Helpers\DateTimeHelper;
 use TUTOR\Input;
 use TUTOR_ASSIGNMENTS\Assignments_List;
 
 $order_filter          = Input::get( 'order', 'desc' );
 $assignment_id         = Input::get( 'assignment' );
+$format                = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
+$assignment_info       = tutor_utils()->get_assignment_option( $assignment_id );
+$submission_time       = $assignment_info['time_duration']['value'] > 1 ? $assignment_info['time_duration']['time'] : str_replace( 's', '', $assignment_info['time_duration']['time'] );
+$submission_period     = ! $assignment_info['time_duration']['value'] ? __( 'No Limit', 'tutor' ) : $assignment_info['time_duration']['value'] . ' ' . $submission_time;
 $assignments_submitted = Assignments_List::get_submitted_assignments( $assignment_id, $order_filter );
 
 $max_mark       = tutor_utils()->get_assignment_option( $assignment_id, 'total_mark' );
 $pass_mark      = tutor_utils()->get_assignment_option( $assignment_id, 'pass_mark' );
-$format         = get_option( 'date_format' ) . ' ' . get_option( 'time_format' );
-$deadline       = tutor_utils()->get_assignment_deadline_date( $assignment_id, $format, __( 'No Limit', 'tutor' ) );
 $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]->comment_parent : null;
 ?>
 
@@ -44,8 +47,8 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 		</div>
 		<div class="assignment-info tutor-mt-12 tutor-d-flex">
 			<div class="tutor-fs-7 tutor-color-secondary">
-				<?php esc_html_e( 'Submission Deadline', 'tutor' ); ?>:
-				<span class="tutor-fs-7 tutor-fw-medium"><?php echo esc_html( $deadline ); ?></span>
+				<?php esc_html_e( 'Assignment Submission Period', 'tutor' ); ?>:
+				<span class="tutor-fs-7 tutor-fw-medium"><?php echo esc_html( $submission_period ); ?></span>
 			</div>
 			<div class="tutor-fs-7 tutor-color-secondary tutor-ml-24">
 				<?php esc_html_e( 'Total Points', 'tutor' ); ?>:
@@ -73,11 +76,14 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 			<table class="tutor-table tutor-table-middle">
 				<thead>
 					<tr>
-						<th width="20%">
-							<?php esc_html_e( 'Date', 'tutor' ); ?>
-						</th>
 						<th width="30%">
 							<?php esc_html_e( 'Student', 'tutor' ); ?>
+						</th>
+						<th width="20%">
+							<?php esc_html_e( 'Submission Date', 'tutor' ); ?>
+						</th>
+						<th width="18%">
+							<?php esc_html_e( 'Submission Deadline', 'tutor' ); ?>
 						</th>
 						<th>
 							<?php esc_html_e( 'Total Points', 'tutor' ); ?>
@@ -98,6 +104,9 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 						$not_evaluated             = '' === $given_mark;
 						$status                    = 'pending';
 						$button_text               = __( 'Evaluate', 'tutor' );
+						$date_format               = get_option( 'date_format' );
+						$time_format               = get_option( 'time_format' );
+						$deadline_date             = tutor_utils()->get_assignment_deadline_date( $assignment->comment_post_ID, $date_format . ' ' . $time_format , __( 'No Limit', 'tutor' ), $assignment->user_id, $assignment->comment_parent );
 
 						if ( ! empty( $given_mark ) || ! $not_evaluated ) {
 							$status      = (int) $given_mark >= (int) $pass_mark ? 'pass' : 'fail';
@@ -105,10 +114,6 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 						}
 						?>
 						<tr>
-							<td>
-								<?php echo wp_kses_post( tutor_utils()->convert_date_into_wp_timezone( $assignment->comment_date_gmt , 'j M, Y,<\b\r>h:i a' ) ); ?>
-							</td>
-
 							<td>
 								<div class="tutor-d-flex tutor-align-center tutor-gap-2">
 									<?php echo wp_kses( tutor_utils()->get_tutor_avatar( $comment_author->ID ), tutor_utils()->allowed_avatar_tags() ); ?>
@@ -119,6 +124,12 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 										</span>
 									</div>
 								</div>
+							</td>
+							<td>
+								<?php echo wp_kses_post( DateTimeHelper::get_gmt_to_user_timezone_date( $assignment->comment_date_gmt ) ); ?>
+							</td>
+							<td>
+								<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ) ); ?>
 							</td>
 							<td>
 								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium">
