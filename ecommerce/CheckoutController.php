@@ -168,7 +168,7 @@ class CheckoutController {
 	}
 
 	/**
-	 * Prepare additional checkout item.
+	 * Prepare additional checkout item like enrollment fee, trial fee etc
 	 *
 	 * @since 3.4.0
 	 *
