@@ -11,7 +11,7 @@ import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { generateTree } from '@TutorShared/utils/util';
+import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -164,7 +164,7 @@ export const Branch = ({ option, onChange, level = 0 }: BranchProps) => {
   return (
     <div css={styles.branchItem(level)}>
       <button type="button" onClick={() => onChange(option.id)}>
-        {option.name}
+        {decodeHtmlEntities(option.name)}
       </button>
 
       {renderBranches()}
