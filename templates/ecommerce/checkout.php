@@ -81,7 +81,7 @@ $is_checkout_page = true;
 								</div>
 								<?php
 							} else {
-								$supported_gateways = tutor_get_supported_payment_gateways( $plan_id );
+								$supported_gateways = tutor_get_supported_payment_gateways();
 
 								if ( empty( $supported_gateways ) ) {
 									?>

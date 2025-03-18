@@ -154,7 +154,6 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
                 {...controllerProps}
                 label={__('Meeting Name', 'tutor')}
                 placeholder={__('Enter meeting name', 'tutor')}
-                selectOnFocus
               />
             )}
           />

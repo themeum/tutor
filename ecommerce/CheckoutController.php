@@ -880,7 +880,8 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_incomplete_order() {
-		$order_id = Input::post( 'order_id', 0, Input::TYPE_INT );
+		$order_id       = Input::post( 'order_id', 0, Input::TYPE_INT );
+		$payment_method = Input::post( 'payment_method', '' );
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'purchase_history' ), tutor_utils()->error_message( 'nonce' ), 'error' );
 			exit;
@@ -889,8 +890,8 @@ class CheckoutController {
 			$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
-					$payment_data = $this->prepare_payment_data( (array) $order_data, $order_data->payment_method, $order_data->order_type );
-					$this->proceed_to_payment( $payment_data, $order_data->payment_method, $order_data->order_type );
+					$payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
+					$this->proceed_to_payment( $payment_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
 					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $th->getMessage() );
