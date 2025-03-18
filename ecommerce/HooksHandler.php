@@ -473,11 +473,17 @@ class HooksHandler {
 	 * @return string
 	 */
 	public function redirect_to_the_course( string $url, string $status, int $order_id ):string {
+		$user_id = get_current_user_id();
 		if ( OrderModel::ORDER_PLACEMENT_SUCCESS === $status ) {
 			$order = $this->order_model->get_order_by_id( $order_id );
 			if ( $order && count( $order->items ) === 1 && empty( $order->total_price ) ) {
 
+				// Firing hook to clear cart.
 				do_action( 'tutor_order_placement_success', $order_id );
+
+				// Clear the alert message.
+				delete_transient( CheckoutController::PAY_NOW_ALERT_MSG_TRANSIENT_KEY . $user_id );
+				delete_transient( CheckoutController::PAY_NOW_ERROR_TRANSIENT_KEY . $user_id );
 				$course_id = $order->items[0]->id;
 				$url       = get_the_permalink( $course_id );
 			}
