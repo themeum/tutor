@@ -10,6 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const applyCouponInput = applyCouponForm?.querySelector("input");
         const applyCouponButton = applyCouponForm?.querySelector("button");
 
+        const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
+        const paymentMethodElem = paymentMethodWrapper.innerHTML;
+        const payNowBtn = document.querySelector('#tutor-checkout-pay-now-button');
+
         // Handle payment method click 
         const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
         if (paymentOptionsWrapper) {
@@ -94,6 +98,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (status_code === 200) {
                         tutor_toast(__('Success', 'tutor'), message, 'success');
                         updateCheckoutData(couponCode);
+                        if (!data.tutor_price && paymentMethodElem) {
+                            if (!paymentMethodWrapper.classList.contains('tutor-mt-20')){
+                                paymentMethodWrapper.classList.add('tutor-mt-20');
+                            }
+
+                            paymentMethodWrapper.innerHTML = '';
+                            payNowBtn.innerHTML = __( 'Enroll Now', 'tutor' );
+                        }
                     } else {
                         tutor_toast(__('Failed', 'tutor'), message, 'error');
                     }
@@ -111,7 +123,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
                 document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
-                updateCheckoutData('');
+                const update = updateCheckoutData('');
+                update.then(() => {
+                    paymentMethodWrapper.innerHTML = paymentMethodElem;
+                    payNowBtn.innerHTML = __( 'Pay Now', 'tutor' );
+                });
             }
         });
 

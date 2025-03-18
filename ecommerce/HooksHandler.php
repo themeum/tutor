@@ -476,6 +476,8 @@ class HooksHandler {
 		if ( OrderModel::ORDER_PLACEMENT_SUCCESS === $status ) {
 			$order = $this->order_model->get_order_by_id( $order_id );
 			if ( $order && count( $order->items ) === 1 && empty( $order->total_price ) ) {
+
+				do_action( 'tutor_order_placement_success', $order_id );
 				$course_id = $order->items[0]->id;
 				$url       = get_the_permalink( $course_id );
 			}

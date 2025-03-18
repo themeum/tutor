@@ -85,8 +85,8 @@ $is_checkout_page = true;
 										<?php
 								} else {
 									foreach ( $supported_gateways as $gateway ) {
-										list( 'is_manual' => $is_manual, 'name' => $name, 'label' => $label, 'icon' => $icon ) = $gateway;
-
+										list( 'name' => $name, 'label' => $label, 'icon' => $icon ) = $gateway;
+										$is_manual = $gateway['is_manual'] ?? false;
 										if ( $is_manual ) {
 											?>
 											<label class="tutor-checkout-payment-item" data-payment-method="<?php echo esc_attr( $name ); ?>" data-payment-type="manual" data-payment-details="<?php echo esc_attr( $gateway['additional_details'] ?? '' ); ?>" data-payment-instruction="<?php echo esc_attr( $gateway['payment_instructions'] ?? '' ); ?>">

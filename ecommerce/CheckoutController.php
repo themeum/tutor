@@ -925,10 +925,13 @@ class CheckoutController {
 		$order_types = implode( ',', $order_types );
 
 		$validation_rules = array(
-			'object_ids'     => 'required',
-			'payment_method' => 'required',
-			'order_type'     => "required|match_string:{$order_types}",
+			'object_ids' => 'required',
+			'order_type' => "required|match_string:{$order_types}",
 		);
+
+		if ( $data['order_price'] ) {
+			$validation_rules['payment_method'] = 'required';
+		}
 
 		// Skip validation rules for not available fields in data.
 		foreach ( $validation_rules as $key => $value ) {
