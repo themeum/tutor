@@ -243,7 +243,6 @@ const AssignmentModal = ({
                     placeholder={__('Enter Assignment Title', 'tutor')}
                     generateWithAi={!isTutorPro || isOpenAiEnabled}
                     isClearable
-                    selectOnFocus
                   />
                 )}
               />

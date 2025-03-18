@@ -14,6 +14,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import 'react-day-picker/style.css';
 
+import { typography } from '@TutorShared/config/typography';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormDateInputProps extends FormControllerProps<string> {
@@ -197,11 +198,11 @@ const styles = {
     color: ${colorTokens.icon.default};
   `,
   pickerWrapper: css`
+    ${typography.body('regular')};
     position: absolute;
     background-color: ${colorTokens.background.white};
     box-shadow: ${shadow.popover};
     border-radius: ${borderRadius[6]};
-    color: ${colorTokens.text.primary};
 
     .rdp-root {
       --rdp-day-height: 40px; /* Height of the day cells. */
@@ -241,8 +242,11 @@ const styles = {
       button {
         border-radius: ${borderRadius.circle};
 
-        &:hover {
+        &:hover,
+        &:focus,
+        &:active {
           background-color: ${colorTokens.background.hover};
+          color: ${colorTokens.text.primary};
         }
 
         &:focus-visible:not(:disabled) {
@@ -270,8 +274,11 @@ const styles = {
       border-radius: ${borderRadius.circle};
       font-weight: ${fontWeight.regular};
       .rdp-day_button {
-        &:hover {
+        &:hover,
+        &:focus,
+        &:active {
           background-color: var(--rdp-accent-color);
+          color: ${colorTokens.text.primary};
         }
 
         &:focus-visible {
@@ -286,8 +293,11 @@ const styles = {
     }
 
     .rdp-day_button {
-      &:hover {
+      &:hover,
+      &:focus,
+      &:active {
         background-color: var(--rdp-background-color);
+        color: ${colorTokens.text.primary};
       }
 
       &:focus-visible:not([disabled]) {

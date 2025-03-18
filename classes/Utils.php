@@ -2407,17 +2407,17 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
 	 *
+	 * @since 3.4.0 $filters replaced with $args to override the defaults.
+	 *
 	 * @param integer $user_id user id.
 	 * @param string  $post_status post status.
 	 * @param integer $offset offset.
 	 * @param integer $posts_per_page post per page.
-	 * @param array   $filters additional filters with key value for \WP_Query.
+	 * @param array   $args Args to override the defaults.
 	 *
 	 * @return bool|\WP_Query
 	 */
-	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $filters = array() ) {
-		global $wpdb;
-
+	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $args = array() ) {
 		$user_id    = $this->get_user_id( $user_id );
 		$course_ids = array_unique( $this->get_enrolled_courses_ids_by_user( $user_id ) );
 
@@ -2431,14 +2431,7 @@ class Utils {
 				'posts_per_page' => $posts_per_page,
 			);
 
-			if ( count( $filters ) ) {
-				$keys = array_keys( $course_args );
-				foreach ( $filters as $key => $value ) {
-					if ( ! in_array( $key, $keys ) ) {
-						$course_args[ $key ] = $value;
-					}
-				}
-			}
+			$course_args = wp_parse_args( $args, $course_args );
 
 			$result = new \WP_Query( $course_args );
 
@@ -7597,7 +7590,25 @@ class Utils {
 		$instructor = TutorCache::get( $cache_key );
 
 		if ( false === $instructor ) {
-			$is_approved_clause = $is_approved ? "AND meta_key = '_tutor_instructor_status' AND meta_value = 'approved'" : '';
+
+			if ( $is_approved ) {
+				$is_approved_instructor = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(umeta_id)
+						FROM   {$wpdb->usermeta}
+						WHERE  user_id = %d 
+							AND meta_key = %s 
+							AND meta_value = %s",
+						$instructor_id,
+						'_tutor_instructor_status',
+						'approved',
+					)
+				);
+
+				if ( ! $is_approved_instructor ) {
+					return false;
+				}
+			}
 
 			//phpcs:disable
 			$instructor = $wpdb->get_col(
@@ -7605,7 +7616,6 @@ class Utils {
 					"SELECT umeta_id
 				FROM   {$wpdb->usermeta}
 				WHERE  user_id = %d
-					{$is_approved_clause}
 					AND meta_key = '_tutor_instructor_course_id'
 					AND meta_value = %d
 				",
@@ -10458,5 +10468,48 @@ class Utils {
 		}
 
 		return (object) $info;
+	}
+
+	/**
+	 * Delete enrollment record by providing the student and course id
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int $student_id Student id.
+	 * @param int $course_id Course id
+	 *
+	 * @return bool
+	 */
+	public function delete_enrollment_record( int $student_id, int $course_id ):bool {
+		global $wpdb;
+		return QueryHelper::delete(
+			$wpdb->posts,
+			array(
+				'post_author' => $student_id,
+				'post_parent' => $course_id,
+				'post_type'   => tutor()->enrollment_post_type,
+			)
+		);
+	}
+
+	/**
+	 * Delete student course comment by providing the student and course id
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int $student_id Student id.
+	 * @param int $course_id Course id
+	 *
+	 * @return bool
+	 */
+	public function delete_student_course_comment( int $student_id, int $course_id ): bool {
+		global $wpdb;
+		return QueryHelper::delete(
+			$wpdb->comments,
+			array(
+				'user_id'         => $student_id,
+				'comment_post_ID' => $course_id,
+			)
+		);
 	}
 }

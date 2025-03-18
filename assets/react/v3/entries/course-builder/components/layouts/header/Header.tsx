@@ -263,6 +263,8 @@ const styles = {
     }
 
     &:focus {
+      background-color: ${colorTokens.background.status.errorFail};
+      color: ${colorTokens.icon.error};
       box-shadow: ${shadow.focus};
     }
   `,

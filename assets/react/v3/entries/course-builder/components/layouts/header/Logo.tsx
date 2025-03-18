@@ -27,6 +27,12 @@ const styles = {
     padding-left: ${spacing[32]};
     cursor: default;
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
+
     img {
       max-height: 24px;
       width: auto;
