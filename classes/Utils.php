@@ -8160,14 +8160,13 @@ class Utils {
 	 * Return the assignment deadline date based on duration and assignment creation date
 	 *
 	 * @since 1.8.0
+	 * @since 3.4.0 param $student_id and $course_id added.
 	 *
 	 * @param int   $assignment_id assignment id.
 	 * @param mixed $format format.
 	 * @param mixed $fallback fallback.
 	 * @param int   $student_id the student id.
 	 * @param int   $course_id  the course id.
-	 *
-	 * @since 3.4.0 param $student_id and $course_id added.
 	 *
 	 * @return string|false
 	 */
