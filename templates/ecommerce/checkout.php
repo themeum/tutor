@@ -54,7 +54,6 @@ $is_checkout_page = true;
 				if ( file_exists( $file ) ) {
 					include $file;
 				}
-				$is_zero_price = empty( $checkout_data->total_price );
 				?>
 			</div>
 			<div class="tutor-col-md-6">
@@ -67,9 +66,9 @@ $is_checkout_page = true;
 						<div class="tutor-billing-fields">
 							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
 						</div>
-						<div class="tutor-payment-method-wrapper">
+						<div class="tutor-payment-method-wrapper tutor-mt-20">
 						<?php if ( ! $is_zero_price ) : ?>
-							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24 tutor-mt-20">
+							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
 								<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
 							</h5>
 							<div class="tutor-checkout-payment-options tutor-mb-24">
@@ -171,11 +170,8 @@ $is_checkout_page = true;
 						</div>
 						<?php endif; ?>
 						<!-- handle errors end -->
-						 <?php
-							$pay_btn_text = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
-							?>
 						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
-							<?php echo esc_html( apply_filters( 'tutor_checkout_pay_btn_text', $pay_btn_text, $is_zero_price, $checkout_data ) ); ?>
+							<?php echo esc_html( $pay_now_btn_text ); ?>
 						</button>
 					</div>
 				</div>

@@ -106,14 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (status_code === 200) {
                         tutor_toast(__('Success', 'tutor'), message, 'success');
-                        updateCheckoutData(couponCode);
+                        await updateCheckoutData(couponCode);
+                        
                         if (!data.tutor_price && paymentMethodElem) {
-                            if (!paymentMethodWrapper.classList.contains('tutor-mt-20')) {
-                                paymentMethodWrapper.classList.add('tutor-mt-20');
-                            }
-
                             paymentMethodWrapper.innerHTML = '';
-                            payNowBtn.innerHTML = __('Enroll Now', 'tutor');
+                            const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
+                            payNowBtn.innerHTML = payNowBtnText;
                             paymentMethodWrapper.insertAdjacentHTML('beforeend', `<input type='hidden' name='payment_method' value='free' id="tutor-temp-payment-method"/>`);
                         }
                     } else {
@@ -135,7 +133,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
                 await updateCheckoutData('');
                 paymentMethodWrapper.innerHTML = paymentMethodElem;
-                payNowBtn.innerHTML = __('Pay Now', 'tutor');
+                const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
+                payNowBtn.innerHTML = payNowBtnText;
                 document.getElementById('tutor-temp-payment-method')?.remove();
             }
         });
