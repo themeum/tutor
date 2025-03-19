@@ -420,7 +420,7 @@ class HooksHandler {
 	 * @return array
 	 */
 	public function update_order_data( array $order_data ) {
-		if ( empty( $order_data->total_price ) ) {
+		if ( empty( $order_data['total_price'] ) ) {
 			$order_data['order_status']   = OrderModel::ORDER_COMPLETED;
 			$order_data['payment_status'] = OrderModel::PAYMENT_PAID;
 			$order_data['payment_method'] = 'free';
@@ -438,7 +438,7 @@ class HooksHandler {
 	 * @return array
 	 */
 	public function handle_free_checkout( array $order_data ) {
-		if ( empty( $order_data->total_price ) ) {
+		if ( empty( $order_data['total_price'] ) ) {
 			$user_id = $order_data['user_id'];
 			$items   = $order_data['items'];
 			foreach ( $items as $item ) {

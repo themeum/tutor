@@ -105,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             paymentMethodWrapper.innerHTML = '';
                             payNowBtn.innerHTML = __( 'Enroll Now', 'tutor' );
+                            paymentMethodWrapper.insertAdjacentHTML('beforeend', `<input type='hidden' name='payment_method' value='free' id="tutor-temp-payment-method"/>`);
                         }
                     } else {
                         tutor_toast(__('Failed', 'tutor'), message, 'error');
@@ -119,15 +120,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // Handle coupon remove button click
-        document.addEventListener('click', (e) => {
+        document.addEventListener('click', async (e) => {
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
                 document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
-                const update = updateCheckoutData('');
-                update.then(() => {
-                    paymentMethodWrapper.innerHTML = paymentMethodElem;
-                    payNowBtn.innerHTML = __( 'Pay Now', 'tutor' );
-                });
+                await updateCheckoutData('');
+                paymentMethodWrapper.innerHTML = paymentMethodElem;
+                payNowBtn.innerHTML = __( 'Pay Now', 'tutor' );
+                document.getElementById('tutor-temp-payment-method')?.remove();
             }
         });
 
