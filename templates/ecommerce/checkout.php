@@ -171,8 +171,11 @@ $is_checkout_page = true;
 						</div>
 						<?php endif; ?>
 						<!-- handle errors end -->
+						 <?php
+							$pay_btn_text = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
+							?>
 						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
-							<?php echo esc_html( $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' ) ); ?>
+							<?php echo esc_html( apply_filters( 'tutor_checkout_pay_btn_text', $pay_btn_text, $is_zero_price, $checkout_data ) ); ?>
 						</button>
 					</div>
 				</div>

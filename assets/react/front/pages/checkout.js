@@ -6,12 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const checkoutPageWrapper = document.querySelector(".tutor-checkout-page");
 
     if (checkoutPageWrapper) {
-        const applyCouponForm = document.querySelector(".tutor-apply-coupon-form");
-        const applyCouponInput = applyCouponForm?.querySelector("input");
-        const applyCouponButton = applyCouponForm?.querySelector("button");
-
         const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
-        const paymentMethodElem = paymentMethodWrapper.innerHTML;
+        const paymentMethodElem = paymentMethodWrapper?.innerHTML;
         const payNowBtn = document.querySelector('#tutor-checkout-pay-now-button');
 
         // Handle payment method click 
