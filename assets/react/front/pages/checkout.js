@@ -31,6 +31,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
             });
+
+            // If only on payment available, keep selected.
+            if (paymentOptions.length === 1) {
+                paymentOptions[0].classList.add('active');
+                paymentOptions[0].querySelector('input[name=payment_method]').checked = true;
+                paymentTypeInput.value = paymentOptions[0].dataset.paymentType;
+
+                const paymentInstructions = paymentOptions[0].dataset.paymentInstruction;
+                if (paymentInstructions) {
+                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                }
+            }
         }
 
         // Handle toggle coupon form button click
@@ -95,12 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         tutor_toast(__('Success', 'tutor'), message, 'success');
                         updateCheckoutData(couponCode);
                         if (!data.tutor_price && paymentMethodElem) {
-                            if (!paymentMethodWrapper.classList.contains('tutor-mt-20')){
+                            if (!paymentMethodWrapper.classList.contains('tutor-mt-20')) {
                                 paymentMethodWrapper.classList.add('tutor-mt-20');
                             }
 
                             paymentMethodWrapper.innerHTML = '';
-                            payNowBtn.innerHTML = __( 'Enroll Now', 'tutor' );
+                            payNowBtn.innerHTML = __('Enroll Now', 'tutor');
                             paymentMethodWrapper.insertAdjacentHTML('beforeend', `<input type='hidden' name='payment_method' value='free' id="tutor-temp-payment-method"/>`);
                         }
                     } else {
@@ -122,7 +135,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
                 await updateCheckoutData('');
                 paymentMethodWrapper.innerHTML = paymentMethodElem;
-                payNowBtn.innerHTML = __( 'Pay Now', 'tutor' );
+                payNowBtn.innerHTML = __('Pay Now', 'tutor');
                 document.getElementById('tutor-temp-payment-method')?.remove();
             }
         });
@@ -151,9 +164,9 @@ document.addEventListener('DOMContentLoaded', () => {
          * @param {string} billingState Billing state.
          */
         async function updateCheckoutData(couponCode, billingCountry = null, billingState = null) {
-            const url       = new URL(window.location.href);
-            const plan      = url.searchParams.get('plan');
-            const course_id = url.searchParams.get('course_id' );
+            const url = new URL(window.location.href);
+            const plan = url.searchParams.get('plan');
+            const course_id = url.searchParams.get('course_id');
 
             const formData = new FormData();
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
@@ -162,7 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (billingCountry) {
                 formData.set('billing_country', billingCountry);
             }
-            
+
             if (billingState) {
                 formData.set('billing_state', billingState);
             }
@@ -171,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('plan', plan);
             }
 
-            if(course_id){
+            if (course_id) {
                 formData.set('course_id', course_id);
             }
 
@@ -215,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dropdown_billing_country?.addEventListener('change', async (e) => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = e.target.value;
-            const coupon_code = input_coupon_code?.value? input_coupon_code.value : '';
+            const coupon_code = input_coupon_code?.value ? input_coupon_code.value : '';
 
             if (country) {
                 toggleSpinner(e.target, 'show');
@@ -234,7 +247,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const input_coupon_code = document.querySelector('[name=coupon_code]');
             const country = dropdown_billing_country.value;
             const state = e.target.value;
-            const coupon_code = input_coupon_code?.value? input_coupon_code.value : '';
+            const coupon_code = input_coupon_code?.value ? input_coupon_code.value : '';
 
             if (state) {
                 toggleSpinner(e.target, 'show');
