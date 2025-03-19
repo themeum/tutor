@@ -438,7 +438,7 @@ class HooksHandler {
 	 * @return array
 	 */
 	public function handle_free_checkout( array $order_data ) {
-		if ( empty( $order_data['total_price'] ) ) {
+		if ( empty( $order_data['total_price'] ) && OrderModel::TYPE_SINGLE_ORDER === $order_data['order_type'] ) {
 			$user_id = $order_data['user_id'];
 			$items   = $order_data['items'];
 			foreach ( $items as $item ) {
@@ -476,7 +476,7 @@ class HooksHandler {
 		$user_id = get_current_user_id();
 		if ( OrderModel::ORDER_PLACEMENT_SUCCESS === $status ) {
 			$order = $this->order_model->get_order_by_id( $order_id );
-			if ( $order && count( $order->items ) === 1 && empty( $order->total_price ) ) {
+			if ( $order && count( $order->items ) === 1 && empty( $order->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $order->order_type ) {
 
 				// Firing hook to clear cart.
 				do_action( 'tutor_order_placement_success', $order_id );
