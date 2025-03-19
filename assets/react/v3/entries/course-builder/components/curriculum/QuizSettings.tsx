@@ -256,7 +256,7 @@ const QuizSettings = ({ contentDripType }: QuizSettingsProps) => {
                       topics.reduce((topics, topic) => {
                         topics.push({
                           ...topic,
-                          contents: topic.contents.filter((content) => content.ID !== quizId),
+                          contents: topic.contents.filter((content) => String(content.ID) !== String(quizId)),
                         });
 
                         return topics;
