@@ -139,7 +139,7 @@ class Students_List {
 				$courses = $enrolled_courses->get_posts();
 				foreach ( $courses as $course ) {
 					tutor_utils()->delete_enrollment_record( $student_id, $course->ID );
-					tutor_utils()->delete_course_progress( $course->ID );
+					tutor_utils()->delete_course_progress( $course->ID, $course->post_author );
 					tutor_utils()->delete_student_course_comment( $student_id, $course->ID );
 				}
 			}

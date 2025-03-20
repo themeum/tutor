@@ -80,7 +80,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 				<?php esc_html_e( 'State', 'tutor' ); ?>
 			</label>
 			<select name="billing_state" class="tutor-form-control">
-				<?php if ( $billing_country && empty( $states ) ) : ?>
+				<?php if ( empty( $states ) ) : ?>
 				<option value=""><?php esc_html_e( 'N/A', 'tutor' ); ?></option>
 				<?php endif; ?>
 				<?php if ( $billing_country && ( $states ) ) : ?>

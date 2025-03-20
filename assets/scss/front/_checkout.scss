@@ -235,7 +235,8 @@
 	}
 
 	.tutor-payment-instructions {
-		background-color: #ffffff;
+		background-color: #fafafa;
+		border: 1px solid var(--tutor-border-color);
 		border-radius: 6px;
 		padding: 16px;
 		margin-top: 16px;
@@ -379,6 +380,7 @@
 
 	.tutor-checkout-payment-item {
 		border: none;
+		margin: 0px;
 		background-color: transparent;
 		display: flex;
 		align-items: center;

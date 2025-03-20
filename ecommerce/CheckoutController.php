@@ -447,6 +447,7 @@ class CheckoutController {
 		$response['total_price_without_tax'] = $total_price_without_tax;
 		$response['tax_amount']              = $tax_amount;
 		$response['total_price']             = $total_price;
+		$response['order_type']              = $order_type;
 
 		return (object) $response;
 	}
@@ -952,9 +953,14 @@ class CheckoutController {
 			exit;
 		}
 		if ( $order_id ) {
-			$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
+			$order_model = new OrderModel();
+			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
+					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_MANUAL === $order_data->payment_method ) {
+						$order_model->update_order( $order_data->id, array( 'payment_method' => $payment_method ) );
+					}
+
 					$payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
 					$this->proceed_to_payment( $payment_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
 				} catch ( \Throwable $th ) {
@@ -992,8 +998,8 @@ class CheckoutController {
 
 		$validation_rules = array(
 			'object_ids'     => 'required',
-			'payment_method' => 'required',
 			'order_type'     => "required|match_string:{$order_types}",
+			'payment_method' => 'required',
 		);
 
 		// Skip validation rules for not available fields in data.

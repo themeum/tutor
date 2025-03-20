@@ -74,6 +74,17 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 	</div>
 	<?php endif; ?>
 
+	<?php
+	if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
+		add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
+		?>
+		<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
+			<span><?php esc_html_e( 'You\'re already enrolled in this course.', 'tutor' ); ?></span>
+			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>"><?php esc_html_e( 'Start learning!', 'tutor' ); ?></a>
+		</div>
+		<?php
+	}
+	?>
 	<div class="tutor-checkout-details-inner">
 		<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-border-bottom tutor-pb-8">
 			<?php esc_html_e( 'Order Details', 'tutor' ); ?>
@@ -415,5 +426,12 @@ $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
 			<input type="hidden" name="order_type" value="<?php echo esc_attr( $order_type ); ?>">
 		</div>
+
+		<?php
+		$is_zero_price    = empty( $checkout_data->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $checkout_data->order_type;
+		$pay_now_btn_text = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
+		$pay_now_btn_text = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
+		?>
+		<input type="hidden" id="pay_now_btn_text" value="<?php echo esc_attr( $pay_now_btn_text ); ?>">
 	</div>
 </div>

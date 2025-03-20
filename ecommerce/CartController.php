@@ -107,6 +107,7 @@ class CartController {
 	public function restrict_add_to_cart_course_list( $add_to_cart_btn, $course_id ) {
 
 		$selling_option = Course::get_selling_option( $course_id );
+		$btn_class = apply_filters( 'tutor_enroll_required_login_class', ! is_user_logged_in() ? 'tutor-open-login-modal' : '' );
 
 		if ( in_array( $selling_option, array( Course::SELLING_OPTION_BOTH, Course::SELLING_OPTION_SUBSCRIPTION, Course::SELLING_OPTION_MEMBERSHIP ), true ) ) {
 			return $add_to_cart_btn;
@@ -116,7 +117,7 @@ class CartController {
 			$checkout_page_url = add_query_arg( array( 'course_id' => $course_id ), CheckoutController::get_page_url() );
 			ob_start();
 			?>
-			<a href="<?php echo esc_url( $checkout_page_url ); ?>" class="tutor-btn tutor-course-list-btn tutor-btn-outline-primary tutor-btn-block">
+			<a href="<?php echo esc_url( $checkout_page_url ); ?>" class="tutor-btn tutor-course-list-btn tutor-btn-outline-primary tutor-btn-block <?php echo esc_attr( $btn_class ); ?>">
 				<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
 			</a>
 			<?php

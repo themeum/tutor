@@ -80,7 +80,7 @@ const FormTopicPrerequisites = ({
   isSearchable = false,
   helpText,
 }: FormTopicPrerequisitesProps) => {
-  const inputValue = field.value ?? [];
+  const inputValue = field.value || [];
   const selectedIds = inputValue.map((item) => String(item));
   const selectedOptions = options.reduce((contents, topic) => {
     return topic.contents.reduce((selectedContents, content) => {
