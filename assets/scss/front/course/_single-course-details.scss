@@ -68,6 +68,7 @@
     &.tutor-sidebar-sticky {
 		position: sticky;
 		top: 50px;
+        z-index: 1025;
 	}
     
     .tutor-sidebar-card {
