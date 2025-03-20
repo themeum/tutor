@@ -195,6 +195,18 @@ function editorConfig(
         });
         editor.on('blur', () => setIsFocused(false));
         editor.on('FullscreenStateChanged', (event: { state: boolean }) => {
+          const courseBuilder = document.getElementById('tutor-course-builder');
+          const courseBundleBuilder = document.getElementById('tutor-course-bundle-builder-root');
+          const builderWrapper = courseBuilder || courseBundleBuilder;
+          if (builderWrapper) {
+            if (event.state) {
+              builderWrapper.style.position = 'relative';
+              builderWrapper.style.zIndex = '999999';
+            } else {
+              builderWrapper.removeAttribute('style');
+            }
+          }
+
           onFullScreenChange?.(event.state);
         });
       },
@@ -399,13 +411,6 @@ const styles = {
     .mce-edit-area {
       background-color: unset;
     }
-
-    ${tutorConfig.is_admin_bar_showing === '1' &&
-    css`
-      .mce-fullscreen {
-        top: 32px;
-      }
-    `}
 
     ${isMinimal &&
     css`
