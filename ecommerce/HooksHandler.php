@@ -442,13 +442,7 @@ class HooksHandler {
 			$user_id = $order_data['user_id'];
 			$items   = $order_data['items'];
 			foreach ( $items as $item ) {
-				add_filter(
-					'tutor_enroll_data',
-					function( $enroll_data ) {
-						$enroll_data['post_status'] = 'completed';
-						return $enroll_data;
-					}
-				);
+				add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
 				$enrolled_id = tutor_utils()->do_enroll( $item['item_id'], $order_data['id'], $user_id );
 				if ( $enrolled_id && tutor_utils()->is_addon_enabled( 'course-bundle' ) && get_post_type( $item['item_id'] ) === CourseBundle::POST_TYPE ) {
