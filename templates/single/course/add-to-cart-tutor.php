@@ -19,7 +19,7 @@ $course_id                = get_the_ID();
 $is_logged_in             = is_user_logged_in();
 $user_id                  = get_current_user_id();
 $enable_guest_course_cart = false;
-$required_loggedin_class  = 'tutor-native-add-to-cart';
+$required_loggedin_class  = Settings::is_buy_now_enabled() ? '' : 'tutor-native-add-to-cart';
 if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
@@ -80,7 +80,7 @@ $buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutContr
 	} elseif ( $buy_now ) {
 		?>
 		<div class="tutor-mt-24">
-			<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block">
+			<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>">
 				<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
 			</a>
 		</div>
