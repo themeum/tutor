@@ -420,7 +420,7 @@ class HooksHandler {
 	 * @return array
 	 */
 	public function update_order_data( array $order_data ) {
-		if ( empty( $order_data['total_price'] && OrderModel::TYPE_SINGLE_ORDER === $order_data['order_type'] ) ) {
+		if ( empty( $order_data['total_price'] ) && OrderModel::TYPE_SINGLE_ORDER === $order_data['order_type'] ) {
 			$order_data['order_status']   = OrderModel::ORDER_COMPLETED;
 			$order_data['payment_status'] = OrderModel::PAYMENT_PAID;
 			$order_data['payment_method'] = 'free';
