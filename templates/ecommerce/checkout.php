@@ -59,6 +59,18 @@ $is_checkout_page = true;
 			<div class="tutor-col-md-6">
 				<div class="tutor-checkout-billing">
 					<div class="tutor-checkout-billing-inner">
+					<?php
+					if ( ! is_user_logged_in() ) {
+						$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null ) ? '' : wp_login_url( tutor()->current_url );
+						?>
+							<div class="tutor-mb-32 tutor-d-flex tutor-align-center tutor-justify-between tutor-border tutor-radius-6 tutor-p-12">
+								<p><?php esc_html_e( 'Already have an account?', 'tutor' ); ?></p>
+								<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-open-login-modal" data-login_url="<?php echo esc_url( $login_url ); ?>">
+								<?php esc_html_e( 'Login', 'tutor' ); ?>
+								</button>
+							</div>
+					<?php } ?>
+
 						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
 							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
 						</h5>
@@ -181,3 +193,8 @@ $is_checkout_page = true;
 </div>
 </div>
 </div>
+<?php
+if ( ! is_user_logged_in() ) {
+	tutor_load_template_from_custom_path( tutor()->path . '/views/modal/login.php' );
+}
+?>
