@@ -1474,7 +1474,7 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		}
 	}
 
-	if ( ! function_exists( 'tutor_get_supported_payment_gateways' ) ) {
+	if ( ! function_exists( 'tutor_get_subscription_supported_payment_gateways' ) ) {
 		/**
 		 * Get all supported gateways
 		 *
@@ -1482,10 +1482,11 @@ if ( ! function_exists( 'tutor_global_timezone_lists' ) ) {
 		 * plan id provided.
 		 *
 		 * @since 3.0.0
+		 * @since 3.4.0 plan_id param removed
 		 *
 		 * @return array
 		 */
-		function tutor_get_supported_payment_gateways( ) {
+		function tutor_get_subscription_supported_payment_gateways() {
 			$payment_gateways = tutor_get_all_active_payment_gateways();
 
 			$supported_gateways = array();
@@ -1694,7 +1695,7 @@ if ( ! function_exists( 'tutor_redirect_after_payment' ) ) {
 			}
 		}
 
-		wp_safe_redirect( add_query_arg( $query_params, home_url() ) );
+		wp_safe_redirect( apply_filters( 'tutor_redirect_url_after_checkout', add_query_arg( $query_params, home_url() ), $status, $order_id ) );
 		exit();
 	}
 }

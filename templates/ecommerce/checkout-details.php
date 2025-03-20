@@ -292,5 +292,12 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
 			<input type="hidden" name="order_type" value="<?php echo esc_attr( $order_type ); ?>">
 		</div>
+
+		<?php
+		$is_zero_price    = empty( $checkout_data->total_price );
+		$pay_now_btn_text = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
+		$pay_now_btn_text = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
+		?>
+		<input type="hidden" id="pay_now_btn_text" value="<?php echo esc_attr( $pay_now_btn_text ); ?>">
 	</div>
 </div>

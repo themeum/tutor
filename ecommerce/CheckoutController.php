@@ -926,8 +926,8 @@ class CheckoutController {
 
 		$validation_rules = array(
 			'object_ids'     => 'required',
-			'payment_method' => 'required',
 			'order_type'     => "required|match_string:{$order_types}",
+			'payment_method' => 'required',
 		);
 
 		// Skip validation rules for not available fields in data.
