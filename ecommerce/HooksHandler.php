@@ -455,8 +455,7 @@ class HooksHandler {
 
 	/**
 	 * Redirect user to the course after free checkout when item is 1.
-	 *
-	 * If user checkout multiple items and keep the default behaviour.
+	 * If user checkout multiple items and keep the default behavior.
 	 *
 	 * @since 3.4.0
 	 *
