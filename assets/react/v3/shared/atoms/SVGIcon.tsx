@@ -8,7 +8,6 @@ interface SVGIconProps {
   height?: number;
   style?: SerializedStyles;
   isColorIcon?: boolean;
-  title?: string;
 }
 
 interface Icon {
@@ -18,7 +17,7 @@ interface Icon {
 
 const iconCache: Record<string, Icon> = {};
 
-const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = false, title, ...rest }: SVGIconProps) => {
+const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = false, ...rest }: SVGIconProps) => {
   const [icon, setIcon] = useState<Icon | null>(iconCache[name] || null);
   const [isLoading, setIsLoading] = useState(!iconCache[name]);
 
@@ -53,22 +52,24 @@ const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = fals
 
   const viewBox = icon ? icon.viewBox : `0 0 ${width} ${height}`;
 
+  if (!icon && !isLoading) {
+    return (
+      <svg viewBox={viewBox}>
+        <rect width={width} height={height} fill="transparent" />
+      </svg>
+    );
+  }
+
   return (
     <svg
       css={[style, { width, height }, styles.svg({ isColorIcon, isLoading })]}
       xmlns="http://www.w3.org/2000/svg"
       viewBox={viewBox}
       {...additionalAttributes}
-      role={title ? 'img' : 'presentation'}
-      aria-hidden={!title}
-    >
-      {title && <title>{title}</title>}
-      {icon ? (
-        <g dangerouslySetInnerHTML={{ __html: icon.icon }} />
-      ) : (
-        <rect width={width} height={height} fill="transparent" />
-      )}
-    </svg>
+      role="presentation"
+      aria-hidden={true}
+      dangerouslySetInnerHTML={{ __html: icon ? icon.icon : '' }}
+    />
   );
 });
 
@@ -81,10 +82,12 @@ const styles = {
     transition:
       filter 0.3s ease-in-out,
       opacity 0.2s ease-in-out;
+
     ${isColorIcon &&
     css`
       filter: grayscale(100%);
     `}
+
     ${isLoading &&
     css`
       opacity: 0.6;
