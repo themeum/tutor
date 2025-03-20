@@ -383,6 +383,7 @@ class CheckoutController {
 		$response['total_price_without_tax'] = $total_price_without_tax;
 		$response['tax_amount']              = $tax_amount;
 		$response['total_price']             = $total_price;
+		$response['order_type']              = $order_type;
 
 		return (object) $response;
 	}

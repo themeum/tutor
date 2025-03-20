@@ -305,7 +305,7 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 		</div>
 
 		<?php
-		$is_zero_price    = empty( $checkout_data->total_price );
+		$is_zero_price    = empty( $checkout_data->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $checkout_data->order_type;
 		$pay_now_btn_text = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
 		$pay_now_btn_text = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
 		?>

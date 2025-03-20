@@ -108,7 +108,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         tutor_toast(__('Success', 'tutor'), message, 'success');
                         await updateCheckoutData(couponCode);
                         
-                        if (!data.total_price && paymentMethodElem) {
+                        if (!data.total_price && data.order_type === 'single_order' && paymentMethodElem) {
+                            console.log(data.order_type);
                             paymentMethodWrapper.innerHTML = '';
                             const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
                             payNowBtn.innerHTML = payNowBtnText;
