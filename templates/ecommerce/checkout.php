@@ -64,7 +64,7 @@ $is_checkout_page = true;
 						$login_url = tutor_utils()->get_option( 'enable_tutor_native_login', null ) ? '' : wp_login_url( tutor()->current_url );
 						?>
 							<div class="tutor-mb-32 tutor-d-flex tutor-align-center tutor-justify-between tutor-border tutor-radius-6 tutor-p-12">
-								<p><?php esc_html_e( 'Already have an account?', 'tutor' ); ?></p>
+								<p class="tutor-mb-0"><?php esc_html_e( 'Already have an account?', 'tutor' ); ?></p>
 								<button type="button" class="tutor-btn tutor-btn-secondary tutor-btn-sm tutor-open-login-modal" data-login_url="<?php echo esc_url( $login_url ); ?>">
 								<?php esc_html_e( 'Login', 'tutor' ); ?>
 								</button>
