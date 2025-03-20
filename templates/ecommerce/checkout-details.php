@@ -44,6 +44,17 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 ?>
 
 <div class="tutor-checkout-details">
+	<?php
+	if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
+		add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
+		?>
+		<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
+			<span><?php esc_html_e( 'You\'re already enrolled in this course.', 'tutor' ); ?></span>
+			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>"><?php esc_html_e( 'Start learning!', 'tutor' ); ?></a>
+		</div>
+		<?php
+	}
+	?>
 	<div class="tutor-checkout-details-inner">
 		<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-border-bottom tutor-pb-8">
 			<?php esc_html_e( 'Order Details', 'tutor' ); ?>

@@ -71,8 +71,15 @@ $is_checkout_page = true;
 							</div>
 					<?php } ?>
 
-						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
-							<?php echo esc_html_e( 'Billing Address', 'tutor' ); ?>
+						<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
+							<?php
+							$address_title = __( 'Billing Address', 'tutor' );
+							if ( ! is_user_logged_in() ) {
+								$address_title = __( 'Continue as Guest', 'tutor' );
+							}
+
+							echo esc_html( $address_title );
+							?>
 						</h5>
 
 						<div class="tutor-billing-fields">
@@ -80,7 +87,7 @@ $is_checkout_page = true;
 						</div>
 						<div class="tutor-payment-method-wrapper tutor-mt-20">
 						<?php if ( ! $is_zero_price ) : ?>
-							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-24">
+							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
 							</h5>
 							<div class="tutor-checkout-payment-options tutor-mb-24">
@@ -182,7 +189,8 @@ $is_checkout_page = true;
 						</div>
 						<?php endif; ?>
 						<!-- handle errors end -->
-						<button type="submit" id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
+						<?php $enable_pay_now_btn = apply_filters( 'tutor_checkout_enable_pay_now_btn', true, $checkout_data ); ?>
+						<button type="submit" <?php echo $enable_pay_now_btn ? '' : 'disabled'; ?>  id="tutor-checkout-pay-now-button" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-w-100 tutor-justify-center">
 							<?php echo esc_html( $pay_now_btn_text ); ?>
 						</button>
 					</div>
