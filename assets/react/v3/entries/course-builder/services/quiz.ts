@@ -103,7 +103,7 @@ interface QuizResponseWithStatus extends Omit<QuizDetailsResponse, 'questions' |
     content_drip_settings?: {
       unlock_date?: string;
       after_xdays_of_enroll?: number;
-      prerequisites?: ID[];
+      prerequisites?: ID[] | string;
     };
     quiz_type?: string;
   };
@@ -116,7 +116,7 @@ interface QuizPayload {
   deleted_answer_ids?: ID[];
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: number;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface QuizDetailsResponse {
@@ -387,7 +387,9 @@ export const convertQuizFormDataToPayload = (
               after_xdays_of_enroll: formData.quiz_option.content_drip_settings.after_xdays_of_enroll,
             }),
             ...(contentDripType === 'after_finishing_prerequisites' && {
-              prerequisites: formData.quiz_option.content_drip_settings.prerequisites,
+              prerequisites: formData.quiz_option.content_drip_settings.prerequisites?.length
+                ? formData.quiz_option.content_drip_settings.prerequisites
+                : '',
             }),
           },
         }),
@@ -460,7 +462,9 @@ export const convertQuizFormDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': formData.quiz_option.content_drip_settings.prerequisites,
+        'content_drip_settings[prerequisites]': formData.quiz_option.content_drip_settings.prerequisites?.length
+          ? formData.quiz_option.content_drip_settings.prerequisites
+          : '',
       }),
     ...Object.fromEntries(settingsSlotFields.map((key) => [key, formData[key as keyof QuizForm]])),
   };

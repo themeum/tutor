@@ -117,7 +117,7 @@ export interface LessonPayload {
   tutor_attachments: ID[];
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: string;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface AssignmentPayload {
@@ -135,7 +135,7 @@ export interface AssignmentPayload {
 
   'content_drip_settings[unlock_date]'?: string;
   'content_drip_settings[after_xdays_of_enroll]'?: string;
-  'content_drip_settings[prerequisites]'?: ID[];
+  'content_drip_settings[prerequisites]'?: ID[] | string;
 }
 
 export interface ContentDuplicatePayload {
@@ -199,7 +199,9 @@ export const convertLessonDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites?.length
+          ? data.content_drip_settings.prerequisites
+          : '',
       }),
     ...Object.fromEntries(
       slotFields.map((key) => {
@@ -239,7 +241,9 @@ export const convertAssignmentDataToPayload = (
       }),
     ...(isAddonEnabled(Addons.CONTENT_DRIP) &&
       contentDripType === 'after_finishing_prerequisites' && {
-        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites || [],
+        'content_drip_settings[prerequisites]': data.content_drip_settings.prerequisites?.length
+          ? data.content_drip_settings.prerequisites
+          : '',
       }),
     ...Object.fromEntries(
       slotFields.map((key) => {
