@@ -898,16 +898,16 @@ class CheckoutController {
 			if ( $order_data ) {
 				try {
 					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_MANUAL === $order_data->payment_method ) {
-						$billing_info = $billing_model->get_info( get_current_user_id() );
+						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
-							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => get_current_user_id() ) );
+							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );
 
 							if ( ! $update_billing ) {
 								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );
 							}
 						} else {
 							// Save billing info.
-							$billing_fillable_fields['user_id'] = get_current_user_id();
+							$billing_fillable_fields['user_id'] = $order_data->user_id;
 
 							$save = $billing_model->insert( $billing_fillable_fields );
 
