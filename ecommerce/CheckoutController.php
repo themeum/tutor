@@ -905,7 +905,6 @@ class CheckoutController {
 							if ( ! $update_billing ) {
 								throw new \Exception( __( 'Billing information update failed!', 'tutor' ) );
 							}
-
 						} else {
 							// Save billing info.
 							$billing_fillable_fields['user_id'] = get_current_user_id();
@@ -915,7 +914,6 @@ class CheckoutController {
 							if ( ! $save ) {
 								throw new \Exception( __( 'Billing info save failed!', 'tutor' ) );
 							}
-
 						}
 
 						$order_model->update_order( $order_data->id, array( 'payment_method' => $payment_method ) );
