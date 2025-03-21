@@ -903,7 +903,7 @@ class CheckoutController {
 							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => get_current_user_id() ) );
 
 							if ( ! $update_billing ) {
-								throw new \Exception( __( 'Billing information update failed!', 'tutor' ) );
+								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );
 							}
 						} else {
 							// Save billing info.
@@ -912,7 +912,7 @@ class CheckoutController {
 							$save = $billing_model->insert( $billing_fillable_fields );
 
 							if ( ! $save ) {
-								throw new \Exception( __( 'Billing info save failed!', 'tutor' ) );
+								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing info save failed!', 'tutor' ) );
 							}
 						}
 
