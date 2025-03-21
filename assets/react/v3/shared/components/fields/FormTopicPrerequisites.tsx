@@ -493,7 +493,9 @@ const styles = {
       box-shadow: ${shadow.card};
     `}
 
-    :hover {
+    &:hover,
+    &:focus,
+    &:active {
       background-color: ${colorTokens.background.hover};
 
       ${!onPopover &&
