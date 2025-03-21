@@ -136,7 +136,7 @@ class Students_List {
 			);
 
 			if ( is_array( $enrollments ) && count( $enrollments ) ) {
-				delete_user_meta( $student_id, User::TUTOR_STUDENT_META, true );
+				delete_user_meta( $student_id, User::TUTOR_STUDENT_META );
 				foreach ( $enrollments as $enrollment ) {
 					$course_id = (int) $enrollment->post_parent;
 					tutor_utils()->delete_enrollment_record( $student_id, $course_id );
