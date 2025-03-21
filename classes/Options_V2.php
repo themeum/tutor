@@ -280,7 +280,7 @@ class Options_V2 {
 		$tutor_settings_log = get_option( 'tutor_settings_log' );
 		$delete_id          = $this->get_request_data( 'delete_id' );
 		unset( $tutor_settings_log[ $delete_id ] );
-		update_option( 'tutor_settings_log', $tutor_settings_log );
+		update_option( 'tutor_settings_log', $tutor_settings_log, false );
 
 		wp_send_json_success( $tutor_settings_log );
 	}
@@ -515,7 +515,7 @@ class Options_V2 {
 
 		$update_option = array_slice( $update_option, 0, 10 );
 
-		update_option( 'tutor_settings_log', $update_option );
+		update_option( 'tutor_settings_log', $update_option, false );
 		update_option( 'tutor_option', $option );
 		update_option( 'tutor_option_update_time', gmdate( 'j M, Y, g:i a', $time ) );
 
