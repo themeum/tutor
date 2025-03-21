@@ -69,10 +69,16 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 			<div class="tutor-alert tutor-warning">
 				<div>
 					<p class="tutor-mb-8">
-					<?php esc_html_e( 'You are already enrolled in the following courses. Please remove from cart and continue.', 'tutor' ); ?>
+					<?php
+					if ( count( $enrolled_courses ) > 1 ) {
+						esc_html_e( 'You are already enrolled in the following courses. Please remove those from your cart and continue.', 'tutor' );
+					} else {
+						esc_html_e( 'You are already enrolled in the following course. Please remove that from your cart and continue.', 'tutor' );
+					}
+					?>
 					<a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( $cart_controller->get_page_url() ); ?>"><?php esc_html_e( 'View Cart', 'tutor' ); ?></a>
 					</p>
-					<ul class="tutor-list">
+					<ul>
 					<?php foreach ( $enrolled_courses as $course ) : ?>
 						<li><a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>"><?php echo esc_html( $course->post_title ); ?></a></li>
 					<?php endforeach; ?>
