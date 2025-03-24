@@ -168,29 +168,6 @@ class CheckoutController {
 	}
 
 	/**
-	 * Prepare additional checkout item like enrollment fee, trial fee etc
-	 *
-	 * @since 3.4.0
-	 *
-	 * @param string|int     $item_id item id.
-	 * @param string         $item_name item name.
-	 * @param int|float      $regular_price regular price.
-	 * @param integer        $quantity quantity.
-	 * @param int|float|null $discounted_price discounted price.
-	 *
-	 * @return array
-	 */
-	public static function prepare_additional_item( $item_id, $item_name, $regular_price, $quantity = 1, $discounted_price = null ) {
-		return array(
-			'item_id'          => $item_id,
-			'item_name'        => $item_name,
-			'regular_price'    => floatval( $regular_price ),
-			'quantity'         => $quantity,
-			'discounted_price' => $discounted_price,
-		);
-	}
-
-	/**
 	 * Prepare items
 	 *
 	 * @since 3.0.0
@@ -225,7 +202,7 @@ class CheckoutController {
 			}
 
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-				$item = apply_filters( 'tutor_checkout_subscription_item', $item, $item_id, $coupon );
+				$item = apply_filters( 'tutor_checkout_subscription_item', array(), $item_id, $coupon );
 			}
 
 			$is_coupon_applicable = false;
