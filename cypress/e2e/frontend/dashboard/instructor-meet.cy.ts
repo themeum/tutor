@@ -71,10 +71,10 @@ describe('Tutor Dashboard My Courses', () => {
         // cy.wait(500);
         cy.getByInputName('meeting_summary').click({ force: true }).type(googleMeetData.meeting_summary);
         cy.selectDate('meeting_start_date');
-        cy.getSelectInput('meeting_start_time', '08:30 PM');
+        cy.getSelectInput('meeting_start_time', '11:00 PM');
 
         cy.selectDate('meeting_end_date');
-        cy.getSelectInput('meeting_end_time', '09:00 PM');
+        cy.getSelectInput('meeting_end_time', '11:30 PM');
 
         cy.getSelectInput('meeting_timezone', googleMeetData.meeting_timezone);
         cy.get('[data-cy=save-google-meeting]').click();
@@ -218,28 +218,9 @@ describe('Tutor Dashboard My Courses', () => {
         cy.get('.tutor-form-select-options')
           .eq(1)
           .then(() => {
-            cy.get('.tutor-form-select-option')
-              .then(() => {
-                cy.get('.tutor-form-select-options>div:nth-child(2)').eq(0).click();
-              })
-              .then(() => {
-                cy.get('span.tutor-form-select-label[tutor-dropdown-label]')
-                  .eq(0)
-                  .invoke('text')
-                  .then((retrievedText) => {
-                    cy.get(
-                      '.tutor-wp-dashboard-filter-item >.tutor-js-form-select >.tutor-form-select-dropdown >.tutor-form-select-options >.tutor-form-select-option >.tutor-nowrap-ellipsis',
-                    ).each(($category) => {
-                      cy.wrap($category)
-                        .invoke('text')
-                        .then((categoryText) => {
-                          if (categoryText.trim() === retrievedText.trim()) {
-                            cy.wrap($category).click({ force: true });
-                          }
-                        });
-                    });
-                  });
-              });
+            cy.get('.tutor-form-select-option').then(() => {
+              cy.get('.tutor-form-select-options>div:nth-child(2)').eq(0).click();
+            });
           });
       }
     });
