@@ -337,6 +337,12 @@ const styles = {
     :disabled {
       cursor: not-allowed;
     }
+    
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

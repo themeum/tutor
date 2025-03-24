@@ -141,7 +141,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 {...controllerProps}
                 label={__('Meeting Name', 'tutor')}
                 placeholder={__('Enter meeting name', 'tutor')}
-                selectOnFocus
               />
             )}
           />
@@ -278,7 +277,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 placeholder={__('Enter meeting password', 'tutor')}
                 type="password"
                 isPassword
-                selectOnFocus
               />
             )}
           />
@@ -295,7 +293,6 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
                 label={__('Meeting Host', 'tutor')}
                 placeholder={__('Enter meeting host', 'tutor')}
                 disabled
-                selectOnFocus
               />
             )}
           />

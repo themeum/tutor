@@ -24,6 +24,15 @@
 			margin-top: 20px;
 		}
 	}
+
+	.tutor-form-select-label {
+		display: inline-block;
+		white-space: nowrap;
+		max-width: 200px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		vertical-align: middle;
+	}
 }
 
 .tutor-wp-dashboard-filter-items {
@@ -33,8 +42,6 @@
 		color: var(--tutor-color-secondary);
 	}
 }
-
-
 
 .tutor-course-builder {
 	&-zoom-meeting-list {

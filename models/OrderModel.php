@@ -15,6 +15,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\OrderActivitiesController;
+use Tutor\Ecommerce\Tax;
 
 /**
  * OrderModel Class
@@ -47,6 +48,7 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
+	const PAYMENT_MANUAL             = 'manual';
 
 	/**
 	 * Order Meta keys for history & refunds
@@ -80,6 +82,7 @@ class OrderModel {
 	const TYPE_SINGLE_ORDER = 'single_order';
 	const TYPE_SUBSCRIPTION = 'subscription';
 	const TYPE_RENEWAL      = 'renewal';
+
 
 	/**
 	 * Transient constants
@@ -156,6 +159,35 @@ class OrderModel {
 	 */
 	public function get_table_name() {
 		return $this->table_name;
+	}
+
+	/**
+	 * Get recalculated order tax data.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int|object $order the order id or object.
+	 *
+	 * @return array
+	 */
+	public function get_recalculated_order_tax_data( $order ) {
+		$order       = self::get_order( $order );
+		$total_price = $order->total_price;
+		$tax_rate    = Tax::get_user_tax_rate( $order->user_id );
+		$order_data  = array();
+		if ( $tax_rate ) {
+			$order_data['tax_type']   = Tax::get_tax_type();
+			$order_data['tax_rate']   = $tax_rate;
+			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+
+			if ( ! Tax::is_tax_included_in_price() ) {
+				$total_price              += $order_data['tax_amount'];
+				$order_data['total_price'] = $total_price;
+				$order_data['net_payment'] = $total_price;
+			}
+		}
+
+		return $order_data;
 	}
 
 
@@ -1708,8 +1740,9 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		
-		<?php elseif ( $show_pay_button ) : ?>
+		<?php elseif ( $show_pay_button ) : 
+			ob_start();
+		?>
 			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
@@ -1722,6 +1755,7 @@ class OrderModel {
 			</form>
 			
 			<?php
+			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );
 		endif;
 	}
 

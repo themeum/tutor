@@ -10,8 +10,9 @@ import Show from '@TutorShared/controls/Show';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection, Option } from '@TutorShared/utils/types';
+import type { Option } from '@TutorShared/utils/types';
 
+import { IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormInputWithPresetsProps extends FormControllerProps<string | null> {

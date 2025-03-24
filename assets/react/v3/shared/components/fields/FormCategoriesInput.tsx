@@ -9,7 +9,7 @@ import {
   useCreateCategoryMutation,
 } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
-import { generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
+import { decodeHtmlEntities, generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 import { type SerializedStyles, css } from '@emotion/react';
 import { produce } from 'immer';
 import { useEffect, useState } from 'react';
@@ -248,7 +248,7 @@ export const Branch = ({ option, value, onChange, isLastChild, disabled }: Branc
     <div css={styles.branchItem({ leftBarHeight, hasParent: option.parent !== 0 })}>
       <Checkbox
         checked={Array.isArray(value) ? value.includes(option.id) : value === option.id}
-        label={option.name}
+        label={decodeHtmlEntities(option.name)}
         onChange={() => {
           onChange(option.id);
         }}
@@ -321,6 +321,13 @@ const styles = {
     display: flex;
     align-items: center;
     border-radius: ${borderRadius[2]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.brand.blue};
+    }
 
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};

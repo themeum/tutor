@@ -66,7 +66,7 @@ const Additional = () => {
 
   const prerequisiteCoursesQuery = useCourseListQuery({
     params: {
-      excludedIds: [String(courseId), ...prerequisiteCourseIds],
+      exclude: [String(courseId), ...prerequisiteCourseIds],
       limit: -1,
     },
     isEnabled: !!isPrerequisiteAddonEnabled && !isCourseDetailsFetching,

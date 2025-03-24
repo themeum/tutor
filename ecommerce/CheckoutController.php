@@ -383,6 +383,7 @@ class CheckoutController {
 		$response['total_price_without_tax'] = $total_price_without_tax;
 		$response['tax_amount']              = $tax_amount;
 		$response['total_price']             = $total_price;
+		$response['order_type']              = $order_type;
 
 		return (object) $response;
 	}
@@ -820,6 +821,7 @@ class CheckoutController {
 	public function restrict_checkout_page() {
 		$page_id = self::get_page_id();
 		$plan_id = Input::get( 'plan' );
+		$buy_now = Settings::is_buy_now_enabled();
 
 		if ( is_page( $page_id ) && ! $plan_id ) {
 			$cart_controller = new CartController();
@@ -828,7 +830,7 @@ class CheckoutController {
 			$user_id       = tutils()->get_user_id();
 			$has_cart_item = $cart_model->has_item_in_cart( $user_id );
 
-			if ( ! $has_cart_item ) {
+			if ( ! $has_cart_item && ! $buy_now ) {
 				wp_safe_redirect( $cart_controller::get_page_url() );
 				exit;
 			}
@@ -879,17 +881,53 @@ class CheckoutController {
 	 * @return void
 	 */
 	public function pay_incomplete_order() {
-		$order_id = Input::post( 'order_id', 0, Input::TYPE_INT );
+		$order_id       = Input::post( 'order_id', 0, Input::TYPE_INT );
+		$payment_method = Input::post( 'payment_method', '' );
+		$request        = Input::sanitize_array( $_POST ); //phpcs:ignore -- $POST sanitized
+
+		$billing_model           = new BillingModel();
+		$billing_fillable_fields = array_intersect_key( $request, array_flip( $billing_model->get_fillable_fields() ) );
+
 		if ( ! tutor_utils()->is_nonce_verified() ) {
 			tutor_utils()->redirect_to( tutor_utils()->tutor_dashboard_url( 'purchase_history' ), tutor_utils()->error_message( 'nonce' ), 'error' );
 			exit;
 		}
 		if ( $order_id ) {
-			$order_data = ( new OrderModel() )->get_order_by_id( $order_id );
+			$order_model = new OrderModel();
+			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
-					$payment_data = $this->prepare_payment_data( (array) $order_data, $order_data->payment_method, $order_data->order_type );
-					$this->proceed_to_payment( $payment_data, $order_data->payment_method, $order_data->order_type );
+					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_MANUAL === $order_data->payment_method ) {
+						$billing_info = $billing_model->get_info( $order_data->user_id );
+						if ( $billing_info ) {
+							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );
+
+							if ( ! $update_billing ) {
+								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing information update failed!', 'tutor' ) );
+							}
+						} else {
+							// Save billing info.
+							$billing_fillable_fields['user_id'] = $order_data->user_id;
+
+							$save = $billing_model->insert( $billing_fillable_fields );
+
+							if ( ! $save ) {
+								tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, __( 'Billing info save failed!', 'tutor' ) );
+							}
+						}
+
+						$update_order_data                   = $order_model->get_recalculated_order_tax_data( $order_id );
+						$update_order_data['payment_method'] = $payment_method;
+
+						$updated = $order_model->update_order( $order_data->id, $update_order_data );
+
+						if ( $updated ) {
+							$order_data = $order_model->get_order_by_id( $order_id );
+						}
+					}
+
+					$payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
+					$this->proceed_to_payment( $payment_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
 					tutor_redirect_after_payment( OrderModel::ORDER_PLACEMENT_FAILED, $order_data->id, $th->getMessage() );
@@ -924,8 +962,8 @@ class CheckoutController {
 
 		$validation_rules = array(
 			'object_ids'     => 'required',
-			'payment_method' => 'required',
 			'order_type'     => "required|match_string:{$order_types}",
+			'payment_method' => 'required',
 		);
 
 		// Skip validation rules for not available fields in data.

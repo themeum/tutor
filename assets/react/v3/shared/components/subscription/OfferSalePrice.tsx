@@ -122,7 +122,7 @@ export function OfferSalePrice({ index }: { index: number }) {
                         return undefined;
                       },
                     },
-                    deps: ['sale_price_from_date'],
+                    deps: [`subscriptions.${index}.sale_price_from_date`],
                   }}
                   render={(controllerProps) => (
                     <FormDateInput
@@ -153,7 +153,11 @@ export function OfferSalePrice({ index }: { index: number }) {
                         return undefined;
                       },
                     },
-                    deps: ['sale_price_from_date', 'sale_price_from_time', 'sale_price_to_date'],
+                    deps: [
+                      `subscriptions.${index}.sale_price_from_date`,
+                      `subscriptions.${index}.sale_price_from_time`,
+                      `subscriptions.${index}.sale_price_to_date`,
+                    ],
                   }}
                   render={(controllerProps) => (
                     <FormTimeInput {...controllerProps} interval={60} isClearable={false} placeholder="hh:mm A" />
