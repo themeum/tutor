@@ -206,20 +206,27 @@ class CheckoutController {
 		$plan_info = null;
 
 		foreach ( $item_ids as $item_id ) {
-			$item_name    = get_the_title( $item_id );
-			$course_price = tutor_utils()->get_raw_course_price( $item_id );
 
-			$regular_price = $course_price->regular_price;
-			$sale_price    = $course_price->sale_price;
+			if ( OrderModel::TYPE_SINGLE_ORDER === $order_type ) {
+				$item_name    = get_the_title( $item_id );
+				$course_price = tutor_utils()->get_raw_course_price( $item_id );
 
-			$item = array(
-				'item_id'           => (int) $item_id,
-				'item_name'         => $item_name,
-				'regular_price'     => $regular_price,
-				'sale_price'        => $sale_price ? $sale_price : null,
-				'is_coupon_applied' => false,
-				'coupon_code'       => null,
-			);
+				$regular_price = $course_price->regular_price;
+				$sale_price    = $course_price->sale_price;
+
+				$item = array(
+					'item_id'           => (int) $item_id,
+					'item_name'         => $item_name,
+					'regular_price'     => $regular_price,
+					'sale_price'        => $sale_price ? $sale_price : null,
+					'is_coupon_applied' => false,
+					'coupon_code'       => null,
+				);
+			}
+
+			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
+				$item = apply_filters( 'tutor_checkout_subscription_item', $item, $item_id, $coupon );
+			}
 
 			$is_coupon_applicable = false;
 			if ( Settings::is_coupon_usage_enabled() && is_object( $coupon ) ) {
@@ -230,7 +237,7 @@ class CheckoutController {
 				}
 			}
 
-			$items[] = apply_filters( 'tutor_checkout_item', $item, $item_id, $order_type, $coupon );
+			$items[] = $item;
 		}
 
 		return array( $items, $plan_info );
@@ -634,7 +641,7 @@ class CheckoutController {
 			}
 
 			if ( OrderModel::TYPE_SUBSCRIPTION === $order_type ) {
-				$subscription_items = apply_filters( 'tutor_checkout_subscription_payment_items', array(), $item, $order_id, $order_type );
+				$subscription_items = apply_filters( 'tutor_checkout_subscription_payment_items', array(), $item, $order_id );
 				foreach ( $subscription_items as $subscription_item ) {
 					$items[] = $subscription_item;
 				}
