@@ -43,9 +43,9 @@ describe('Tutor Dashboard My Bundles', () => {
     cy.waitAfterRequest('getBundleDetails');
 
     // Only focus on creating basic bundle information
-    cy.getByInputName('post_title').type(bundleData.post_title);
+    cy.getByInputName('post_title').clear().type(bundleData.post_title);
     cy.setTinyMceContent('[data-cy=tutor-tinymce]', bundleData.post_content);
-    cy.getByInputName('course_benefits').type(bundleData.course_benefits);
+    cy.getByInputName('course_benefits').clear().type(bundleData.course_benefits);
 
     // Add course to bundle
     cy.get('[data-cy=add-course]').click();
