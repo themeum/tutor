@@ -162,7 +162,7 @@ class OrderModel {
 	}
 
 	/**
-	 * Obtain order tax data when student pays.
+	 * Get recalculated order tax data.
 	 *
 	 * @since 3.4.0
 	 *
