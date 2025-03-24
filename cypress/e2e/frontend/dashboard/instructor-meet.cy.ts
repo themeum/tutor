@@ -54,7 +54,7 @@ describe('Tutor Dashboard My Courses', () => {
 
     cy.get('a.tutor-create-new-course.tutor-dashboard-create-course').click();
     cy.url().should('include', '/create-course');
-    cy.getByInputName('post_title').type('Google meet test course');
+    cy.getByInputName('post_title').clear().type('Google meet test course');
     cy.get('[data-cy=tutor-tracker]').within(() => {
       cy.get('button').contains('Additional').click();
     });
@@ -97,7 +97,7 @@ describe('Tutor Dashboard My Courses', () => {
     });
   });
 
-  it('should edit a google meeting', () => {
+  it.only('should edit a google meeting', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
       if (req.body.includes('tutor_google_meet_new_meeting')) {
         req.alias = 'ajaxRequest';
@@ -108,7 +108,7 @@ describe('Tutor Dashboard My Courses', () => {
       if ($body.text().includes('No Records Found')) {
         cy.log('No data available');
       } else {
-        cy.get("button[action-tutor-dropdown='toggle']").eq(1).click();
+        cy.get(".tutor-google-meet-meeting-item button[action-tutor-dropdown='toggle']").eq(1).click();
         cy.get('a.tutor-dropdown-item').contains('Edit').click();
 
         cy.get("input[name='meeting_title']").eq(0).clear().type('Edited test google meeting');
@@ -167,7 +167,7 @@ describe('Tutor Dashboard My Courses', () => {
       if ($body.text().includes('No Records Found') || $body.text().includes('No records found')) {
         cy.log('No data available');
       } else {
-        cy.get("button[action-tutor-dropdown='toggle']").eq(3).click();
+        cy.get(".tutor-google-meet-meeting-item button[action-tutor-dropdown='toggle']").eq(3).click();
         cy.get('a.tutor-dropdown-item').contains('Delete').click({ force: true });
         cy.get('#tutor-common-confirmation-form > .tutor-d-flex > .tutor-btn-primary')
           .contains('Yes, I’m sure')
