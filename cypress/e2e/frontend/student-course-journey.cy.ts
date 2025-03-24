@@ -46,7 +46,7 @@ describe('Tutor Student Course Journey', () => {
       } else if ($body.text().includes('Enroll Now')) {
         cy.get('button').contains('Enroll Now').click();
         cy.wait(500);
-        cy.get('button').contains('Start Learning').click();
+        cy.get('a').contains('Start Learning').click();
       }
     });
 
