@@ -111,7 +111,7 @@ describe('Tutor Admin Subscriptions', () => {
     cy.get('[data-cy=edit-subscription]').first().click({ force: true });
     cy.get('[data-cy=tutor-modal]').should('be.visible');
 
-    cy.get('[data-cy=delete-subscription]').click();
+    cy.get('[data-cy=delete-subscription]').first().click();
     cy.get('.tutor-portal-popover').within(() => {
       cy.get('[data-cy=confirm-button]').click();
     });
