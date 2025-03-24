@@ -31,23 +31,9 @@ $total_count         = $courses['total_count'];
 $course_id           = (int) Input::sanitize_request_data( 'course_id', 0 );
 $course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
 
-$plan_id   = (int) Input::sanitize_request_data( 'plan' );
-$plan_info = apply_filters( 'tutor_get_plan_info', null, $plan_id );
-
+$plan_id          = (int) Input::sanitize_request_data( 'plan' );
+$plan_info        = apply_filters( 'tutor_get_plan_info', null, $plan_id );
 $has_trial_period = $plan_info ? $plan_info->has_trial_period : false;
-$is_trial_used    = false;
-if ( $plan_info ) {
-	$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan_info->id, $user_id );
-	$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
-
-	if ( $has_trial_period && ! $is_trial_used ) {
-		$label_interval = $plan_info->trial_value > 1 ? $plan_info->trial_interval . 's' : $plan_info->trial_interval;
-		$label_interval = ucwords( $label_interval );
-
-		/* translators: %d: trial value, %s: trial interval */
-		$pay_now_btn_label = sprintf( __( 'Start %1$d-%2$s Trial', 'tutor' ), $plan_info->trial_value, $label_interval );
-	}
-}
 
 // Contains Course/Bundle/Plan ids.
 $object_ids = array();
@@ -220,7 +206,7 @@ $checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order
 							<?php endif ?>
 			</div>
 
-					<?php if ( 'manual' === $checkout_data->coupon_type && $checkout_data->is_coupon_applied ) : ?>
+			<?php if ( 'manual' === $checkout_data->coupon_type && $checkout_data->is_coupon_applied ) : ?>
 				<input type="hidden" name="coupon_code" value="<?php echo esc_attr( $coupon_code ); ?>">
 			<?php endif; ?>
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
