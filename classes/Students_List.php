@@ -120,27 +120,28 @@ class Students_List {
 	 * @return bool
 	 */
 	public static function delete_students( string $student_ids ): bool {
+		global $wpdb;
 		$student_ids = array_map( 'intval', explode( ',', $student_ids ) );
 		foreach ( $student_ids as $student_id ) {
-			$args = array(
-				'post_type' => tutor()->course_post_type,
+			$enrollments = QueryHelper::get_all(
+				$wpdb->posts,
+				array(
+					'post_author' => $student_id,
+					'post_type'   => array(
+						tutor()->enrollment_post_type,
+						'course-bundle',
+					),
+				),
+				'ID'
 			);
 
-			if ( tutor_utils()->is_addon_enabled( 'course-bundle' ) ) {
-				$args['post_type'] = array( tutor()->course_post_type, CourseBundle::POST_TYPE );
-			}
-
-			$enrolled_courses = tutor_utils()->get_enrolled_courses_by_user( $student_id, 'any', 0, -1, $args );
-			if ( is_a( $enrolled_courses, 'WP_Query' ) ) {
-				// Delete student flag.
-				delete_user_meta( $student_id, User::TUTOR_STUDENT_META, true );
-
-				// Delete the enrollment, course progress & comments.
-				$courses = $enrolled_courses->get_posts();
-				foreach ( $courses as $course ) {
-					tutor_utils()->delete_enrollment_record( $student_id, $course->ID );
-					tutor_utils()->delete_course_progress( $course->ID, $course->post_author );
-					tutor_utils()->delete_student_course_comment( $student_id, $course->ID );
+			if ( is_array( $enrollments ) && count( $enrollments ) ) {
+				delete_user_meta( $student_id, User::TUTOR_STUDENT_META );
+				foreach ( $enrollments as $enrollment ) {
+					$course_id = (int) $enrollment->post_parent;
+					tutor_utils()->delete_enrollment_record( $student_id, $course_id );
+					tutor_utils()->delete_course_progress( $course_id, $student_id );
+					tutor_utils()->delete_student_course_comment( $student_id, $course_id );
 				}
 			}
 		}

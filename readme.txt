@@ -312,9 +312,27 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 == Changelog ==
 
-= 3.4.0 - March 20, 2025
+= 3.4.0 - March 24, 2025
 
-Changelog coming soon...
+New: Bulk enrollment support for membership plans (Pro)
+New: "Buy Now" option added, allowing users to purchase without adding courses to the cart
+New: Login option added to the checkout page when guest checkout is enabled (Pro)
+Update: Added maximum student alert message for bulk enrollment (Pro)
+Update: Assignment expiration now follows the enrolment date (Pro)
+Update: Prevents deletion from WP users, removes student status, and cleans up related data
+Update: When a 100% discount coupon is used for a one-time purchase, users are redirected to "Start Learning" without requiring a payment method
+Fix: Users were able to enroll even when the enrolment period hadn’t started or was paused (Pro)
+Fix: Auto-completion failed when a 100% discount coupon was used for a subscription course with Stripe (Pro)
+Fix: Enrollment vulnerability for membership plans (Pro)
+Fix: Zoom meetings added by admins for other instructors were missing from the course interface (Pro)
+Fix: Zoom meeting issues related to time zones (Pro)
+Fix: Instructors couldn’t track the progress of private courses
+Fix: Co-instructors were unable to access scheduled courses (Pro)
+Fix: Currency formatting issue in withdrawal method email templates (Pro)
+Fix: "Invalid Plan" error appeared when duplicating a subscription plan (Pro)
+Fix: Automatic backslashes appeared in answer explanations when using quotation marks (" or ') (Pro)
+Fix: Billing information was reset for guest users (Pro)
+Fix: Instructors could still update courses after their status or role changed (Pro)
 
 = 3.3.1 - March 05, 2025
 
