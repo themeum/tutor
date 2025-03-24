@@ -58,7 +58,7 @@ describe('Course Builder - Creation', () => {
       cy.visit(`/wp-admin/admin.php?page=create-course&course_id=${courseId}`);
       cy.waitAfterRequest('getCourseDetails');
 
-      cy.getByInputName('post_title').type(courseData.post_title);
+      cy.getByInputName('post_title').clear().type(courseData.post_title);
       cy.setTinyMceContent('[data-cy=tutor-tinymce]', courseData.post_content);
 
       cy.updateCourse();

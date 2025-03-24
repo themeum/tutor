@@ -25,7 +25,7 @@ describe('Tutor Admin ENROLLMENTS', () => {
   });
 
   it('should enroll a student', () => {
-    cy.get('a').contains('Enroll a student').click();
+    cy.get('a').contains('Enroll Student').click();
     cy.wait(500);
     cy.get('body').then(($body) => {
       if ($body.text().includes('Select a course to enroll students')) {
