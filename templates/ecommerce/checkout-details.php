@@ -67,16 +67,6 @@ $checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order
 ?>
 
 <div class="tutor-checkout-details">
-
-	<?php if ( $has_trial_period && $is_trial_used ) : ?>
-	<div class="tutor-alert tutor-warning">
-		<div class="tutor-alert-text">
-			<span class="tutor-alert-icon tutor-fs-4 tutor-icon-circle-info tutor-mr-12"></span>
-			<span><?php esc_html_e( "You've already claimed your trial. Purchase a plan now to continue your eLearning journey!", 'tutor' ); ?></span>
-		</div>
-	</div>
-	<?php endif; ?>
-
 	<?php
 	if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
 		add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
@@ -121,6 +111,7 @@ $checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order
 			<?php
 		}
 	}
+	do_action( 'tutor_before_checkout_order_details' );
 	?>
 	<div class="tutor-checkout-details-inner">
 		<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-border-bottom tutor-pb-8">
