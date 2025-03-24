@@ -242,7 +242,7 @@ describe('Tutor Dashboard My Courses', () => {
         cy.log('No data available');
       } else {
         cy.wait(2000);
-        cy.get('.tutor-fs-7 > span').each(($el) => {
+        cy.get('.tutor-google-meet-meeting-item .tutor-fs-7 > span').each(($el) => {
           const dateText = $el.text().trim();
           expect(dateText).to.contain('June 11, 2025');
         });

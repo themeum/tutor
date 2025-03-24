@@ -68,7 +68,6 @@ describe('Tutor Dashboard My Courses', () => {
         cy.get('.tutor-portal-popover').within(() => {
           cy.getByInputName('meeting_name').type(zoomMeetingData.meeting_name);
           cy.getByInputName('meeting_duration').type(zoomMeetingData.meeting_duration);
-          cy.getByInputName('meeting_password').type(zoomMeetingData.meeting_password);
         });
 
         // cy.wait(500);
@@ -76,6 +75,9 @@ describe('Tutor Dashboard My Courses', () => {
         cy.selectDate('meeting_date');
         cy.getSelectInput('meeting_time', '11:30 PM');
         cy.getSelectInput('meeting_timezone', zoomMeetingData.meeting_timezone);
+        cy.wait(500);
+        cy.getByInputName('meeting_password').scrollIntoView().click().type(zoomMeetingData.meeting_password);
+
         cy.get('[data-cy=save-zoom-meeting]').click();
 
         cy.waitAfterRequest('saveZoomMeeting');
