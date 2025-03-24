@@ -785,12 +785,7 @@ Cypress.Commands.add('selectDate', (selector: string) => {
     .last()
     .should('be.visible')
     .within(() => {
-      cy.get('.rdp-day')
-        .not('.rdp-outside, .rdp-selected')
-        .then(($days) => {
-          const middleIndex = Math.floor($days.length / 2);
-          cy.wrap($days.eq(middleIndex)).find('.rdp-day_button').click();
-        });
+      cy.get('.rdp-day.rdp-today').click();
     });
 });
 
