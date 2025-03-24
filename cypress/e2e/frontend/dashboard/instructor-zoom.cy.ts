@@ -104,7 +104,7 @@ describe('Tutor Dashboard My Courses', () => {
       if ($body.text().includes('No Data Found from your Search/Filter')) {
         cy.log('No data available');
       } else {
-        cy.get("button[action-tutor-dropdown='toggle']").eq(1).click();
+        cy.get(".tutor-zoom-meeting-item button[action-tutor-dropdown='toggle']").eq(1).click();
         cy.get('a.tutor-dropdown-item').contains('Edit').click();
         cy.get("input[data-name='meeting_title']").eq(0).clear().type('Edited test zoom meeting');
 
@@ -152,7 +152,7 @@ describe('Tutor Dashboard My Courses', () => {
       if ($body.text().includes('No Data Found from your Search/Filter')) {
         cy.log('No data available');
       } else {
-        cy.get("button[action-tutor-dropdown='toggle']").eq(0).click();
+        cy.get(".tutor-zoom-meeting-item button[action-tutor-dropdown='toggle']").eq(0).click();
         cy.get('a').contains('Delete').click({ force: true });
         cy.get('button').contains('Yes, Delete This').click();
 

@@ -97,7 +97,7 @@ describe('Tutor Dashboard My Courses', () => {
     });
   });
 
-  it.only('should edit a google meeting', () => {
+  it('should edit a google meeting', () => {
     cy.intercept('POST', `${Cypress.env('base_url')}/wp-admin/admin-ajax.php`, (req) => {
       if (req.body.includes('tutor_google_meet_new_meeting')) {
         req.alias = 'ajaxRequest';
