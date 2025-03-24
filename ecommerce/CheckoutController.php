@@ -233,12 +233,7 @@ class CheckoutController {
 	 */
 	public function calculate_discount( $items, $discount_type, $discount_value ) {
 		// Filter products without a sale price.
-		$items_without_sale = array_filter(
-			$items,
-			function( $item ) {
-				return empty( $item['sale_price'] );
-			}
-		);
+		$items_without_sale = array_filter( $items, fn( $item ) => empty( $item['sale_price'] ) );
 
 		// Calculate the total regular price of products without a sale price.
 		$total_regular_price = array_sum( array_column( $items_without_sale, 'regular_price' ) );
