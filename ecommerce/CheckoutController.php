@@ -100,6 +100,7 @@ class CheckoutController {
 			add_action( 'tutor_action_tutor_pay_incomplete_order', array( $this, 'pay_incomplete_order' ) );
 			add_action( 'template_redirect', array( $this, 'restrict_checkout_page' ) );
 			add_action( 'wp_ajax_tutor_get_checkout_html', array( $this, 'ajax_get_checkout_html' ) );
+			add_action( 'tutor_before_checkout_order_details', array( $this, 'add_warning_alert' ) );
 		}
 	}
 
@@ -165,6 +166,70 @@ class CheckoutController {
 			__( 'Success', 'tutor' ),
 			$content
 		);
+	}
+
+	/**
+	 * Add warning alert to checkout details.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $course_list course list.
+	 *
+	 * @return void
+	 */
+	public function add_warning_alert( $course_list ) {
+		/**
+		 * Scenario: Guest checkout and buy now option enabled.
+		 * Display a warning alert if the user attempts to purchase a course they are already enrolled in.
+		 */
+		$course_id = (int) Input::sanitize_request_data( 'course_id', 0 );
+		if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
+			add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
+			?>
+			<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
+				<span><?php esc_html_e( 'You\'re already enrolled in this course.', 'tutor' ); ?></span>
+				<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>"><?php esc_html_e( 'Start learning!', 'tutor' ); ?></a>
+			</div>
+			<?php
+		}
+
+		/**
+		 * Scenario: user login from the checkout page with courses in the cart.
+		 * Display a warning alert if the user tries to purchase a course they are already enrolled in.
+		 */
+		if ( ! Settings::is_buy_now_enabled() && count( $course_list ) ) {
+			$enrolled_courses = array();
+			foreach ( $course_list as $course ) {
+				if ( tutor_utils()->is_enrolled( $course->ID, get_current_user_id() ) ) {
+					$enrolled_courses[] = $course;
+				}
+			}
+
+			if ( count( $enrolled_courses ) ) {
+				add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
+				?>
+				<div class="tutor-alert tutor-warning">
+					<div>
+						<p class="tutor-mb-8">
+						<?php
+						if ( count( $enrolled_courses ) > 1 ) {
+							esc_html_e( 'You are already enrolled in the following courses. Please remove those from your cart and continue.', 'tutor' );
+						} else {
+							esc_html_e( 'You are already enrolled in the following course. Please remove that from your cart and continue.', 'tutor' );
+						}
+						?>
+						<a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( CartController::get_page_url() ); ?>"><?php esc_html_e( 'View Cart', 'tutor' ); ?></a>
+						</p>
+						<ul>
+						<?php foreach ( $enrolled_courses as $course ) : ?>
+							<li><a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>"><?php echo esc_html( $course->post_title ); ?></a></li>
+						<?php endforeach; ?>
+						</ul>
+					</div>
+				</div>
+				<?php
+			}
+		}
 	}
 
 	/**

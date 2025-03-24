@@ -67,52 +67,9 @@ $checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order
 ?>
 
 <div class="tutor-checkout-details">
-	<?php
-	if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
-		add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
-		?>
-		<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
-			<span><?php esc_html_e( 'You\'re already enrolled in this course.', 'tutor' ); ?></span>
-			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>"><?php esc_html_e( 'Start learning!', 'tutor' ); ?></a>
-		</div>
-		<?php
-	}
 
-	if ( ! Settings::is_buy_now_enabled() && count( $course_list ) ) {
-		$enrolled_courses = array();
-		foreach ( $course_list as $course ) {
-			if ( tutor_utils()->is_enrolled( $course->ID, get_current_user_id() ) ) {
-				$enrolled_courses[] = $course;
-			}
-		}
+	<?php do_action( 'tutor_before_checkout_order_details', $course_list ); ?>
 
-		if ( count( $enrolled_courses ) ) {
-			add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
-			?>
-			<div class="tutor-alert tutor-warning">
-				<div>
-					<p class="tutor-mb-8">
-					<?php
-					if ( count( $enrolled_courses ) > 1 ) {
-						esc_html_e( 'You are already enrolled in the following courses. Please remove those from your cart and continue.', 'tutor' );
-					} else {
-						esc_html_e( 'You are already enrolled in the following course. Please remove that from your cart and continue.', 'tutor' );
-					}
-					?>
-					<a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( $cart_controller->get_page_url() ); ?>"><?php esc_html_e( 'View Cart', 'tutor' ); ?></a>
-					</p>
-					<ul>
-					<?php foreach ( $enrolled_courses as $course ) : ?>
-						<li><a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>"><?php echo esc_html( $course->post_title ); ?></a></li>
-					<?php endforeach; ?>
-					</ul>
-				</div>
-			</div>
-			<?php
-		}
-	}
-	do_action( 'tutor_before_checkout_order_details' );
-	?>
 	<div class="tutor-checkout-details-inner">
 		<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-border-bottom tutor-pb-8">
 			<?php esc_html_e( 'Order Details', 'tutor' ); ?>
