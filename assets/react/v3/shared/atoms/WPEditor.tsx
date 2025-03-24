@@ -201,7 +201,7 @@ function editorConfig(
           if (builderWrapper) {
             if (event.state) {
               builderWrapper.style.position = 'relative';
-              builderWrapper.style.zIndex = '999999';
+              builderWrapper.style.zIndex = '100000';
             } else {
               builderWrapper.removeAttribute('style');
             }

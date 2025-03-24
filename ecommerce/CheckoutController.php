@@ -919,7 +919,14 @@ class CheckoutController {
 							}
 						}
 
-						$order_model->update_order( $order_data->id, array( 'payment_method' => $payment_method ) );
+						$update_order_data                   = $order_model->get_recalculated_order_tax_data( $order_id );
+						$update_order_data['payment_method'] = $payment_method;
+
+						$updated = $order_model->update_order( $order_data->id, $update_order_data );
+
+						if ( $updated ) {
+							$order_data = $order_model->get_order_by_id( $order_id );
+						}
 					}
 
 					$payment_data = $this->prepare_payment_data( (array) $order_data, $payment_method ? $payment_method : $order_data->payment_method, $order_data->order_type );
