@@ -173,7 +173,7 @@ class OrderModel {
 	public function get_recalculated_order_tax_data( $order ) {
 		$order       = self::get_order( $order );
 		$total_price = $order->total_price;
- 		$tax_rate    = Tax::get_user_tax_rate( $order->user_id );
+		$tax_rate    = Tax::get_user_tax_rate( $order->user_id );
 		$order_data  = array();
 		if ( $tax_rate ) {
 			$order_data['tax_type']   = Tax::get_tax_type();
