@@ -199,33 +199,17 @@ class OrderController {
 		$subtotal_price = 0;
 		$total_price    = 0;
 
-		// Add enrollment fee with total & subtotal price.
-		if ( $this->model::TYPE_SINGLE_ORDER !== $order_type ) {
-			$plan = apply_filters( 'tutor_get_plan_info', null, $items[0]['item_id'] );
-			if ( $plan ) {
-				$item_price     = $this->model::calculate_order_price( $items );
-				$subtotal_price = $item_price->subtotal;
-				$total_price    = $item_price->total;
-
-				$user_subscription = apply_filters( 'tutor_get_user_plan_subscription', null, $plan->id, $user_id );
-				$is_trial_used     = $user_subscription && $user_subscription->is_trial_used;
-
-				if ( $this->model::TYPE_SUBSCRIPTION === $order_type ) {
-					if ( $plan->enrollment_fee > 0 && ( ! $plan->has_trial_period || $is_trial_used ) ) {
-						$subtotal_price += $plan->enrollment_fee;
-						$total_price    += $plan->enrollment_fee;
-					}
-
-					if ( $plan->trial_value > 0 && $plan->trial_fee > 0 && ! $is_trial_used ) {
-						$subtotal_price += $plan->trial_fee;
-						$total_price    += $plan->trial_fee;
-					}
-				}
-			}
-		} else {
+		if ( $this->model::TYPE_SINGLE_ORDER === $order_type ) {
 			$item_price     = $this->model::calculate_order_price( $items );
 			$subtotal_price = $item_price->subtotal;
 			$total_price    = $item_price->total;
+		} else {
+			// For subscription and renewal order.
+			$prices = apply_filters( 'tutor_create_order_prices_for_subscription', null, $items, $order_type, $user_id );
+			if ( $prices ) {
+				$subtotal_price = $prices->subtotal_price;
+				$total_price    = $prices->total_price;
+			}
 		}
 
 		$order_data = array(
