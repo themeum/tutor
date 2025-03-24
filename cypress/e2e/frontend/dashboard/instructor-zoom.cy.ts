@@ -57,7 +57,7 @@ describe('Tutor Dashboard My Courses', () => {
     cy.get('a.tutor-create-new-course.tutor-dashboard-create-course').click();
     cy.url().should('include', '/create-course');
     cy.waitAfterRequest('getCourseDetails');
-    cy.getByInputName('post_title').type('Zoom test course');
+    cy.getByInputName('post_title').clear().type('Zoom test course');
     cy.get('[data-cy=tutor-tracker]').contains('Additional').click();
 
     cy.wait(500);
@@ -74,7 +74,7 @@ describe('Tutor Dashboard My Courses', () => {
         // cy.wait(500);
         cy.getByInputName('meeting_summary').click({ force: true }).type(zoomMeetingData.meeting_summary);
         cy.selectDate('meeting_date');
-        cy.getSelectInput('meeting_time', '08:30 PM');
+        cy.getSelectInput('meeting_time', '11:30 PM');
         cy.getSelectInput('meeting_timezone', zoomMeetingData.meeting_timezone);
         cy.get('[data-cy=save-zoom-meeting]').click();
 
