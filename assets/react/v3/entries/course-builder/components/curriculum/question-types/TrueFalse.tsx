@@ -262,5 +262,12 @@ const styles = {
     color: ${colorTokens.icon.default};
     cursor: grab;
     place-self: center center;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
   `,
 };

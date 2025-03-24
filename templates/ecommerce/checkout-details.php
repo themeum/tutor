@@ -23,7 +23,8 @@ $checkout_controller = new CheckoutController( false );
 $get_cart            = $cart_controller->get_cart_items();
 $courses             = $get_cart['courses'];
 $total_count         = $courses['total_count'];
-$course_list         = $courses['results'];
+$course_id           = (int) Input::sanitize_request_data( 'course_id', 0 );
+$course_list         = Settings::is_buy_now_enabled() && $course_id ? array( get_post( $course_id ) ) : $courses['results'];
 
 $plan_id   = (int) Input::sanitize_request_data( 'plan' );
 $plan_info = apply_filters( 'tutor_get_plan_info', new stdClass(), $plan_id );
@@ -43,6 +44,51 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 ?>
 
 <div class="tutor-checkout-details">
+	<?php
+	if ( Settings::is_buy_now_enabled() && $course_id && tutor_utils()->is_enrolled( $course_id, get_current_user_id() ) ) {
+		add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
+		?>
+		<div class="tutor-alert tutor-warning tutor-d-flex tutor-gap-1">
+			<span><?php esc_html_e( 'You\'re already enrolled in this course.', 'tutor' ); ?></span>
+			<a href="<?php echo esc_url( get_the_permalink( $course_id ) ); ?>"><?php esc_html_e( 'Start learning!', 'tutor' ); ?></a>
+		</div>
+		<?php
+	}
+
+	if ( ! Settings::is_buy_now_enabled() && count( $course_list ) ) {
+		$enrolled_courses = array();
+		foreach ( $course_list as $course ) {
+			if ( tutor_utils()->is_enrolled( $course->ID, get_current_user_id() ) ) {
+				$enrolled_courses[] = $course;
+			}
+		}
+
+		if ( count( $enrolled_courses ) ) {
+			add_filter( 'tutor_checkout_enable_pay_now_btn', '__return_false' );
+			?>
+			<div class="tutor-alert tutor-warning">
+				<div>
+					<p class="tutor-mb-8">
+					<?php
+					if ( count( $enrolled_courses ) > 1 ) {
+						esc_html_e( 'You are already enrolled in the following courses. Please remove those from your cart and continue.', 'tutor' );
+					} else {
+						esc_html_e( 'You are already enrolled in the following course. Please remove that from your cart and continue.', 'tutor' );
+					}
+					?>
+					<a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( $cart_controller->get_page_url() ); ?>"><?php esc_html_e( 'View Cart', 'tutor' ); ?></a>
+					</p>
+					<ul>
+					<?php foreach ( $enrolled_courses as $course ) : ?>
+						<li><a class="tutor-text-decoration-none tutor-color-primary" href="<?php echo esc_url( get_the_permalink( $course->ID ) ); ?>"><?php echo esc_html( $course->post_title ); ?></a></li>
+					<?php endforeach; ?>
+					</ul>
+				</div>
+			</div>
+			<?php
+		}
+	}
+	?>
 	<div class="tutor-checkout-details-inner">
 		<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-border-bottom tutor-pb-8">
 			<?php esc_html_e( 'Order Details', 'tutor' ); ?>
@@ -291,5 +337,12 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 			<input type="hidden" name="object_ids" value="<?php echo esc_attr( implode( ',', $object_ids ) ); ?>">
 			<input type="hidden" name="order_type" value="<?php echo esc_attr( $order_type ); ?>">
 		</div>
+
+		<?php
+		$is_zero_price    = empty( $checkout_data->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $checkout_data->order_type;
+		$pay_now_btn_text = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
+		$pay_now_btn_text = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
+		?>
+		<input type="hidden" id="pay_now_btn_text" value="<?php echo esc_attr( $pay_now_btn_text ); ?>">
 	</div>
 </div>

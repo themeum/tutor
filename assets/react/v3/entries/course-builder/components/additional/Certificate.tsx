@@ -307,6 +307,13 @@ const styles = {
     color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
     border-radius: ${borderRadius[4]};
 
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${isActive ? colorTokens.icon.brand : colorTokens.icon.default};
+    }
+
     &:focus-visible {
       outline: 2px solid ${colorTokens.stroke.brand};
       outline-offset: 1px;

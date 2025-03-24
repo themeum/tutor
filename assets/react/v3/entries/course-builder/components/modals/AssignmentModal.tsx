@@ -244,7 +244,6 @@ const AssignmentModal = ({
                     placeholder={__('Enter Assignment Title', 'tutor')}
                     generateWithAi={!isTutorPro || isOpenAiEnabled}
                     isClearable
-                    selectOnFocus
                   />
                 )}
               />
@@ -342,10 +341,10 @@ const AssignmentModal = ({
                       placeholder={__('Select Prerequisite', 'tutor')}
                       options={
                         topics.reduce((topics, topic) => {
-                          if (topic.id === topicId) {
+                          if (String(topic.id) === String(topicId)) {
                             topics.push({
                               ...topic,
-                              contents: topic.contents.filter((content) => content.ID !== assignmentId),
+                              contents: topic.contents.filter((content) => String(content.ID) !== String(assignmentId)),
                             });
                           } else {
                             topics.push(topic);

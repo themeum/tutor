@@ -197,9 +197,11 @@ const styles = {
         &:hover,
         &:focus {
           background-color: ${colorTokens.action.secondary.hover};
+          color: ${colorTokens.text.brand};
         }
         &:active {
           background-color: ${colorTokens.action.secondary.active};
+          color: ${colorTokens.text.brand};
         }
       }
     `,

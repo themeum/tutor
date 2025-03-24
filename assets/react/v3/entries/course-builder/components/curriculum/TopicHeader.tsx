@@ -164,12 +164,7 @@ const TopicHeader = ({
                   name="title"
                   rules={{ required: __('Title is required', 'tutor') }}
                   render={(controllerProps) => (
-                    <FormInput
-                      {...controllerProps}
-                      placeholder={__('Add a title', 'tutor')}
-                      isSecondary
-                      selectOnFocus
-                    />
+                    <FormInput {...controllerProps} placeholder={__('Add a title', 'tutor')} isSecondary />
                   )}
                 />
               </div>
@@ -424,6 +419,12 @@ const styles = {
 
     :disabled {
       cursor: not-allowed;
+    }
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
     }
 
     &:focus-visible {

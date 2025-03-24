@@ -15,6 +15,7 @@ import Show from '@TutorShared/controls/Show';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { type Tag, useCreateTagMutation, useTagListQuery } from '@TutorShared/services/tags';
 
+import { decodeHtmlEntities } from '@TutorShared/utils/util';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormTagsInputProps extends FormControllerProps<Tag[] | null> {
@@ -122,7 +123,11 @@ const FormTagsInput = ({
             {fieldValue.length > 0 && (
               <div css={styles.tagsWrapper}>
                 {fieldValue.map((tag: Tag) => (
-                  <Chip key={tag.id} label={tag.name} onClick={() => handleCheckboxChange(false, tag)} />
+                  <Chip
+                    key={tag.id}
+                    label={decodeHtmlEntities(tag.name)}
+                    onClick={() => handleCheckboxChange(false, tag)}
+                  />
                 ))}
               </div>
             )}
@@ -156,7 +161,7 @@ const FormTagsInput = ({
                     {tags.map((tag) => (
                       <li key={String(tag.id)} css={styles.optionItem}>
                         <Checkbox
-                          label={tag.name}
+                          label={decodeHtmlEntities(tag.name)}
                           checked={!!fieldValue.find((item) => item.id === tag.id)}
                           onChange={(checked) => handleCheckboxChange(checked, tag)}
                         />
@@ -260,8 +265,11 @@ const styles = {
     width: 100%;
     padding: ${spacing[8]};
 
+    &:focus,
+    &:active,
     &:hover {
       background-color: ${colorTokens.background.hover};
+      color: ${colorTokens.text.primary};
     }
   `,
 };

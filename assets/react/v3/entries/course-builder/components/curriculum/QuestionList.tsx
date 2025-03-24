@@ -41,8 +41,8 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
+import { IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
 const questionTypeOptions: {
@@ -432,6 +432,12 @@ const styles = {
       height: 32px;
       border-radius: ${borderRadius[6]};
 
+      &:focus,
+      &:active,
+      &:hover {
+        background: none;
+      }
+
       svg {
         color: ${colorTokens.action.primary.default};
         width: 100%;
@@ -465,6 +471,7 @@ const styles = {
   `,
   questionTypeOption: css`
     ${styleUtils.resetButton};
+    color: ${colorTokens.text.title};
     width: 100%;
     padding: ${spacing[8]} ${spacing[16]} ${spacing[8]} ${spacing[20]};
     transition: background-color 0.3s ease-in-out;
@@ -472,6 +479,13 @@ const styles = {
     align-items: center;
     gap: ${spacing[4]};
     border: 2px solid transparent;
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.text.title};
+    }
 
     :disabled {
       cursor: not-allowed;

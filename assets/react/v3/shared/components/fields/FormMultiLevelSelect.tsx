@@ -11,7 +11,7 @@ import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { generateTree } from '@TutorShared/utils/util';
+import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -164,7 +164,7 @@ export const Branch = ({ option, onChange, level = 0 }: BranchProps) => {
   return (
     <div css={styles.branchItem(level)}>
       <button type="button" onClick={() => onChange(option.id)}>
-        {option.name}
+        {decodeHtmlEntities(option.name)}
       </button>
 
       {renderBranches()}
@@ -192,12 +192,17 @@ const styles = {
 
     button {
       ${styleUtils.resetButton};
+      ${typography.body('regular')};
+      color: ${colorTokens.text.title};
       padding-left: calc(${spacing[24]} + ${spacing[24]} * ${level});
       line-height: ${lineHeight[36]};
       width: 100%;
 
-      &:hover {
+      &:hover,
+      &:focus,
+      &:active {
         background-color: ${colorTokens.background.hover};
+        color: ${colorTokens.text.title};
       }
     }
   `,
@@ -211,6 +216,13 @@ const styles = {
     transition: transform 0.3s ease-in-out;
     color: ${colorTokens.icon.default};
     padding: ${spacing[6]};
+
+    &:focus,
+    &:active,
+    &:hover {
+      background: none;
+      color: ${colorTokens.icon.default};
+    }
 
     ${isOpen &&
     css`
