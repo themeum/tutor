@@ -15,6 +15,7 @@ use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
 use Tutor\Ecommerce\OrderActivitiesController;
+use Tutor\Ecommerce\Tax;
 
 /**
  * OrderModel Class
@@ -158,6 +159,35 @@ class OrderModel {
 	 */
 	public function get_table_name() {
 		return $this->table_name;
+	}
+
+	/**
+	 * Get recalculated order tax data.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int|object $order the order id or object.
+	 *
+	 * @return array
+	 */
+	public function get_recalculated_order_tax_data( $order ) {
+		$order       = self::get_order( $order );
+		$total_price = $order->total_price;
+		$tax_rate    = Tax::get_user_tax_rate( $order->user_id );
+		$order_data  = array();
+		if ( $tax_rate ) {
+			$order_data['tax_type']   = Tax::get_tax_type();
+			$order_data['tax_rate']   = $tax_rate;
+			$order_data['tax_amount'] = Tax::calculate_tax( $total_price, $tax_rate );
+
+			if ( ! Tax::is_tax_included_in_price() ) {
+				$total_price              += $order_data['tax_amount'];
+				$order_data['total_price'] = $total_price;
+				$order_data['net_payment'] = $total_price;
+			}
+		}
+
+		return $order_data;
 	}
 
 
