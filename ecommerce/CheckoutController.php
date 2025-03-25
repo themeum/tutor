@@ -197,7 +197,7 @@ class CheckoutController {
 		 * Scenario: user login from the checkout page with courses in the cart.
 		 * Display a warning alert if the user tries to purchase a course they are already enrolled in.
 		 */
-		if ( ! Settings::is_buy_now_enabled() && count( $course_list ) ) {
+		if ( ! Settings::is_buy_now_enabled() && is_array( $course_list ) && count( $course_list ) ) {
 			$enrolled_courses = array();
 			foreach ( $course_list as $course ) {
 				if ( tutor_utils()->is_enrolled( $course->ID, get_current_user_id() ) ) {
