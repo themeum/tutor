@@ -58,7 +58,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       meeting_timezone: currentMeeting?.meeting_data.timezone ?? '',
       auto_recording: currentMeeting?.meeting_data.settings?.auto_recording ?? 'none',
       meeting_password: currentMeeting?.meeting_data.password ?? '',
-      meeting_host: Object.values(meetingHost)[0],
+      meeting_host: Object.keys(meetingHost).length === 1 ? Object.keys(meetingHost)[0] : '',
     },
     shouldFocusError: true,
     mode: 'onChange',
@@ -69,6 +69,11 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
   const timezones = tutorConfig.timezones;
   const timeZonesOptions = Object.keys(timezones).map((key) => ({
     label: timezones[key],
+    value: key,
+  }));
+
+  const hostOptions = Object.keys(meetingHost).map((key) => ({
+    label: meetingHost[key],
     value: key,
   }));
 
@@ -91,7 +96,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
       auto_recording: formData.auto_recording,
       meeting_password: formData.meeting_password,
       click_form: topicId ? 'course_builder' : 'metabox',
-      meeting_host: Object.keys(meetingHost)[0],
+      meeting_host: formData.meeting_host,
     });
 
     if (response.data) {
@@ -112,7 +117,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
         meeting_timezone: currentMeeting.meeting_data.timezone,
         auto_recording: currentMeeting.meeting_data.settings?.auto_recording ?? 'none',
         meeting_password: currentMeeting.meeting_data.password,
-        meeting_host: Object.values(meetingHost)[0],
+        meeting_host: currentMeeting.meeting_data.host_id,
       });
     }
 
@@ -288,11 +293,14 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
               required: __('Meeting host is required', 'tutor'),
             }}
             render={(controllerProps) => (
-              <FormInput
+              <FormSelectInput
                 {...controllerProps}
                 label={__('Meeting Host', 'tutor')}
                 placeholder={__('Enter meeting host', 'tutor')}
-                disabled
+                options={hostOptions}
+                disabled={isDefined(currentMeeting)}
+                selectOnFocus
+                isSearchable
               />
             )}
           />
