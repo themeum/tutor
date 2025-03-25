@@ -34,7 +34,18 @@ class Settings {
 		add_filter( 'tutor_option_input', array( $this, 'format_payment_settings_data' ) );
 		add_action( 'wp_ajax_tutor_payment_settings', array( $this, 'ajax_get_tutor_payment_settings' ) );
 		add_action( 'wp_ajax_tutor_payment_gateways', array( $this, 'ajax_tutor_payment_gateways' ) );
+	}
 
+
+	/**
+	 * Check if buy now setting is enabled.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @return boolean
+	 */
+	public static function is_buy_now_enabled() {
+		return (bool) tutor_utils()->get_option( OptionKeys::BUY_NOW, false );
 	}
 
 	/**
@@ -238,6 +249,13 @@ class Settings {
 							'label'   => __( 'Enable Coupon Code', 'tutor' ),
 							'default' => 'on',
 							'desc'    => __( 'Allow users to apply the coupon code during checkout.', 'tutor' ),
+						),
+						array(
+							'key'     => OptionKeys::BUY_NOW,
+							'type'    => 'toggle_switch',
+							'label'   => __( 'Enable "Buy Now" Button', 'tutor' ),
+							'default' => 'off',
+							'desc'    => __( 'Allow users to purchase courses directly without adding them to the cart.', 'tutor' ),
 						),
 					),
 				),

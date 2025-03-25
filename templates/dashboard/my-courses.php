@@ -18,9 +18,10 @@ $current_user_id                     = get_current_user_id();
 
 // Map required course status according to page.
 $status_map = array(
-	'my-courses'                 => CourseModel::STATUS_PUBLISH,
-	'my-courses/draft-courses'   => CourseModel::STATUS_DRAFT,
-	'my-courses/pending-courses' => CourseModel::STATUS_PENDING,
+	'my-courses'                  => CourseModel::STATUS_PUBLISH,
+	'my-courses/draft-courses'    => CourseModel::STATUS_DRAFT,
+	'my-courses/pending-courses'  => CourseModel::STATUS_PENDING,
+	'my-courses/schedule-courses' => CourseModel::STATUS_FUTURE,
 );
 
 // Set currently required course status fo rcurrent tab.
@@ -31,6 +32,7 @@ $count_map = array(
 	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true ),
 	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true ),
 	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true ),
+	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true ),
 );
 
 $course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
@@ -67,6 +69,11 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 				<li class="tutor-nav-item">
 					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/draft-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/draft-courses' ) ); ?>">
 						<?php esc_html_e( 'Draft', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['draft'] . ')' ); ?>
+					</a>
+				</li>
+				<li class="tutor-nav-item">
+					<a class="tutor-nav-link<?php echo esc_attr( 'my-courses/schedule-courses' === $active_tab ? ' is-active' : '' ); ?>" href="<?php echo esc_url( tutor_utils()->get_tutor_dashboard_page_permalink( 'my-courses/schedule-courses' ) ); ?>">
+						<?php esc_html_e( 'Schedule', 'tutor' ); ?> <?php echo esc_html( '(' . $count_map['future'] . ')' ); ?>
 					</a>
 				</li>
 			</ul>

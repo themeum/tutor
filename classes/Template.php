@@ -131,11 +131,11 @@ class Template extends Tutor_Base {
 				}
 				switch ( $course_filter ) {
 					case 'newest_first':
-						$query->set( 'orderby', 'ID' );
+						$query->set( 'orderby', 'post_date' );
 						$query->set( 'order', 'desc' );
 						break;
 					case 'oldest_first':
-						$query->set( 'orderby', 'ID' );
+						$query->set( 'orderby', 'post_date' );
 						$query->set( 'order', 'asc' );
 						break;
 					case 'course_title_az':

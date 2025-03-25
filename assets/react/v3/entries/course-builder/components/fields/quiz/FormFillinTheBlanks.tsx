@@ -6,12 +6,12 @@ import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Tooltip from '@TutorShared/atoms/Tooltip';
 
+import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
+import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
-import { useQuizModalContext } from '@CourseBuilderContexts/QuizModalContext';
-import { QuizDataStatus, type QuizQuestionOption, calculateQuizDataStatus } from '@CourseBuilderServices/quiz';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
@@ -81,7 +81,7 @@ const FormFillInTheBlanks = ({ field }: FormFillInTheBlanksProps) => {
         </div>
         <div css={styles.optionBody}>
           <Show
-            when={isEditing}
+            when={!inputValue.is_saved || isEditing}
             fallback={
               <div css={styles.placeholderWrapper}>
                 <div css={styles.optionPlaceholder({ isTitle: !!inputValue.answer_title })}>

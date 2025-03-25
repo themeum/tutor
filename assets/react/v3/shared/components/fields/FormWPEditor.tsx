@@ -12,10 +12,10 @@ import Tooltip from '@TutorShared/atoms/Tooltip';
 import WPEditor from '@TutorShared/atoms/WPEditor';
 
 import AITextModal from '@TutorShared/components/modals/AITextModal';
+import ConfirmationModal from '@TutorShared/components/modals/ConfirmationModal';
 import { useModal } from '@TutorShared/components/modals/Modal';
 import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModal';
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
-import StaticConfirmationModal from '@TutorShared/components/modals/StaticConfirmationModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
 import { TutorRoles } from '@TutorShared/config/constants';
@@ -24,11 +24,12 @@ import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { Editor, IconCollection, TutorMutationResponse } from '@TutorShared/utils/types';
+import type { Editor, TutorMutationResponse } from '@TutorShared/utils/types';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
 
+import { IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormWPEditorProps extends FormControllerProps<string | null> {
@@ -91,7 +92,7 @@ const CustomEditorOverlay = ({
           loading={loadingButton === 'back_to'}
           onClick={async () => {
             const { action } = await showModal({
-              component: StaticConfirmationModal,
+              component: ConfirmationModal,
               props: {
                 title: __('Back to WordPress Editor', 'tutor'),
                 description: (

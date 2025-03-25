@@ -1,12 +1,17 @@
 import { differenceInDays } from 'date-fns';
 import React, { useEffect, useState } from 'react';
 import DatePicker, { CalendarContainer } from 'react-datepicker';
-import { CustomInput } from '../CustomInput';
-const { __, _x, _n, _nx } = wp.i18n;
+import CustomHeader from './CustomHeader';
+import { CustomInput } from './CustomInput';
+import { translateWeekday } from './utils';
+const { __, sprintf, _n } = wp.i18n;
 
 
 const TutorDateRangePicker = () => {
-	const dateFormat = window._tutorobject ? window._tutorobject.wp_date_format : 'Y-M-d';
+	const dateFormat = 'Y-M-d';
+
+	const [dropdownMonth, setDropdownMonth] = useState(false);
+	const [dropdownYear, setDropdownYear] = useState(false);
 
 	const [dateRange, setDateRange] = useState([null, null]);
 	const [startDate, endDate] = dateRange;
@@ -14,6 +19,11 @@ const TutorDateRangePicker = () => {
 
 	const handleCalenderChange = (update) => {
 		setDateRange(update);
+	};
+
+	const handleCalendarClose = () => {
+		setDropdownYear(false);
+		setDropdownMonth(false);
 	};
 
 	/**
@@ -46,10 +56,6 @@ const TutorDateRangePicker = () => {
 		}
 	};
 
-	const handleCalendarClose = () => {
-		console.log('adlkjaslkdf');
-	};
-
 	const ContainerWrapper = ({ className, children }) => {
 		return (
 			<CalendarContainer className={className}>
@@ -57,7 +63,7 @@ const TutorDateRangePicker = () => {
 					{children}
 					<div className="react-datepicker__custom-footer">
 						<div className="react-datepicker__selected-days-count">
-							{dayCount ? (dayCount > 1 ? `${dayCount} days selected` : `${dayCount} day selected`) : __( '0 day selected', 'tutor' )}
+							{dayCount ? sprintf(_n('%d day selected', '%d days selected', dayCount, 'tutor'), dayCount) : __('0 day selected', 'tutor')}
 						</div>
 						<div className="tutor-btns">
 							<button
@@ -65,7 +71,7 @@ const TutorDateRangePicker = () => {
 								className="tutor-btn tutor-btn-outline-primary"
 								onClick={applyDateRange}
 							>
-							{__('Apply', 'tutor')}
+								{__('Apply', 'tutor')}
 							</button>
 						</div>
 					</div>
@@ -85,18 +91,30 @@ const TutorDateRangePicker = () => {
 	return (
 		<div className="tutor-react-datepicker tutor-react-datepicker__selects-range" style={{ width: '100%' }}>
 			<DatePicker
-				customInput={<CustomInput/>}
+				customInput={<CustomInput />}
 				placeholderText={` ${dateFormat} -- ${dateFormat} `}
 				showPopperArrow={false}
 				shouldCloseOnSelect={false}
 				selectsRange={true}
 				startDate={startDate}
 				endDate={endDate}
-				onChange={(update) => {
-					handleCalenderChange(update);
-				}}
+				onChange={handleCalenderChange}
+				onCalendarClose={handleCalendarClose}
+				onClick={handleCalendarClose}
 				dateFormat={dateFormat}
+				formatWeekDay={(nameOfDay) => translateWeekday(nameOfDay)}
+				calendarStartDay={_tutorobject.start_of_week}
 				calendarContainer={ContainerWrapper}
+				renderCustomHeader={(props) => (
+					<CustomHeader
+						{...props}
+						dropdownMonth={dropdownMonth}
+						setDropdownMonth={setDropdownMonth}
+						dropdownYear={dropdownYear}
+						setDropdownYear={setDropdownYear}
+						handleCalendarClose={handleCalendarClose}
+					/>
+				)}
 			/>
 		</div>
 	);

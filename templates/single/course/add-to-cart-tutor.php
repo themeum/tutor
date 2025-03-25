@@ -10,6 +10,8 @@
  */
 
 use Tutor\Ecommerce\CartController;
+use Tutor\Ecommerce\CheckoutController;
+use Tutor\Ecommerce\Settings;
 use Tutor\Ecommerce\Tax;
 use Tutor\Models\CartModel;
 
@@ -17,7 +19,7 @@ $course_id                = get_the_ID();
 $is_logged_in             = is_user_logged_in();
 $user_id                  = get_current_user_id();
 $enable_guest_course_cart = false;
-$required_loggedin_class  = 'tutor-native-add-to-cart';
+$required_loggedin_class  = Settings::is_buy_now_enabled() ? '' : 'tutor-native-add-to-cart';
 if ( ! $is_logged_in && ! $enable_guest_course_cart ) {
 	$required_loggedin_class = apply_filters( 'tutor_enroll_required_login_class', 'tutor-open-login-modal' );
 }
@@ -39,6 +41,8 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 	$tax_amount     = Tax::calculate_tax( $display_price, $tax_rate );
 	$display_price += $tax_amount;
 }
+$buy_now      = Settings::is_buy_now_enabled();
+$buy_now_link = add_query_arg( array( 'course_id' => $course_id ), CheckoutController::get_page_url() );
 
 ?>
 	<div>
@@ -68,10 +72,18 @@ if ( $show_price_with_tax && is_numeric( $display_price ) && ! Tax::is_tax_inclu
 		?>
         <?php echo apply_filters( 'tutor_after_course_details_tutor_add_to_cart_price', ob_get_clean(), $course_id ); //phpcs:ignore ?>
 	</div>
-	<?php if ( $is_course_in_user_cart ) { ?>
+	<?php if ( $is_course_in_user_cart && ! $buy_now ) { ?>
 		<a href="<?php echo esc_url( $cart_page_url ? $cart_page_url : '#' ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-mt-24 tutor-btn-lg tutor-btn-block <?php echo esc_attr( $cart_page_url ? '' : 'tutor-cart-page-not-configured' ); ?>">
 			<?php esc_html_e( 'View Cart', 'tutor' ); ?>
 		</a>
+		<?php
+	} elseif ( $buy_now ) {
+		?>
+		<div class="tutor-mt-24">
+			<a href="<?php echo esc_url( $buy_now_link ); ?>" class="tutor-btn tutor-btn-primary tutor-btn-lg tutor-btn-block <?php echo esc_attr( $required_loggedin_class ); ?>">
+				<?php esc_html_e( 'Buy Now', 'tutor' ); ?>
+			</a>
+		</div>
 		<?php
 	} else {
 			ob_start();

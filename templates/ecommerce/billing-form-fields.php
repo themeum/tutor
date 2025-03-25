@@ -14,15 +14,15 @@ use Tutor\Ecommerce\BillingController;
 $billing_controller = new BillingController( false );
 $billing_info       = $billing_controller->get_billing_info();
 
-$billing_first_name = $billing_info->billing_first_name ?? '';
-$billing_last_name  = $billing_info->billing_last_name ?? '';
-$billing_email      = $billing_info->billing_email ?? '';
-$billing_phone      = $billing_info->billing_phone ?? '';
-$billing_zip_code   = $billing_info->billing_zip_code ?? '';
-$billing_address    = $billing_info->billing_address ?? '';
-$billing_country    = $billing_info->billing_country ?? '';
-$billing_state      = $billing_info->billing_state ?? '';
-$billing_city       = $billing_info->billing_city ?? '';
+$billing_first_name = $billing_info->billing_first_name ?? tutor_utils()->input_old( 'billing_first_name', '' );
+$billing_last_name  = $billing_info->billing_last_name ?? tutor_utils()->input_old( 'billing_last_name', '' );
+$billing_email      = $billing_info->billing_email ?? tutor_utils()->input_old( 'billing_email', '' );
+$billing_phone      = $billing_info->billing_phone ?? tutor_utils()->input_old( 'billing_phone', '' );
+$billing_zip_code   = $billing_info->billing_zip_code ?? tutor_utils()->input_old( 'billing_zip_code', '' );
+$billing_address    = $billing_info->billing_address ?? tutor_utils()->input_old( 'billing_address', '' );
+$billing_country    = $billing_info->billing_country ?? tutor_utils()->input_old( 'billing_country', '' );
+$billing_state      = $billing_info->billing_state ?? tutor_utils()->input_old( 'billing_state', '' );
+$billing_city       = $billing_info->billing_city ?? tutor_utils()->input_old( 'billing_city', '' );
 
 $country_info = tutor_get_country_info_by_name( $billing_country );
 $states       = $country_info && isset( $country_info['states'] ) ? $country_info['states'] : array();
@@ -80,7 +80,7 @@ $states       = $country_info && isset( $country_info['states'] ) ? $country_inf
 				<?php esc_html_e( 'State', 'tutor' ); ?>
 			</label>
 			<select name="billing_state" class="tutor-form-control">
-				<?php if ( $billing_country && empty( $states ) ) : ?>
+				<?php if ( empty( $states ) ) : ?>
 				<option value=""><?php esc_html_e( 'N/A', 'tutor' ); ?></option>
 				<?php endif; ?>
 				<?php if ( $billing_country && ( $states ) ) : ?>

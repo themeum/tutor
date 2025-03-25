@@ -17,8 +17,8 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import type { IconCollection } from '@TutorShared/utils/types';
 
 const questionTypes = {
   true_false: {
@@ -218,7 +218,6 @@ const QuestionConditions = () => {
                 type="number"
                 isInlineLabel
                 placeholder="0"
-                selectOnFocus
                 style={css`
                   max-width: 80px;
                 `}

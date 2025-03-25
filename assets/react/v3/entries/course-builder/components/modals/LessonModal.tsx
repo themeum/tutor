@@ -271,7 +271,6 @@ const LessonModal = ({
                     label={__('Name', 'tutor')}
                     placeholder={__('Enter Lesson Name', 'tutor')}
                     generateWithAi={!isTutorPro || isOpenAiEnabled}
-                    selectOnFocus
                     isClearable
                   />
                 )}
@@ -493,10 +492,10 @@ const LessonModal = ({
                       placeholder={__('Select Prerequisite', 'tutor')}
                       options={
                         topics.reduce((topics, topic) => {
-                          if (topic.id === topicId) {
+                          if (String(topic.id) === String(topicId)) {
                             topics.push({
                               ...topic,
-                              contents: topic.contents.filter((content) => content.ID !== lessonId),
+                              contents: topic.contents.filter((content) => String(content.ID) !== String(lessonId)),
                             });
                           } else {
                             topics.push(topic);

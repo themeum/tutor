@@ -33,7 +33,7 @@
 				top: 0;
 				background: rgba(255, 255, 255, 0.6);
 				backdrop-filter: blur(14px);
-				z-index: 1023;
+				z-index: 500;
 			}
 		}
 	}
@@ -247,7 +247,9 @@
 	&-item {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: start;
+		gap: 8px;
+		font-size: 16px;
 		padding: 8px 16px;
 		background-color: #FFF;
 		transition: background-color 300ms ease-in;

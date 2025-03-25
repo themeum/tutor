@@ -2407,17 +2407,17 @@ class Utils {
 	 * @since 1.0.0
 	 * @since 2.5.0 $filters param added to query enrolled courses with additional filters.
 	 *
+	 * @since 3.4.0 $filters replaced with $args to override the defaults.
+	 *
 	 * @param integer $user_id user id.
 	 * @param string  $post_status post status.
 	 * @param integer $offset offset.
 	 * @param integer $posts_per_page post per page.
-	 * @param array   $filters additional filters with key value for \WP_Query.
+	 * @param array   $args Args to override the defaults.
 	 *
 	 * @return bool|\WP_Query
 	 */
-	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $filters = array() ) {
-		global $wpdb;
-
+	public function get_enrolled_courses_by_user( $user_id = 0, $post_status = 'publish', $offset = 0, $posts_per_page = -1, $args = array() ) {
 		$user_id    = $this->get_user_id( $user_id );
 		$course_ids = array_unique( $this->get_enrolled_courses_ids_by_user( $user_id ) );
 
@@ -2431,14 +2431,7 @@ class Utils {
 				'posts_per_page' => $posts_per_page,
 			);
 
-			if ( count( $filters ) ) {
-				$keys = array_keys( $course_args );
-				foreach ( $filters as $key => $value ) {
-					if ( ! in_array( $key, $keys ) ) {
-						$course_args[ $key ] = $value;
-					}
-				}
-			}
+			$course_args = wp_parse_args( $args, $course_args );
 
 			$result = new \WP_Query( $course_args );
 
@@ -3546,10 +3539,14 @@ class Utils {
 	 * @param string  $date_filter date filter.
 	 * @param string  $order_by order by.
 	 * @param string  $order order.
+	 * 
+	 * @since 3.4.0
+	 *
+	 * @param array   $post_status the post status.
 	 *
 	 * @return array
 	 */
-	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '' ): array {
+	public function get_students_by_instructor( int $instructor_id, int $offset, int $limit, $search_filter = '', $course_id = '', $date_filter = '', $order_by = '', $order = '', $post_status = array( 'publish' ) ): array {
 		global $wpdb;
 		$instructor_id = sanitize_text_field( $instructor_id );
 		$limit         = sanitize_text_field( $limit );
@@ -3597,6 +3594,7 @@ class Utils {
 			$author_query = "AND course.post_author = $instructor_id";
 		}
 
+		$post_status = QueryHelper::prepare_in_clause( $post_status );
 		$students       = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT COUNT(enrollment.post_author) AS course_taken, user.*, (SELECT post_date FROM {$wpdb->posts} WHERE post_author = user.ID LIMIT 1) AS enroll_date
@@ -3606,7 +3604,7 @@ class Utils {
 					INNER  JOIN {$wpdb->users} AS user
 							ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
-					AND course.post_status = %s
+					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
 					{$author_query}
@@ -3619,7 +3617,6 @@ class Utils {
 				LIMIT %d, %d
 			",
 				$course_post_type,
-				'publish',
 				'tutor_enrolled',
 				'completed',
 				$search_query,
@@ -3639,7 +3636,7 @@ class Utils {
 					INNER  JOIN {$wpdb->users} AS user
 							ON user.ID = enrollment.post_author
 				WHERE course.post_type = %s
-					AND course.post_status = %s
+					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
 					AND ( user.display_name LIKE %s OR user.user_nicename LIKE %s OR user.user_email = %s OR user.user_login LIKE %s )
@@ -3651,7 +3648,6 @@ class Utils {
 
 			",
 				$course_post_type,
-				'publish',
 				'tutor_enrolled',
 				'completed',
 				$search_query,
@@ -3672,14 +3668,19 @@ class Utils {
 	 *
 	 * @since 1.9.9
 	 *
-	 * @param int $student_id student id.
-	 * @param int $instructor_id instructor id.
+	 * @param int   $student_id student id.
+	 * @param int   $instructor_id instructor id.
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param array $post the post status.
 	 *
 	 * @return array
 	 */
-	public function get_courses_by_student_instructor_id( int $student_id, int $instructor_id ): array {
+	public function get_courses_by_student_instructor_id( int $student_id, int $instructor_id, $post_status = array( 'publish' ) ): array {
 		global $wpdb;
 		$course_post_type = tutor()->course_post_type;
+		$post_status      = QueryHelper::prepare_in_clause( $post_status );
 		$students         = $wpdb->get_results(
 			$wpdb->prepare(
 				"SELECT course.*
@@ -3688,7 +3689,7 @@ class Utils {
 							ON enrollment.post_parent=course.ID
 				WHERE 	course.post_author = %d
 					AND course.post_type = %s
-					AND course.post_status = %s
+					AND course.post_status IN ({$post_status})
 					AND enrollment.post_type = %s
 					AND enrollment.post_status = %s
 					AND enrollment.post_author = %d
@@ -3696,7 +3697,6 @@ class Utils {
 			",
 				$instructor_id,
 				$course_post_type,
-				'publish',
 				'tutor_enrolled',
 				'completed',
 				$student_id
@@ -5106,6 +5106,7 @@ class Utils {
 		foreach ( $questions as $question ) {
 			$question->question_title       = stripslashes( $question->question_title );
 			$question->question_description = stripslashes( $question->question_description );
+			$question->answer_explanation   = stripslashes( $question->answer_explanation );
 		}
 
 		return ( is_array( $questions ) && count( $questions ) ) ? $questions : false;
@@ -7567,13 +7568,15 @@ class Utils {
 	 * Is instructor of this course
 	 *
 	 * @since 1.6.4
+	 * @since 3.4.0 param $is_approved added.
 	 *
-	 * @param int $instructor_id instructor id.
-	 * @param int $course_id course id.
+	 * @param int  $instructor_id instructor id.
+	 * @param int  $course_id course id.
+	 * @param bool $is_approved is approved.
 	 *
 	 * @return bool|int
 	 */
-	public function is_instructor_of_this_course( $instructor_id = 0, $course_id = 0 ) {
+	public function is_instructor_of_this_course( $instructor_id = 0, $course_id = 0, $is_approved = true ) {
 		global $wpdb;
 
 		$instructor_id = $this->get_user_id( $instructor_id );
@@ -7583,10 +7586,31 @@ class Utils {
 			return false;
 		}
 
-		$cache_key  = "tutor_is_instructor_of_the_course_{$instructor_id}_{$course_id}";
+		$cache_key  = "tutor_is_instructor_of_the_course_{$instructor_id}_{$course_id}_{$is_approved}";
 		$instructor = TutorCache::get( $cache_key );
 
 		if ( false === $instructor ) {
+
+			if ( $is_approved ) {
+				$is_approved_instructor = (int) $wpdb->get_var(
+					$wpdb->prepare(
+						"SELECT COUNT(umeta_id)
+						FROM   {$wpdb->usermeta}
+						WHERE  user_id = %d 
+							AND meta_key = %s 
+							AND meta_value = %s",
+						$instructor_id,
+						'_tutor_instructor_status',
+						'approved',
+					)
+				);
+
+				if ( ! $is_approved_instructor ) {
+					return false;
+				}
+			}
+
+			//phpcs:disable
 			$instructor = $wpdb->get_col(
 				$wpdb->prepare(
 					"SELECT umeta_id
@@ -7599,6 +7623,8 @@ class Utils {
 					$course_id
 				)
 			);
+			//phpcs:enable
+
 			TutorCache::set( $cache_key, $instructor );
 		}
 
@@ -8134,14 +8160,17 @@ class Utils {
 	 * Return the assignment deadline date based on duration and assignment creation date
 	 *
 	 * @since 1.8.0
+	 * @since 3.4.0 param $student_id and $course_id added.
 	 *
 	 * @param int   $assignment_id assignment id.
 	 * @param mixed $format format.
 	 * @param mixed $fallback fallback.
+	 * @param int   $student_id the student id.
+	 * @param int   $course_id  the course id.
 	 *
 	 * @return string|false
 	 */
-	public function get_assignment_deadline_date( $assignment_id, $format = null, $fallback = null ) {
+	public function get_assignment_deadline_date( $assignment_id, $format = null, $fallback = null, $student_id = 0, $course_id = 0 ) {
 
 		! $format ? $format = 'j F, Y, g:i a' : 0;
 
@@ -8152,9 +8181,22 @@ class Utils {
 			return $fallback;
 		}
 
-		$publish_date = get_post_field( 'post_date', $assignment_id );
+		$deadline_date     = null;
+		$enrolled_date_gmt = '';
 
-		$date = date_create( $publish_date );
+		if ( $course_id && $student_id ) {
+			$enrolled_info = $this->is_enrolled( $course_id, $student_id );
+
+			if ( $enrolled_info ) {
+				$enrolled_date_gmt = $enrolled_info->post_date_gmt;
+			}
+		}
+
+		$publish_date_gmt = get_post_field( 'post_date_gmt', $assignment_id );
+
+		$deadline_date = strtotime( $enrolled_date_gmt ) < strtotime( $publish_date_gmt ) ? $publish_date_gmt : $enrolled_date_gmt;
+
+		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
 
 		return date_format( $date, $format );
@@ -8349,7 +8391,7 @@ class Utils {
 	 * @return boolean
 	 */
 	public function can_user_edit_course( $user_id, $course_id ) {
-		return current_user_can( 'edit_post', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
+		return current_user_can( 'edit_tutor_course', $course_id ) || $this->is_instructor_of_this_course( $user_id, $course_id );
 	}
 
 
@@ -10442,5 +10484,48 @@ class Utils {
 		}
 
 		return (object) $info;
+	}
+
+	/**
+	 * Delete enrollment record by providing the student and course id
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int $student_id Student id.
+	 * @param int $course_id Course id
+	 *
+	 * @return bool
+	 */
+	public function delete_enrollment_record( int $student_id, int $course_id ):bool {
+		global $wpdb;
+		return QueryHelper::delete(
+			$wpdb->posts,
+			array(
+				'post_author' => $student_id,
+				'post_parent' => $course_id,
+				'post_type'   => tutor()->enrollment_post_type,
+			)
+		);
+	}
+
+	/**
+	 * Delete student course comment by providing the student and course id
+	 *
+	 * @since 3.4.0
+	 *
+	 * @param int $student_id Student id.
+	 * @param int $course_id Course id
+	 *
+	 * @return bool
+	 */
+	public function delete_student_course_comment( int $student_id, int $course_id ): bool {
+		global $wpdb;
+		return QueryHelper::delete(
+			$wpdb->comments,
+			array(
+				'user_id'         => $student_id,
+				'comment_post_ID' => $course_id,
+			)
+		);
 	}
 }
