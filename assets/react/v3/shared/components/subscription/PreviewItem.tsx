@@ -38,7 +38,7 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
   const { showModal } = useModal();
 
   return (
-    <div css={styles.wrapper}>
+    <div data-cy="subscription-preview-item" css={styles.wrapper}>
       <div css={styles.item}>
         <p css={styles.title}>
           {subscription.plan_name}
@@ -103,6 +103,7 @@ export function PreviewItem({ subscription, courseId, isBundle }: PreviewItemPro
           });
         }}
         data-edit-button
+        data-cy="edit-subscription"
       >
         <SVGIcon name="pen" width={19} height={19} />
       </button>

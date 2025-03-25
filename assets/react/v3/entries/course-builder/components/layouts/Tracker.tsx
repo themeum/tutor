@@ -21,7 +21,7 @@ const Tracker = () => {
   };
 
   return (
-    <div css={styles.wrapper}>
+    <div data-cy="tutor-tracker" css={styles.wrapper}>
       <For each={steps}>
         {(step) => (
           <button

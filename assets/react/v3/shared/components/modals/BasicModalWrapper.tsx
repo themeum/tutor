@@ -81,7 +81,7 @@ const BasicModalWrapper = ({
             when={actions}
             fallback={
               <Show when={isCloseAble}>
-                <button type="button" css={styles.closeButton} onClick={onClose}>
+                <button data-cy="close-modal" type="button" css={styles.closeButton} onClick={onClose}>
                   <SVGIcon name="timesThin" width={24} height={24} />
                 </button>
               </Show>

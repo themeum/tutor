@@ -304,6 +304,7 @@ const ZoomMeetingForm = ({ onCancel, data, meetingHost, topicId, meetingId }: Zo
           {__('Cancel', 'tutor')}
         </Button>
         <Button
+          data-cy="save-zoom-meeting"
           loading={saveZoomMeeting.isPending}
           variant="primary"
           size="small"

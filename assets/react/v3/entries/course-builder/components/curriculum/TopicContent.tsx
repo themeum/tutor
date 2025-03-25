@@ -290,7 +290,13 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
             </Tooltip>
           </Show>
           <Tooltip content={__('Edit', 'tutor')} delay={200}>
-            <button ref={editButtonRef} type="button" css={styleUtils.actionButton} onClick={handleShowModalOrPopover}>
+            <button
+              data-cy={`edit-${type}`}
+              ref={editButtonRef}
+              type="button"
+              css={styleUtils.actionButton}
+              onClick={handleShowModalOrPopover}
+            >
               <SVGIcon name="edit" width={24} height={24} />
             </button>
           </Tooltip>
@@ -300,7 +306,12 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
                 <Show
                   when={!isTutorPro}
                   fallback={
-                    <button type="button" css={styleUtils.actionButton} onClick={handleDuplicate}>
+                    <button
+                      data-cy={`duplicate-${type}`}
+                      type="button"
+                      css={styleUtils.actionButton}
+                      onClick={handleDuplicate}
+                    >
                       <SVGIcon name="copyPaste" width={24} height={24} />
                     </button>
                   }
@@ -316,6 +327,7 @@ const TopicContent = ({ type, topic, content, onCopy, onDelete, isOverlay = fals
           </Show>
           <Tooltip content={__('Delete', 'tutor')} delay={200}>
             <button
+              data-cy={`delete-${type}`}
               ref={deleteRef}
               type="button"
               css={styleUtils.actionButton}
