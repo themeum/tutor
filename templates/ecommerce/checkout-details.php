@@ -43,13 +43,14 @@ $order_type = ( $plan_id && $plan_info )
 
 $coupon_code            = Input::sanitize_request_data( 'coupon_code', '' );
 $has_manual_coupon_code = ! empty( $coupon_code );
-$show_coupon_box        = Settings::is_coupon_usage_enabled();
 
 $is_tax_included_in_price = Tax::is_tax_included_in_price();
 $tax_rate                 = Tax::get_user_tax_rate( $user_id );
 
 $item_ids      = ( $plan_id && $plan_info ) ? $plan_info->id : array_column( $course_list, 'ID' );
 $checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order_type, $coupon_code );
+
+$show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_coupon_applied;
 ?>
 
 <div class="tutor-checkout-details">
@@ -144,7 +145,7 @@ $checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order
 			</div>
 			<?php endif ?>
 
-					<?php if ( ! $has_trial_period && $show_coupon_box && ! $checkout_data->is_coupon_applied ) : ?>
+					<?php if ( $show_coupon_box ) : ?>
 			<div class="tutor-checkout-summary-item tutor-have-a-coupon">
 				<div><?php esc_html_e( 'Have a coupon?', 'tutor' ); ?></div>
 				<button type="button" id="tutor-toggle-coupon-button" class="tutor-btn tutor-btn-link">
@@ -214,9 +215,10 @@ $checkout_data = $checkout_controller->prepare_checkout_items( $item_ids, $order
 		</div>
 
 		<?php
-		$is_zero_price    = empty( $checkout_data->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $checkout_data->order_type;
-		$pay_now_btn_text = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
-		$pay_now_btn_text = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
+		$is_zero_price        = empty( $checkout_data->total_price ) && OrderModel::TYPE_SINGLE_ORDER === $checkout_data->order_type;
+		$pay_now_btn_text     = $is_zero_price ? __( 'Enroll Now', 'tutor' ) : __( 'Pay Now', 'tutor' );
+		$pay_now_btn_text     = apply_filters( 'tutor_checkout_pay_now_btn_text', $pay_now_btn_text, $checkout_data );
+		$show_payment_methods = apply_filters( 'tutor_checkout_show_payment_methods', ! $is_zero_price, $checkout_data );
 		?>
 		<input type="hidden" id="pay_now_btn_text" value="<?php echo esc_attr( $pay_now_btn_text ); ?>">
 	</div>
