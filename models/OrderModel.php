@@ -206,15 +206,14 @@ class OrderModel {
 	 * @since 3.5.0
 	 *
 	 * @param object $item order item object.
-	 * @param bool   $format whether to format the price or not.
 	 *
 	 * @return string
 	 */
-	public function get_order_item_display_price( $item, $format = true ) {
+	public function get_order_item_display_price( $item ) {
 		$display_price = is_numeric( $item->sale_price )
 						? $item->sale_price
 						: ( is_numeric( $item->discount_price ) ? $item->discount_price : $item->regular_price );
-		return $format ? tutor_get_formatted_price( $display_price ) : $display_price;
+		return $display_price;
 	}
 
 	/**
