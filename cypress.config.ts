@@ -20,8 +20,6 @@ export default defineConfig({
   env: {
     base_url: process.env.CYPRESS_base_url,
     single_course_slug: process.env.CYPRESS_single_course_slug,
-    paid_course_slug: process.env.CYPRESS_paid_course_slug,
-    cod_course_slug: process.env.CYPRESS_cod_course_slug,
     student_username: process.env.CYPRESS_student_username,
     student_password: process.env.CYPRESS_student_password,
     admin_username: process.env.CYPRESS_admin_username,
