@@ -591,7 +591,6 @@ class OrderModel {
 
 				$course->id            = (int) $course->id;
 				$course->regular_price = (float) $course->regular_price;
-				$course->sale_price    = (float) $course->sale_price;
 				$course->image         = get_the_post_thumbnail_url( $course->id );
 			}
 		}
