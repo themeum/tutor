@@ -200,6 +200,35 @@ class OrderModel {
 		return $order_data;
 	}
 
+	/**
+	 * Get order item display price.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param object $item order item object.
+	 * @param bool   $format whether to format the price or not.
+	 *
+	 * @return string
+	 */
+	public function get_order_item_display_price( $item, $format = true ) {
+		$display_price = is_numeric( $item->sale_price )
+						? $item->sale_price
+						: ( is_numeric( $item->discount_price ) ? $item->discount_price : $item->regular_price );
+		return $format ? tutor_get_formatted_price( $display_price ) : $display_price;
+	}
+
+	/**
+	 * Check order item has sale price or discount price
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param object $item order item object.
+	 *
+	 * @return boolean
+	 */
+	public function has_order_item_sale_price( $item ) {
+		return is_numeric( $item->sale_price ) || is_numeric( $item->discount_price );
+	}
 
 	/**
 	 * Get all order statuses
@@ -925,6 +954,7 @@ class OrderModel {
 			}
 		}
 
+		//phpcs:disable
 		$query = $wpdb->prepare(
 			"SELECT
 				SQL_CALC_FOUND_ROWS
@@ -942,6 +972,7 @@ class OrderModel {
 		);
 
 		$results = $wpdb->get_results( $query );
+		//phpcs:enable
 
 		if ( $wpdb->last_error ) {
 			throw new \Exception( $wpdb->last_error );
@@ -1012,6 +1043,7 @@ class OrderModel {
 				$user_clause = $wpdb->prepare( 'AND c.post_author = %d', $user_id );
 			}
 
+			//phpcs:disable
 			$discounts = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1048,11 +1080,13 @@ class OrderModel {
 					$course_id
 				)
 			);
+			//phpcs:enable
 		} else {
 			if ( $user_id ) {
 				$user_clause = $wpdb->prepare( "AND %d = (SELECT user_id FROM {$wpdb->tutor_earnings} WHERE order_status = 'completed' LIMIT 1) ", $user_id );
 			}
 
+			//phpcs:disable
 			$discounts = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1081,6 +1115,7 @@ class OrderModel {
 					1
 				)
 			);
+			//phpcs:enable
 		}
 
 		$total_discount = 0;
@@ -1174,6 +1209,7 @@ class OrderModel {
 		$item_table = $wpdb->prefix . 'tutor_order_items';
 
 		if ( $course_id ) {
+			//phpcs:disable
 			$refunds = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1211,12 +1247,14 @@ class OrderModel {
 					$course_id
 				)
 			);
+			//phpcs:enable
 		} else {
 			$earning_table = $wpdb->tutor_earnings;
 			if ( $user_id ) {
 				$user_clause = "AND {$user_id} = (SELECT user_id FROM {$earning_table} LIMIT 1)";
 			}
 
+			//phpcs:disable
 			$refunds = $wpdb->get_results(
 				$wpdb->prepare(
 					"SELECT 
@@ -1236,6 +1274,7 @@ class OrderModel {
 					0
 				)
 			);
+			//phpcs:enable
 		}
 
 		$total_refund = 0;
@@ -1750,22 +1789,23 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		<?php elseif ( $show_pay_button ) : 
+			<?php
+		elseif ( $show_pay_button ) :
 			ob_start();
-		?>
-			
+			?>
+
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
 				<input type="hidden" name="tutor_action" value="tutor_pay_incomplete_order">
 				<input type="hidden" name="order_id" value="<?php echo esc_attr( $order->id ); ?>">
-				
+
 				<button type="submit" class="tutor-btn tutor-btn-sm tutor-btn-outline-primary">
 					<?php esc_html_e( 'Pay', 'tutor' ); ?>
 				</button>				
 			</form>
-			
+
 			<?php
-			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );
+			echo apply_filters( 'tutor_after_pay_button', ob_get_clean(), $order );//phpcs:ignore --sanitized output.
 		endif;
 	}
 
