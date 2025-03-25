@@ -86,7 +86,7 @@ $is_checkout_page = true;
 							<?php require tutor()->path . 'templates/ecommerce/billing-form-fields.php'; ?>
 						</div>
 						<div class="tutor-payment-method-wrapper tutor-mt-20">
-						<?php if ( ! $is_zero_price ) : ?>
+						<?php if ( $show_payment_methods ) : ?>
 							<h5 class="tutor-fs-5 tutor-fw-medium tutor-color-black tutor-mb-12">
 								<?php esc_html_e( 'Payment Method', 'tutor' ); ?>
 							</h5>
@@ -142,7 +142,7 @@ $is_checkout_page = true;
 						<?php endif; ?>
 						</div>
 						<?php if ( null !== $tutor_toc_page_link ) : ?>
-							<div class="tutor-mb-16 <?php echo esc_attr( $is_zero_price ? 'tutor-mt-20' : '' ); ?>">
+							<div class="tutor-mb-16 <?php echo esc_attr( $show_payment_methods ? 'tutor-mt-20' : '' ); ?>">
 								<div class="tutor-form-check tutor-d-flex">
 									<input type="checkbox" id="tutor_checkout_agree_to_terms" name="agree_to_terms" class="tutor-form-check-input" required>
 									<label for="tutor_checkout_agree_to_terms">
