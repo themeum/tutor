@@ -239,8 +239,7 @@ class OrderController {
 		/**
 		 * Tax calculation for order.
 		 */
-		$order_data = apply_filters( 'tutor_order_create_pre_tax', array_merge( $order_data, $args ) );
-		$tax_rate   = Tax::get_user_tax_rate( $user_id );
+		$tax_rate = Tax::get_user_tax_rate( $user_id );
 		if ( $tax_rate ) {
 			$order_data['tax_type']   = Tax::get_tax_type();
 			$order_data['tax_rate']   = $tax_rate;
