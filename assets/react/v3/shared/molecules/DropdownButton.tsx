@@ -537,5 +537,6 @@ const styles = {
   dropdownOptionContent: css`
     display: flex;
     align-items: center;
+    white-space: nowrap;
   `,
 };

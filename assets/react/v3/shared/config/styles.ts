@@ -5,6 +5,7 @@ export const sidebarWidth = 355;
 export const footerHeight = 56;
 
 export const fontFamily = {
+  inter: "'Inter', sans-serif;",
   roboto: "'Roboto', sans-serif;",
   sfProDisplay: "'SF Pro Display', sans-serif;",
 } as const;
