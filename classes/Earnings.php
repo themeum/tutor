@@ -97,7 +97,9 @@ class Earnings extends Singleton {
 				$item_sold_price = $order_model->get_item_sold_price( $item->id, false );
 
 				try {
-					$per_earning_refund = ( $deducted_amount * $subtotal_price ) / $order_details->subtotal_price;
+					$per_earning_refund = $order_details->subtotal_price
+										? ( $deducted_amount * $subtotal_price ) / $order_details->subtotal_price
+										: 0;
 				} catch ( \Throwable $th ) {
 					tutor_log( $th );
 					$per_earning_refund = 0;
@@ -116,7 +118,7 @@ class Earnings extends Singleton {
 				$course_id = $item->id;
 
 				if ( OrderModel::TYPE_SINGLE_ORDER !== $order_details->order_type ) {
-					$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $course_id );
+					$plan_info = apply_filters( 'tutor_get_plan_info', null, $course_id );
 					if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
 						$course_id = null;
 					} else {

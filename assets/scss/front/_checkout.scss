@@ -287,6 +287,26 @@
 		right: 0px;
 		padding: 0px;
 	}
+
+	.tutor-plan-trial-price {
+		font-size: 13px;
+		line-height: 21px;
+		font-weight: 500;
+		color: #239C46;
+		background-color: #E5F5EB;
+
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 4px 8px;
+		border-radius: 4px;
+
+		.tutor-plan-trial-icon-wrapper {
+			display: flex;
+			align-items: center;
+			gap: 4px;
+		}
+	}
 }
 
 .tutor-checkout-billing {
