@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import ErrorBoundary from '@TutorShared/components/ErrorBoundary';
+import FocusTrap from '@TutorShared/components/FocusTrap';
 
 import { modal } from '@TutorShared/config/constants';
 import { Breakpoint, borderRadius, colorTokens, shadow, spacing } from '@TutorShared/config/styles';
@@ -47,54 +48,56 @@ const BasicModalWrapper = ({
   }, []);
 
   return (
-    <div
-      css={[styles.container({ isFullScreen: fullScreen }), modalStyle]}
-      style={{
-        maxWidth: `${maxWidth}px`,
-      }}
-    >
+    <FocusTrap>
       <div
-        css={styles.header({
-          hasEntireHeader: !!entireHeader,
-        })}
+        css={[styles.container({ isFullScreen: fullScreen }), modalStyle]}
+        style={{
+          maxWidth: `${maxWidth}px`,
+        }}
       >
-        <Show when={!entireHeader} fallback={entireHeader}>
-          <div css={styles.headerContent}>
-            <div css={styles.iconWithTitle}>
-              <Show when={icon}>{icon}</Show>
-              <Show when={title}>
-                <p css={styles.title}>{title}</p>
-              </Show>
-            </div>
-            <Show when={subtitle}>
-              <span css={styles.subtitle}>{subtitle}</span>
-            </Show>
-          </div>
-        </Show>
-
         <div
-          css={styles.actionsWrapper({
+          css={styles.header({
             hasEntireHeader: !!entireHeader,
           })}
         >
-          <Show
-            when={actions}
-            fallback={
-              <Show when={isCloseAble}>
-                <button data-cy="close-modal" type="button" css={styles.closeButton} onClick={onClose}>
-                  <SVGIcon name="timesThin" width={24} height={24} />
-                </button>
+          <Show when={!entireHeader} fallback={entireHeader}>
+            <div css={styles.headerContent}>
+              <div css={styles.iconWithTitle}>
+                <Show when={icon}>{icon}</Show>
+                <Show when={title}>
+                  <p css={styles.title}>{title}</p>
+                </Show>
+              </div>
+              <Show when={subtitle}>
+                <span css={styles.subtitle}>{subtitle}</span>
               </Show>
-            }
-          >
-            {actions}
+            </div>
           </Show>
+
+          <div
+            css={styles.actionsWrapper({
+              hasEntireHeader: !!entireHeader,
+            })}
+          >
+            <Show
+              when={actions}
+              fallback={
+                <Show when={isCloseAble}>
+                  <button data-cy="close-modal" type="button" css={styles.closeButton} onClick={onClose}>
+                    <SVGIcon name="timesThin" width={24} height={24} />
+                  </button>
+                </Show>
+              }
+            >
+              {actions}
+            </Show>
+          </div>
+        </div>
+        <div css={styles.content({ isFullScreen: fullScreen })}>
+          <ErrorBoundary>{children}</ErrorBoundary>
         </div>
       </div>
-      <div css={styles.content({ isFullScreen: fullScreen })}>
-        <ErrorBoundary>{children}</ErrorBoundary>
-      </div>
-    </div>
+    </FocusTrap>
   );
 };
 
