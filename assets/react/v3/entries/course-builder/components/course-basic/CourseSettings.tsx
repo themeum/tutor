@@ -73,7 +73,7 @@ const CourseSettings = () => {
     <div>
       <label css={typography.caption()}>{__('Options', 'tutor')}</label>
 
-      <div css={styles.courseSettings}>
+      <div data-cy="course-settings" css={styles.courseSettings}>
         <Tabs
           tabList={
             // this is a hack to only show the tab labels on screens above small mobile

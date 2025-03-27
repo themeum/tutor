@@ -267,12 +267,18 @@ const QuizModal = ({
                   <Show
                     when={activeTab === 'settings' || quizId}
                     fallback={
-                      <Button variant="primary" size="small" onClick={() => setActiveTab('settings')}>
+                      <Button
+                        data-cy="quiz-next"
+                        variant="primary"
+                        size="small"
+                        onClick={() => setActiveTab('settings')}
+                      >
                         {__('Next', 'tutor')}
                       </Button>
                     }
                   >
                     <Button
+                      data-cy="save-quiz"
                       loading={saveQuizMutation.isPending}
                       variant="primary"
                       size="small"
@@ -298,7 +304,12 @@ const QuizModal = ({
                           fallback={
                             <div role="button" tabIndex={0} css={styles.quizNameWithButton}>
                               <span css={styles.quizTitle}>{form.getValues('quiz_title')}</span>
-                              <Button variant="text" type="button" onClick={() => setIsEdit(true)}>
+                              <Button
+                                data-cy="edit-quiz-title"
+                                variant="text"
+                                type="button"
+                                onClick={() => setIsEdit(true)}
+                              >
                                 <SVGIcon name="edit" width={24} height={24} />
                               </Button>
                             </div>
@@ -341,6 +352,7 @@ const QuizModal = ({
                                 {__('Cancel', 'tutor')}
                               </Button>
                               <Button
+                                data-cy="save-quiz-title"
                                 loading={saveQuizMutation.isPending}
                                 variant="secondary"
                                 type="submit"

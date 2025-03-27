@@ -92,6 +92,7 @@ function Topbar() {
               {__('Cancel', 'tutor')}
             </Button>
             <Button
+              data-cy="save-coupon"
               variant="primary"
               loading={createCouponMutation.isPending || updateCouponMutation.isPending}
               onClick={form.handleSubmit(handleSubmit)}

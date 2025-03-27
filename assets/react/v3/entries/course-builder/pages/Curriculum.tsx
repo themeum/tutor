@@ -394,6 +394,7 @@ const Curriculum = () => {
                 description={__('Add Topics, Lessons, and Quizzes to get started.', 'tutor')}
                 actions={
                   <Button
+                    data-cy="add-topic"
                     variant="secondary"
                     icon={<SVGIcon name="plusSquareBrand" width={24} height={25} />}
                     onClick={() => {
@@ -507,6 +508,7 @@ const Curriculum = () => {
         <Show when={topics.length > 0}>
           <div css={styles.addButtonWrapper}>
             <Button
+              data-cy="add-topic"
               variant="secondary"
               icon={<SVGIcon name="plusSquareBrand" width={24} height={24} />}
               onClick={() => {

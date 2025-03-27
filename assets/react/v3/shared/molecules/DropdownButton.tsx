@@ -27,6 +27,7 @@ export const DropdownItem = ({
   onClick,
   buttonContentCss,
   isDanger = false,
+  ...props
 }: DropdownOptionProps) => {
   return (
     <button
@@ -35,7 +36,9 @@ export const DropdownItem = ({
         disabled,
         isDanger,
       })}
+      disabled={disabled}
       onClick={onClick}
+      {...props}
     >
       <span css={[styles.dropdownOptionContent, buttonContentCss]}>{text}</span>
     </button>
@@ -76,6 +79,7 @@ const DropdownButton = ({
   buttonContentCss,
   dropdownMaxWidth = '140px',
   disabledDropdown = false,
+  ...props
 }: DropdownButtonProps) => {
   const dropdownTriggerRef = useRef<HTMLButtonElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -97,6 +101,7 @@ const DropdownButton = ({
           onClick={onClick}
           tabIndex={tabIndex}
           disabled={disabled || loading}
+          {...props}
         >
           {loading && !disabled && (
             <span css={styles.spinner}>
@@ -134,6 +139,7 @@ const DropdownButton = ({
           </span>
         </button>
         <button
+          data-cy="dropdown-trigger"
           ref={dropdownTriggerRef}
           type="button"
           disabled={disabled || disabledDropdown}

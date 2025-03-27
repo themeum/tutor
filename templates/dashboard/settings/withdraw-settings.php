@@ -44,8 +44,8 @@ $col_classes = array(
 				foreach ( $tutor_withdrawal_methods as $method_id => $method ) {
 					?>
 					<div class="<?php echo esc_attr( $col_classes[ $method_count ] ); ?>" data-withdraw-method="<?php echo esc_attr( $method_id ); ?>">
-						<label class="tutor-radio-select tutor-align-center tutor-mb-12">
-							<input class="tutor-form-check-input" type="radio" name="tutor_selected_withdraw_method" value="<?php echo esc_attr( $method_id ); ?>" <?php checked( $method_id, $old_method_key ); ?>/>
+						<label  class="tutor-radio-select tutor-align-center tutor-mb-12">
+							<input data-test='bank-transfer-radio-selector' class="tutor-form-check-input" type="radio" name="tutor_selected_withdraw_method" value="<?php echo esc_attr( $method_id ); ?>" <?php checked( $method_id, $old_method_key ); ?>/>
 							<div class="tutor-radio-select-content">
 								<span class="tutor-radio-select-title">
 									<?php echo esc_html( tutor_utils()->avalue_dot( 'method_name', $method ) ); ?>
