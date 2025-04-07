@@ -10528,4 +10528,36 @@ class Utils {
 			)
 		);
 	}
+
+	/**
+	 * Create unique username.
+	 *
+	 * @since 3.4.1
+	 *
+	 * @param string $username Username.
+	 *
+	 * @return string
+	 */
+	public function create_unique_username( string $username ) {
+		$username = trim( $username );
+
+		// If username is email then remove domain part from it.
+		if ( filter_var( $username , FILTER_VALIDATE_EMAIL ) ) {
+			$username = strstr( $username, '@', true );
+		}
+
+		// Sanitize and convert to snake_case.
+		$username = str_replace('-', '_', sanitize_title( $username ) );
+
+		// Add postfix to username if exists and make sure it's unique.
+		$original_username = $username;
+		$counter           = 1;
+
+		while ( get_user_by( 'login', $username ) ) {
+			$username = $original_username . '_' . $counter;
+			$counter++;
+		}
+
+		return $username;
+	}
 }
