@@ -31,7 +31,7 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { TutorMutationResponse } from '@TutorShared/utils/types';
 import { requiredRule } from '@TutorShared/utils/validation';
 
-import { IconCollection } from '@TutorShared/icons/types';
+import { type IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -523,6 +523,7 @@ const FormVideoInput = ({
                     >
                       <Show when={videoSources.includes('html5')}>
                         <Button
+                          data-cy="upload-media"
                           size="small"
                           variant="secondary"
                           icon={<SVGIcon name="monitorPlay" height={24} width={24} />}
@@ -569,7 +570,7 @@ const FormVideoInput = ({
                 >
                   {() => {
                     return (
-                      <div css={styles.previewWrapper}>
+                      <div css={styles.previewWrapper} data-cy="media-preview">
                         <div css={styles.videoInfoWrapper}>
                           <div css={styles.videoInfoCard}>
                             <SVGIcon

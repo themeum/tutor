@@ -3,7 +3,6 @@ import type { UseFormReturn } from 'react-hook-form';
 
 import type { QuizValidationErrorType } from '@CourseBuilderContexts/QuizModalContext';
 import type { QuizForm } from '@CourseBuilderServices/quiz';
-import { tutorConfig } from '@TutorShared/config/config';
 import { VideoRegex } from '@TutorShared/config/constants';
 import { type ID } from '@TutorShared/utils/types';
 
@@ -17,7 +16,7 @@ export async function getVimeoVideoDuration(videoUrl: string): Promise<number | 
   const regExp = /^.*(vimeo\.com\/)((channels\/[A-z]+\/)|(groups\/[A-z]+\/videos\/))?([0-9]+)/;
   const match = videoUrl.match(regExp);
   const videoId = match ? match[5] : null;
-  const jsonUrl = `http${tutorConfig.is_ssl}://vimeo.com/api/v2/video/${videoId}.xml`;
+  const jsonUrl = `https://vimeo.com/api/v2/video/${videoId}.xml`;
 
   try {
     const response = await fetch(jsonUrl);

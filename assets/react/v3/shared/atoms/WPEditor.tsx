@@ -269,14 +269,6 @@ const WPEditor = ({
   }, [value]);
 
   useEffect(() => {
-    if (window.wp.media) {
-      window.wp.media.view.Modal.prototype.on('open', function () {
-        window.wp.media.frame.modal.$el.attr('data-focus-trap', 'true');
-      });
-    }
-  }, []);
-
-  useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       window.wp.editor.remove(editorId);
       window.wp.editor.initialize(
@@ -317,7 +309,7 @@ const WPEditor = ({
         isReadOnly: readonly,
       })}
     >
-      <textarea ref={editorRef} id={editorId} defaultValue={value} />
+      <textarea data-cy="tutor-tinymce" ref={editorRef} id={editorId} defaultValue={value} />
     </div>
   );
 };
