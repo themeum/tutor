@@ -40,16 +40,60 @@ const FormQuestionDescription = ({
   const [isEdit, setIsEdit] = useState<boolean>(false);
   const [previousValue, setPreviousValue] = useState<string>(inputValue);
 
+  const handleCancelClick = () => {
+    field.onChange(previousValue);
+    setIsEdit(false);
+  };
+
+  const handleOkClick = () => {
+    setIsEdit(false);
+    setPreviousValue(field.value || '');
+  };
+
+  const handleOverlayActivation = () => {
+    if (!isEdit && !disabled) {
+      setIsEdit(true);
+    }
+  };
+
+  const handleOverlayKeyDown = (event: React.KeyboardEvent) => {
+    if ((event.key === 'Enter' || event.key === ' ') && !isEdit) {
+      event.preventDefault();
+      setIsEdit(true);
+    }
+  };
+
   return (
-    <div css={styles.editorWrapper({ isEdit })}>
-      <div css={styles.container({ isEdit, isDisabled: disabled })}>
+    <div css={styles.editorWrapper({ isEdit })} tabIndex={-1}>
+      <div data-container css={styles.container({ isEdit, isDisabled: disabled })}>
         <Show
           when={!isEdit && (!isTutorPro || !inputValue)}
           fallback={
-            <Show
-              when={isTutorPro}
-              fallback={
-                <FormTextareaInput
+            <div
+              css={styles.editorContainer}
+              aria-hidden={!isEdit}
+              // @ts-ignore
+              inert={!isEdit ? '' : undefined}
+            >
+              <Show
+                when={isTutorPro}
+                fallback={
+                  <FormTextareaInput
+                    field={field}
+                    fieldState={fieldState}
+                    label={label}
+                    disabled={disabled}
+                    helpText={helpText}
+                    loading={loading}
+                    readOnly={!isEdit}
+                    onChange={onChange}
+                    placeholder={placeholder}
+                    autoResize
+                    maxHeight={400}
+                  />
+                }
+              >
+                <FormWPEditor
                   field={field}
                   fieldState={fieldState}
                   label={label}
@@ -59,31 +103,18 @@ const FormQuestionDescription = ({
                   readOnly={!isEdit}
                   onChange={onChange}
                   placeholder={placeholder}
-                  autoResize
-                  maxHeight={400}
+                  min_height={100}
+                  max_height={400}
+                  autoFocus={true}
+                  toolbar1={`bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | ${
+                    isTutorPro ? ' codesample' : ''
+                  } | wp_adv`}
+                  toolbar2={
+                    'formatselect strikethrough hr wp_more forecolor pastetext removeformat charmap outdent indent undo redo wp_help fullscreen tutor_button undoRedoDropdown'
+                  }
                 />
-              }
-            >
-              <FormWPEditor
-                field={field}
-                fieldState={fieldState}
-                label={label}
-                disabled={disabled}
-                helpText={helpText}
-                loading={loading}
-                readOnly={!isEdit}
-                onChange={onChange}
-                placeholder={placeholder}
-                min_height={100}
-                max_height={400}
-                toolbar1={`bold italic underline | bullist numlist | blockquote | alignleft aligncenter alignright | link unlink | ${
-                  isTutorPro ? ' codesample' : ''
-                } | wp_adv`}
-                toolbar2={
-                  'formatselect strikethrough hr wp_more forecolor pastetext removeformat charmap outdent indent undo redo wp_help fullscreen tutor_button undoRedoDropdown'
-                }
-              />
-            </Show>
+              </Show>
+            </div>
           }
         >
           <div
@@ -91,48 +122,30 @@ const FormQuestionDescription = ({
             dangerouslySetInnerHTML={{
               __html: inputValue || placeholder || '',
             }}
+            tabIndex={-1}
+            aria-hidden="true"
           />
         </Show>
+
         <Show when={isEdit}>
           <div data-action-buttons css={styles.actionButtonWrapper({ isEdit })}>
-            <Button
-              variant="text"
-              size="small"
-              onClick={() => {
-                field.onChange(previousValue);
-                setIsEdit(false);
-              }}
-            >
+            <Button variant="text" size="small" onClick={handleCancelClick}>
               {__('Cancel', 'tutor')}
             </Button>
-            <Button
-              variant="secondary"
-              size="small"
-              onClick={() => {
-                setIsEdit(false);
-                setPreviousValue(field.value || '');
-              }}
-              disabled={inputValue === previousValue}
-            >
+            <Button variant="secondary" size="small" onClick={handleOkClick} disabled={inputValue === previousValue}>
               {__('Ok', 'tutor')}
             </Button>
           </div>
         </Show>
+
         <Show when={!isEdit}>
           <div
-            onClick={() => {
-              if (!isEdit && !disabled) {
-                setIsEdit(true);
-              }
-            }}
-            onKeyDown={(event) => {
-              if ((event.key === 'Enter' || event.key === ' ') && !isEdit) {
-                setIsEdit(true);
-              }
-            }}
+            onClick={handleOverlayActivation}
+            onKeyDown={handleOverlayKeyDown}
             data-overlay
             tabIndex={0}
             role="button"
+            aria-label={inputValue ? __('Edit description', 'tutor') : __('Add description', 'tutor')}
           />
         </Show>
       </div>
@@ -173,6 +186,7 @@ const styles = {
       position: absolute;
       inset: 0;
       opacity: 1;
+      cursor: pointer;
 
       &:focus-visible {
         outline: 2px solid ${colorTokens.stroke.brand};
@@ -189,7 +203,8 @@ const styles = {
 
     ${!isDisabled &&
     css`
-      &:hover {
+      &:hover,
+      &:has([data-overlay]:focus-visible) {
         background-color: ${!isEdit && colorTokens.background.white};
         color: ${colorTokens.text.subdued};
 
@@ -204,6 +219,10 @@ const styles = {
       padding-inline: 0;
     `}
   `,
+  editorContainer: css`
+    position: relative;
+    width: 100%;
+  `,
   placeholder: css`
     ${typography.caption()}
     color: ${colorTokens.text.hints};
@@ -211,6 +230,7 @@ const styles = {
     inset: 0;
     padding-block: ${spacing[8]};
     overflow-x: hidden;
+    pointer-events: none;
   `,
   actionButtonWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     display: flex;
@@ -223,9 +243,5 @@ const styles = {
     css`
       opacity: 1;
     `}
-  `,
-  overlay: css`
-    position: absolute;
-    inset: 0;
   `,
 };
