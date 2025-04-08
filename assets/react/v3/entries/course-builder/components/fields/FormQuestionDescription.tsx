@@ -65,7 +65,7 @@ const FormQuestionDescription = ({
 
   return (
     <div css={styles.editorWrapper({ isEdit })} tabIndex={-1}>
-      <div data-container css={styles.container({ isEdit, isDisabled: disabled })}>
+      <div css={styles.container({ isEdit, isDisabled: disabled })}>
         <Show
           when={!isEdit && (!isTutorPro || !inputValue)}
           fallback={
