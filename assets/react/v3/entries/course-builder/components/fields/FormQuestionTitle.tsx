@@ -61,7 +61,7 @@ const FormQuestionTitle = ({
   const inputValue = field.value ?? '';
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const isControlled = propsIsEdit !== undefined;
+  const isControlled = isDefined(propsIsEdit);
   const [internalIsEdit, setInternalIsEdit] = useState(false);
 
   const isEdit = isControlled ? propsIsEdit : internalIsEdit;
@@ -109,7 +109,6 @@ const FormQuestionTitle = ({
   return (
     <div
       role="button"
-      tabIndex={0}
       css={styles.container({ isEdit, isDisabled: disabled || false, size })}
       aria-label="Question title field"
     >
@@ -154,6 +153,7 @@ const FormQuestionTitle = ({
                     type="text"
                     ref={inputRef}
                     value={inputValue}
+                    placeholder={placeholder}
                     onChange={(event) => {
                       const { value } = event.target;
 
@@ -201,7 +201,7 @@ const FormQuestionTitle = ({
           }
         >
           <>
-            <Show when={field.value !== previousValue}>
+            <Show when={field.value !== previousValue && field.value}>
               <Button
                 buttonCss={styles.actionButton}
                 variant="text"
@@ -272,14 +272,12 @@ const styles = {
 
       &:focus-within {
         ${isEdit && styleUtils.inputFocus}
+        background-color: ${colorTokens.background.white};
+        color: ${colorTokens.text.subdued};
 
         [data-action-buttons] {
           opacity: 1;
         }
-      }
-
-      &:focus-visible {
-        outline: 2px solid ${colorTokens.stroke.brand};
       }
     `}
 
