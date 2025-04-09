@@ -90,13 +90,13 @@
 					$question_type = $question->question_type;
 
 					$rand_choice = false;
-					if ( 'matching' !== $question_type && 'image_matching' !== $question_type ) { // Note: Randomize will be done in specific template.
-						$question_settings = maybe_unserialize( $question->question_settings );
-						if ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] ) {
-							$rand_choice = true;
-						} else if ( 'ordering' === $question_type ) {
-							$rand_choice = true;
-						}
+					if ( ! in_array( $question_type, array( 'matching', 'image_matching' ), true ) ) {
+							if ( 'ordering' === $question_type ) {
+									$rand_choice = true;
+							} else {
+									$question_settings = maybe_unserialize( $question->question_settings );
+									$rand_choice       = ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] );
+							}
 					}
 
 					$answers            = \Tutor\Models\QuizModel::get_answers_by_quiz_question( $question->question_id, $rand_choice );
