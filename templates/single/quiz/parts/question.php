@@ -91,12 +91,12 @@
 
 					$rand_choice = false;
 					if ( ! in_array( $question_type, array( 'matching', 'image_matching' ), true ) ) {
-							if ( 'ordering' === $question_type ) {
-									$rand_choice = true;
-							} else {
-									$question_settings = maybe_unserialize( $question->question_settings );
-									$rand_choice       = ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] );
-							}
+						if ( 'ordering' === $question_type ) {
+							$rand_choice = true;
+						} else {
+							$question_settings = maybe_unserialize( $question->question_settings );
+							$rand_choice       = ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] );
+						}
 					}
 
 					$answers            = \Tutor\Models\QuizModel::get_answers_by_quiz_question( $question->question_id, $rand_choice );
