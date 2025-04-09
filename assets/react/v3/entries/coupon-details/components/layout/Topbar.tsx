@@ -9,7 +9,7 @@ import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { useToast } from '@TutorShared/atoms/Toast';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import Container from '@TutorShared/components/Container';
-import { tutorConfig } from '@TutorShared/config/config';
+import config from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -37,27 +37,33 @@ function Topbar() {
   const createCouponMutation = useCreateCouponMutation();
   const updateCouponMutation = useUpdateCouponMutation();
 
-  async function handleSubmit(data: Coupon) {
+  const handleSubmit = async (data: Coupon) => {
     const payload = convertFormDataToPayload(data);
 
-    const appliesToRegex = new RegExp(/specific_(courses|bundles|category|membership_plans)/i);
-    const isSpecificAppliesTo = appliesToRegex.test(payload.applies_to);
-    const isAppliesToItemsEmpty = payload.applies_to_items.length === 0;
-    if (isSpecificAppliesTo && isAppliesToItemsEmpty) {
+    // Check if specific items are required but not selected
+    const appliesToRegex = /specific_(courses|bundles|category|membership_plans)/i;
+    const requiresSpecificItems = appliesToRegex.test(payload.applies_to);
+    const hasNoSelectedItems = payload.applies_to_items.length === 0;
+
+    if (requiresSpecificItems && hasNoSelectedItems) {
       showToast({
         message: __('Please select at least one applicable item.', 'tutor'),
         type: 'danger',
       });
-    } else if (data.id) {
-      updateCouponMutation.mutate(payload);
-    } else {
-      createCouponMutation.mutate(payload);
+      return;
     }
-  }
 
-  function handleGoBack() {
-    window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_coupons`;
-  }
+    if (data.id) {
+      updateCouponMutation.mutate(payload);
+      return;
+    }
+
+    createCouponMutation.mutate(payload);
+  };
+
+  const handleGoBack = () => {
+    window.location.href = config.TUTOR_COUPONS_PAGE;
+  };
 
   return (
     <div css={styles.wrapper}>
