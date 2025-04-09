@@ -94,6 +94,8 @@
 						$question_settings = maybe_unserialize( $question->question_settings );
 						if ( isset( $question_settings['randomize_question'] ) && '1' === $question_settings['randomize_question'] ) {
 							$rand_choice = true;
+						} else if ( 'ordering' === $question_type ) {
+							$rand_choice = true;
 						}
 					}
 
