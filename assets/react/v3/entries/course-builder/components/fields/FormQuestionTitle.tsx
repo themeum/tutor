@@ -12,6 +12,7 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { isDefined } from '@TutorShared/utils/types';
 
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { __ } from '@wordpress/i18n';
 
 type Size = 'small' | 'regular';
 
@@ -194,7 +195,7 @@ const FormQuestionTitle = ({
               variant="text"
               size="small"
               onClick={() => handleToggleEdit(true)}
-              aria-label="Edit question title"
+              aria-label={__('Edit question title', 'tutor')}
             >
               <SVGIcon name="edit" height={24} width={24} />
             </Button>
@@ -208,7 +209,7 @@ const FormQuestionTitle = ({
                 size="small"
                 onClick={handleSave}
                 disabled={field.value === previousValue}
-                aria-label="Save question title"
+                aria-label={__('Save question title', 'tutor')}
               >
                 <SVGIcon name="checkMark" height={24} width={24} />
               </Button>
@@ -218,7 +219,7 @@ const FormQuestionTitle = ({
               variant="text"
               size="small"
               onClick={handleCancel}
-              aria-label="Cancel editing question title"
+              aria-label={__('Cancel question title', 'tutor')}
             >
               <SVGIcon name="lineCross" height={24} width={24} />
             </Button>
