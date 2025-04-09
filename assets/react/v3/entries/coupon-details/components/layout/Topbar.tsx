@@ -6,6 +6,7 @@ import {
 } from '@CouponServices/coupon';
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { useToast } from '@TutorShared/atoms/Toast';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import Container from '@TutorShared/components/Container';
 import { tutorConfig } from '@TutorShared/config/config';
@@ -32,12 +33,22 @@ function Topbar() {
 
   const form = useFormContext<Coupon>();
   const coupon = form.getValues();
+  const { showToast } = useToast();
   const createCouponMutation = useCreateCouponMutation();
   const updateCouponMutation = useUpdateCouponMutation();
 
   async function handleSubmit(data: Coupon) {
     const payload = convertFormDataToPayload(data);
-    if (data.id) {
+
+    const appliesToRegex = new RegExp(/specific_(courses|bundles|category|membership_plans)/i);
+    const isSpecificAppliesTo = appliesToRegex.test(payload.applies_to);
+    const isAppliesToItemsEmpty = payload.applies_to_items.length === 0;
+    if (isSpecificAppliesTo && isAppliesToItemsEmpty) {
+      showToast({
+        message: __('Please select at least one applicable item.', 'tutor'),
+        type: 'danger',
+      });
+    } else if (data.id) {
       updateCouponMutation.mutate(payload);
     } else {
       createCouponMutation.mutate(payload);
