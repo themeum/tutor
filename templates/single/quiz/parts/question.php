@@ -90,7 +90,7 @@
 					$question_type = $question->question_type;
 
 					$rand_choice = false;
-					if ( ! in_array( $question_type, array( 'matching', 'image_matching' ), true ) ) {
+					if ( 'matching' !== $question_type && 'image_matching' !== $question_type ) { // Note: Randomize will be done in specific template.
 						if ( 'ordering' === $question_type ) {
 							$rand_choice = true;
 						} else {
