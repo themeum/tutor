@@ -1198,6 +1198,8 @@ final class Tutor {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 3.4.1 Supported video sources added
+	 *
 	 * @return array
 	 */
 	public static function default_options() {
