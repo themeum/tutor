@@ -1198,6 +1198,8 @@ final class Tutor {
 	 *
 	 * @since 1.0.0
 	 *
+	 * @since 3.4.1 Supported video sources added
+	 *
 	 * @return array
 	 */
 	public static function default_options() {
@@ -1242,6 +1244,14 @@ final class Tutor {
 			'decimal_separator'                 => '.',
 			'number_of_decimals'                => '2',
 			'is_coupon_applicable'              => 'on',
+			'supported_video_sources'           => array(
+				'html5',
+				'external_url',
+				'youtube',
+				'vimeo',
+				'embedded',
+				'shortcode',
+			),
 		);
 
 		return $options;
