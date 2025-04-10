@@ -63,7 +63,9 @@ const FormDateInput = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const isValidDate = isValid(new Date(field.value));
-  const parsedISODate = isValidDate ? parseISO(format(new Date(field.value), DateFormats.yearMonthDay)) : new Date();
+  const parsedISODate = isValidDate
+    ? new Date(field.value.length === 10 ? field.value + 'T00:00:00' : field.value)
+    : new Date();
   const fieldValue = isValidDate ? format(parsedISODate, dateFormat) : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
