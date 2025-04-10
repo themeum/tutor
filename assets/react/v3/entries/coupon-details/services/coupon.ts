@@ -213,7 +213,7 @@ export const useCouponDetailsQuery = (couponId: number) => {
   return useQuery({
     enabled: !!couponId,
     queryKey: ['CouponDetails', couponId],
-    queryFn: () => getCouponDetails(couponId),
+    queryFn: () => getCouponDetails(couponId).then((res) => res.data),
   });
 };
 
@@ -280,10 +280,6 @@ export const useAppliesToQuery = (params: GetAppliesToParam) => {
   return useQuery({
     queryKey: ['AppliesTo', params],
     placeholderData: keepPreviousData,
-    queryFn: () => {
-      return getAppliesToList(params).then((res) => {
-        return res.data;
-      });
-    },
+    queryFn: () => getAppliesToList(params).then((res) => res.data),
   });
 };
