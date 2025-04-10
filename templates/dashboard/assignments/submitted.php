@@ -129,7 +129,7 @@ $comment_parent = ! empty( $assignments_submitted ) ? $assignments_submitted[0]-
 								<?php echo wp_kses_post( DateTimeHelper::get_gmt_to_user_timezone_date( $assignment->comment_date_gmt ) ); ?>
 							</td>
 							<td>
-								<?php echo esc_html( DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ) ); ?>
+								<?php echo esc_html( 'No Limit' !== $deadline_date ? DateTimeHelper::get_gmt_to_user_timezone_date( $deadline_date ) : $deadline_date ); ?>
 							</td>
 							<td>
 								<span class="tutor-color-black tutor-fs-7 tutor-fw-medium">
