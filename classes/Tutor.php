@@ -1242,6 +1242,14 @@ final class Tutor {
 			'decimal_separator'                 => '.',
 			'number_of_decimals'                => '2',
 			'is_coupon_applicable'              => 'on',
+			'supported_video_sources'           => array(
+				'html5',
+				'external_url',
+				'youtube',
+				'vimeo',
+				'embedded',
+				'shortcode',
+			),
 		);
 
 		return $options;
