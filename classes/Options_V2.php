@@ -1010,6 +1010,14 @@ class Options_V2 {
 								'label_title' => '',
 								'desc'        => __( 'When a user\'s WooCommerce order is auto-completed, they will be redirected to enrolled courses', 'tutor' ),
 							),
+							array(
+								'key'         => 'enable_guest_course_cart',
+								'type'        => 'toggle_switch',
+								'label'       => __( 'Enable Guest Mode', 'tutor' ),
+								'label_title' => '',
+								'default'     => 'off',
+								'desc'        => __( 'Allow customers to place orders without an account.', 'tutor' ),
+							),					
 						),
 					),
 					'block_revenue_sharing' => array(
