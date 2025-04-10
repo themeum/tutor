@@ -281,6 +281,10 @@ const styles = {
   `,
   checkboxLabel: css`
     line-height: 1.88rem !important;
+
+    span:last-of-type {
+      ${styleUtils.text.ellipsis(1)}
+    }
   `,
   branchItem: ({ leftBarHeight, hasParent }: { leftBarHeight: string; hasParent: boolean }) => css`
     line-height: ${spacing[32]};
