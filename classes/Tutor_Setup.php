@@ -507,7 +507,7 @@ class Tutor_Setup {
 					'currency_position' => array(
 						'type'    => 'select',
 						'options' => $currency_positions,
-						'lable'   => __( 'Currency Position', 'tutor' ),
+						'lable'   => __( 'Currency Symbol Position', 'tutor' ),
 						'tooltip' => __( 'Set the position of the currency symbol', 'tutor' ),
 					),
 
