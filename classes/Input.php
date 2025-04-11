@@ -187,7 +187,7 @@ class Input {
 			),
 		);
 
-		$content = wp_unslash( $_POST[$value] ?? '' ); //phpcs:ignore
+		$content = wp_unslash( $_POST[ $value ] ?? '' ); //phpcs:ignore
 		return wp_kses( $content, $supported_tags );
 	}
 
