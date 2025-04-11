@@ -4,7 +4,6 @@ import { useFormContext } from 'react-hook-form';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { useToast } from '@TutorShared/atoms/Toast';
 import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
 import Container from '@TutorShared/components/Container';
 
@@ -35,25 +34,11 @@ function Topbar() {
 
   const form = useFormContext<Coupon>();
   const coupon = form.getValues();
-  const { showToast } = useToast();
   const createCouponMutation = useCreateCouponMutation();
   const updateCouponMutation = useUpdateCouponMutation();
 
   const handleSubmit = async (data: Coupon) => {
     const payload = convertFormDataToPayload(data);
-
-    // Check if specific items are required but not selected
-    const appliesToRegex = /specific_(courses|bundles|category|membership_plans)/i;
-    const requiresSpecificItems = appliesToRegex.test(payload.applies_to);
-    const hasNoSelectedItems = payload.applies_to_items.length === 0;
-
-    if (requiresSpecificItems && hasNoSelectedItems) {
-      showToast({
-        message: __('Please select at least one applicable item.', 'tutor'),
-        type: 'danger',
-      });
-      return;
-    }
 
     if (data.id) {
       updateCouponMutation.mutate(payload);
