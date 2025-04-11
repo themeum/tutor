@@ -225,7 +225,7 @@ class CouponController extends BaseController {
 		}
 
 		unset( $data['coupon_id'] );
-		unset( $data['coupon_type']);
+		unset( $data['coupon_type'] );
 
 		if ( ! isset( $data['expire_date_gmt'] ) ) {
 			$data['expire_date_gmt'] = null;
@@ -237,10 +237,10 @@ class CouponController extends BaseController {
 		try {
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
-				$isSpecificAppliesTo = $this->model->is_specific_applies_to( $data['applies_to'] );
-				$hasAppliesToItems = isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
+				$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
+				$has_applies_to_items   = isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
 
-				if ( $isSpecificAppliesTo && ! $hasAppliesToItems) {
+				if ( $is_specific_applies_to && ! $has_applies_to_items ) {
 					return $this->json_response(
 						__( 'Add items first', 'tutor' ),
 						null,
@@ -248,8 +248,8 @@ class CouponController extends BaseController {
 					);
 				}
 
-				if ( $hasAppliesToItems ) {
-					$this->model->insert_applies_to($data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code);
+				if ( $has_applies_to_items ) {
+					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $data['coupon_id'] ); // Updated to use $data['coupon_id']
 				}
 
 				$this->json_response( __( 'Coupon updated successfully!', 'tutor' ) );
