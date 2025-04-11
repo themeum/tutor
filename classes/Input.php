@@ -180,14 +180,14 @@ class Input {
 			'sub'    => array(),
 			'sup'    => array(),
 			'a'      => array(
-				'href'  => true,
-				'title' => true,
-				'target'=> true,
-				'rel'   => true,
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
 			),
 		);
 
-		$content = wp_unslash( $_POST[$value] ?? '' );
+		$content = wp_unslash( $_POST[$value] ?? '' ); //phpcs:ignore
 		return wp_kses( $content, $supported_tags );
 	}
 
