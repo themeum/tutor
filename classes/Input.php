@@ -159,7 +159,7 @@ class Input {
 	 *
 	 * @return string
 	 */
-	public static function sanitize_tutor_editor_text( $field_name ) {
+	public static function sanitize_tutor_editor_content( $field_name ) {
 		$supported_tags = array(
 			'p'      => array(),
 			'br'     => array(),
