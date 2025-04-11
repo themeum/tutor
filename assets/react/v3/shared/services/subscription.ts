@@ -8,10 +8,9 @@ import { DateFormats } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { type ID, type TutorMutationResponse } from '@TutorShared/utils/types';
+import { type DurationUnit, type ID, type MembershipPlan, type TutorMutationResponse } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate, convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 
-export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
 type PlanType = 'course' | 'bundle' | 'category' | 'full_site';
 type PaymentType = 'onetime' | 'recurring';
 
@@ -316,5 +315,16 @@ export const useSortCourseSubscriptionsMutation = (objectId: number) => {
         queryKey: ['SubscriptionsList', objectId],
       });
     },
+  });
+};
+
+const getMembershipPlans = () => {
+  return wpAjaxInstance.get<MembershipPlan[]>(endpoints.GET_MEMBERSHIP_PLANS).then((response) => response.data);
+};
+
+export const useMembershipPlansQuery = () => {
+  return useQuery({
+    queryKey: ['MembershipPlans'],
+    queryFn: getMembershipPlans,
   });
 };

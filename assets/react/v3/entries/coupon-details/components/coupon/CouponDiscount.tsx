@@ -13,6 +13,7 @@ import type { Coupon } from '@CouponServices/coupon';
 import coursePlaceholder from '@SharedImages/course-placeholder.png';
 import { Addons } from '@TutorShared/config/constants';
 import { typography } from '@TutorShared/config/typography';
+import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
@@ -23,6 +24,8 @@ import { Controller, useFormContext } from 'react-hook-form';
 
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
 const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);
+const isSubscriptionActive = isTutorProActive && isAddonEnabled(Addons.SUBSCRIPTION);
+const isMembershipOnlyMode = isSubscriptionActive && tutorConfig.settings?.membership_only_mode;
 
 const discountTypeOptions = [
   { label: __('Percent', 'tutor'), value: 'percentage' },
@@ -31,11 +34,24 @@ const discountTypeOptions = [
 
 const appliesToOptions = [
   { label: __('All courses', 'tutor'), value: 'all_courses' },
-  ...(displayBundle ? [{ label: __('All bundles', 'tutor'), value: 'all_bundles' }] : []),
-  ...(displayBundle ? [{ label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' }] : []),
+  ...(displayBundle
+    ? [
+        { label: __('All bundles', 'tutor'), value: 'all_bundles' },
+        { label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' },
+      ]
+    : []),
+  ...(isMembershipOnlyMode ? [{ label: __('All membership plans', 'tutor'), value: 'memberships' }] : []),
   { label: __('Specific courses', 'tutor'), value: 'specific_courses' },
   ...(displayBundle ? [{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' }] : []),
   { label: __('Specific category', 'tutor'), value: 'specific_category' },
+  ...(isMembershipOnlyMode
+    ? [
+        {
+          label: __('Specific membership plans', 'tutor'),
+          value: 'specific_membership_plans',
+        },
+      ]
+    : []),
 ];
 
 function CouponDiscount() {
@@ -48,6 +64,14 @@ function CouponDiscount() {
   const courses = form.watch('courses') ?? [];
   const bundles = form.watch('bundles') ?? [];
   const categories = form.watch('categories') ?? [];
+  const membershipPlans = form.watch('membershipPlans') ?? [];
+
+  const modalType = {
+    specific_courses: 'courses',
+    specific_bundles: 'bundles',
+    specific_category: 'categories',
+    specific_membership_plans: 'membershipPlans',
+  } as const;
 
   function removesSelectedItem(type: string, id: number) {
     if (type === 'courses') {
@@ -66,6 +90,12 @@ function CouponDiscount() {
       form.setValue(
         type,
         categories?.filter((item) => item.id !== id),
+      );
+    }
+    if (type === 'membershipPlans') {
+      form.setValue(
+        type,
+        membershipPlans?.filter((item) => item.id !== id),
       );
     }
   }
@@ -114,6 +144,7 @@ function CouponDiscount() {
           {courses?.map((item) => (
             <AppliesToItem
               key={item.id}
+              type="courses"
               image={item.image}
               title={item.title}
               subTitle={
@@ -141,6 +172,7 @@ function CouponDiscount() {
           {bundles?.map((item) => (
             <AppliesToItem
               key={item.id}
+              type="bundles"
               image={item.image}
               title={item.title}
               subTitle={
@@ -160,6 +192,7 @@ function CouponDiscount() {
           {categories?.map((item) => (
             <AppliesToItem
               key={item.id}
+              type="categories"
               image={item.image}
               title={item.title}
               subTitle={`${item.total_courses} ${__('Courses', 'tutor')}`}
@@ -169,8 +202,32 @@ function CouponDiscount() {
         </div>
       )}
 
+      {appliesTo === 'specific_membership_plans' && membershipPlans.length > 0 && (
+        <div css={styles.selectedWrapper}>
+          {form.watch('membershipPlans')?.map((item) => (
+            <AppliesToItem
+              key={item.id}
+              type="membershipPlans"
+              title={item.plan_name}
+              subTitle={
+                <div css={styles.price}>
+                  <span>{formatPrice(Number(item.sale_price) || Number(item.regular_price))}</span>
+                  {Number(item.sale_price) > 0 && (
+                    <span css={styles.discountPrice}>{formatPrice(Number(item.regular_price))}</span>
+                  )}
+                  /<span css={styles.recurringInterval}>{item.recurring_interval}</span>
+                </div>
+              }
+              handleDeleteClick={() => removesSelectedItem('membershipPlans', item.id)}
+            />
+          ))}
+        </div>
+      )}
+
       <Show
-        when={appliesTo === 'specific_courses' || appliesTo === 'specific_bundles' || appliesTo === 'specific_category'}
+        when={['specific_courses', 'specific_bundles', 'specific_category', 'specific_membership_plans'].includes(
+          appliesTo,
+        )}
       >
         <Button
           variant="tertiary"
@@ -182,12 +239,7 @@ function CouponDiscount() {
               component: CouponSelectItemModal,
               props: {
                 title: __('Selected items', 'tutor'),
-                type:
-                  appliesTo === 'specific_category'
-                    ? 'categories'
-                    : appliesTo === 'specific_courses'
-                      ? 'courses'
-                      : 'bundles',
+                type: modalType[appliesTo as keyof typeof modalType],
                 form,
               },
               closeOnOutsideClick: true,
@@ -204,17 +256,22 @@ function CouponDiscount() {
 export default CouponDiscount;
 
 interface AppliesToItemProps {
-  image: string;
+  type: 'courses' | 'bundles' | 'categories' | 'membershipPlans';
+  image?: string;
   title: string;
   subTitle: string | ReactNode;
   handleDeleteClick: () => void;
 }
 
-function AppliesToItem({ image, title, subTitle, handleDeleteClick }: AppliesToItemProps) {
+function AppliesToItem({ type, image, title, subTitle, handleDeleteClick }: AppliesToItemProps) {
   return (
     <div css={styles.selectedItem}>
       <div css={styles.selectedThumb}>
-        <img src={image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+        {type !== 'membershipPlans' ? (
+          <img src={image || coursePlaceholder} css={styles.thumbnail} alt="course item" />
+        ) : (
+          <SVGIcon name="crownOutlined" width={32} height={32} />
+        )}
       </div>
       <div css={styles.selectedContent}>
         <div css={styles.selectedTitle}>{title}</div>
@@ -287,6 +344,9 @@ const styles = {
   `,
   selectedThumb: css`
     height: 48px;
+    color: ${colorTokens.icon.hints};
+    ${styleUtils.flexCenter()};
+    flex-shrink: 0;
   `,
   thumbnail: css`
     width: 48px;
@@ -294,6 +354,10 @@ const styles = {
     border-radius: ${borderRadius[4]};
   `,
   startingFrom: css`
+    color: ${colorTokens.text.hints};
+  `,
+  recurringInterval: css`
+    text-transform: capitalize;
     color: ${colorTokens.text.hints};
   `,
 };

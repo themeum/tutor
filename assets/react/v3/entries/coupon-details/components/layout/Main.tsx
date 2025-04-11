@@ -26,7 +26,7 @@ function Main() {
   const couponDetailsQuery = useCouponDetailsQuery(Number(courseId));
 
   useEffect(() => {
-    const couponData = couponDetailsQuery.data?.data;
+    const couponData = couponDetailsQuery.data;
     if (couponData) {
       form.reset.call(null, {
         id: couponData.id,

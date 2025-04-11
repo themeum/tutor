@@ -1,10 +1,10 @@
 import { useToast } from '@TutorShared/atoms/Toast';
-import { tutorConfig } from '@TutorShared/config/config';
+import config from '@TutorShared/config/config';
 import { DateFormats } from '@TutorShared/config/constants';
 import { wpAjaxInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import type { PaginatedParams, PaginatedResult } from '@TutorShared/utils/types';
+import type { MembershipPlan, PaginatedParams, PaginatedResult } from '@TutorShared/utils/types';
 import { convertToErrorMessage, convertToGMT } from '@TutorShared/utils/util';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
@@ -33,9 +33,11 @@ export type CouponAppliesTo =
   | 'all_courses_and_bundles'
   | 'all_courses'
   | 'all_bundles'
+  | 'all_membership_plans'
   | 'specific_courses'
   | 'specific_bundles'
-  | 'specific_category';
+  | 'specific_category'
+  | 'specific_membership_plans';
 
 export interface Coupon {
   id?: number;
@@ -49,6 +51,7 @@ export interface Coupon {
   courses?: Course[];
   categories?: CourseCategory[];
   bundles?: Course[];
+  membershipPlans?: MembershipPlan[];
   usage_limit_status: boolean;
   total_usage_limit: string | null;
   per_user_limit_status: boolean;
@@ -125,6 +128,7 @@ export const couponInitialValue: Coupon = {
   courses: [],
   categories: [],
   bundles: [],
+  membershipPlans: [],
   usage_limit_status: false,
   total_usage_limit: '',
   per_user_limit_status: false,
@@ -153,6 +157,9 @@ function getAppliesToItemIds(data: Coupon) {
   }
   if (data.applies_to === 'specific_category') {
     return data.categories?.map((item) => item.id) ?? [];
+  }
+  if (data.applies_to === 'specific_membership_plans') {
+    return data.membershipPlans?.map((item) => item.id) ?? [];
   }
   return [];
 }
@@ -206,7 +213,7 @@ export const useCouponDetailsQuery = (couponId: number) => {
   return useQuery({
     enabled: !!couponId,
     queryKey: ['CouponDetails', couponId],
-    queryFn: () => getCouponDetails(couponId),
+    queryFn: () => getCouponDetails(couponId).then((res) => res.data),
   });
 };
 
@@ -226,7 +233,7 @@ export const useCreateCouponMutation = () => {
   return useMutation({
     mutationFn: createCoupon,
     onSuccess: (response) => {
-      window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_coupons`;
+      window.location.href = config.TUTOR_COUPONS_PAGE;
       showToast({ type: 'success', message: response.message });
     },
     onError: (error: ErrorResponse) => {
@@ -273,10 +280,6 @@ export const useAppliesToQuery = (params: GetAppliesToParam) => {
   return useQuery({
     queryKey: ['AppliesTo', params],
     placeholderData: keepPreviousData,
-    queryFn: () => {
-      return getAppliesToList(params).then((res) => {
-        return res.data;
-      });
-    },
+    queryFn: () => getAppliesToList(params).then((res) => res.data),
   });
 };

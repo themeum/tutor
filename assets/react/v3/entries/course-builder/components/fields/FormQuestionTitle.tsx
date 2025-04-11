@@ -12,6 +12,9 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { isDefined } from '@TutorShared/utils/types';
 
 import { styleUtils } from '@TutorShared/utils/style-utils';
+import { __ } from '@wordpress/i18n';
+
+type Size = 'small' | 'regular';
 
 interface FormQuestionTitleProps extends FormControllerProps<string | null> {
   maxLimit?: number;
@@ -29,6 +32,9 @@ interface FormQuestionTitleProps extends FormControllerProps<string | null> {
   isInlineLabel?: boolean;
   style?: SerializedStyles;
   selectOnFocus?: boolean;
+  size?: Size;
+  isEdit?: boolean;
+  onToggleEdit?: (isEdit: boolean) => void;
 }
 
 const FormQuestionTitle = ({
@@ -49,11 +55,17 @@ const FormQuestionTitle = ({
   isInlineLabel = false,
   style,
   selectOnFocus = false,
+  size = 'regular',
+  isEdit: propsIsEdit,
+  onToggleEdit,
 }: FormQuestionTitleProps) => {
   const inputValue = field.value ?? '';
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const isControlled = isDefined(propsIsEdit);
+  const [internalIsEdit, setInternalIsEdit] = useState(false);
+
+  const isEdit = isControlled ? propsIsEdit : internalIsEdit;
   const [previousValue, setPreviousValue] = useState<string>(inputValue);
 
   let characterCount:
@@ -72,22 +84,42 @@ const FormQuestionTitle = ({
   };
 
   useEffect(() => {
-    if (isDefined(inputRef.current)) {
+    if (isEdit && inputRef.current) {
       inputRef.current.focus();
       setPreviousValue(inputValue);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, inputRef.current]);
+  }, [isEdit]);
+
+  const handleToggleEdit = (newEditState: boolean) => {
+    if (!isControlled) {
+      setInternalIsEdit(newEditState);
+    }
+    onToggleEdit?.(newEditState);
+  };
+
+  const handleSave = () => {
+    handleToggleEdit(false);
+  };
+
+  const handleCancel = () => {
+    field.onChange(previousValue);
+    handleToggleEdit(false);
+  };
 
   return (
-    <div role="button" tabIndex={0} css={styles.container({ isEdit, isDisabled: disabled || false })}>
+    <div
+      role="button"
+      css={styles.container({ isEdit, isDisabled: disabled || false, size })}
+      aria-label="Question title field"
+    >
       <Show when={!isEdit}>
         <div
-          css={styles.placeholder}
-          onClick={() => !disabled && setIsEdit(true)}
+          css={styles.placeholder({ size })}
+          onClick={() => !disabled && handleToggleEdit(true)}
           onKeyDown={(event) => {
             if (event.key === 'Enter' || event.key === ' ') {
-              setIsEdit(true);
+              handleToggleEdit(true);
             }
           }}
         >
@@ -113,7 +145,7 @@ const FormQuestionTitle = ({
           {(inputProps) => {
             return (
               <>
-                <div css={styles.inputContainer(false)}>
+                <div css={styles.inputContainer({ isClearable: false, size })}>
                   <input
                     {...field}
                     {...inputProps}
@@ -122,6 +154,7 @@ const FormQuestionTitle = ({
                     type="text"
                     ref={inputRef}
                     value={inputValue}
+                    placeholder={placeholder}
                     onChange={(event) => {
                       const { value } = event.target;
 
@@ -133,11 +166,10 @@ const FormQuestionTitle = ({
                     }}
                     onKeyDown={(event) => {
                       if (event.key === 'Enter') {
-                        setIsEdit(false);
+                        handleSave();
                       }
                       if (event.key === 'Escape') {
-                        field.onChange(previousValue);
-                        setIsEdit(false);
+                        handleCancel();
                       }
                       onKeyDown?.(event.key);
                     }}
@@ -158,21 +190,26 @@ const FormQuestionTitle = ({
         <Show
           when={isEdit}
           fallback={
-            <Button buttonCss={styles.actionButton} variant="text" size="small" onClick={() => setIsEdit(true)}>
+            <Button
+              buttonCss={styles.actionButton}
+              variant="text"
+              size="small"
+              onClick={() => handleToggleEdit(true)}
+              aria-label={__('Edit question title', 'tutor')}
+            >
               <SVGIcon name="edit" height={24} width={24} />
             </Button>
           }
         >
           <>
-            <Show when={field.value !== previousValue}>
+            <Show when={field.value !== previousValue && field.value}>
               <Button
                 buttonCss={styles.actionButton}
                 variant="text"
                 size="small"
-                onClick={() => {
-                  setIsEdit(false);
-                }}
+                onClick={handleSave}
                 disabled={field.value === previousValue}
+                aria-label={__('Save question title', 'tutor')}
               >
                 <SVGIcon name="checkMark" height={24} width={24} />
               </Button>
@@ -181,10 +218,8 @@ const FormQuestionTitle = ({
               buttonCss={styles.actionButton}
               variant="text"
               size="small"
-              onClick={() => {
-                field.onChange(previousValue);
-                setIsEdit(false);
-              }}
+              onClick={handleCancel}
+              aria-label={__('Cancel question title', 'tutor')}
             >
               <SVGIcon name="lineCross" height={24} width={24} />
             </Button>
@@ -198,7 +233,7 @@ const FormQuestionTitle = ({
 export default FormQuestionTitle;
 
 const styles = {
-  container: ({ isEdit, isDisabled }: { isEdit: boolean; isDisabled: boolean }) => css`
+  container: ({ isEdit, isDisabled, size }: { isEdit: boolean; isDisabled: boolean; size: Size }) => css`
     position: relative;
     display: grid;
     grid-template-columns: 1fr auto;
@@ -214,6 +249,17 @@ const styles = {
     transition: box-shadow 0.15s ease-in-out;
     border: 1px solid transparent;
 
+    ${size === 'small' &&
+    css`
+      min-height: 40px;
+      padding-inline: ${spacing[8]} ${spacing[12]};
+      gap: ${spacing[4]};
+      border-radius: ${borderRadius[4]};
+      height: 100%;
+      width: 100%;
+      padding-block: 0;
+    `}
+
     ${!isDisabled &&
     css`
       &:hover {
@@ -227,14 +273,12 @@ const styles = {
 
       &:focus-within {
         ${isEdit && styleUtils.inputFocus}
+        background-color: ${colorTokens.background.white};
+        color: ${colorTokens.text.subdued};
 
         [data-action-buttons] {
           opacity: 1;
         }
-      }
-
-      &:focus-visible {
-        outline: 2px solid ${colorTokens.stroke.brand};
       }
     `}
 
@@ -242,7 +286,8 @@ const styles = {
     css`
       background-color: ${colorTokens.background.white};
       color: ${colorTokens.text.subdued};
-      padding-block: ${spacing[4]};
+      padding-inline: ${size === 'small' && spacing[16]};
+      padding-block: ${size === 'small' ? 0 : spacing[4]};
       border: 1px solid ${colorTokens.stroke.default};
       cursor: default;
     `}
@@ -253,7 +298,7 @@ const styles = {
       }
     }
   `,
-  inputContainer: (isClearable: boolean) => css`
+  inputContainer: ({ isClearable, size }: { isClearable: boolean; size: Size }) => css`
     position: relative;
     display: flex;
     transition: background 0.15s ease-in-out;
@@ -278,6 +323,11 @@ const styles = {
           outline: none;
         }
       }
+
+      ${size === 'small' &&
+      css`
+        ${typography.caption()}
+      `}
     }
   `,
   clearButton: css`
@@ -293,10 +343,17 @@ const styles = {
       padding: ${spacing[10]};
     }
   `,
-  placeholder: css`
+  placeholder: ({ size }: { size: Size }) => css`
     ${typography.heading6()}
     color: ${colorTokens.text.hints};
     border-radius: ${borderRadius[6]};
+
+    ${size === 'small' &&
+    css`
+      ${typography.caption()}
+      padding: ${spacing[4]} ${spacing[8]};
+      border-radius: ${borderRadius[4]};
+    `}
   `,
   actionButtonWrapper: ({ isEdit }: { isEdit: boolean }) => css`
     display: flex;

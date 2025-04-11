@@ -1,27 +1,34 @@
+import type { Coupon } from '@CouponServices/coupon';
 import Button from '@TutorShared/atoms/Button';
 import BasicModalWrapper from '@TutorShared/components/modals/BasicModalWrapper';
 import type { ModalProps } from '@TutorShared/components/modals/Modal';
 import { spacing } from '@TutorShared/config/styles';
-import Show from '@TutorShared/controls/Show';
-import type { Coupon } from '@CouponServices/coupon';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import type { UseFormReturn } from 'react-hook-form';
 import CategoryListTable from './CategoryListTable';
 import CourseListTable from './CourseListTable';
+import MembershipPlanListTable from './MembershipPlanListTable';
 
 interface CouponSelectItemModalProps extends ModalProps {
   closeModal: (props?: { action: 'CONFIRM' | 'CLOSE' }) => void;
-  // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   form: UseFormReturn<Coupon, any, undefined>;
-  type: 'bundles' | 'courses' | 'categories';
+  type: 'bundles' | 'courses' | 'categories' | 'membershipPlans';
 }
 
 function CouponSelectItemModal({ title, closeModal, actions, form, type }: CouponSelectItemModalProps) {
   const _form = useFormWithGlobalError<Coupon>({
     defaultValues: form.getValues(),
   });
+
+  const itemsTable = {
+    courses: <CourseListTable form={_form} type="courses" />,
+    bundles: <CourseListTable form={_form} type="bundles" />,
+    categories: <CategoryListTable form={_form} />,
+    membershipPlans: <MembershipPlanListTable form={_form} />,
+  };
 
   function handleApply() {
     form.setValue(type, _form.getValues(type));
@@ -30,12 +37,7 @@ function CouponSelectItemModal({ title, closeModal, actions, form, type }: Coupo
 
   return (
     <BasicModalWrapper onClose={() => closeModal({ action: 'CLOSE' })} title={title} actions={actions} maxWidth={720}>
-      <Show
-        when={type === 'categories'}
-        fallback={<CourseListTable form={_form} type={type === 'bundles' ? 'bundles' : 'courses'} />}
-      >
-        <CategoryListTable form={_form} />
-      </Show>
+      {itemsTable[type]}
       <div css={styles.footer}>
         <Button size="small" variant="text" onClick={() => closeModal({ action: 'CLOSE' })}>
           {__('Cancel', 'tutor')}
