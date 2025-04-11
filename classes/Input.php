@@ -155,7 +155,7 @@ class Input {
 	 *
 	 * @since 3.4.1
 	 *
-	 * @param string  $value input value.
+	 * @param string $value input value.
 	 *
 	 * @return string
 	 */
