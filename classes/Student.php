@@ -211,7 +211,7 @@ class Student {
 
 		if ( ! is_wp_error( $user_id ) ) {
 			update_user_meta( $user_id, User::PHONE_NUMBER_META, $phone_number );
-			update_user_meta( $user_id, User::PROFILE_BIO_META, $tutor_profile_bio );
+			update_user_meta( $user_id, User::PROFILE_BIO_META, esc_html( $tutor_profile_bio ) );
 			update_user_meta( $user_id, User::PROFILE_JOB_TITLE_META, $tutor_profile_job_title );
 			update_user_meta( $user_id, User::TIMEZONE_META, $timezone );
 		}
