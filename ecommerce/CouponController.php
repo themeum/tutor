@@ -237,10 +237,19 @@ class CouponController extends BaseController {
 		try {
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
-				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
-				$this->model->delete_applies_to( $coupon_data->coupon_code );
-				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
-					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code );
+				$isSpecificAppliesTo = $this->model->is_specific_applies_to( $data['applies_to'] );
+				$hasAppliesToItems = isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
+
+				if ( $isSpecificAppliesTo && ! $hasAppliesToItems) {
+					return $this->json_response(
+						__( 'Add items first', 'tutor' ),
+						null,
+						HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+					);
+				}
+
+				if ( $hasAppliesToItems ) {
+					$this->model->insert_applies_to($data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code);
 				}
 
 				$this->json_response( __( 'Coupon updated successfully!', 'tutor' ) );
