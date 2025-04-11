@@ -388,11 +388,12 @@ class Course extends Tutor_Base {
 	 */
 	public function validate_video_source( $params, &$errors ) {
 		if ( isset( $params['video'] ) ) {
-			$video_source = isset( $params['video']['source'] ) ? $params['video']['source'] : '';
+			$video_source      = isset( $params['video']['source'] ) ? $params['video']['source'] : '';
+			$video_source_type = isset( $params['video']['source_type'] ) ? $params['video']['source_type'] : '';
 
 			if ( '' === $video_source ) {
 				$errors['video_source'] = __( 'Video source is required', 'tutor' );
-			} elseif ( ! $this->is_valid_video_source_type( $video_source ) ) {
+			} elseif ( ! $this->is_valid_video_source_type( $video_source_type ) ) {
 					$errors['video_source'] = __( 'Invalid video source', 'tutor' );
 			}
 		}
