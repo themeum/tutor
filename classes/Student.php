@@ -194,7 +194,7 @@ class Student {
 		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
 		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
-		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
+		$tutor_profile_bio       = Input::sanitize_tutor_editor_text( 'tutor_profile_bio' );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 		$timezone                = Input::post( 'timezone', '' );
 
@@ -211,7 +211,7 @@ class Student {
 
 		if ( ! is_wp_error( $user_id ) ) {
 			update_user_meta( $user_id, User::PHONE_NUMBER_META, $phone_number );
-			update_user_meta( $user_id, User::PROFILE_BIO_META, esc_html( $tutor_profile_bio ) );
+			update_user_meta( $user_id, User::PROFILE_BIO_META,$tutor_profile_bio );
 			update_user_meta( $user_id, User::PROFILE_JOB_TITLE_META, $tutor_profile_job_title );
 			update_user_meta( $user_id, User::TIMEZONE_META, $timezone );
 		}
