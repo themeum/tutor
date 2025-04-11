@@ -41,7 +41,7 @@ import { typography } from '@TutorShared/config/typography';
 import For from '@TutorShared/controls/For';
 import Show from '@TutorShared/controls/Show';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
-import { IconCollection } from '@TutorShared/icons/types';
+import { type IconCollection } from '@TutorShared/icons/types';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { nanoid, noop } from '@TutorShared/utils/util';
 
@@ -400,8 +400,10 @@ const QuestionList = ({ isEditing }: { isEditing: boolean }) => {
               >
                 <button key={option.value} type="button" css={styles.questionTypeOption} disabled onClick={noop}>
                   <SVGIcon data-question-icon name={option.icon as IconCollection} width={24} height={24} />
-                  <span>{option.label}</span>
-                  <ProBadge size="small" content={__('Pro', 'tutor')} />
+                  <div>
+                    <span>{option.label}</span>
+                    <ProBadge size="small" content={__('Pro', 'tutor')} />
+                  </div>
                 </button>
               </Show>
             ))}
@@ -477,8 +479,14 @@ const styles = {
     transition: background-color 0.3s ease-in-out;
     display: flex;
     align-items: center;
-    gap: ${spacing[4]};
+    gap: ${spacing[10]};
     border: 2px solid transparent;
+
+    div {
+      ${styleUtils.display.flex()};
+      align-items: center;
+      gap: ${spacing[4]};
+    }
 
     &:focus,
     &:active,
