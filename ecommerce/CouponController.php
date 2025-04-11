@@ -225,6 +225,7 @@ class CouponController extends BaseController {
 		}
 
 		unset( $data['coupon_id'] );
+		unset( $data['coupon_type']);
 
 		if ( ! isset( $data['expire_date_gmt'] ) ) {
 			$data['expire_date_gmt'] = null;
