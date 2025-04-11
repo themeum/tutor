@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { __, sprintf } from '@wordpress/i18n';
 import { useFormContext } from 'react-hook-form';
 
@@ -40,9 +39,6 @@ function Topbar() {
   const createCouponMutation = useCreateCouponMutation();
   const updateCouponMutation = useUpdateCouponMutation();
 
-  const queryClient = useQueryClient();
-  const couponDetailsQueryData = queryClient.getQueryData(['CouponDetails', Number(courseId)]) as Coupon;
-
   const handleSubmit = async (data: Coupon) => {
     const payload = convertFormDataToPayload(data);
 
@@ -60,10 +56,7 @@ function Topbar() {
     }
 
     if (data.id) {
-      updateCouponMutation.mutate({
-        ...payload,
-        coupon_type: couponDetailsQueryData?.coupon_type,
-      });
+      updateCouponMutation.mutate(payload);
       return;
     }
 

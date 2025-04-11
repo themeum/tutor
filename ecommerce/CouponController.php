@@ -225,6 +225,7 @@ class CouponController extends BaseController {
 		}
 
 		unset( $data['coupon_id'] );
+		unset( $data['coupon_type']);
 
 		if ( ! isset( $data['expire_date_gmt'] ) ) {
 			$data['expire_date_gmt'] = null;
@@ -233,10 +234,12 @@ class CouponController extends BaseController {
 		// Set updated by.
 		$data['updated_by'] = get_current_user_id();
 
+
 		try {
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
 				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
+
 				$this->model->delete_applies_to( $coupon_data->coupon_code );
 				if ( isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] ) ) {
 					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code );
