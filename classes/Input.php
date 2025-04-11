@@ -159,7 +159,7 @@ class Input {
 	 *
 	 * @return string
 	 */
-	public static function sanitize_tutor_editor_text( $value ) {
+	public static function sanitize_tutor_editor_text( $field_name ) {
 		$supported_tags = array(
 			'p'      => array(),
 			'br'     => array(),
@@ -187,7 +187,7 @@ class Input {
 			),
 		);
 
-		$content = wp_unslash( $_POST[ $value ] ?? '' ); //phpcs:ignore
+		$content = wp_unslash( $_POST[ $field_name ] ?? '' ); //phpcs:ignore
 		return wp_kses( $content, $supported_tags );
 	}
 
