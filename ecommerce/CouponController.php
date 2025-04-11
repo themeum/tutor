@@ -235,20 +235,21 @@ class CouponController extends BaseController {
 		$data['updated_by'] = get_current_user_id();
 
 		try {
+			$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
+			$has_applies_to_items   = isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
+
+			if ( $is_specific_applies_to && ! $has_applies_to_items ) {
+				$this->json_response(
+					__( 'Add items first', 'tutor' ),
+					null,
+					HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+				);
+			}
+
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
-				$coupon_data            = $this->model->get_coupon( array( 'id' => $coupon_id ) );
-				$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
-				$has_applies_to_items   = isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
+				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
 				$this->model->delete_applies_to( $coupon_data->coupon_code );
-
-				if ( $is_specific_applies_to && ! $has_applies_to_items ) {
-					$this->json_response(
-						__( 'Add items first', 'tutor' ),
-						null,
-						HttpHelper::STATUS_UNPROCESSABLE_ENTITY
-					);
-				}
 
 				if ( $has_applies_to_items ) {
 					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code );
