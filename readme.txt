@@ -314,6 +314,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.4.1 - April 11, 2025
 
+Update: Host selection option added while creating zoom meetings (Pro)
 Fix: Resolved security vulnerabilities on the student profile page
 Fix: Prevented PHP fatal error on the assignment page when no time limit is set
 Fix: Bundle course details page now properly displays more than 10 courses
