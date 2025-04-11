@@ -140,8 +140,7 @@ class Admin {
 		// Ecommerce menu @since 3.0.0.
 		do_action( 'tutor_after_courses_admin_menu' );
 
-		$is_course_edit_page = Input::get( 'page' ) === 'create-course' && Input::get( 'course_id', 0, INPUT::TYPE_INT );
-		add_submenu_page( 'tutor', $is_course_edit_page ? __( 'Edit Course', 'tutor' ) : __( 'Create Course', 'tutor' ), '<span class="tutor-create-course">Create Course</span>', 'manage_tutor_instructor', 'create-course', array( new Course( false ), 'load_course_builder' ) );
+		add_submenu_page( 'tutor', __( 'Course Builder', 'tutor' ), '<span class="tutor-create-course">Create Course</span>', 'manage_tutor_instructor', 'create-course', array( new Course( false ), 'load_course_builder' ) );
 
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );
