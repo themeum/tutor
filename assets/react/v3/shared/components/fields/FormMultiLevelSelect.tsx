@@ -83,7 +83,7 @@ const FormMultiLevelSelect = ({
                   }
                 }}
                 autoComplete="off"
-                readOnly={true}
+                disabled={disabled || options.length === 0}
                 value={Array.isArray(field.value) ? '' : (options.find((item) => item.id === field.value)?.name ?? '')}
                 placeholder={placeholder}
               />
