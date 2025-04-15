@@ -10163,7 +10163,7 @@ class Utils {
 	}
 
 	/**
-	 * Get allowed tags for tutor text editor.
+	 * Get allowed profile bio tags for tutor text editor.
 	 *
 	 * @since 3.4.2
 	 *
