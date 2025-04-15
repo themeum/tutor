@@ -138,6 +138,7 @@ const FormDateInput = ({
               >
                 <DayPicker
                   dir={isRTL ? 'rtl' : 'ltr'}
+                  animate
                   mode="single"
                   formatters={createFormatters()}
                   disabled={[
