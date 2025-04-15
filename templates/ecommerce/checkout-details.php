@@ -136,9 +136,14 @@ $show_coupon_box = Settings::is_coupon_usage_enabled() && ! $checkout_data->is_c
 				</div>
 			</div>
 
-					<?php if ( $checkout_data->sale_discount > 0 ) : ?>
+			<?php if ( $checkout_data->sale_discount > 0 ) : ?>
 			<div class="tutor-checkout-summary-item">
-				<div><?php esc_html_e( 'Sale discount', 'tutor' ); ?></div>
+				<div>
+				<?php
+					$sale_discount_label = apply_filters( 'tutor_checkout_sale_discount_label', __( 'Sale discount', 'tutor' ) );
+					echo esc_html( $sale_discount_label );
+				?>
+					</div>
 				<div class="tutor-fw-bold">
 					- <?php tutor_print_formatted_price( $checkout_data->sale_discount ); ?>
 				</div>
