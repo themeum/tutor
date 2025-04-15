@@ -314,8 +314,8 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 = 3.4.2 - April 15, 2025
 
-Fix: Invalid course intro video source issue
-Fix: Resolved security vulnerabilities on the Tutor editor
+Fix: Resolved the 'Invalid video source' issue.
+Fix: Patched security vulnerabilities in the Tutor editor.
 
 = 3.4.1 - April 11, 2025
 
