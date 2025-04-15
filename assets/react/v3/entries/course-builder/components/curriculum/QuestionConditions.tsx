@@ -61,7 +61,7 @@ const questionTypes = {
 
 type QuestionTypes = Omit<QuizQuestionType, 'single_choice' | 'image_matching'>;
 
-const supportRandomize: QuestionTypes[] = ['multiple_choice', 'matching', 'image_answering', 'ordering'];
+const supportRandomize: QuestionTypes[] = ['multiple_choice', 'matching', 'image_answering'];
 
 const QuestionConditions = () => {
   const { activeQuestionIndex, activeQuestionId, validationError, setValidationError } = useQuizModalContext();

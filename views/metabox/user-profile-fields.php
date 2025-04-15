@@ -34,7 +34,7 @@ wp_enqueue_media();
 		<th><label for="description"><?php esc_html_e( 'Profile Bio', 'tutor' ); ?></label></th>
 		<td>
 			<?php
-			$profile_bio = get_user_meta( $user->ID, '_tutor_profile_bio', true );
+			$profile_bio = wp_kses( get_user_meta( $user->ID, '_tutor_profile_bio', true ), tutor_utils()->allowed_profile_bio_tags() );
 			wp_editor( $profile_bio, '_tutor_profile_bio', tutor_utils()->get_profile_bio_editor_config( '_tutor_profile_bio' ) );
 			?>
 

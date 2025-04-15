@@ -10163,6 +10163,45 @@ class Utils {
 	}
 
 	/**
+	 * Get allowed profile bio tags for tutor text editor.
+	 *
+	 * @since 3.4.2
+	 *
+	 * @param array $tags the list of tags allowed.
+	 *
+	 * @return array
+	 */
+	public function allowed_profile_bio_tags( $tags = array() ) {
+		$supported_tags = array(
+			'p'      => array(),
+			'br'     => array(),
+			'span'   => array(
+				'style' => true,
+			),
+			'strong' => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'u'      => array(),
+			'blockquote' => array(),
+			'ul'     => array(),
+			'ol'     => array(),
+			'li'     => array(),
+			'del'    => array(),
+			'ins'    => array(),
+			'sub'    => array(),
+			'sup'    => array(),
+			'a'      => array(
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		);
+		return wp_parse_args( $tags, $supported_tags );
+	}
+
+	/**
 	 * Get allowed tags for avatar, useful while using wp_kses
 	 *
 	 * @since 2.1.4
