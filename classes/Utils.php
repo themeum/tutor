@@ -10165,13 +10165,13 @@ class Utils {
 	/**
 	 * Get allowed tags for tutor text editor.
 	 *
-	 * @since 3.4.1
+	 * @since 3.4.2
 	 *
 	 * @param array $tags the list of tags allowed.
 	 *
 	 * @return array
 	 */
-	public function allowed_editor_tags( $tags = array() ) {
+	public function allowed_profile_bio_tags( $tags = array() ) {
 		$supported_tags = array(
 			'p'      => array(),
 			'br'     => array(),
