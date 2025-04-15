@@ -194,7 +194,7 @@ class Student {
 		$first_name              = sanitize_text_field( tutor_utils()->input_old( 'first_name' ) );
 		$last_name               = sanitize_text_field( tutor_utils()->input_old( 'last_name' ) );
 		$phone_number            = sanitize_text_field( tutor_utils()->input_old( 'phone_number' ) );
-		$tutor_profile_bio       = Input::post( 'tutor_profile_bio', '', Input::TYPE_KSES_POST );
+		$tutor_profile_bio       = Input::sanitize_tutor_editor_content( 'tutor_profile_bio' );
 		$tutor_profile_job_title = sanitize_text_field( tutor_utils()->input_old( 'tutor_profile_job_title' ) );
 		$timezone                = Input::post( 'timezone', '' );
 

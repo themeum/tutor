@@ -151,6 +151,47 @@ class Input {
 	}
 
 	/**
+	 * Sanitize tutor text editor text
+	 *
+	 * @since 3.4.1
+	 *
+	 * @param string $field_name input value.
+	 *
+	 * @return string
+	 */
+	public static function sanitize_tutor_editor_content( $field_name ) {
+		$supported_tags = array(
+			'p'      => array(),
+			'br'     => array(),
+			'span'   => array(
+				'style' => true,
+			),
+			'strong' => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'u'      => array(),
+			'blockquote' => array(),
+			'ul'     => array(),
+			'ol'     => array(),
+			'li'     => array(),
+			'del'    => array(),
+			'ins'    => array(),
+			'sub'    => array(),
+			'sup'    => array(),
+			'a'      => array(
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		);
+
+		$content = wp_unslash( $_POST[ $field_name ] ?? '' ); //phpcs:ignore
+		return wp_kses( $content, $supported_tags );
+	}
+
+	/**
 	 * Dynamically get value
 	 *
 	 * @since 2.2.0
