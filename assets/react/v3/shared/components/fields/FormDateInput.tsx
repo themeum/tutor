@@ -63,10 +63,10 @@ const FormDateInput = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const isValidDate = isValid(new Date(field.value));
-  const parsedISODate = isValidDate
+  const parsedDate = isValidDate
     ? new Date(field.value.length === 10 ? field.value + 'T00:00:00' : field.value)
     : new Date();
-  const fieldValue = isValidDate ? format(parsedISODate, dateFormat) : '';
+  const fieldValue = isValidDate ? format(parsedDate, dateFormat) : '';
 
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
@@ -145,7 +145,7 @@ const FormDateInput = ({
                     !!disabledBefore && { before: parseISO(disabledBefore) },
                     !!disabledAfter && { after: parseISO(disabledAfter) },
                   ]}
-                  selected={isValidDate ? parsedISODate : undefined}
+                  selected={isValidDate ? parsedDate : undefined}
                   onSelect={(value) => {
                     if (value) {
                       const formattedDate = format(value, DateFormats.yearMonthDay);
@@ -161,7 +161,7 @@ const FormDateInput = ({
                   showOutsideDays
                   captionLayout="dropdown"
                   autoFocus
-                  defaultMonth={isValidDate ? parsedISODate : new Date()}
+                  defaultMonth={isValidDate ? parsedDate : new Date()}
                   startMonth={disabledBefore ? parseISO(disabledBefore) : new Date(new Date().getFullYear() - 10, 0)}
                   endMonth={disabledAfter ? parseISO(disabledAfter) : new Date(new Date().getFullYear() + 10, 11)}
                   weekStartsOn={wp.date?.getSettings().l10n.startOfWeek}
