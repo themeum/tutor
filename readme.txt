@@ -316,6 +316,7 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 Fix: Resolved the 'Invalid video source' issue.
 Fix: Patched security vulnerabilities in the Tutor editor.
+Fix: Resolved the PDF certificate download issue (Pro).
 
 = 3.4.1 - April 11, 2025
 
