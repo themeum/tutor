@@ -944,7 +944,7 @@ class CheckoutController {
 			$order_data  = $order_model->get_order_by_id( $order_id );
 			if ( $order_data ) {
 				try {
-					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_MANUAL === $order_data->payment_method ) {
+					if ( ! empty( $payment_method ) && OrderModel::PAYMENT_METHOD_MANUAL === $order_data->payment_method ) {
 						$billing_info = $billing_model->get_info( $order_data->user_id );
 						if ( $billing_info ) {
 							$update_billing = $billing_model->update( $billing_fillable_fields, array( 'user_id' => $order_data->user_id ) );

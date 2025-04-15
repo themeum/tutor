@@ -48,7 +48,16 @@ class OrderModel {
 	const PAYMENT_UNPAID             = 'unpaid';
 	const PAYMENT_REFUNDED           = 'refunded';
 	const PAYMENT_PARTIALLY_REFUNDED = 'partially-refunded';
-	const PAYMENT_MANUAL             = 'manual';
+
+	/**
+	 * Payment methods
+	 *
+	 * @since 3.5.0
+	 *
+	 * @var string
+	 */
+	const PAYMENT_METHOD_MANUAL = 'manual';
+	const PAYMENT_METHOD_FREE   = 'free';
 
 	/**
 	 * Order Meta keys for history & refunds
