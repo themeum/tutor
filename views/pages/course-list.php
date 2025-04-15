@@ -48,7 +48,7 @@ $navbar_data    = array(
 	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
 	'active'       => $active_tab,
 	'add_button'   => true,
-	'button_title' => __( 'Add New', 'tutor' ),
+	'button_title' => __( 'New Course', 'tutor' ),
 	'button_url'   => '#',
 	'button_class' => 'tutor-create-new-course',
 );
@@ -160,7 +160,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 		 */
 		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		$filters_template = tutor()->path . 'views/elements/filters.php';
-		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
+		tutor_load_template_from_custom_path( $navbar_template, apply_filters( 'tutor_course_list_navbar', $navbar_data ) );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 	<div class="tutor-admin-body">
@@ -224,7 +224,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 								}
 
 								$author_details = $authors[ $post->post_author ];
-								$edit_link      = $add_course_url . "&course_id=$post->ID";
+								$edit_link      = apply_filters( 'tutor_course_list_course_edit_link', $add_course_url . "&course_id=$post->ID", $post );
 								?>
 								<tr>
 									<td>
