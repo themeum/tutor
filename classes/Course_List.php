@@ -282,11 +282,12 @@ class Course_List {
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
 
-		$course_ids = implode( ',',
+		$course_ids = implode(
+			',',
 			array_filter(
 				explode( ',', $bulk_ids ),
 				function( $id ) {
-					return tutor()->course_post_type === get_post_type( $id );	
+					return tutor()->course_post_type === get_post_type( $id );
 				}
 			)
 		);
