@@ -435,10 +435,8 @@ class CheckoutController {
 		// Total price should not negative.
 		$total_price = max( 0, $total_price );
 
-		$response['is_plan_checkout'] = isset( $plan_info );
-		$response['plan_info']        = $plan_info;
+		$response['plan_info'] = $plan_info;
 
-		$response['additional_items']  = $additional_items;
 		$response['coupon_type']       = $coupon_type;
 		$response['coupon_title']      = $coupon_title;
 		$response['is_coupon_applied'] = $is_coupon_applied;
