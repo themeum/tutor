@@ -337,7 +337,7 @@ const styles = {
     :disabled {
       cursor: not-allowed;
     }
-    
+
     &:focus,
     &:active,
     &:hover {

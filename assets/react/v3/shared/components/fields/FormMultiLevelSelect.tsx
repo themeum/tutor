@@ -83,6 +83,7 @@ const FormMultiLevelSelect = ({
                   }
                 }}
                 autoComplete="off"
+                readOnly
                 disabled={disabled || options.length === 0}
                 value={Array.isArray(field.value) ? '' : (options.find((item) => item.id === field.value)?.name ?? '')}
                 placeholder={placeholder}
@@ -106,6 +107,14 @@ const FormMultiLevelSelect = ({
               >
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}
                 <div css={[styles.options, optionsWrapperStyle]}>
+                  {/* Search input */}
+                  <input
+                    type="text"
+                    placeholder={__('Search...', 'tutor')}
+                    css={styles.searchInput}
+                    className="tutor-input-field"
+                    onChange={() => {}}
+                  />
                   {treeOptions.map((option) => (
                     <Branch
                       key={option.id}
@@ -186,6 +195,24 @@ const styles = {
     max-height: 455px;
     overflow-y: auto;
   `,
+  searchInput: css`
+    ${typography.body()};
+    width: 100%;
+    padding-right: ${spacing[32]};
+    padding-left: ${spacing[36]};
+    ${styleUtils.textEllipsis};
+    border-color: transparent;
+
+    :focus {
+      outline: none;
+      box-shadow: none;
+    }
+
+    &.tutor-input-field {
+      padding-right: ${spacing[32]};
+      padding-left: ${spacing[36]};
+    }
+  `,
   branchItem: (level: number) => css`
     position: relative;
     z-index: ${zIndex.positive};
@@ -231,9 +258,14 @@ const styles = {
   `,
   inputWrapper: css`
     position: relative;
+
+    input:read-only {
+      background-color: inherit;
+    }
   `,
   clearButton: css`
     padding: ${spacing[8]} ${spacing[24]};
+    box-shadow: ${shadow.dividerTop};
 
     & > button {
       padding: 0;
