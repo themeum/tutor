@@ -13,6 +13,7 @@ namespace TUTOR;
 use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -8157,23 +8158,20 @@ class Utils {
 	}
 
 	/**
-	 * Return the assignment deadline date based on duration and assignment creation date
+	 * Return the assignment deadline date in gmt based on duration and assignment creation date
 	 *
 	 * @since 1.8.0
 	 * @since 3.4.0 param $student_id and $course_id added.
+	 * @since 3.5.0 param $format removed.
 	 *
 	 * @param int   $assignment_id assignment id.
-	 * @param mixed $format format.
 	 * @param mixed $fallback fallback.
 	 * @param int   $student_id the student id.
 	 * @param int   $course_id  the course id.
 	 *
 	 * @return string|false
 	 */
-	public function get_assignment_deadline_date( $assignment_id, $format = null, $fallback = null, $student_id = 0, $course_id = 0 ) {
-
-		! $format ? $format = 'j F, Y, g:i a' : 0;
-
+	public function get_assignment_deadline_date_in_gmt( $assignment_id, $fallback = null, $student_id = 0, $course_id = 0 ) {
 		$value = $this->get_assignment_option( $assignment_id, 'time_duration.value' );
 		$time  = $this->get_assignment_option( $assignment_id, 'time_duration.time' );
 
@@ -8199,7 +8197,7 @@ class Utils {
 		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
 
-		return date_format( $date, $format );
+		return date_format( $date, DateTimeHelper::FORMAT_MYSQL );
 	}
 
 	/**
@@ -10160,6 +10158,45 @@ class Utils {
 			),
 		);
 		return wp_parse_args( $tags, $defaults );
+	}
+
+	/**
+	 * Get allowed profile bio tags for tutor text editor.
+	 *
+	 * @since 3.4.2
+	 *
+	 * @param array $tags the list of tags allowed.
+	 *
+	 * @return array
+	 */
+	public function allowed_profile_bio_tags( $tags = array() ) {
+		$supported_tags = array(
+			'p'      => array(),
+			'br'     => array(),
+			'span'   => array(
+				'style' => true,
+			),
+			'strong' => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'u'      => array(),
+			'blockquote' => array(),
+			'ul'     => array(),
+			'ol'     => array(),
+			'li'     => array(),
+			'del'    => array(),
+			'ins'    => array(),
+			'sub'    => array(),
+			'sup'    => array(),
+			'a'      => array(
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		);
+		return wp_parse_args( $tags, $supported_tags );
 	}
 
 	/**
