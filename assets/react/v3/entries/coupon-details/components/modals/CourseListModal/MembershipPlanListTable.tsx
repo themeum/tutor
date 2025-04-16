@@ -1,13 +1,14 @@
 import { css } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
 import { useCallback, useMemo, useState } from 'react';
+import { type UseFormReturn } from 'react-hook-form';
 
+import Checkbox from '@TutorShared/atoms/CheckBox';
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import Table, { type Column } from '@TutorShared/molecules/Table';
 
 import { type Coupon } from '@CouponServices/coupon';
-import Checkbox from '@TutorShared/atoms/CheckBox';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -15,7 +16,8 @@ import { useMembershipPlansQuery } from '@TutorShared/services/subscription';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type MembershipPlan } from '@TutorShared/utils/types';
-import { type UseFormReturn } from 'react-hook-form';
+import { formatSubscriptionRepeatUnit } from '@TutorShared/utils/util';
+
 import SearchField from './SearchField';
 
 interface MembershipPlanListTableProps {
@@ -118,7 +120,10 @@ const MembershipPlanListTable = ({ form }: MembershipPlanListTableProps) => {
               {Number(item.sale_price) > 0 && (
                 <span css={styles.discountPrice}>{formatPrice(Number(item.regular_price))}</span>
               )}
-              /<span css={styles.recurringInterval}>{item.recurring_interval}</span>
+              /
+              <span css={styles.recurringInterval}>
+                {formatSubscriptionRepeatUnit({ unit: item.recurring_interval, value: Number(item.recurring_value) })}
+              </span>
             </div>
           </div>
         );
