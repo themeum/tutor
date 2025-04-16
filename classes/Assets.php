@@ -238,6 +238,10 @@ class Assets {
 		if ( 'tutor-addons' === $page ) {
 			wp_enqueue_script( 'tutor-coupon', tutor()->url . 'assets/js/tutor-addon-list.min.js', array( 'wp-i18n', 'wp-element' ), TUTOR_VERSION, true );
 		}
+
+		if ( 'tutor-templates' === $page ) {
+			wp_enqueue_style( 'tutor-template-import', tutor()->url . 'assets/css/tutor-template-import.min.css', array(), TUTOR_VERSION, 'all' );
+		}
 	}
 
 	/**
