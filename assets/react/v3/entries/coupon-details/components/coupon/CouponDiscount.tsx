@@ -238,7 +238,7 @@ function CouponDiscount() {
             showModal({
               component: CouponSelectItemModal,
               props: {
-                title: __('Selected items', 'tutor'),
+                title: __('Select items', 'tutor'),
                 type: modalType[appliesTo as keyof typeof modalType],
                 form,
               },

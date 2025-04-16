@@ -43,7 +43,7 @@ function CouponSelectItemModal({ title, closeModal, actions, form, type }: Coupo
           {__('Cancel', 'tutor')}
         </Button>
         <Button type="submit" size="small" variant="primary" onClick={handleApply}>
-          {__('Apply', 'tutor')}
+          {__('Add', 'tutor')}
         </Button>
       </div>
     </BasicModalWrapper>
