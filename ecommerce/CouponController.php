@@ -128,6 +128,28 @@ class CouponController extends BaseController {
 	}
 
 	/**
+	 * Validate applies to item
+	 * 
+	 * @since 3.5.0
+	 * 
+	 * @param array $data The data to validate.
+	 * 
+	 * @return void send wp_json response when validation fails
+	 */
+	public function validate_applies_to_item( $data ) {
+		$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
+		$has_applies_to_items   = isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
+
+		if ( $is_specific_applies_to && ! $has_applies_to_items ) {
+			$this->json_response(
+				__( 'Add items first', 'tutor' ),
+				null,
+				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
+			);
+		}
+	}
+
+	/**
 	 * Handle ajax request for creating coupon
 	 *
 	 * @since 3.0.0
@@ -152,6 +174,7 @@ class CouponController extends BaseController {
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
+		$this->validate_applies_to_item( $data );
 
 		if ( $this->model->get_coupon( array( 'coupon_code' => $data['coupon_code'] ) ) ) {
 			$this->json_response(
@@ -223,6 +246,7 @@ class CouponController extends BaseController {
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
+		$this->validate_applies_to_item( $data );
 
 		unset( $data['coupon_id'] );
 		unset( $data['coupon_type'] );
@@ -235,16 +259,7 @@ class CouponController extends BaseController {
 		$data['updated_by'] = get_current_user_id();
 
 		try {
-			$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
 			$has_applies_to_items   = isset( $data['applies_to_items'] ) && is_array( $data['applies_to_items'] ) && count( $data['applies_to_items'] );
-
-			if ( $is_specific_applies_to && ! $has_applies_to_items ) {
-				$this->json_response(
-					__( 'Add items first', 'tutor' ),
-					null,
-					HttpHelper::STATUS_UNPROCESSABLE_ENTITY
-				);
-			}
 
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
