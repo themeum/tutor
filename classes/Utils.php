@@ -10,10 +10,10 @@
 
 namespace TUTOR;
 
-use DateTime;
 use Tutor\Cache\TutorCache;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Ecommerce\Tax;
+use Tutor\Helpers\DateTimeHelper;
 use Tutor\Helpers\HttpHelper;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Models\CourseModel;
@@ -8197,7 +8197,7 @@ class Utils {
 		$date = date_create( $deadline_date );
 		date_add( $date, date_interval_create_from_date_string( $value . ' ' . $time ) );
 
-		return date_format( $date, 'Y-m-d H:i:s' );
+		return date_format( $date, DateTimeHelper::FORMAT_MYSQL );
 	}
 
 	/**
