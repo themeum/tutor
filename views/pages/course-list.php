@@ -339,7 +339,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 									<td>
 										<div class="tutor-d-flex tutor-align-center tutor-justify-end tutor-gap-2">
 											<div class="tutor-form-select-with-icon <?php echo esc_attr( $status ); ?>">
-												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="tutor_change_course_status">
+												<select title="<?php esc_attr_e( 'Update course status', 'tutor' ); ?>" class="tutor-table-row-status-update" data-id="<?php echo esc_attr( $post->ID ); ?>" data-status="<?php echo esc_attr( $post->post_status ); ?>" data-status_key="status" data-action="<?php echo apply_filters( 'tutor_course_list_action', 'tutor_change_course_status', $post ); ?>">
 													<?php
 													$status_list = $available_status;
 													if ( 'future' === $post->post_status ) {
@@ -373,7 +373,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 													</a>
 													<?php do_action( 'tutor_admin_middle_course_list_action', $post->ID ); ?>
 													<?php if ( $show_course_delete ) : ?>
-													<a href="javascript:void(0)" class="tutor-dropdown-item tutor-admin-course-delete" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
+													<a href="javascript:void(0)" class="tutor-dropdown-item <?php echo apply_filters( 'tutor_course_list_action', 'tutor-admin-course-delete', $post ); ?>" data-tutor-modal-target="tutor-common-confirmation-modal" data-id="<?php echo esc_attr( $post->ID ); ?>">
 														<i class="tutor-icon-trash-can-bold tutor-mr-8" area-hidden="true"></i>
 														<span><?php esc_html_e( 'Delete Permanently', 'tutor' ); ?></span>
 													</a>
