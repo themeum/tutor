@@ -1,3 +1,4 @@
+import type { Coupon } from '@CouponServices/coupon';
 import { Box, BoxSubtitle, BoxTitle } from '@TutorShared/atoms/Box';
 import Button from '@TutorShared/atoms/Button';
 import FormInput from '@TutorShared/components/fields/FormInput';
@@ -5,7 +6,6 @@ import FormRadioGroup from '@TutorShared/components/fields/FormRadioGroup';
 import FormSelectInput from '@TutorShared/components/fields/FormSelectInput';
 import { DateFormats } from '@TutorShared/config/constants';
 import { colorTokens, spacing } from '@TutorShared/config/styles';
-import type { Coupon } from '@CouponServices/coupon';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { generateCouponCode } from '@TutorShared/utils/util';
 import { maxLimitRule, requiredRule } from '@TutorShared/utils/validation';
@@ -95,7 +95,12 @@ function CouponInfo() {
             )}
           />
           {!isEditMode && (
-            <Button variant="text" onClick={handleGenerateCouponCode} buttonCss={styles.generateCode}>
+            <Button
+              data-cy="generate-code"
+              variant="text"
+              onClick={handleGenerateCouponCode}
+              buttonCss={styles.generateCode}
+            >
               {__('Generate Code', 'tutor')}
             </Button>
           )}

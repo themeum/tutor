@@ -43,8 +43,6 @@ class WooCommerce extends Tutor_Base {
 			return;
 		}
 
-		add_filter( 'tutor/options/attr', array( $this, 'add_options' ) );
-
 		/**
 		 * Is Course Purchasable
 		 */
@@ -499,28 +497,6 @@ class WooCommerce extends Tutor_Base {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Add option for WooCommerce settings
-	 *
-	 * @since 1.0.0
-	 *
-	 * @param array $attr option attrs.
-	 *
-	 * @return mixed
-	 */
-	public function add_options( $attr ) {
-		$attr['monetization']['blocks']['block_woocommerce']['fields'][] = array(
-			'key'         => 'enable_guest_course_cart',
-			'type'        => 'toggle_switch',
-			'label'       => __( 'Enable Guest Mode', 'tutor' ),
-			'label_title' => '',
-			'default'     => 'off',
-			'desc'        => __( 'Allow customers to place orders without an account.', 'tutor' ),
-		);
-
-		return $attr;
 	}
 
 	/**

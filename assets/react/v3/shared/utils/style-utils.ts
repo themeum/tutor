@@ -33,7 +33,7 @@ export const createGlobalCss = () => css`
   }
   body {
     margin: 0;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     height: 100%;
   }
 
@@ -221,6 +221,7 @@ export const createGlobalCss = () => css`
   :is(h1, h2, h3, h4, h5, h6, p) {
     padding: 0;
     margin: 0;
+    text-transform: unset;
   }
 
   table {
@@ -265,7 +266,7 @@ export const styleUtils = {
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     cursor: pointer;
   `,
   cardInnerSection: css`
@@ -517,7 +518,7 @@ export const styleUtils = {
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     cursor: pointer;
     height: 32px;
     width: 32px;
@@ -549,7 +550,7 @@ export const styleUtils = {
     padding: 0;
     margin: 0;
     text-align: inherit;
-    font-family: ${fontFamily.sfProDisplay};
+    font-family: ${fontFamily.inter};
     cursor: grab;
     display: flex;
     align-items: center;
@@ -591,7 +592,7 @@ export const styleUtils = {
       padding: 0;
       margin: 0;
       text-align: inherit;
-      font-family: ${fontFamily.sfProDisplay};
+      font-family: ${fontFamily.inter};
       ${typography.caption()};
       flex: 1;
       color: ${colorTokens.text.subdued};

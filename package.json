@@ -16,7 +16,9 @@
     "watch": "concurrently \"npm run css-watch\" \"npm run js-watch\"",
     "rm-lang": "rm ./languages/tutor.pot || echo \"No tutor pot yet\"",
     "biome:check": "npx @biomejs/biome check --apply ./assets/react/v3",
-    "tutor-droip": "cd tutor-droip && npm run build && cp -r dist/* ../tutor-droip"
+    "tutor-droip": "cd tutor-droip && npm run build && cp -r dist/* ../tutor-droip",
+    "cy:open": "cypress open --e2e --browser electron",
+    "test": "cypress run"
   },
   "keywords": [
     "lms",
@@ -38,7 +40,9 @@
     "@biomejs/biome": "^1.8.3",
     "@emotion/babel-preset-css-prop": "^11.11.0",
     "@eslint/js": "^9.15.0",
+    "@faker-js/faker": "^9.5.0",
     "@svgr/webpack": "^8.1.0",
+    "@types/cypress": "^1.1.6",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/react-router-dom": "^5.3.3",
@@ -48,6 +52,7 @@
     "concurrently": "^9.1.0",
     "css-loader": "^5.0.2",
     "css-minimizer-webpack-plugin": "^1.2.0",
+    "cypress": "^14.1.0",
     "date-fns": "^2.25.0",
     "error-stack-parser": "^2.1.4",
     "eslint": "^9.15.0",
@@ -95,6 +100,7 @@
     "@tippyjs/react": "^4.2.6",
     "@wordpress/i18n": "^4.49.0",
     "axios": "^1.7.7",
+    "dotenv": "^16.4.7",
     "emotion": "^11.0.0",
     "immer": "^10.0.3",
     "lodash": "^4.17.21",

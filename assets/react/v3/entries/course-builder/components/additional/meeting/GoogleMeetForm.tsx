@@ -300,6 +300,7 @@ const GoogleMeetForm = ({ onCancel, data, topicId, meetingId }: GoogleMeetFormPr
           {__('Cancel', 'tutor')}
         </Button>
         <Button
+          data-cy="save-google-meeting"
           loading={saveGoogleMeetMeeting.isPending}
           variant="primary"
           size="small"

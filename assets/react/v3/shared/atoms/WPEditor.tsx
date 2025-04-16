@@ -29,6 +29,7 @@ if (!window.wp.editor.getDefaultSettings) {
 }
 
 function editorConfig(
+  isFocused: boolean,
   onChange: (value: string) => void,
   setIsFocused: (value: boolean) => void,
   isMinimal?: boolean,
@@ -86,6 +87,10 @@ function editorConfig(
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       setup: (editor: any) => {
         editor.on('init', () => {
+          if (isFocused && !readOnly) {
+            editor.getBody().focus();
+          }
+
           if (readOnly) {
             editor.setMode('readonly');
 
@@ -269,19 +274,12 @@ const WPEditor = ({
   }, [value]);
 
   useEffect(() => {
-    if (window.wp.media) {
-      window.wp.media.view.Modal.prototype.on('open', function () {
-        window.wp.media.frame.modal.$el.attr('data-focus-trap', 'true');
-      });
-    }
-  }, []);
-
-  useEffect(() => {
     if (typeof window.wp !== 'undefined' && window.wp.editor) {
       window.wp.editor.remove(editorId);
       window.wp.editor.initialize(
         editorId,
         editorConfig(
+          isFocused,
           onChange,
           setIsFocused,
           isMinimal,
@@ -317,7 +315,7 @@ const WPEditor = ({
         isReadOnly: readonly,
       })}
     >
-      <textarea ref={editorRef} id={editorId} defaultValue={value} />
+      <textarea data-cy="tutor-tinymce" ref={editorRef} id={editorId} defaultValue={value} />
     </div>
   );
 };
