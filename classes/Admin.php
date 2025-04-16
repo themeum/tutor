@@ -140,7 +140,7 @@ class Admin {
 		// Ecommerce menu @since 3.0.0.
 		do_action( 'tutor_after_courses_admin_menu' );
 
-		add_submenu_page( 'tutor', __( 'Create Course', 'tutor' ), '<span class="tutor-create-course">Create Course</span>', 'manage_tutor_instructor', 'create-course', array( new Course( false ), 'load_course_builder' ) );
+		add_submenu_page( 'tutor', __( 'Course Builder', 'tutor' ), '<span class="tutor-create-course">Create Course</span>', 'manage_tutor_instructor', 'create-course', array( new Course( false ), 'load_course_builder' ) );
 
 		// Extendable action hook @since 2.2.0.
 		do_action( 'tutor_after_courses_menu' );

@@ -30,7 +30,7 @@ const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = fals
     setIsLoading(true);
 
     // Dynamically import the icon based on the name
-    import(`@TutorShared/icons/icon-list/${name}`)
+    import(/* webpackChunkName: "icon-[request]" */ `@TutorShared/icons/icon-list/${name}`)
       .then((iconModule) => {
         const loadedIcon = iconModule.default;
         // Store in cache for future use
