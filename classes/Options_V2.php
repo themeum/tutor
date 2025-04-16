@@ -1894,10 +1894,11 @@ class Options_V2 {
 		ob_start();
 		$blocks = $section['blocks'];
 		if ( isset( $section['template'] ) ) {
-			include tutor()->path . "views/options/template/{$section['template']}.php";
+			include apply_filters( 'tutor_option_template_path', tutor()->path . "views/options/template/{$section['template']}.php", $section['template'] );
 		}
 		return ob_get_clean();
 	}
+
 
 	/**
 	 * Load template inside template directory
