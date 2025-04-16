@@ -10163,6 +10163,45 @@ class Utils {
 	}
 
 	/**
+	 * Get allowed profile bio tags for tutor text editor.
+	 *
+	 * @since 3.4.2
+	 *
+	 * @param array $tags the list of tags allowed.
+	 *
+	 * @return array
+	 */
+	public function allowed_profile_bio_tags( $tags = array() ) {
+		$supported_tags = array(
+			'p'      => array(),
+			'br'     => array(),
+			'span'   => array(
+				'style' => true,
+			),
+			'strong' => array(),
+			'b'      => array(),
+			'em'     => array(),
+			'i'      => array(),
+			'u'      => array(),
+			'blockquote' => array(),
+			'ul'     => array(),
+			'ol'     => array(),
+			'li'     => array(),
+			'del'    => array(),
+			'ins'    => array(),
+			'sub'    => array(),
+			'sup'    => array(),
+			'a'      => array(
+				'href'   => true,
+				'title'  => true,
+				'target' => true,
+				'rel'    => true,
+			),
+		);
+		return wp_parse_args( $tags, $supported_tags );
+	}
+
+	/**
 	 * Get allowed tags for avatar, useful while using wp_kses
 	 *
 	 * @since 2.1.4
@@ -10527,5 +10566,37 @@ class Utils {
 				'comment_post_ID' => $course_id,
 			)
 		);
+	}
+
+	/**
+	 * Create unique username.
+	 *
+	 * @since 3.4.1
+	 *
+	 * @param string $username Username.
+	 *
+	 * @return string
+	 */
+	public function create_unique_username( string $username ) {
+		$username = trim( $username );
+
+		// If username is email then remove domain part from it.
+		if ( filter_var( $username , FILTER_VALIDATE_EMAIL ) ) {
+			$username = strstr( $username, '@', true );
+		}
+
+		// Sanitize and convert to snake_case.
+		$username = str_replace('-', '_', sanitize_title( $username ) );
+
+		// Add postfix to username if exists and make sure it's unique.
+		$original_username = $username;
+		$counter           = 1;
+
+		while ( get_user_by( 'login', $username ) ) {
+			$username = $original_username . '_' . $counter;
+			$counter++;
+		}
+
+		return $username;
 	}
 }

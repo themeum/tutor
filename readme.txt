@@ -5,7 +5,7 @@ Tags: lms, course, elearning, education, learning management system
 Requires at least: 5.3
 Tested up to: 6.7
 Requires PHP: 7.4
-Stable tag: 3.4.0
+Stable tag: 3.4.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -311,6 +311,20 @@ Tutor LMS allows you to offer certificates to your students upon course completi
 
 
 == Changelog ==
+
+= 3.4.2 - April 15, 2025
+
+Fix: Resolved the 'Invalid video source' issue.
+Fix: Patched security vulnerabilities in the Tutor editor.
+Fix: Resolved the PDF certificate download issue (Pro).
+
+= 3.4.1 - April 11, 2025
+
+Update: Host selection option added while creating zoom meetings (Pro)
+Fix: Resolved security vulnerabilities on the student profile page
+Fix: Prevented PHP fatal error on the assignment page when no time limit is set (Pro)
+Fix: Bundle course details page now properly displays more than 10 courses (Pro)
+Fix: Guest checkout registration issue when multiple users have the same first and last name (Pro)
 
 = 3.4.0 - March 24, 2025
 
