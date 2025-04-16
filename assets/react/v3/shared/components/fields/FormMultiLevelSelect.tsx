@@ -1,14 +1,15 @@
-import { type SerializedStyles, css } from '@emotion/react';
+import { css, type SerializedStyles } from '@emotion/react';
 import { __ } from '@wordpress/i18n';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from '@TutorShared/atoms/Button';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
+import { useCategoryListQuery, type Category, type CategoryWithChildren } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
@@ -42,13 +43,22 @@ const FormMultiLevelSelect = ({
   listItemsLabel,
   optionsWrapperStyle,
 }: FormMultiLevelSelectProps) => {
-  const treeOptions = generateTree(options);
   const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSearchValue = useDebounce(searchValue, 300);
+  const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
+  const treeOptions = generateTree(categoryListQuery.data ?? []);
 
-  const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
+  const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
   });
+
+  useEffect(() => {
+    if (!isOpen) {
+      setSearchValue('');
+    }
+  }, [isOpen]);
 
   return (
     <FormFieldWrapper
@@ -104,17 +114,22 @@ const FormMultiLevelSelect = ({
               <div
                 css={[styles.categoryWrapper, { [isRTL ? 'right' : 'left']: position.left, top: position.top }]}
                 ref={popoverRef}
+                style={{
+                  maxWidth: triggerWidth,
+                }}
               >
                 {!!listItemsLabel && <p css={styles.listItemLabel}>{listItemsLabel}</p>}
-                <div css={[styles.options, optionsWrapperStyle]}>
-                  {/* Search input */}
+                <div css={styles.searchInput}>
                   <input
                     type="text"
-                    placeholder={__('Search...', 'tutor')}
-                    css={styles.searchInput}
-                    className="tutor-input-field"
-                    onChange={() => {}}
+                    placeholder={__('Search', 'tutor')}
+                    value={searchValue}
+                    onChange={(event) => {
+                      setSearchValue(event.target.value);
+                    }}
                   />
+                </div>
+                <div css={[styles.options, optionsWrapperStyle]}>
                   {treeOptions.map((option) => (
                     <Branch
                       key={option.id}
@@ -196,21 +211,22 @@ const styles = {
     overflow-y: auto;
   `,
   searchInput: css`
-    ${typography.body()};
-    width: 100%;
-    padding-right: ${spacing[32]};
-    padding-left: ${spacing[36]};
-    ${styleUtils.textEllipsis};
-    border-color: transparent;
+    position: sticky;
+    top: 0;
+    padding: ${spacing[8]} ${spacing[16]};
 
-    :focus {
-      outline: none;
-      box-shadow: none;
-    }
+    input {
+      ${typography.body('regular')};
+      width: 100%;
+      border-radius: ${borderRadius[6]};
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: ${spacing[8]} ${spacing[16]};
+      color: ${colorTokens.text.title};
+      appearance: textfield;
 
-    &.tutor-input-field {
-      padding-right: ${spacing[32]};
-      padding-left: ${spacing[36]};
+      :focus {
+        ${styleUtils.inputFocus};
+      }
     }
   `,
   branchItem: (level: number) => css`
@@ -220,6 +236,7 @@ const styles = {
     button {
       ${styleUtils.resetButton};
       ${typography.body('regular')};
+      ${styleUtils.text.ellipsis(1)};
       color: ${colorTokens.text.title};
       padding-left: calc(${spacing[24]} + ${spacing[24]} * ${level});
       line-height: ${lineHeight[36]};
