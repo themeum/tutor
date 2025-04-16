@@ -288,7 +288,7 @@ class Course_List {
 				function( $id ) {
 					return tutor()->course_post_type === get_post_type( $id );	
 				}
-			) 
+			)
 		);
 
 		// Check if user is privileged.
@@ -304,7 +304,7 @@ class Course_List {
 			}
 		}
 
-		if ( '' === $action || '' === $course_ids ) {
+		if ( '' === $action || '' === $bulk_ids ) {
 			wp_send_json_error( array( 'message' => __( 'Please select appropriate action', 'tutor' ) ) );
 			exit;
 		}
@@ -313,7 +313,7 @@ class Course_List {
 			// Do action before delete.
 			do_action( 'before_tutor_course_bulk_action_delete', $bulk_ids );
 
-			$delete_courses = self::bulk_delete_course( $course_ids );
+			$delete_courses = apply_filters( 'tutor_course_list_bulk_action', self::bulk_delete_course( $course_ids ), $action, $bulk_ids );
 
 			do_action( 'after_tutor_course_bulk_action_delete', $bulk_ids );
 			$delete_courses ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not delete selected courses', 'tutor' ) ) );
@@ -328,7 +328,7 @@ class Course_List {
 		 */
 		do_action( 'before_tutor_course_bulk_action_update', $action, $bulk_ids );
 
-		$update_status = self::update_course_status( $action, $course_ids );
+		$update_status = apply_filters( 'tutor_course_list_bulk_action', self::update_course_status( $action, $course_ids ), $action, $bulk_ids );
 
 		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
 
