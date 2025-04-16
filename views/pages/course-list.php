@@ -160,7 +160,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 		 */
 		$navbar_template  = tutor()->path . 'views/elements/navbar.php';
 		$filters_template = tutor()->path . 'views/elements/filters.php';
-		tutor_load_template_from_custom_path( $navbar_template, apply_filters( 'tutor_course_list_navbar', $navbar_data ) );
+		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
 	<div class="tutor-admin-body">
