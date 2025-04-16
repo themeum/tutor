@@ -14,6 +14,7 @@ const config = {
   TUTOR_SUPPORT_PAGE_URL: 'https://tutorlms.com/support',
   TUTOR_SUBSCRIPTIONS_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor-subscriptions`,
   TUTOR_ENROLLMENTS_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=enrollments`,
+  TUTOR_COUPONS_PAGE: `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_coupons`,
 };
 
 export default config;
