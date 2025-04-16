@@ -129,11 +129,11 @@ class CouponController extends BaseController {
 
 	/**
 	 * Validate applies to item
-	 * 
+	 *
 	 * @since 3.5.0
-	 * 
+	 *
 	 * @param array $data The data to validate.
-	 * 
+	 *
 	 * @return void send wp_json response when validation fails
 	 */
 	public function validate_applies_to_item( $data ) {
