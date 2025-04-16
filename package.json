@@ -51,7 +51,7 @@
     "babel-loader": "^8.2.2",
     "concurrently": "^9.1.0",
     "css-loader": "^5.0.2",
-    "css-minimizer-webpack-plugin": "^1.2.0",
+    "css-minimizer-webpack-plugin": "^7.0.2",
     "cypress": "^14.1.0",
     "date-fns": "^2.25.0",
     "error-stack-parser": "^2.1.4",
