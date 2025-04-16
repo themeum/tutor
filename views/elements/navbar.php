@@ -24,48 +24,24 @@ if ( isset( $data ) && count( $data ) ) : ?>
 							<?php echo esc_html( $data['sub_page_title'] ); ?>
 						</span>
 					<?php endif; ?>
+					<?php
+					// If modal target set then button will be set as modal button otherwise url button.
+					$button_class = isset( $data['button_class'] ) ? $data['button_class'] : '';
+					if ( isset( $data['modal_target'] ) && '' !== $data['modal_target'] ) : 
 
-					<?php if ( isset( $data['buttons'] ) ) : ?>
-						<?php foreach( $data['buttons'] as $button ): ?>
-							<?php
-							// If modal target set then button will be set as modal button otherwise url button.
-							$button_class = isset( $button['button_class'] ) ? $button['button_class'] : '';
-							if ( isset( $button['modal_target'] ) && '' !== $button['modal_target'] ) : ?>
-								<?php if ( isset( $button['add_button'] ) && $button['add_button'] ) : ?>
-									<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md tutor-mr-8 <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $button['modal_target'] ); ?>">
-										<span class="tutor-icon-plus-o tutor-mr-8"></span>
-										<span><?php echo esc_html( $button['button_title'] ); ?></span>
-									</button>
-								<?php endif; ?>
-							<?php else : ?>
-								<?php if ( isset( $button['add_button'] ) && $button['add_button'] ) : ?>
-									<a href="<?php echo esc_url( $button['button_url'] ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-mr-8 tutor-btn-md <?php echo esc_attr( $button_class ); ?>">
-										<span class="tutor-icon-plus-o tutor-mr-8"></span>
-										<span><?php echo esc_html( $button['button_title'] ); ?></span>
-									</a>
-								<?php endif; ?>
-							<?php endif; ?>
-						<?php endforeach; ?>
-					<?php else : ?> 
-						<?php
-						// If modal target set then button will be set as modal button otherwise url button.
-						$button_class = isset( $data['button_class'] ) ? $data['button_class'] : '';
-						if ( isset( $data['modal_target'] ) && '' !== $data['modal_target'] ) :
-							
-							?>
-							<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-								<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
-									<span class="tutor-icon-plus-o tutor-mr-8"></span>
-									<span><?php echo esc_html( $data['button_title'] ); ?></span>
-								</button>
-							<?php endif; ?>
-						<?php else : ?>
-							<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
-								<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $button_class ); ?>">
-									<span class="tutor-icon-plus-o tutor-mr-8"></span>
-									<span><?php echo esc_html( $data['button_title'] ); ?></span>
-								</a>
-							<?php endif; ?>
+						?>
+						<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
+							<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
+								<span class="tutor-icon-plus-o tutor-mr-8"></span>
+								<span><?php echo esc_html( $data['button_title'] ); ?></span>
+							</button>
+						<?php endif; ?>
+					<?php else : ?>
+						<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
+							<a href="<?php echo esc_url( $data['button_url'] ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $button_class ); ?>">
+								<span class="tutor-icon-plus-o tutor-mr-8"></span>
+								<span><?php echo esc_html( $data['button_title'] ); ?></span>
+							</a>
 						<?php endif; ?>
 					<?php endif; ?>
 				</div>
