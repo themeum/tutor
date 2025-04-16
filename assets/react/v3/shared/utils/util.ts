@@ -1,5 +1,5 @@
 import type { Category, CategoryWithChildren } from '@TutorShared/services/category';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { addMinutes, format } from 'date-fns';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,11 +7,12 @@ import { tutorConfig } from '@TutorShared/config/config';
 import { type Addons, DateFormats } from '@TutorShared/config/constants';
 import type { ErrorResponse } from '@TutorShared/utils/form';
 import {
+  type DurationUnit,
   type InjectedField,
   type PaginatedParams,
   type WPPostStatus,
   isDefined,
-  isObject
+  isObject,
 } from '@TutorShared/utils/types';
 
 export function assertIsDefined<T>(val: T, errorMsg: string): asserts val is NonNullable<T> {
@@ -390,6 +391,73 @@ export const findSlotFields = (...fieldArgs: { fields: Record<string, InjectedFi
 
 export const decodeHtmlEntities = (text: string) => {
   const parser = new DOMParser();
-  const doc = parser.parseFromString(text, "text/html");
-  return doc.body.textContent || "";
+  const doc = parser.parseFromString(text, 'text/html');
+  return doc.body.textContent || '';
+};
+
+export const formatSubscriptionRepeatUnit = ({
+  unit = 'hour',
+  value,
+  useLySuffix = false,
+  capitalize = true,
+}: {
+  unit: Omit<DurationUnit, 'hour'>;
+  value: number;
+  useLySuffix?: boolean;
+  capitalize?: boolean;
+}) => {
+  let result: string = '';
+
+  switch (unit) {
+    case 'hour':
+      result =
+        value > 1
+          ? sprintf(__('%d hours', 'tutor-pro'), value)
+          : useLySuffix
+            ? __('hourly', 'tutor-pro')
+            : __('hour', 'tutor-pro');
+      break;
+    case 'day':
+      result =
+        value > 1
+          ? sprintf(__('%d days', 'tutor-pro'), value)
+          : useLySuffix
+            ? __('daily', 'tutor-pro')
+            : __('day', 'tutor-pro');
+      break;
+    case 'week':
+      result =
+        value > 1
+          ? sprintf(__('%d weeks', 'tutor-pro'), value)
+          : useLySuffix
+            ? __('weekly', 'tutor-pro')
+            : __('week', 'tutor-pro');
+      break;
+    case 'month':
+      result =
+        value > 1
+          ? sprintf(__('%d months', 'tutor-pro'), value)
+          : useLySuffix
+            ? __('monthly', 'tutor-pro')
+            : __('month', 'tutor-pro');
+      break;
+    case 'year':
+      result =
+        value > 1
+          ? sprintf(__('%d years', 'tutor-pro'), value)
+          : useLySuffix
+            ? __('yearly', 'tutor-pro')
+            : __('year', 'tutor-pro');
+      break;
+    case 'until_cancellation':
+      result = __('Until Cancellation', 'tutor-pro');
+      break;
+  }
+
+  return capitalize
+    ? result
+        .split(' ')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ')
+    : result;
 };
