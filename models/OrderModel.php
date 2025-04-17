@@ -594,7 +594,7 @@ class OrderModel {
 		$data = (object) array(
 			'first_name' => $billing_address->billing_first_name ?? '',
 			'last_name'  => $billing_address->billing_last_name ?? '',
-			'full_name'  => ( $billing_address->billing_first_name ?? '' ) . ' ' . ( $billing_address->billing_last_name ?? '' ),
+			'full_name'  => trim( ( $billing_address->billing_first_name ?? '' ) . ' ' . ( $billing_address->billing_last_name ?? '' ) ),
 			'email'      => $billing_address->billing_email ?? '',
 			'phone'      => $billing_address->billing_phone ?? '',
 			'address'    => $billing_address->billing_address ?? '',
