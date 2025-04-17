@@ -11,6 +11,7 @@
 namespace Tutor\Models;
 
 use Exception;
+use Tutor\Ecommerce\BillingController;
 use Tutor\Ecommerce\Ecommerce;
 use Tutor\Helpers\QueryHelper;
 use Tutor\Helpers\DateTimeHelper;
@@ -389,7 +390,7 @@ class OrderModel {
 		$student->name            = $user_info->data->display_name;
 		$student->email           = $user_info->data->user_email;
 		$student->phone           = get_user_meta( $order_data->user_id, 'phone_number', true );
-		$student->billing_address = $this->get_tutor_customer_data( $order_data->user_id );
+		$student->billing_address = $this->get_order_billing_address( $order_id, $order_data->user_id );
 		$student->image           = get_avatar_url( $order_data->user_id );
 
 		$order_data->student = $student;
@@ -564,46 +565,46 @@ class OrderModel {
 	}
 
 	/**
-	 * Retrieve tutor customer data by user ID.
+	 * Get order billing address with fallback customer billing address record support.
+	 * It'll return order billing address if found, otherwise it'll return customer billing address record.
 	 *
-	 * This function fetches customer data from the 'tutor_customers' table based on
-	 * the given user ID. It utilizes a helper function from the QueryHelper class
-	 * to perform the database query.
+	 * @since 3.5.0
 	 *
-	 * The function returns the customer data as an object.
+	 * @param int $order_id order id.
+	 * @param int $user_id order id.
 	 *
-	 * @global wpdb $wpdb WordPress database abstraction object.
-	 *
-	 * @param int $user_id The ID of the user to retrieve customer data for.
-	 *
-	 * @since 3.0.0
-	 *
-	 * @return object|null The customer data retrieved from the database.
+	 * @return object
 	 */
-	public function get_tutor_customer_data( $user_id ) {
-		global $wpdb;
+	public static function get_order_billing_address( $order_id, $user_id ) {
+		$billing_address = OrderMetaModel::get_meta_value( $order_id, self::META_KEY_BILLING_ADDRESS, true );
 
-		// Retrieve customer data for the given user ID from the 'tutor_customers' table.
-		$customer_data = QueryHelper::get_row( "{$wpdb->prefix}tutor_customers", array( 'user_id' => $user_id ), 'id' );
+		/**
+		 * Fallback data from customer billing record.
+		 */
+		if ( false === $billing_address ) {
+			$billing_address = ( new BillingController( false ) )->get_billing_info( $user_id );
+		} else {
+			$billing_address = json_decode( $billing_address );
+		}
 
-		if ( empty( $customer_data ) ) {
+		if ( empty( $billing_address ) ) {
 			return null;
 		}
 
-		$return_data = (object) array(
-			'id'       => $customer_data->id,
-			'user_id'  => $customer_data->user_id,
-			'name'     => $customer_data->billing_first_name . ' ' . $customer_data->billing_last_name,
-			'email'    => $customer_data->billing_email,
-			'phone'    => $customer_data->billing_phone,
-			'address'  => $customer_data->billing_address,
-			'city'     => $customer_data->billing_city,
-			'state'    => $customer_data->billing_state,
-			'country'  => $customer_data->billing_country,
-			'zip_code' => $customer_data->billing_zip_code,
+		$data = (object) array(
+			'first_name' => $billing_address->billing_first_name ?? '',
+			'last_name'  => $billing_address->billing_last_name ?? '',
+			'full_name'  => ( $billing_address->billing_first_name ?? '' ) . ' ' . ( $billing_address->billing_last_name ?? '' ),
+			'email'      => $billing_address->billing_email ?? '',
+			'phone'      => $billing_address->billing_phone ?? '',
+			'address'    => $billing_address->billing_address ?? '',
+			'country'    => $billing_address->billing_country ?? '',
+			'state'      => $billing_address->billing_state ?? '',
+			'city'       => $billing_address->billing_city ?? '',
+			'zip_code'   => $billing_address->billing_zip_code ?? '',
 		);
 
-		return $return_data;
+		return $data;
 	}
 
 	/**
