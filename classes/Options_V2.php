@@ -1917,4 +1917,31 @@ class Options_V2 {
 		}
 		return ob_get_clean();
 	}
+
+	/**
+	 * Get field name
+	 *
+	 * It's useful when a field has event key like course.lessons
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $field Option field array.
+	 *
+	 * @return string
+	 */
+	public function get_field_name( array $field ) {
+		$events     = $field['event'] ?? null;
+		$field_name = 'tutor_option';
+		if ( $events ) {
+			$events = explode( '.', $events );
+			foreach ( $events as $event ) {
+				$field_name .= '[' . $event . ']';
+			}
+			$field_name .= '[' . $field['key'] . ']';
+		} else {
+			$field_name .= '[' . $field['key'] . ']';
+		}
+
+		return $field_name;
+	}
 }
