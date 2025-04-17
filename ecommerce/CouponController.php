@@ -273,7 +273,6 @@ class CouponController extends BaseController {
 		$data['updated_by'] = get_current_user_id();
 
 		try {
-
 			$update = $this->model->update_coupon( $coupon_id, $data );
 			if ( $update ) {
 				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
