@@ -512,6 +512,15 @@ class CouponModel {
 		return $this->process_coupon_data( $coupon_data );
 	}
 
+	/**
+	 * Get coupon details by coupon code.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param string|integer $coupon_code coupon code.
+	 *
+	 * @return object|false return coupon data as an object if found, or false if not found.
+	 */
 	public function get_coupon_by_code( $coupon_code ) {
 		$coupon_data = QueryHelper::get_row(
 			$this->table_name,
@@ -551,6 +560,15 @@ class CouponModel {
 		return $coupons['results'];
 	}
 
+	/**
+	 * Process coupon data.
+	 *
+	 * @since 3.0.0
+	 *
+	 * @param object $coupon_data coupon data.
+	 *
+	 * @return object
+	 */
 	private function process_coupon_data( $coupon_data ) {
 		$coupon_data->id                  = (int) $coupon_data->id;
 		$coupon_data->usage_limit_status  = ! empty( $coupon_data->total_usage_limit ) ? true : false;
@@ -999,7 +1017,8 @@ class CouponModel {
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int $id Application id.
+	 * @param int    $id Application id.
+	 * @param string $applies_to Applies to.
 	 *
 	 * @return array
 	 */
