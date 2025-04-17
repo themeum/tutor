@@ -99,7 +99,7 @@ describe('Course Builder - Settings', () => {
     cy.updateCourse();
   });
 
-  it.only('configures course media', () => {
+  it('configures course media', () => {
     cy.getWPMedia('Featured Image', 'Upload Thumbnail', 'Replace Image');
     cy.get('body').then((body) => {
       if (body.find('[data-cy=remove-video]').length > 0) {
@@ -125,49 +125,60 @@ describe('Course Builder - Settings', () => {
         return;
       }
 
-      for (const source of videoSources) {
+      for (const [index, source] of videoSources.entries()) {
         cy.get('[data-cy=add-from-url]').click().wait(500);
         cy.getSelectInput('videoSource', source.label);
 
         switch (source.value) {
           case 'youtube':
-            cy.getByInputName('videoUrl').type('https://www.youtube.com/watch?v=78t8LnQjOVs');
+            cy.getByInputName('videoUrl').clear().type('https://www.youtube.com/watch?v=78t8LnQjOVs');
             break;
           case 'vimeo':
-            cy.getByInputName('videoUrl').type('https://vimeo.com/336812686');
+            cy.getByInputName('videoUrl').clear().type('https://vimeo.com/336812686');
             break;
           case 'embed':
-            cy.getByInputName('videoUrl').type(
-              '<iframe width="560" height="315" src="https://www.youtube.com/embed/78t8LnQjOVs?si=HKqial1krokwjBu-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
-            );
+            cy.getByInputName('videoUrl')
+              .clear()
+              .type(
+                '<iframe width="560" height="315" src="https://www.youtube.com/embed/78t8LnQjOVs?si=HKqial1krokwjBu-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
+              );
             break;
           case 'shortcode':
-            cy.getByInputName('videoUrl').type('[tutor_video src="https://www.youtube.com/watch?v=78t8LnQjOVs"]');
+            cy.getByInputName('videoUrl').clear().type('[tutor_video id="78t8LnQjOVs"]');
             break;
           default:
-            cy.getByInputName('videoUrl').type(faker.internet.url());
+            cy.getByInputName('videoUrl').clear().type(faker.internet.url());
             break;
         }
         cy.get('[data-cy=submit-url]').click();
         cy.updateCourse();
-        cy.get('[data-cy=remove-video]').click();
+        if (index < videoSources.length - 1) {
+          cy.get('[data-cy=remove-video]').click();
+        }
       }
     });
   });
 
   it('configures pricing', () => {
-    cy.getByInputName('course_price_type').contains('Paid').click();
+    cy.window().then((win) => {
+      if (win._tutorobject.settings?.monetize_by === 'tutor' && win._tutorobject.settings?.membership_only_mode) {
+        cy.log('Membership only mode is enabled');
+        return;
+      }
 
-    cy.isAddonEnabled(Addons.SUBSCRIPTION).then((isEnabled) => {
-      cy.window().then((win) => {
-        if (win._tutorobject.settings?.monetize_by === 'tutor' && isEnabled) {
-          cy.getSelectInput('course_selling_option', 'All');
-        }
+      cy.getByInputName('course_price_type').contains('Paid').click();
+
+      cy.isAddonEnabled(Addons.SUBSCRIPTION).then((isEnabled) => {
+        cy.window().then((win) => {
+          if (win._tutorobject.settings?.monetize_by === 'tutor' && isEnabled) {
+            cy.getSelectInput('course_selling_option', 'All');
+          }
+        });
       });
-    });
-    cy.getByInputName('course_price').type(courseData.course_price);
-    cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
+      cy.getByInputName('course_price').type(courseData.course_price);
+      cy.getByInputName('course_sale_price').type(courseData.course_sale_price);
 
-    cy.updateCourse();
+      cy.updateCourse();
+    });
   });
 });
