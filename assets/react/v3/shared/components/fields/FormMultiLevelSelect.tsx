@@ -9,15 +9,15 @@ import { borderRadius, colorTokens, fontWeight, lineHeight, shadow, spacing, zIn
 import { typography } from '@TutorShared/config/typography';
 import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
-import { useCategoryListQuery, type Category, type CategoryWithChildren } from '@TutorShared/services/category';
+import { useCategoryListQuery, type CategoryWithChildren } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { decodeHtmlEntities, generateTree } from '@TutorShared/utils/util';
 
+import Show from '@TutorShared/controls/Show';
 import FormFieldWrapper from './FormFieldWrapper';
 
 interface FormMultiLevelSelectProps extends FormControllerProps<number | null> {
-  options: Category[];
   label?: string;
   disabled?: boolean;
   loading?: boolean;
@@ -37,7 +37,6 @@ const FormMultiLevelSelect = ({
   loading,
   placeholder,
   helpText,
-  options,
   isInlineLabel,
   clearable,
   listItemsLabel,
@@ -47,11 +46,12 @@ const FormMultiLevelSelect = ({
   const [searchValue, setSearchValue] = useState('');
   const debouncedSearchValue = useDebounce(searchValue, 300);
   const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
-  const treeOptions = generateTree(categoryListQuery.data ?? []);
+  const options = generateTree(categoryListQuery.data ?? []);
 
   const { triggerRef, triggerWidth, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
     isDropdown: true,
+    dependencies: [categoryListQuery.isLoading],
   });
 
   useEffect(() => {
@@ -65,7 +65,7 @@ const FormMultiLevelSelect = ({
       label={label}
       field={field}
       fieldState={fieldState}
-      disabled={disabled}
+      disabled={disabled || options.length === 0}
       loading={loading}
       placeholder={placeholder}
       helpText={helpText}
@@ -101,6 +101,8 @@ const FormMultiLevelSelect = ({
               <button
                 tabIndex={-1}
                 type="button"
+                disabled={disabled || options.length === 0}
+                aria-label={__('Toggle options', 'tutor')}
                 css={styles.toggleIcon(isOpen)}
                 onClick={() => {
                   setIsOpen((prev) => !prev);
@@ -129,18 +131,23 @@ const FormMultiLevelSelect = ({
                     }}
                   />
                 </div>
-                <div css={[styles.options, optionsWrapperStyle]}>
-                  {treeOptions.map((option) => (
-                    <Branch
-                      key={option.id}
-                      option={option}
-                      onChange={(id) => {
-                        field.onChange(id);
-                        setIsOpen(false);
-                      }}
-                    />
-                  ))}
-                </div>
+                <Show
+                  when={options.length > 0}
+                  fallback={<div css={styles.notFound}>{__('No categories found.', 'tutor')}</div>}
+                >
+                  <div css={[styles.options, optionsWrapperStyle]}>
+                    {options.map((option) => (
+                      <Branch
+                        key={option.id}
+                        option={option}
+                        onChange={(id) => {
+                          field.onChange(id);
+                          setIsOpen(false);
+                        }}
+                      />
+                    ))}
+                  </div>
+                </Show>
 
                 {clearable && (
                   <div css={styles.clearButton}>
@@ -187,7 +194,7 @@ export const Branch = ({ option, onChange, level = 0 }: BranchProps) => {
 
   return (
     <div css={styles.branchItem(level)}>
-      <button type="button" onClick={() => onChange(option.id)}>
+      <button type="button" onClick={() => onChange(option.id)} title={option.name}>
         {decodeHtmlEntities(option.name)}
       </button>
 
@@ -208,7 +215,14 @@ const styles = {
   `,
   options: css`
     max-height: 455px;
-    overflow-y: auto;
+    ${styleUtils.overflowYAuto};
+  `,
+  notFound: css`
+    ${styleUtils.display.flex()};
+    align-items: center;
+    ${typography.caption('regular')};
+    padding: ${spacing[8]} ${spacing[16]};
+    color: ${colorTokens.text.hints};
   `,
   searchInput: css`
     position: sticky;
@@ -220,7 +234,7 @@ const styles = {
       width: 100%;
       border-radius: ${borderRadius[6]};
       border: 1px solid ${colorTokens.stroke.default};
-      padding: ${spacing[8]} ${spacing[16]};
+      padding: ${spacing[4]} ${spacing[16]};
       color: ${colorTokens.text.title};
       appearance: textfield;
 
@@ -240,6 +254,7 @@ const styles = {
       color: ${colorTokens.text.title};
       padding-left: calc(${spacing[24]} + ${spacing[24]} * ${level});
       line-height: ${lineHeight[36]};
+      padding-right: ${spacing[16]};
       width: 100%;
 
       &:hover,

@@ -14,7 +14,6 @@ import { type SerializedStyles, css } from '@emotion/react';
 import { produce } from 'immer';
 import { useEffect, useState } from 'react';
 
-import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import { isRTL } from '@TutorShared/config/constants';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -24,6 +23,8 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { __ } from '@wordpress/i18n';
 import { Controller, type FieldValues } from 'react-hook-form';
 
+import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
 import FormMultiLevelSelect from './FormMultiLevelSelect';
@@ -47,9 +48,11 @@ const FormMultiLevelInput = ({
   helpText,
   optionsWrapperStyle,
 }: FormMultiLevelInputProps) => {
-  const categoryListQuery = useCategoryListQuery();
   const createCategoryMutation = useCreateCategoryMutation();
   const [isOpen, setIsOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState('');
+  const debouncedSearchValue = useDebounce(searchValue, 300);
+  const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
   const { ref: scrollElementRef, isScrolling } = useIsScrolling<HTMLDivElement>();
 
   const form = useFormWithGlobalError<{
@@ -75,10 +78,6 @@ const FormMultiLevelInput = ({
   const { triggerRef, position, popoverRef } = usePortalPopover<HTMLDivElement, HTMLDivElement>({
     isOpen,
   });
-
-  if (categoryListQuery.isLoading) {
-    return <LoadingSpinner />;
-  }
 
   const treeOptions = generateTree(categoryListQuery.data ?? []);
 
@@ -108,38 +107,60 @@ const FormMultiLevelInput = ({
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
-                <Show
-                  when={treeOptions.length > 0}
-                  fallback={<span css={styles.notFound}>{__('No categories found.', 'tutor')}</span>}
-                >
-                  {treeOptions.map((option, index) => (
-                    <Branch
-                      key={option.id}
-                      disabled={disabled}
-                      option={option}
-                      value={field.value}
-                      isLastChild={index === treeOptions.length - 1}
-                      onChange={(id) => {
-                        field.onChange(
-                          produce(field.value, (draft) => {
-                            if (Array.isArray(draft)) {
-                              return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
-                            }
-                            return [id];
-                          }),
-                        );
-                      }}
-                    />
-                  ))}
+                <div css={styles.searchInput}>
+                  <input
+                    type="text"
+                    placeholder={__('Search', 'tutor')}
+                    value={searchValue}
+                    disabled={disabled || loading}
+                    onChange={(e) => {
+                      setSearchValue(e.target.value);
+                    }}
+                  />
+                </div>
+
+                <Show when={!categoryListQuery.isLoading && !loading} fallback={<LoadingSection />}>
+                  <Show
+                    when={treeOptions.length > 0}
+                    fallback={<span css={styles.notFound}>{__('No categories found.', 'tutor')}</span>}
+                  >
+                    {treeOptions.map((option, index) => (
+                      <Branch
+                        key={option.id}
+                        disabled={disabled}
+                        option={option}
+                        value={field.value}
+                        isLastChild={index === treeOptions.length - 1}
+                        onChange={(id) => {
+                          field.onChange(
+                            produce(field.value, (draft) => {
+                              if (Array.isArray(draft)) {
+                                return draft.includes(id) ? draft.filter((item) => item !== id) : [...draft, id];
+                              }
+                              return [id];
+                            }),
+                          );
+                        }}
+                      />
+                    ))}
+                  </Show>
                 </Show>
               </div>
 
               <Show when={!disabled}>
                 <div
                   ref={triggerRef}
-                  css={styles.addButtonWrapper({ isActive: isScrolling, hasCategories: treeOptions.length > 0 })}
+                  css={styles.addButtonWrapper({
+                    isActive: isScrolling,
+                    hasCategories: categoryListQuery.isLoading || treeOptions.length > 0,
+                  })}
                 >
-                  <button disabled={disabled} type="button" css={styles.addNewButton} onClick={() => setIsOpen(true)}>
+                  <button
+                    disabled={disabled || loading}
+                    type="button"
+                    css={styles.addNewButton}
+                    onClick={() => setIsOpen(true)}
+                  >
                     <SVGIcon width={24} height={24} name="plus" /> {__('Add', 'tutor')}
                   </button>
                 </div>
@@ -161,20 +182,18 @@ const FormMultiLevelInput = ({
                     <FormInput {...controllerProps} placeholder={__('Category name', 'tutor')} selectOnFocus />
                   )}
                 />
-                <Show when={treeOptions.length > 0}>
-                  <Controller
-                    name="parent"
-                    control={form.control}
-                    render={(controllerProps) => (
-                      <FormMultiLevelSelect
-                        {...controllerProps}
-                        placeholder={__('Select parent', 'tutor')}
-                        options={categoryListQuery.data ?? []}
-                        clearable={!!controllerProps.field.value}
-                      />
-                    )}
-                  />
-                </Show>
+
+                <Controller
+                  name="parent"
+                  control={form.control}
+                  render={(controllerProps) => (
+                    <FormMultiLevelSelect
+                      {...controllerProps}
+                      placeholder={__('Select parent', 'tutor')}
+                      clearable={!!controllerProps.field.value}
+                    />
+                  )}
+                />
 
                 <div css={styles.categoryFormButtons}>
                   <Button
@@ -278,6 +297,27 @@ const styles = {
     ${typography.caption('regular')};
     padding: ${spacing[8]} ${spacing[16]};
     color: ${colorTokens.text.hints};
+  `,
+  searchInput: css`
+    position: sticky;
+    top: 0;
+    padding: ${spacing[4]} ${spacing[16]};
+    background-color: ${colorTokens.background.white};
+    z-index: ${zIndex.dropdown};
+
+    input {
+      ${typography.body('regular')};
+      width: 100%;
+      border-radius: ${borderRadius[6]};
+      border: 1px solid ${colorTokens.stroke.default};
+      padding: ${spacing[4]} ${spacing[16]};
+      color: ${colorTokens.text.title};
+      appearance: textfield;
+
+      :focus {
+        ${styleUtils.inputFocus};
+      }
+    }
   `,
   checkboxLabel: css`
     line-height: 1.88rem !important;
