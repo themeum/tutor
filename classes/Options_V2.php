@@ -1876,7 +1876,7 @@ class Options_V2 {
 	 */
 	public function blocks( $blocks = array() ) {
 		ob_start();
-		include tutor()->path . 'views/options/option_blocks.php';
+		include apply_filters( 'tutor_settings_block_template_path', tutor()->path . 'views/options/option_blocks.php', $blocks );
 		return ob_get_clean();
 	}
 
