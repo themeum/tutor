@@ -6,7 +6,7 @@
  * @subpackage Tutor\Settings
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.5.0
  */
 
 ?>
@@ -17,8 +17,10 @@
 			<?php echo esc_html( $field['label'] ?? '' ); ?>
 		</div>			
 	</div>
+	<?php if ( ! empty( $field['desc'] ) ) : ?>
 	<div class="tutor-fs-7 tutor-color-muted tutor-mt-8">
 		<?php echo esc_html( $field['desc'] ); ?>
 	</div>
+	<?php endif; ?>
 </div>
 
