@@ -132,7 +132,7 @@ class CouponController extends BaseController {
 	 *
 	 * @since 3.5.0
 	 *
-	 * @param array $data The data array to check
+	 * @param array $data The data to validate.
 	 *
 	 * @return bool Whether applies to items exist and are valid
 	 */
