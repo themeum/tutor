@@ -57,9 +57,10 @@ class OrderModel {
 	 *
 	 * @var string
 	 */
-	const META_KEY_HISTORY  = 'history';
-	const META_KEY_REFUND   = 'refund';
-	const META_KEY_ORDER_ID = 'tutor_order_id_';
+	const META_KEY_HISTORY         = 'history';
+	const META_KEY_REFUND          = 'refund';
+	const META_KEY_ORDER_ID        = 'tutor_order_id_';
+	const META_KEY_BILLING_ADDRESS = 'billing_address';
 
 	/**
 	 * Tax type constants
@@ -1740,9 +1741,10 @@ class OrderModel {
 					<?php esc_html_e( 'Payment Is Pending Due To Gateway Processing.', 'tutor' ); ?>
 				</span>
 			</div>
-		<?php elseif ( $show_pay_button ) : 
+			<?php
+		elseif ( $show_pay_button ) :
 			ob_start();
-		?>
+			?>
 			
 			<form method="post">
 				<?php tutor_nonce_field(); ?>
