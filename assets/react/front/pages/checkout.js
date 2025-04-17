@@ -9,18 +9,34 @@ document.addEventListener('DOMContentLoaded', () => {
         const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
         const paymentMethodElem = paymentMethodWrapper?.innerHTML;
         const payNowBtn = document.querySelector('#tutor-checkout-pay-now-button');
-
+     
         // Handle payment method click 
         const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
         if (paymentOptionsWrapper) {
             const paymentTypeInput = document.querySelector("input[name=payment_type]");
-            const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");
+            const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");   
+            let hideTax = false;
+         
 
             paymentOptions.forEach((option) => {
                 option.addEventListener('click', (e) => {
+                    const inputCouponCode = document.querySelector('[name=coupon_code]');
+                    const couponCode = inputCouponCode?.value ? inputCouponCode.value : '';
                     paymentOptions.forEach(item => item.classList.remove('active'));
                     option.classList.add('active');
                     paymentTypeInput.value = option.dataset.paymentType;
+              
+                    if (option.firstElementChild.value === 'stripe') {
+                        updateCheckoutData(couponCode, null, null, 0);
+                        hideTax = true;
+
+                    } else{
+
+                        if (hideTax) {
+                            updateCheckoutData(couponCode, null, null, 1);
+                            hideTax = false;                       
+                        }                     
+                    }
 
                     const paymentInstructions = option.dataset.paymentInstruction;
                     if (paymentInstructions) {
@@ -109,7 +125,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         await updateCheckoutData(couponCode);
                         
                         if (!data.total_price && data.order_type === 'single_order' && paymentMethodElem) {
-                            console.log(data.order_type);
                             paymentMethodWrapper.innerHTML = '';
                             const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
                             payNowBtn.innerHTML = payNowBtnText;
@@ -162,8 +177,9 @@ document.addEventListener('DOMContentLoaded', () => {
          * @param {string} couponCode coupon code.
          * @param {string} billingCountry Billing country.
          * @param {string} billingState Billing state.
+         * @param {string} showTax Hide tax when payment method is Paddle.
          */
-        async function updateCheckoutData(couponCode, billingCountry = null, billingState = null) {
+        async function updateCheckoutData(couponCode, billingCountry = null, billingState = null, showTax = '1') {
             const url = new URL(window.location.href);
             const plan = url.searchParams.get('plan');
             const course_id = url.searchParams.get('course_id');
@@ -172,6 +188,7 @@ document.addEventListener('DOMContentLoaded', () => {
             formData.set(window.tutor_get_nonce_data(true).key, window.tutor_get_nonce_data(true).value);
             formData.set('action', 'tutor_get_checkout_html');
             formData.set('coupon_code', couponCode);
+            formData.set('show_tax', showTax);
             if (billingCountry) {
                 formData.set('billing_country', billingCountry);
             }

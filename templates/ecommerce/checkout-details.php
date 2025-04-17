@@ -8,13 +8,13 @@
  * @since 3.0.0
  */
 
+use TUTOR\Input;
+use Tutor\Ecommerce\Tax;
+use Tutor\Models\OrderModel;
+use Tutor\Ecommerce\Settings;
+use Tutor\Models\CouponModel;
 use Tutor\Ecommerce\CartController;
 use Tutor\Ecommerce\CheckoutController;
-use Tutor\Ecommerce\Settings;
-use Tutor\Ecommerce\Tax;
-use TUTOR\Input;
-use Tutor\Models\CouponModel;
-use Tutor\Models\OrderModel;
 
 
 $coupon_model        = new CouponModel();
@@ -36,6 +36,7 @@ $order_type = ( $plan_id && $plan_info )
 			: OrderModel::TYPE_SINGLE_ORDER;
 
 $coupon_code            = Input::sanitize_request_data( 'coupon_code', '' );
+$show_tax               = (int) Input::sanitize_request_data( 'show_tax', '1' );
 $has_manual_coupon_code = ! empty( $coupon_code );
 $show_coupon_box        = Settings::is_coupon_usage_enabled();
 
@@ -301,7 +302,7 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 			</div>
 
 					<?php
-					if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price ) :
+					if ( Tax::is_tax_configured() && $tax_rate > 0 && ! $is_tax_included_in_price && $show_tax ) :
 						?>
 			<div class="tutor-checkout-summary-item" data-tax-amount>
 				<div><?php esc_html_e( 'Tax', 'tutor' ); ?></div>
@@ -314,13 +315,13 @@ $tax_rate                 = Tax::get_user_tax_rate( get_current_user_id() );
 			<div class="tutor-checkout-summary-item">
 				<div class="tutor-fw-medium"><?php esc_html_e( 'Grand Total', 'tutor' ); ?></div>
 				<div class="tutor-fs-5 tutor-fw-bold tutor-checkout-grand-total">
-					<?php tutor_print_formatted_price( $checkout_data->total_price ); ?>
+					<?php tutor_print_formatted_price( ! $show_tax ? $checkout_data->total_price_without_tax : $checkout_data->total_price ); ?>
 				</div>
 			</div>
 			<div class="tutor-checkout-summary-item">
 				<div></div>
 					<?php
-					if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price ) :
+					if ( Tax::is_tax_configured() && $tax_rate > 0 && $is_tax_included_in_price && $show_tax ) :
 						?>
 					<div class="tutor-fs-7 tutor-color-muted">
 						<?php
