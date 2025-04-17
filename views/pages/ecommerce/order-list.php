@@ -180,11 +180,13 @@ $available_status = array(
 									<td>
 										<?php echo wp_kses_post( tutor_utils()->tutor_price( $order->total_price ) ); ?>
 									</td>
-									<td class="tutor-d-flex tutor-gap-1">
-										<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
-											<?php esc_html_e( 'Edit', 'tutor' ); ?>
-										</a>
-										<?php do_action( 'tutor_admin_invoice_button', $order ); ?>
+									<td>
+										<div class="tutor-d-flex tutor-align-center tutor-gap-1">
+											<a href="<?php echo esc_url( $order_controller->get_order_page_url() . '&action=edit&id=' . $order->id ); ?>" class="tutor-btn tutor-btn-outline-primary tutor-btn-sm">
+												<?php esc_html_e( 'Edit', 'tutor' ); ?>
+											</a>
+											<?php do_action( 'tutor_after_order_edit_link', $order ); ?>
+										</div>
 									</td>
 								</tr>
 							<?php endforeach; ?>
