@@ -11,8 +11,6 @@
 namespace Tutor\Models;
 
 use TUTOR\Course;
-use Tutor\Ecommerce\Settings;
-use Tutor\Ecommerce\Tax;
 use Tutor\Helpers\QueryHelper;
 
 /**
