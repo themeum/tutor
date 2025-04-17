@@ -174,7 +174,7 @@ class CouponController extends BaseController {
 				HttpHelper::STATUS_UNPROCESSABLE_ENTITY
 			);
 		}
-		
+
 		$this->validate_applies_to_item( $data );
 
 		if ( $this->model->get_coupon( array( 'coupon_code' => $data['coupon_code'] ) ) ) {
