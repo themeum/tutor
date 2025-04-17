@@ -152,7 +152,7 @@ class CouponController extends BaseController {
 	public function validate_applies_to_item( $data ) {
 		$is_specific_applies_to = $this->model->is_specific_applies_to( $data['applies_to'] );
 
-		if ( $is_specific_applies_to && ! $this->has_applies_to_items( $data['applies_to_items'] ) ) {
+		if ( $is_specific_applies_to && ! $this->has_applies_to_items( $data ) ) {
 			$this->json_response(
 				__( 'Add items first', 'tutor' ),
 				null,
@@ -279,7 +279,7 @@ class CouponController extends BaseController {
 				$coupon_data = $this->model->get_coupon( array( 'id' => $coupon_id ) );
 				$this->model->delete_applies_to( $coupon_data->coupon_code );
 
-				if ( $this->has_applies_to_items( $data['applies_to_items'] ) ) {
+				if ( $this->has_applies_to_items( $data ) ) {
 					$this->model->insert_applies_to( $data['applies_to'], $data['applies_to_items'], $coupon_data->coupon_code );
 				}
 
