@@ -73,7 +73,7 @@ class AdminMenu {
 			return;
 		}
 
-		include tutor()->path . 'views/pages/ecommerce/order-list.php';
+		include apply_filters( 'tutor_order_list_page_template', tutor()->path . 'views/pages/ecommerce/order-list.php' );
 	}
 
 	/**
