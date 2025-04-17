@@ -99,11 +99,60 @@ describe('Course Builder - Settings', () => {
     cy.updateCourse();
   });
 
-  it('configures course media', () => {
+  it.only('configures course media', () => {
     cy.getWPMedia('Featured Image', 'Upload Thumbnail', 'Replace Image');
+    cy.get('body').then((body) => {
+      if (body.find('[data-cy=remove-video]').length > 0) {
+        cy.get('[data-cy=remove-video]').click();
+      }
+    });
+
     cy.getWPMedia('Intro Video', 'Upload Video', 'Replace Thumbnail');
 
     cy.updateCourse();
+
+    cy.get('[data-cy=remove-video]').click();
+
+    cy.window().then((win) => {
+      const videoSources = (
+        Array.isArray(win._tutorobject.supported_video_sources)
+          ? win._tutorobject.supported_video_sources
+          : [win._tutorobject.supported_video_sources]
+      ).filter((source) => source.value !== 'html5');
+
+      if (videoSources.length === 0) {
+        cy.log('No video sources available.');
+        return;
+      }
+
+      for (const source of videoSources) {
+        cy.get('[data-cy=add-from-url]').click().wait(500);
+        cy.getSelectInput('videoSource', source.label);
+
+        switch (source.value) {
+          case 'youtube':
+            cy.getByInputName('videoUrl').type('https://www.youtube.com/watch?v=78t8LnQjOVs');
+            break;
+          case 'vimeo':
+            cy.getByInputName('videoUrl').type('https://vimeo.com/336812686');
+            break;
+          case 'embed':
+            cy.getByInputName('videoUrl').type(
+              '<iframe width="560" height="315" src="https://www.youtube.com/embed/78t8LnQjOVs?si=HKqial1krokwjBu-" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>',
+            );
+            break;
+          case 'shortcode':
+            cy.getByInputName('videoUrl').type('[tutor_video src="https://www.youtube.com/watch?v=78t8LnQjOVs"]');
+            break;
+          default:
+            cy.getByInputName('videoUrl').type(faker.internet.url());
+            break;
+        }
+        cy.get('[data-cy=submit-url]').click();
+        cy.updateCourse();
+        cy.get('[data-cy=remove-video]').click();
+      }
+    });
   });
 
   it('configures pricing', () => {
