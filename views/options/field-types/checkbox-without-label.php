@@ -26,11 +26,6 @@ $checked = 'on' === $value ? 'checked' : '';
 $field_name = $this->get_field_name( $field );
 ?>
 <div class="tutor-form-check">
-	<?php if ( ! empty( $field['label'] ) ) : ?>
-	<span class="label-before">
-		<?php echo esc_html( $field['label'] ); ?>
-	</span>
-	<?php endif; ?>
 	<input type="hidden" name="<?php echo esc_attr( $field_name ); ?>" value="<?php echo esc_attr( $value ); ?>">
 	<input type="checkbox" value="<?php echo esc_attr( $value ); ?>" class="tutor-form-toggle-input tutor-form-check-input" <?php echo esc_attr( $checked ); ?>>
 </div>
