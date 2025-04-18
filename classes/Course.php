@@ -283,7 +283,8 @@ class Course extends Tutor_Base {
 	public function handle_schedule_courses( $content ){
 		global $wp_query;
 		$course_coming_soon_enabled = (int) get_post_meta( $content->ID, '_tutor_course_enable_coming_soon', true );
-		if ( CourseModel::POST_TYPE !== $content->post_type || current_user_can( 'administrator' ) || tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $content->ID, true ) ||  $course_coming_soon_enabled ) {
+		$is_instructor              = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $content->ID, true );
+		if ( CourseModel::POST_TYPE !== $content->post_type || current_user_can( 'administrator' ) || $is_instructor ||  $course_coming_soon_enabled ) {
 			return $content;
 		}
 
