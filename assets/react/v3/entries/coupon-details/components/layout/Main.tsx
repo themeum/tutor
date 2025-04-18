@@ -10,6 +10,7 @@ import {
 import { LoadingSection } from '@TutorShared/atoms/LoadingSpinner';
 import { DateFormats } from '@TutorShared/config/constants';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { type MembershipPlan } from '@TutorShared/utils/types';
 import { convertGMTtoLocalDate } from '@TutorShared/utils/util';
 import { css } from '@emotion/react';
 import { format } from 'date-fns';
@@ -41,6 +42,10 @@ function Main() {
         bundles: couponData.applies_to === 'specific_bundles' ? (couponData.applies_to_items as Course[]) : [],
         categories:
           couponData.applies_to === 'specific_category' ? (couponData.applies_to_items as CourseCategory[]) : [],
+        membershipPlans:
+          couponData.applies_to === 'specific_membership_plans'
+            ? (couponData.applies_to_items as MembershipPlan[])
+            : [],
         usage_limit_status: couponData.total_usage_limit !== '0',
         total_usage_limit: couponData.total_usage_limit,
         per_user_limit_status: couponData.per_user_usage_limit !== '0',
