@@ -284,7 +284,7 @@ class Course extends Tutor_Base {
 		global $wp_query;
 		$course_coming_soon_enabled = (int) get_post_meta( $content->ID, '_tutor_course_enable_coming_soon', true );
 		$is_instructor              = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $content->ID, true );
-		if ( CourseModel::POST_TYPE !== $content->post_type || current_user_can( 'administrator' ) || $is_instructor || $course_coming_soon_enabled ) {
+		if ( ! in_array( $content->post_type, array( CourseModel::POST_TYPE, tutor()->bundle_post_type ) ) || current_user_can( 'administrator' ) || $is_instructor || $course_coming_soon_enabled ) {
 			return $content;
 		}
 
