@@ -1752,4 +1752,14 @@ if ( ! function_exists( 'tutor_is_local_env' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_add_to_cart' ) ) {
+	/**
+	 * Handle add to cart functionalities
+	 *
+	 * @return void
+	 */
+	function tutor_add_to_cart() {
+
+	}
+}
 
