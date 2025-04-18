@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const inputCouponCode  = document.querySelector('[name=coupon_code]');
                         const couponCode       = inputCouponCode?.value ? inputCouponCode.value : '';
 
-                        if (option.firstElementChild.value === 'stripe') {
+                        if (option.firstElementChild.value === 'paddle') {
                             updateCheckoutData(couponCode, null, null, 0);
                             showTax = false;
 
