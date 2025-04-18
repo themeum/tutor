@@ -40,7 +40,7 @@ const appliesToOptions = [
         { label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' },
       ]
     : []),
-  ...(isMembershipOnlyMode ? [{ label: __('All membership plans', 'tutor'), value: 'memberships' }] : []),
+  ...(isMembershipOnlyMode ? [{ label: __('All membership plans', 'tutor'), value: 'all_membership_plans' }] : []),
   { label: __('Specific courses', 'tutor'), value: 'specific_courses' },
   ...(displayBundle ? [{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' }] : []),
   { label: __('Specific category', 'tutor'), value: 'specific_category' },
