@@ -29,7 +29,6 @@ if ( isset( $data ) && count( $data ) ) : ?>
 					// If modal target set then button will be set as modal button otherwise url button.
 					$button_class = isset( $data['button_class'] ) ? $data['button_class'] : '';
 					if ( isset( $data['modal_target'] ) && '' !== $data['modal_target'] ) :
-						
 						?>
 						<?php if ( isset( $data['add_button'] ) && $data['add_button'] ) : ?>
 							<button class="tutor-btn tutor-btn-outline-primary tutor-btn-md <?php echo esc_attr( $button_class ); ?>" data-tutor-modal-target="<?php echo esc_html( $data['modal_target'] ); ?>">
@@ -43,6 +42,7 @@ if ( isset( $data ) && count( $data ) ) : ?>
 								<span class="tutor-icon-plus-o tutor-mr-8"></span>
 								<span><?php echo esc_html( $data['button_title'] ); ?></span>
 							</a>
+							<?php do_action( 'tutor_data_list_navbar_button' ); ?>
 						<?php endif; ?>
 					<?php endif; ?>
 				</div>

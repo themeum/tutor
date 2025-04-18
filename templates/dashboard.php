@@ -141,7 +141,7 @@ do_action( 'tutor_dashboard/before/wrap' );
 							<?php else : ?>
 							<a href="#" class="tutor-btn tutor-btn-outline-primary tutor-create-new-course">
 								<i class="tutor-icon-plus-square tutor-my-n4 tutor-mr-8"></i>
-								<?php esc_html_e( 'Create a New Course', 'tutor' ); ?>
+								<?php esc_html_e( 'New Course', 'tutor' ); ?>
 							</a>
 					<?php endif; ?>
 						<?php
