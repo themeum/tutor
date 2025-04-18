@@ -280,11 +280,11 @@ class Course extends Tutor_Base {
 	 *
 	 * @return \WP_Post
 	 */
-	public function handle_schedule_courses( $content ){
+	public function handle_schedule_courses( $content ) {
 		global $wp_query;
 		$course_coming_soon_enabled = (int) get_post_meta( $content->ID, '_tutor_course_enable_coming_soon', true );
 		$is_instructor              = tutor_utils()->is_instructor_of_this_course( get_current_user_id(), $content->ID, true );
-		if ( CourseModel::POST_TYPE !== $content->post_type || current_user_can( 'administrator' ) || $is_instructor ||  $course_coming_soon_enabled ) {
+		if ( CourseModel::POST_TYPE !== $content->post_type || current_user_can( 'administrator' ) || $is_instructor || $course_coming_soon_enabled ) {
 			return $content;
 		}
 
