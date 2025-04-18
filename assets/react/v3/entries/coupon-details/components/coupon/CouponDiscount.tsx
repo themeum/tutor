@@ -15,7 +15,7 @@ import { Addons } from '@TutorShared/config/constants';
 import { typography } from '@TutorShared/config/typography';
 import { formatPrice } from '@TutorShared/utils/currency';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { isAddonEnabled } from '@TutorShared/utils/util';
+import { formatSubscriptionRepeatUnit, isAddonEnabled } from '@TutorShared/utils/util';
 import { requiredRule } from '@TutorShared/utils/validation';
 import { css } from '@emotion/react';
 import { __, sprintf } from '@wordpress/i18n';
@@ -215,7 +215,13 @@ function CouponDiscount() {
                   {Number(item.sale_price) > 0 && (
                     <span css={styles.discountPrice}>{formatPrice(Number(item.regular_price))}</span>
                   )}
-                  /<span css={styles.recurringInterval}>{item.recurring_interval}</span>
+                  /
+                  <span css={styles.recurringInterval}>
+                    {formatSubscriptionRepeatUnit({
+                      unit: item.recurring_interval,
+                      value: Number(item.recurring_value),
+                    })}
+                  </span>
                 </div>
               }
               handleDeleteClick={() => removesSelectedItem('membershipPlans', item.id)}
