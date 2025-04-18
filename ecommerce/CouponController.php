@@ -601,7 +601,7 @@ class CouponController extends BaseController {
 		$applications = $this->model->get_formatted_coupon_applications( $coupon_data );
 
 		// Set applies to items.
-		$coupon_data->applies_to_items = $applications;
+		$coupon_data->applies_to_items = apply_filters( 'tutor_coupon_details_applies_to_items_response', $applications, $coupon_data );
 
 		// Set coupon usage.
 		$coupon_data->coupon_usage = $this->model->get_coupon_usage_count( $coupon_data->coupon_code );
