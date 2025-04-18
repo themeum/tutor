@@ -282,16 +282,6 @@ class Course_List {
 		$action   = Input::post( 'bulk-action', '' );
 		$bulk_ids = Input::post( 'bulk-ids', '' );
 
-		$course_ids = implode(
-			',',
-			array_filter(
-				explode( ',', $bulk_ids ),
-				function( $id ) {
-					return tutor()->course_post_type === get_post_type( $id );
-				}
-			)
-		);
-
 		// Check if user is privileged.
 		if ( ! current_user_can( 'administrator' ) ) {
 			if ( current_user_can( 'edit_tutor_course' ) ) {
@@ -314,7 +304,7 @@ class Course_List {
 			// Do action before delete.
 			do_action( 'before_tutor_course_bulk_action_delete', $bulk_ids );
 
-			$delete_courses = apply_filters( 'tutor_course_list_bulk_action', self::bulk_delete_course( $course_ids ), $action, $bulk_ids );
+			$delete_courses = self::bulk_delete_course( $bulk_ids );
 
 			do_action( 'after_tutor_course_bulk_action_delete', $bulk_ids );
 			$delete_courses ? wp_send_json_success() : wp_send_json_error( array( 'message' => __( 'Could not delete selected courses', 'tutor' ) ) );
@@ -329,7 +319,7 @@ class Course_List {
 		 */
 		do_action( 'before_tutor_course_bulk_action_update', $action, $bulk_ids );
 
-		$update_status = apply_filters( 'tutor_course_list_bulk_action', self::update_course_status( $action, $course_ids ), $action, $bulk_ids );
+		$update_status = self::update_course_status( $action, $bulk_ids );
 
 		do_action( 'after_tutor_course_bulk_action_update', $action, $bulk_ids );
 
@@ -378,7 +368,7 @@ class Course_List {
 			}
 		}
 
-		if ( CourseModel::POST_TYPE !== $course->post_type ) {
+		if ( ! in_array( $course->post_type, array( CourseModel::POST_TYPE, tutor()->bundle_post_type ) ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 

@@ -411,7 +411,7 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function delete_course( $post_id ) {
-		if ( get_post_type( $post_id ) !== tutor()->course_post_type ) {
+		if ( ! in_array( get_post_type( $post_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ) ) ) {
 			return false;
 		}
 
