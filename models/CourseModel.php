@@ -339,7 +339,7 @@ class CourseModel {
 		$course  = get_post( $course_id );
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
-		if ( ! $course || ( self::POST_TYPE !== $course->post_type && tutor()->bundle_post_type !== $course->post_type ) || $user_id !== (int) $course->post_author ) {
+		if ( ! $course || ! in_array( $course->post_type, array( self::POST_TYPE, tutor()->bundle_post_type ) ) || $user_id !== (int) $course->post_author ) {
 			return false;
 		}
 
