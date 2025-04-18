@@ -14,6 +14,7 @@ use Tutor\Ecommerce\Settings;
 use TUTOR\Input;
 use Tutor\Models\CourseModel;
 use Tutor\Course;
+use Tutor\Ecommerce\Cart\CartFactory;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -1756,10 +1757,32 @@ if ( ! function_exists( 'tutor_add_to_cart' ) ) {
 	/**
 	 * Handle add to cart functionalities
 	 *
-	 * @return void
+	 * @since 3.5.0
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return object {success, message, body}
 	 */
-	function tutor_add_to_cart() {
+	function tutor_add_to_cart( int $item_id ) {
+		$monetization      = tutor_utils()->get_option( 'monetize_by' );
+		$response          = new stdClass();
+		$response->success = true;
+		$response->message = __( 'Course added to cart', 'tutor' );
+		$response->body    = null;
+		try {
+			$cart = CartFactory::create_cart( $monetization );
+			if ( $cart->add( $item_id ) ) {
+				$response->body = $cart->get_page_url();
+			} else {
+				$response->success = false;
+				$response->message = $cart->get_error();
+			}
+		} catch ( \Throwable $th ) {
+			$response->success = false;
+			$response->message = $th->getMessage();
+		}
 
+		return $response;
 	}
 }
 

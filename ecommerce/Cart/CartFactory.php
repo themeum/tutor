@@ -38,7 +38,7 @@ class CartFactory {
 		switch ( $monetization_engine ) {
 			case 'wc':
 				return new WooCart();
-			case 'native':
+			case 'tutor':
 				return new NativeCart();
 			case 'edd':
 				return new EddCart();

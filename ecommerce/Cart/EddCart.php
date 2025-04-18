@@ -20,14 +20,30 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 3.5.0
  */
-class EddCart implements CartInterface {
+class EddCart extends BaseCart implements CartInterface {
 
 	/**
 	 * Add to cart
 	 *
 	 * @since 3.5.0
+	 *
+	 * @param int $item_id Item id to add to cart.
+	 *
+	 * @return bool
 	 */
-	public function add() {
-		return 'item added';
+	public function add( int $item_id ): bool {
+		return true;
+	}
+
+	/**
+	 * Get cart page url to view the cart
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return string
+	 */
+	public function get_page_url(): string {
+		return '';
 	}
 }
+
