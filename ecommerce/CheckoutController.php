@@ -272,7 +272,7 @@ class CheckoutController {
 
 			$is_coupon_applicable = false;
 			if ( Settings::is_coupon_usage_enabled() && is_object( $coupon ) ) {
-				$is_coupon_applicable = ! $sale_price && $this->coupon_model->is_coupon_applicable( $coupon, $item_id );
+				$is_coupon_applicable = ! $item['sale_price'] && $this->coupon_model->is_coupon_applicable( $coupon, $item_id );
 				if ( $is_coupon_applicable ) {
 					$item['is_coupon_applied'] = $is_coupon_applicable;
 					$item['coupon_code']       = $coupon->coupon_code;
