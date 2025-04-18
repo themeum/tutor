@@ -53,6 +53,9 @@ class CouponModel {
 	const APPLIES_TO_SPECIFIC_BUNDLES        = 'specific_bundles';
 	const APPLIES_TO_SPECIFIC_CATEGORY       = 'specific_category';
 
+	const APPLIES_TO_ALL_MEMBERSHIP_PLANS      = 'all_membership_plans';
+	const APPLIES_TO_SPECIFIC_MEMBERSHIP_PLANS = 'specific_membership_plans';
+
 	/**
 	 * Coupon purchase requirement
 	 *
@@ -299,8 +302,14 @@ class CouponModel {
 	 * @return mixed true|false on insert, void if not insert-able
 	 */
 	public function insert_applies_to( string $applies_to, array $applies_to_ids, $coupon_code ) {
-		$specific_applies = array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY );
-		if ( in_array( $applies_to, $specific_applies ) ) {
+		$specific_applies = array(
+			self::APPLIES_TO_SPECIFIC_BUNDLES,
+			self::APPLIES_TO_SPECIFIC_COURSES,
+			self::APPLIES_TO_SPECIFIC_CATEGORY,
+			self::APPLIES_TO_SPECIFIC_MEMBERSHIP_PLANS,
+		);
+
+		if ( in_array( $applies_to, $specific_applies, true ) ) {
 			$data = array();
 
 			foreach ( $applies_to_ids as $id ) {
@@ -853,7 +862,7 @@ class CouponModel {
 				break;
 		}
 
-		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id );
+		return apply_filters( 'tutor_coupon_is_applicable', $is_applicable, $coupon, $object_id, $applications );
 	}
 
 	/**
@@ -1061,7 +1070,16 @@ class CouponModel {
 	 * @return boolean
 	 */
 	public function is_specific_applies_to( string $applies_to ) {
-		return in_array( $applies_to, array( self::APPLIES_TO_SPECIFIC_BUNDLES, self::APPLIES_TO_SPECIFIC_COURSES, self::APPLIES_TO_SPECIFIC_CATEGORY ) );
+		return in_array(
+			$applies_to,
+			array(
+				self::APPLIES_TO_SPECIFIC_BUNDLES,
+				self::APPLIES_TO_SPECIFIC_COURSES,
+				self::APPLIES_TO_SPECIFIC_CATEGORY,
+				self::APPLIES_TO_SPECIFIC_MEMBERSHIP_PLANS,
+			),
+			true
+		);
 	}
 
 	/**
