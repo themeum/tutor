@@ -539,6 +539,7 @@ const FormVideoInput = ({
                           when={!videoSources.includes('html5')}
                           fallback={
                             <button
+                              data-cy="add-from-url"
                               type="button"
                               css={styles.urlButton}
                               onClick={() => {
@@ -550,6 +551,7 @@ const FormVideoInput = ({
                           }
                         >
                           <Button
+                            data-cy="add-from-url"
                             size="small"
                             variant="secondary"
                             icon={<SVGIcon name="plusSquareBrand" height={24} width={24} />}
@@ -606,6 +608,7 @@ const FormVideoInput = ({
                               </button>
                             </Show>
                             <button
+                              data-cy="remove-video"
                               type="button"
                               css={styleUtils.actionButton}
                               onClick={() => {
@@ -731,7 +734,12 @@ const FormVideoInput = ({
               >
                 {__('Cancel', 'tutor')}
               </Button>
-              <Button variant="secondary" size="small" onClick={form.handleSubmit(handleDataFromUrl)}>
+              <Button
+                data-cy="submit-url"
+                variant="secondary"
+                size="small"
+                onClick={form.handleSubmit(handleDataFromUrl)}
+              >
                 {__('Ok', 'tutor')}
               </Button>
             </div>
