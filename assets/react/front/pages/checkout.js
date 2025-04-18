@@ -4,63 +4,57 @@ const { __ } = wp.i18n;
 document.addEventListener('DOMContentLoaded', () => {
     const defaultErrorMessage = __('Something went wrong, please try again', 'tutor');
     const checkoutPageWrapper = document.querySelector(".tutor-checkout-page");
+    let showTax               = true;    
 
     if (checkoutPageWrapper) {
+
         const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
-        const paymentMethodElem = paymentMethodWrapper?.innerHTML;
-        const payNowBtn = document.querySelector('#tutor-checkout-pay-now-button');
+        const paymentMethodElem    = paymentMethodWrapper?.innerHTML;
+        const payNowBtn            = document.querySelector('#tutor-checkout-pay-now-button');
      
-        // Handle payment method click 
-        const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
-        if (paymentOptionsWrapper) {
-            const paymentTypeInput = document.querySelector("input[name=payment_type]");
-            const paymentOptions = paymentOptionsWrapper.querySelectorAll("label");   
-            let hideTax = false;
-         
+        // Handle payment method selection.
+        document.addEventListener('click', (e) => {
+            if (e.target.closest(".tutor-checkout-payment-options")) {
 
-            paymentOptions.forEach((option) => {
-                option.addEventListener('click', (e) => {
-                    const inputCouponCode = document.querySelector('[name=coupon_code]');
-                    const couponCode = inputCouponCode?.value ? inputCouponCode.value : '';
-                    paymentOptions.forEach(item => item.classList.remove('active'));
-                    option.classList.add('active');
-                    paymentTypeInput.value = option.dataset.paymentType;
-              
-                    if (option.firstElementChild.value === 'stripe') {
-                        updateCheckoutData(couponCode, null, null, 0);
-                        hideTax = true;
+                const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
+                const paymentTypeInput      = document.querySelector("input[name=payment_type]");
+                const paymentOptions        = paymentOptionsWrapper.querySelectorAll("label");
+                
+                paymentOptions.forEach((option) => {
+                    option.addEventListener('click', (e) => {
+                    
+                        // Remove active class.
+                        paymentOptions.forEach(item => item.classList.remove('active'));
+                        // Add active class to the selected option.
+                        option.classList.add('active');
 
-                    } else{
+                        paymentTypeInput.value = option.dataset.paymentType;     
+                        const inputCouponCode  = document.querySelector('[name=coupon_code]');
+                        const couponCode       = inputCouponCode?.value ? inputCouponCode.value : '';
 
-                        if (hideTax) {
-                            updateCheckoutData(couponCode, null, null, 1);
-                            hideTax = false;                       
-                        }                     
-                    }
+                        if (option.firstElementChild.value === 'stripe') {
+                            updateCheckoutData(couponCode, null, null, 0);
+                            showTax = false;
 
-                    const paymentInstructions = option.dataset.paymentInstruction;
-                    if (paymentInstructions) {
-                        document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                        document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
-                    } else {
-                        document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
-                    }
+                        } else {
+
+                            if (!showTax) {
+                                updateCheckoutData(couponCode, null, null, 1);
+                                showTax = true;
+                            }
+                        }    
+                        
+                        const paymentInstructions = option.dataset.paymentInstruction;
+                        if (paymentInstructions) {
+                            document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                            document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                        } else {
+                            document.querySelector('.tutor-payment-instructions').classList.add('tutor-d-none');
+                        }
+                    });
                 });
-            });
-
-            // If only on payment available, keep selected.
-            if (paymentOptions.length === 1) {
-                paymentOptions[0].classList.add('active');
-                paymentOptions[0].querySelector('input[name=payment_method]').checked = true;
-                paymentTypeInput.value = paymentOptions[0].dataset.paymentType;
-
-                const paymentInstructions = paymentOptions[0].dataset.paymentInstruction;
-                if (paymentInstructions) {
-                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
-                }
             }
-        }
+        });
 
         // Handle toggle coupon form button click
         document.addEventListener('click', (e) => {
@@ -91,6 +85,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /**
          * Handle apply coupon button.
+         * 
+         * @since 3.5.0
          */
         document.addEventListener('click', async (e) => {
             if (e.target.closest("#tutor-apply-coupon-button")) {
@@ -122,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     if (status_code === 200) {
                         tutor_toast(__('Success', 'tutor'), message, 'success');
-                        await updateCheckoutData(couponCode);
+                        await updateCheckoutData(couponCode, null, null, showTax ? 1 : 0);
                         
                         if (!data.total_price && data.order_type === 'single_order' && paymentMethodElem) {
                             paymentMethodWrapper.innerHTML = '';
@@ -147,11 +143,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
                 document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
-                await updateCheckoutData('');
+                await updateCheckoutData('', null, null, showTax ? 1 : 0);
                 paymentMethodWrapper.innerHTML = paymentMethodElem;
                 const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
                 payNowBtn.innerHTML = payNowBtnText;
                 document.getElementById('tutor-temp-payment-method')?.remove();
+                showTax = true;
             }
         });
 
@@ -254,7 +251,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_country', country);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value, showTax ? 1 : 0);
 
                 toggleSpinner(e.target, 'hide');
             }
@@ -274,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 formData.set('billing_state', state);
 
                 await saveBilling(formData);
-                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value);
+                await updateCheckoutData(coupon_code, dropdown_billing_country.value, dropdown_billing_state.value, showTax ? 1 : 0);
 
                 toggleSpinner(e.target, 'hide');
             }
