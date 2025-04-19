@@ -109,6 +109,9 @@ const FormMultiLevelInput = ({
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
                 <Show when={treeOptions.length > 0 || searchValue}>
                   <div css={styles.searchInput}>
+                    <div css={styles.searchIcon}>
+                      <SVGIcon name="search" width={24} height={24} />
+                    </div>
                     <input
                       type="text"
                       placeholder={__('Search', 'tutor')}
@@ -312,7 +315,7 @@ const styles = {
       width: 100%;
       border-radius: ${borderRadius[6]};
       border: 1px solid ${colorTokens.stroke.default};
-      padding: ${spacing[4]} ${spacing[16]};
+      padding: ${spacing[4]} ${spacing[16]} ${spacing[4]} ${spacing[32]};
       color: ${colorTokens.text.title};
       appearance: textfield;
 
@@ -320,6 +323,14 @@ const styles = {
         ${styleUtils.inputFocus};
       }
     }
+  `,
+  searchIcon: css`
+    position: absolute;
+    left: ${spacing[24]};
+    top: 50%;
+    transform: translateY(-50%);
+    color: ${colorTokens.icon.default};
+    display: flex;
   `,
   checkboxLabel: css`
     line-height: 1.88rem !important;
