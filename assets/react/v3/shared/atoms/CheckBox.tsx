@@ -54,7 +54,9 @@ const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>((props: Check
         css={[inputCss, styles.checkbox({ label: !!label, isIndeterminate, disabled })]}
       />
       <span />
-      <span css={[styles.label({ isDisabled: disabled }), labelCss]}>{label}</span>
+      <span css={[styles.label({ isDisabled: disabled }), labelCss]} title={label?.toString()}>
+        {label}
+      </span>
     </label>
   );
 });

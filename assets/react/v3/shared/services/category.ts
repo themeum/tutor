@@ -1,8 +1,8 @@
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@TutorShared/atoms/Toast';
 import { wpAuthApiInstance } from '@TutorShared/utils/api';
 import endpoints from '@TutorShared/utils/endpoints';
 import type { ErrorResponse } from '@TutorShared/utils/form';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { convertToErrorMessage } from '@TutorShared/utils/util';
 
 export interface Category {
@@ -23,18 +23,28 @@ interface CreateCategoryResponse {
   data: Category;
 }
 
-const getCategoryList = () => {
-  return wpAuthApiInstance.get<Category[]>(endpoints.CATEGORIES, {
-    params: {
-      per_page: 100,
-    },
-  });
+const getCategoryList = (search?: string) => {
+  return wpAuthApiInstance.get<Category[]>(
+    endpoints.CATEGORIES,
+    search
+      ? {
+          params: {
+            per_page: 100,
+            search,
+          },
+        }
+      : {
+          params: {
+            per_page: 100,
+          },
+        },
+  );
 };
 
-export const useCategoryListQuery = () => {
+export const useCategoryListQuery = (search?: string) => {
   return useQuery({
-    queryKey: ['CategoryList'],
-    queryFn: () => getCategoryList().then((res) => res.data),
+    queryKey: ['CategoryList', search],
+    queryFn: () => getCategoryList(search).then((res) => res.data),
   });
 };
 
