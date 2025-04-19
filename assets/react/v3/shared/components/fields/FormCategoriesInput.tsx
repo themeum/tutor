@@ -107,17 +107,19 @@ const FormMultiLevelInput = ({
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
-                <div css={styles.searchInput}>
-                  <input
-                    type="text"
-                    placeholder={__('Search', 'tutor')}
-                    value={searchValue}
-                    disabled={disabled || loading}
-                    onChange={(e) => {
-                      setSearchValue(e.target.value);
-                    }}
-                  />
-                </div>
+                <Show when={treeOptions.length > 0 || searchValue}>
+                  <div css={styles.searchInput}>
+                    <input
+                      type="text"
+                      placeholder={__('Search', 'tutor')}
+                      value={searchValue}
+                      disabled={disabled || loading}
+                      onChange={(e) => {
+                        setSearchValue(e.target.value);
+                      }}
+                    />
+                  </div>
+                </Show>
 
                 <Show when={!categoryListQuery.isLoading && !loading} fallback={<LoadingSection />}>
                   <Show
