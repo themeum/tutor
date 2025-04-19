@@ -50,6 +50,7 @@ const FormMultiLevelInput = ({
 }: FormMultiLevelInputProps) => {
   const createCategoryMutation = useCreateCategoryMutation();
   const [isOpen, setIsOpen] = useState(false);
+  const [hasCategories, setHasCategories] = useState(false);
   const [searchValue, setSearchValue] = useState('');
   const debouncedSearchValue = useDebounce(searchValue, 300);
   const categoryListQuery = useCategoryListQuery(debouncedSearchValue);
@@ -61,6 +62,12 @@ const FormMultiLevelInput = ({
   }>({
     shouldFocusError: true,
   });
+
+  useEffect(() => {
+    if (!categoryListQuery.isLoading && (categoryListQuery.data || []).length > 0) {
+      setHasCategories(true);
+    }
+  }, [categoryListQuery.isLoading, categoryListQuery.data]);
 
   useEffect(() => {
     if (isOpen) {
@@ -107,7 +114,7 @@ const FormMultiLevelInput = ({
           <>
             <div css={[styles.options, optionsWrapperStyle]}>
               <div css={styles.categoryListWrapper} ref={scrollElementRef}>
-                <Show when={treeOptions.length > 0 || searchValue}>
+                <Show when={hasCategories || debouncedSearchValue}>
                   <div css={styles.searchInput}>
                     <div css={styles.searchIcon}>
                       <SVGIcon name="search" width={24} height={24} />
