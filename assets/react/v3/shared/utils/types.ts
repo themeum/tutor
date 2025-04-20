@@ -201,3 +201,10 @@ export interface Editor {
   link: string;
   name: string;
 }
+
+interface VisibilityProps {
+  visibilityKey?: string;
+}
+
+export type VisibilityContext = 'course_builder';
+export type WithVisibilityProps<T> = T & VisibilityProps;
