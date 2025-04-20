@@ -1,7 +1,21 @@
+import { type SerializedStyles, css } from '@emotion/react';
+import { __ } from '@wordpress/i18n';
+import { produce } from 'immer';
+import { useEffect, useState } from 'react';
+import { Controller, type FieldValues } from 'react-hook-form';
+
 import Button from '@TutorShared/atoms/Button';
 import Checkbox from '@TutorShared/atoms/CheckBox';
+import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
+
+import { isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
+import { typography } from '@TutorShared/config/typography';
+import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import {
   type CategoryWithChildren,
@@ -9,20 +23,8 @@ import {
   useCreateCategoryMutation,
 } from '@TutorShared/services/category';
 import type { FormControllerProps } from '@TutorShared/utils/form';
-import { decodeHtmlEntities, generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
-import { type SerializedStyles, css } from '@emotion/react';
-import { produce } from 'immer';
-import { useEffect, useState } from 'react';
-
-import LoadingSpinner from '@TutorShared/atoms/LoadingSpinner';
-import { isRTL } from '@TutorShared/config/constants';
-import { typography } from '@TutorShared/config/typography';
-import Show from '@TutorShared/controls/Show';
-import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
-import { useIsScrolling } from '@TutorShared/hooks/useIsScrolling';
 import { styleUtils } from '@TutorShared/utils/style-utils';
-import { __ } from '@wordpress/i18n';
-import { Controller, type FieldValues } from 'react-hook-form';
+import { decodeHtmlEntities, generateTree, getCategoryLeftBarHeight } from '@TutorShared/utils/util';
 
 import FormFieldWrapper from './FormFieldWrapper';
 import FormInput from './FormInput';
@@ -205,7 +207,7 @@ const FormMultiLevelInput = ({
   );
 };
 
-export default FormMultiLevelInput;
+export default withVisibilityControl(FormMultiLevelInput);
 
 interface BranchProps {
   option: CategoryWithChildren;

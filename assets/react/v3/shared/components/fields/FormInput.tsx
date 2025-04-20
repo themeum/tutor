@@ -21,6 +21,7 @@ import { parseNumberOnly } from '@TutorShared/utils/util';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
@@ -229,7 +230,7 @@ const FormInput = ({
   );
 };
 
-export default FormInput;
+export default withVisibilityControl(FormInput);
 
 const styles = {
   container: (isClearable: boolean) => css`

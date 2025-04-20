@@ -21,6 +21,7 @@ import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 import type { Option } from '@TutorShared/utils/types';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
@@ -28,41 +29,63 @@ const courseId = getCourseId();
 
 const CourseSettings = () => {
   const form = useFormContext<CourseFormData>();
-  const [activeTab, setActiveTab] = useState('general');
   const isCourseDetailsLoading = useIsFetching({
     queryKey: ['CourseDetails', courseId],
+  });
+
+  const isGeneralSettingsVisible = useVisibilityControl({
+    key: 'basics_options_general',
+    context: 'course_builder',
+  });
+  const isContentDripSettingsVisible = useVisibilityControl({
+    key: 'basics_options_content_drip',
+    context: 'course_builder',
+  });
+  const isEnrollmentSettingsVisible = useVisibilityControl({
+    key: 'basics_options_enrollment',
+    context: 'course_builder',
   });
 
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');
 
-  const tabList: TabItem<string>[] = [
-    {
+  const availableTabs = [
+    isGeneralSettingsVisible && {
       label: __('General', 'tutor'),
       value: 'general',
       icon: <SVGIcon name="settings" width={24} height={24} />,
     },
-    {
+    isContentDripSettingsVisible && {
       label: __('Content Drip', 'tutor'),
       value: 'content_drip',
       icon: <SVGIcon name="contentDrip" width={24} height={24} />,
       activeBadge: !!isContentDripActive,
     },
-    {
+    isEnrollmentSettingsVisible && {
       label: __('Enrollment', 'tutor'),
       value: 'enrollment',
       icon: <SVGIcon name="update" width={24} height={24} />,
     },
-  ];
-
-  if (isAddonEnabled(Addons.BUDDYPRESS)) {
-    tabList.push({
+    isAddonEnabled(Addons.BUDDYPRESS) && {
       label: __('BuddyPress', 'tutor'),
       value: 'buddyPress',
       icon: <SVGIcon name="buddyPress" width={24} height={24} />,
       activeBadge: isBuddyPressEnabled,
-    });
+    },
+  ].filter(Boolean) as TabItem<string>[];
+
+  const [activeTab, setActiveTab] = useState(availableTabs[0]?.value || 'general');
+
+  if (!availableTabs.length) {
+    return null;
   }
+
+  const tabList = CURRENT_VIEWPORT.isAboveSmallMobile
+    ? availableTabs
+    : availableTabs.map((tab) => ({
+        ...tab,
+        label: activeTab === tab.value ? tab.label : '',
+      }));
 
   const difficultyLevelOptions: Option<string>[] = (tutorConfig.difficulty_levels || []).map((level) => ({
     label: level.label,
@@ -75,12 +98,7 @@ const CourseSettings = () => {
 
       <div data-cy="course-settings" css={styles.courseSettings}>
         <Tabs
-          tabList={
-            // this is a hack to only show the tab labels on screens above small mobile
-            CURRENT_VIEWPORT.isAboveSmallMobile
-              ? tabList
-              : tabList.map((tab) => ({ ...tab, label: activeTab === tab.value ? tab.label : '' }))
-          }
+          tabList={tabList}
           activeTab={activeTab}
           onChange={setActiveTab}
           orientation={!CURRENT_VIEWPORT.isAboveSmallMobile ? 'horizontal' : 'vertical'}

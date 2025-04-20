@@ -4,23 +4,26 @@ import { useEffect, useRef, useState } from 'react';
 
 import SVGIcon from '@TutorShared/atoms/SVGIcon';
 
+import { tutorConfig } from '@TutorShared/config/config';
+import { isRTL, TutorRoles } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, lineHeight, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
+import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
+
+import { useDebounce } from '@TutorShared/hooks/useDebounce';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 
 import Show from '@TutorShared/controls/Show';
-import { useDebounce } from '@TutorShared/hooks/useDebounce';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
+import type { User } from '@TutorShared/services/users';
 import { noop } from '@TutorShared/utils/util';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 import profileImage from '@SharedImages/profile-photo.png';
-import { tutorConfig } from '@TutorShared/config/config';
-import { isRTL, TutorRoles } from '@TutorShared/config/constants';
-import { useSelectKeyboardNavigation } from '@TutorShared/hooks/useSelectKeyboardNavigation';
-import type { User } from '@TutorShared/services/users';
 
 export interface UserOption extends User {
   isRemoveAble?: boolean;
@@ -383,7 +386,7 @@ const FormSelectUser = ({
   );
 };
 
-export default FormSelectUser;
+export default withVisibilityControl(FormSelectUser);
 
 const styles = {
   mainWrapper: css`

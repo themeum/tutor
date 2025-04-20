@@ -35,6 +35,7 @@ import { type IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 
 export interface CourseVideo {
   source: string;
@@ -742,7 +743,7 @@ const FormVideoInput = ({
   );
 };
 
-export default FormVideoInput;
+export default withVisibilityControl(FormVideoInput);
 
 const styles = {
   emptyMediaWrapper: css`

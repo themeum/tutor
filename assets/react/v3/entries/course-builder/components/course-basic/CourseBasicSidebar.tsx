@@ -97,6 +97,26 @@ const CourseBasicSidebar = () => {
     (instructor) => String(instructor.id) !== String(currentAuthor?.id),
   );
 
+  const handleAuthorChange = () => {
+    const previousAuthor = courseDetails?.post_author;
+    const courseInstructors = form.getValues('course_instructors');
+    const isAlreadyAdded = !!courseInstructors.find(
+      (instructor) => String(instructor.id) === String(previousAuthor?.ID),
+    );
+
+    const convertedAuthor: UserOption = {
+      id: Number(previousAuthor?.ID),
+      name: previousAuthor?.display_name,
+      email: previousAuthor.user_email,
+      avatar_url: previousAuthor?.tutor_profile_photo_url,
+      isRemoveAble: String(previousAuthor?.ID) !== String(currentUser.data.id),
+    };
+
+    const updatedInstructors = isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor];
+
+    form.setValue('course_instructors', updatedInstructors);
+  };
+
   return (
     <div css={styles.sidebar}>
       <div css={styles.statusAndDate}>
@@ -147,7 +167,7 @@ const CourseBasicSidebar = () => {
         />
       </Show>
 
-      <ScheduleOptions />
+      <ScheduleOptions visibilityKey="course_builder.basics_scheduling_option" />
 
       <Controller
         name="thumbnail"
@@ -160,6 +180,7 @@ const CourseBasicSidebar = () => {
             infoText={sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
             generateWithAi={!isTutorPro || isOpenAiEnabled}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+            visibilityKey="course_builder.basics_featured_image"
           />
         )}
       />
@@ -174,26 +195,38 @@ const CourseBasicSidebar = () => {
             buttonText={__('Upload Video', 'tutor')}
             infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+            visibilityKey="course_builder.basics_intro_video"
           />
         )}
       />
 
       <Show when={!isMembershipOnlyMode}>
-        <CoursePricing />
+        <CoursePricing visibilityKey="course_builder.basics_pricing_options" />
       </Show>
 
       <Controller
         name="course_categories"
         control={form.control}
         defaultValue={[]}
-        render={(controllerProps) => <FormCategoriesInput {...controllerProps} label={__('Categories', 'tutor')} />}
+        render={(controllerProps) => (
+          <FormCategoriesInput
+            {...controllerProps}
+            label={__('Categories', 'tutor')}
+            visibilityKey="course_builder.basics_categories"
+          />
+        )}
       />
 
       <Controller
         name="course_tags"
         control={form.control}
         render={(controllerProps) => (
-          <FormTagsInput {...controllerProps} label={__('Tags', 'tutor')} placeholder={__('Add tags', 'tutor')} />
+          <FormTagsInput
+            {...controllerProps}
+            label={__('Tags', 'tutor')}
+            placeholder={__('Add tags', 'tutor')}
+            visibilityKey="course_builder.basic_tags"
+          />
         )}
       />
 
@@ -219,28 +252,11 @@ const CourseBasicSidebar = () => {
             isSearchable
             disabled={!isAuthorEditable}
             loading={userList.isLoading}
-            onChange={() => {
-              const previousAuthor = courseDetails?.post_author;
-              const courseInstructors = form.getValues('course_instructors');
-              const isAlreadyAdded = !!courseInstructors.find(
-                (instructor) => String(instructor.id) === String(previousAuthor?.ID),
-              );
-
-              const convertedAuthor: UserOption = {
-                id: Number(previousAuthor?.ID),
-                name: previousAuthor?.display_name,
-                email: previousAuthor.user_email,
-                avatar_url: previousAuthor?.tutor_profile_photo_url,
-                isRemoveAble: String(previousAuthor?.ID) !== String(currentUser.data.id),
-              };
-
-              const updatedInstructors = isAlreadyAdded ? courseInstructors : [...courseInstructors, convertedAuthor];
-
-              form.setValue('course_instructors', updatedInstructors);
-            }}
+            onChange={handleAuthorChange}
             handleSearchOnChange={(searchText) => {
               setUserSearchText(searchText);
             }}
+            visibilityKey="course_builder.basics_author"
           />
         )}
       />
@@ -260,6 +276,7 @@ const CourseBasicSidebar = () => {
               loading={instructorListQuery.isLoading && !controllerProps.field.value}
               emptyStateText={__('No instructors added.', 'tutor')}
               isInstructorMode
+              visibilityKey="course_builder.basics_instructors"
             />
           )}
         />
