@@ -150,7 +150,7 @@ export const VisibilityControlKeys = {
       TOTAL_COURSE_DURATION: 'course_builder.additional__total_course_duration',
       COURSE_MATERIALS_INCLUDES: 'course_builder.additional__course_materials_includes',
       COURSE_REQUIREMENTS: 'course_builder.additional__course_requirements',
-      CERTIFICATES: 'course_builder.additional__certificates',
+      CERTIFICATES: 'course_builder.additional__certificate',
       ATTACHMENTS: 'course_builder.additional__attachments',
       SCHEDULE_LIVE_CLASS: 'course_builder.additional__schedule_live_class',
     },
