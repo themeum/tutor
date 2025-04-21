@@ -463,36 +463,36 @@ class Course extends Tutor_Base {
 	}
 
 	/**
-	 * Setup course categories and tags
+	 * Setup course categories and tags.
 	 *
 	 * @since 3.0.0
 	 *
-	 * @param int   $post_id post id.
-	 * @param array $params  array of params.
+	 * @param int   $post_id Post ID.
+	 * @param array $params  Array of params.
 	 *
 	 * @return void
 	 */
 	public function setup_course_categories_tags( $post_id, $params ) {
-    if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
-        $valid_category_ids = $this->validate_term_ids( 
-            $params['course_categories'], 
-            CourseModel::COURSE_CATEGORY 
-        );
-        wp_set_object_terms( $post_id, $valid_category_ids, CourseModel::COURSE_CATEGORY );
-    } else {
-        wp_set_object_terms( $post_id, array(), CourseModel::COURSE_CATEGORY );
-    }
+		if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
+			$valid_category_ids = $this->validate_term_ids(
+				$params['course_categories'],
+				CourseModel::COURSE_CATEGORY
+			);
+			wp_set_object_terms( $post_id, $valid_category_ids, CourseModel::COURSE_CATEGORY );
+		} else {
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_CATEGORY );
+		}
 
-    if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
-        $valid_tag_ids = $this->validate_term_ids( 
-            $params['course_tags'], 
-            CourseModel::COURSE_TAG 
-        );
-        wp_set_object_terms( $post_id, $valid_tag_ids, CourseModel::COURSE_TAG );
-    } else {
-        wp_set_object_terms( $post_id, array(), CourseModel::COURSE_TAG );
-    }
-}
+		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
+			$valid_tag_ids = $this->validate_term_ids(
+				$params['course_tags'],
+				CourseModel::COURSE_TAG
+			);
+			wp_set_object_terms( $post_id, $valid_tag_ids, CourseModel::COURSE_TAG );
+		} else {
+			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_TAG );
+		}
+	}
 
 	/**
 	 * Validate price for course create
