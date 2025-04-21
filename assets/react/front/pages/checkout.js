@@ -31,18 +31,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         paymentTypeInput.value = option.dataset.paymentType;     
                         const inputCouponCode  = document.querySelector('[name=coupon_code]');
-                        const couponCode       = inputCouponCode?.value ? inputCouponCode.value : '';
+                        const couponCode       = inputCouponCode?.value || '';
 
                         if (option.firstElementChild.value === 'paddle') {
                             updateCheckoutData(couponCode, null, null, 0);
                             showTax = false;
 
-                        } else {
-
-                            if (!showTax) {
-                                updateCheckoutData(couponCode, null, null, 1);
-                                showTax = true;
-                            }
+                        } else if(!showTax) {                  
+                            updateCheckoutData(couponCode, null, null, 1);
+                            showTax = true;                       
                         }    
                         
                         const paymentInstructions = option.dataset.paymentInstruction;
@@ -58,17 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // If only one payment available, keep selected.
-        if (payments.length === 1) {
-            payments[0].classList.add('active');
-            payments[0].querySelector('input[name=payment_method]').checked = true;
-            paymentTypeInput.value = payments[0].dataset.paymentType;
-
-            const paymentInstructions = payments[0].dataset.paymentInstruction;
-            if (paymentInstructions) {
-                document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
-                document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
-            }
-        }
+        handleSinglePaymentOptionSelection();
 
         // Handle toggle coupon form button click
         document.addEventListener('click', (e) => {
@@ -163,6 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 payNowBtn.innerHTML = payNowBtnText;
                 document.getElementById('tutor-temp-payment-method')?.remove();
                 showTax = true;
+                handleSinglePaymentOptionSelection();
             }
         });
 
@@ -290,5 +278,44 @@ document.addEventListener('DOMContentLoaded', () => {
                 toggleSpinner(e.target, 'hide');
             }
         })
+
+
+        /**
+         * Handles the selection of the Paddle payment method.
+         * 
+         * @since 3.5.0
+         */
+        async function handlePaddlePaymentSelection() {
+            const inputCouponCode = document.querySelector('[name=coupon_code]');
+            const couponCode      = inputCouponCode?.value || '';
+            await updateCheckoutData(couponCode, null, null, 0);
+            showTax = false;
+        }   
+
+        /**
+         * Handles the selection of a single payment option.
+         * 
+         * @returns {void}
+         * @since 3.5.0
+         */
+        function handleSinglePaymentOptionSelection()
+        {
+            // If only one payment available, keep selected.
+            if (payments.length === 1) {
+                payments[0].classList.add('active');
+                payments[0].querySelector('input[name=payment_method]').checked = true;
+                paymentTypeInput.value = payments[0].dataset.paymentType;
+
+                if (payments[0].firstElementChild.value === 'paddle') {
+                    handlePaddlePaymentSelection();
+                }
+
+                const paymentInstructions = payments[0].dataset.paymentInstruction;
+                if (paymentInstructions) {
+                    document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                    document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+                }
+            }
+        }
     }
 });

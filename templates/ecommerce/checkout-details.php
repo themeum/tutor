@@ -36,7 +36,7 @@ $order_type = ( $plan_id && $plan_info )
 			: OrderModel::TYPE_SINGLE_ORDER;
 
 $coupon_code            = Input::sanitize_request_data( 'coupon_code', '' );
-$show_tax               = (int) Input::sanitize_request_data( 'show_tax', '1' );
+$show_tax               = (int) Input::sanitize_request_data( 'show_tax', 1 );
 $has_manual_coupon_code = ! empty( $coupon_code );
 $show_coupon_box        = Settings::is_coupon_usage_enabled();
 
