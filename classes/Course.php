@@ -473,40 +473,26 @@ class Course extends Tutor_Base {
 	 * @return void
 	 */
 	public function setup_course_categories_tags( $post_id, $params ) {
-		if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
-			$category_names = array();
+    if ( isset( $params['course_categories'] ) && is_array( $params['course_categories'] ) ) {
+        $valid_category_ids = $this->validate_term_ids( 
+            $params['course_categories'], 
+            CourseModel::COURSE_CATEGORY 
+        );
+        wp_set_object_terms( $post_id, $valid_category_ids, CourseModel::COURSE_CATEGORY );
+    } else {
+        wp_set_object_terms( $post_id, array(), CourseModel::COURSE_CATEGORY );
+    }
 
-			foreach ( $params['course_categories'] as $category_id ) {
-				$term = get_term( $category_id, CourseModel::COURSE_CATEGORY );
-
-				if ( ! is_wp_error( $term ) && $term ) {
-					$category_names[] = $term->name;
-				}
-			}
-
-			// Set category names on the post.
-			wp_set_object_terms( $post_id, $category_names, CourseModel::COURSE_CATEGORY );
-		} else {
-			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_CATEGORY );
-		}
-
-		if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
-			$tag_names = array();
-
-			foreach ( $params['course_tags'] as $tag_id ) {
-				$term = get_term( $tag_id, CourseModel::COURSE_TAG );
-
-				if ( ! is_wp_error( $term ) && $term ) {
-					$tag_names[] = $term->name;
-				}
-			}
-
-			// Set tag names on the post.
-			wp_set_object_terms( $post_id, $tag_names, CourseModel::COURSE_TAG );
-		} else {
-			wp_set_object_terms( $post_id, array(), CourseModel::COURSE_TAG );
-		}
-	}
+    if ( isset( $params['course_tags'] ) && is_array( $params['course_tags'] ) ) {
+        $valid_tag_ids = $this->validate_term_ids( 
+            $params['course_tags'], 
+            CourseModel::COURSE_TAG 
+        );
+        wp_set_object_terms( $post_id, $valid_tag_ids, CourseModel::COURSE_TAG );
+    } else {
+        wp_set_object_terms( $post_id, array(), CourseModel::COURSE_TAG );
+    }
+}
 
 	/**
 	 * Validate price for course create
@@ -3071,4 +3057,25 @@ class Course extends Tutor_Base {
 
 		return $args;
 	}
+
+	/**
+ * Validate term IDs before setting them
+ * 
+ * @since 3.5.0
+ * 
+ * @param array  $term_ids Term IDs to validate.
+ * @param string $taxonomy Taxonomy to check against.
+ * 
+ * @return array Valid term IDs
+ * 
+ */
+private function validate_term_ids( $term_ids, $taxonomy ) {
+    return array_filter( 
+        array_map( 'intval', $term_ids ), 
+        function( $term_id ) use ( $taxonomy ) {
+            $term = get_term( $term_id, $taxonomy );
+            return ! is_wp_error( $term ) && $term;
+        }
+    );
+}
 }
