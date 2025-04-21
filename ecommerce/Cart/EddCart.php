@@ -54,7 +54,7 @@ class EddCart extends BaseCart implements CartInterface {
 	 * @return string
 	 */
 	public function get_page_url(): string {
-		return edd_get_checkout_uri();
+		return (string) edd_get_checkout_uri();
 	}
 
 	/**

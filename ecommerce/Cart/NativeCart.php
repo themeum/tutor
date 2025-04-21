@@ -71,7 +71,7 @@ class NativeCart extends BaseCart implements CartInterface {
 	}
 
 	/**
-	 * Get cart page url to view the cart
+	 * Check if item exists in cart
 	 *
 	 * @since 3.5.0
 	 *

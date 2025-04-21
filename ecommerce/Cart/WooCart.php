@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /**
- * Class for managing native cart functions
+ * Class for managing woocommere cart functions
  *
  * @since 3.5.0
  */
@@ -75,7 +75,7 @@ class WooCart extends BaseCart implements CartInterface {
 	}
 
 	/**
-	 * Get cart page url to view the cart
+	 * Check if item exists in cart
 	 *
 	 * @since 3.5.0
 	 *
