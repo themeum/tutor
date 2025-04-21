@@ -25,14 +25,15 @@ $status_map = array(
 );
 
 // Set currently required course status fo rcurrent tab.
-$status = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : CourseModel::STATUS_PUBLISH;
+$status    = isset( $status_map[ $active_tab ] ) ? $status_map[ $active_tab ] : CourseModel::STATUS_PUBLISH;
+$post_type = apply_filters( 'tutor_dashboard_course_list_post_type', array( tutor()->course_post_type ) );
 
 // Get counts for course tabs.
 $count_map = array(
-	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true ),
-	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true ),
-	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true ),
-	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true ),
+	'publish' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PUBLISH, 0, 0, true, $post_type ),
+	'pending' => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_PENDING, 0, 0, true, $post_type ),
+	'draft'   => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_DRAFT, 0, 0, true, $post_type ),
+	'future'  => CourseModel::get_courses_by_instructor( $current_user_id, CourseModel::STATUS_FUTURE, 0, 0, true, $post_type ),
 );
 
 $course_archive_arg = isset( $GLOBALS['tutor_course_archive_arg'] ) ? $GLOBALS['tutor_course_archive_arg']['column_per_row'] : null;
@@ -40,8 +41,7 @@ $courseCols         = null === $course_archive_arg ? tutor_utils()->get_option( 
 $per_page           = tutor_utils()->get_option( 'courses_per_page', 10 );
 $paged              = Input::get( 'current_page', 1, Input::TYPE_INT );
 $offset             = $per_page * ( $paged - 1 );
-
-$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page );
+$results            = CourseModel::get_courses_by_instructor( $current_user_id, $status, $offset, $per_page, false, $post_type );
 $show_course_delete = true;
 if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'instructor_can_delete_course' ) ) {
 	$show_course_delete = false;
@@ -101,6 +101,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 					$course_duration    = get_tutor_course_duration_context( $post->ID, true );
 					$course_students    = tutor_utils()->count_enrolled_users_by_course();
 					$is_main_instructor = CourseModel::is_main_instructor( $post->ID );
+					$course_edit_link   = apply_filters( 'tutor_dashboard_course_list_edit_link', tutor_utils()->course_edit_link( $post->ID, tutor()->has_pro ? 'frontend' : 'backend' ), $post );
 					?>
 
 					<div id="<?php echo esc_attr( $row_id ); ?>" class="tutor-card tutor-course-card tutor-mycourse-<?php the_ID(); ?>">
@@ -183,7 +184,7 @@ if ( ! current_user_can( 'administrator' ) && ! tutor_utils()->get_option( 'inst
 									</span>
 								</div>
 								<div class="tutor-iconic-btn-group tutor-mr-n8">
-									<a href="<?php echo esc_url( tutor_utils()->course_edit_link( $post->ID, tutor()->has_pro ? 'frontend' : 'backend' ) ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
+									<a href="<?php echo esc_url( $course_edit_link ); ?>" class="tutor-iconic-btn tutor-my-course-edit">
 										<i class="tutor-icon-edit" area-hidden="true"></i>
 									</a>
 									<div class="tutor-dropdown-parent">

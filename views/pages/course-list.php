@@ -48,7 +48,7 @@ $navbar_data    = array(
 	'tabs'         => $courses->tabs_key_value( $category_slug, $course_id, $date, $search_filter ),
 	'active'       => $active_tab,
 	'add_button'   => true,
-	'button_title' => __( 'Add New', 'tutor' ),
+	'button_title' => __( 'New Course', 'tutor' ),
 	'button_url'   => '#',
 	'button_class' => 'tutor-create-new-course',
 );
@@ -182,14 +182,14 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 							<th width="13%">
 								<?php esc_html_e( 'Categories', 'tutor' ); ?>
 							</th>
-							<th width="13%">
-								<?php esc_html_e( 'Author', 'tutor' ); ?>
-							</th>
 							<th width="10%">
 								<?php
 								$membership_only_mode = apply_filters( 'tutor_membership_only_mode', false );
 								echo esc_html( $membership_only_mode ? __( 'Plan', 'tutor' ) : __( 'Price', 'tutor' ) );
 								?>
+							</th>
+							<th width="13%">
+								<?php esc_html_e( 'Author', 'tutor' ); ?>
 							</th>
 							<th class="tutor-table-rows-sorting" width="15%">
 								<?php esc_html_e( 'Date', 'tutor' ); ?>
@@ -224,7 +224,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 								}
 
 								$author_details = $authors[ $post->post_author ];
-								$edit_link      = $add_course_url . "&course_id=$post->ID";
+								$edit_link      = apply_filters( 'tutor_course_list_course_edit_link', $add_course_url . "&course_id=$post->ID", $post );
 								?>
 								<tr>
 									<td>
@@ -249,6 +249,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 												</a>
 
 												<div class="tutor-meta tutor-mt-4">
+												<?php ob_start(); ?>
 													<span>
 														<?php esc_html_e( 'Topic:', 'tutor' ); ?>
 														<span class="tutor-meta-value">
@@ -276,6 +277,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 															<?php echo esc_html( $count_assignment ); ?>
 														</span>
 													</span>
+													<?php echo wp_kses_post( apply_filters( 'tutor_filter_course_list_meta', ob_get_clean(), $post ) ); ?>
 												</div>
 											</div>
 										</div>
@@ -293,23 +295,6 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 											?>
 										</span>
 									</td>
-
-									<td>
-										<div class="tutor-d-flex tutor-align-center">
-											<?php
-											echo wp_kses(
-												tutor_utils()->get_tutor_avatar( $author_details, 'sm' ),
-												tutor_utils()->allowed_avatar_tags()
-											)
-											?>
-											<div class="tutor-ml-12">
-												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $author_details, true ) ); ?>">
-													<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
-												</a>
-											</div>
-										</div>
-									</td>
-
 									<td>
 										<div class="tutor-fs-7">
 											<?php
@@ -325,7 +310,21 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 											?>
 										</div>
 									</td>
-
+									<td>
+										<div class="tutor-d-flex tutor-align-center">
+											<?php
+											echo wp_kses(
+												tutor_utils()->get_tutor_avatar( $author_details, 'sm' ),
+												tutor_utils()->allowed_avatar_tags()
+											)
+											?>
+											<div class="tutor-ml-12">
+												<a target="_blank" class="tutor-fs-7 tutor-table-link" href="<?php echo esc_url( tutor_utils()->profile_url( $author_details, true ) ); ?>">
+													<?php echo esc_html( $author_details ? $author_details->display_name : '' ); ?>
+												</a>
+											</div>
+										</div>
+									</td>
 									<td>
 										<div class="tutor-fw-normal">
 											<div class="tutor-fs-7 tutor-mb-4">
