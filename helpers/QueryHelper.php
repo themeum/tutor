@@ -220,7 +220,7 @@ class QueryHelper {
 			$value = '(' . self::prepare_in_clause( $value ) . ')';
 		}
 
-		return "{$field} {$operator} {$value}";
+		return "{$field} {$upper_operator} {$value}";
 	}
 
 	/**
