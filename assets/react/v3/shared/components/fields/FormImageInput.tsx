@@ -10,13 +10,13 @@ import ProIdentifierModal from '@TutorShared/components/modals/ProIdentifierModa
 import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 
 import { tutorConfig } from '@TutorShared/config/config';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 
 import generateImage2x from '@SharedImages/pro-placeholders/generate-image-2x.webp';
 import generateImage from '@SharedImages/pro-placeholders/generate-image.webp';
 
-import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import FormFieldWrapper from './FormFieldWrapper';
 
 type FormImageInputProps = {

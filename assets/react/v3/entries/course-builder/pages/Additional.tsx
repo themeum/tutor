@@ -30,13 +30,13 @@ import { Addons, CURRENT_VIEWPORT, VisibilityControlKeys } from '@TutorShared/co
 import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 import { useCourseListQuery } from '@TutorShared/services/course';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isAddonEnabled } from '@TutorShared/utils/util';
 
 import attachmentsPro2x from '@SharedImages/pro-placeholders/attachments-2x.webp';
 import attachmentsPro from '@SharedImages/pro-placeholders/attachments.webp';
-import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 
 const isTutorPro = !!tutorConfig.tutor_pro_url;
 const courseId = getCourseId();

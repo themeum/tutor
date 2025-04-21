@@ -79,11 +79,11 @@ export default SVGIcon;
 
 const styles = {
   svg: ({ isColorIcon = false }) => css`
-    transition:
-      filter 0.3s ease-in-out,
-      ${isColorIcon &&
-      css`
-        filter: grayscale(100%);
-      `};
+    transition: filter 0.3s ease-in-out;
+
+    ${isColorIcon &&
+    css`
+      filter: grayscale(100%);
+    `};
   `,
 };

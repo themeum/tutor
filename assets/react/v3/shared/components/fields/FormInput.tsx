@@ -14,6 +14,7 @@ import SetupOpenAiModal from '@TutorShared/components/modals/SetupOpenAiModal';
 import { tutorConfig } from '@TutorShared/config/config';
 import { borderRadius, colorTokens, spacing } from '@TutorShared/config/styles';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { isDefined } from '@TutorShared/utils/types';
@@ -21,7 +22,6 @@ import { parseNumberOnly } from '@TutorShared/utils/util';
 
 import generateText2x from '@SharedImages/pro-placeholders/generate-text-2x.webp';
 import generateText from '@SharedImages/pro-placeholders/generate-text.webp';
-import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 
 interface FormInputProps extends FormControllerProps<string | number | null> {
   label?: string | React.ReactNode;
