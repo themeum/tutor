@@ -40,4 +40,15 @@ interface CartInterface {
 	 * @return string
 	 */
 	public function get_error(): string;
+
+	/**
+	 * Check if item already exists in cart
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param integer $item_id Item id.
+	 *
+	 * @return boolean
+	 */
+	public function is_item_exists( int $item_id ): bool;
 }

@@ -51,8 +51,12 @@ class NativeCart extends BaseCart implements CartInterface {
 	 * @return bool
 	 */
 	public function add( int $item_id ): bool {
-		$user_id = tutor_utils()->get_user_id();
-		return (bool) $this->cart_model->add_course_to_cart( $user_id, $item_id );
+		if ( $this->is_item_exists( $item_id ) ) {
+			$this->cart_error = __( 'Item already exists in cart', 'tutor' );
+			return false;
+		}
+
+		return (bool) $this->cart_model->add_course_to_cart( $this->user_id, $item_id );
 	}
 
 	/**
@@ -64,5 +68,18 @@ class NativeCart extends BaseCart implements CartInterface {
 	 */
 	public function get_page_url(): string {
 		return CartController::get_page_url();
+	}
+
+	/**
+	 * Get cart page url to view the cart
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return bool
+	 */
+	public function is_item_exists( int $item_id ): bool {
+		return $this->cart_model->is_course_in_user_cart( $this->user_id, $item_id );
 	}
 }

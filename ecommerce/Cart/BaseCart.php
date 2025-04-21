@@ -20,7 +20,14 @@ class BaseCart {
 	 *
 	 * @var string
 	 */
-	private $cart_error;
+	protected $cart_error;
+
+	/**
+	 * Current user id
+	 *
+	 * @var int
+	 */
+	protected $user_id;
 
 	/**
 	 * Initialize member variables
@@ -29,6 +36,7 @@ class BaseCart {
 	 */
 	public function __construct() {
 		$this->cart_error = __( 'Failed to add item to the cart', 'tutor' );
+		$this->user_id    = get_current_user_id();
 	}
 
 	/**
