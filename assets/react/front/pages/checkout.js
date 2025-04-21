@@ -11,13 +11,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const paymentMethodWrapper = document.querySelector('.tutor-payment-method-wrapper');
         const paymentMethodElem    = paymentMethodWrapper?.innerHTML;
         const payNowBtn            = document.querySelector('#tutor-checkout-pay-now-button');
+        const payments             = document.querySelectorAll('.tutor-checkout-payment-item');
+        const paymentTypeInput     = document.querySelector("input[name=payment_type]");
      
         // Handle payment method selection.
         document.addEventListener('click', (e) => {
             if (e.target.closest(".tutor-checkout-payment-options")) {
 
                 const paymentOptionsWrapper = document.querySelector(".tutor-checkout-payment-options");
-                const paymentTypeInput      = document.querySelector("input[name=payment_type]");
                 const paymentOptions        = paymentOptionsWrapper.querySelectorAll("label");
                 
                 paymentOptions.forEach((option) => {
@@ -55,6 +56,19 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
+
+        // If only one payment available, keep selected.
+        if (payments.length === 1) {
+            payments[0].classList.add('active');
+            payments[0].querySelector('input[name=payment_method]').checked = true;
+            paymentTypeInput.value = payments[0].dataset.paymentType;
+
+            const paymentInstructions = payments[0].dataset.paymentInstruction;
+            if (paymentInstructions) {
+                document.querySelector('.tutor-payment-instructions').classList.remove('tutor-d-none');
+                document.querySelector('.tutor-payment-instructions').textContent = paymentInstructions;
+            }
+        }
 
         // Handle toggle coupon form button click
         document.addEventListener('click', (e) => {
