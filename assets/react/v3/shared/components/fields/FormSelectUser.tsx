@@ -20,8 +20,8 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { noop } from '@TutorShared/utils/util';
 
-
 import profileImage from '@SharedImages/profile-photo.png';
+
 import FormFieldWrapper from './FormFieldWrapper';
 
 export interface UserOption extends User {
