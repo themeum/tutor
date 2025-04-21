@@ -1786,3 +1786,22 @@ if ( ! function_exists( 'tutor_add_to_cart' ) ) {
 	}
 }
 
+if ( ! function_exists( 'tutor_get_cart_page_url' ) ) {
+	/**
+	 * Get the cart page URL
+	 *
+	 * @since 3.5.0
+	 *
+	 * @return string
+	 */
+	function tutor_get_cart_page_url() {
+		$monetization = tutor_utils()->get_option( 'monetize_by' );
+		try {
+			$cart = CartFactory::create_cart( $monetization );
+			return $cart->get_page_url();
+		} catch ( \Throwable $th ) {
+			return $th->getMessage();
+		}
+	}
+}
+

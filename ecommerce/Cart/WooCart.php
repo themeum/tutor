@@ -23,6 +23,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 class WooCart extends BaseCart implements CartInterface {
 
 	/**
+	 * WC_Cart object
+	 *
+	 * @var WC_Cart
+	 */
+	private $cart;
+
+	/**
+	 * Constructor
+	 *
+	 * @since 3.5.0
+	 */
+	public function __construct() {
+		parent::__construct();
+		$this->cart = WC()->cart;
+	}
+
+	/**
 	 * Add to cart
 	 *
 	 * @since 3.5.0
@@ -32,7 +49,18 @@ class WooCart extends BaseCart implements CartInterface {
 	 * @return bool
 	 */
 	public function add( int $item_id ): bool {
-		return true;
+		$wc_product_id = tutor_utils()->get_course_product_id( $item_id );
+		if ( ! $wc_product_id ) {
+			$this->cart_error = __( 'Woocommerce Product not found', 'tutor' );
+			return false;
+		}
+
+		if ( $this->is_item_exists( $item_id ) ) {
+			$this->cart_error = __( 'Item already exists in cart', 'tutor' );
+			return false;
+		} else {
+			return $this->cart->add_to_cart( $wc_product_id ) ? true : false;
+		}
 	}
 
 	/**
@@ -43,6 +71,20 @@ class WooCart extends BaseCart implements CartInterface {
 	 * @return string
 	 */
 	public function get_page_url(): string {
-		return '';
+		return wc_get_cart_url();
+	}
+
+	/**
+	 * Get cart page url to view the cart
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return bool
+	 */
+	public function is_item_exists( int $item_id ): bool {
+		$product_id = tutor_utils()->get_course_product_id( $item_id );
+		return (bool) $this->cart->find_product_in_cart( $this->cart->generate_cart_id( $product_id ) );
 	}
 }
