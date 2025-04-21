@@ -202,6 +202,43 @@ export interface Editor {
   name: string;
 }
 
+export type DurationUnit = 'hour' | 'day' | 'week' | 'month' | 'year';
+
+export interface MembershipPlan {
+  id: number;
+  payment_type: string;
+  plan_type: string;
+  restriction_mode: string | null;
+  plan_name: string;
+  description: string | null;
+  is_enabled: '1' | '0';
+  is_featured: string;
+  featured_text: string | null;
+  recurring_value: string;
+  recurring_interval: Exclude<DurationUnit, 'hour'>;
+  recurring_limit: string;
+  plan_duration: string;
+  regular_price: string;
+  sale_price: string;
+  sale_price_from: string | null;
+  sale_price_to: string | null;
+  provide_certificate: string;
+  enrollment_fee: string;
+  trial_fee: string;
+  trial_value: string;
+  trial_interval: Extract<DurationUnit, 'hour' | 'day'>;
+  plan_order: string;
+  plan_id: string;
+  object_name: string;
+  object_id: string;
+  categories: {
+    id: number;
+    title: string;
+    image: string;
+    total_courses: number;
+  }[];
+}
+
 interface VisibilityProps {
   visibilityKey?: string;
 }
