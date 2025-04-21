@@ -214,7 +214,7 @@ class CouponModel {
 	 * @return array
 	 */
 	public static function get_coupon_applies_to() {
-		return array(
+		$list = array(
 			self::APPLIES_TO_ALL_COURSES_AND_BUNDLES => __( 'All courses and bundles', 'tutor' ),
 			self::APPLIES_TO_ALL_COURSES             => __( 'All courses', 'tutor' ),
 			self::APPLIES_TO_ALL_BUNDLES             => __( 'All bundles', 'tutor' ),
@@ -222,6 +222,22 @@ class CouponModel {
 			self::APPLIES_TO_SPECIFIC_BUNDLES        => __( 'Specific bundles', 'tutor' ),
 			self::APPLIES_TO_SPECIFIC_CATEGORY       => __( 'Specific category', 'tutor' ),
 		);
+
+		return apply_filters( 'tutor_coupon_applies_to', $list );
+	}
+
+	/**
+	 * Get applies to label by key.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param string $key Applies to key.
+	 *
+	 * @return string
+	 */
+	public static function get_coupon_applies_to_label( $key ) {
+		$applies_to = self::get_coupon_applies_to();
+		return isset( $applies_to[ $key ] ) ? $applies_to[ $key ] : '';
 	}
 
 	/**
