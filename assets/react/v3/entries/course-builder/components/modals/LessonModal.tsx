@@ -35,7 +35,7 @@ import {
 import type { H5PContent } from '@CourseBuilderServices/quiz';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, CURRENT_VIEWPORT, TutorRoles } from '@TutorShared/config/constants';
+import { Addons, CURRENT_VIEWPORT, TutorRoles, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -103,10 +103,12 @@ const LessonModal = ({
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
   const { fields } = useCourseBuilderSlot();
-  const isLessonPreviewVisible = useVisibilityControl({
-    key: 'curriculum__lesson__lesson_preview',
-    context: 'course_builder',
-  });
+  const isVideoPlaybackTimeVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME,
+  );
+  const isLessonPreviewVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.LESSON_PREVIEW,
+  );
 
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
@@ -368,7 +370,7 @@ const LessonModal = ({
                     __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
                     tutorConfig.max_upload_size,
                   )}
-                  visibilityKey="course_builder.curriculum__lesson__featured_image"
+                  visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.FEATURED_IMAGE}
                 />
               )}
             />
@@ -386,60 +388,62 @@ const LessonModal = ({
                     form.setValue('duration.minute', duration.minutes);
                     form.setValue('duration.second', duration.seconds);
                   }}
-                  visibilityKey="course_builder.curriculum__lesson__video"
+                  visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO}
                 />
               )}
             />
-            <div css={styles.durationWrapper}>
-              <span css={styles.additionLabel}>{__('Video Playback Time', 'tutor')}</span>
-              <div css={styles.duration}>
-                <Controller
-                  name="duration.hour"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      type="number"
-                      content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
-                      contentPosition="right"
-                      placeholder="0"
-                      showVerticalBar={false}
-                      visibilityKey="course_builder.curriculum__lesson__video_payback_time"
-                    />
-                  )}
-                />
-                <Controller
-                  name="duration.minute"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      type="number"
-                      content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
-                      contentPosition="right"
-                      placeholder="0"
-                      showVerticalBar={false}
-                      visibilityKey="course_builder.curriculum__lesson__video_payback_time"
-                    />
-                  )}
-                />
-                <Controller
-                  name="duration.second"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormInputWithContent
-                      {...controllerProps}
-                      type="number"
-                      content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
-                      contentPosition="right"
-                      placeholder="0"
-                      showVerticalBar={false}
-                      visibilityKey="course_builder.curriculum__lesson__video_payback_time"
-                    />
-                  )}
-                />
+            <Show when={isVideoPlaybackTimeVisible}>
+              <div css={styles.durationWrapper}>
+                <span css={styles.additionLabel}>{__('Video Playback Time', 'tutor')}</span>
+                <div css={styles.duration}>
+                  <Controller
+                    name="duration.hour"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormInputWithContent
+                        {...controllerProps}
+                        type="number"
+                        content={<span css={styles.durationContent}>{__('hour', 'tutor')}</span>}
+                        contentPosition="right"
+                        placeholder="0"
+                        showVerticalBar={false}
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="duration.minute"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormInputWithContent
+                        {...controllerProps}
+                        type="number"
+                        content={<span css={styles.durationContent}>{__('min', 'tutor')}</span>}
+                        contentPosition="right"
+                        placeholder="0"
+                        showVerticalBar={false}
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME}
+                      />
+                    )}
+                  />
+                  <Controller
+                    name="duration.second"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormInputWithContent
+                        {...controllerProps}
+                        type="number"
+                        content={<span css={styles.durationContent}>{__('sec', 'tutor')}</span>}
+                        contentPosition="right"
+                        placeholder="0"
+                        showVerticalBar={false}
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.VIDEO_PLAYBACK_TIME}
+                      />
+                    )}
+                  />
+                </div>
               </div>
-            </div>
+            </Show>
 
             <Show when={isAddonEnabled(Addons.CONTENT_DRIP)}>
               <Show when={contentDripType === 'specific_days'}>
@@ -531,7 +535,7 @@ const LessonModal = ({
                   label={__('Exercise Files', 'tutor')}
                   buttonText={__('Upload Attachment', 'tutor')}
                   selectMultiple
-                  visibilityKey="course_builder.curriculum__lesson__exercise_files"
+                  visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.EXERCISE_FILES}
                 />
               )}
             />
@@ -555,7 +559,7 @@ const LessonModal = ({
                         // prettier-ignore
                         __( 'If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
                       }
-                      visibilityKey="course_builder.curriculum__lesson__lesson_preview"
+                      visibilityKey={VisibilityControlKeys.COURSE_BUILDER.CURRICULUM.LESSON.LESSON_PREVIEW}
                     />
                   )}
                 />

@@ -30,8 +30,8 @@ export const CURRENT_VIEWPORT = {
 export const modal = {
   HEADER_HEIGHT: 56,
   MARGIN_TOP: 88,
-  BASIC_MODAL_HEADER_HEIGHT: 50,
-  BASIC_MODAL_MAX_WIDTH: 1218,
+  BASICS_MODAL_HEADER_HEIGHT: 50,
+  BASICS_MODAL_MAX_WIDTH: 1218,
 };
 
 export const notebook = {
@@ -117,3 +117,42 @@ export const visibilityStatusOptions = [
     value: 'private',
   },
 ];
+
+export const VisibilityControlKeys = {
+  COURSE_BUILDER: {
+    BASICS: {
+      FEATURED_IMAGE: 'course_builder.basics__featured_image',
+      INTRO_VIDEO: 'course_builder.basics__intro_video',
+      SCHEDULING_OPTIONS: 'course_builder.basics__scheduling_options',
+      PRICING_OPTIONS: 'course_builder.basics__pricing_options',
+      CATEGORIES: 'course_builder.basics__categories',
+      TAGS: 'course_builder.basics__tags',
+      AUTHOR: 'course_builder.basics__author',
+      INSTRUCTORS: 'course_builder.basics__instructors',
+      OPTIONS: {
+        GENERAL: 'course_builder.basics__options__general',
+        CONTENT_DRIP: 'course_builder.basics__options__content_drip',
+        ENROLLMENT: 'course_builder.basics__options__enrollment',
+      },
+    },
+    CURRICULUM: {
+      LESSON: {
+        FEATURED_IMAGE: 'course_builder.curriculum__lesson__featured_image',
+        VIDEO: 'course_builder.curriculum__lesson__video',
+        VIDEO_PLAYBACK_TIME: 'course_builder.curriculum__lesson__video_playback_time',
+        EXERCISE_FILES: 'course_builder.curriculum__lesson__exercise_files',
+        LESSON_PREVIEW: 'course_builder.curriculum__lesson__lesson_preview',
+      },
+    },
+    ADDITIONAL: {
+      COURSE_BENEFITS: 'course_builder.additional__course_benefits',
+      COURSE_TARGET_AUDIENCE: 'course_builder.additional__course_target_audience',
+      TOTAL_COURSE_DURATION: 'course_builder.additional__total_course_duration',
+      COURSE_MATERIALS_INCLUDES: 'course_builder.additional__course_materials_includes',
+      COURSE_REQUIREMENTS: 'course_builder.additional__course_requirements',
+      CERTIFICATES: 'course_builder.additional__certificates',
+      ATTACHMENTS: 'course_builder.additional__attachments',
+      SCHEDULE_LIVE_CLASS: 'course_builder.additional__schedule_live_class',
+    },
+  },
+};

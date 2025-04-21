@@ -205,6 +205,4 @@ export interface Editor {
 interface VisibilityProps {
   visibilityKey?: string;
 }
-
-export type VisibilityContext = 'course_builder';
 export type WithVisibilityProps<T> = T & VisibilityProps;

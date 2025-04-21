@@ -17,7 +17,7 @@ import EnrollmentSettings from '@CourseBuilderComponents/course-basic/Enrollment
 import type { CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Addons, CURRENT_VIEWPORT, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { borderRadius, Breakpoint, colorTokens, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -33,18 +33,13 @@ const CourseSettings = () => {
     queryKey: ['CourseDetails', courseId],
   });
 
-  const isGeneralSettingsVisible = useVisibilityControl({
-    key: 'basics__options__general',
-    context: 'course_builder',
-  });
-  const isContentDripSettingsVisible = useVisibilityControl({
-    key: 'basics__options__content_drip',
-    context: 'course_builder',
-  });
-  const isEnrollmentSettingsVisible = useVisibilityControl({
-    key: 'basics__options__enrollment',
-    context: 'course_builder',
-  });
+  const isGeneralSettingsVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.BASICS.OPTIONS.GENERAL);
+  const isContentDripSettingsVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.BASICS.OPTIONS.CONTENT_DRIP,
+  );
+  const isEnrollmentSettingsVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.BASICS.OPTIONS.ENROLLMENT,
+  );
 
   const isContentDripActive = form.watch('contentDripType');
   const isBuddyPressEnabled = form.watch('enable_tutor_bp');

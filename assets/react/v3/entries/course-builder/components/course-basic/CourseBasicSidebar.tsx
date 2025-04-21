@@ -20,7 +20,7 @@ import FormVideoInput from '@TutorShared/components/fields/FormVideoInput';
 import type { CourseDetailsResponse, CourseFormData } from '@CourseBuilderServices/course';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, DateFormats, TutorRoles } from '@TutorShared/config/constants';
+import { Addons, DateFormats, TutorRoles, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, headerHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -167,7 +167,7 @@ const CourseBasicSidebar = () => {
         />
       </Show>
 
-      <ScheduleOptions visibilityKey="course_builder.basics__scheduling_option" />
+      <ScheduleOptions visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.SCHEDULING_OPTIONS} />
 
       <Controller
         name="thumbnail"
@@ -180,7 +180,7 @@ const CourseBasicSidebar = () => {
             infoText={sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
             generateWithAi={!isTutorPro || isOpenAiEnabled}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-            visibilityKey="course_builder.basics__featured_image"
+            visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.FEATURED_IMAGE}
           />
         )}
       />
@@ -195,13 +195,13 @@ const CourseBasicSidebar = () => {
             buttonText={__('Upload Video', 'tutor')}
             infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-            visibilityKey="course_builder.basics__intro_video"
+            visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.INTRO_VIDEO}
           />
         )}
       />
 
       <Show when={!isMembershipOnlyMode}>
-        <CoursePricing visibilityKey="course_builder.basics__pricing_options" />
+        <CoursePricing visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.PRICING_OPTIONS} />
       </Show>
 
       <Controller
@@ -212,7 +212,7 @@ const CourseBasicSidebar = () => {
           <FormCategoriesInput
             {...controllerProps}
             label={__('Categories', 'tutor')}
-            visibilityKey="course_builder.basics__categories"
+            visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.CATEGORIES}
           />
         )}
       />
@@ -225,7 +225,7 @@ const CourseBasicSidebar = () => {
             {...controllerProps}
             label={__('Tags', 'tutor')}
             placeholder={__('Add tags', 'tutor')}
-            visibilityKey="course_builder.basic__tags"
+            visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.TAGS}
           />
         )}
       />
@@ -256,7 +256,7 @@ const CourseBasicSidebar = () => {
             handleSearchOnChange={(searchText) => {
               setUserSearchText(searchText);
             }}
-            visibilityKey="course_builder.basics__author"
+            visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.AUTHOR}
           />
         )}
       />
@@ -276,7 +276,7 @@ const CourseBasicSidebar = () => {
               loading={instructorListQuery.isLoading && !controllerProps.field.value}
               emptyStateText={__('No instructors added.', 'tutor')}
               isInstructorMode
-              visibilityKey="course_builder.basics__instructors"
+              visibilityKey={VisibilityControlKeys.COURSE_BUILDER.BASICS.INSTRUCTORS}
             />
           )}
         />

@@ -26,7 +26,7 @@ import Navigator from '@CourseBuilderComponents/layouts/Navigator';
 import { CourseBuilderRouteConfigs } from '@CourseBuilderConfig/route-configs';
 import { getCourseId } from '@CourseBuilderUtils/utils';
 import { tutorConfig } from '@TutorShared/config/config';
-import { Addons, CURRENT_VIEWPORT } from '@TutorShared/config/constants';
+import { Addons, CURRENT_VIEWPORT, VisibilityControlKeys } from '@TutorShared/config/constants';
 import { Breakpoint, colorTokens, footerHeight, headerHeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
@@ -61,34 +61,21 @@ const Additional = () => {
     queryKey: ['CourseDetails', courseId],
   });
 
-  const isCourseBenefitsVisible = useVisibilityControl({
-    key: 'additional__course_benefits',
-    context: 'course_builder',
-  });
-  const isCourseTargetAudienceVisible = useVisibilityControl({
-    key: 'additional__course_target_audience',
-    context: 'course_builder',
-  });
-  const isTotalCourseDurationVisible = useVisibilityControl({
-    key: 'additional__total_course_duration',
-    context: 'course_builder',
-  });
-  const isCourseMaterialIncluded = useVisibilityControl({
-    key: 'additional__course_material_includes',
-    context: 'course_builder',
-  });
-  const isCourseRequirementsVisible = useVisibilityControl({
-    key: 'additional__course_requirements',
-    context: 'course_builder',
-  });
-  const isCertificateVisible = useVisibilityControl({
-    key: 'additional__certificate',
-    context: 'course_builder',
-  });
-  const isAttachmentsVisible = useVisibilityControl({
-    key: 'additional__attachments',
-    context: 'course_builder',
-  });
+  const isCourseBenefitsVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_BENEFITS);
+  const isCourseTargetAudienceVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_TARGET_AUDIENCE,
+  );
+  const isTotalCourseDurationVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.TOTAL_COURSE_DURATION,
+  );
+  const isCourseMaterialIncluded = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_MATERIALS_INCLUDES,
+  );
+  const isCourseRequirementsVisible = useVisibilityControl(
+    VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_REQUIREMENTS,
+  );
+  const isCertificateVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.CERTIFICATES);
+  const isAttachmentsVisible = useVisibilityControl(VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.ATTACHMENTS);
 
   const courseDetails = queryClient.getQueryData(['CourseDetails', courseId]) as CourseDetailsResponse;
   const prerequisiteCourseIds =
@@ -187,7 +174,7 @@ const Additional = () => {
         </div>
       </Show>
 
-      <LiveClass visibilityKey="course_builder.additional__schedule_live_class" />
+      <LiveClass visibilityKey={VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.SCHEDULE_LIVE_CLASS} />
 
       <CourseBuilderInjectionSlot section="Additional.bottom_of_sidebar" form={form} />
     </div>
@@ -227,7 +214,7 @@ const Additional = () => {
                         rows={2}
                         enableResize
                         loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                        visibilityKey="course_builder.additional__course_benefits"
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_BENEFITS}
                       />
                     )}
                   />
@@ -244,7 +231,7 @@ const Additional = () => {
                         rows={2}
                         enableResize
                         loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                        visibilityKey="course_builder.additional__course_target_audience"
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_TARGET_AUDIENCE}
                       />
                     )}
                   />
@@ -263,7 +250,7 @@ const Additional = () => {
                             contentPosition="right"
                             content={__('hour(s)', 'tutor')}
                             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                            visibilityKey="course_builder.additional__total_course_duration"
+                            visibilityKey={VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.TOTAL_COURSE_DURATION}
                           />
                         )}
                       />
@@ -278,7 +265,7 @@ const Additional = () => {
                             contentPosition="right"
                             content={__('min(s)', 'tutor')}
                             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                            visibilityKey="course_builder.additional__total_course_duration"
+                            visibilityKey={VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.TOTAL_COURSE_DURATION}
                           />
                         )}
                       />
@@ -297,7 +284,7 @@ const Additional = () => {
                         rows={4}
                         enableResize
                         loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                        visibilityKey="course_builder.additional__course_material_includes"
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_MATERIALS_INCLUDES}
                       />
                     )}
                   />
@@ -314,7 +301,7 @@ const Additional = () => {
                         rows={2}
                         enableResize
                         loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                        visibilityKey="course_builder.additional__course_requirements"
+                        visibilityKey={VisibilityControlKeys.COURSE_BUILDER.ADDITIONAL.COURSE_REQUIREMENTS}
                       />
                     )}
                   />

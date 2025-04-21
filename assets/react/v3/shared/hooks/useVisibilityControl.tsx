@@ -1,23 +1,24 @@
-import { tutorConfig } from '@TutorShared/config/config';
-import { isDefined, type VisibilityContext } from '@TutorShared/utils/types';
 import { useMemo } from 'react';
 
-interface VisibilityControlProps {
-  key?: string;
-  context?: VisibilityContext;
-}
+import { tutorConfig } from '@TutorShared/config/config';
+import { isDefined } from '@TutorShared/utils/types';
+
 /**
  * Custom hook to control the visibility of fields based on the provided visibility key and context.
  *
- * @param {VisibilityControlProps} props - The properties for controlling visibility.
- * @param {string} [props.key] - The key used to determine visibility.
- * @param {string} [props.context] - The context in which the visibility key is used.
+ * @param {string} visibilityKey - The key used to determine the visibility of the field.
  * @returns {boolean} - Returns true if the field should be visible, false otherwise.
  */
-const useVisibilityControl = ({ key, context }: VisibilityControlProps = {}): boolean => {
+const useVisibilityControl = (visibilityKey: string = ''): boolean => {
   return useMemo(() => {
     // If no visibility key provided, always show the field
-    if (!isDefined(key) || !isDefined(context)) {
+    if (!isDefined(visibilityKey)) {
+      return true;
+    }
+
+    const [context, key] = visibilityKey?.split('.') || [];
+
+    if (!isDefined(context) || !isDefined(key)) {
       return true;
     }
 
@@ -33,7 +34,7 @@ const useVisibilityControl = ({ key, context }: VisibilityControlProps = {}): bo
     const keyWithRole = `${key}_${primaryRole}`;
 
     return visibilitySettings[keyWithRole] === 'on';
-  }, [key, context]);
+  }, [visibilityKey]);
 };
 
 export default useVisibilityControl;
