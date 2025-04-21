@@ -100,6 +100,19 @@ class CourseModel {
 	}
 
 	/**
+	 * Get tutor post types
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param int|\WP_POST $post the post id or object.
+     *
+	 * @return bool
+	 */
+	public static function get_post_types( $post ) {
+		return apply_filters( 'tutor_check_course_post_type', get_post_type( $post ) );
+	}
+
+	/**
 	 * Get courses
 	 *
 	 * @since 1.0.0
@@ -339,7 +352,7 @@ class CourseModel {
 		$course  = get_post( $course_id );
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
-		if ( ! $course || ! apply_filters( 'tutor_check_course_post_type', $course->post_type ) || $user_id !== (int) $course->post_author ) {
+		if ( ! $course || ! self::get_post_types( $course_id ) || $user_id !== (int) $course->post_author ) {
 			return false;
 		}
 
@@ -411,7 +424,7 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function delete_course( $post_id ) {
-		if ( ! apply_filters( 'tutor_check_course_post_type', get_post_type( $post_id ) ) ) {
+		if ( ! self::get_post_types( $post_id ) ) {
 			return false;
 		}
 
