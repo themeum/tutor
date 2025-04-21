@@ -207,13 +207,15 @@ class CouponModel {
 	}
 
 	/**
-	 * Get all coupon applies to
+	 * Get course bundle applies to.
 	 *
-	 * @since 3.0.0
+	 * @since 3.5.0
+	 *
+	 * @param bool $only_keys get only keys or not.
 	 *
 	 * @return array
 	 */
-	public static function get_coupon_applies_to() {
+	public static function get_course_bundle_applies_to( $only_keys = false ) {
 		$list = array(
 			self::APPLIES_TO_ALL_COURSES_AND_BUNDLES => __( 'All courses and bundles', 'tutor' ),
 			self::APPLIES_TO_ALL_COURSES             => __( 'All courses', 'tutor' ),
@@ -223,7 +225,24 @@ class CouponModel {
 			self::APPLIES_TO_SPECIFIC_CATEGORY       => __( 'Specific category', 'tutor' ),
 		);
 
-		return apply_filters( 'tutor_coupon_applies_to', $list );
+		return $only_keys ? array_keys( $list ) : $list;
+	}
+
+	/**
+	 * Get all coupon applies to
+	 *
+	 * @since 3.0.0
+	 * @since 3.5.0 refactor, $only_keys param and filter hook added.
+	 *
+	 * @param bool $only_keys only keys or not.
+	 *
+	 * @return array
+	 */
+	public static function get_coupon_applies_to( $only_keys = false ) {
+		$list = self::get_course_bundle_applies_to();
+		$list = apply_filters( 'tutor_coupon_applies_to', $list );
+
+		return $only_keys ? array_keys( $list ) : $list;
 	}
 
 	/**
@@ -768,14 +787,7 @@ class CouponModel {
 		$args = array(
 			'coupon_type'   => self::TYPE_AUTOMATIC,
 			'coupon_status' => self::STATUS_ACTIVE,
-			'applies_to'    => array(
-				self::APPLIES_TO_ALL_COURSES_AND_BUNDLES,
-				self::APPLIES_TO_ALL_COURSES,
-				self::APPLIES_TO_ALL_BUNDLES,
-				self::APPLIES_TO_SPECIFIC_COURSES,
-				self::APPLIES_TO_SPECIFIC_BUNDLES,
-				self::APPLIES_TO_SPECIFIC_CATEGORY,
-			),
+			'applies_to'    => $this->get_course_bundle_applies_to( true ),
 		);
 
 		$args = apply_filters( 'tutor_automatic_coupon_args_for_checkout', $args );
