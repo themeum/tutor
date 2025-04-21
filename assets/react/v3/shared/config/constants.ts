@@ -30,8 +30,8 @@ export const CURRENT_VIEWPORT = {
 export const modal = {
   HEADER_HEIGHT: 56,
   MARGIN_TOP: 88,
-  BASICS_MODAL_HEADER_HEIGHT: 50,
-  BASICS_MODAL_MAX_WIDTH: 1218,
+  BASIC_MODAL_HEADER_HEIGHT: 50,
+  BASIC_MODAL_MAX_WIDTH: 1218,
 };
 
 export const notebook = {
