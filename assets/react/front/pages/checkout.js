@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const inputCouponCode  = document.querySelector('[name=coupon_code]');
                         const couponCode       = inputCouponCode?.value || '';
 
-                        if (option.firstElementChild.value === 'stripe') {
+                        if (option.firstElementChild.value === 'paddle') {
                             updateCheckoutData(couponCode, null, null, 0);
                             showTax = false;
 
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 payments[0].querySelector('input[name=payment_method]').checked = true;
                 paymentTypeInput.value = payments[0].dataset.paymentType;
 
-                if (payments[0].firstElementChild.value === 'stripe') {
+                if (payments[0].firstElementChild.value === 'paddle') {
                     handlePaddlePaymentSelection();
                 }
 
