@@ -110,7 +110,14 @@ const Additional = () => {
     return null;
   }
 
-  const isSidebarVisible =
+  const isOverViewVisible =
+    isCourseBenefitsVisible ||
+    isCourseTargetAudienceVisible ||
+    isTotalCourseDurationVisible ||
+    isCourseMaterialIncluded ||
+    isCourseRequirementsVisible;
+  const hasLeftSideContent = isOverViewVisible || !isTutorPro || (isCertificateVisible && isCertificateAddonEnabled);
+  const hasSidebarContent =
     !isTutorPro ||
     [
       Addons.TUTOR_PREREQUISITES,
@@ -118,235 +125,243 @@ const Additional = () => {
       Addons.TUTOR_ZOOM_INTEGRATION,
       Addons.TUTOR_GOOGLE_MEET_INTEGRATION,
     ].some(isAddonEnabled);
-  const isOverViewVisible =
-    isCourseBenefitsVisible ||
-    isCourseTargetAudienceVisible ||
-    isTotalCourseDurationVisible ||
-    isCourseMaterialIncluded ||
-    isCourseRequirementsVisible;
+
+  const SidebarContent = () => (
+    <div css={styles.sidebarContent}>
+      <Show when={!isTutorPro || isPrerequisiteAddonEnabled}>
+        <div>
+          <div css={styles.label}>
+            {__('Course Prerequisites', 'tutor')}
+            {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
+          </div>
+          <Show when={isTutorPro && isPrerequisiteAddonEnabled} fallback={<CoursePrerequisitesEmptyState />}>
+            <Controller
+              name="course_prerequisites"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormCoursePrerequisites
+                  {...controllerProps}
+                  placeholder={__('Search courses for prerequisites', 'tutor')}
+                  options={prerequisiteCoursesQuery.data?.results || []}
+                  isSearchable
+                  loading={
+                    prerequisiteCoursesQuery.isLoading || (!!isCourseDetailsFetching && !controllerProps.field.value)
+                  }
+                />
+              )}
+            />
+          </Show>
+        </div>
+      </Show>
+      <Show when={!isTutorPro || (isAttachmentsVisible && isAttachmentsAddonEnabled)}>
+        <div>
+          <div css={styles.label}>
+            {__('Attachments', 'tutor')}
+            {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
+          </div>
+          <Show
+            when={isTutorPro && isAttachmentsAddonEnabled}
+            fallback={
+              <Show when={!isTutorPro}>
+                <EmptyState
+                  size="small"
+                  removeBorder={false}
+                  emptyStateImage={attachmentsPro}
+                  emptyStateImage2x={attachmentsPro2x}
+                  title={__(
+                    // prettier-ignore
+                    __( 'Provide additional resources like downloadable files and reference materials.', 'tutor'),
+                  )}
+                />
+              </Show>
+            }
+          >
+            <Controller
+              name="course_attachments"
+              control={form.control}
+              render={(controllerProps) => (
+                <FormFileUploader {...controllerProps} buttonText={__('Upload Attachment', 'tutor')} selectMultiple />
+              )}
+            />
+          </Show>
+        </div>
+      </Show>
+
+      <LiveClass visibilityKey="course_builder.additional__live_class" />
+
+      <CourseBuilderInjectionSlot section="Additional.bottom_of_sidebar" form={form} />
+    </div>
+  );
 
   return (
     <div
       css={styles.wrapper({
-        showSidebar: isSidebarVisible,
+        showSidebar: hasSidebarContent && hasLeftSideContent,
       })}
     >
       <div css={styles.leftSide}>
         <CanvasHead title={__('Additional', 'tutor')} backUrl="/curriculum" />
-        <div css={styles.formWrapper}>
-          <Show when={isOverViewVisible}>
-            <Box bordered>
-              <div css={styles.titleAndSub}>
-                <BoxTitle>{__('Overview', 'tutor')}</BoxTitle>
-                <BoxSubtitle>
-                  {__('Provide essential course information to attract and inform potential students', 'tutor')}
-                </BoxSubtitle>
-              </div>
-              <div css={styles.fieldsWrapper}>
-                <Controller
-                  name="course_benefits"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormTextareaInput
-                      {...controllerProps}
-                      label={__('What Will I Learn?', 'tutor')}
-                      placeholder={__('Define the key takeaways from this course (list one benefit per line)', 'tutor')}
-                      rows={2}
-                      enableResize
-                      loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                      visibilityKey="course_builder.additional__course_benefits"
-                    />
-                  )}
-                />
 
-                <Controller
-                  name="course_target_audience"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormTextareaInput
-                      {...controllerProps}
-                      label={__('Target Audience', 'tutor')}
-                      // prettier-ignore
-                      placeholder={__('Specify the target audience that will benefit the most from the course. (One Line Per target audience)', 'tutor')}
-                      rows={2}
-                      enableResize
-                      loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                      visibilityKey="course_builder.additional__course_target_audience"
-                    />
-                  )}
-                />
+        <Show when={hasLeftSideContent}>
+          <div css={styles.formWrapper}>
+            <Show when={isOverViewVisible}>
+              <Box bordered>
+                <div css={styles.titleAndSub}>
+                  <BoxTitle>{__('Overview', 'tutor')}</BoxTitle>
+                  <BoxSubtitle>
+                    {__('Provide essential course information to attract and inform potential students', 'tutor')}
+                  </BoxSubtitle>
+                </div>
+                <div css={styles.fieldsWrapper}>
+                  <Controller
+                    name="course_benefits"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormTextareaInput
+                        {...controllerProps}
+                        label={__('What Will I Learn?', 'tutor')}
+                        placeholder={__(
+                          'Define the key takeaways from this course (list one benefit per line)',
+                          'tutor',
+                        )}
+                        rows={2}
+                        enableResize
+                        loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                        visibilityKey="course_builder.additional__course_benefits"
+                      />
+                    )}
+                  />
 
-                <Show when={isTotalCourseDurationVisible}>
-                  <div css={styles.totalCourseDuration}>
-                    <Controller
-                      name="course_duration_hours"
-                      control={form.control}
-                      render={(controllerProps) => (
-                        <FormInputWithContent
-                          {...controllerProps}
-                          type="number"
-                          label={__('Total Course Duration', 'tutor')}
-                          placeholder="0"
-                          contentPosition="right"
-                          content={__('hour(s)', 'tutor')}
-                          loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                          visibilityKey="course_builder.additional__total_course_duration"
-                        />
-                      )}
-                    />
-                    <Controller
-                      name="course_duration_minutes"
-                      control={form.control}
-                      render={(controllerProps) => (
-                        <FormInputWithContent
-                          {...controllerProps}
-                          type="number"
-                          placeholder="0"
-                          contentPosition="right"
-                          content={__('min(s)', 'tutor')}
-                          loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                          visibilityKey="course_builder.additional__total_course_duration"
-                        />
-                      )}
-                    />
-                  </div>
-                </Show>
+                  <Controller
+                    name="course_target_audience"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormTextareaInput
+                        {...controllerProps}
+                        label={__('Target Audience', 'tutor')}
+                        // prettier-ignore
+                        placeholder={__('Specify the target audience that will benefit the most from the course. (One Line Per target audience)', 'tutor')}
+                        rows={2}
+                        enableResize
+                        loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                        visibilityKey="course_builder.additional__course_target_audience"
+                      />
+                    )}
+                  />
 
-                <Controller
-                  name="course_material_includes"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormTextareaInput
-                      {...controllerProps}
-                      label={__('Materials Included', 'tutor')}
-                      // prettier-ignore
-                      placeholder={__('A list of assets you will be providing for the students in this course (One Per Line)', 'tutor' )}
-                      rows={4}
-                      enableResize
-                      loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                      visibilityKey="course_builder.additional__course_material_includes"
-                    />
-                  )}
-                />
-
-                <Controller
-                  name="course_requirements"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormTextareaInput
-                      {...controllerProps}
-                      label={__('Requirements/Instructions', 'tutor')}
-                      // prettier-ignore
-                      placeholder={__('Additional requirements or special instructions for the students (One Per Line)', 'tutor')}
-                      rows={2}
-                      enableResize
-                      loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-                      visibilityKey="course_builder.additional__course_requirements"
-                    />
-                  )}
-                />
-              </div>
-            </Box>
-          </Show>
-
-          <Show when={!isTutorPro || (isCertificateVisible && isCertificateAddonEnabled)}>
-            <Box bordered>
-              <div css={styles.titleAndSub}>
-                <BoxTitle css={styles.titleWithBadge}>
-                  {__('Certificate', 'tutor')}
-                  <Show when={!isTutorPro}>
-                    <ProBadge content={__('Pro', 'tutor')} />
+                  <Show when={isTotalCourseDurationVisible}>
+                    <div css={styles.totalCourseDuration}>
+                      <Controller
+                        name="course_duration_hours"
+                        control={form.control}
+                        render={(controllerProps) => (
+                          <FormInputWithContent
+                            {...controllerProps}
+                            type="number"
+                            label={__('Total Course Duration', 'tutor')}
+                            placeholder="0"
+                            contentPosition="right"
+                            content={__('hour(s)', 'tutor')}
+                            loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                            visibilityKey="course_builder.additional__total_course_duration"
+                          />
+                        )}
+                      />
+                      <Controller
+                        name="course_duration_minutes"
+                        control={form.control}
+                        render={(controllerProps) => (
+                          <FormInputWithContent
+                            {...controllerProps}
+                            type="number"
+                            placeholder="0"
+                            contentPosition="right"
+                            content={__('min(s)', 'tutor')}
+                            loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                            visibilityKey="course_builder.additional__total_course_duration"
+                          />
+                        )}
+                      />
+                    </div>
                   </Show>
-                </BoxTitle>
-                <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
-                  <BoxSubtitle>{__('Select a certificate to award your learners.', 'tutor')}</BoxSubtitle>
-                </Show>
-              </div>
-              <Show when={!isCourseDetailsFetching} fallback={<LoadingSection />}>
-                <Certificate isSidebarVisible={isSidebarVisible} />
-              </Show>
-            </Box>
-          </Show>
 
-          <CourseBuilderInjectionSlot section="Additional.after_certificates" form={form} />
-        </div>
+                  <Controller
+                    name="course_material_includes"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormTextareaInput
+                        {...controllerProps}
+                        label={__('Materials Included', 'tutor')}
+                        // prettier-ignore
+                        placeholder={__('A list of assets you will be providing for the students in this course (One Per Line)', 'tutor' )}
+                        rows={4}
+                        enableResize
+                        loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                        visibilityKey="course_builder.additional__course_material_includes"
+                      />
+                    )}
+                  />
+
+                  <Controller
+                    name="course_requirements"
+                    control={form.control}
+                    render={(controllerProps) => (
+                      <FormTextareaInput
+                        {...controllerProps}
+                        label={__('Requirements/Instructions', 'tutor')}
+                        // prettier-ignore
+                        placeholder={__('Additional requirements or special instructions for the students (One Per Line)', 'tutor')}
+                        rows={2}
+                        enableResize
+                        loading={!!isCourseDetailsFetching && !controllerProps.field.value}
+                        visibilityKey="course_builder.additional__course_requirements"
+                      />
+                    )}
+                  />
+                </div>
+              </Box>
+            </Show>
+
+            <Show when={!isTutorPro || (isCertificateVisible && isCertificateAddonEnabled)}>
+              <Box bordered>
+                <div css={styles.titleAndSub}>
+                  <BoxTitle css={styles.titleWithBadge}>
+                    {__('Certificate', 'tutor')}
+                    <Show when={!isTutorPro}>
+                      <ProBadge content={__('Pro', 'tutor')} />
+                    </Show>
+                  </BoxTitle>
+                  <Show when={isTutorPro && isAddonEnabled(Addons.TUTOR_CERTIFICATE)}>
+                    <BoxSubtitle>{__('Select a certificate to award your learners.', 'tutor')}</BoxSubtitle>
+                  </Show>
+                </div>
+                <Show when={!isCourseDetailsFetching} fallback={<LoadingSection />}>
+                  <Certificate isSidebarVisible={hasSidebarContent} />
+                </Show>
+              </Box>
+            </Show>
+
+            <CourseBuilderInjectionSlot section="Additional.after_certificates" form={form} />
+          </div>
+        </Show>
+
+        <Show when={!hasLeftSideContent && hasSidebarContent}>
+          <div css={styles.formWrapper}>
+            <SidebarContent />
+          </div>
+        </Show>
 
         <Show when={CURRENT_VIEWPORT.isAboveTablet}>
           <Navigator />
         </Show>
       </div>
 
-      <Show when={isSidebarVisible}>
+      <Show when={hasSidebarContent && hasLeftSideContent}>
         <div css={styles.sidebar}>
-          <Show when={!isTutorPro || isPrerequisiteAddonEnabled}>
-            <div>
-              <div css={styles.label}>
-                {__('Course Prerequisites', 'tutor')}
-                {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
-              </div>
-              <Show when={isTutorPro && isPrerequisiteAddonEnabled} fallback={<CoursePrerequisitesEmptyState />}>
-                <Controller
-                  name="course_prerequisites"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormCoursePrerequisites
-                      {...controllerProps}
-                      placeholder={__('Search courses for prerequisites', 'tutor')}
-                      options={prerequisiteCoursesQuery.data?.results || []}
-                      isSearchable
-                      loading={
-                        prerequisiteCoursesQuery.isLoading ||
-                        (!!isCourseDetailsFetching && !controllerProps.field.value)
-                      }
-                    />
-                  )}
-                />
-              </Show>
-            </div>
-          </Show>
-          <Show when={!isTutorPro || (isAttachmentsVisible && isAttachmentsAddonEnabled)}>
-            <div>
-              <div css={styles.label}>
-                {__('Attachments', 'tutor')}
-                {!isTutorPro && <ProBadge content={__('Pro', 'tutor')} />}
-              </div>
-              <Show
-                when={isTutorPro && isAttachmentsAddonEnabled}
-                fallback={
-                  <Show when={!isTutorPro}>
-                    <EmptyState
-                      size="small"
-                      removeBorder={false}
-                      emptyStateImage={attachmentsPro}
-                      emptyStateImage2x={attachmentsPro2x}
-                      title={__(
-                        // prettier-ignore
-                        __( 'Provide additional resources like downloadable files and reference materials.', 'tutor'),
-                      )}
-                    />
-                  </Show>
-                }
-              >
-                <Controller
-                  name="course_attachments"
-                  control={form.control}
-                  render={(controllerProps) => (
-                    <FormFileUploader
-                      {...controllerProps}
-                      buttonText={__('Upload Attachment', 'tutor')}
-                      selectMultiple
-                    />
-                  )}
-                />
-              </Show>
-            </div>
-          </Show>
-
-          <LiveClass visibilityKey="course_builder.additional__live_class" />
-
-          <CourseBuilderInjectionSlot section="Additional.bottom_of_sidebar" form={form} />
+          <SidebarContent />
         </div>
       </Show>
+
       <Show when={!CURRENT_VIEWPORT.isAboveTablet}>
         <Navigator />
       </Show>
@@ -355,6 +370,7 @@ const Additional = () => {
 };
 
 export default Additional;
+
 const styles = {
   wrapper: ({ showSidebar }: { showSidebar: boolean }) => css`
     display: grid;
@@ -427,5 +443,9 @@ const styles = {
     ${typography.body('medium')}
     color: ${colorTokens.text.title};
     margin-bottom: ${spacing[8]};
+  `,
+  sidebarContent: css`
+    ${styleUtils.display.flex('column')}
+    gap: ${spacing[16]};
   `,
 };
