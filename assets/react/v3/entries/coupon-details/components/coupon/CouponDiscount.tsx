@@ -25,7 +25,6 @@ import { Controller, useFormContext } from 'react-hook-form';
 const isTutorProActive = !!tutorConfig.tutor_pro_url;
 const displayBundle = isTutorProActive && isAddonEnabled(Addons.COURSE_BUNDLE);
 const isSubscriptionActive = isTutorProActive && isAddonEnabled(Addons.SUBSCRIPTION);
-const isMembershipOnlyMode = isSubscriptionActive && tutorConfig.settings?.membership_only_mode;
 
 const discountTypeOptions = [
   { label: __('Percent', 'tutor'), value: 'percentage' },
@@ -40,11 +39,11 @@ const appliesToOptions = [
         { label: __('All courses and bundles', 'tutor'), value: 'all_courses_and_bundles' },
       ]
     : []),
-  ...(isMembershipOnlyMode ? [{ label: __('All membership plans', 'tutor'), value: 'all_membership_plans' }] : []),
+  ...(isSubscriptionActive ? [{ label: __('All membership plans', 'tutor'), value: 'all_membership_plans' }] : []),
   { label: __('Specific courses', 'tutor'), value: 'specific_courses' },
   ...(displayBundle ? [{ label: __('Specific bundles', 'tutor'), value: 'specific_bundles' }] : []),
   { label: __('Specific category', 'tutor'), value: 'specific_category' },
-  ...(isMembershipOnlyMode
+  ...(isSubscriptionActive
     ? [
         {
           label: __('Specific membership plans', 'tutor'),
