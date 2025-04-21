@@ -1,22 +1,24 @@
+import { css } from '@emotion/react';
+import { __, sprintf } from '@wordpress/i18n';
+import { useFormContext } from 'react-hook-form';
+
+import Button from '@TutorShared/atoms/Button';
+import SVGIcon from '@TutorShared/atoms/SVGIcon';
+import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
+import Container from '@TutorShared/components/Container';
+
 import {
   type Coupon,
   convertFormDataToPayload,
   useCreateCouponMutation,
   useUpdateCouponMutation,
 } from '@CouponServices/coupon';
-import Button from '@TutorShared/atoms/Button';
-import SVGIcon from '@TutorShared/atoms/SVGIcon';
-import { TutorBadge } from '@TutorShared/atoms/TutorBadge';
-import Container from '@TutorShared/components/Container';
-import { tutorConfig } from '@TutorShared/config/config';
+import config from '@TutorShared/config/config';
 import { Breakpoint, colorTokens, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { makeFirstCharacterUpperCase } from '@TutorShared/utils/util';
-import { css } from '@emotion/react';
-import { __, sprintf } from '@wordpress/i18n';
-import { useFormContext } from 'react-hook-form';
 
 export const TOPBAR_HEIGHT = 96;
 
@@ -35,18 +37,20 @@ function Topbar() {
   const createCouponMutation = useCreateCouponMutation();
   const updateCouponMutation = useUpdateCouponMutation();
 
-  async function handleSubmit(data: Coupon) {
+  const handleSubmit = async (data: Coupon) => {
     const payload = convertFormDataToPayload(data);
+
     if (data.id) {
       updateCouponMutation.mutate(payload);
-    } else {
-      createCouponMutation.mutate(payload);
+      return;
     }
-  }
 
-  function handleGoBack() {
-    window.location.href = `${tutorConfig.site_url}/wp-admin/admin.php?page=tutor_coupons`;
-  }
+    createCouponMutation.mutate(payload);
+  };
+
+  const handleGoBack = () => {
+    window.location.href = config.TUTOR_COUPONS_PAGE;
+  };
 
   return (
     <div css={styles.wrapper}>
