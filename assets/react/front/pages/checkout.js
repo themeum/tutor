@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const inputCouponCode  = document.querySelector('[name=coupon_code]');
                         const couponCode       = inputCouponCode?.value || '';
 
-                        if (option.firstElementChild.value === 'paddle') {
+                        if (option.firstElementChild.value === 'stripe') {
                             updateCheckoutData(couponCode, null, null, 0);
                             showTax = false;
 
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.closest("#tutor-checkout-remove-coupon")) {
                 document.querySelector('input[name=coupon_code]').value = '';
                 document.querySelector('#tutor-checkout-remove-coupon').classList.add('is-loading');
-                await updateCheckoutData('', null, null, showTax ? 1 : 0);
+                await updateCheckoutData('', null, null, 1);
                 paymentMethodWrapper.innerHTML = paymentMethodElem;
                 const payNowBtnText = document.getElementById('pay_now_btn_text')?.value;
                 payNowBtn.innerHTML = payNowBtnText;
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 payments[0].querySelector('input[name=payment_method]').checked = true;
                 paymentTypeInput.value = payments[0].dataset.paymentType;
 
-                if (payments[0].firstElementChild.value === 'paddle') {
+                if (payments[0].firstElementChild.value === 'stripe') {
                     handlePaddlePaymentSelection();
                 }
 
