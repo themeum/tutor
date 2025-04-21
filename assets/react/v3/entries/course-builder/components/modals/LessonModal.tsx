@@ -40,6 +40,7 @@ import { borderRadius, Breakpoint, colorTokens, spacing, zIndex } from '@TutorSh
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
+import useVisibilityControl from '@TutorShared/hooks/useVisibilityControl';
 import { type WPMedia } from '@TutorShared/hooks/useWpMedia';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import { type ID } from '@TutorShared/utils/types';
@@ -102,6 +103,10 @@ const LessonModal = ({
   const topics = queryClient.getQueryData(['Topic', courseId]) as CourseTopic[];
 
   const { fields } = useCourseBuilderSlot();
+  const isLessonPreviewVisible = useVisibilityControl({
+    key: 'curriculum__lesson__lesson_preview',
+    context: 'course_builder',
+  });
 
   const form = useFormWithGlobalError<LessonForm>({
     defaultValues: {
@@ -363,6 +368,7 @@ const LessonModal = ({
                     __('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'),
                     tutorConfig.max_upload_size,
                   )}
+                  visibilityKey="course_builder.curriculum__lesson__featured_image"
                 />
               )}
             />
@@ -380,6 +386,7 @@ const LessonModal = ({
                     form.setValue('duration.minute', duration.minutes);
                     form.setValue('duration.second', duration.seconds);
                   }}
+                  visibilityKey="course_builder.curriculum__lesson__video"
                 />
               )}
             />
@@ -397,6 +404,7 @@ const LessonModal = ({
                       contentPosition="right"
                       placeholder="0"
                       showVerticalBar={false}
+                      visibilityKey="course_builder.curriculum__lesson__video_payback_time"
                     />
                   )}
                 />
@@ -411,6 +419,7 @@ const LessonModal = ({
                       contentPosition="right"
                       placeholder="0"
                       showVerticalBar={false}
+                      visibilityKey="course_builder.curriculum__lesson__video_payback_time"
                     />
                   )}
                 />
@@ -425,6 +434,7 @@ const LessonModal = ({
                       contentPosition="right"
                       placeholder="0"
                       showVerticalBar={false}
+                      visibilityKey="course_builder.curriculum__lesson__video_payback_time"
                     />
                   )}
                 />
@@ -521,11 +531,12 @@ const LessonModal = ({
                   label={__('Exercise Files', 'tutor')}
                   buttonText={__('Upload Attachment', 'tutor')}
                   selectMultiple
+                  visibilityKey="course_builder.curriculum__lesson__exercise_files"
                 />
               )}
             />
 
-            <Show when={!isTutorPro || isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW)}>
+            <Show when={!isTutorPro || (isLessonPreviewVisible && isAddonEnabled(Addons.TUTOR_COURSE_PREVIEW))}>
               <div css={styles.lessonPreview}>
                 <Controller
                   name="lesson_preview"
@@ -544,6 +555,7 @@ const LessonModal = ({
                         // prettier-ignore
                         __( 'If checked, any user/guest can view this lesson without enrolling in the course.', 'tutor')
                       }
+                      visibilityKey="course_builder.curriculum__lesson__lesson_preview"
                     />
                   )}
                 />

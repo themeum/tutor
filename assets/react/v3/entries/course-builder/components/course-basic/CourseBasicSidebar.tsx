@@ -167,7 +167,7 @@ const CourseBasicSidebar = () => {
         />
       </Show>
 
-      <ScheduleOptions visibilityKey="course_builder.basics_scheduling_option" />
+      <ScheduleOptions visibilityKey="course_builder.basics__scheduling_option" />
 
       <Controller
         name="thumbnail"
@@ -180,7 +180,7 @@ const CourseBasicSidebar = () => {
             infoText={sprintf(__('JPEG, PNG, GIF, and WebP formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
             generateWithAi={!isTutorPro || isOpenAiEnabled}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-            visibilityKey="course_builder.basics_featured_image"
+            visibilityKey="course_builder.basics__featured_image"
           />
         )}
       />
@@ -195,13 +195,13 @@ const CourseBasicSidebar = () => {
             buttonText={__('Upload Video', 'tutor')}
             infoText={sprintf(__('MP4, and WebM formats, up to %s', 'tutor'), tutorConfig.max_upload_size)}
             loading={!!isCourseDetailsFetching && !controllerProps.field.value}
-            visibilityKey="course_builder.basics_intro_video"
+            visibilityKey="course_builder.basics__intro_video"
           />
         )}
       />
 
       <Show when={!isMembershipOnlyMode}>
-        <CoursePricing visibilityKey="course_builder.basics_pricing_options" />
+        <CoursePricing visibilityKey="course_builder.basics__pricing_options" />
       </Show>
 
       <Controller
@@ -212,7 +212,7 @@ const CourseBasicSidebar = () => {
           <FormCategoriesInput
             {...controllerProps}
             label={__('Categories', 'tutor')}
-            visibilityKey="course_builder.basics_categories"
+            visibilityKey="course_builder.basics__categories"
           />
         )}
       />
@@ -225,7 +225,7 @@ const CourseBasicSidebar = () => {
             {...controllerProps}
             label={__('Tags', 'tutor')}
             placeholder={__('Add tags', 'tutor')}
-            visibilityKey="course_builder.basic_tags"
+            visibilityKey="course_builder.basic__tags"
           />
         )}
       />
@@ -256,7 +256,7 @@ const CourseBasicSidebar = () => {
             handleSearchOnChange={(searchText) => {
               setUserSearchText(searchText);
             }}
-            visibilityKey="course_builder.basics_author"
+            visibilityKey="course_builder.basics__author"
           />
         )}
       />
@@ -276,7 +276,7 @@ const CourseBasicSidebar = () => {
               loading={instructorListQuery.isLoading && !controllerProps.field.value}
               emptyStateText={__('No instructors added.', 'tutor')}
               isInstructorMode
-              visibilityKey="course_builder.basics_instructors"
+              visibilityKey="course_builder.basics__instructors"
             />
           )}
         />

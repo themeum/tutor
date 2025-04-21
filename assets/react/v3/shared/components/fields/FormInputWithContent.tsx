@@ -4,6 +4,7 @@ import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 import { type ReactNode, useRef } from 'react';
 
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -116,6 +117,8 @@ const FormInputWithContent = ({
   );
 };
 
+export default withVisibilityControl(FormInputWithContent);
+
 const styles = {
   inputWrapper: (hasFieldError: boolean, removeBorder: boolean) => css`
     display: flex;
@@ -216,5 +219,3 @@ const styles = {
     `}
   `,
 };
-
-export default FormInputWithContent;

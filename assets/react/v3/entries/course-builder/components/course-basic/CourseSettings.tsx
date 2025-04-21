@@ -34,15 +34,15 @@ const CourseSettings = () => {
   });
 
   const isGeneralSettingsVisible = useVisibilityControl({
-    key: 'basics_options_general',
+    key: 'basics__options__general',
     context: 'course_builder',
   });
   const isContentDripSettingsVisible = useVisibilityControl({
-    key: 'basics_options_content_drip',
+    key: 'basics__options__content_drip',
     context: 'course_builder',
   });
   const isEnrollmentSettingsVisible = useVisibilityControl({
-    key: 'basics_options_enrollment',
+    key: 'basics__options__enrollment',
     context: 'course_builder',
   });
 

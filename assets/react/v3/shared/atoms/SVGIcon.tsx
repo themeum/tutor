@@ -62,7 +62,7 @@ const SVGIcon = memo(({ name, width = 16, height = 16, style, isColorIcon = fals
 
   return (
     <svg
-      css={[style, { width, height }, styles.svg({ isColorIcon, isLoading })]}
+      css={[style, { width, height }, styles.svg({ isColorIcon })]}
       xmlns="http://www.w3.org/2000/svg"
       viewBox={viewBox}
       {...additionalAttributes}
@@ -78,19 +78,12 @@ SVGIcon.displayName = 'SVGIcon';
 export default SVGIcon;
 
 const styles = {
-  svg: ({ isColorIcon = false, isLoading = false }) => css`
+  svg: ({ isColorIcon = false }) => css`
     transition:
       filter 0.3s ease-in-out,
-      opacity 0.2s ease-in-out;
-
-    ${isColorIcon &&
-    css`
-      filter: grayscale(100%);
-    `}
-
-    ${isLoading &&
-    css`
-      opacity: 0.6;
-    `}
+      ${isColorIcon &&
+      css`
+        filter: grayscale(100%);
+      `};
   `,
 };

@@ -3,6 +3,7 @@ import { typography } from '@TutorShared/config/typography';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { type SerializedStyles, css } from '@emotion/react';
 
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { useLayoutEffect, useRef } from 'react';
 import FormFieldWrapper from './FormFieldWrapper';
 
@@ -72,11 +73,11 @@ const FormTextareaInput = ({
     }
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useLayoutEffect(() => {
     if (autoResize) {
       adjustHeight();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -140,7 +141,7 @@ const FormTextareaInput = ({
   );
 };
 
-export default FormTextareaInput;
+export default withVisibilityControl(FormTextareaInput);
 
 const styles = {
   container: (enableResize = false, inputCss?: SerializedStyles) => css`
