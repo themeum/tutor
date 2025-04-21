@@ -187,7 +187,7 @@ const Additional = () => {
         </div>
       </Show>
 
-      <LiveClass visibilityKey="course_builder.additional__live_class" />
+      <LiveClass visibilityKey="course_builder.additional__schedule_live_class" />
 
       <CourseBuilderInjectionSlot section="Additional.bottom_of_sidebar" form={form} />
     </div>
