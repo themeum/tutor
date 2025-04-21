@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 /**
- * Class for managing native cart functions
+ * Class for managing Edd cart functions
  *
  * @since 3.5.0
  */
@@ -32,7 +32,18 @@ class EddCart extends BaseCart implements CartInterface {
 	 * @return bool
 	 */
 	public function add( int $item_id ): bool {
-		return true;
+		$download_id = tutor_utils()->get_course_product_id( $item_id );
+		if ( ! $download_id ) {
+			$this->cart_error = __( 'Downloadable item not found', 'tutor' );
+			return false;
+		}
+
+		if ( $this->is_item_exists( $item_id ) ) {
+			$this->cart_error = __( 'Item already exists in cart', 'tutor' );
+			return false;
+		} else {
+			return edd_add_to_cart( $download_id ) ? true : false;
+		}
 	}
 
 	/**
@@ -43,7 +54,21 @@ class EddCart extends BaseCart implements CartInterface {
 	 * @return string
 	 */
 	public function get_page_url(): string {
-		return '';
+		return edd_get_checkout_uri();
+	}
+
+	/**
+	 * Check if item exists in cart
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param int $item_id Item id.
+	 *
+	 * @return bool
+	 */
+	public function is_item_exists( int $item_id ): bool {
+		$download_id = tutor_utils()->get_course_product_id( $item_id );
+		return edd_item_in_cart( $download_id );
 	}
 }
 
