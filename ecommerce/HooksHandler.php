@@ -16,6 +16,7 @@ use TUTOR\Earnings;
 use Tutor\Helpers\QueryHelper;
 use TUTOR\Input;
 use Tutor\Models\CartModel;
+use Tutor\Models\OrderMetaModel;
 use Tutor\Models\OrderModel;
 use TutorPro\CourseBundle\CustomPosts\CourseBundle;
 use TutorPro\CourseBundle\Models\BundleModel;
@@ -74,6 +75,13 @@ class HooksHandler {
 		add_filter( 'tutor_before_order_create', array( $this, 'update_order_data' ) );
 		add_action( 'tutor_order_placed', array( $this, 'handle_free_checkout' ) );
 		add_filter( 'tutor_redirect_url_after_checkout', array( $this, 'redirect_to_the_course' ), 10, 3 );
+
+		/**
+		 * Store customer billing information for each order.
+		 *
+		 * @since 3.5.0
+		 */
+		add_action( 'tutor_order_placed', array( $this, 'store_billing_address_for_order' ) );
 	}
 
 	/**
@@ -316,7 +324,7 @@ class HooksHandler {
 				 *
 				 * @since 3.2.0
 				 */
-				$plan_info = apply_filters( 'tutor_get_plan_info', new \stdClass(), $object_id );
+				$plan_info = apply_filters( 'tutor_get_plan_info', null, $object_id );
 				if ( $plan_info && isset( $plan_info->is_membership_plan ) && $plan_info->is_membership_plan ) {
 					continue;
 				} else {
@@ -482,6 +490,27 @@ class HooksHandler {
 			}
 		}
 		return $url;
+	}
+
+	/**
+	 * Store billing address for an order when order is placed.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array $order_data order data.
+	 *
+	 * @return void
+	 */
+	public function store_billing_address_for_order( array $order_data ) {
+		$order_id     = $order_data['id'];
+		$user_id      = $order_data['user_id'];
+		$billing_info = ( new BillingController( false ) )->get_billing_info( $user_id );
+
+		OrderMetaModel::add_meta(
+			$order_id,
+			OrderModel::META_KEY_BILLING_ADDRESS,
+			wp_json_encode( $billing_info )
+		);
 	}
 }
 
