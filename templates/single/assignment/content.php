@@ -45,7 +45,7 @@ $course_stats = tutor_utils()->get_course_completed_percent( $course_id, 0, true
 
 // Get enrolled data.
 $enrolled_info   = tutor_utils()->is_enrolled( $course_id, $user_id );
-$enrollment_time = strtotime( $enrolled_info->post_date_gmt );
+$enrollment_time = apply_filters( 'tutor_content_drip_assignment_deadline', strtotime( $enrolled_info->post_date_gmt ), $course_id, $post_id );
 
 /**
  * Convert assignment time
@@ -101,21 +101,7 @@ $upload_basedir = trailingslashit( $upload_dir['basedir'] ?? '' );
 				$total_mark        = tutor_utils()->get_assignment_option( get_the_ID(), 'total_mark' );
 				$pass_mark         = tutor_utils()->get_assignment_option( get_the_ID(), 'pass_mark' );
 				$file_upload_limit = tutor_utils()->get_assignment_option( get_the_ID(), 'upload_file_size_limit' );
-				$drip_type         = get_tutor_course_settings( $course_id, 'content_drip_type', 'unlock_by_date' );
-
-				if ( 'specific_days' === $drip_type ) {
-					$days         = (int) get_item_content_drip_settings( $post_id, 'after_xdays_of_enroll' );
-					$days_in_time = 60 * 60 * 24 * $days;
-					$enrollment_time += $days_in_time;
-				}
-
-				if ( $drip_type === 'unlock_by_date' ) {
-					$unlock_timestamp = strtotime( get_item_content_drip_settings( $post_id, 'unlock_date' ) );
-
-					if ( $unlock_timestamp ) {
-						$enrollment_time = $unlock_timestamp < $enrollment_time ? $enrollment_time : $unlock_timestamp;
-					}
-				}
+				
 
 				global $post;
 				$assignment_created_time = strtotime( $post->post_date_gmt );
