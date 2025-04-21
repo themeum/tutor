@@ -368,7 +368,7 @@ class Course_List {
 			}
 		}
 
-		if ( ! in_array( $course->post_type, array( CourseModel::POST_TYPE, tutor()->bundle_post_type ) ) ) {
+		if ( ! apply_filters( 'tutor_check_course_post_type', $course->post_type ) ) {
 			wp_send_json_error( tutor_utils()->error_message() );
 		}
 

@@ -339,7 +339,7 @@ class CourseModel {
 		$course  = get_post( $course_id );
 		$user_id = tutor_utils()->get_user_id( $user_id );
 
-		if ( ! $course || ! in_array( $course->post_type, array( self::POST_TYPE, tutor()->bundle_post_type ) ) || $user_id !== (int) $course->post_author ) {
+		if ( ! $course || ! apply_filters( 'tutor_check_course_post_type', $course->post_type ) || $user_id !== (int) $course->post_author ) {
 			return false;
 		}
 
@@ -411,7 +411,7 @@ class CourseModel {
 	 * @return bool
 	 */
 	public static function delete_course( $post_id ) {
-		if ( ! in_array( get_post_type( $post_id ), array( tutor()->course_post_type, tutor()->bundle_post_type ) ) ) {
+		if ( ! apply_filters( 'tutor_check_course_post_type', get_post_type( $post_id ) ) ) {
 			return false;
 		}
 
