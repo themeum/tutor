@@ -1,12 +1,12 @@
 <?php
 /**
- * Checkbox items template for full width type field.
+ * Checkbox without label template
  *
  * @package Tutor\Views
  * @subpackage Tutor\Settings
  * @author Themeum <support@themeum.com>
  * @link https://themeum.com
- * @since 2.0.0
+ * @since 3.5.0
  */
 
 $key    = $field['key'] ?? '';
