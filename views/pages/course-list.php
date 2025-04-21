@@ -277,7 +277,7 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 															<?php echo esc_html( $count_assignment ); ?>
 														</span>
 													</span>
-													<?php echo esc_html( apply_filters( 'tutor_filter_course_list_meta', ob_get_clean(), $post ) ); ?>
+													<?php echo wp_kses_post( apply_filters( 'tutor_filter_course_list_meta', ob_get_clean(), $post ) ); ?>
 												</div>
 											</div>
 										</div>
