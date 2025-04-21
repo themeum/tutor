@@ -3059,23 +3059,22 @@ class Course extends Tutor_Base {
 	}
 
 	/**
- * Validate term IDs before setting them
- * 
- * @since 3.5.0
- * 
- * @param array  $term_ids Term IDs to validate.
- * @param string $taxonomy Taxonomy to check against.
- * 
- * @return array Valid term IDs
- * 
- */
-private function validate_term_ids( $term_ids, $taxonomy ) {
-    return array_filter( 
-        array_map( 'intval', $term_ids ), 
-        function( $term_id ) use ( $taxonomy ) {
-            $term = get_term( $term_id, $taxonomy );
-            return ! is_wp_error( $term ) && $term;
-        }
-    );
-}
+	 * Validate term IDs before setting them.
+	 *
+	 * @since 3.5.0
+	 *
+	 * @param array  $term_ids Term IDs to validate.
+	 * @param string $taxonomy Taxonomy to check against.
+	 *
+	 * @return array Valid term IDs.
+	 */
+	private function validate_term_ids( $term_ids, $taxonomy ) {
+		return array_filter(
+			array_map( 'intval', $term_ids ),
+			function( $term_id ) use ( $taxonomy ) {
+				$term = get_term( $term_id, $taxonomy );
+				return ! is_wp_error( $term ) && $term;
+			}
+		);
+	}
 }
