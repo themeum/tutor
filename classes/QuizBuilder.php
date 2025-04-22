@@ -339,9 +339,12 @@ class QuizBuilder {
 
 			// Save quiz settings.
 			$quiz_option = Input::sanitize_array( $payload['quiz_option'] ?? array() ); //phpcs:ignore
-			$quiz_option = array_map( function( $value ) {
-				return empty( $value ) ? 0 : $value;
-			}, $quiz_option );
+			$quiz_option = array_map(
+				function( $value ) {
+					return empty( $value ) ? 0 : $value;
+				},
+				$quiz_option
+			);
 
 			update_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, $quiz_option );
 			do_action( 'tutor_quiz_settings_updated', $quiz_id );
