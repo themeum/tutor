@@ -520,7 +520,7 @@ class HooksHandler {
 		$user_id      = $order_data['user_id'];
 		$billing_info = ( new BillingController( false ) )->get_billing_info( $user_id );
 
-		$meta_value = array();
+		$meta_value = '{}';
 		if ( $billing_info ) {
 			$meta_value = wp_json_encode( $billing_info );
 		} else {
