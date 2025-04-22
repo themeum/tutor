@@ -447,8 +447,9 @@ class HooksHandler {
 	 */
 	public function handle_free_checkout( array $order_data ) {
 		if ( empty( $order_data['total_price'] ) && OrderModel::TYPE_SINGLE_ORDER === $order_data['order_type'] ) {
-			$user_id = $order_data['user_id'];
-			$items   = $order_data['items'];
+			$order_id = $order_data['id'];
+			$user_id  = $order_data['user_id'];
+			$items    = $order_data['items'];
 			foreach ( $items as $item ) {
 				add_filter( 'tutor_enroll_data', fn( $enroll_data) => array_merge( $enroll_data, array( 'post_status' => 'completed' ) ) );
 
@@ -457,6 +458,9 @@ class HooksHandler {
 					BundleModel::enroll_to_bundle_courses( $item['item_id'], $user_id );
 				}
 			}
+
+			// Store coupon usage.
+			( new CouponController( false ) )->store_coupon_usage( $order_id );
 		}
 		return $order_data;
 	}
