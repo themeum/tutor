@@ -22,16 +22,17 @@ import { VideoRegex, isRTL } from '@TutorShared/config/constants';
 import { borderRadius, colorTokens, shadow, spacing, zIndex } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
 import Show from '@TutorShared/controls/Show';
+import { withVisibilityControl } from '@TutorShared/hoc/withVisibilityControl';
 import { AnimationType } from '@TutorShared/hooks/useAnimation';
 import { useFormWithGlobalError } from '@TutorShared/hooks/useFormWithGlobalError';
 import { Portal, usePortalPopover } from '@TutorShared/hooks/usePortalPopover';
 import useWPMedia, { type WPMedia } from '@TutorShared/hooks/useWpMedia';
+import { type IconCollection } from '@TutorShared/icons/types';
 import type { FormControllerProps } from '@TutorShared/utils/form';
 import { styleUtils } from '@TutorShared/utils/style-utils';
 import type { TutorMutationResponse } from '@TutorShared/utils/types';
 import { requiredRule } from '@TutorShared/utils/validation';
 
-import { type IconCollection } from '@TutorShared/icons/types';
 import FormFieldWrapper from './FormFieldWrapper';
 import FormSelectInput from './FormSelectInput';
 import FormTextareaInput from './FormTextareaInput';
@@ -750,7 +751,7 @@ const FormVideoInput = ({
   );
 };
 
-export default FormVideoInput;
+export default withVisibilityControl(FormVideoInput);
 
 const styles = {
   emptyMediaWrapper: css`
