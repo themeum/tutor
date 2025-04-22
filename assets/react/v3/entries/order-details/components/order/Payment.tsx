@@ -10,7 +10,7 @@ import DiscountModal from '@OrderComponents/modals/DiscountModal';
 import MarkAsPaidModal from '@OrderComponents/modals/MarkAsPaidModal';
 import RefundModal from '@OrderComponents/modals/RefundModal';
 import { useOrderContext } from '@OrderContexts/order-context';
-import type { PaymentStatus } from '@OrderServices/order';
+import type { Order } from '@OrderServices/order';
 
 import { colorTokens, fontWeight, spacing } from '@TutorShared/config/styles';
 import { typography } from '@TutorShared/config/typography';
@@ -22,19 +22,19 @@ import { styleUtils } from '@TutorShared/utils/style-utils';
 import { PaymentBadge } from './PaymentBadge';
 
 function PaymentActionButton({
-  status,
+  order,
   onClick,
-  total_price,
 }: {
-  status: PaymentStatus;
+  order: Order;
   onClick: (buttonType: 'refund' | 'mark-as-paid') => void;
-  total_price: number;
 }) {
-  if (total_price <= 0) {
+  const { payment_status, total_price, net_payment } = order || {};
+
+  if (total_price <= 0 || net_payment <= 0) {
     return null;
   }
 
-  switch (status) {
+  switch (payment_status) {
     case 'paid':
     case 'partially-refunded':
     case 'failed':
@@ -233,8 +233,7 @@ function Payment() {
 
         <div css={styles.markAsPaid}>
           <PaymentActionButton
-            status={order.payment_status}
-            total_price={order.total_price}
+            order={order}
             onClick={(buttonType) => {
               if (buttonType === 'refund') {
                 return showModal({
