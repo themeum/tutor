@@ -210,10 +210,10 @@ if ( 'trash' === $active_tab && current_user_can( 'administrator' ) ) {
 		tutor_load_template_from_custom_path( $navbar_template, $navbar_data );
 		tutor_load_template_from_custom_path( $filters_template, $filters );
 	?>
-	<div class="tutor-admin-body">
-		<div class="table-dashboard-course-list tutor-mt-16">
+	<div class="tutor-admin-container tutor-admin-container-lg">
+		<div class="tutor-dashboard-course-list tutor-mt-16">
 			<div class="tutor-table-responsive">
-				<table class="tutor-table tutor-table-middle">
+				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>

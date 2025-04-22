@@ -57,6 +57,10 @@
 		padding-left: 20px;
 		padding-right: 20px;
 
+		&-lg {
+			max-width: 1380px;
+		}
+
 		&-sm {
 			max-width: 760px;
 			min-width: 480px;
@@ -1799,7 +1803,7 @@ h2.tutor-page-heading {
     display: none!important;
 }
 
-.table-dashboard-course-list {
+.tutor-dashboard-course-list {
 	tr {
 		th {
 			border-top: 1px solid #E6E6E6;
@@ -1870,9 +1874,5 @@ h2.tutor-page-heading {
 
 	.tutor-avatar {
 		box-shadow: none;
-	}
-
-	.tutor-pagination {
-		border-color: #e0e2ea;
 	}
 }

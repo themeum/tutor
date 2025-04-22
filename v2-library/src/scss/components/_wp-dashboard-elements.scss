@@ -44,21 +44,23 @@
 }
 
 .tutor-wp-dashboard-course-header {
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-between;
-	gap: 16px;
 	border-bottom: 1px solid $border-color-secondary;
-	padding: 16px 24px;
+	padding: 16px 0px;
 	margin-bottom: 24px;
+
+	&-inner {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: space-between;
+		gap: 16px;
+	}
 }
 
 .tutor-wp-dashboard-course-filter {
 	display: flex;
 	align-items: start;
 	gap: 24px;
-	padding: 0px 20px;
 
 	@include breakpoint-max(mobile) {
 		flex-direction: column;
