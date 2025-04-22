@@ -338,18 +338,7 @@ class QuizBuilder {
 			do_action( ( $is_update ? 'tutor_quiz_updated' : 'tutor_initial_quiz_created' ), $quiz_id );
 
 			// Save quiz settings.
-			$numeric_options = array(
-				'attempts_allowed',
-				'passing_grade',
-				'max_questions_for_answer',
-			);
 			$quiz_option = Input::sanitize_array( $payload['quiz_option'] ?? array() ); //phpcs:ignore
-			foreach ( $numeric_options as $option ) {
-				if ( isset( $quiz_option[ $option ] ) && empty( $quiz_option[ $option ] ) ) {
-					$quiz_option[ $option ] = 0;
-				}
-			}
-
 			update_post_meta( $quiz_id, Quiz::META_QUIZ_OPTION, $quiz_option );
 			do_action( 'tutor_quiz_settings_updated', $quiz_id );
 
