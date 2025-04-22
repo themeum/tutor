@@ -76,7 +76,7 @@ $filters = array(
 		<div class="tutor-mt-24">
 			<div class="tutor-table-responsive">
 
-				<table class="tutor-table tutor-table-middle table-dashboard-course-list">
+				<table class="tutor-table tutor-table-middle">
 					<thead class="tutor-text-sm tutor-text-400">
 						<tr>
 							<th>
